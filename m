@@ -5,216 +5,251 @@ X-Spam-Level:
 X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42430 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbgCKDoU (ORCPT
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53280 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbgCKDoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:44:20 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t3so400806plz.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:44:17 -0700 (PDT)
+        Tue, 10 Mar 2020 23:44:22 -0400
+Received: by mail-pj1-f65.google.com with SMTP id l36so257514pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:44:22 -0700 (PDT)
 From: Jason Ekstrand <jason@jlekstrand.net>
 Cc: airlied@redhat.com, christian.koenig@amd.com, jessehall@google.com,
         jajones@nvidia.com, daniels@collabora.com, hoegsberg@google.com,
         daniel.vetter@ffwll.ch, bas@basnieuwenhuizen.nl,
-        =?UTF-8?q?Christian=20K=C3=B6nig?=
-        <ckoenig.leichtzumerken@gmail.com>,
         Jason Ekstrand <jason@jlekstrand.net>,
         Sumit Semwal <sumit.semwal@linaro.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Chenbo Feng <fengc@google.com>,
         Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] dma-buf: add dma_resv_get_singleton (v2)
-Date: Tue, 10 Mar 2020 22:43:47 -0500
-Message-Id: <20200311034351.1275197-2-jason@jlekstrand.net>
+        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting sync files (v4)
+Date: Tue, 10 Mar 2020 22:43:48 -0500
+Message-Id: <20200311034351.1275197-3-jason@jlekstrand.net>
 In-Reply-To: <20200311034351.1275197-1-jason@jlekstrand.net>
 References: <20200303190318.522103-1-jason@jlekstrand.net>
  <20200311034351.1275197-1-jason@jlekstrand.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To: unlisted-recipients:; (no To-header on input)@rostedt.homelinux.com
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311034347.WPgufJca2Qy31hnJvjMvkUCUSGnXMn18MCUccjR9TNQ@z>
+Message-ID: <20200311034348.MX6pszMuTIWOqxR3YlEA2a6JjB4Kn3p3YyLXPzkHntI@z>
 
-From: Christian König <ckoenig.leichtzumerken@gmail.com>
+Explicit synchronization is the future.  At least, that seems to be what
+most userspace APIs are agreeing on at this point.  However, most of our
+Linux APIs (both userspace and kernel UAPI) are currently built around
+implicit synchronization with dma-buf.  While work is ongoing to change
+many of the userspace APIs and protocols to an explicit synchronization
+model, switching over piecemeal is difficult due to the number of
+potential components involved.  On the kernel side, many drivers use
+dma-buf including GPU (3D/compute), display, v4l, and others.  In
+userspace, we have X11, several Wayland compositors, 3D drivers, compute
+drivers (OpenCL etc.), media encode/decode, and the list goes on.
 
-Add a helper function to get a single fence representing
-all fences in a dma_resv object.
+This patch provides a path forward by allowing userspace to manually
+manage the fences attached to a dma-buf.  Alternatively, one can think
+of this as making dma-buf's implicit synchronization simply a carrier
+for an explicit fence.  This is accomplished by adding two IOCTLs to
+dma-buf for importing and exporting a sync file to/from the dma-buf.
+This way a userspace component which is uses explicit synchronization,
+such as a Vulkan driver, can manually set the write fence on a buffer
+before handing it off to an implicitly synchronized component such as a
+Wayland compositor or video encoder.  In this way, each of the different
+components can be upgraded to an explicit synchronization model one at a
+time as long as the userspace pieces connecting them are aware of it and
+import/export fences at the right times.
 
-This fence is either the only one in the object or all not
-signaled fences of the object in a flatted out dma_fence_array.
+There is a potential race condition with this API if userspace is not
+careful.  A typical use case for implicit synchronization is to wait for
+the dma-buf to be ready, use it, and then signal it for some other
+component.  Because a sync_file cannot be created until it is guaranteed
+to complete in finite time, userspace can only signal the dma-buf after
+it has already submitted the work which uses it to the kernel and has
+received a sync_file back.  There is no way to atomically submit a
+wait-use-signal operation.  This is not, however, really a problem with
+this API so much as it is a problem with explicit synchronization
+itself.  The way this is typically handled is to have very explicit
+ownership transfer points in the API or protocol which ensure that only
+one component is using it at any given time.  Both X11 (via the PRESENT
+extension) and Wayland provide such ownership transfer points via
+explicit present and idle messages.
+
+The decision was intentionally made in this patch to make the import and
+export operations IOCTLs on the dma-buf itself rather than as a DRM
+IOCTL.  This makes it the import/export operation universal across all
+components which use dma-buf including GPU, display, v4l, and others.
+It also means that a userspace component can do the import/export
+without access to the DRM fd which may be tricky to get in cases where
+the client communicates with DRM via a userspace API such as OpenGL or
+Vulkan.  At a future date we may choose to add direct import/export APIs
+to components such as drm_syncobj to avoid allocating a file descriptor
+and going through two ioctls.  However, that seems to be something of a
+micro-optimization as import/export operations are likely to happen at a
+rate of a few per frame of rendered or decoded video.
 
 v2 (Jason Ekstrand):
- - Take reference of fences both for creating the dma_fence_array and in
-   the case where we return one fence.
- - Handle the case where dma_resv_get_list() returns NULL
+ - Use a wrapper dma_fence_array of all fences including the new one
+   when importing an exclusive fence.
+
+v3 (Jason Ekstrand):
+ - Lock around setting shared fences as well as exclusive
+ - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
+ - Initialize ret to 0 in dma_buf_wait_sync_file
+
+v4 (Jason Ekstrand):
+ - Use the new dma_resv_get_singleton helper
 
 Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
 ---
- drivers/dma-buf/dma-resv.c | 118 +++++++++++++++++++++++++++++++++++++
- include/linux/dma-resv.h   |   3 +
- 2 files changed, 121 insertions(+)
+ drivers/dma-buf/dma-buf.c    | 96 ++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/dma-buf.h | 13 ++++-
+ 2 files changed, 107 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 4264e64788c4..66591d8ab7ef 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -33,6 +33,8 @@
-  */
- 
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index d4097856c86b..09973c689866 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -20,6 +20,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/seq_file.h>
++#include <linux/sync_file.h>
+ #include <linux/poll.h>
  #include <linux/dma-resv.h>
-+#include <linux/dma-fence-chain.h>
-+#include <linux/dma-fence-array.h>
- #include <linux/export.h>
- #include <linux/sched/mm.h>
- 
-@@ -47,6 +49,19 @@
-  * write-side updates.
-  */
- 
-+/**
-+ * dma_fence_deep_dive_for_each - deep dive into the fence containers
-+ * @fence: resulting fence
-+ * @chain: variable for a dma_fence_chain
-+ * @index: index into a dma_fence_array
-+ * @head: starting point
-+ *
-+ * Helper to deep dive into the fence containers for flattening them.
-+ */
-+#define dma_fence_deep_dive_for_each(fence, chain, index, head)	\
-+	dma_fence_chain_for_each(chain, head)			\
-+		dma_fence_array_for_each(fence, index, chain)
-+
- DEFINE_WD_CLASS(reservation_ww_class);
- EXPORT_SYMBOL(reservation_ww_class);
- 
-@@ -516,6 +531,109 @@ int dma_resv_get_fences_rcu(struct dma_resv *obj,
+ #include <linux/mm.h>
+@@ -348,6 +349,95 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(dma_resv_get_fences_rcu);
  
-+/**
-+ * dma_resv_get_singleton - get a single fence for the dma_resv object
-+ * @obj: the reservation object
-+ * @extra: extra fence to add to the resulting array
-+ * @result: resulting dma_fence
-+ *
-+ * Get a single fence representing all unsignaled fences in the dma_resv object
-+ * plus the given extra fence. If we got only one fence return a new
-+ * reference to that, otherwise return a dma_fence_array object.
-+ *
-+ * RETURNS
-+ * Returns -NOMEM if allocations fail, zero otherwise.
-+ */
-+int dma_resv_get_singleton(struct dma_resv *obj, struct dma_fence *extra,
-+			   struct dma_fence **result)
++static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
++				   const void __user *user_data)
 +{
-+	struct dma_resv_list *fobj = dma_resv_get_list(obj);
-+	struct dma_fence *excl = dma_resv_get_excl(obj);
-+	struct dma_fence *fence, *chain, **fences;
-+	struct dma_fence_array *array;
-+	unsigned int num_fences, shared_count;
-+	unsigned int i, j;
++	struct dma_buf_sync_file arg;
++	struct dma_fence *fence;
++	int ret = 0;
 +
-+	num_fences = 0;
-+	*result = NULL;
++	if (copy_from_user(&arg, user_data, sizeof(arg)))
++		return -EFAULT;
 +
-+	dma_fence_deep_dive_for_each(fence, chain, i, extra) {
-+		if (dma_fence_is_signaled(fence))
-+			continue;
++	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
++		return -EINVAL;
 +
-+		*result = fence;
-+		++num_fences;
++	fence = sync_file_get_fence(arg.fd);
++	if (!fence)
++		return -EINVAL;
++
++	dma_resv_lock(dmabuf->resv, NULL);
++
++	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
++		struct dma_fence *singleton = NULL;
++		ret = dma_resv_get_singleton(dmabuf->resv, fence, &singleton);
++		if (!ret && singleton)
++			dma_resv_add_excl_fence(dmabuf->resv, singleton);
++	} else {
++		dma_resv_add_shared_fence(dmabuf->resv, fence);
 +	}
 +
-+	dma_fence_deep_dive_for_each(fence, chain, i, excl) {
-+		if (dma_fence_is_signaled(fence))
-+			continue;
++	dma_resv_unlock(dmabuf->resv);
 +
-+		*result = fence;
-+		++num_fences;
-+	}
++	dma_fence_put(fence);
 +
-+	shared_count = fobj ? fobj->shared_count : 0;
-+	for (i = 0; i < shared_count; ++i) {
-+		struct dma_fence *f;
-+
-+		f = rcu_dereference_protected(fobj->shared[i],
-+					      dma_resv_held(obj));
-+		dma_fence_deep_dive_for_each(fence, chain, j, f) {
-+			if (dma_fence_is_signaled(fence))
-+				continue;
-+
-+			*result = fence;
-+			++num_fences;
-+		}
-+	}
-+
-+	if (num_fences <= 1) {
-+		*result = dma_fence_get(*result);
-+		return 0;
-+	}
-+
-+	fences = kmalloc_array(num_fences, sizeof(struct dma_fence*),
-+			       GFP_KERNEL);
-+	if (!fences)
-+		return -ENOMEM;
-+
-+	num_fences = 0;
-+
-+	dma_fence_deep_dive_for_each(fence, chain, i, extra)
-+		if (!dma_fence_is_signaled(fence))
-+			fences[num_fences++] = dma_fence_get(fence);
-+
-+	dma_fence_deep_dive_for_each(fence, chain, i, excl)
-+		if (!dma_fence_is_signaled(fence))
-+			fences[num_fences++] = dma_fence_get(fence);
-+
-+	for (i = 0; i < shared_count; ++i) {
-+		struct dma_fence *f;
-+
-+		f = rcu_dereference_protected(fobj->shared[i],
-+					      dma_resv_held(obj));
-+		dma_fence_deep_dive_for_each(fence, chain, j, f)
-+			if (!dma_fence_is_signaled(fence))
-+				fences[num_fences++] = dma_fence_get(fence);
-+	}
-+
-+	array = dma_fence_array_create(num_fences, fences,
-+				       dma_fence_context_alloc(1),
-+				       1, false);
-+	if (!array)
-+		goto error_free;
-+
-+	*result = &array->base;
-+	return 0;
-+
-+error_free:
-+	while (num_fences--)
-+		dma_fence_put(fences[num_fences]);
-+	kfree(fences);
-+	return -ENOMEM;
++	return ret;
 +}
 +
- /**
-  * dma_resv_wait_timeout_rcu - Wait on reservation's objects
-  * shared and/or exclusive fences.
-diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-index ee50d10f052b..d50e753e4550 100644
---- a/include/linux/dma-resv.h
-+++ b/include/linux/dma-resv.h
-@@ -287,6 +287,9 @@ int dma_resv_get_fences_rcu(struct dma_resv *obj,
- 
- int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src);
- 
-+int dma_resv_get_singleton(struct dma_resv *obj, struct dma_fence *extra,
-+			   struct dma_fence **result);
++static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
++				     void __user *user_data)
++{
++	struct dma_buf_sync_file arg;
++	struct dma_fence *fence = NULL;
++	struct sync_file *sync_file;
++	int fd, ret;
 +
- long dma_resv_wait_timeout_rcu(struct dma_resv *obj, bool wait_all, bool intr,
- 			       unsigned long timeout);
++	if (copy_from_user(&arg, user_data, sizeof(arg)))
++		return -EFAULT;
++
++	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
++		return -EINVAL;
++
++	fd = get_unused_fd_flags(O_CLOEXEC);
++	if (fd < 0)
++		return fd;
++
++	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
++		/* We need to include both the exclusive fence and all of
++		 * the shared fences in our fence.
++		 */
++		ret = dma_resv_get_singleton(dmabuf->resv, NULL, &fence);
++		if (ret)
++			goto err_put_fd;
++	} else {
++		fence = dma_resv_get_excl_rcu(dmabuf->resv);
++	}
++
++	if (!fence)
++		fence = dma_fence_get_stub();
++
++	sync_file = sync_file_create(fence);
++
++	dma_fence_put(fence);
++
++	if (!sync_file) {
++		ret = -EINVAL;
++		goto err_put_fd;
++	}
++
++	fd_install(fd, sync_file->file);
++
++	arg.fd = fd;
++	if (copy_to_user(user_data, &arg, sizeof(arg)))
++		return -EFAULT;
++
++	return 0;
++
++err_put_fd:
++	put_unused_fd(fd);
++	return ret;
++}
++
+ static long dma_buf_ioctl(struct file *file,
+ 			  unsigned int cmd, unsigned long arg)
+ {
+@@ -390,6 +480,12 @@ static long dma_buf_ioctl(struct file *file,
+ 	case DMA_BUF_SET_NAME:
+ 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
  
++	case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
++		return dma_buf_wait_sync_file(dmabuf, (const void __user *)arg);
++
++	case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
++		return dma_buf_signal_sync_file(dmabuf, (void __user *)arg);
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+index dbc7092e04b5..86e07acca90c 100644
+--- a/include/uapi/linux/dma-buf.h
++++ b/include/uapi/linux/dma-buf.h
+@@ -37,8 +37,17 @@ struct dma_buf_sync {
+ 
+ #define DMA_BUF_NAME_LEN	32
+ 
++struct dma_buf_sync_file {
++	__u32 flags;
++	__s32 fd;
++};
++
++#define DMA_BUF_SYNC_FILE_SYNC_WRITE	(1 << 0)
++
+ #define DMA_BUF_BASE		'b'
+-#define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
+-#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
++#define DMA_BUF_IOCTL_SYNC	    _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++#define DMA_BUF_SET_NAME	    _IOW(DMA_BUF_BASE, 1, const char *)
++#define DMA_BUF_IOCTL_WAIT_SYNC_FILE	_IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
++#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE	_IOWR(DMA_BUF_BASE, 3, struct dma_buf_sync)
+ 
+ #endif
 -- 
 2.24.1
 
