@@ -1,112 +1,88 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
-Received: from mga01.intel.com ([192.55.52.88]:14056 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbgCKQkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:40:49 -0400
-Date: Wed, 11 Mar 2020 09:40:47 -0700
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Nathaniel McCallum <npmccallum@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-Message-ID: <20200311164047.GG21852@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
- <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
- <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
- <20200311132832.GA75185@linux.intel.com>
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39450 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgCKQnH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 12:43:07 -0400
+Subject: Re: [EXTERNAL] Re: [PATCH v4 2/4] power_supply: Add additional health
+ properties to the header
+To: Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sandeep Patil <sspatil@android.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@android.com>
+References: <20200116175039.1317-1-dmurphy@ti.com>
+ <20200116175039.1317-3-dmurphy@ti.com>
+ <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
+ <20200306235548.GA187098@google.com>
+ <20200310213050.si7gcr2wbmjgr7jf@earth.universe>
+ <de919edb-79b3-82ec-f55c-31a127d6c751@ti.com>
+From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <66b2ac86-8513-b540-8a2c-c2ebef4124dd@ti.com>
+Date: Wed, 11 Mar 2020 11:43:00 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311132832.GA75185@linux.intel.com>
+In-Reply-To: <de919edb-79b3-82ec-f55c-31a127d6c751@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, Mar 11, 2020 at 03:28:32PM +0200, Jarkko Sakkinen wrote:
-> On Thu, Mar 05, 2020 at 01:33:28PM +0200, Jarkko Sakkinen wrote:
-> > On Wed, 2020-03-04 at 14:27 -0500, Nathaniel McCallum wrote:
-> > > > > +xsave_area:
-> > > > +       .fill   1, 4, 0x037F            # FCW
-> > > > +       .fill   5, 4, 0
-> > > > +       .fill   1, 4, 0x1F80            # MXCSR
-> > > > +       .fill   1, 4, 0xFFFF            # MXCSR_MASK
-> > > > +       .fill   123, 4, 0
-> > > > +       .fill   1, 4, 0x80000000        # XCOMP_BV[63] = 1, compaction mode
-> > > > +       .fill   12, 4, 0
-> > > 
-> > > I find this much more readable:
-> > 
-> > And I always aim to get things more readable. Thank you.
-> > 
-> > > xsave_area:
-> > >         # Legacy
-> > >         .fill   1, 4, 0x037F            # FCW
-> > >         .fill   5, 4, 0
-> > >         .fill   1, 4, 0x1F80            # MXCSR
-> > >         .fill   1, 4, 0xFFFF            # MXCSR_MASK
-> > >         .fill   60, 8, 0
-> > > 
-> > >         # Header
-> > >         .fill   1, 8, 0                 # XSTATE_BV
-> > >         .fill   1, 8, 1 << 63           # XCOMP_BV (compaction mode)
-> > >         .fill   6, 8, 0
-> > > 
-> > > Also, since people are likely to copy this code for their own
-> > > enclaves, it would be helpful to document which flags are set in FCW
-> > > and MXCSR.
-> > 
-> > It was meant as a test program but I'd guess what you say is true
-> > because it also might be the only alternative user space to Intel's
-> > :-) And a great starting point if you want to do things from scratch.
-> > 
-> > Because I meant it as a smoke test program for SGX, not everything is
-> > too well documented but given the multipurpose use for that code I'll
-> > make the improvements that you are suggesting.
-> 
-> For FPU Control World (FCW), I think 0x037F is not the right value even
-> if section 18.5 in the x86 SDM says that it is the initial value for it.
-> 
-> I took that value from that section.
-> 
-> The reason I think that there is an error in the SDM is that if you look
-> at the section 8.1.5, you'll see that bit 6 is a reserved bit. Thus,
-> does not make to set it on.
-> 
-> I think the legit value ought to be 0x33F i.e. unset bit 6.
+Sebastian
 
-Bit 6 is reserved, but it's forced to '1' by the CPU.
+On 3/11/20 6:29 AM, Dan Murphy wrote:
+> Sebastian
+>
+> On 3/10/20 4:30 PM, Sebastian Reichel wrote:
+>> Hi Sandeep,
+>>
+>> On Fri, Mar 06, 2020 at 03:55:48PM -0800, Sandeep Patil wrote:
+>>> On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
+>>>> Hi,
+>>>>
+>>>> On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
+>>>>> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>> Looks good. But I will not merge it without a user and have comments
+>>>> for the driver.
+>>> Android has been looking for these properties for a while now [1].
+>>> It was added[2] when we saw that the manufacturers were implementing 
+>>> these
+>>> properties in the driver. I didn't know the properties were absent 
+>>> upstream
+>>> until yesterday. Somebody pointed out in our ongoing effort to make 
+>>> sure
+>>> all core kernel changes that android depends on are present upstream.
+>>>
+>>> I think those values are also propagated in application facing APIs in
+>>> Android (but I am not sure yet, let me know if that's something you 
+>>> want
+>>> to find out).
+>>>
+>>> I wanted to chime in and present you a 'user' for this if that helps.
+>> With user I meant an upstream kernel driver, which exposes the
+>> values. But thanks for the pointer. This should be mentioned in
+>> the patch description, also the fact that the status values are
+>> directly taken from JEITA spec.
+>
+> I mentioned the JEITA in the cover letter but I guess you would like 
+> the description in the commit message as well
+>
+> Dan
+>
+>
+I have added a note mentioning that the properties are taken from the 
+JEITA spec in the commit message and listing the bq2515x_charger driver 
+as a user. I am waiting for feedback on my other patches in the series 
+before sending you v5 patches.
 
-Regardless, IMO it'd be better to drop this code entirely, it's all kinds
-of wonky.  The label says "xsave_area" and implies XSAVE state is being
-loaded, but the code uses FXRSTOR, which will only load x86/MMX/XMM state,
-i.e. the first 512 bytes of the so called xsave_area.
-
-The test enclave doesn't touch state managed by XSAVE, let alone put
-secrets into said state.  I see no reason to bother purging anything.
-
-> In any case check:
-> 
-> https://raw.githubusercontent.com/jsakkine-intel/linux-sgx/master/tools/testing/selftests/x86/sgx/encl_bootstrap.S
-> 
-> I.e. both have now a reference:
-> 
-> 1. To the section that describes the default.
-> 2. To the section that describes what the bits mean.
-> 
-> /Jarkko
+Ricardo
 
