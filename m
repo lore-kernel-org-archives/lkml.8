@@ -2,139 +2,137 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E3EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2314CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18955222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583887012;
-	bh=4kRfeINODboa2z4c+8D8exjL2sbcQ0JoaVZFJvfMarE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b370exOMnD+fLLzxEcDk+qLAN0tmI1YAZnHRwTvkmba2d9YZsRGanarVNx4T3OjKd
-	 eZJUjoVQndwKoKj0PbKdUZUdumYQtGiw/P3rn1XaiQdFHPbZXmdzzzwDjSxB7F5vW3
-	 wMsv64CAdn9uOqmbkuAkoUt+HhX37zVhIB60PTe8=
+	by mail.kernel.org (Postfix) with ESMTP id D2953215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="quq+3ext"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgCKAgv (ORCPT
+        id S1727912AbgCKAhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:36:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40479 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbgCKAgu (ORCPT
+        Tue, 10 Mar 2020 20:37:43 -0400
+Received: from mail.efficios.com ([167.114.26.124]:59034 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgCKAhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:36:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t24so200696pgj.7;
-        Tue, 10 Mar 2020 17:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Vd8wwy++z15II2/dBTfgFL0hl+Hgv4lR23h2vNOMvr8=;
-        b=gxytofn9W2QC+J7wiTxoPyNReGrF4fQbxnTPT7y1SfofqH/tO7P9KaK/AxJ7YDULR2
-         llXuUYi3KZ30I/0U78DBzoH9KwNNhT0pI6h8BrLZWEl3sOtXyQNTOPVDB7Y7h+ZtXUgD
-         8YqZ2meiORv/1U7kCKZLyOKflDgrGkFPbJGeneIvb0sJfYQhG2E3yWOQ21Xmt6q/Xv0N
-         Ejxkv4cx2XagjdiNXWYwaWUN7m2Wkqff4SFMyFb3NBn8ZzbEk1lN07bcJ7xzpT70UST3
-         BDbPtAAvqOCVIbTQRBZ1lM3JSa5f3a2Vn3/ygxh5TWRBuhJcE4x2BmKwcVtEzA6rVCBw
-         dEtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vd8wwy++z15II2/dBTfgFL0hl+Hgv4lR23h2vNOMvr8=;
-        b=PxhGNO5IEcAj8y0DwUpNhwGcKSpI/voYTRMGs6ikuXYFIOpg1urYff7H55yXoiSWVg
-         ivfFXDOaWZUAvg6N1CoPpiU/minHXbZBREd5fVjK8FnnIjoUbuoO3jFcxg4yXPJUDxy3
-         J1lFxl7oM2FnYJ3MTrOnnTCuE1rorkK472cx7zMOURkdrGmr3GXbPx2MvFkcxsUQjBzX
-         NVQGvRsZpGiWVLXhnOAJNI5vziMET79lmi+ntbtNU3B8RYXQBcD2beacfjMe3de2PdSx
-         kW7xXE3zo4X4W2A3CNF4fwdEyT0oNhG+K+H+2sAu0zs/9OwOPv+W1DsRZ2/P5MxkoLGi
-         b5Cg==
-X-Gm-Message-State: ANhLgQ3Emf/sEevdCgN3jXNSuj2MpaKuses0d5eHg3s92iP9dKsRbfIJ
-        o1L3p1aaF2GPVm464H8ykMc=
-X-Google-Smtp-Source: ADFU+vswEpqqcw4XX2RthZfi5bdsShhNz14MpEtyAQ7rosc6C1e6e/ydxWEzoYFqo+CzmwWPJVNYHQ==
-X-Received: by 2002:a65:685a:: with SMTP id q26mr284721pgt.29.1583887009162;
-        Tue, 10 Mar 2020 17:36:49 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id m26sm2440274pgc.77.2020.03.10.17.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 17:36:48 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 17:36:46 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
-Message-ID: <20200311003646.GA87930@google.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-3-minchan@kernel.org>
- <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
- <20200310222008.GB72963@google.com>
+        Tue, 10 Mar 2020 20:37:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E7596274CD6;
+        Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id mJln51YZFwyu; Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9825F274CD5;
+        Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9825F274CD5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583887061;
+        bh=U7LALiVWnzC6Qqk8on30unANb+95Awa8y5B50fzooEw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=quq+3extVd1A47yffX1wsAG3fOcc5745ii4EGJDOwqVXggQnIG6DPa/lgcO8dtg4E
+         gIEHrpjlWFTtkqD4ZQQewWAY/0fQPeG4RfbU195kEUXLNB4MnW0B1y+XLZQr9RAKCK
+         UReuqrFBrfI3seiptMl3l5e5hsn4D6H1CQNxEGjrj4d2mz43/216H5d5T/kaDjwpEz
+         jjf97Pp0Je94eXw9YKRahysJkEyR/Cs/M+bbfMT3M/+rYsPvDQG7juDeTVnkm2JMwd
+         onMpmkOkCX5xmZV+3YWmhRZkXx2QAtXOBkzmxTsBPrXoIZp0fP5tkjw3a2Khnm9yku
+         TuFBz91uXJKXQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id R9pO-4JRyErH; Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 8626E275011;
+        Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Message-ID: <831351096.24668.1583887061530.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200311091815.fce458348bb7641b60f600d9@kernel.org>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <87fteh73sp.fsf@nanos.tec.linutronix.de> <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org> <87pndk5tb4.fsf@nanos.tec.linutronix.de> <450878559.23455.1583854311078.JavaMail.zimbra@efficios.com> <20200310114657.099122fd@gandalf.local.home> <1760242532.23694.1583857291763.JavaMail.zimbra@efficios.com> <20200311091815.fce458348bb7641b60f600d9@kernel.org>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310222008.GB72963@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: hz+zwspBrcoLTdRQIpEDllLfCMkCTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 03:20:08PM -0700, Minchan Kim wrote:
-> On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
-> > On 3/2/20 8:36 PM, Minchan Kim wrote:
-> > > There is usecase that System Management Software(SMS) want to give
-> > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
-> > > in the case of Android, it is the ActivityManagerService.
-> > > 
-> > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> > 
-> > You mean MADV_DONTNEED?
+----- On Mar 10, 2020, at 8:18 PM, Masami Hiramatsu mhiramat@kernel.org wrote:
+[...]
+ 
+>> An approach where the "in_tracer" flag is tested and set by the instrumentation
+>> (function tracer, kprobes, tracepoints) would work here. Let's say the beginning
+>> of the int3 ISR is part of the code which is invisible to instrumentation, and
+>> before we issue rcu_nmi_enter(), we handle the in_tracer flag:
+>> 
+>> rcu_nmi_enter();
+>>  <int3>
+>>     (recursion_ctx->in_tracer == false)
+>>     set recursion_ctx->in_tracer = true
+>>     do_int3() {
+>>        rcu_nmi_enter();
+>>          <int3>
+>>             if (recursion_ctx->in_tracer == true)
+>>                 iret
+>> 
+>> We can change "in_tracer" for "in_breakpoint", "in_tracepoint" and
+>> "in_function_trace" if we ever want to allow different types of instrumentation
+>> to nest. I'm not sure whether this is useful or not through.
 > 
-> Mean to DONT_NEED's future version.
+> Kprobes already has its own "in_kprobe" flag, and the recursion path is
+> not so simple. Since the int3 replaces the original instruction, we have to
+> execute the original instruction with single-step and fixup.
 > 
-> > 
-> > > required to make the reclaim decision is not known to the app.
-> > 
-> > This seems to be mixing up the differences between MADV_DONTNEED and
-> > COLD/PAGEOUT and self-imposed vs external memory hints?
-> 
-> Sorry, I don't understand what you want here.
-> 
-> > 
-> > > Instead,
-> > > it is known to the centralized userspace daemon(ActivityManagerService),
-> > > and that daemon must be able to initiate reclaim on its own without
-> > > any app involvement.
-> > > 
-> > > To solve the issue, this patch introduces a new syscall process_madvise(2).
-> > > It uses pidfd of an external process to give the hint.
-> > > 
-> > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
-> > > 			unsigned long flag);
-> > 
-> > It's more common to call the argument 'flags' not 'flag'? The code seems to call
-> > it flags. Also in line with madvise(2), the 'advise' argument should rather be
-> > 'advice'. This is more important for the manpage, but let's be consistent.
-> 
-> Yub, I will send the patch along with your comment in previous patch.
+> This means it involves do_debug() too. Thus, we can not do iret directly
+> from do_int3 like above, but if recursion happens, we have no way to
+> recover to origonal execution path (and call BUG()).
 
-Only place to use *advice* in kernel is comment in madvise_willneed.
-Al other places use advise in kernel so I wanted to be more consistent
-with other kernel sources. For man page, we could use the term "advice",
-no problem.
+I think that all the code involved when hitting a breakpoint which would
+be the minimal subset required to act as if the kprobe was not there in the
+first place (single-step, fixup) should be hidden from kprobes
+instrumentation. I suspect this is the current intent today with noprobe
+annotations, but Thomas' proposal brings this a step further.
+
+However, any other kprobe code (and tracer callbacks) beyond that
+minimalistic "effect-less" kprobe could be protected by a
+per-recursion-context in_kprobe flag.
+
+> As my previous email, I showed a patch which is something like
+> "bust_kprobes()" for oops path. That is not safe but no other way to escape
+> from this recursion hell. (Maybe we can try to call it instead of calling
+> BUG() so that the kernel can continue to run, but I'm not sure we can
+> safely make the pagetable to readonly again.)
+
+As long as we provide a minimalistic "effect-less" kprobe implementation
+in a non-instrumentable section which can be used whenever we are in a
+recursion scenario, I think we could achieve something recursion-free without
+requiring a bust_kprobes() work-around.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
