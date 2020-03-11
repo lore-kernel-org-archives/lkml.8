@@ -8,68 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9A7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2A9C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EECA21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE98921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ky5RLIT1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dixj4Z0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgCKBKB (ORCPT
+        id S1728080AbgCKBKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:10:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54869 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgCKBJc (ORCPT
+        Tue, 10 Mar 2020 21:10:03 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39060 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgCKBJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 21:09:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n8so282065wmc.4;
-        Tue, 10 Mar 2020 18:09:30 -0700 (PDT)
+Received: by mail-wm1-f68.google.com with SMTP id f7so286887wml.4;
+        Tue, 10 Mar 2020 18:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RuNOtjoIJ0PnueFmG34tyRMkYyJp/CS0kq/rmnLgTB8=;
-        b=Ky5RLIT1Z12v+Tdj/SdmCF8yw8/esVe5wN2flSN6DvbtJiYTMcBZoKa8hjbCs/bABz
-         dVkGsVx54HA62EKm6qRRC6fj5KrntxmxmLoSmTDHVN972WG02Pen5xBHVFzQnuSfMU2V
-         x7Ya3EYfSOe4yxQfIBFPKfL4TtTzK3JxbGNHDf6he0YAHSD8YflAJ7j1+cjS42ti1QRb
-         aUFiKBScPT4iy9+l0qY0Kah97UmvwP2sMgs4R6pfzhZ8aERSdxLz2trLB6ly3ozvc3Ys
-         RlX3d6Moqp6pUOvX0Dh9Ctbk0R84djgtsCwsk3uEB4yqGsJ2ngqQYVqf+YGxAxw7jXR8
-         Q1Jw==
+        bh=FfWEwRjnWrI+e8fHcACmfkZeIDdYu59pur6KndMjjNY=;
+        b=Dixj4Z0YJlggYSUyUQ/N9K0iThizcZjLO5mZ0kvDXMOeW/zwZcQauhE3tLJNSllkoK
+         80A5vpgifCRcyJxHA6rElCdLyN5yP8L1/cYjeSkp8sApvioSr0RhOv22ecMIAb1NYTpa
+         REPR/NkIA4C2Ccfqoobtar0T44RnX5Xfx4leimnUWNMcxwQ24x3USvnVXQdsW5d7VE6I
+         GdlFxWjKVcOw3pqvzBMvpM2DkECy6oAJXKac34Iy4ZZfaQPb5x5ODzYR05dvvDC3NmW1
+         zQhhha3u1jR56yzq1wg8w+UHevJhetmbsCgSRL5kFfrfyk0JowhjrHX+xOv0cyyM9xRB
+         hq5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RuNOtjoIJ0PnueFmG34tyRMkYyJp/CS0kq/rmnLgTB8=;
-        b=swWPofLKhMIXhvf4tAiemiRGNn+1gtteFsLdD+xLtE13653MYqVC4wf+ZbLjPV37gu
-         ztVvSiWDfS4az4CqFtLJVUo/ohnSdKPbJSg1xP8VRnnhEzqstLiPNSIsFSDGqX0eDPPl
-         Vd0uBIc/4KzBnI7E0A3GGCIYKdd6qVMW+lV3GZSXdRhxeoTDEYZ7QJ+pTFD17Td9ITl/
-         IrA+6XhZS1DWWyGTfl2R8YwbYHh2yKgkOHbbFS+fUYzGW2iQCquZf5z5m/OkdEdDm2rc
-         /BCBOuUsXTly2mffbBqqwyg7mmw/R7wAk8QTKqiG+KsnKM0yKB7GuzARKKa2+6gob733
-         gQJw==
-X-Gm-Message-State: ANhLgQ0Qt8wIg/ec8tSusWzx1IiWdM1MnEf6cIFP85wrEKZyZqdELW6c
-        3oUBWQ7YoHodV46Tja8uHQ==
-X-Google-Smtp-Source: ADFU+vstobGIfUQ6tm+MOVwHT3BG0QrGLRFILKpE5LfNWrPT2WL1JG1k54PECBlvcaTJ+wBoJRZF5Q==
-X-Received: by 2002:a1c:1fc7:: with SMTP id f190mr441997wmf.2.1583888969521;
-        Tue, 10 Mar 2020 18:09:29 -0700 (PDT)
+        bh=FfWEwRjnWrI+e8fHcACmfkZeIDdYu59pur6KndMjjNY=;
+        b=j7j6gMvHNXXQGf1qCflY3CQUovuau3mthP5ms4O5ft9epTWa8iNXGI5W0dkxSZLhLn
+         qtbtQIwklyupXH/swdL+ZtKltA2G0y3GYvpQTnVosTNckmBkWbzJ2m+PonOVhmA2NNfQ
+         EbMQImWuBNUY7778M1bRWhjtuu8AI1SvFCCmMWPCfp8TRYLhTanKRLHHLrcuhzWiNEr1
+         f+jPlB9X28oFQGaMC0ugFpeByiwtiUSj06T7+vZwuQJdBT/PMxIV/nXGkN0SEdPFlfrT
+         vUI0mf8gyuKfvasmQ7dvO4hN6LgKP3f/2NBDCS4S3jzMK4lOqc7io3mbRDkjvwcik1Sz
+         5PTg==
+X-Gm-Message-State: ANhLgQ2cuRdtblifYEqLQ1K0wVq75sUFI69rshxlQ9pSYnum6gFafzlR
+        CPbrGmBPpNI2tOZrPVmy8w==
+X-Google-Smtp-Source: ADFU+vsrGhrH0kjCQVr6n7dem2snr5Jgxu93uqYQ1n3Q1xOAaD7eT0k5slu7U6q1CB/jTfcY653ZHA==
+X-Received: by 2002:a1c:a345:: with SMTP id m66mr381869wme.114.1583888968391;
+        Tue, 10 Mar 2020 18:09:28 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-15-144.as13285.net. [2.102.15.144])
-        by smtp.googlemail.com with ESMTPSA id i6sm36658097wra.42.2020.03.10.18.09.28
+        by smtp.googlemail.com with ESMTPSA id i6sm36658097wra.42.2020.03.10.18.09.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 18:09:29 -0700 (PDT)
+        Tue, 10 Mar 2020 18:09:28 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
+        netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org (open list:NETFILTER),
-        coreteam@netfilter.org (open list:NETFILTER)
-Subject: [PATCH 4/8] netfilter: Add missing annotation for ctnetlink_parse_nat_setup()
-Date:   Wed, 11 Mar 2020 01:09:04 +0000
-Message-Id: <20200311010908.42366-5-jbi.octave@gmail.com>
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 3/8] tcp: Add missing annotation for tcp_child_process()
+Date:   Wed, 11 Mar 2020 01:09:03 +0000
+Message-Id: <20200311010908.42366-4-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200311010908.42366-1-jbi.octave@gmail.com>
 References: <0/8>
@@ -81,31 +79,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at ctnetlink_parse_nat_setup()
+Sparse reports warning at tcp_child_process()
+warning: context imbalance in tcp_child_process() - unexpected unlock
+The root cause is the missing annotation at tcp_child_process()
 
-warning: context imbalance in ctnetlink_parse_nat_setup()
-	- unexpected unlock
-
-The root cause is the missing annotation at ctnetlink_parse_nat_setup()
-Add the missing __must_hold(RCU) annotation
+Add the missing __releases(&((child)->sk_lock.slock)) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/netfilter/nf_conntrack_netlink.c | 1 +
+ net/ipv4/tcp_minisocks.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index 6a1c8f1f6171..eb190206cd12 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -1533,6 +1533,7 @@ static int
- ctnetlink_parse_nat_setup(struct nf_conn *ct,
- 			  enum nf_nat_manip_type manip,
- 			  const struct nlattr *attr)
-+	__must_hold(RCU)
+diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+index ad3b56d9fa71..0e8a5b6e477c 100644
+--- a/net/ipv4/tcp_minisocks.c
++++ b/net/ipv4/tcp_minisocks.c
+@@ -817,6 +817,7 @@ EXPORT_SYMBOL(tcp_check_req);
+ 
+ int tcp_child_process(struct sock *parent, struct sock *child,
+ 		      struct sk_buff *skb)
++	__releases(&((child)->sk_lock.slock))
  {
- 	struct nf_nat_hook *nat_hook;
- 	int err;
+ 	int ret = 0;
+ 	int state = child->sk_state;
 -- 
 2.24.1
 
