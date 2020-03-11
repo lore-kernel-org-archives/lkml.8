@@ -2,253 +2,135 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A721EC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7386DC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C7520750
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL8dp+f8"
+	by mail.kernel.org (Postfix) with ESMTP id 09D1A2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbgCKRni (ORCPT
+        id S1730516AbgCKRno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:43:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46681 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgCKRnd (ORCPT
+        Wed, 11 Mar 2020 13:43:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730389AbgCKRnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:43:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n15so3725331wrw.13;
-        Wed, 11 Mar 2020 10:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1pJAR/sckcdLGJSwTx5sy+rsfwGpz9fPR5d1aK/vSAI=;
-        b=IL8dp+f8Ls3O4ZBKg0S7q07Ne+0KPwrBNYU44a8fqCPSWcItDMq7pjC/Pr4uqGqNmK
-         DHpK2vhTYvwwq0Lrf7gqR71/s3LT/NYqhabkqVpXujHAJfueU6HTfxAimK9nAYUlLRd7
-         lt3Gv4w90ahkiZKxkl7iR1T+1EJ076xesoMRWnNEAvwJEsgQzPHtq9PRL8W8ekuVzTf7
-         ioIU13aDkkHHPljPEklJFzPk4+p11P6iLhX8yW4vTwAqf94uLiO0QhJgwA/wvIMX4R4a
-         NYuws1oJ3ECaYpHh6LOWP8PdZ8f0hxSndx8shMo16QBEBlt9zWHv5E1zISbAf9wfK8VC
-         eliA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1pJAR/sckcdLGJSwTx5sy+rsfwGpz9fPR5d1aK/vSAI=;
-        b=slWiPuWY4OjCvR1JF4hoQl3X86WSwW8hLBJufizXPHB4sdLnuBRCJNgnLAv7jpoghN
-         gI2WBhQwD41icBXjIuP615qUxpW2GHwgMQyoRLFR668Q3sckKu6CnfwxvOca/K/29Zfi
-         S+AR56C6dTajg1Yo4rLPuKgMAesiguH45DHPuVIN5RkQ0Knt8VSbYUetsiYx2iYF+R9U
-         2CMey7VS7Jr+YqeKxlqkbG7AnFtLf/NlKRIurQTtBOi71iZUta4VHlm9zQ4ThiCvXWxZ
-         a2nhdmEQy93mnQdnd5yTXEaQaTv/kVlPIFiSREH4GT21q5IrMqOfrPMeYz3HYeHquX0Q
-         btIg==
-X-Gm-Message-State: ANhLgQ1IXfhPBEWE9uUcWWqJZeuDwfV4JRt0LgL6WGH1PzbiFgbPn6xv
-        fQ9sFuY49Yit3ReFOoPcf/NfBAv4
-X-Google-Smtp-Source: ADFU+vvKDdOtWWEdNwVAEQZQ9mrYzweIQAoDItXSKaFgMXGnDq8K7Z+Mo7oErH9P/yJc80PGZda9wA==
-X-Received: by 2002:a5d:6544:: with SMTP id z4mr5535066wrv.298.1583948610652;
-        Wed, 11 Mar 2020 10:43:30 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id d1sm8933166wrw.52.2020.03.11.10.43.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 10:43:29 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     lgirdwood@gmail.com
-Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] dt-bindings: sound: convert rockchip i2s bindings to yaml
-Date:   Wed, 11 Mar 2020 18:43:21 +0100
-Message-Id: <20200311174322.23813-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 11 Mar 2020 13:43:43 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BHeX9H068783;
+        Wed, 11 Mar 2020 13:43:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypxbkbwgw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Mar 2020 13:43:21 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02BHetiC069720;
+        Wed, 11 Mar 2020 13:43:19 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypxbkbwgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Mar 2020 13:43:19 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02BHfPuL003571;
+        Wed, 11 Mar 2020 17:43:17 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 2ypjxqxkus-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Mar 2020 17:43:17 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BHhHLk15532886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 17:43:17 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28AD9112061;
+        Wed, 11 Mar 2020 17:43:17 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACC23112062;
+        Wed, 11 Mar 2020 17:43:16 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.103.158])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Mar 2020 17:43:16 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net, bjwyman@gmail.com,
+        Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH] hwmon: (pmbus/ibm-cffps) Add another PSU CCIN to version detection
+Date:   Wed, 11 Mar 2020 12:43:10 -0500
+Message-Id: <1583948590-17220-1-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_08:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1011 mlxscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'i2s' nodes are manually verified.
-In order to automate this process rockchip-i2s.txt
-has to be converted to yaml.
+There is an additional CCIN for the IBM CFFPS that may be classifed as
+either version one or version two, based upon the rest of the bits of
+the CCIN. Add support for it in the version detection.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- .../devicetree/bindings/sound/rockchip-i2s.txt     |  49 ----------
- .../devicetree/bindings/sound/rockchip-i2s.yaml    | 106 +++++++++++++++++++++
- 2 files changed, 106 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
+ drivers/hwmon/pmbus/ibm-cffps.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-deleted file mode 100644
-index 54aefab71..000000000
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Rockchip I2S controller
--
--The I2S bus (Inter-IC sound bus) is a serial link for digital
--audio data transfer between devices in the system.
--
--Required properties:
--
--- compatible: should be one of the following:
--   - "rockchip,rk3066-i2s": for rk3066
--   - "rockchip,px30-i2s", "rockchip,rk3066-i2s": for px30
--   - "rockchip,rk3036-i2s", "rockchip,rk3066-i2s": for rk3036
--   - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
--   - "rockchip,rk3228-i2s", "rockchip,rk3066-i2s": for rk3228
--   - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
--   - "rockchip,rk3328-i2s", "rockchip,rk3066-i2s": for rk3328
--   - "rockchip,rk3366-i2s", "rockchip,rk3066-i2s": for rk3366
--   - "rockchip,rk3368-i2s", "rockchip,rk3066-i2s": for rk3368
--   - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: should contain the I2S interrupt.
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--	Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: should include "tx" and "rx".
--- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
--- clock-names: should contain the following:
--   - "i2s_hclk": clock for I2S BUS
--   - "i2s_clk" : clock for I2S controller
--- rockchip,playback-channels: max playback channels, if not set, 8 channels default.
--- rockchip,capture-channels: max capture channels, if not set, 2 channels default.
--
--Required properties for controller which support multi channels
--playback/capture:
--
--- rockchip,grf: the phandle of the syscon node for GRF register.
--
--Example for rk3288 I2S controller:
--
--i2s@ff890000 {
--	compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
--	reg = <0xff890000 0x10000>;
--	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--	dmas = <&pdma1 0>, <&pdma1 1>;
--	dma-names = "tx", "rx";
--	clock-names = "i2s_hclk", "i2s_clk";
--	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
--	rockchip,playback-channels = <8>;
--	rockchip,capture-channels = <2>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-new file mode 100644
-index 000000000..eff06b4b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rockchip-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip I2S controller
-+
-+description:
-+  The I2S bus (Inter-IC sound bus) is a serial link for digital
-+  audio data transfer between devices in the system.
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,rk3066-i2s
-+      - items:
-+          - enum:
-+            - rockchip,px30-i2s
-+            - rockchip,rk3036-i2s
-+            - rockchip,rk3188-i2s
-+            - rockchip,rk3228-i2s
-+            - rockchip,rk3288-i2s
-+            - rockchip,rk3328-i2s
-+            - rockchip,rk3366-i2s
-+            - rockchip,rk3368-i2s
-+            - rockchip,rk3399-i2s
-+          - const: rockchip,rk3066-i2s
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock for I2S controller
-+      - description: clock for I2S BUS
-+
-+  clock-names:
-+    items:
-+      - const: i2s_clk
-+      - const: i2s_hclk
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  rockchip,capture-channels:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 2
-+    description:
-+      Max capture channels, if not set, 2 channels default.
-+
-+  rockchip,playback-channels:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 8
-+    description:
-+      Max playback channels, if not set, 8 channels default.
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+      Required property for controllers which support multi channel
-+      playback/capture.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3288-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2s@ff890000 {
-+      compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
-+      reg = <0xff890000 0x10000>;
-+      interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_I2S0>, <&cru HCLK_I2S0>;
-+      clock-names = "i2s_clk", "i2s_hclk";
-+      dmas = <&pdma1 0>, <&pdma1 1>;
-+      dma-names = "tx", "rx";
-+      rockchip,capture-channels = <2>;
-+      rockchip,playback-channels = <8>;
-+    };
+diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+index b9bfa43..7d300f2 100644
+--- a/drivers/hwmon/pmbus/ibm-cffps.c
++++ b/drivers/hwmon/pmbus/ibm-cffps.c
+@@ -33,9 +33,12 @@
+ #define CFFPS_INPUT_HISTORY_CMD			0xD6
+ #define CFFPS_INPUT_HISTORY_SIZE		100
+ 
++#define CFFPS_CCIN_REVISION			GENMASK(7, 0)
++#define  CFFPS_CCIN_REVISION_LEGACY		 0xde
+ #define CFFPS_CCIN_VERSION			GENMASK(15, 8)
+ #define CFFPS_CCIN_VERSION_1			 0x2b
+ #define CFFPS_CCIN_VERSION_2			 0x2e
++#define CFFPS_CCIN_VERSION_3			 0x51
+ 
+ /* STATUS_MFR_SPECIFIC bits */
+ #define CFFPS_MFR_FAN_FAULT			BIT(0)
+@@ -486,11 +489,14 @@ static int ibm_cffps_probe(struct i2c_client *client,
+ 		vs = (enum versions)id->driver_data;
+ 
+ 	if (vs == cffps_unknown) {
++		u16 ccin_revision = 0;
+ 		u16 ccin_version = CFFPS_CCIN_VERSION_1;
+ 		int ccin = i2c_smbus_read_word_swapped(client, CFFPS_CCIN_CMD);
+ 
+-		if (ccin > 0)
++		if (ccin > 0) {
++			ccin_revision = FIELD_GET(CFFPS_CCIN_REVISION, ccin);
+ 			ccin_version = FIELD_GET(CFFPS_CCIN_VERSION, ccin);
++		}
+ 
+ 		switch (ccin_version) {
+ 		default:
+@@ -500,6 +506,12 @@ static int ibm_cffps_probe(struct i2c_client *client,
+ 		case CFFPS_CCIN_VERSION_2:
+ 			vs = cffps2;
+ 			break;
++		case CFFPS_CCIN_VERSION_3:
++			if (ccin_revision == CFFPS_CCIN_REVISION_LEGACY)
++				vs = cffps1;
++			else
++				vs = cffps2;
++			break;
+ 		}
+ 
+ 		/* Set the client name to include the version number. */
 -- 
-2.11.0
+1.8.3.1
 
