@@ -2,325 +2,596 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0AEC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A822C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A4920674
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWOiVkaR"
+	by mail.kernel.org (Postfix) with ESMTP id 36E9921927
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgCKDaq (ORCPT
+        id S1728041AbgCKDck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:30:46 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39363 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbgCKDap (ORCPT
+        Tue, 10 Mar 2020 23:32:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37344 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727659AbgCKDcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:30:45 -0400
-Received: by mail-qv1-f65.google.com with SMTP id fc12so240753qvb.6;
-        Tue, 10 Mar 2020 20:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9J5qiQUPzskfFYaq0VFel7qMJ7BbpvwZwBFmnnOYWzo=;
-        b=TWOiVkaRy0VXEc7KYFp0FdQv4wg+6yYDGW3oB5sRT6eKRQgYt3bTQR32M/dFFgDVPx
-         eNt5dHcT0zjpqU+sGsCQqNCvZFw0un/YbiI5ZK09P0SN+afExJIrvDx+qXtfWchCycXu
-         cLbv77cQk+aW4fw7Iv/Xpzndkh7IQPv1hc4pREffcc0O4iIgdlwHLialYJVN6BP3Bflc
-         yONLj303EzBKoSuU0T78VfxXFN2CM8P3aGHo+anhQWlHoczEegd23mLjgoqDiZgV5che
-         Mz6B+hMLy3/JqpDOEkAuarIsiZEEFBjxn3Ph39TIIaeX9OsNcgshyZRUsZhjuMWrwvNg
-         WPwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9J5qiQUPzskfFYaq0VFel7qMJ7BbpvwZwBFmnnOYWzo=;
-        b=EgqhiyDg4a+I6r0VtsMxlD+WzgHWXyQfcZFMG9on7o0pGob1T3tCD9jQAh4Y2K/BBH
-         ePK9bEtbG5Q85LCq45m1QEv7e5tH8anHEeJO6VjAyqdZR4J1MvYN108oLfjAjK+QWr49
-         Ik4c9VLZDuNa0fQ40/wtFWaxMfnGQVJmjBN8HjBt4NC6G9FbLEShGQwgjSra+sW+tN6M
-         FAUj3H0ICCI1TA2S0RWAybkDVZrQkuQHCvzP9vix46x37Oj9PHPGBYy/TlRQfBOVV8wB
-         LoHe4iyx5wp6bOEiRGtlpIUMhC2eXM2HD2VjZxLiQXuUJQh/wpuGpw+ZdqfYjEhIbD2f
-         q7wg==
-X-Gm-Message-State: ANhLgQ2IUZqUlQKCdO1yw7j/3Z3WnVpq5NMtWRmVg3KPOJ0RqSEZBWPY
-        ZFUFgPSMF1CBF8ABJycKsenCfRjyw7k=
-X-Google-Smtp-Source: ADFU+vtNWJPXdET2Y/5xnUXOUaKNUms0V/qsbhb+iGfG22yUJoBtWlWzXw3efT1+Jl5jwIj1BnA7Ug==
-X-Received: by 2002:ad4:5289:: with SMTP id v9mr1164968qvr.82.1583897442292;
-        Tue, 10 Mar 2020 20:30:42 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id k66sm12384571qke.10.2020.03.10.20.30.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Mar 2020 20:30:41 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 66AAE22295;
-        Tue, 10 Mar 2020 23:30:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 10 Mar 2020 23:30:40 -0400
-X-ME-Sender: <xms:YFtoXm0LeDrt46SN4dTlmZI4wm4XD1pCSQbIRcukQQWy0MIo1P8XjA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvuddgiedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrg
-    hinhepghhithhhuhgsuhhsvghrtghonhhtvghnthdrtghomhenucfkphephedvrdduheeh
-    rdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledv
-    geehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtoh
-    hmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:YFtoXla4h4-bUzBVOaS-JCnEeV5sfhZZqVO07bRx42e5dYGztA6jyg>
-    <xmx:YFtoXhrKrZ5_FRQs1yg-OMQoKkjvGwqjP-bcXISDewPuY5gwzhbomA>
-    <xmx:YFtoXpoIHmg0HYprHXcA4GQ17lLCrfqWrnaC0j7PnmJpD3hn5lUrMg>
-    <xmx:YFtoXpzlIKhvVpk_HWvKhSrhC0o6vcnOxDu7EyfxC2YivIfmLirfsA>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9D48E30611FB;
-        Tue, 10 Mar 2020 23:30:39 -0400 (EDT)
-Date:   Wed, 11 Mar 2020 11:30:38 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>
-Subject: Re: PROVE_RCU_LIST + /proc/lockdep warning
-Message-ID: <20200311033038.GA64051@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
- <20200307171618.GC231616@google.com>
- <20200309014017.GH110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <1583865744.7365.167.camel@lca.pw>
+        Tue, 10 Mar 2020 23:32:39 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B3TPoF026843
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:32:36 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yppmyk7dq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:32:36 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 11 Mar 2020 03:32:33 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Mar 2020 03:32:26 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02B3VPUv9503050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 03:31:25 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4CB8842045;
+        Wed, 11 Mar 2020 03:32:25 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A131342041;
+        Wed, 11 Mar 2020 03:32:24 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Mar 2020 03:32:24 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 834C3A0130;
+        Wed, 11 Mar 2020 14:32:19 +1100 (AEDT)
+Subject: Re: [PATCH v3 20/27] powerpc/powernv/pmem: Forward events to
+ userspace
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 11 Mar 2020 14:32:23 +1100
+In-Reply-To: <7ee589c0-2c02-9b8e-95a9-743ce29674ec@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-21-alastair@au1.ibm.com>
+         <7ee589c0-2c02-9b8e-95a9-743ce29674ec@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583865744.7365.167.camel@lca.pw>
+X-TM-AS-GCONF: 00
+x-cbid: 20031103-0012-0000-0000-0000038F3534
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031103-0013-0000-0000-000021CC0233
+Message-Id: <d22899af71549f2768e5e932f0f21a60c39586f6.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_17:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=2 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:42:24PM -0400, Qian Cai wrote:
-> On Mon, 2020-03-09 at 09:40 +0800, Boqun Feng wrote:
-> > On Sat, Mar 07, 2020 at 12:16:18PM -0500, Joel Fernandes wrote:
-> > > On Thu, Mar 05, 2020 at 11:06:10PM -0500, Qian Cai wrote:
-> > > > Since the linux-next commit c9af03c14bfd (“Default enable RCU list lockdep debugging with PROVE_RCU”),
-> > > > read /proc/lockdep will trigger a warning with this config below. Reverted the commit fixed the issue
-> > > > right away.
-> > > > 
-> > > > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
-> > > 
-> > > Hmm, since Peter hates the list-RCU checking patches and rejected a patch by
-> > > Amol to fix this (;-)), the easiest way to resolve it would be to just bypass
-> > > the check in lockdep code:
-> > > 
-> > > Peter, this should be the last of the list-RCU changes and thank you for the
-> > > patience.
-> > > 
-> > > Should I or Amol send a patch for this?
-> > > 
-> > 
-> > Hmm.. IIUC, the warning got triggered here is because
-> > lockdep_count_forward_deps() didn't set up the ->lockdep_recursion, as a
-> > result, __bfs() was called without ->lockdep_recursion being 1, which
-> > introduced the inconsistency of lockdep status. So how about the
-> > following (untested) fix?:
-> > 
-> > Thoughts?
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > -------------------------
-> > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> > index 32406ef0d6a2..a258640edace 100644
-> > --- a/kernel/locking/lockdep.c
-> > +++ b/kernel/locking/lockdep.c
-> > @@ -1720,7 +1720,9 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
-> >  
-> >  	raw_local_irq_save(flags);
-> >  	arch_spin_lock(&lockdep_lock);
-> > +	current->lockdep_recursion = 1;
-> >  	ret = __lockdep_count_forward_deps(&this);
-> > +	current->lockdep_recursion = 0;
-> >  	arch_spin_unlock(&lockdep_lock);
-> >  	raw_local_irq_restore(flags);
+On Wed, 2020-03-04 at 12:00 +0100, Frederic Barrat wrote:
 > 
-> This does not work. Still the same splat.
+> Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Some of the interrupts that the card generates are better handled
+> > by the userspace daemon, in particular:
+> > Controller Hardware/Firmware Fatal
+> > Controller Dump Available
+> > Error Log available
+> > 
+> > This patch allows a userspace application to register an eventfd
+> > with
+> > the driver via SCM_IOCTL_EVENTFD to receive notifications of these
+> > interrupts.
+> > 
+> > Userspace can then identify what events have occurred by calling
+> > SCM_IOCTL_EVENT_CHECK and checking against the SCM_IOCTL_EVENT_FOO
+> > masks.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 216
+> > ++++++++++++++++++
+> >   .../platforms/powernv/pmem/ocxl_internal.h    |   5 +
+> >   include/uapi/nvdimm/ocxl-pmem.h               |  16 ++
+> >   3 files changed, 237 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > index 009d4fd29e7d..e46696d3cc36 100644
+> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > @@ -10,6 +10,7 @@
+> >   #include <misc/ocxl.h>
+> >   #include <linux/delay.h>
+> >   #include <linux/ndctl.h>
+> > +#include <linux/eventfd.h>
+> >   #include <linux/fs.h>
+> >   #include <linux/mm_types.h>
+> >   #include <linux/memory_hotplug.h>
+> > @@ -335,11 +336,22 @@ static void free_ocxlpmem(struct ocxlpmem
+> > *ocxlpmem)
+> >   {
+> >   	int rc;
+> >   
+> > +	// Disable doorbells
+> > +	(void)ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_CHIEC,
+> > +				     OCXL_LITTLE_ENDIAN,
+> > +				     GLOBAL_MMIO_CHI_ALL);
+> > +
+> >   	if (ocxlpmem->nvdimm_bus)
+> >   		nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
+> >   
+> >   	free_minor(ocxlpmem);
+> >   
+> > +	if (ocxlpmem->irq_addr[1])
+> > +		iounmap(ocxlpmem->irq_addr[1]);
+> > +
+> > +	if (ocxlpmem->irq_addr[0])
+> > +		iounmap(ocxlpmem->irq_addr[0]);
+> > +
+> >   	if (ocxlpmem->cdev.owner)
+> >   		cdev_del(&ocxlpmem->cdev);
+> >   
+> > @@ -443,6 +455,11 @@ static int file_release(struct inode *inode,
+> > struct file *file)
+> >   {
+> >   	struct ocxlpmem *ocxlpmem = file->private_data;
+> >   
+> > +	if (ocxlpmem->ev_ctx) {
+> > +		eventfd_ctx_put(ocxlpmem->ev_ctx);
+> > +		ocxlpmem->ev_ctx = NULL;
+> > +	}
+> > +
+> >   	ocxlpmem_put(ocxlpmem);
+> >   	return 0;
+> >   }
+> > @@ -938,6 +955,51 @@ static int ioctl_controller_stats(struct
+> > ocxlpmem *ocxlpmem,
+> >   	return rc;
+> >   }
+> >   
+> > +static int ioctl_eventfd(struct ocxlpmem *ocxlpmem,
+> > +		 struct ioctl_ocxl_pmem_eventfd __user *uarg)
+> > +{
+> > +	struct ioctl_ocxl_pmem_eventfd args;
+> > +
+> > +	if (copy_from_user(&args, uarg, sizeof(args)))
+> > +		return -EFAULT;
+> > +
+> > +	if (ocxlpmem->ev_ctx)
+> > +		return -EINVAL;
+> 
+> EBUSY?
+> 
+Ok
+
+> 
+> > +
+> > +	ocxlpmem->ev_ctx = eventfd_ctx_fdget(args.eventfd);
+> > +	if (!ocxlpmem->ev_ctx)
+> > +		return -EFAULT;
+> 
+> Why not use what eventfd_ctx_fdget() returned? (through some
+> IS_ERR() 
+> and PTR_ERR() convolution)
 > 
 
-Hmm.. interesting, I tried this myself. I could trigger the 
-"DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)" warning after a "cat
-/proc/lockdep" with the linux-next tree, and after I applied the changes
-I proposed above, "cat /proc/lockdep" did not trigger the same warning.
+Ok
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user
+> > *uarg)
+> > +{
+> > +	u64 val = 0;
+> > +	int rc;
+> > +	u64 chi = 0;
+> > +
+> > +	rc = ocxlpmem_chi(ocxlpmem, &chi);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	if (chi & GLOBAL_MMIO_CHI_ELA)
+> > +		val |= IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE;
+> > +
+> > +	if (chi & GLOBAL_MMIO_CHI_CDA)
+> > +		val |= IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE;
+> > +
+> > +	if (chi & GLOBAL_MMIO_CHI_CFFS)
+> > +		val |= IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL;
+> > +
+> > +	if (chi & GLOBAL_MMIO_CHI_CHFS)
+> > +		val |= IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL;
+> > +
+> > +	rc = copy_to_user((u64 __user *) uarg, &val, sizeof(val));
+> > +
+> 
+> copy_to_user doesn't return an errno. Should be:
+> 
+> if (copy_to_user((u64 __user *) uarg, &val, sizeof(val)))
+> 	return -EFAULT;
+> 
+Ok
 
-Is this the typical "works on my machine" situation? ;-)
+> 
+> > +	return rc;
+> > +}
+> > +
+> >   static long file_ioctl(struct file *file, unsigned int cmd,
+> > unsigned long args)
+> >   {
+> >   	struct ocxlpmem *ocxlpmem = file->private_data;
+> > @@ -966,6 +1028,15 @@ static long file_ioctl(struct file *file,
+> > unsigned int cmd, unsigned long args)
+> >   		rc = ioctl_controller_stats(ocxlpmem,
+> >   					    (struct
+> > ioctl_ocxl_pmem_controller_stats __user *)args);
+> >   		break;
+> > +
+> > +	case IOCTL_OCXL_PMEM_EVENTFD:
+> > +		rc = ioctl_eventfd(ocxlpmem,
+> > +				   (struct ioctl_ocxl_pmem_eventfd
+> > __user *)args);
+> > +		break;
+> > +
+> > +	case IOCTL_OCXL_PMEM_EVENT_CHECK:
+> > +		rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
+> > +		break;
+> >   	}
+> >   
+> >   	return rc;
+> > @@ -1107,6 +1178,146 @@ static void dump_error_log(struct ocxlpmem
+> > *ocxlpmem)
+> >   	kfree(buf);
+> >   }
+> >   
+> > +static irqreturn_t imn0_handler(void *private)
+> > +{
+> > +	struct ocxlpmem *ocxlpmem = private;
+> > +	u64 chi = 0;
+> > +
+> > +	(void)ocxlpmem_chi(ocxlpmem, &chi);
+> > +
+> > +	if (chi & GLOBAL_MMIO_CHI_ELA) {
+> > +		dev_warn(&ocxlpmem->dev, "Error log is available\n");
+> > +
+> > +		if (ocxlpmem->ev_ctx)
+> > +			eventfd_signal(ocxlpmem->ev_ctx, 1);
+> > +	}
+> > +
+> > +	if (chi & GLOBAL_MMIO_CHI_CDA) {
+> > +		dev_warn(&ocxlpmem->dev, "Controller dump is
+> > available\n");
+> > +
+> > +		if (ocxlpmem->ev_ctx)
+> > +			eventfd_signal(ocxlpmem->ev_ctx, 1);
+> > +	}
+> > +
+> > +
+> 
+> (at least) one empty line too many.
+> 
 
-Just to be clear, you mean after you added the ->lockdep_recursion pair
-for both lockdep_count_forward_deps() and lockdep_count_backward_deps(),
-the same splat ("DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)" still
-got trigger, after you did a read on /proc/lockdep? Thanks!
+Ok
 
-Regards,
-Boqun
+> 
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static irqreturn_t imn1_handler(void *private)
+> > +{
+> > +	struct ocxlpmem *ocxlpmem = private;
+> > +	u64 chi = 0;
+> > +
+> > +	(void)ocxlpmem_chi(ocxlpmem, &chi);
+> > +
+> > +	if (chi & (GLOBAL_MMIO_CHI_CFFS | GLOBAL_MMIO_CHI_CHFS)) {
+> > +		dev_err(&ocxlpmem->dev,
+> > +			"Controller status is fatal, chi=0x%llx, going
+> > offline\n", chi);
+> > +
+> > +		if (ocxlpmem->nvdimm_bus) {
+> > +			nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
+> > +			ocxlpmem->nvdimm_bus = NULL;
+> > +		}
+> > +
+> > +		if (ocxlpmem->ev_ctx)
+> > +			eventfd_signal(ocxlpmem->ev_ctx, 1);
+> > +	}
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +
+> > +/**
+> > + * ocxlpmem_setup_irq() - Set up the IRQs for the OpenCAPI
+> > Persistent Memory device
+> > + * @ocxlpmem: the device metadata
+> > + * Return: 0 on success, negative on failure
+> > + */
+> > +static int ocxlpmem_setup_irq(struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	int rc;
+> > +	u64 irq_addr;
+> > +
+> > +	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem-
+> > >irq_id[0]);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem-
+> > >irq_id[0],
+> > +				  imn0_handler, NULL, ocxlpmem);
+> > +
+> > +	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
+> > ocxlpmem->irq_id[0]);
+> > +	if (!irq_addr)
+> > +		return -EINVAL;
+> > +
+> > +	ocxlpmem->irq_addr[0] = ioremap(irq_addr, PAGE_SIZE);
+> > +	if (!ocxlpmem->irq_addr[0])
+> > +		return -EINVAL;
+> > +
+> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_IMA0_OHP,
+> > +				      OCXL_LITTLE_ENDIAN,
+> > +				      (u64)ocxlpmem->irq_addr[0]);
+> > +	if (rc)
+> > +		goto out_irq0;
+> > +
+> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_IMA0_CFP,
+> > +				      OCXL_LITTLE_ENDIAN, 0);
+> > +	if (rc)
+> > +		goto out_irq0;
+> 
+> That's a few lines of duplicate code. On the other hand, there's
+> enough 
+> varying parameters between the 2 interrupts that factorizing in a 
+> subfunction would be slightly less readable. So duplicating is
+> probably ok.
+> 
+> 
+> 
+> > +	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem-
+> > >irq_id[1]);
+> > +	if (rc)
+> > +		goto out_irq0;
+> > +
+> > +
+> > +	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem-
+> > >irq_id[1],
+> > +				  imn1_handler, NULL, ocxlpmem);
+> > +	if (rc)
+> > +		goto out_irq0;
+> > +
+> > +	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
+> > ocxlpmem->irq_id[1]);
+> > +	if (!irq_addr) {
+> > +		rc = -EFAULT;
+> > +		goto out_irq0;
+> > +	}
+> > +
+> > +	ocxlpmem->irq_addr[1] = ioremap(irq_addr, PAGE_SIZE);
+> > +	if (!ocxlpmem->irq_addr[1]) {
+> > +		rc = -EINVAL;
+> > +		goto out_irq0;
+> > +	}
+> > +
+> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_IMA1_OHP,
+> > +				      OCXL_LITTLE_ENDIAN,
+> > +				      (u64)ocxlpmem->irq_addr[1]);
+> > +	if (rc)
+> > +		goto out_irq1;
+> > +
+> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_IMA1_CFP,
+> > +				      OCXL_LITTLE_ENDIAN, 0);
+> > +	if (rc)
+> > +		goto out_irq1;
+> > +
+> > +	// Enable doorbells
+> > +	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_CHIE,
+> > +				    OCXL_LITTLE_ENDIAN,
+> > +				    GLOBAL_MMIO_CHI_ELA |
+> > GLOBAL_MMIO_CHI_CDA |
+> > +				    GLOBAL_MMIO_CHI_CFFS |
+> > GLOBAL_MMIO_CHI_CHFS |
+> > +				    GLOBAL_MMIO_CHI_NSCRA);
+> 
+> GLOBAL_MMIO_CHI_NSCRA doesn't seem to be handled in the handlers.
+> 
 
+This will be moved to the overwrite patch.
+
+> 
+> 
+> > +	if (rc)
+> > +		goto out_irq1;
+> > +
+> > +	return 0;
+> > +
+> > +out_irq1:
+> > +	iounmap(ocxlpmem->irq_addr[1]);
+> > +	ocxlpmem->irq_addr[1] = NULL;
+> > +
+> > +out_irq0:
+> > +	iounmap(ocxlpmem->irq_addr[0]);
+> > +	ocxlpmem->irq_addr[0] = NULL;
+> > +
+> > +	return rc;
+> > +}
+> > +
+> >   /**
+> >    * probe_function0() - Set up function 0 for an OpenCAPI
+> > persistent memory device
+> >    * This is important as it enables templates higher than 0 across
+> > all other functions,
+> > @@ -1216,6 +1427,11 @@ static int probe(struct pci_dev *pdev, const
+> > struct pci_device_id *ent)
+> >   		goto err;
+> >   	}
+> >   
+> > +	if (ocxlpmem_setup_irq(ocxlpmem)) {
+> > +		dev_err(&pdev->dev, "Could not set up OCXL IRQs\n");
+> 
+> Like with other patches, rc needs to be set.
+> 
+ok
+
+> 
+> > +		goto err;
+> > +	}
+> > +
+> >   	if (setup_command_metadata(ocxlpmem)) {
+> >   		dev_err(&pdev->dev, "Could not read OCXL command
+> > matada\n");
+> >   		goto err;
+> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > index b953ee522ed4..927690f4888f 100644
+> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > @@ -103,6 +103,10 @@ struct ocxlpmem {
+> >   	struct pci_dev *pdev;
+> >   	struct cdev cdev;
+> >   	struct ocxl_fn *ocxl_fn;
+> > +#define SCM_IRQ_COUNT 2
+> > +	int irq_id[SCM_IRQ_COUNT];
+> > +	struct dev_pagemap irq_pgmap[SCM_IRQ_COUNT];
+> 
+> irq_pgmap is not used.
+
+Ok
+> 
+> 
+> > +	void *irq_addr[SCM_IRQ_COUNT];
+> >   	struct nd_interleave_set nd_set;
+> >   	struct nvdimm_bus_descriptor bus_desc;
+> >   	struct nvdimm_bus *nvdimm_bus;
+> > @@ -113,6 +117,7 @@ struct ocxlpmem {
+> >   	struct command_metadata ns_command;
+> >   	struct resource pmem_res;
+> >   	struct nd_region *nd_region;
+> > +	struct eventfd_ctx *ev_ctx;
+> >   	char fw_version[8+1];
+> >   	u32 timeouts[ADMIN_COMMAND_MAX+1];
+> >   
+> > diff --git a/include/uapi/nvdimm/ocxl-pmem.h
+> > b/include/uapi/nvdimm/ocxl-pmem.h
+> > index add223aa2fdb..988eb0bc413d 100644
+> > --- a/include/uapi/nvdimm/ocxl-pmem.h
+> > +++ b/include/uapi/nvdimm/ocxl-pmem.h
+> > @@ -66,6 +66,20 @@ struct ioctl_ocxl_pmem_controller_stats {
+> >   	__u64 cache_write_latency; /* nanoseconds */
+> >   };
+> >   
+> > +struct ioctl_ocxl_pmem_eventfd {
+> > +	__s32 eventfd;
+> > +	__u32 reserved;
+> > +};
+> > +
+> > +#ifndef BIT_ULL
+> > +#define BIT_ULL(nr)	(1ULL << (nr))
+> > +#endif
+> > +
+> > +#define IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE	BIT_ULL
+> > (0)
+> > +#define IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE	BIT_ULL(1)
+> > +#define IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL		BIT_ULL
+> > (2)
+> > +#define IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL		BIT_ULL
+> > (3)
+> > +
+> 
+> I'm not fond of adding a macro with such a generic name as BIT_ULL()
+> in 
+> a user header file. What's wrong with:
+> 
+> #define IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE	0x1
+> #define IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE	0x2
+> #define IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL		0x4
+> #define IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL		0x8
+> 
+> 
+
+Nothing, I'll change it.
+
+>    Fred
+> 
+> 
+> >   /* ioctl numbers */
+> >   #define OCXL_PMEM_MAGIC 0x5C
+> >   /* SCM devices */
+> > @@ -74,5 +88,7 @@ struct ioctl_ocxl_pmem_controller_stats {
+> >   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_DATA		_IOWR(O
+> > CXL_PMEM_MAGIC, 0x03, struct ioctl_ocxl_pmem_controller_dump_data)
+> >   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE	_IO(OCXL_PMEM_M
+> > AGIC, 0x04)
+> >   #define IOCTL_OCXL_PMEM_CONTROLLER_STATS		_IO(OCXL_PMEM_M
+> > AGIC, 0x05)
+> > +#define IOCTL_OCXL_PMEM_EVENTFD				_IOW(OC
+> > XL_PMEM_MAGIC, 0x06, struct ioctl_ocxl_pmem_eventfd)
+> > +#define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OC
+> > XL_PMEM_MAGIC, 0x07, __u64)
+> >   
+> >   #endif /* _UAPI_OCXL_SCM_H */
 > > 
-> > > ---8<-----------------------
-> > > 
-> > > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> > > index 32406ef0d6a2d..d47643d8081b2 100644
-> > > --- a/kernel/locking/lockdep.c
-> > > +++ b/kernel/locking/lockdep.c
-> > > @@ -1493,7 +1493,7 @@ static int __bfs(struct lock_list *source_entry,
-> > >  
-> > >  		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
-> > >  
-> > > -		list_for_each_entry_rcu(entry, head, entry) {
-> > > +		list_for_each_entry_rcu(entry, head, entry, true) {
-> > >  			if (!lock_accessed(entry)) {
-> > >  				unsigned int cq_depth;
-> > >  				mark_lock_accessed(entry, lock);
-> > > 
-> > > thanks,
-> > > 
-> > >  - Joel
-> > > 
-> > > > 
-> > > > [26405.676199][ T3548] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-> > > > [26405.676239][ T3548] WARNING: CPU: 11 PID: 3548 at kernel/locking/lockdep.c:4637 check_flags.part.28+0x218/0x220
-> > > > [26405.756287][ T3548] Modules linked in: kvm_intel nls_iso8859_1 nls_cp437 kvm vfat fat irqbypass intel_cstate intel_uncore intel_rapl_perf dax_pmem dax_pmem_core efivars ip_tables x_tables xfs sd_mod bnx2x hpsa mdio scsi_transport_sas firmware_class dm_mirror dm_region_hash dm_log dm_mod efivarfs
-> > > > [26405.881899][ T3548] CPU: 11 PID: 3548 Comm: cat Not tainted 5.6.0-rc4-next-20200305+ #8
-> > > > [26405.920091][ T3548] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
-> > > > [26405.955370][ T3548] RIP: 0010:check_flags.part.28+0x218/0x220
-> > > > [26405.983016][ T3548] Code: 13 8a e8 2b 3f 29 00 44 8b 15 84 df ba 01 45 85 d2 0f 85 c7 94 00 00 48 c7 c6 40 2b 47 89 48 c7 c7 40 04 47 89 e8 49 e3 f3 ff <0f> 0b e9 ad 94 00 00 90 55 48 89 e5 41 57 4d 89 cf 41 56 45 89 c6
-> > > > [26406.076147][ T3548] RSP: 0018:ffffc9000695f848 EFLAGS: 00010086
-> > > > [26406.104215][ T3548] RAX: 0000000000000000 RBX: ffff888fe6184040 RCX: ffffffff8858cecf
-> > > > [26406.140856][ T3548] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: 0000000000000000
-> > > > [26406.178465][ T3548] RBP: ffffc9000695f850 R08: fffffbfff1377355 R09: fffffbfff1377355
-> > > > [26406.217995][ T3548] R10: ffffffff89bb9aa3 R11: fffffbfff1377354 R12: 0000000000000000
-> > > > [26406.256760][ T3548] R13: ffffffff8aa55ee0 R14: 0000000000000046 R15: ffffffff8aa55ec0
-> > > > [26406.293708][ T3548] FS:  00007f58cf3a3540(0000) GS:ffff88905fa80000(0000) knlGS:0000000000000000
-> > > > [26406.335252][ T3548] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [26406.366331][ T3548] CR2: 00007f58cf326000 CR3: 0000000f1ba38006 CR4: 00000000001606e0
-> > > > [26406.402408][ T3548] Call Trace:
-> > > > [26406.416739][ T3548]  lock_is_held_type+0x5d/0x150
-> > > > [26406.438262][ T3548]  ? rcu_lockdep_current_cpu_online+0x64/0x80
-> > > > [26406.466463][ T3548]  rcu_read_lock_any_held+0xac/0x100
-> > > > [26406.490105][ T3548]  ? rcu_read_lock_held+0xc0/0xc0
-> > > > [26406.513258][ T3548]  ? __slab_free+0x421/0x540
-> > > > [26406.535012][ T3548]  ? kasan_kmalloc+0x9/0x10
-> > > > [26406.555901][ T3548]  ? __kmalloc_node+0x1d7/0x320
-> > > > [26406.578668][ T3548]  ? kvmalloc_node+0x6f/0x80
-> > > > [26406.599872][ T3548]  __bfs+0x28a/0x3c0
-> > > > [26406.617075][ T3548]  ? class_equal+0x30/0x30
-> > > > [26406.637524][ T3548]  lockdep_count_forward_deps+0x11a/0x1a0
-> > > > [26406.664134][ T3548]  ? check_noncircular+0x2e0/0x2e0
-> > > > [26406.688191][ T3548]  ? __kasan_check_read+0x11/0x20
-> > > > [26406.713581][ T3548]  ? check_chain_key+0x1df/0x2e0
-> > > > [26406.738044][ T3548]  ? seq_vprintf+0x4e/0xb0
-> > > > [26406.758241][ T3548]  ? seq_printf+0x9b/0xd0
-> > > > [26406.778169][ T3548]  ? seq_vprintf+0xb0/0xb0
-> > > > [26406.798172][ T3548]  l_show+0x1c4/0x380
-> > > > [26406.816474][ T3548]  ? print_name+0xb0/0xb0
-> > > > [26406.836393][ T3548]  seq_read+0x56b/0x750
-> > > > [26406.855346][ T3548]  proc_reg_read+0x1b4/0x200
-> > > > [26406.876737][ T3548]  ? proc_reg_unlocked_ioctl+0x1e0/0x1e0
-> > > > [26406.903030][ T3548]  ? check_chain_key+0x1df/0x2e0
-> > > > [26406.926531][ T3548]  ? find_held_lock+0xca/0xf0
-> > > > [26406.948291][ T3548]  __vfs_read+0x50/0xa0
-> > > > [26406.967391][ T3548]  vfs_read+0xcb/0x1e0
-> > > > [26406.986102][ T3548]  ksys_read+0xc6/0x160
-> > > > [26407.005405][ T3548]  ? kernel_write+0xc0/0xc0
-> > > > [26407.026076][ T3548]  ? do_syscall_64+0x79/0xaec
-> > > > [26407.047448][ T3548]  ? do_syscall_64+0x79/0xaec
-> > > > [26407.068650][ T3548]  __x64_sys_read+0x43/0x50
-> > > > [26407.089132][ T3548]  do_syscall_64+0xcc/0xaec
-> > > > [26407.109939][ T3548]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-> > > > [26407.134924][ T3548]  ? syscall_return_slowpath+0x580/0x580
-> > > > [26407.160854][ T3548]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-> > > > [26407.188943][ T3548]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > > > [26407.216692][ T3548]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > > > [26407.243534][ T3548]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > [26407.272720][ T3548] RIP: 0033:0x7f58ceeafd75
-> > > > [26407.293162][ T3548] Code: fe ff ff 50 48 8d 3d 4a dc 09 00 e8 25 0e 02 00 0f 1f 44 00 00 f3 0f 1e fa 48 8d 05 a5 59 2d 00 8b 00 85 c0 75 0f 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 53 c3 66 90 41 54 49 89 d4 55 48 89 f5 53 89
-> > > > [26407.386043][ T3548] RSP: 002b:00007ffc115111a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> > > > [26407.425283][ T3548] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f58ceeafd75
-> > > > [26407.462717][ T3548] RDX: 0000000000020000 RSI: 00007f58cf327000 RDI: 0000000000000003
-> > > > [26407.500428][ T3548] RBP: 00007f58cf327000 R08: 00000000ffffffff R09: 0000000000000000
-> > > > [26407.538473][ T3548] R10: 0000000000000022 R11: 0000000000000246 R12: 00007f58cf327000
-> > > > [26407.575743][ T3548] R13: 0000000000000003 R14: 0000000000000fff R15: 0000000000020000
-> > > > [26407.613112][ T3548] irq event stamp: 7161
-> > > > [26407.632089][ T3548] hardirqs last  enabled at (7161): [<ffffffff88ea2684>] _raw_spin_unlock_irqrestore+0x44/0x50
-> > > > [26407.680094][ T3548] hardirqs last disabled at (7160): [<ffffffff88ea2418>] _raw_spin_lock_irqsave+0x18/0x50
-> > > > [26407.727273][ T3548] softirqs last  enabled at (5898): [<ffffffff89200447>] __do_softirq+0x447/0x766
-> > > > [26407.774000][ T3548] softirqs last disabled at (5889): [<ffffffff884d20e6>] irq_exit+0xd6/0xf0
-> > > > [26407.814407][ T3548] ---[ end trace 1026d00df66af83e ]---
-> > > > [26407.839742][ T3548] possible reason: unannotated irqs-off.
-> > > > [26407.866243][ T3548] irq event stamp: 7161
-> > > > [26407.885407][ T3548] hardirqs last  enabled at (7161): [<ffffffff88ea2684>] _raw_spin_unlock_irqrestore+0x44/0x50
-> > > > [26407.933602][ T3548] hardirqs last disabled at (7160): [<ffffffff88ea2418>] _raw_spin_lock_irqsave+0x18/0x50
-> > > > [26407.980432][ T3548] softirqs last  enabled at (5898): [<ffffffff89200447>] __do_softirq+0x447/0x766
-> > > > [26408.022826][ T3548] softirqs last disabled at (5889): [<ffffffff884d20e6>] irq_exit+0xd6/0xf0
-> > > > 
-> > > > On a side note, it likely to hit another bug in next-20200305 (not such problem on 0304) where it
-> > > > will stuck during boot, but the reverting does not help there. Rebooting a few times could pass.
-> > > > 
-> > > > [    0.013514][    C0] NMI watchdog: Watchdog detected hard LOCKUP on cpu 0 
-> > > > [    0.013514][    C0] Modules linked in: 
-> > > > [    0.013514][    C0] irq event stamp: 64186318 
-> > > > [    0.013514][    C0] hardirqs last  enabled at (64186317): [<ffffffff84c9b107>] _raw_spin_unlock_irq+0x27/0x40 
-> > > > [    0.013514][    C0] hardirqs last disabled at (64186318): [<ffffffff84c8f384>] __schedule+0x214/0x1070 
-> > > > [    0.013514][    C0] softirqs last  enabled at (267904): [<ffffffff85000447>] __do_softirq+0x447/0x766 
-> > > > [    0.013514][    C0] softirqs last disabled at (267897): [<ffffffff842d1f16>] irq_exit+0xd6/0xf0 
-> > > > [    0.013514][    C0] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200305+ #6 
-> > > > [    0.013514][    C0] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018 
-> > > > [    0.013514][    C0] RIP: 0010:lock_is_held_type+0x12a/0x150 
-> > > > [    0.013514][    C0] Code: 41 0f 94 c4 65 48 8b 1c 25 40 0f 02 00 48 8d bb 74 08 00 00 e8 77 c0 28 00 c7 83 74 08 00 00 00 00 00 00 41 56 9d 48 83 c4 18 <44> 89 e0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 45 31 e4 eb c7 41 bc 01 
-> > > > [    0.013514][    C0] RSP: 0000:ffffc9000628f9f8 EFLAGS: 00000082 
-> > > > [    0.013514][    C0] RAX: 0000000000000000 RBX: ffff889880efc040 RCX: ffffffff8438b449 
-> > > > [    0.013514][    C0] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: ffff889880efc8b4 
-> > > > [    0.013514][    C0] RBP: ffffc9000628fa20 R08: ffffed1108588a24 R09: ffffed1108588a24 
-> > > > [    0.013514][    C0] R10: ffff888842c4511b R11: 0000000000000000 R12: 0000000000000000 
-> > > > [    0.013514][    C0] R13: ffff889880efc908 R14: 0000000000000046 R15: 0000000000000003 
-> > > > [    0.013514][    C0] FS:  0000000000000000(0000) GS:ffff888842c00000(0000) knlGS:0000000000000000 
-> > > > [    0.013514][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
-> > > > [    0.013514][    C0] CR2: ffff88a0707ff000 CR3: 0000000b72012001 CR4: 00000000001606f0 
-> > > > [    0.013514][    C0] Call Trace: 
-> > > > [    0.013514][    C0]  rcu_read_lock_sched_held+0xac/0xe0 
-> > > > lock_is_held at include/linux/lockdep.h:361
-> > > > (inlined by) rcu_read_lock_sched_held at kernel/rcu/update.c:121
-> > > > [    0.013514][    C0]  ? rcu_read_lock_bh_held+0xc0/0xc0 
-> > > > [    0.013514][    C0]  rcu_note_context_switcx186/0x3b0 
-> > > > [    0.013514][    C0]  __schedule+0x21f/0x1070 
-> > > > [    0.013514][    C0]  ? __sched_text_start+0x8/0x8 
-> > > > [    0.013514][    C0]  schedule+0x95/0x160 
-> > > > [    0.013514][    C0]  do_boot_cpu+0x58c/0xaf0 
-> > > > [    0.013514][    C0]  native_cpu_up+0x298/0x430 
-> > > > [    0.013514][    C0]  ? common_cpu_up+0x150/0x150 
-> > > > [    0.013514][    C0]  bringup_cpu+0x44/0x310 
-> > > > [    0.013514][    C0]  ? timers_prepare_cpu+0x114/0x190 
-> > > > [    0.013514][    C0]  ? takedown_cpu+0x2e0/0x2e0 
-> > > > [    0.013514][    C0]  cpuhp_invoke_callback+0x197/0x1120 
-> > > > [    0.013514][    C0]  ? ring_buffer_record_is_set_on+0x40/0x40 
-> > > > [    0.013514][    C0]  _cpu_up+0x171/0x280 
-> > > > [    0.013514][    C0]  do_cpu_up+0xb1/0x120 
-> > > > [    0.013514][    C0]  cpu_up+0x13/0x20 
-> > > > [    0.013514][    C0]  smp_init+0x91/0x118 
-> > > > [    0.013514][    C0]  kernel_init_freeable+0x221/0x4f8 
-> > > > [    0.013514][    C0]  ? mark_held_locks+0x34/0xb0 
-> > > > [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40 
-> > > > [    0.013514][    C0]  ? start_kernel+0x876/0x876 
-> > > > [    0.013514][    C0]  ? lockdep_hardirqs_on+0x1b0/0x2a0 
-> > > > [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40 
-> > > > [    0.013514][    C0]  ? rest_init+0x307/0x307 
-> > > > [    0.013514][    C0]  kernel_init+0x  0.013514][    C0]  ? rest_init+0x307/0x307 
-> > > > [    0.013514][    C0]  ret_from_fork+0x3a/0x50 
-> > > > 
-> > > >  
-> > > 
-> > > 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
