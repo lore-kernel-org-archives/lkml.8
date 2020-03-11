@@ -1,167 +1,143 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:11926 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729286AbgCKMoD (ORCPT
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780CBC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:10 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 2C4FC206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K1flaRtF"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730851AbgCKScJ (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:32:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36490 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730784AbgCKScI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:44:03 -0400
-Subject: Re: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1583177253.3.5@crapouillou.net>
-Date: Wed, 11 Mar 2020 13:43:46 +0100
-Cc: Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel
-        <letux-kernel@openphoenux.org>,
-        MIPS Creator CI20 Development
-        <mips-creator-ci20-dev@googlegroups.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
-References: <cover.1582913973.git.hns@goldelico.com> <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com> <1583177253.3.5@crapouillou.net>
-To: Paul Cercueil <paul@crapouillou.net>
+        Wed, 11 Mar 2020 14:32:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583951527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=spM5agWGar+ORsG2ukJRJ/Acpiv+8pritJ4Z+l+AEgc=;
+        b=K1flaRtFchzQeOMhixPvlwqSz+v0Ebn2VBtiQLHQWJYJeTTEu9I1lqg+pNy7bwKhD3jHKw
+        N3zrQm0puphZ1aPXISBZTltX/UOrkDePgLycjyusz9BeyFMBRZ0jSZS3hFGJuFexA01tAW
+        uJM1kKKEH2IAPsBjizBXz8f7o1p4pWI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-3oG0_XDyPGO4VhMOP5uzFg-1; Wed, 11 Mar 2020 14:32:04 -0400
+X-MC-Unique: 3oG0_XDyPGO4VhMOP5uzFg-1
+Received: by mail-qv1-f69.google.com with SMTP id v4so1923568qvt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:32:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=spM5agWGar+ORsG2ukJRJ/Acpiv+8pritJ4Z+l+AEgc=;
+        b=Scf31Q8InfJUNlKFKGZc5OITSq88Nb6Z6UR6ycReW5TOgA789CKUufxnZ2LQyqLMKw
+         p6wf9NRmXW2N/J2gUt87Nk0YKqIM8dvQ97XwKjuefTjQH0FnCP8yOvYSYBvLFcfec6G1
+         8foHBwb6Zt5GiGqk49YapHPYeeFPuiUSIwc/+hb9S50RvM+kBMiDNOooweLmPnjaf1W2
+         qUHw3S9IEMubo5skp18BMW/6MariVqaFx5MTCekp4Xs65/fh9IiFL51p4FHij8x821JE
+         W8smuIyg65bD/oskazbolIkBquwyUCoh0dbLfvbIJIGgZ94hKoh66Ithv+OtiPILpw82
+         5NTw==
+X-Gm-Message-State: ANhLgQ1RL1nx9f4AwBnwiu4z9Mcc82nqyVZmRJY9j2KOOo2WDIHmZtYN
+        7Ypeg02RscD49FwCzAVv58hcWKEZGSEOP+GXXEr1MB/ZgCyu+iceC9UnI8T5XjcbO+uHsOAqwG8
+        vFEmgNfG3QdSxTffCU3HHesrw
+X-Received: by 2002:a0c:bf0b:: with SMTP id m11mr4107321qvi.63.1583951524038;
+        Wed, 11 Mar 2020 11:32:04 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvDO0+2HivD9CsnZqlnawBVE/5XfG4sJ4JQNxOeTz1KiYixvBmarAvMLC1hUJiRKxZ4PT/7NA==
+X-Received: by 2002:a0c:bf0b:: with SMTP id m11mr4107299qvi.63.1583951523712;
+        Wed, 11 Mar 2020 11:32:03 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id w132sm3565718qkb.96.2020.03.11.11.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 11:32:02 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 14:32:01 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
+ kvm_flush_remote_tlbs()
+Message-ID: <20200311183201.GK479302@xz-x1>
+References: <20200207223520.735523-1-peterx@redhat.com>
+ <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311124346.OGN5sCJvrFzOQP3U-w4J4icRPVKNdFWuI6hC373PX68@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
+> On 07/02/20 23:35, Peter Xu wrote:
+> > [This series is RFC because I don't have MIPS to compile and test]
+> > 
+> > kvm_flush_remote_tlbs() can be arch-specific, by either:
+> > 
+> > - Completely replace kvm_flush_remote_tlbs(), like ARM, who is the
+> >   only user of CONFIG_HAVE_KVM_ARCH_TLB_FLUSH_ALL so far
+> > 
+> > - Doing something extra before kvm_flush_remote_tlbs(), like MIPS VZ
+> >   support, however still wants to have the common tlb flush to be part
+> >   of the process.  Could refer to kvm_vz_flush_shadow_all().  Then in
+> >   MIPS it's awkward to flush remote TLBs: we'll need to call the mips
+> >   hooks.
+> > 
+> > It's awkward to have different ways to specialize this procedure,
+> > especially MIPS cannot use the genenal interface which is quite a
+> > pity.  It's good to make it a common interface.
+> > 
+> > This patch series removes the 2nd MIPS usage above, and let it also
+> > use the common kvm_flush_remote_tlbs() interface.  It should be
+> > suggested that we always keep kvm_flush_remote_tlbs() be a common
+> > entrance for tlb flushing on all archs.
+> > 
+> > This idea comes from the reading of Sean's patchset on dynamic memslot
+> > allocation, where a new dirty log specific hook is added for flushing
+> > TLBs only for the MIPS code [1].  With this patchset, logically the
+> > new hook in that patch can be dropped so we can directly use
+> > kvm_flush_remote_tlbs().
+> > 
+> > TODO: We can even extend another common interface for ranged TLB, but
+> > let's see how we think about this series first.
+> > 
+> > Any comment is welcomed, thanks.
+> > 
+> > Peter Xu (4):
+> >   KVM: Provide kvm_flush_remote_tlbs_common()
+> >   KVM: MIPS: Drop flush_shadow_memslot() callback
+> >   KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
+> >   KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
+> > 
+> >  arch/mips/include/asm/kvm_host.h |  7 -------
+> >  arch/mips/kvm/Kconfig            |  1 +
+> >  arch/mips/kvm/mips.c             | 22 ++++++++++------------
+> >  arch/mips/kvm/trap_emul.c        | 15 +--------------
+> >  arch/mips/kvm/vz.c               | 14 ++------------
+> >  include/linux/kvm_host.h         |  1 +
+> >  virt/kvm/kvm_main.c              | 10 ++++++++--
+> >  7 files changed, 23 insertions(+), 47 deletions(-)
+> > 
+> 
+> Compile-tested and queued.
 
-> Am 02.03.2020 um 20:27 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> From: Paul Boddie <paul@boddie.org.uk>
->> A specialisation of the generic Synopsys HDMI driver is employed for =
-JZ4780
->> HDMI support. This requires a new driver, plus device tree and =
-configuration
->> modifications.
->> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/mips/boot/dts/ingenic/jz4780.dtsi | 32 =
-++++++++++++++++++++++++++
->> 1 file changed, 32 insertions(+)
->> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi =
-b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> index f928329b034b..391d4e1efd35 100644
->> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
->> @@ -433,4 +433,36 @@
->> 		status =3D "disabled";
->> 	};
->> +
->> +	hdmi: hdmi@10180000 {
->> +		compatible =3D "ingenic,jz4780-dw-hdmi";
->> +		reg =3D <0x10180000 0x8000>;
->> +		reg-io-width =3D <4>;
->> +
->> +		clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu =
-JZ4780_CLK_AHB0>;
->> +		clock-names =3D "isfr" , "iahb";
->> +
->> +		assigned-clocks =3D <&cgu JZ4780_CLK_HDMI>;
->> +		assigned-clock-rates =3D <27000000>;
->=20
-> I *think* this should go to the board file.
->=20
->> +
->> +		interrupt-parent =3D <&intc>;
->> +		interrupts =3D <3>;
->> +
->> +		/* ddc-i2c-bus =3D <&i2c4>; */
->> +
->> +		status =3D "disabled";
->> +	};
->> +
->> +	lcd: lcd@13050000 {
->=20
-> The node name should be 'lcd-controller'.
->=20
->> +		compatible =3D "ingenic,jz4740-lcd";
->=20
-> The JZ4780's LCD controller is much newer than the JZ4740 one, so even =
-if it works with the "ingenic,jz4740-lcd" compatible string, you want it =
-as a fallback.
-> So this should be: compatible =3D "ingenic,jz4780-lcd", =
-"ingenic,jz4740-lcd".
->=20
-> That means the YAML should be updated too.
+Just in case it fells through the crach - Paolo, do you still have
+plan to queue this again?
 
-I have started to look into jz4780 HDMI setup again.
+Thanks,
 
-Well, there is no driver compatible to "ingenic,jz4780-lcd" so far
-and it is questionalbe if we need a different one.
-
-I think we should rather make the driver also compatible
-than adding a fallback to ingenic,jz4740-lcdto the DTS.
-
-The reason why this is better even if both LCDC are almost
-compatible is that the jz4780 allows for much bigger displays
-and therefore should have its own jz_soc_info with 4k x 2k
-as maximum.
-
-Next I tried to find out if the LCDC are really compatible.
-
-Well the jz4780 has two lcdc instances but they are separated
-by the reg addr. Next, there are unique features (like picture in
-picture with alpha blending) but those are probably disabled
-if not programmed from reset state. This may become a reason
-to separate or augment the driver for the jz4780 but at the
-moment we can ignore that.
-
-There are also subtly different bit definitions and register
-widths (e.g. 24 bit in addition to 16/18 bit modes or more bits
-for the sync position) but it looks as if the ingenic_drm
-driver already handles this.
-
-Then I tried to read back the registers. Strangely they
-are all 0x00000000. So there is no programming of the
-lcd-controller in our DT setup with HDMI at all!
-
-I also checked that ingenic_drm_probe() is called and
-returns successfully 0. It also reports that a /dev/fb
-has been created:
-
-[    7.908830] ingenic-drm 13050000.lcd-controller: fb0: ingenic-drmdrmf =
-frame buffer device
-
-But for example ingenic_drm_encoder_atomic_mode_set() is
-never called which should write some registers of the LCDC.
-
-I only did see some calls to ingenic_drm_encoder_atomic_check().
-
-This of course explains why we have no HDMI signals despite
-proper HPD and a /dev/fb0. Because the LCDC is not being
-programmed.
-
-Any ideas / hints how to check or improve?
-
-BR and thanks,
-Nikolaus
+-- 
+Peter Xu
 
