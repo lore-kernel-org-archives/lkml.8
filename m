@@ -2,175 +2,353 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57604C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFB4C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D602220575
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF25D2074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387556AbgCKVki (ORCPT
+        id S2387582AbgCKVko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:40:38 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:34036 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387523AbgCKVke (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:40:34 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 575BA20031;
-        Wed, 11 Mar 2020 22:40:30 +0100 (CET)
-Date:   Wed, 11 Mar 2020 22:40:28 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] dt-bindings: display: Fix dtc unit-address warnings in
- examples
-Message-ID: <20200311214028.GA21800@ravnborg.org>
-References: <20200311210001.5102-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311210001.5102-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=7gkXJVJtAAAA:8 a=sozttTNsAAAA:8 a=VwQbUJbxAAAA:8 a=Hs3obBPvDEpcAaRkq7IA:9
-        a=KgW6Z8YwRCCCCE-m:21 a=khJvjRUq4pdLXzPm:21 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=aeg5Gbbo78KNqacMgKqU:22
-        a=AjGcO6oz07-iQ99wixmX:22
+        Wed, 11 Mar 2020 17:40:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46674 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387523AbgCKVkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 17:40:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B513BAE8C;
+        Wed, 11 Mar 2020 21:40:38 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 5DBC0E0C0A; Wed, 11 Mar 2020 22:40:38 +0100 (CET)
+Message-Id: <1658adf064ca5d7d17bfb3c40f5dc88ea83295b1.1583962006.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1583962006.git.mkubecek@suse.cz>
+References: <cover.1583962006.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 07/15] ethtool: provide private flags with
+ PRIVFLAGS_GET request
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 11 Mar 2020 22:40:38 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 04:00:01PM -0500, Rob Herring wrote:
-> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-> when building the binding examples. These were fixed treewide in
-> 5.6-rc5, but some new display bindings have been added with new
-> warnings:
-> 
-> Documentation/devicetree/bindings/display/panel/raydium,rm68200.example.dts:17.7-27.11: Warning (unit_address_vs_reg): /example-0/dsi@0: node has a unit name, but no reg property
-> Documentation/devicetree/bindings/display/panel/panel-simple-dsi.example.dts:17.19-31.11: Warning (unit_address_vs_reg): /example-0/mdss_dsi@fd922800: node has a unit name, but no reg property
-> Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.example.dts:17.7-26.11: Warning (unit_address_vs_reg): /example-0/dsi@0: node has a unit name, but no reg property
-> Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-> Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-> Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
-> 
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Jyri Sarha <jsarha@ti.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Implement PRIVFLAGS_GET request to get private flags for a network device.
+These are traditionally available via ETHTOOL_GPFLAGS ioctl request.
 
-And I can drop my patch that only fixed the panel/ parts - good.
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ Documentation/networking/ethtool-netlink.rst |  30 +++-
+ include/uapi/linux/ethtool_netlink.h         |  14 ++
+ net/ethtool/Makefile                         |   2 +-
+ net/ethtool/netlink.c                        |   8 ++
+ net/ethtool/netlink.h                        |   1 +
+ net/ethtool/privflags.c                      | 136 +++++++++++++++++++
+ 6 files changed, 189 insertions(+), 2 deletions(-)
+ create mode 100644 net/ethtool/privflags.c
 
-	Sam
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index 47542f042e9d..7bba4c940ef7 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -191,6 +191,7 @@ Userspace to kernel:
+   ``ETHTOOL_MSG_WOL_SET``               set wake-on-lan settings
+   ``ETHTOOL_MSG_FEATURES_GET``          get device features
+   ``ETHTOOL_MSG_FEATURES_SET``          set device features
++  ``ETHTOOL_MSG_PRIVFLAGS_GET``         get private flags
+   ===================================== ================================
+ 
+ Kernel to userspace:
+@@ -209,6 +210,7 @@ Kernel to userspace:
+   ``ETHTOOL_MSG_FEATURES_GET_REPLY``    device features
+   ``ETHTOOL_MSG_FEATURES_SET_REPLY``    optional reply to FEATURES_SET
+   ``ETHTOOL_MSG_FEATURES_NTF``          netdev features notification
++  ``ETHTOOL_MSG_PRIVFLAGS_GET_REPLY``   private flags
+   ===================================== =================================
+ 
+ ``GET`` requests are sent by userspace applications to retrieve device
+@@ -598,6 +600,32 @@ request but also each time features are modified with netdev_update_features()
+ or netdev_change_features().
+ 
+ 
++PRIVFLAGS_GET
++=============
++
++Gets private flags like ``ETHTOOL_GPFLAGS`` ioctl request.
++
++Request contents:
++
++  ====================================  ======  ==========================
++  ``ETHTOOL_A_PRIVFLAGS_HEADER``        nested  request header
++  ====================================  ======  ==========================
++
++Kernel response contents:
++
++  ====================================  ======  ==========================
++  ``ETHTOOL_A_PRIVFLAGS_HEADER``        nested  reply header
++  ``ETHTOOL_A_PRIVFLAGS_FLAGS``         bitset  private flags
++  ====================================  ======  ==========================
++
++``ETHTOOL_A_PRIVFLAGS_FLAGS`` is a bitset with values of device private flags.
++These flags are defined by driver, their number and names (and also meaning)
++are device dependent. For compact bitset format, names can be retrieved as
++``ETH_SS_PRIV_FLAGS`` string set. If verbose bitset format is requested,
++response uses all private flags supported by the device as mask so that client
++gets the full information without having to fetch the string set with names.
++
++
+ Request translation
+ ===================
+ 
+@@ -647,7 +675,7 @@ have their netlink replacement yet.
+   ``ETHTOOL_SGSO``                    ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GFLAGS``                  ``ETHTOOL_MSG_FEATURES_GET``
+   ``ETHTOOL_SFLAGS``                  ``ETHTOOL_MSG_FEATURES_SET``
+-  ``ETHTOOL_GPFLAGS``                 n/a
++  ``ETHTOOL_GPFLAGS``                 ``ETHTOOL_MSG_PRIVFLAGS_GET``
+   ``ETHTOOL_SPFLAGS``                 n/a
+   ``ETHTOOL_GRXFH``                   n/a
+   ``ETHTOOL_SRXFH``                   n/a
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index 3d0204cf96a6..d94bbf5e4d1c 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -26,6 +26,7 @@ enum {
+ 	ETHTOOL_MSG_WOL_SET,
+ 	ETHTOOL_MSG_FEATURES_GET,
+ 	ETHTOOL_MSG_FEATURES_SET,
++	ETHTOOL_MSG_PRIVFLAGS_GET,
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_MSG_USER_CNT,
+@@ -48,6 +49,7 @@ enum {
+ 	ETHTOOL_MSG_FEATURES_GET_REPLY,
+ 	ETHTOOL_MSG_FEATURES_SET_REPLY,
+ 	ETHTOOL_MSG_FEATURES_NTF,
++	ETHTOOL_MSG_PRIVFLAGS_GET_REPLY,
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_MSG_KERNEL_CNT,
+@@ -248,6 +250,18 @@ enum {
+ 	ETHTOOL_A_FEATURES_MAX = __ETHTOOL_A_FEATURES_CNT - 1
+ };
+ 
++/* PRIVFLAGS */
++
++enum {
++	ETHTOOL_A_PRIVFLAGS_UNSPEC,
++	ETHTOOL_A_PRIVFLAGS_HEADER,			/* nest - _A_HEADER_* */
++	ETHTOOL_A_PRIVFLAGS_FLAGS,			/* bitset */
++
++	/* add new constants above here */
++	__ETHTOOL_A_PRIVFLAGS_CNT,
++	ETHTOOL_A_PRIVFLAGS_MAX = __ETHTOOL_A_PRIVFLAGS_CNT - 1
++};
++
+ /* generic netlink info */
+ #define ETHTOOL_GENL_NAME "ethtool"
+ #define ETHTOOL_GENL_VERSION 1
+diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+index 5be8c9ab26d1..58708bcc2968 100644
+--- a/net/ethtool/Makefile
++++ b/net/ethtool/Makefile
+@@ -5,4 +5,4 @@ obj-y				+= ioctl.o common.o
+ obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+ 
+ ethtool_nl-y	:= netlink.o bitset.o strset.o linkinfo.o linkmodes.o \
+-		   linkstate.o debug.o wol.o features.o
++		   linkstate.o debug.o wol.o features.o privflags.o
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 5c0e361bfd66..9cbb1d8b4d23 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -216,6 +216,7 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
+ 	[ETHTOOL_MSG_DEBUG_GET]		= &ethnl_debug_request_ops,
+ 	[ETHTOOL_MSG_WOL_GET]		= &ethnl_wol_request_ops,
+ 	[ETHTOOL_MSG_FEATURES_GET]	= &ethnl_features_request_ops,
++	[ETHTOOL_MSG_PRIVFLAGS_GET]	= &ethnl_privflags_request_ops,
+ };
+ 
+ static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
+@@ -733,6 +734,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.flags	= GENL_UNS_ADMIN_PERM,
+ 		.doit	= ethnl_set_features,
+ 	},
++	{
++		.cmd	= ETHTOOL_MSG_PRIVFLAGS_GET,
++		.doit	= ethnl_default_doit,
++		.start	= ethnl_default_start,
++		.dumpit	= ethnl_default_dumpit,
++		.done	= ethnl_default_done,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 135836201e89..36cf077c3085 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -338,6 +338,7 @@ extern const struct ethnl_request_ops ethnl_linkstate_request_ops;
+ extern const struct ethnl_request_ops ethnl_debug_request_ops;
+ extern const struct ethnl_request_ops ethnl_wol_request_ops;
+ extern const struct ethnl_request_ops ethnl_features_request_ops;
++extern const struct ethnl_request_ops ethnl_privflags_request_ops;
+ 
+ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info);
+diff --git a/net/ethtool/privflags.c b/net/ethtool/privflags.c
+new file mode 100644
+index 000000000000..169dd4a832f6
+--- /dev/null
++++ b/net/ethtool/privflags.c
+@@ -0,0 +1,136 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include "netlink.h"
++#include "common.h"
++#include "bitset.h"
++
++struct privflags_req_info {
++	struct ethnl_req_info		base;
++};
++
++struct privflags_reply_data {
++	struct ethnl_reply_data		base;
++	const char			(*priv_flag_names)[ETH_GSTRING_LEN];
++	unsigned int			n_priv_flags;
++	u32				priv_flags;
++};
++
++#define PRIVFLAGS_REPDATA(__reply_base) \
++	container_of(__reply_base, struct privflags_reply_data, base)
++
++static const struct nla_policy
++privflags_get_policy[ETHTOOL_A_PRIVFLAGS_MAX + 1] = {
++	[ETHTOOL_A_PRIVFLAGS_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHTOOL_A_PRIVFLAGS_HEADER]		= { .type = NLA_NESTED },
++	[ETHTOOL_A_PRIVFLAGS_FLAGS]		= { .type = NLA_REJECT },
++};
++
++static int ethnl_get_priv_flags_info(struct net_device *dev,
++				     unsigned int *count,
++				     const char (**names)[ETH_GSTRING_LEN])
++{
++	const struct ethtool_ops *ops = dev->ethtool_ops;
++	int nflags;
++
++	nflags = ops->get_sset_count(dev, ETH_SS_PRIV_FLAGS);
++	if (nflags < 0)
++		return nflags;
++
++	if (names) {
++		*names = kcalloc(nflags, ETH_GSTRING_LEN, GFP_KERNEL);
++		if (!*names)
++			return -ENOMEM;
++		ops->get_strings(dev, ETH_SS_PRIV_FLAGS, (u8 *)*names);
++	}
++
++	/* We can pass more than 32 private flags to userspace via netlink but
++	 * we cannot get more with ethtool_ops::get_priv_flags(). Note that we
++	 * must not adjust nflags before allocating the space for flag names
++	 * as the buffer must be large enough for all flags.
++	 */
++	if (WARN_ONCE(nflags > 32,
++		      "device %s reports more than 32 private flags (%d)\n",
++		      netdev_name(dev), nflags))
++		nflags = 32;
++	*count = nflags;
++
++	return 0;
++}
++
++static int privflags_prepare_data(const struct ethnl_req_info *req_base,
++				  struct ethnl_reply_data *reply_base,
++				  struct genl_info *info)
++{
++	struct privflags_reply_data *data = PRIVFLAGS_REPDATA(reply_base);
++	struct net_device *dev = reply_base->dev;
++	const char (*names)[ETH_GSTRING_LEN];
++	const struct ethtool_ops *ops;
++	unsigned int nflags;
++	int ret;
++
++	ops = dev->ethtool_ops;
++	if (!ops->get_priv_flags || !ops->get_sset_count || !ops->get_strings)
++		return -EOPNOTSUPP;
++	ret = ethnl_ops_begin(dev);
++	if (ret < 0)
++		return ret;
++
++	ret = ethnl_get_priv_flags_info(dev, &nflags, &names);
++	if (ret < 0)
++		goto out_ops;
++	data->priv_flags = ops->get_priv_flags(dev);
++	data->priv_flag_names = names;
++	data->n_priv_flags = nflags;
++
++out_ops:
++	ethnl_ops_complete(dev);
++	return ret;
++}
++
++static int privflags_reply_size(const struct ethnl_req_info *req_base,
++				const struct ethnl_reply_data *reply_base)
++{
++	const struct privflags_reply_data *data = PRIVFLAGS_REPDATA(reply_base);
++	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++	const u32 all_flags = ~(u32)0 >> (32 - data->n_priv_flags);
++
++	return ethnl_bitset32_size(&data->priv_flags, &all_flags,
++				   data->n_priv_flags,
++				   data->priv_flag_names, compact);
++}
++
++static int privflags_fill_reply(struct sk_buff *skb,
++				const struct ethnl_req_info *req_base,
++				const struct ethnl_reply_data *reply_base)
++{
++	const struct privflags_reply_data *data = PRIVFLAGS_REPDATA(reply_base);
++	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++	const u32 all_flags = ~(u32)0 >> (32 - data->n_priv_flags);
++
++	return ethnl_put_bitset32(skb, ETHTOOL_A_PRIVFLAGS_FLAGS,
++				  &data->priv_flags, &all_flags,
++				  data->n_priv_flags, data->priv_flag_names,
++				  compact);
++}
++
++static void privflags_cleanup_data(struct ethnl_reply_data *reply_data)
++{
++	struct privflags_reply_data *data = PRIVFLAGS_REPDATA(reply_data);
++
++	kfree(data->priv_flag_names);
++}
++
++const struct ethnl_request_ops ethnl_privflags_request_ops = {
++	.request_cmd		= ETHTOOL_MSG_PRIVFLAGS_GET,
++	.reply_cmd		= ETHTOOL_MSG_PRIVFLAGS_GET_REPLY,
++	.hdr_attr		= ETHTOOL_A_PRIVFLAGS_HEADER,
++	.max_attr		= ETHTOOL_A_PRIVFLAGS_MAX,
++	.req_info_size		= sizeof(struct privflags_req_info),
++	.reply_data_size	= sizeof(struct privflags_reply_data),
++	.request_policy		= privflags_get_policy,
++
++	.prepare_data		= privflags_prepare_data,
++	.reply_size		= privflags_reply_size,
++	.fill_reply		= privflags_fill_reply,
++	.cleanup_data		= privflags_cleanup_data,
++};
+-- 
+2.25.1
 
-> ---
->  .../devicetree/bindings/display/panel/orisetech,otm8009a.yaml  | 3 +--
->  .../devicetree/bindings/display/panel/panel-simple-dsi.yaml    | 2 +-
->  .../devicetree/bindings/display/panel/raydium,rm68200.yaml     | 2 +-
->  Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
->  Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
->  Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
->  6 files changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-> index 6e6ac995c27b..2e7c65b093d7 100644
-> --- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-> @@ -39,7 +39,7 @@ required:
->  
->  examples:
->    - |
-> -    dsi@0 {
-> +    dsi {
->        #address-cells = <1>;
->        #size-cells = <0>;
->        panel@0 {
-> @@ -50,4 +50,3 @@ examples:
->        };
->      };
->  ...
-> -
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> index 8b60368a2425..b2e8742fd6af 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> @@ -50,7 +50,7 @@ required:
->  
->  examples:
->    - |
-> -    mdss_dsi@fd922800 {
-> +    dsi {
->        #address-cells = <1>;
->        #size-cells = <0>;
->        panel@0 {
-> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-> index 09149f140d5f..a35ba16fc000 100644
-> --- a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-> @@ -42,7 +42,7 @@ required:
->  
->  examples:
->    - |
-> -    dsi@0 {
-> +    dsi {
->        #address-cells = <1>;
->        #size-cells = <0>;
->        panel@0 {
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> index cac61a998203..aa5543a64526 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> @@ -121,7 +121,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/irq.h>
->      #include <dt-bindings/soc/ti,sci_pm_domain.h>
->  
-> -    dss: dss@04a00000 {
-> +    dss: dss@4a00000 {
->              compatible = "ti,am65x-dss";
->              reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
->                      <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> index ade9b2f513f5..6d47cd7206c2 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> @@ -154,7 +154,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/irq.h>
->      #include <dt-bindings/soc/ti,sci_pm_domain.h>
->  
-> -    dss: dss@04a00000 {
-> +    dss: dss@4a00000 {
->              compatible = "ti,j721e-dss";
->              reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
->                      <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> index 385bd060ccf9..7cb37053e95b 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> @@ -81,7 +81,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
->      #include <dt-bindings/interrupt-controller/irq.h>
->  
-> -    dss: dss@02540000 {
-> +    dss: dss@2540000 {
->              compatible = "ti,k2g-dss";
->              reg =   <0x02540000 0x400>,
->                      <0x02550000 0x1000>,
-> -- 
-> 2.20.1
