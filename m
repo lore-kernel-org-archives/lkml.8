@@ -2,208 +2,268 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87487C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D184C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F48A2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDED2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nn//fcFB"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NkaJLzGh";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Z2FIPjfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgCKUyb (ORCPT
+        id S1729130AbgCKU6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 16:54:31 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40935 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgCKUya (ORCPT
+        Wed, 11 Mar 2020 16:58:30 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43022 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726579AbgCKU63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 16:54:30 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a24so4620148edy.7;
-        Wed, 11 Mar 2020 13:54:29 -0700 (PDT)
+        Wed, 11 Mar 2020 16:58:29 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 233AFC0F71;
+        Wed, 11 Mar 2020 20:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583960308; bh=RD+d7RV6+v/1Va4YA/+qNQEtN8lG+sQTsu/lyFwY02k=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=NkaJLzGhLUcWke5LmwcMLKz0FUofyGOYhtWQZBpsyAfeMOKx6gacOFxPuwKJunDkh
+         8XMSe0794yN4n25/0+SEy9OI6eQmB4lM6u7tsGjyNThZ8b147MD6wfm0Pk+W5mn8Dl
+         MpRg6hH7FE4Q+syNgw0qEmgDEX81hZD2fdEun1y3FVbayAunmeK6+rC7LE64WAUqDx
+         2zAXqWl0rLbC97c6TMOlcNZUklCXiGWHvIHa1iz1ChUXPl/PKCoa5waNNouyh2rumh
+         AtfYKRApb8wiQT15b7GRygYITMN+ebYUzFWBI7I8lpTglnQMKKVf6JXgGOK0ye91ad
+         lfxDbC3t9NT8w==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id AE35DA006A;
+        Wed, 11 Mar 2020 20:58:27 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 11 Mar 2020 13:58:16 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 11 Mar 2020 13:58:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lRC3NLVz1o6GPB/Ji5vmOBfRs3/ArvYBcJIJhxL/sk8bLlGyJx+FMVwz3+cUvhFgnkXe30RE7Sy7pknK/kjOyi2PiRvbsz4o1+gSzcqrw+Yb7wlYgk2VrR+h0QkzQnhePMNUs0FG/dRy6QvhTeunHODxfIzxyy1iAtsPKyrzpFlZdoUbMP3PAvK98NBCO3x/hF6JBAYCFUPBTqirsclNVmFUTMOi/3sTCLduwwnFrz7TeWdVWGAbUt+dVZa7jE9GWkiMct86AndlW8N076/r/rtOqsht8xlUy9Cj9VVgNwY/nfW7EvZYtN4CwgV+EV5xwuvx14FsAlZQNdAkRiTCOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kb9tdOnqxgpA0HtpEEJGKN6131sq7lDi/t+wRTKebY8=;
+ b=mIZh6BFoIVEW1AoJL3nJ5OWl7/n4XbFRzERF+a72L4LtCq89vov1JT1f0CcIA+0W/a7DiaDIyPkygo4mo+yQFlrKmanAGY5C5mNfAR4TC5+sdzkzAtv9alMlTBcRZdk6aJop1W4jPy0Mvng4dTlOG6QEXd0+fb/t1XtAnd7Mg+mU7ec2Hs/JBA374HhsrcE30NyyrqfjnZDrSkXIx9GnDHEGMUWeYPMzB9CyXR5fx0Fq0Qigd+s2x1pOra4vtLPbs43nyN3fvqb4ziW90rPw3oztWqNh8Z7iiU1Gi1EP8jdVlpTKqjFh5ml1L/hGI6hHUY1msWVShP4y+ocqoecjYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HbdjWuoiokVFJb/R37FmH/KxomkDrV4rWjVeO+JjVlc=;
-        b=nn//fcFBPZwlqvin4jOk+1owLO+b0MhivgrL6uMFamrDesgH54O8T2itQYY3II//2S
-         b+j0o4JvpHs9m+CAKP5qMcRuASBBhXLyWfzUR5v0wd/RbYEZD6GOAsskzJdslfFBmeBU
-         kcNUaeOVhle7OPPrBNGj0fMWPr34sxRQ7a8Rk7vxR4Qybw5ASKOfby8/BApMHQnHxHT8
-         AFwmdZomhGw3SYWnzpP4uReubLphCfF0H5800hnPTTstpRE3kmLsWIgrzSRdiy3e0d75
-         SB0GZllCZN1BFu7PQJxsCBvjd4G6r8AlfIfqmfV/UX0vHhfQBJcpeLU3nvhIwKEp7cfi
-         5Pyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HbdjWuoiokVFJb/R37FmH/KxomkDrV4rWjVeO+JjVlc=;
-        b=qi87TUSN614E33wmmgBlJyBW3UKIbVuVypqU9OUTmWsKm8u/Dt4oxJSLTcDsYirqEq
-         fJrnOhd4tMgdJifpT9Vno/mzd1VtpC+89GH3TqkScjTSMSGZ/s1cKKBSh0RzfJHyqPzO
-         KC8T3ooaNqZTJy4eSfNaVX1k4k6CewdnvzbO33etLfoQoPRriv+QlN5dtXy+FVXPdMhT
-         RitL/+ATuARA1BLZULCcmqNpCbjOUSbStQsLjvGIEhI0kOz5SXwbTQLLqjSwnToKAZgd
-         eXYOLWNCenmx4e3ssLrMNHJDUf0IYYBdh25uKekMXmyiLk/atpoRhtgQ7Es8TbAJQHyY
-         Vtrg==
-X-Gm-Message-State: ANhLgQ3yc0wuaB/LOG8/lloKysDCyyDrMk5/3eHpFe6H1Yliw0ZSExjl
-        XQrG+g/VfvEGJHUjkU4xTudDA6Ut
-X-Google-Smtp-Source: ADFU+vvZi3LTBMFCkMcvTFHAyOSJvowT4af8qJA5S5S7RC8ICvJKKiJ5Z0zVRvdLyky2rXkg/1/Cbg==
-X-Received: by 2002:a05:6402:8c6:: with SMTP id d6mr4170282edz.76.1583960068361;
-        Wed, 11 Mar 2020 13:54:28 -0700 (PDT)
-Received: from [10.67.48.239] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id r23sm4648413edx.24.2020.03.11.13.54.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 13:54:27 -0700 (PDT)
-Subject: Re: [PATCH v2] MIPS: c-r4k: Invalidate BMIPS5000 ZSCM prefetch lines
-To:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200207223324.46011-1-kdasu.kdev@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <53c0ca2d-84a5-7556-c1f4-a75e99f0a743@gmail.com>
-Date:   Wed, 11 Mar 2020 13:54:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200207223324.46011-1-kdasu.kdev@gmail.com>
-Content-Type: text/plain; charset=utf-8
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kb9tdOnqxgpA0HtpEEJGKN6131sq7lDi/t+wRTKebY8=;
+ b=Z2FIPjfuvX3XwnJ7XwYntEnCZJk16fnK4bWt84ijGXG/y9ysXANvWuFdfw+aIoSehNTvd8qRpfWkjzfGHu6yZoTn/h9SK96bRU6FTBq89kQMHhWXTQochasFVwCRFc3jvWYFKWaRMe0dmm4t2H82THFllAXXpeVrm1Ud9ZxvzOs=
+Received: from BY5PR12MB4034.namprd12.prod.outlook.com (2603:10b6:a03:205::9)
+ by BY5PR12MB4116.namprd12.prod.outlook.com (2603:10b6:a03:210::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Wed, 11 Mar
+ 2020 20:58:14 +0000
+Received: from BY5PR12MB4034.namprd12.prod.outlook.com
+ ([fe80::3531:93d8:93db:207a]) by BY5PR12MB4034.namprd12.prod.outlook.com
+ ([fe80::3531:93d8:93db:207a%5]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 20:58:14 +0000
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 2/2] ARC: don't align ret_from_exception function
+Thread-Topic: [PATCH 2/2] ARC: don't align ret_from_exception function
+Thread-Index: AQHV98HujcRrFCa3G0K90e5pOjYelKhDqFKAgAAx9ms=
+Date:   Wed, 11 Mar 2020 20:58:14 +0000
+Message-ID: <BY5PR12MB40348292DA303489C1DA2B66DEFC0@BY5PR12MB4034.namprd12.prod.outlook.com>
+References: <20200311162644.7667-1-Eugeniy.Paltsev@synopsys.com>
+ <20200311162644.7667-2-Eugeniy.Paltsev@synopsys.com>,<448ba208-56a5-d8b2-9675-7be03b872c23@synopsys.com>
+In-Reply-To: <448ba208-56a5-d8b2-9675-7be03b872c23@synopsys.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=paltsev@synopsys.com; 
+x-originating-ip: [5.18.243.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 10db636b-68e5-4f40-076e-08d7c5feea96
+x-ms-traffictypediagnostic: BY5PR12MB4116:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR12MB4116E7B86AB2C69366511D8EDEFC0@BY5PR12MB4116.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(346002)(39860400002)(366004)(396003)(199004)(7696005)(54906003)(26005)(186003)(316002)(110136005)(8676002)(6506007)(52536014)(9686003)(81156014)(33656002)(55016002)(71200400001)(86362001)(8936002)(107886003)(4326008)(478600001)(66446008)(5660300002)(66556008)(76116006)(91956017)(66476007)(64756008)(81166006)(2906002)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR12MB4116;H:BY5PR12MB4034.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UcXWAPTouO03hsMReeDFu1aQEmQXaGXtzLCGSBkqO7RO14CgdL+ZTUhLjbdT8nehSji/9Xjvw+EnFywhfcqrwEht5afDpuVGNmaqR1x0/L6RMOU5L+A0fSMs4uAuSTTOo7D3ahyDS0eqFfLyqnE9cVNNDXm2H8BTeHOwtl5yYFg+h7UDRqLhJWOng9cyER2LTh7N4uGx+k/X2JUqC5/4rKtCrcGKzAhSfOlwsV9qH5ByYhVSZhviRrC6CM3kHNxv2p2tTzUkySWDABltFMazNOK4ZoBdpkyT4kdWeZuBwhalkZ9v53FmIve1vcbXZ/SujVlLOKCFpBldMf3caF1myUp/vmVnYmiVWVoBGx5flU7kCJMmqm9RlU0V4ScSkbBgrqk2q0Hjqk9+nuqVHKsuG0GgOnHaIL1Xbu+RGG63wb36A56OImR5aZdQ3BxN4k7V
+x-ms-exchange-antispam-messagedata: 9FDC/y7xqGBiYkz1Wc21iIT9qC2uTMgaUC/A5K6CBByMiKS8bv0sGG9znZ/AoYqyPF9DUZ6jFae9sCMfYuDKUxi94JKQ6rSPFMWRR1FVbXbk5QJ4XSfRqNUwm+erJDhGnrnMSRuoHGhp/OEuifqMjQ==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10db636b-68e5-4f40-076e-08d7c5feea96
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 20:58:14.3195
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8UZ4rBgcxIolD2q/00Kqojx153uKIGWk4RzCZen7sbbxeRZBOpoPrTpLj/TPYCYK/dxNuRMJu1EsDdBAtdvGfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4116
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 2:33 PM, Kamal Dasu wrote:
-> Zephyr secondary cache is 256KB, 128B lines. 32B sectors. A secondary cache
-> line can contain two instruction cache lines (64B), or four data cache
-> lines (32B). Hardware prefetch Cache detects stream access, and prefetches
-> ahead of processor access. Add support to invalidate BMIPS5000 cpu zephyr
-> secondary cache module (ZSCM) on DMA from device so that data returned is
-> coherent during DMA read operations.
-> 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-
-Thomas can review and apply this patch? Thank you!
-
-> ---
->  arch/mips/mm/c-r4k.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
-> index 5f3d0103b95d..acd9ef383e97 100644
-> --- a/arch/mips/mm/c-r4k.c
-> +++ b/arch/mips/mm/c-r4k.c
-> @@ -901,6 +901,31 @@ static void r4k_dma_cache_wback_inv(unsigned long addr, unsigned long size)
->  	__sync();
->  }
->  
-> +static void prefetch_cache_inv(unsigned long addr, unsigned long size)
-> +{
-> +	unsigned int linesz = cpu_scache_line_size();
-> +	unsigned long addr0 = addr, addr1;
-> +
-> +	addr0 &= ~(linesz - 1);
-> +	addr1 = (addr0 + size - 1) & ~(linesz - 1);
-> +
-> +	protected_writeback_scache_line(addr0);
-> +	if (likely(addr1 != addr0))
-> +		protected_writeback_scache_line(addr1);
-> +	else
-> +		return;
-> +
-> +	addr0 += linesz;
-> +	if (likely(addr1 != addr0))
-> +		protected_writeback_scache_line(addr0);
-> +	else
-> +		return;
-> +
-> +	addr1 -= linesz;
-> +	if (likely(addr1 > addr0))
-> +		protected_writeback_scache_line(addr0);
-> +}
-> +
->  static void r4k_dma_cache_inv(unsigned long addr, unsigned long size)
->  {
->  	/* Catch bad driver code */
-> @@ -908,6 +933,10 @@ static void r4k_dma_cache_inv(unsigned long addr, unsigned long size)
->  		return;
->  
->  	preempt_disable();
-> +
-> +	if (current_cpu_type() == CPU_BMIPS5000)
-> +		prefetch_cache_inv(addr, size);
-> +
->  	if (cpu_has_inclusive_pcaches) {
->  		if (size >= scache_size) {
->  			if (current_cpu_type() != CPU_LOONGSON64)
-> 
-
-
--- 
-Florian
+>From: Vineet Gupta <vgupta@synopsys.com>=0A=
+>Sent: Wednesday, March 11, 2020 20:38=0A=
+>To: Eugeniy Paltsev; linux-snps-arc@lists.infradead.org=0A=
+>Cc: linux-kernel@vger.kernel.org; Alexey Brodkin=0A=
+>Subject: Re: [PATCH 2/2] ARC: don't align ret_from_exception function=0A=
+>=0A=
+>On 3/11/20 9:26 AM, Eugeniy Paltsev wrote:=0A=
+>> ARC have a tricky implemented ret_from_exception function.=0A=
+>> It is written on ASM and can be called like regular function.=0A=
+>> However it has another 'entry point' as it can be called as a=0A=
+>> continuation of EV_Trap function.=0A=
+>=0A=
+>It is not really intended / needed to be called form outside ASM - but has=
+ to be=0A=
+>spread across 2 asm files as it is mostly target isa independent, while th=
+e=0A=
+>callers are in separate target isa specific files.=0A=
+>The ENTRY/END annotations are simply for the dwarf unwinder to stop gracef=
+ully.=0A=
+>=0A=
+>> As we declare "ret_from_exception" using ENTRY macro it may align=0A=
+>> "ret_from_exception" by 4 bytes by adding padding before it.=0A=
+>> "ret_from_exception" doesn't require alignment by 4 bytes=0A=
+>> (as it doesn't go to vector table, etc...) so let's avoid aligning=0A=
+>> it by switch from ENTRY (which is alias for SYM_FUNC_START) to=0A=
+>> SYM_FUNC_START_NOALIGN macro.=0A=
+>=0A=
+>I would like to keep it aligned.=0A=
+>=0A=
+>ARC700 definitely has penalty for unaligned branch targets, so it will def=
+initely=0A=
+>suffer there.=0A=
+=0A=
+Do you know some exact numbers? I'm not an expert in ARC700 (fortunately =
+=3D)=0A=
+=0A=
+>=0A=
+>For HS, unaligned branch targets have no penalty (for the general case atl=
+east),=0A=
+>but if it does get unaligned, the entire entry prologue code will be - i.e=
+. each=0A=
+>one of the subsequent 130 or so instructions. That doesn't seem like a goo=
+d idea=0A=
+>in general to me.=0A=
+=0A=
+I really don't insist about applying this patch but I don't understand your=
+=0A=
+argumentation about ARC HS like at all. Could you please explain in more de=
+tail what=0A=
+130 instructions you are talking about?=0A=
+=0A=
+>What's weird is I never hit the original problem you ran into - are you us=
+ing a=0A=
+>toolchain with the branch relaxation stuff  ?=0A=
+=0A=
+Looks like we just were lucky enough and didn't change this code a lot.=0A=
+I faced with this issue when I was developing DSP-related stuff. Initially =
+I=0A=
+triggered it when I replaced 'mov r10, 0' instruction with 'mov_s r10, 0' a=
+nd got=0A=
+weird kernel crush.=0A=
+=0A=
+It can be reproduced with any toolchain (it's not related to branch relaxat=
+ion stuff).=0A=
+=0A=
+>I faked it using a nop_s and the SYM_FUNC_START_NOALIGN( ) annotation and =
+can see=0A=
+>all instructions getting unaligned.=0A=
+=0A=
+What is the problem with it? It's totally valid and fine for ARC HS to have=
+ instructions=0A=
+aligned by 2 byte. Or are you talking about ARC700 again?=0A=
+=0A=
+>Before;=0A=
+>=0A=
+>921238e4 <ret_from_exception>:=0A=
+>921238e4:    ld    r8,[sp,124]=0A=
+>921238e8:    bbit0.nt    r8,0x7,212=0A=
+>...=0A=
+>92123ac8:    rtie=0A=
+>92123acc <debug_marker_ds>:=0A=
+>92123acc:    ld    r2,[0x927d81d8]=0A=
+>92123ad4:    add    r2,r2,0x1=0A=
+>92123ad8:    st    r2,[0x927d81d8]=0A=
+>92123ae0:    bmskn    r11,r10,0xf=0A=
+>92123ae4:    sr    r11,[aux_irq_act]=0A=
+>92123ae8:    b    -140    ;92123a5c=0A=
+>=0A=
+>After:=0A=
+>=0A=
+>9212393c:    nop_s=0A=
+>9212393e <ret_from_exception>:=0A=
+>9212393e:    ld    r8,[sp,124]=0A=
+>92123942:    bbit0.nt    r8,0x7,214=0A=
+>...=0A=
+>92123b22:    rtie=0A=
+>92123b26 <debug_marker_ds>:=0A=
+>92123b26:    ld    r2,[0x927d81d8]=0A=
+>92123b2e:    add    r2,r2,0x1=0A=
+>92123b32:    st    r2,[0x927d81d8]=0A=
+>92123b3a:    bmskn    r11,r10,0xf=0A=
+>92123b3e:    sr    r11,[aux_irq_act]=0A=
+>92123b42:    b    -138    ;92123ab6 <debug_marker_syscall>=0A=
+>92123b46:    nop_s=0A=
+>=0A=
+>> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>=0A=
+>> ---=0A=
+>>  arch/arc/kernel/entry-arcv2.S | 2 +-=0A=
+>>  arch/arc/kernel/entry.S       | 3 +--=0A=
+>>  2 files changed, 2 insertions(+), 3 deletions(-)=0A=
+>>=0A=
+>> diff --git a/arch/arc/kernel/entry-arcv2.S b/arch/arc/kernel/entry-arcv2=
+.S=0A=
+>> index 12d5f12d10d2..d482e1507f56 100644=0A=
+>> --- a/arch/arc/kernel/entry-arcv2.S=0A=
+>> +++ b/arch/arc/kernel/entry-arcv2.S=0A=
+>> @@ -260,4 +260,4 @@ debug_marker_ds:=0A=
+>>       sr      r11, [AUX_IRQ_ACT]=0A=
+>>       b       .Lexcept_ret=0A=
+>>=0A=
+>> -END(ret_from_exception)=0A=
+>> +SYM_FUNC_END(ret_from_exception)=0A=
+>> diff --git a/arch/arc/kernel/entry.S b/arch/arc/kernel/entry.S=0A=
+>> index 60406ec62eb8..79409b518a09 100644=0A=
+>> --- a/arch/arc/kernel/entry.S=0A=
+>> +++ b/arch/arc/kernel/entry.S=0A=
+>> @@ -280,7 +280,7 @@ END(EV_Trap)=0A=
+>>  ;=0A=
+>>  ; If ret to user mode do we need to handle signals, schedule() et al.=
+=0A=
+>>=0A=
+>> -ENTRY(ret_from_exception)=0A=
+>> +SYM_FUNC_START_NOALIGN(ret_from_exception)=0A=
+>>=0A=
+>>       ; Pre-{IRQ,Trap,Exception} K/U mode from pt_regs->status32=0A=
+>>       ld  r8, [sp, PT_status32]   ; returning to User/Kernel Mode=0A=
+>> @@ -373,4 +373,3 @@ resume_kernel_mode:=0A=
+>>       b       .Lrestore_regs=0A=
+>>=0A=
+>>  ##### DONT ADD CODE HERE - .Lrestore_regs actually follows in entry-<is=
+a>.S=0A=
+>> -=
