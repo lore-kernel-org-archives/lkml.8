@@ -2,111 +2,231 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F5CC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6A2C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6D921927
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RHBCxJTe"
+	by mail.kernel.org (Postfix) with ESMTP id 4DC3C222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgCKDdd (ORCPT
+        id S1728114AbgCKDdn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:33:33 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2531 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbgCKDdc (ORCPT
+        Tue, 10 Mar 2020 23:33:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37179 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbgCKDdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:33:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e685bdf0000>; Tue, 10 Mar 2020 20:32:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Mar 2020 20:33:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Mar 2020 20:33:32 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Mar
- 2020 03:33:31 +0000
-Subject: Re: [PATCH] pid: fix uninitialized retval in alloc_pid()
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200311032153.431492-1-jhubbard@nvidia.com>
- <20200311033021.qm26c6cltfndlx3c@wittgenstein>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e9eed2e9-5bcf-1978-3776-b8b25f92ac5b@nvidia.com>
-Date:   Tue, 10 Mar 2020 20:33:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200311033021.qm26c6cltfndlx3c@wittgenstein>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583897567; bh=Rmr1OCF1smWpgkALhWurYV1x/xRC0traeg34+z5gvtk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RHBCxJTeB3toSl6UDZK5GlFTIf+Dz0Nhz4u8lm6LHje8525BjDkJbGus2Fqmdj7lj
-         rCrg6Wc5+rLPnWUZdbr7es7ryTYdbUeS8eQoj91EvioHtUcKIbC5fzoZswwSm0HeqA
-         lgVTohrcZg+DJYlHRwqiL4ux75boN64IYvv31y6DQC8S5OiRnJkb7uxYPn1QsB4sFg
-         DDZN7P9Lr9paFC1Q2BQm4yAZilNQvyLCym/dVDifK2MqtvINaq8LD6eVWdJ2LKsWN1
-         igAcleeuFo2FOx0CigYr1h9Yuf1tE63IKSNtlBa66VV0MeSooBa2p+E/RgoRwkypHi
-         qjczD4EeTziuw==
+        Tue, 10 Mar 2020 23:33:42 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jBs5C-0007ly-Kw
+        for linux-kernel@vger.kernel.org; Wed, 11 Mar 2020 03:30:58 +0000
+Received: by mail-pf1-f199.google.com with SMTP id d127so439349pfa.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:30:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=JAj39y4cSkPD8V1E4/a4ReHRXvM9rblHsG5Ml1/Bwlg=;
+        b=FArtQIeHxPt6kNd3ipYBEZoVQz8EOXzW/HtktkIHxJIGQ4qcrGZHtS33MJdtH1ynd8
+         66qukc35hIHRiy0a43qn8okEklDC3ulI2cRPYIklEcLs8hizgBXwdCI/wQsXhOzjGUeV
+         VrrmnkZACOyhye+NVqFSO3xXhBCcfFe55g4S+dw/+RTcBsVfQzY1Bwazl0V39cpD618n
+         Elcge5xRx7SDISGdPxWuRhLaxzITcMWPa83p0XiQkzFCas/saiF/PpgoQy8pVLOExBkv
+         aQqmbD6/V1Z9u+kP3+62fPWzQ9xBkjZfK8MeXiE4QiRBI95aA5ytMWOvbXJ6dNPUmz3I
+         enqg==
+X-Gm-Message-State: ANhLgQ2UaUk9e2E4dtkZRhZZ6hwkVst3Dqsca1i9/YiJnkQOxBNcpupf
+        ZbKM2eom8khYJu/D+gYGNEXPIWcPgYYGrE5FkalinNxG/QOZEppthCnCwWVUfElSuJv/zwhN5Lg
+        OnEDVBiAvXgmLAqerHLgSjZ2jLmzM/ydTQvtIzn+q7Q==
+X-Received: by 2002:a63:1c4a:: with SMTP id c10mr911465pgm.252.1583897457269;
+        Tue, 10 Mar 2020 20:30:57 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsEErfC0z0HElIsPQwHJRDDdA2hHxEBoyTBij97kd4MeYBIaxapOby5p099widGMm2WCiMq9w==
+X-Received: by 2002:a63:1c4a:: with SMTP id c10mr911334pgm.252.1583897455506;
+        Tue, 10 Mar 2020 20:30:55 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id u3sm3623345pjv.32.2020.03.10.20.30.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Mar 2020 20:30:54 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v3 2/2] net-sysfs: Ensure begin/complete are called in
+ speed_show() and duplex_show()
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <425AF2D4-1FEE-437B-8520-452F818F7DEE@canonical.com>
+Date:   Wed, 11 Mar 2020 11:30:49 +0800
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wang Hai <wanghai26@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kimberly Brown <kimbrownkd@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>, Andrew Lunn <andrew@lunn.ch>,
+        Li RongQing <lirongqing@baidu.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <BEFADD90-2EC7-4B46-8AF4-F1D1CCD81993@canonical.com>
+References: <20200207101005.4454-1-kai.heng.feng@canonical.com>
+ <20200207101005.4454-2-kai.heng.feng@canonical.com>
+ <425AF2D4-1FEE-437B-8520-452F818F7DEE@canonical.com>
+To:     David Miller <davem@davemloft.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 8:30 PM, Christian Brauner wrote:
-> On Tue, Mar 10, 2020 at 08:21:53PM -0700, John Hubbard wrote:
->> Commit 8deb24dcb89cb ("pid: make ENOMEM return value more obvious")
->> left the return value uninitialized in one error case. The justification
->> for the above commit included a statement that retval is "initialized on
->> ever[y] failure path in the loop". However, that is not quite good
->> enough because there is an earlier case that is before the loop. And
->> also, it's more maintenance and merge-safe to initialize it once at the
->> top, as evidenced by this build warning that we now have.
->>
->> Therefore, restore the top-level initialization of retval.
->>
->> Also move the descriptive comment up, and remove the now-redundant
->> later initialization of retval.
->>
->> Fixes: 8deb24dcb89cb ("pid: make ENOMEM return value more obvious")
->> Cc: Christian Brauner <christian.brauner@ubuntu.com>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> Thanks. I already have a fixed-up version in my tree after Stephen
-> reported it earlier today:
-> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=10dab84caf400f2f5f8b010ebb0c7c4272ec5093
-> 
-> (Fwiw, we can't just move the it back up. It needs to be set after the
-> loop too because it can be set to EPERM before. See
 
 
-OK, yes. Sounds good.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=b26ebfe12f34f372cf041c6f801fa49c3fb382c5
-> for the motiviation for the comment.)
+> On Feb 20, 2020, at 13:45, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 > 
-> Christian
+>> 
+>> On Feb 7, 2020, at 18:10, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>> 
+>> Device like igb gets runtime suspended when there's no link partner. We
+>> can't get correct speed under that state:
+>> $ cat /sys/class/net/enp3s0/speed
+>> 1000
+>> 
+>> In addition to that, an error can also be spotted in dmesg:
+>> [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+>> 
+>> It's because the igb device doesn't get runtime resumed before calling
+>> get_link_ksettings().
+>> 
+>> So let's use a new helper to call begin() and complete() like what
+>> dev_ethtool() does, to runtime resume/suspend or power up/down the
+>> device properly.
+>> 
+>> Once this fix is in place, igb can show the speed correctly without link
+>> partner:
+>> $ cat /sys/class/net/enp3s0/speed
+>> -1
+>> 
+>> -1 here means SPEED_UNKNOWN, which is the correct value when igb is
+>> runtime suspended.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > 
+> A gentle ping...
+
+Another gentle ping...
+
+> 
+> Kai-Heng
+> 
+>> ---
+>> v3:
+>> - Specify -1 means SPEED_UNKNOWN.
+>> v2:
+>> - Add a new helper with begin/complete and use it in net-sysfs.
+>> 
+>> include/linux/ethtool.h |  4 ++++
+>> net/core/net-sysfs.c    |  4 ++--
+>> net/ethtool/ioctl.c     | 33 ++++++++++++++++++++++++++++++++-
+>> 3 files changed, 38 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+>> index 95991e4300bf..785ec1921417 100644
+>> --- a/include/linux/ethtool.h
+>> +++ b/include/linux/ethtool.h
+>> @@ -160,6 +160,10 @@ extern int
+>> __ethtool_get_link_ksettings(struct net_device *dev,
+>> 			     struct ethtool_link_ksettings *link_ksettings);
+>> 
+>> +extern int
+>> +__ethtool_get_link_ksettings_full(struct net_device *dev,
+>> +				  struct ethtool_link_ksettings *link_ksettings);
+>> +
+>> /**
+>> * ethtool_intersect_link_masks - Given two link masks, AND them together
+>> * @dst: first mask and where result is stored
+>> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+>> index 4c826b8bf9b1..a199e15a080f 100644
+>> --- a/net/core/net-sysfs.c
+>> +++ b/net/core/net-sysfs.c
+>> @@ -201,7 +201,7 @@ static ssize_t speed_show(struct device *dev,
+>> 	if (netif_running(netdev)) {
+>> 		struct ethtool_link_ksettings cmd;
+>> 
+>> -		if (!__ethtool_get_link_ksettings(netdev, &cmd))
+>> +		if (!__ethtool_get_link_ksettings_full(netdev, &cmd))
+>> 			ret = sprintf(buf, fmt_dec, cmd.base.speed);
+>> 	}
+>> 	rtnl_unlock();
+>> @@ -221,7 +221,7 @@ static ssize_t duplex_show(struct device *dev,
+>> 	if (netif_running(netdev)) {
+>> 		struct ethtool_link_ksettings cmd;
+>> 
+>> -		if (!__ethtool_get_link_ksettings(netdev, &cmd)) {
+>> +		if (!__ethtool_get_link_ksettings_full(netdev, &cmd)) {
+>> 			const char *duplex;
+>> 
+>> 			switch (cmd.base.duplex) {
+>> diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+>> index b987052d91ef..faeba247c1fb 100644
+>> --- a/net/ethtool/ioctl.c
+>> +++ b/net/ethtool/ioctl.c
+>> @@ -420,7 +420,9 @@ struct ethtool_link_usettings {
+>> 	} link_modes;
+>> };
+>> 
+>> -/* Internal kernel helper to query a device ethtool_link_settings. */
+>> +/* Internal kernel helper to query a device ethtool_link_settings. To be called
+>> + * inside begin/complete block.
+>> + */
+>> int __ethtool_get_link_ksettings(struct net_device *dev,
+>> 				 struct ethtool_link_ksettings *link_ksettings)
+>> {
+>> @@ -434,6 +436,35 @@ int __ethtool_get_link_ksettings(struct net_device *dev,
+>> }
+>> EXPORT_SYMBOL(__ethtool_get_link_ksettings);
+>> 
+>> +/* Internal kernel helper to query a device ethtool_link_settings. To be called
+>> + * outside of begin/complete block.
+>> + */
+>> +int __ethtool_get_link_ksettings_full(struct net_device *dev,
+>> +				      struct ethtool_link_ksettings *link_ksettings)
+>> +{
+>> +	int rc;
+>> +
+>> +	ASSERT_RTNL();
+>> +
+>> +	if (!dev->ethtool_ops->get_link_ksettings)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (dev->ethtool_ops->begin) {
+>> +		rc = dev->ethtool_ops->begin(dev);
+>> +		if (rc  < 0)
+>> +			return rc;
+>> +	}
+>> +
+>> +	memset(link_ksettings, 0, sizeof(*link_ksettings));
+>> +	rc = dev->ethtool_ops->get_link_ksettings(dev, link_ksettings);
+>> +
+>> +	if (dev->ethtool_ops->complete)
+>> +		dev->ethtool_ops->complete(dev);
+>> +
+>> +	return rc;
+>> +}
+>> +EXPORT_SYMBOL(__ethtool_get_link_ksettings_full);
+>> +
+>> /* convert ethtool_link_usettings in user space to a kernel internal
+>> * ethtool_link_ksettings. return 0 on success, errno on error.
+>> */
+>> -- 
+>> 2.17.1
+
