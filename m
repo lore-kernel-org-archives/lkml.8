@@ -2,107 +2,98 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5C5C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42196C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6F62146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FE721D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:58:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0RdqNJ64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgCKM6l (ORCPT
+        id S1729475AbgCKM6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:58:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35442 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729320AbgCKM6l (ORCPT
+        Wed, 11 Mar 2020 08:58:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39867 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbgCKM6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:58:41 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BCtlvx014086;
-        Wed, 11 Mar 2020 08:58:35 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ypywu1fhj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 08:58:35 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02BCsnS1027972;
-        Wed, 11 Mar 2020 12:58:34 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma05wdc.us.ibm.com with ESMTP id 2ypjxr4x3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 12:58:34 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BCwXJT8127112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 12:58:33 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AABB6124054;
-        Wed, 11 Mar 2020 12:58:33 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8397A124052;
-        Wed, 11 Mar 2020 12:58:33 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Mar 2020 12:58:33 +0000 (GMT)
-Subject: Re: [PATCH v6 1/3] tpm: of: Handle IBM,vtpm20 case when getting log
- parameters
-To:     kbuild test robot <lkp@intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     kbuild-all@lists.01.org, jarkko.sakkinen@linux.intel.com,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com
-References: <20200304132243.179402-2-stefanb@linux.vnet.ibm.com>
- <202003110648.y1djA66Z%lkp@intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <361c9000-fb0a-a34a-9322-4e6fbe738ab4@linux.ibm.com>
-Date:   Wed, 11 Mar 2020 08:58:33 -0400
+        Wed, 11 Mar 2020 08:58:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id c19so714271ioo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pXMGtTgQX/vG6YdfwMEutnSxHcYYkuMTZjUufEEkwrs=;
+        b=0RdqNJ64RPB/YwilvK1FgfDcZgni+Z2YUWUBcLwScASQbGBbB9Dz+LE4Mm35IFt6vr
+         4cSxKXzulAxx/FMhBjxo7H6LFUFR8GPqsvxXNjSRUPuzvFkJ4jv1PyVkcJG+rzbCC2Np
+         QluikAk9mzDbEMQsnqi+vhGhm69SUbxzK8wbFD8zbHl+VIITIdrwzXk7cwoU57h6DYTK
+         xP/B6p8lJjmkYSUT2EEde9KDBifsOxQlJzU6xNbSL1nZM0pl98Obd5V+EG9SnWmey6tz
+         SPlj8XfxaXHr4JqefQegQiSZa1hJYMurvTPgBuMJ9xU7xwGx1tFUNwEPiNDvzHAuPBK6
+         0h/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pXMGtTgQX/vG6YdfwMEutnSxHcYYkuMTZjUufEEkwrs=;
+        b=H6keAo2f46dyyr+pin31gNvScsgFiuTRQmFKvHsQUYa0xVLS+Mdh7Kl9kh8EWDCuZA
+         2dGk9mF61En3uMzpR6Z15y4/KtgkJk2iFou2uRTd8vvnU4ZaWwm9NXNJTQHjiYkXGwaD
+         npOS0hrLQ0aM8d11Bw0aBK31XpZL9My7J4LE9e1JViTQ1KLYKvZ1l8Zqc07Jp7rnKs23
+         kV8UNe2Zy+DWE6z7tMBzkcgspNu/i5/0KZz6LdW2gMZod+aLzbxLqzQatWVRpklYwbQ/
+         LRcOYJ1Bk6p82KaN9mJlMLOjOZV9UKgin9SAp+2p8M7U+ZpGkuLYwtbs+KeCLhaUz0nh
+         +4CQ==
+X-Gm-Message-State: ANhLgQ1Yhhj2uHYfxmmpafCqteO0IyoC833iby5giJTbZRj7GKkeKCrq
+        21plxMs11/IagKrf4tx+QxCttA==
+X-Google-Smtp-Source: ADFU+vvQvrqamJpOiZ/PrfYXGY85lIbp+WER5L+9cjMJPMlJO1Ap5yHyqeha4+2wZHF6gubxcVHRhQ==
+X-Received: by 2002:a02:6658:: with SMTP id l24mr1450719jaf.33.1583931522194;
+        Wed, 11 Mar 2020 05:58:42 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p79sm17821112ill.66.2020.03.11.05.58.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 05:58:41 -0700 (PDT)
+Subject: Re: [PATCH v3] block: refactor duplicated macros
+To:     Matteo Croce <mcroce@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Liu <song@kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+References: <20200311002254.121365-1-mcroce@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7e03d359-f199-29d8-a75f-20c4b7ff3031@kernel.dk>
+Date:   Wed, 11 Mar 2020 06:58:39 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <202003110648.y1djA66Z%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200311002254.121365-1-mcroce@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_05:2020-03-11,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- spamscore=0 phishscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110082
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 6:56 PM, kbuild test robot wrote:
-> Hi Stefan,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on jss-tpmdd/next]
-> [also build test ERROR on powerpc/next linux/master linus/master v5.6-rc5 next-20200310]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Stefan-Berger/Enable-vTPM-2-0-for-the-IBM-vTPM-driver/20200305-042731
-> base:   git://git.infradead.org/users/jjs/linux-tpmdd next
-> config: xtensa-randconfig-a001-20200310 (attached as .config)
-> compiler: xtensa-linux-gcc (GCC) 9.2.0
-> reproduce:
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          GCC_VERSION=9.2.0 make.cross ARCH=xtensa
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+On 3/10/20 6:22 PM, Matteo Croce wrote:
+> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
+> several times in different flavours across the whole tree.
+> Define them just once in a common header.
+> 
+> While at it, replace replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too
+> and rename SECTOR_MASK to PAGE_SECTORS_MASK.
 
-I suppose I would only add this Report-by if this was an issue upstream?!
+Applied, thanks.
 
+-- 
+Jens Axboe
 
