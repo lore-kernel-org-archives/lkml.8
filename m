@@ -2,108 +2,247 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FC4C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DFFC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6795220671
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E0920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:25:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7HIdGTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgCKOX0 (ORCPT
+        id S1729827AbgCKOZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:23:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:50334 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729531AbgCKOX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:23:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 993B831B;
-        Wed, 11 Mar 2020 07:23:25 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B3013F67D;
-        Wed, 11 Mar 2020 07:23:24 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 14:23:21 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] sched/rt: Fix pushing unfit tasks to a better CPU
-Message-ID: <20200311142321.3zfyoemzvheo4omt@e107158-lin.cambridge.arm.com>
-References: <20200302132721.8353-1-qais.yousef@arm.com>
- <20200302132721.8353-7-qais.yousef@arm.com>
- <20200311100020.63bb81e5@gandalf.local.home>
+        Wed, 11 Mar 2020 10:25:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51139 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgCKOZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:25:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a5so2326506wmb.0;
+        Wed, 11 Mar 2020 07:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Nb1plmfKVAC2MuOfuDX+4wev59kTOAoXYnUwoJgsEc=;
+        b=U7HIdGTFOGwgnYE5FaqaayFnfK6pdYCBoTLTdF3EBIatnVSAEqU6MF5IJaFluI92I1
+         LHzqVxK+GuJfCrIQ3zLu7znfofv+au3P5nQSxqG85vopccus3Y4VlB31wswOU2RtJR4K
+         h9rJLbgf01C80Vq6b0GYIk28BudIk+HvCa+xUaxYFuKTpGj2bSOZpKFF7inK23Gq3pFq
+         0nl+WDcXbgekhWuJCfppzb68QbKGLWEYXOvNnBwZ8IMImjJiMQeWVsCCQ3sshpYI1bhB
+         W/49GxRp/Tt3FGJh3Poo+OHzNUjr692j4R0t85CexK4eMXx+O577Rv4/3WqaviKAcsBV
+         KjHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Nb1plmfKVAC2MuOfuDX+4wev59kTOAoXYnUwoJgsEc=;
+        b=k2O69ZuCEpGLcxxBErGdc4xHADSe330pyCPFwJVoYD4g8hdjZs8QoCDKZGdRSM4bgj
+         fpPL4Mjf400pHyOUZKN60BF/SkwGI+gMl7tsLlsbpwpU/szks/XRmByd+1aaUbGr1PUW
+         BgjyBCTWqS5Vyfgdv0mnY/kCd7AEOQ+PIlZR9HUhOTEefKDS9FPTQ2NMGuFeAhuO80lL
+         I9Oqfl9T8AenS2rB8bZoTgLngQEsPLgUqEj105NWyf/ZfEPhT9R4HHaoaJ4JQcyYgoyw
+         4oLCBLegOUxGAJli0Kx5BkUimzbSoVx2XvrfEQ3JyGhYGvB1ykC2pgF+HKxN70t/PFtU
+         cZvw==
+X-Gm-Message-State: ANhLgQ0uQ5UIQ0cciv/wH6svHy4Q+7aft6TvDyoqGqdTdmXsEgi4xgzJ
+        hOQt9j6ybyF1U+I9atZOSKA=
+X-Google-Smtp-Source: ADFU+vv0xKGBUYpBIvH40iDkndpgBVMWwB6DdAtSmVeVuY13QccFoclSfNHbas6fXIRJ1zXzVhp0Rg==
+X-Received: by 2002:a7b:c202:: with SMTP id x2mr4023042wmi.71.1583936702561;
+        Wed, 11 Mar 2020 07:25:02 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 9sm8541009wmo.38.2020.03.11.07.25.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 07:25:01 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 14:25:00 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v1 4/5] mm/memory_hotplug: convert memhp_auto_online to
+ store an online_type
+Message-ID: <20200311142500.ja5ftlfhv4fgmgcj@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200311123026.16071-1-david@redhat.com>
+ <20200311123026.16071-5-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311100020.63bb81e5@gandalf.local.home>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200311123026.16071-5-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/11/20 10:00, Steven Rostedt wrote:
-> On Mon,  2 Mar 2020 13:27:21 +0000
-> Qais Yousef <qais.yousef@arm.com> wrote:
+On Wed, Mar 11, 2020 at 01:30:25PM +0100, David Hildenbrand wrote:
+>... and rename it to memhp_default_online_type. This is a preparation
+>for more detailed default online behavior.
+>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Michal Hocko <mhocko@kernel.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>Cc: Paul Mackerras <paulus@samba.org>
+>Cc: Michael Ellerman <mpe@ellerman.id.au>
+>Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>Cc: Wei Liu <wei.liu@kernel.org>
+>Cc: Thomas Gleixner <tglx@linutronix.de>
+>Cc: linuxppc-dev@lists.ozlabs.org
+>Cc: linux-hyperv@vger.kernel.org
+>Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+
+>---
+> arch/powerpc/platforms/powernv/memtrace.c |  2 +-
+> drivers/base/memory.c                     | 10 ++++------
+> drivers/hv/hv_balloon.c                   |  2 +-
+> include/linux/memory_hotplug.h            |  3 ++-
+> mm/memory_hotplug.c                       | 13 +++++++------
+> 5 files changed, 15 insertions(+), 15 deletions(-)
+>
+>diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
+>index d6d64f8718e6..e15a600cfa4d 100644
+>--- a/arch/powerpc/platforms/powernv/memtrace.c
+>+++ b/arch/powerpc/platforms/powernv/memtrace.c
+>@@ -235,7 +235,7 @@ static int memtrace_online(void)
+> 		 * If kernel isn't compiled with the auto online option
+> 		 * we need to online the memory ourselves.
+> 		 */
+>-		if (!memhp_auto_online) {
+>+		if (memhp_default_online_type == MMOP_OFFLINE) {
+> 			lock_device_hotplug();
+> 			walk_memory_blocks(ent->start, ent->size, NULL,
+> 					   online_mem_block);
+>diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>index 8a7f29c0bf97..8d3e16dab69f 100644
+>--- a/drivers/base/memory.c
+>+++ b/drivers/base/memory.c
+>@@ -386,10 +386,8 @@ static DEVICE_ATTR_RO(block_size_bytes);
+> static ssize_t auto_online_blocks_show(struct device *dev,
+> 				       struct device_attribute *attr, char *buf)
+> {
+>-	if (memhp_auto_online)
+>-		return sprintf(buf, "online\n");
+>-	else
+>-		return sprintf(buf, "offline\n");
+>+	return sprintf(buf, "%s\n",
+>+		       online_type_to_str[memhp_default_online_type]);
+> }
 > 
-> > +			 * Don't bother moving it if the destination CPU is
-> > +			 * not running a lower priority task.
-> > +			 */
-> > +			if (p->prio < cpu_rq(target)->rt.highest_prio.curr) {
-> > +
-> > +				cpu = target;
-> > +
-> > +			} else if (p->prio == cpu_rq(target)->rt.highest_prio.curr) {
-> > +
-> > +				/*
-> > +				 * If the priority is the same and the new CPU
-> > +				 * is a better fit, then move, otherwise don't
-> > +				 * bother here either.
-> > +				 */
-> > +				if (fit_target)
-> > +					cpu = target;
-> > +			}
+> static ssize_t auto_online_blocks_store(struct device *dev,
+>@@ -397,9 +395,9 @@ static ssize_t auto_online_blocks_store(struct device *dev,
+> 					const char *buf, size_t count)
+> {
+> 	if (sysfs_streq(buf, "online"))
+>-		memhp_auto_online = true;
+>+		memhp_default_online_type = MMOP_ONLINE;
+> 	else if (sysfs_streq(buf, "offline"))
+>-		memhp_auto_online = false;
+>+		memhp_default_online_type = MMOP_OFFLINE;
+> 	else
+> 		return -EINVAL;
 > 
-> BTW, A little better algorithm would be to test fit_target first:
+>diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+>index a02ce43d778d..3b90fd12e0c5 100644
+>--- a/drivers/hv/hv_balloon.c
+>+++ b/drivers/hv/hv_balloon.c
+>@@ -727,7 +727,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+> 		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
 > 
-> 	target_prio = cpu_rq(target)->rt.hightest_prio.curr;
-> 	if (p->prio < target_prio) {
-> 		cpu = target;
+> 		init_completion(&dm_device.ol_waitevent);
+>-		dm_device.ha_waiting = !memhp_auto_online;
+>+		dm_device.ha_waiting = memhp_default_online_type == MMOP_OFFLINE;
 > 
-> 	} else if (fit_target && p->prio == target_prio) {
-> 		cpu = target;
-> 	}
+> 		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+> 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+>diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>index c2e06ed5e0e9..c6e090b34c4b 100644
+>--- a/include/linux/memory_hotplug.h
+>+++ b/include/linux/memory_hotplug.h
+>@@ -117,7 +117,8 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
+> 			struct mhp_restrictions *restrictions);
+> extern u64 max_mem_size;
 > 
-> Which can also just be a single if statement:
+>-extern bool memhp_auto_online;
+>+/* Default online_type (MMOP_*) when new memory blocks are added. */
+>+extern int memhp_default_online_type;
+> /* If movable_node boot option specified */
+> extern bool movable_node_enabled;
+> static inline bool movable_node_is_enabled(void)
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 1a00b5a37ef6..01443c70aa27 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -67,18 +67,18 @@ void put_online_mems(void)
+> bool movable_node_enabled = false;
 > 
-> 	if (p->prio < target_prio ||
-> 	    (fit_target && p->prio == target_prio)
-> 		cpu = target;
+> #ifndef CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE
+>-bool memhp_auto_online;
+>+int memhp_default_online_type = MMOP_OFFLINE;
+> #else
+>-bool memhp_auto_online = true;
+>+int memhp_default_online_type = MMOP_ONLINE;
+> #endif
+>-EXPORT_SYMBOL_GPL(memhp_auto_online);
+>+EXPORT_SYMBOL_GPL(memhp_default_online_type);
+> 
+> static int __init setup_memhp_default_state(char *str)
+> {
+> 	if (!strcmp(str, "online"))
+>-		memhp_auto_online = true;
+>+		memhp_default_online_type = MMOP_ONLINE;
+> 	else if (!strcmp(str, "offline"))
+>-		memhp_auto_online = false;
+>+		memhp_default_online_type = MMOP_OFFLINE;
+> 
+> 	return 1;
+> }
+>@@ -991,6 +991,7 @@ static int check_hotplug_memory_range(u64 start, u64 size)
+> 
+> static int online_memory_block(struct memory_block *mem, void *arg)
+> {
+>+	mem->online_type = memhp_default_online_type;
+> 	return device_online(&mem->dev);
+> }
+> 
+>@@ -1063,7 +1064,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
+> 	mem_hotplug_done();
+> 
+> 	/* online pages if requested */
+>-	if (memhp_auto_online)
+>+	if (memhp_default_online_type != MMOP_OFFLINE)
+> 		walk_memory_blocks(start, size, NULL, online_memory_block);
+> 
+> 	return ret;
+>-- 
+>2.24.1
 
-Indeed.
-
-We might have a better fix now if [1] goes in.
-
-It'd fix the 'thundering herd' issue I mentioned before.
-cpumask_any_and_distribute() should teach find_lowest_rq() to distribute tasks
-that wakeup at the same time better. Hence fix the need to do the above.
-It won't be bullet proof still, but neither the above is.
-
-I'm sure there will be other places that can benefit from this distribution
-function too.
-
-Thanks!
-
---
-Qais Yousef
-
-[1] https://lore.kernel.org/lkml/20200311010113.136465-1-joshdon@google.com/
+-- 
+Wei Yang
+Help you, Help me
