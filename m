@@ -2,159 +2,156 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBE2C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFDEC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F38121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E718F21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="nJ8/+eXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgCKDiu (ORCPT
+        id S1728061AbgCKDnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:38:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15314 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727648AbgCKDit (ORCPT
+        Tue, 10 Mar 2020 23:43:37 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43698 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbgCKDnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:38:49 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B3Topf127702
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:38:48 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ypjxd56mu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:38:48 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 11 Mar 2020 03:38:45 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Mar 2020 03:38:38 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02B3cbIQ25952406
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 03:38:37 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2237242041;
-        Wed, 11 Mar 2020 03:38:37 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BAE7D4203F;
-        Wed, 11 Mar 2020 03:38:36 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Mar 2020 03:38:36 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 97549A0130;
-        Wed, 11 Mar 2020 14:38:31 +1100 (AEDT)
-Subject: Re: [PATCH v3 21/27] powerpc/powernv/pmem: Add an IOCTL to request
- controller health & perf data
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 11 Mar 2020 14:38:35 +1100
-In-Reply-To: <3ecb49e3-8828-ab7b-4391-5dd6127e76e0@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-22-alastair@au1.ibm.com>
-         <fdc5faec-d03d-3cba-4a9c-add7e522ad13@linux.ibm.com>
-         <3ecb49e3-8828-ab7b-4391-5dd6127e76e0@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 10 Mar 2020 23:43:37 -0400
+Received: by mail-ed1-f65.google.com with SMTP id dc19so1109562edb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CCpVdCL5A6Oia90+I5IH75I8Yb81GbOHYhkCg0SoRo4=;
+        b=nJ8/+eXQLL14Bq3hAfEKaNkcuE0LJoTv4/4MeEEXgzMp4KLSx9aY7HnJZ9UhVp3W9Y
+         fXxkd5cNxriEVWhu7CxUFZ/Wk0e50qIqXnTH6Ri9UJZf9mPscvZif0BVieasPbLbv5kb
+         GQmVIMXbKASfnhROqiBIDAe48wIKVspe9m4dDZnvUuNZ9UaPD8GcRDiL3X0ldOcZ+pnI
+         k2gVgpXexZUSH7fKQ3eFnG3kD3wsPIhFOiRjGQo1kylrAqUGMYwz1s6/jMMNH/ytSVv8
+         KQeML8Q5Nqh30BBdkcpyaonvrG4g9J2RN2B//RrG0wjhlVWCt5pZSIHQzypaJKqJS2g5
+         rV6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CCpVdCL5A6Oia90+I5IH75I8Yb81GbOHYhkCg0SoRo4=;
+        b=piesGniNnngr/R0l+EwdsfCt5nIso7GoBUOb0QoggdmcvOmZotpYS8Qgx2UeEJegfY
+         IKBNqSUfpfAyfeKCR6lO4eXmhPI73mWesO5ebnR0yzB+qMyadJMeicFz7/vG/rkOTj7N
+         +K+Ii2lBpNVaHGE/gHlP/kJem+7QvXde20BcgGzyCtd7UONQgT0M+LzxqQeXw5GwAmYp
+         Bjzy3Z8Zfjcwt8VlLihCYNArroZqLNxb83S1kyLSh7ybJYxRvFKcDSQBmklHe27AAX6t
+         kTsdpFAemTE9OUIgvo15eADd4DpWtmJjMAADyNv0KryL4vL22wn5FWzGXHahCpOE3utu
+         x3Cg==
+X-Gm-Message-State: ANhLgQ0GhTprwGPOGOeSMSQnqPtCv8b8Xt5t6E7J/ZCfCTqZIETubQb4
+        IgHMDGM6byssezbiFuPgt1QjGtZZ9tiLk4v7g5sW2w==
+X-Google-Smtp-Source: ADFU+vvpVyJEYOHSvxTt0jv9faPw/cY00LFVDFiLuvXyfzEgv30x/D/c6hrhc0XXqk7qHc23+OeLh0RzP5ZxEyP2RYI=
+X-Received: by 2002:a50:f38e:: with SMTP id g14mr958779edm.168.1583898213971;
+ Tue, 10 Mar 2020 20:43:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031103-0020-0000-0000-000003B288B6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031103-0021-0000-0000-0000220AD6ED
-Message-Id: <97d52eefea5f362fee47e378a3e7ae51d565b291.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_17:2020-03-10,2020-03-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxscore=0 mlxlogscore=560 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110020
+References: <20200225235856.975366-1-jason@jlekstrand.net> <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+ <20200226100523.GQ2363188@phenom.ffwll.local> <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
+ <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com>
+ <810a26e7-4294-a615-b7ee-18148ac70641@amd.com> <CAOFGe96namyeQXTvdrduM+=wkJuoWWx34CxcsJHS3fcCaKDadw@mail.gmail.com>
+ <21aeacc0-f3ae-c5dd-66df-4d2f3d73f73e@amd.com> <CAOFGe95Gx=kX=sxwhx1FYmXQuPtGAKwt2V5YodQBwJXujE3WwA@mail.gmail.com>
+ <CAOFGe97XSxgzCViOH=2+B2_d5P3vGifKmvAw-JrzRQbbRMRbcg@mail.gmail.com>
+ <6fb8becf-9e6b-f59e-9c22-2b20069241a7@amd.com> <CAOFGe94gv9N+6n6oEC2aRtsmy7kBfx1D_R6WLQSGq7-8yUM_OQ@mail.gmail.com>
+ <203505dc-7b75-1135-587e-cc6e88ade8cd@amd.com>
+In-Reply-To: <203505dc-7b75-1135-587e-cc6e88ade8cd@amd.com>
+From:   Jason Ekstrand <jason@jlekstrand.net>
+Date:   Tue, 10 Mar 2020 22:43:22 -0500
+Message-ID: <CAOFGe94DnZcTb51TE3kFYxMgLkEWdNg2Yz3f4BEWNXz4GTOs7Q@mail.gmail.com>
+Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync files
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
+        Dave Airlie <airlied@redhat.com>,
+        Jesse Hall <jessehall@google.com>,
+        James Jones <jajones@nvidia.com>,
+        Daniel Stone <daniels@collabora.com>,
+        =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 12:06 +0100, Frederic Barrat wrote:
-> 
-> Le 28/02/2020 à 07:12, Andrew Donnellan a écrit :
-> > On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> > > From: Alastair D'Silva <alastair@d-silva.org>
-> > > 
-> > > When health & performance data is requested from the controller,
-> > > it responds with an error log containing the requested
-> > > information.
-> > > 
-> > > This patch allows the request to me issued via an IOCTL.
-> > 
-> > A better explanation would be good - this IOCTL triggers a request
-> > to 
-> > the controller to collect controller health/perf data, and the 
-> > controller will later respond with an error log that can be picked
-> > up 
-> > via the error log IOCTL that you've defined earlier.
-> 
-> And even more precisely (to also check my understanding):
-> 
->  > this IOCTL triggers a request to
->  > the controller to collect controller health/perf data, and the
->  > controller will later respond
-> 
-> by raising an interrupt to let the user app know that
-> 
->  > an error log that can be picked up
->  > via the error log IOCTL that you've defined earlier.
-> 
-> 
-> The rest of the patch looks ok to me.
-> 
->    Fred
+On Mon, Mar 9, 2020 at 11:21 AM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 05.03.20 um 16:54 schrieb Jason Ekstrand:
+> > On Thu, Mar 5, 2020 at 7:06 AM Christian K=C3=B6nig <christian.koenig@a=
+md.com> wrote:
+> >> [SNIP]
+> >> Well as far as I can see this won't work because it would break the
+> >> semantics of the timeline sync.
+> > I'm not 100% convinced it has to.  We already have support for the
+> > seqno regressing and we ensure that we still wait for all the fences.
+> > I thought maybe we could use that but I haven't spent enough time
+> > looking at the details to be sure.  I may be missing something.
+>
+> That won't work. The seqno regression works by punishing userspace for
+> doing something stupid and undefined.
+>
+> Be we can't do that under normal circumstances.
+>
+> >> I can prototype that if you want, shouldn't be more than a few hours o=
+f
+> >> hacking anyway.
+> > If you'd like to, go for it.  I'd be happy to give it a go as well but
+> > if you already know what you want, it may be easier for you to just
+> > write the patch for the cursor.
+>
+> Send you two patches for that a few minutes ago. But keep in mind that
+> those are completely untested.
 
-Ok
+No worries.  They were full of bugs but I think I've got them sorted
+out now.  The v2's I'm about to send seem to work.  I'm going to leave
+a Vulkan demo running all night long just to make sure I'm not leaking
+memory like mad.
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+--Jason
 
+> > Two more questions:
+> >
+> >   1. Do you want this collapsing to happen every time we create a
+> > dma_fence_array or should it be a special entrypoint?  Collapsing all
+> > the time likely means doing extra array calculations instead of the
+> > dma_fence_array taking ownership of the array that's passed in.  My
+> > gut says that cost is ok; but my gut doesn't spend much time in kernel
+> > space.
+>
+> In my prototype implementation that is a dma_resv function you call and
+> get either a single fence or a dma_fence_array with the collapsed fences
+> in return.
+>
+> But I wouldn't add that to the general dma_fence_array_init function
+> since this is still a rather special case. Well see the patches, they
+> should be pretty self explaining.
+>
+> >   2. When we do the collapsing, should we call dma_fence_is_signaled()
+> > to avoid adding signaled fences to the array?  It seems like avoiding
+> > adding references to fences that are already signaled would let the
+> > kernel clean them up faster and reduce the likelihood that a fence
+> > will hang around forever because it keeps getting added to arrays with
+> > other unsignaled fences.
+>
+> I think so. Can't think of a good reason why we would want to add
+> already signaled fences to the array.
+>
+> Christian.
+>
+> >
+> > --Jason
+>
