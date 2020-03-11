@@ -2,94 +2,118 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD799C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F937C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C213206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="avmx2t1I"
+	by mail.kernel.org (Postfix) with ESMTP id 2D27C20736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583951736;
+	bh=/dlRsfvS/we5eABYE9MJFKJ0xsg5SyvhCoQ5qD84TX0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=apWPgUQQO3ntdCJ1hroMTBfe3l9LeZZdy3cfI94iwySrFBaK8B6q5VYtCpqY004P3
+	 vBN2MYHFkITpCF5RrqjFjHwv1yskoxI7gekgP5D9LMs0YWexZZWicHxLdKHptnDg5j
+	 G0ZrdGCumXnjJVSgIhiQjvKYQy2PiX2Onh6CNqrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbgCKSex (ORCPT
+        id S1730885AbgCKSfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:34:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37261 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730641AbgCKSew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:34:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583951692;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=ck66yOynV6oFFHDYrIkPfdq+bgw9rigHmyCYwCoQaaQ=;
-        b=avmx2t1IC9dvDiqjd9CQrDoDkb0Uwsh2MGMTMbASMc8fe3iWN3ysabN+s80PiM0m0+/FD5
-        AAZil4VHNfzm8s/zjiQsU+dUwz8ujDgghjdEB457i6e/z4o8GAW8DySWg+xE+bamwN+JEX
-        hXXWGFdrhKQNEG6ZDN3vde//E5f0r54=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-Yf2UNswrNKGu9r_EIxvw3w-1; Wed, 11 Mar 2020 14:34:48 -0400
-X-MC-Unique: Yf2UNswrNKGu9r_EIxvw3w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 092A8107ACCC;
-        Wed, 11 Mar 2020 18:34:47 +0000 (UTC)
-Received: from virtlab512.virt.lab.eng.bos.redhat.com (virtlab512.virt.lab.eng.bos.redhat.com [10.19.152.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BB6B884779;
-        Wed, 11 Mar 2020 18:34:45 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mtosatti@redhat.com, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, pbonzini@redhat.com
-Subject: [Patch v1] KVM: x86: Initializing all kvm_lapic_irq fields
-Date:   Wed, 11 Mar 2020 14:34:45 -0400
-Message-Id: <1583951685-202743-1-git-send-email-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Wed, 11 Mar 2020 14:35:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:53466 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730641AbgCKSfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:35:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3869D1FB;
+        Wed, 11 Mar 2020 11:35:33 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B02773F6CF;
+        Wed, 11 Mar 2020 11:35:32 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 18:35:31 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     broonie@kernel.org, chenxiang66@hisilicon.com, joe@perches.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-next@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, rdunlap@infradead.org,
+        sfr@canb.auug.org.au, Tudor.Ambarus@microchip.com
+Subject: Applied "spi: Stop selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX" to the spi tree
+In-Reply-To:  <1583948115-239907-1-git-send-email-john.garry@huawei.com>
+Message-Id:  <applied-1583948115-239907-1-git-send-email-john.garry@huawei.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously all fields of structure kvm_lapic_irq were not initialized
-before it was passed to kvm_bitmap_or_dest_vcpus(). Which will cause
-an issue when any of those fields are used for processing a request.
-This patch initializes all the fields of kvm_lapic_irq based on the
-values which are passed through the ioapic redirect_entry object.
+The patch
 
-Fixes: 7ee30bc132c6("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+   spi: Stop selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From caef2df1137adcea48b0902f310f4639b846e3a1 Mon Sep 17 00:00:00 2001
+From: John Garry <john.garry@huawei.com>
+Date: Thu, 12 Mar 2020 01:35:15 +0800
+Subject: [PATCH] spi: Stop selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX
+
+By selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX, we may introduce unmet
+dependencies:
+
+WARNING: unmet direct dependencies detected for MTD_SPI_NOR
+  Depends on [m]: MTD [=m] && SPI_MASTER [=y]
+  Selected by [y]:
+  - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
+
+Since MTD_SPI_NOR is only selected by SPI_HISI_SFC_V3XX for practical
+reasons - slave devices use the spi-nor driver, enabled by MTD_SPI_NOR -
+just drop it.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+
+Link: https://lore.kernel.org/r/1583948115-239907-1-git-send-email-john.garry@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/x86/kvm/ioapic.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/spi/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 7668fed..3a8467d 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
- 		if (e->fields.delivery_mode == APIC_DM_FIXED) {
- 			struct kvm_lapic_irq irq;
- 
--			irq.shorthand = APIC_DEST_NOSHORT;
- 			irq.vector = e->fields.vector;
- 			irq.delivery_mode = e->fields.delivery_mode << 8;
--			irq.dest_id = e->fields.dest_id;
- 			irq.dest_mode =
- 			    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
-+			irq.level = 1;
-+			irq.trig_mode = e->fields.trig_mode;
-+			irq.shorthand = APIC_DEST_NOSHORT;
-+			irq.dest_id = e->fields.dest_id;
-+			irq.msi_redir_hint = false;
- 			bitmap_zero(&vcpu_bitmap, 16);
- 			kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
- 						 &vcpu_bitmap);
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 8ad267cb15cd..ad79454d8584 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -299,7 +299,6 @@ config SPI_HISI_SFC_V3XX
+ 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
+ 	depends on (ARM64 && ACPI) || COMPILE_TEST
+ 	depends on HAS_IOMEM
+-	select MTD_SPI_NOR
+ 	help
+ 	  This enables support for HiSilicon v3xx SPI-NOR flash controller
+ 	  found in hi16xx chipsets.
 -- 
-1.8.3.1
+2.20.1
 
