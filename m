@@ -2,177 +2,197 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F3AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D54C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D280205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583888457;
-	bh=WGmn9XbX98c+gTv43PciiVyTFBGe2hdoDYrb8BxgOLs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G7mbblQ+zXT1ImFyIlA4drw4sE5ti/Qv4oXx2TmRZUNIvWUpICF7EJaeFmK0oaf3k
-	 D2Mywgu3VI2SYNvYzZX/ibXe/3yTobYNcNky5E7YbnQRS7iPOqmxDS4qEvv5hRKupS
-	 qMUIJSTS1QCzpnYkHBqq/prcsB1OUToemq/NRgBA=
+	by mail.kernel.org (Postfix) with ESMTP id 256D221D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:01:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RGcqqP2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgCKBA4 (ORCPT
+        id S1727889AbgCKBBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:00:56 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:47467 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbgCKBA4 (ORCPT
+        Tue, 10 Mar 2020 21:01:40 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:40621 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbgCKBBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:00:56 -0400
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 02B10l05031935
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:00:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02B10l05031935
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583888448;
-        bh=KUzkZz+40uH/FoOvp/tZz+GQMOBtVLpt7fPLrvD4dT0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ffFBxNixEWpPLRQvp9jyB0fRgorDhjPhXSwGuCqO95NmlfDgzYweJqbNtHWhfNs+f
-         G0M+0qbkk/Cx47CHAKhm86BHZL629y8ZnJU2UJTZIS37qyrMLf8BjZhWwlzcJ9FFpi
-         BG6DMS3Kc5PWvveWfF0i0MEAPz4KdqCMHsG/wctCAEddjre8kNbtVzWc3OZhVpJ0yW
-         tQyDDb078hM+8cd35X1ERzHi2y9cPXra+oH+AMxDJ7R9po4avpKbyTPhJ0jwC32ukk
-         +1Z7g10Ol2xxaHwLywKAs6bOCKBvGw2QFmg/D8h4GLq+p8xZ8bFjhMRiL5prVCnKb0
-         83WjCKDoTitQA==
-X-Nifty-SrcIP: [209.85.221.174]
-Received: by mail-vk1-f174.google.com with SMTP id q8so64323vka.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 18:00:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1quN6HDuTdOVl+w5BcFs4pqbWfQARjVikjKTsEAqPMtclagW+3
-        ncEf+0rm8dpRDs5PVUn69x0EXa3Q0hydisSzmZk=
-X-Google-Smtp-Source: ADFU+vuTbEtm/O3NPmJLiQkkiej5z+7jrqg6qV6ldniovJgwOKtJaQGYnbjHbhQDl5YtFsBc+4idYviNKLxtuSCAV5Y=
-X-Received: by 2002:a1f:2f4c:: with SMTP id v73mr576209vkv.12.1583888447027;
- Tue, 10 Mar 2020 18:00:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306160206.5609-1-jeyu@kernel.org> <CAK7LNARZ4VgaCa_TiDBG-99amBGTTXTQMs9LsK3nO4k+y-5KDQ@mail.gmail.com>
- <20200309095914.GA18870@linux-8ccs.fritz.box> <CAK7LNARf9CzZ8dcK5O5vxUoncpDdpzSZctd0YuKeWyfDG_cdwA@mail.gmail.com>
- <20200309103935.GB18870@linux-8ccs.fritz.box> <CAK7LNARpJ-FAvCUEH9rrNCiqx5LwRHmWospvRnT-ERQoEGjK-Q@mail.gmail.com>
- <20200309105812.GC18870@linux-8ccs.fritz.box> <CAK7LNAQqMGSkX4Coe+f49SbXT_jkG_Mm4XZ3EJei0_K7SEaLhg@mail.gmail.com>
- <20200310113158.GA4865@linux-8ccs.fritz.box> <20200310155516.GC22995@intel.com>
-In-Reply-To: <20200310155516.GC22995@intel.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 11 Mar 2020 10:00:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQM1WF1rk5H+26J87-jC4ghYvdEs1UQSNy+C87myS94DQ@mail.gmail.com>
-Message-ID: <CAK7LNAQM1WF1rk5H+26J87-jC4ghYvdEs1UQSNy+C87myS94DQ@mail.gmail.com>
-Subject: Re: [LKP] Re: [PATCH v3 1/2] modpost: rework and consolidate logging interface
-To:     Philip Li <philip.li@intel.com>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkp@01.org
+        Tue, 10 Mar 2020 21:01:40 -0400
+Received: by mail-pf1-f201.google.com with SMTP id d127so225099pfa.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 18:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=uFju+yiXs54MdHtgioQYAx/aRo0/p25DSWXwTL9KVhU=;
+        b=RGcqqP2HhuPpq5mYsqQ1M/+GX4ukKpmw6wJTxII3zvx2Bf104CkLRTUii4yFizR6Bg
+         2wg1xwQZBz5v7mn91rdSOig5iFIA8pad9iTMrm9EqHXRC50XxovDweSCklDbYBJlQ2d3
+         T8BG94oZMiucIeoDoU5DVQWBfDLDa6mNSXqmBZhFdwHof4avq/PZ3c4vpH4u8TFUFZkX
+         bwhJIoZeHDiX9QCUudRaZhuqqUG7RLYxF9D49/SqlQqRxRgA3b027mTdfzZSmIiGwp1g
+         COztLez1h6t1oDDuHe2qbuCNyz0ovGiDKTyDCrxZeDCifF50x/oAmDH+zz99mPxXzsRJ
+         KIvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=uFju+yiXs54MdHtgioQYAx/aRo0/p25DSWXwTL9KVhU=;
+        b=JYW+gac4yPO8Vk7MaJP4jd0EdAzsuhmDz2RH8n5R5q0dcersXMCbYnAv3NxWWK3XuO
+         z0szunVXM8sumdna/627/FU8TNzAGRIpyjJN0ILT7puHgOdRphuNsMWAMxgTK2KlOdE0
+         OLtPcRYktoKlWDQ6xa48L5VqMfeWcptZhdrxJAk/ebMVJ71/X7RIcxWavMBlZ2qKGpRm
+         67bihgLRS2hrc9JucVxz8mQTIOQXl7ZyZ8f2jxSgsZNRcWIIA+5K84QA/9fERAPkF0M5
+         F8DEgUJ6BBe5NJe1qUK6Dm356qhD3Jzs8iGSh1mZiyKa5hZblKzb4i8YqnLU/CvKixYw
+         GDTg==
+X-Gm-Message-State: ANhLgQ2Bx45CQPRgAN8zoHUjqKAhsFZ7n0zBDtXcvrri7QLv5/t52rqW
+        Q1JSp+ZkzzpkQ77VOGZAh7bg8IVibg6S
+X-Google-Smtp-Source: ADFU+vtv1JcbFOuxbcyBd07owGiwiL/aoKg6YUYaLuhfUd5CE/FpUdrKIM2Q6j8dUNWjsJCdTgYWsI0mToUt
+X-Received: by 2002:a17:90b:238e:: with SMTP id mr14mr686812pjb.146.1583888498905;
+ Tue, 10 Mar 2020 18:01:38 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 18:01:13 -0700
+Message-Id: <20200311010113.136465-1-joshdon@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v2] sched/cpuset: distribute tasks within affinity masks
+From:   Josh Don <joshdon@google.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Paul Turner <pjt@google.com>, Josh Don <joshdon@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:56 AM Philip Li <philip.li@intel.com> wrote:
->
-> On Tue, Mar 10, 2020 at 12:32:00PM +0100, Jessica Yu wrote:
-> > +++ Masahiro Yamada [09/03/20 20:03 +0900]:
-> > > On Mon, Mar 9, 2020 at 7:58 PM Jessica Yu <jeyu@kernel.org> wrote:
-> > > >
-> > > > +++ Masahiro Yamada [09/03/20 19:49 +0900]:
-> > > > >On Mon, Mar 9, 2020 at 7:39 PM Jessica Yu <jeyu@kernel.org> wrote:
-> > > > >>
-> > > > >> Ah, sorry, I mean the kbuild 0-day bot errors. I am just realizing
-> > > > >> the 0-day bot emails are not CC'd to lkml. Here is the error I got
-> > > > >> from the bot:
-> > > > >>
-> > > > >> ---
-> > > > >>
-> > > > >> I love your patch! Yet something to improve:
-> > > > >>
-> > > > >> [auto build test ERROR on linus/master]
-> > > > >> [also build test ERROR on v5.6-rc4 next-20200306]
-> > > > >> [if your patch is applied to the wrong git tree, please drop us a note to help
-> > > > >> improve the system. BTW, we also suggest to use '--base' option to specify the
-> > > > >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > > > >>
-> > > > >> url:    https://github.com/0day-ci/linux/commits/Jessica-Yu/modpost-rework-and-consolidate-logging-interface/20200307-052346
-> > > > >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 30fe0d07fd7b27d41d9b31a224052cc4e910947a
-> > > > >> config: sh-randconfig-a001-20200306 (attached as .config)
-> > > > >> compiler: sh4-linux-gcc (GCC) 7.5.0
-> > > > >> reproduce:
-> > > > >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > > >>         chmod +x ~/bin/make.cross
-> > > > >>         # save the attached .config to linux build tree
-> > > > >>         GCC_VERSION=7.5.0 make.cross ARCH=sh
-> > > > >>
-> > > > >> If you fix the issue, kindly add following tag
-> > > > >> Reported-by: kbuild test robot <lkp@intel.com>
-> > > > >>
-> > > > >> All errors (new ones prefixed by >>):
-> > > > >>
-> > > > >> >> ERROR: modpost: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
-> > > > >
-> > > > >
-> > > > >Indeed, this one is odd.
-> > > > >I have no idea...
-> > > >
-> > > > I've pushed the patches to a branch to let the kbuild bot run through its
-> > > > build tests again, and if I have extra time today I will try to
-> > > > reproduce this and let you know the results.
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Jessica
-> > >
-> > >
-> > > Ah, Now I see.
-> > >
-> > >
-> > > Because you added "modpost:" prefix.
-> > >
-> > >
-> > >
-> > > The previous error message:
-> > >
-> > > ERROR: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
-> > >
-> > >
-> > > The new error message:
-> > >
-> > > ERROR: modpost: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
-> > >
-> > >
-> > >
-> > > So, the bot assumed it was a new error.
-> >
-> > Nice catch! Hm, I suppose we need to let the LKP folks know about the
-> > change in error message. CC'd LKP mailing list.
-> Thanks for the info, we will look into this to handle the
-> changed error.
->
-> >
-> > Jessica
-> > _______________________________________________
-> > LKP mailing list -- lkp@lists.01.org
-> > To unsubscribe send an email to lkp-leave@lists.01.org
+From: Paul Turner <pjt@google.com>
 
+Currently, when updating the affinity of tasks via either cpusets.cpus,
+or, sched_setaffinity(); tasks not currently running within the newly
+specified mask will be arbitrarily assigned to the first CPU within the
+mask.
 
+This (particularly in the case that we are restricting masks) can
+result in many tasks being assigned to the first CPUs of their new
+masks.
 
-Could you improve the report by adding more context?
+This:
+ 1) Can induce scheduling delays while the load-balancer has a chance to
+    spread them between their new CPUs.
+ 2) Can antogonize a poor load-balancer behavior where it has a
+    difficult time recognizing that a cross-socket imbalance has been
+    forced by an affinity mask.
 
-Currently, only new errors/warnings are shown by '>>'.
+This change adds a new cpumask interface to allow iterated calls to
+distribute within the intersection of the provided masks.
 
+The cases that this mainly affects are:
+- modifying cpuset.cpus
+- when tasks join a cpuset
+- when modifying a task's affinity via sched_setaffinity(2)
 
-If fixed ones had been shown by '<<',
-we would have easily noticed that
-this was just a matter of message format.
+Co-developed-by: Josh Don <joshdon@google.com>
+Signed-off-by: Josh Don <joshdon@google.com>
+Signed-off-by: Paul Turner <pjt@google.com>
+---
+v2:
+- Moved the "distribute" implementation to a new
+cpumask_any_and_distribute() function
+- No longer move a task if it is already running on an allowed cpu
 
-<< ERROR: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
->> ERROR: modpost: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
+ include/linux/cpumask.h |  7 +++++++
+ kernel/sched/core.c     |  7 ++++++-
+ lib/cpumask.c           | 29 +++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+), 1 deletion(-)
 
-
-
-
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index d5cc88514aee..f0d895d6ac39 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -194,6 +194,11 @@ static inline unsigned int cpumask_local_spread(unsigned int i, int node)
+ 	return 0;
+ }
+ 
++static inline int cpumask_any_and_distribute(const struct cpumask *src1p,
++					     const struct cpumask *src2p) {
++	return cpumask_next_and(-1, src1p, src2p);
++}
++
+ #define for_each_cpu(cpu, mask)			\
+ 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask)
+ #define for_each_cpu_not(cpu, mask)		\
+@@ -245,6 +250,8 @@ static inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
+ int cpumask_next_and(int n, const struct cpumask *, const struct cpumask *);
+ int cpumask_any_but(const struct cpumask *mask, unsigned int cpu);
+ unsigned int cpumask_local_spread(unsigned int i, int node);
++int cpumask_any_and_distribute(const struct cpumask *src1p,
++			       const struct cpumask *src2p);
+ 
+ /**
+  * for_each_cpu - iterate over every cpu in a mask
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1a9983da4408..fc6f2bec7d44 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1652,7 +1652,12 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_equal(p->cpus_ptr, new_mask))
+ 		goto out;
+ 
+-	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
++	/*
++	 * Picking a ~random cpu helps in cases where we are changing affinity
++	 * for groups of tasks (ie. cpuset), so that load balancing is not
++	 * immediately required to distribute the tasks within their new mask.
++	 */
++	dest_cpu = cpumask_any_and_distribute(cpu_valid_mask, new_mask);
+ 	if (dest_cpu >= nr_cpu_ids) {
+ 		ret = -EINVAL;
+ 		goto out;
+diff --git a/lib/cpumask.c b/lib/cpumask.c
+index 0cb672eb107c..fb22fb266f93 100644
+--- a/lib/cpumask.c
++++ b/lib/cpumask.c
+@@ -232,3 +232,32 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+ 	BUG();
+ }
+ EXPORT_SYMBOL(cpumask_local_spread);
++
++static DEFINE_PER_CPU(int, distribute_cpu_mask_prev);
++
++/**
++ * Returns an arbitrary cpu within srcp1 & srcp2.
++ *
++ * Iterated calls using the same srcp1 and srcp2 will be distributed within
++ * their intersection.
++ *
++ * Returns >= nr_cpu_ids if the intersection is empty.
++ */
++int cpumask_any_and_distribute(const struct cpumask *src1p,
++			       const struct cpumask *src2p)
++{
++	int next, prev;
++
++	/* NOTE: our first selection will skip 0. */
++	prev = __this_cpu_read(distribute_cpu_mask_prev);
++
++	next = cpumask_next_and(prev, src1p, src2p);
++	if (next >= nr_cpu_ids)
++		next = cpumask_first_and(src1p, src2p);
++
++	if (next < nr_cpu_ids)
++		__this_cpu_write(distribute_cpu_mask_prev, next);
++
++	return next;
++}
++EXPORT_SYMBOL(cpumask_any_and_distribute);
 -- 
-Best Regards
-Masahiro Yamada
+2.25.1.481.gfbce0eb801-goog
+
