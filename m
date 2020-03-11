@@ -2,150 +2,115 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975DC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FCCC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78AC2072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F02620650
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583938454;
+	bh=FTqUtXYIF4iIuJ+yTfQiXiyt2Svw9cpfJ6cRAAT55kk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=t/MJcah+V4JPih+nc42rLf+xExlGKLbDUpmrfFAwv7TtTIKue5hYyUAk4NQ7YdrVN
+	 XrtbUFqslMhUydO60EDPA3nUpzTa1rYRxIY4RRWwdoqNyjbtI2qU8y4M+XD8y1BrFZ
+	 s0TYFWJHil0J7XyHySNIw7jUmDdy7w8UBXcSz26o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgCKOwW (ORCPT
+        id S1729908AbgCKOyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:52:22 -0400
-Received: from mga07.intel.com ([134.134.136.100]:9853 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729584AbgCKOwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:52:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 07:52:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="242703772"
-Received: from psingh6-mobl.amr.corp.intel.com (HELO [10.251.23.209]) ([10.251.23.209])
-  by orsmga003.jf.intel.com with ESMTP; 11 Mar 2020 07:52:20 -0700
-Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
- <20200227223206.5020-2-pierre-louis.bossart@linux.intel.com>
- <20200303054136.GP4148@vkoul-mobl>
- <8a04eda6-cbcf-582f-c229-5d6e4557344b@linux.intel.com>
- <20200304095312.GT4148@vkoul-mobl>
- <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
- <20200305063646.GW4148@vkoul-mobl>
- <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
- <20200306050115.GC4148@vkoul-mobl>
- <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
- <20200311063645.GH4885@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <0fafb567-10e5-a1ea-4a6d-b3c53afb215e@linux.intel.com>
-Date:   Wed, 11 Mar 2020 09:44:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200311063645.GH4885@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 11 Mar 2020 10:54:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41124 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729584AbgCKOyO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:54:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Mime-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=V5VwQ3DE+z7Gin8QWO2wlhFBBFKjYu8MYUyeDZvDjTA=; b=s7mN0sk0ngR79fsppXGLXlZ25a
+        BbEbycKQ6SlQpPxENYqRwMB3Ui4KjmHwO8VuX+i/7Gcp6xhg07dPwX2TQDU9gfA6O9DbWuUWrx9oN
+        5voV9t1b+QRgSacgBtgO/BSXQaOZJILYXddD+l6j1yh6WN3NHXhuh2UkkLcnWjJ0GJ2BaMrjS0Vyk
+        mogt6hgkeMc3gs+2RlX7SpqbSZeij2R1crYr/BrNDaR4LT18Ej5OBoP0h6/SlRDYye4ylj4gsLNmN
+        vlJkiVIPrWRgf0kUpoSf8/2npEwkHMNJ6bYx/OA78Kbc3tRTcIKYjClnz09vNknffTV/2d2U/amsp
+        RicCxsqQ==;
+Received: from [54.239.6.186] (helo=u0c626add9cce5a.drs10.amazon.com)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jC2kC-0000sD-0Z; Wed, 11 Mar 2020 14:54:00 +0000
+Message-ID: <f09bacf3029edfc7f90097f7fc6e41176ddd4873.camel@kernel.org>
+Subject: Re: [PATCH] virtio: virtio_console: add missing
+ MODULE_DEVICE_TABLE() for rproc serial
+From:   Amit Shah <amit@kernel.org>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sjur Brandeland <sjur.brandeland@stericsson.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 11 Mar 2020 15:53:56 +0100
+In-Reply-To: <20200310110538.19254-1-alobakin@dlink.ru>
+References: <20200310110538.19254-1-alobakin@dlink.ru>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/11/20 1:36 AM, Vinod Koul wrote:
-> On 06-03-20, 09:40, Pierre-Louis Bossart wrote:
->>>>> Why do you need a extra driver for this. Do you have another set of
->>>>> device object and driver for DSP code? But you do manage that, right?
->>>>> I am proposing to simplify the device model here and have only one
->>>>> device (SOF PCI) and driver (SOF PCI driver), which is created by actual
->>>>> bus (PCI here) as you have in rest of the driver like HDA, DSP etc.
->>>>>
->>>>> I have already recommended is to make the int-sdw a module which is
->>>>> invoked by SOF PCI driver code (thereby all code uses SOF PCI device and
->>>>> SOF PCI driver) directly. The DSP in my time for skl was a separate
->>>>> module but used the parent objects.
->>>>>
->>>>> The SOF sdw init (the place where sdw routines are invoked after DSP
->>>>> load) can call sdw_probe and startup. Based on DSP sequencing you can
->>>>> call these functions directly without waiting for extra device to be
->>>>> probed etc.
->>>>>
->>>>> I feel your flows will be greatly simplified as a result of this.
->>>>
->>>> Not at all, no. This is not a simplification but an extremely invasive
->>>> proposal.
->>>>
->>>> The parent-child relationship is extremely useful for power management, and
->>>> guarantees that the PCI device remains on while one or more of the masters
->>>> are used, and conversely can suspend when all links are idle. I currently
->>>> don't need to do anything, it's all taken care of by the framework.
->>>>
->>>> If I have to do all the power management at the PCI device level, then I
->>>> will need to keep track of which links are currently active. All these links
->>>> are used independently, so it's racy as hell to keep track of the usage when
->>>> the pm framework already does so quite elegantly. You really want to use the
->>>> pm_runtime_get/put refcount for each master device, not manage them from the
->>>> PCI level.
->>>
->>> Not at all, you still can call pm_runtime_get/put() calls in sdw module
->>> for PCI device. That doesn't change at all.
->>>
->>> Only change is for suspend/resume you have callbacks from PCI driver
->>> rather than pm core.
->> There are two other related issues that you didn't mention.
->>
->> the ASoC layer does require a driver with a 'name' for the components
->> registered with the master device. So if you don't have a driver for the
->> master device, the DAIs will be associated with the PCI device.
->>
->> But the ASoC core does make pm_runtime calls on its own,
->>
->> soc_pcm_open(struct snd_pcm_substream *substream)
->> {
->> ...
->> 	for_each_rtd_components(rtd, i, component)
->> 		pm_runtime_get_sync(component->dev);
->>
->> and if the device that's associated with the DAI is the PCI device, then
->> that will not result in the relevant master IP being activated, only the PCI
->> device refcount will be increased - meaning there is no hook that would tell
->> the PCI layer to turn on a specific link.
->>
->> What you are recommending would be an all-or-nothing solution with all links
->> on or all links off, which beats the purpose of having independent
->> link-level power management.
+On Tue, 2020-03-10 at 14:05 +0300, Alexander Lobakin wrote:
+> rproc_serial_id_table lacks an exposure to module devicetable, so
+> when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+> is generated and no module autoloading occurs.
+> Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+> one for VIRTIO_ID_CONSOLE right to the table itself.
 > 
-> Why can't you use dai .startup callback for this?
+> Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc
+> serial")
+> Cc: <stable@vger.kernel.org> # v3.8+
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+
+Reviewed-by: Amit Shah <amit@kernel.org>
+
+Thanks,
+
+> ---
+>  drivers/char/virtio_console.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> The ASoC core will do pm_runtime calls that will ensure PCI device is
-> up, DSP firmware downloaded and running.
-> 
-> You can use .startup() to turn on your link and .shutdown to turn off
-> the link.
-
-There are multiple dais per link, and multiple Slave per link, so we 
-would have to refcount and track active dais to understand when the link 
-needs to be turned on/off. It's a duplication of what the pm framework 
-can do at the device/link level, and will likely introduce race conditions.
-
-Not to mention that we'd need to introduce workqueues to turn the link 
-off with a delay, with pm_runtime_put_autosuspend() does for free.
-
-Linux is all about frameworks. For power management, we shall use the 
-power management framework, not reinvent it.
-
+> diff --git a/drivers/char/virtio_console.c
+> b/drivers/char/virtio_console.c
+> index 4df9b40d6342..7e1bc0f580a2 100644
+> --- a/drivers/char/virtio_console.c
+> +++ b/drivers/char/virtio_console.c
+> @@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[] = {
+>  	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+>  	{ 0 },
+>  };
+> +MODULE_DEVICE_TABLE(virtio, id_table);
+>  
+>  static unsigned int features[] = {
+>  	VIRTIO_CONSOLE_F_SIZE,
+> @@ -2128,6 +2129,7 @@ static struct virtio_device_id
+> rproc_serial_id_table[] = {
+>  #endif
+>  	{ 0 },
+>  };
+> +MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+>  
+>  static unsigned int rproc_serial_features[] = {
+>  };
+> @@ -2280,6 +2282,5 @@ static void __exit fini(void)
+>  module_init(init);
+>  module_exit(fini);
+>  
+> -MODULE_DEVICE_TABLE(virtio, id_table);
+>  MODULE_DESCRIPTION("Virtio console driver");
+>  MODULE_LICENSE("GPL");
 
