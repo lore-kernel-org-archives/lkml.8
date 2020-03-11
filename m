@@ -2,112 +2,82 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB2EC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE8C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7866E20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF74208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583916849;
+	bh=q9pX7RdIeHC12gIE7AwUqz4c8Oq1C8zcrGUI6VQx08k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xj7WCh0cZZ9qdjnoaTShMdDz25uLtcQ90xp03fVOe8TlU/AH90b+i7GXCQKHEIRLE
+	 RwBoBQJUDQ7D4EojWxk06zA5+p9m1fzMcAyglseXnEDzdy9VPIC/DZRefn+UBQigGL
+	 jHi5Y2jZG0b8OycDi1zQkfFym/1F/1BLg3Uq4H5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgCKIvM (ORCPT
+        id S1728654AbgCKIyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:51:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57294 "EHLO mx2.suse.de"
+        Wed, 11 Mar 2020 04:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgCKIvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:51:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DABCEAF2F;
-        Wed, 11 Mar 2020 08:51:08 +0000 (UTC)
-Subject: Re: [PATCH] mm,page_alloc,cma: conditionally prefer cma pageblocks
- for movable allocations
-To:     Rik van Riel <riel@surriel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Roman Gushchin <guro@fb.com>,
-        Qian Cai <cai@lca.pw>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <20200306150102.3e77354b@imladris.surriel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <8e67d88f-3ec8-4795-35dc-47e3735e530e@suse.cz>
-Date:   Wed, 11 Mar 2020 09:51:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728195AbgCKIyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:54:07 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2825020873;
+        Wed, 11 Mar 2020 08:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583916847;
+        bh=q9pX7RdIeHC12gIE7AwUqz4c8Oq1C8zcrGUI6VQx08k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9tEh9CKAQvhblCfQ79VtTz2ZvM7u9zbEuZryIvvvwfaV/cQRcvprPihaPFOiqyQE
+         KiouaIwbxFCoz9RdF9cBGIzKA149ljubVMfa2WzhlC8Z4mxlVdOEF/h5GxAe02urT6
+         JpuyGXmzqN3xI1mKT/9xZspk9pOKGm5kmqLBkFIg=
+Date:   Wed, 11 Mar 2020 16:53:58 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] ARM: dts: imx: use generic name for crypto node
+Message-ID: <20200311085357.GG29269@dragon>
+References: <20200305135909.8180-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200306150102.3e77354b@imladris.surriel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305135909.8180-1-horia.geanta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 9:01 PM, Rik van Riel wrote:
-> Posting this one for Roman so I can deal with any upstream feedback and
-> create a v2 if needed, while scratching my head over the next piece of
-> this puzzle :)
+On Thu, Mar 05, 2020 at 03:59:04PM +0200, Horia Geantă wrote:
+> This patch set aligns / fixes the naming of the crypto node
+> (and its child nodes) for sahara, dcp and caam crypto engines
+> used in i.MX SoCs.
 > 
-> ---8<---
+> Horia Geantă (4):
+>   dt-bindings: crypto: sahara: use generic node name
+>   dt-bindings: crypto: dcp: use generic node name
+>   dt-bindings: crypto: caam: use generic node name
+>   ARM: dts: imx: align name for crypto node and child nodes
 > 
-> From: Roman Gushchin <guro@fb.com>
-> 
-> Currently a cma area is barely used by the page allocator because
-> it's used only as a fallback from movable, however kswapd tries
-> hard to make sure that the fallback path isn't used.
+> Silvano di Ninno (1):
+>   arm64: dts: imx8mn: align name for crypto child nodes
 
-Few years ago Joonsoo wanted to fix these kinds of weird MIGRATE_CMA corner
-cases by using ZONE_MOVABLE instead [1]. Unfortunately it was reverted due to
-unresolved bugs. Perhaps the idea could be resurrected now?
-
-[1]
-https://lore.kernel.org/linux-mm/1512114786-5085-1-git-send-email-iamjoonsoo.kim@lge.com/
-
-> This results in a system evicting memory and pushing data into swap,
-> while lots of CMA memory is still available. This happens despite the
-> fact that alloc_contig_range is perfectly capable of moving any movable
-> allocations out of the way of an allocation.
-> 
-> To effectively use the cma area let's alter the rules: if the zone
-> has more free cma pages than the half of total free pages in the zone,
-> use cma pageblocks first and fallback to movable blocks in the case of
-> failure.
-> 
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> Co-developed-by: Rik van Riel <riel@surriel.com>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  mm/page_alloc.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 3c4eb750a199..0fb3c1719625 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -2711,6 +2711,18 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
->  {
->  	struct page *page;
->  
-> +	/*
-> +	 * Balance movable allocations between regular and CMA areas by
-> +	 * allocating from CMA when over half of the zone's free memory
-> +	 * is in the CMA area.
-> +	 */
-> +	if (migratetype == MIGRATE_MOVABLE &&
-> +	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
-> +	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
-> +		page = __rmqueue_cma_fallback(zone, order);
-> +		if (page)
-> +			return page;
-> +	}
->  retry:
->  	page = __rmqueue_smallest(zone, order, migratetype);
->  	if (unlikely(!page)) {
-> 
-
+Applied all, thanks.
