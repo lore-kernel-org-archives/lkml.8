@@ -2,257 +2,97 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32C9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC45C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EC020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731C820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gikDt68m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgCKCQG (ORCPT
+        id S1727944AbgCKCQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:16:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54233 "EHLO mga11.intel.com"
+        Tue, 10 Mar 2020 22:16:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41481 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727506AbgCKCQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:16:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 19:16:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="322000862"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga001.jf.intel.com with ESMTP; 10 Mar 2020 19:16:03 -0700
-Date:   Wed, 11 Mar 2020 10:14:00 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH 3/7] fpga: dfl: introduce interrupt trigger setting API
-Message-ID: <20200311021400.GD30868@yilunxu-OptiPlex-7050>
-References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
- <1583749790-10837-4-git-send-email-yilun.xu@intel.com>
- <20200310103024.GC28396@hao-dev>
+        id S1727506AbgCKCQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 22:16:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cbDQ4nw3z9sPF;
+        Wed, 11 Mar 2020 13:16:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583892982;
+        bh=IUNSc58Jz6r6hiWS7vwzc6j+AQinhAUb1odUaLgBQoQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gikDt68mh47MXcNctlx//GD0dNwSONcLDZXZo42RCvULWeue4ye11pP+nPDibdyWe
+         X6IbM9FH6EJSmyOE0xVLslZHK2thNJTUVWKE+YBuRQOAuejufKIhNotnZD61Nt50OZ
+         /vHq5DJfaEIyqnCw2s2cue/r1yJES9q+gwL+kh5UZEQhcsCIzcHqBvxoT9uUX2dCZc
+         gvSeFFptGrULG4F3nrg4UrxzO+cvWGDCEZkufchij435iWcazkaTWmvs0WyioqJ+hw
+         EIOP2GJc2mUBlYDWOq8WeYWpdIu0yT6tQjJA2t0sbH3FB2PGAMPUIbGQtONrJ4NX0e
+         YKe5EZJyJ/ENg==
+Date:   Wed, 11 Mar 2020 13:16:16 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the nand tree
+Message-ID: <20200311131616.41e728a1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310103024.GC28396@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/0V/_r3uLAw0Z0QjKz.4eQAc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 06:30:24PM +0800, Wu Hao wrote:
-> On Mon, Mar 09, 2020 at 06:29:46PM +0800, Xu Yilun wrote:
-> > FPGA user applications may be interested in interrupts generated by
-> > DFL features. For example, users can implement their own FPGA
-> > logics with interrupts enabled in AFU (Accelerated Function Unit,
-> > dynamic region of DFL based FPGA). So user applications need to be
-> > notified to handle these interrupts.
-> > 
-> > In order to allow userspace applications to monitor interrupts,
-> > driver requires userspace to provide eventfds as interrupt
-> > notification channels. Applications then poll/select on the eventfds
-> > to get notified.
-> > 
-> > This patch introduces a generic helper function for sub features to
-> > do eventfds binding with given interrupts.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ---
-> >  drivers/fpga/dfl.c | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/fpga/dfl.h | 11 +++++++
-> >  2 files changed, 104 insertions(+)
-> > 
-> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> > index 493822d..ae6baca 100644
-> > --- a/drivers/fpga/dfl.c
-> > +++ b/drivers/fpga/dfl.c
-> > @@ -535,6 +535,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  		int i, virq;
-> >  
-> >  		/* save resource information for each feature */
-> > +		feature->dev = fdev;
-> >  		feature->id = finfo->fid;
-> >  		feature->resource_index = index;
-> >  		feature->ioaddr = finfo->ioaddr;
-> > @@ -1373,6 +1374,98 @@ int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vfs)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_ports_vf);
-> >  
-> > +static irqreturn_t dfl_irq_handler(int irq, void *arg)
-> > +{
-> > +	struct eventfd_ctx *trigger = arg;
-> > +
-> > +	eventfd_signal(trigger, 1);
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int do_set_irq_trigger(struct dfl_feature *feature, int idx, int fd)
-> > +{
-> > +	struct platform_device *pdev = feature->dev;
-> > +	struct eventfd_ctx *trigger;
-> > +	int irq, ret;
-> > +
-> > +	if (idx < 0 || idx >= feature->nr_irqs)
-> > +		return -EINVAL;
-> > +
-> > +	irq = feature->irq_ctx[idx].irq;
-> > +
-> > +	if (feature->irq_ctx[idx].trigger) {
-> > +		free_irq(irq, feature->irq_ctx[idx].trigger);
-> > +		kfree(feature->irq_ctx[idx].name);
-> > +		eventfd_ctx_put(feature->irq_ctx[idx].trigger);
-> > +		feature->irq_ctx[idx].trigger = NULL;
-> > +	}
-> > +
-> > +	if (fd < 0)
-> > +		return 0;
-> > +
-> > +	feature->irq_ctx[idx].name =
-> > +		kasprintf(GFP_KERNEL, "fpga-irq[%d](%s-%llx)", idx,
-> > +			  dev_name(&pdev->dev),
-> > +			  (unsigned long long)feature->id);
-> > +	if (!feature->irq_ctx[idx].name)
-> > +		return -ENOMEM;
-> > +
-> > +	trigger = eventfd_ctx_fdget(fd);
-> > +	if (IS_ERR(trigger)) {
-> > +		ret = PTR_ERR(trigger);
-> > +		goto free_name;
-> > +	}
-> > +
-> > +	ret = request_irq(irq, dfl_irq_handler, 0,
-> > +			  feature->irq_ctx[idx].name, trigger);
-> > +	if (!ret) {
-> > +		feature->irq_ctx[idx].trigger = trigger;
-> > +		return ret;
-> > +	}
-> > +
-> > +	eventfd_ctx_put(trigger);
-> > +free_name:
-> > +	kfree(feature->irq_ctx[idx].name);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * dfl_fpga_set_irq_triggers - set eventfd triggers for dfl feature interrupts
-> > + *
-> > + * @feature: dfl sub feature.
-> > + * @start: start of irq index in this dfl sub feature.
-> > + * @count: number of irqs.
-> > + * @fds: eventfds to bind with irqs.
-> > + *
-> > + * Bind given eventfds with irqs in this dfl sub feature. Use negative fds as
-> > + * parameter to unbind irqs.
-> 
-> Looks like it accepts NULL for fds to unbind irqs, please add some description
-> here as well.
+--Sig_/0V/_r3uLAw0Z0QjKz.4eQAc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sure.
+Hi all,
 
-> 
-> > + *
-> > + * Return: 0 on success, negative error code otherwise.
-> > + */
-> > +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
-> > +			      unsigned int count, int32_t *fds)
-> > +{
-> > +	int i, j, ret = 0;
-> > +
-> > +	if (start + count < start || start + count > feature->nr_irqs)
-> > +		return -EINVAL;
-> > +
-> > +	for (i = 0, j = start; i < count && !ret; i++, j++) {
-> > +		int fd = fds ? fds[i] : -1;
-> > +
-> > +		ret = do_set_irq_trigger(feature, j, fd);
-> > +	}
-> > +
-> > +	if (ret) {
-> > +		for (--j; j >= (int)start; j--)
-> 
-> it converts unsigned int start to int, what about upper loop code?
-> should start and count be converted as well?
+After merging the nand tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Using int for i, j seems not suitable. Let me change them to unsigned
-int and fix other parts accordingly.
+FATAL: modpost: drivers/mtd/nand/raw/ams-delta: sizeof(struct of_device_id)=
+=3D200 is not a modulo of the size of section __mod_of__<identifier>_device=
+_table=3D64.
+Fix definition of struct of_device_id in mod_devicetable.h
 
-Thanks
-Yilun
+Maybe caused by commit
 
-> 
-> Thanks
-> Hao
-> 
-> > +			do_set_irq_trigger(feature, j, -1);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dfl_fpga_set_irq_triggers);
-> > +
-> >  static void __exit dfl_fpga_exit(void)
-> >  {
-> >  	dfl_chardev_uinit();
-> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> > index 6a498cd..6b60077 100644
-> > --- a/drivers/fpga/dfl.h
-> > +++ b/drivers/fpga/dfl.h
-> > @@ -24,6 +24,8 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/uuid.h>
-> >  #include <linux/fpga/fpga-region.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/eventfd.h>
-> >  
-> >  /* maximum supported number of ports */
-> >  #define MAX_DFL_FPGA_PORT_NUM 4
-> > @@ -213,14 +215,19 @@ struct dfl_feature_driver {
-> >   * struct dfl_feature_irq_ctx - dfl private feature interrupt context
-> >   *
-> >   * @irq: Linux IRQ number of this interrupt.
-> > + * @trigger: eventfd context to signal when interrupt happens.
-> > + * @name: irq name needed when requesting irq.
-> >   */
-> >  struct dfl_feature_irq_ctx {
-> >  	int irq;
-> > +	struct eventfd_ctx *trigger;
-> > +	char *name;
-> >  };
-> >  
-> >  /**
-> >   * struct dfl_feature - sub feature of the feature devices
-> >   *
-> > + * @dev: ptr to pdev of the feature device which has the sub feature.
-> >   * @id: sub feature id.
-> >   * @resource_index: each sub feature has one mmio resource for its registers.
-> >   *		    this index is used to find its mmio resource from the
-> > @@ -231,6 +238,7 @@ struct dfl_feature_irq_ctx {
-> >   * @ops: ops of this sub feature.
-> >   */
-> >  struct dfl_feature {
-> > +	struct platform_device *dev;
-> >  	u64 id;
-> >  	int resource_index;
-> >  	void __iomem *ioaddr;
-> > @@ -506,4 +514,7 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id);
-> >  int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id);
-> >  void dfl_fpga_cdev_config_ports_pf(struct dfl_fpga_cdev *cdev);
-> >  int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vf);
-> > +
-> > +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
-> > +			      unsigned int count, int32_t *fds);
-> >  #endif /* __FPGA_DFL_H */
-> > -- 
-> > 2.7.4
+  966d708517e3 ("mtd: rawnand: ams-delta: Add module device tables")
+
+But I have no idea why.
+
+I have used the nand tree from next-20200310 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0V/_r3uLAw0Z0QjKz.4eQAc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oSfAACgkQAVBC80lX
+0GxGEwf/bj6EsI/hl1fveK/KX7xJ+ovgNbwjOVAJ+PPiUpiUnkTgJ/2FnCJ9Wd0g
+Ijny1ky4hGEmd842/q7nOXK3Q9vpatQj9EukNa0dfuTVQcCHtJK0kDhWW8wg75v3
+UfBNx5rmFr1HyP7dyOrdsdkVZun3jDQ/i/xGcbU9NJrh7qyvKdia1mI0QW4aWOlB
+RItlSm+8LHle/Pn8D/r1Oj4CIZYuxYdHoNPkXHCL12KnHaSDoR5rOFY+pqLKtaBA
+lGRzn8sInx28ux6BVJ9BkssmE8FySG+8VwML9LaxuzdbVbTLTOspppGBcx2SDsxz
+nZsWag6QZI5RoiU+enwZbXocYxE8yg==
+=EvU6
+-----END PGP SIGNATURE-----
+
+--Sig_/0V/_r3uLAw0Z0QjKz.4eQAc--
