@@ -2,191 +2,120 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29797C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E33C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DDA2192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A024D21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="vPQwHgJL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="byWNOnaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgCKKqQ (ORCPT
+        id S1729044AbgCKKqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:46:16 -0400
-Received: from mail-bn8nam12on2052.outbound.protection.outlook.com ([40.107.237.52]:50049
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726000AbgCKKqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:46:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n2Oc/Fla7MYHcdTjwS4Lvha+3iLDAdTsYJF1lp91LA8GEd0cuqVj4JElnOndQyDwqFZJp+1YnOaUmDjQT1KXEAeLgl+8gqe5a3jjXJ+gAQ4xkGiSlB0Gtqx6STfE0gsbgLI3Ms3EYLhinGWfAzCDGI7CSNJkI49HWRiL1NrjiwwuJKgKA2kwZHb5DEKw1Dacx5NGidxAjbXMjbw/rKETK7Ng7uhg0NbHJeW79t0bYVlv8hlQBfOPquq4Iu4job2L0yDhRCOZtoxlH/875+SMez0qwj5+bTUnjGNULM1mQDr6o1VfNEaSaxxxlq4tj2I3nIHjf3NfG36zuX/D6tRLwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y7zrrZy+C/nbNfF/QoVkp0ypT1XtO38jMkqz/R2+qjc=;
- b=jOeJgtP5G7Po6Tn61llPzCoAo0+JKq0Z08BO8nmBAB1JuV50aavR4IRB5pnTf6BEc+j+0j0eqCJCooCkErXExGyijhyAYOgKR1HxW0q9iowoHoF/nnYgKDMplVF2gNY/39lhJkjflRaLThEq6rgMeBi2POkSJ1t8b/YnlGiNbPrp+ehvm+PY0IRSIZndcfdv2Kw2QEdOUuvVGq6n3oKKV59iTfYOBNMydZqHGYDdYK6eq/JKpv+8hcjykFChhBrwGsn1aRMMNV517ZQvBuJZIGZNFgEILvDskJE9EpZtTv52X2S1s8Bcves8nQjLn4CA4A9nXE0u+cD+rceVqBvsbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y7zrrZy+C/nbNfF/QoVkp0ypT1XtO38jMkqz/R2+qjc=;
- b=vPQwHgJLYM4ujfZ36hxhjJYi89CpGSqegYL5mvNl1Bx7HcsZM/Qe0PFSr7IpqbY4CMiCBc9I2xaXyU6wLyE89vBbafZ9s8gm87f2P8SkrhZ2DGGdpnf7lr+TXh2yyOkoLipP9OJj5KWXG3SXXZOw3TshT2lHhUzi6/lS/Wjjkgc=
-Received: from MN2PR08MB6397.namprd08.prod.outlook.com (2603:10b6:208:1aa::10)
- by MN2PR08MB6173.namprd08.prod.outlook.com (2603:10b6:208:11d::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Wed, 11 Mar
- 2020 10:46:10 +0000
-Received: from MN2PR08MB6397.namprd08.prod.outlook.com
- ([fe80::884a:b0f5:3cf5:f4a4]) by MN2PR08MB6397.namprd08.prod.outlook.com
- ([fe80::884a:b0f5:3cf5:f4a4%4]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
- 10:46:10 +0000
-From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>
-Subject: RE: [EXT] [PATCH v6 0/6] Add new series Micron SPI NAND devices
-Thread-Topic: [EXT] [PATCH v6 0/6] Add new series Micron SPI NAND devices
-Thread-Index: AQHV9gmnJCpFuJN0LkOTHmMRqJbTd6hDJ4lA
-Date:   Wed, 11 Mar 2020 10:46:10 +0000
-Message-ID: <MN2PR08MB6397D2050B70490F28AFEAABB8FC0@MN2PR08MB6397.namprd08.prod.outlook.com>
-References: <20200309115230.7207-1-sshivamurthy@micron.com>
-In-Reply-To: <20200309115230.7207-1-sshivamurthy@micron.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-rorf: true
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc3NoaXZhbXVydGh5XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctODMxNjVjYTEtNjM4NS0xMWVhLWIxZWEtOTgzYjhmNzQ1MjUxXGFtZS10ZXN0XDgzMTY1Y2EzLTYzODUtMTFlYS1iMWVhLTk4M2I4Zjc0NTI1MWJvZHkudHh0IiBzej0iMjk5OCIgdD0iMTMyMjgzOTcxNjc5NDczMjU1IiBoPSJFNWJiWU10UEh2dHVNWUg5aTZ3a3VTUWtEc0k9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUJuem01Rmt2ZlZBUmNCNitmOWV6amdGd0hyNS8xN09PQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQUlTQjI1d0FBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sshivamurthy@micron.com; 
-x-originating-ip: [165.225.86.136]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c296afdc-141e-4ef0-249e-08d7c5a9697c
-x-ms-traffictypediagnostic: MN2PR08MB6173:|MN2PR08MB6173:|MN2PR08MB6173:
-x-microsoft-antispam-prvs: <MN2PR08MB617352620B04D63325994CAEB8FC0@MN2PR08MB6173.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-forefront-prvs: 0339F89554
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(346002)(136003)(199004)(8936002)(55236004)(186003)(8676002)(86362001)(71200400001)(316002)(33656002)(81156014)(81166006)(7696005)(54906003)(6506007)(2906002)(4326008)(5660300002)(66476007)(9686003)(76116006)(55016002)(66446008)(966005)(66556008)(6916009)(52536014)(66946007)(26005)(64756008)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB6173;H:MN2PR08MB6397.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HqAW16m6SRrIiNHOMKdCMA3+xXUFIp7mOA3LjWvc1eHM8MwYA3qse6tba6vp/8o2Zb9yRvqtK7mrEKiz+CeCMa4mg9sv9wCAv99WFRbddXEA5VSoknlRJH8gCZccEJUD5Xl0Y626j9nNx0Lnw7jrFPWHYT8sstYh+/zwtgWNF/zw9AbOY3WDQRiOIm8yH1vQA3uHz/SpLEgcBmk/bq5FO4+UxdyjT1srEu7sSP1oR0nlb0NE22pebtGtFGjM0X41RTR3zzJqdERaYbozUByYcZYIGrJIT6EPanUoY+85Qx8PADra3qBKeq6vZypdr3Ttk3cOjeVzoLbzzAuvsWzgZZ6q3YzpCcvzBsAVax/nUPK3ph6PW0tfkDf8OnEIptYWCLM55EAmE9X32PChN7pLY26Wuu5SrcP8ZSarqGrK7DLokbt3z5POqBy4VhfzNovhdAJ3WoOgKurmyY0jQq7VSZ2Z9PKaGbZgE71Fl6wzfLYwzMKTQYaYfanTzrds42hmSiToJIMvPJEtGuzWuvTaSg==
-x-ms-exchange-antispam-messagedata: OFVrI9Xk5LlOg+48Aai2fP7/0w84NJ4+XZdR0DGbaTvRUf/qJeHbUIlF/iLH+XG6UmEtSlqCnCBAzBnPv1/W5VvlaOaRsOxEJYs+aAij2rjibl6RUXBkpkb73IRtVwMpFq7Wy8lBTCtoF6wbjLB5gA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Mar 2020 06:46:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33788 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCKKqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:46:24 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d22so1183246qtn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 03:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q8RSBQ1awf7J0+pbXujt6gnSJdQq7hBnAow/IoAFi0c=;
+        b=byWNOnaBSpcX4NgglDMaAl/iu/+Se3lc7hoi0h+nNEWULQmNMK1lsgjxTzb82gp/VF
+         5cJCyhQrSwzYySv1MAkIjiotOuSnlZY1qtUV8cX5+o7aPYgFXBbgO1WCcDTn0gWrgmxI
+         1cGW9tx0SckKW9lrIHfxte/TacXzDe/6zNeA8LjEEUWUVFUgehnf7irKNs3/piBl5Te3
+         r8HV5dSUvdYp0qFBuXosUVXhlewJ4EBkzJxGHxrn1IdlERUO26R0Sa4U01MSYYOXqRsE
+         a9ItxmXAH+fbjeibEqTPho121UE/eTz8r/SHy2CMuzJfodDlCXCO+eD2/Nb6kpl3Ge+2
+         xi/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q8RSBQ1awf7J0+pbXujt6gnSJdQq7hBnAow/IoAFi0c=;
+        b=FPbL79z2hDACWjRZ467zEFuakJflx79FOt25EP0HNO1K9BqTOV4oxaaGOSbmr4P4QE
+         KwCGEYscnVofX0o2rvyWATKZeRYA/ZDCw4qZbpTyRpz417hmrqfxgQWJ1Hi99S+uTDIx
+         WW07hrKmEokt+qPQ9X3MXr6NOpi+yJhlgrQIPwmsQMCAL4JA86zSsKabVIHdPAr7a0Nt
+         /9O+a5ZU0GRBapv/81bIQCsDrzzxvbu/ePMYUJdz9xswVKTtE3pV0WqbhSc6RSfHPZxs
+         mgy+pxpVB6hlWFgGCbIFeKi3l2+nzw+vaz4P4jlYBE+FVPEsf7WaAW+CZi+PHMjx2i9A
+         tjBA==
+X-Gm-Message-State: ANhLgQ3C3AzsxCSkqoESgDUfUVKKIOZljy2TEgKJG1b3rfZmP+rl6+at
+        j8g2PhkVGurSeQmxtAjTMamEcXjkUvPb9TcTbpuAbA==
+X-Google-Smtp-Source: ADFU+vvPq796XwuNZCzNOH45PgR6QT2y52wU+cBX8IJQOGhpAaAOnl3rh8/h047At8I49vKAmG414LX/0zWfixX7xJQ=
+X-Received: by 2002:ac8:6697:: with SMTP id d23mr1966498qtp.257.1583923582471;
+ Wed, 11 Mar 2020 03:46:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c296afdc-141e-4ef0-249e-08d7c5a9697c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 10:46:10.4345
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kgp5MZ//c6T0IbtKJrnJH71JWKTdtv2SvORacaMC8TBipaDx+At8RuTEnzoM/lPoBXrK3vPHEDVjD0MGrpWk/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB6173
+References: <20200226004608.8128-1-trishalfonso@google.com>
+ <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com> <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
+In-Reply-To: <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 11 Mar 2020 11:46:10 +0100
+Message-ID: <CACT4Y+ZypjEidZQ6E8ajY1yBU6XA2t6eVz56sJ1JaBjCniRMUQ@mail.gmail.com>
+Subject: Re: [PATCH] UML: add support for KASAN under x86_64
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+On Wed, Mar 11, 2020 at 11:32 AM Johannes Berg
+<johannes@sipsolutions.net> wrote:
+>
+> Hi,
+>
+> > Hi all, I just want to bump this so we can get all the comments while
+> > this is still fresh in everyone's minds. I would love if some UML
+> > maintainers could give their thoughts!
+>
+> I'm not the maintainer, and I don't know where Richard is, but I just
+> tried with the test_kasan.ko module, and that seems to work. Did you
+> test that too? I was surprised to see this because you said you didn't
+> test modules, but surely this would've been the easiest way?
+>
+> Anyway, as expected, stack (and of course alloca) OOB access is not
+> detected right now, but otherwise it seems great.
+>
+> Here's the log:
+> https://p.sipsolutions.net/ca9b4157776110fe.txt
+>
+> I'll repost my module init thing as a proper patch then, I guess.
+>
+>
+> I do see issues with modules though, e.g.
+> https://p.sipsolutions.net/1a2df5f65d885937.txt
+>
+> where we seem to get some real confusion when lockdep is storing the
+> stack trace??
+>
+> And https://p.sipsolutions.net/9a97e8f68d8d24b7.txt, where something
+> convinces ASAN that an address is a user address (it might even be
+> right?) and it disallows kernel access to it?
 
-I have rebased these patches to v5.6-rc1 as you suggested.
-Please let me know, if there is still a problem.
+Please pass these reports via scripts/decode_stacktrace.sh to add line
+numbers (or any other symbolization script). What is the base
+revision?
+Hard to analyze without line numbers.
 
-Thanks,
-Shiva
-
->=20
-> From: Shivamurthy Shastri <sshivamurthy@micron.com>
->=20
-> This patchset is for the new series of Micron SPI NAND devices, and the
-> following links are their datasheets.
->=20
-> M78A:
-> [1] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m78a_1gb_3v_nand_spi.pdf
-> [2] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m78a_1gb_1_8v_nand_spi.pdf
->=20
-> M79A:
-> [3] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m79a_2gb_1_8v_nand_spi.pdf
-> [4] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m79a_ddp_4gb_3v_nand_spi.pdf
->=20
-> M70A:
-> [5] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m70a_4gb_3v_nand_spi.pdf
-> [6] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m70a_4gb_1_8v_nand_spi.pdf
-> [7] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m70a_ddp_8gb_3v_nand_spi.pdf
-> [8] https://www.micron.com/~/media/documents/products/data-
-> sheet/nand-flash/70-series/m70a_ddp_8gb_1_8v_nand_spi.pdf
->=20
-> Changes since v5:
-> -----------------
->=20
-> 1. Rebased series to v5.6-rc1.
->=20
-> Changes since v4:
-> -----------------
->=20
-> 1. Patch 2 is separated into two as per the comment by Boris.
-> 2. Renamed MICRON_CFG_CONTI_READ into MICRON_CFG_CR.
-> 3. Reworked die selection function as per the comment by Boris.
->=20
-> Changes since v3:
-> -----------------
->=20
-> 1. Patch 3 and 4 reworked as follows
->    - Patch 3 introducing the Continuous read feature
->    - Patch 4 adding devices with the feature
->=20
-> Changes since v2:
-> -----------------
->=20
-> 1. Patch commit messages have been modified.
-> 2. Handled devices with Continuous Read feature with vendor specific flag=
-.
-> 3. Reworked die selection function as per the comment.
->=20
-> Changes since v1:
-> -----------------
->=20
-> 1. The patch split into multiple patches.
-> 2. Added comments for selecting the die.
->=20
-> Shivamurthy Shastri (6):
->   mtd: spinand: micron: Generalize the OOB layout structure and function
->     names
->   mtd: spinand: micron: Describe the SPI NAND device MT29F2G01ABAGD
->   mtd: spinand: micron: Add new Micron SPI NAND devices
->   mtd: spinand: micron: identify SPI NAND device with Continuous Read
->     mode
->   mtd: spinand: micron: Add M70A series Micron SPI NAND devices
->   mtd: spinand: micron: Add new Micron SPI NAND devices with multiple
->     dies
->=20
->  drivers/mtd/nand/spi/micron.c | 150
-> ++++++++++++++++++++++++++++++----
->  include/linux/mtd/spinand.h   |   1 +
->  2 files changed, 137 insertions(+), 14 deletions(-)
->=20
-> --
-> 2.17.1
-
+> Also, do you have any intention to work on the stack later? For me,
+> enabling that doesn't even report any issues, it just hangs at 'boot'.
+>
+> johannes
+>
