@@ -2,128 +2,113 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3A8C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7498C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C9920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A2820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:38:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMZJz01m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgCKNgU (ORCPT
+        id S1729551AbgCKNi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:36:20 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:34431 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbgCKNgR (ORCPT
+        Wed, 11 Mar 2020 09:38:28 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52921 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729232AbgCKNi2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:36:17 -0400
-Received: by mail-io1-f71.google.com with SMTP id n26so1503593iop.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:36:16 -0700 (PDT)
+        Wed, 11 Mar 2020 09:38:28 -0400
+Received: by mail-pj1-f65.google.com with SMTP id f15so1018451pjq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=iwO+qWgIM9f3My2kQh2h35ZK0GeUk2RHl41oBvJStTA=;
+        b=eMZJz01mXe3/ifT+hdwJkqR2hwnztmZqsn/QxoJpTI7gXv9Hq7Mho/K3STadVNsqnJ
+         Jx9efTHHul5gLpGYUqgE+I7KKMWhi54bV6FDskbH3N8PpmF7QAepzxONG3RQPwIfm1FY
+         EFbD9hs6enLO4wjYYQS3FeNT7JymO2VaJToosruysIL++2mTBak1+80XCKaphPE0Pww1
+         yhtQl+5WsH/zw3Ne0klDkA8tkO1R91+BvoGZftBIF5zK6tiCwqzLubSKJ3NDhj77PGVN
+         EdCBc/RmqQy3E8C4/YfnfMYDa6N3Q1bO7+ACYUGVnVM0JZpGSJogyiUQNz5ZaMDTlLl+
+         fTjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=B6+pwT0gZafpVjC1uFsztM6A9cG4YUfExspz24y936U=;
-        b=oEwJ8rk99D0Fmj3Bil610VdnBdYLBBpZ4O78yftCjB2YnG1HZJRwKQdsDC6pPC8ac3
-         LvirhO1UIMt69Da59CKBWgGKEnfJ2uGHaskEXzQfTcN36kfNG6+OXDLJMSSdvfqtgFiM
-         YKgiha5t8ib8uy5RWpRh62DKzHarxSgohVO+vjW5IEtilpo9EfqEUKrG2ZA32uDG5CLh
-         BxM+nbejTLJ4nsyt+NIPgY31Cq1xJGiLW7MYdKUXqzXE8yiyu7zBj+hN9/jkPBwpYLvz
-         M1t408RSzaYmx4I7woc4DgeQIyxN8oz3qGciHfYC8CbMmSqZ3UCKPUCor9LebIAmOm8z
-         sM1Q==
-X-Gm-Message-State: ANhLgQ1zoq+CqsYH4ieQlnd/5cQPOARerX8Dcr058wbLkQ/KsTzhR46e
-        uAhRlhzlBu2N8qbjbhPU4AZmiX9ghOvdQgezQEAqGQZ0pTV5
-X-Google-Smtp-Source: ADFU+vuLxefO+UDW/tYunN18EVyA6TyIEtNg86ZkgNJ7UPyQWxTCqY1YwLupkTwbW3PKLI13wVWZKuk2yLt5OeZ1mHHX7C7I3CU5
-MIME-Version: 1.0
-X-Received: by 2002:a92:9edc:: with SMTP id s89mr3251008ilk.229.1583933775736;
- Wed, 11 Mar 2020 06:36:15 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 06:36:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000cf74105a094527d@google.com>
-Subject: general protection fault in ir_raw_event_store_with_filter
-From:   syzbot <syzbot+34008406ee9a31b13c73@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, andriin@fb.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=iwO+qWgIM9f3My2kQh2h35ZK0GeUk2RHl41oBvJStTA=;
+        b=kK9jIqcWfrhkcQuhAep+uEwQok/ol7CTHjIsJf4MmSqsOQ9EspmANVHGyjhiqjNFH9
+         CzbodLzpzJxfIuE3blTq4OZMUB+2JqVFSuf+MgNSWIKcz3uI5S/HpqbYOMelzZrhqvTP
+         4a0ULJZqNTkyhlggvnw8wVF5o7txAvadLtFUuVC+C7PTCxgxz07f1u3x7Gm/klHBPdrC
+         F/2xfPP8CNfyjifCsjVSxxCkQMcV86rqkDDDZMC74z2z2xjyP9pE+f3RjFclLBTaGLGN
+         ZM1M65TdlO2gwQThFJOjipUS6DlxjFNOR0T5w9JCgMAlyoY8dhWF03+YVoGQFqWv9Fby
+         Mydg==
+X-Gm-Message-State: ANhLgQ3RUl4QxpV3yk/ukjXr1c10XuQrB6BUXF3C2fYaBCkOliOD21KP
+        aXl2ydL8BehW/72QKaf7KxI=
+X-Google-Smtp-Source: ADFU+vt+TmQHSgrVjNtg41NbMfFfFtaXhBRGeiR+y3qUhNsfgthVTB1cd+qPq8B4smxq2g4cVswDVQ==
+X-Received: by 2002:a17:902:bcc5:: with SMTP id o5mr3126671pls.174.1583933905596;
+        Wed, 11 Mar 2020 06:38:25 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:287:fb4d:18bc:a849:c699:3914])
+        by smtp.gmail.com with ESMTPSA id k5sm5668922pju.29.2020.03.11.06.38.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 06:38:25 -0700 (PDT)
+From:   Shreeya Patel <shreeya.patel23498@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
+        sbrivio@redhat.com, daniel.baluta@gmail.com,
+        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
+        shreeya.patel23498@gmail.com, Larry.Finger@lwfinger.net
+Subject: [Outreachy kernel] [PATCH] Staging: rtl8723bs: sdio_halinit: Remove unnecessary conditions
+Date:   Wed, 11 Mar 2020 19:08:11 +0530
+Message-Id: <20200311133811.2246-1-shreeya.patel23498@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Remove if and else conditions since both are leading to the
+initialization of "valueDMATimeout" and "valueDMAPageCount" with
+the same value.
 
-syzbot found the following crash on:
+Found using coccinelle script.
 
-HEAD commit:    d6ff8147 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d0f655e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=90a3d9bed5648419
-dashboard link: https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1743a061e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1775f5c3e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+34008406ee9a31b13c73@syzkaller.appspotmail.com
-
-rc rc0: IR event FIFO is full!
-rc rc0: IR event FIFO is full!
-rc rc0: IR event FIFO is full!
-rc rc0: IR event FIFO is full!
-rc rc0: IR event FIFO is full!
-general protection fault, probably for non-canonical address 0xdffffc0000000219: 0000 [#1] SMP KASAN
-KASAN: probably user-memory-access in range [0x00000000000010c8-0x00000000000010cf]
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ir_raw_event_store_with_filter+0x41b/0x580 drivers/media/rc/rc-ir-raw.c:186
-Code: 80 3c 02 00 0f 85 5b 01 00 00 4c 8b a5 f0 05 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d bc 24 c8 10 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 4b 01 00 00 48 ba 00 00 00 00 00 fc ff df 48 89
-RSP: 0018:ffff8881db309948 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: ffff8881db3099b8 RCX: 0000000000000000
-RDX: 0000000000000219 RSI: ffffffff8406b41d RDI: 00000000000010c8
-RBP: ffff8881ccc8c000 R08: 000000000000001e R09: ffffed103b66439f
-R10: ffffed103b66439e R11: ffff8881db321cf3 R12: 0000000000000000
-R13: ffff8881db3099bd R14: 000000000001f400 R15: ffff8881ccc8c5f0
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc50e2e1000 CR3: 00000001ce093000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- sz_push.isra.0+0xa4/0x1e0 drivers/media/rc/streamzap.c:118
- sz_push_half_space drivers/media/rc/streamzap.c:182 [inline]
- streamzap_callback+0x337/0x8a0 drivers/media/rc/streamzap.c:234
- __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
- dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
- call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x950 kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x178/0x1a0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:696
-Code: cc cc 41 56 41 55 65 44 8b 2d 94 c9 72 7a 41 54 55 53 0f 1f 44 00 00 e8 16 bb b5 fb e9 07 00 00 00 0f 00 2d 3a 5f 53 00 fb f4 <65> 44 8b 2d 70
-
-
+Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index e813382e78a6..643592b0bd38 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -551,18 +551,11 @@ static void HalRxAggr8723BSdio(struct adapter *padapter)
+ 
+ 	pregistrypriv = &padapter->registrypriv;
+ 
+-	if (pregistrypriv->wifi_spec) {
+-		/*  2010.04.27 hpfan */
+-		/*  Adjust RxAggrTimeout to close to zero disable RxAggr, suggested by designer */
+-		/*  Timeout value is calculated by 34 / (2^n) */
+-		valueDMATimeout = 0x06;
+-		valueDMAPageCount = 0x06;
+-	} else {
+-		/*  20130530, Isaac@SD1 suggest 3 kinds of parameter */
+-		/*  TX/RX Balance */
+-		valueDMATimeout = 0x06;
+-		valueDMAPageCount = 0x06;
+-	}
++	/*  2010.04.27 hpfan */
++	/*  Adjust RxAggrTimeout to close to zero disable RxAggr, suggested by designer */
++	/*  Timeout value is calculated by 34 / (2^n) */
++	valueDMATimeout = 0x06;
++	valueDMAPageCount = 0x06;
+ 
+ 	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH + 1, valueDMATimeout);
+ 	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH, valueDMAPageCount);
+-- 
+2.17.1
+
