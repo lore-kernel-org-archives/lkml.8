@@ -3,121 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: *
 X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
-	autolearn_force=no version=3.4.0
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39416 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729921AbgCKQRa (ORCPT
+	RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
+Received: from retiisi.org.uk ([95.216.213.190]:42662 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729921AbgCKQRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:17:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id j20so1323224pll.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 09:17:30 -0700 (PDT)
-Date: Wed, 11 Mar 2020 09:17:26 -0700
-From: Matthias Kaehlcke <mka@chromium.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFT PATCH 1/9] drivers: qcom: rpmh-rsc: Clean code
- reading/writing regs/cmds
-Message-ID: <20200311161726.GA144492@google.com>
-References: <20200306235951.214678-1-dianders@chromium.org>
- <20200306155707.RFT.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
- <85758e97-8c0c-5c4e-24ad-d3e8b2b01d3c@codeaurora.org>
- <CAD=FV=X649r8qrNRZSezUBEuJbt0oZg6VBweAGjEhxOPp0zf2w@mail.gmail.com>
+        Wed, 11 Mar 2020 12:17:48 -0400
+Date: Wed, 11 Mar 2020 18:16:54 +0200
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Robert Foss <robert.foss@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        ben.kao@intel.com, Rob Herring <robh+dt@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200311161654.GK2619@valkosipuli.retiisi.org.uk>
+References: <20200310134603.30260-1-robert.foss@linaro.org>
+ <20200310134603.30260-3-robert.foss@linaro.org>
+ <20200310142652.GK1922688@smile.fi.intel.com>
+ <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
+ <20200311114848.GJ2619@valkosipuli.retiisi.org.uk>
+ <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=X649r8qrNRZSezUBEuJbt0oZg6VBweAGjEhxOPp0zf2w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-Hi,
-
-On Wed, Mar 11, 2020 at 08:03:27AM -0700, Doug Anderson wrote:
-> Hi,
+On Wed, Mar 11, 2020 at 02:32:30PM +0100, Robert Foss wrote:
+> Hey Sakari,
 > 
-> On Wed, Mar 11, 2020 at 1:47 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+> On Wed, 11 Mar 2020 at 12:49, Sakari Ailus <sakari.ailus@iki.fi> wrote:
 > >
-> > Hi,
+> > Hi Robert,
 > >
-> > On 3/7/2020 5:29 AM, Douglas Anderson wrote:
-> > > This patch makes two changes, both of which should be no-ops:
+> > On Tue, Mar 10, 2020 at 04:55:20PM +0100, Robert Foss wrote:
+> > > Hi Andy,
 > > >
-> > > 1. Make read_tcs_reg() / read_tcs_cmd() symmetric to write_tcs_reg() /
-> > >    write_tcs_cmd().
+> > > On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
+> > > > > Add devicetree match table, and enable ov8856_probe()
+> > > > > to initialize power, clocks and reset pins.
+> > > >
+> > > > ...
+> > > >
+> > > > > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
+> > > >
+> > > > Use ARRAY_SIZE() directly.
+> > >
+> > > Ack.
+> > >
+> > > >
+> > > > Have you seen Sakari's comments?
+> > > > Sakari, do I have déją vu or you indeed commented this driver?
+> > >
+> > > Yes, I may have missed some part of it, so please tell me if I have.
+> > >
+> > > There is a patchset floating around that implements a larger chunk of
+> > > functionality,
+> > > including a couple of new modes. This is based on that series.
 > >
-> > i agree that there are two different write function doing same thing except last addition (RSC_DRV_CMD_OFFSET * cmd_id)
+> > Please see earlier comments given against an earlier variant of this set.
+> > They're on LMML.
 > >
-> > can you please rename write_tcs_cmd() to write_tcs_reg(), add above operation in it, and then remove existing write_tcs_reg().
-> > this way we have only one read and one write function.
+> > >
+> > > >
+> > > > ...
+> > > >
+> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
+> > > >
+> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
+> > > >
+> > > > Yes, seems this one is inverted.
+> > > >
+> > > > ...
+> > > >
+> > > > > +{
+> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
+> > > > > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
+> > > > > +     clk_disable_unprepare(ov8856->xvclk);
+> > > > > +}
+> > > > > +
+> > > > > +
+> > > >
+> > > > One blank line is enough.
+> > > >
+> > > > ...
+> > > >
+> > > > > +     ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
+> > > > > +     if (IS_ERR(ov8856->xvclk)) {
+> > > > > +             dev_err(&client->dev, "failed to get xvclk\n");
+> > > > > +             return -EINVAL;
+> > > > > +     }
+> > > >
+> > > > Previously it worked without clock provider, now you make a dependency.
+> > > >
+> > > > This won't work.
+> > >
+> > > So the ideal behavior would be to only use the xclk if it is provided?
 > >
-> > so at the end we will two function as,
-> >
-> > static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
-> > {
-> >         return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-> >                              RSC_DRV_CMD_OFFSET * cmd_id);
-> > }
-> >
-> > static void write_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id,
-> >                           u32 data)
-> > {
-> >         writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-> >                        RSC_DRV_CMD_OFFSET * cmd_id);
-> > }
+> > See e.g. the smiapp driver on how to do this so it continues to work on
+> > ACPI.
 > 
-> I can if you insist and this is still better than the existing
-> (inconsistent) code.
+> Thanks for the pointer!
 > 
-> ...but I still feel that having two functions adds value here.
+> >
+> > I think it'd be also appropriate to add the usleep() after lifting reset
+> > only if the reset GPIO is defined for the device.
 > 
-> 
-> Anyone else who is CCed want to weigh in and tie break?
+> Ack
 
-I agree with Doug, having two functions makes the code that calls them
-clearer. It makes it evident when a command is read/written and doesn't require
-a useless extra parameter when accessing a non-command register.
+On second thought, that probably applies if any of the resources needed for
+powering the device on are defined. It could be that there's no reset GPIO
+but a regulator is still there, in which case a delay is needed.
 
-> > > 2. Change the order of operations in the above functions to make it
-> > >    more obvious to me what the math is doing.  Specifically first you
-> > >    want to find the right TCS, then the right register, and then
-> > >    multiply by the command ID if necessary.
-> > With above change, i don't think you need to re-order this.
-> > specifically from tcs->base, we find right "reg" first and if it happens to be tcs then intended tcs, and then cmd inside tcs.
-> 
-> There was never any "need" to re-order.  That math works out to be the
-> same.  This is just clearer.
-> 
-> As an example, let's look at this:
-> 
-> struct point {
->   int x;
->   int y;
-> };
-> struct point points[10];
-> 
-> Let's say you have:
->   void *points_base = &(points[0]);
-> 
-> ...and now you want to find &(points[5].y).  What does your math look like?
-> 
-> a) points_base + (sizeof(struct point) * 5) + 4 ;
-> 
-> ...or...
-> 
-> b) points_base + 4 + (sizeof(struct point) * 5);
-> 
-> 
-> Both calculations give the same result, but I am arguring that "a)" is
-> more intuitive.  Specifically you deal with the array access first and
-> then deal with the offset within the structure that you found.
-
-+1
+-- 
+Sakari Ailus
 
