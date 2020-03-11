@@ -2,322 +2,159 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC0AC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBE2C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A2B21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:36:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NhBZ38G6"
+	by mail.kernel.org (Postfix) with ESMTP id 2F38121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgCKDgk (ORCPT
+        id S1728021AbgCKDiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:36:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39626 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbgCKDgj (ORCPT
+        Tue, 10 Mar 2020 23:38:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15314 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727648AbgCKDit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:36:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B3X3Yi178241;
-        Wed, 11 Mar 2020 03:36:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=j/yAOurweEWBuZxlqFBKOrkzZqy6u3iCDxl2snn59TU=;
- b=NhBZ38G6y3teXoCeN68p61lNHMmBednLWiDZhqslGd/epgDSF2HaEd4WzvZewinW8ydG
- sYryB8/vvlpruOvywqeeOgy/IP8vWh/zARQm+dR+L0RvIEsfGxLwniOmGU9B5++Ud6pa
- vujv4recSmzjqHlkpzoBht7HwGBA8MGBUiVcM1rnUpHe4YHvelq0MYzO/bA2SLcVRg2y
- 6MRhdz9Ul9r8D+qYbK5ifv8JXRc29AXqjNC9lTGTVCFV+aIhV33haN3IWrH+CFwQ0kOh
- sXo6q8H8C2W17GBK3lUmGOOiQ431OpLgMghMDc3aHV+vU7hLJNzc92RNMbwco3RLP6Ed BA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2yp9v646c3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 03:36:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B3YZUT190641;
-        Wed, 11 Mar 2020 03:36:23 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2yp8pvxcnn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 03:36:23 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02B3aHZx015209;
-        Wed, 11 Mar 2020 03:36:17 GMT
-Received: from localhost (/10.159.131.14)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 20:36:16 -0700
-Date:   Tue, 10 Mar 2020 20:36:14 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tue, 10 Mar 2020 23:38:49 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B3Topf127702
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:38:48 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ypjxd56mu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:38:48 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 11 Mar 2020 03:38:45 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Mar 2020 03:38:38 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02B3cbIQ25952406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 03:38:37 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2237242041;
+        Wed, 11 Mar 2020 03:38:37 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BAE7D4203F;
+        Wed, 11 Mar 2020 03:38:36 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Mar 2020 03:38:36 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 97549A0130;
+        Wed, 11 Mar 2020 14:38:31 +1100 (AEDT)
+Subject: Re: [PATCH v3 21/27] powerpc/powernv/pmem: Add an IOCTL to request
+ controller health & perf data
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200311033614.GQ1752567@magnolia>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
- <20200305155144.GA5598@lst.de>
- <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 11 Mar 2020 14:38:35 +1100
+In-Reply-To: <3ecb49e3-8828-ab7b-4391-5dd6127e76e0@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-22-alastair@au1.ibm.com>
+         <fdc5faec-d03d-3cba-4a9c-add7e522ad13@linux.ibm.com>
+         <3ecb49e3-8828-ab7b-4391-5dd6127e76e0@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031103-0020-0000-0000-000003B288B6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031103-0021-0000-0000-0000220AD6ED
+Message-Id: <97d52eefea5f362fee47e378a3e7ae51d565b291.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_17:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ mlxscore=0 mlxlogscore=560 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2003110020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003110020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 10:04:37AM -0700, Ira Weiny wrote:
-> On Thu, Mar 05, 2020 at 04:51:44PM +0100, Christoph Hellwig wrote:
-> > FYI, I still will fully NAK any series that adds additional locks
-> > and thus atomic instructions to basically every fs call, and grows
-> > the inode by a rw_semaphore plus and atomic64_t.  I also think the
-> > whole idea of switching operation vectors at runtime is fatally flawed
-> > and we should never add such code, nevermind just for a fringe usecase
-> > of a fringe feature.
+On Wed, 2020-03-04 at 12:06 +0100, Frederic Barrat wrote:
 > 
-> Being new to this area of the kernel I'm not clear on the history...
-
-I /think/ the TLDR version in no particular order is:
-
-- Some people expressed interest in being able to control page cache vs.
-  direct access on pmem hardware at a higher granularity than the entire
-  fs.
-
-- Dave Chinner(?) added the per-inode flag intending it to be the sign
-  that would flip on DAX.
-
-- Someone (I forget who) made it a mount option that would enable it for
-  all files regardless of inode flags and whatnot.
-
-- Eric Sandeen(?) complained that the behavior of the dax inode flag was
-  weird, particularly the part where you set the iflag and at some point
-  if and when the inode gets reclaimed and then reconstituted then the
-  change will finally take place.
-
-- Christoph Hellwig objected on various grounds (the kernel is
-  responsible for selecting the most appropriate hardware abstraction
-  for the usage pattern; a binary flag doesn't capture enough detail for
-  potential future pmem hardware; and now additional locking overhead).
-
-- There's been (I hope) a long term understanding that the mount option
-  will go away eventually, and not after we remove the EXPERIMENTAL
-  tags.
-
-(FWIW I tend to agree with Eric and Christoph, but I also thought it
-would be useful at least to see what changeable file operations would be
-like; if there were other users who had already implemented it; and how
-much of an apetite there was for revoke().)
-
-Hopefully I summarized that more or less accurately...
-
-> It was my understanding that the per-file flag support was a requirement to
-> removing the experimental designation from DAX.  Is this still the case?
-
-Nailing down the meaning of the per-file dax flag is/was the requirement,
-even if we kill it off entirely in the end.
-
-Given Christoph's veto threat, I suppose that leaves the following
-options?
-
-1) Leave the inode flag (FS_XFLAG_DAX) as it is, and export the S_DAX
-status via statx.  Document that changes to FS_XFLAG_DAX do not take
-effect immediately and that one must check statx to find out the real
-mode.  If we choose this, I would also deprecate the dax mount option;
-send in my mkfs.xfs patch to make it so that you can set FS_XFLAG_DAX on
-all files at mkfs time; and we can finally lay this whole thing to rest.
-This is the closest to what we have today.
-
-2) Withdraw FS_XFLAG_DAX entirely, and let the kernel choose based on
-usage patterns, hardware heuristics, or spiteful arbitrariness.
-
-Can we please pick (1) and just be done with this?  I want to move on.
-
---D
-
-There are still other things that need to be ironed out WRT pmem:
-
-a) reflink and page/pfn/whatever sharing -- fix the mm or (ab)use the
-xfs buffer cache, or something worse?
-
-b) getting our stories straight on how to clear poison, and whether or
-not we can come up with a better story for ZERO_FILE_RANGE on pmem.  In
-the ideal world I'd love to see Z_F_R actually memset(0) the pmem and
-clear poison, at least if the file->pmem mappings were contiguous.
-
-c) wiring up xfs to hwpoison, or wiring up hwpoison to xfs, or otherwise
-figuring out how to get storage to tell xfs that it lost something so
-that maybe xfs can fix it quickly
-
-> Ira
-> 
+> Le 28/02/2020 à 07:12, Andrew Donnellan a écrit :
+> > On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > 
+> > > When health & performance data is requested from the controller,
+> > > it responds with an error log containing the requested
+> > > information.
+> > > 
+> > > This patch allows the request to me issued via an IOCTL.
 > > 
-> > On Wed, Feb 26, 2020 at 09:24:30PM -0800, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Changes from V4:
-> > > 	* Open code the aops lock rather than add it to the xfs_ilock()
-> > > 	  subsystem (Darrick's comments were obsoleted by this change)
-> > > 	* Fix lkp build suggestions and bugs
-> > > 
-> > > Changes from V3:
-> > > 	* Remove global locking...  :-D
-> > > 	* put back per inode locking and remove pre-mature optimizations
-> > > 	* Fix issues with Directories having IS_DAX() set
-> > > 	* Fix kernel crash issues reported by Jeff
-> > > 	* Add some clean up patches
-> > > 	* Consolidate diflags to iflags functions
-> > > 	* Update/add documentation
-> > > 	* Reorder/rename patches quite a bit
-> > > 
-> > > Changes from V2:
-> > > 
-> > > 	* Move i_dax_sem to be a global percpu_rw_sem rather than per inode
-> > > 		Internal discussions with Dan determined this would be easier,
-> > > 		just as performant, and slightly less overhead that having it
-> > > 		in the SB as suggested by Jan
-> > > 	* Fix locking order in comments and throughout code
-> > > 	* Change "mode" to "state" throughout commits
-> > > 	* Add CONFIG_FS_DAX wrapper to disable inode_[un]lock_state() when not
-> > > 		configured
-> > > 	* Add static branch for which is activated by a device which supports
-> > > 		DAX in XFS
-> > > 	* Change "lock/unlock" to up/down read/write as appropriate
-> > > 		Previous names were over simplified
-> > > 	* Update comments/documentation
-> > > 
-> > > 	* Remove the xfs specific lock to the vfs (global) layer.
-> > > 	* Fix i_dax_sem locking order and comments
-> > > 
-> > > 	* Move 'i_mapped' count from struct inode to struct address_space and
-> > > 		rename it to mmap_count
-> > > 	* Add inode_has_mappings() call
-> > > 
-> > > 	* Fix build issues
-> > > 	* Clean up syntax spacing and minor issues
-> > > 	* Update man page text for STATX_ATTR_DAX
-> > > 	* Add reviewed-by's
-> > > 	* Rebase to 5.6
-> > > 
-> > > 	Rename patch:
-> > > 		from: fs/xfs: Add lock/unlock state to xfs
-> > > 		to: fs/xfs: Add write DAX lock to xfs layer
-> > > 	Add patch:
-> > > 		fs/xfs: Clarify lockdep dependency for xfs_isilocked()
-> > > 	Drop patch:
-> > > 		fs/xfs: Fix truncate up
-> > > 
-> > > 
-> > > At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
-> > > consumption due to their inability to detect whether the kernel will
-> > > instantiate page cache for a file, and cases where a global dax enable via a
-> > > mount option is too coarse.
-> > > 
-> > > The following patch series enables selecting the use of DAX on individual files
-> > > and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
-> > > scheme the dax mount option can be omitted to allow the per-file property to
-> > > take effect.
-> > > 
-> > > The insight at LSF/MM was to separate the per-mount or per-file "physical"
-> > > capability switch from an "effective" attribute for the file.
-> > > 
-> > > At LSF/MM we discussed the difficulties of switching the DAX state of a file
-> > > with active mappings / page cache.  It was thought the races could be avoided
-> > > by limiting DAX state flips to 0-length files.
-> > > 
-> > > However, this turns out to not be true.[3] This is because address space
-> > > operations (a_ops) may be in use at any time the inode is referenced and users
-> > > have expressed a desire to be able to change the DAX state on a file with data
-> > > in it.  For those reasons this patch set allows changing the DAX state flag on
-> > > a file as long as it is not current mapped.
-> > > 
-> > > Details of when and how DAX state can be changed on a file is included in a
-> > > documentation patch.
-> > > 
-> > > It should be noted that the physical DAX flag inheritance is not shown in this
-> > > patch set as it was maintained from previous work on XFS.  The physical DAX
-> > > flag and it's inheritance will need to be added to other file systems for user
-> > > control. 
-> > > 
-> > > As submitted this works on real hardware testing.
-> > > 
-> > > 
-> > > [1] https://lwn.net/Articles/787973/
-> > > [2] https://lwn.net/Articles/787233/
-> > > [3] https://lkml.org/lkml/2019/10/20/96
-> > > [4] https://patchwork.kernel.org/patch/11310511/
-> > > 
-> > > 
-> > > To: linux-kernel@vger.kernel.org
-> > > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > > Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-> > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > Cc: Dave Chinner <david@fromorbit.com>
-> > > Cc: Christoph Hellwig <hch@lst.de>
-> > > Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-> > > Cc: Jan Kara <jack@suse.cz>
-> > > Cc: linux-ext4@vger.kernel.org
-> > > Cc: linux-xfs@vger.kernel.org
-> > > Cc: linux-fsdevel@vger.kernel.org
-> > > 
-> > > 
-> > > Ira Weiny (12):
-> > >   fs/xfs: Remove unnecessary initialization of i_rwsem
-> > >   fs: Remove unneeded IS_DAX() check
-> > >   fs/stat: Define DAX statx attribute
-> > >   fs/xfs: Isolate the physical DAX flag from enabled
-> > >   fs/xfs: Create function xfs_inode_enable_dax()
-> > >   fs: Add locking for a dynamic address space operations state
-> > >   fs: Prevent DAX state change if file is mmap'ed
-> > >   fs/xfs: Hold off aops users while changing DAX state
-> > >   fs/xfs: Clean up locking in dax invalidate
-> > >   fs/xfs: Allow toggle of effective DAX flag
-> > >   fs/xfs: Remove xfs_diflags_to_linux()
-> > >   Documentation/dax: Update Usage section
-> > > 
-> > >  Documentation/filesystems/dax.txt | 84 +++++++++++++++++++++++++-
-> > >  Documentation/filesystems/vfs.rst | 16 +++++
-> > >  fs/attr.c                         |  1 +
-> > >  fs/inode.c                        | 16 ++++-
-> > >  fs/iomap/buffered-io.c            |  1 +
-> > >  fs/open.c                         |  4 ++
-> > >  fs/stat.c                         |  5 ++
-> > >  fs/xfs/xfs_icache.c               |  5 +-
-> > >  fs/xfs/xfs_inode.h                |  2 +
-> > >  fs/xfs/xfs_ioctl.c                | 98 +++++++++++++++----------------
-> > >  fs/xfs/xfs_iops.c                 | 69 +++++++++++++++-------
-> > >  include/linux/fs.h                | 73 ++++++++++++++++++++++-
-> > >  include/uapi/linux/stat.h         |  1 +
-> > >  mm/fadvise.c                      |  7 ++-
-> > >  mm/filemap.c                      |  4 ++
-> > >  mm/huge_memory.c                  |  1 +
-> > >  mm/khugepaged.c                   |  2 +
-> > >  mm/mmap.c                         | 19 +++++-
-> > >  mm/util.c                         |  9 ++-
-> > >  19 files changed, 328 insertions(+), 89 deletions(-)
-> > > 
-> > > -- 
-> > > 2.21.0
-> > ---end quoted text---
+> > A better explanation would be good - this IOCTL triggers a request
+> > to 
+> > the controller to collect controller health/perf data, and the 
+> > controller will later respond with an error log that can be picked
+> > up 
+> > via the error log IOCTL that you've defined earlier.
+> 
+> And even more precisely (to also check my understanding):
+> 
+>  > this IOCTL triggers a request to
+>  > the controller to collect controller health/perf data, and the
+>  > controller will later respond
+> 
+> by raising an interrupt to let the user app know that
+> 
+>  > an error log that can be picked up
+>  > via the error log IOCTL that you've defined earlier.
+> 
+> 
+> The rest of the patch looks ok to me.
+> 
+>    Fred
+
+Ok
+
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
