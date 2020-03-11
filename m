@@ -2,318 +2,163 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB156C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525A2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDCA20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KQwCs+/l"
+	by mail.kernel.org (Postfix) with ESMTP id 2C7D221655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583904384;
+	bh=TWJjYu/HvVnlNeY2VBees63MsYh/Rigq9wwN47Kg4yE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G7nkb4w2Y8AUK2EM6P78cgX50Mjak4j0bcNxMJaXfEUvFvHMG46jNsLBVgMIjFSEw
+	 dsd9QdS0QMZ7P/bbzgrTNOmdu8LgPmgkkBi4Yp92mvAr+Q6+kgGZg5u5EZkumZ6Qo6
+	 nI1AL/5kW2/3RLMJpkqWSBke84i1AIRD8JBF+02M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgCKFXR (ORCPT
+        id S1726864AbgCKF0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:23:17 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38148 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgCKFXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:23:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h5so1343710edn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JM9zu4grKzwKY2OIbM2yqTOoFgqOAS5Vs32abRmGmUM=;
-        b=KQwCs+/l9EaTxy3RwXy50wGVDvK1dSgCff/KUauW5pN1fszV3LSPQc2T2D0ZiwIx9t
-         It135UhmhIw3RafGKWFO5x46JRKtPf/yCz3+ghgGnnBX0vLOrx8pa7ofGX5mLaBZ/FU9
-         KNfPSwQwjCMRyuMwYpUTRRnmURbl3WDAw8ZuJO+7SSiVfLYLDkV0hxkTkbGrufYD2xq9
-         LUVrfmy/I7z1CrtTBF9CzaixYTGyHPvApKxsAxYr4bms5hIc+bhw6HeVx6RgQ3+5H/UD
-         tQJtbuSVnpB0YgV/ePW0f6Po03AqU3xPr34KwUBX0xzTVlNvjK4PZx7zbGbUeT+ggO+k
-         Mbrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JM9zu4grKzwKY2OIbM2yqTOoFgqOAS5Vs32abRmGmUM=;
-        b=ZjkRZC3bqpNOGydvhHAhurLKcBFazkU5ayzHEPskjBdrhrIgRdM9bT+i9tVwAja8xi
-         3U7U40x5Z/TzCl35l3wlLLwavS0Q1ZZevFQaahRtpCQXz0jiNWSBWVHn2ktp+VICxK+f
-         Y2YW0QlFOaRoOPhwzNWQzC0uVLEwwHJC2LClB1aKNTmF6wiKdIdvar6S+hSh1PbyXPEE
-         KbnP7yFsiNTe3XhtUwu7lFtJrK0d0RDQAvOzzwZ90xeuTJrGGEIvPDCNKE8FpAXyIUqH
-         1PYm6bUon58p9KmZmYktywGNW0MSfwAseXoCTvXr5VBNKpSKxqyrziBpkcVO6dpnSKFO
-         Er+g==
-X-Gm-Message-State: ANhLgQ3nxiNpB0OPu0iYOXCfuL3nrdk47BTFUm0iucWVJQ9kqU1kwHEY
-        5KZc0YcMF8KtFT+g5w3QTWomEqSg2LBP7ocjZwx+6g==
-X-Google-Smtp-Source: ADFU+vuTDvC9t080L+LZ2YE+PW/zd8Eu9TQJoE8XAM9NvA1Xqm/2oKnjT2jJhZKEQMuGlrbALvs8u36+drjZYwbvN/E=
-X-Received: by 2002:a17:906:385:: with SMTP id b5mr913477eja.268.1583904194983;
- Tue, 10 Mar 2020 22:23:14 -0700 (PDT)
+        Wed, 11 Mar 2020 01:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbgCKF0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 01:26:23 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 725E220873;
+        Wed, 11 Mar 2020 05:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583904381;
+        bh=TWJjYu/HvVnlNeY2VBees63MsYh/Rigq9wwN47Kg4yE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rXPmjs7QHPAofkD4abxKlOB1O+aKdBc3TZZ/lqFOfOzj9mp+cX1Av+2tzTcsurkv3
+         7IXCjMs1vb24OLfYT4L1vz+Y0eWmS8wTRdTJbbTWOEqprHUIvjoqqb1w0P/vEF9EPn
+         kPdg9f5XugJZ9dh+pRf3vAHGmGB4u8BvpWw1xi5o=
+Date:   Tue, 10 Mar 2020 22:26:20 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     NeilBrown <neilb@suse.com>, Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] kmod: make request_module() return an error when
+ autoloading is disabled
+Message-ID: <20200311052620.GD46757@gmail.com>
+References: <20200310223731.126894-1-ebiggers@kernel.org>
+ <20200311043221.GK11244@42.do-not-panic.com>
 MIME-Version: 1.0
-References: <cover.1583896344.git.joe@perches.com> <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
-In-Reply-To: <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 11 Mar 2020 10:53:03 +0530
-Message-ID: <CAHLCerPFWFoUpt6Soc1awDiCy6aBn=qTbQ8G5vjhmX-g2=8znA@mail.gmail.com>
-Subject: Re: [PATCH -next 011/491] ARM/QUALCOMM SUPPORT: Use fallthrough;
-To:     Joe Perches <joe@perches.com>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-media@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311043221.GK11244@42.do-not-panic.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:37 AM Joe Perches <joe@perches.com> wrote:
->
-> Convert the various uses of fallthrough comments to fallthrough;
->
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+On Wed, Mar 11, 2020 at 04:32:21AM +0000, Luis Chamberlain wrote:
+> On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > It's long been possible to disable kernel module autoloading completely
+> > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
+> > preferable
+> 
+> preferable but ... not documented. Or was this documented or recommended
+> somewhere?
+> 
+> > to setting it to a nonexistent file since it avoids the
+> > overhead of an attempted execve(), avoids potential deadlocks, and
+> > avoids the call to security_kernel_module_request() and thus on
+> > SELinux-based systems eliminates the need to write SELinux rules to
+> > dontaudit module_request.
 
+Not that I know of, though I didn't look too hard.  proc(5) mentions
+/proc/sys/kernel/modprobe but doesn't mention the empty string case.
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+In any case, it's been supported for a long time, and it's useful for the
+reasons I mentioned.
 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/media/platform/qcom/venus/vdec.c |  2 +-
->  drivers/phy/qualcomm/phy-qcom-usb-hs.c   |  2 +-
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c |  4 ++--
->  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  2 +-
->  drivers/rpmsg/qcom_glink_native.c        |  4 ++--
->  drivers/soc/qcom/socinfo.c               | 16 ++++++++--------
->  drivers/thermal/qcom/tsens-v0_1.c        |  8 ++++----
->  drivers/thermal/qcom/tsens-v1.c          |  4 ++--
->  8 files changed, 21 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index f34920..9e0451 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -983,7 +983,7 @@ static int vdec_stop_capture(struct venus_inst *inst)
->         switch (inst->codec_state) {
->         case VENUS_DEC_STATE_DECODING:
->                 ret = hfi_session_flush(inst, HFI_FLUSH_ALL);
-> -               /* fallthrough */
-> +               fallthrough;
->         case VENUS_DEC_STATE_DRAIN:
->                 vdec_cancel_dst_buffers(inst);
->                 inst->codec_state = VENUS_DEC_STATE_STOPPED;
-> diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-> index 610542..327df1a 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-> @@ -53,7 +53,7 @@ static int qcom_usb_hs_phy_set_mode(struct phy *phy,
->                 case PHY_MODE_USB_OTG:
->                 case PHY_MODE_USB_HOST:
->                         val |= ULPI_INT_IDGRD;
-> -                       /* fall through */
-> +                       fallthrough;
->                 case PHY_MODE_USB_DEVICE:
->                         val |= ULPI_INT_SESS_VALID;
->                 default:
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index fe0be8..3b0ab0e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -793,13 +793,13 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
->         switch (subtype) {
->         case PMIC_GPIO_SUBTYPE_GPIO_4CH:
->                 pad->have_buffer = true;
-> -               /* Fall through */
-> +               fallthrough;
->         case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
->                 pad->num_sources = 4;
->                 break;
->         case PMIC_GPIO_SUBTYPE_GPIO_8CH:
->                 pad->have_buffer = true;
-> -               /* Fall through */
-> +               fallthrough;
->         case PMIC_GPIO_SUBTYPE_GPIOC_8CH:
->                 pad->num_sources = 8;
->                 break;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-> index 338a15..b5949f7 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-> @@ -346,7 +346,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
->                                 return -EINVAL;
->                         }
->                         pin->pull_up_strength = arg;
-> -                       /* FALLTHROUGH */
-> +                       fallthrough;
->                 case PIN_CONFIG_BIAS_PULL_UP:
->                         pin->bias = pin->pull_up_strength;
->                         banks |= BIT(2);
-> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-> index 1995f5b..f40312 100644
-> --- a/drivers/rpmsg/qcom_glink_native.c
-> +++ b/drivers/rpmsg/qcom_glink_native.c
-> @@ -553,7 +553,7 @@ static void qcom_glink_receive_version(struct qcom_glink *glink,
->                 break;
->         case GLINK_VERSION_1:
->                 glink->features &= features;
-> -               /* FALLTHROUGH */
-> +               fallthrough;
->         default:
->                 qcom_glink_send_version_ack(glink);
->                 break;
-> @@ -584,7 +584,7 @@ static void qcom_glink_receive_version_ack(struct qcom_glink *glink,
->                         break;
->
->                 glink->features &= features;
-> -               /* FALLTHROUGH */
-> +               fallthrough;
->         default:
->                 qcom_glink_send_version(glink);
->                 break;
-> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-> index 7864b7..8ae5646 100644
-> --- a/drivers/soc/qcom/socinfo.c
-> +++ b/drivers/soc/qcom/socinfo.c
-> @@ -325,7 +325,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
->                 debugfs_create_x32("raw_device_number", 0400,
->                                    qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.raw_device_num);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 11):
->         case SOCINFO_VERSION(0, 10):
->         case SOCINFO_VERSION(0, 9):
-> @@ -333,12 +333,12 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
->
->                 debugfs_create_u32("foundry_id", 0400, qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.foundry_id);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 8):
->         case SOCINFO_VERSION(0, 7):
->                 DEBUGFS_ADD(info, pmic_model);
->                 DEBUGFS_ADD(info, pmic_die_rev);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 6):
->                 qcom_socinfo->info.hw_plat_subtype =
->                         __le32_to_cpu(info->hw_plat_subtype);
-> @@ -346,7 +346,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
->                 debugfs_create_u32("hardware_platform_subtype", 0400,
->                                    qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.hw_plat_subtype);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 5):
->                 qcom_socinfo->info.accessory_chip =
->                         __le32_to_cpu(info->accessory_chip);
-> @@ -354,27 +354,27 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
->                 debugfs_create_u32("accessory_chip", 0400,
->                                    qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.accessory_chip);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 4):
->                 qcom_socinfo->info.plat_ver = __le32_to_cpu(info->plat_ver);
->
->                 debugfs_create_u32("platform_version", 0400,
->                                    qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.plat_ver);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 3):
->                 qcom_socinfo->info.hw_plat = __le32_to_cpu(info->hw_plat);
->
->                 debugfs_create_u32("hardware_platform", 0400,
->                                    qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.hw_plat);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 2):
->                 qcom_socinfo->info.raw_ver  = __le32_to_cpu(info->raw_ver);
->
->                 debugfs_create_u32("raw_version", 0400, qcom_socinfo->dbg_root,
->                                    &qcom_socinfo->info.raw_ver);
-> -               /* Fall through */
-> +               fallthrough;
->         case SOCINFO_VERSION(0, 1):
->                 DEBUGFS_ADD(info, build_id);
->                 break;
-> diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
-> index 4b8dd6..893ce1 100644
-> --- a/drivers/thermal/qcom/tsens-v0_1.c
-> +++ b/drivers/thermal/qcom/tsens-v0_1.c
-> @@ -163,7 +163,7 @@ static int calibrate_8916(struct tsens_priv *priv)
->                 p2[4] = (qfprom_cdata[1] & MSM8916_S4_P2_MASK) >> MSM8916_S4_P2_SHIFT;
->                 for (i = 0; i < priv->num_sensors; i++)
->                         p2[i] = ((base1 + p2[i]) << 3);
-> -               /* Fall through */
-> +               fallthrough;
->         case ONE_PT_CALIB2:
->                 base0 = (qfprom_cdata[0] & MSM8916_BASE0_MASK);
->                 p1[0] = (qfprom_cdata[0] & MSM8916_S0_P1_MASK) >> MSM8916_S0_P1_SHIFT;
-> @@ -228,7 +228,7 @@ static int calibrate_8974(struct tsens_priv *priv)
->                         p2[8] = (calib[5] & S8_P2_BKP_MASK) >> S8_P2_BKP_SHIFT;
->                         p2[9] = (calib[5] & S9_P2_BKP_MASK) >> S9_P2_BKP_SHIFT;
->                         p2[10] = (calib[5] & S10_P2_BKP_MASK) >> S10_P2_BKP_SHIFT;
-> -                       /* Fall through */
-> +                       fallthrough;
->                 case ONE_PT_CALIB:
->                 case ONE_PT_CALIB2:
->                         base1 = bkp[0] & BASE1_MASK;
-> @@ -263,7 +263,7 @@ static int calibrate_8974(struct tsens_priv *priv)
->                         p2[8] = (calib[4] & S8_P2_MASK) >> S8_P2_SHIFT;
->                         p2[9] = (calib[4] & S9_P2_MASK) >> S9_P2_SHIFT;
->                         p2[10] = (calib[4] & S10_P2_MASK) >> S10_P2_SHIFT;
-> -                       /* Fall through */
-> +                       fallthrough;
->                 case ONE_PT_CALIB:
->                 case ONE_PT_CALIB2:
->                         base1 = calib[0] & BASE1_MASK;
-> @@ -293,7 +293,7 @@ static int calibrate_8974(struct tsens_priv *priv)
->                         p2[i] <<= 2;
->                         p2[i] |= BIT_APPEND;
->                 }
-> -               /* Fall through */
-> +               fallthrough;
->         case ONE_PT_CALIB2:
->                 for (i = 0; i < priv->num_sensors; i++) {
->                         p1[i] += base1;
-> diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
-> index bd2ddb..d096d3 100644
-> --- a/drivers/thermal/qcom/tsens-v1.c
-> +++ b/drivers/thermal/qcom/tsens-v1.c
-> @@ -202,7 +202,7 @@ static int calibrate_v1(struct tsens_priv *priv)
->                 p2[9] = (qfprom_cdata[3] & S9_P2_MASK) >> S9_P2_SHIFT;
->                 for (i = 0; i < priv->num_sensors; i++)
->                         p2[i] = ((base1 + p2[i]) << 2);
-> -               /* Fall through */
-> +               fallthrough;
->         case ONE_PT_CALIB2:
->                 base0 = (qfprom_cdata[4] & BASE0_MASK) >> BASE0_SHIFT;
->                 p1[0] = (qfprom_cdata[0] & S0_P1_MASK) >> S0_P1_SHIFT;
-> @@ -263,7 +263,7 @@ static int calibrate_8976(struct tsens_priv *priv)
->
->                 for (i = 0; i < priv->num_sensors; i++)
->                         p2[i] = ((base1 + p2[i]) << 2);
-> -               /* Fall through */
-> +               fallthrough;
->         case ONE_PT_CALIB2:
->                 base0 = qfprom_cdata[0] & MSM8976_BASE0_MASK;
->                 p1[0] = (qfprom_cdata[0] & MSM8976_S0_P1_MASK) >> MSM8976_S0_P1_SHIFT;
-> --
-> 2.24.0
->
+> > 
+> > However, when module autoloading is disabled in this way,
+> > request_module() returns 0.  This is broken because callers expect 0 to
+> > mean that the module was successfully loaded.
+> 
+> However this is implicitly not true. For instance, as Neil recently
+> chased down -- blacklisting a module today returns 0 as well, and so
+> this corner case is implicitly set to return 0.
+
+That sounds like another similar bug, but in the modprobe program instead of in
+the kernel.  Do you have a link to the discussion about it?
+
+> 
+> > But
+> > improperly returning 0 can indeed confuse a few callers, for example
+> > get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
+> > 
+> > 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+> > 		fs = __get_fs_type(name, len);
+> > 		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
+> > 	}
+> > 
+> > This is easily reproduced with:
+> > 
+> > 	echo > /proc/sys/kernel/modprobe
+> > 	mount -t NONEXISTENT none /
+> > 
+> > It causes:
+> > 
+> > 	request_module fs-NONEXISTENT succeeded, but still no fs?
+> > 	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
+> > 	[...]
+> 
+> Thanks for reporting this.
+> 
+> > Arguably this warning is broken and should be removed, since the module
+> > could have been unloaded already.
+> 
+> No, the warning is present *because* debuggins issues for when the
+> module which did not load is a rootfs is *really* hard to debug. Then,
+> if the culprit of the issue is a userspace modprobe bug (it happens)
+> this makes debugging *very* difficult as you won't know what failed at
+> all, you just get a silent failed boot.
+
+I meant that it's broken to use WARN_ON(), because it's a userspace triggerable
+condition.  WARN_ON() is for kernel bugs only.  Of course, if it's a useful
+warning, it can still be left in as pr_warn().
+
+> > However, request_module() should also
+> > correctly return an error when it fails.  So let's make it return
+> > -ENOENT, which matches the error when the modprobe binary doesn't exist.
+> 
+> This is a user experience change though, and I wouldn't have on my radar
+> who would use this, and expects the old behaviour. Josh, would you by
+> chance?
+> 
+> I'd like this to be more an RFC first so we get vetted parties to
+> review. I take it this and Neil's case are cases we should revisit now,
+> properly document as we didn't before, ensure we don't break anything,
+> and also extend the respective kmod selftests to ensure we don't break
+> these corner cases in the future.
+
+This patch only affects kernel internals, not the userspace API.  So I don't see
+why it would be controversial?  I already went through all callers of
+request_module() that check its return value, and they all appear to work better
+with -ENOENT, since they assume that 0 means the module was loaded.
+
+Incorrectly returning 0 typically causes unnecessary work (checking again
+whether the module's functionality is available) or misleading log messages.  In
+fact, I can't think of a situation where kernel code would *want* 0 returned in
+this case, as it's ambiguous with the module being successfully loaded.
+
+Sure, I'll check whether it would be possible to add a test for this case in
+lib/test_kmod.c and tools/testing/selftests/kmod/.
+
+- Eric
