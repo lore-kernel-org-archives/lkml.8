@@ -2,224 +2,154 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F96C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9700C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1612082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YMXe1meY"
+	by mail.kernel.org (Postfix) with ESMTP id 82188208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgCKIPa (ORCPT
+        id S1728587AbgCKIPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:15:30 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34065 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728533AbgCKIP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:15:29 -0400
-Received: by mail-lf1-f66.google.com with SMTP id i19so912393lfl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jOjGU3wzPeEBTqciAiFkvPsk2Rvz1207yuRzp5ZI22A=;
-        b=YMXe1meY0Ry5dt0/YTi6LD2sq1y8JA1K2tw35d9SXB0Xym/fasJSX8xopFbMTgljmj
-         sbYAHPNr4yllnJJOaM5wjDKD1oc9jZokEZ3Gx7zfLcCSd3QLvWBbE6livByO6dwqAYW/
-         psWCXu+76CX86sU2phB/p8OlYE4basp0ucgsKtZEpFRpEGIGJ27Rvo2YPfmVgrQOvMJZ
-         HRdyaeQdcIpV+t/2OkpW+VXO+fVdeVVcwdW5ucWr1KwzUlSBYyztaOZ27gALMBu8CSDb
-         O9X+q16RSbkyr92sDBV1JeQyQt0Nj8z5UzfEXdRcplhQgLuIIPjumry22fN/9S+4W82G
-         YTeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jOjGU3wzPeEBTqciAiFkvPsk2Rvz1207yuRzp5ZI22A=;
-        b=qmiPWJ9o3jJkOvUnDmXSUE0DjF227HAXPyBG3WQ34kgBSo/NJowKC1AZNx0h0XR3mX
-         dZnO4wGsOy6LXMurKZJg2P78rWGVfUQOIVbE6FSTY1G98Dibmj1NXOwFHum7QrZn5MlQ
-         uhMpF+xW+mC4SfMaBIJT2r7ep0NcUW1l3o9Tk0uncgeTuRyjnzj5TkSnwPryfJHn9f6c
-         ZzNd9ASxTWPMHX4xZVPO62UkPMQf82E5vZp1624DfwAq88YNhB7c3tmIOAQpOR/KI7n1
-         vyQer1aZYO0outuT95Kn2FdZAMG56TS9JwtYbJ/BaE3wUEgEUe6tagfYmz9ffzPFXtyn
-         Me+g==
-X-Gm-Message-State: ANhLgQ22nvpSrvYaKBYNzVvEuGyXaXs5EC+I5i9uFyt9osIVhUYds+AP
-        I5vv9nUP3iu8rUGHfZTXw7CTnc+R7jDy8JsaQuEq1w==
-X-Google-Smtp-Source: ADFU+vtU+ZEVtgT1sRTyfkr5wdmsCjOAh2UsHK9kBDRX6mc/raNw9j4ccsDe9UmOZY6oJ2zA3l2Wkl7mbV+SJIFkYsk=
-X-Received: by 2002:a19:4c08:: with SMTP id z8mr1374387lfa.95.1583914526981;
- Wed, 11 Mar 2020 01:15:26 -0700 (PDT)
+        Wed, 11 Mar 2020 04:15:43 -0400
+Received: from mga12.intel.com ([192.55.52.136]:5732 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728533AbgCKIPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:15:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:15:42 -0700
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="236353114"
+Received: from mkuta-mobl.ger.corp.intel.com (HELO localhost) ([10.249.39.69])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:15:38 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Wambui Karuga <wambui.karugax@gmail.com>, airlied@linux.ie,
+        daniel@ffwll.ch, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v2 14/17] drm/i915: have *_debugfs_init() functions return void.
+In-Reply-To: <20200310133121.27913-15-wambui.karugax@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200310133121.27913-1-wambui.karugax@gmail.com> <20200310133121.27913-15-wambui.karugax@gmail.com>
+Date:   Wed, 11 Mar 2020 10:15:55 +0200
+Message-ID: <87y2s7l32c.fsf@intel.com>
 MIME-Version: 1.0
-References: <20200310123639.608886314@linuxfoundation.org>
-In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 11 Mar 2020 13:43:19 +0530
-Message-ID: <CA+G9fYt0W2P4WaEg=KSziBtDA6riTATdp-eS6QM4Ft4LzAoUOA@mail.gmail.com>
-Subject: Re: [PATCH 5.5 000/189] 5.5.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 18:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, 10 Mar 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
+> Since commit 987d65d01356 (drm: debugfs: make
+> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
+> fails and should return void. Therefore, remove its use as the
+> return value of debugfs_init() functions and have the functions return
+> void.
 >
-> This is the start of the stable review cycle for the 5.5.9 release.
-> There are 189 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> v2: convert intel_display_debugfs_register() stub to return void too.
 >
-> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+
+
+> ---
+>  drivers/gpu/drm/i915/display/intel_display_debugfs.c | 8 ++++----
+>  drivers/gpu/drm/i915/display/intel_display_debugfs.h | 4 ++--
+>  drivers/gpu/drm/i915/i915_debugfs.c                  | 8 ++++----
+>  drivers/gpu/drm/i915/i915_debugfs.h                  | 4 ++--
+>  4 files changed, 12 insertions(+), 12 deletions(-)
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.9-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.c b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+> index 1e6eb7f2f72d..424f4e52f783 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+> @@ -1927,7 +1927,7 @@ static const struct {
+>  	{"i915_edp_psr_debug", &i915_edp_psr_debug_fops},
+>  };
+>  
+> -int intel_display_debugfs_register(struct drm_i915_private *i915)
+> +void intel_display_debugfs_register(struct drm_i915_private *i915)
+>  {
+>  	struct drm_minor *minor = i915->drm.primary;
+>  	int i;
+> @@ -1940,9 +1940,9 @@ int intel_display_debugfs_register(struct drm_i915_private *i915)
+>  				    intel_display_debugfs_files[i].fops);
+>  	}
+>  
+> -	return drm_debugfs_create_files(intel_display_debugfs_list,
+> -					ARRAY_SIZE(intel_display_debugfs_list),
+> -					minor->debugfs_root, minor);
+> +	drm_debugfs_create_files(intel_display_debugfs_list,
+> +				 ARRAY_SIZE(intel_display_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  }
+>  
+>  static int i915_panel_show(struct seq_file *m, void *data)
+> diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.h b/drivers/gpu/drm/i915/display/intel_display_debugfs.h
+> index a3bea1ce04c2..c922c1745bfe 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display_debugfs.h
+> +++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.h
+> @@ -10,10 +10,10 @@ struct drm_connector;
+>  struct drm_i915_private;
+>  
+>  #ifdef CONFIG_DEBUG_FS
+> -int intel_display_debugfs_register(struct drm_i915_private *i915);
+> +void intel_display_debugfs_register(struct drm_i915_private *i915);
+>  int intel_connector_debugfs_add(struct drm_connector *connector);
+>  #else
+> -static inline int intel_display_debugfs_register(struct drm_i915_private *i915) { return 0; }
+> +static inline void intel_display_debugfs_register(struct drm_i915_private *i915) {}
+>  static inline int intel_connector_debugfs_add(struct drm_connector *connector) { return 0; }
+>  #endif
+>  
+> diff --git a/drivers/gpu/drm/i915/i915_debugfs.c b/drivers/gpu/drm/i915/i915_debugfs.c
+> index 8f2525e4ce0f..de313199c714 100644
+> --- a/drivers/gpu/drm/i915/i915_debugfs.c
+> +++ b/drivers/gpu/drm/i915/i915_debugfs.c
+> @@ -2392,7 +2392,7 @@ static const struct i915_debugfs_files {
+>  	{"i915_guc_log_relay", &i915_guc_log_relay_fops},
+>  };
+>  
+> -int i915_debugfs_register(struct drm_i915_private *dev_priv)
+> +void i915_debugfs_register(struct drm_i915_private *dev_priv)
+>  {
+>  	struct drm_minor *minor = dev_priv->drm.primary;
+>  	int i;
+> @@ -2409,7 +2409,7 @@ int i915_debugfs_register(struct drm_i915_private *dev_priv)
+>  				    i915_debugfs_files[i].fops);
+>  	}
+>  
+> -	return drm_debugfs_create_files(i915_debugfs_list,
+> -					I915_DEBUGFS_ENTRIES,
+> -					minor->debugfs_root, minor);
+> +	drm_debugfs_create_files(i915_debugfs_list,
+> +				 I915_DEBUGFS_ENTRIES,
+> +				 minor->debugfs_root, minor);
+>  }
+> diff --git a/drivers/gpu/drm/i915/i915_debugfs.h b/drivers/gpu/drm/i915/i915_debugfs.h
+> index 6da39c76ab5e..1de2736f1248 100644
+> --- a/drivers/gpu/drm/i915/i915_debugfs.h
+> +++ b/drivers/gpu/drm/i915/i915_debugfs.h
+> @@ -12,10 +12,10 @@ struct drm_i915_private;
+>  struct seq_file;
+>  
+>  #ifdef CONFIG_DEBUG_FS
+> -int i915_debugfs_register(struct drm_i915_private *dev_priv);
+> +void i915_debugfs_register(struct drm_i915_private *dev_priv);
+>  void i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj);
+>  #else
+> -static inline int i915_debugfs_register(struct drm_i915_private *dev_priv) { return 0; }
+> +static inline void i915_debugfs_register(struct drm_i915_private *dev_priv) {}
+>  static inline void i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj) {}
+>  #endif
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.5.9-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: 11e07aec07807683209513e2ad4a41bd7ee8a250
-git describe: v5.5.8-190-g11e07aec0780
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5.8-190-g11e07aec0780
-
-No regressions (compared to build v5.5.8)
-
-No fixes (compared to build v5.5.8)
-
-Ran 27520 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* perf
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-cve-tests
-* ltp-ipc-tests
-* network-basic-tests
-* spectre-meltdown-checker-test
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-64k-page_size-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-compat-tests
-* ltp-syscalls-kasan-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Jani Nikula, Intel Open Source Graphics Center
