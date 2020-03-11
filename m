@@ -2,210 +2,137 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC206C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EAC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4DF21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED3421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583927826;
-	bh=+aqXKKrNTVRxCGqYMt/IExvi6HRSqwAe7KUsmMCZLE4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=O0B1pdJe0kusBnK6Ztqek/AOyQ9E4+AATl1leXPmeFvEpapIaCExb6QaNOeGX4oX6
-	 4A7heGhlrPYkoanOWfJxdJDhcQtBZnQUW2vsZEsfgwROjSwSlfoDEDvlSH7GgjcSOg
-	 iNK1GiMTzXDVWhTDwtusJ7kXWDJOHaGX85mdDmL8=
+	s=default; t=1583927861;
+	bh=X8vrm2ss5Ba+8w1C2C3dnf7dinwdRSWZ4ySZTkEtdD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qoCmYvsXeayq3QogMMY54rk4gDYmulIHyGj8zejBm/Sel7YmiZL+nM8c/BKhdxUs7
+	 mt3EM1Urliz2QgN+aPxfC7XyMxelTo3gyG+/o9Iw0312WWnbJoqJorTPueetW5Eegy
+	 F4mEgw02jvXbdJ9OEppLf24Pukh0WCeWQUFHNf/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgCKL5F (ORCPT
+        id S1729315AbgCKL5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729244AbgCKL5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:57:04 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E49D20873;
-        Wed, 11 Mar 2020 11:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583927823;
-        bh=+aqXKKrNTVRxCGqYMt/IExvi6HRSqwAe7KUsmMCZLE4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yKDnR99LlgXnkIagzFTKls8FuBT9BorDH8lm5RFh7fpjhuNk2jYmmbn23AHCV2lJs
-         Xv/F6h16T3m2a7UVDf4OQ+/lGwEA355Yivc5Kg/jUFF93ncryc5gtV+6ZlGtERoqYG
-         /5MJ2K2jCKEnq2UOIaS6IBBHoSSmhmhyY1wEAVVg=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jBzyu-00Bte4-TW; Wed, 11 Mar 2020 11:57:01 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Salter <msalter@redhat.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH] irqchip/gic-v3: Workaround Cavium erratum 38539 when reading GICD_TYPER2
-Date:   Wed, 11 Mar 2020 11:56:49 +0000
-Message-Id: <20200311115649.26060-1-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Mar 2020 07:57:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55339 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbgCKL5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:57:39 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 6so1762119wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:57:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tZ17rEf6Xvksk/thMYpVF8wPE/d3WH4FVyx1lotSqqk=;
+        b=h/TUCiJk5eB1MVioqm40qjYY3FFY86FzGpnHgcjva0b8Kf569pEavtv39N17X3E2dA
+         BVFmx9gPinyYjwp/EtHJkjuzHoFqx7YW7LP/gF7JVZsOtiMISaV14PBX0MAD9jiDBFFA
+         JgQzch/8jqQPjhaq54wVA2yxFg3GZ40coF4HwH8lnQmAnajyxD+2NzTvmtopnB20tP8H
+         J5LE4EvsFIyVlQGBMC52ogsguE/Xt2mfQ4irhJIitMqO/b8IjLFvG3Jj/bKULWG46lwC
+         DFj++idOM50pAk5pcecMI/ksDbftwcW8SAsWBTTiqU1i+31Mt93OjqukNgSaLNVfO+8I
+         UPyQ==
+X-Gm-Message-State: ANhLgQ0xoyX8kGFrqhJ0+yCLsDg9vo50bOfVzA+GJir9K8yAvQClxnvK
+        Rrf25zmvFsQeD5up6Il0KVMnalP/
+X-Google-Smtp-Source: ADFU+vvESGFZ1n4LLTj2JSRkMK7+3YcfWoI1XMkLFpJ1FrM0KfhtH1XEz0eUrZeFKyHCNhX1niYzAA==
+X-Received: by 2002:a7b:c082:: with SMTP id r2mr3683800wmh.177.1583927857619;
+        Wed, 11 Mar 2020 04:57:37 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id w19sm8004689wmi.0.2020.03.11.04.57.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 04:57:36 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 12:57:35 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
+Message-ID: <20200311115735.GM23944@dhcp22.suse.cz>
+References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
+ <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, jason@lakedaemon.net, msalter@redhat.com, rrichter@marvell.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Despite the architecture spec requiring that reserved registers in the GIC
-distributor memory map are RES0 (and thus are not allowed to generate
-an exception), the Cavium ThunderX (aka TX1) SoC explodes as such:
+On Wed 11-03-20 16:32:35, Srikar Dronamraju wrote:
+> A Powerpc system with multiple possible nodes and with CONFIG_NUMA
+> enabled always used to have a node 0, even if node 0 does not any cpus
+> or memory attached to it. As per PAPR, node affinity of a cpu is only
+> available once its present / online. For all cpus that are possible but
+> not present, cpu_to_node() would point to node 0.
+> 
+> To ensure a cpuless, memoryless dummy node is not online, powerpc need
+> to make sure all possible but not present cpu_to_node are set to a
+> proper node.
 
-[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
-[    0.000000] GICv3: 128 SPIs implemented
-[    0.000000] GICv3: 0 Extended SPIs implemented
-[    0.000000] Internal error: synchronous external abort: 96000210 [#1] SMP
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc4-00035-g3cf6a3d5725f #7956
-[    0.000000] Hardware name: cavium,thunder-88xx (DT)
-[    0.000000] pstate: 60000085 (nZCv daIf -PAN -UAO)
-[    0.000000] pc : __raw_readl+0x0/0x8
-[    0.000000] lr : gic_init_bases+0x110/0x560
-[    0.000000] sp : ffff800011243d90
-[    0.000000] x29: ffff800011243d90 x28: 0000000000000000
-[    0.000000] x27: 0000000000000018 x26: 0000000000000002
-[    0.000000] x25: ffff8000116f0000 x24: ffff000fbe6a2c80
-[    0.000000] x23: 0000000000000000 x22: ffff010fdc322b68
-[    0.000000] x21: ffff800010a7a208 x20: 00000000009b0404
-[    0.000000] x19: ffff80001124dad0 x18: 0000000000000010
-[    0.000000] x17: 000000004d8d492b x16: 00000000f67eb9af
-[    0.000000] x15: ffffffffffffffff x14: ffff800011249908
-[    0.000000] x13: ffff800091243ae7 x12: ffff800011243af4
-[    0.000000] x11: ffff80001126e000 x10: ffff800011243a70
-[    0.000000] x9 : 00000000ffffffd0 x8 : ffff80001069c828
-[    0.000000] x7 : 0000000000000059 x6 : ffff8000113fb4d1
-[    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
-[    0.000000] x3 : 0000000000000000 x2 : 0000000000000000
-[    0.000000] x1 : 0000000000000000 x0 : ffff8000116f000c
-[    0.000000] Call trace:
-[    0.000000]  __raw_readl+0x0/0x8
-[    0.000000]  gic_of_init+0x188/0x224
-[    0.000000]  of_irq_init+0x200/0x3cc
-[    0.000000]  irqchip_init+0x1c/0x40
-[    0.000000]  init_IRQ+0x160/0x1d0
-[    0.000000]  start_kernel+0x2ec/0x4b8
-[    0.000000] Code: a8c47bfd d65f03c0 d538d080 d65f03c0 (b9400000)
+Just curious, is this somehow related to
+http://lkml.kernel.org/r/20200227182650.GG3771@dhcp22.suse.cz?
 
-when reading the GICv4.1 GICD_TYPER2 register, which is unexpected...
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
+> Cc: Christopher Lameter <cl@linux.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/mm/numa.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index 8a399db..54dcd49 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -931,8 +931,20 @@ void __init mem_topology_setup(void)
+>  
+>  	reset_numa_cpu_lookup_table();
+>  
+> -	for_each_present_cpu(cpu)
+> -		numa_setup_cpu(cpu);
+> +	for_each_possible_cpu(cpu) {
+> +		/*
+> +		 * Powerpc with CONFIG_NUMA always used to have a node 0,
+> +		 * even if it was memoryless or cpuless. For all cpus that
+> +		 * are possible but not present, cpu_to_node() would point
+> +		 * to node 0. To remove a cpuless, memoryless dummy node,
+> +		 * powerpc need to make sure all possible but not present
+> +		 * cpu_to_node are set to a proper node.
+> +		 */
+> +		if (cpu_present(cpu))
+> +			numa_setup_cpu(cpu);
+> +		else
+> +			set_cpu_numa_node(cpu, first_online_node);
+> +	}
+>  }
+>  
+>  void __init initmem_init(void)
+> -- 
+> 1.8.3.1
 
-Work around it by adding a new quirk for the following variants:
-
- ThunderX: CN88xx
- OCTEON TX: CN83xx, CN81xx
- OCTEON TX2: CN93xx, CN96xx, CN98xx, CNF95xx*
-
-and use this flag to avoid accessing GICD_TYPER2. Note that all
-reserved registers (including redistributors and ITS) are impacted
-by this erratum, but that only GICD_TYPER2 has to be worked around
-so far.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Robert Richter <rrichter@marvell.com>
----
-This is a respin of [1], with the erratum number and affected
-platform list provided by Robert.
-
-[1] https://lore.kernel.org/lkml/20191027144234.8395-11-maz@kernel.org/
-
- Documentation/arm64/silicon-errata.rst |  2 ++
- drivers/irqchip/irq-gic-v3.c           | 30 +++++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-index 9120e59578dc..2c08c628febd 100644
---- a/Documentation/arm64/silicon-errata.rst
-+++ b/Documentation/arm64/silicon-errata.rst
-@@ -110,6 +110,8 @@ stable kernels.
- +----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX GICv3  | #23154          | CAVIUM_ERRATUM_23154        |
- +----------------+-----------------+-----------------+-----------------------------+
-+| Cavium         | ThunderX GICv3  | #38539          | N/A                         |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX Core   | #27456          | CAVIUM_ERRATUM_27456        |
- +----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX Core   | #30115          | CAVIUM_ERRATUM_30115        |
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index c1f7af9d9ae7..1eec9d4649d5 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -34,6 +34,7 @@
- #define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
- 
- #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
-+#define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539	(1ULL << 1)
- 
- struct redist_region {
- 	void __iomem		*redist_base;
-@@ -1464,6 +1465,15 @@ static bool gic_enable_quirk_msm8996(void *data)
- 	return true;
- }
- 
-+static bool gic_enable_quirk_cavium_38539(void *data)
-+{
-+	struct gic_chip_data *d = data;
-+
-+	d->flags |= FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539;
-+
-+	return true;
-+}
-+
- static bool gic_enable_quirk_hip06_07(void *data)
- {
- 	struct gic_chip_data *d = data;
-@@ -1502,6 +1512,19 @@ static const struct gic_quirk gic_quirks[] = {
- 		.mask	= 0xffffffff,
- 		.init	= gic_enable_quirk_hip06_07,
- 	},
-+	{
-+		/*
-+		 * Reserved register accesses generate a Synchronous
-+		 * External Abort. This erratum applies to:
-+		 * - ThunderX: CN88xx
-+		 * - OCTEON TX: CN83xx, CN81xx
-+		 * - OCTEON TX2: CN93xx, CN96xx, CN98xx, CNF95xx*
-+		 */
-+		.desc	= "GICv3: Cavium erratum 38539",
-+		.iidr	= 0xa000034c,
-+		.mask	= 0xe8f00fff,
-+		.init	= gic_enable_quirk_cavium_38539,
-+	},
- 	{
- 	}
- };
-@@ -1577,7 +1600,12 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
- 	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
- 
--	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
-+	/*
-+	 * ThunderX1 explodes on reading GICD_TYPER2, in violation of the
-+	 * architecture spec (which says that reserved registers are RES0).
-+	 */
-+	if (!(gic_data.flags & FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539))
-+		gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
- 
- 	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
- 						 &gic_data);
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
