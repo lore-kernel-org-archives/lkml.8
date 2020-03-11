@@ -2,143 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD312C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB72C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D9520727
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBA520727
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiQEiqxO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FY7/W01w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgCKBMQ (ORCPT
+        id S1727768AbgCKBON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:12:16 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38807 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCKBMP (ORCPT
+        Tue, 10 Mar 2020 21:14:13 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:32829 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgCKBOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:12:15 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k21so235897oij.5;
-        Tue, 10 Mar 2020 18:12:13 -0700 (PDT)
+        Tue, 10 Mar 2020 21:14:12 -0400
+Received: by mail-yw1-f65.google.com with SMTP id j186so523498ywe.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 18:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7e9kdJF3mluOhD1f6/Nwb28lEg4dYM2hjsaSfswwkMc=;
-        b=NiQEiqxOO8bCCcjt2dn/i+Qn6TwC8hrPuXzL48/sfX1J5PAT0Bd5JTi4w/pz+vjMC3
-         rUhxUiloArwMIKuntpFtdZjbTTakVANaquCU02lPV+gn8lMO8BSbZvpQ3SZuLWFFVv0B
-         AEv1cSoafHTaceX505JZVMvQRLMkhcxYobRttgnYEBHZJdlWnd5c34y/Hg108JcaFY9Y
-         DN0u+T3gmrvijuVODZSke1apmMbuXafdR2pxh6KDh/CUoH84e7Yon6ijTcYKbU7ycSR2
-         ZRoWrenj/urlzpsXPql0pouwZzFmLvDbPyeWgZBWPVvXSg2aAcmYNv5SWxOSaY2OBtbQ
-         UJsg==
+        bh=X9RdD7dG4OSnH/ITM7CpyzLcUBxqAje79nHZ8XeIV6g=;
+        b=FY7/W01wzvgaIOdYQmMKo/yPAcX5tUr8fyE9PXSm5dg0lBfJjqqut+QRmbH6fe8sDo
+         aCsNgyAJXvIs87SGiKHBGxPe0yoCGIjRZ9Z12r5bTKc+q2KRl6a/g3QW3TGXh48i8JBH
+         VFdU1bEVxp5m4XEXuxBNsaem5cxDyuVEzaxpJ/F00Q/3fbqOEIRtuuk0Kh5Gevldzk3Y
+         a04u9tzfasIpXemR3KyUivgq8HCj4lF9GQkPCCTrh4TpSEPkWBUoOQ96UtqGCU81SJOS
+         p3bzk+ugjtyM0uaaWFkwForh3BEqmXWA42Z086x6RTMO1ChvbkKWSXcRGT+K5gw3ZGHR
+         Y4gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7e9kdJF3mluOhD1f6/Nwb28lEg4dYM2hjsaSfswwkMc=;
-        b=BQqnhQjclQ0nTGRgcZgBjco38ZgGKtOF818rF67ioN9d3NAlOPDOOfijmWST/gfkwX
-         YgXe+NWqKp4XYEHOxCISRXlyovO71oHBvTJFSYNStvDMrn3zm7/yICzm+7V1NIajWLt5
-         KiHLLp2XfyB8rSaINxU98j//j0aFeeWYuL0seFrR4vfgIzxlZQXAdwvLkzbim3dfuS9J
-         6zzCrVx54ef31UVyWeI/K4UVzMJWfejx/5UqxPVpy+54ryDdQnt720QfSXpxC0TFGrxh
-         45Dj1teGvvgHGRVslu8acLOFBhgZYCr2RQ7RDrtfpBMwkU9/d1l+BBWk0ZRvZZxfiwyv
-         X2Vw==
-X-Gm-Message-State: ANhLgQ1SGRuZxqp1YXlFknWbmeadXKy1OvmyK2tAnl55p993fyQOsUv5
-        nrDNk4TWeaNB0UDLBRKLXWc81GC6cMqXMFdCvNY=
-X-Google-Smtp-Source: ADFU+vsZ+NXvpZuO6uraRuKkYFspwGjGqaznVWT289WY9llq5Vwwotot8JNDzFXSvIGNknEPl0kDhOAoqCIPNxnB5i0=
-X-Received: by 2002:aca:5f09:: with SMTP id t9mr327851oib.5.1583889133582;
- Tue, 10 Mar 2020 18:12:13 -0700 (PDT)
+        bh=X9RdD7dG4OSnH/ITM7CpyzLcUBxqAje79nHZ8XeIV6g=;
+        b=L02odQcCdQyCbd7DUT0ZmU9N69et4dJRJyXWQtijz/qVQnSpFgyttJGa+gEdy64WKE
+         YtLfcEm3p8gAJe1PxyBOFV0YWYc9uTDE1NM7cmssbUj48P18NpIGjMedomMIauim1PNS
+         BeR6zdnVjtgJ+o7Z06BntiXWk5JLXuZy5Uk1jngwheHg095AjSHQnZi/po0YnfifU9UV
+         FaHeAuR1oikQhRoBpx+zeSHMweJXuAcP8/ZMKJPYc4EgkuXnv6a1UbQbO5HfHcNdP+10
+         21ulMYK6TcNYhFW3H8YubSJSjgB8UOhE+GnLn9TI/bMyY/qNIbQFGLtPFM9IAg+4HRCO
+         YgKQ==
+X-Gm-Message-State: ANhLgQ0HnAfLpUWAtt2JyLyJYnwK497pW2dDsUXxeQOmAhMuS3paoIqi
+        gDShLZsm+Pk7EIlNQl/irauPThbzUinbQPG3l0tZ4g==
+X-Google-Smtp-Source: ADFU+vvorRI9Lt+4KrjNb6NV3EAfKk8c6LXgbMK5EVVCsuMdZYDpBAx98uZ8ZL0CtLeEszNLo+LdzSzOGYj+SmY7B34=
+X-Received: by 2002:a25:2688:: with SMTP id m130mr524689ybm.408.1583889251315;
+ Tue, 10 Mar 2020 18:14:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583823679-17648-1-git-send-email-wanpengli@tencent.com> <20200310160129.GA9305@linux.intel.com>
-In-Reply-To: <20200310160129.GA9305@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 11 Mar 2020 09:12:02 +0800
-Message-ID: <CANRm+CxFUiv=ss51Yg73L+HTWe4-Zrixk4mM6=XAaVwKRqeUYA@mail.gmail.com>
-Subject: Re: [PATCH] KVM: X86: Don't load/put guest FPU context for sleeping AP
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+References: <20200311010908.42366-1-jbi.octave@gmail.com> <20200311010908.42366-4-jbi.octave@gmail.com>
+In-Reply-To: <20200311010908.42366-4-jbi.octave@gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 10 Mar 2020 18:14:00 -0700
+Message-ID: <CANn89iJc9e5fQEWerHgDM1g2vp_1EEj0EntbCvccCzAyusHtdg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] tcp: Add missing annotation for tcp_child_process()
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, LKML <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 at 00:01, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Tue, Mar 10, 2020 at 6:09 PM Jules Irenge <jbi.octave@gmail.com> wrote:
 >
-> On Tue, Mar 10, 2020 at 03:01:19PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > kvm_load_guest_fpu() and kvm_put_guest_fpu() each consume more than 14us
-> > observed by ftrace, the qemu userspace FPU is swapped out for the guest
-> > FPU context for the duration of the KVM_RUN ioctl even if sleeping AP,
-> > we shouldn't load/put guest FPU context for this case especially for
-> > serverless scenario which sensitives to boot time.
-> >
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 5de2006..080ffa4 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -8680,7 +8680,6 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >
-> >       vcpu_load(vcpu);
-> >       kvm_sigset_activate(vcpu);
-> > -     kvm_load_guest_fpu(vcpu);
-> >
-> >       if (unlikely(vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED)) {
-> >               if (kvm_run->immediate_exit) {
-> > @@ -8718,12 +8717,14 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >               }
-> >       }
-> >
-> > +     kvm_load_guest_fpu(vcpu);
+> Sparse reports warning at tcp_child_process()
+> warning: context imbalance in tcp_child_process() - unexpected unlock
+> The root cause is the missing annotation at tcp_child_process()
 >
-> Ugh, so this isn't safe on MPX capable CPUs, kvm_apic_accept_events() can
-> trigger kvm_vcpu_reset() with @init_event=true and try to unload guest_fpu.
+> Add the missing __releases(&((child)->sk_lock.slock)) annotation
+>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  net/ipv4/tcp_minisocks.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+> index ad3b56d9fa71..0e8a5b6e477c 100644
+> --- a/net/ipv4/tcp_minisocks.c
+> +++ b/net/ipv4/tcp_minisocks.c
+> @@ -817,6 +817,7 @@ EXPORT_SYMBOL(tcp_check_req);
+>
+>  int tcp_child_process(struct sock *parent, struct sock *child,
+>                       struct sk_buff *skb)
+> +       __releases(&((child)->sk_lock.slock))
+>  {
+>         int ret = 0;
+>         int state = child->sk_state;
 
-Right.
 
->
-> We could hack around that issue, but it'd be ugly, and I'm also concerned
-> that calling vmx_vcpu_reset() without guest_fpu loaded will be problematic
-> in the future with all the things that are getting managed by XSAVE.
->
-> > +
-> >       if (unlikely(vcpu->arch.complete_userspace_io)) {
-> >               int (*cui)(struct kvm_vcpu *) = vcpu->arch.complete_userspace_io;
-> >               vcpu->arch.complete_userspace_io = NULL;
-> >               r = cui(vcpu);
-> >               if (r <= 0)
-> > -                     goto out;
-> > +                     goto out_fpu;
-> >       } else
-> >               WARN_ON(vcpu->arch.pio.count || vcpu->mmio_needed);
-> >
-> > @@ -8732,8 +8733,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >       else
-> >               r = vcpu_run(vcpu);
-> >
-> > -out:
-> > +out_fpu:
-> >       kvm_put_guest_fpu(vcpu);
-> > +out:
-> >       if (vcpu->run->kvm_valid_regs)
-> >               store_regs(vcpu);
-> >       post_kvm_run_save(vcpu);
-> > --
-> > 2.7.4
-> >
+Yeah, although we prefer to use lockdep these days ;)
+
+Reviewed-by: Eric Dumazet <edumazet@google.com>
