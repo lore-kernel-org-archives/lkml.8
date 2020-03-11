@@ -1,52 +1,88 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.3 required=3.0 tests=RDNS_NONE,SPF_HELO_NONE,
-	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729716AbgCKPpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from youngberry.canonical.com ([91.189.89.112]:60826 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgCKPpA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 11:45:00 -0400
+From: Christian Brauner <christian.brauner@ubuntu.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] thread fixes v5.6-rc6
+Date: Wed, 11 Mar 2020 16:44:05 +0100
+Message-Id: <20200311154405.3137527-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20200117170352.16040-1-olivier.moysan@st.com> <20200121220022.GA12737@bogus>
- <6a49bf6c-8851-a65c-5606-563776e07c08@st.com>
-In-Reply-To: <6a49bf6c-8851-a65c-5606-563776e07c08@st.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 11 Mar 2020 10:44:45 -0500
-Message-ID: <CAL_JsqKGy6Ec57RC_N-KZfKgGij4nn-BEdNQqXCd9dH_yPY6ew@mail.gmail.com>
-Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
-To: Olivier MOYSAN <olivier.moysan@st.com>
-Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com"
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, Jan 22, 2020 at 3:20 AM Olivier MOYSAN <olivier.moysan@st.com> wrote:
->
-> Hi Rob,
->
-> I did not report your reviewed-by tag, as I have made a extra change in v2.
-> This change is related to dmas property reported in v2 change log.
-> Sorry, this extra change was indeed not clearly highlighted in log comments.
+Hey Linus,
 
-Indeed you did mention it, I just missed it. Anyways, it's a minor
-change and my R-by still stands.
+/* Summary */
+This contains a single fix for a regression which was introduced when we
+introduced the ability to select a specific pid at process creation time. When
+this feature is requested, the error value will be set to -EPERM after exiting
+the pid allocation loop. This caused EPERM to be returned when e.g. the init
+process/child subreaper of the pid namespace has already died where we used to
+return ENOMEM before.
+The first patch here simply fixes the regression by unconditionally setting the
+return value back to ENOMEM again once we've successfully allocated the
+requested pid number. This should be easy to backport to v5.5.
 
-I'd resend this to make sure it's in Mark's inbox again.
+The second patch adds a comment explaining that we must keep returning ENOMEM
+since we've been doing it for a long time and have explicitly documented this
+behavior for userspace. This seemed worthwhile because we now have at least two
+separate example where people tried to change the return value to something
+other than ENOMEM (The first version of the regression fix did that too and the
+commit message links to an earlier patch that tried to do the same.).
 
-Rob
+I have a simple regression test to make sure we catch this regression in the
+future but since that introduces a whole new selftest subdir and test files
+I'll keep this for v5.7.
+
+/* Testing */
+All patches have seen exposure in linux-next and are based on v5.6-rc1.
+I've had a build warning reported to me for the first version of the second
+patch two days ago that tried to remove the unconditional initalization but
+that's fixed and linux-next seemed happy. The second patch is now a pure
+non-functional change.
+
+/* Conflicts */
+At the time of creating this pr no merge conflicts were reported with anything
+that is expected to land this merge window.
+
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-2020-03-10
+
+for you to fetch changes up to 10dab84caf400f2f5f8b010ebb0c7c4272ec5093:
+
+  pid: make ENOMEM return value more obvious (2020-03-09 23:40:05 +0100)
+
+Please consider pulling these changes from the signed for-linus-2020-03-10 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-2020-03-10
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      pid: make ENOMEM return value more obvious
+
+Corey Minyard (1):
+      pid: Fix error return value in some cases
+
+ kernel/pid.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
