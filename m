@@ -2,135 +2,152 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2307AC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108E5C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C4A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D536321D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:20:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DiECrG1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgCKLUY (ORCPT
+        id S1729141AbgCKLU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 07:20:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45992 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbgCKLUY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 07:20:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39412 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgCKLUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:20:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B7121AED2;
-        Wed, 11 Mar 2020 11:20:18 +0000 (UTC)
-Subject: Re: [PATCH v3] block: refactor duplicated macros
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-scsi@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Liu <song@kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-References: <20200311002254.121365-1-mcroce@redhat.com>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <89925759-cbc1-e8f0-b9b3-23fd062ebbcd@suse.de>
-Date:   Wed, 11 Mar 2020 19:20:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+Received: by mail-pf1-f196.google.com with SMTP id 2so1132996pfg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dwWKWsLEV24axZ5LPi6+9EofRSocDQnNjSMdJCwyg/k=;
+        b=DiECrG1ChFrIsdnCWJkiiijV0Oa2bLJvHMESQKerzpeZrJBihyO27UbVoCHaNyHPMH
+         3Zf0FXl3wUuI7rGKr3W7raEbt/GKRIAgNwv8jRHu9xBi2qAhYsfvrS6rwyKm2U7mBDtZ
+         SzR6JVH7cbDV7RKvMFAbM3cWCfSEgVFtW7rTE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dwWKWsLEV24axZ5LPi6+9EofRSocDQnNjSMdJCwyg/k=;
+        b=Ie3XeLtSFbB7ENRGWzDQJejk2z8h8fAlkl4poifOEFG16L3OzbXB4nyoYENLxIiaOz
+         QoYq5GyBWxFs715PDAECog+979i5BTyFmuXdwF8MpYIjegu98S2tCkaTr91E3syYQJF/
+         ibSaKUO3zX5HXjuxgald/eBDI0hfahLjY44zVu2UT2HMGMC29+2grmhMwygXTzsmT12Q
+         Mi8dVXmwoEa4rt6IcTfsvsho9dDgqaUZzPc+V7WPO31M6+V7hFKCJoNVBPekml5POiCx
+         ULbn/DDfnH5nYxdgMOaqoY7/uqixiU1Uj8zkXFDArt3YbiNVsjdhGf/716K8q5NpEWdP
+         jaNQ==
+X-Gm-Message-State: ANhLgQ2oEzPkpDo5VMjB+rcb5auTDovHtYqe9UbMiOGWQvfYv9h2U+Py
+        7pYfS3edxXccYCR9J++X5nBLGQ==
+X-Google-Smtp-Source: ADFU+vsqTKXWkUwlZU65GnXLcGQeIusImXSF6/071PjPajjV9Zy+d6+78zX7Xm4MNtky83+YtZg6Ow==
+X-Received: by 2002:aa7:94b5:: with SMTP id a21mr295803pfl.290.1583925623087;
+        Wed, 11 Mar 2020 04:20:23 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:30f2:7a9c:387e:6c7])
+        by smtp.gmail.com with ESMTPSA id q43sm4280776pjc.40.2020.03.11.04.20.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 04:20:22 -0700 (PDT)
+From:   David Stevens <stevensd@chromium.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Stevens <stevensd@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
+Date:   Wed, 11 Mar 2020 20:20:01 +0900
+Message-Id: <20200311112004.47138-2-stevensd@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+In-Reply-To: <20200311112004.47138-1-stevensd@chromium.org>
+References: <20200311112004.47138-1-stevensd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200311002254.121365-1-mcroce@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/11 8:22 上午, Matteo Croce wrote:
-> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> several times in different flavours across the whole tree.
-> Define them just once in a common header.
-> 
-> While at it, replace replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too
-> and rename SECTOR_MASK to PAGE_SECTORS_MASK.
-> 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+This change adds a new dma-buf operation that allows dma-bufs to be used
+by virtio drivers to share exported objects. The new operation allows
+the importing driver to query the exporting driver for the UUID which
+identifies the underlying exported object.
 
-Hi Matteo,
+Signed-off-by: David Stevens <stevensd@chromium.org>
+---
+ drivers/dma-buf/dma-buf.c | 12 ++++++++++++
+ include/linux/dma-buf.h   | 18 ++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-For the bcache part, it looks good to me.
-
-Acked-by: Coly Li <colyli@suse.de>
-
-> ---
-> v3:
-> As Guoqing Jiang suggested, replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT"
-> 
-> v2:
-> As Dan Williams suggested:
-> 
->  #define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
-> 
->  block/blk-lib.c                  |  2 +-
->  block/blk-settings.c             |  4 ++--
->  block/partition-generic.c        |  2 +-
->  drivers/block/brd.c              |  3 ---
->  drivers/block/null_blk_main.c    | 14 +++++---------
->  drivers/block/zram/zram_drv.c    |  8 ++++----
->  drivers/block/zram/zram_drv.h    |  2 --
->  drivers/dax/super.c              |  2 +-
->  drivers/md/bcache/util.h         |  2 --
->  drivers/md/dm-bufio.c            |  6 +++---
->  drivers/md/dm-integrity.c        | 10 +++++-----
->  drivers/md/dm-table.c            |  2 +-
->  drivers/md/md.c                  |  4 ++--
->  drivers/md/raid1.c               |  2 +-
->  drivers/md/raid10.c              |  2 +-
->  drivers/md/raid5-cache.c         | 10 +++++-----
->  drivers/md/raid5.h               |  2 +-
->  drivers/mmc/core/host.c          |  3 ++-
->  drivers/nvme/host/fc.c           |  2 +-
->  drivers/nvme/target/loop.c       |  2 +-
->  drivers/scsi/xen-scsifront.c     |  4 ++--
->  fs/erofs/internal.h              |  2 +-
->  fs/ext2/dir.c                    |  2 +-
->  fs/iomap/buffered-io.c           |  2 +-
->  fs/libfs.c                       |  2 +-
->  fs/nfs/blocklayout/blocklayout.h |  2 --
->  fs/nilfs2/dir.c                  |  2 +-
->  include/linux/blkdev.h           |  4 ++++
->  include/linux/device-mapper.h    |  1 -
->  mm/page_io.c                     |  4 ++--
->  mm/swapfile.c                    | 12 ++++++------
->  31 files changed, 56 insertions(+), 65 deletions(-)
-> 
-
-[snipped]
-
-> diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
-> index c029f7443190..55196e0f37c3 100644
-> --- a/drivers/md/bcache/util.h
-> +++ b/drivers/md/bcache/util.h
-> @@ -15,8 +15,6 @@
->  
->  #include "closure.h"
->  
-> -#define PAGE_SECTORS		(PAGE_SIZE / 512)
-> -
->  struct closure;
->  
->  #ifdef CONFIG_BCACHE_DEBUG
-
-[snipped]
-
-
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index d4097856c86b..fa5210ba6aaa 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -1158,6 +1158,18 @@ void dma_buf_vunmap(struct dma_buf *dmabuf, void *vaddr)
+ }
+ EXPORT_SYMBOL_GPL(dma_buf_vunmap);
+ 
++int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid)
++{
++	if (WARN_ON(!dmabuf) || !uuid)
++		return -EINVAL;
++
++	if (!dmabuf->ops->get_uuid)
++		return -ENODEV;
++
++	return dmabuf->ops->get_uuid(dmabuf, uuid);
++}
++EXPORT_SYMBOL_GPL(dma_buf_get_uuid);
++
+ #ifdef CONFIG_DEBUG_FS
+ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+ {
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index abf5459a5b9d..00758523597d 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -251,6 +251,21 @@ struct dma_buf_ops {
+ 
+ 	void *(*vmap)(struct dma_buf *);
+ 	void (*vunmap)(struct dma_buf *, void *vaddr);
++
++	/**
++	 * @get_uuid
++	 *
++	 * This is called by dma_buf_get_uuid to get the UUID which identifies
++	 * the buffer to virtio devices.
++	 *
++	 * This callback is optional.
++	 *
++	 * Returns:
++	 *
++	 * 0 on success or a negative error code on failure. On success uuid
++	 * will be populated with the buffer's UUID.
++	 */
++	int (*get_uuid)(struct dma_buf *dmabuf, uuid_t *uuid);
+ };
+ 
+ /**
+@@ -444,4 +459,7 @@ int dma_buf_mmap(struct dma_buf *, struct vm_area_struct *,
+ 		 unsigned long);
+ void *dma_buf_vmap(struct dma_buf *);
+ void dma_buf_vunmap(struct dma_buf *, void *vaddr);
++
++int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid);
++
+ #endif /* __DMA_BUF_H__ */
 -- 
+2.25.1.481.gfbce0eb801-goog
 
-Coly Li
