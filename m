@@ -2,126 +2,377 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE74C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBC6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C9121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KOftGtCh"
+	by mail.kernel.org (Postfix) with ESMTP id 9A68921655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgCKBxd (ORCPT
+        id S1727744AbgCKB5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:53:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38187 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbgCKBxc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:53:32 -0400
-X-UUID: 6a56e4500bd34b35bb8a16fe0d916be8-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MeJypbtXZBi16e+sneeWLK3w3UOQDEmwsecp62tfwK4=;
-        b=KOftGtChChN2R3tI37nwpPyjzlJLlH6lc7hL/U/x5NR5KC/uuqVNNRyNmINeLam4t6hEhOVmvZaKAg8TG0gdTXo9FS1OFiblFDzjrgurBt9lLyxpxR7GHsW26lrrU62+VwKNyzwFQOzp7MUAaxnaA7j0Mj5BvO0DciLjARnR1Mw=;
-X-UUID: 6a56e4500bd34b35bb8a16fe0d916be8-20200311
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 445182679; Wed, 11 Mar 2020 09:53:25 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 09:52:08 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 09:53:31 +0800
-Message-ID: <1583891602.17522.17.camel@mtksdccf07>
-Subject: Re: [PATCH -next] lib/test_kasan: silence a -Warray-bounds warning
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 11 Mar 2020 09:53:22 +0800
-In-Reply-To: <CACT4Y+aV9BrvEHdaadL7FXsjMi4iPDJUnK8eyJj=HuZFa4fxuw@mail.gmail.com>
-References: <1583847469-4354-1-git-send-email-cai@lca.pw>
-         <CACT4Y+aV9BrvEHdaadL7FXsjMi4iPDJUnK8eyJj=HuZFa4fxuw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 10 Mar 2020 21:57:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11222 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727484AbgCKB5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 21:57:21 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 58EB776B38C8CC6921DD;
+        Wed, 11 Mar 2020 09:57:15 +0800 (CST)
+Received: from [127.0.0.1] (10.133.210.141) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 11 Mar 2020
+ 09:57:13 +0800
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+To:     NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
+CC:     kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20200308140314.GQ5972@shao2-debian>
+ <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+ <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+ <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+ <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+ <87blp5urwq.fsf@notabene.neil.brown.name>
+ <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+ <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
+ <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+ <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+ <878sk7vs8q.fsf@notabene.neil.brown.name>
+From:   yangerkun <yangerkun@huawei.com>
+Message-ID: <f9db707f-74ef-9439-1aec-e1ce8234888e@huawei.com>
+Date:   Wed, 11 Mar 2020 09:57:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <878sk7vs8q.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.210.141]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUWlhbiwNCg0KT24gVHVlLCAyMDIwLTAzLTEwIGF0IDE2OjIwICswMTAwLCAnRG1pdHJ5IFZ5
-dWtvdicgdmlhIGthc2FuLWRldiB3cm90ZToNCj4gT24gVHVlLCBNYXIgMTAsIDIwMjAgYXQgMjoz
-OCBQTSBRaWFuIENhaSA8Y2FpQGxjYS5wdz4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgY29tbWl0ICJr
-YXNhbjogYWRkIHRlc3QgZm9yIGludmFsaWQgc2l6ZSBpbiBtZW1tb3ZlIiBpbnRyb2R1Y2VkIGEN
-Cj4gPiBjb21waWxhdGlvbiB3YXJuaW5nIHdoZXJlIGl0IHVzZWQgYSBuZWdhdGl2ZSBzaXplIG9u
-IHB1cnBvc2UuIFNpbGVuY2UgaXQNCj4gPiBieSBkaXNhYmxpbmcgImFycmF5LWJvdW5kcyIgY2hl
-Y2tpbmcgZm9yIHRoaXMgZmlsZSBvbmx5IGZvciB0ZXN0aW5nDQo+ID4gcHVycG9zZS4NCj4gPg0K
-PiA+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSAuL2luY2x1ZGUvbGludXgvYml0bWFwLmg6OSwNCj4g
-PiAgICAgICAgICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L2NwdW1hc2suaDoxMiwNCj4g
-PiAgICAgICAgICAgICAgICAgIGZyb20gLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcHVtYXNrLmg6
-NSwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9tc3Iu
-aDoxMSwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9w
-cm9jZXNzb3IuaDoyMiwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gLi9hcmNoL3g4Ni9pbmNs
-dWRlL2FzbS9jcHVmZWF0dXJlLmg6NSwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gLi9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS90aHJlYWRfaW5mby5oOjUzLA0KPiA+ICAgICAgICAgICAgICAgICAg
-ZnJvbSAuL2luY2x1ZGUvbGludXgvdGhyZWFkX2luZm8uaDozOCwNCj4gPiAgICAgICAgICAgICAg
-ICAgIGZyb20gLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wcmVlbXB0Lmg6NywNCj4gPiAgICAgICAg
-ICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L3ByZWVtcHQuaDo3OCwNCj4gPiAgICAgICAg
-ICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L3JjdXBkYXRlLmg6MjcsDQo+ID4gICAgICAg
-ICAgICAgICAgICBmcm9tIC4vaW5jbHVkZS9saW51eC9yY3VsaXN0Lmg6MTEsDQo+ID4gICAgICAg
-ICAgICAgICAgICBmcm9tIC4vaW5jbHVkZS9saW51eC9waWQuaDo1LA0KPiA+ICAgICAgICAgICAg
-ICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvc2NoZWQuaDoxNCwNCj4gPiAgICAgICAgICAgICAg
-ICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L3VhY2Nlc3MuaDo2LA0KPiA+ICAgICAgICAgICAgICAg
-ICAgZnJvbSAuL2FyY2gveDg2L2luY2x1ZGUvYXNtL2ZwdS94c3RhdGUuaDo1LA0KPiA+ICAgICAg
-ICAgICAgICAgICAgZnJvbSAuL2FyY2gveDg2L2luY2x1ZGUvYXNtL3BndGFibGUuaDoyNiwNCj4g
-PiAgICAgICAgICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L2thc2FuLmg6MTUsDQo+ID4g
-ICAgICAgICAgICAgICAgICBmcm9tIGxpYi90ZXN0X2thc2FuLmM6MTI6DQo+ID4gSW4gZnVuY3Rp
-b24gJ21lbW1vdmUnLA0KPiA+ICAgICBpbmxpbmVkIGZyb20gJ2ttYWxsb2NfbWVtbW92ZV9pbnZh
-bGlkX3NpemUnIGF0DQo+ID4gbGliL3Rlc3Rfa2FzYW4uYzozMDE6MjoNCj4gPiAuL2luY2x1ZGUv
-bGludXgvc3RyaW5nLmg6NDQxOjk6IHdhcm5pbmc6ICdfX2J1aWx0aW5fbWVtbW92ZScgcG9pbnRl
-cg0KPiA+IG92ZXJmbG93IGJldHdlZW4gb2Zmc2V0IDAgYW5kIHNpemUgWy0yLCA5MjIzMzcyMDM2
-ODU0Nzc1ODA3XQ0KPiA+IFstV2FycmF5LWJvdW5kc10NCj4gPiAgIHJldHVybiBfX2J1aWx0aW5f
-bWVtbW92ZShwLCBxLCBzaXplKTsNCj4gPiAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fg0KPiA+DQoNCldoZW4gcGFzcyB0aGUgbmVnYXRpdmUgbnVtYmVycywgdGhlbiB0aGVy
-ZSBhcmUgdHdvIHdhcm5pbmcuIEluIGdjYy04IHRoZQ0Kd2FybmluZyBpcyBjaGVja2VkIGJ5IGFy
-cmF5LWJvdW5kcywgYnV0IGluIGdjYy05IHRoZSB3YXJuaW5nIGlzIGNoZWNrZWQNCmJ5IHN0cmlu
-Z29wLW92ZXJmbG93Lg0KDQpJIHRyeSB0byB1c2UgeW91IHBhdGNoIHRvIGNoZWNrIHRoZSBnY2Mt
-OSB0b29sY2hhaW5zLCBidXQgaXQgc3RpbGwgaGF2ZQ0KdGhlIHdhcm5pbmcsIGJ1dCB1c2luZyBi
-ZWxvdyB0aGUgcGF0Y2ggY2FuIGZpeCB0aGUgd2FybmluZyBpbiBnY2MtOCBhbmQNCmdjYy05Lg0K
-DQoNCi0tLSBhL2xpYi90ZXN0X2thc2FuLmMNCisrKyBiL2xpYi90ZXN0X2thc2FuLmMNCkBAIC0y
-ODksNiArMjg5LDcgQEAgc3RhdGljIG5vaW5saW5lIHZvaWQgX19pbml0DQprbWFsbG9jX21lbW1v
-dmVfaW52YWxpZF9zaXplKHZvaWQpDQogew0KICAgICAgICBjaGFyICpwdHI7DQogICAgICAgIHNp
-emVfdCBzaXplID0gNjQ7DQorICAgICAgIHZvbGF0aWxlIHNpemVfdCBpbnZhbGlkX3NpemUgPSAt
-MjsNCg0KICAgICAgICBwcl9pbmZvKCJpbnZhbGlkIHNpemUgaW4gbWVtbW92ZVxuIik7DQogICAg
-ICAgIHB0ciA9IGttYWxsb2Moc2l6ZSwgR0ZQX0tFUk5FTCk7DQpAQCAtMjk4LDcgKzI5OSw3IEBA
-IHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdA0Ka21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6
-ZSh2b2lkKQ0KICAgICAgICB9DQoNCiAgICAgICAgbWVtc2V0KChjaGFyICopcHRyLCAwLCA2NCk7
-DQotICAgICAgIG1lbW1vdmUoKGNoYXIgKilwdHIsIChjaGFyICopcHRyICsgNCwgLTIpOw0KKyAg
-ICAgICBtZW1tb3ZlKChjaGFyICopcHRyLCAoY2hhciAqKXB0ciArIDQsIGludmFsaWRfc2l6ZSk7
-DQogICAgICAgIGtmcmVlKHB0cik7DQogfQ0KDQoNCg0KPiA+IFNpZ25lZC1vZmYtYnk6IFFpYW4g
-Q2FpIDxjYWlAbGNhLnB3Pg0KPiA+IC0tLQ0KPiA+ICBsaWIvTWFrZWZpbGUgfCAyICsrDQo+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9s
-aWIvTWFrZWZpbGUgYi9saWIvTWFrZWZpbGUNCj4gPiBpbmRleCBhYjY4YTg2NzQzNjAuLjI0ZDUx
-OWEwNzQxZCAxMDA2NDQNCj4gPiAtLS0gYS9saWIvTWFrZWZpbGUNCj4gPiArKysgYi9saWIvTWFr
-ZWZpbGUNCj4gPiBAQCAtMjk3LDYgKzI5Nyw4IEBAIFVCU0FOX1NBTklUSVpFX3Vic2FuLm8gOj0g
-bg0KPiA+ICBLQVNBTl9TQU5JVElaRV91YnNhbi5vIDo9IG4NCj4gPiAgS0NTQU5fU0FOSVRJWkVf
-dWJzYW4ubyA6PSBuDQo+ID4gIENGTEFHU191YnNhbi5vIDo9ICQoY2FsbCBjYy1vcHRpb24sIC1m
-bm8tc3RhY2stcHJvdGVjdG9yKSAkKERJU0FCTEVfU1RBQ0tMRUFLX1BMVUdJTikNCj4gPiArIyBr
-bWFsbG9jX21lbW1vdmVfaW52YWxpZF9zaXplKCkgZG9lcyB0aGlzIG9uIHB1cnBvc2UuDQo+ID4g
-K0NGTEFHU190ZXN0X2thc2FuLm8gKz0gJChjYWxsIGNjLWRpc2FibGUtd2FybmluZywgYXJyYXkt
-Ym91bmRzKQ0KPiA+DQo+ID4gIG9iai0kKENPTkZJR19TQklUTUFQKSArPSBzYml0bWFwLm8NCj4g
-Pg0KPiA+IC0tDQo+ID4gMS44LjMuMQ0KPiA+DQo+IA0KPiBBY2tlZC1ieTogRG1pdHJ5IFZ5dWtv
-diA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KPiANCj4gVGhhbmtzDQo+IA0KDQo=
+
+
+On 2020/3/11 5:01, NeilBrown wrote:
+> On Tue, Mar 10 2020, Jeff Layton wrote:
+> 
+>> On Tue, 2020-03-10 at 08:52 -0400, Jeff Layton wrote:
+>>
+>> [snip]
+>>
+>>> On Tue, 2020-03-10 at 11:24 +0800, yangerkun wrote:
+>>>>>
+>>>> Something others. I think there is no need to call locks_delete_block
+>>>> for all case in function like flock_lock_inode_wait. What we should do
+>>>> as the patch '16306a61d3b7 ("fs/locks: always delete_block after
+>>>> waiting.")' describes is that we need call locks_delete_block not only
+>>>> for error equal to -ERESTARTSYS(please point out if I am wrong). And
+>>>> this patch may fix the regression too since simple lock that success or
+>>>> unlock will not try to acquire blocked_lock_lock.
+>>>>
+>>>>
+>>>
+>>> Nice! This looks like it would work too, and it's a simpler fix.
+>>>
+>>> I'd be inclined to add a WARN_ON_ONCE(fl->fl_blocker) after the if
+>>> statements to make sure we never exit with one still queued. Also, I
+>>> think we can do a similar optimization in __break_lease.
+>>>
+>>> There are some other callers of locks_delete_block:
+>>>
+>>> cifs_posix_lock_set: already only calls it in these cases
+>>>
+>>> nlmsvc_unlink_block: I think we need to call this in most cases, and
+>>> they're not going to be high-performance codepaths in general
+>>>
+>>> nfsd4 callback handling: Several calls here, most need to always be
+>>> called. find_blocked_lock could be reworked to take the
+>>> blocked_lock_lock only once (I'll do that in a separate patch).
+>>>
+>>> How about something like this (
+>>>
+>>> ----------------------8<---------------------
+>>>
+>>> From: yangerkun <yangerkun@huawei.com>
+>>>
+>>> [PATCH] filelock: fix regression in unlock performance
+>>>
+>>> '6d390e4b5d48 ("locks: fix a potential use-after-free problem when
+>>> wakeup a waiter")' introduces a regression since we will acquire
+>>> blocked_lock_lock every time locks_delete_block is called.
+>>>
+>>> In many cases we can just avoid calling locks_delete_block at all,
+>>> when we know that the wait was awoken by the condition becoming true.
+>>> Change several callers of locks_delete_block to only call it when
+>>> waking up due to signal or other error condition.
+>>>
+>>> [ jlayton: add similar optimization to __break_lease, reword changelog,
+>>> 	   add WARN_ON_ONCE calls ]
+>>>
+>>> Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
+>>> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
+>>> Signed-off-by: yangerkun <yangerkun@huawei.com>
+>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>> ---
+>>>   fs/locks.c | 29 ++++++++++++++++++++++-------
+>>>   1 file changed, 22 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/fs/locks.c b/fs/locks.c
+>>> index 426b55d333d5..b88a5b11c464 100644
+>>> --- a/fs/locks.c
+>>> +++ b/fs/locks.c
+>>> @@ -1354,7 +1354,10 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+>>>   		if (error)
+>>>   			break;
+>>>   	}
+>>> -	locks_delete_block(fl);
+>>> +	if (error)
+>>> +		locks_delete_block(fl);
+>>> +	WARN_ON_ONCE(fl->fl_blocker);
+>>> +
+>>>   	return error;
+>>>   }
+>>>   
+>>> @@ -1447,7 +1450,9 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
+>>>   
+>>>   		break;
+>>>   	}
+>>> -	locks_delete_block(&fl);
+>>> +	if (error)
+>>> +		locks_delete_block(&fl);
+>>> +	WARN_ON_ONCE(fl.fl_blocker);
+>>>   
+>>>   	return error;
+>>>   }
+>>> @@ -1638,23 +1643,28 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+>>>   
+>>>   	locks_dispose_list(&dispose);
+>>>   	error = wait_event_interruptible_timeout(new_fl->fl_wait,
+>>> -						!new_fl->fl_blocker, break_time);
+>>> +						 !new_fl->fl_blocker,
+>>> +						 break_time);
+>>>   
+>>>   	percpu_down_read(&file_rwsem);
+>>>   	spin_lock(&ctx->flc_lock);
+>>>   	trace_break_lease_unblock(inode, new_fl);
+>>> -	locks_delete_block(new_fl);
+>>>   	if (error >= 0) {
+>>>   		/*
+>>>   		 * Wait for the next conflicting lease that has not been
+>>>   		 * broken yet
+>>>   		 */
+>>> -		if (error == 0)
+>>> +		if (error == 0) {
+>>> +			locks_delete_block(new_fl);
+>>>   			time_out_leases(inode, &dispose);
+>>> +		}
+>>>   		if (any_leases_conflict(inode, new_fl))
+>>>   			goto restart;
+>>>   		error = 0;
+>>> +	} else {
+>>> +		locks_delete_block(new_fl);
+>>>   	}
+>>> +	WARN_ON_ONCE(fl->fl_blocker);
+>>>   out:
+>>>   	spin_unlock(&ctx->flc_lock);
+>>>   	percpu_up_read(&file_rwsem);
+>>> @@ -2126,7 +2136,10 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+>>>   		if (error)
+>>>   			break;
+>>>   	}
+>>> -	locks_delete_block(fl);
+>>> +	if (error)
+>>> +		locks_delete_block(fl);
+>>> +	WARN_ON_ONCE(fl->fl_blocker);
+>>> +
+>>>   	return error;
+>>>   }
+>>>   
+>>> @@ -2403,7 +2416,9 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
+>>>   		if (error)
+>>>   			break;
+>>>   	}
+>>> -	locks_delete_block(fl);
+>>> +	if (error)
+>>> +		locks_delete_block(fl);
+>>> +	WARN_ON_ONCE(fl->fl_blocker);
+>>>   
+>>>   	return error;
+>>>   }
+>>
+>> I've gone ahead and added the above patch to linux-next. Linus, Neil,
+>> are you ok with this one? I think this is probably the simplest
+>> approach.
+> 
+> I think this patch contains an assumption which is not justified.  It
+> assumes that if a wait_event completes without error, then the wake_up()
+> must have happened.  I don't think that is correct.
+> 
+> In the patch that caused the recent regression, the race described
+> involved a signal arriving just as __locks_wake_up_blocks() was being
+> called on another thread.
+> So the waiting process was woken by a signal *after* ->fl_blocker was set
+> to NULL, and *before* the wake_up().  If wait_event_interruptible()
+> finds that the condition is true, it will report success whether there
+> was a signal or not.
+Neil and Jeff, Hi,
+
+But after this, like in flock_lock_inode_wait, we will go another 
+flock_lock_inode. And the flock_lock_inode it may return 
+-ENOMEM/-ENOENT/-EAGAIN/0.
+
+- 0: If there is a try lock, it means that we have call 
+locks_move_blocks, and fl->fl_blocked_requests will be NULL, no need to 
+wake up at all. If there is a unlock, no one call wait for me, no need 
+to wake up too.
+
+- ENOENT: means we are doing unlock, no one will wait for me, no need to 
+wake up.
+
+- ENOMEM: since last time we go through flock_lock_inode someone may 
+wait for me, so for this error, we need to wake up them.
+
+- EAGAIN: since we has go through flock_lock_inode before, these may 
+never happen because FL_SLEEP will not lose.
+
+So the assumption may be ok and for some error case we need to wake up 
+someone may wait for me before(the reason for the patch "cifs: call 
+locks_delete_block for all error case in cifs_posix_lock_set"). If I am 
+wrong, please point out!
+
+
+> 
+> If you skip the locks_delete_block() after a wait, you get exactly the
+> same race as the optimization - which only skipped most of
+> locks_delete_block().
+> 
+> I have a better solution.  I did like your patch except that it changed
+> too much code.  So I revised it to change less code.  See below.
+> 
+> NeilBrown
+> 
+> From: NeilBrown <neilb@suse.de>
+> Date: Wed, 11 Mar 2020 07:39:04 +1100
+> Subject: [PATCH] locks: restore locks_delete_lock optimization
+> 
+> A recent patch (see Fixes: below) removed an optimization which is
+> important as it avoids taking a lock in a common case.
+> 
+> The comment justifying the optimisation was correct as far as it went,
+> in that if the tests succeeded, then the values would remain stable and
+> the test result will remain valid even without a lock.
+> 
+> However after the test succeeds the lock can be freed while some other
+> thread might have only just set ->blocker to NULL (thus allowing the
+> test to succeed) but has not yet called wake_up() on the wq in the lock.
+> If the wake_up happens after the lock is freed, a use-after-free error
+> occurs.
+> 
+> This patch restores the optimization and reorders code to avoid the
+> use-after-free.  Specifically we move the list_del_init on
+> fl_blocked_member to *after* the wake_up(), and add an extra test on
+> fl_block_member() to locks_delete_lock() before deciding to avoid taking
+> the spinlock.
+> 
+> As this involves breaking code out of __locks_delete_block(), we discard
+> the function completely and open-code it in the two places it was
+> called.
+> 
+> These lockless accesses do not require any memory barriers.  The failure
+> mode from possible memory access reordering is that the test at the top
+> of locks_delete_lock() will fail, and in that case we fall through into
+> the locked region which provides sufficient memory barriers implicitly.
+> 
+> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>   fs/locks.c | 42 ++++++++++++++++++++++++++++--------------
+>   1 file changed, 28 insertions(+), 14 deletions(-)
+> 
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 426b55d333d5..dc99ab2262ea 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -716,18 +716,6 @@ static void locks_delete_global_blocked(struct file_lock *waiter)
+>   	hash_del(&waiter->fl_link);
+>   }
+>   
+> -/* Remove waiter from blocker's block list.
+> - * When blocker ends up pointing to itself then the list is empty.
+> - *
+> - * Must be called with blocked_lock_lock held.
+> - */
+> -static void __locks_delete_block(struct file_lock *waiter)
+> -{
+> -	locks_delete_global_blocked(waiter);
+> -	list_del_init(&waiter->fl_blocked_member);
+> -	waiter->fl_blocker = NULL;
+> -}
+> -
+>   static void __locks_wake_up_blocks(struct file_lock *blocker)
+>   {
+>   	while (!list_empty(&blocker->fl_blocked_requests)) {
+> @@ -735,11 +723,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+>   
+>   		waiter = list_first_entry(&blocker->fl_blocked_requests,
+>   					  struct file_lock, fl_blocked_member);
+> -		__locks_delete_block(waiter);
+> +		locks_delete_global_blocked(waiter);
+> +		waiter->fl_blocker = NULL;
+>   		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+>   			waiter->fl_lmops->lm_notify(waiter);
+>   		else
+>   			wake_up(&waiter->fl_wait);
+> +		list_del_init(&waiter->fl_blocked_member);
+>   	}
+>   }
+>   
+> @@ -753,11 +743,35 @@ int locks_delete_block(struct file_lock *waiter)
+>   {
+>   	int status = -ENOENT;
+>   
+> +	/*
+> +	 * If fl_blocker is NULL, it won't be set again as this thread
+> +	 * "owns" the lock and is the only one that might try to claim
+> +	 * the lock.  So it is safe to test fl_blocker locklessly.
+> +	 * Also if fl_blocker is NULL, this waiter is not listed on
+> +	 * fl_blocked_requests for some lock, so no other request can
+> +	 * be added to the list of fl_blocked_requests for this
+> +	 * request.  So if fl_blocker is NULL, it is safe to
+> +	 * locklessly check if fl_blocked_requests is empty.  If both
+> +	 * of these checks succeed, there is no need to take the lock.
+> +	 * We also check fl_blocked_member is empty.  This is logically
+> +	 * redundant with the test of fl_blocker, but it ensure that
+> +	 * __locks_wake_up_blocks() has finished the wakeup and will not
+> +	 * access the lock again, so it is safe to return and free.
+> +	 * There is no need for any memory barriers with these lockless
+> +	 * tests as is the reads happen before the corresponding writes are
+> +	 * seen, we fall through to the locked code.
+> +	 */
+> +	if (waiter->fl_blocker == NULL &&
+> +	    list_empty(&waiter->fl_blocked_member) &&
+> +	    list_empty(&waiter->fl_blocked_requests))
+> +		return status;
+>   	spin_lock(&blocked_lock_lock);
+>   	if (waiter->fl_blocker)
+>   		status = 0;
+>   	__locks_wake_up_blocks(waiter);
+> -	__locks_delete_block(waiter);
+> +	locks_delete_global_blocked(waiter);
+> +	list_del_init(&waiter->fl_blocked_member);
+> +	waiter->fl_blocker = NULL;
+>   	spin_unlock(&blocked_lock_lock);
+>   	return status;
+>   }
+> 
 
