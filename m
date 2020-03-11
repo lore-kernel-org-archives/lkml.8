@@ -5,44 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40830 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730007AbgCKPfI (ORCPT
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44213 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730020AbgCKPfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:35:08 -0400
-Received: by mail-ua1-f67.google.com with SMTP id t20so875693uao.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:35:07 -0700 (PDT)
+        Wed, 11 Mar 2020 11:35:19 -0400
+Received: by mail-vk1-f193.google.com with SMTP id s194so642844vkb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:35:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org> <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
+References: <20200305151228.24692-1-faiz_abbas@ti.com>
+In-Reply-To: <20200305151228.24692-1-faiz_abbas@ti.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 11 Mar 2020 16:34:31 +0100
-Message-ID: <CAPDyKFov_MwTjXarivgJ7+D_Oa1cgma3t1pDGQ8gkmeNJn4jDQ@mail.gmail.com>
-Subject: Re: [PATCH V2] mmc: cqhci: Update cqhci memory ioresource name
-To: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
+Date: Wed, 11 Mar 2020 16:34:40 +0100
+Message-ID: <CAPDyKFrRcCzLs=Oab_ct_1yLkfCAT9mB4exT3er-UyFUKK_ePw@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-omap: Add Support for Suspend/Resume
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Doug Anderson <dianders@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>
+        Kishon <kishon@ti.com>, Adrian Hunter <adrian.hunter@intel.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, 4 Mar 2020 at 14:25, Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
+On Thu, 5 Mar 2020 at 16:10, Faiz Abbas <faiz_abbas@ti.com> wrote:
 >
-> Update cqhci memory ioresource name from cqhci_mem to cqhci since
-> suffix _mem is redundant.
+> Add power management ops which save and restore the driver context and
+> facilitate a system suspend and resume.
 >
-> Only sdhci-msm driver is making use of this resource as of now.
-> No other vendor's driver is using it. So this update shouldn't affect
-> any other vendor's cqhci functionality.
->
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 
 Applied for next, thanks!
 
@@ -51,30 +42,96 @@ Uffe
 
 
 > ---
-> Corresponding binding change:
-> https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
+> v2:
+> 1. Save and restore only those registers which are not written to by
+>    core
+> 2. Use force_suspend()/resume() APIs instead of runtime_resume()/suspend()
+>    as the driver has no runtime PM support.
+>  drivers/mmc/host/sdhci-omap.c | 57 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 >
-> Changes sicne V1:
->         - Updated commit text expalining this change affects *only*
->           qcom cqhci functionality.
+> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+> index 882053151a47..989133ec74d6 100644
+> --- a/drivers/mmc/host/sdhci-omap.c
+> +++ b/drivers/mmc/host/sdhci-omap.c
+> @@ -108,6 +108,11 @@ struct sdhci_omap_host {
+>         struct pinctrl          *pinctrl;
+>         struct pinctrl_state    **pinctrl_state;
+>         bool                    is_tuning;
+> +       /* Omap specific context save */
+> +       u32                     con;
+> +       u32                     hctl;
+> +       u32                     sysctl;
+> +       u32                     capa;
+>  };
 >
-> ---
->  drivers/mmc/host/cqhci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  static void sdhci_omap_start_clock(struct sdhci_omap_host *omap_host);
+> @@ -1232,12 +1237,64 @@ static int sdhci_omap_remove(struct platform_device *pdev)
 >
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index e2ea2c4..e24b8ff 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -1077,7 +1077,7 @@ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev)
+>         return 0;
+>  }
+> +#ifdef CONFIG_PM_SLEEP
+> +static void sdhci_omap_context_save(struct sdhci_omap_host *omap_host)
+> +{
+> +       omap_host->con = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
+> +       omap_host->hctl = sdhci_omap_readl(omap_host, SDHCI_OMAP_HCTL);
+> +       omap_host->capa = sdhci_omap_readl(omap_host, SDHCI_OMAP_CAPA);
+> +}
+> +
+> +static void sdhci_omap_context_restore(struct sdhci_omap_host *omap_host)
+> +{
+> +       sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, omap_host->con);
+> +       sdhci_omap_writel(omap_host, SDHCI_OMAP_HCTL, omap_host->hctl);
+> +       sdhci_omap_writel(omap_host, SDHCI_OMAP_CAPA, omap_host->capa);
+> +}
+> +
+> +static int __maybe_unused sdhci_omap_suspend(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+> +
+> +       sdhci_suspend_host(host);
+> +
+> +       sdhci_omap_context_save(omap_host);
+> +
+> +       pinctrl_pm_select_idle_state(dev);
+> +
+> +       pm_runtime_force_suspend(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused sdhci_omap_resume(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+> +
+> +       pm_runtime_force_resume(dev);
+> +
+> +       pinctrl_pm_select_default_state(dev);
+> +
+> +       sdhci_omap_context_restore(omap_host);
+> +
+> +       sdhci_resume_host(host);
+> +
+> +       return 0;
+> +}
+> +#endif
+> +static SIMPLE_DEV_PM_OPS(sdhci_omap_dev_pm_ops, sdhci_omap_suspend,
+> +                        sdhci_omap_resume);
 >
->         /* check and setup CMDQ interface */
->         cqhci_memres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> -                                                  "cqhci_mem");
-> +                                                  "cqhci");
->         if (!cqhci_memres) {
->                 dev_dbg(&pdev->dev, "CMDQ not supported\n");
->                 return ERR_PTR(-EINVAL);
+>  static struct platform_driver sdhci_omap_driver = {
+>         .probe = sdhci_omap_probe,
+>         .remove = sdhci_omap_remove,
+>         .driver = {
+>                    .name = "sdhci-omap",
+> +                  .pm = &sdhci_omap_dev_pm_ops,
+>                    .of_match_table = omap_sdhci_match,
+>                   },
+>  };
 > --
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+> 2.19.2
+>
 
