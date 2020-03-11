@@ -2,149 +2,194 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAE0C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC5FC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C3020746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BuMBcq9i"
+	by mail.kernel.org (Postfix) with ESMTP id 86AB820736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgCKRTU (ORCPT
+        id S1730460AbgCKRTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 13:19:21 -0400
+Received: from mga12.intel.com ([192.55.52.136]:51236 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730380AbgCKRTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 13:19:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28261 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730205AbgCKRTT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:19:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583947158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=uczb4pAojxIRA+B5sUM2PIPzhEPKXzDEFRXyZ39v1l0=;
-        b=BuMBcq9ieRBbcpQr6rtUHjY9nMhbsrPoBfmqV0ri5wEntfpjYd80utaO03PYm7z6bs11Fw
-        ljxuZHQ6ry6xoLJhyqqf3ImNtUGQMs9e8kX+cEuwjZaKkocqPxp2keb1+dpG+HvO3oa3ut
-        PYorP+59ydqxOMCaT3MWBmGVVyoKKng=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-W3UxZeFqOBGYdsw1XpdjQQ-1; Wed, 11 Mar 2020 13:19:10 -0400
-X-MC-Unique: W3UxZeFqOBGYdsw1XpdjQQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5901118B9FC2;
-        Wed, 11 Mar 2020 17:19:08 +0000 (UTC)
-Received: from [10.36.116.132] (ovpn-116-132.ams2.redhat.com [10.36.116.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91A9760BEE;
-        Wed, 11 Mar 2020 17:19:05 +0000 (UTC)
-Subject: Re: [PATCH v2 07/10] mm/memory_hotplug: Introduce
- offline_and_remove_memory()
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-References: <20200311171422.10484-1-david@redhat.com>
- <20200311171422.10484-8-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <156601a9-e919-b88f-2278-97ecee554d21@redhat.com>
-Date:   Wed, 11 Mar 2020 18:19:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 10:19:20 -0700
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="277454902"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 10:19:19 -0700
+Subject: Re: [PATCH V1 11/13] selftests/resctrl: Change Cache Quality
+ Monitoring (CQM) test
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <26086dda86f062bba4116878a012a553503924b2.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <e7bd79cf-4da8-7a61-ac09-4d124315fa93@intel.com>
+ <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
+Date:   Wed, 11 Mar 2020 10:19:18 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200311171422.10484-8-david@redhat.com>
+In-Reply-To: <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.20 18:14, David Hildenbrand wrote:
-> virtio-mem wants to offline and remove a memory block once it unplugged
-> all subblocks (e.g., using alloc_contig_range()). Let's provide
-> an interface to do that from a driver. virtio-mem already supports to
-> offline partially unplugged memory blocks. Offlining a fully unplugged
-> memory block will not require to migrate any pages. All unplugged
-> subblocks are PageOffline() and have a reference count of 0 - so
-> offlining code will simply skip them.
+Hi Sai,
+
+On 3/10/2020 7:46 PM, Sai Praneeth Prakhya wrote:
+> On Tue, 2020-03-10 at 15:18 -0700, Reinette Chatre wrote:
+>> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+>>>  		.mum_resctrlfs	= 0,
+>>>  		.filename	= RESULT_FILE_NAME,
+>>> -		.mask		= ~(long_mask << n) & long_mask,
+>>> -		.span		= cache_size * n / count_of_bits,
+>>>  		.num_of_runs	= 0,
+>>> -		.setup		= cqm_setup,
+>>> +		.setup		= cqm_setup
+>>>  	};
+>>> +	int ret;
+>>> +	char schemata[64];
+>>> +	unsigned long long_mask;
+>>>  
+>>> -	if (strcmp(benchmark_cmd[0], "fill_buf") == 0)
+>>> -		sprintf(benchmark_cmd[1], "%lu", param.span);
+>>> +	ret = remount_resctrlfs(1);
+>>> +	if (ret)
+>>> +		return ret;
+>>
+>> Here resctrl is remounted and followed by some changes to the root
+>> group's schemata. That is followed by a call to resctrl_val that
+>> attempts to remount resctrl again that will undo all the configurations
+>> inbetween.
 > 
-> All we need is an interface to offline and remove the memory from kernel
-> module context, where we don't have access to the memory block devices
-> (esp. find_memory_block() and device_offline()) and the device hotplug
-> lock.
-> 
-> To keep things simple, allow to only work on a single memory block.
+> No, it wouldn't because mum_resctrlfs is 0. When resctrl FS is already mounted
+> and mum_resctrlfs is 0, then remount_resctrlfs() is a noop.
 > 
 
-Lost the ACK from Michael
+I missed that. Thank you.
 
-Acked-by: Michal Hocko <mhocko@suse.com> [1]
+fyi ... when I tried these tests I encountered the following error
+related to unmounting:
 
-[1] https://lkml.kernel.org/r/20200302142737.GP4380@dhcp22.suse.cz
+[SNIP]
+ok Write schema "L3:1=7fff" to resctrl FS
+ok Write schema "L3:1=ffff" to resctrl FS
+ok Write schema "L3:1=1ffff" to resctrl FS
+ok Write schema "L3:1=3ffff" to resctrl FS
+# Unable to umount resctrl: Device or resource busy
+# Results are displayed in (Bytes)
+ok CQM: diff within 5% for mask 1
+# alloc_llc_cache_size: 2883584
+# avg_llc_occu_resc: 2973696
+ok CQM: diff within 5% for mask 3
+[SNIP]
 
--- 
-Thanks,
+This seems to originate from resctrl_val() that forces an unmount but if
+that fails the error is not propagated.
 
-David / dhildenb
+>>> diff --git a/tools/testing/selftests/resctrl/resctrl_val.c
+>>> b/tools/testing/selftests/resctrl/resctrl_val.c
+>>> index 271cb5c976f5..c59fad6cb9b0 100644
+>>> --- a/tools/testing/selftests/resctrl/resctrl_val.c
+>>> +++ b/tools/testing/selftests/resctrl/resctrl_val.c
+>>> @@ -705,29 +705,21 @@ int resctrl_val(char **benchmark_cmd, struct
+>>> resctrl_val_param *param)
+>>>  		goto out;
+>>>  	}
+>>>  
+>>> -	/* Give benchmark enough time to fully run */
+>>> -	sleep(1);
+>>> -
+>>>  	/* Test runs until the callback setup() tells the test to stop. */
+>>>  	while (1) {
+>>> +		ret = param->setup(param);
+>>> +		if (ret) {
+>>> +			ret = 0;
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		/* Measure vals sleeps for a second */
+>>>  		if ((strcmp(resctrl_val, "mbm") == 0) ||
+>>>  		    (strcmp(resctrl_val, "mba") == 0)) {
+>>> -			ret = param->setup(param);
+>>> -			if (ret) {
+>>> -				ret = 0;
+>>> -				break;
+>>> -			}
+>>> -
+
+(I refer to the above snippet in my comment below)
+
+>>>  			ret = measure_vals(param, &bw_resc_start);
+>>>  			if (ret)
+>>>  				break;
+>>>  		} else if (strcmp(resctrl_val, "cqm") == 0) {
+>>> -			ret = param->setup(param);
+>>> -			if (ret) {
+>>> -				ret = 0;
+>>> -				break;
+>>> -			}
+>>> -			sleep(1);
+>>>  			ret = measure_cache_vals(param, bm_pid);
+>>>  			if (ret)
+>>>  				break;
+>>
+>> This change affects not just the cache monitoring test. Could this
+>> change be extracted into its own patch to be clear what is done here and
+>> how it impacts the other tests?
+> 
+> This change shouldn't impact other tests (i.e. CAT) because CAT will not call
+> resctrl_val().
+
+I was referring to the snippet above that seems to impact the "mbm" and
+"mba" tests by moving the call to "param->setup" for the them.
+
+> 
+>>> diff --git a/tools/testing/selftests/resctrl/resctrlfs.c
+>>> b/tools/testing/selftests/resctrl/resctrlfs.c
+>>> index 52452bb0178a..bd81a13ff9df 100644
+>>> --- a/tools/testing/selftests/resctrl/resctrlfs.c
+>>> +++ b/tools/testing/selftests/resctrl/resctrlfs.c
+>>> @@ -365,11 +365,7 @@ void run_benchmark(int signum, siginfo_t *info, void
+>>> *ucontext)
+>>>  		memflush =  atoi(benchmark_cmd[3]);
+>>>  		operation = atoi(benchmark_cmd[4]);
+>>>  		sprintf(resctrl_val, "%s", benchmark_cmd[5]);
+>>> -
+>>> -		if (strcmp(resctrl_val, "cqm") != 0)
+>>> -			buffer_span = span * MB;
+>>> -		else
+>>> -			buffer_span = span;
+>>> +		buffer_span = span * MB;
+>>
+>> This change seems to change the buffer_span used by the other tests. It
+>> is not obvious why this change is made to other tests while this commit
+>> intends to focus on the cache monitoring test. Perhaps this can be split
+>> into a separate patch to make this clear?
+> 
+
+Got it. Thank you.
+
+
+Reinette
 
