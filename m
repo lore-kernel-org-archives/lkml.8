@@ -2,112 +2,69 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7823EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F00DC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5ED2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8ImzmaR"
+	by mail.kernel.org (Postfix) with ESMTP id 6BC4E2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583968081;
+	bh=mIDvbT395T9PcLGcQ6KRb4uh0b+8YxZmC7DZ0lz0z9k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fGYocShB1oTumER7p+Jqa+LTh4NfJsSfyqP1pKHwnxD/uPUBi0X4XPzFpLgeSSfOc
+	 ICPR0QeHq2NT9j1dQRSfnSRy2Dy7nFxur0HckHQ2u6xjxewESudUiKIkKTwFCy6a/0
+	 vTHOViAt6cNcVDRs62zLKhCV0uTm1u0FOn4rOSIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgCKXG5 (ORCPT
+        id S1731477AbgCKXIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:06:57 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44312 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCKXG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:06:56 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d9so1802863plo.11;
-        Wed, 11 Mar 2020 16:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zrjFFfnQxfxf+b411Ohc8jC4fvp22dOgtxuNGSOhOrI=;
-        b=N8ImzmaRC9iFGIOX2idaUyKFljIkNfgUjxj6FGbYhY+gCf6cT+RiJ6nv0j21pnFj5b
-         p9agH41ezIMVcnMf+itV0kl6yB5rtWXZVsyz2a5dh1SdgqU3y/z8cQ/nQDlGxe0DQp3j
-         nbh0vJYdShdA1U9aBplC8G6Fln6ryNqb0+NnaZ+/0VZImXOgpXpVXNSInz62gtUGJ+Mo
-         qzfczRcjANv9EdeSB423u87fJ4YmUIEOsyIyQliI4MCYnmZsUiObLgdieQNwZMS1U9L1
-         D57yCauadybOKoiyd0+ZJ0Kk0QcbTshgYoqg8CnVq/UIc0FCQrxAwVfQwH86x6tQ3mL3
-         fifA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zrjFFfnQxfxf+b411Ohc8jC4fvp22dOgtxuNGSOhOrI=;
-        b=GvmN6LxzR/4naqTjN6HU+Mgu0jLkzKTnRGgccn9I5pLOcnAmwi+6/AS6wnEZso7ACJ
-         OKVy0b8FcYcGHw4ERIzgEdv8JmoP+vPXRbfcZdBQmfrqeMQmvlxe8/ry0sEgn5tPA3pS
-         hJj0w1WlgaqLK1PkU5sZhQfZ50BX4KBrBaHr6Vx5f4Lazy17AMhWThBljsF4eh3v3UqJ
-         1EgDKRa6MLi9HZ/oZMCLcaAZf72hFMjf/1WPqHkDDyFbFNuo30XEvc7BYfswso/+Zpoe
-         0C+kAeNvskidEQs3SWnt0vX5TlHi6QhOzRN5kyM0ym2eNFe0CPL4B/a5u0fbfeo4MzO4
-         w7rg==
-X-Gm-Message-State: ANhLgQ38icci8MdOl0ekdrQqXYlDuxcNAn5f0Jhg0RQp8ujEiIdzXpWm
-        B+/C7WAOzOQmpYQauJ6aQiM=
-X-Google-Smtp-Source: ADFU+vtYeBPyfkjBN5fyB7mvQHLbpXJ94GZdO0hU/S0YDuTyWyywz+4tpcdPcNMeOJ29M7KFkv7h4Q==
-X-Received: by 2002:a17:90a:d593:: with SMTP id v19mr962093pju.177.1583968015672;
-        Wed, 11 Mar 2020 16:06:55 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e10sm10141664pfm.121.2020.03.11.16.06.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 16:06:54 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 16:06:53 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/169] 5.4.25-rc4 review
-Message-ID: <20200311230653.GA25697@roeck-us.net>
-References: <20200311204002.240698596@linuxfoundation.org>
+        Wed, 11 Mar 2020 19:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCKXH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 19:07:59 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6BDD2074A;
+        Wed, 11 Mar 2020 23:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583968079;
+        bh=mIDvbT395T9PcLGcQ6KRb4uh0b+8YxZmC7DZ0lz0z9k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cjI4HeSPHugHZPP4u8BtUuVscx+iaCimCG5vpifg3sFUC8yIxuMmk53S4Cpirdh/Y
+         SrvVfsMEqR+h4z/ZSfPwLBw3WStOFe7YaBALAt+QJ4OiRP86iqrjH4TWFjjRpUvK6L
+         wB/L3Ma0QPsvxge2MVzzJuqPcv/EXbkdFOrw24OU=
+Date:   Wed, 11 Mar 2020 16:07:57 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 08/15] ethtool: set device private flags with
+ PRIVFLAGS_SET request
+Message-ID: <20200311160757.3e5c1395@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <ee141a0bfbe5f6fe1ada537e0f0f1001100eaee5.1583962006.git.mkubecek@suse.cz>
+References: <cover.1583962006.git.mkubecek@suse.cz>
+        <ee141a0bfbe5f6fe1ada537e0f0f1001100eaee5.1583962006.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311204002.240698596@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 09:41:16PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.25 release.
-> There are 169 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 11 Mar 2020 22:40:43 +0100 (CET) Michal Kubecek wrote:
+> Implement PRIVFLAGS_SET netlink request to set private flags of a network
+> device. These are traditionally set with ETHTOOL_SPFLAGS ioctl request.
 > 
-> Responses should be made by Fri, 13 Mar 2020 20:39:27 +0000.
-> Anything received after that time might be too late.
-> 
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-Build results:
-	total: 158 pass: 146 fail: 12
-Failed builds:
-	alpha:allmodconfig
-	arm:allmodconfig
-	arm64:allmodconfig
-	m68k:allmodconfig
-	mips:allmodconfig
-	nds32:allmodconfig
-	parisc:allmodconfig
-	powerpc:allmodconfig
-	riscv:defconfig
-	s390:allmodconfig
-	sparc64:allmodconfig
-	xtensa:allmodconfig
-Qemu test results:
-	total: 422 pass: 405 fail: 17
-Failed tests:
-	<all riscv>
-
-As already reported, the failure is:
-
-drivers/gpu/drm/virtio/virtgpu_object.c:31:67: error: expected ')' before 'int'
-   31 | module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
-
-Guenter
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
