@@ -2,141 +2,374 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C60C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D438FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB72206E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89AB20739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6wwwPS7"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Dx5Br7VM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbgCKWGL (ORCPT
+        id S1729747AbgCKWJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:06:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38635 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbgCKWGL (ORCPT
+        Wed, 11 Mar 2020 18:09:24 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44114 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729535AbgCKWJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:06:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x7so1943087pgh.5;
-        Wed, 11 Mar 2020 15:06:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jdeJesX6/hIMY4ZDUT+iCkrSbPRCTupa20SWyKBVxQw=;
-        b=l6wwwPS76iH65wuHEnC2k7LhOYfpILhaQ1LwgfMGsrLXtmQDjJpuQ8mzJ9iMxo4lMm
-         JfYQZMiL/4up8h6xGmNfJwCZdzY7NmlR/Ncs5Oa4WV4whns79SCNvdsjfDkHlG9NsNdo
-         L9N484V3Vg+uXtoaYWgQwifBgRLfMGAhe4jnge81tk1LxBoA/vsIaYvIEoCVEcJw3ZIm
-         566Nt1kxnS8hwYLMalY5hmVRDxNiK/LxM3mzlj50P5P0HEuQJQ4J+O459m2m2YyX6VFb
-         ul2j/a1OvbUKrQPvlqdfYNWN0C0sHxxmPu9z/V96dssf5IvSWcWMykaY+/nfEatLI5vX
-         PnxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jdeJesX6/hIMY4ZDUT+iCkrSbPRCTupa20SWyKBVxQw=;
-        b=egcIqE8ASjl+Pkn7NwXAIS3EDhFPTOKPopbh0YegjSgz8qgdHH1Sb3lihSmp5C+PLL
-         djjZCpcDpiFq6TuhTEO3l5nGLQqP3MB1N90TKEzfAD2m5Yzd11KHbjpvurbcWJkBsqKR
-         WE8obZirooH0mEfl80LuDnlq8EUWCEMXDLsAZvX9dTw/JozhNvaYAGFVudkAsex2cYfy
-         SLqXedIjTC5iy/ZA9cFzqrSG0YIdW+m6Dpn9Q4uCoWuGPxHu1Jju0tci+IJl8g0aFE9X
-         WxLiralk9lGMNp5l/+CrX7gdrg9+XZNdECeAUzCqT9XhQZ73a8V4yqQgmbiZ7t/J3iiG
-         zhcQ==
-X-Gm-Message-State: ANhLgQ1k9prR1hkRqw+/iqvbsjhUaUGSVnkTgI2cKgWuB+0YtHOkYeO6
-        mCXRL8awdR1l9EftSHoG7jTFtB3A
-X-Google-Smtp-Source: ADFU+vs8w0gtdMFHGdtX5KNSuLipy26/9hqDZfygWGDH0F3sIG0WX1NdWEaKHbBs01pE4pi/IwJdBg==
-X-Received: by 2002:a63:68a:: with SMTP id 132mr4786808pgg.12.1583964367652;
-        Wed, 11 Mar 2020 15:06:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id mp5sm6375531pjb.48.2020.03.11.15.06.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 15:06:06 -0700 (PDT)
-Subject: Re: [PATCH 5.4 000/169] 5.4.25-rc4 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200311204002.240698596@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <5371323a-516e-cfa0-d8c0-c37599fb6442@roeck-us.net>
-Date:   Wed, 11 Mar 2020 15:06:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 18:09:23 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BM0eIY002720
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 15:09:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=xOsxMeB6xbKBUIfGFABLuhEYB5rReWtaCoUJRqO/ziw=;
+ b=Dx5Br7VM7wKNHlgUvHaCmW49scWgCvstoLlZ9biSJonLoJI8jItVVOKf1JSRCu9hBXuh
+ 1X5GJArl11R395Th9y3bgtamu916rw7lx9nCzwZh/YW1cizWAC1+VZM8vm1jQKSGMr7l
+ USYxqb21k9l4URNFngvRFdhT2MOoUKw/Xbc= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yq5kf8wf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 15:09:22 -0700
+Received: from intmgw001.41.prn1.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 11 Mar 2020 15:09:22 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id B6EDC36A2704F; Wed, 11 Mar 2020 15:09:21 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Andreas Schaufler <andreas.schaufler@gmx.de>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v3] mm: hugetlb: optionally allocate gigantic hugepages using cma 65;5803;1c Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation at runtime") has added the run-time allocation of gigantic pages. However it actually works only at early stages of the system loading, when the majority of memory is free. After some time the memory gets fragmented by non-movable pages, so the chances to find a contiguous 1 GB block are getting close to zero. Even dropping caches manually doesn't help a lot.
+Date:   Wed, 11 Mar 2020 15:09:20 -0700
+Message-ID: <20200311220920.2487528-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <20200311204002.240698596@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_11:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=2
+ priorityscore=1501 phishscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110123
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 1:41 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.25 release.
-> There are 169 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 13 Mar 2020 20:39:27 +0000.
-> Anything received after that time might be too late.
-> 
+At large scale rebooting servers in order to allocate gigantic hugepages
+is quite expensive and complex. At the same time keeping some constant
+percentage of memory in reserved hugepages even if the workload isn't
+using it is a big waste: not all workloads can benefit from using 1 GB
+pages.
 
-drivers/gpu/drm/virtio/virtgpu_object.c:31:67: error: expected ')' before 'int'
-   31 | module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
+The following solution can solve the problem:
+1) On boot time a dedicated cma area* is reserved. The size is passed
+   as a kernel argument.
+2) Run-time allocations of gigantic hugepages are performed using the
+   cma allocator and the dedicated cma area
 
-Commit b0138364da17 ("drm/virtio: module_param_named() requires linux/moduleparam.h")
-is still missing.
+In this case gigantic hugepages can be allocated successfully with a
+high probability, however the memory isn't completely wasted if nobody
+is using 1GB hugepages: it can be used for pagecache, anon memory,
+THPs, etc.
 
-Guenter
+* On a multi-node machine a per-node cma area is allocated on each node.
+  Following gigantic hugetlb allocation are using the first available
+  numa node if the mask isn't specified by a user.
+
+Usage:
+1) configure the kernel to allocate a cma area for hugetlb allocations:
+   pass hugetlb_cma=10G as a kernel argument
+
+2) allocate hugetlb pages as usual, e.g.
+   echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+
+If the option isn't enabled or the allocation of the cma area failed,
+the current behavior of the system is preserved.
+
+x86 and arm-64 are covered by this patch, other architectures can be
+trivially added later.
+
+v3:
+  - added fallback to the existing allocation mechanism
+  - added min/max checks
+  - switched to MiB in debug output
+  - removed percentage option
+  - added arch-specific order argument to determine an alignment
+  - added arm support
+  - fixed the !CONFIG_HUGETLBFS build
+
+  Thanks to Michal, Mike, Andreas and Rik for ideas and suggestions!
+
+v2:
+  -fixed !CONFIG_CMA build, suggested by Andrew Morton
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ .../admin-guide/kernel-parameters.txt         |   7 ++
+ arch/arm64/mm/init.c                          |   6 +
+ arch/x86/kernel/setup.c                       |   4 +
+ include/linux/hugetlb.h                       |   8 ++
+ mm/hugetlb.c                                  | 116 ++++++++++++++++++
+ 5 files changed, 141 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 0c9894247015..9eb0df40643d 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1452,6 +1452,13 @@
+ 	hpet_mmap=	[X86, HPET_MMAP] Allow userspace to mmap HPET
+ 			registers.  Default set by CONFIG_HPET_MMAP_DEFAULT.
+ 
++	hugetlb_cma=	[x86-64] The size of a cma area used for allocation
++			of gigantic hugepages.
++			Format: nn[KMGTPE]
++
++			If enabled, boot-time allocation of gigantic hugepages
++			is skipped.
++
+ 	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
+ 	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
+ 			On x86-64 and powerpc, this option can be specified
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index b65dffdfb201..e42727e3568e 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -29,6 +29,7 @@
+ #include <linux/mm.h>
+ #include <linux/kexec.h>
+ #include <linux/crash_dump.h>
++#include <linux/hugetlb.h>
+ 
+ #include <asm/boot.h>
+ #include <asm/fixmap.h>
+@@ -457,6 +458,11 @@ void __init arm64_memblock_init(void)
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ 
+ 	dma_contiguous_reserve(arm64_dma32_phys_limit);
++
++#ifdef CONFIG_ARM64_4K_PAGES
++	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
++#endif
++
+ }
+ 
+ void __init bootmem_init(void)
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index a74262c71484..fc3e326a62b9 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -16,6 +16,7 @@
+ #include <linux/pci.h>
+ #include <linux/root_dev.h>
+ #include <linux/sfi.h>
++#include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+ #include <linux/usb/xhci-dbgp.h>
+ 
+@@ -1158,6 +1159,9 @@ void __init setup_arch(char **cmdline_p)
+ 	initmem_init();
+ 	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+ 
++	if (boot_cpu_has(X86_FEATURE_GBPAGES))
++		hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
++
+ 	/*
+ 	 * Reserve memory for crash kernel after SRAT is parsed so that it
+ 	 * won't consume hotpluggable memory.
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 50480d16bd33..b831e9fa1a26 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -890,4 +890,12 @@ static inline spinlock_t *huge_pte_lock(struct hstate *h,
+ 	return ptl;
+ }
+ 
++#if defined(CONFIG_HUGETLB_PAGE) && defined(CONFIG_CMA)
++extern void __init hugetlb_cma_reserve(int order);
++#else
++static inline __init void hugetlb_cma_reserve(int order)
++{
++}
++#endif
++
+ #endif /* _LINUX_HUGETLB_H */
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 7fb31750e670..66bfc2bdc203 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -28,6 +28,7 @@
+ #include <linux/jhash.h>
+ #include <linux/numa.h>
+ #include <linux/llist.h>
++#include <linux/cma.h>
+ 
+ #include <asm/page.h>
+ #include <asm/pgtable.h>
+@@ -44,6 +45,9 @@
+ int hugetlb_max_hstate __read_mostly;
+ unsigned int default_hstate_idx;
+ struct hstate hstates[HUGE_MAX_HSTATE];
++
++static struct cma *hugetlb_cma[MAX_NUMNODES];
++
+ /*
+  * Minimum page order among possible hugepage sizes, set to a proper value
+  * at boot time.
+@@ -1228,6 +1232,14 @@ static void destroy_compound_gigantic_page(struct page *page,
+ 
+ static void free_gigantic_page(struct page *page, unsigned int order)
+ {
++	/*
++	 * If the page isn't allocated using the cma allocator,
++	 * cma_release() returns false.
++	 */
++	if (IS_ENABLED(CONFIG_CMA) &&
++	    cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
++		return;
++
+ 	free_contig_range(page_to_pfn(page), 1 << order);
+ }
+ 
+@@ -1237,6 +1249,21 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+ {
+ 	unsigned long nr_pages = 1UL << huge_page_order(h);
+ 
++	if (IS_ENABLED(CONFIG_CMA)) {
++		struct page *page;
++		int node;
++
++		for_each_node_mask(node, *nodemask) {
++			if (!hugetlb_cma[node])
++				break;
++
++			page = cma_alloc(hugetlb_cma[node], nr_pages,
++					 huge_page_order(h), true);
++			if (page)
++				return page;
++		}
++	}
++
+ 	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
+ }
+ 
+@@ -2439,6 +2466,10 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ 
+ 	for (i = 0; i < h->max_huge_pages; ++i) {
+ 		if (hstate_is_gigantic(h)) {
++			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
++				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
++				break;
++			}
+ 			if (!alloc_bootmem_huge_page(h))
+ 				break;
+ 		} else if (!alloc_pool_huge_page(h,
+@@ -5372,3 +5403,88 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason)
+ 		spin_unlock(&hugetlb_lock);
+ 	}
+ }
++
++#ifdef CONFIG_CMA
++static unsigned long hugetlb_cma_size __initdata;
++
++static int __init cmdline_parse_hugetlb_cma(char *p)
++{
++	unsigned long long val;
++	char *endptr;
++
++	if (!p)
++		return -EINVAL;
++
++	val = simple_strtoull(p, &endptr, 0);
++	hugetlb_cma_size = memparse(p, &p);
++	return 0;
++}
++
++early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
++
++void __init hugetlb_cma_reserve(int order)
++{
++	unsigned long size, reserved, per_node;
++	int nid;
++
++	if (!hugetlb_cma_size)
++		return;
++
++	if (hugetlb_cma_size < (PAGE_SIZE << order)) {
++		pr_warn("hugetlb_cma: cma area should be at least %lu MiB\n",
++			(PAGE_SIZE << order) / SZ_1M);
++		return;
++	}
++
++	/*
++	 * If 3 GB area is requested on a machine with 4 numa nodes,
++	 * let's allocate 1 GB on first three nodes and ignore the last one.
++	 */
++	per_node = DIV_ROUND_UP(hugetlb_cma_size, nr_online_nodes);
++	pr_info("hugetlb_cma: reserve %lu MiB, up to %lu MiB per node\n",
++		hugetlb_cma_size / SZ_1M, per_node / SZ_1M);
++
++	reserved = 0;
++	for_each_node_state(nid, N_ONLINE) {
++		unsigned long start_pfn, end_pfn;
++		unsigned long min_pfn = 0, max_pfn = 0;
++		int res, i;
++
++		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
++			if (!min_pfn)
++				min_pfn = start_pfn;
++			max_pfn = end_pfn;
++		}
++
++		size = max(per_node, hugetlb_cma_size - reserved);
++		size = round_up(size, PAGE_SIZE << order);
++
++		if (size > ((max_pfn - min_pfn) << PAGE_SHIFT) / 2) {
++			pr_warn("hugetlb_cma: cma_area is too big, please try less than %lu MiB\n",
++				round_down(((max_pfn - min_pfn) << PAGE_SHIFT) *
++					   nr_online_nodes / 2 / SZ_1M,
++					   PAGE_SIZE << order));
++			break;
++		}
++
++		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
++					     PFN_PHYS(max_pfn),
++					     PAGE_SIZE << order,
++					     0, false,
++					     "hugetlb", &hugetlb_cma[nid]);
++		if (res) {
++			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
++				res, nid, PFN_PHYS(min_pfn), PFN_PHYS(max_pfn));
++			break;
++		}
++
++		reserved += size;
++		pr_info("hugetlb_cma: reserved %lu MiB on node %d\n",
++			size / SZ_1M, nid);
++
++		if (reserved >= hugetlb_cma_size)
++			break;
++	}
++}
++
++#endif /* CONFIG_CMA */
+-- 
+2.24.1
+
