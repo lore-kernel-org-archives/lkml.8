@@ -2,120 +2,170 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F94C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4520C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724F2208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5031B208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgPW57tz"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="SPbH7Gm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgCKGZP (ORCPT
+        id S1728196AbgCKG2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:25:15 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52396 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgCKGZP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:25:15 -0400
-Received: by mail-pj1-f65.google.com with SMTP id f15so454349pjq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:25:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bt1O8uM5G8pXH1MHWG9pCoJ7EMImXZ7wY9eLxbsFLdA=;
-        b=LgPW57tzWWWdp9KgQ0hpT4ZMxdE4CE+5156yW06y5G9NTk8fi4QDfdxtQc38KQTxws
-         +pdsUZ+euQv91pReXuvQheDBUPIY8y09YfuEh8UBcqwPN4Vlmey9i0P9BWMwRYS8xyPF
-         BEX6ZgDvG2KolqPQB0MKqK22ho6OelCf7WccHLduOeiJyF5rWt5F9KHQC8HwwiRG2f5X
-         ZV0Bd2QZ5l8cxJX6C6Svu7mzCbJLs1iVpr78RtAogCcium+Lz0HKKoGHXOFVBSvItQPr
-         xo0k7jRJlC2Nme1PS/2BHqxn9gvzmUmFnYUd02b351r+kp53hpfMWgrxoWIPlXa46/YR
-         3ghg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bt1O8uM5G8pXH1MHWG9pCoJ7EMImXZ7wY9eLxbsFLdA=;
-        b=VaJTSKGi87ONabVK9ep/EmLEkZm8aTNiG/+GpemJTmVOIioXcM2FMamQhc4c6nYv/W
-         ev+k555BqxCsHslp8isH4ijmfGPvtxvCZLladGX/fkT810B9M94vr+sHQf9SY/W+9ugO
-         V3K1pcr+DJnB0kwlJoXl7QTL6Bs8xmIfqA9HEKLHr0BjvUINKnhgnBIpyvVeQS1gN8oy
-         BpUMdMxTqlYwp2s7rLPIwJc9VYRbfP/DOayXOzowskT61Fc+uKyaetQ/5trjBxd4au8R
-         iCHsX9/i6SE3mf5kbmixPMdsTm+J8s0T4fTsTFIgJikSSV6Snv7dGsO+vNLrRGst8QIH
-         PPMg==
-X-Gm-Message-State: ANhLgQ3BROwJpYJbchAiyXd+9L/zwmlzsGJcJUc+cradjhbZxIi4j7aP
-        Og7vj0GyZMwrkGSuw1hDDsU=
-X-Google-Smtp-Source: ADFU+vtO8orUpxL98tMF8My0R6rxQboeMUoUFL+xJhiu1WuQLqkbtm3AENqM+1gJVVS9BbO139yngg==
-X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr1767437pjt.173.1583907912392;
-        Tue, 10 Mar 2020 23:25:12 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id 199sm53153692pfv.81.2020.03.10.23.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 23:25:11 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:25:09 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Jaewon Kim <jaewon31.kim@samsung.com>, adobriyan@gmail.com,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com
-Subject: Re: [RFC PATCH 1/3] proc/meminfo: introduce extra meminfo
-Message-ID: <20200311062509.GB83589@google.com>
-References: <20200311034441.23243-1-jaewon31.kim@samsung.com>
- <CGME20200311034454epcas1p184680d40f89d37eec7f934074c4a9fcf@epcas1p1.samsung.com>
- <20200311034441.23243-2-jaewon31.kim@samsung.com>
- <20200311061836.GA83589@google.com>
+        Wed, 11 Mar 2020 02:28:32 -0400
+Received: from mail-eopbgr40067.outbound.protection.outlook.com ([40.107.4.67]:22855
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726160AbgCKG2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:28:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oDcqTUDYKfIDciT+Qf1y262+pGzOuS9BgbTDcaLRHkBydq6c4bS8V8AVEaWRuTl41nR7qX4LAk+z31VWaytkxOZhIDQv92xAOEtXvRHiLb+eifMhRxGKda3LsOzZJMscPUYZeYgjOrPeGIB4mH0mx76KdW41b75RpszX5+AmMrbhrYVc5tFpoyQFVA9eK/i4K3B1bZiqLAwFUO1HuwJefUWLei9tjot1z/wguMwZGAHsp913neek49kWZEX0EY/YPa97PPBPR6uta2Hb4KFBgX1vsGPPql36mDVkwCH0xpTsNgJdV5tPIfOozFmRXNu7Y13CHrKLOKmBEWzP3Jpffw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WrrzdlgW89qyudRrOhcZh+b5nFbUAFMIH/q6G+jBBpE=;
+ b=YBgRlNR0tjdrhY1M5yxU11An2dllpSfiHPRcV3MgKR3Hhy4IlzvW914FjpsAhtjqbA8lba9EXyL+rThZTOA5lzgzaxo5YTMe8kiTY7NAPuWnPP1l6YnOVKtAivqXrHBDPDsnMm9URrgHzsH9AbVKK1d9NNYjHZwMrSpN02rHxGDETON+mNr2HQz9joGHGrItVn3MnPWeV7clAsP1z48WCG5VL0JgUNgJHJbpWgRpRQGAK9eHpIqJO2XbnScGrfcLA14tMynnUEBEUvX/hVnBnrWMd7XSR7ndK7rXCduuyK53tc53hEfruLLCfCclF1sU6fqmLD0mA62m8EpW3dP/HA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WrrzdlgW89qyudRrOhcZh+b5nFbUAFMIH/q6G+jBBpE=;
+ b=SPbH7Gm/iVsbfVH3PHVc3se49kMfOSGK8R/Rn6VcENZ8oWOC7pZZswIiNcGyRFRBkNclHKGJHA+wbymk3/2YO7diDWmciUBKtooNcs+NJfft2EJecPrTDNdwvtp3yCbI+JGPxwGsNVzoY2Awkkq7sHo8h0tOqBqJ/wv4WJq7m8c=
+Received: from DB8PR04MB6985.eurprd04.prod.outlook.com (52.133.243.85) by
+ DB8PR04MB6971.eurprd04.prod.outlook.com (52.133.240.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13; Wed, 11 Mar 2020 06:28:26 +0000
+Received: from DB8PR04MB6985.eurprd04.prod.outlook.com
+ ([fe80::a523:58cc:b584:2c2]) by DB8PR04MB6985.eurprd04.prod.outlook.com
+ ([fe80::a523:58cc:b584:2c2%6]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 06:28:26 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: RE: [PATCH] dpaa_eth: Remove unnecessary boolean expression in
+ dpaa_get_headroom
+Thread-Topic: [PATCH] dpaa_eth: Remove unnecessary boolean expression in
+ dpaa_get_headroom
+Thread-Index: AQHV9yg9B58WfTtTEUGZdgGF+/fe+6hC7dsQ
+Date:   Wed, 11 Mar 2020 06:28:26 +0000
+Message-ID: <DB8PR04MB6985A192818CEB0F0D274677ECFC0@DB8PR04MB6985.eurprd04.prod.outlook.com>
+References: <20200310220654.1987-1-natechancellor@gmail.com>
+In-Reply-To: <20200310220654.1987-1-natechancellor@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [86.126.9.20]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 15530de9-c1c0-4bfb-13c3-08d7c585681b
+x-ms-traffictypediagnostic: DB8PR04MB6971:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-microsoft-antispam-prvs: <DB8PR04MB69711396ADFD226F8416BAF2ADFC0@DB8PR04MB6971.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:155;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(376002)(39860400002)(199004)(110136005)(8936002)(316002)(54906003)(6506007)(5660300002)(64756008)(66446008)(66476007)(66556008)(53546011)(76116006)(66946007)(9686003)(55016002)(33656002)(4326008)(2906002)(7696005)(45080400002)(478600001)(71200400001)(52536014)(86362001)(186003)(8676002)(26005)(81166006)(81156014)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6971;H:DB8PR04MB6985.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R1uL8wTxG9AIF/q1QYTzEK877BnShzw65z5kog/6yRXdcM5i1fR23NQoUGHUqnp96SSlD6pysxfYofs1RZEZfZsTuJTnWT8GCWFYIQJSdXnu+GbuwMoj2jMmv3y0sLmA/XQdiNpxlIZyk5cAVdi6vJ06Z6Bwvq93E3j2FBaSFn1tpTl2mOo6JwZ/AkhFK3R6jlIa3I+X38JeR8pzB55gCWT5tNzFw/d7aLs57D9TRaf3dUIVIHf/HlMgSBrXLFCd4nNY6PRI/tLTy0J+BWmLFw9KU8xagYqEL8kHNqdSRhruJNebI1td+Z1qH1j9Jdb9sTdjYDOJclLeDaTWJzrjJtj1Mg0Qi+0NE4G4EIYo29yr4uTlmwylYhI77eSvlcI/ZaTKpokdgcbknfJ5Xp1w19A3gCvzMtWPrGw0pBgOwMZf7NF9RVfclpsPDOHzuFh5JFx7DDdWMmYtQMvd/BF7n3hjic3VRuHg0DUkcsKJEUgZFqdFxNq2if4WZBm4sVwwR45rPm279We/PTFtDmxGWA==
+x-ms-exchange-antispam-messagedata: OQD3wOUzvHs+oZCJyi/KbYbiOQU/3Vey7a10YawTrz4nQEksfYsdt21CWf/VbrCXlfAfRIXzRr5BdDWbnTl4JOd1t7wTF8hrAH4c12vbOz8X4XrYbYL0SUgf+YA2Nel+ZkcRXVX2I1cseJJxbZJfaQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311061836.GA83589@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15530de9-c1c0-4bfb-13c3-08d7c585681b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 06:28:26.3006
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4ReTbHtuZQi6IjDLqzN30561s5v8rZKTigIwIzqlt0z057ba0+pxWIfTkRWGNw17kZvGS4LBJzRPd2UriWCg2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6971
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/11 15:18), Sergey Senozhatsky wrote:
-> On (20/03/11 12:44), Jaewon Kim wrote:
-> [..]
-> > +#define NAME_SIZE      15
-> > +#define NAME_BUF_SIZE  (NAME_SIZE + 2) /* ':' and '\0' */
-> > +
-> > +struct extra_meminfo {
-> > +	struct list_head list;
-> > +	atomic_long_t *val;
-> > +	int shift_for_page;
-> > +	char name[NAME_BUF_SIZE];
-> > +	char name_pad[NAME_BUF_SIZE];
-> > +};
-> > +
-> > +int register_extra_meminfo(atomic_long_t *val, int shift, const char *name)
-> > +{
-> > +	struct extra_meminfo *meminfo, *memtemp;
-> > +	int len;
-> > +	int error = 0;
-> > +
-> > +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
-> > +	if (!meminfo) {
-> > +		error = -ENOMEM;
-> > +		goto out;
-> > +	}
-> > +
-> > +	meminfo->val = val;
-> > +	meminfo->shift_for_page = shift;
-> > +	strncpy(meminfo->name, name, NAME_SIZE);
-> > +	len = strlen(meminfo->name);
-> > +	meminfo->name[len] = ':';
-> > +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
-> 
-> What happens if there is no NULL byte among the first NAME_SIZE bytes
-> of passed `name'?
+> -----Original Message-----
+> From: Nathan Chancellor <natechancellor@gmail.com>
+> Sent: Wednesday, March 11, 2020 12:07 AM
+> To: David S. Miller <davem@davemloft.net>; Madalin Bucur
+> <madalin.bucur@nxp.com>
+> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; clang-built-
+> linux@googlegroups.com; Nathan Chancellor <natechancellor@gmail.com>
+> Subject: [PATCH] dpaa_eth: Remove unnecessary boolean expression in
+> dpaa_get_headroom
+>=20
+> Clang warns:
+>=20
+> drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
+> converting the result of '?:' with integer constants to a boolean always
+> evaluates to 'true' [-Wtautological-constant-compare]
+>         return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+>                ^
+> drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
+> from macro 'DPAA_FD_DATA_ALIGNMENT'
+> \#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
+>                                  ^
+> 1 warning generated.
+>=20
+> This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
+> workaround") even though it appears to have been an issue since the
+> introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
+> Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+>=20
+> Just replace the whole boolean expression with the true branch, as it is
+> always been true.
+>=20
+> Link:
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgithu=
+b.c
+> om%2FClangBuiltLinux%2Flinux%2Fissues%2F928&amp;data=3D02%7C01%7Cmadalin.=
+buc
+> ur%40nxp.com%7C53f37e7dbf584248844608d7c53f5f70%7C686ea1d3bc2b4c6fa92cd99=
+c
+> 5c301635%7C0%7C0%7C637194748277007260&amp;sdata=3DGshtiHYyjvTcp87StdMoQDP=
+5L6
+> %2BhYN6nnUi6vbyuqic%3D&amp;reserved=3D0
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> index 190e4478128a..46039d80bb43 100644
+> --- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> @@ -2857,9 +2857,7 @@ static inline u16 dpaa_get_headroom(struct
+> dpaa_buffer_layout *bl)
+>  	headroom =3D (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
+>  		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
+>=20
+> -	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+> -					      DPAA_FD_DATA_ALIGNMENT) :
+> -					headroom;
+> +	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
+>  }
+>=20
+>  static int dpaa_eth_probe(struct platform_device *pdev)
+> --=09
+> 2.26.0.rc1
 
-Ah. The buffer size is NAME_BUF_SIZE, so should be fine.
-
-	-ss
+Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
