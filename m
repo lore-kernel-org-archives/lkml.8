@@ -1,79 +1,142 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9930C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:42:35 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D2620738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:42:36 +0000 (UTC)
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgCKSme (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:42:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27245 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbgCKSmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:42:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:42:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="441776328"
-Received: from fjan-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.25.157])
-  by fmsmga005.fm.intel.com with ESMTP; 11 Mar 2020 11:42:04 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 13/16] soundwire: cadence: remove PREQ_DELAY assignment
-Date:   Wed, 11 Mar 2020 13:41:25 -0500
-Message-Id: <20200311184128.4212-14-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200311184128.4212-1-pierre-louis.bossart@linux.intel.com>
-References: <20200311184128.4212-1-pierre-louis.bossart@linux.intel.com>
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45035 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730450AbgCKRU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:20:28 -0400
+Received: by mail-vs1-f68.google.com with SMTP id u24so1839841vso.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:20:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200311155404.209990-1-abhishekpandit@chromium.org> <99C097F2-FD84-49B8-B3D7-F03C34C4F563@holtmann.org>
+In-Reply-To: <99C097F2-FD84-49B8-B3D7-F03C34C4F563@holtmann.org>
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date: Wed, 11 Mar 2020 10:20:16 -0700
+Message-ID:
+ <CANFp7mV-0HjEzYwh4LacMPOJCqgF1=1zwQ66e+8Hd6pODa3dMQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 0/5] Bluetooth: Handle system suspend gracefully
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Alain Michaud <alainm@chromium.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200311172016.9mNnx_kdDK3tC2ZoHBBgvCSfjnmZJgeXFOmmXiOVW8w@z>
 
-The hardware default is 0x1F, and the existing code does an OR with 0xF.
-This is a no-op, remove.
+Let's continue the discussion on the bluez list.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/cadence_master.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+I will update the patch series so that the "set_wake_capable"
+management change is last in the series there as well and send out an
+update today.
 
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index 7757c51b200d..a428c7935589 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -1107,8 +1107,7 @@ int sdw_cdns_init(struct sdw_cdns *cdns)
- 
- 	/* Multi-master support to be added here */
- 
--	/* Set frame delay between PREQ and ping frame to 15 frames */
--	val |= 0xF << SDW_REG_SHIFT(CDNS_MCP_CONFIG_MPREQ_DELAY);
-+	/* leave frame delay to hardware default of 0x1F */
- 
- 	/* Set Max cmd retry to 15 */
- 	val |= CDNS_MCP_CONFIG_MCMD_RETRY;
--- 
-2.20.1
+Thanks
+Abhishek
+
+On Wed, Mar 11, 2020 at 10:05 AM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Abhishek,
+>
+> > This patch series prepares the Bluetooth controller for system suspend
+> > by disconnecting all devices and preparing the event filter and LE
+> > whitelist with devices that can wake the system from suspend.
+> >
+> > The main motivation for doing this is so we can enable Bluetooth as
+> > a wake up source during suspend without it being noisy. Bluetooth should
+> > wake the system when a HID device receives user input but otherwise not
+> > send any events to the host.
+> >
+> > This patch series was tested on several Chromebooks with both btusb and
+> > hci_serdev on kernel 4.19. The set of tests was basically the following:
+> > * Reconnects after suspend succeed
+> > * HID devices can wake the system from suspend (needs some related bluez
+> >  changes to call the Set Wake Capable management command)
+> > * System properly pauses and unpauses discovery + advertising around
+> >  suspend
+> > * System does not wake from any events from non wakeable devices
+> >
+> > Series 2 has refactored the change into multiple smaller commits as
+> > requested. I tried to simplify some of the whitelist filtering edge
+> > cases but unfortunately it remains quite complex.
+> >
+> > Series 3 has refactored it further and should have resolved the
+> > whitelisting complexity in series 2.
+> >
+> > Series 4 adds a fix to check for powered down and powering down adapters.
+> >
+> > Series 5 moves set_wake_capable to the last patch in the series and
+> > changes BT_DBG to bt_dev_dbg.
+> >
+> > Please review and provide any feedback.
+> >
+> > Thanks
+> > Abhishek
+> >
+> >
+> > Changes in v6:
+> > * Removed unused variables in hci_req_prepare_suspend
+> > * Add int old_state to this patch
+> >
+> > Changes in v5:
+> > * Convert BT_DBG to bt_dev_dbg
+> > * Added wakeable list and changed BT_DBG to bt_dev_dbg
+> > * Add wakeable to hci_conn_params and change BT_DBG to bt_dev_dbg
+> > * Changed BT_DBG to bt_dev_dbg
+> > * Wakeable entries moved to other commits
+> > * Patch moved to end of series
+> >
+> > Changes in v4:
+> > * Added check for mgmt_powering_down and hdev_is_powered in notifier
+> >
+> > Changes in v3:
+> > * Refactored to only handle BR/EDR devices
+> > * Split LE changes into its own commit
+> > * Added wakeable property to le_conn_param
+> > * Use wakeable list for BR/EDR and wakeable property for LE
+> >
+> > Changes in v2:
+> > * Moved pm notifier registration into its own patch and moved params out
+> >  of separate suspend_state
+> > * Refactored filters and whitelist settings to its own patch
+> > * Refactored update_white_list to have clearer edge cases
+> > * Add connected devices to whitelist (previously missing corner case)
+> > * Refactored pause discovery + advertising into its own patch
+> >
+> > Abhishek Pandit-Subedi (5):
+> >  Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
+> >  Bluetooth: Handle BR/EDR devices during suspend
+> >  Bluetooth: Handle LE devices during suspend
+> >  Bluetooth: Pause discovery and advertising during suspend
+> >  Bluetooth: Add mgmt op set_wake_capable
+> >
+> > include/net/bluetooth/hci.h      |  17 +-
+> > include/net/bluetooth/hci_core.h |  43 ++++
+> > include/net/bluetooth/mgmt.h     |   7 +
+> > net/bluetooth/hci_core.c         | 102 ++++++++++
+> > net/bluetooth/hci_event.c        |  24 +++
+> > net/bluetooth/hci_request.c      | 331 ++++++++++++++++++++++++++-----
+> > net/bluetooth/hci_request.h      |   2 +
+> > net/bluetooth/mgmt.c             |  92 +++++++++
+> > 8 files changed, 558 insertions(+), 60 deletions(-)
+>
+> patches 1-4 have been applied to bluetooth-next tree.
+>
+> I skipped patch 5 since now we have to discuss how best the API for setting the wakeable devices will be. Care to start up a discussion thread for that?
+>
+> Regards
+>
+> Marcel
+>
 
