@@ -2,124 +2,140 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265D5C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48380C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67055206B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E52020749
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fzumF5ev"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MoBv5Azm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgCKVtW (ORCPT
+        id S1729656AbgCKVuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:49:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48846 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729223AbgCKVtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583963361;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5i8d0/y4R6sMxndZYF3wHrGqGjDf4b+kE4cAWVwa8PA=;
-        b=fzumF5evIu6CbGtVvBXdnjF2OtjYeWkCWg2x84bfT09CDlcE9OB0V8SoSIWCzGGZktWn8S
-        I0vkeehuzEtiDkQw7WsbkpNtH/yU6xYa580RfiX4A44NbMAUz2yui5JkQZovUb/r20LYlR
-        AHUD/0N7MmMScY1I5sodHe9wCZ0dP2s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-HGbxLO8ZNougPtx8aZLWfg-1; Wed, 11 Mar 2020 17:49:16 -0400
-X-MC-Unique: HGbxLO8ZNougPtx8aZLWfg-1
-Received: by mail-wm1-f72.google.com with SMTP id r19so1400739wmh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:49:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5i8d0/y4R6sMxndZYF3wHrGqGjDf4b+kE4cAWVwa8PA=;
-        b=BJEuARZqbNDp8T65eZPL3Zxbg8rurziE7FUys2cLOJRbRNHOs3RLFlqV49IEQubpHx
-         fVeUyF2ta9xkTp6btT2LV5DiZ/zhaJc61+OHbiv8RnRTCqn+evZ15PdSCED3KVLv4GvW
-         x581hzpkZqvJ7RYdqjvssX8s26Z5R8LSg6e8/OD/PmFgO2f9IFAM3EER2HO4FoCPl5kA
-         GpYAhpU0PQWP+lnPd9Wi/D61KvZvpSAHEvoCZaooJ+n4jght9Fg82UIcEbXifYW771W/
-         8caTZULnJwrxFzVaCsEyg4cN9JCMye4wbjVU5VhyQ98qrb+TsW1v6OSOIe0vkBPvQ3nC
-         dENw==
-X-Gm-Message-State: ANhLgQ1AXxPqmjrDoVrXg2rXHmkQvcsusb867oJ43R2nxJnuvw03e22C
-        4EYHyRT9zRenJdPA67wHayrKoSyHBTNUoQXj6PK3gQ1E91fWHvrL/znPrNAxDq0faDO3GSDFtAq
-        jB3pasYD4VOiKLCejhS6Hu/me
-X-Received: by 2002:a7b:c202:: with SMTP id x2mr717096wmi.71.1583963354852;
-        Wed, 11 Mar 2020 14:49:14 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvJh7ov//Fnzju2Fjoa56M5YkAUFuQ4/RNkG53NtiQYrS/m7+q0+QRUOVFSof+x/grazcfT+Q==
-X-Received: by 2002:a7b:c202:: with SMTP id x2mr717075wmi.71.1583963354591;
-        Wed, 11 Mar 2020 14:49:14 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id r23sm16627136wrr.93.2020.03.11.14.49.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 14:49:14 -0700 (PDT)
-Subject: Re: [RFC v2] x86: Select HARDIRQS_SW_RESEND on x86
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <87sgk4naqh.fsf@nanos.tec.linutronix.de>
- <0e5b484d-89f5-c018-328a-fb4a04c6cd91@redhat.com>
- <87fteek27x.fsf@nanos.tec.linutronix.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <218eb262-011f-0739-8e74-9ca3ef793bb8@redhat.com>
-Date:   Wed, 11 Mar 2020 22:49:12 +0100
+        Wed, 11 Mar 2020 17:50:06 -0400
+Received: from mail-bn7nam10on2066.outbound.protection.outlook.com ([40.107.92.66]:6097
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729333AbgCKVuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 17:50:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kry3t/Ivhh/ZiLzdlfYt40PhuGtbq2o+PT7H2mBgJJzY0HO1EwHBYvtppwZV9aTVavk62LsrEaYd4zGYv2fmPOwOAqZKWI8YZpRSoSEzLa432N40XljKaCSktTM5X6FkfnWrciaCuw4ji3p42L5Y1XCRxr5mGUxZqTNtwlhsEhfyqgAHRKyAP6i8KP26suMBOopXH705lMtyXYS4SjmLpqw4VeOIdPE/jZd46+8YyucS8xt8KN3vORas08J/mj+3P6qg/1aqwQB7MGBQR/qse7WAXWJWoL/EBOuAuM3bxI3fb9xbCSz5//5Ipvdmenb0AIKD1sHKGTKvPK5T0bG8Xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LloKidggvWjRdNj3I8/BZ4T+CO703iXJl+1vJaVh/TI=;
+ b=k9ucb52LVSnpCerZgnZdfaQuEeV+DwTp7vmGGqA+2efHJrWJtaFe3U7vvgeCOdl6VRzn+83rNCtsItvs6K9G5QekkdtQedbATHR2YxYcghcamO3xIAxAv0vfSGOLRMS4meVVDbXqEDZTYydlR182N0Ab9MY9UAMka3g084hRoKufXeTyb7ekRDLsFWgvwClYIQMTnIveSgIUQBwT9zGOz5PjXC1OV2+54vhuy3hY5EieCKyVddzRiDwDzi3XPfdMjrTE6VO1FOIjHLexYqNp8UxCuwmVE+2v5pUq4HOoI+tA5DzSnpELDW1RYT71hCcTbOHVpnthWTVNudd59FrIfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LloKidggvWjRdNj3I8/BZ4T+CO703iXJl+1vJaVh/TI=;
+ b=MoBv5AzmKWHaUvScjtyVv72BwiBHC/84gE9SrFdjFE5aWUmW8mJIIX1tqIuyQZJ/ccDqYMFwDCJwG6AMEXhAY9qrGPMFgFbY6tAXsRb/wRCmx5Rl9z8gvWzJAAfywQnADZlLSLyw6iLPL27ci+biN2ijjCzQTFwsm0S3AI9YHJU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Felix.Kuehling@amd.com; 
+Received: from DM5PR1201MB0090.namprd12.prod.outlook.com (2603:10b6:4:53::12)
+ by DM5PR1201MB0219.namprd12.prod.outlook.com (2603:10b6:4:56::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Wed, 11 Mar
+ 2020 21:50:02 +0000
+Received: from DM5PR1201MB0090.namprd12.prod.outlook.com
+ ([fe80::6c24:8172:ed3c:5a8a]) by DM5PR1201MB0090.namprd12.prod.outlook.com
+ ([fe80::6c24:8172:ed3c:5a8a%6]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 21:50:02 +0000
+Subject: Re: [PATCH -next 023/491] AMD KFD: Use fallthrough;
+To:     Joe Perches <joe@perches.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <cover.1583896344.git.joe@perches.com>
+ <3cfc40c8f750abc672d6a60418fe220cb663a0f5.1583896349.git.joe@perches.com>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Organization: AMD Inc.
+Message-ID: <12c75b17-1d0e-6cc4-4ed1-a6f5003772ae@amd.com>
+Date:   Wed, 11 Mar 2020 17:50:01 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <87fteek27x.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+ Thunderbird/68.4.1
+In-Reply-To: <3cfc40c8f750abc672d6a60418fe220cb663a0f5.1583896349.git.joe@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: YT1PR01CA0023.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::36)
+ To DM5PR1201MB0090.namprd12.prod.outlook.com (2603:10b6:4:53::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.27.226.80] (165.204.55.251) by YT1PR01CA0023.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Wed, 11 Mar 2020 21:50:01 +0000
+X-Originating-IP: [165.204.55.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fa9eda06-d106-4f1f-d4f0-08d7c60626f8
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0219:|DM5PR1201MB0219:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB02198557A4FDD3A198DACBFD92FC0@DM5PR1201MB0219.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(366004)(39860400002)(136003)(199004)(53546011)(6486002)(2906002)(4326008)(6916009)(478600001)(966005)(66946007)(31696002)(81156014)(316002)(8936002)(54906003)(16576012)(5660300002)(66556008)(2616005)(81166006)(36916002)(52116002)(86362001)(66476007)(44832011)(8676002)(956004)(26005)(186003)(31686004)(16526019)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR1201MB0219;H:DM5PR1201MB0090.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: n+tDM3vTKNa+N//fHb6luOKecyRbRQLewb6iXgUeLpyz0ea4+JvqAYLHt0trDEkjYSoyVdEloGvidS5sVCr/HQfc5r8mJDn9+DeFfEewyfXANkLzsmXmAGvHbetNx7hLMTVs4pyl34hbw3OxISb+sR47RdC45Ii6F8+C7JkYgiwe+x60DMnTYl7e+0qVJJaDeoTR2xV8Jveqo8B/1OjJhTWnuVllLriOn8VMmPQSuyPVXoVyO1QhiL1aYZhI8/Qq3v5E+j3dswXXo9Ga/Ob68r0JtZpn4fAVFdUUoQs1L/h2LCqOgrPUnk/Z1g5B4u3c55EouCLJnmZZjfSAa6mofdwtFa0eK4Mc5K7RWV8AQqmLaV0ee49IANhRaD5tkWqQGplJ+X0c4ctEkmhD+ilLN5KBuG+32s13hoAAIcBZscI41hP/10i98kB66+jJEkc5hWf5Gx8gTaHdaDilT5srlM+WE4i4LJIUBVJd8mmBiLogzQYjn1KUyQhQCYyuksHvgmg67k3gBIxkr1O6Z56zqQ==
+X-MS-Exchange-AntiSpam-MessageData: T+aNPQkFtRwhegbjaIC8JP/dIRFewQpKrGQ1oz7QtLDs4OKAUWGRBISAGX0fM/MYvtRvuW7TdvnwBUo2YOlGeXgMuusRfd6PSLrUsDDkcEtzU7WsqSWm58Oa7nFtAKjhWgxZr6YJ8AoKi1jD7w7YGQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa9eda06-d106-4f1f-d4f0-08d7c60626f8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 21:50:02.4838
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PbckqFNE75EKyfrV8VCKVTJvPzvFVo+N5nmucoi/XUskDhF2lo91fPHWudcwVq0H5oeCiSlvJarK+B6a6HHZdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020-03-11 12:51 a.m., Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
+>
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
 
-On 3/11/20 10:31 PM, Thomas Gleixner wrote:
-> Hans de Goede <hdegoede@redhat.com> writes:
->>> I just need to stare at the legacy PIC and the virt stuff.
->>>
->>>> Also maybe we should add a Cc: stable@vger.kernel.org ??? This seems like
->>>> somewhat a big change for that but it does solve some real issues...
->>>
->>> Yes. Let me stare at the couple of weird irqchips which might get
->>> surprised. I'll teach them not to do that :)
->>
->> I know that you are very busy, still I'm wondering is there any progress
->> on this ?
-> 
-> Bah. That fell through the cracks, but actually I looked at this due to
-> the PCI-E AER wreckage. So yes, this is fine, but we want:
-> 
->   https://lkml.kernel.org/r/20200306130623.590923677@linutronix.de
->   https://lkml.kernel.org/r/20200306130623.684591280@linutronix.de
-> 
-> if we want to backport this to stable.
 
-So far I have seen a few, but not a lot of devices which need this, so
-I'm not 100% sure what to do here.
+The link seems to be broken. This one works: 
+https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
 
-Do you consider this change safe / suitable for stable if those 2 patches
-are backported and applied first?
 
-Regards,
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Hans
 
+Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+
+
+> ---
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c
+> index d6549e..6529ca 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c
+> @@ -79,7 +79,7 @@ static uint32_t get_sdma_rlc_reg_offset(struct amdgpu_device *adev,
+>   		dev_warn(adev->dev,
+>   			 "Invalid sdma engine id (%d), using engine id 0\n",
+>   			 engine_id);
+> -		/* fall through */
+> +		fallthrough;
+>   	case 0:
+>   		sdma_engine_reg_base = SOC15_REG_OFFSET(SDMA0, 0,
+>   				mmSDMA0_RLC0_RB_CNTL) - mmSDMA0_RLC0_RB_CNTL;
