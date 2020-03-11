@@ -2,147 +2,111 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884A0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEEEC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6F021655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:41:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z0epLqAD"
+	by mail.kernel.org (Postfix) with ESMTP id A143321D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583908973;
+	bh=LI8rbNA8wJc83S2WR1/sE0Ht53AWmB5tHGMzGWEUODg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TWIsyQ/uNc0LGaC4dqxHIrr3oBi6RnOym9JYBS2TGddgRYXSi9FLrkxfxcZBjX5sB
+	 UoG3fKn+jTKQjE+YoS0YiwWm+U4qFPUS1eAbvTUjAkby9SeAiYjY+zidUbfIAXDlnK
+	 L3xkqpeKcC1KDYQCdSgJg2ZMoS8xeJM98poAH3js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgCKGlD (ORCPT
+        id S1728209AbgCKGmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:41:03 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59748 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728126AbgCKGlC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:41:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583908862; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=9Ma3v93cOhH+P2MvDLMRQOh7LMKfyPwnXpDIHPd4gMM=;
- b=Z0epLqADKSkqpSakQ8XPh1W5xHwhffnP1TX3XZ+zNkkMhvb6DBrMWmcNYvy6BBUy16fH4iJs
- mdkUBXGHgGlOCBnDxGtgC1EqAd5SkMJWBdOwzwjLbspOQgJpP4ydVu663BultMpAGA3gjdDB
- xskbCnNtUYqt/ZZUKOaw45Xo0z8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6887fd.7f3e91b80030-smtp-out-n02;
- Wed, 11 Mar 2020 06:41:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 41753C433D2; Wed, 11 Mar 2020 06:41:01 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 11 Mar 2020 02:42:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgCKGmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:42:52 -0400
+Received: from localhost (unknown [106.201.105.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D1F7C433CB;
-        Wed, 11 Mar 2020 06:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75C1821655;
+        Wed, 11 Mar 2020 06:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583908971;
+        bh=LI8rbNA8wJc83S2WR1/sE0Ht53AWmB5tHGMzGWEUODg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M26G4X0UgwEGh4VvB4h8EhSAmXLwIUI3RrvAC1rXFaHYjFSmydS6eC2mH78OUax1D
+         NiPWOlTwLO1RKZs61ALXNh6VG6oFv3Xm5RNq3boFdB2WKh7n1h7cBr8fW21JQFkkQ7
+         87pnEdS5lWLdqmfV+/o4dTszFH+1ouannbTnzC2Y=
+Date:   Wed, 11 Mar 2020 12:12:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     pierre-louis.bossart@linux.intel.com, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as
+ readonly
+Message-ID: <20200311064243.GI4885@vkoul-mobl>
+References: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 11 Mar 2020 12:11:00 +0530
-From:   kgunda@codeaurora.org
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
-In-Reply-To: <20200310152719.5hpzh6osq22y4qbn@holly.lan>
-References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
- <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
- <20200310152719.5hpzh6osq22y4qbn@holly.lan>
-Message-ID: <05ab744dfbd83b6704bd394ce3c3dfc9@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-10 20:57, Daniel Thompson wrote:
-> On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
->> Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
->> callback functions to prepare the driver for adding WLED5 support.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+On 09-03-20, 17:37, Srinivas Kandagatla wrote:
+> According to SoundWire Specification Version 1.2.
+> "A Data Port number X (in the range 0-14) which supports only one
+> value of WordLength may implement the WordLength field in the
+> DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
+> WordLength in response to reads."
 > 
-> Overall this code would a lot easier to review if
->> ---
->>  drivers/video/backlight/qcom-wled.c | 196 
->> +++++++++++++++++++++++-------------
->>  1 file changed, 126 insertions(+), 70 deletions(-)
->> 
->> diff --git a/drivers/video/backlight/qcom-wled.c 
->> b/drivers/video/backlight/qcom-wled.c
->> index 3d276b3..b73f273 100644
->> --- a/drivers/video/backlight/qcom-wled.c
->> +++ b/drivers/video/backlight/qcom-wled.c
->> @@ -128,6 +128,7 @@ struct wled_config {
->>  	bool cs_out_en;
->>  	bool ext_gen;
->>  	bool cabc;
->> +	bool en_cabc;
+> As WSA881x interfaces in PDM mode making the only field "WordLength"
+> in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
+> register on WSA881x soundwire slave with Qualcomm Soundwire Controller
+> is throwing up an error. Not sure how other controllers deal with
+> writing to readonly registers, but this patch provides a way to avoid
+> writes to DPN_BlockCtrl1 register by providing a ro_blockctrl1_reg
+> flag in struct sdw_port_runtime.
 > 
-> Does this ever get set to true?
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
 > 
-Yes. If user wants use the cabc pin to control the brightness and
-use the "qcom,cabc" DT property in the device tree.
+> I will send patch for WSA881x to include this change once this patch
+> is accepted.
+> 
+>  drivers/soundwire/bus.h    |  2 ++
+>  drivers/soundwire/stream.c | 17 ++++++++++-------
+>  2 files changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+> index 204204a26db8..791e8d14093e 100644
+> --- a/drivers/soundwire/bus.h
+> +++ b/drivers/soundwire/bus.h
+> @@ -79,6 +79,7 @@ int sdw_find_col_index(int col);
+>   * @num: Port number. For audio streams, valid port number ranges from
+>   * [1,14]
+>   * @ch_mask: Channel mask
+> + * @ro_blockctrl1_reg: Read Only flag for DPN_BlockCtrl1 register
+>   * @transport_params: Transport parameters
+>   * @port_params: Port parameters
+>   * @port_node: List node for Master or Slave port_list
+> @@ -89,6 +90,7 @@ int sdw_find_col_index(int col);
+>  struct sdw_port_runtime {
+>  	int num;
+>  	int ch_mask;
+> +	bool ro_blockctrl1_reg;
 
->>  	bool external_pfet;
->>  	bool auto_detection_enabled;
->>  };
->> @@ -147,14 +148,20 @@ struct wled {
->>  	u32 max_brightness;
->>  	u32 short_count;
->>  	u32 auto_detect_count;
->> +	u32 version;
->>  	bool disabled_by_short;
->>  	bool has_short_detect;
->> +	bool cabc_disabled;
->>  	int short_irq;
->>  	int ovp_irq;
->> 
->>  	struct wled_config cfg;
->>  	struct delayed_work ovp_work;
->>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
->> +	int (*cabc_config)(struct wled *wled, bool enable);
->> +	int (*wled_sync_toggle)(struct wled *wled);
->> +	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
->> +	int (*wled_ovp_delay)(struct wled *wled);
-> 
-> Let's get some doc comments explaining what these callbacks do (and
-> which versions they apply to).
-> 
-Sure. I will update it in the commit text in next post.
+Let us use properties for this so it should be added in struct
+sdw_dpn_prop or struct sdw_slave_prop (I dont think that we would have
+different properties for each DPn when we are dealing with these simple
+codecs)
 
-> cabc_config() in particular appears to have a very odd interface for
-> wled4.  It looks like it relies on being initially called with enable
-> set a particular way and prevents itself from acting again. Therefore 
-> if
-> the comment you end up writing doesn't sound "right" then please also
-> fix the API!
-> 
-Actually this variable is useful for WLED5, where the default HW state 
-is
-CABC1 enabled mode. So, if the user doesn't want to use the CABC we are 
-configuring
-the HW state to "0" based on the DT property and then setting a flag to 
-not enable it again.
-This is not needed for WLED4. I will remove it for WLED4 in next post.
+Also the property should not have mipi tag as this is not in DiSCo spec
+(yet), so I would suggest sdw_ro_wordlen for this.
 
-> Finally, why is everything except cabc_config() prefixed with wled?
-> 
-It is typo. I will correct it in the next post.
-> 
-> Daniel.
+Thanks
+-- 
+~Vinod
