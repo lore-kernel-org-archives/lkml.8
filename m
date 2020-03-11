@@ -4,49 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B80C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D26C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1646F2192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A792192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgCKFHQ (ORCPT
+        id S1728234AbgCKFHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:07:16 -0400
-Received: from smtprelay0059.hostedemail.com ([216.40.44.59]:47948 "EHLO
+        Wed, 11 Mar 2020 01:07:19 -0400
+Received: from smtprelay0030.hostedemail.com ([216.40.44.30]:47984 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728154AbgCKFHK (ORCPT
+        by vger.kernel.org with ESMTP id S1728214AbgCKFHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:07:10 -0400
+        Wed, 11 Mar 2020 01:07:16 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 5C3691805A816;
-        Wed, 11 Mar 2020 05:07:04 +0000 (UTC)
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 76A3B18063C8E;
+        Wed, 11 Mar 2020 05:07:15 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: part68_204fd3f78a028
-X-Filterd-Recvd-Size: 9986
+X-HE-Tag: trade07_221c65ba4ee3b
+X-Filterd-Recvd-Size: 4145
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:07:01 +0000 (UTC)
+        Wed, 11 Mar 2020 05:07:14 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH -next 011/491] ARM/QUALCOMM SUPPORT: Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:25 -0700
-Message-Id: <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH -next 016/491] KERNEL VIRTUAL MACHINE FOR POWERPC (KVM/powerpc): Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:30 -0700
+Message-Id: <37a5342c67e1b68b9ad06aca8da245b0ff409692.1583896348.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -64,228 +55,91 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/media/platform/qcom/venus/vdec.c |  2 +-
- drivers/phy/qualcomm/phy-qcom-usb-hs.c   |  2 +-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c |  4 ++--
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  2 +-
- drivers/rpmsg/qcom_glink_native.c        |  4 ++--
- drivers/soc/qcom/socinfo.c               | 16 ++++++++--------
- drivers/thermal/qcom/tsens-v0_1.c        |  8 ++++----
- drivers/thermal/qcom/tsens-v1.c          |  4 ++--
- 8 files changed, 21 insertions(+), 21 deletions(-)
+ arch/powerpc/kvm/book3s_32_mmu.c | 2 +-
+ arch/powerpc/kvm/book3s_64_mmu.c | 2 +-
+ arch/powerpc/kvm/book3s_pr.c     | 2 +-
+ arch/powerpc/kvm/booke.c         | 6 +++---
+ arch/powerpc/kvm/powerpc.c       | 1 -
+ 5 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index f34920..9e0451 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -983,7 +983,7 @@ static int vdec_stop_capture(struct venus_inst *inst)
- 	switch (inst->codec_state) {
- 	case VENUS_DEC_STATE_DECODING:
- 		ret = hfi_session_flush(inst, HFI_FLUSH_ALL);
--		/* fallthrough */
+diff --git a/arch/powerpc/kvm/book3s_32_mmu.c b/arch/powerpc/kvm/book3s_32_mmu.c
+index f21e734..3fbd57 100644
+--- a/arch/powerpc/kvm/book3s_32_mmu.c
++++ b/arch/powerpc/kvm/book3s_32_mmu.c
+@@ -234,7 +234,7 @@ static int kvmppc_mmu_book3s_32_xlate_pte(struct kvm_vcpu *vcpu, gva_t eaddr,
+ 				case 2:
+ 				case 6:
+ 					pte->may_write = true;
+-					/* fall through */
++					fallthrough;
+ 				case 3:
+ 				case 5:
+ 				case 7:
+diff --git a/arch/powerpc/kvm/book3s_64_mmu.c b/arch/powerpc/kvm/book3s_64_mmu.c
+index 5991332..26b8b2 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu.c
++++ b/arch/powerpc/kvm/book3s_64_mmu.c
+@@ -311,7 +311,7 @@ static int kvmppc_mmu_book3s_64_xlate(struct kvm_vcpu *vcpu, gva_t eaddr,
+ 	case 2:
+ 	case 6:
+ 		gpte->may_write = true;
+-		/* fall through */
 +		fallthrough;
- 	case VENUS_DEC_STATE_DRAIN:
- 		vdec_cancel_dst_buffers(inst);
- 		inst->codec_state = VENUS_DEC_STATE_STOPPED;
-diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-index 610542..327df1a 100644
---- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-+++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-@@ -53,7 +53,7 @@ static int qcom_usb_hs_phy_set_mode(struct phy *phy,
- 		case PHY_MODE_USB_OTG:
- 		case PHY_MODE_USB_HOST:
- 			val |= ULPI_INT_IDGRD;
--			/* fall through */
-+			fallthrough;
- 		case PHY_MODE_USB_DEVICE:
- 			val |= ULPI_INT_SESS_VALID;
- 		default:
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index fe0be8..3b0ab0e 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -793,13 +793,13 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
- 	switch (subtype) {
- 	case PMIC_GPIO_SUBTYPE_GPIO_4CH:
- 		pad->have_buffer = true;
--		/* Fall through */
+ 	case 3:
+ 	case 5:
+ 	case 7:
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index 729a0f..7db3695 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -740,7 +740,7 @@ int kvmppc_handle_pagefault(struct kvm_run *run, struct kvm_vcpu *vcpu,
+ 		    (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) &&
+ 		    ((pte.raddr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS))
+ 			pte.raddr &= ~SPLIT_HACK_MASK;
+-		/* fall through */
 +		fallthrough;
- 	case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
- 		pad->num_sources = 4;
- 		break;
- 	case PMIC_GPIO_SUBTYPE_GPIO_8CH:
- 		pad->have_buffer = true;
--		/* Fall through */
-+		fallthrough;
- 	case PMIC_GPIO_SUBTYPE_GPIOC_8CH:
- 		pad->num_sources = 8;
- 		break;
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-index 338a15..b5949f7 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -346,7 +346,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
- 				return -EINVAL;
- 			}
- 			pin->pull_up_strength = arg;
--			/* FALLTHROUGH */
-+			fallthrough;
- 		case PIN_CONFIG_BIAS_PULL_UP:
- 			pin->bias = pin->pull_up_strength;
- 			banks |= BIT(2);
-diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 1995f5b..f40312 100644
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -553,7 +553,7 @@ static void qcom_glink_receive_version(struct qcom_glink *glink,
- 		break;
- 	case GLINK_VERSION_1:
- 		glink->features &= features;
--		/* FALLTHROUGH */
-+		fallthrough;
- 	default:
- 		qcom_glink_send_version_ack(glink);
- 		break;
-@@ -584,7 +584,7 @@ static void qcom_glink_receive_version_ack(struct qcom_glink *glink,
- 			break;
+ 	case MSR_IR:
+ 		vcpu->arch.mmu.esid_to_vsid(vcpu, eaddr >> SID_SHIFT, &vsid);
  
- 		glink->features &= features;
--		/* FALLTHROUGH */
+diff --git a/arch/powerpc/kvm/booke.c b/arch/powerpc/kvm/booke.c
+index 7b27604..be47815 100644
+--- a/arch/powerpc/kvm/booke.c
++++ b/arch/powerpc/kvm/booke.c
+@@ -421,11 +421,11 @@ static int kvmppc_booke_irqprio_deliver(struct kvm_vcpu *vcpu,
+ 	case BOOKE_IRQPRIO_DATA_STORAGE:
+ 	case BOOKE_IRQPRIO_ALIGNMENT:
+ 		update_dear = true;
+-		/* fall through */
 +		fallthrough;
- 	default:
- 		qcom_glink_send_version(glink);
+ 	case BOOKE_IRQPRIO_INST_STORAGE:
+ 	case BOOKE_IRQPRIO_PROGRAM:
+ 		update_esr = true;
+-		/* fall through */
++		fallthrough;
+ 	case BOOKE_IRQPRIO_ITLB_MISS:
+ 	case BOOKE_IRQPRIO_SYSCALL:
+ 	case BOOKE_IRQPRIO_FP_UNAVAIL:
+@@ -459,7 +459,7 @@ static int kvmppc_booke_irqprio_deliver(struct kvm_vcpu *vcpu,
+ 	case BOOKE_IRQPRIO_DECREMENTER:
+ 	case BOOKE_IRQPRIO_FIT:
+ 		keep_irq = true;
+-		/* fall through */
++		fallthrough;
+ 	case BOOKE_IRQPRIO_EXTERNAL:
+ 	case BOOKE_IRQPRIO_DBELL:
+ 		allowed = vcpu->arch.shared->msr & MSR_EE;
+diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+index 1af96fb5..c242a79 100644
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -525,7 +525,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		r = 1;
  		break;
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-index 7864b7..8ae5646 100644
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -325,7 +325,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
- 		debugfs_create_x32("raw_device_number", 0400,
- 				   qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.raw_device_num);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 11):
- 	case SOCINFO_VERSION(0, 10):
- 	case SOCINFO_VERSION(0, 9):
-@@ -333,12 +333,12 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
- 
- 		debugfs_create_u32("foundry_id", 0400, qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.foundry_id);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 8):
- 	case SOCINFO_VERSION(0, 7):
- 		DEBUGFS_ADD(info, pmic_model);
- 		DEBUGFS_ADD(info, pmic_die_rev);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 6):
- 		qcom_socinfo->info.hw_plat_subtype =
- 			__le32_to_cpu(info->hw_plat_subtype);
-@@ -346,7 +346,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
- 		debugfs_create_u32("hardware_platform_subtype", 0400,
- 				   qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.hw_plat_subtype);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 5):
- 		qcom_socinfo->info.accessory_chip =
- 			__le32_to_cpu(info->accessory_chip);
-@@ -354,27 +354,27 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
- 		debugfs_create_u32("accessory_chip", 0400,
- 				   qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.accessory_chip);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 4):
- 		qcom_socinfo->info.plat_ver = __le32_to_cpu(info->plat_ver);
- 
- 		debugfs_create_u32("platform_version", 0400,
- 				   qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.plat_ver);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 3):
- 		qcom_socinfo->info.hw_plat = __le32_to_cpu(info->hw_plat);
- 
- 		debugfs_create_u32("hardware_platform", 0400,
- 				   qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.hw_plat);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 2):
- 		qcom_socinfo->info.raw_ver  = __le32_to_cpu(info->raw_ver);
- 
- 		debugfs_create_u32("raw_version", 0400, qcom_socinfo->dbg_root,
- 				   &qcom_socinfo->info.raw_ver);
--		/* Fall through */
-+		fallthrough;
- 	case SOCINFO_VERSION(0, 1):
- 		DEBUGFS_ADD(info, build_id);
- 		break;
-diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
-index 4b8dd6..893ce1 100644
---- a/drivers/thermal/qcom/tsens-v0_1.c
-+++ b/drivers/thermal/qcom/tsens-v0_1.c
-@@ -163,7 +163,7 @@ static int calibrate_8916(struct tsens_priv *priv)
- 		p2[4] = (qfprom_cdata[1] & MSM8916_S4_P2_MASK) >> MSM8916_S4_P2_SHIFT;
- 		for (i = 0; i < priv->num_sensors; i++)
- 			p2[i] = ((base1 + p2[i]) << 3);
--		/* Fall through */
-+		fallthrough;
- 	case ONE_PT_CALIB2:
- 		base0 = (qfprom_cdata[0] & MSM8916_BASE0_MASK);
- 		p1[0] = (qfprom_cdata[0] & MSM8916_S0_P1_MASK) >> MSM8916_S0_P1_SHIFT;
-@@ -228,7 +228,7 @@ static int calibrate_8974(struct tsens_priv *priv)
- 			p2[8] = (calib[5] & S8_P2_BKP_MASK) >> S8_P2_BKP_SHIFT;
- 			p2[9] = (calib[5] & S9_P2_BKP_MASK) >> S9_P2_BKP_SHIFT;
- 			p2[10] = (calib[5] & S10_P2_BKP_MASK) >> S10_P2_BKP_SHIFT;
--			/* Fall through */
-+			fallthrough;
- 		case ONE_PT_CALIB:
- 		case ONE_PT_CALIB2:
- 			base1 = bkp[0] & BASE1_MASK;
-@@ -263,7 +263,7 @@ static int calibrate_8974(struct tsens_priv *priv)
- 			p2[8] = (calib[4] & S8_P2_MASK) >> S8_P2_SHIFT;
- 			p2[9] = (calib[4] & S9_P2_MASK) >> S9_P2_SHIFT;
- 			p2[10] = (calib[4] & S10_P2_MASK) >> S10_P2_SHIFT;
--			/* Fall through */
-+			fallthrough;
- 		case ONE_PT_CALIB:
- 		case ONE_PT_CALIB2:
- 			base1 = calib[0] & BASE1_MASK;
-@@ -293,7 +293,7 @@ static int calibrate_8974(struct tsens_priv *priv)
- 			p2[i] <<= 2;
- 			p2[i] |= BIT_APPEND;
- 		}
--		/* Fall through */
-+		fallthrough;
- 	case ONE_PT_CALIB2:
- 		for (i = 0; i < priv->num_sensors; i++) {
- 			p1[i] += base1;
-diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
-index bd2ddb..d096d3 100644
---- a/drivers/thermal/qcom/tsens-v1.c
-+++ b/drivers/thermal/qcom/tsens-v1.c
-@@ -202,7 +202,7 @@ static int calibrate_v1(struct tsens_priv *priv)
- 		p2[9] = (qfprom_cdata[3] & S9_P2_MASK) >> S9_P2_SHIFT;
- 		for (i = 0; i < priv->num_sensors; i++)
- 			p2[i] = ((base1 + p2[i]) << 2);
--		/* Fall through */
-+		fallthrough;
- 	case ONE_PT_CALIB2:
- 		base0 = (qfprom_cdata[4] & BASE0_MASK) >> BASE0_SHIFT;
- 		p1[0] = (qfprom_cdata[0] & S0_P1_MASK) >> S0_P1_SHIFT;
-@@ -263,7 +263,7 @@ static int calibrate_8976(struct tsens_priv *priv)
- 
- 		for (i = 0; i < priv->num_sensors; i++)
- 			p2[i] = ((base1 + p2[i]) << 2);
--		/* Fall through */
-+		fallthrough;
- 	case ONE_PT_CALIB2:
- 		base0 = qfprom_cdata[0] & MSM8976_BASE0_MASK;
- 		p1[0] = (qfprom_cdata[0] & MSM8976_S0_P1_MASK) >> MSM8976_S0_P1_SHIFT;
+ 	case KVM_CAP_PPC_GUEST_DEBUG_SSTEP:
+-		/* fall through */
+ 	case KVM_CAP_PPC_PAIRED_SINGLES:
+ 	case KVM_CAP_PPC_OSI:
+ 	case KVM_CAP_PPC_GET_PVINFO:
 -- 
 2.24.0
 
