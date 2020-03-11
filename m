@@ -2,135 +2,136 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B727AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A24C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D55B20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954FB222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KX3p6IR6"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rVXx1Hw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgCKDV7 (ORCPT
+        id S1728053AbgCKDWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:21:59 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2076 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbgCKDV6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:21:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e6859290000>; Tue, 10 Mar 2020 20:21:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Mar 2020 20:21:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Mar 2020 20:21:58 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Mar
- 2020 03:21:57 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 11 Mar 2020 03:21:57 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e6859550000>; Tue, 10 Mar 2020 20:21:57 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-CC:     Linux Next <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH] pid: fix uninitialized retval in alloc_pid()
-Date:   Tue, 10 Mar 2020 20:21:53 -0700
-Message-ID: <20200311032153.431492-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-X-NVConfidentiality: public
+        Tue, 10 Mar 2020 23:22:38 -0400
+Received: from mail-db8eur05on2056.outbound.protection.outlook.com ([40.107.20.56]:6017
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727307AbgCKDWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 23:22:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FQNlL3ZxzYgOATAHY6dc5/UJoXd7ftF8BZdKA488BHY19dQR+P7TyWRQgTfZUWVcuyj4nkANMKbTY3Zm//71E6DU5fnf1OLGjLArjz85G6+lT0PXpfYjoDuYBB46mKaEGxKPl255VpdQzP8F0aG9W8/nMHuxqHaa2qh0p1HsxMAOzPXTALtimQvBE6e4KSMi/Ohzbh10K9vkchnW8cS3Osg6MyM6yxrg63PAX+kD3KptnfKbVnTJ4QT6MX69t4rrYFAWsNKYeJxaNyd7YfTy6ICMSkPW46ovlvjvks5jqN7xOMoXZ6NMxNFU4YKBzb6yfysWypzg5YDbyXz82QS9CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Je2YVo1kUJNHFYL0EYH5Nir7tjrKjvEMQHdvfBU23T8=;
+ b=Aw85tMl8VKU/cr4VB2w/bL8S+iiXmH5M3LHStSqtWU8Auc1ZSYIJTu3W6METp7A8y+GZGoNvVBbGD7Pe3wGO75veA5cNIns0RlR8PyAPyjDnVBVbAkmhg969JGPIdSVyus7nXVxvMYckeoD55xNxIggVNvu3W0NBV6mPf/aaQQ/GuveRWzKVY37uM6ihU+9L2Y8gtsoN9fUtyqPufayk3qzhfgfBb89Fd1axIw0d/TwTXeRYTqVwTvWEwEcAR+MLkc5R9YtSaCLgMvtWmqV2WgIVoUejG5VJUMkdRVNgbPdENygeH4mHaNehSuIBZs0JVNXDq0J6E/0BKLxQ51yIeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Je2YVo1kUJNHFYL0EYH5Nir7tjrKjvEMQHdvfBU23T8=;
+ b=rVXx1Hw9ozNoxwVkH1wiR6pGiWTi6z0FIAdEWf5fHUaJBIMZA4VpXxNfy4LCbpzBe7cJdU8+BS/bg/hcibiPoxAy2LZQ5l3UeSzMB8Xvad3Na8CzMSger9QSU98Dp8rESoDkKvv1hJs4drOYi8v7sqOsqfEdhnoLV497EE+7tJ8=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6735.eurprd04.prod.outlook.com (20.179.234.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11; Wed, 11 Mar 2020 03:22:33 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 03:22:33 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
+ binding doc
+Thread-Topic: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
+ binding doc
+Thread-Index: AQHV9oxfw7CsQoETxUioWYNmo+gC4ahCKc6AgACQhpA=
+Date:   Wed, 11 Mar 2020 03:22:33 +0000
+Message-ID: <VE1PR04MB6638FF9C3ED1A93FD5A6C2C289FC0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
+ <20200310184103.GA2192@bogus>
+In-Reply-To: <20200310184103.GA2192@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d933de75-8e82-4930-6acc-08d7c56b70a7
+x-ms-traffictypediagnostic: VE1PR04MB6735:|VE1PR04MB6735:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6735BBB1F617FFD91A1FD91D89FC0@VE1PR04MB6735.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(66556008)(7696005)(54906003)(66946007)(64756008)(66446008)(52536014)(33656002)(5660300002)(478600001)(76116006)(4326008)(66476007)(86362001)(316002)(9686003)(55016002)(71200400001)(2906002)(81166006)(8936002)(81156014)(8676002)(4744005)(186003)(6506007)(6916009)(7416002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6735;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Ny4Hh7E36twGFm9BQBpTW96RTok6vMqJ69xILpeBWWCe5i3zYCSpgjw8NvCeXjpHw3Y8/79hqFhYDxpzXiHYaoO1zLQmhDum1/lfM4oubDltD8hTkyS1XPFyfK3UPk4IXDclci0c7jBpsOiCE57IqZC6tGCH6wzShqVjWawynSvkcWVTVV8BecZlhEpCMv0pxugeLCVT4uS6d2PoznS/BjQ0IuKw9JxvCG+y5HMWe+Plpf/3MgOBvGh/nvdjsPTp9ux2pRyntfRhR/1nDIqX9cCgbzwyk2fY0cMIS2gbrrZOyjosP03vgq04XmT3TcMhtgbtzGxsAthSBBvtVnVPdvF+8yQJgEahInPM2UXXlDdBrcPGszaXoBDirNHbsVjgjA20b9ciiQHSQC5F0ixqo7SYjVPMrp1hEXJrdNf0CWK9Shp8WNCQBSQjU02jEOnl
+x-ms-exchange-antispam-messagedata: 1i2/kg39UMNcvHR8w6zcd4K8qMm2fWo7h6bNhqogRsYoNPBWzgT9tUp8KxfqyHKZblgulmRMPKOHZuLWOT7LlIqamkvcSzucLA1n0ouTcc2DLNsOtyiVv3tqdRtLAllKaXX8CyX2THEscAr0slOViA==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583896873; bh=aNbMTHzEBed2jLOkpeGMmsEaPHwGzRfzqOjyErWK5uk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=KX3p6IR6m/cQXjuSydvF0pEZ0gTdkgVJTOLRSOdojHLdH5cQZk+I1nwGRl7Kg3Kcx
-         +eHwLyP6kuBpa7FnsUx7RtImMfZi1udoigiyeUtkKskqhxifRO4MYg01M0jc0qFiOe
-         Z5FQvDYPOfdRrMdvcbnPl94iuMROFDiRBShgbJNnsVaDn3IfhjEHulDKNfTpfOVJsr
-         mizltKbR1xzsUzhDYx0ENA8xRQkz3zWcK4ZAaDkLNq2pfAGov0hIV0glXu6Y3o903p
-         /wRm1fGcK/W0WgG32Hf3STT45EgDarQKBrCareLKlyLOCH5ZnFCqYdXcdwSkq6EBd2
-         r0E2TKg4ssdYw==
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d933de75-8e82-4930-6acc-08d7c56b70a7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 03:22:33.6428
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ChaF6tWiTMb3S8P8VbiuOH1uiuCa4z09MrnqWI48OpFbpWfKxU5kNkQkBlYB0eUQfuP7KmP3QnQlLJxJacmQww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8deb24dcb89cb ("pid: make ENOMEM return value more obvious")
-left the return value uninitialized in one error case. The justification
-for the above commit included a statement that retval is "initialized on
-ever[y] failure path in the loop". However, that is not quite good
-enough because there is an earlier case that is before the loop. And
-also, it's more maintenance and merge-safe to initialize it once at the
-top, as evidenced by this build warning that we now have.
-
-Therefore, restore the top-level initialization of retval.
-
-Also move the descriptive comment up, and remove the now-redundant
-later initialization of retval.
-
-Fixes: 8deb24dcb89cb ("pid: make ENOMEM return value more obvious")
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- kernel/pid.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/pid.c b/kernel/pid.c
-index ff6cd6786d10..49bf6dd32de4 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -162,7 +162,16 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t =
-*set_tid,
- 	int i, nr;
- 	struct pid_namespace *tmp;
- 	struct upid *upid;
--	int retval;
-+
-+	/*
-+	 * ENOMEM is not the most obvious choice especially for the case
-+	 * where the child subreaper has already exited and the pid
-+	 * namespace denies the creation of any new processes. But ENOMEM
-+	 * is what we have exposed to userspace for a long time and it is
-+	 * documented behavior for pid namespaces. So we can't easily
-+	 * change it even if there were an error code better suited.
-+	 */
-+	int retval =3D -ENOMEM;
-=20
- 	/*
- 	 * set_tid_size contains the size of the set_tid array. Starting at
-@@ -244,16 +253,6 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t =
-*set_tid,
- 		tmp =3D tmp->parent;
- 	}
-=20
--	/*
--	 * ENOMEM is not the most obvious choice especially for the case
--	 * where the child subreaper has already exited and the pid
--	 * namespace denies the creation of any new processes. But ENOMEM
--	 * is what we have exposed to userspace for a long time and it is
--	 * documented behavior for pid namespaces. So we can't easily
--	 * change it even if there were an error code better suited.
--	 */
--	retval =3D -ENOMEM;
--
- 	get_pid_ns(ns);
- 	refcount_set(&pid->count, 1);
- 	for (type =3D 0; type < PIDTYPE_MAX; ++type)
-
-base-commit: 134546626849cd6852d6d4bf8f207b5fbc54261b
---=20
-2.25.1
-
+On 2020/03/11 Rob Herring <robh@kernel.org> wrote:
+> On Tue, 10 Mar 2020 19:31:57 +0800, Robin Gong wrote:
+> > ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
+> >
+> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > Acked-by: Mark Brown <broonie@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
+Sorry, Rob, I forgot to add your reviewed tag on v5, will add it back incid=
+entally in v7.
