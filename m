@@ -2,156 +2,197 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D4EC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF861C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEE2208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABE02192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:12:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mp5sCxQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgCKLKL (ORCPT
+        id S1728255AbgCKLM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:10:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbgCKLKL (ORCPT
+        Wed, 11 Mar 2020 07:12:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47188 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725834AbgCKLM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:10:11 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BB7sEW114343
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:10:10 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypv5uh963-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:10:08 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Wed, 11 Mar 2020 11:02:59 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Mar 2020 11:02:55 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BB2sEI41680930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 11:02:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57FD95204E;
-        Wed, 11 Mar 2020 11:02:54 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.102.25.51])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6031352050;
-        Wed, 11 Mar 2020 11:02:51 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 0/3] Offline memoryless cpuless node 0
-Date:   Wed, 11 Mar 2020 16:32:34 +0530
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20031111-0028-0000-0000-000003E31105
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031111-0029-0000-0000-000024A85500
-Message-Id: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_05:2020-03-11,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- mlxscore=0 spamscore=0 adultscore=0 phishscore=0 suspectscore=2
- lowpriorityscore=0 impostorscore=0 mlxlogscore=970 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110072
+        Wed, 11 Mar 2020 07:12:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583925176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=J27SQcQ8+CHD3vks6FCpV5FX2N8wFEgpobTli186cvI=;
+        b=Mp5sCxQtyzWHWHBbka0ds0kYmPp47R0B/xpgons1w1mRxhW3rRNJIAPQ6EiZVXaVShFZx3
+        M7XxaGxPrd5oI46qCrxCjJlfNjwpLkznYqeeXr+v98Oj+F2I24xR9/0efE/jpd/klCcChv
+        TWn1flMk/zsXdnPKZKs4760pHsZjBlc=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-8t7uUoNuPIipMjAN9Kc5fw-1; Wed, 11 Mar 2020 07:12:46 -0400
+X-MC-Unique: 8t7uUoNuPIipMjAN9Kc5fw-1
+Received: by mail-qk1-f199.google.com with SMTP id 22so1218848qkc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:12:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=J27SQcQ8+CHD3vks6FCpV5FX2N8wFEgpobTli186cvI=;
+        b=YPeBcuVV4+1K623544wBLzIGPU4wCxCX/Zef4kvbACZVEJF8JVGvAX5Z85UQ+cYQCX
+         a3mbf4s00Fw2m8Z4RIFMOcBC3g2wAb+WnwY3lGF8F94GWiKBrWQWBe+YyhKVQoC1lI1q
+         EgqGZrskUrPpux3FObPyk1K5c4uw1njGLo9zJrhY94iJmRjAltqHFGsNW4Cl/8uhEfYi
+         E3nzft/1FaISyh8uP4V3sWXarUVQU/ncYOgetArb7UgOA1YvPBYMno+bUOezkZzxti/2
+         gpPgBtF5O0gSQPL+tWCPleLGA9B/G2o7azPDcqwAEcBz7T/DLbJszJb2GuHR4A0QHNc2
+         Yagg==
+X-Gm-Message-State: ANhLgQ0fnx+8djJhtP4aCoVy9OZ54eoka2Oxm5U5taOicTgfYywgQD1a
+        mLvUESR5iOX2TOFNbs8RE2PjNT3H049tfG68Ff50mQXWaG3i1yRT6fopxsjFQDWO1eWPwfyvSF4
+        ZqpPWLUYpYrLdF/+aPUjiw1NC
+X-Received: by 2002:a37:bc1:: with SMTP id 184mr2146583qkl.57.1583925165494;
+        Wed, 11 Mar 2020 04:12:45 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuFYc5tFK7zblYvbrcTfg23/Z2VBpJF5tj1r6y1PoPqomX102twr6p25lkiLGbRFJbUQ7JMrQ==
+X-Received: by 2002:a37:bc1:: with SMTP id 184mr2146542qkl.57.1583925165130;
+        Wed, 11 Mar 2020 04:12:45 -0700 (PDT)
+Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
+        by smtp.gmail.com with ESMTPSA id o7sm7446399qtg.63.2020.03.11.04.12.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 04:12:43 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 07:12:36 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tyler Sanderson <tysand@google.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Message-ID: <20200311070952-mutt-send-email-mst@kernel.org>
+References: <20200310113854.11515-1-david@redhat.com>
+ <alpine.DEB.2.21.2003101204590.90377@chino.kir.corp.google.com>
+ <890da35b-1ac2-9c2e-b42d-96d24d3e0f4c@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <890da35b-1ac2-9c2e-b42d-96d24d3e0f4c@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel configured with CONFIG_NUMA on a system with multiple
-possible nodes, marks node 0 as online at boot. However in practice,
-there are systems which have node 0 as memoryless and cpuless.
+On Tue, Mar 10, 2020 at 08:13:19PM +0100, David Hildenbrand wrote:
+> On 10.03.20 20:05, David Rientjes wrote:
+> > On Tue, 10 Mar 2020, David Hildenbrand wrote:
+> > 
+> >> Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+> >> changed the behavior when deflation happens automatically. Instead of
+> >> deflating when called by the OOM handler, the shrinker is used.
+> >>
+> >> However, the balloon is not simply some other slab cache that should be
+> >> shrunk when under memory pressure. The shrinker does not have a concept of
+> >> priorities yet, so this behavior cannot be configured. Eventually once
+> >> that is in place, we might want to switch back after doing proper
+> >> testing.
+> >>
+> >> There was a report that this results in undesired side effects when
+> >> inflating the balloon to shrink the page cache. [1]
+> >> 	"When inflating the balloon against page cache (i.e. no free memory
+> >> 	 remains) vmscan.c will both shrink page cache, but also invoke the
+> >> 	 shrinkers -- including the balloon's shrinker. So the balloon
+> >> 	 driver allocates memory which requires reclaim, vmscan gets this
+> >> 	 memory by shrinking the balloon, and then the driver adds the
+> >> 	 memory back to the balloon. Basically a busy no-op."
+> >>
+> >> The name "deflate on OOM" makes it pretty clear when deflation should
+> >> happen - after other approaches to reclaim memory failed, not while
+> >> reclaiming. This allows to minimize the footprint of a guest - memory
+> >> will only be taken out of the balloon when really needed.
+> >>
+> >> Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
+> >> this has no such side effects. Always register the shrinker with
+> >> VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
+> >> pages that are still to be processed by the guest. The hypervisor takes
+> >> care of identifying and resolving possible races between processing a
+> >> hinting request and the guest reusing a page.
+> >>
+> >> In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
+> >> notifier with shrinker"), don't add a moodule parameter to configure the
+> >> number of pages to deflate on OOM. Can be re-added if really needed.
+> >> Also, pay attention that leak_balloon() returns the number of 4k pages -
+> >> convert it properly in virtio_balloon_oom_notify().
+> >>
+> >> Testing done by Tyler for future reference:
+> >>   Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
+> >>   GB file full of random bytes that we continually cat to /dev/null.
+> >>   This fills the page cache as the file is read. Meanwhile we trigger
+> >>   the balloon to inflate, with a target size of 53 GB. This setup causes
+> >>   the balloon inflation to pressure the page cache as the page cache is
+> >>   also trying to grow. Afterwards we shrink the balloon back to zero (so
+> >>   total deflate = total inflate).
+> >>
+> >>   Without patch (kernel 4.19.0-5):
+> >>   Inflation never reaches the target until we stop the "cat file >
+> >>   /dev/null" process. Total inflation time was 542 seconds. The longest
+> >>   period that made no net forward progress was 315 seconds (see attached
+> >>   graph).
+> >>   Result of "grep balloon /proc/vmstat" after the test:
+> >>   balloon_inflate 154828377
+> >>   balloon_deflate 154828377
+> >>
+> >>   With patch (kernel 5.6.0-rc4+):
+> >>   Total inflation duration was 63 seconds. No deflate-queue activity
+> >>   occurs when pressuring the page-cache.
+> >>   Result of "grep balloon /proc/vmstat" after the test:
+> >>   balloon_inflate 12968539
+> >>   balloon_deflate 12968539
+> >>
+> >>   Conclusion: This patch fixes the issue. In the test it reduced
+> >>   inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
+> >>   But more importantly, if we hadn't killed the "grep balloon
+> >>   /proc/vmstat" process then, without the patch, the inflation process
+> >>   would never reach the target.
+> >>
+> >> [1] https://www.spinics.net/lists/linux-virtualization/msg40863.html
+> >>
+> >> Reported-by: Tyler Sanderson <tysand@google.com>
+> >> Tested-by: Tyler Sanderson <tysand@google.com>
+> >> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+> >> Cc: Michael S. Tsirkin <mst@redhat.com>
+> >> Cc: Wei Wang <wei.w.wang@intel.com>
+> >> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >> Cc: David Rientjes <rientjes@google.com>
+> >> Cc: Nadav Amit <namit@vmware.com>
+> >> Cc: Michal Hocko <mhocko@kernel.org>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> > 
+> > Acked-by: David Rientjes <rientjes@google.com>
+> > 
+> 
+> Thanks!
 
-This can cause
-1. numa_balancing to be enabled on systems with only one online node.
-2. Existence of dummy (cpuless and memoryless) node which can confuse
-users/scripts looking at output of lscpu / numactl.
+David could you repost with corrected commit log
+so Andrew can merge? To make sure it's not missed,
+it's probably a good idea to have a cover letter
+mentioning mm in the subject.
 
-This patchset wants to correct this anomaly.
-
-This should only affect systems that have CONFIG_MEMORYLESS_NODES.
-Currently there are only 2 architectures ia64 and powerpc that have this
-config.
-
-v5.6-rc4
- available: 2 nodes (0,2)
- node 0 cpus:
- node 0 size: 0 MB
- node 0 free: 0 MB
- node 2 cpus: 0 1 2 3 4 5 6 7
- node 2 size: 32625 MB
- node 2 free: 31490 MB
- node distances:
- node   0   2
-   0:  10  20
-   2:  20  10
-
-proc and sys files
-------------------
- /sys/devices/system/node/online:            0,2
- /proc/sys/kernel/numa_balancing:            1
- /sys/devices/system/node/has_cpu:           2
- /sys/devices/system/node/has_memory:        2
- /sys/devices/system/node/has_normal_memory: 2
- /sys/devices/system/node/possible:          0-31
-
-v5.6-rc4 + patches
-------------------
- available: 1 nodes (2)
- node 2 cpus: 0 1 2 3 4 5 6 7
- node 2 size: 32625 MB
- node 2 free: 31487 MB
- node distances:
- node   2
-   2:  10
-
-proc and sys files
-------------------
-/sys/devices/system/node/online:            2
-/proc/sys/kernel/numa_balancing:            0
-/sys/devices/system/node/has_cpu:           2
-/sys/devices/system/node/has_memory:        2
-/sys/devices/system/node/has_normal_memory: 2
-/sys/devices/system/node/possible:          0-31
-
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Christopher Lameter <cl@linux.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-
-Srikar Dronamraju (3):
-  powerpc/numa: Set numa_node for all possible cpus
-  powerpc/numa: Prefer node id queried from vphn
-  mm/page_alloc: Keep memoryless cpuless node 0 offline
-
- arch/powerpc/mm/numa.c | 32 ++++++++++++++++++++++----------
- mm/page_alloc.c        |  4 +++-
- 2 files changed, 25 insertions(+), 11 deletions(-)
-
--- 
-1.8.3.1
+> > Should this have:
+> > 
+> > Cc: stable@vger.kernel.org # 4.19+
+> 
+> I guess as nothing will actually "crash" it's not worth stable.
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
