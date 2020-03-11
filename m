@@ -2,94 +2,96 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE913C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E58C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F47020691
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5A420739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583950089;
+	bh=6MIXU7Mwc0VDsHaOdMgwhPDerRJ9XxPEu+qxamHI2sk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ikxJaVA+Tk4iIbxBskeTCBIUXxnTDPFVKCH0YaJASOE3Zl0BJtOKOVQA5Y6swcg5u
+	 34XxPCGRY1m3vAGGHfzCy8xn23bHJefsFQKwytd+BqZxM+EMi3PvaVXFgmDZJZORDM
+	 pDb9ommehtwuWz6nwazQUn5BOX8/dwDXhjG0IGeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbgCKSGf (ORCPT
+        id S1730722AbgCKSII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:06:35 -0400
-Received: from mga14.intel.com ([192.55.52.115]:13104 "EHLO mga14.intel.com"
+        Wed, 11 Mar 2020 14:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgCKSGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:06:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:06:34 -0700
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="277470002"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 11:06:35 -0700
-Subject: Re: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
-To:     "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-        "babu.moger@amd.com" <babu.moger@amd.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
- <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
- <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
- <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
- <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
- <FFF73D592F13FD46B8700F0A279B802F573084EC@ORSMSX114.amr.corp.intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <b83ba95d-9f0f-4d4f-b68c-c5a612afece4@intel.com>
-Date:   Wed, 11 Mar 2020 11:06:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1730607AbgCKSIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:08:07 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8914320691;
+        Wed, 11 Mar 2020 18:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583950087;
+        bh=6MIXU7Mwc0VDsHaOdMgwhPDerRJ9XxPEu+qxamHI2sk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y91BYwoVFMWy7IhSUNFJFEBDLOTgaFp0aa6zpHM9bavXn9CAVlX5mS7qovrtGxVbu
+         0qY1xaAEIt2V7umCxRqPJgz8Kmzg8GbXZCGXbybREUWq4Xd87J7KF0ebr1bUHZGP0Y
+         auoWsQmrNChcLY2Kf3O6tZ13U9jg93hvrDbEkXY8=
+Date:   Wed, 11 Mar 2020 11:08:05 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH] kmod: make request_module() return an error when
+ autoloading is disabled
+Message-ID: <20200311180805.GA1273@sol.localdomain>
+References: <20200310223731.126894-1-ebiggers@kernel.org>
+ <202003111026.2BBE41C@keescook>
+ <20200311174134.GB20006@gmail.com>
+ <20200311180107.GO11244@42.do-not-panic.com>
 MIME-Version: 1.0
-In-Reply-To: <FFF73D592F13FD46B8700F0A279B802F573084EC@ORSMSX114.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311180107.GO11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
-
-On 3/9/2020 3:51 PM, Prakhya, Sai Praneeth wrote:
->> -----Original Message-----
->> From: Reinette Chatre <reinette.chatre@intel.com>
->> Sent: Monday, March 9, 2020 3:34 PM
+On Wed, Mar 11, 2020 at 06:01:07PM +0000, Luis Chamberlain wrote:
+> On Wed, Mar 11, 2020 at 10:41:34AM -0700, Eric Biggers wrote:
+> > On Wed, Mar 11, 2020 at 10:28:07AM -0700, Kees Cook wrote:
+> > > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
+> > > > From: Eric Biggers <ebiggers@google.com>
+> > > > 
+> > > > It's long been possible to disable kernel module autoloading completely
+> > > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
+> > > 
+> > > Hunh. I've never seen that before. :) I've always used;
+> > > 
+> > > echo 1 > /proc/sys/kernel/modules_disabled
+> > > 
+> > > Regardless,
+> > > 
+> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > > 
+> > 
+> > modules_disabled is different because it disables *all* module loading, not just
+> > autoloading.
 > 
-> [SNIP]
-> 
->>> That's a good point and makes sense to me. I think we could fix it in
->>> two ways 1. grep for strings in dmesg but that will still leave
->>> ambiguity in deciding b/w mbm and cqm because kernel prints "resctrl: L3
->> monitoring detected" for both the features 2. Check in "info" directory
->>> 	a. For cat_l3, we could search for info/L3
->>> 	b. For mba, we could search for info/MB
->>> 	c. For cqm and mbm, we could search for specified string in
->>> info/L3_MON/mon_features
->>>
->>> I think option 2 might be better because it can handle all cases, please let me
->> know what you think.
->>
->> I agree. For the reasons you mention and also that (1) may not be possible if the
->> loglevel prevents those lines from being printed.
-> 
-> Makes sense. I will work on the fix.
+> Clarifying this on your patch would be useful, otherwise its lost
+> tribal knowledge.
 
-One more note about this ... from what I can tell the test for a feature
-currently fails if the platform does not support the feature. Would it
-be possible to just skip the test in this case instead?
+I think it would be more useful to improve the documentation in proc(5) and
+Documentation/admin-guide/sysctl/kernel.rst.  People shouldn't have to read
+random kernel commit messages to find the documentation.
 
-Reinette
+I'll send out patches for those.
 
+- Eric
