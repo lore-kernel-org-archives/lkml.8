@@ -1,233 +1,142 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MENTIONS_GIT_HOSTING,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46031 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJUqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:46:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 2so4565pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:46:37 -0700 (PDT)
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE631C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:03:27 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 8051D206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:03:28 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730628AbgCKSD0 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:03:26 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21410 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730468AbgCKSD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:03:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:03:24 -0700
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="277469185"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 11:03:26 -0700
+Subject: Re: [PATCH V1 11/13] selftests/resctrl: Change Cache Quality
+ Monitoring (CQM) test
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <26086dda86f062bba4116878a012a553503924b2.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <e7bd79cf-4da8-7a61-ac09-4d124315fa93@intel.com>
+ <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
+ <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
+ <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <e0bada87-9464-2d08-c4cb-751e30866585@intel.com>
+Date:   Wed, 11 Mar 2020 11:03:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
- <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
- <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
- <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com> <20200310111837.GA1368052@kuha.fi.intel.com>
-In-Reply-To: <20200310111837.GA1368052@kuha.fi.intel.com>
-From: Brendan Higgins <brendanhiggins@google.com>
-Date: Tue, 10 Mar 2020 13:46:24 -0700
-Message-ID:
- <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        hdegoede@redhat.com,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK"
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200310204624.355IJs7ycPmpLreXX49WzBfejaO54Hz2Kb3x23P6BSE@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 4:18 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Mon, Mar 09, 2020 at 02:43:13PM -0700, Brendan Higgins wrote:
-> > On Mon, Mar 9, 2020 at 1:35 PM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > On Fri, Mar 6, 2020 at 4:05 AM Heikki Krogerus
-> > > <heikki.krogerus@linux.intel.com> wrote:
-> > > >
-> > > > On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
-> > > > > Hi Brendan,
-> > > > >
-> > > > > On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
-> > > > > > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
-> > > > > > <brendanhiggins@google.com> wrote:
-> > > > > > >
-> > > > > > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
-> > > > > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > +Cc: Sakari
-> > > > > > > >
-> > > > > > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > > > > > > >
-> > > > > > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-> > > > > > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
-> > > > > > > > > printf.sh test case.
-> > > > > > > > > Which is doing modprobe operations.
-> > > > > > > > >
-> > > > > > > > > BTW, there are few RCU warnings from the boot log.
-> > > > > > > > > Please refer below link for more details.
-> > > > > > > > >
-> > > > > > > > > Steps reproduce by using kselftests,
-> > > > > > > > >
-> > > > > > > > >           - lsmod || true
-> > > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
-> > > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> > > > > > > > >           - ./printf.sh || true
-> > > > > > > > >           - ./bitmap.sh || true
-> > > > > > > > >           - ./prime_numbers.sh || true
-> > > > > > > > >           - ./strscpy.sh || true
-> > > > > > > > >
-> > > > > > > > > x86_64 kernel BUG dump.
-> > > > > > > > > + ./printf.sh
-> > > > > > >
-> > > > > > > Oops, I am wondering if I broke this with my change "Revert "software
-> > > > > > > node: Simplify software_node_release() function"":
-> > > > > > >
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
-> > > > > > >
-> > > > > > > I am still investigating, will update later.
-> > > > > >
-> > > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
-> > > > > > from kernel test robot a couple days ago that I didn't see:
-> > > > > >
-> > > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
-> > > > > >
-> > > > > > It shows the same breakage after applying this change.
-> > > > > >
-> > > > > > I am still investigating how my change broke it, nevertheless.
-> > > > >
-> > > > > As nodes in the tree are being removed, the code before the patch that
-> > > > > "simplified" the software_node_release() function accessed the node's parent
-> > > > > in its release function.
-> > > > >
-> > > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
-> > > > > longer necessarily called in order, leading to referencing released memory.
-> > > > > Oops!
-> > > > >
-> > > > > So Heikki's patch actually fixed a bug. :-)
-> > > >
-> > > > Well, I think it just hid the problem. It looks like the core
-> > > > (lib/kobject.c) allows the parent kobject to be released before the
-> > > > last child kobject is released. To be honest, that does not sound
-> > > > right to me...
-> > > >
-> > > > I think we can workaround this problem by taking reference to the
-> > > > parent when the child is added, and then releasing it when the child
-> > > > is released, and in that way be guaranteed that the parent will not
-> > > > disappear before the child is fully released, but that still does not
-> > > > feel right. It feels more like the core is not doing it's job to me.
-> > > > The parent just should not be released before its children.
-> > > >
-> > > > Either I'm wrong about that, and we still should take the reference on
-> > > > the parent, or we revert my patch like Brendan proposed and then fix
-> > >
-> > > Either way, isn't it wrong to release the node ID before deleting the
-> > > sysfs entry? I am not sure that my fix was the correct one, but I
-> > > believe the bug that Heidi and I found is actually a bug.
->
-> I agree.
->
-> > > > the core with something like this (warning, I did not even try to
-> > > > compile that):
-> > >
-> > > I will try it out.
-> > >
-> > > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > > index 83198cb37d8d..ec5774992337 100644
-> > > > --- a/lib/kobject.c
-> > > > +++ b/lib/kobject.c
-> > > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > >                 kobject_uevent(kobj, KOBJ_REMOVE);
-> > > >         }
-> > > >
-> > > > +       if (t && t->release) {
-> > > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > > +                        kobject_name(kobj), kobj);
-> > > > +               t->release(kobj);
-> > > > +       }
-> > > > +
-> > > >         /* remove from sysfs if the caller did not do it */
-> > > >         if (kobj->state_in_sysfs) {
-> > > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > >                 kobject_del(kobj);
-> > > >         }
-> > > >
-> > > > -       if (t && t->release) {
-> > > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > > -                        kobject_name(kobj), kobj);
-> > > > -               t->release(kobj);
-> > > > -       }
-> > > > -
-> > > >         /* free name if we allocated it */
-> > > >         if (name) {
-> > > >                 pr_debug("kobject: '%s': free name\n", name);
-> >
-> > Alright, so I tried it and it looks like Heikki's suggestion worked.
-> >
-> > Is everyone comfortable going this route?
->
-> Hold on. Another way to fix the problem is to increment the parent's
-> reference count before that kobject_del(kobj) is called, and then
-> decrementing it after t->release(kobj) is called. It may be safer to
-> fix the problem like that.
+Hi Sai,
 
-Right, this was your first suggestion above, right? That actually made
-more sense to me, but you seemed skeptical of it due to it being
-messier, which makes sense.
+On 3/11/2020 10:33 AM, Sai Praneeth Prakhya wrote:
+> On Wed, 2020-03-11 at 10:19 -0700, Reinette Chatre wrote:
+>> On 3/10/2020 7:46 PM, Sai Praneeth Prakhya wrote:
+>>> On Tue, 2020-03-10 at 15:18 -0700, Reinette Chatre wrote:
+>>>> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+>>>>>  		.mum_resctrlfs	= 0,
+>>>>>  		.filename	= RESULT_FILE_NAME,
+>>>>> -		.mask		= ~(long_mask << n) & long_mask,
+>>>>> -		.span		= cache_size * n / count_of_bits,
+>>>>>  		.num_of_runs	= 0,
+>>>>> -		.setup		= cqm_setup,
+>>>>> +		.setup		= cqm_setup
+>>>>>  	};
+>>>>> +	int ret;
+>>>>> +	char schemata[64];
+>>>>> +	unsigned long long_mask;
+>>>>>  
+>>>>> -	if (strcmp(benchmark_cmd[0], "fill_buf") == 0)
+>>>>> -		sprintf(benchmark_cmd[1], "%lu", param.span);
+>>>>> +	ret = remount_resctrlfs(1);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>
+>>>> Here resctrl is remounted and followed by some changes to the root
+>>>> group's schemata. That is followed by a call to resctrl_val that
+>>>> attempts to remount resctrl again that will undo all the configurations
+>>>> inbetween.
+>>>
+>>> No, it wouldn't because mum_resctrlfs is 0. When resctrl FS is already
+>>> mounted
+>>> and mum_resctrlfs is 0, then remount_resctrlfs() is a noop.
+>>>
+>>
+>> I missed that. Thank you.
+>>
+>> fyi ... when I tried these tests I encountered the following error
+>> related to unmounting:
+>>
+>> [SNIP]
+>> ok Write schema "L3:1=7fff" to resctrl FS
+>> ok Write schema "L3:1=ffff" to resctrl FS
+>> ok Write schema "L3:1=1ffff" to resctrl FS
+>> ok Write schema "L3:1=3ffff" to resctrl FS
+>> # Unable to umount resctrl: Device or resource busy
+>> # Results are displayed in (Bytes)
+>> ok CQM: diff within 5% for mask 1
+>> # alloc_llc_cache_size: 2883584
+>> # avg_llc_occu_resc: 2973696
+>> ok CQM: diff within 5% for mask 3
+>> [SNIP]
+>>
+>> This seems to originate from resctrl_val() that forces an unmount but if
+>> that fails the error is not propagated.
+> 
+> Yes, that's right and it's a good test. I didn't encounter this issue during
+> my testing because I wasn't using resctrl FS from other terminals (I think you
+> were using resctrl FS from other terminal and hence resctrl_test was unable to
+> unmount it).
 
-Nevertheless, having children take a reference seems like the right
-thing to do because the children need to degregister themselves from
-the parent. Calling t->release() ahead of kobject_del() seems to
-reintroduce the problem that I pointed out, albeit *much* more
-briefly. If I understand correctly, it is always wrong to have a sysfs
-entry that points to a partially deallocated kobject. Please correct
-me if I am wrong.
+I was not explicitly testing for this but this may have been the case.
 
-So I think there are two solutions: Either we have to ensure that each
-child is deallocated first so we can preserve the kobject_del() and
-then t->release() ordering, or we have to add some sort of "locking"
-mechanism to prevent the kobject from being accessed by anything other
-than the deallocation code until it is fully deallocated; well, it
-would have to prevent any access at all :-). I think it goes without
-saying that this "locking" idea is pretty flawed.
+As a sidenote ... could remount_resctrlfs() be called consistently? It
+seems to switch between being called with true/false and 1/0. Since its
+parameter type is boolean using true/false seems most appropriate.
 
-The problem with just having children take a reference is that the
-kobject children already take a reference to their parent, so it seems
-like the kobject should be smart enough to deallocate children rather
-than having swnode have to keep a separate tally of children, no?
+> I think the error should not be propagated because unmounting resctrl FS
+> shouldn't stop us from checking the results. If measuring values reports an
+> error then we shouldn't check for results.
 
-Sorry if this all seems obvious, I am not an expert on this part of the kernel.
+This sounds right. It is inconsistent though ... the CQM test unmounts
+resctrl after it is run but the CAT test does not. Looking closer the
+CAT test seems to leave its artifacts around in resctrl and this should
+be cleaned up.
 
-> My example above proofs that there is the problem, but it changes the
-> order of execution which I think can always have other consequences.
->
-> > Also, should I send this fix as a separate patch? Or do people want me
-> > to send an updated revision of my revert patch with the fix?
->
-> This needs to be send in its own separate patch. Ideally it could be
-> send together with the revert in the same series, but I'm not sure
-> that's possible anymore. Didn't Greg pick the revert already?
+I am not sure about the expectations here. Unmounting resctrl after a
+test is run is indeed the easiest to clean up and may be ok. It may be a
+surprise to the user though. Perhaps there can be a snippet in the
+README that warns people about this?
 
-Sounds good.
+Thank you very much
 
-I did already let Greg know when he emailed us on backporting the
-patch to stable, and he acked saying he removed them. So as long as
-these are not in the queue for 5.6 (it is not in Linus' tree yet), we
-should be good.
-
-Cheers
-
+Reinette
