@@ -2,69 +2,113 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87894C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA2CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C34920746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96C320749
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583966829;
+	bh=UcNd5rYmINjwGgfboOi/vC/8shoIdG5DtpBHMlvH6Ls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=erSqN6sjrvTjiBhmw9qZ+rtjIIgrYrS1YdNjpSWyWGRDuURuyf41Nug8q2CFpwPSQ
+	 wFUDXxUIwssEFP/YeCKpR99YbNRpn5tubzo+1kdxvfxcaHVYPbASMrFaCAUoU2h2ut
+	 exc7Pr/KnDCklZ35abBFy2hiGaYUOZrWin0V5iZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbgCKWou (ORCPT
+        id S1731341AbgCKWrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:44:50 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:34820 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387411AbgCKWot (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:44:49 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jCA5e-002chY-TR; Wed, 11 Mar 2020 23:44:39 +0100
-Message-ID: <1fb57ec2a830deba664379f3e0f480e08e6dec2f.camel@sipsolutions.net>
-Subject: Re: [PATCH] UML: add support for KASAN under x86_64
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
-Date:   Wed, 11 Mar 2020 23:44:37 +0100
-In-Reply-To: <CAKFsvULGSQRx3hL8HgbYbEt_8GOorZj96CoMVhx6sw=xWEwSwA@mail.gmail.com> (sfid-20200311_233314_128549_A453E950)
-References: <20200226004608.8128-1-trishalfonso@google.com>
-         <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
-         <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
-         <CAKFsvULGSQRx3hL8HgbYbEt_8GOorZj96CoMVhx6sw=xWEwSwA@mail.gmail.com>
-         (sfid-20200311_233314_128549_A453E950)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Wed, 11 Mar 2020 18:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729739AbgCKWrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:47:08 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0331F206E7;
+        Wed, 11 Mar 2020 22:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583966828;
+        bh=UcNd5rYmINjwGgfboOi/vC/8shoIdG5DtpBHMlvH6Ls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KZVa7ZPGNaqaiG4v4C38D6UvLLRqNoYWMAZH4Bi8oTEMEozqM9VjVHGBgUWyZPXDd
+         XKSKgE7dJEWJbeSxZNDL+XP7wwA0dldCByvGTYYwEnUP/l80mCfAa4Pbh9FuAPTkWg
+         IgtwL2rWjAYE5FLiLZ91QnjvjX6VfJ+8g28vdft8=
+Received: by pali.im (Postfix)
+        id 96068803; Wed, 11 Mar 2020 23:47:05 +0100 (CET)
+Date:   Wed, 11 Mar 2020 23:47:05 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     'Linux Next Mailing List' <linux-next@vger.kernel.org>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] staging: exfat: remove staging version of exfat
+ filesystem
+Message-ID: <20200311224705.z3sn3taxjap67jle@pali>
+References: <003501d5f66b$7fe3b260$7fab1720$@samsung.com>
+ <20200310105421.GA2810679@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310105421.GA2810679@kroah.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 15:32 -0700, Patricia Alfonso wrote:
+On Tuesday 10 March 2020 11:54:21 Greg Kroah-Hartman wrote:
+> Now that there is a "real" solution for exfat in the vfs tree queued up
+> to be merged in 5.7-rc1 the "old" exfat code in staging can be removed.
+> 
+> Many thanks to Valdis for doing the work to get this into the tree in
+> the first place, it was greatly appreciated.
+> 
+> Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> Cc: Pali Rohár <pali@kernel.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Al Viro <viro@ZenIV.linux.org.uk>
+> Cc: Namjae Jeon <namjae.jeon@samsung.com>
+> Cc: Sungjong Seo <sj1557.seo@samsung.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> I'll need some time to investigate these all myself. Having just
-> gotten my first module to run about an hour ago, any more information
-> about how you got these errors would be helpful so I can try to
-> reproduce them on my own.
+Acked-by: Pali Rohár <pali@kernel.org>
 
-See the other emails, I was basically just loading random modules. In my
-case cfg80211, mac80211, mac80211-hwsim - those are definitely available
-without any (virtio) hardware requirements, so you could use them.
-
-Note that doing a bunch of vmalloc would likely result in similar
-issues, since the module and vmalloc space is the same on UML.
-
-johannes
-
+> ---
+>  MAINTAINERS                          |    6 -
+>  drivers/staging/Kconfig              |    2 -
+>  drivers/staging/Makefile             |    1 -
+>  drivers/staging/exfat/Kconfig        |   41 -
+>  drivers/staging/exfat/Makefile       |   10 -
+>  drivers/staging/exfat/TODO           |   69 -
+>  drivers/staging/exfat/exfat.h        |  760 ------
+>  drivers/staging/exfat/exfat_blkdev.c |  138 --
+>  drivers/staging/exfat/exfat_cache.c  |  514 ----
+>  drivers/staging/exfat/exfat_core.c   | 2529 --------------------
+>  drivers/staging/exfat/exfat_nls.c    |  212 --
+>  drivers/staging/exfat/exfat_super.c  | 3296 --------------------------
+>  drivers/staging/exfat/exfat_upcase.c |  740 ------
+>  13 files changed, 8318 deletions(-)
+>  delete mode 100644 drivers/staging/exfat/Kconfig
+>  delete mode 100644 drivers/staging/exfat/Makefile
+>  delete mode 100644 drivers/staging/exfat/TODO
+>  delete mode 100644 drivers/staging/exfat/exfat.h
+>  delete mode 100644 drivers/staging/exfat/exfat_blkdev.c
+>  delete mode 100644 drivers/staging/exfat/exfat_cache.c
+>  delete mode 100644 drivers/staging/exfat/exfat_core.c
+>  delete mode 100644 drivers/staging/exfat/exfat_nls.c
+>  delete mode 100644 drivers/staging/exfat/exfat_super.c
+>  delete mode 100644 drivers/staging/exfat/exfat_upcase.c
