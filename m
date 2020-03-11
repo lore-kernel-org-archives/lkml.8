@@ -2,79 +2,84 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A199FC10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45178C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C87121655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F32E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583910401;
-	bh=okOXa54cfB+bdRhXjprIbKZ1MimsKWayO+TfQBcDW3A=;
+	s=default; t=1583910489;
+	bh=KWEMZBtvojoiS04WgF5wQ4fehfKEjCOMaHzHE9OimCo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DQZY4j35KbqtMsLShv2d+dLeGdWi8Sc9INl/v9M05mUWk/MApFdrH4TEPJrupgay/
-	 IBMj4Sc2rJ/o6gF5NzOKxu9tIewhgYzbR4wuqgTQ+mwGcpWX2byr9NIvThxwLGCSlu
-	 jRDWapk+vWg0/pP20ysGhy3yInDaMMxaSYlGOcec=
+	b=WBtEko9rywgb4MtyHQtB800JtKqicoPloX4Rlm/mAc/7vQgzoioirFPIn4KHTzEmK
+	 JQvKe6qnv5e+pEpXeFpYoz7IaXt0pET+XsC8mSDBzer6jYRBGBfg3rACbAhEhE5WJv
+	 sween5VzZx5jsmW3sViDJ+TkoFGgM9cPEi5B5jpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgCKHGk (ORCPT
+        id S1728271AbgCKHII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:06:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34464 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 03:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgCKHGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:06:40 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        id S1726672AbgCKHIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:08:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE7C22146E;
-        Wed, 11 Mar 2020 07:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 309BB208E4;
+        Wed, 11 Mar 2020 07:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583910399;
-        bh=okOXa54cfB+bdRhXjprIbKZ1MimsKWayO+TfQBcDW3A=;
+        s=default; t=1583910485;
+        bh=KWEMZBtvojoiS04WgF5wQ4fehfKEjCOMaHzHE9OimCo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZbvB74u1TKShenFO7xEN7ZF9ObHmKzWllnp4Vy3pWjmycniOZBaSprNmoEFugr2Qh
-         wJoxC5aEdVFs/uwnvZNuu5eMnbzECX8TSDrhT5lN72ONFsGo4wSxqKjb+WNVy/35c0
-         Wn5whSPR9061BXeSHVe+WmPVnqR5cJ1DQWGNPboQ=
-Date:   Wed, 11 Mar 2020 15:06:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/15] arm64: defconfig: Enable NXP/FSL SPI controller
- drivers
-Message-ID: <20200311070632.GI29269@dragon>
-References: <1582585690-463-1-git-send-email-leoyang.li@nxp.com>
- <1582585690-463-7-git-send-email-leoyang.li@nxp.com>
- <20200311055104.GA29269@dragon>
- <CADRPPNQ-VWmVMdBuEUj9RdXAYvt4dhy+scP-EaYbrXj3McSaVQ@mail.gmail.com>
+        b=i8mlWTqL8hQaKdnBrGXlmaFGFg14Y58UbQQPFmbkMSqc09kQUUJnoi30vPVobfFZT
+         n1flj0u5KAweKqLuUA9tKjx4qzht5Ljz8Nska+4sDXiRp+7gNtCgj6ytN5ve1KbtpW
+         heAls2eIfiR94jE9W3SBdKMq/WdTWh19vhQELeGc=
+Date:   Wed, 11 Mar 2020 08:08:03 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thiago Souza Ferreira <thsouza2013@gmail.com>
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH] staging: rtl8188eu: Fix block comments to use *
+Message-ID: <20200311070803.GA3585003@kroah.com>
+References: <20200311012332.27498-1-thsouza2013@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADRPPNQ-VWmVMdBuEUj9RdXAYvt4dhy+scP-EaYbrXj3McSaVQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200311012332.27498-1-thsouza2013@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:24:07AM -0500, Li Yang wrote:
-> On Wed, Mar 11, 2020 at 12:52 AM Shawn Guo <shawnguo@kernel.org> wrote:
+On Wed, Mar 11, 2020 at 01:23:32AM +0000, Thiago Souza Ferreira wrote:
+> Fix "Block comments use * on subsequent lines" warning of
+> rtw_mlme_ext.c, found by checkpatch.pl script
 > 
-> > On Mon, Feb 24, 2020 at 05:08:01PM -0600, Li Yang wrote:
-> > > Enables SPI controller drivers used in various NXP/FSL SoCs.
-> > >
-> > > Enabled as built-in to load RFS from SPI flash without requiring
-> > > initramfs.
-> >
-> > RootFS on SPI flash?  On which platforms?
+> Signed-off-by: Thiago Souza Ferreira <thsouza2013@gmail.com>
+> ---
+>  drivers/staging/rtl8188eu/core/rtw_mlme_ext.c | 69 ++++++++++---------
+>  1 file changed, 35 insertions(+), 34 deletions(-)
 > 
-> 
-> QSPI is fast enough to connect big flash for file system.  It is used to
-> connect 512MB NAND flash and 256MB NOR flash on LS1028RDB.  It is used as
-> bootsource for other platforms like LS2080ardb too.
+> diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+> index 36841d20c..02b87a804 100644
+> --- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+> +++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+> @@ -20,8 +20,8 @@
+>  static u8 null_addr[ETH_ALEN] = {};
+>  
+>  /**************************************************
+> -OUI definitions for the vendor specific IE
+> -***************************************************/
+> + *OUI definitions for the vendor specific IE
+> + ***************************************************/
 
-Please put this info into commit log.
+Please use a ' ' before the text to make it look "clean".
 
-Shawn
+thanks,
+
+greg k-h
