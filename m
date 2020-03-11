@@ -2,115 +2,87 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A2CC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7211AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F126020736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277A020650
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpR821mE"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="sNkNrzhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgCKOzG (ORCPT
+        id S1729878AbgCKO4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:55:06 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45367 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729460AbgCKOzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:55:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m9so2986944wro.12;
-        Wed, 11 Mar 2020 07:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=T6dhYyYvJS/8Bl4FjnByulc+SHG/kFSfXU5KSrYTgvo=;
-        b=YpR821mEYGSQYCAJdxDmyyX1QVwPDu7Rb+v0SpjUUf77rpGL4EX+ni4S+CA2f5Ddd4
-         Tn6GVumWKMkc+KSE4/YRS9Bh9EXH07aq1OGbWacOITIjyrgjPKWp5s8QtRFCtElId6ap
-         loh9EfaNtUHKS0cARkPlOA5W3ZvPDVQe4YKYApAG4RFW2sO+D4lojIESO+ye4U8YfB0U
-         OA7UmdyO96F/KOBzabiUxreqyVAmzi4lLfGFxNyETOZu5z/8kdcwLFq4eTsGGz3FN+Qt
-         Zq9+pswIm00N4KRxKmDlZZouEd/pvKvXEVr3JS3V9AZ8rQJlOaDRPFtcDijkVtvYv9mf
-         QLUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=T6dhYyYvJS/8Bl4FjnByulc+SHG/kFSfXU5KSrYTgvo=;
-        b=NRgBx/07bnOHz1vHwnZ+kpO/r8pxWqonrmp0/7Zeto4BTzspdNp8ak/Qi8Bp7TcY2g
-         MIg18Kvpn5TiwrTahqCXFVta0L6LqRW3nIBkJA0zu5X7Du1a5YWxdBl0Wb29wCXbOhik
-         lz0/W4erX0UXGZI5YIU1d9JbBCjCaEX/kWAK3XoTYBQzxxq1n2kBzivvFdRt2eaX+tO5
-         Sc3kJNOgRlYtBIx8gML8EqzVuts5jFcM/qWJeFR1wuVFcEAFy+piNLa1Lvi26m1gO/gf
-         3hkMdG2SQxKDBaJvoAzyMxTskxbK15yODxoX/HReFyHQ+2u30VOYgaY+5ykwaH1laeiX
-         AVfA==
-X-Gm-Message-State: ANhLgQ0otppPNH6iaySJc1mwqZLFwurqxlKIRKgMvpxflAMqzwBMPQ8F
-        kDqZ6FauZ3+L9iyGDCCiqF4=
-X-Google-Smtp-Source: ADFU+vs4BWU2lMGWUFQMXyBURcsQiYdsefcfXhTiCwDFmuMlBP9RvmVVDzc5UzvPBDK9q9P6PpDWBQ==
-X-Received: by 2002:adf:a506:: with SMTP id i6mr4636282wrb.146.1583938503671;
-        Wed, 11 Mar 2020 07:55:03 -0700 (PDT)
-Received: from wambui.local ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id i7sm56001662wro.87.2020.03.11.07.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 07:55:02 -0700 (PDT)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-X-Google-Original-From: Wambui Karuga <wambui@wambui>
-Date:   Wed, 11 Mar 2020 17:54:46 +0300 (EAT)
-To:     Thierry Reding <thierry.reding@gmail.com>
-cc:     Wambui Karuga <wambui.karugax@gmail.com>, daniel@ffwll.ch,
-        airlied@linux.ie, Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 10/21] drm/tegra: remove checks for debugfs functions
- return value
-In-Reply-To: <20200311143753.GC494173@ulmo>
-Message-ID: <alpine.LNX.2.21.99999.375.2003111750360.14786@wambui>
-References: <20200227120232.19413-1-wambui.karugax@gmail.com> <20200227120232.19413-11-wambui.karugax@gmail.com> <20200311143753.GC494173@ulmo>
-User-Agent: Alpine 2.21.99999 (LNX 375 2019-10-29)
+        Wed, 11 Mar 2020 10:56:08 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45812 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729521AbgCKO4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:56:07 -0400
+Received: from zn.tnic (p200300EC2F12AA00E5C435974B72A9DE.dip0.t-ipconnect.de [IPv6:2003:ec:2f12:aa00:e5c4:3597:4b72:a9de])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 834C71EC0BF2;
+        Wed, 11 Mar 2020 15:56:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1583938566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=92qwRm+YOA18EqQyRIQCHO5hSt3TQ0QTKu3/BKRY/WM=;
+        b=sNkNrzhdtUbjn39ZqLFHkdiOJgk6qMzncEQPLfKgcqq409n7qijV04mih0quVL9x2/qM80
+        FPRKcfwatCBps4LdMQmgDZiRyrs71keb8txORKXgewxntIX4D8Mj2YlGos5Xjyst94YFqa
+        Dw7/Px4d6L8QTTv+JyzP6cRcSG9a3SQ=
+Date:   Wed, 11 Mar 2020 15:56:11 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bruce Rogers <brogers@suse.com>
+Subject: Re: [PATCH] x86/ioremap: Map EFI runtime services data as encrypted
+ for SEV
+Message-ID: <20200311145610.GC3470@zn.tnic>
+References: <2d9e16eb5b53dc82665c95c6764b7407719df7a0.1582645327.git.thomas.lendacky@amd.com>
+ <20200310124003.GE29372@zn.tnic>
+ <20200310130321.GH7028@suse.de>
+ <20200310163738.GF29372@zn.tnic>
+ <20200310174712.GG29372@zn.tnic>
+ <20200311090447.GI7028@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200311090447.GI7028@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Thierry,
+On Wed, Mar 11, 2020 at 10:04:47AM +0100, Joerg Roedel wrote:
+> Hi,
+> 
+> On Tue, Mar 10, 2020 at 06:47:31PM +0100, Borislav Petkov wrote:
+> > Ok, here's what I have. @joro, I know it is trivially different from the
+> > version you tested but I'd appreciate it if you ran it again, just to be
+> > sure.
+> 
+> Looks good and ested it, works fine.
+> 
+> Reviewed-by: Joerg Roedel <jroedel@suse.de>
+> Tested-by: Joerg Roedel <jroedel@suse.de>
 
-On Wed, 11 Mar 2020, Thierry Reding wrote:
+Thanks man!
 
-> On Thu, Feb 27, 2020 at 03:02:21PM +0300, Wambui Karuga wrote:
->> Since 987d65d01356 (drm: debugfs: make
->> drm_debugfs_create_files() never fail) there is no need to check the
->> return value of drm_debugfs_create_files(). Therefore, remove the
->> return checks and error handling of the drm_debugfs_create_files()
->> function from various debugfs init functions in drm/tegra and have
->> them return 0 directly.
->>
->> This change also includes removing the use of drm_debugfs_create_files
->> as a return value in tegra_debugfs_init() and have the function declared
->> as void.
->>
->> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
->> ---
->>  drivers/gpu/drm/tegra/dc.c   | 11 +----------
->>  drivers/gpu/drm/tegra/drm.c  |  8 ++++----
->>  drivers/gpu/drm/tegra/dsi.c  | 11 +----------
->>  drivers/gpu/drm/tegra/hdmi.c | 11 +----------
->>  drivers/gpu/drm/tegra/sor.c  | 11 +----------
->>  5 files changed, 8 insertions(+), 44 deletions(-)
->
-> Applied, thanks.
->
-There's a newer version[1] of this patch series as this specific patch 
-depends on other work in drm.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks,
-wambui karuga.
-
-[1] https://lists.freedesktop.org/archives/dri-devel/2020-March/258793.html
-> Thierry
->
+https://people.kernel.org/tglx/notes-about-netiquette
