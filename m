@@ -2,143 +2,105 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EF7C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19330C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A88208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC920873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIAiHixS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgCKH42 (ORCPT
+        id S1728501AbgCKH4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:56:28 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2549 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726310AbgCKH41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:56:27 -0400
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id BAC71261D951A4DBCAE3;
-        Wed, 11 Mar 2020 07:56:26 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 11 Mar 2020 07:56:26 +0000
-Received: from [127.0.0.1] (10.210.172.48) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 11 Mar
- 2020 07:56:25 +0000
-Subject: Re: linux-next: Tree for Mar 10 (mtd/spi-nor/)
-To:     <Tudor.Ambarus@microchip.com>, <linux-mtd@lists.infradead.org>
-CC:     <rdunlap@infradead.org>, <sfr@canb.auug.org.au>,
-        <linux-next@vger.kernel.org>, <joe@perches.com>,
-        <broonie@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200310201923.24e34363@canb.auug.org.au>
- <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
- <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
- <1993805.xNpbgTSjYd@localhost.localdomain>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b547776c-2749-8b78-e35f-c6ed42be9759@huawei.com>
-Date:   Wed, 11 Mar 2020 07:56:23 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 11 Mar 2020 03:56:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44072 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbgCKH4c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:56:32 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 37so724575pgm.11;
+        Wed, 11 Mar 2020 00:56:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hKRLUEOkt4uqRQRU+kMzzPavE35BURSZlwqA28UO4lM=;
+        b=hIAiHixSgSB8CG6jFRazUx7eGmIVELTjcRzoaclR4wisH+6SF02A+mqUStcmGTI//M
+         ndmIAOXWtDjRUhWawWx9q9jdRdlyHTK01mSj5VCDaq3jtVPrKl+5GZU8GR0WDxsJNTVI
+         KIRuPbPOIq6HdU1pZdj64n5zHlxC/AJQWTHAGwVKTuE1+jtM1zzzv6u5JRUSvubNgnOO
+         JaQq6F68Vp8t2AsRBMQpIf4gfk6fdJ+ISRcEdcrvRfqjnZdLMWj0PujOWQOOgu8vCZEq
+         3HdcqqwBIk2ZWOZDlEc3O3GJBcphdaRPbe4UxAtk6JsHXf54RS0UYhcNo36XBOz7CHvf
+         xYCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hKRLUEOkt4uqRQRU+kMzzPavE35BURSZlwqA28UO4lM=;
+        b=BjpWuCzad5Loko7rrbjmL5FNGWP1KEmG1LwuY/diEKWoZ4qG0dS7U3wzGr8mCzyrjB
+         oMLthuo7MeDcO57S5fI4F7/agZ+mVROvUH5mcEEo9LcVQdebhi5FZ4i58ZHslOykBhVi
+         6Xqw/gedXbeLKeTE9feFt6RNz3GaKDJmqveJm0g49QUKTfM3e1j1yMEgwhC4IEbzXAMP
+         5CQ4CdCpgrBwJLRaVZbolVGucRFbpp/vFzDbvfqnJeU7kojsCvhU+RE05pGExiWpA6MT
+         6FEfoU1PXLdxyXV2tSQfDBhX0UHLd/uQ51ZjkFjoqh+eVd0KwT2jYugZydnVzgWPwann
+         89wQ==
+X-Gm-Message-State: ANhLgQ0oX/lsQTpg4E5VSn41iKydzO9faPybRVLJPASopSA6vSr0jxnY
+        fQiHY3SAId2O7jGtJ2PXW78=
+X-Google-Smtp-Source: ADFU+vsj5VHBIH60lW4mWAjTEbLfKzxmDR2I9/6w7rOrbhTOb6WgKGPMCYdlyg7RtNUnAx7/rd5wlA==
+X-Received: by 2002:a63:6203:: with SMTP id w3mr1710913pgb.35.1583913390950;
+        Wed, 11 Mar 2020 00:56:30 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id y7sm10093247pfq.159.2020.03.11.00.56.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 00:56:30 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 13:26:28 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200311075628.GA6313@afzalpc>
+References: <20200304203144.GA4323@alpha.franken.de>
+ <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
+ <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
-In-Reply-To: <1993805.xNpbgTSjYd@localhost.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.172.48]
-X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/03/2020 07:12, Tudor.Ambarus@microchip.com wrote:
-> On Tuesday, March 10, 2020 7:14:13 PM EET John Garry wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the
->> content is safe
->>
->> +
->>
->> On 10/03/2020 14:37, Randy Dunlap wrote:
->>> On 3/10/20 2:19 AM, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> Changes since 20200306:
->>>>
->>>> Removed tree: nfc-next (abanboned)
->>>>
->>>                                 doned
->>>
->>> on i386:
->>>
->>> WARNING: unmet direct dependencies detected for MTD_SPI_NOR
->>
->> Uh, so kbuild honors a "select" of a config option which has unmet
->> dependencies:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Docu
->> mentation/kbuild/kconfig-language.rst?h=v5.6-rc5#n143
->>
->> So this looks introduced by:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/d
->> rivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e8
+Hi Nathan,
+
+On Tue, Mar 10, 2020 at 10:31:26PM -0700, Nathan Chancellor wrote:
+
+> This patch regresses booting malta_defconfig with both GCC and clang
+> with this rootfs and QEMU 4.2.0:
 > 
-> Hi, John,
+> https://github.com/ClangBuiltLinux/continuous-integration/blob/a85e3e44c2570847e22ad8f92f317c2b007c4517/images/mipsel/rootfs.cpio
 > 
-> Is there any need to select the MTD_SPI_NOR in SPI_HISI_SFC_V3XX? Can't we
-> just drop the select?
+> $ timeout 2m qemu-system-mipsel -machine malta -cpu 24Kf -initrd rootfs.cpio -kernel vmlinux -m 512m -display none -serial mon:stdio
+> 
+> just hangs. I have not done further debugging past the initial bisect.
 
-Yes, I think that we can just drop it. That effectively reverts Joe's 
-change. The reason I added the select wasn't for building, but just for 
-practicality - MTD_SPI_NOR enables the driver of the devices attached.
+i will look into it.
 
-
-In response to Randy:
-
-
- >>> So this looks introduced by:
- >>>
- >>> 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e823
- >>>
- >>>>     Depends on [m]: MTD [=m] && SPI_MASTER [=y] >    Selected by [y]:
- >>>>     - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && 
-(ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
- >>
- >> Would it be acceptable to move the Kconfig entry for this:
- >>
- >> config SPI_HISI_SFC_V3XX
- >> 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
- >> 	depends on (ARM64 && ACPI) || COMPILE_TEST
- >> 	depends on HAS_IOMEM
- >> 	select MTD_SPI_NOR
- >>
- >> into drivers/mtd/spi-nor/Kconfig, say after this one:
- >>
- >> config SPI_HISI_SFC
- >> 	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
- >> 	depends on ARCH_HISI || COMPILE_TEST
- >> 	depends on HAS_IOMEM
- >>
- >> and drop the "select MTD_SPI_NOR" because when it's in 
-drivers/mtd/spi-nor/Kconfig,
- >> it will depend on MTD_SPI_NOR.
- >>
- >
- > These changes to 2 Kconfig files does fix the kconfig warning and 
-build errors.
- > I don't know if it's acceptable, or if the source file also wants to be
- > relocated.  (I almost said "needs to be relocated," but it builds 
-fine without
- > that change.)
-
-As above, I think that we can drop the select for now. I'll do some 
-building test for that - even though it should be same as pre-e14572c52546
-
-Thanks
+Regards
+afzal
