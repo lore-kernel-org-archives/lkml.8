@@ -2,175 +2,132 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C266C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70BBC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C3221655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61E12192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgCKKxG (ORCPT
+        id S1729123AbgCKKxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:53:06 -0400
-Received: from mx05.melco.co.jp ([192.218.140.145]:50714 "EHLO
-        mx05.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728255AbgCKKwv (ORCPT
+        Wed, 11 Mar 2020 06:53:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56512 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbgCKKxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:52:51 -0400
-Received: from mr05.melco.co.jp (mr05 [133.141.98.165])
-        by mx05.melco.co.jp (Postfix) with ESMTP id E500C3A4455;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received: from mr05.melco.co.jp (unknown [127.0.0.1])
-        by mr05.imss (Postfix) with ESMTP id 48cphK5xc8zRk8c;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
-        by mr05.melco.co.jp (Postfix) with ESMTP id 48cphK5dNxzRk81;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received: from mf04.melco.co.jp (unknown [133.141.98.184])
-        by mf04_second.melco.co.jp (Postfix) with ESMTP id 48cphK5ZmMzRjFt;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
-        by mf04.melco.co.jp (Postfix) with ESMTP id 48cphK57jfzRjFp;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received:  from tux532.tad.melco.co.jp
-        by tux532.tad.melco.co.jp (unknown) with ESMTP id 02BAqnRu028969;
-        Wed, 11 Mar 2020 19:52:49 +0900
-Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
-        by postfix.imss70 (Postfix) with ESMTP id 76B6517E075;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received: from tux554.tad.melco.co.jp (tux100.tad.melco.co.jp [10.168.7.223])
-        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 6027117E073;
-        Wed, 11 Mar 2020 19:52:49 +0900 (JST)
-Received: from tux554.tad.melco.co.jp
-        by tux554.tad.melco.co.jp (unknown) with ESMTP id 02BAqm0w017644;
-        Wed, 11 Mar 2020 19:52:49 +0900
-From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] staging: exfat: add boot region verification
-Date:   Wed, 11 Mar 2020 19:52:44 +0900
-Message-Id: <20200311105245.125564-4-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200311105245.125564-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-References: <20200311105245.125564-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+        Wed, 11 Mar 2020 06:53:02 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0F241295F37;
+        Wed, 11 Mar 2020 10:53:00 +0000 (GMT)
+Date:   Wed, 11 Mar 2020 11:52:57 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     shiva.linuxworks@gmail.com
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Shivamurthy Shastri <sshivamurthy@micron.com>
+Subject: Re: [PATCH v6 4/6] mtd: spinand: micron: identify SPI NAND device
+ with Continuous Read mode
+Message-ID: <20200311115257.2a15e63c@collabora.com>
+In-Reply-To: <20200309115230.7207-5-sshivamurthy@micron.com>
+References: <20200309115230.7207-1-sshivamurthy@micron.com>
+        <20200309115230.7207-5-sshivamurthy@micron.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Boot-Regions verification specified in exFAT specification.
+On Mon,  9 Mar 2020 12:52:28 +0100
+shiva.linuxworks@gmail.com wrote:
 
-Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
----
- drivers/staging/exfat/exfat_core.c | 69 ++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+> From: Shivamurthy Shastri <sshivamurthy@micron.com>
+> 
+> Add SPINAND_HAS_CR_FEAT_BIT flag to identify the SPI NAND device with
+> the Continuous Read mode.
+> 
+> Some of the Micron SPI NAND devices have the "Continuous Read" feature
+> enabled by default, which does not fit the subsystem needs.
+> 
+> In this mode, the READ CACHE command doesn't require the starting column
+> address. The device always output the data starting from the first
+> column of the cache register, and once the end of the cache register
+> reached, the data output continues through the next page. With the
+> continuous read mode, it is possible to read out the entire block using
+> a single READ command, and once the end of the block reached, the output
+> pins become High-Z state. However, during this mode the read command
+> doesn't output the OOB area.
+> 
+> Hence, we disable the feature at probe time.
+> 
+> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
 
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 3faa7f35c77c..07c876bb1759 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -2017,7 +2017,20 @@ u16 calc_checksum_2byte(void *data, s32 len, u16 chksum, s32 type)
- 			chksum = (((chksum & 1) << 15) |
- 				  ((chksum & 0xFFFE) >> 1)) + (u16)*c;
- 	}
-+	return chksum;
-+}
- 
-+u32 calc_checksum32(void *data, int len, u32 chksum, int type)
-+{
-+	int i;
-+	u8 *c = (u8 *)data;
-+
-+	for (i = 0; i < len; i++, c++) {
-+		if (unlikely(type == CS_BOOT_SECTOR &&
-+			     (i == 106 || i == 107 || i == 112)))
-+			continue;
-+		chksum = ((chksum & 1) << 31 | chksum >> 1) + (u32)*c;
-+	}
- 	return chksum;
- }
- 
-@@ -2053,6 +2066,58 @@ s32 resolve_path(struct inode *inode, char *path, struct chain_t *p_dir,
- 	return 0;
- }
- 
-+static int verify_boot_region(struct super_block *sb)
-+{
-+	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-+	struct buffer_head *tmp_bh = NULL;
-+	u32 chksum = 0, *p_signatue, *p_chksum;
-+	int sn = 0, i, ret;
-+
-+	/* read boot sector sub-regions */
-+	ret = sector_read(sb, sn++, &tmp_bh, 1);
-+	if (ret)
-+		goto out;
-+
-+	chksum = calc_checksum32(tmp_bh->b_data, p_bd->sector_size,
-+				 chksum, CS_BOOT_SECTOR);
-+
-+	while (sn < 11) {
-+		ret = sector_read(sb, sn++, &tmp_bh, 1);
-+		if (ret)
-+			goto out;
-+
-+		chksum = calc_checksum32(tmp_bh->b_data, p_bd->sector_size,
-+					 chksum, CS_DEFAULT);
-+
-+		/* skip OEM Parameters & Reserved sub-regions */
-+		if (sn >= 9)
-+			continue;
-+
-+		/* extended boot sector sub-regions */
-+		p_signatue = (u32 *)(tmp_bh->b_data + p_bd->sector_size - 4);
-+		if (le32_to_cpu(*p_signatue) != EXBOOT_SIGNATURE) {
-+			ret = -EFSCORRUPTED;
-+			goto out;
-+		}
-+	}
-+
-+	/* boot checksum sub-regions */
-+	ret = sector_read(sb, sn++, &tmp_bh, 1);
-+	if (ret)
-+		goto out;
-+
-+	p_chksum = (u32 *)tmp_bh->b_data;
-+	for (i = 0; i < p_bd->sector_size / 4; i++) {
-+		if (le32_to_cpu(*p_chksum) != chksum) {
-+			ret = -EFSCORRUPTED;
-+			goto out;
-+		}
-+	}
-+out:
-+	brelse(tmp_bh);
-+	return ret;
-+}
-+
- static int read_boot_sector(struct super_block *sb)
- {
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -2129,6 +2194,10 @@ s32 exfat_mount(struct super_block *sb)
- 	if (ret)
- 		goto err_out;
- 
-+	ret = verify_boot_region(sb);
-+	if (ret)
-+		goto err_out;
-+
- 	ret = load_alloc_bitmap(sb);
- 	if (ret)
- 		goto err_out;
--- 
-2.25.1
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> ---
+>  drivers/mtd/nand/spi/micron.c | 16 ++++++++++++++++
+>  include/linux/mtd/spinand.h   |  1 +
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+> index 5fd1f921ef12..ff0a3c01441d 100644
+> --- a/drivers/mtd/nand/spi/micron.c
+> +++ b/drivers/mtd/nand/spi/micron.c
+> @@ -18,6 +18,8 @@
+>  #define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
+>  #define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
+>  
+> +#define MICRON_CFG_CR			BIT(0)
+> +
+>  static SPINAND_OP_VARIANTS(read_cache_variants,
+>  		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
+>  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+> @@ -153,8 +155,22 @@ static int micron_spinand_detect(struct spinand_device *spinand)
+>  	return 1;
+>  }
+>  
+> +static int micron_spinand_init(struct spinand_device *spinand)
+> +{
+> +	/*
+> +	 * M70A device series enable Continuous Read feature at Power-up,
+> +	 * which is not supported. Disable this bit to avoid any possible
+> +	 * failure.
+> +	 */
+> +	if (spinand->flags & SPINAND_HAS_CR_FEAT_BIT)
+> +		return spinand_upd_cfg(spinand, MICRON_CFG_CR, 0);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
+>  	.detect = micron_spinand_detect,
+> +	.init = micron_spinand_init,
+>  };
+>  
+>  const struct spinand_manufacturer micron_spinand_manufacturer = {
+> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+> index 4ea558bd3c46..333149b2855f 100644
+> --- a/include/linux/mtd/spinand.h
+> +++ b/include/linux/mtd/spinand.h
+> @@ -270,6 +270,7 @@ struct spinand_ecc_info {
+>  };
+>  
+>  #define SPINAND_HAS_QE_BIT		BIT(0)
+> +#define SPINAND_HAS_CR_FEAT_BIT		BIT(1)
+>  
+>  /**
+>   * struct spinand_info - Structure used to describe SPI NAND chips
 
