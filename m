@@ -2,147 +2,122 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540D2C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5375C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D67F21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B964421655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgCKGhZ (ORCPT
+        id S1728208AbgCKGjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:37:25 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63106 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgCKGhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:37:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 23:37:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,539,1574150400"; 
-   d="scan'208";a="236188930"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Mar 2020 23:37:22 -0700
-Date:   Wed, 11 Mar 2020 14:35:19 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH 4/7] fpga: dfl: afu: add interrupt support for error
-  reporting
-Message-ID: <20200311063519.GC4193@yilunxu-OptiPlex-7050>
-References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
- <1583749790-10837-5-git-send-email-yilun.xu@intel.com>
- <20200310103921.GD28396@hao-dev>
- <20200310164738.GC30868@yilunxu-OptiPlex-7050>
- <20200311024356.GA26202@hao-dev>
+        Wed, 11 Mar 2020 02:39:51 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:49925 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725976AbgCKGjv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:39:51 -0400
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 623EF7E9D25;
+        Wed, 11 Mar 2020 17:39:44 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jBv1r-0007cE-0A; Wed, 11 Mar 2020 17:39:43 +1100
+Date:   Wed, 11 Mar 2020 17:39:42 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200311063942.GE10776@dread.disaster.area>
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200305155144.GA5598@lst.de>
+ <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
+ <20200311033614.GQ1752567@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311024356.GA26202@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200311033614.GQ1752567@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
+        a=7-415B0cAAAA:8 a=6_jS5YWjWD2_AzFwGG8A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:43:56AM +0800, Wu Hao wrote:
-> On Wed, Mar 11, 2020 at 12:47:38AM +0800, Xu Yilun wrote:
-> > On Tue, Mar 10, 2020 at 06:39:21PM +0800, Wu Hao wrote:
-> > > On Mon, Mar 09, 2020 at 06:29:47PM +0800, Xu Yilun wrote:
-> > > > Error reporting interrupt is very useful to notify users that some
-> > > > errors are detected by the hardware. Once users are notified, they
-> > > > could query hardware logged error states, no need to continuously
-> > > > poll on these states.
-> > > > 
-> > > > This patch follows the common DFL interrupt notification and handling
-> > > > mechanism, implements two ioctl commands below for user to query
-> > > > hardware capability, and set/unset interrupt triggers.
-> > > > 
-> > > >  Ioctls:
-> > > >  * DFL_FPGA_PORT_ERR_GET_INFO
-> > > >    get error reporting feature info, including num_irqs which is used to
-> > > >    determine whether/how many interrupts it supports.
-> > > > 
-> > > >  * DFL_FPGA_PORT_ERR_SET_IRQ
-> > > >    set/unset given eventfds as error interrupt triggers.
-> > > > 
-> > > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > > ---
-> > > >  drivers/fpga/dfl-afu-error.c  | 69 +++++++++++++++++++++++++++++++++++++++++++
-> > > >  drivers/fpga/dfl-afu-main.c   |  4 +++
-> > > >  include/uapi/linux/fpga-dfl.h | 34 +++++++++++++++++++++
-> > > >  3 files changed, 107 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
-> > > > index c1467ae..a2c5454 100644
-> > > > --- a/drivers/fpga/dfl-afu-error.c
-> > > > +++ b/drivers/fpga/dfl-afu-error.c
-> > > > @@ -15,6 +15,7 @@
-> > > >   */
-> > > >  
-> > > >  #include <linux/uaccess.h>
-> > > > +#include <linux/fpga-dfl.h>
-> > > >  
-> > > >  #include "dfl-afu.h"
-> > > >  
-> > > > @@ -219,6 +220,73 @@ static void port_err_uinit(struct platform_device *pdev,
-> > > >  	afu_port_err_mask(&pdev->dev, true);
-> > > >  }
-> > > >  
-> > > > +static long
-> > > > +port_err_get_info(struct platform_device *pdev,
-> > > > +		  struct dfl_feature *feature, unsigned long arg)
-> > > > +{
-> > > > +	struct dfl_fpga_port_err_info info;
-> > > > +
-> > > > +	info.flags = 0;
-> > > > +	info.capability = 0;
-> > > 
-> > > as flags and capability are not used at this moment, so actually it only exposes
-> > > irq information to user. I understand flags and capability are used for
-> > > future extension, but it may not work without argsz, as we never know what
-> > > comes next, e.g. a capability requires > 32bit can't fit into this ioctl.
-> > > So maybe just a ioctl for IRQ_INFO is enough for now.
-> > > 
-> > > How do you think?
-> > 
-> > Yes the flags & capability are for future extension.
-> > 
-> > The capability field is planned to a bitmask, each bit could indicate the feature
-> > has some capability or not. So it could describe up to 32 capabilities.
-> > I think it would be enough for one sub feature.
-> > 
-> > With this field, users could get a general description of capabilities with one
-> > ioctl. If some capability has more detailed info, we may add addtional ioctl to
-> > fetch it. This is how it works without argsz. Does it make sense?
-> > 
-> > And same definition for flag field. The flag fields could contain some
-> > bool running state represented by each bit.
+On Tue, Mar 10, 2020 at 08:36:14PM -0700, Darrick J. Wong wrote:
+> There are still other things that need to be ironed out WRT pmem:
 > 
-> This should work for some cases, but kernel doc (core-api/ioctl.rst) says it's
-> better to avoid bitfield completely. I understand it's possible to extend this
-> ioctl with flags and capability, even we can define if flags = A, then given 
-> capability = definition B, if flags = C, then capbaility definition is D, to
-> maximum the usage for extension, but it may make this interface very very
-> complicated to users. This should be the same reason why you didn't put irq
-> info into capability directly. Another reason is, in my understanding, it
-> choices ioctl to expose irq info becasue user must use ioctl to set irq, for
-> other capabilities which doesn't use device file, then some sysfs may be enough
-> for their own functions.
+> a) reflink and page/pfn/whatever sharing -- fix the mm or (ab)use the
+> xfs buffer cache, or something worse?
 
-Thanks for clarify this, I'll remove the flags & capability fields
+I don't think we need either. We just need to remove the DAX page
+association for hwpoison that requires the struct page to store the
+mapping and index. Get rid of that and we should be able to  safely
+map the same page into different inode address spaces at the same
+time. When we write a shared page, we COW it immediately and replace
+the page in the inode's mapping tree, so we can't actually write to
+a shared page...
 
-Yilun
+IOWs, the dax_associate_page() related functionality probably needs
+to be a filesystem callout - part of the aops vector, I think, so
+that device dax can still use it. That way XFS can go it's own way,
+while ext4 and device dax can continue to use the existing mechanism
+mechanisn that is currently implemented....
 
-> 
-> Thanks
-> Hao
+XFS can then make use of rmapbt to find the owners on a bad page
+notification, and run the "kill userspace dead dead dead" lookup on
+each mapping/index tuple rather than pass it around on a struct
+page. i.e. we'll do a kill scan for each mapping/index owner tuple
+we find, not just one.
+
+That requires converting all the current vma killer code to pass
+mapping/index tuples around rather than the struct page. That kill
+code doesn't actually need the struct page, it just needs the
+mapping/index tuple to match to the vmas that have it mapped into
+userspace.
+
+> b) getting our stories straight on how to clear poison, and whether or
+> not we can come up with a better story for ZERO_FILE_RANGE on pmem.  In
+> the ideal world I'd love to see Z_F_R actually memset(0) the pmem and
+> clear poison, at least if the file->pmem mappings were contiguous.
+
+Are you talking about ZFR from userspace through the filesystem (how
+do you clear poison in free space?) or ZFR on the dax device fro
+either userspace or the kernel filesystem code?
+
+> c) wiring up xfs to hwpoison, or wiring up hwpoison to xfs, or otherwise
+> figuring out how to get storage to tell xfs that it lost something so
+> that maybe xfs can fix it quickly
+
+Yup, I think that's a dax device callback into the filesystem. i.e
+the hwpoison gets delivered to the dax device, which then calls the
+fs function rather than do it's current "dax_lock_page(), kill
+userspace dead dead dead, dax_unlock_page()" dance. The filesystem
+can do a much more intricate dance and wreak far more havoc on
+userspace than what the dax device can do.....
+
+Copious amounts of unused time are things I don't have,
+unfortunately. Only having 7 fingers to type with right now doesn't
+help, either.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
