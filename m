@@ -2,97 +2,117 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0342AC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E86C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A28222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4711F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSWmNcSQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge+bTOm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgCKB0w (ORCPT
+        id S1727909AbgCKB27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:26:52 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43019 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCKB0v (ORCPT
+        Tue, 10 Mar 2020 21:28:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41842 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCKB26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:26:51 -0400
-Received: by mail-qk1-f194.google.com with SMTP id q18so553375qki.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 18:26:50 -0700 (PDT)
+        Tue, 10 Mar 2020 21:28:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s14so455685wrt.8;
+        Tue, 10 Mar 2020 18:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UCtkFFyzWvdtpD3qcxemfQRR6JkYt3csnpIWX56p83w=;
-        b=QSWmNcSQr6Dkhtf0ataFvPH3lyriSK8dTS69dj+OPApW2rIc2GcT04dSBSF5V1x1wd
-         ujvfnHj3wXmHGCeWq5zbM73TusV6OlJgMKTR17sNw+ve1yjX52vdIMJ0azaORdle1BWc
-         1Nk2yxDdV7mdUGXgrhudtxPNLhJpXu1gX/o1qo9UOJ69fIleQcAvt1jZHpgQADZusMcG
-         6uLVoY8QgxNNN28Mq2O1VDi9A3nhNSTfBZq1PF1ph/MAR/+U7pwooP33eubml8nSASax
-         KOaUtsv+z3iepBlPQT6AHsiNdcOWH1Z++3W2998AImEWZkENL/9QbaJcvOYR3Y+PeQeH
-         SV3g==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=i2GXwUO3qDNgYDRB9ez8I/6iO72/MRbkR6e7aAcVV0A=;
+        b=Ge+bTOm5BYPgFpr5KskZa8tzox1HvhGVvVAdSXCMkAgacvZTQvg25yVy2z63vxWNiZ
+         wSjsxpkN6tdYJ2QpOUAd8y37Wd+4wtfDTa/bUHaBO8kHjhiqBy76RdZaTD9hOh4paPlG
+         qPi1XQskPxgRlUGUXZ8Ci3JfWuFXJdQZ9ziEbrIRsQj3E2dq9+lU+W9so7Oyx0Ef82V3
+         9+wODufvk02QtXrWBhpubnnSEsgTF9KRiL/qGWoH9mHmz5QVXQNrlSJdWQOL7htaCzGB
+         ykIJakogtGGUZW5qDxp0WKfX6liAyLMwgtWeioo5z8WJ1HhDsQk+SWLn6EbIsyK8yiEC
+         xEsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UCtkFFyzWvdtpD3qcxemfQRR6JkYt3csnpIWX56p83w=;
-        b=oxWiXhvwtZZEWQ1VFmsR3Re0fgwt5O6JTZFnUIlGDcGu82OyqlhIbfZ324PE3CuMnY
-         dVzcvhpv6QvHrJaXlJ0P/vav9L8bA5iJcPuipO7eNbEBQGBgG7wTSonVc4pJdFeL/p6R
-         Wbtmxa1Q6DTlnDxZWwSjfv2ml6VVtJLmHTNgvJ7bPswn6pjW2ABOiIwzg9Q9oH+MaHkh
-         FLSWqXh0Sx8MoxPOg7tyOmQ5Old+Mxwypp2i3BMehCmt3eev8Pjgdy/S30638/y9hdg0
-         kzASDv13sZW46u4mRXi6U3FHOU9eOiG7JMip1m5Ub0ZgiPZj7Xl6qVi8fTATVOLABCP2
-         rRmA==
-X-Gm-Message-State: ANhLgQ05WdsWyUkJG0/vFdDhDo9rkkKfO/uGYF4uTP3AMQzSe7uGB3SO
-        VBofu6X2DYDSSCmAcCq7kvA=
-X-Google-Smtp-Source: ADFU+vs80U7uCDpKBrjfjFYBr8EBQ2qV/rC3KPBixrmZP2xvYFRmkKkdFVIp35YjnPAtklWA7Ils0A==
-X-Received: by 2002:a05:620a:1644:: with SMTP id c4mr572113qko.315.1583890009650;
-        Tue, 10 Mar 2020 18:26:49 -0700 (PDT)
-Received: from 171489447db2.ic.unicamp.br (wifi-177-220-84-20.wifi.ic.unicamp.br. [177.220.84.20])
-        by smtp.gmail.com with ESMTPSA id k202sm12193192qke.134.2020.03.10.18.26.47
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=i2GXwUO3qDNgYDRB9ez8I/6iO72/MRbkR6e7aAcVV0A=;
+        b=qXPhoihmodU6dMsez5EMThDioKgAvWkAApaHYYw4lQINlnbY9UumLILapEBTXWKm3N
+         b3do+s4q7dkOua3qLUtJYCQ2NzWD8fsSC1ej5nfL8p1Fr2V3xOMJUNOswkIuKTJqefnp
+         sf2XbZ0aCVCHFfF9ed05TjazdxTXRQjCsKrYvahYhNVVmdufjbS83ezYEzN8yxIdG3fx
+         0w1lYXRnAd2XX6848KREZq3aDL64DykUXDMXPmNR4fwqpiOqXo+FsNjMbWSbtCotdUqD
+         747hfLKhQZneWN/znfO5tG79w5DbnYc/RRlfVBlcKSQEtHO35lEtRAeGZLBWFhzxJbra
+         M4hg==
+X-Gm-Message-State: ANhLgQ0ql2yKTdCHu0ruDfTE5sjgxPlWqRBJFec6lh9/QJ/IAnB7OsKa
+        pft7fdJnsycM89sxJsUjsg==
+X-Google-Smtp-Source: ADFU+vuMDrEPIvbWT0QtIlkI3Vb5ORn9kagCSARcSjQ0D7WOfTVUMOL5UowmRsaSiG0hhio/8Gn8KQ==
+X-Received: by 2002:adf:ef0f:: with SMTP id e15mr869826wro.213.1583890137091;
+        Tue, 10 Mar 2020 18:28:57 -0700 (PDT)
+Received: from ninjahub.lan (host-2-102-15-144.as13285.net. [2.102.15.144])
+        by smtp.gmail.com with ESMTPSA id a7sm5929804wmb.0.2020.03.10.18.28.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 18:26:48 -0700 (PDT)
-From:   Andre Pinto <andrealmeidap1996@gmail.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Subject: [PATCH] staging: rtl8188eu: fix typo s/informations/information
-Date:   Wed, 11 Mar 2020 01:26:38 +0000
-Message-Id: <20200311012638.18889-1-andrealmeidap1996@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Mar 2020 18:28:56 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
+Date:   Wed, 11 Mar 2020 01:28:49 +0000 (GMT)
+To:     Eric Dumazet <edumazet@google.com>
+cc:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 3/8] tcp: Add missing annotation for
+ tcp_child_process()
+In-Reply-To: <CANn89iJc9e5fQEWerHgDM1g2vp_1EEj0EntbCvccCzAyusHtdg@mail.gmail.com>
+Message-ID: <alpine.LFD.2.21.2003110127440.25519@ninjahub.org>
+References: <20200311010908.42366-1-jbi.octave@gmail.com> <20200311010908.42366-4-jbi.octave@gmail.com> <CANn89iJc9e5fQEWerHgDM1g2vp_1EEj0EntbCvccCzAyusHtdg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch check: 'informations' may be misspelled - perhaps
-'information'? in rtw_mlme_ext.c:1151.
+Thanks for the feedbacks. Good to know I have not used lockdep but I will 
+try it.
 
-Signed-off-by: Andre Pinto <andrealmeidap1996@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_mlme_ext.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 10 Mar 2020, Eric Dumazet wrote:
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-index 36841d20c..04897cd48 100644
---- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-@@ -1151,7 +1151,7 @@ static void issue_assocreq(struct adapter *padapter)
- 				if (!padapter->registrypriv.wifi_spec) {
- 					/* Commented by Kurt 20110629 */
- 					/* In some older APs, WPS handshake */
--					/* would be fail if we append vender extensions informations to AP */
-+					/* would be fail if we append vender extensions information to AP */
- 					if (!memcmp(pIE->data, WPS_OUI, 4))
- 						pIE->Length = 14;
- 				}
--- 
-2.20.1
-
+> On Tue, Mar 10, 2020 at 6:09 PM Jules Irenge <jbi.octave@gmail.com> wrote:
+> >
+> > Sparse reports warning at tcp_child_process()
+> > warning: context imbalance in tcp_child_process() - unexpected unlock
+> > The root cause is the missing annotation at tcp_child_process()
+> >
+> > Add the missing __releases(&((child)->sk_lock.slock)) annotation
+> >
+> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> > ---
+> >  net/ipv4/tcp_minisocks.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+> > index ad3b56d9fa71..0e8a5b6e477c 100644
+> > --- a/net/ipv4/tcp_minisocks.c
+> > +++ b/net/ipv4/tcp_minisocks.c
+> > @@ -817,6 +817,7 @@ EXPORT_SYMBOL(tcp_check_req);
+> >
+> >  int tcp_child_process(struct sock *parent, struct sock *child,
+> >                       struct sk_buff *skb)
+> > +       __releases(&((child)->sk_lock.slock))
+> >  {
+> >         int ret = 0;
+> >         int state = child->sk_state;
+> 
+> 
+> Yeah, although we prefer to use lockdep these days ;)
+> 
+> Reviewed-by: Eric Dumazet <edumazet@google.com>
+> 
