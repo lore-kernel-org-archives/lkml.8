@@ -2,126 +2,165 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BBEC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF1BC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122402146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C32821655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rR2OLtKN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kg0G/ShW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgCKJs6 (ORCPT
+        id S1728871AbgCKJuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:48:58 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:27450 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728245AbgCKJs5 (ORCPT
+        Wed, 11 Mar 2020 05:50:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41494 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgCKJuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:48:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583920137; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=9EHJuHhO/vVks/b4ckeCpcR077Su2ufOHJa7u+CnVwY=; b=rR2OLtKNmT3dlJRwpjGTdpx6oqo58rDEpb1gZG70yBrGJGs0BLR6NfVv8XJ0aUjqONqMYyT1
- tWv8PrxmYdgdwQJ9bLsIvacDvDLf5ow7jnNZFim8y/UIXbZm2po7TsgtIP2dH2kLDKwYhhZA
- w0nX/3wCsqBJRpzBegkxWUEno3w=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e68b3f7.7f2c6764e998-smtp-out-n03;
- Wed, 11 Mar 2020 09:48:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9405CC43636; Wed, 11 Mar 2020 09:48:38 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1432DC433D2;
-        Wed, 11 Mar 2020 09:48:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1432DC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [RFT PATCH 0/9] drivers: qcom: rpmh-rsc: Cleanup / add lots of
- comments
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
-        evgreen@chromium.org, swboyd@chromium.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306235951.214678-1-dianders@chromium.org>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <9db1e130-6c75-6445-eae5-bfe946f377d5@codeaurora.org>
-Date:   Wed, 11 Mar 2020 15:18:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 11 Mar 2020 05:50:32 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m25so2070703edq.8;
+        Wed, 11 Mar 2020 02:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fCEtSOjGKWZDiJGPZb/06Cw2I8STvTOMgUuHbv6hqmM=;
+        b=Kg0G/ShWrHMS7umeyyWvSP5yz1weaZombe3EbZTmMK0bu8Ai7YQiWEe5Cl3ie+NbcO
+         290Yuy7ZfW7Xm7qwskcJ649//1IC5ndMUVIyixylmC4cT4X+a7ZWMFBsGXsh53i2G277
+         nmvpMCRx1/KtHjrBYLG8e/73zChpp4tAwYBGf3ikH6iBYfwWcXpUrC7N3B8tar18q2lw
+         rNygmIpLxOq+8lAFPatsp0TpYln0ZGXFBLLoGb7WPAtXOO2NiCitxihS8yrOwfMFt9oS
+         bXA9AGLaiXgtu4AJwIOAxsnxNvxmjU5VwscfxE25HAyckPYfXFmYSEx4eZ7yd5iOSIu4
+         g0CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fCEtSOjGKWZDiJGPZb/06Cw2I8STvTOMgUuHbv6hqmM=;
+        b=nV1kl9Oqax6Ag6tUbLbJG99n6ivLxf+eeA9q75vvFxWihGUD/mBX4k6wa9bb/h7DHM
+         PFqOGNZoEwMkRww8ROimKRAbIP5mtcyxX1tRi72bPKmYye9xTnn9kp07RYzKQ0n+nSoy
+         dTVLcbYAEWhgicWn2mo3LkGciZ+xJ+SifNiDrIy2na7e994LJ0ySHxuq23fy7BTSF8lC
+         nCo+TV+N6qqV3Z45g8tqb0W1u2kcWgs9JuaMRzVIlwColUBVFaJU4PN83zsiFEFk5DFC
+         mjb6Gy5ur13rVgAMs/utIbaJFCy7GRdxiETy9NOHMsF21sMF4/r+5WtNWhyWuVDXcSrd
+         ZtTg==
+X-Gm-Message-State: ANhLgQ0vg2jddmNn9TzQHV/Cjoy0ER65kZEs2LgudNIOajolbNpTkiJ8
+        h1Lu9u0g8OEkjY1Viy9qw9fNTpNKvCfGehziu6R62qkr
+X-Google-Smtp-Source: ADFU+vs0+8wWoArNexkwpDDRCjbYIOgng5dA1XuotC4sNzt1ak8Gk3E2rjf2tDCrsPQv8CjyrSyusyb5q8zIc8I4Z/Y=
+X-Received: by 2002:a50:9b07:: with SMTP id o7mr1971382edi.139.1583920228519;
+ Wed, 11 Mar 2020 02:50:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200306235951.214678-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20200311123318.51eff802@canb.auug.org.au>
+In-Reply-To: <20200311123318.51eff802@canb.auug.org.au>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 11 Mar 2020 11:50:17 +0200
+Message-ID: <CA+h21hq1pVEJCZHzM4mCPEWhOL-_ugJ5h=EA4g=Lv5sweXGnAA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the net-next tree with the net tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Stephen,
 
-On 3/7/2020 5:29 AM, Douglas Anderson wrote:
-> In order to review Maulik's latest "rpmh_flush for non OSI targets"
-> patch series I've found myself trying to understand rpmh-rsc better.
-> To make it easier for others to do this in the future, add a whole lot
-> of comments / documentation.
+On Wed, 11 Mar 2020 at 03:34, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> As part of this there are a very small number of functional changes.
-> - We'll get a tiny performance boost by getting rid of the "cmd_cache"
->   which I believe was unnecessary (though just to be sure, best to try
->   this atop Maulik's patches where it should be super obvious that we
->   always invalidate before writing sleep/wake TCSs.
-> - I think I've eliminated a possible deadlock on "nosmp" systems,
->   though it was mostly theoretical.
-> - Possibly we could get a warning in some cases if I misunderstood how
->   tcs_is_free() works.  It'd be easy to remove the warning, though.
+> Hi all,
 >
-> These changes touch a lot of code in rpmh-rsc, so hopefully someone at
-> Qualcomm can test them out better than I did (I don't have every last
-> client of RPMH in my tree) 
+> Today's linux-next merge of the net-next tree got a conflict in:
+>
+>   drivers/net/ethernet/mscc/ocelot.c
+>
+> between commit:
+>
+>   a8015ded89ad ("net: mscc: ocelot: properly account for VLAN header length when setting MRU")
+>
+> from the net tree and commit:
+>
+>   69df578c5f4b ("net: mscc: ocelot: eliminate confusion between CPU and NPI port")
+>
+> from the net-next tree.
+>
+> I fixed it up (I think - see below) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+>
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc drivers/net/ethernet/mscc/ocelot.c
+> index d3b7373c5961,06f9d013f807..000000000000
+> --- a/drivers/net/ethernet/mscc/ocelot.c
+> +++ b/drivers/net/ethernet/mscc/ocelot.c
+> @@@ -2310,27 -2323,34 +2329,34 @@@ void ocelot_configure_cpu(struct ocelo
+>                          ANA_PORT_PORT_CFG_PORTID_VAL(cpu),
+>                          ANA_PORT_PORT_CFG, cpu);
+>
+> -       /* If the CPU port is a physical port, set up the port in Node
+> -        * Processor Interface (NPI) mode. This is the mode through which
+> -        * frames can be injected from and extracted to an external CPU.
+> -        * Only one port can be an NPI at the same time.
+> -        */
+> -       if (cpu < ocelot->num_phys_ports) {
+> +       if (npi >= 0 && npi < ocelot->num_phys_ports) {
+>  -              int mtu = VLAN_ETH_FRAME_LEN + OCELOT_TAG_LEN;
+>  +              int sdu = ETH_DATA_LEN + OCELOT_TAG_LEN;
+>
+>                 ocelot_write(ocelot, QSYS_EXT_CPU_CFG_EXT_CPUQ_MSK_M |
+> -                            QSYS_EXT_CPU_CFG_EXT_CPU_PORT(cpu),
+> +                            QSYS_EXT_CPU_CFG_EXT_CPU_PORT(npi),
+>                              QSYS_EXT_CPU_CFG);
+>
+>                 if (injection == OCELOT_TAG_PREFIX_SHORT)
+>  -                      mtu += OCELOT_SHORT_PREFIX_LEN;
+>  +                      sdu += OCELOT_SHORT_PREFIX_LEN;
+>                 else if (injection == OCELOT_TAG_PREFIX_LONG)
+>  -                      mtu += OCELOT_LONG_PREFIX_LEN;
+>  +                      sdu += OCELOT_LONG_PREFIX_LEN;
+>
+> -               ocelot_port_set_maxlen(ocelot, cpu, sdu);
+>  -              ocelot_port_set_mtu(ocelot, npi, mtu);
+> ++              ocelot_port_set_maxlen(ocelot, npi, sdu);
+> +
+> +               /* Enable NPI port */
+> +               ocelot_write_rix(ocelot,
+> +                                QSYS_SWITCH_PORT_MODE_INGRESS_DROP_MODE |
+> +                                QSYS_SWITCH_PORT_MODE_SCH_NEXT_CFG(1) |
+> +                                QSYS_SWITCH_PORT_MODE_PORT_ENA,
+> +                                QSYS_SWITCH_PORT_MODE, npi);
+> +               /* NPI port Injection/Extraction configuration */
+> +               ocelot_write_rix(ocelot,
+> +                                SYS_PORT_MODE_INCL_XTR_HDR(extraction) |
+> +                                SYS_PORT_MODE_INCL_INJ_HDR(injection),
+> +                                SYS_PORT_MODE, npi);
+>         }
+>
+> -       /* CPU port Injection/Extraction configuration */
+> +       /* Enable CPU port module */
+>         ocelot_write_rix(ocelot, QSYS_SWITCH_PORT_MODE_INGRESS_DROP_MODE |
+>                          QSYS_SWITCH_PORT_MODE_SCH_NEXT_CFG(1) |
+>                          QSYS_SWITCH_PORT_MODE_PORT_ENA,
 
-i can help these get tested.
+What would be the takeaway here? I did bring the fact that it will
+conflict to David's attention here, not sure what else should have
+been done:
+https://www.spinics.net/lists/netdev/msg636207.html
+The conflict resolution looks fine btw, I've tested linux-next and it
+also works.
 
 Thanks,
-Maulik
-
-> and review them soon-ish so they can land
-> and future patches can be based on them.
->
-> I've tried to structure the patches so that simpler / less
-> controversial patches are first.  Those could certainly land on their
-> own without later patches.  Many of the patches could also be dropped
-> and the others would still apply if they are controversial.  If you
-> need help doing this then please yell.
->
-> With all that, enjoy.
->
->
-> Douglas Anderson (9):
->   drivers: qcom: rpmh-rsc: Clean code reading/writing regs/cmds
->   drivers: qcom: rpmh-rsc: Document the register layout better
->   drivers: qcom: rpmh-rsc: Fold tcs_ctrl_write() into its single caller
->   drivers: qcom: rpmh-rsc: Remove get_tcs_of_type() abstraction
->   drivers: qcom: rpmh-rsc: A lot of comments
->   drivers: qcom: rpmh-rsc: Only use "tcs_in_use" for ACTIVE_ONLY
->   drivers: qcom: rpmh-rsc: Warning if tcs_write() used for non-active
->   drivers: qcom: rpmh-rsc: spin_lock_irqsave() for tcs_invalidate()
->   drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
->
->  drivers/soc/qcom/rpmh-internal.h |  45 ++--
->  drivers/soc/qcom/rpmh-rsc.c      | 390 +++++++++++++++++++++++--------
->  2 files changed, 313 insertions(+), 122 deletions(-)
->
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+-Vladimir
