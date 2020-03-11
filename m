@@ -2,141 +2,184 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40121C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF82C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2A620650
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C09206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:00:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kk5K54fh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgCKO65 (ORCPT
+        id S1729940AbgCKPAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:58:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38596 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgCKO64 (ORCPT
+        Wed, 11 Mar 2020 11:00:42 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:32888 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729742AbgCKPAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:58:56 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jC2os-0002Ez-Pt; Wed, 11 Mar 2020 15:58:50 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 598211C2209;
-        Wed, 11 Mar 2020 15:58:50 +0100 (CET)
-Date:   Wed, 11 Mar 2020 14:58:50 -0000
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/ioremap: Map EFI runtime services data as
- encrypted for SEV
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>, Joerg Roedel <jroedel@suse.de>,
-        <stable@vger.kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3C2d9e16eb5b53dc82665c95c6764b7407719df7a0=2E15826?=
- =?utf-8?q?45327=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3C2d9e16eb5b53dc82665c95c6764b7407719df7a0=2E158264?=
- =?utf-8?q?5327=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
+        Wed, 11 Mar 2020 11:00:42 -0400
+Received: by mail-vs1-f67.google.com with SMTP id n27so1538851vsa.0;
+        Wed, 11 Mar 2020 08:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Id7nxzKDmSxI0cxB6yaElDPLzg27V9lnZyiHS/FO3cA=;
+        b=kk5K54fhbAGgKLS5pzQ5IBK/6e3411Mi/vQvsKgsNtPKuaPXlbKf/PzYtcLSiDVnHp
+         /BEvBGQDspiC3/y9s1wFt85JYqEvuEr6Ulq/Z4UEs/6Sa5qJcVpdUY2Pj9BblfUo8wMS
+         K+7V5iBp9NEbKD7WcK/Ed/w0tmoxXpnOEAD0sSh/89NBzOZXPPs/dZmzzixaS1UtUhxw
+         7vZxn0zMvG7/dlZ80GZC/ihGNABNrxELuSGjf+fUSjDY8TLbb6BSRAxoZmJ5aykPOXtp
+         HhCD0DQfBCL3MAkpCx54tBjYfIkwCrEx/1inxtgRZc4Bawhz21c7tF5imQO5yoROlaES
+         hHMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Id7nxzKDmSxI0cxB6yaElDPLzg27V9lnZyiHS/FO3cA=;
+        b=MDeAgr5FF1uRGlCxxBQQXrLERxsFDpLuR/ILdr+AH7R8VhnAcPyMK78OjZi5lCFVMg
+         JKONe+rORR+OyS4OtEXK/YB89pWkrTACkDM6+rmXxWjylKU+2eb2xJKC2epf8MGqhIZa
+         EqmR7YGBolqTuI97h19LBNlv/WyB99IzfC4Fz1lpJurrtaRbbNeBGIZGHulWvYN3DGzn
+         MLJvXSaOu+AwHXxMKYTJq3jXouuXfy7yVpF00KqIf94Pfn5GYBpnoSuyrae/QcN9VCv3
+         4vs+SGh4C0lIj5oDRE6kuxU0wOokbz91GPpMljZ3ZfjiaSg+ZC5faPoQ32Lv/Hrwfvwq
+         uGxQ==
+X-Gm-Message-State: ANhLgQ3hOzZGYxnErRe0sAcd0u9LDKkYR6Z6ToUUZ91nbyYLZ3Zv5FNN
+        Jr7CzIyUDZMkjwd4IMg4b2nq8Ia5GfXPqLvRlEk=
+X-Google-Smtp-Source: ADFU+vv2eJRjNaYGv0DYhFYkPBmmDTYaOnz/JeuA1Du+FLPVAUHXTCfm+H4I//Ti2O1te8g82zroRYnrkf1z+R50+5A=
+X-Received: by 2002:a67:7182:: with SMTP id m124mr2269349vsc.150.1583938838979;
+ Wed, 11 Mar 2020 08:00:38 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158393873003.28353.16382331068625290742.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <00000000000088452f05a07621d2@google.com>
+In-Reply-To: <00000000000088452f05a07621d2@google.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Wed, 11 Mar 2020 23:00:27 +0800
+Message-ID: <CADG63jBgo30DEv4n07C+1ViDCTHZ0opphZ=1=Zis2kNsRCo8Lw@mail.gmail.com>
+Subject: Re: WARNING: refcount bug in sctp_wfree
+To:     syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>,
+        vyasevich@gmail.com
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+sctp_wfree
+    ->refcount_sub_and_test(sizeof(struct sctp_chunk),
+                                      &sk->sk_wmem_alloc)
+sctp_wfree will sub sizeof(struct sctp_chunk) for every skb. So could
+we add the extra size for gso segment ?
 
-Commit-ID:     985e537a4082b4635754a57f4f95430790afee6a
-Gitweb:        https://git.kernel.org/tip/985e537a4082b4635754a57f4f95430790afee6a
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Tue, 10 Mar 2020 18:35:57 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 11 Mar 2020 15:54:54 +01:00
 
-x86/ioremap: Map EFI runtime services data as encrypted for SEV
 
-The dmidecode program fails to properly decode the SMBIOS data supplied
-by OVMF/UEFI when running in an SEV guest. The SMBIOS area, under SEV, is
-encrypted and resides in reserved memory that is marked as EFI runtime
-services data.
+--- a/net/sctp/output.c
++++ b/net/sctp/output.c
+@@ -398,7 +398,8 @@ static void sctp_packet_gso_append(struct sk_buff
+*head, struct sk_buff *skb)
+        head->truesize += skb->truesize;
+        head->data_len += skb->len;
+        head->len += skb->len;
+-       refcount_add(skb->truesize, &head->sk->sk_wmem_alloc);
++       refcount_add(skb->truesize + sizeof(struct sctp_chunk),
++                               &head->sk->sk_wmem_alloc);
 
-As a result, when memremap() is attempted for the SMBIOS data, it
-can't be mapped as regular RAM (through try_ram_remap()) and, since
-the address isn't part of the iomem resources list, it isn't mapped
-encrypted through the fallback ioremap().
+        __skb_header_release(skb);
 
-Add a new __ioremap_check_other() to deal with memory types like
-EFI_RUNTIME_SERVICES_DATA which are not covered by the resource ranges.
-
-This allows any runtime services data which has been created encrypted,
-to be mapped encrypted too.
-
- [ bp: Move functionality to a separate function. ]
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Joerg Roedel <jroedel@suse.de>
-Cc: <stable@vger.kernel.org> # 5.3
-Link: https://lkml.kernel.org/r/2d9e16eb5b53dc82665c95c6764b7407719df7a0.1582645327.git.thomas.lendacky@amd.com
----
- arch/x86/mm/ioremap.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 44e4beb..935a91e 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -106,6 +106,19 @@ static unsigned int __ioremap_check_encrypted(struct resource *res)
- 	return 0;
- }
- 
-+/*
-+ * The EFI runtime services data area is not covered by walk_mem_res(), but must
-+ * be mapped encrypted when SEV is active.
-+ */
-+static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *desc)
-+{
-+	if (!sev_active())
-+		return;
-+
-+	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
-+		desc->flags |= IORES_MAP_ENCRYPTED;
-+}
-+
- static int __ioremap_collect_map_flags(struct resource *res, void *arg)
- {
- 	struct ioremap_desc *desc = arg;
-@@ -124,6 +137,9 @@ static int __ioremap_collect_map_flags(struct resource *res, void *arg)
-  * To avoid multiple resource walks, this function walks resources marked as
-  * IORESOURCE_MEM and IORESOURCE_BUSY and looking for system RAM and/or a
-  * resource described not as IORES_DESC_NONE (e.g. IORES_DESC_ACPI_TABLES).
-+ *
-+ * After that, deal with misc other ranges in __ioremap_check_other() which do
-+ * not fall into the above category.
-  */
- static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
- 				struct ioremap_desc *desc)
-@@ -135,6 +151,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
- 	memset(desc, 0, sizeof(struct ioremap_desc));
- 
- 	walk_mem_res(start, end, desc, __ioremap_collect_map_flags);
-+
-+	__ioremap_check_other(addr, desc);
- }
- 
- /*
+On Tue, Mar 10, 2020 at 9:36 AM syzbot
+<syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    2c523b34 Linux 5.6-rc5
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=155a5f29e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164b5181e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166dd70de00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> refcount_t: underflow; use-after-free.
+> WARNING: CPU: 1 PID: 8668 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 8668 Comm: syz-executor779 Not tainted 5.6.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>  panic+0x264/0x7a0 kernel/panic.c:221
+>  __warn+0x209/0x210 kernel/panic.c:582
+>  report_bug+0x1ac/0x2d0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+> Code: c7 e4 ff d0 88 31 c0 e8 23 20 b3 fd 0f 0b eb 85 e8 8a 4a e0 fd c6 05 ff 70 b1 05 01 48 c7 c7 10 00 d1 88 31 c0 e8 05 20 b3 fd <0f> 0b e9 64 ff ff ff e8 69 4a e0 fd c6 05 df 70 b1 05 01 48 c7 c7
+> RSP: 0018:ffffc90001f577d0 EFLAGS: 00010246
+> RAX: 8c9c9070bbb4e500 RBX: 0000000000000003 RCX: ffff8880938a63c0
+> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+> RBP: 0000000000000003 R08: ffffffff815e16e6 R09: fffffbfff15db92a
+> R10: fffffbfff15db92a R11: 0000000000000000 R12: dffffc0000000000
+> R13: ffff88809de82000 R14: ffff8880a89237c0 R15: 1ffff11013be52b0
+>  sctp_wfree+0x3b1/0x710 net/sctp/socket.c:9111
+>  skb_release_head_state+0xfb/0x210 net/core/skbuff.c:651
+>  skb_release_all net/core/skbuff.c:662 [inline]
+>  __kfree_skb+0x22/0x1c0 net/core/skbuff.c:678
+>  sctp_chunk_destroy net/sctp/sm_make_chunk.c:1454 [inline]
+>  sctp_chunk_put+0x17b/0x200 net/sctp/sm_make_chunk.c:1481
+>  __sctp_outq_teardown+0x80a/0x9d0 net/sctp/outqueue.c:257
+>  sctp_association_free+0x21e/0x7c0 net/sctp/associola.c:339
+>  sctp_cmd_delete_tcb net/sctp/sm_sideeffect.c:930 [inline]
+>  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1318 [inline]
+>  sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
+>  sctp_do_sm+0x3c01/0x5560 net/sctp/sm_sideeffect.c:1156
+>  sctp_primitive_ABORT+0x93/0xc0 net/sctp/primitive.c:104
+>  sctp_close+0x231/0x770 net/sctp/socket.c:1512
+>  inet_release+0x135/0x180 net/ipv4/af_inet.c:427
+>  __sock_release net/socket.c:605 [inline]
+>  sock_close+0xd8/0x260 net/socket.c:1283
+>  __fput+0x2d8/0x730 fs/file_table.c:280
+>  task_work_run+0x176/0x1b0 kernel/task_work.c:113
+>  exit_task_work include/linux/task_work.h:22 [inline]
+>  do_exit+0x5ef/0x1f80 kernel/exit.c:801
+>  do_group_exit+0x15e/0x2c0 kernel/exit.c:899
+>  __do_sys_exit_group+0x13/0x20 kernel/exit.c:910
+>  __se_sys_exit_group+0x10/0x10 kernel/exit.c:908
+>  __x64_sys_exit_group+0x37/0x40 kernel/exit.c:908
+>  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x43ef98
+> Code: Bad RIP value.
+> RSP: 002b:00007ffcc7e7c398 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ef98
+> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> RBP: 00000000004be7a8 R08: 00000000000000e7 R09: ffffffffffffffd0
+> R10: 000000002059aff8 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00000000006d01a0 R14: 0000000000000000 R15: 0000000000000000
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
