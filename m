@@ -2,72 +2,941 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D779C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBA5C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293F02253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2275C21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgCKFcD (ORCPT
+        id S1728090AbgCKFdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:32:03 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:35622 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgCKFcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:32:02 -0400
-Received: by mail-il1-f199.google.com with SMTP id h18so612523ilc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:32:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=wevRqhBz7Ha1ufXj1J5HganeoAQW6JbLBzDxT526K4A=;
-        b=N81UFinEvjQ23BLb3Z8HgOGijpJT8b5tbq+nBZUpG8yCdc2TycNnmrBCmBXrn7KaT1
-         XJ5uQyrYCXAMthspYzEnXbhrsQ7pmC7ObTSA5+jFGfcpcRrUjNu+JoKVmdPZ0lN59tas
-         LaCqMJzN+t0lMh1FPNCrMnGqrXIC0fcT9k/Hk23+bHoEL9nqYB6eiOPWDipHEP2vJWJp
-         Pc7FF4U4HcNHATE4QmWXepCxn+vt+hmWWFs1zm/K/jbnbdH7G4ffJUri2M0ZyakiL5WZ
-         fQ1E5sX/i7doeiUOMonYfAEIFhP271HBpRMDAOrSBH5WOP4H3IpD2TBa6rBhSWJk5SnE
-         m17g==
-X-Gm-Message-State: ANhLgQ20ooCrRZhJQCliyTApUvNthiHIlgZHFvcrZps/VDWwHxaIwHk7
-        4yg1yE7AF5wf9ap86v3kCYIQWPq7TkFkZ5RmIgpa0+CHnqHU
-X-Google-Smtp-Source: ADFU+vs5AqIDyondsGCpHRqGUbzyITX4Ug9elC3TYXqm2eit9qrpqbl4xt+rQ3f2GwU+70pBRgba2LC0w62AfY1MRyxlthvFVwiY
+        Wed, 11 Mar 2020 01:33:23 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49289 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgCKFdW (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 01:33:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 22:33:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,539,1574150400"; 
+   d="scan'208";a="389158165"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by orsmga004.jf.intel.com with ESMTP; 10 Mar 2020 22:33:18 -0700
+Subject: Re: [PATCH v1 01/14] perf util: Create source line mapping table
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+References: <20200310070245.16314-1-yao.jin@linux.intel.com>
+ <20200310070245.16314-2-yao.jin@linux.intel.com>
+ <20200310150855.GF15931@kernel.org>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <ca8fbeac-1cc7-e218-a54d-50081f27cdbe@linux.intel.com>
+Date:   Wed, 11 Mar 2020 13:33:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9509:: with SMTP id d9mr1407940iom.127.1583904721925;
- Tue, 10 Mar 2020 22:32:01 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 22:32:01 -0700
-In-Reply-To: <CAM_iQpXBb_73wLrBWW7qYfpryWB8zUpMs62d-b0cq3Rw2r2f1w@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004efb2705a08d8e8e@google.com>
-Subject: Re: KASAN: use-after-free Read in tcindex_dump
-From:   syzbot <syzbot+653090db2562495901dc@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200310150855.GF15931@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Arnaldo,
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+On 3/10/2020 11:08 PM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Mar 10, 2020 at 03:02:32PM +0800, Jin Yao escreveu:
+>> Sometimes, a small change in a hot function reducing the cycles of
+>> this function, but the overall workload doesn't get faster. It is
+>> interesting where the cycles are moved to.
+>>
+>> What it would like is to diff before/after streams. A stream is a
+>> callchain which is aggregated by the branch records from samples.
+>>
+>> By browsing the hot streams, we can understand the hot code flow.
+>> By comparing the cycles variation of same streams between old perf
+>> data and new perf data, we can understand if the cycles are moved to
+>> the unchanged code.
+>>
+>> The before stream is the stream before source line changed
+>> (e.g. streams in perf.data.old). The after stream is the stream
+>> after source line changed (e.g. streams in perf.data).
+>>
+>> Diffing before/after streams compares all streams (or compares top
+>> N hot streams) between two perf data files.
+>>
+>> If all entries of one stream in perf.data.old are fully matched with
+>> all entries of another stream in perf.data, we think these two streams
+>> are matched, otherwise the streams are not matched.
+>>
+>> For example,
+>>
+>>     cycles: 1, hits: 26.80%                 cycles: 1, hits: 27.30%
+>> --------------------------              --------------------------
+>>               main div.c:39                           main div.c:39
+>>               main div.c:44                           main div.c:44
+>>
+>> It looks that two streams are matched and we can see for the same
+>> streams the cycles are equal and the stream hit percents are
+>> slightly changed. That's expected in the normal range.
+>>
+>> But that's not always true if source lines are changed in perf.data
+>> (e.g. div.c:39 is changed). If the source line is changed, they
+>> are different streams, we can't compare them. We just think the
+>> stream in perf.data is a new one.
+>>
+>> The challenge is how to identify the changed source lines. The basic
+>> idea is to use linux command 'diff' to compare the source file A and
+>> source file A* line by line (assume A is used in perf.data.old
+>> and A* is updated in perf.data). Create a source line mapping table.
+>>
+>> For example,
+>>
+>>    Execute 'diff ./before/div.c ./after/div.c'
+>>
+>>    25c25
+>>    <       i = rand() % 2;
+>>    ---
+>>    >       i = rand() % 4;
+>>    39c39
+>>    <       for (i = 0; i < 2000000000; i++) {
+>>    ---
+>>    >       for (i = 0; i < 20000000001; i++) {
+>>
+>>    div.c (after -> before) lines mapping:
+>>    0 -> 0
+>>    1 -> 1
+>>    2 -> 2
+>>    3 -> 3
+>>    4 -> 4
+>>    5 -> 5
+>>    6 -> 6
+>>    7 -> 7
+>>    8 -> 8
+>>    9 -> 9
+>>    ...
+>>    24 -> 24
+>>    25 -> -1
+>>    26 -> 26
+>>    27 -> 27
+>>    28 -> 28
+>>    29 -> 29
+>>    30 -> 30
+>>    31 -> 31
+>>    32 -> 32
+>>    33 -> 33
+>>    34 -> 34
+>>    35 -> 35
+>>    36 -> 36
+>>    37 -> 37
+>>    38 -> 38
+>>    39 -> -1
+>>    40 -> 40
+>>    ...
+>>
+>>  From the table, we can easily know div.c:39 is source line changed.
+>> (it's mapped to -1). So these two streams are not matched.
+>>
+>> This patch can also handle the cases of new source lines insertion
+>> and old source lines deletion. This source line mapping table is a
+>> base for next processing for stream comparison.
+>>
+>> This patch creates a new rblist 'srclist' to manage the source line
+>> mapping tables. Each node contains the source line mapping table of
+>> a before/after source file pair. The node is created on demand as
+>> we process the samples. So it's likely we don't need to create so many
+>> nodes.
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/util/Build     |   1 +
+>>   tools/perf/util/srclist.c | 552 ++++++++++++++++++++++++++++++++++++++
+>>   tools/perf/util/srclist.h |  65 +++++
+>>   3 files changed, 618 insertions(+)
+>>   create mode 100644 tools/perf/util/srclist.c
+>>   create mode 100644 tools/perf/util/srclist.h
+>>
+>> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+>> index c0cf8dff694e..b9bf620b60f0 100644
+>> --- a/tools/perf/util/Build
+>> +++ b/tools/perf/util/Build
+>> @@ -99,6 +99,7 @@ perf-y += call-path.o
+>>   perf-y += rwsem.o
+>>   perf-y += thread-stack.o
+>>   perf-y += spark.o
+>> +perf-y += srclist.o
+>>   perf-$(CONFIG_AUXTRACE) += auxtrace.o
+>>   perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+>>   perf-$(CONFIG_AUXTRACE) += intel-pt.o
+>> diff --git a/tools/perf/util/srclist.c b/tools/perf/util/srclist.c
+>> new file mode 100644
+>> index 000000000000..cb1d42a3a8ed
+>> --- /dev/null
+>> +++ b/tools/perf/util/srclist.c
+>> @@ -0,0 +1,552 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Manage difference of source lines
+>> + * Copyright (c) 2020, Intel Corporation.
+>> + * Author: Jin Yao
+>> + */
+>> +#include <stdlib.h>
+>> +#include <stdio.h>
+>> +#include <sys/types.h>
+>> +#include <inttypes.h>
+>> +#include <string.h>
+>> +#include <strings.h>
+>> +#include <unistd.h>
+>> +#include <err.h>
+>> +#include <errno.h>
+>> +#include <limits.h>
+>> +#include <stdbool.h>
+>> +#include <linux/zalloc.h>
+>> +#include "strlist.h"
+>> +#include "srclist.h"
+>> +#include "debug.h"
+>> +
+>> +enum {
+>> +	DIFF_LINE_ADD,
+>> +	DIFF_LINE_DEL,
+>> +	DIFF_LINE_CHANGE
+>> +};
+>> +
+>> +static void get_full_path(const char *dir, const char *rel_path,
+>> +			  char *full_path, int size)
+>> +{
+>> +	if (!dir) {
+>> +		snprintf(full_path, size, "%s", rel_path);
+>> +		return;
+>> +	}
+>> +
+>> +	if (dir[strlen(dir) - 1] == '/')
+>> +		snprintf(full_path, size, "%s%s", dir, rel_path);
+>> +	else
+>> +		snprintf(full_path, size, "%s/%s", dir, rel_path);
+> 
+> Just use
+> 
+> 	snprintf(full_path, size, "%s/%s", dir, rel_path);
+> 
+> an extra / won't matter, the code will be smaller. At first I thought
+> you could use path__join(), please check if that is the case.
+> 
 
-Reported-and-tested-by: syzbot+653090db2562495901dc@syzkaller.appspotmail.com
+Yes, path__join() looks better. Let me try this function.
 
-Tested on:
+>> +}
+>> +
+>> +static int get_line_num(char *path)
+> 
+> So this is to get how many lines a given file has? I.e. 'wc -l'? Maybe:
+> 
+> static int path__number_of_lines(const char *path)
+> 
+> ?
+> 
 
-commit:         2c19e526 net_sched: hold rtnl lock for tcindex_partial_des..
-git tree:       https://github.com/congwang/linux.git tcindex
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bcbe864577669742
-dashboard link: https://syzkaller.appspot.com/bug?extid=653090db2562495901dc
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Yes, something like "wc -l".
 
-Note: testing is done by a robot and is best-effort only.
+I will use the new function name "path__number_of_lines".
+
+>> +{
+>> +	FILE *fh;
+>> +	int num = 0, ch, last = 0;
+>> +
+>> +	fh = fopen(path, "r");
+>> +	if (!fh) {
+>> +		pr_debug("Failed to open file %s\n", path);
+>> +		return -1;
+>> +	}
+>> +
+>> +	while (!feof(fh)) {
+>> +		ch = fgetc(fh);
+>> +		if (ch == '\n')
+>> +			num++;
+>> +		last = ch;
+> 
+> Maybe use fgets() instead as it already stops at '\n'?
+> 
+
+Yes, fgets() can be used here to replace fgetc().
+
+>> +	}
+>> +
+>> +	fclose(fh);
+>> +
+>> +	if (last != '\n')
+>> +		num++;
+>> +
+>> +	return num;
+>> +}
+>> +
+>> +static int get_digit(char *str, char **end_str, int *val)
+>> +{
+>> +	int v;
+>> +	char *end;
+>> +
+>> +	errno = 0;
+>> +	v = strtol(str, &end, 10);
+>> +	if ((errno == ERANGE && (v == INT_MAX || v == INT_MIN))
+>> +		|| (errno != 0 && v == 0)) {
+>> +		return -1;
+>> +	}
+>> +
+>> +	if (end == str)
+>> +		return -1;
+>> +
+>> +	*val = v;
+>> +	*end_str = end;
+>> +	return 0;
+>> +}
+>> +
+>> +static int get_range(char *str, int *start_val, int *end_val)
+>> +{
+>> +	int val, ret;
+>> +	char *end, *next;
+>> +
+>> +	*start_val = -1;
+>> +	*end_val = -1;
+>> +
+>> +	ret = get_digit(str, &end, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*start_val = val;
+>> +
+>> +	if (*end != '\0') {
+>> +		next = end + 1;
+>> +		ret = get_digit(next, &end, &val);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		*end_val = val;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int opr_str_idx(char *str, int len, char ch)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < len; i++) {
+>> +		if (str[i] == ch)
+>> +			break;
+>> +	}
+>> +
+>> +	if (i == len || i == 0 || i == len - 1)
+>> +		return -1;
+>> +
+>> +	if (str[i - 1] >= '0' && str[i - 1] <= '9' &&
+>> +	    str[i + 1] >= '0' && str[i + 1] <= '9') {
+>> +		return i;
+>> +	}
+>> +
+>> +	return -1;
+>> +}
+>> +
+>> +static bool get_diff_operation(char *str, int *opr, int *b_start, int *b_end,
+>> +			       int *a_start, int *a_end)
+>> +{
+>> +	int idx, len;
+>> +
+>> +	if (str[0] == '<' || str[0] == '>' || str[0] == '-')
+>> +		return false;
+>> +
+>> +	len = strlen(str);
+>> +
+>> +	/*
+>> +	 * For example,
+>> +	 * 5,6d4
+>> +	 * 8a7
+>> +	 * 20,21c19
+>> +	 */
+>> +	idx = opr_str_idx(str, len, 'd');
+>> +	if (idx != -1) {
+>> +		*opr = DIFF_LINE_DEL;
+>> +		goto exit;
+>> +	}
+>> +
+>> +	idx = opr_str_idx(str, len, 'a');
+>> +	if (idx != -1) {
+>> +		*opr = DIFF_LINE_ADD;
+>> +		goto exit;
+>> +	}
+>> +
+>> +	idx = opr_str_idx(str, len, 'c');
+>> +	if (idx != -1) {
+>> +		*opr = DIFF_LINE_CHANGE;
+>> +		goto exit;
+>> +	}
+>> +
+>> +exit:
+>> +	if (idx != -1) {
+>> +		str[idx] = 0;
+>> +		get_range(str, b_start, b_end);
+>> +		get_range(&str[idx + 1], a_start, a_end);
+> 
+> get_range() may return -1, don't you have to check this here?
+> 
+
+Thanks for reminding, I should add checking here.
+
+>> +		return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static int del_lines(struct line_pair *lines, int b_start, int b_end,
+>> +		     int a_start, int a_end __maybe_unused,
+>> +		     int *nr_lines, int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +	bool set = false;
+>> +
+>> +	/*
+>> +	 * For example, 5,6d4
+>> +	 * It means line5~line6 of file1 are not same as line4 of file2
+>> +	 * since line5~line6 are deleted.
+>> +	 */
+>> +
+>> +	if (a_start == i) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + *b_adjust;
+>> +		set = true;
+>> +	}
+>> +
+>> +	if (b_end != -1)
+>> +		*b_adjust += b_end - b_start + 1;
+>> +	else
+>> +		*b_adjust += 1;
+>> +
+>> +	if (!set) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + *b_adjust;
+>> +	}
+>> +
+>> +	*nr_lines = i + 1;
+>> +	return 0;
+>> +}
+>> +
+>> +static int add_lines(struct line_pair *lines,
+>> +		     int b_start __maybe_unused, int b_end __maybe_unused,
+>> +		     int a_start, int a_end, int *nr_lines, int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +
+>> +	/*
+>> +	 * For example, 8a7
+>> +	 * It means line8 of file1 is not same as line7 of file2
+>> +	 * since a new line (line7) is inserted to file2.
+>> +	 */
+>> +	if (a_end != -1) {
+>> +		for (int j = 0; j < a_end - a_start + 1; j++) {
+>> +			lines[i].a_nr = i;
+>> +			lines[i].b_nr = -1;
+>> +			i++;
+>> +		}
+>> +		*b_adjust -= a_end - a_start + 1;
+>> +	} else {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = -1;
+>> +		i++;
+>> +		*b_adjust -= 1;
+>> +	}
+>> +
+>> +	*nr_lines = i;
+>> +	return 0;
+>> +}
+>> +
+>> +static int change_lines(struct line_pair *lines, int b_start, int b_end,
+>> +			int a_start, int a_end, int *nr_lines, int *b_adjust)
+>> +{
+>> +	int i = *nr_lines;
+>> +
+>> +	/*
+>> +	 * For example, 20,21c19
+>> +	 * It means line20~line21 of file1 are not same as line19 of file2
+>> +	 * since they are changed.
+>> +	 */
+>> +
+>> +	if (a_end != -1) {
+>> +		for (int j = 0; j < a_end - a_start + 1; j++) {
+>> +			lines[i].a_nr = i;
+>> +			lines[i].b_nr = -1;
+>> +			i++;
+>> +		}
+>> +	} else {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = -1;
+>> +		i++;
+>> +	}
+>> +
+>> +	if (b_end != -1)
+>> +		*b_adjust += b_end - b_start;
+>> +
+>> +	if (a_end != -1)
+>> +		*b_adjust -= a_end - a_start;
+>> +
+>> +	*nr_lines = i;
+>> +	return 0;
+>> +}
+>> +
+>> +static int update_lines(struct line_pair *lines, int opr, int b_start,
+>> +			int b_end, int a_start, int a_end, int *nr_lines,
+>> +			int *b_adjust)
+> 
+> 
+> Functions operating on thisa 'struct line_pair' should have the
+> line_pair__ prefix, so that we can use ctags, etc, as we have other
+> places that process lines, etc, which may end up clashing.
+> 
+
+OK, I will use the function names like line_pair__change_lines(), 
+line_pair__update_lines() and etc.
+
+>> +{
+>> +	int i = *nr_lines;
+>> +
+>> +	while (i < a_start) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + *b_adjust;
+>> +		i++;
+>> +	}
+>> +
+>> +	*nr_lines = i;
+>> +
+>> +	switch (opr) {
+>> +	case DIFF_LINE_DEL:
+>> +		del_lines(lines, b_start, b_end, a_start, a_end,
+>> +			  nr_lines, b_adjust);
+>> +		break;
+>> +
+>> +	case DIFF_LINE_ADD:
+>> +		add_lines(lines, b_start, b_end, a_start, a_end,
+>> +			  nr_lines, b_adjust);
+>> +		break;
+>> +
+>> +	case DIFF_LINE_CHANGE:
+>> +		change_lines(lines, b_start, b_end, a_start, a_end,
+>> +			     nr_lines, b_adjust);
+>> +		break;
+>> +
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void update_remaining(struct line_pair *lines, int a_num, int *nr_lines,
+>> +			     int b_adjust)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = *nr_lines; i <= a_num; i++) {
+>> +		lines[i].a_nr = i;
+>> +		lines[i].b_nr = i + b_adjust;
+>> +	}
+>> +
+>> +	*nr_lines = i;
+>> +}
+>> +
+>> +static int build_mapping_table(FILE *diff_fd, struct line_pair *lines,
+>> +			       int *nr_lines, int a_num)
+>> +{
+>> +	char *str, *p;
+>> +	size_t len;
+>> +	int opr, b_start, b_end, a_start, a_end, b_adjust = 0;
+>> +
+>> +	*nr_lines = 1;  /* First line is reserved */
+>> +
+>> +	while (!feof(diff_fd)) {
+>> +		str = NULL;
+> 
+> Forgot to set len to zero? (See getline manpage)
+> 
+
+I've set str to NULL yet. Yes, I should set len to 0 too. The manpage says
+
+"If *lineptr is set to NULL and *n is set 0 before the call, then 
+getline() will allocate a buffer for storing the line."
+
+It mentions the "and" here.
+
+>> +		if (getline(&str, &len, diff_fd) < 0 || !len)
+>> +			break;
+>> +
+>> +		p = strchr(str, '\n');
+>> +		if (p)
+>> +			*p = '\0';
+>> +
+>> +		pr_debug("%s\n", str);
+>> +
+>> +		if (!get_diff_operation(str, &opr, &b_start, &b_end,
+>> +					&a_start, &a_end)) {
+>> +			continue;
+>> +		}
+>> +
+>> +		update_lines(lines, opr, b_start, b_end, a_start, a_end,
+>> +			     nr_lines, &b_adjust);
+> 
+> So, since str was allocated, where is it being kept? above you're always
+> setting it to NULL before calling getline.
+> 
+
+Let me update the code as following.
+
+size_t len = 0;
+char *str = NULL;
+
+while (getline(&str, &len, diff_fd) > 0) {
+	...
+}
+
+free(str);
+
+>> +	}
+>> +
+>> +	update_remaining(lines, a_num, nr_lines, b_adjust);
+>> +
+>> +	free(str);
+>> +	return 0;
+>> +}
+>> +
+>> +static int create_line_mapping(struct src_info *info, char *b_path,
+>> +			       char *a_path)
+> 
+> src_info__create_line_mappings() ?
+>
+
+OK, I will change it to src_info__create_line_mappings().
+
+>> +{
+>> +	char cmd[PATH_MAX];
+>> +	FILE *diff_fd = NULL;
+>> +	int ret = -1;
+>> +
+>> +	info->nr_lines_before = get_line_num(b_path);
+>> +	if (info->nr_lines_before == -1)
+>> +		goto out;
+>> +
+>> +	info->nr_lines_after = get_line_num(a_path);
+>> +	if (info->nr_lines_after == -1)
+>> +		goto out;
+>> +
+>> +	/* Reserve first line */
+>> +	info->nr_max = info->nr_lines_before + info->nr_lines_after + 1;
+>> +	info->lines = calloc(info->nr_max, sizeof(struct line_pair));
+>> +	if (!info->lines) {
+>> +		pr_err("Failed to alloc memory for lines\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	snprintf(cmd, sizeof(cmd), "diff %s %s",
+>> +		 b_path, a_path);
+>> +
+>> +	pr_debug("Execute '%s'\n", cmd);
+>> +
+>> +	diff_fd = popen(cmd, "r");
+>> +	if (!diff_fd) {
+>> +		pr_err("Failed to execute '%s'\n", cmd);
+>> +		goto out;
+>> +	}
+>> +
+>> +	ret = build_mapping_table(diff_fd, info->lines, &info->nr_lines,
+>> +				  info->nr_lines_after);
+>> +
+>> +out:
+>> +	if (diff_fd)
+>> +		fclose(diff_fd);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void free_src_info(struct src_info *info)
+>> +{
+>> +	if (info->rel_path)
+>> +		zfree(&info->rel_path);
+>> +
+>> +	if (info->lines)
+>> +		zfree(&info->lines);
+> 
+> No need to check if it is NULL, call zfree() straight away.
+> 
+
+OK
+
+>> +}
+>> +
+>> +static int init_src_info(char *b_path, char *a_path, const char *rel_path,
+>> +			 struct src_info *info)
+>> +{
+>> +	int ret;
+>> +
+>> +	info->rel_path = strdup(rel_path);
+>> +	if (!info->rel_path)
+>> +		return -1;
+>> +
+>> +	ret = create_line_mapping(info, b_path, a_path);
+>> +	if (ret) {
+>> +		free_src_info(info);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+> 
+> 	if (ret)
+> 		free_src_info(info);
+> 
+> 	return ret;
+> 
+> Should be equivalent and shorter, no?
+> 
+> 
+
+Yes, much better. :)
+
+>> +}
+>> +
+>> +static void free_src_node(struct src_node *node)
+>> +{
+> 
+> Free routines should accept a NULL arg, i.e. first thing:
+> 
+>          if (node == NULL)
+> 		return;
+> 
+
+Yes, will add NULL check here.
+
+>> +	free_src_info(&node->info);
+>> +	free(node);
+>> +}
+>> +
+>> +static struct rb_node *srclist__node_new(struct rblist *rblist,
+>> +					 const void *entry)
+>> +{
+>> +	struct srclist *slist = container_of(rblist, struct srclist, rblist);
+>> +	const char *rel_path = entry;
+>> +	char b_path[PATH_MAX], a_path[PATH_MAX];
+>> +	struct src_node *node;
+>> +	int ret;
+>> +
+>> +	get_full_path(slist->before_dir, rel_path, b_path, PATH_MAX);
+>> +	get_full_path(slist->after_dir, rel_path, a_path, PATH_MAX);
+>> +
+>> +	node = calloc(1, sizeof(*node));
+> 
+> 	zalloc()?
+> 
+
+Will change it to zalloc().
+
+>> +	if (!node)
+>> +		return NULL;
+>> +
+>> +	ret = init_src_info(b_path, a_path, rel_path, &node->info);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	return &node->rb_node;
+>> +
+>> +err:
+>> +	free_src_node(node);
+>> +	return NULL;
+>> +}
+>> +
+>> +static void srclist__node_delete(struct rblist *rblist __maybe_unused,
+>> +				 struct rb_node *rb_node)
+>> +{
+>> +	struct src_node *node = container_of(rb_node, struct src_node, rb_node);
+>> +
+>> +	free_src_info(&node->info);
+>> +	free(node);
+>> +}
+>> +
+>> +static int srclist__node_cmp(struct rb_node *rb_node, const void *entry)
+>> +{
+>> +	struct src_node *node = container_of(rb_node, struct src_node, rb_node);
+>> +	const char *str = entry;
+>> +
+>> +	return strcmp(node->info.rel_path, str);
+>> +}
+>> +
+>> +struct srclist *srclist__new(const char *before_dir, const char *after_dir)
+>> +{
+>> +	struct srclist *slist = calloc(1, sizeof(*slist));
+> 
+> zalloc()
+> 
+
+zalloc :)
+
+>> +
+>> +	if (!slist)
+>> +		return NULL;
+>> +
+>> +	rblist__init(&slist->rblist);
+>> +	slist->rblist.node_cmp = srclist__node_cmp;
+>> +	slist->rblist.node_new = srclist__node_new;
+>> +	slist->rblist.node_delete = srclist__node_delete;
+>> +
+>> +	slist->before_dir = before_dir;
+>> +	slist->after_dir = after_dir;
+>> +	return slist;
+>> +}
+>> +
+>> +void srclist__delete(struct srclist *slist)
+>> +{
+>> +	if (slist)
+>> +		rblist__delete(&slist->rblist);
+> 
+> 
+> Correct, delete operations should accept NULL, just like free()
+> 
+
+Yes.
+
+Sorry for so many isues in this patch. I will update according to your 
+suggestions.
+
+Thanks
+Jin Yao
+
+>> +}
+>> +
+>> +struct src_node *srclist__find(struct srclist *slist, char *rel_path,
+>> +			       bool create)
+>> +{
+>> +	struct src_node *node = NULL;
+>> +	struct rb_node *rb_node;
+>> +
+>> +	if (create)
+>> +		rb_node = rblist__findnew(&slist->rblist, (void *)rel_path);
+>> +	else
+>> +		rb_node = rblist__find(&slist->rblist, (void *)rel_path);
+>> +
+>> +	if (rb_node)
+>> +		node = container_of(rb_node, struct src_node, rb_node);
+>> +
+>> +	return node;
+>> +}
+>> +
+>> +struct line_pair *srclist__line_pair(struct src_node *node, int a_nr)
+>> +{
+>> +	struct src_info *info = &node->info;
+>> +
+>> +	if (a_nr < info->nr_lines && a_nr > 0)
+>> +		return &info->lines[a_nr];
+>> +
+>> +	pr_debug("Exceeds line range: nr_lines = %d, a_nr = %d\n",
+>> +		 info->nr_lines, a_nr);
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +void srclist__dump(struct srclist *slist)
+>> +{
+>> +	struct src_node *node;
+>> +	struct src_info *info;
+>> +	int i;
+>> +
+>> +	srclist__for_each_entry(node, slist) {
+>> +		info = &node->info;
+>> +
+>> +		pr_debug("%s (after -> before) lines mapping:\n",
+>> +			 info->rel_path);
+>> +
+>> +		for (i = 0; i < info->nr_lines; i++) {
+>> +			pr_debug("%d -> %d\n",
+>> +				 info->lines[i].a_nr,
+>> +				 info->lines[i].b_nr);
+>> +		}
+>> +	}
+>> +}
+>> diff --git a/tools/perf/util/srclist.h b/tools/perf/util/srclist.h
+>> new file mode 100644
+>> index 000000000000..f25b0de91a13
+>> --- /dev/null
+>> +++ b/tools/perf/util/srclist.h
+>> @@ -0,0 +1,65 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef __PERF_SRCLIST_H
+>> +#define __PERF_SRCLIST_H
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/rbtree.h>
+>> +#include "rblist.h"
+>> +
+>> +struct line_pair {
+>> +	int a_nr;	/* line nr in after.c */
+>> +	int b_nr;	/* line nr in before.c */
+>> +};
+>> +
+>> +struct src_node;
+>> +
+>> +struct src_info {
+>> +	char *rel_path; /* relative path */
+>> +	struct line_pair *lines;
+>> +	int nr_max;
+>> +	int nr_lines;
+>> +	int nr_lines_before;
+>> +	int nr_lines_after;
+>> +};
+>> +
+>> +struct src_node {
+>> +	struct rb_node rb_node;
+>> +	struct src_info info;
+>> +};
+>> +
+>> +struct srclist {
+>> +	struct rblist rblist;
+>> +	const char *before_dir;
+>> +	const char *after_dir;
+>> +};
+>> +
+>> +struct srclist *srclist__new(const char *before_dir, const char *after_dir);
+>> +void srclist__delete(struct srclist *slist);
+>> +
+>> +struct src_node *srclist__find(struct srclist *slist, char *rel_path,
+>> +			       bool create);
+>> +
+>> +struct line_pair *srclist__line_pair(struct src_node *node, int a_nr);
+>> +void srclist__dump(struct srclist *slist);
+>> +
+>> +static inline struct src_node *srclist__first(struct srclist *slist)
+>> +{
+>> +	struct rb_node *rn = rb_first_cached(&slist->rblist.entries);
+>> +
+>> +	return rn ? rb_entry(rn, struct src_node, rb_node) : NULL;
+>> +}
+>> +
+>> +static inline struct src_node *srclist__next(struct src_node *sn)
+>> +{
+>> +	struct rb_node *rn;
+>> +
+>> +	if (!sn)
+>> +		return NULL;
+>> +	rn = rb_next(&sn->rb_node);
+>> +	return rn ? rb_entry(rn, struct src_node, rb_node) : NULL;
+>> +}
+>> +
+>> +#define srclist__for_each_entry(pos, slist)	\
+>> +	for (pos = srclist__first(slist); pos; pos = srclist__next(pos))
+>> +
+>> +#endif /* __PERF_SRCLIST_H */
+>> -- 
+>> 2.17.1
+>>
+> 
