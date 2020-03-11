@@ -2,198 +2,64 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B3BC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD0C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C13020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="GZj2zCxt"
+	by mail.kernel.org (Postfix) with ESMTP id 33BB520578
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbgCKT01 (ORCPT
+        id S1731124AbgCKT1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:26:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44354 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730705AbgCKT00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:26:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b72so1874830pfb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=N8GeVwimrf194q+69nNoqJbKMtnU04MRfyht6Ybi7d8=;
-        b=GZj2zCxtZQN7rdwZIHCh7uyVzBz4scfrRmTUFR/VffGGdCMA5bFrHhL2JL5YEyT6mu
-         aqxBUwJ0thje1vnf+cT4Tay0UfVbeKhf+lSsKewwSLy9Q0va9cTYxrbI6Ubao8v9vOBE
-         AJI9KLn8rFoAN7kOyhqkKYI795+vxgGRLFa6aaR4vlWc6RZlfY3C6ipaA9g/e1d7xahd
-         gjW4sa1bK+aCX9/c3GsABv9kgNpQTmSGO3TKaVswW11iaElcHnHE0wzTabUUblTlzo2v
-         +AoUipGw4JhQO+irtU9G7gPPbenApQLW1gWXcivgE3hqR2chl+i047KTZ4IG9h2gulwf
-         /UBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=N8GeVwimrf194q+69nNoqJbKMtnU04MRfyht6Ybi7d8=;
-        b=nrfB35bl9trHQAg12YuMNdZd3MN/8eZfSy3cljsQLaTf4mHgSKTGavln0V9S24nVLL
-         gdR8181L4ARVgJ1FxuRvxXVlgPcoHPHMz8PrTYPzPE8gf5G770ANQgUZM56v7kJnngQ/
-         Dle32yiSmD1xIyBRK3CfW+y1ukYkzmRjJbhPtAbAzhGkwl5J7l51al0LhxjBedjwQfvn
-         kAvUHL7fq3OLOAuR+BssFp+6c+oEU1s1qTcWkHbtt3jbseVGn6SylC2MdzVs0x6KvG3b
-         CyL8HMSwVHvi5GLQPdxzKXMl8Wdb7mVpiT21wtDJiC6l07w5Q/Y2fnIpUvg6CQHBF2Xq
-         54Fw==
-X-Gm-Message-State: ANhLgQ2SQmpYEdRTi0pdbFLBBguJMVBkMnL78xysoK6cSScqga0asfxK
-        OcpGHjKWBFoUaV6FGM8ZUzBh/A==
-X-Google-Smtp-Source: ADFU+vu8rW01yUwE3dJ6eiLXrml4XQ97aTB4ttHKpl1VVIpAKWDBPNdmLEzNqgBxmiXxUuG4g+xnfA==
-X-Received: by 2002:a63:5547:: with SMTP id f7mr4302933pgm.166.1583954784511;
-        Wed, 11 Mar 2020 12:26:24 -0700 (PDT)
-Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id w124sm1859792pfd.71.2020.03.11.12.26.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 12:26:23 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <C4175F35-E9D4-4B79-B1A0-047A51DE3287@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_905F47DD-E2D0-46C5-9E10-53ED895035D2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH RFC 0/5] fs, ext4: Physical blocks placement hint for
- fallocate(0): fallocate2(). TP defrag.
-Date:   Wed, 11 Mar 2020 13:26:19 -0600
-In-Reply-To: <2b2bb85f-8062-648a-1b6e-7d655bf43c96@virtuozzo.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
-        krisman@collabora.com, surajjs@amazon.com,
-        Dmitry Monakhov <dmonakhov@gmail.com>,
-        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
-        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <20200302165637.GA6826@mit.edu>
- <2b2bb85f-8062-648a-1b6e-7d655bf43c96@virtuozzo.com>
-X-Mailer: Apple Mail (2.3273)
+        Wed, 11 Mar 2020 15:27:44 -0400
+Received: from elvis.franken.de ([193.175.24.41]:34841 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730913AbgCKT1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:27:43 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jC713-0008JO-01; Wed, 11 Mar 2020 20:27:41 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 46A54C1038; Wed, 11 Mar 2020 20:20:17 +0100 (CET)
+Date:   Wed, 11 Mar 2020 20:20:17 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH -next 015/491] KERNEL VIRTUAL MACHINE FOR MIPS
+ (KVM/mips): Use fallthrough;
+Message-ID: <20200311192017.GB3588@alpha.franken.de>
+References: <cover.1583896344.git.joe@perches.com>
+ <5a1ee76be0f502af626f50313456730d75fe424b.1583896348.git.joe@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a1ee76be0f502af626f50313456730d75fe424b.1583896348.git.joe@perches.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 09:51:29PM -0700, Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
+> 
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  arch/mips/kvm/emulate.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
 
---Apple-Mail=_905F47DD-E2D0-46C5-9E10-53ED895035D2
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-On Mar 3, 2020, at 2:57 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->=20
-> On 02.03.2020 19:56, Theodore Y. Ts'o wrote:
->> Kirill,
->>=20
->> In a couple of your comments on this patch series, you mentioned
->> "defragmentation".  Is that because you're trying to use this as part
->> of e4defrag, or at least, using EXT4_IOC_MOVE_EXT?
->>=20
->> If that's the case, you should note that input parameter for that
->> ioctl is:
->>=20
->> struct move_extent {
->> 	__u32 reserved;		/* should be zero */
->> 	__u32 donor_fd;		/* donor file descriptor */
->> 	__u64 orig_start;	/* logical start offset in block for =
-orig */
->> 	__u64 donor_start;	/* logical start offset in block for =
-donor */
->> 	__u64 len;		/* block length to be moved */
->> 	__u64 moved_len;	/* moved block length */
->> };
->>=20
->> Note that the donor_start is separate from the start of the file that
->> is being defragged.  So you could have the userspace application
->> fallocate a large chunk of space for that donor file, and then use
->> that donor file to defrag multiple files if you want to close pack
->> them.
->=20
-> The practice shows it's not so. Your suggestion was the first thing we =
-tried,
-> but it works bad and just doubles/triples IO.
->=20
-> Let we have two files of 512Kb, and they are placed in separate 1Mb =
-clusters:
->=20
-> [[512Kb file][512Kb free]][[512Kb file][512Kb free]]
->=20
-> We want to pack both of files in the same 1Mb cluster. Packed together =
-on block
-> device, they will be in the same server of underlining distributed =
-storage file
-> system. This gives a big performance improvement, and this is the =
-price I aimed.
->=20
-> In case of I fallocate a large hunk for both of them, I have to move =
-them
-> both to this new hunk. So, instead of moving 512Kb of data, we will =
-have to move
-> 1Mb of data, i.e. double size, which is counterproductive.
->=20
-> Imaging another situation, when we have
-> [[1020Kb file]][4Kb free]][[4Kb file][1020Kb free]]
->=20
-> Here we may just move [4Kb file] into [4Kb free]. But your suggestion =
-again
-> forces us to move 1Mb instead of 4Kb, which makes IO 256 times worse! =
-This is
-> terrible! And this is the thing I try prevent with finding a new =
-interface.
+Thomas.
 
-One idea I had, which may work for your use case, is to run fallocate() =
-on
-the *1MB-4KB file* to allocate the last 4KB in that hunk, then use that =
-block
-as the donor file for the 1MB+4KB file.  The ext4 allocation algorithms =
-should
-always give you that 4KB chunk if it is free, and that avoids the need =
-to try
-and force the allocator to select that block through some other method.
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_905F47DD-E2D0-46C5-9E10-53ED895035D2
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5pO1sACgkQcqXauRfM
-H+CUYQ/+N4uJb0zbYQEoZSC1KjJdap67W8NEO4Ja/2L++extPWuCUl9YQy7MEfoQ
-oF2C/7ryZReGDzXO3RPtZkQ5IuiQSLkcmVYhJJsDmyLGOxtNEDobV/UchLjGeYSH
-XcoQAZXi+bzvB27PYLkfFQ/rOJD24XP/vj9+brrN75fqapD1zdsqc7FdJr7JQuuU
-gvFfakB94J6+XCXrWH8VDsnliXK3ylwIoHKNbcUcEe/bLyozZ+Pa0Uld8nX/IvF0
-UMJwj2H456qeovLVmjm7F6/R62uGTnJU1D6LkgozdhM4hT+bBzf/5ReJgC0+R8pT
-UPu4cDUGSlmjZTfKWxbT5ZkrEUsM/gR6/wxIdWCZYHzHWov70Hud7fd0WJX/VGrd
-lP3/CxrI7+L1xF9BHFdyrOrFb52YjYDrK0PLbUBoT89VLbrdC7VFQZvLokq0VPMe
-Uf/n7aaLllgP2EfxgQNgB7HI5Qpo9XceFEDnFAR9ahj9d+pYns8+tr7qvdnpW/L8
-BQ0T96GtcAvtVlrdPL6Q/Bw4xS14h4AwUz8qgSYHb0JCoiML50uIVx62jJkPEGAr
-8RuofbHTOZQVxiaIJYsgCn7Eg5WNTVhYVxB/f1HTAz+K215EvA1HkSwaH0CY9LYE
-gfa2zfNxQ05c9TvNbe4JWcXcdLG06NxybRviCQ2G3Higtyh1Zf4=
-=l6lA
------END PGP SIGNATURE-----
-
---Apple-Mail=_905F47DD-E2D0-46C5-9E10-53ED895035D2--
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
