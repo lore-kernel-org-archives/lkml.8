@@ -2,134 +2,158 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64863C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A80C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B2F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8D9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VfobzLcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgCKBce (ORCPT
+        id S1727934AbgCKBdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:32:34 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:47064 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCKBcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:32:33 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 02B1VNCw010399
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 10 Mar 2020 20:31:27 -0500
-Message-ID: <481e9b7d40c51505518a34ddc2515d3200dbf158.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2] usb: gadget: aspeed: improve vhub port irq handling
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Date:   Wed, 11 Mar 2020 12:31:22 +1100
-In-Reply-To: <20200305234746.1002-1-rentao.bupt@gmail.com>
-References: <20200305234746.1002-1-rentao.bupt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Mar 2020 21:33:31 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59475 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbgCKBdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 21:33:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cZGs4NtWz9s3x;
+        Wed, 11 Mar 2020 12:33:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583890407;
+        bh=qPTgb9mMJWX0JwqMPHT/IxZFbU+joOqwR/+5g2LF+kA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VfobzLcNZBoY4p6dRTXthkJwdLsZoMuuH0kraGYC+IoAyccYopAapvAawS6lzK0fs
+         gq4MTPppkGRVwTc7sfGqdT/8NLaWngIhp6GDrzyGeFZHDxocXV/CvMmrJIQ35yQZTl
+         3FELkK74xh5J1LUz4vgDCL4C+knvQNOfc3K4KW5UMO73pEjyoMLVVrduggpKLZY8Oc
+         cfz2a5AL+stGOyDe2E9iFy2kFCWyEOgbuO+9IjQ92xRlM9UQAu9PTPrhTtIIETd3SL
+         l9toRhFH/KBcKgLUEqOsWzph4MGpdci7y4KLW/CleTUFFeOt0zqxTLNsYwyaFU4fsi
+         vehqvRQACFsPg==
+Date:   Wed, 11 Mar 2020 12:33:18 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200311123318.51eff802@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JF2vUcnOrMs.cnYuTAW8+N6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-05 at 15:47 -0800, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> This patch evaluates vhub ports' irq mask before going through per-port
-> irq handling one by one, which helps to speed up irq handling in case
-> there is no port interrupt.
-> 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> ---
->  Changes in v2:
->    - use "for_each_set_bit" to speed up port irq handling.
-> 
->  drivers/usb/gadget/udc/aspeed-vhub/core.c | 11 ++++++++---
->  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  8 +++-----
->  2 files changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> index f8d35dd60c34..af2dbd405361 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> @@ -134,11 +134,14 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
->  	}
->  
->  	/* Handle device interrupts */
-> -	for (i = 0; i < vhub->max_ports; i++) {
-> -		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
-> +	if (istat & vhub->port_irq_mask) {
-> +		int offset = VHUB_IRQ_DEV1_BIT;
-> +		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
->  
-> -		if (istat & dev_mask)
-> +		for_each_set_bit_from(offset, (unsigned long *)&istat, size) 
+--Sig_/JF2vUcnOrMs.cnYuTAW8+N6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That type cast is very bad. It will not work on big endian for example
-(yes this driver isn't used on big endian today but still).
+Hi all,
 
-Please assign istat to an unsigned long (or make it unsigned long to
-begin with).
+Today's linux-next merge of the net-next tree got a conflict in:
 
-> +			i = offset - VHUB_IRQ_DEV1_BIT;
->  			ast_vhub_dev_irq(&vhub->ports[i].dev);
-> +		}
->  	}
->  
->  	/* Handle top-level vHub EP0 interrupts */
-> @@ -332,6 +335,8 @@ static int ast_vhub_probe(struct platform_device *pdev)
->  
->  	spin_lock_init(&vhub->lock);
->  	vhub->pdev = pdev;
-> +	vhub->port_irq_mask = GENMASK(VHUB_IRQ_DEV1_BIT + vhub->max_ports - 1,
-> +				      VHUB_IRQ_DEV1_BIT);
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	vhub->regs = devm_ioremap_resource(&pdev->dev, res);
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-> index fac79ef6d669..23a1ac91f8d2 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-> @@ -51,14 +51,11 @@
->  #define VHUB_CTRL_UPSTREAM_CONNECT		(1 << 0)
->  
->  /* IER & ISR */
-> +#define VHUB_IRQ_DEV1_BIT			9
->  #define VHUB_IRQ_USB_CMD_DEADLOCK		(1 << 18)
->  #define VHUB_IRQ_EP_POOL_NAK			(1 << 17)
->  #define VHUB_IRQ_EP_POOL_ACK_STALL		(1 << 16)
-> -#define VHUB_IRQ_DEVICE5			(1 << 13)
-> -#define VHUB_IRQ_DEVICE4			(1 << 12)
-> -#define VHUB_IRQ_DEVICE3			(1 << 11)
-> -#define VHUB_IRQ_DEVICE2			(1 << 10)
-> -#define VHUB_IRQ_DEVICE1			(1 << 9)
-> +#define VHUB_IRQ_DEVICE1			(1 << (VHUB_IRQ_DEV1_BIT))
->  #define VHUB_IRQ_BUS_RESUME			(1 << 8)
->  #define VHUB_IRQ_BUS_SUSPEND 			(1 << 7)
->  #define VHUB_IRQ_BUS_RESET 			(1 << 6)
-> @@ -402,6 +399,7 @@ struct ast_vhub {
->  	/* Per-port info */
->  	struct ast_vhub_port		*ports;
->  	u32				max_ports;
-> +	u32				port_irq_mask;
->  
->  	/* Generic EP data structures */
->  	struct ast_vhub_ep		*epns;
+  drivers/net/ethernet/mscc/ocelot.c
 
+between commit:
+
+  a8015ded89ad ("net: mscc: ocelot: properly account for VLAN header length=
+ when setting MRU")
+
+from the net tree and commit:
+
+  69df578c5f4b ("net: mscc: ocelot: eliminate confusion between CPU and NPI=
+ port")
+
+from the net-next tree.
+
+I fixed it up (I think - see below) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/mscc/ocelot.c
+index d3b7373c5961,06f9d013f807..000000000000
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@@ -2310,27 -2323,34 +2329,34 @@@ void ocelot_configure_cpu(struct ocelo
+  			 ANA_PORT_PORT_CFG_PORTID_VAL(cpu),
+  			 ANA_PORT_PORT_CFG, cpu);
+ =20
+- 	/* If the CPU port is a physical port, set up the port in Node
+- 	 * Processor Interface (NPI) mode. This is the mode through which
+- 	 * frames can be injected from and extracted to an external CPU.
+- 	 * Only one port can be an NPI at the same time.
+- 	 */
+- 	if (cpu < ocelot->num_phys_ports) {
++ 	if (npi >=3D 0 && npi < ocelot->num_phys_ports) {
+ -		int mtu =3D VLAN_ETH_FRAME_LEN + OCELOT_TAG_LEN;
+ +		int sdu =3D ETH_DATA_LEN + OCELOT_TAG_LEN;
+ =20
+  		ocelot_write(ocelot, QSYS_EXT_CPU_CFG_EXT_CPUQ_MSK_M |
+- 			     QSYS_EXT_CPU_CFG_EXT_CPU_PORT(cpu),
++ 			     QSYS_EXT_CPU_CFG_EXT_CPU_PORT(npi),
+  			     QSYS_EXT_CPU_CFG);
+ =20
+  		if (injection =3D=3D OCELOT_TAG_PREFIX_SHORT)
+ -			mtu +=3D OCELOT_SHORT_PREFIX_LEN;
+ +			sdu +=3D OCELOT_SHORT_PREFIX_LEN;
+  		else if (injection =3D=3D OCELOT_TAG_PREFIX_LONG)
+ -			mtu +=3D OCELOT_LONG_PREFIX_LEN;
+ +			sdu +=3D OCELOT_LONG_PREFIX_LEN;
+ =20
+- 		ocelot_port_set_maxlen(ocelot, cpu, sdu);
+ -		ocelot_port_set_mtu(ocelot, npi, mtu);
+++		ocelot_port_set_maxlen(ocelot, npi, sdu);
++=20
++ 		/* Enable NPI port */
++ 		ocelot_write_rix(ocelot,
++ 				 QSYS_SWITCH_PORT_MODE_INGRESS_DROP_MODE |
++ 				 QSYS_SWITCH_PORT_MODE_SCH_NEXT_CFG(1) |
++ 				 QSYS_SWITCH_PORT_MODE_PORT_ENA,
++ 				 QSYS_SWITCH_PORT_MODE, npi);
++ 		/* NPI port Injection/Extraction configuration */
++ 		ocelot_write_rix(ocelot,
++ 				 SYS_PORT_MODE_INCL_XTR_HDR(extraction) |
++ 				 SYS_PORT_MODE_INCL_INJ_HDR(injection),
++ 				 SYS_PORT_MODE, npi);
+  	}
+ =20
+- 	/* CPU port Injection/Extraction configuration */
++ 	/* Enable CPU port module */
+  	ocelot_write_rix(ocelot, QSYS_SWITCH_PORT_MODE_INGRESS_DROP_MODE |
+  			 QSYS_SWITCH_PORT_MODE_SCH_NEXT_CFG(1) |
+  			 QSYS_SWITCH_PORT_MODE_PORT_ENA,
+
+--Sig_/JF2vUcnOrMs.cnYuTAW8+N6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oP94ACgkQAVBC80lX
+0Gz0aQf/dc9xZsfmIau6hOVEzrinZzgwQfXpIhsqp5P4IWh+eRV/ZPi8NHFUCIZq
+BrjKVCXV1EdADDHXOkUlzyw3MsAAgPhC5uZqJQh10JX9pZChF9LAqnsIsu9S7CKQ
+Wf3YR6Zr3Y81fB4kgLhOxgdq09fb8yzEYdnUc/s2RfqkRh0F1fi09LBLGp9hifh/
+fxsTuxo3QUKWtwoCpGkREJmVr/c9anFI9ti2+pGj8+krh37t6qagaM8s3hXhY/O8
+KSpRLzWugfhR0ttWOkXI8JbJxV5A/pCJBzG2TGzVkbB6NVXatUF3NhjZEoaPuH0M
+nJuQY+ux86PhIvR6kTjK8XJCrMT6Ew==
+=4lSb
+-----END PGP SIGNATURE-----
+
+--Sig_/JF2vUcnOrMs.cnYuTAW8+N6--
