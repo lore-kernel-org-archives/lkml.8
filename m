@@ -2,144 +2,106 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B259C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F91EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFB52146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7485E21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZfTaqQP+"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cBX9fKK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgCKM7h (ORCPT
+        id S1729500AbgCKM7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:59:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60157 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729232AbgCKM7h (ORCPT
+        Wed, 11 Mar 2020 08:59:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45900 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729401AbgCKM7h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 08:59:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583931575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eRHGawj8EctzUWRxgMWMCKcmyXT/eFQgkAXnHzfcavw=;
-        b=ZfTaqQP+OzuLv3sQ7SDCgXigTrpPdQMZEeoU66HWJTglxKT49lNUw6dLjDwf+dAFvXtKS/
-        2XXRJiBzao+4C5augEXOUUiTIz1LLVN+Rz1S6OZCn2lVo/fW4uqsFapiz5jFT6N3ziLUqp
-        QFASNuXb6BmKMVv5M2gv8iSpFCyaF2U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-k6PJU7nPPLWeiHCzgt1RXQ-1; Wed, 11 Mar 2020 08:59:34 -0400
-X-MC-Unique: k6PJU7nPPLWeiHCzgt1RXQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B2BD100550E;
-        Wed, 11 Mar 2020 12:59:32 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C3F660C18;
-        Wed, 11 Mar 2020 12:59:24 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id DD31F22021D; Wed, 11 Mar 2020 08:59:23 -0400 (EDT)
-Date:   Wed, 11 Mar 2020 08:59:23 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Liu Bo <bo.liu@linux.alibaba.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
-Message-ID: <20200311125923.GA83257@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-21-vgoyal@redhat.com>
- <20200311051641.l6gonmmyb4o5rcrb@rsjd01523.et2sqa>
+Received: by mail-io1-f68.google.com with SMTP id w9so1758040iob.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9l0335H7R/gtb+vxYfReRASjTU9/uz9886f0Ecj/gTU=;
+        b=cBX9fKK9kCURF+tzK+q02uWe1wlkHdpQKBOKxTNGlv/iaPh3Fth1OCztTJOwGToc0n
+         zYEBA1cwfskvgCni8Vrmrmddo8xXTbPC240dk5n7pIjTZszTfpMx1Uwg17w6g5OBPmVB
+         /qDaqZKNETlMfoppxTw64IxVw14UntG6b0+mhzX2tGyMhdlyeSYxojBhu/9jARSCLyLI
+         9cYak3H3lNcv8vzquw+GVUVEecWM6vmP3ZMSoqtbeDJTXz4YNMeYDa0ew4xwLMKVTmEb
+         HW0qSDSeknuwPX37i0PvSYQKvWmi2gO98c2Ub2K1b0tDemLtXFQf2FIeb5W6rDdektqZ
+         Zygw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9l0335H7R/gtb+vxYfReRASjTU9/uz9886f0Ecj/gTU=;
+        b=dHn6TIez9nVlV8V0Le5bw4k5T0Ay6ccp4tudOw2i6UnyZ65AHBMDFNrZ7GzNO/SsNb
+         aUfKruuMP34wqASA716QT0bt3BeNcC8vj19sFWoID+xnbu379aLQ3PAdEj4Jde1f3aPX
+         xVtKow6kyET7IlKQ3MLk4ass5ewMVJmGMJYiFiz2QL4mR9FVrb6rDfsNfNv/VQvijJ3a
+         JjtgdVXNx6jejQvRppf00qmoVuCVrhkyjZYMRbs0YUk+USBYBFukt5uDx03ochBnjvA1
+         SBP5RhsihMQ30rlQUF0p7NLg7vVefL4zY+4FGAuXaDOuWZahmowMH/UGWmScPaj9kCf8
+         /Lgg==
+X-Gm-Message-State: ANhLgQ0e6rL06oFbIKIbh/h3NcIMMz8Ipr8OA+/+hy7tP+g2KmOXx5TL
+        DjasyZmXtYOA83eh6OJV5mG9Ow==
+X-Google-Smtp-Source: ADFU+vsl/lvX5mvSRhEyJTk5S80SJXyx1Jrs5RSf9T3HJPOEcp6tH3JPhhc4GlLr5Nf+N5EGQWAyeA==
+X-Received: by 2002:a6b:ea0b:: with SMTP id m11mr2796586ioc.182.1583931576447;
+        Wed, 11 Mar 2020 05:59:36 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t7sm2138153ioc.15.2020.03.11.05.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 05:59:36 -0700 (PDT)
+Subject: Re: [PATCH] block: Fix use-after-free issue accessing struct io_cq
+To:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Pradeep P V K <ppvk@codeaurora.org>
+References: <1583923070-22245-1-git-send-email-stummala@codeaurora.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <da11e249-904f-6cec-03b6-ce4b8d7eb1e1@kernel.dk>
+Date:   Wed, 11 Mar 2020 06:59:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311051641.l6gonmmyb4o5rcrb@rsjd01523.et2sqa>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <1583923070-22245-1-git-send-email-stummala@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:16:42PM +0800, Liu Bo wrote:
-
-[..]
-> > @@ -719,6 +723,7 @@ void fuse_conn_put(struct fuse_conn *fc)
-> >  	if (refcount_dec_and_test(&fc->count)) {
-> >  		struct fuse_iqueue *fiq = &fc->iq;
-> >  
-> > +		flush_delayed_work(&fc->dax_free_work);
+On 3/11/20 4:37 AM, Sahitya Tummala wrote:
+> There is a potential race between ioc_release_fn() and
+> ioc_clear_queue() as shown below, due to which below kernel
+> crash is observed. It also can result into use-after-free
+> issue.
 > 
-> Today while debugging another case, I realized that flushing work here
-> at the very last fuse_conn_put() is a bit too late, here's my analysis,
+> context#1:				context#2:
+> ioc_release_fn()			__ioc_clear_queue() gets the same icq
+> ->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
+> ->ioc_destroy_icq(icq);
+>   ->list_del_init(&icq->q_node);
+>   ->call_rcu(&icq->__rcu_head,
+>   	icq_free_icq_rcu);
+> ->spin_unlock(&ioc->lock);
+> 					->ioc_destroy_icq(icq);
+> 					  ->hlist_del_init(&icq->ioc_node);
+> 					  This results into below crash as this memory
+> 					  is now used by icq->__rcu_head in context#1.
+> 					  There is a chance that icq could be free'd
+> 					  as well.
 > 
->          umount                                                   kthread
-> 
-> deactivate_locked_super
->   ->virtio_kill_sb                                            try_to_free_dmap_chunks
->     ->generic_shutdown_super                                    ->igrab()
->                                                                 ...
->      ->evict_inodes()  -> check all inodes' count
->      ->fuse_conn_put                                            ->iput
->  ->virtio_fs_free_devs
->    ->fuse_dev_free
->      ->fuse_conn_put // vq1
->    ->fuse_dev_free
->      ->fuse_conn_put // vq2
->        ->flush_delayed_work
-> 
-> The above can end up with a warning message reported by evict_inodes()
-> about stable inodes.
+> 22150.386550:   <6> Unable to handle kernel write to read-only memory
+> at virtual address ffffffaa8d31ca50
 
-Hi Liu Bo,
+Fix looks good to me, applied.
 
-Which warning is that? Can you point me to it in code.
-
-> So I think it's necessary to put either
-> cancel_delayed_work_sync() or flush_delayed_work() before going to
-> generic_shutdown_super().
-
-In general I agree that shutting down memory range freeing worker
-earling in unmount/shutdown sequence makes sense. It does not seem
-to help to let it run while filesystem is going away. How about following
-patch.
-
----
- fs/fuse/inode.c     |    1 -
- fs/fuse/virtio_fs.c |    5 +++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-Index: redhat-linux/fs/fuse/virtio_fs.c
-===================================================================
---- redhat-linux.orig/fs/fuse/virtio_fs.c	2020-03-10 14:11:10.970284651 -0400
-+++ redhat-linux/fs/fuse/virtio_fs.c	2020-03-11 08:27:08.103330039 -0400
-@@ -1295,6 +1295,11 @@ static void virtio_kill_sb(struct super_
- 	vfs = fc->iq.priv;
- 	fsvq = &vfs->vqs[VQ_HIPRIO];
- 
-+	/* Stop dax worker. Soon evict_inodes() will be called which will
-+	 * free all memory ranges belonging to all inodes.
-+	 */
-+	flush_delayed_work(&fc->dax_free_work);
-+
- 	/* Stop forget queue. Soon destroy will be sent */
- 	spin_lock(&fsvq->lock);
- 	fsvq->connected = false;
-Index: redhat-linux/fs/fuse/inode.c
-===================================================================
---- redhat-linux.orig/fs/fuse/inode.c	2020-03-10 09:13:35.132565666 -0400
-+++ redhat-linux/fs/fuse/inode.c	2020-03-11 08:22:02.685330039 -0400
-@@ -723,7 +723,6 @@ void fuse_conn_put(struct fuse_conn *fc)
- 	if (refcount_dec_and_test(&fc->count)) {
- 		struct fuse_iqueue *fiq = &fc->iq;
- 
--		flush_delayed_work(&fc->dax_free_work);
- 		if (fc->dax_dev)
- 			fuse_free_dax_mem_ranges(&fc->free_ranges);
- 		if (fiq->ops->release)
+-- 
+Jens Axboe
 
