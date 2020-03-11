@@ -2,130 +2,147 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A836BC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56017C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD6820736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493E120736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ytxtuf3Q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRa0WWvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731182AbgCKTca (ORCPT
+        id S1731225AbgCKTck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:32:30 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39217 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730705AbgCKTca (ORCPT
+        Wed, 11 Mar 2020 15:32:40 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41717 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731165AbgCKTcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:32:30 -0400
-Received: by mail-il1-f195.google.com with SMTP id a14so3183847ilk.6;
-        Wed, 11 Mar 2020 12:32:29 -0700 (PDT)
+        Wed, 11 Mar 2020 15:32:39 -0400
+Received: by mail-yw1-f68.google.com with SMTP id p124so3162938ywc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2mXGK5i6t3MsASMxT0lG83kEdxLaxyp7/VkTyiOzfWA=;
-        b=Ytxtuf3QQxZWXFhnUaNGSp6HRtTjU2rvi2VTtDUKIWrIxcTF08sJcrGYYDSZ0cjYVi
-         NC7Jr18qi45Tn2TxgwNtbFQJyxoGPpldN77YOO65Z1kc2htI75AljVGHwZtqXl4WFh09
-         II9VBsbHtPSWuTzSj8DU2x+vAkcTNO12e6wd0JHiEtKO2fSJv+IyvIKGAf31Vwlh/6le
-         fGg/uJ53yaXQU8x+y+MF9ACDtFn+SNGFV7s3uD000Qka0NXvCcWm88thMuialB2aMbeW
-         LTTNeVSpoAVa+tcRkDxn2Zcdp7Mw05sgFo6hkmJTrwxWy7LCnul4OZtHXyEwSBI41s5K
-         c7lw==
+        bh=LKraGJ30l6Da9gHXvZPSp4wo2q6s17TXGOTZwSnizRM=;
+        b=ZRa0WWvzWQ7vbhoCUSCiE+Xpnyn0r9X4j+VOZY5z0moAgoqNi7XrIrbvdOGZLoPStZ
+         t73/+8vK2zz/7Sh+YYuj8fHZZ3FvfEkXr6S9rYt7Ocx5uwZ/jttu0ZmY6lDF4hBC0sXu
+         RTFy9i9geyhj4B0j0J1TMco4guXl0g6ScFtbUdddNz65nOwp+Tj4KuGah5rZn7yD5Rip
+         nEJhat4np3znLve8DajoGUAaFw8E/zVSfQ8ONil21IEam4PVvzEjr7iYRP+6KxiOUnLs
+         Khqge9cA25XyxZdxn421HLHv3XL3BJR/eI7EJ1GdIvQIWL5pL6/nNTdMvucoFOejfkzH
+         yvNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2mXGK5i6t3MsASMxT0lG83kEdxLaxyp7/VkTyiOzfWA=;
-        b=uGzgB+ob1lCNqciuuiptR1YJlSCpHTMJZ83z7LCH8WP1LyoGy2ku46I8V0sUWoUZ73
-         P/5EUSe/OiFD2xDw/N/GiFp6ghh0NLM7cSxbX9KQpVzzJ1fdsWra0Ks9YNvHTF96ZP3L
-         hK7lEjlxRL+AU/tcriuHYH3Mm0x08Jq9XSXM8NtXc4WvXeQGbrMPs4nE4u6/eYyz796u
-         Trx+H4T4o/oC0TtED58Anvy3OJIdBmrrTMQtis5yDeVwjktVzVIwbuH9hPTHuiRJjwyJ
-         JsCU1MVOlH/ZjX2RoZSplabkcEYlt5Aj01VC3TTw8mzC9xPaG6TKqHzyrCusj5NqBdcD
-         CrmQ==
-X-Gm-Message-State: ANhLgQ1j9V+TWXItMWftRBQrr+oIRJVGtOLXsdlmaQsxdz+0NTMgUbIz
-        bwTw30dDJOTx/X5puOrnY4ZWyvscxNYzNcx+IpU=
-X-Google-Smtp-Source: ADFU+vv0awZxCRaxLNBtprB5PP6XxG/N9GF146xOmYHuD2pw5NVQaGTRY7PIOTDoXzSifgO7fcQC19biON6GFFI5zP8=
-X-Received: by 2002:a92:6f10:: with SMTP id k16mr4651309ilc.275.1583955149310;
- Wed, 11 Mar 2020 12:32:29 -0700 (PDT)
+        bh=LKraGJ30l6Da9gHXvZPSp4wo2q6s17TXGOTZwSnizRM=;
+        b=SnNt2Nj6p4Ei+37+6+ZBtkYtqqzCSXWQbkfQ2cnaTudeIAFLd/avWQMqnvKLu5QpUi
+         yRIqa7jKzRzFWzDQCcFaxVepYyhWMmMvu5lCkqhmAEztJMB6uvoCvJu6TxeHwu7HfYXr
+         PsAk64n13CpFmaJv8dwKgZq+fwWCsjfb0DIX7cdSiOy+jXxkP1GE/4TBYwj089KB7hVH
+         7oq09lhAwSg8/Z8KGxwej2WViayKOh3FbcBQJBGtivSJVdwnw0slW8CRc2Dx6GQqQOb3
+         XHmRqWz+4BUBGc7Ml1M7cEC7MP8H8YwC4jP5/EpbXni7rvXIiOoT585VBjbo0zv3k+wk
+         tzZg==
+X-Gm-Message-State: ANhLgQ3C8zG6uUkL+zj7wvOmL2NZDhpUjWiUymY/kxv+RWBF3S+hHyEr
+        xmYEnNPH6QQjjcHjkwOKV0sywDiiG2pT9AbmCq4UMg==
+X-Google-Smtp-Source: ADFU+vuV0D3QIjqPpw7rA21p5bLAVNUkr3pTXiahSyMXLJ3IuwPm7ousgUlGjlBoJJ8eQPNDhN9e5l4QTnhzSuuZwbw=
+X-Received: by 2002:a25:c482:: with SMTP id u124mr4859412ybf.286.1583955157918;
+ Wed, 11 Mar 2020 12:32:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200304165845.3081-1-vgoyal@redhat.com> <CAOQ4uxi_Xrf+iyP6KVugFgLOfzUvscMr0de0KxQo+jHNBCA9oA@mail.gmail.com>
- <20200311184830.GC83257@redhat.com>
-In-Reply-To: <20200311184830.GC83257@redhat.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 11 Mar 2020 21:32:17 +0200
-Message-ID: <CAOQ4uxjja3cReO28qOd-YGmhU-_KrLxOCaBeqZYydxPAte9_pg@mail.gmail.com>
-Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, mst@redhat.com
+References: <20200310185003.57344-1-irogers@google.com> <20200310195915.GA1676879@tassilo.jf.intel.com>
+ <CABPqkBRQo=bEOiCFGFjwcM8TZaXMFyaL7o1hcFd6Bc3w+LhJQA@mail.gmail.com> <20200311161320.GA254105@krava>
+In-Reply-To: <20200311161320.GA254105@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 11 Mar 2020 12:32:26 -0700
+Message-ID: <CAP-5=fXYMTT7-iiaacO1VF0rRSO6t9W0a5edkiEwdZMYBcrtpQ@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: add support for lipfm4
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 8:48 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+On Wed, Mar 11, 2020 at 9:13 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Wed, Mar 11, 2020 at 07:22:51AM +0200, Amir Goldstein wrote:
-> > On Wed, Mar 4, 2020 at 7:01 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> On Tue, Mar 10, 2020 at 02:39:23PM -0700, Stephane Eranian wrote:
+> > On Tue, Mar 10, 2020 at 12:59 PM Andi Kleen <ak@linux.intel.com> wrote:
 > > >
-> > > Hi,
+> > > On Tue, Mar 10, 2020 at 11:50:03AM -0700, Ian Rogers wrote:
+> > > > This patch links perf with the libpfm4 library.
+> > > > This library contains all the hardware event tables for all
+> > > > processors supported by perf_events. This is a helper library
+> > > > that help convert from a symbolic event name to the event
+> > > > encoding required by the underlying kernel interface. This
+> > > > library is open-source and available from: http://perfmon2.sf.net.
 > > >
-> > > This patch series adds DAX support to virtiofs filesystem. This allows
-> > > bypassing guest page cache and allows mapping host page cache directly
-> > > in guest address space.
+> > > For most CPUs the builtin perf JSON event support should make
+> > > this redundant.
 > > >
-> > > When a page of file is needed, guest sends a request to map that page
-> > > (in host page cache) in qemu address space. Inside guest this is
-> > > a physical memory range controlled by virtiofs device. And guest
-> > > directly maps this physical address range using DAX and hence gets
-> > > access to file data on host.
-> > >
-> > > This can speed up things considerably in many situations. Also this
-> > > can result in substantial memory savings as file data does not have
-> > > to be copied in guest and it is directly accessed from host page
-> > > cache.
-> > >
-> > > Most of the changes are limited to fuse/virtiofs. There are couple
-> > > of changes needed in generic dax infrastructure and couple of changes
-> > > in virtio to be able to access shared memory region.
-> > >
-> > > These patches apply on top of 5.6-rc4 and are also available here.
-> > >
-> > > https://github.com/rhvgoyal/linux/commits/vivek-04-march-2020
-> > >
-> > > Any review or feedback is welcome.
-> > >
-> > [...]
-> > >  drivers/dax/super.c                |    3 +-
-> > >  drivers/virtio/virtio_mmio.c       |   32 +
-> > >  drivers/virtio/virtio_pci_modern.c |  107 +++
-> > >  fs/dax.c                           |   66 +-
-> > >  fs/fuse/dir.c                      |    2 +
-> > >  fs/fuse/file.c                     | 1162 +++++++++++++++++++++++++++-
+> > We decided to post this patch to propose an alternative to the JSON
+> > file approach. It could be an option during the build.
+> > The libpfm4 library has been around for 15 years now. Therefore, it
+> > supports a lot of processors core and uncore and it  is very portable.
+> > The key value add I see is that this is a library that can be, and has
+> > been, used by tool developers directly in their apps. It can
+> > work with more than Linux perf_events interface. It is not tied to the
+> > interface. It has well defined and documented entry points.
+> > We do use libpfm4 extensively at Google in both the perf tool and
+> > applications. The PAPI toolkit also relies on this library.
 > >
-> > That's a big addition to already big file.c.
-> > Maybe split dax specific code to dax.c?
-> > Can be a post series cleanup too.
+> > I don't see this as competing with the JSON approach. It is just an
+> > option I'd like to offer to users especially those familiar
+> > with it in their apps.
 >
-> How about fs/fuse/iomap.c instead. This will have all the iomap related logic
-> as well as all the dax range allocation/free logic which is required
-> by iomap logic. That moves about 900 lines of code from file.c to iomap.c
+> I dont mind having it, in fact I found really old email where I'm
+> asking Peter about that ;-) and he wasn't very keen about that:
+>   https://lore.kernel.org/lkml/1312806326.10488.30.camel@twins/
 >
+> not sure what was the actual reason at that time and if anything
+> changed since.. Peter?
+>
+> btw I can't apply even that v2 on latest Arnaldo's branch
+>
+> jirka
 
-Fine by me. I didn't take time to study the code in file.c
-I just noticed is has grown a lot bigger and wasn't sure that
-it made sense. Up to you. Only if you think the result would be nicer
-to maintain.
+Thanks Jiri,
 
-Thanks,
-Amir.
+the patches were done on tip.git/master, perhaps there is a conflict
+with the Documents Makefile due to adding better man page dates? I'll
+try to repro building on
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/ on the
+perf/core branch unless you  have a different suggestion? I also
+noticed a warning crept into the Makefile.config in the v2 patch set
+that should be removed.
+
+Ian
