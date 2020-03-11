@@ -2,108 +2,158 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83049C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B35C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01786206B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982AD206B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583937959;
+	bh=8Ta0Ywuou1GN90e0Q2WNKbhuY2sBRMaHPXRr97CbkrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=FdxMXsanZhKwPN/KD3Q7Ub4bEJozKw2HnrVib5MG9UZJJo8uMHhzUcI5IehLnSFcv
+	 mmtFsT+sWbY55zDz50xV1O3XTKXTFhuhIYVHacas+/Dd9YBIzi5itM0IBO7j7TsGqO
+	 uyyLsx0OybQgQ7H9rce6h5J18ifgRDpjx5vQ6S6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbgCKOpj (ORCPT
+        id S1729909AbgCKOqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 10:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729198AbgCKOpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:45:39 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1729057AbgCKOp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:45:59 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC42020650;
-        Wed, 11 Mar 2020 14:45:36 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 10:45:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Artem Savkov <asavkov@redhat.com>
-Subject: [GIT PULL] ftrace: Return the first found result in lookup_rec()
-Message-ID: <20200311104536.59de3c5a@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA077206B1;
+        Wed, 11 Mar 2020 14:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583937957;
+        bh=8Ta0Ywuou1GN90e0Q2WNKbhuY2sBRMaHPXRr97CbkrM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qSVKXeS48mazxKjpMGxpjI1liswrAHQ8MnJ5PIZp0eQBJkJNwKZkwmIIyM5UQX9If
+         Z2yhBncP+9wi9eZuwhHtf+7oiMH5KZc9aRtKv0yRd1sNk/4YoFZ99d8A9hM+xlYsNd
+         EPdWG0fw9tAU8xz1k8Fnloa9sZXdtdxIe2imwKuk=
+Date:   Wed, 11 Mar 2020 09:45:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311144556.GA208157@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 08:06:21PM +0000, Austin.Bolen@dell.com wrote:
+> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
+> > On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
+> >> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
+> >>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
+> >>>> [+cc Austin, tentative Linux patches on this git branch:
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
+> >>>>
+> >>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> >>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>>>>
+> >>>>> As per PCI firmware specification r3.2 System Firmware Intermediary
+> >>>>> (SFI) _OSC and DPC Updates ECR
+> >>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> >>>>> Event Handling Implementation Note", page 10, Error Disconnect Recover
+> >>>>> (EDR) support allows OS to handle error recovery and clearing Error
+> >>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> >>>>> which allows clearing AER registers without FF mode checks.
 
-Linus,
+> >> OS clears the DPC Trigger Status bit which will bring port below it out
+> >> of containment. Then OS will clear the "port" error status bits (i.e.,
+> >> the AER and DPC status bits in the root port or downstream port that
+> >> triggered containment). I don't think it would hurt to do this two steps
+> >> in reverse order but don't think it is necessary.
 
-Have ftrace lookup_rec() return a consistent record otherwise it
-can break live patching.
+> >> Note that error status bits for devices below the port in
+> >> containment are cleared later after f/w has a chance to log them.
 
+Thanks for pointing out this wrinkle about devices below the port in
+containment.  I think we might have an issue here with the current
+series because evaluating _OST is the last thing the EDR notify
+handler does.  More below.
 
-Please pull the latest trace-v5.6-rc4 tree, which can be found at:
+> > Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
+> > can read/write DPC registers until it clears the DPC Trigger Status.
+> > If the OS clears Trigger Status first, my understanding is that we're
+> > now out of the EDR notification processing window and the OS is not
+> > permitted to write DPC registers.
+> > 
+> > If it's OK for the OS to clear Trigger Status before clearing DPC
+> > error status, what is the event that determines when the OS may no
+> > longer read/write the DPC registers?
+> 
+> I think there are a few different registers to consider... DPC
+> Control, DPC Status, various AER registers, and the RP PIO
+> registers. At this point in the flow, the firmware has already had a
+> chance to read all of them and so it really doesn't matter the order
+> the OS does those two things. The firmware isn't going to get
+> notified again until _OST so by then both operation will be done and
+> system firmware will have no idea which order the OS did them in,
+> nor will it care.  But since the existing normative text specifies
+> and order, I would just follow that.
 
+OK, this series clears DPC error status before clearing DPC Trigger
+Status, so I think we can keep that as-is.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.6-rc4
+> > There are no events after the "clear device AER status" box.  That
+> > seems to mean the OS can write the AER status registers at any
+> > time.  But the whole implementation note assumes firmware
+> > maintains control of AER.
+> 
+> In this model the OS doesn't own DPC or AER but the model allows OS
+> to touch both DPC and AER registers at certain times.  I would view
+> ownership in this case as who is the primary owner and not who is
+> the sole entity allowed to access the registers.
 
-Tag SHA1: 3bedd0c3802cdffacf9fd6a4cac9f3fa6a4da477
-Head SHA1: d9815bff6b379ff46981bea9dfeb146081eab314
+I'm not sure how to translate the idea of primary ownership into code.
 
+> For the normative text describing when OS clears the AER bits
+> following the informative flow chart, it could say that OS clears
+> AER as soon as possible after OST returns and before OS processes
+> _HPX and loading drivers.  Open to other suggestions as well.
 
-Artem Savkov (1):
-      ftrace: Return the first found result in lookup_rec()
+I'm not sure what to do with "as soon as possible" either.  That
+doesn't seem like something firmware and the OS can agree on.
 
-----
- kernel/trace/ftrace.c | 2 ++
- 1 file changed, 2 insertions(+)
----------------------------
-commit d9815bff6b379ff46981bea9dfeb146081eab314
-Author: Artem Savkov <asavkov@redhat.com>
-Date:   Fri Mar 6 18:43:17 2020 +0100
+For the port that triggered DPC containment, I think the easiest thing
+to understand and implement would be to allow AER access during the
+same EDR processing window where DPC access is allowed.
 
-    ftrace: Return the first found result in lookup_rec()
-    
-    It appears that ip ranges can overlap so. In that case lookup_rec()
-    returns whatever results it got last even if it found nothing in last
-    searched page.
-    
-    This breaks an obscure livepatch late module patching usecase:
-      - load livepatch
-      - load the patched module
-      - unload livepatch
-      - try to load livepatch again
-    
-    To fix this return from lookup_rec() as soon as it found the record
-    containing searched-for ip. This used to be this way prior lookup_rec()
-    introduction.
-    
-    Link: http://lkml.kernel.org/r/20200306174317.21699-1-asavkov@redhat.com
-    
-    Cc: stable@vger.kernel.org
-    Fixes: 7e16f581a817 ("ftrace: Separate out functionality from ftrace_location_range()")
-    Signed-off-by: Artem Savkov <asavkov@redhat.com>
-    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+For child devices of that port, obviously it's impossible to access
+AER registers until DPC Trigger Status is cleared, and the flowchart
+says the OS shouldn't access them until after _OST.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 3f7ee102868a..fd81c7de77a7 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1547,6 +1547,8 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
- 		rec = bsearch(&key, pg->records, pg->index,
- 			      sizeof(struct dyn_ftrace),
- 			      ftrace_cmp_recs);
-+		if (rec)
-+			break;
- 	}
- 	return rec;
- }
+I'm actually not sure we currently do *anything* with child device AER
+info in the EDR path.  pcie_do_recovery() does walk the sub-hierarchy
+of child devices, but it only calls error handling callbacks in the
+child drivers; it doesn't do anything with the child AER registers
+itself.  And of course, this happens before _OST, so it would be too
+early in any case.  But maybe I'm missing something here.
+
+BTW, if/when this is updated, I have another question: the _OSC DPC
+control bit currently allows the OS to write DPC Control during that
+window.  I understand the OS writing the RW1C *Status* bits to clear
+them, but it seems like writing the DPC Control register is likely to
+cause issues.  The same question would apply to the AER access we're
+talking about.
+
+Bjorn
