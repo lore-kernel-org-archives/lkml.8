@@ -2,72 +2,150 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02034C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D337CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA68208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD932146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LxyfcpIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgCKE4G (ORCPT
+        id S1726689AbgCKE6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 00:56:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35278 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgCKE4F (ORCPT
+        Wed, 11 Mar 2020 00:58:20 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59540 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgCKE6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 00:56:05 -0400
-Received: by mail-io1-f70.google.com with SMTP id w16so655552iot.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 21:56:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=PTAmheRb83mqmqcQhDPjsi3Wza5HOxd3cp66btvqBKk=;
-        b=o6joeCeIMfIkosRi5gcvFMOIEiGCUrdpapFT0dhrAYD2EqLMSNRbW4JT5Jz8980omt
-         GiLrxgsBmBBY046Gm7BYG60fx80xIr9q156AFrft6xM/NNffHKNkl26f/schA6SBe0Eu
-         6x/r9GShmn5/N5reXIiX92TqtBuxq6G4tkuTzHDBh4eR2vdOViNQDgmVr3u+ieWpQoSB
-         ciTNYhgpxhBnbmnIJSGeDSZahx+oomgy0/D/4Mihc3ZEXzC94blsFU7fMvsoBWLqk+3r
-         TL8RGRLZaWOBusGZYGiM/0WJvE2kAYysKVNLnlM3MoWlJ/j7GAj6Af9PxfEDhLikyIch
-         dQjg==
-X-Gm-Message-State: ANhLgQ3YsHnFvPuJB4CPC9/rehicfxBKfF0rMJUKA1Tys/nN8LzqVywZ
-        a+BgafgV5eEHAP+jWT4s5EtX3I7n3lg/6Dz4UndzAIVURypb
-X-Google-Smtp-Source: ADFU+vthrNPKofNyk0KpJ1HImRdkg+YaS9tEx7+ZHPT032pNO/bgZc3l3bt7nz1NMcRU810us7EbYn2aqUapzEc63cfz0gzFeD1t
+        Wed, 11 Mar 2020 00:58:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B4vliK085472;
+        Tue, 10 Mar 2020 23:57:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583902667;
+        bh=MFTqGdrDyTmeaJQ1bZpBzfDtbpnP3ovZ3eA6y3Etkpg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LxyfcpIh2W+Bsk5crUUjzOQjTkD+k2r8DTKINGYZI4hjjSWMWyIekWRblL9BFyK0r
+         2CMSJJG9jE6OdD55+B0kykLUyHNFd98Vp+AmDZQeCmo21uMDzycgsEKRFEkd4fOB8i
+         o6DR36lvZrdupylA+QzkBojFkE/TCocpBSkg1tFs=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B4vlbe057182
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Mar 2020 23:57:47 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
+ Mar 2020 23:57:47 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 10 Mar 2020 23:57:47 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02B4vgLT066746;
+        Tue, 10 Mar 2020 23:57:42 -0500
+Subject: Re: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for
+ {request,release}_resources
+To:     Tim Harvey <tharvey@gateworks.com>
+CC:     Marc Zyngier <marc.zyngier@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20190430101230.21794-1-lokeshvutla@ti.com>
+ <20190430101230.21794-8-lokeshvutla@ti.com>
+ <CAJ+vNU2gnKKxX2YL1JUSnpF7qNqKVAsPhC2emv=Y79HPJbZXzw@mail.gmail.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <ed6472a7-5bd8-25bd-e2bc-f88f97a82607@ti.com>
+Date:   Wed, 11 Mar 2020 10:26:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:c802:: with SMTP id v2mr218215iln.277.1583902562672;
- Tue, 10 Mar 2020 21:56:02 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 21:56:02 -0700
-In-Reply-To: <CAM_iQpVrasivmeLHfxFpBcTxYr+Er-KCOrdSR0L4Bd7DuzxHhw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009b65a605a08d0da7@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in tcindex_set_parms
-From:   syzbot <syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJ+vNU2gnKKxX2YL1JUSnpF7qNqKVAsPhC2emv=Y79HPJbZXzw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Tim,
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+On 11/03/20 4:57 AM, Tim Harvey wrote:
+> On Tue, Apr 30, 2019 at 3:14 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
+>>
+>> thunderx_gpio_irq_{request,release}_resources apis are trying to
+>> {request,release} resources on parent interrupt. There are default
+>> apis doing the same. Use the default parent apis instead of writing
+>> the same code snippet.
+>>
+>> Cc: linux-gpio@vger.kernel.org
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> ---
+>> Changes since v7:
+>> - None
+>>
+>>  drivers/gpio/gpio-thunderx.c | 16 ++++------------
+>>  1 file changed, 4 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+>> index 1306722faa5a..715371b5102a 100644
+>> --- a/drivers/gpio/gpio-thunderx.c
+>> +++ b/drivers/gpio/gpio-thunderx.c
+>> @@ -363,22 +363,16 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
+>>  {
+>>         struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+>>         struct thunderx_gpio *txgpio = txline->txgpio;
+>> -       struct irq_data *parent_data = data->parent_data;
+>>         int r;
+>>
+>>         r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
+>>         if (r)
+>>                 return r;
+>>
+>> -       if (parent_data && parent_data->chip->irq_request_resources) {
+>> -               r = parent_data->chip->irq_request_resources(parent_data);
+>> -               if (r)
+>> -                       goto error;
+>> -       }
+>> +       r = irq_chip_request_resources_parent(data);
+>> +       if (r)
+>> +               gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+> 
+> Lokesh,
+> 
+> This patch breaks irq resources for thunderx-gpio as
+> parent_data->chip->irq_request_resources is undefined thus your new
+> irq_chip_request_resources_parent() returns -ENOSYS causing this
+> function to return an error where as before it would happily return 0.
 
-Reported-and-tested-by: syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
+Returning -ENOSYS is the right behaviour. If the parent doesn't have the
+resources, child driver should not hook it at all.
 
-Tested on:
+> 
+> Is the following the correct fix or should we qualify
+> data->parent_data->chip->irq_request_resources before calling
+> irq_chip_request_resources_parent() in thunderx-gpio?
 
-commit:         2c19e526 net_sched: hold rtnl lock for tcindex_partial_des..
-git tree:       https://github.com/congwang/linux.git tcindex
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bcbe864577669742
-dashboard link: https://syzkaller.appspot.com/bug?extid=c72da7b9ed57cde6fca2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+If there are no parent resources why should  thunderx-gpio request parent
+resources at all?
 
-Note: testing is done by a robot and is best-effort only.
+Thanks and regards,
+Lokesh
