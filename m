@@ -2,98 +2,113 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A110C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E906C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA60D2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583948503;
-	bh=EjwdLwpD9O1wBjIDdnmLLvTydXV7UfCM11tNXgcs9ao=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UeuhacQgiXKOD7yEeUsBe7Od+wRAKf5ekqASa43UmLaL/5OVcjQVxWztkEQUtb4Cn
-	 LbUtEk4+vB9sXv+gADpc15C/wP+iwXlrH9EvHV8PkY2Ys2uhQluxRNox2o8s8Z9EZi
-	 2CVNuOUT8+r478yzIDKD6pRLBU11NtQFR3UBmvPs=
+	by mail.kernel.org (Postfix) with ESMTP id 243DE2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgCKRlm (ORCPT
+        id S1730566AbgCKRlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:41:42 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39305 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgCKRll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:41:41 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j15so2468547lfk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QCN3ckDZYTgKsnmWN3MWB/SQ8UiGeh+NLtW3p106h1c=;
-        b=YSCkVqVocKNnlqDlgiECoEadYMt16n+8MdHbaK6Gz4V/6O09UsUL+qmuweL0ZNYT2i
-         Sr+AidQV9hb4/BL4It5d/F0SRAJZtYfVSGXINNlDJSfUWwK0NTXRvpGwgZRmxC5/f8Gy
-         rsjNb5cScHJ2Hv2E8KQjB7u3AijuPnYd/xZas=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QCN3ckDZYTgKsnmWN3MWB/SQ8UiGeh+NLtW3p106h1c=;
-        b=cmS7MhIuexeB7VNmqMHeOy0cphWdQN0ETZyM29hpuukpI8qSXznbg0YCrK+JK2WVOw
-         OsJYmewOxx3mJmzfgnr8PfzIr0koPuct58dIHxHouOo33ZrWht+aFKA/YQaHjda5jQsI
-         5JEJ9nmg27T1yZsac8PpJ7Mb9ykGIL8EfWTRq4GFAlmqX7VeOkrnlqGzGUfMzEx5wpTO
-         bjtY3McFahpICw/KH4/GOEzOO/lURYVXascMU1VW90lUtfi6ucU/phmikH9aJZXTHeLe
-         HozyL68YVCgr5Ve9cnmQKo0RkKyGaUAzD8UW94LAnuUtszMpSt0xSr/5jnrPsazk5L1H
-         jYdQ==
-X-Gm-Message-State: ANhLgQ2ddqWArp2JvjuPzk4+o2Tk6ed7CCIgnT9rDR2rDch57hVzjFUj
-        PJpIPyr/IZ/2DuQLd5grxQdonQGJZl0=
-X-Google-Smtp-Source: ADFU+vuDpeWxXTsbVkBhSHld6Gg5hgerbrEVTh001y4cMA3pUdroimkWvQdo73d67fCeLpgsVNTCDA==
-X-Received: by 2002:a19:915b:: with SMTP id y27mr2810946lfj.127.1583948498299;
-        Wed, 11 Mar 2020 10:41:38 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id m24sm30947298ljb.81.2020.03.11.10.41.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 10:41:37 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id w1so3322964ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:41:37 -0700 (PDT)
-X-Received: by 2002:a2e:5850:: with SMTP id x16mr2584551ljd.209.1583948497068;
- Wed, 11 Mar 2020 10:41:37 -0700 (PDT)
+        Wed, 11 Mar 2020 13:41:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32856 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgCKRlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:41:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B2BD2AE6F;
+        Wed, 11 Mar 2020 17:41:40 +0000 (UTC)
+Subject: Re: [PATCH] mm,page_alloc,cma: conditionally prefer cma pageblocks
+ for movable allocations
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Rik van Riel <riel@surriel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Roman Gushchin <guro@fb.com>, Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200306150102.3e77354b@imladris.surriel.com>
+ <8e67d88f-3ec8-4795-35dc-47e3735e530e@suse.cz>
+ <CAAmzW4P6+3O_RLvgy_QOKD4iXw+Hk3HE7Toc4Ky7kvQbCozCeA@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <89865b7b-f0ed-999d-0f23-4dbfb45115db@suse.cz>
+Date:   Wed, 11 Mar 2020 18:41:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200311162735.GA152176@google.com> <CAHk-=wjES_Si7rUtu_EuYu4PDz4OGdA4BWhYGJ=zOoJiELiykw@mail.gmail.com>
- <20200311173513.GA261045@google.com>
-In-Reply-To: <20200311173513.GA261045@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 11 Mar 2020 10:41:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVpnOo9MyOpHxAyuv0ZBGCsW2tMmOtwb+6CX-taKRtKQ@mail.gmail.com>
-Message-ID: <CAHk-=wiVpnOo9MyOpHxAyuv0ZBGCsW2tMmOtwb+6CX-taKRtKQ@mail.gmail.com>
-Subject: Re: [GIT PULL] f2fs for 5.6-rc6
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAAmzW4P6+3O_RLvgy_QOKD4iXw+Hk3HE7Toc4Ky7kvQbCozCeA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:35 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
->
-> I actually merged the last three patches which were introduced yesterday.
->
-> Others were merged over a week ago.
+On 3/11/20 11:13 AM, Joonsoo Kim wrote:
+>>
+>> Few years ago Joonsoo wanted to fix these kinds of weird MIGRATE_CMA corner
+>> cases by using ZONE_MOVABLE instead [1]. Unfortunately it was reverted due to
+>> unresolved bugs. Perhaps the idea could be resurrected now?
+>>
+>> [1]
+>> https://lore.kernel.org/linux-mm/1512114786-5085-1-git-send-email-iamjoonsoo.kim@lge.com/
+> 
+> Thanks for ccing, Vlastimil.
 
-No, three were done just before you sent the pull request, and then
-seven others were done yesterday.
+No problem. Also, welcome back :)
 
-Yes, the rest were a week ago.
+> Recently, I'm working for resurrecting this idea.
+> I will send the preparation patches in this or next week.
 
-But basically, by rc6, I want to get the warm and fuzzies that the
-code has been tested, seen review, and isn't some last-minute
-addition.
+Good to hear!
 
-               Linus
+> Unresolved bugs of my patchset comes from the fact that ZONE_MOVABLE
+> which is used for
+> serving CMA memory in my patchset could have both lowmem(direct mapped) and
+> highmem(no direct mapped) pages on CONFIG_HIGHMEM enabled system.
+> 
+> For someone to use this memory, PageHighMem() should be called to
+> check if there is direct
+> mapping or not. Current PageHighMem() implementation is:
+> 
+> #define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))
+> 
+> Since ZONE_MOVABLE has both typed pages, ZONE_MOVABLE should be considered
+> as highmem zone. In this case, PageHighMem() always returns TRUE for
+> all pages on
+> ZONE_MOVABLE and lowmem pages on ZONE_MOVABLE could make some troubles.
+
+Doh, HighMem brings only troubles these days [1].
+
+[1] https://lwn.net/Articles/813201/
+
+> My plan to fix this problem is to change the PageHighMem() implementation.
+> 
+> #define PageHighMem(__p) (page_to_pfn(__p) >= max_low_pfn)
+> 
+> In fact, PageHighMem() is used to check whether direct mapping exists or not.
+> With this new implementation, regardless of the zone type of the page, we can
+> correctly check if the page is direct mapped or not. Changing the
+> name, PageHighMem(),
+> to !PageDirectMapped() is also planned but it will be done after
+> everything have settle down.
+> 
+> Unfortunately, before changing the implementation, I should check the
+> all call-sites
+> of PageHighMem() since there is some callers who use PageHighMem() to check
+> the zone type.
+> 
+> What my preparation patch will does is to correct this PageHighMem() usage.
+> After fixing it, I will try to merge the patchset [1].
+> 
+> Thanks.
+> 
+
