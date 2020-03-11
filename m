@@ -2,120 +2,75 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A319FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7287F20727
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB0720727
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fw7PTvl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgCKBRT (ORCPT
+        id S1727947AbgCKBRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:17:19 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:43914 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727484AbgCKBRT (ORCPT
+        Tue, 10 Mar 2020 21:17:52 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:44369 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbgCKBRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:17:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TsFZ44m_1583889435;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0TsFZ44m_1583889435)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 11 Mar 2020 09:17:15 +0800
-Date:   Wed, 11 Mar 2020 09:17:15 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/swap_slots.c: don't reset the cache slot after use
-Message-ID: <20200311011715.GA47198@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200309090940.34130-1-richard.weiyang@linux.alibaba.com>
- <20200309174854.b6b8c7f019c3dde048c28f94@linux-foundation.org>
- <005f7454-16db-e8b5-dde2-8f2ddaa42932@linux.intel.com>
- <20200310222002.lr2vurqfk6jvfo2z@master>
- <d851c5c9-7fc0-0959-e5c9-1a62f0341cb7@linux.intel.com>
+        Tue, 10 Mar 2020 21:17:52 -0400
+Received: by mail-ot1-f45.google.com with SMTP id v22so253542otq.11;
+        Tue, 10 Mar 2020 18:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FIpHicZ3t9iIlvAbQDoq7yMgDqITyaH5TIJrz/BqXnM=;
+        b=fw7PTvl2MhJgDakZwvudlq0gxJTnOwVNwCEqEat2rdtdkKmeZD8+70LgewQKpboECD
+         Nb3SzqyR78fI5pUOaB/tt0hV5wxYQMqNdPwdQkfksMMg+mFNDPoI6dkjnztOyrwyOZob
+         CksHAs3+/gubF1CrA0ec6vzlANwGXOcI0F3vuk0ONUu5dxjN5UsQsUUDJU94B90k1O/s
+         SeuH+FQ0eji2Pacvqzg57mMmyh7a7TEmh074TZrbH0H4q3uQ1bO275Gp0HP7+SRwCKM/
+         5Vbifz3Lerhj5zs/dWMTpYTiyt5HQKNzn9m388XDl6JjcGXcdfZAuFUaGtiuhzOkuckm
+         k68Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FIpHicZ3t9iIlvAbQDoq7yMgDqITyaH5TIJrz/BqXnM=;
+        b=mfGjEAItK9JUpwbWEZTnpDv+Qo46mF+Z0xuaA5/kYTy1LknYurSH1Qf2EHWu2za1q1
+         cVgQo4iaHzTbvOKAXVu4QfafOdq4J6ocfe05MwulwzzHRmoPRhsf/bVqR1h3v0nQK75L
+         2tadnNw8oGRdMaVwjBIUDdqIXm5TMR34BRc0XXSKj7gTNbeMvGa/T2RjT8LcdmJ3nir/
+         4HlpMNPsoFHGVbeHBcVg9U5fpUOPemoxjmwJpsQQn9OWfk8Y0G2HamE/EOtEhljgshMw
+         oovdOvTZ4cB2S265wVd0F0RVFVHq1dB+WE0mUdVVglMiwkMy+BDvv09KNHOAFlCQpPGb
+         AWaA==
+X-Gm-Message-State: ANhLgQ2ciUBkmHIO5EpItiAGTTBt4gTo9Z3OnHWDnnH8i+6ofliSvkVp
+        ACTzMXPPmg/8Iud3Tmhexe7g4N1+DFhFWGfjZJs=
+X-Google-Smtp-Source: ADFU+vuhKF1v+vup0kdBVr7A8Vm7Jra+CtZeQ0Wyajafk/bF5zFsN/TFEXuiVxHKa+W73xkLdUkBFs8rj6nK6NrpE34=
+X-Received: by 2002:a9d:4702:: with SMTP id a2mr410773otf.319.1583889471514;
+ Tue, 10 Mar 2020 18:17:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d851c5c9-7fc0-0959-e5c9-1a62f0341cb7@linux.intel.com>
+References: <00000000000034513e05a05cfc23@google.com>
+In-Reply-To: <00000000000034513e05a05cfc23@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 10 Mar 2020 18:17:40 -0700
+Message-ID: <CAM_iQpXLZ1PaG757i1NiQH9q+xuZAzhued0DYEGNH2XtAWZq2A@mail.gmail.com>
+Subject: Re: KASAN: invalid-free in tcf_exts_destroy
+To:     syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 04:03:07PM -0700, Tim Chen wrote:
->On 3/10/20 3:20 PM, Wei Yang wrote:
->> On Tue, Mar 10, 2020 at 11:13:13AM -0700, Tim Chen wrote:
->>> On 3/9/20 5:48 PM, Andrew Morton wrote:
->>>> On Mon,  9 Mar 2020 17:09:40 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
->>>>
->>>>> Currently we would clear the cache slot if it is used. While this is not
->>>>> necessary, since this entry would not be used until refilled.
->>>>>
->>>>> Leave it untouched and assigned the value directly to entry which makes
->>>>> the code little more neat.
->>>>>
->>>>> Also this patch merges the else and if, since this is the only case we
->>>>> refill and repeat swap cache.
->>>>
->>>> cc Tim, who can hopefully remember how this code works ;)
->>>>
->>>>> --- a/mm/swap_slots.c
->>>>> +++ b/mm/swap_slots.c
->>>>> @@ -309,7 +309,7 @@ int free_swap_slot(swp_entry_t entry)
->>>>>  
->>>>>  swp_entry_t get_swap_page(struct page *page)
->>>>>  {
->>>>> -	swp_entry_t entry, *pentry;
->>>>> +	swp_entry_t entry;
->>>>>  	struct swap_slots_cache *cache;
->>>>>  
->>>>>  	entry.val = 0;
->>>>> @@ -336,13 +336,10 @@ swp_entry_t get_swap_page(struct page *page)
->>>>>  		if (cache->slots) {
->>>>>  repeat:
->>>>>  			if (cache->nr) {
->>>>> -				pentry = &cache->slots[cache->cur++];
->>>>> -				entry = *pentry;
->>>>> -				pentry->val = 0;
->>>
->>> The cache entry was cleared after assignment for defensive programming,  So there's
->>> little chance I will be using a slot that has been assigned to someone else.
->>> When I wrote swap_slots.c, this code was new and I want to make sure
->>> that if something went wrong, and I assigned a swap slot that I shouldn't,
->>> I will be able to detect quickly as I will only be stepping on entry 0.
->>>
->>> Otherwise such bug will be harder to detect as we will have two users of some random
->>> swap slot stepping on each other.
->>>
->>> I'm okay if we want to get rid of this logic, now that the code has been
->>> working correctly long enough.  But I think is good hygiene to clear the
->>> cached entry after it has been assigned. 
->>>
->> 
->> This is fine to keep the logic, while I am wondering whether we need to do
->> this through pointer. cache->slots[] contain the value, we can get and reset
->> without pointer.
->> 
->> The following code looks more obvious about the logic.
->> 
->> 		entry = cache->slots[cache->cur];
->> 		cache->slots[cache->cur++].val = 0;
->
->Yes, this looks pretty good.
-
-Thanks, I would rephrase v2.
-
->
->Thanks.
->
->Tim
-
--- 
-Wei Yang
-Help you, Help me
+#syz test: https://github.com/congwang/linux.git tcindex
