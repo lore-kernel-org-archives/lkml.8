@@ -2,53 +2,67 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6817C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D89C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E62215A4
+	by mail.kernel.org (Postfix) with ESMTP id BCADD222C4
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1583885952;
-	bh=y5QJ9GXWSnz15V7XZRVYJqb5uqwEux6PilkXReQ4U1Q=;
+	bh=UcNtWpBPblu9vR73y/1seDmYC7BGlEjFnb+kqdeS3Bk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nzaFpZqNM/pvC6OwKPHo4+V2/WqaYavC5NrBy37T0SaXQT35vIweDeCwJTY1TKYkR
-	 BTDNbLQt99ieBTWo8Rqbc0d/zl+6XwE3ptejeRVqVon973Dvr87tBe6/k9GFcHdXVf
-	 bA7TPqaFNndnTQQd2o7pKvn+u0JHOY5b/lhCZxVs=
+	b=RESrt4nA8G7ua56ueZ5M73oz16H56sI+DDLI1M5MQ5S8yY0TaZ3TGj500mPP9qi7e
+	 qb/4VPR6MVBURMnocdHe8m6tuXsOeCZjESUwF33xIKZfcqPaH9Gm7/zvLFT7BSMjDE
+	 H59HH7Dn/AFIxixjLAo8fHTRCVZnZiQS5FUJB1zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgCKASD (ORCPT
+        id S1727881AbgCKASW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 20:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgCKASD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:18:03 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1726463AbgCKASW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 20:18:22 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4334222C4;
-        Wed, 11 Mar 2020 00:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86637222C4;
+        Wed, 11 Mar 2020 00:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583885883;
-        bh=y5QJ9GXWSnz15V7XZRVYJqb5uqwEux6PilkXReQ4U1Q=;
+        s=default; t=1583885901;
+        bh=UcNtWpBPblu9vR73y/1seDmYC7BGlEjFnb+kqdeS3Bk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pO7/4cHWR3qTj0bznJ7188fG64qaOSB88v7476iEvv3KbMspuOvOFmbEqLGsOanQ1
-         9/io2pTiqypzmUKiZ/4F0cXTFv2UUPnnwJQ9foCp+4eBKERrzND7jG8Aw8qFxSU4U3
-         2XbTIWxreNknyUIg94KcQqpX/rci92Nfcn53fLfU=
-Date:   Tue, 10 Mar 2020 17:18:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP
- systems
-Message-Id: <20200310171802.128129f6817ef3f77d230ccd@linux-foundation.org>
-In-Reply-To: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        b=zkmttxiF36VLz6lg5tyYyttgoIp2YkTtMDmbi+ciIQ/EXhdFDmRQAzjeAkVf9I9gp
+         cHJ2iJu1z9A3KSuYWOQYtYFY+R5y6kp+KfCtp77SKI7WMz2RzjVp+KbLCUBN6Cwj1f
+         YCIpFEhGYhi1ygDGR/zWxoyr5cx2FyIDleoO6X00=
+Date:   Wed, 11 Mar 2020 09:18:15 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: Instrumentation and RCU
+Message-Id: <20200311091815.fce458348bb7641b60f600d9@kernel.org>
+In-Reply-To: <1760242532.23694.1583857291763.JavaMail.zimbra@efficios.com>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+        <20200309141546.5b574908@gandalf.local.home>
+        <87fteh73sp.fsf@nanos.tec.linutronix.de>
+        <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org>
+        <87pndk5tb4.fsf@nanos.tec.linutronix.de>
+        <450878559.23455.1583854311078.JavaMail.zimbra@efficios.com>
+        <20200310114657.099122fd@gandalf.local.home>
+        <1760242532.23694.1583857291763.JavaMail.zimbra@efficios.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -57,54 +71,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 14:39:48 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
+Hi Mathieu,
 
-> When a process is oom killed as a result of memcg limits and the victim
-> is waiting to exit, nothing ends up actually yielding the processor back
-> to the victim on UP systems with preemption disabled.  Instead, the
-> charging process simply loops in memcg reclaim and eventually soft
-> lockups.
+On Tue, 10 Mar 2020 12:21:31 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+
+> ----- On Mar 10, 2020, at 11:46 AM, rostedt rostedt@goodmis.org wrote:
 > 
-> Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB oom_score_adj:0
-> watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
-> CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
-> RIP: 0010:shrink_lruvec+0x4e9/0xa40
-> ...
-> Call Trace:
->  shrink_node+0x40d/0x7d0
->  do_try_to_free_pages+0x13f/0x470
->  try_to_free_mem_cgroup_pages+0x16d/0x230
->  try_charge+0x247/0xac0
->  mem_cgroup_try_charge+0x10a/0x220
->  mem_cgroup_try_charge_delay+0x1e/0x40
->  handle_mm_fault+0xdf2/0x15f0
->  do_user_addr_fault+0x21f/0x420
->  page_fault+0x2f/0x40
+> > On Tue, 10 Mar 2020 11:31:51 -0400 (EDT)
+> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> > 
+> >> I think there are two distinct problems we are trying to solve here,
+> >> and it would be good to spell them out to see which pieces of technical
+> >> solution apply to which.
+> >> 
+> >> Problem #1) Tracer invoked from partially initialized kernel context
+> >> 
+> >>   - Moving the early/late entry/exit points into sections invisible from
+> >>     instrumentation seems to make tons of sense for this.
+> >> 
+> >> Problem #2) Tracer recursion
+> >> 
+> >>   - I'm much less convinced that hiding entry points from instrumentation
+> >>     works for this. As an example, with the isntr_begin/end() approach you
+> >>     propose above, as soon as you have a tracer recursing into itself because
+> >>     something below do_stuff() has been instrumented, having hidden the entry
+> >>     point did not help at all.
+> >> 
+> >> So I would be tempted to use the "hide entry/exit points" with explicit
+> >> instr begin/end annotation to solve Problem #1, but I'm still thinking there
+> >> is value in the per recursion context "in_tracing" flag to prevent tracer
+> >> recursion.
+> > 
+> > The only recursion issue that I've seen discussed is breakpoints. And
+> > that's outside of the tracer infrastructure. Basically, if someone added a
+> > breakpoint for a kprobe on something that gets called in the int3 code
+> > before kprobes is called we have (let's say rcu_nmi_enter()):
+> > 
+> > 
+> > rcu_nmi_enter();
+> >  <int3>
+> >     do_int3() {
+> >        rcu_nmi_enter();
+> >          <int3>
+> >             do_int3();
+> >                [..]
+> > 
+> > Where would a "in_tracer" flag help here? Perhaps a "in_breakpoint" could?
 > 
-> Make sure that something ends up actually yielding the processor back to
-> the victim to allow for memory freeing.  Most appropriate place appears to
-> be shrink_node_memcgs() where the iteration of all decendant memcgs could
-> be particularly lengthy.
->
+> An approach where the "in_tracer" flag is tested and set by the instrumentation
+> (function tracer, kprobes, tracepoints) would work here. Let's say the beginning
+> of the int3 ISR is part of the code which is invisible to instrumentation, and
+> before we issue rcu_nmi_enter(), we handle the in_tracer flag:
+> 
+> rcu_nmi_enter();
+>  <int3>
+>     (recursion_ctx->in_tracer == false)
+>     set recursion_ctx->in_tracer = true
+>     do_int3() {
+>        rcu_nmi_enter();
+>          <int3>
+>             if (recursion_ctx->in_tracer == true)
+>                 iret
+> 
+> We can change "in_tracer" for "in_breakpoint", "in_tracepoint" and
+> "in_function_trace" if we ever want to allow different types of instrumentation
+> to nest. I'm not sure whether this is useful or not through.
 
-That's a bit sad.
+Kprobes already has its own "in_kprobe" flag, and the recursion path is
+not so simple. Since the int3 replaces the original instruction, we have to
+execute the original instruction with single-step and fixup.
 
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2637,6 +2637,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
->  		unsigned long reclaimed;
->  		unsigned long scanned;
->  
-> +		cond_resched();
-> +
->  		switch (mem_cgroup_protected(target_memcg, memcg)) {
->  		case MEMCG_PROT_MIN:
->  			/*
+This means it involves do_debug() too. Thus, we can not do iret directly
+from do_int3 like above, but if recursion happens, we have no way to
+recover to origonal execution path (and call BUG()).
 
+As my previous email, I showed a patch which is something like
+"bust_kprobes()" for oops path. That is not safe but no other way to escape
+from this recursion hell. (Maybe we can try to call it instead of calling
+BUG() so that the kernel can continue to run, but I'm not sure we can
+safely make the pagetable to readonly again.)
 
-Obviously better, but this will still spin wheels until this tasks's
-timeslice expires, and we might want to do something to help ensure
-that the victim runs next (or soon)?
+Thank you,
 
-(And why is shrink_node_memcgs compiled in when CONFIG_MEMCG=n?)
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
