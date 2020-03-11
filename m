@@ -2,225 +2,143 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7391FC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EF7C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C19220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lnn57H92"
+	by mail.kernel.org (Postfix) with ESMTP id D4A88208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgCKHxJ (ORCPT
+        id S1728424AbgCKH42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:53:09 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33549 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgCKHxI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:53:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c20so867279lfb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 00:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dmYpz/aYVnj1bUh+RSDK8X311SKNrr0dk2BrKf5slAo=;
-        b=lnn57H92SdNASu+2A/R6UAAKJ+dWpQA2U1nV6pNZiM1cr/0Ln+gEkCR+zZrGXyS7+X
-         fvZ05Mp8Ei+KOe/9zt2SjWDynKlCyrKu4UGWCLWh9AfDGFwbxzcCH/g6DQCK81xa8Adn
-         R69XkTp4XMSFN54l2XgczZhCgw3phSfCYX3qHFxmP+NmUqq7X7dNr2ZxqWBEp5MO4jTA
-         VkS4G6EFH+bvFIJJvC6lHE7wi+iDVOZtbXevt79LhROGLnBRvA1wHpHlgUTayXcJgGlX
-         9VN5XSoWJLkQB7YURB7AcoeEMcz5dV/65P6GZEUGTg/r8YfJRJpdu05O5aSYNsN3vf8b
-         RGZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dmYpz/aYVnj1bUh+RSDK8X311SKNrr0dk2BrKf5slAo=;
-        b=WzqtjG1i+DZpi90DA4udEfdfR7DlBQa3ZmY4qfPmwE34thP9afY4FqZqwoqtHxop8m
-         6mlSVsVn18eWREfmP+Gjmgs9IrlPya9SG618/NMoTK7oRHbbpw16es7/RaILyreAlv8M
-         LcJkXUiyomqqRnF8IYn3FEePPe0jUeHfCUDNUXANRgrUbazk2Yx8OeVgq8JfBGluqQPP
-         EmAiggwCq3YJWtx8DWKZr4esHC1N1AITGqdrpy1Pl6kjb/KfosryZDTwcV9IZts/2YUR
-         AgY70OElwSJ0XwDP70h4m90RWAPN/fIUm1Id9VN3KPdKpaNLh6d1elucL3pQjOhz5LWq
-         lVFQ==
-X-Gm-Message-State: ANhLgQ00XH5cvCsNlK6iUsu79rKJxhOH14u+gbqreYcZlJrGiESfV8cw
-        Xl43ECmU4J5qRX7y0xBnZ5OegGIlKXxxg4FjdoSQXQ==
-X-Google-Smtp-Source: ADFU+vsNiDJQhI3JYt02VwGMK03BIvdCMAH8jElfm3TdyDiJXGGw/8PAaypyOh6jVmy0oBjylxkwATDLsLWyFA3mqwQ=
-X-Received: by 2002:a19:4c08:: with SMTP id z8mr1315189lfa.95.1583913186300;
- Wed, 11 Mar 2020 00:53:06 -0700 (PDT)
+        Wed, 11 Mar 2020 03:56:28 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2549 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726310AbgCKH41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:56:27 -0400
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id BAC71261D951A4DBCAE3;
+        Wed, 11 Mar 2020 07:56:26 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 11 Mar 2020 07:56:26 +0000
+Received: from [127.0.0.1] (10.210.172.48) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 11 Mar
+ 2020 07:56:25 +0000
+Subject: Re: linux-next: Tree for Mar 10 (mtd/spi-nor/)
+To:     <Tudor.Ambarus@microchip.com>, <linux-mtd@lists.infradead.org>
+CC:     <rdunlap@infradead.org>, <sfr@canb.auug.org.au>,
+        <linux-next@vger.kernel.org>, <joe@perches.com>,
+        <broonie@kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200310201923.24e34363@canb.auug.org.au>
+ <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
+ <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
+ <1993805.xNpbgTSjYd@localhost.localdomain>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b547776c-2749-8b78-e35f-c6ed42be9759@huawei.com>
+Date:   Wed, 11 Mar 2020 07:56:23 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200310123635.322799692@linuxfoundation.org>
-In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 11 Mar 2020 13:22:54 +0530
-Message-ID: <CA+G9fYtAjT1iBMCpPjKBcjrPPuqQ-WPU-axgikmoifyxJYJ5vA@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/168] 5.4.25-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1993805.xNpbgTSjYd@localhost.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.172.48]
+X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 18:19, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.25 release.
-> There are 168 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.25-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 11/03/2020 07:12, Tudor.Ambarus@microchip.com wrote:
+> On Tuesday, March 10, 2020 7:14:13 PM EET John Garry wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the
+>> content is safe
+>>
+>> +
+>>
+>> On 10/03/2020 14:37, Randy Dunlap wrote:
+>>> On 3/10/20 2:19 AM, Stephen Rothwell wrote:
+>>>> Hi all,
+>>>>
+>>>> Changes since 20200306:
+>>>>
+>>>> Removed tree: nfc-next (abanboned)
+>>>>
+>>>                                 doned
+>>>
+>>> on i386:
+>>>
+>>> WARNING: unmet direct dependencies detected for MTD_SPI_NOR
+>>
+>> Uh, so kbuild honors a "select" of a config option which has unmet
+>> dependencies:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Docu
+>> mentation/kbuild/kconfig-language.rst?h=v5.6-rc5#n143
+>>
+>> So this looks introduced by:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/d
+>> rivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e8
+> 
+> Hi, John,
+> 
+> Is there any need to select the MTD_SPI_NOR in SPI_HISI_SFC_V3XX? Can't we
+> just drop the select?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Yes, I think that we can just drop it. That effectively reverts Joe's 
+change. The reason I added the select wasn't for building, but just for 
+practicality - MTD_SPI_NOR enables the driver of the devices attached.
 
-Summary
-------------------------------------------------------------------------
 
-kernel: 5.4.25-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 877097a6286abcb4d5eaa7d683640e3a86b7a95c
-git describe: v5.4.24-168-g877097a6286a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.24-168-g877097a6286a
+In response to Randy:
 
-No regressions (compared to build v5.4.24)
 
-No fixes (compared to build v5.4.24)
+ >>> So this looks introduced by:
+ >>>
+ >>> 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e823
+ >>>
+ >>>>     Depends on [m]: MTD [=m] && SPI_MASTER [=y] >    Selected by [y]:
+ >>>>     - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && 
+(ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
+ >>
+ >> Would it be acceptable to move the Kconfig entry for this:
+ >>
+ >> config SPI_HISI_SFC_V3XX
+ >> 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
+ >> 	depends on (ARM64 && ACPI) || COMPILE_TEST
+ >> 	depends on HAS_IOMEM
+ >> 	select MTD_SPI_NOR
+ >>
+ >> into drivers/mtd/spi-nor/Kconfig, say after this one:
+ >>
+ >> config SPI_HISI_SFC
+ >> 	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
+ >> 	depends on ARCH_HISI || COMPILE_TEST
+ >> 	depends on HAS_IOMEM
+ >>
+ >> and drop the "select MTD_SPI_NOR" because when it's in 
+drivers/mtd/spi-nor/Kconfig,
+ >> it will depend on MTD_SPI_NOR.
+ >>
+ >
+ > These changes to 2 Kconfig files does fix the kconfig warning and 
+build errors.
+ > I don't know if it's acceptable, or if the source file also wants to be
+ > relocated.  (I almost said "needs to be relocated," but it builds 
+fine without
+ > that change.)
 
-Ran 26864 total tests in the following environments and test suites.
+As above, I think that we can drop the select for now. I'll do some 
+building test for that - even though it should be same as pre-e14572c52546
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-mm-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-ipc-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* kvm-unit-tests
-* ltp-crypto-tests
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-cve-64k-page_size-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-64k-page_size-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-compat-tests
-* ltp-syscalls-kasan-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Thanks
