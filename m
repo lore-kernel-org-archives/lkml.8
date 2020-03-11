@@ -2,70 +2,275 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7882CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05BAC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5033820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583914847;
-	bh=GmJNbFRmVzHqNxMlbiejxZG/ZtZVxK9/BMxk9LgKxjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bE78Ya2BlWPcqOJ8ongyq63pI7FTaH3WFA3kUAhJ+X/GdK7+A4aQ9Fa1MewZZNtfz
-	 X/n2uFeVTzYhoSXQRrRvssQanIvkjMst/kbVhXgwYGRsBhJTMSUD8dvaXlL8TohghY
-	 XT2WCChhcsOb3ZwwE0umMzyYOJNs/eN3Uewf1Z50=
+	by mail.kernel.org (Postfix) with ESMTP id BA1C92082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sswH5hsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgCKIUq (ORCPT
+        id S1728608AbgCKIVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbgCKIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:20:46 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 448342082E;
-        Wed, 11 Mar 2020 08:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583914845;
-        bh=GmJNbFRmVzHqNxMlbiejxZG/ZtZVxK9/BMxk9LgKxjk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=01E/2LMki/OUi3TQ3TRpihzzOHd4Vf2dgE9WX9pv0K+9/tTS88ecvx99Chjul6Hr7
-         hlTRQeClfWJmsW2mQM7RjdXSwDb8BZSxzQD8xt30PTc/Ncj7Rcp3MqpMm2ou4XZftV
-         559aHT5QeU4LXQAoA0+jErbPkGmwdnk3KMTc0zPI=
-Date:   Wed, 11 Mar 2020 16:20:38 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, leoyang.li@nxp.com, laurentiu.tudor@nxp.com,
-        Xiaowei.Bao@nxp.com
-Subject: Re: [PATCHv2] arm64: dts: layerscape: add iommu-map property to pci
- nodes
-Message-ID: <20200311082037.GZ29269@dragon>
-References: <20200302042027.15589-1-Zhiqiang.Hou@nxp.com>
+        Wed, 11 Mar 2020 04:21:18 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37179 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgCKIVS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:21:18 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j11so921877lfg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/H44xo9YVbjQU2jF8VsFwG+fQELUXeP3PySlq2Oi+ZU=;
+        b=sswH5hskdEuA+AVikpt0FFbATlmickLcGGKFoeCnwSLyfud9SEuMptPh7I0IqKqmrQ
+         JY0DbfPNjMfpNtTfVv3UkbF8bU6LX4dX3Bs4WqIpMWcwyIcRDB/TuthViJojm0W1s92K
+         SApwJ3xPBjPZ59CsDFnRA4MFGfGw3bD1U1M0Fhy0XQ6kWsZeWiEjqUOFiNBSyEViQQUM
+         sNITfek9Z/pfJJGTKb14aqqi5HBBaaLQPJu2cq8+qGG11fW3DDcbpBX6bCl/0RgQZuPE
+         R+b9aMxLWrAusGIn+dlmVxrAfXR14w3z58Du4DKj3AKPSKoMlEubaunBM7lJm8f1Bd+l
+         D4Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/H44xo9YVbjQU2jF8VsFwG+fQELUXeP3PySlq2Oi+ZU=;
+        b=lpRT84t8OZhhNgcMuE8BlqsuGmewUKJ46fkNrC5oCbIvJ1ak3wd7aHH0KHp2lXfO6N
+         /SxJpOeZz+e5E6aWjNB4mMrAtL2BQyaQrj2/QzZgfO9iwtKGwJins2hRYKHIVeF0QVh1
+         ZTTOA2fYWPrxHSrnkzFTPA3EudOuOv3lizFVwJz04qdT0ndgCoCox3m9DHPzBM2gaueT
+         JVMH6viOe/g6UN8CelBwVIFhV9tVsdyR0RUNJx78u7EW8C7DQmhBvn5C2isyyoPAoQ02
+         2mvtkWrsCHFKdkafG6oPC/X8yIwoTBLFj9AUJUJkeS0R7RvpsPvSGYJA8t78VdwBWr89
+         3xyA==
+X-Gm-Message-State: ANhLgQ0TsRH7HvI/ba3HT+rJQF0IoDyDzR8MfYxQ64WzL9LAFed5KsL8
+        B0L3miKInKFMTjaA05POYTcHhpzNgu2/nne8kUo7fg==
+X-Google-Smtp-Source: ADFU+vuttkx3YOuB8M4MIP0FHI7sbtyY4OuMHmkIcMSsUUV+RcyFRZiPwXRwDoU0GdfmZKpUr4BX4GbNVF4HtmXO8fw=
+X-Received: by 2002:a05:6512:1042:: with SMTP id c2mr1366390lfb.6.1583914875135;
+ Wed, 11 Mar 2020 01:21:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302042027.15589-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200310123601.053680753@linuxfoundation.org>
+In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 11 Mar 2020 13:50:48 +0530
+Message-ID: <CA+G9fYsmBrJp2LRY_ixWMgKcNZXDC=TwNbGFN08iFwxybpSBUQ@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/72] 4.4.216-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 12:20:27PM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> Add the iommu-map property to the pci nodes so that the firmware
-> fixes it up with the required values thus enabling iommu for
-> devices connected over pci.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Tue, 10 Mar 2020 at 18:11, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.216 release.
+> There are 72 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.216-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Applied, thanks.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.216-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 836f82655232ea02028bb5857f19bfd950b33c33
+git describe: v4.4.215-73-g836f82655232
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.215-73-g836f82655232
+
+No regressions (compared to build v4.4.215)
+
+No fixes (compared to build v4.4.215)
+
+Ran 21137 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* kselftest
+* kvm-unit-tests
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* install-android-platform-tools-r2600
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-none
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.216-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.216-rc1-hikey-20200310-664
+git commit: ac3d5b19a0a5c40aaa3436bb63d6b0098eb7ce7b
+git describe: 4.4.216-rc1-hikey-20200310-664
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.216-rc1-hikey-20200310-664
+
+
+No regressions (compared to build 4.4.216-rc1-hikey-20200309-663)
+
+
+No fixes (compared to build 4.4.216-rc1-hikey-20200309-663)
+
+Ran 1682 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
