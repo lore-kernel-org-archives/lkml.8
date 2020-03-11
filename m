@@ -2,293 +2,175 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586C4C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CD0C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2EB2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E021208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgCKKSe (ORCPT
+        id S1728263AbgCKKWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:18:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54003 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgCKKSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:18:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 03:18:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="322094690"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 11 Mar 2020 03:18:28 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jByRa-008i07-Ca; Wed, 11 Mar 2020 12:18:30 +0200
-Date:   Wed, 11 Mar 2020 12:18:30 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] power: supply: add CellWise cw2015 fuel gauge
- driver
-Message-ID: <20200311101830.GE1922688@smile.fi.intel.com>
-References: <20200311093043.3636807-1-t.schramm@manjaro.org>
- <20200311093043.3636807-4-t.schramm@manjaro.org>
+        Wed, 11 Mar 2020 06:22:18 -0400
+Received: from mo-csw-fb1114.securemx.jp ([210.130.202.173]:42134 "EHLO
+        mo-csw-fb.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgCKKWS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:22:18 -0400
+X-Greylist: delayed 4453 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 06:22:16 EDT
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1114) id 02B986Ks031477; Wed, 11 Mar 2020 18:08:06 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 02B97qMd027659; Wed, 11 Mar 2020 18:07:52 +0900
+X-Iguazu-Qid: 2wHHmtTgkJMFNf1O55
+X-Iguazu-QSIG: v=2; s=0; t=1583917671; q=2wHHmtTgkJMFNf1O55; m=T9pvUaVtdcXlXHk1fcGilXOCfKr3Ua0poicjzHbiQpU=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1111) id 02B97npe011116;
+        Wed, 11 Mar 2020 18:07:50 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 02B97nLH025918;
+        Wed, 11 Mar 2020 18:07:49 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 02B97m4h031782;
+        Wed, 11 Mar 2020 18:07:49 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BV2HWEuqqL48ASDpQY+SxDJ8Ms6L/8cwjNfDpxJ/X971wLuB029bEj8kxkyTDnuiUziCK25e+zc+x8fo+/Z4BmlDELa9yWrFkUWqiEwBOwQ/Lk1AucE1Q2GcoWK+FoqBE1h8YJVDhouJRYNWOqRHRDuvaV17zks2EvnmMikaktVDTdsYt7HpdKTTU4Fy0ipJorWQeRAyalR+hoC1ww6/KXBb8NrmSuTWpM7bcTVMsDDtia+IanP6cOfaPKGWDEDB1Dov3b2sxcRkD3PHjr2m/vCOtzGM3yN4XgoCtwpMAO31LGaMFaHCCYr893BLQbFq4Rql/azQOvSV0Ij9oyz1jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OT+B0f7zv561z/TGLZQ6jI3pa1GkubxrsQXlhdLAL4Y=;
+ b=iO6WyDwLGrlJtfq/l1pfAE3yMVXpTQ+W+TNAOE613Vr8tgY0k8KABiKo5jRFemYeQ/O1qa//eQE2yYD54CETJHWq7vd/DObSRobYXWpFmCgXvcpywx6sdVy8SjDSks4ZQZDEBJ8kCia7QvdUdZRIVL/NfboiQXUnQqNyqsQgVbRqwN1G5u9C09RPUEdfoBpnAu0k95hihtfYebu1QydwjVhZgjNbNeVjI3sTvPk/tbJd/8nIWYMqMlq8OBIkCDvdvxhn8hVBV+fn0Kljumnmj84XCzUWh9+Q7XqQXMTsfNkSDvLldsFs6DUmkgqDV8TRkt4rrz0nzW5pZ+ssgRy0Yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
+ header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
+From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
+CC:     <stable@vger.kernel.org>, <yukuai3@huawei.com>,
+        <alexander.deucher@amd.com>, <sashal@kernel.org>
+Subject: RE: [PATCH 4.4 035/113] drm/amdgpu: remove 4 set but not used
+ variable in amdgpu_atombios_get_connector_info_from_object_table
+Thread-Topic: [PATCH 4.4 035/113] drm/amdgpu: remove 4 set but not used
+ variable in amdgpu_atombios_get_connector_info_from_object_table
+Thread-Index: AQHV7X0fLU36CVqEc0iwb5hJdrkUP6hDK5tQ
+Date:   Wed, 11 Mar 2020 09:07:47 +0000
+X-TSB-HOP: ON
+Message-ID: <OSAPR01MB3667601BEAABB5AF95FB799592FC0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+References: <20200227132211.791484803@linuxfoundation.org>
+ <20200227132217.325886959@linuxfoundation.org>
+In-Reply-To: <20200227132217.325886959@linuxfoundation.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nobuhiro1.iwamatsu@toshiba.co.jp; 
+x-originating-ip: [209.137.146.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b3ed348a-01d8-463a-3f58-08d7c59baadd
+x-ms-traffictypediagnostic: OSAPR01MB4548:
+x-microsoft-antispam-prvs: <OSAPR01MB4548FC64F48834922659023292FC0@OSAPR01MB4548.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:49;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(199004)(26005)(7696005)(71200400001)(66556008)(52536014)(64756008)(66946007)(5660300002)(8936002)(54906003)(316002)(110136005)(53546011)(33656002)(6506007)(76116006)(66476007)(66574012)(2906002)(81166006)(8676002)(81156014)(9686003)(478600001)(55016002)(186003)(66446008)(86362001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:OSAPR01MB4548;H:OSAPR01MB3667.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: toshiba.co.jp does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8G+ZyUTMME+0QnS4tju188Vkd08fXFbaYoeMi6eO7E31XzXSEOg3iMs69tpSDeqSB5KwxKRy6caluyA34VerqEJRpATspocAzHm+74ZsWSH15Ru7DlKe2WcyM//GQu9GOfG4oKoYsB2+A2WTXxOl+FoT0nGMYKga5NY4NUpmb6S1ns7kWe5wjPSVB5cJrk8hKEeVTDbr+Yhy0T5hbYZoTAJspujjFVLTEaHif5BXg2Q6BTQ1c0CsjAZ+QcuYTJvFOe2l144T7586cq10JPAN8TQ7SOc/y3SqKOF5Z5y+apyUbEQh8R2CouoeZQ05NvnGSXILq0KuWOKDwYFlOrcL6WsqlDaIkpkiThs+NyFB5xa4fC2+mctoGjNuu96KOJERMtfsKwP24iL/dZ5fk3Rif6LPZtlQHgQxJgTOZ7COMBhW2Dm/f/tFBTtSdp7fv/ig
+x-ms-exchange-antispam-messagedata: Dvxl1GohIhWhPK51KxqCtq6C+sUCVsWBkLq/0TrwYAigbr8VuInS41ZXcaiD4AAUCXfWqJc/RrHeDOggOuFlYW+SS64RC9w0+Z4dQUZJSKMJZalmagWZvi0Er2YlHv/Goxsxbt0UWglxxtazFtbi4w==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311093043.3636807-4-t.schramm@manjaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3ed348a-01d8-463a-3f58-08d7c59baadd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 09:07:47.2354
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ybAai5/7YWpHq6q0u1vH+4TlgeeAC/Jp05Q+mzQs1x65WK8Qm4WrC1Nd9Sp++wrj0d7nI0LGjvhk7hFrPVOAvhUBE+ZMve+CcXiyLjb7eLkSijPLNbUq4goYnFyKlX2P
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB4548
+X-OriginatorOrg: toshiba.co.jp
+MSSCP.TransferMailToMossAgent: 103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:30:43AM +0100, Tobias Schramm wrote:
-> This patch adds a driver for the CellWise cw2015 fuel gauge.
-> 
-> The CellWise cw2015 is a shuntless, single-cell Li-Ion fuel gauge used
-> in the pine64 Pinebook Pro laptop and some Raspberry Pi UPS HATs.
-
-Thank you for an update!
-My comments below.
-
-...
-
-> +	/* wait for gauge to become ready */
-> +	for (i = 0; i < CW2015_READ_TRIES; i++) {
-> +		ret = regmap_read(cw_bat->regmap, CW2015_REG_SOC, &reg_val);
-> +		if (ret)
-> +			return ret;
-> +		/* SoC must not be more than 100% */
-> +		else if (reg_val <= 100)
-> +			break;
-> +
-> +		msleep(100);
-> +	}
-
-Have you considered to use regmap_read_poll_timeout()?
-
-> +
-> +	if (i >= CW2015_READ_TRIES) {
-> +		reg_val = CW2015_MODE_SLEEP;
-> +		regmap_write(cw_bat->regmap, CW2015_REG_MODE, reg_val);
-> +		dev_err(cw_bat->dev,
-> +			"Gauge did not become ready after profile upload");
-> +		return -ETIMEDOUT;
-> +	}
-
-...
-
-> +		if (memcmp(bat_info, cw_bat->bat_profile,
-> +				CW2015_SIZE_BATINFO)) {
-
-I think it's pretty much okay to have this on one line, disregard 80 limit
-(it's only 1 extra).
-
-...
-
-> +static int cw_get_soc(struct cw_battery *cw_bat)
-> +{
-> +	unsigned int soc;
-> +	int ret;
-> +
-> +	ret = regmap_read(cw_bat->regmap, CW2015_REG_SOC, &soc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (soc > 100) {
-
-> +		int max_error_cycles = CW2015_BAT_SOC_ERROR_MS /
-> +					cw_bat->poll_interval_ms;
-
-The following looks better
-
-		int max_error_cycles =
-			CW2015_BAT_SOC_ERROR_MS / cw_bat->poll_interval_ms;
-
-Applies to all similar places in the code.
-
-> +		dev_err(cw_bat->dev, "Invalid SoC %d%%", soc);
-> +		cw_bat->read_errors++;
-> +		if (cw_bat->read_errors > max_error_cycles) {
-> +			dev_warn(cw_bat->dev,
-> +				"Too many invalid SoC reports, resetting gauge");
-> +			cw_power_on_reset(cw_bat);
-> +			cw_bat->read_errors = 0;
-> +		}
-> +		return cw_bat->soc;
-> +	}
-> +	cw_bat->read_errors = 0;
-> +
-> +	/* Reset gauge if stuck while charging */
-
-> +	if (cw_bat->status == POWER_SUPPLY_STATUS_CHARGING &&
-> +			soc == cw_bat->soc) {
-
-A bit strange indentation, and honestly I would leave it on one line, but it's up to you.
-
-> +		int max_stuck_cycles = CW2015_BAT_CHARGING_STUCK_MS /
-> +					cw_bat->poll_interval_ms;
-> +
-> +		cw_bat->charge_stuck_cnt++;
-> +		if (cw_bat->charge_stuck_cnt > max_stuck_cycles) {
-> +			dev_warn(cw_bat->dev,
-> +				"SoC stuck @%u%%, resetting gauge", soc);
-> +			cw_power_on_reset(cw_bat);
-> +			cw_bat->charge_stuck_cnt = 0;
-> +		}
-> +	} else {
-> +		cw_bat->charge_stuck_cnt = 0;
-> +	}
-> +
-> +	/* Ignore voltage dips during charge */
-
-> +	if (cw_bat->charger_attached &&
-> +			HYSTERESIS(soc, cw_bat->soc, 0, 3)) {
-
-This is pretty much one line (77), check your editor settings and update all
-similar places in the code.
-
-> +		soc = cw_bat->soc;
-> +	}
-> +
-> +	/* Ignore voltage spikes during discharge */
-> +	if (!cw_bat->charger_attached &&
-> +			HYSTERESIS(soc, cw_bat->soc, 3, 0)) {
-> +		soc = cw_bat->soc;
-> +	}
-> +
-> +	return soc;
-> +}
-
-...
-
-> +	cw_bat =
-> +		container_of(delay_work, struct cw_battery, battery_delay_work);
-
-It will be better to read if it would be one line.
-
-...
-
-> +static bool cw_battery_valid_time_to_empty(struct cw_battery *cw_bat)
-> +{
-> +	return cw_bat->time_to_empty > 0 &&
-> +		cw_bat->time_to_empty < CW2015_MASK_SOC &&
-> +		cw_bat->status == POWER_SUPPLY_STATUS_DISCHARGING;
-
-Fix indentation to be all 'c':s in one column.
-
-> +}
-
-...
-
-> +static int cw2015_parse_properties(struct cw_battery *cw_bat)
-> +{
-> +	struct device *dev = cw_bat->dev;
-> +	int length;
-> +	u32 value;
-> +	int ret;
-> +
-
-> +	length = device_property_read_u8_array(dev, "cellwise,battery-profile",
-> +						NULL, 0);
-
-device_property_count_u8();
-
-> +	if (length) {
-> +		if (length != CW2015_SIZE_BATINFO) {
-> +			dev_err(cw_bat->dev, "battery-profile must be %d bytes",
-> +				CW2015_SIZE_BATINFO);
-> +			return -EINVAL;
-> +		}
-> +
-> +		cw_bat->bat_profile =
-> +			devm_kzalloc(dev, CW2015_SIZE_BATINFO, GFP_KERNEL);
-
-Replace with length (so, you will have one point of validation), and put on
-one line.
-
-> +		if (!cw_bat->bat_profile) {
-> +			dev_err(cw_bat->dev,
-> +				"Failed to allocate memory for battery config info");
-> +			return -ENOMEM;
-> +		}
-> +
-> +		ret = device_property_read_u8_array(dev,
-> +						"cellwise,battery-profile",
-> +						cw_bat->bat_profile,
-
-> +						CW2015_SIZE_BATINFO);
-
-length.
-
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		dev_warn(cw_bat->dev,
-> +			"No battery-profile found, rolling with current flash contents");
-> +	}
-> +
-> +	cw_bat->poll_interval_ms = CW2015_DEFAULT_POLL_INTERVAL_MS;
-
-> +	ret = device_property_read_u32_array(dev,
-> +						"cellwise,monitor-interval-ms",
-
-It's fine to have it on one line.
-
-> +						&value, 1);
-> +	if (ret >= 0) {
-> +		dev_dbg(cw_bat->dev, "Overriding default monitor-interval with %u ms",
-> +			value);
-> +		cw_bat->poll_interval_ms = value;
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-> +	regmap_reg_range(CW2015_REG_BATINFO,
-> +				CW2015_REG_BATINFO + CW2015_SIZE_BATINFO - 1),
-
-Indentation issue. Check all similar places.
-
-...
-
-> +	cw_bat->rk_bat = devm_power_supply_register(&client->dev,
-> +		&cw2015_bat_desc, &psy_cfg);
-> +	if (IS_ERR(cw_bat->rk_bat)) {
-> +		dev_err(cw_bat->dev, "Failed to register power supply");
-
-> +		return -1;
-
-Do not shadow an error code.
-
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+SGksDQoNClRoaXMgY29tbWl0IGhhcyBhIGlzc3VlIHdpdGggZHVwbGljYXRlIGdycGhfb2JqX3R5
+cGUgZGVjbGFyYXRpb25zLg0KQW5kIHRoaXMgaGFzIGJlZW4gZml4ZWQgaW4gY29tbWl0OmQ3ODU0
+NzZjNjA4YzYyMWIzNDVkZDkzOTZlOGIyMWU5MDM3NWNiMC4NCg0KLS0tLQ0KY29tbWl0IGQ3ODU0
+NzZjNjA4YzYyMWIzNDVkZDkzOTZlOGIyMWU5MDM3NWNiMGUNCkF1dGhvcjogQ29saW4gSWFuIEtp
+bmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCkRhdGU6ICAgRnJpIE5vdiA4IDE0OjQ1OjI3
+IDIwMTkgKzAwMDANCg0KICAgIGRybS9hbWQvZGlzcGxheTogcmVtb3ZlIGR1cGxpY2F0ZWQgYXNz
+aWdubWVudCB0byBncnBoX29ial90eXBlDQogICAgDQogICAgVmFyaWFibGUgZ3JwaF9vYmpfdHlw
+ZSBpcyBiZWluZyBhc3NpZ25lZCB0d2ljZSwgb25lIG9mIHRoZXNlIGlzDQogICAgcmVkdW5kYW50
+IHNvIHJlbW92ZSBpdC4NCiAgICANCiAgICBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiRXZhbHVhdGlv
+biBvcmRlciB2aW9sYXRpb24iKQ0KICAgIFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBLaW5nIDxj
+b2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQogICAgU2lnbmVkLW9mZi1ieTogQWxleCBEZXVjaGVy
+IDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQotLS0tDQoNClBsZWFzZSBhcHBseSB0byBh
+bGwgTFRTIHdpdGhvdXQgMy4xNi55Lg0KDQpCZXN0IHJlZ2FyZHMsDQogIE5vYnVoaXJvDQoNCj4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogc3RhYmxlLW93bmVyQHZnZXIua2Vy
+bmVsLm9yZw0KPiBbbWFpbHRvOnN0YWJsZS1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFs
+ZiBPZiBHcmVnIEtyb2FoLUhhcnRtYW4NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDI3LCAy
+MDIwIDEwOjM2IFBNDQo+IFRvOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBH
+cmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsNCj4gc3RhYmxl
+QHZnZXIua2VybmVsLm9yZzsgeXUga3VhaSA8eXVrdWFpM0BodWF3ZWkuY29tPjsgQWxleCBEZXVj
+aGVyDQo+IDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPjsgU2FzaGEgTGV2aW4gPHNhc2hhbEBr
+ZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBbUEFUQ0ggNC40IDAzNS8xMTNdIGRybS9hbWRncHU6IHJl
+bW92ZSA0IHNldCBidXQgbm90IHVzZWQNCj4gdmFyaWFibGUgaW4gYW1kZ3B1X2F0b21iaW9zX2dl
+dF9jb25uZWN0b3JfaW5mb19mcm9tX29iamVjdF90YWJsZQ0KPiANCj4gRnJvbTogeXUga3VhaSA8
+eXVrdWFpM0BodWF3ZWkuY29tPg0KPiANCj4gWyBVcHN0cmVhbSBjb21taXQgYmFlMDI4ZTNlNTIx
+ZThjYjhjYWYyY2MxNmE0NTVjZTRjNTVmMjMzMiBdDQo+IA0KPiBGaXhlcyBnY2MgJy1XdW51c2Vk
+LWJ1dC1zZXQtdmFyaWFibGUnIHdhcm5pbmc6DQo+IA0KPiBkcml2ZXJzL2dwdS9kcm0vYW1kL2Ft
+ZGdwdS9hbWRncHVfYXRvbWJpb3MuYzogSW4gZnVuY3Rpb24NCj4gJ2FtZGdwdV9hdG9tYmlvc19n
+ZXRfY29ubmVjdG9yX2luZm9fZnJvbV9vYmplY3RfdGFibGUnOg0KPiBkcml2ZXJzL2dwdS9kcm0v
+YW1kL2FtZGdwdS9hbWRncHVfYXRvbWJpb3MuYzozNzY6MjY6IHdhcm5pbmc6DQo+IHZhcmlhYmxl
+ICdncnBoX29ial9udW0nIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFi
+bGVdDQo+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hdG9tYmlvcy5jOjM3Njox
+Mzogd2FybmluZzoNCj4gdmFyaWFibGUgJ2dycGhfb2JqX2lkJyBzZXQgYnV0IG5vdCB1c2VkIFst
+V3VudXNlZC1idXQtc2V0LXZhcmlhYmxlXQ0KPiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9h
+bWRncHVfYXRvbWJpb3MuYzozNDE6Mzc6IHdhcm5pbmc6DQo+IHZhcmlhYmxlICdjb25fb2JqX3R5
+cGUnIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+IGRyaXZl
+cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hdG9tYmlvcy5jOjM0MToyNDogd2FybmluZzoN
+Cj4gdmFyaWFibGUgJ2Nvbl9vYmpfbnVtJyBzZXQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC1idXQt
+c2V0LXZhcmlhYmxlXQ0KPiANCj4gVGhleSBhcmUgbmV2ZXIgdXNlZCwgc28gY2FuIGJlIHJlbW92
+ZWQuDQo+IA0KPiBGaXhlczogZDM4Y2VhZjk5ZWQwICgiZHJtL2FtZGdwdTogYWRkIGNvcmUgZHJp
+dmVyICh2NCkiKQ0KPiBTaWduZWQtb2ZmLWJ5OiB5dSBrdWFpIDx5dWt1YWkzQGh1YXdlaS5jb20+
+DQo+IFNpZ25lZC1vZmYtYnk6IEFsZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNv
+bT4NCj4gU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPg0KPiAt
+LS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hdG9tYmlvcy5jIHwgMTkg
+KystLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
+MTcgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9h
+bWRncHUvYW1kZ3B1X2F0b21iaW9zLmMNCj4gYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9h
+bWRncHVfYXRvbWJpb3MuYw0KPiBpbmRleCAzZTkwZGRjYmIyNGE3Li5kNzk5OTI3ZDNhNWRlIDEw
+MDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYXRvbWJpb3Mu
+Yw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYXRvbWJpb3MuYw0K
+PiBAQCAtMzE5LDE3ICszMTksOSBAQCBib29sDQo+IGFtZGdwdV9hdG9tYmlvc19nZXRfY29ubmVj
+dG9yX2luZm9fZnJvbV9vYmplY3RfdGFibGUoc3RydWN0DQo+IGFtZGdwdV9kZXZpY2UgKg0KPiAg
+CQlwYXRoX3NpemUgKz0gbGUxNl90b19jcHUocGF0aC0+dXNTaXplKTsNCj4gDQo+ICAJCWlmIChk
+ZXZpY2Vfc3VwcG9ydCAmIGxlMTZfdG9fY3B1KHBhdGgtPnVzRGV2aWNlVGFnKSkgew0KPiAtCQkJ
+dWludDhfdCBjb25fb2JqX2lkLCBjb25fb2JqX251bSwgY29uX29ial90eXBlOw0KPiAtDQo+IC0J
+CQljb25fb2JqX2lkID0NCj4gKwkJCXVpbnQ4X3QgY29uX29ial9pZCA9DQo+ICAJCQkgICAgKGxl
+MTZfdG9fY3B1KHBhdGgtPnVzQ29ubk9iamVjdElkKSAmDQo+IE9CSkVDVF9JRF9NQVNLKQ0KPiAg
+CQkJICAgID4+IE9CSkVDVF9JRF9TSElGVDsNCj4gLQkJCWNvbl9vYmpfbnVtID0NCj4gLQkJCSAg
+ICAobGUxNl90b19jcHUocGF0aC0+dXNDb25uT2JqZWN0SWQpICYNCj4gRU5VTV9JRF9NQVNLKQ0K
+PiAtCQkJICAgID4+IEVOVU1fSURfU0hJRlQ7DQo+IC0JCQljb25fb2JqX3R5cGUgPQ0KPiAtCQkJ
+ICAgIChsZTE2X3RvX2NwdShwYXRoLT51c0Nvbm5PYmplY3RJZCkgJg0KPiAtCQkJICAgICBPQkpF
+Q1RfVFlQRV9NQVNLKSA+PiBPQkpFQ1RfVFlQRV9TSElGVDsNCj4gDQo+ICAJCQkvKiBTa2lwIFRW
+L0NWIHN1cHBvcnQgKi8NCj4gIAkJCWlmICgobGUxNl90b19jcHUocGF0aC0+dXNEZXZpY2VUYWcp
+ID09IEBADQo+IC0zNTQsMTQgKzM0Niw3IEBAIGJvb2wNCj4gYW1kZ3B1X2F0b21iaW9zX2dldF9j
+b25uZWN0b3JfaW5mb19mcm9tX29iamVjdF90YWJsZShzdHJ1Y3QNCj4gYW1kZ3B1X2RldmljZSAq
+DQo+ICAJCQlyb3V0ZXIuZGRjX3ZhbGlkID0gZmFsc2U7DQo+ICAJCQlyb3V0ZXIuY2RfdmFsaWQg
+PSBmYWxzZTsNCj4gIAkJCWZvciAoaiA9IDA7IGogPCAoKGxlMTZfdG9fY3B1KHBhdGgtPnVzU2l6
+ZSkgLSA4KQ0KPiAvIDIpOyBqKyspIHsNCj4gLQkJCQl1aW50OF90IGdycGhfb2JqX2lkLCBncnBo
+X29ial9udW0sDQo+IGdycGhfb2JqX3R5cGU7DQo+IC0NCj4gLQkJCQlncnBoX29ial9pZCA9DQo+
+IC0NCj4gKGxlMTZfdG9fY3B1KHBhdGgtPnVzR3JhcGhpY09iaklkc1tqXSkgJg0KPiAtCQkJCSAg
+ICAgT0JKRUNUX0lEX01BU0spID4+DQo+IE9CSkVDVF9JRF9TSElGVDsNCj4gLQkJCQlncnBoX29i
+al9udW0gPQ0KPiAtDQo+IChsZTE2X3RvX2NwdShwYXRoLT51c0dyYXBoaWNPYmpJZHNbal0pICYN
+Cj4gLQkJCQkgICAgIEVOVU1fSURfTUFTSykgPj4gRU5VTV9JRF9TSElGVDsNCj4gKwkJCQl1aW50
+OF90IGdycGhfb2JqX3R5cGU9DQo+ICAJCQkJZ3JwaF9vYmpfdHlwZSA9DQo+IA0KPiAobGUxNl90
+b19jcHUocGF0aC0+dXNHcmFwaGljT2JqSWRzW2pdKSAmDQo+ICAJCQkJICAgICBPQkpFQ1RfVFlQ
+RV9NQVNLKSA+Pg0KPiBPQkpFQ1RfVFlQRV9TSElGVDsNCj4gLS0NCj4gMi4yMC4xDQo+IA0KPiAN
+Cg0K
