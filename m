@@ -2,174 +2,120 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFBCC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330F9C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14520206E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25339206E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bj/AQ/Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731316AbgCKWoN (ORCPT
+        id S2387476AbgCKWoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:44:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61420 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbgCKWoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:44:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 15:44:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,542,1574150400"; 
-   d="scan'208";a="389412091"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 11 Mar 2020 15:44:12 -0700
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id E6B875804A0;
-        Wed, 11 Mar 2020 15:44:11 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <20200311221324.GA195204@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <162f65bc-b963-653f-67d5-4de2abb26366@linux.intel.com>
-Date:   Wed, 11 Mar 2020 15:41:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 18:44:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34988 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387411AbgCKWon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:44:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d5so4525052wrc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 15:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QeeVZpCysBLeBcff3DdO0j5CS9fOGStZhIzASGNoSMk=;
+        b=bj/AQ/QcbhLyB8amYbmO2G+4QoHnBpQ+wv/2gXDJiJN1o2Z6z41VLd+S1msCev3kE/
+         jxF7gneBkOD8j1NF4mRy/v66QrDfXtozOJ6giil05/t1oLEkNOIBnTQzC/XJ4MN3PNVO
+         Uc2D9YTr0VROIIapZKBVvBwx/+eExIWAPjYfo1T8hSmYdJktupEmFPSPGoUp/lctf+zd
+         4OgqE4sQL48w8ayxdK1MTnkbPZhCPzDvNTfMS7OOUyApAea3Djl36m+J6NkWLrt18eSF
+         yWNFepulKsPsueVWoU5M8tFOfAj0hgjFglfjCJqIfKxzo7dUux65U5wFMdDxNjm0ciSA
+         AmaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QeeVZpCysBLeBcff3DdO0j5CS9fOGStZhIzASGNoSMk=;
+        b=A5khJonFHQyEBAcx15zu4v1Q44iIBtnrMYWMWp3U/nch3KF9MoHCp1iJsNV4GMFRKH
+         5n3wzSTvYojQ+gdG3TNKTFyfvsvfalOsBQfwo/HzIu6pibnjwI71IWZHZzDQDt5RDKd7
+         /dNTZvXE6pmT3IzkrEdQydW64JQ2gCjKoRnOCXP0OWv9uf3hxr6HL08svd+DbEIBnRbG
+         uOsSLPBlX5bS59CMMrko6OY0WQE2GF+chiVJK2DQO5AGUiPlWLMcJAJiRUUqh3Si+woh
+         jdzsbUMgUXJZVOilKgvVQG2aNxgpVxhuz1dsiZ+zH/chPTPilTvl+riT5WVhV97QhISU
+         EunQ==
+X-Gm-Message-State: ANhLgQ2u6JGqRFJCrkNHBaMxdzqdLUXptvZOz9lgr28PyudjDHoJLba4
+        WaC17/tVNSjTq5DMDaM5Sz4o+r4S5myruoM+76q8VQ==
+X-Google-Smtp-Source: ADFU+vvRF8pVr4qGIYY8Vh+Y3Xi1B9aZ5b+ZyHUrUCRc5/9PrDOZSstCwaoSgzVTpnhA0c8AxNkEplh/H8511uk/tD4=
+X-Received: by 2002:a5d:628c:: with SMTP id k12mr6779929wru.237.1583966681000;
+ Wed, 11 Mar 2020 15:44:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200311221324.GA195204@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200228232736.182780-1-rammuthiah@google.com> <20200301023025-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200301023025-mutt-send-email-mst@kernel.org>
+From:   Ram Muthiah <rammuthiah@google.com>
+Date:   Wed, 11 Mar 2020 15:44:14 -0700
+Message-ID: <CA+CXyWu9AfPbb_BVb9bh9Q_82XfavTGy+M11+6GEGCjeCetThw@mail.gmail.com>
+Subject: Re: [PATCH RESEND] virtio: virtio_pci_legacy: Remove default y from Kconfig
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/11/20 3:13 PM, Bjorn Helgaas wrote:
-> On Wed, Mar 11, 2020 at 02:25:18PM -0700, Kuppuswamy Sathyanarayanan wrote:
->> On 3/11/20 1:33 PM, Bjorn Helgaas wrote:
->>> On Wed, Mar 11, 2020 at 05:27:35PM +0000, Austin.Bolen@dell.com wrote:
->>>> On 3/11/2020 12:12 PM, Bjorn Helgaas wrote:
->>>> <SNIP>
->>>>>>>> For the normative text describing when OS clears the AER bits
->>>>>>>> following the informative flow chart, it could say that OS clears
->>>>>>>> AER as soon as possible after OST returns and before OS processes
->>>>>>>> _HPX and loading drivers.  Open to other suggestions as well.
->>>>>>> I'm not sure what to do with "as soon as possible" either.  That
->>>>>>> doesn't seem like something firmware and the OS can agree on.
->>>>>> I can just state that it's done after OST returns but before _HPX or
->>>>>> driver is loaded. Any time in that range is fine. I can't get super
->>>>>> specific here because different OSes do different things.  Even for
->>>>>> a given OS they change over time. And I need something generic
->>>>>> enough to support a wide variety of OS implementations.
->>>>> Yeah.  I don't know how to solve this.
->>>>>
->>>>> Linux doesn't actually unload and reload drivers for the child devices
->>>>> (Sathy, correct me if I'm wrong here) even though DPC containment
->>>>> takes the link down and effectively unplugs and replugs the device.  I
->>>>> would *like* to handle it like hotplug, but some higher-level software
->>>>> doesn't deal well with things like storage devices disappearing and
->>>>> reappearing.
->>>>>
->>>>> Since Linux doesn't actually re-enumerate the child devices, it
->>>>> wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
->>>>> but it's all tied up with the whole unplug/replug problem.
->>>> DPC resets everything below it and so to get it back up and running it
->>>> would mean that all buses and resources need to be assigned, _HPX
->>>> evaluated, and drivers reloaded. If those things don't happen then the
->>>> whole hierarchy below the port that triggered DPC will be inaccessible.
->>> Hmm, I think I might be confusing this with another situation.  Sathy,
->>> can you help me understand this?  I don't have a way to actually
->>> exercise this EDR path.  Is there some way the pciehp hotplug driver
->>> gets involved here?
->>>
->>> Here's how this seems to work as far as I can tell:
->>>
->>>     - Linux does not have DPC or AER control
->>>
->>>     - Linux installs EDR notify handler
->>>
->>>     - Linux evaluates DPC Enable _DSM
->>>
->>>     - DPC containment event occurs
->>>
->>>     - Firmware fields DPC interrupt
->>>
->>>     - DPC event is not a surprise remove
->>>
->>>     - Firmware sends EDR notification
->>>
->>>     - Linux EDR notify handler evaluates Locate _DSM
->>>
->>>     - Linux reads and logs DPC and AER error information for port in
->>>       containment mode.  [If it was an RP PIO error, Linux clears RP PIO
->>>       error status, which is an asymmetry with the non-RP PIO path.]
->>>
->>>     - Linux clears AER error status (pci_aer_raw_clear_status())
->>>
->>>     - Linux calls driver .error_detected() methods for all child devices
->>>       of the port in containment mode (pcie_do_recovery()).  These
->>>       devices are inaccessible because the link is down.
->>>
->>>     - Linux clears DPC Trigger Status (dpc_reset_link() from
->>>       pcie_do_recovery()).
->>>
->>>     - Linux calls driver .mmio_enabled() methods for all child devices.
->>>
->>> This is where I get lost.  These child devices are now accessible, but
->>> they've been reset, so I don't know how their config space got
->>> restored.  Did pciehp enumerate them?  Did we do something like
->>> pci_restore_state()?  I don't see where either of these happens.
->> AFAIK, AER error status registers  are sticky (RW1CS) and hence
->> will be preserved during reset.
-> I'm not concerned about the AER registers.  I'm wondering about bus
-> numbers & windows (for bridges), BAR settings, MSI programming, etc.:
-> all the normal stuff the driver expects.  Or do we actually detach the
-> driver, remove the device, hot-add the device, re-enumerate, and
-> rebind the driver?
-Yes, link down event removes the device and detaches the
-driver. It will re-added once the link comes up. Please check
-the pciehp_handle_presence_or_link_change() and
-pciehp_unconfigure_device() for details.
+On Sat, Feb 29, 2020 at 11:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
 >
->>> So they want to basically do native AER handling even though firmware
->>> owns AER?  My head hurts.
->> No, it's meant only for clearing AER registers. In EDR path, since
->> OS owns clearing DPC registers, they want to let OS own clearing AER
->> registers as well. Also, it would give OS a chance to decide
->> whether we want to keep the device on based on error status and
->> history of the device attached.
-> It's obviously not meant "only for clearing AER registers" if the OS
-> is going to decide things based on the error status.  How is deciding
-> things and clearing AER registers different from native AER handling?
-In EDR case,  firmware *first* detects error events and decides whether
-to attempt recovery or to notify OS. Even after you recovered the device
-firmware can decide whether to keep the link on or off. This is the main
-difference between native vs EDR model.
-
-But, once OS receives receives notification then it can attempt recovery and
-error handling similar to native model.
+> On Fri, Feb 28, 2020 at 03:27:36PM -0800, Ram Muthiah wrote:
+> > The legacy pci driver should no longer be default enabled. QEMU has
+> > implemented support for Virtio 1 for virtio-pci since June 2015
+> > on SHA dfb8e184db75.
+> >
+> > Signed-off-by: Ram Muthiah <rammuthiah@google.com>
 >
-> This sort of makes a mockery of the idea of "AER ownership".  But I
-> guess the spec doesn't actually say anything that limits OS access to
-> the AER capability, even if firmware retains "control".  It does
-> restrict *firmware* from modifying the AER cap if it grants control
-> to the OS, but not the other way around.
+> I see little reason to do this: y is safer and will boot on more
+> hypervisors, so people that aren't sure should enable it.
 >
-> Bjorn
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+In that case, would it be reasonable to fold VIRTIO_PCI_LEGACY
+into VIRTIO_PCI?
 
+The result would boot more hypervisors as well and remove the
+CONFIG in the process.
+
+> > ---
+> >  drivers/virtio/Kconfig | 6 ------
+> >  1 file changed, 6 deletions(-)
+> >
+> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > index 078615cf2afc..eacd0b90d32b 100644
+> > --- a/drivers/virtio/Kconfig
+> > +++ b/drivers/virtio/Kconfig
+> > @@ -26,7 +26,6 @@ config VIRTIO_PCI
+> >
+> >  config VIRTIO_PCI_LEGACY
+> >       bool "Support for legacy virtio draft 0.9.X and older devices"
+> > -     default y
+> >       depends on VIRTIO_PCI
+> >       ---help---
+> >            Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
+> > @@ -36,11 +35,6 @@ config VIRTIO_PCI_LEGACY
+> >         If disabled, you get a slightly smaller, non-transitional driver,
+> >         with no legacy compatibility.
+> >
+> > -          So look out into your driveway.  Do you have a flying car?  If
+> > -          so, you can happily disable this option and virtio will not
+> > -          break.  Otherwise, leave it set.  Unless you're testing what
+> > -          life will be like in The Future.
+> > -
+> >         If unsure, say Y.
+> >
+> >  config VIRTIO_PMEM
+> > --
+> > 2.25.0.265.gbab2e86ba0-goog
+>
