@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02268C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8B7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED50920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607C82073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583955203;
-	bh=mpYolZHG8Rvhtyy8ykOU3NvHJt669wKPrtsMsgQb4Cs=;
+	s=default; t=1583955211;
+	bh=Bw4/xEpyDHzYLhZEHshtNZum9AZNeo7acrZD+FQGz0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iiyauN/ERQ53j9tciMWScHJfa6Q+rK6IxQiY4jCWmM0IBNOAa/DKW9HYN/roM23Kn
-	 a8sKmQj1BzgA41bMg+Foe7fOOqLZkUuEhFkiJAreMhMnXu/YVMv0zRketozqm3VXgC
-	 aQGAqYGBcRuaj+Y7SUVpqvoaGgmOY66ejhbTUNGc=
+	b=WzVskFs8A4/AvWkfZus9gbgjHPp5wKfYjU29nLz39ywt6T9ZFijxi6eC9ucroXkLb
+	 0yidt6RExEFPZMX37Zi0YllmYJnzr0q1zSMoeSFfagM059oD5ud56UqAD5xM8hHIj9
+	 +kNmzMBvBSby6YfkQrZc0gZI9uITly7K+KMWHhGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731344AbgCKTdU (ORCPT
+        id S1731394AbgCKTd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:33:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:54374 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 15:33:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:54442 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731317AbgCKTdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:33:19 -0400
+        id S1731376AbgCKTdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:33:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6917B1FB;
-        Wed, 11 Mar 2020 12:33:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 180887FA;
+        Wed, 11 Mar 2020 12:33:25 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0143F534;
-        Wed, 11 Mar 2020 12:33:17 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D6D33F534;
+        Wed, 11 Mar 2020 12:33:24 -0700 (PDT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -56,11 +56,11 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Sudakshina Das <sudi.das@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
+        Daniel Kiss <daniel.kiss@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v9 09/13] arm64: BTI: Reset BTYPE when skipping emulated instructions
-Date:   Wed, 11 Mar 2020 19:26:04 +0000
-Message-Id: <20200311192608.40095-10-broonie@kernel.org>
+Subject: [PATCH v9 12/13] mm: smaps: Report arm64 guarded pages in smaps
+Date:   Wed, 11 Mar 2020 19:26:07 +0000
+Message-Id: <20200311192608.40095-13-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200311192608.40095-1-broonie@kernel.org>
 References: <20200311192608.40095-1-broonie@kernel.org>
@@ -71,34 +71,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: Daniel Kiss <daniel.kiss@arm.com>
 
-Since normal execution of any non-branch instruction resets the
-PSTATE BTYPE field to 0, so do the same thing when emulating a
-trapped instruction.
+The arm64 Branch Target Identification support is activated by marking
+executable pages as guarded pages.  Report pages mapped this way in
+smaps to aid diagnostics.
 
-Branches don't trap directly, so we should never need to assign a
-non-zero value to BTYPE here.
-
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Daniel Kiss <daniel.kiss@arm.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kernel/traps.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/filesystems/proc.txt | 1 +
+ fs/proc/task_mmu.c                 | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 3c07a7074145..52ed261e7739 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -335,6 +335,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 99ca040e3f90..ed5465d0f435 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -519,6 +519,7 @@ manner. The codes are the following:
+     hg  - huge page advise flag
+     nh  - no-huge page advise flag
+     mg  - mergable advise flag
++    bt  - arm64 BTI guarded page
  
- 	if (compat_user_mode(regs))
- 		advance_itstate(regs);
-+	else
-+		regs->pstate &= ~PSR_BTYPE_MASK;
- }
- 
- static LIST_HEAD(undef_hook);
+ Note that there is no guarantee that every flag and associated mnemonic will
+ be present in all further kernel releases. Things get changed, the flags may
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 3ba9ae83bff5..1e3409c484d1 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -668,6 +668,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+ 		[ilog2(VM_ARCH_1)]	= "ar",
+ 		[ilog2(VM_WIPEONFORK)]	= "wf",
+ 		[ilog2(VM_DONTDUMP)]	= "dd",
++#ifdef CONFIG_ARM64_BTI
++		[ilog2(VM_ARM64_BTI)]	= "bt",
++#endif
+ #ifdef CONFIG_MEM_SOFT_DIRTY
+ 		[ilog2(VM_SOFTDIRTY)]	= "sd",
+ #endif
 -- 
 2.20.1
 
