@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73144C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A635CC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482F4208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700C3208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="0BNBnlt0"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="xgQwRmjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgCKHaU (ORCPT
+        id S1728492AbgCKHaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:30:20 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:41530 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCKHaT (ORCPT
+        Wed, 11 Mar 2020 03:30:46 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44023 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgCKHaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:30:19 -0400
-Received: by mail-ua1-f68.google.com with SMTP id l7so354783uap.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 00:30:18 -0700 (PDT)
+        Wed, 11 Mar 2020 03:30:46 -0400
+Received: by mail-ua1-f66.google.com with SMTP id o42so352653uad.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 00:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BPmOcXQ3X99zHwJqpB3nsuNuIevnyBfADR/rHEtNRP8=;
-        b=0BNBnlt0yW57VD8zwOmvzW2sMziTU7mHMcMb/HOT0kuqJeFVpOc5fUJ6z9I4fFzjcB
-         HtH1k4B+xEpqyI2Q0sX9RTaK11jmWJh18wZtJamFmwhIs2JBzlf25q9B1Zq3iAO7UQaN
-         2oqkIsPspe2v/YbOo80/tyqJQDagTe6a+FkRZn0R73XKkTnZaF7793JlZ85CTjMpTdPf
-         1jV2RqUXIZphPLvicgDxaYlIw6wTBz7k5E533El1oCe7Owad7QXcRN+jP0Qmva8sgdXG
-         YDctySDeLCpZimi6n1fsxU+B19JswHyXUTI9Q6rO2WkfHChuS0TCwoAWt2Jmsax5ukXl
-         HvDw==
+        bh=+Nk9d88tir1z9F+OfZqa+RxpSNCU78XfSYzCiKpe64Q=;
+        b=xgQwRmjyFp8+taCvHKFUoeqURRY7TiuLf89r+llmJb6qciItR+j4GtXgiRI5Exwd45
+         8jY928jqPvHCyGb0XL6Yw1dwNw+V6ErLpr7mxnrq88bL4/4l1fxxvnk+5Blu4/kH7/Xh
+         ueBcClS0plhlOrAmI5a1ehlI88tkTnKwZWqqm8hMJRkWRy+Uxw5CgXOrrXvyPuXDCxv0
+         KA1o+PY55P+eaR+1D47waYAVPaIv8GIphtvyWcwDUCvIXPNyBcE+WQBFo2jMEYI2q8hC
+         mq4en4mQHKnr8MdkVJrpwwvrNzg8SMAcgndxI3YXecLM6bqw65F4rBuie5VlWe9l4yiD
+         3zbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BPmOcXQ3X99zHwJqpB3nsuNuIevnyBfADR/rHEtNRP8=;
-        b=g6HpjVwKv1qZ+8Y+obmWxELNrEBaoV5l25jEBZraJiclNiE16JgKNGYOJ2ONotlets
-         +MEDUrocwq8A8w06CFNM8CToyvJfMtN3M0TVM5mT3ugS8XyK1D7uXCiVXYqe47uqXbvQ
-         zSvSYiZ0pJTsYIawium1dTTGVY6VjJGFSpPAnDHPf+iC1z1fyjpKgItSQH1K3YPAJgTL
-         QbhtdkwMhmWvMMv6ycJXM3LRZOMT7lGCU0YaOMp7EL6D2qjvr8sKhjaDwveUb8PgqBdI
-         mLb0REHYaF0oR0HEmv73FEdpV6NZeOSUrfdJ/ZLHZ/C82y0zvOXIAfO+5NgBFZHrIf6G
-         49vQ==
-X-Gm-Message-State: ANhLgQ3XGC0CCls2/fQUE2olvrvMMGhxkeNbdVq6Hyaldt6J5JbIG5bW
-        agGTKfL4dBubUKmHhWY8KFPJv8sB8Hd4U7mO2zvYPg==
-X-Google-Smtp-Source: ADFU+vs0Dvq9z7hlChVBga5EnnnCXMWgmos410ryGreZya3+Vz6NMZ91SWJ54I7K3Dhw1Fs8MAk1q3q7PPUo08uzlI4=
-X-Received: by 2002:ab0:7518:: with SMTP id m24mr806098uap.60.1583911817488;
- Wed, 11 Mar 2020 00:30:17 -0700 (PDT)
+        bh=+Nk9d88tir1z9F+OfZqa+RxpSNCU78XfSYzCiKpe64Q=;
+        b=UDHZXog9FMZwIqtiIG1sBLkQi1HBMNsi+YtgtBXF997+tU8EkFvyZoNf4WQQKuQSN2
+         sb0SUUXXG35AvUvlxRzOANbsiFSwdPdvkr3+AuZ1FsNReqmnF5SqiePJdK1tvwWU68nn
+         9ihwTni+CXkJ2R/nJBeMZYKVWfiAU8LBFQWr/8wlR2TwSNMy/ErRuyRvDVe4f+cFXHGp
+         sQHV4+M0NBJQYTmGuwTxQaBAQXQNNX4riNV30LRsu2BZ2Z2npvUSg/95gJEZ1MYdmPPO
+         cjQJQhYgvbkUqTvw+UaltbpQk8Doi2+HzZCExoLGbuvLw2WSdwGiuoXC/1L2afvGIZcS
+         vV5Q==
+X-Gm-Message-State: ANhLgQ3FYcFe58KPu+ap9DSrgslFZc+7fSqRU+j5ByUeFBt51SHr/Ers
+        w9+o8g28e8AAHzghwo1KpaQVIdZw18hLZV7kBFqQ1A==
+X-Google-Smtp-Source: ADFU+vt1Nj01BNrpKA6Wcf6tdySvJn+95tH2Jbcar3F9/LL7ZtoYmUEKyaT4NHRuBSPHRz11S0Tm9XGr1rpoOymRoko=
+X-Received: by 2002:ab0:3089:: with SMTP id h9mr877616ual.48.1583911843276;
+ Wed, 11 Mar 2020 00:30:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310154358.39367-1-swboyd@chromium.org> <20200310154358.39367-2-swboyd@chromium.org>
-In-Reply-To: <20200310154358.39367-2-swboyd@chromium.org>
+References: <20200310154358.39367-1-swboyd@chromium.org> <20200310154358.39367-3-swboyd@chromium.org>
+In-Reply-To: <20200310154358.39367-3-swboyd@chromium.org>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
 Date:   Wed, 11 Mar 2020 13:00:00 +0530
-Message-ID: <CAHLCerOx8-iUn0QHO4mDs2M9ncmpEvY7TyM9Tg-_wz9C0Thxug@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] i2c: qcom-geni: Let firmware specify irq trigger flags
+Message-ID: <CAHLCerNVX844nUwaYHCRQdUhYbpfjRxQQp445bd_v7hnQ3YbyA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] i2c: qcom-geni: Grow a dev pointer to simplify code
 To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Wolfram Sang <wsa@the-dreams.de>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -76,11 +76,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, Mar 10, 2020 at 9:14 PM Stephen Boyd <swboyd@chromium.org> wrote:
 >
-> We don't need to force IRQF_TRIGGER_HIGH here as the DT or ACPI tables
-> should take care of this for us. Just use 0 instead so that we use the
-> flags from the firmware. Also, remove specify dev_name() for the irq
-> name so that we can get better information in /proc/interrupts about
-> which device is generating interrupts.
+> Some lines are long here. Use a struct dev pointer to shorten lines and
+> simplify code. The clk_get() call can fail because of EPROBE_DEFER
+> problems too, so just remove the error print message because it isn't
+> useful. Finally, platform_get_irq() already prints an error so just
+> remove that error message.
 >
 
 Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
@@ -90,24 +90,140 @@ Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/i2c/busses/i2c-qcom-geni.c | 57 ++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 31 deletions(-)
 >
 > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index 17abf60c94ae..4efca130035a 100644
+> index 4efca130035a..2f5fb2e83f95 100644
 > --- a/drivers/i2c/busses/i2c-qcom-geni.c
 > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -549,8 +549,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
+> @@ -502,45 +502,40 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>         struct resource *res;
+>         u32 proto, tx_depth;
+>         int ret;
+> +       struct device *dev = &pdev->dev;
+>
+> -       gi2c = devm_kzalloc(&pdev->dev, sizeof(*gi2c), GFP_KERNEL);
+> +       gi2c = devm_kzalloc(dev, sizeof(*gi2c), GFP_KERNEL);
+>         if (!gi2c)
+>                 return -ENOMEM;
+>
+> -       gi2c->se.dev = &pdev->dev;
+> -       gi2c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
+> +       gi2c->se.dev = dev;
+> +       gi2c->se.wrapper = dev_get_drvdata(dev->parent);
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       gi2c->se.base = devm_ioremap_resource(&pdev->dev, res);
+> +       gi2c->se.base = devm_ioremap_resource(dev, res);
+>         if (IS_ERR(gi2c->se.base))
+>                 return PTR_ERR(gi2c->se.base);
+>
+> -       gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+> -       if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
+> -               ret = PTR_ERR(gi2c->se.clk);
+> -               dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
+> -               return ret;
+> -       }
+> +       gi2c->se.clk = devm_clk_get(dev, "se");
+> +       if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(dev))
+> +               return PTR_ERR(gi2c->se.clk);
+>
+> -       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+> -                                                       &gi2c->clk_freq_out);
+> +       ret = device_property_read_u32(dev, "clock-frequency",
+> +                                      &gi2c->clk_freq_out);
+>         if (ret) {
+> -               dev_info(&pdev->dev,
+> -                       "Bus frequency not specified, default to 100kHz.\n");
+> +               dev_info(dev, "Bus frequency not specified, default to 100kHz.\n");
+>                 gi2c->clk_freq_out = KHZ(100);
+>         }
+>
+> -       if (has_acpi_companion(&pdev->dev))
+> -               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
+> +       if (has_acpi_companion(dev))
+> +               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
+>
+>         gi2c->irq = platform_get_irq(pdev, 0);
+> -       if (gi2c->irq < 0) {
+> -               dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
+> +       if (gi2c->irq < 0)
+>                 return gi2c->irq;
+> -       }
+>
+>         ret = geni_i2c_clk_map_idx(gi2c);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Invalid clk frequency %d Hz: %d\n",
+> +               dev_err(dev, "Invalid clk frequency %d Hz: %d\n",
+>                         gi2c->clk_freq_out, ret);
+>                 return ret;
+>         }
+> @@ -549,29 +544,29 @@ static int geni_i2c_probe(struct platform_device *pdev)
 >         init_completion(&gi2c->done);
 >         spin_lock_init(&gi2c->lock);
 >         platform_set_drvdata(pdev, gi2c);
-> -       ret = devm_request_irq(&pdev->dev, gi2c->irq, geni_i2c_irq,
-> -                              IRQF_TRIGGER_HIGH, "i2c_geni", gi2c);
-> +       ret = devm_request_irq(&pdev->dev, gi2c->irq, geni_i2c_irq, 0,
-> +                              dev_name(&pdev->dev), gi2c);
+> -       ret = devm_request_irq(&pdev->dev, gi2c->irq, geni_i2c_irq, 0,
+> -                              dev_name(&pdev->dev), gi2c);
+> +       ret = devm_request_irq(dev, gi2c->irq, geni_i2c_irq, 0,
+> +                              dev_name(dev), gi2c);
 >         if (ret) {
->                 dev_err(&pdev->dev, "Request_irq failed:%d: err:%d\n",
+> -               dev_err(&pdev->dev, "Request_irq failed:%d: err:%d\n",
+> +               dev_err(dev, "Request_irq failed:%d: err:%d\n",
 >                         gi2c->irq, ret);
+>                 return ret;
+>         }
+>         /* Disable the interrupt so that the system can enter low-power mode */
+>         disable_irq(gi2c->irq);
+>         i2c_set_adapdata(&gi2c->adap, gi2c);
+> -       gi2c->adap.dev.parent = &pdev->dev;
+> -       gi2c->adap.dev.of_node = pdev->dev.of_node;
+> +       gi2c->adap.dev.parent = dev;
+> +       gi2c->adap.dev.of_node = dev->of_node;
+>         strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+>
+>         ret = geni_se_resources_on(&gi2c->se);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Error turning on resources %d\n", ret);
+> +               dev_err(dev, "Error turning on resources %d\n", ret);
+>                 return ret;
+>         }
+>         proto = geni_se_read_proto(&gi2c->se);
+>         tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
+>         if (proto != GENI_SE_I2C) {
+> -               dev_err(&pdev->dev, "Invalid proto %d\n", proto);
+> +               dev_err(dev, "Invalid proto %d\n", proto);
+>                 geni_se_resources_off(&gi2c->se);
+>                 return -ENXIO;
+>         }
+> @@ -581,11 +576,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>                                                         true, true, true);
+>         ret = geni_se_resources_off(&gi2c->se);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Error turning off resources %d\n", ret);
+> +               dev_err(dev, "Error turning off resources %d\n", ret);
+>                 return ret;
+>         }
+>
+> -       dev_dbg(&pdev->dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
+> +       dev_dbg(dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
+>
+>         gi2c->suspended = 1;
+>         pm_runtime_set_suspended(gi2c->se.dev);
+> @@ -595,12 +590,12 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>
+>         ret = i2c_add_adapter(&gi2c->adap);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Error adding i2c adapter %d\n", ret);
+> +               dev_err(dev, "Error adding i2c adapter %d\n", ret);
+>                 pm_runtime_disable(gi2c->se.dev);
+>                 return ret;
+>         }
+>
+> -       dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
+> +       dev_dbg(dev, "Geni-I2C adaptor successfully added\n");
+>
+>         return 0;
+>  }
 > --
 > Sent by a computer, using git, on the internet
 >
