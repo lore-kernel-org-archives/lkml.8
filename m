@@ -2,141 +2,195 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D41BC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13A5C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49E020736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777B520736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Yp/LTLFv";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Bre8N7Xb"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eADYAC3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbgCKTNe (ORCPT
+        id S1731047AbgCKTNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:13:34 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37796 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730705AbgCKTNe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:13:34 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B870A43B76;
-        Wed, 11 Mar 2020 19:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1583954013; bh=GCnc8Pe16ifGGkBm9Qf1Pg9gDdgo5xyrsNj7YaH1v98=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=Yp/LTLFve61m3uCDVcZeEFomxUPuPRi/24K41uKhCJ/PBQxvEoKgiW3eMt3ORWWkf
-         SZonKrU10ZqoonSAuoVQfX9EbMp04lT1R/Vf6lkQaqLgkP6XWWs9ReKY/SnVlgeigq
-         waQAehba+IM5iENmUSlfChrlM/kPLIcnCIBS32AQIn9d7qsC28FqaYEZWmgoBw/zAb
-         LY/WBvruoh9kU1SK0UsQxjVUpTOXdp0pGBwGMkPYm/IngDNwW7rSM7fU0aPwFeMEz/
-         R+BCAijM0KnpVdruNULbbhLx3sfRmkRrbtsJKrO8dyyVCmkVU4Ih0hUITrtvyln/jz
-         z/FcbnMaqKOQw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 881CBA0083;
-        Wed, 11 Mar 2020 19:13:33 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 11 Mar 2020 12:13:29 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 11 Mar 2020 12:13:29 -0700
+        Wed, 11 Mar 2020 15:13:42 -0400
+Received: from mail-bn8nam12on2058.outbound.protection.outlook.com ([40.107.237.58]:6625
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730705AbgCKTNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:13:42 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dfg0ZgCqIj3/JP9RDlYmNf8as7FuDI0TAC/yuJt/EO34/2flIWzHYghYPUHXyBhb/R/hJQQl0Hg7khf3OjFnJSOEC9sSwU2TUcEhn7SMIBHQL2Khod6qpTcWvEdHJw1aF/6AD53QxISANxnVoOcnio/GFE/b9dc8Bk7xyESZ/FBW+X57Uy3TbG///y7RGmJvapZdv+ANv1T1/G31HL+Y8Hd5UVGKtjkAVibL9C4bvHPaz45vmBPsxJyQaaraBHYtt8jD0UvYVSavF5flPEUnpMPLq3zeOn3RbZ92XGzKwBHJLVNI0fGMNdmDOmaL6fMC/STKsm7CcbfcOZDhTrlQKw==
+ b=Uz+imgwfXy+lNdUBJ/eavGkZ75ePszGepQU4NKzPW4Iu5Xxb3OWR9LbZdoCu2G3FBx2t+36ACoDxDpUmblid/RrnDvwPUtKP1GtkJHEcMM07kxIYJ6sECP7D/D9lFvcbve2IbHWGUGtcQPWRskjvTuo0CRwAsjctAeaQN5g6KIUsXzeKy74Tpb3oMkfFNAG+Tf3xUOV5wbgsfNAVGPFnQ1934IB/zGgRKlJ/etINjGBLqg+HqPChSqOdLTDuPnn/+fqjZ5vQOQIJ+SPmAyd4pRM7APpQLfC57zIGkMmdtjVsBVU/+GPH1efKvYpGa5yZwtoqOpXOK1bf8r+rYM+6cg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GCnc8Pe16ifGGkBm9Qf1Pg9gDdgo5xyrsNj7YaH1v98=;
- b=DhXydrpnckpPgfxLALZcq0zipnXZp0Lr9d/RtHOYCneGRVjQ2yDqpT1Oez8hxGbTzzIgMAB8uM46MTu35awl8Vq9QxR94eb8XhTRVj5jALUCo3DcTpkl9HvJVG+UNcugQ6LjgtZd/ZEkKNVS3NLxRaaLxoj0liOw4FsVATgD+D8PMfvUhavrkO33eGl3sTCXWxN2RlnbmpAroFUVsw/X2TKhekvilqZfwNkJcT3wiKwCbq3Y4xn4lcqhAfX6eexvZUgHiMVXjqSQL/Gy9UDu5/I4PljYagrnGyJqVRT/KbvHzEf1q+cRN18tabnqJgkIY7FiYLB2/0avH7wB0BOKMg==
+ bh=k62kN9OcmFsC9ZPnWFWWW0UlGqwjxjbjZ+WbIuWGYy4=;
+ b=G8UjiyPMDAgYKZfKbUXJif7+dMglheXZSNcxTVfOdDSoxXMT373SG4BKeiC0V5CuBP/21L+/1wiHrv3Zi/yXPXr42kdVnhZC1Pd2NAOoZ1eF20lz/Y1NyRR0cdvznbNvNlRSQBPEyCmBLmNyyUlPHxPjw0VOtRXfjl8CO0d7+fr4EUc1s+SVMDRHZU9P/PyPGdfgVPib9U/vesVSsHSUFRG0OCsh+LPphTbyXBxkYC8n8pcrJ/pM6mQGk3MfE+IZcb8rj6FhK8lKvvFZqf++rMbxNLULrK3oBL31hE4wQGYCzPSFmJNtq/zdpaoyGLnxlaQlM9XBa2JOuaSJrelLtA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GCnc8Pe16ifGGkBm9Qf1Pg9gDdgo5xyrsNj7YaH1v98=;
- b=Bre8N7Xb4G0vzoJtlFsOAZmWWAiFlnNw3X6EdkcKIPiPM8s1oJf6MO+RkgEsmnj9FooA6XGVNBzNYd9PUzr9CJ7ywvMH5ha9criDlMqSfOvhcSBncJqLJwRT7yJkGdeyyLkwX4mptR7x8vOb+OCrc7cdu2yj6XixyDSVFcuLvMU=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
- by BYAPR12MB3112.namprd12.prod.outlook.com (2603:10b6:a03:ae::25) with
+ bh=k62kN9OcmFsC9ZPnWFWWW0UlGqwjxjbjZ+WbIuWGYy4=;
+ b=eADYAC3sbWji4emN9RXzB63ykr43JTlbKI87MmdcFpZ/uYHDdjx8ABf4zyBNRmQXV36E+t33cEKB5HHYWAH9SSH9cxvJH2KvHrsgBcE80K75Lkv8lAXvFUSuOVk0kOGyPbahFNNj43wkf2/Hjj3oNQJikWPOOVyPXP6tphJBvrE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2830.namprd12.prod.outlook.com (2603:10b6:805:e0::27) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Wed, 11 Mar
- 2020 19:13:28 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
- 19:13:28 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v2 3/4] ARC: add support for DSP-enabled userspace
- applications
-Thread-Topic: [PATCH v2 3/4] ARC: add support for DSP-enabled userspace
- applications
-Thread-Index: AQHV8ykv0O4Z+b6gX0KY0D/KHFb2oKhDy/cA
-Date:   Wed, 11 Mar 2020 19:13:28 +0000
-Message-ID: <6f7916f4-9ff9-e947-c62e-30000a4bcc84@synopsys.com>
-References: <20200305200252.14278-1-Eugeniy.Paltsev@synopsys.com>
- <20200305200252.14278-4-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20200305200252.14278-4-Eugeniy.Paltsev@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [149.117.75.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1ba3b106-10ea-44e0-2866-08d7c5f047b2
-x-ms-traffictypediagnostic: BYAPR12MB3112:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB31123F2A562B0202711D4A4BB6FC0@BYAPR12MB3112.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0339F89554
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(376002)(346002)(39860400002)(396003)(199004)(76116006)(71200400001)(66556008)(478600001)(66946007)(66476007)(64756008)(66446008)(31696002)(4744005)(8676002)(2906002)(86362001)(5660300002)(53546011)(81166006)(8936002)(81156014)(36756003)(6506007)(6512007)(2616005)(26005)(107886003)(4326008)(186003)(54906003)(316002)(31686004)(6486002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3112;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1I4sgSNL/i7LXmknuLSFEveCg89TOJQVgTgU0/7bjJLwt/kOGq3p32Lfiz0LGQUFu8/ojOne1AP5GqKVHqjq4U9hC5O8tAoSM+Jo5s/TThr9UJwCRcuueGwlc705eqXxC8AR1eg79f5WZlLfxYxjRYfIvZha3qz0eU2VbztSrD7Y8Q5Pv7my4MwcGdrEDcZ5z2l0RlITrtygf4xJy3Y7vk3NI2wth7lT8c9GgGEEHZPOMr+IFYXOU137fA4LefstmjlmWXZKMZ4akBWfu+UZr0TpZ9lw7Ao5g/q63nCkfC25vZZB4k+AsZuS9ndqFmuLhLkNSmvfDVAYUvy/MWlQS38Po9UFhjS/rIJhlL7PLnS0aSduVlh/EJvOiD4qPN7ThrLllVEFSVbPq54FKeAA7Yd3kBA0NBXJw6Hchrd/oqcQRAIVC7uWlv3eu165qMHQ
-x-ms-exchange-antispam-messagedata: ZbOgs+uwtNVvhxlLBRw+O2RswABN8aV4NL7MprX/crzHyxOn7gsGqUF2Liul8Qv/ZI+tZyCdbReSI3blXDOBthhJP4x957tKK/2WfyQNLo0etYtfm29PxwfPgAY1PS+Y9IXHyJExVtEzR1g3SOwG8g==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6401D9DBA752F04C8C88B8138468C5BA@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Wed, 11 Mar
+ 2020 19:13:38 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
+ 19:13:38 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, kim.phillips@amd.com
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH 1/3 RESEND] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+Date:   Wed, 11 Mar 2020 14:13:21 -0500
+Message-Id: <20200311191323.13124-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR13CA0011.namprd13.prod.outlook.com
+ (2603:10b6:3:23::21) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ba3b106-10ea-44e0-2866-08d7c5f047b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 19:13:28.0606
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fritz.amd.com (165.204.77.1) by DM5PR13CA0011.namprd13.prod.outlook.com (2603:10b6:3:23::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.7 via Frontend Transport; Wed, 11 Mar 2020 19:13:36 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ad4de020-bbed-4350-6fdc-08d7c5f04d61
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2830:|SN6PR12MB2830:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2830A1C85E5DEDBB420DAE3587FC0@SN6PR12MB2830.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(376002)(39860400002)(199004)(2616005)(956004)(6486002)(6666004)(7696005)(316002)(52116002)(8936002)(36756003)(110136005)(44832011)(478600001)(54906003)(26005)(16526019)(186003)(66556008)(66946007)(2906002)(1076003)(86362001)(5660300002)(8676002)(966005)(66476007)(4326008)(81166006)(81156014)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2830;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SoUWURoxP/JVnAE5SlIfpNF8FlaAMIT/QnkIpqEK4Q/3drs/YvFtMyZ3nQy7TOhsF9Rf8IN+il3OSyYX3kwSw0GA9cNqgHdK/ozqVy6aRp8hRb8VEIsgvxKshVLt6RJ+b4E0DNERy9j9qtByRHv01ZnStGzZ3/B/ZUiS3xYYpleeWZYClLJ3AHqle+N+Wq5YS2G6+mai/Hfq6WFm9usR+IAjBN8kXPBOKbY4gk72SOpe4xLzcN8gVLeBssl2rVfcqNi8XAz2QsXyWuuPuEwiiZP6vmZRon13xKfpJPBcXBNqP8a9PuHlv0TChw8swg5JWC6shjyDvnyby5zFEHzzMSGeeoOEWKm2uIupHXWiG0q9BoeB3cebUC6ANmTBs446VdIgO1KhqqFNeE3bn1ozuBnwIVF8t+NQtNrY0aRF53F5E6figWQVS5+po6OvDdoGuRjxI0r/hoiRtomfxQI6hP33xkyMt0+Vy5vgUGB3FUihN2QXJYO1EaLl9VO2ryegyrepDFL/PeHr4v3PJ9brZA==
+X-MS-Exchange-AntiSpam-MessageData: WR8ty9svt5XZkjJtg64qkSZensEogRERvV9vzUBkpTRG7Zm9skYVujc9/3GmO3ZdNOY+eyvXOZmsmUJgE5XnzYRmHvR32kNZc2IcddEpSxUWpvZgEAd6HPc0RenHGGI/qRCZFRw0ZVHJLrT3feialg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad4de020-bbed-4350-6fdc-08d7c5f04d61
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 19:13:37.8707
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q4lbC1C/K8hKjdwAjkF2OwnqdJnSlaTUZQG45OoY+sZB+h9VrGTUy7uQgufiM+j0HZHFJKWiJyNcoEoGmCGYuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3112
-X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3p9Ys8cTQjubdsKw+R0JTS05HSlS5MBclwpeGuEQlvPKHU0Vo5JLeAwYSv3rvFWXAIZ5WOn3xWvDsRZ1qzK2+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2830
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy81LzIwIDEyOjAyIFBNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+IFRvIGJlIGFibGUg
-dG8gcnVuIERTUC1lbmFibGVkIHVzZXJzcGFjZSBhcHBsaWNhdGlvbnMgd2UgbmVlZCB0bw0KPiBz
-YXZlIGFuZCByZXN0b3JlIGZvbGxvd2luZyBEU1AtcmVsYXRlZCByZWdpc3RlcnM6DQo+IEF0IElS
-US9leGNlcHRpb24gZW50cnkvZXhpdDoNCj4gICogRFNQX0NUUkwgKHNhdmUgaXQgYW5kIHJlc2V0
-IHRvIHZhbHVlIHN1aXRhYmxlIGZvciBrZXJuZWwpDQo+ICAqIEFDQzBfTE8sIEFDQzBfSEkgKHdl
-IGFscmVhZHkgc2F2ZSB0aGVtIGFzIHI1OCwgcjU5IHBhaXIpDQo+IEF0IGNvbnRleHQgc3dpdGNo
-Og0KPiAgKiBBQ0MwX0dMTywgQUNDMF9HSEkNCj4gICogRFNQX0JGTFkwLCBEU1BfRkZUX0NUUkwN
-Cj4gDQo+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuaXkgUGFsdHNldiA8RXVnZW5peS5QYWx0c2V2QHN5
-bm9wc3lzLmNvbT4NCg0KQWNrZWQtYnk6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNv
-bT4NCg==
+This enables the sampling check in kernel/events/core.c's
+perf_event_open, which returns the more appropriate -EOPNOTSUPP.
+
+BEFORE:
+
+$ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
+/bin/dmesg | grep -i perf may provide additional information.
+
+With nothing relevant in dmesg.
+
+AFTER:
+
+$ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+Error:
+l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org
+Cc: stable@vger.kernel.org
+Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
+---
+RESEND.  No changes since original submission 19 Feb 2020:
+
+https://lkml.org/lkml/2020/2/19/1194
+
+ arch/x86/events/amd/uncore.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index a6ea07f2aa84..4d867a752f0e 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -190,15 +190,12 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 
+ 	/*
+ 	 * NB and Last level cache counters (MSRs) are shared across all cores
+-	 * that share the same NB / Last level cache. Interrupts can be directed
+-	 * to a single target core, however, event counts generated by processes
+-	 * running on other cores cannot be masked out. So we do not support
+-	 * sampling and per-thread events.
++	 * that share the same NB / Last level cache.  On family 16h and below,
++	 * Interrupts can be directed to a single target core, however, event
++	 * counts generated by processes running on other cores cannot be masked
++	 * out. So we do not support sampling and per-thread events via
++	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
+ 	 */
+-	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+-		return -EINVAL;
+-
+-	/* and we do not enable counter overflow interrupts */
+ 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+ 	hwc->idx = -1;
+ 
+@@ -306,7 +303,7 @@ static struct pmu amd_nb_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
+-	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct pmu amd_llc_pmu = {
+@@ -317,7 +314,7 @@ static struct pmu amd_llc_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
+-	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
+-- 
+2.25.1
+
