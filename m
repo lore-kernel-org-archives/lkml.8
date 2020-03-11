@@ -2,163 +2,172 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7947EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1965EC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1652465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D7F21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="oqzQpnQI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="M2w0nZx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgCKEDz (ORCPT
+        id S1726550AbgCKEE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 00:03:55 -0400
-Received: from mail-eopbgr770072.outbound.protection.outlook.com ([40.107.77.72]:35150
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbgCKEDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 00:03:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a/knOl/+cZEbv2jPXy/ozNPU7/U9u2/+kADOd839FMdTZbt75Dx0YRyo+nK90tJuIGNXMwykPfvA2yiA0KsID9s5oZtozN+NRo5MHzGDQWThs61z9dF9hPm/CVXVvdKj5CjA4Zh7G0JokVpScaTb5FOsNAigzNjXYHCMat15oi337G7m8GqXC9ty4Hem25iyLWxmNYddub/nyBThffntIcxNaK3wXyWSiKFL+qs8An/7MglQeHSkEL5yKXNFeMY2JWAeqMOlsqqCJp2QU9PQTU6woifB/EHFedM0z9Cqqgb/I0yQJUugjDXMGzRU9cd8YvmOlasdEj92oKS9Qr8sWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnqGGJ/YZIcJnZUnivCOZ7zrQrNsQLPkFMGyTpbbaGo=;
- b=Nn/DXQjhcFkdX8Rq3nHaqR9Lw/qnZvNv+7K9sPmRIGObkjxBvnv+uVaWu6ArELqWxpxnYQw/KH2Xl9jYbBItfzttYTKmJ70AFdb66inD9KiSjJk0zp8X6wX+oXa3rosttlN2W8zNMHVFR/jLWptgFuthG42kCQA6NpM84yd7wrViNjt22RZfUUWe2cQ6w9YUtgmURS5c3+Ohs3zvRdeoSiq1QFafDAKJnh2PhO9YrhpFOSBMF92nOep1RkgUx+w8hLpUi9ilinOo+eRCwzEiNbHAEZc6B5A7gIfxBNEb952EjVaypIv8egsYVbV7FbxYbns5x2z/fxkbZwlOR5Ffmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnqGGJ/YZIcJnZUnivCOZ7zrQrNsQLPkFMGyTpbbaGo=;
- b=oqzQpnQI3LhAzA69iB28hRQoz7zGbsh1TnPC7HL5yD/iUhX9ZkJYVNkUz6wqzoRr/kHVXuanm13PMwcWq06fN7+apZj/BDM/oVm70+B3XRjs199ly3j8OJQ9bUvNSE9S76nsz9QX4ej5ug+f4oBTnpBtFdhX3MEiggcDo5qVWMg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Zhe.He@windriver.com; 
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
- by SN6PR11MB3326.namprd11.prod.outlook.com (2603:10b6:805:bc::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Wed, 11 Mar
- 2020 04:03:52 +0000
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::d852:181d:278b:ba9d]) by SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::d852:181d:278b:ba9d%5]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
- 04:03:52 +0000
-Subject: Re: disk revalidation updates and OOM
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     jack@suse.cz, Jens Axboe <axboe@kernel.dk>,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, keith.busch@intel.com,
-        tglx@linutronix.de, mwilck@suse.com, yuyufen@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com>
- <20200310074018.GB26381@lst.de>
- <75865e17-48f8-a63a-3a29-f995115ffcfc@windriver.com>
- <20200310162647.GA6361@lst.de>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <f48683d9-7854-ba5f-da3a-7ef987a539b8@windriver.com>
-Date:   Wed, 11 Mar 2020 12:03:43 +0800
+        Wed, 11 Mar 2020 00:04:26 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.35]:45931 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726375AbgCKEE0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 00:04:26 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 0E25548B3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:04:25 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id BsbZj6zBaAGTXBsbZjYVQq; Tue, 10 Mar 2020 23:04:25 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3mQ8efzp5o0AkNF9bZhfeVXit4yUM1qXe8Qn2DoH+uM=; b=M2w0nZx0+GhH4CQngfIEQ9sxdq
+        dPBJpztWkuF97hxTB23jiqquuyEfWqRtGR/dz6LZfloO8lVT6HRJBDCzlEgubKv2IueRb5FraSCwc
+        MZSd1X4ZFG8dJmaoRIn41Qh5FHZp4U4C1FQfc+zUnKbDr22t5pmLrfnPezI+nnvl5njb5lvQ2KWBm
+        0S/z022YqNNU0omGKoOKzoDJRKsIUFNQKG8p6BFMh9sQFvWrh5rEp549fjZc5EcgtBUv/lyoaTcI+
+        sZPFNjYuVX/3d4DFlVT75XME5sVGqYzR5Sc+yMA+NL5z9oCUri+zjNGywSZkWHU8uRqHuWv/7ptnK
+        PQxQcQoQ==;
+Received: from [191.31.204.9] (port=54190 helo=[192.168.15.3])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jBsbY-001Nn8-Lh; Wed, 11 Mar 2020 01:04:24 -0300
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br
+References: <20200229104358.GB19610@mani>
+ <20200307002453.350430-1-matheus@castello.eng.br>
+ <20200307002453.350430-2-matheus@castello.eng.br>
+ <62e115af-9d8c-572a-a400-91bdef9d9292@suse.de>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <143fea2e-3361-445a-a261-1860ffc435eb@castello.eng.br>
+Date:   Wed, 11 Mar 2020 01:04:20 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200310162647.GA6361@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: HK2PR04CA0089.apcprd04.prod.outlook.com
- (2603:1096:202:15::33) To SN6PR11MB3360.namprd11.prod.outlook.com
- (2603:10b6:805:c8::30)
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.175] (60.247.85.82) by HK2PR04CA0089.apcprd04.prod.outlook.com (2603:1096:202:15::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Wed, 11 Mar 2020 04:03:48 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b9d315c3-787b-4613-0f20-08d7c57135d2
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3326:
-X-Microsoft-Antispam-PRVS: <SN6PR11MB33262F37B1467137265B66E28FFC0@SN6PR11MB3326.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0339F89554
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(366004)(376002)(396003)(39850400004)(346002)(136003)(199004)(7416002)(5660300002)(478600001)(66946007)(2616005)(66556008)(31696002)(16576012)(316002)(53546011)(6666004)(956004)(66476007)(86362001)(4326008)(16526019)(186003)(6706004)(36756003)(6916009)(52116002)(8936002)(2906002)(31686004)(81166006)(81156014)(8676002)(6486002)(26005)(78286006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB3326;H:SN6PR11MB3360.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: windriver.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6nhI65631lvmXxV54X7imbeEedGahUGyggZJkItO8E7twz4cMjuXh1GFiDkuLSC6Q1V6m1ih+8jTyRjtgUqUS1HxvTgXdB2uYEuL1VUuwusaq0d/r+K0Q4bYtTiAfI0d0K9z+QfXSJJOAvkFtQCUsItCDyDOh7a7vgmK3tuCvb3ceF5VaMe3LqeKKUaLDMzTrwutzvyrOuuvnOTRXJIvU2ZExUe7xpBWtoGB9z5NVfl9LC5Yu0vbuAm/r5QmtLvMlMg/sEZZPqJJwJMTAYRRfNUImuQ/FnHYRmOYpEzNr6p74wMgC8WnlerCejx663n0CGOYeXsMkCur62incy607yZNhemSP1Qs+i9bCvXtdFbCeknN99i/ViucD1KD1tDh/HhHBu8b6dLbWi/GEZptNFfp4YRk30kzQFo0BYbvpY3j60Zg7bOmBR3BJpVEeqoV8EghzaBXjhqslSbRuiz3qlvwwLAdXz4SFXuvZ35aQUOjwlUFGKodztlPvKxfortLbVQd4pxGpFWg0yEgk/QpiIAsewxx8vPNhEY8IdoivIM=
-X-MS-Exchange-AntiSpam-MessageData: BedbGS+2nS9CO5QJBC7eE+rsTzoovuNbosfvHruMKaYtqRuNtvex4Eg7TZ98mDnwEG+VWnFWmLRv7b+6ufhl4ZKlf8I8porx1mhDwdlphNwK3fYxBy+LJtwg4XiiQh/7VST0eNghLeRdiaDitpst7Q==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9d315c3-787b-4613-0f20-08d7c57135d2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 04:03:52.3618
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0NvsCwhHK+tkhvM0pSwpSIkl0TzcWUyIgQzdqImYoFZ/YvAxllf3B98HBXfciHWHhIKhXZZJJz3MKhb7Z/EJvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3326
+In-Reply-To: <62e115af-9d8c-572a-a400-91bdef9d9292@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.204.9
+X-Source-L: No
+X-Exim-ID: 1jBsbY-001Nn8-Lh
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.3]) [191.31.204.9]:54190
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 7
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andreas,
 
+Em 3/7/20 9:34 AM, Andreas Färber escreveu:
+> Hi Matheus,
+> 
+> Am 07.03.20 um 01:24 schrieb Matheus Castello:
+>> The Caninos Loucos Program develops Single Board Computers with an open
+>> structure. The Program wants to form a community of developers to use
+>> the IoT technology and disseminate the learning of embedded systems in
+> 
+> I would suggest "IoT technologies" without "the".
+> 
 
-On 3/11/20 12:26 AM, Christoph Hellwig wrote:
-> On Tue, Mar 10, 2020 at 11:30:27PM +0800, He Zhe wrote:
->>> So this is the exact requirement of commits to be reverted from a bisect
->>> or just a first guess?
->> Many commits failed to build or boot during bisection.
+ack
+
+>> Brazil.
 >>
->> At least the following four have to be reverted to make it work.
+>> The boards are designed and manufactured by LSI-TEC NPO.
 >>
->> 979c690d block: move clearing bd_invalidated into check_disk_size_change
->> f0b870d block: remove (__)blkdev_reread_part as an exported API
->> 142fe8f block: fix bdev_disk_changed for non-partitioned devices
->> a1548b6 block: move rescan_partitions to fs/block_dev.c
-> Just to make sure we are on the same page:  if you revert all four it
-> works, if you rever all but
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml 
+>> b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> index 9e67944bec9c..3e974dd563cf 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> @@ -167,6 +167,8 @@ patternProperties:
+>>       description: Calxeda
+>>     "^capella,.*":
+>>       description: Capella Microsystems, Inc
+>> +  "^caninos,.*":
+>> +    description: Caninos Loucos LSI-TEC NPO
+> 
+
+I will change this to "Caninos Loucos Program"
+
+> Alphabetical order: n goes before p.
+> 
+> I'm confused by the description... Either this Caninos Loucos is an 
+> independent vendor and gets its own prefix, or it's LSI-Tec and uses 
+> something like lsi-tec,caninosloucos-foo. Please clarify commit message 
+> and/or description line, at least by inserting something like "program 
+> by", "brand by" or the like rather than just concatenating names. Maybe 
+> compare UDOO by SECO. Is caninos,foo unique enough or should it be 
+> caninosloucos,foo? (crazy canines?)
+> 
+
+Yes "Caninos Loucos" means crazy canines (or mad dog) in Portuguese. 
+This is a initiative that have as co-founder the Jon Maddog Hall, 
+because of Jon we have the "maddog", but in Portuguese, on the name of 
+program.
+
+ From their website: https://caninosloucos.org/en/program-en/:
+"It is an initiative of the Technological Integrated Systems Laboratory 
+(LSI-TEC) with the support of Polytechnic School of the University of 
+São Paulo (Poli-USP) and Jon “Maddog” Hall"
+
+So I think we can put this instead "The boards are designed and 
+manufactured by LSI-TEC NPO." on description.
+
+Let me know what you think about this.
+
+> Note that I usually attempt to CC the organizations I'm assigning a 
+> vendor prefix for. Do you represent them or coordinated with them?
 >
-> a1548b6 block: move rescan_partitions to fs/block_dev.c
+
+Thanks for the review and tips. I am adding Edgar Bernardi Righi and 
+Igor Ruschi from Caninos team as CC on this patch series.
+
+Best Regards,
+Matheus Castello
+
+> Regards,
+> Andreas
 >
-> it doesn't?
-
-After reverting 142fe8f, rescan_partitions would be called in block/ioctl.c
-and cause a build failure. So I need to also revert a1548b6 to provide
-rescan_partitions.
-
-OR if I manually add the following diff instead of reverting a1548b6, then yes,
-it works too.
-
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 8d724d11c8f5..bac562604cd0 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -192,6 +192,7 @@ static int compat_blkpg_ioctl(struct block_device *bdev,
-  * acquire bd_mutex. This API should be used in case that
-  * caller has held bd_mutex already.
-  */
-+extern int rescan_partitions(struct gendisk *disk, struct block_device *bdev, bool invalidate);
- int __blkdev_reread_part(struct block_device *bdev)
- {
-        struct gendisk *disk = bdev->bd_disk;
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index ec10dacd18d0..30da0bc85c31 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1508,7 +1508,7 @@ EXPORT_SYMBOL(bd_set_size);
-
- static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part);
-
--static int rescan_partitions(struct gendisk *disk, struct block_device *bdev,
-+int rescan_partitions(struct gendisk *disk, struct block_device *bdev,
-                bool invalidate)
- {
-        int ret;
-
-
-Zhe
-
-
+>>     "^cascoda,.*":
+>>       description: Cascoda, Ltd.
+>>     "^catalyst,.*":
+> 
