@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F43C18E5C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFB7C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7942C20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F0E21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="St+wsL4O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wf40d4SS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgCKMax (ORCPT
+        id S1729390AbgCKMa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:30:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22641 "EHLO
+        Wed, 11 Mar 2020 08:30:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45995 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729255AbgCKMar (ORCPT
+        by vger.kernel.org with ESMTP id S1729238AbgCKMaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:30:47 -0400
+        Wed, 11 Mar 2020 08:30:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583929846;
+        s=mimecast20190719; t=1583929854;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0PFnYncdR71VA2SBTKHYdn9p5aztn1GjhQsJsLTG0A4=;
-        b=St+wsL4O0rxvIRDjQE2wOeKKd48vEXwFT4WtJV9sdI16KjrHKMXZthOY4nbcDc17t5RZLo
-        wqOu3W1diwYc3tugQ2rJJRKDfpMgsuh5FPIZMMW9lVxJFiXRg9x3k9+sqz8Ca0QqW1rBi8
-        E0hRvNDN9Nr/DcvhUXuGXIBf0G1c9WY=
+        bh=EdxfJCF7xzkoVVDPgtAvv+vhs38SZ2AEeiWuNCr8aIE=;
+        b=Wf40d4SS6rho6B3LfdycR+0q3rH3rThKeu0Rj+97X/SQqC7/fFih/sCDHjMBezavltkHEJ
+        ZfLNpa11lzqKnwFUrDsiLBoNKbiTnKC/l1xmBS8O08wSiVfVbvWc+nu/KPNbTJCZvtwVPq
+        m4UvqkFx1HyhxYIBeyEg9srE0b30XKE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-hSNViO6CNkKeyz3wpahNdQ-1; Wed, 11 Mar 2020 08:30:42 -0400
-X-MC-Unique: hSNViO6CNkKeyz3wpahNdQ-1
+ us-mta-405-8YruXUlWMsCI7s9QgkT7jw-1; Wed, 11 Mar 2020 08:30:48 -0400
+X-MC-Unique: 8YruXUlWMsCI7s9QgkT7jw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AAA2801E67;
-        Wed, 11 Mar 2020 12:30:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9B211084420;
+        Wed, 11 Mar 2020 12:30:46 +0000 (UTC)
 Received: from t480s.redhat.com (unknown [10.36.118.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AFCC5C1D4;
-        Wed, 11 Mar 2020 12:30:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74D105C1D4;
+        Wed, 11 Mar 2020 12:30:43 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
@@ -56,9 +56,9 @@ Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Baoquan He <bhe@redhat.com>,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH v1 1/5] drivers/base/memory: rename MMOP_ONLINE_KEEP to MMOP_ONLINE
-Date:   Wed, 11 Mar 2020 13:30:22 +0100
-Message-Id: <20200311123026.16071-2-david@redhat.com>
+Subject: [PATCH v1 3/5] drivers/base/memory: store mapping between MMOP_* and string in an array
+Date:   Wed, 11 Mar 2020 13:30:24 +0100
+Message-Id: <20200311123026.16071-4-david@redhat.com>
 In-Reply-To: <20200311123026.16071-1-david@redhat.com>
 References: <20200311123026.16071-1-david@redhat.com>
 MIME-Version: 1.0
@@ -69,10 +69,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The name is misleading. Let's just name it like the online_type name we
-expose to user space ("online").
-
-Add some documentation to the types.
+Let's use a simple array which we can reuse soon. While at it, move the
+string->mmop conversion out of the device hotplug lock.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -83,74 +81,81 @@ Cc: Baoquan He <bhe@redhat.com>
 Cc: Wei Yang <richard.weiyang@gmail.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/base/memory.c          | 9 +++++----
- include/linux/memory_hotplug.h | 6 +++++-
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6448c9ece2cb..8c5ce42c0fc3 100644
+index e7e77cafef80..8a7f29c0bf97 100644
 --- a/drivers/base/memory.c
 +++ b/drivers/base/memory.c
-@@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
- 	 * attribute and need to set the online_type.
- 	 */
- 	if (mem->online_type < 0)
--		mem->online_type =3D MMOP_ONLINE_KEEP;
-+		mem->online_type =3D MMOP_ONLINE;
+@@ -28,6 +28,24 @@
 =20
- 	ret =3D memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+ #define MEMORY_CLASS_NAME	"memory"
 =20
-@@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct=
- device_attribute *attr,
- 	else if (sysfs_streq(buf, "online_movable"))
- 		online_type =3D MMOP_ONLINE_MOVABLE;
- 	else if (sysfs_streq(buf, "online"))
--		online_type =3D MMOP_ONLINE_KEEP;
-+		online_type =3D MMOP_ONLINE;
- 	else if (sysfs_streq(buf, "offline"))
- 		online_type =3D MMOP_OFFLINE;
- 	else {
-@@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct=
- device_attribute *attr,
++static const char *const online_type_to_str[] =3D {
++	[MMOP_OFFLINE] =3D "offline",
++	[MMOP_ONLINE] =3D "online",
++	[MMOP_ONLINE_KERNEL] =3D "online_kernel",
++	[MMOP_ONLINE_MOVABLE] =3D "online_movable",
++};
++
++static int memhp_online_type_from_str(const char *str)
++{
++	int i;
++
++	for (i =3D 0; i < ARRAY_SIZE(online_type_to_str); i++) {
++		if (sysfs_streq(str, online_type_to_str[i]))
++			return i;
++	}
++	return -EINVAL;
++}
++
+ #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+=20
+ static int sections_per_block;
+@@ -236,26 +254,17 @@ static int memory_subsys_offline(struct device *dev=
+)
+ static ssize_t state_store(struct device *dev, struct device_attribute *=
+attr,
+ 			   const char *buf, size_t count)
+ {
++	const int online_type =3D memhp_online_type_from_str(buf);
+ 	struct memory_block *mem =3D to_memory_block(dev);
+-	int ret, online_type;
++	int ret;
++
++	if (online_type < 0)
++		return -EINVAL;
+=20
+ 	ret =3D lock_device_hotplug_sysfs();
+ 	if (ret)
+ 		return ret;
+=20
+-	if (sysfs_streq(buf, "online_kernel"))
+-		online_type =3D MMOP_ONLINE_KERNEL;
+-	else if (sysfs_streq(buf, "online_movable"))
+-		online_type =3D MMOP_ONLINE_MOVABLE;
+-	else if (sysfs_streq(buf, "online"))
+-		online_type =3D MMOP_ONLINE;
+-	else if (sysfs_streq(buf, "offline"))
+-		online_type =3D MMOP_OFFLINE;
+-	else {
+-		ret =3D -EINVAL;
+-		goto err;
+-	}
+-
  	switch (online_type) {
  	case MMOP_ONLINE_KERNEL:
  	case MMOP_ONLINE_MOVABLE:
--	case MMOP_ONLINE_KEEP:
-+	case MMOP_ONLINE:
- 		/* mem->online_type is protected by device_hotplug_lock */
- 		mem->online_type =3D online_type;
- 		ret =3D device_online(&mem->dev);
-@@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
+@@ -271,7 +280,6 @@ static ssize_t state_store(struct device *dev, struct=
+ device_attribute *attr,
+ 		ret =3D -EINVAL; /* should never happen */
  	}
 =20
- 	nid =3D mem->nid;
--	default_zone =3D zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, n=
-r_pages);
-+	default_zone =3D zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
-+					  nr_pages);
- 	strcat(buf, default_zone->name);
+-err:
+ 	unlock_device_hotplug();
 =20
- 	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
-g.h
-index f4d59155f3d4..261dbf010d5d 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -47,9 +47,13 @@ enum {
-=20
- /* Types for control the zone type of onlined and offlined memory */
- enum {
-+	/* Offline the memory. */
- 	MMOP_OFFLINE =3D -1,
--	MMOP_ONLINE_KEEP,
-+	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
-+	MMOP_ONLINE,
-+	/* Online the memory to ZONE_NORMAL. */
- 	MMOP_ONLINE_KERNEL,
-+	/* Online the memory to ZONE_MOVABLE. */
- 	MMOP_ONLINE_MOVABLE,
- };
-=20
+ 	if (ret < 0)
 --=20
 2.24.1
 
