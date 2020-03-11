@@ -2,82 +2,94 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49A0C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B535C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB192146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583924490;
-	bh=mgHHjoGsBSu4RcBDTdG8yJfsVpcu6E7h/NKi+LwRRYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JAh+eyKSroWVQKzQA3FDZ737M7At3UXT8ChFymbzfVsvC0wRJzg+MmsjgOoO0oMwI
-	 5MDReZjuf9mCF/roGJbRJMzG68f/YnfGAlSAjU9C8sYebaBUcDbKqiTYfVavqKb2k8
-	 mKPFCjeqARvoAizPCIZcH8Xb+mV3FylcdEdg5Uww=
+	by mail.kernel.org (Postfix) with ESMTP id 00E032146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="q1gWRADY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgCKLB3 (ORCPT
+        id S1729091AbgCKLBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:01:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:48090 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 07:01:52 -0400
+Received: from vps.xff.cz ([195.181.215.36]:54858 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgCKLB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:01:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD15F1FB;
-        Wed, 11 Mar 2020 04:01:28 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42FD33F6CF;
-        Wed, 11 Mar 2020 04:01:28 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 11:01:26 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: entry-ftrace.S: Fix missing argument for
- CONFIG_FUNCTION_GRAPH_TRACER=y
-Message-ID: <20200311110126.GA5411@sirena.org.uk>
-References: <1583894213-7633-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1726000AbgCKLBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:01:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+        t=1583924511; bh=P6XGe2Y/JfrAmfvHCCn6nLtRPNSYzKFV+VBM9UgB3m0=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=q1gWRADYxD/Lk+gYf4sKqAypi6n1psX3dYNFQY3jPlM1bX1aGg2FX2aR8js7PijZg
+         vyfv2Qd3hOrxpv/6cp3zTHZLE+lSj1rHGQMKVQe7jgBg72Dh/JrbsEbQrn/qrA6Kmx
+         r4G7Y0H4P2aIo8QDBjUgBBIxsHLRPconvVLPQTqE=
+Date:   Wed, 11 Mar 2020 12:01:50 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
+ support was added
+Message-ID: <20200311110150.ajywqttf7pyrpnau@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20200225120814.gjm4dby24cs22lux@core.my.home>
+ <20200225122706.d6pngz62iwyowhym@core.my.home>
+ <72d28eba-53b9-b6f4-01a5-45b2352f4285@huawei.com>
+ <20200226121143.uag224cqzqossvlv@core.my.home>
+ <20200226180557.le2fr66fyuvrqker@core.my.home>
+ <7b62f506-f737-9fb2-6e8e-4b1c454f03b2@huawei.com>
+ <20200306120203.2p34ezryzxb2jeuk@core.my.home>
+ <0ce08d13-ca00-2823-94eb-8274c332a8ef@huawei.com>
+ <20200311103309.m52hdut7mt7crt7g@core.my.home>
+ <c3d53657-7c2a-9d2f-9111-048db6e30a7e@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583894213-7633-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Cookie: I'm a Lisp variable -- bind me!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c3d53657-7c2a-9d2f-9111-048db6e30a7e@huawei.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 11, 2020 at 06:51:23PM +0800, Chao Yu wrote:
+> Hi,
+> 
+> >> Oops, it looks previous fix patch just cover the root cause... :(
+> >>
+> >> Did this issue still happen frequently? If it is, would you please apply patch
+> >> that prints log during down/up semaphore.
+> > 
+> > Not frequently. Just once. I couldn't afford FS corruption during update,
+> 
+> Alright.
+> 
+> > so I reverted the compression support shortly after.
+> 
+> What I can see is that filesystem was just stuck, rather than image became
+> corrupted, I guess the condition is not such bad, anyway, it's okay to just
+> revert compression support for now to keep fs stable.
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, to be precise, file writes were not completed and fs was stuck.
+The system as a whole would probably become unbootable if this would
+happen to core libraries necessary for systemd, or something like that,
+but filesystem itself was not corrupted.
 
-On Wed, Mar 11, 2020 at 11:36:53AM +0900, Kunihiko Hayashi wrote:
-> Missing argument of another SYM_INNER_LABEL() breaks build for
-> CONFIG_FUNCTION_GRAPH_TRACER=y.
+Re-writing the files was enough to recover the system.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+I guess we'll see if there will be more reports after 5.6 is released,
+or if it's just some quirk in my system.
 
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
+I'll try to collect more information, once I'll have some time, to
+get to the bottom of this.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5oxQMACgkQJNaLcl1U
-h9CeWgf7Bzv1s2eTPsMd1oDrdWw4fbak3ACJ/ynsFM2lhEQI3DdhGMYCsAgoLlRX
-HS/K+7ydBUZEEyxDPnMLPCAEB3iOAWGEaSwhFlvxJzBOZzK1fLs2JrJCHvDGN6fY
-Ex7/OkteIo16ppA8UwzINYOAUX4x1zimrvWEyX8mmOQn+k+Na9SO1Zl7TUBINiir
-Gtk/gv3fcM4WV15B83bFE9N4o3JLw3t+PY8rtijIqYEHqcYHuzXi7d4A+GBZlHlZ
-VS0rq49bFboQ81SnbbpsLXEXXROWxD+hOfcTzxvN8W95g0+HNmNvZQlnn5SttzHl
-3Q3GptTWpuPLyNU9QjL0TOuJFRDggA==
-=R3/C
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
+thank you and regards,
+	o.
