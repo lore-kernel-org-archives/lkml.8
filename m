@@ -2,117 +2,177 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C1AC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AA9C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB7E20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CD320866
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KK2szt1h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J2DX4Bve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgCKI1H (ORCPT
+        id S1728611AbgCKI1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:27:07 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42640 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgCKI1H (ORCPT
+        Wed, 11 Mar 2020 04:27:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39476 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbgCKI1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:27:07 -0400
-Received: by mail-qk1-f196.google.com with SMTP id e11so1238721qkg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:27:06 -0700 (PDT)
+        Wed, 11 Mar 2020 04:27:11 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f10so1293565ljn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:27:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Vuzfa5Ii3C+114ZZwPqdNHymYuyp0hGwxEjG+i+rX1M=;
-        b=KK2szt1h7nFFVCO3f9nxfC++kUNef5i7vZty9U/gBtxe1i+yMWak1f4jIR5Kb4+ZLA
-         4vw5Iye+6iBjmx4V99eSyyfZWKslZbhILLwKA+Fh0R3xZ4NGcf7fD2K+qr0lK8OL/e1j
-         HEvSqaPf47seotvIOR/52luoXum5Qp7c7fwsU135RB1sY9c8iV1SxIsluGw4hoP8ENKU
-         6Dc3TfE8HEo36qIXRqrCwGcnJ8/oVPIEMnJh0529oXSU0ZV2sLh+72GfO4C5jjxotBCF
-         ZU43ziooQvVB2uodGzLDDFl0uwQyXL4tiyfagbq7qk+JhQfeh5xNtG0zV0/ao45KwBlg
-         xzvA==
+         :cc;
+        bh=NWQU7YCcR/s5BfakGwEM5MbP1hNswxlqWffpTanXogY=;
+        b=J2DX4Bveq98DNDNLQytIzyqNO5U/1AlZAea10CrmXpFd7AVX90yX5Tdtt+c1ZwmWBZ
+         fnvYHqNq/BJufaeH84JB+sQjUiXLFXeaTifVEvrmHuiDonL/w9rW4NDoo9gCju2Dl/uo
+         92ROgYAY+nNd2sqIH4YekmH8HwlZ6JuBBRQsWxmOiiilOB9ivaFB5mgwNHFSOq6GqvmG
+         XYAEumikhY4sYyW8zmTqNh2JpUimiMOYo4K1+CWkHjkpq5kQobVPWERlz52TuW7OzqND
+         D5qGNapWdFpE4kihUbV51Sbe3VJveaBctzaZgQREo6+0ZclVJVf1bdwNSMkGk2rPCgpc
+         fFEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Vuzfa5Ii3C+114ZZwPqdNHymYuyp0hGwxEjG+i+rX1M=;
-        b=RWspj9KMm98cVF2TDY8CKg13m2yNWxzXjoRIYFGMg8udYDEn0hUtFvQOV27PbePfHH
-         Ll0BHjudfIPefNHTQQUnL9CDdjdoiIMPMM3HLmD7AV7xONsN6CCwJTPOnrhRlat3raUA
-         r62JxF37dX+CE1cKK8qrelr9Dx1s9ZROAwH09XafAu/piLIZ4HH5h+4omEgriR9vmTUN
-         CWvmUJ7bngU8vS3KpKtaPbcZO5ArV0byzsUChpeRT4AHay4KLJlsx0OAo76BtfmMfHjY
-         zamr6Q7Cmk5Hts5TRVwzauUj7Xs6Ddn02S6RWSofjW7mxNMeOhjn8K+IY0pmwL2U4Kv/
-         5Icg==
-X-Gm-Message-State: ANhLgQ1UdVfYomRpUHjab4P8R3EgpvkSHxlADeScB4/XAQiGuHNpR0Ub
-        c1p2t90L3/8mxyTW4AHsvCXOm/oBvEi0BwfI3zL/ow==
-X-Google-Smtp-Source: ADFU+vtRG2ZTrHb7CXb7FLMFpUdds0tOVt2N9o3unR9wlTcKNLgyYsV64mnNuo/+Q1Bnfi60U9+WJIUiDfOg7LEc+Cc=
-X-Received: by 2002:a37:b9c7:: with SMTP id j190mr1583102qkf.21.1583915225914;
- Wed, 11 Mar 2020 01:27:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=NWQU7YCcR/s5BfakGwEM5MbP1hNswxlqWffpTanXogY=;
+        b=GZAFARrrfnTLGoSqtpOXF4d4bWdvqetY7jaxoEs1Nkp/Rl3smOKk4ISTxRLOVClKFp
+         js7uh+uiZ3/c1hN7up5AEARLhchYvsSsKt26YhoO6GMAwXUMjAJR9kqnBE0nCGwVnFfe
+         OJyBR2cbpwo+jnU+soVoreg3bo53gs2jN/uXDQCaq32NLuzmG5eXVVYoWV9HATgnTOoF
+         IULUzklvnbQuLFjzMBwpEXsQ6j6REGKQ/TXWFfglOyhAoieGATt8BOmmQFkSu4SlwkA7
+         Esdo6CShkp+b+sdibNODHq+cqJCtCmwHYta7ihW+UhDcyG20vVP+b+zEM3f7X31cXe2Z
+         XD2Q==
+X-Gm-Message-State: ANhLgQ3pXmJJB4Vxh49AZERAV6FdT+T8/8D9P927/Pl/WHY/zyF1QAny
+        4Ib+a5rQwnKmRu4o7ETTqb572z0AM+GJohIAUGGUyA==
+X-Google-Smtp-Source: ADFU+vvaBLQx0v3t5e1U81RlRAcTudqkB2UQUvNAnj10TA+zBwZty+uumu0htJHaLHRRaMeDZa+YsS6rF0AAu8Ma6cs=
+X-Received: by 2002:a2e:a0cc:: with SMTP id f12mr1365444ljm.154.1583915228511;
+ Wed, 11 Mar 2020 01:27:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310205841.123084-1-michael.auchter@ni.com>
-In-Reply-To: <20200310205841.123084-1-michael.auchter@ni.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Mar 2020 09:26:54 +0100
-Message-ID: <CAMpxmJXBN_qTwHpcD-anHVB-uhatuN-PZDUUe6boD0GoFiMVXw@mail.gmail.com>
-Subject: Re: [PATCH] misc: eeprom: at24: fix regulator underflow
-To:     Michael Auchter <michael.auchter@ni.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <cover.1583412540.git.amit.kucheria@linaro.org> <93466e6c031c0084de09bd6b448556a6c5080880.1583412540.git.amit.kucheria@linaro.org>
+In-Reply-To: <93466e6c031c0084de09bd6b448556a6c5080880.1583412540.git.amit.kucheria@linaro.org>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 11 Mar 2020 09:26:56 +0100
+Message-ID: <CAKfTPtBXaVww5fdU5HpWWH1-H3dKr2s=Uvdr==wf669BtKnyvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add yaml bindings for
+ thermal sensors
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 10 mar 2020 o 21:59 Michael Auchter <michael.auchter@ni.com> napisa=C5=
-=82(a):
+On Thu, 5 Mar 2020 at 13:56, Amit Kucheria <amit.kucheria@linaro.org> wrote:
 >
-> The at24 driver attempts to read a byte from the device to validate that
-> it's actually present, and if not, disables the vcc regulator and
-> returns -ENODEV. However, between the read and the error handling path,
-> pm_runtime_idle() is called and invokes the driver's suspend callback,
-> which also disables the vcc regulator. This leads to an underflow of the
-> regulator enable count if the EEPROM is not present.
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
 >
-> Move the pm_runtime_suspend() call to be after the error handling path
-> to resolve this.
+> The property #thermal-sensor-cells is required in each device that acts
+> as a thermal sensor. It is used to uniquely identify the instance of the
+> thermal sensor inside the system.
 >
-> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  drivers/misc/eeprom/at24.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  .../bindings/thermal/thermal-sensor.yaml      | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
 >
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 031eb64549af..282c9ef68ed2 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -712,13 +712,14 @@ static int at24_probe(struct i2c_client *client)
->          * chip is functional.
->          */
->         err =3D at24_read(at24, 0, &test_byte, 1);
-> -       pm_runtime_idle(dev);
->         if (err) {
->                 pm_runtime_disable(dev);
->                 regulator_disable(at24->vcc_reg);
->                 return -ENODEV;
->         }
->
-> +       pm_runtime_idle(dev);
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> new file mode 100644
+> index 0000000000000..920ee7667591d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-sensor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->         if (writable)
->                 dev_info(dev, "%u byte %s EEPROM, writable, %u bytes/writ=
-e\n",
->                          byte_len, client->name, at24->write_max);
+> +title: Thermal sensor binding
+> +
+> +maintainers:
+> +  - Amit Kucheria <amitk@kernel.org>
+> +
+> +description: |
+> +  Thermal management is achieved in devicetree by describing the sensor hardware
+> +  and the software abstraction of thermal zones required to take appropriate
+> +  action to mitigate thermal overloads.
+> +
+> +  The following node types are used to completely describe a thermal management
+> +  system in devicetree:
+> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> +   - cooling-device: device used to dissipate heat either passively or artively
+
+typo: s/artively/actively/
+
+> +   - thermal-zones: a container of the following node types used to describe all
+> +     thermal data for the platform
+> +
+> +  This binding describes the thermal-sensor.
+> +
+> +  Thermal sensor devices provide temperature sensing capabilities on thermal
+> +  zones. Typical devices are I2C ADC converters and bandgaps. Thermal sensor
+> +  devices may control one or more internal sensors.
+> +
+> +properties:
+> +  "#thermal-sensor-cells":
+> +    description:
+> +      Used to uniquely identify a thermal sensor instance within an IC. Will be
+> +      0 on sensor nodes with only a single sensor and at least 1 on nodes
+> +      containing several internal sensors.
+> +    enum: [0, 1]
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    // Example 1: SDM845 TSENS
+> +    soc: soc@0 {
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +
+> +            /* ... */
+> +
+> +            tsens0: thermal-sensor@c263000 {
+> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> +                          <0 0x0c222000 0 0x1ff>; /* SROT */
+> +                    #qcom,sensors = <13>;
+> +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "uplow", "critical";
+> +                    #thermal-sensor-cells = <1>;
+> +            };
+> +
+> +            tsens1: thermal-sensor@c265000 {
+> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> +                          <0 0x0c223000 0 0x1ff>; /* SROT */
+> +                    #qcom,sensors = <8>;
+> +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "uplow", "critical";
+> +                    #thermal-sensor-cells = <1>;
+> +            };
+> +    };
+> +...
 > --
-> 2.24.1
+> 2.20.1
 >
-
-Patch applied for fixes.
-
-Bartosz
