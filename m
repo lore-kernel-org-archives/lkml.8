@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49908C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42378C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6014620739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB5520739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgCKWFV (ORCPT
+        id S1729847AbgCKWFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:05:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40801 "EHLO
+        Wed, 11 Mar 2020 18:05:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40803 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbgCKWFV (ORCPT
+        with ESMTP id S1729518AbgCKWFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 18:05:21 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jC9TZ-0001hC-J6; Wed, 11 Mar 2020 23:05:17 +0100
+        id 1jC9TZ-0001hF-U2; Wed, 11 Mar 2020 23:05:18 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 367D31C224A;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 99E231C2249;
         Wed, 11 Mar 2020 23:05:17 +0100 (CET)
-Date:   Wed, 11 Mar 2020 22:05:16 -0000
+Date:   Wed, 11 Mar 2020 22:05:17 -0000
 From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/timers] x86/tsc_msr: Fix MSR_FSB_FREQ mask for Cherry Trail devices
+Subject: [tip: x86/timers] x86/tsc_msr: Use named struct initializers
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200223140610.59612-2-hdegoede@redhat.com>
-References: <20200223140610.59612-2-hdegoede@redhat.com>
+In-Reply-To: <20200223140610.59612-1-hdegoede@redhat.com>
+References: <20200223140610.59612-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158396431695.28353.14027321767001755746.tip-bot2@tip-bot2>
+Message-ID: <158396431730.28353.16602854182721546383.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,131 +56,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/timers branch of tip:
 
-Commit-ID:     c8810e2ffc30c7e1577f9c057c4b85d984bbc35a
-Gitweb:        https://git.kernel.org/tip/c8810e2ffc30c7e1577f9c057c4b85d984bbc35a
+Commit-ID:     812c2d7506fde7cdf83cb2532810a65782b51741
+Gitweb:        https://git.kernel.org/tip/812c2d7506fde7cdf83cb2532810a65782b51741
 Author:        Hans de Goede <hdegoede@redhat.com>
-AuthorDate:    Sun, 23 Feb 2020 15:06:09 +01:00
+AuthorDate:    Sun, 23 Feb 2020 15:06:08 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 11 Mar 2020 22:57:39 +01:00
 
-x86/tsc_msr: Fix MSR_FSB_FREQ mask for Cherry Trail devices
+x86/tsc_msr: Use named struct initializers
 
-According to the "Intel 64 and IA-32 Architectures Software Developer's
-Manual Volume 4: Model-Specific Registers" on Cherry Trail (Airmont)
-devices the 4 lowest bits of the MSR_FSB_FREQ mask indicate the bus freq
-unlike on e.g. Bay Trail where only the lowest 3 bits are used.
-
-This is also the reason why MAX_NUM_FREQS is defined as 9, since Cherry
-Trail SoCs have 9 possible frequencies, so the lo value from the MSR needs
-to be masked with 0x0f, not with 0x07 otherwise the 9th frequency will get
-interpreted as the 1st.
-
-Bump MAX_NUM_FREQS to 16 to avoid any possibility of addressing the array
-out of bounds and makes the mask part of the cpufreq struct so it can be
-set it per model.
-
-While at it also log an error when the index points to an uninitialized
-part of the freqs lookup-table.
+Use named struct initializers for the freq_desc struct-s initialization
+and change the "u8 msr_plat" to a "bool use_msr_plat" to make its meaning
+more clear instead of relying on a comment to explain it.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200223140610.59612-2-hdegoede@redhat.com
+Link: https://lkml.kernel.org/r/20200223140610.59612-1-hdegoede@redhat.com
 
 ---
- arch/x86/kernel/tsc_msr.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/x86/kernel/tsc_msr.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 5fa41ac..9503089 100644
+index e0cbe4f..5fa41ac 100644
 --- a/arch/x86/kernel/tsc_msr.c
 +++ b/arch/x86/kernel/tsc_msr.c
-@@ -15,7 +15,7 @@
- #include <asm/param.h>
- #include <asm/tsc.h>
- 
--#define MAX_NUM_FREQS	9
-+#define MAX_NUM_FREQS	16 /* 4 bits to select the frequency */
- 
- /*
-  * If MSR_PERF_STAT[31] is set, the maximum resolved bus ratio can be
-@@ -27,6 +27,7 @@
+@@ -22,10 +22,10 @@
+  * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
+  * Unfortunately some Intel Atom SoCs aren't quite compliant to this,
+  * so we need manually differentiate SoC families. This is what the
+- * field msr_plat does.
++ * field use_msr_plat does.
+  */
  struct freq_desc {
- 	bool use_msr_plat;
+-	u8 msr_plat;	/* 1: use MSR_PLATFORM_INFO, 0: MSR_IA32_PERF_STATUS */
++	bool use_msr_plat;
  	u32 freqs[MAX_NUM_FREQS];
-+	u32 mask;
  };
  
- /*
-@@ -37,37 +38,44 @@ struct freq_desc {
+@@ -35,31 +35,39 @@ struct freq_desc {
+  * by MSR based on SDM.
+  */
  static const struct freq_desc freq_desc_pnw = {
- 	.use_msr_plat = false,
- 	.freqs = { 0, 0, 0, 0, 0, 99840, 0, 83200 },
-+	.mask = 0x07,
+-	0, { 0, 0, 0, 0, 0, 99840, 0, 83200 }
++	.use_msr_plat = false,
++	.freqs = { 0, 0, 0, 0, 0, 99840, 0, 83200 },
  };
  
  static const struct freq_desc freq_desc_clv = {
- 	.use_msr_plat = false,
- 	.freqs = { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
-+	.mask = 0x07,
+-	0, { 0, 133200, 0, 0, 0, 99840, 0, 83200 }
++	.use_msr_plat = false,
++	.freqs = { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
  };
  
  static const struct freq_desc freq_desc_byt = {
- 	.use_msr_plat = true,
- 	.freqs = { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
-+	.mask = 0x07,
+-	1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
++	.use_msr_plat = true,
++	.freqs = { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
  };
  
  static const struct freq_desc freq_desc_cht = {
- 	.use_msr_plat = true,
- 	.freqs = { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
- 		   88900, 87500 },
-+	.mask = 0x0f,
+-	1, { 83300, 100000, 133300, 116700, 80000, 93300, 90000, 88900, 87500 }
++	.use_msr_plat = true,
++	.freqs = { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
++		   88900, 87500 },
  };
  
  static const struct freq_desc freq_desc_tng = {
- 	.use_msr_plat = true,
- 	.freqs = { 0, 100000, 133300, 0, 0, 0, 0, 0 },
-+	.mask = 0x07,
+-	1, { 0, 100000, 133300, 0, 0, 0, 0, 0 }
++	.use_msr_plat = true,
++	.freqs = { 0, 100000, 133300, 0, 0, 0, 0, 0 },
  };
  
  static const struct freq_desc freq_desc_ann = {
- 	.use_msr_plat = true,
- 	.freqs = { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
-+	.mask = 0x0f,
+-	1, { 83300, 100000, 133300, 100000, 0, 0, 0, 0 }
++	.use_msr_plat = true,
++	.freqs = { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
  };
  
  static const struct freq_desc freq_desc_lgm = {
- 	.use_msr_plat = true,
- 	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
-+	.mask = 0x0f,
+-	1, { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 }
++	.use_msr_plat = true,
++	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
  };
  
  static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
-@@ -93,6 +101,7 @@ unsigned long cpu_khz_from_msr(void)
- 	const struct freq_desc *freq_desc;
- 	const struct x86_cpu_id *id;
- 	unsigned long res;
-+	int index;
+@@ -91,7 +99,7 @@ unsigned long cpu_khz_from_msr(void)
+ 		return 0;
  
- 	id = x86_match_cpu(tsc_msr_cpu_ids);
- 	if (!id)
-@@ -109,13 +118,17 @@ unsigned long cpu_khz_from_msr(void)
- 
- 	/* Get FSB FREQ ID */
- 	rdmsr(MSR_FSB_FREQ, lo, hi);
-+	index = lo & freq_desc->mask;
- 
- 	/* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz) */
--	freq = freq_desc->freqs[lo & 0x7];
-+	freq = freq_desc->freqs[index];
- 
- 	/* TSC frequency = maximum resolved freq * maximum resolved bus ratio */
- 	res = freq * ratio;
- 
-+	if (freq == 0)
-+		pr_err("Error MSR_FSB_FREQ index %d is unknown\n", index);
-+
- #ifdef CONFIG_X86_LOCAL_APIC
- 	lapic_timer_period = (freq * 1000) / HZ;
- #endif
+ 	freq_desc = (struct freq_desc *)id->driver_data;
+-	if (freq_desc->msr_plat) {
++	if (freq_desc->use_msr_plat) {
+ 		rdmsr(MSR_PLATFORM_INFO, lo, hi);
+ 		ratio = (lo >> 8) & 0xff;
+ 	} else {
