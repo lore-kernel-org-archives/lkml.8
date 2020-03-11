@@ -2,162 +2,87 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B2CC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AA220739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cEKMyEQq"
+	by mail.kernel.org (Postfix) with ESMTP id 5BFB720739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgCKS7l (ORCPT
+        id S1730941AbgCKTBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:59:41 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33046 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730944AbgCKS7k (ORCPT
+        Wed, 11 Mar 2020 15:01:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33740 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730799AbgCKTBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:59:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m5so1704040pgg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZLCmQGD2nYRFngV6EM0JVcVHQdhqOzhhGYnboeZx+J8=;
-        b=cEKMyEQqNjfrWLH7u32sjCQs4hChIhKsIZ0FmnXtkC4MfbJpY9o3rNlK4rYMDjh+45
-         TETh5DQbErQLvzWXaM972+gECBSACcKku69Qsqowk2Q+HH8YsxB50x9QUNsub6EDIwnL
-         4s6qwTsKVQ00/U+uZE5pymcXQkSM0FEMRbO4o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZLCmQGD2nYRFngV6EM0JVcVHQdhqOzhhGYnboeZx+J8=;
-        b=SU6+wY/GKBH/ANN/II71OBVnqUQQ6eIjxUzIYeYbxXsgSZ9bp//n8nks86aTGvJuhc
-         fwfVSlZEqMNL1q3KUouHSJTr4bjXfcrPEUdfPHAvasxNC6M4rPQhYZ6wR/i5Io9Mo415
-         KQvdFPoRB7kxVs8D0hBW5zSffIt3soWuXC2mQcP/kI+dQKlYaKPH9cpf7+Rt/MI4U2xm
-         VcxDf/57UfN3j1GoGbULydnGhuu1XFosp5qsSzzy+HHB8vZSx4sg/6MOya4RoUE4RBnb
-         qwh5TwQwojj5Gdk2bs3gev+PaI/6eo8bPH/7K+Gs1gfWWAUAwJ+WnoqWCzmgwsbHaejd
-         nwxw==
-X-Gm-Message-State: ANhLgQ3uJMW2RiZa8t3CUYyr/yvar4Q+Vx8fWXwof5a82RKaHr0qdqjU
-        Mg1mmiCh8QCBdojS5Jb55wuSvg==
-X-Google-Smtp-Source: ADFU+vtJO9kiWA5K8fGpjclsKmfTQP+X/SjYQbVg72YZU8IhHMuYBgcwUyPQP2L+QH+kQwQAMxmaFA==
-X-Received: by 2002:aa7:988f:: with SMTP id r15mr4221796pfl.252.1583953179891;
-        Wed, 11 Mar 2020 11:59:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 11sm1155601pfv.43.2020.03.11.11.59.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:59:39 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 11:59:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 2/4] proc: Use new infrastructure to fix deadlocks in
- execve
-Message-ID: <202003111159.5D5B240F@keescook>
-References: <87r1y12yc7.fsf@x220.int.ebiederm.org>
- <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfcxlwy.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705D211EC8E7EA270627B1E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Wed, 11 Mar 2020 15:01:54 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 8F772292194
+Message-ID: <02c89cb555c10ae61a365a2f54eb72bc4aee3c78.camel@collabora.com>
+Subject: Re: [PATCH 6/6] hantro: Refactor for V4L2 API spec compliancy
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Wed, 11 Mar 2020 16:01:44 -0300
+In-Reply-To: <20200311174300.19407-7-ezequiel@collabora.com>
+References: <20200311174300.19407-1-ezequiel@collabora.com>
+         <20200311174300.19407-7-ezequiel@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB51705D211EC8E7EA270627B1E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 06:45:32PM +0100, Bernd Edlinger wrote:
-> This changes lock_trace to use the new exec_update_mutex
-> instead of cred_guard_mutex.
+On Wed, 2020-03-11 at 14:43 -0300, Ezequiel Garcia wrote:
+> Refactor how S_FMT and TRY_FMT are handled, and also make sure
+> internal initial format and format reset are done properly.
 > 
-> This fixes possible deadlocks when the trace is accessing
-> /proc/$pid/stack for instance.
+> The latter is achieved by making sure the same hantro_{set,try}_fmt
+> helpers are called on all paths that set the format (which is
+> part of the driver state).
 > 
-> This should be safe, as the credentials are only used for reading,
-> and task->mm is updated on execve under the new exec_update_mutex.
+> This commit removes the following v4l2-compliance warnings:
 > 
-> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> test VIDIOC_G_FMT: OK
+> 	fail: v4l2-test-formats.cpp(711): Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
+> test VIDIOC_TRY_FMT: FAIL
+> 	fail: v4l2-test-formats.cpp(1116): Video Capture Multiplanar: S_FMT(G_FMT) != G_FMT
+> test VIDIOC_S_FMT: FAIL
+> 
+> Reported-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > ---
->  fs/proc/base.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index ebea950..4fdfe4f 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -403,11 +403,11 @@ static int proc_pid_wchan(struct seq_file *m, struct pid_namespace *ns,
->  
->  static int lock_trace(struct task_struct *task)
->  {
-> -	int err = mutex_lock_killable(&task->signal->cred_guard_mutex);
-> +	int err = mutex_lock_killable(&task->signal->exec_update_mutex);
->  	if (err)
->  		return err;
->  	if (!ptrace_may_access(task, PTRACE_MODE_ATTACH_FSCREDS)) {
-> -		mutex_unlock(&task->signal->cred_guard_mutex);
-> +		mutex_unlock(&task->signal->exec_update_mutex);
->  		return -EPERM;
->  	}
+[..]
+> @@ -227,12 +232,12 @@ static int vidioc_g_fmt_cap_mplane(struct file *file, void *priv,
 >  	return 0;
-> @@ -415,7 +415,7 @@ static int lock_trace(struct task_struct *task)
->  
->  static void unlock_trace(struct task_struct *task)
->  {
-> -	mutex_unlock(&task->signal->cred_guard_mutex);
-> +	mutex_unlock(&task->signal->exec_update_mutex);
 >  }
 >  
->  #ifdef CONFIG_STACKTRACE
-> -- 
-> 1.9.1
+> -static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
+> -			  bool capture)
+> +static int hantro_try_fmt(const struct hantro_ctx *ctx,
 
--- 
-Kees Cook
+Oops, it seems there's a warning due to ctx being const-qualified.
+
+That should be fixed of course.
+
+Regards,
+Ezequiel
+
+
