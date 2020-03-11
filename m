@@ -2,83 +2,178 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385E7C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91CEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B775206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13811206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="LPUXGEF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgCKPL1 (ORCPT
+        id S1729964AbgCKPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 11:11:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41172 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbgCKPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:11:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 59B93ACA1;
-        Wed, 11 Mar 2020 15:11:24 +0000 (UTC)
-Message-ID: <47735babf2f02ce85e9201df403bf3e1ec5579d6.camel@suse.com>
-Subject: Re: disk revalidation updates and OOM
-From:   Martin Wilck <mwilck@suse.com>
-To:     He Zhe <zhe.he@windriver.com>, Christoph Hellwig <hch@lst.de>,
-        jack@suse.cz, Jens Axboe <axboe@kernel.dk>,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, keith.busch@intel.com,
-        tglx@linutronix.de, yuyufen@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 16:11:28 +0100
-In-Reply-To: <209f06496c1ef56b52b0ec67c503838e402c8911.camel@suse.com>
-References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com>
-         <209f06496c1ef56b52b0ec67c503838e402c8911.camel@suse.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.34.4 
+        Wed, 11 Mar 2020 11:12:29 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38676 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729521AbgCKPM3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 11:12:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id c25so1633347ioi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zDINA0vZuHEOMHgRG8O8q8Cv6r3DuQRO69eZhFF5eEI=;
+        b=LPUXGEF5amYOBlrop1rcjSx8ZchMVTTL0Q8j/pP8BHayJceQuBOOq8WUjqMDAPx895
+         9IIyKqEalpT/MkO9z+NdQ49IQUNX1zj6RNQIdOLxH8Ewy+cMoKO32n73pUaLUprt9QaW
+         PJp5aNh7zDbiZn+7g0tDB0pJIQuBIRNfXjjoA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zDINA0vZuHEOMHgRG8O8q8Cv6r3DuQRO69eZhFF5eEI=;
+        b=Ao4asG1CPjOq7YUy2J/+8R/3TY1QgjQ+nOESJC4YMh0MHcdzFUlkVws/e5EL2MQjVz
+         kAMAQONABvrbGTkMiXTMUp1qkZh8OUXJezkvge3vCWeQwe+eAUdOXsazxYQeuAcVE8sZ
+         uSlru1NZTkbkhwfU8olyXK2p8x2cSz6LKDhRLcuvLtRyMWZZucw7I1lhRFmkdIvgtSWO
+         KR1JxMm7UMxhh86mKx6YMZF4Mil34Yg+1XtItiYB9RkUSVJSBIJrWrzAYUYA9a0dIFaf
+         NaU0I+7lXC15kjFtmTVDP3bWERBOVBrCSAB3gWnAdqHnZWTYFGIEg6LUdibK+vec82gn
+         AHWA==
+X-Gm-Message-State: ANhLgQ0JSsE+U7LWUieCbTohba4pe7qnai06mKQ82nWUrU47Dz27I9zi
+        e9wA9iZ1Bbb2r41njUxJEFuZ3S5DaRlCSJ+QjM+nfg==
+X-Google-Smtp-Source: ADFU+vvcCJuciXit7oxjlwuLQPMyjyQkvi+E6T6WbAs28DGpKmuWEM2zqBlhtPKMYLB1eY3XtFE56zv57fsgFipCP3s=
+X-Received: by 2002:a6b:9386:: with SMTP id v128mr3374290iod.15.1583939546534;
+ Wed, 11 Mar 2020 08:12:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-13-vgoyal@redhat.com>
+ <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com>
+ <20200310203321.GF38440@redhat.com> <CAOQ4uxh2WdLdbcMp+qvQCX2hiBx+hLO1z5wkZtc-7GCuDdsthw@mail.gmail.com>
+ <CAJfpeguwqEsPLtph73AG7bhm1Dp4ahyJtyW=Ud7L-OFwyEmwWg@mail.gmail.com> <20200311144124.GB83257@redhat.com>
+In-Reply-To: <20200311144124.GB83257@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 11 Mar 2020 16:12:15 +0100
+Message-ID: <CAJfpegvTo=FX5y+8R3hdkv6mOTAUQgg9qmzvL5oStddFW0OBgg@mail.gmail.com>
+Subject: Re: [PATCH 12/20] fuse: Introduce setupmapping/removemapping commands
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peng Tao <tao.peng@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 11:29 +0100, Martin Wilck wrote:
-> On Mon, 2020-03-02 at 11:55 +0800, He Zhe wrote:
-> > Hi,
-> > 
-> > Since the following commit
-> > https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.5/disk-revalidate&id=6917d0689993f46d97d40dd66c601d0fd5b1dbdd
-> > until now(v5.6-rc4),
-> > 
-> > If we start udisksd service of systemd(v244), systemd-udevd will
-> > scan
-> > /dev/hdc
-> > (the cdrom device created by default in qemu(v4.2.0)). systemd-
-> > udevd
-> > will
-> > endlessly run and cause OOM.
-> 
-> I've tried to reproduce this, but so far I haven't been able to.
-> Perhaps because the distro 5.5.7 kernel I've tried (which contains
-> the
-> offending commit 142fe8f) has no IDE support - the qemu IDE CD shows
-> up
-> as sr0, with the ata_piix driver. I have systemd-udevd 244. Enabling
-> udisksd makes no difference, the system runs stably. ISO images can
-> be "ejected" and loaded, single uevents are received and processed.
-> 
-> Does this happen for you if you use ata_piix?
+On Wed, Mar 11, 2020 at 3:41 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> On Wed, Mar 11, 2020 at 03:19:18PM +0100, Miklos Szeredi wrote:
+> > On Wed, Mar 11, 2020 at 8:03 AM Amir Goldstein <amir73il@gmail.com> wrote:
+> > >
+> > > On Tue, Mar 10, 2020 at 10:34 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > >
+> > > > On Tue, Mar 10, 2020 at 08:49:49PM +0100, Miklos Szeredi wrote:
+> > > > > On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > > > >
+> > > > > > Introduce two new fuse commands to setup/remove memory mappings. This
+> > > > > > will be used to setup/tear down file mapping in dax window.
+> > > > > >
+> > > > > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > > > > > Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
+> > > > > > ---
+> > > > > >  include/uapi/linux/fuse.h | 37 +++++++++++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 37 insertions(+)
+> > > > > >
+> > > > > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > > > > > index 5b85819e045f..62633555d547 100644
+> > > > > > --- a/include/uapi/linux/fuse.h
+> > > > > > +++ b/include/uapi/linux/fuse.h
+> > > > > > @@ -894,4 +894,41 @@ struct fuse_copy_file_range_in {
+> > > > > >         uint64_t        flags;
+> > > > > >  };
+> > > > > >
+> > > > > > +#define FUSE_SETUPMAPPING_ENTRIES 8
+> > > > > > +#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
+> > > > > > +struct fuse_setupmapping_in {
+> > > > > > +       /* An already open handle */
+> > > > > > +       uint64_t        fh;
+> > > > > > +       /* Offset into the file to start the mapping */
+> > > > > > +       uint64_t        foffset;
+> > > > > > +       /* Length of mapping required */
+> > > > > > +       uint64_t        len;
+> > > > > > +       /* Flags, FUSE_SETUPMAPPING_FLAG_* */
+> > > > > > +       uint64_t        flags;
+> > > > > > +       /* Offset in Memory Window */
+> > > > > > +       uint64_t        moffset;
+> > > > > > +};
+> > > > > > +
+> > > > > > +struct fuse_setupmapping_out {
+> > > > > > +       /* Offsets into the cache of mappings */
+> > > > > > +       uint64_t        coffset[FUSE_SETUPMAPPING_ENTRIES];
+> > > > > > +        /* Lengths of each mapping */
+> > > > > > +        uint64_t       len[FUSE_SETUPMAPPING_ENTRIES];
+> > > > > > +};
+> > > > >
+> > > > > fuse_setupmapping_out together with FUSE_SETUPMAPPING_ENTRIES seem to be unused.
+> > > >
+> > > > This looks like leftover from the old code. I will get rid of it. Thanks.
+> > > >
+> > >
+> > > Hmm. I wonder if we should keep some out args for future extensions.
+> > > Maybe return the mapped size even though it is all or nothing at this
+> > > point?
+> > >
+> > > I have interest in a similar FUSE mapping functionality that was prototyped
+> > > by Miklos and published here:
+> > > https://lore.kernel.org/linux-fsdevel/CAJfpegtjEoE7H8tayLaQHG9fRSBiVuaspnmPr2oQiOZXVB1+7g@mail.gmail.com/
+> > >
+> > > In this prototype, a FUSE_MAP command is used by the server to map a
+> > > range of file to the kernel for io. The command in args are quite similar to
+> > > those in fuse_setupmapping_in, but since the server is on the same host,
+> > > the mapping response is {mapfd, offset, size}.
+> >
+> > Right.  So the difference is in which entity allocates the mapping.
+> > IOW whether the {fd, offset, size} is input or output in the protocol.
+> >
+> > I don't remember the reasons for going with the mapping being
+> > allocated by the client, not the other way round.   Vivek?
+>
+> I think one of the main reasons is memory reclaim. Once all ranges in
+> a cache range are allocated, we need to free a memory range which can be
+> reused. And client has all the logic to free up that range so that it can
+> be remapped and reused for a different file/offset. Server will not know
+> any of this. So I will think that for virtiofs, server might not be
+> able to decide where to map a section of file and it has to be told
+> explicitly by the client.
 
-I have enabled the ATA drivers on my test system now, and I still don't
-see the issue. "hd*" for CDROM devices has been marked deprecated in
-udev since 2009 (!).
+Okay.
 
-Is it possible that you have the legacy udisksd running, and didn't
-disable CD-ROM polling?
+> >
+> > If the allocation were to be by the server, we could share the request
+> > type and possibly some code between the two, although the I/O
+> > mechanism would still be different.
+> >
+>
+> So input parameters of both FUSE_SETUPMAPPING and FUSE_MAP seem
+> similar (except the moffset field).  Given output of FUSE_MAP reqeust
+> is very different, I would think it will be easier to have it as a
+> separate command.
+>
+> Or can it be some sort of optional output args which can differentiate
+> between two types of requests.
+>
+> /me personally finds it simpler to have separate command instead of
+> overloading FUSE_SETUPMAPPING. But its your call. :-)
 
-Martin
+I too prefer a separate request type.
 
-
+Thanks,
+Miklos
