@@ -4,208 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B688CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722ECC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952C921655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFA120848
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgCKLWj (ORCPT
+        id S1728917AbgCKLZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:22:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:48308 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 07:25:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:48340 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgCKLWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:22:39 -0400
+        id S1725834AbgCKLZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:25:06 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F5BC1FB;
-        Wed, 11 Mar 2020 04:22:38 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A60F3F6CF;
-        Wed, 11 Mar 2020 04:22:37 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 11:22:35 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i: r40: Move SPI device nodes based
- on address order
-Message-ID: <20200311112235.62d89683@donnerap.cambridge.arm.com>
-In-Reply-To: <20200310174709.24174-4-wens@kernel.org>
-References: <20200310174709.24174-1-wens@kernel.org>
-        <20200310174709.24174-4-wens@kernel.org>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A95351FB;
+        Wed, 11 Mar 2020 04:25:05 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A836A3F6CF;
+        Wed, 11 Mar 2020 04:25:04 -0700 (PDT)
+Subject: Re: [RFC PATCH] mfd: mfd-core: inherit only valid dma_masks/flags
+ from parent
+To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>
+References: <20200310230935.23962-1-michael@walle.cc>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5f167c37-566f-bd62-b0fd-fdb7925c5afd@arm.com>
+Date:   Wed, 11 Mar 2020 11:25:05 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200310230935.23962-1-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 01:47:09 +0800
-Chen-Yu Tsai <wens@kernel.org> wrote:
-
-> From: Chen-Yu Tsai <wens@csie.org>
+On 2020-03-10 11:09 pm, Michael Walle wrote:
+> Only copy the dma_masks and flags from the parent device, if the parent
+> has a valid dma_mask/flags. Commit cdfee5623290 ("driver core:
+> initialize a default DMA mask for platform device") initialize the DMA
+> masks of a platform device. But if the parent doesn't have a dma_mask
+> set, for example if it's an I2C device, the dma_mask of the child
+> platform device will be set to zero again. Which leads to many "DMA mask
+> not set" warnings, if the MFD cell has the of_compatible property set.
 > 
-> When the SPI device nodes were added, they were added in the wrong
-> location in the device tree file. The device nodes should be sorted
-> by register address.
+> [    1.877937] sl28cpld-pwm sl28cpld-pwm: DMA mask not set
+> [    1.883282] sl28cpld-pwm sl28cpld-pwm.0: DMA mask not set
+> [    1.888795] sl28cpld-gpio sl28cpld-gpio: DMA mask not set
 > 
-> Move the devices node to their correct positions within the file.
-
-Diffed the minus and plus lines, it's indeed a pure move:
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
+> Thus a MFD child should just inherit valid dma_masks and keep the
+> platform default otherwise.
 > 
-> Fixes: 554581b79139 ("ARM: dts: sun8i: R40: Add SPI controllers nodes and pinmuxes")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
->  arch/arm/boot/dts/sun8i-r40.dtsi | 104 +++++++++++++++----------------
->  1 file changed, 52 insertions(+), 52 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> index 81cc92ddc78b..f0ede4f52aa3 100644
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -198,6 +198,32 @@ nmi_intc: interrupt-controller@1c00030 {
->  			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		spi0: spi@1c05000 {
-> +			compatible = "allwinner,sun8i-r40-spi",
-> +				     "allwinner,sun8i-h3-spi";
-> +			reg = <0x01c05000 0x1000>;
-> +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI0>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		spi1: spi@1c06000 {
-> +			compatible = "allwinner,sun8i-r40-spi",
-> +				     "allwinner,sun8i-h3-spi";
-> +			reg = <0x01c06000 0x1000>;
-> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI1>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
->  		csi0: csi@1c09000 {
->  			compatible = "allwinner,sun8i-r40-csi0",
->  				     "allwinner,sun7i-a20-csi0";
-> @@ -307,6 +333,19 @@ crypto: crypto@1c15000 {
->  			resets = <&ccu RST_BUS_CE>;
->  		};
->  
-> +		spi2: spi@1c17000 {
-> +			compatible = "allwinner,sun8i-r40-spi",
-> +				     "allwinner,sun8i-h3-spi";
-> +			reg = <0x01c17000 0x1000>;
-> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI2>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
->  		ahci: sata@1c18000 {
->  			compatible = "allwinner,sun8i-r40-ahci";
->  			reg = <0x01c18000 0x1000>;
-> @@ -364,6 +403,19 @@ ohci2: usb@1c1c400 {
->  			status = "disabled";
->  		};
->  
-> +		spi3: spi@1c1f000 {
-> +			compatible = "allwinner,sun8i-r40-spi",
-> +				     "allwinner,sun8i-h3-spi";
-> +			reg = <0x01c1f000 0x1000>;
-> +			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI3>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
->  		ccu: clock@1c20000 {
->  			compatible = "allwinner,sun8i-r40-ccu";
->  			reg = <0x01c20000 0x400>;
-> @@ -692,58 +744,6 @@ i2c4: i2c@1c2c000 {
->  			#size-cells = <0>;
->  		};
->  
-> -		spi0: spi@1c05000 {
-> -			compatible = "allwinner,sun8i-r40-spi",
-> -				     "allwinner,sun8i-h3-spi";
-> -			reg = <0x01c05000 0x1000>;
-> -			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
-> -			clock-names = "ahb", "mod";
-> -			resets = <&ccu RST_BUS_SPI0>;
-> -			status = "disabled";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
-> -		spi1: spi@1c06000 {
-> -			compatible = "allwinner,sun8i-r40-spi",
-> -				     "allwinner,sun8i-h3-spi";
-> -			reg = <0x01c06000 0x1000>;
-> -			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
-> -			clock-names = "ahb", "mod";
-> -			resets = <&ccu RST_BUS_SPI1>;
-> -			status = "disabled";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
-> -		spi2: spi@1c17000 {
-> -			compatible = "allwinner,sun8i-r40-spi",
-> -				     "allwinner,sun8i-h3-spi";
-> -			reg = <0x01c17000 0x1000>;
-> -			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
-> -			clock-names = "ahb", "mod";
-> -			resets = <&ccu RST_BUS_SPI2>;
-> -			status = "disabled";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
-> -		spi3: spi@1c1f000 {
-> -			compatible = "allwinner,sun8i-r40-spi",
-> -				     "allwinner,sun8i-h3-spi";
-> -			reg = <0x01c1f000 0x1000>;
-> -			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
-> -			clock-names = "ahb", "mod";
-> -			resets = <&ccu RST_BUS_SPI3>;
-> -			status = "disabled";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -		};
-> -
->  		gmac: ethernet@1c50000 {
->  			compatible = "allwinner,sun8i-r40-gmac";
->  			syscon = <&ccu>;
+> Hi,
+> 
+> I don't know if that is the correct way of handling things. Maybe I'm
+> also doing something wrong in my driver, I had a look at other I2C MFD
+> drivers but couldn't find a clue why they shouldn't have the same
+> problem.
+
+The underlying issue is that about 99% of MFD children should not be 
+going through dma_configure() at all because their parent 'real' device 
+is not on a DMA-capable bus, but as they are platform devices we are 
+forced to give them the benefit of the doubt. For DT systems the only 
+vaguely-reasonable heuristic to distinguish between "platform" meaning 
+"SoC memory-mapped device" and "platform" meaning "random crap made up 
+by Linux" is whether the device has a populated OF node, but MFD's trick 
+of hanging the parent device's OF node onto its synthesised children 
+kicks a hole right through even that.
+
+Modulo any other concerns with the existing code, does the change below 
+make things work the way you want? It's still a bit of a bodge, but 
+short of invasive large-scale changes with bus types I don't see a way 
+to do the 'right' thing :/
+
+Robin.
+
+----->8-----
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index f5a73af60dd4..1e4a6e8bd630 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -138,7 +138,7 @@ static int mfd_add_device(struct device *parent, int id,
+
+  	pdev->dev.parent = parent;
+  	pdev->dev.type = &mfd_dev_type;
+-	pdev->dev.dma_mask = parent->dma_mask;
++	pdev->dma_mask = parent->dma_mask ? *parent->dma_mask : 0;
+  	pdev->dev.dma_parms = parent->dma_parms;
+  	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
 
