@@ -2,178 +2,238 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91CEC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0F1C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13811206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91EC120739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="LPUXGEF5"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="ueiRKikR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgCKPM3 (ORCPT
+        id S1729810AbgCKPTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 11:12:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38676 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729521AbgCKPM3 (ORCPT
+        Wed, 11 Mar 2020 11:19:55 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:38778 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729408AbgCKPTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:12:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so1633347ioi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zDINA0vZuHEOMHgRG8O8q8Cv6r3DuQRO69eZhFF5eEI=;
-        b=LPUXGEF5amYOBlrop1rcjSx8ZchMVTTL0Q8j/pP8BHayJceQuBOOq8WUjqMDAPx895
-         9IIyKqEalpT/MkO9z+NdQ49IQUNX1zj6RNQIdOLxH8Ewy+cMoKO32n73pUaLUprt9QaW
-         PJp5aNh7zDbiZn+7g0tDB0pJIQuBIRNfXjjoA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zDINA0vZuHEOMHgRG8O8q8Cv6r3DuQRO69eZhFF5eEI=;
-        b=Ao4asG1CPjOq7YUy2J/+8R/3TY1QgjQ+nOESJC4YMh0MHcdzFUlkVws/e5EL2MQjVz
-         kAMAQONABvrbGTkMiXTMUp1qkZh8OUXJezkvge3vCWeQwe+eAUdOXsazxYQeuAcVE8sZ
-         uSlru1NZTkbkhwfU8olyXK2p8x2cSz6LKDhRLcuvLtRyMWZZucw7I1lhRFmkdIvgtSWO
-         KR1JxMm7UMxhh86mKx6YMZF4Mil34Yg+1XtItiYB9RkUSVJSBIJrWrzAYUYA9a0dIFaf
-         NaU0I+7lXC15kjFtmTVDP3bWERBOVBrCSAB3gWnAdqHnZWTYFGIEg6LUdibK+vec82gn
-         AHWA==
-X-Gm-Message-State: ANhLgQ0JSsE+U7LWUieCbTohba4pe7qnai06mKQ82nWUrU47Dz27I9zi
-        e9wA9iZ1Bbb2r41njUxJEFuZ3S5DaRlCSJ+QjM+nfg==
-X-Google-Smtp-Source: ADFU+vvcCJuciXit7oxjlwuLQPMyjyQkvi+E6T6WbAs28DGpKmuWEM2zqBlhtPKMYLB1eY3XtFE56zv57fsgFipCP3s=
-X-Received: by 2002:a6b:9386:: with SMTP id v128mr3374290iod.15.1583939546534;
- Wed, 11 Mar 2020 08:12:26 -0700 (PDT)
+        Wed, 11 Mar 2020 11:19:54 -0400
+Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BF8ckx024167;
+        Wed, 11 Mar 2020 11:19:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=idq+0kRj9Jozc1zHEbRneFjr+J7eDDDRBgrqvSAQg8M=;
+ b=ueiRKikR9hQHVmK9fRyLDsJlkCOM2SVLSYkxkalBQy2TDCv+bwO4ZWLi/mVd+yO6p9Um
+ K5Idsj+zFLNXweaPKOHLf58l7pAv0OG0PtgWoYsucqa1l31GAwfyuqnvHK/jmSoMPV7W
+ YuYpAZxgflHya7ChXcMEjUwpOiPBFArmUXsJHe2nAlHCmP9E2xv8NfFBiJK58dZd22z0
+ jLUmW4m+yNuReEm9DzAwg+9/DlU/mpZO8NjWnE2xHOVkCzmorG2E3mhwqDi/t4ubNEG1
+ 27W1GB+ZkNeUHKwNSx7qalzWMcbNAI7C/4VcTIIbFW8s51nJasHEmm/B7N3/e+09N85S eA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 2ypk0jbv1g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Mar 2020 11:19:53 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BF9URF052328;
+        Wed, 11 Mar 2020 11:19:53 -0400
+Received: from ausc60pc101.us.dell.com (ausc60pc101.us.dell.com [143.166.85.206])
+        by mx0a-00154901.pphosted.com with ESMTP id 2ypk14cktk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 11:19:53 -0400
+X-LoopCount0: from 10.166.132.127
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1534730440"
+From:   <Austin.Bolen@dell.com>
+To:     <helgaas@kernel.org>, <Austin.Bolen@dell.com>
+CC:     <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Topic: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Index: AQHV9oVCCTYsDGOZY0iqPe3akO+s+A==
+Date:   Wed, 11 Mar 2020 15:19:44 +0000
+Message-ID: <0890801daa6c4564bca1690fd8439dab@AUSX13MPC107.AMER.DELL.COM>
+References: <20200311144556.GA208157@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-13-vgoyal@redhat.com>
- <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com>
- <20200310203321.GF38440@redhat.com> <CAOQ4uxh2WdLdbcMp+qvQCX2hiBx+hLO1z5wkZtc-7GCuDdsthw@mail.gmail.com>
- <CAJfpeguwqEsPLtph73AG7bhm1Dp4ahyJtyW=Ud7L-OFwyEmwWg@mail.gmail.com> <20200311144124.GB83257@redhat.com>
-In-Reply-To: <20200311144124.GB83257@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 11 Mar 2020 16:12:15 +0100
-Message-ID: <CAJfpegvTo=FX5y+8R3hdkv6mOTAUQgg9qmzvL5oStddFW0OBgg@mail.gmail.com>
-Subject: Re: [PATCH 12/20] fuse: Introduce setupmapping/removemapping commands
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peng Tao <tao.peng@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_05:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 impostorscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110097
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 3:41 PM Vivek Goyal <vgoyal@redhat.com> wrote:
->
-> On Wed, Mar 11, 2020 at 03:19:18PM +0100, Miklos Szeredi wrote:
-> > On Wed, Mar 11, 2020 at 8:03 AM Amir Goldstein <amir73il@gmail.com> wrote:
-> > >
-> > > On Tue, Mar 10, 2020 at 10:34 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > >
-> > > > On Tue, Mar 10, 2020 at 08:49:49PM +0100, Miklos Szeredi wrote:
-> > > > > On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > > > >
-> > > > > > Introduce two new fuse commands to setup/remove memory mappings. This
-> > > > > > will be used to setup/tear down file mapping in dax window.
-> > > > > >
-> > > > > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > > > > > Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
-> > > > > > ---
-> > > > > >  include/uapi/linux/fuse.h | 37 +++++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 37 insertions(+)
-> > > > > >
-> > > > > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> > > > > > index 5b85819e045f..62633555d547 100644
-> > > > > > --- a/include/uapi/linux/fuse.h
-> > > > > > +++ b/include/uapi/linux/fuse.h
-> > > > > > @@ -894,4 +894,41 @@ struct fuse_copy_file_range_in {
-> > > > > >         uint64_t        flags;
-> > > > > >  };
-> > > > > >
-> > > > > > +#define FUSE_SETUPMAPPING_ENTRIES 8
-> > > > > > +#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
-> > > > > > +struct fuse_setupmapping_in {
-> > > > > > +       /* An already open handle */
-> > > > > > +       uint64_t        fh;
-> > > > > > +       /* Offset into the file to start the mapping */
-> > > > > > +       uint64_t        foffset;
-> > > > > > +       /* Length of mapping required */
-> > > > > > +       uint64_t        len;
-> > > > > > +       /* Flags, FUSE_SETUPMAPPING_FLAG_* */
-> > > > > > +       uint64_t        flags;
-> > > > > > +       /* Offset in Memory Window */
-> > > > > > +       uint64_t        moffset;
-> > > > > > +};
-> > > > > > +
-> > > > > > +struct fuse_setupmapping_out {
-> > > > > > +       /* Offsets into the cache of mappings */
-> > > > > > +       uint64_t        coffset[FUSE_SETUPMAPPING_ENTRIES];
-> > > > > > +        /* Lengths of each mapping */
-> > > > > > +        uint64_t       len[FUSE_SETUPMAPPING_ENTRIES];
-> > > > > > +};
-> > > > >
-> > > > > fuse_setupmapping_out together with FUSE_SETUPMAPPING_ENTRIES seem to be unused.
-> > > >
-> > > > This looks like leftover from the old code. I will get rid of it. Thanks.
-> > > >
-> > >
-> > > Hmm. I wonder if we should keep some out args for future extensions.
-> > > Maybe return the mapped size even though it is all or nothing at this
-> > > point?
-> > >
-> > > I have interest in a similar FUSE mapping functionality that was prototyped
-> > > by Miklos and published here:
-> > > https://lore.kernel.org/linux-fsdevel/CAJfpegtjEoE7H8tayLaQHG9fRSBiVuaspnmPr2oQiOZXVB1+7g@mail.gmail.com/
-> > >
-> > > In this prototype, a FUSE_MAP command is used by the server to map a
-> > > range of file to the kernel for io. The command in args are quite similar to
-> > > those in fuse_setupmapping_in, but since the server is on the same host,
-> > > the mapping response is {mapfd, offset, size}.
-> >
-> > Right.  So the difference is in which entity allocates the mapping.
-> > IOW whether the {fd, offset, size} is input or output in the protocol.
-> >
-> > I don't remember the reasons for going with the mapping being
-> > allocated by the client, not the other way round.   Vivek?
->
-> I think one of the main reasons is memory reclaim. Once all ranges in
-> a cache range are allocated, we need to free a memory range which can be
-> reused. And client has all the logic to free up that range so that it can
-> be remapped and reused for a different file/offset. Server will not know
-> any of this. So I will think that for virtiofs, server might not be
-> able to decide where to map a section of file and it has to be told
-> explicitly by the client.
-
-Okay.
-
-> >
-> > If the allocation were to be by the server, we could share the request
-> > type and possibly some code between the two, although the I/O
-> > mechanism would still be different.
-> >
->
-> So input parameters of both FUSE_SETUPMAPPING and FUSE_MAP seem
-> similar (except the moffset field).  Given output of FUSE_MAP reqeust
-> is very different, I would think it will be easier to have it as a
-> separate command.
->
-> Or can it be some sort of optional output args which can differentiate
-> between two types of requests.
->
-> /me personally finds it simpler to have separate command instead of
-> overloading FUSE_SETUPMAPPING. But its your call. :-)
-
-I too prefer a separate request type.
-
-Thanks,
-Miklos
+On 3/11/2020 9:46 AM, Bjorn Helgaas wrote:=0A=
+> =0A=
+> [EXTERNAL EMAIL]=0A=
+> =0A=
+> On Tue, Mar 10, 2020 at 08:06:21PM +0000, Austin.Bolen@dell.com wrote:=0A=
+>> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:=0A=
+>>> On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:=
+=0A=
+>>>> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:=0A=
+>>>>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:=0A=
+>>>>>> [+cc Austin, tentative Linux patches on this git branch:=0A=
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree=
+/drivers/pci/pcie?h=3Dreview/edr]=0A=
+>>>>>>=0A=
+>>>>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy=
+@linux.intel.com wrote:=0A=
+>>>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.=
+intel.com>=0A=
+>>>>>>>=0A=
+>>>>>>> As per PCI firmware specification r3.2 System Firmware Intermediary=
+=0A=
+>>>>>>> (SFI) _OSC and DPC Updates ECR=0A=
+>>>>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled =
+"DPC=0A=
+>>>>>>> Event Handling Implementation Note", page 10, Error Disconnect Reco=
+ver=0A=
+>>>>>>> (EDR) support allows OS to handle error recovery and clearing Error=
+=0A=
+>>>>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_stat=
+us()=0A=
+>>>>>>> which allows clearing AER registers without FF mode checks.=0A=
+> =0A=
+>>>> OS clears the DPC Trigger Status bit which will bring port below it ou=
+t=0A=
+>>>> of containment. Then OS will clear the "port" error status bits (i.e.,=
+=0A=
+>>>> the AER and DPC status bits in the root port or downstream port that=
+=0A=
+>>>> triggered containment). I don't think it would hurt to do this two ste=
+ps=0A=
+>>>> in reverse order but don't think it is necessary.=0A=
+> =0A=
+>>>> Note that error status bits for devices below the port in=0A=
+>>>> containment are cleared later after f/w has a chance to log them.=0A=
+> =0A=
+> Thanks for pointing out this wrinkle about devices below the port in=0A=
+> containment.  I think we might have an issue here with the current=0A=
+> series because evaluating _OST is the last thing the EDR notify=0A=
+> handler does.  More below.=0A=
+> =0A=
+>>> Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS=
+=0A=
+>>> can read/write DPC registers until it clears the DPC Trigger Status.=0A=
+>>> If the OS clears Trigger Status first, my understanding is that we're=
+=0A=
+>>> now out of the EDR notification processing window and the OS is not=0A=
+>>> permitted to write DPC registers.=0A=
+>>>=0A=
+>>> If it's OK for the OS to clear Trigger Status before clearing DPC=0A=
+>>> error status, what is the event that determines when the OS may no=0A=
+>>> longer read/write the DPC registers?=0A=
+>>=0A=
+>> I think there are a few different registers to consider... DPC=0A=
+>> Control, DPC Status, various AER registers, and the RP PIO=0A=
+>> registers. At this point in the flow, the firmware has already had a=0A=
+>> chance to read all of them and so it really doesn't matter the order=0A=
+>> the OS does those two things. The firmware isn't going to get=0A=
+>> notified again until _OST so by then both operation will be done and=0A=
+>> system firmware will have no idea which order the OS did them in,=0A=
+>> nor will it care.  But since the existing normative text specifies=0A=
+>> and order, I would just follow that.=0A=
+> =0A=
+> OK, this series clears DPC error status before clearing DPC Trigger=0A=
+> Status, so I think we can keep that as-is.=0A=
+> =0A=
+>>> There are no events after the "clear device AER status" box.  That=0A=
+>>> seems to mean the OS can write the AER status registers at any=0A=
+>>> time.  But the whole implementation note assumes firmware=0A=
+>>> maintains control of AER.=0A=
+>>=0A=
+>> In this model the OS doesn't own DPC or AER but the model allows OS=0A=
+>> to touch both DPC and AER registers at certain times.  I would view=0A=
+>> ownership in this case as who is the primary owner and not who is=0A=
+>> the sole entity allowed to access the registers.=0A=
+> =0A=
+> I'm not sure how to translate the idea of primary ownership into code.=0A=
+=0A=
+I would just add text that said when it's ok for OS to touch these bits =0A=
+even when they don't own them similar to what's done for the DPC bits.=0A=
+=0A=
+> =0A=
+>> For the normative text describing when OS clears the AER bits=0A=
+>> following the informative flow chart, it could say that OS clears=0A=
+>> AER as soon as possible after OST returns and before OS processes=0A=
+>> _HPX and loading drivers.  Open to other suggestions as well.=0A=
+> =0A=
+> I'm not sure what to do with "as soon as possible" either.  That=0A=
+> doesn't seem like something firmware and the OS can agree on.=0A=
+> =0A=
+=0A=
+I can just state that it's done after OST returns but before _HPX or =0A=
+driver is loaded. Any time in that range is fine. I can't get super =0A=
+specific here because different OSes do different things.  Even for a =0A=
+given OS they change over time. And I need something generic enough to =0A=
+support a wide variety of OS implementations.=0A=
+=0A=
+> For the port that triggered DPC containment, I think the easiest thing=0A=
+> to understand and implement would be to allow AER access during the=0A=
+> same EDR processing window where DPC access is allowed.=0A=
+Agreed.=0A=
+=0A=
+> =0A=
+> For child devices of that port, obviously it's impossible to access=0A=
+> AER registers until DPC Trigger Status is cleared, and the flowchart=0A=
+> says the OS shouldn't access them until after _OST.=0A=
+> =0A=
+> I'm actually not sure we currently do *anything* with child device AER=0A=
+> info in the EDR path.  pcie_do_recovery() does walk the sub-hierarchy=0A=
+> of child devices, but it only calls error handling callbacks in the=0A=
+> child drivers; it doesn't do anything with the child AER registers=0A=
+> itself.  And of course, this happens before _OST, so it would be too=0A=
+> early in any case.  But maybe I'm missing something here.=0A=
+=0A=
+My understanding is that the OS read/clears AER in the case where OS has =
+=0A=
+native control of AER.  Feedback from OSVs is they wanted to continue to =
+=0A=
+do that to keep the native OS controlled AER and FF mechanism similar. =0A=
+The other way we could have done it would be to have the firmware =0A=
+read/clear AER and report them to OS via APEI.=0A=
+=0A=
+> =0A=
+> BTW, if/when this is updated, I have another question: the _OSC DPC=0A=
+> control bit currently allows the OS to write DPC Control during that=0A=
+> window.  I understand the OS writing the RW1C *Status* bits to clear=0A=
+> them, but it seems like writing the DPC Control register is likely to=0A=
+> cause issues.  The same question would apply to the AER access we're=0A=
+> talking about.=0A=
+=0A=
+We could specify which particular bits can and can't be touched.  But =0A=
+it's hard to maintain as new bits are added.  Probably better to add =0A=
+some guidance that OS should read/clear error status, DPC Trigger =0A=
+Status, etc. but shouldn't change masks/severity/control bits/etc.=0A=
+=0A=
+> =0A=
+> Bjorn=0A=
+> =0A=
+=0A=
