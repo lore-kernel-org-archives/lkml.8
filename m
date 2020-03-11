@@ -2,125 +2,122 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144E1C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60723C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F1221D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DF62192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VtmtlSe6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgCKHUL (ORCPT
+        id S1728540AbgCKHUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:20:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728242AbgCKHUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:20:10 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1D0CEFE6F693335B3302;
-        Wed, 11 Mar 2020 15:20:06 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.230) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 11 Mar 2020
- 15:19:55 +0800
-Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small
- chunks
-To:     Marc Zyngier <maz@kernel.org>
-References: <20200309085727.1106-1-zhukeqian1@huawei.com>
- <4b85699ec1d354cc73f5302560231f86@misterjones.org>
- <64925c8b-af3d-beb5-bc9b-66ef1e47f92d@huawei.com>
- <a642a79ea9190542a9098e4c9dc5a9f2@kernel.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Jay Zhou" <jianjay.zhou@huawei.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-From:   zhukeqian <zhukeqian1@huawei.com>
-Message-ID: <9ddefc54-dd5b-0555-0aaa-00a3a23febcf@huawei.com>
-Date:   Wed, 11 Mar 2020 15:19:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 11 Mar 2020 03:20:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37048 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbgCKHUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:20:19 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B7K9mJ055887;
+        Wed, 11 Mar 2020 02:20:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583911209;
+        bh=2XfN97zGDMprK+/GnAZ4QQKqgfCDzQBygFK9oOWO4Gc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VtmtlSe6aqrvpaNdJhhjseJ/7U8Y5oh48kJrMWOXurK1Lv0A1wdp0BgEphPoiv9SG
+         0ZfsGobVUh3FJVpJ0btaFTen5FK6Vk07JvWXMYaS/9qZ4smboA+TknO/bhTUD7tcE/
+         8hqKniq6So8QQhtqU+pplnvjPCw5tNlGHm56FgIw=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B7K9BZ016479
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Mar 2020 02:20:09 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Mar 2020 02:20:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Mar 2020 02:20:09 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02B7K6YX052872;
+        Wed, 11 Mar 2020 02:20:07 -0500
+Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     <hch@lst.de>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
+        <nm@ti.com>, <nsekhar@ti.com>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200310115309.31354-1-rogerq@ti.com>
+ <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
+ <20200310154829.GS37466@atomide.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
+Date:   Wed, 11 Mar 2020 09:20:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <a642a79ea9190542a9098e4c9dc5a9f2@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20200310154829.GS37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.230]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 2020/3/10 21:16, Marc Zyngier wrote:
-> On 2020-03-10 08:26, zhukeqian wrote:
->> Hi Marc,
->>
->> On 2020/3/9 19:45, Marc Zyngier wrote:
->>> Kegian,
-> 
-> [...]
-> 
->>> Is there a userspace counterpart to it?
+
+On 10/03/2020 17:48, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
+>> On 10/03/2020 13:53, Roger Quadros wrote:
+>>> The L3 interconnect can access only 32-bits of address.
+>>> Add the dma-ranges property to reflect this limit.
 >>>
->> As this KVM/x86 related changes have not been merged to mainline
->> kernel, some little modification is needed on mainline Qemu.
+>>> This will ensure that no device under L3 is
+>>> given > 32-bit address for DMA.
+>>>
+>>> Issue was observed only with SATA on DRA7-EVM with 4GB RAM
+>>> and CONFIG_ARM_LPAE enabled. This is because the controller
+>>> can perform 64-bit DMA and was setting the dma_mask to 64-bit.
+>>>
+>>> Setting the correct bus_dma_limit fixes the issue.
+>>
+>> This seems kind of messy to modify almost every DT node because of this....
+>> Are you sure this is the only way to get it done? No way to modify the sata
+>> node only which is impacted somehow?
+>>
+>> Also, what if you just pass 0xffffffff to the dma-ranges property? That
+>> would avoid modifying every node I guess.
 > 
-> Could you please point me to these changes?
-I made some changes locally listed below.
+> Also, I think these interconnects are not limited to 32-bit access.
 
-However, Qemu can choose to enable KVM_DIRTY_LOG_INITIALLY_SET or not.
-Here I made no judgement on dirty_log_manual_caps because I just want
-to verify the optimization of this patch.
+But from Table 2-1. L3_MAIN Memory Map
 
-diff --git a/accel/kvm/kvm-all.c b/accel/kvm/kvm-all.c
-index 439a4efe52..1611f644a4 100644
---- a/accel/kvm/kvm-all.c
-+++ b/accel/kvm/kvm-all.c
-@@ -2007,14 +2007,16 @@ static int kvm_init(MachineState *ms)
-     s->coalesced_pio = s->coalesced_mmio &&
-                        kvm_check_extension(s, KVM_CAP_COALESCED_PIO);
+Start address	0x0000_0000
+End address	0xFFFF_FFFF
 
--    s->manual_dirty_log_protect =
-+    uint64_t dirty_log_manual_caps =
-         kvm_check_extension(s, KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
--    if (s->manual_dirty_log_protect) {
--        ret = kvm_vm_enable_cap(s, KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0, 1);
-+    if (dirty_log_manual_caps) {
-+        ret = kvm_vm_enable_cap(s, KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0,
-+                                dirty_log_manual_caps);
-         if (ret) {
-             warn_report("Trying to enable KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 "
-                         "but failed.  Falling back to the legacy mode. ");
--            s->manual_dirty_log_protect = false;
-+        } else {
-+            s->manual_dirty_log_protect = true;
-         }
-     }
+So it is 32-bit limit, right?
 
+> So yeah I too would prefer a top level dma-ranges property assuming
+> that works.
 > 
->> As I tested this patch on a 128GB RAM Linux VM with no huge pages, the
->> time of enabling dirty log will decrease obviously.
+> I guess there dma-ranges should not be 0xffffffff though if
+> limited to 2GB :)
 > 
-> I'm not sure how realistic that is. Not having huge pages tends to lead
-> to pretty bad performance in general...
-Sure, this has no effect on guests which are all of huge pages.
-
-For my understanding, once a guest has normal pages (maybe are initialized
-at beginning or dissloved from huge pages), it can benefit from this patch.
+> Regards,
 > 
-> Thanks,
+> Tony
 > 
->         M.
-Pretty thanks for your review.
 
-Thanks,
-Keqian
-
+-- 
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
