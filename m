@@ -2,122 +2,117 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5375C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2830C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B964421655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAC921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583908816;
+	bh=pmJS1KPAVu0tCjnfh13UknbuRkIWI610a6eXK2eKvFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zml6awGaytIs+tdboLqY2Q+DNRUd12/55+bxSNjdb2UG3DfAZFZ99u3qTZJp7UBkB
+	 wvVzX5VdTupetnTL8ffVDbA5vpCyN60PEsgqsfXVLa0DeDniSRHPXb8FRXRyg0TKFN
+	 42EsJkN0z8DuRv8jXanZtyO9XH9JL8ZfVU5GyLCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgCKGjv (ORCPT
+        id S1728265AbgCKGkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:39:51 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:49925 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725976AbgCKGjv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:39:51 -0400
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 623EF7E9D25;
-        Wed, 11 Mar 2020 17:39:44 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jBv1r-0007cE-0A; Wed, 11 Mar 2020 17:39:43 +1100
-Date:   Wed, 11 Mar 2020 17:39:42 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200311063942.GE10776@dread.disaster.area>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
- <20200305155144.GA5598@lst.de>
- <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
- <20200311033614.GQ1752567@magnolia>
+        Wed, 11 Mar 2020 02:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbgCKGkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:40:15 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2DB2192A;
+        Wed, 11 Mar 2020 06:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583908814;
+        bh=pmJS1KPAVu0tCjnfh13UknbuRkIWI610a6eXK2eKvFU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=din59zveAKkT42o8gjyMV9c31EJn1iJ/B75t1hHffEOkhU4QFIcVZ6M7l40ltYyD0
+         4/axfTn//VT63Z/66gWFkte+SDZP2uiUoQdnywhYphWU3+2O7XRmpKd7YKwfnpVSew
+         hrKlx4q9/mJ8sfF1bHt4Mo7YHXlN+82wH0w214Wg=
+Date:   Wed, 11 Mar 2020 14:40:05 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        abel.vesa@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
+        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/4] clk: imx8mn: A53 core clock no need to be critical
+Message-ID: <20200311064005.GE29269@dragon>
+References: <1582620554-32689-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311033614.GQ1752567@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
-        a=7-415B0cAAAA:8 a=6_jS5YWjWD2_AzFwGG8A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <1582620554-32689-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 08:36:14PM -0700, Darrick J. Wong wrote:
-> There are still other things that need to be ironed out WRT pmem:
+On Tue, Feb 25, 2020 at 04:49:11PM +0800, Anson Huang wrote:
+> 'A53_CORE' is just a mux and no need to be critical, being critical
+> will cause its parent clock always ON which does NOT make sense,
+
+I do not quite understand what problem this patch is trying to fix.  In
+the end, all the ancestor clocks of "arm", including "arm_a53_core" will
+still be ON, as "arm" has CLK_IS_CRITICAL flag.  What is the difference
+you are trying to make here?
+
+Shawn
+
+> to make sure CPU's hardware clock source NOT being disabled during
+> clock tree setup, need to move the 'A53_SRC'/'A53_CORE' reparent
+> operations to after critical clock 'ARM_CLK' setup finished.
 > 
-> a) reflink and page/pfn/whatever sharing -- fix the mm or (ab)use the
-> xfs buffer cache, or something worse?
-
-I don't think we need either. We just need to remove the DAX page
-association for hwpoison that requires the struct page to store the
-mapping and index. Get rid of that and we should be able to  safely
-map the same page into different inode address spaces at the same
-time. When we write a shared page, we COW it immediately and replace
-the page in the inode's mapping tree, so we can't actually write to
-a shared page...
-
-IOWs, the dax_associate_page() related functionality probably needs
-to be a filesystem callout - part of the aops vector, I think, so
-that device dax can still use it. That way XFS can go it's own way,
-while ext4 and device dax can continue to use the existing mechanism
-mechanisn that is currently implemented....
-
-XFS can then make use of rmapbt to find the owners on a bad page
-notification, and run the "kill userspace dead dead dead" lookup on
-each mapping/index tuple rather than pass it around on a struct
-page. i.e. we'll do a kill scan for each mapping/index owner tuple
-we find, not just one.
-
-That requires converting all the current vma killer code to pass
-mapping/index tuples around rather than the struct page. That kill
-code doesn't actually need the struct page, it just needs the
-mapping/index tuple to match to the vmas that have it mapped into
-userspace.
-
-> b) getting our stories straight on how to clear poison, and whether or
-> not we can come up with a better story for ZERO_FILE_RANGE on pmem.  In
-> the ideal world I'd love to see Z_F_R actually memset(0) the pmem and
-> clear poison, at least if the file->pmem mappings were contiguous.
-
-Are you talking about ZFR from userspace through the filesystem (how
-do you clear poison in free space?) or ZFR on the dax device fro
-either userspace or the kernel filesystem code?
-
-> c) wiring up xfs to hwpoison, or wiring up hwpoison to xfs, or otherwise
-> figuring out how to get storage to tell xfs that it lost something so
-> that maybe xfs can fix it quickly
-
-Yup, I think that's a dax device callback into the filesystem. i.e
-the hwpoison gets delivered to the dax device, which then calls the
-fs function rather than do it's current "dax_lock_page(), kill
-userspace dead dead dead, dax_unlock_page()" dance. The filesystem
-can do a much more intricate dance and wreak far more havoc on
-userspace than what the dax device can do.....
-
-Copious amounts of unused time are things I don't have,
-unfortunately. Only having 7 fingers to type with right now doesn't
-help, either.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/clk/imx/clk-imx8mn.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+> index 83618af..0bc7070 100644
+> --- a/drivers/clk/imx/clk-imx8mn.c
+> +++ b/drivers/clk/imx/clk-imx8mn.c
+> @@ -428,7 +428,7 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
+>  	hws[IMX8MN_CLK_GPU_SHADER_DIV] = hws[IMX8MN_CLK_GPU_SHADER];
+>  
+>  	/* CORE SEL */
+> -	hws[IMX8MN_CLK_A53_CORE] = imx_clk_hw_mux2_flags("arm_a53_core", base + 0x9880, 24, 1, imx8mn_a53_core_sels, ARRAY_SIZE(imx8mn_a53_core_sels), CLK_IS_CRITICAL);
+> +	hws[IMX8MN_CLK_A53_CORE] = imx_clk_hw_mux2("arm_a53_core", base + 0x9880, 24, 1, imx8mn_a53_core_sels, ARRAY_SIZE(imx8mn_a53_core_sels));
+>  
+>  	/* BUS */
+>  	hws[IMX8MN_CLK_MAIN_AXI] = imx8m_clk_hw_composite_critical("main_axi", imx8mn_main_axi_sels, base + 0x8800);
+> @@ -559,15 +559,15 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
+>  
+>  	hws[IMX8MN_CLK_DRAM_ALT_ROOT] = imx_clk_hw_fixed_factor("dram_alt_root", "dram_alt", 1, 4);
+>  
+> -	clk_hw_set_parent(hws[IMX8MN_CLK_A53_SRC], hws[IMX8MN_SYS_PLL1_800M]);
+> -	clk_hw_set_parent(hws[IMX8MN_CLK_A53_CORE], hws[IMX8MN_ARM_PLL_OUT]);
+> -
+>  	hws[IMX8MN_CLK_ARM] = imx_clk_hw_cpu("arm", "arm_a53_core",
+>  					   hws[IMX8MN_CLK_A53_CORE]->clk,
+>  					   hws[IMX8MN_CLK_A53_CORE]->clk,
+>  					   hws[IMX8MN_ARM_PLL_OUT]->clk,
+>  					   hws[IMX8MN_CLK_A53_DIV]->clk);
+>  
+> +	clk_hw_set_parent(hws[IMX8MN_CLK_A53_SRC], hws[IMX8MN_SYS_PLL1_800M]);
+> +	clk_hw_set_parent(hws[IMX8MN_CLK_A53_CORE], hws[IMX8MN_ARM_PLL_OUT]);
+> +
+>  	imx_check_clk_hws(hws, IMX8MN_CLK_END);
+>  
+>  	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
+> -- 
+> 2.7.4
+> 
