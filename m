@@ -2,122 +2,92 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64468C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA081C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420A7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAB5222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J1ZrczZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729361AbgCKMGE (ORCPT
+        id S1729247AbgCKMK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:06:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62628 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729180AbgCKMGD (ORCPT
+        Wed, 11 Mar 2020 08:10:27 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:35624 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbgCKMK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:06:03 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BC2rd6145953;
-        Wed, 11 Mar 2020 08:03:55 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypxtvukkt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 08:03:26 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02BBt5l5010969;
-        Wed, 11 Mar 2020 12:01:37 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2ypjxr5q51-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 12:01:37 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BC1akj44433762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 12:01:36 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49881B2065;
-        Wed, 11 Mar 2020 12:01:36 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CBCDB2064;
-        Wed, 11 Mar 2020 12:01:36 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Mar 2020 12:01:36 +0000 (GMT)
-Subject: Re: [PATCH 1/3] tpm: of: Handle IBM,vtpm20 case when getting log
- parameters
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, gcwilson@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-2-stefanb@linux.vnet.ibm.com>
- <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <82136d10-ec07-9e79-d918-a30277443743@linux.ibm.com>
-Date:   Wed, 11 Mar 2020 08:01:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_05:2020-03-11,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- mlxlogscore=999 suspectscore=0 adultscore=0 malwarescore=0 impostorscore=0
- spamscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003110078
+        Wed, 11 Mar 2020 08:10:27 -0400
+Received: by mail-vk1-f201.google.com with SMTP id g131so864532vke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=YodtrD4c+iO7ZsJ4tIPUxivxHJJzFvG5BVbI/GfdvIo=;
+        b=J1ZrczZYyKxvFWBu8yTxaf9m6NkUPWLsq7MPPdcAPmS4BQvlawnfj3YdNYsP+NLm/Q
+         OocU4IG/wQBnHMTCMvFWfX1ICUioZd7YQI6I7vYv7n7eQ6pmeYgWtesaZa2BmkxXsKIl
+         /4zKR/Fae2B/ol+C9cbkMc5mUv1z3BX++G2NYuusSI3o/6y+iSlDK59oAd5b7pa2uS01
+         /yyKqZQeie4VBAYfa6Ew6IP026mKYS7PemDiWkAcf833/XxE8N4he/Fp7I87v3HuvEDM
+         5zEXKMAFivjA/golRRKhrTQ+SGE85WEbqcOuEMqBRuKAdYhhuBGGTheWkQoHtKpjlA8Z
+         XFSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=YodtrD4c+iO7ZsJ4tIPUxivxHJJzFvG5BVbI/GfdvIo=;
+        b=MowGE4rp5hV8l70h5R/oTnAkkfT+Bi0F+1EtCG4RzHpDijEt/kiFbZKE4UNY2TM9jX
+         mfVzQlenQ8Q8+vLSrRBCwMKEsXJ3GV6nej69FqEExEIUDvtXXAEjJZXFA+AkNaSW9rOv
+         6WeZ4AIQnvBMc1OOAUOXEV/w9gLtVbwbztxr4XUwkyOmek1eEQvBUw9tp91E+IgesaOA
+         mUiyVUWvjrRe4ptfCB7jbVWhbyO8ZjBCmrfi0LJaawRUHCpRRZzSjy5NBv+ExmiqfwV/
+         kochlTv44600ulnwwlLfr9V69FL2vmbI22XeeynLA6zCFa8XwPA+lmd/KcEVnrIPveBt
+         BxIg==
+X-Gm-Message-State: ANhLgQ1GM8J1v6cWTu+xbbEtQ7cUXb/6mxfuR8QXiF0uLfbPoEaSZqJU
+        IdHP6DTFiDYw2hgK9HQ+S78nLKQq3Jk=
+X-Google-Smtp-Source: ADFU+vtvNwvld4hNXzu4dHEiNmN0mWLQk9delEO/J3qN4PY2cdXlyrvp1yUpGauRN780SIUAj56UlqOcPjs=
+X-Received: by 2002:ab0:2a0c:: with SMTP id o12mr1404538uar.72.1583928625509;
+ Wed, 11 Mar 2020 05:10:25 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 13:10:02 +0100
+Message-Id: <20200311121002.241430-1-glider@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH 1/2] nds32: linker script: add SOFTIRQENTRY_TEXT
+From:   glider@google.com
+To:     green.hu@gmail.com, deanbo422@gmail.com
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        Alexander Potapenko <glider@google.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 12:46 PM, Nayna wrote:
->
-> On 2/4/20 8:27 AM, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
->> the device tree. Handle it in the same way as 'IBM,vtpm'.
->>
->> The vTPM 2.0's log is written in little endian format so that for this
->> aspect we can rely on existing code.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
->>   drivers/char/tpm/eventlog/of.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/tpm/eventlog/of.c 
->> b/drivers/char/tpm/eventlog/of.c
->> index af347c190819..a9ce66d09a75 100644
->> --- a/drivers/char/tpm/eventlog/of.c
->> +++ b/drivers/char/tpm/eventlog/of.c
->> @@ -51,7 +51,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
->>        * endian format. For this reason, vtpm doesn't need conversion
->>        * but physical tpm needs the conversion.
->>        */
->> -    if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
->> +    if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->> +        of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->
-> How about changing this to use of_device_compatible_match() ?
+This section is required for lib/stackdepot.c to link, as
+filter_irq_stacks() accesses __softirqentry_text_start and
+__softirqentry_text_end.
 
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
+---
+ arch/nds32/kernel/vmlinux.lds.S | 1 +
+ 1 file changed, 1 insertion(+)
 
-I have to roll back the change to using use_of_device_compatible_match() 
-due to a build failure on xtensa. So we'll  be using what I had in this 
-patch here.
-
-
-    Stefan
-
+diff --git a/arch/nds32/kernel/vmlinux.lds.S b/arch/nds32/kernel/vmlinux.lds.S
+index f679d33974366..7a6c1cefe3fe5 100644
+--- a/arch/nds32/kernel/vmlinux.lds.S
++++ b/arch/nds32/kernel/vmlinux.lds.S
+@@ -47,6 +47,7 @@ SECTIONS
+ 		LOCK_TEXT
+ 		KPROBES_TEXT
+ 		IRQENTRY_TEXT
++		SOFTIRQENTRY_TEXT
+ 		*(.fixup)
+ 	}
+ 
+-- 
+2.25.1.481.gfbce0eb801-goog
 
