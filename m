@@ -2,96 +2,135 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFE9C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6504CC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF9021655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2A920848
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:28:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="J6Jl8guI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbgCKL1E (ORCPT
+        id S1729096AbgCKL2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:27:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:48358 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgCKL1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:27:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9ABAB1FB;
-        Wed, 11 Mar 2020 04:27:03 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D09383F6CF;
-        Wed, 11 Mar 2020 04:27:02 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 11:27:00 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Hoan Tran <hoan@os.amperecomputing.com>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        patches@os.amperecomputing.com
-Subject: Re: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
- NUMA
-Message-ID: <20200311112700.GD3216816@arrakis.emea.arm.com>
-References: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200206102340.GA17074@willie-the-truck>
- <c85dbc06-a72b-9c98-fe41-b25069114b2f@os.amperecomputing.com>
-MIME-Version: 1.0
+        Wed, 11 Mar 2020 07:28:40 -0400
+Received: from mail-eopbgr40070.outbound.protection.outlook.com ([40.107.4.70]:53987
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726672AbgCKL2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:28:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hfUPBQ3YDh0GHbex+430nhADcTjFlTucrpAqCfaw1CiaERLmTsJR2BwSOCQEdfioBMVh9VsYVeKUoGsrDy19LKJCyXwBaHTRQWqq7Vi1CtTW1NyzBiBPl5g9BFC0ZJrm1KmYT6pfKqvki0I8Bhr4IlLDAP3NrwebOo9ZP30SPmQz+CEnks1dSuaIldgncYOWPjSb5xEe4IaSSNXiDA7HC5FxxqPrJRudEWLjyzZ49D1PHztBFeyljBjMKw1r0VIvTI9WJRJxpZRhS+r91rsiazV2NIAkCmqNhL8LfIPcMSoqJiW762DB57iuQLVmNAp4GIlhvNkoRQA3hceqMqDSkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1FDCgK9QntRL0SGWTjUNlfiKCR6JSZKdt+pMYACSGPQ=;
+ b=AyyrIVhTyCfEukIoqtgpKMZu5seNin9etvAUfBsF5gzGW83FazLtP80HNg84IusfrXHVEn+QeNeo3Us24G356tQO914uAML2SkXryQb1hsathnDawATq7TfCq3cCLZbUig3n3N9iI0TWSUQiz21GsQyb9fomDGmGedopyYkx/F7WfDRGMZLvsTSXzWFBLtcIxxHc+klF7ayEEt6JniMe7okEdScml+Dn4496bY3MvAoM7ZvLYkXTBXv1xN1pOjF7Eu4nvpjy777H2BTuPbbMrGfRU35JuL+vdRACT7Iz9/f6QIRQLjO3p4hdpguvie1r9/TxO/Q9j8gofZgNmosmUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1FDCgK9QntRL0SGWTjUNlfiKCR6JSZKdt+pMYACSGPQ=;
+ b=J6Jl8guIvUo/2cXK8aNRskPBSf62bpGVhOrQbO/RAo7UWNl0wmGIP0vyXjKAIxkIy8WFLMX3TG8OHP2bDlU7epv7q0mI0kCB4/od8H/fl+A6lbeDs+ZYwbw2ubQe3bbJixb9n8ieDjAvu/3dhQj0Rzgh4fM6nXTgTwHlF7TFdNE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=idosch@mellanox.com; 
+Received: from AM0PR05MB6754.eurprd05.prod.outlook.com (10.186.174.71) by
+ AM0PR05MB4258.eurprd05.prod.outlook.com (52.134.125.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Wed, 11 Mar 2020 11:28:36 +0000
+Received: from AM0PR05MB6754.eurprd05.prod.outlook.com
+ ([fe80::6923:aafd:c994:bfa5]) by AM0PR05MB6754.eurprd05.prod.outlook.com
+ ([fe80::6923:aafd:c994:bfa5%7]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
+ 11:28:35 +0000
+Date:   Wed, 11 Mar 2020 13:28:33 +0200
+From:   Ido Schimmel <idosch@mellanox.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, jiri@mellanox.com,
+        netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Nicolas Pitre <nico@fluxnic.net>, linux-kbuild@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: drop_monitor: use IS_REACHABLE() to guard
+ net_dm_hw_report()
+Message-ID: <20200311112833.GA284417@splinter>
+References: <20200311062925.5163-1-masahiroy@kernel.org>
+ <20200311093143.GB279080@splinter>
+ <20200311104756.GA1972672@hmswarspite.think-freely.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c85dbc06-a72b-9c98-fe41-b25069114b2f@os.amperecomputing.com>
+In-Reply-To: <20200311104756.GA1972672@hmswarspite.think-freely.org>
+X-ClientProxiedBy: AM3PR05CA0140.eurprd05.prod.outlook.com
+ (2603:10a6:207:3::18) To AM0PR05MB6754.eurprd05.prod.outlook.com
+ (2603:10a6:20b:15a::7)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (193.47.165.251) by AM3PR05CA0140.eurprd05.prod.outlook.com (2603:10a6:207:3::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17 via Frontend Transport; Wed, 11 Mar 2020 11:28:35 +0000
+X-Originating-IP: [193.47.165.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6dd838ad-a7ea-446f-e6c4-08d7c5af565f
+X-MS-TrafficTypeDiagnostic: AM0PR05MB4258:|AM0PR05MB4258:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR05MB4258BF77C91A5A2119F6E810BFFC0@AM0PR05MB4258.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(346002)(39860400002)(396003)(376002)(136003)(199004)(86362001)(186003)(478600001)(33656002)(54906003)(2906002)(8676002)(8936002)(26005)(81156014)(16526019)(956004)(81166006)(6916009)(66476007)(52116002)(66946007)(33716001)(316002)(5660300002)(66556008)(1076003)(6486002)(6496006)(9686003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4258;H:AM0PR05MB6754.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vaueLhaj1plfy+nMW5Gp7MkOdRFME94v7D48RYsF7QD7Ilgzr7gdnKuaCeVOi6XOhZRYif2qUXxMiyYzcipFeHYD7hFqI8bsvlHAQzYgZDAQZmpv4VmHLGEBUGadw4Q9a/mVKd/9D6ozyFVtVmoVLFHkxUGDQAv7ffTD0SzYi2Ily5VM+8iY3KqqIlyE/vLYRiOQQfX02/cyONxMt1w4oXRVXH10Yz1bDa3Smoo6ho7Gh7jT1uJbk+6cKQ0Jo+E4aqf3PzKma4HMTDIFEyFT8Lq69noaYBQgoQbVWV6ikez4bAagD7seYmRFxM7aezaQzPv1c+Lo0Tu5ZMfwfnO/ZenaozaZ5kBTfz0Iy5cVIPIqNp/AU+StTFN98VV89V/FbXPFeTOeQYDmUE6qRTzvmMkmLSQK5ntdqco0FBTFIoOKVmi9g0oMECSK5NFOAVRV
+X-MS-Exchange-AntiSpam-MessageData: c9Kqqo4I9tr1EXUaDaZak2baA8ol2rIRP5DMykQFFtD1wAxxM1FLZW8mtqYxY/MM710CD4f+e96qBTtWmdcvFismNIM6RqlE7yn1wP7+f6v+gOG2hAr9Gm64mvFF2mJV3ngPR23NZivMT13J0xDjnA==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dd838ad-a7ea-446f-e6c4-08d7c5af565f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 11:28:35.7927
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KobMHe5wkS4FS2umfT1FTH1r82EvGJ8OdHgtXQZ4Zv7U6wn8wxWMGfbx/bDQQ2wmGAPDwP1G+1cEnYBQN8oCjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 12:01:19PM -0800, Hoan Tran wrote:
-> Hi Will,
-> 
-> On 2/6/20 2:23 AM, Will Deacon wrote:
-> > On Mon, Feb 03, 2020 at 11:55:14AM -0800, Hoan Tran wrote:
-> > > Some NUMA nodes have memory ranges that span other nodes.
-> > > Even though a pfn is valid and between a node's start and end pfns,
-> > > it may not reside on that node.
+On Wed, Mar 11, 2020 at 06:47:56AM -0400, Neil Horman wrote:
+> On Wed, Mar 11, 2020 at 11:31:43AM +0200, Ido Schimmel wrote:
+> > On Wed, Mar 11, 2020 at 03:29:25PM +0900, Masahiro Yamada wrote:
+> > > In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
 > > > 
-> > > This patch enables NODES_SPAN_OTHER_NODES config for NUMA to support
-> > > this type of NUMA layout.
+> > > The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
+> > > from being 'm' when NET_DEVLINK=y.
 > > > 
-> > > Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
-> > > ---
-> > >   arch/arm64/Kconfig | 7 +++++++
-> > >   1 file changed, 7 insertions(+)
+> > > With the planned Kconfig change that relaxes the 'imply', the
+> > > combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
 > > > 
-> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > index e688dfa..939d28f 100644
-> > > --- a/arch/arm64/Kconfig
-> > > +++ b/arch/arm64/Kconfig
-> > > @@ -959,6 +959,13 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
-> > >   config HOLES_IN_ZONE
-> > >   	def_bool y
-> > > +# Some NUMA nodes have memory ranges that span other nodes.
-> > > +# Even though a pfn is valid and between a node's start and end pfns,
-> > > +# it may not reside on that node.
-> > > +config NODES_SPAN_OTHER_NODES
-> > > +	def_bool y
-> > > +	depends on ACPI_NUMA
-> > > +
+> > > Use IS_REACHABLE() to avoid the vmlinux link error for this case.
+> > > 
+> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > > 
-> > I thought we agreed to do this in the core code?
+> > Thanks, Masahiro.
 > > 
-> > https://lore.kernel.org/lkml/1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com
-> 
-> Yes, but it looks like Thomas didn't agree to apply this patch into
-> x86.
-> 
-> https://lore.kernel.org/lkml/alpine.DEB.2.21.1907152042110.1767@nanos.tec.linutronix.de/
+> > Neil, Jiri, another option (long term) is to add a raw tracepoint (not
+> > part of ABI) in devlink and have drop monitor register its probe on it
+> > when monitoring.
+> > 
+> > Two advantages:
+> > 1. Consistent with what drop monitor is already doing with kfree_skb()
+> > tracepoint
+> > 2. We can remove 'imply NET_DROP_MONITOR' altogether
+> > 
+> > What do you think?
+> > 
+> Agreed, I think I like this implementation better.
 
-Was it a clear statement that such change will not make it to x86 or a
-request for improving the patch or the description? I'd suggest you
-update the x86 patch comment to include the rationale as per your reply
-to Thomas and post a new version of the generic series. If Thomas (or
-the mm folk) reject it again, we'll revisit the arm64-specific thread.
-
--- 
-Catalin
+OK, but I don't want to block Masahiro. I think we can go with his patch
+and then I'll add the raw tracepoint in the next release.
