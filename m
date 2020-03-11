@@ -2,208 +2,167 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F92FC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B86C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373892146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583908296;
-	bh=RfRuvwSduLLs0WK6qHgcv9xu4SffWnZFqub/WgO7kkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B7D9E2gZkMhZ1r3XK8fY2QbWHbjnxWZYQSahcve31Ttw0A67lMJZqpTdtWQJEKAIy
-	 ogmYT067H7wCo8bRaWtpst5q0j+oIsYnt5/pV/LGYFcscorFjRYHeKyRZqa7/Q0tzh
-	 N7zFF9rVa0RJnvGUquQuzemqgWIJR8ofehgzZw68=
+	by mail.kernel.org (Postfix) with ESMTP id 849DA21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="iKp/Bvxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgCKGbf (ORCPT
+        id S1728302AbgCKGbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:31:35 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38405 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgCKGbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:31:34 -0400
-Received: by mail-pj1-f67.google.com with SMTP id a16so486046pju.3;
-        Tue, 10 Mar 2020 23:31:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1UAkvLpj5HFn3T7HvjbOrhBTr3mGSentKtT4t87H9Mc=;
-        b=BJQH1jBOoIQ0Fawd2AquivgSRwofkRnhsCHypkNX37kMkOevu/NQ3E3Lvv7iUlN3iG
-         s6tzoAiWBbi21zmedKKfMHFjiZ5LnDKnr5l7Zrnp+1rj+Ambnpg7dnf2xMspBCcKmC/F
-         y0TudrJsdlUlRQoQzcU5+YTiAe628KiE5MMXcpfYKM46Rh2X0WKmMHk+dKt7+rfSq2fY
-         yoOLLApzpxPAJ8DUcQqsZUZBkLGwAXe1x98dnUKVXB6cxmFzEvvbwibc7aym1dCFQwaQ
-         KLAqKNRMVghRK1LFCuHqzAvmdqTqD7vDmPCy2wlkadHUjrAEGBdVife9w6biru6XfBgB
-         8kSQ==
-X-Gm-Message-State: ANhLgQ2rIVIJtl25hj7fhAseYboaiW3oG7l4rujyJTZvGk3/vaqj6ETh
-        RRIbfVzeotErEPdBMT1w6/U=
-X-Google-Smtp-Source: ADFU+vu8VpdJ963e5F6gYZICpswD7PiJ1BYsUQay5tv81lLrfja+u47vUVWbA+qERoD4Ynb9vnPAsQ==
-X-Received: by 2002:a17:90a:5218:: with SMTP id v24mr1786004pjh.90.1583908292874;
-        Tue, 10 Mar 2020 23:31:32 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y18sm48419972pfe.19.2020.03.10.23.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 23:31:31 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 94A704028E; Wed, 11 Mar 2020 06:31:30 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 06:31:30 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     NeilBrown <neilb@suse.com>, Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] kmod: make request_module() return an error when
- autoloading is disabled
-Message-ID: <20200311063130.GL11244@42.do-not-panic.com>
-References: <20200310223731.126894-1-ebiggers@kernel.org>
- <20200311043221.GK11244@42.do-not-panic.com>
- <20200311052620.GD46757@gmail.com>
+        Wed, 11 Mar 2020 02:31:47 -0400
+Received: from mail-co1nam11on2093.outbound.protection.outlook.com ([40.107.220.93]:32096
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbgCKGbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:31:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HDgXapLxg0zrpd0lryGC9UfM42oU3zK5VbK6RVjVfD8H2i1jUKpg6AbR/FB/i+JCFmtGjrwVHSZcDBkJv0fqOIdFj95wa0gEYeYZsGQ2yc5DyXmLsvYqJh7np2PmVKv0qX7gg8ZtzVlHabeX7Rf9twOcYO+mlpzrnzteazYvIssp/0CNsxqFECNhm8r2FWGj3Z8pG6ObFbLnTsMQpXWtzpUxBCAlJBVbQ2sbipDjfNIAg0nzIREX1OfLU/aTl5rRNVCKEK7sa/QojYggxDT1BBpbWWu3ETvYIsQJMpLO5WAKrYZJ3BjWrh/72iS5wJpBbokG4O1RHv5W+Y5/CYgysQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eCkHuTtuAB7yCIUvijeIwLHa0VxHEr37XKHhx1Esa7U=;
+ b=jwcFAi0GkWhNQ/bgzREesK5X325iL3vV7CzfeolPrxIQ5VxS5HlgFw/mJ/aP7u5EDr8r+yZoCLj+4BnQvwuslkRey3VBScNMvD8C3qansNrzeOg0ZbVZuP2rUhqpUWwaCU3l2vuPY0yIrH8XPPW4xsnk8RwKMIQ/P9UEZegvBWwquNj+I0gz5aoQ+UQPKXXkT6aZbNe5LUF31rO2dawFaW8J+A8Un7mzOxqedC2ruZf5vJ1eLBNLpQQjjEj13Z8hZXm9/HmxYbu5LrcFMZgKlnVJCYXYT/bxgbsB6tv5yYK4Y5wG0hR3x5gcQ62hXR45j+m7nOvf4SIxCXe6Fr54hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eCkHuTtuAB7yCIUvijeIwLHa0VxHEr37XKHhx1Esa7U=;
+ b=iKp/BvxeMF8H7yRMsusZqiveADugnOzIocaLeVxEmXLw5mrH+mTVDddxsxiSq9rWehOhk51jIeIvjeJym82vJJ6Uhn70vifBeuUttB5taX0vhDag77+NaWsBQZ6CeHmxKBR9fhWITZadww1MF1jnSqWrXqCNK0lyS5cyHu3o2LE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=hoan@os.amperecomputing.com; 
+Received: from BYAPR01MB5494.prod.exchangelabs.com (2603:10b6:a03:127::30) by
+ BYAPR01MB3736.prod.exchangelabs.com (2603:10b6:a02:8d::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Wed, 11 Mar 2020 06:31:44 +0000
+Received: from BYAPR01MB5494.prod.exchangelabs.com
+ ([fe80::a979:b2e2:fdaf:1ccb]) by BYAPR01MB5494.prod.exchangelabs.com
+ ([fe80::a979:b2e2:fdaf:1ccb%6]) with mapi id 15.20.2814.007; Wed, 11 Mar 2020
+ 06:31:44 +0000
+Subject: Re: [PATCH] arm64: Kconfig: Enable NODES_SPAN_OTHER_NODES config for
+ NUMA
+From:   Hoan Tran <hoan@os.amperecomputing.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        patches@os.amperecomputing.com
+References: <1580759714-4614-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200206102340.GA17074@willie-the-truck>
+ <c85dbc06-a72b-9c98-fe41-b25069114b2f@os.amperecomputing.com>
+ <32a35685-ff3e-9e5c-f6bb-960dd6f3d1d3@os.amperecomputing.com>
+Message-ID: <4d90f400-272c-56a4-9250-d8e238ed78c9@os.amperecomputing.com>
+Date:   Tue, 10 Mar 2020 23:31:38 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
+In-Reply-To: <32a35685-ff3e-9e5c-f6bb-960dd6f3d1d3@os.amperecomputing.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CY4PR1701CA0014.namprd17.prod.outlook.com
+ (2603:10b6:910:5e::24) To BYAPR01MB5494.prod.exchangelabs.com
+ (2603:10b6:a03:127::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311052620.GD46757@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.138] (67.161.31.237) by CY4PR1701CA0014.namprd17.prod.outlook.com (2603:10b6:910:5e::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Wed, 11 Mar 2020 06:31:41 +0000
+X-Originating-IP: [67.161.31.237]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 54d3d8b5-7e54-4460-b40f-08d7c585dd62
+X-MS-TrafficTypeDiagnostic: BYAPR01MB3736:
+X-Microsoft-Antispam-PRVS: <BYAPR01MB37363369A0BD9FEC7080FE54F1FC0@BYAPR01MB3736.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(396003)(136003)(346002)(376002)(366004)(199004)(81166006)(186003)(966005)(26005)(31696002)(16576012)(16526019)(316002)(6486002)(31686004)(86362001)(52116002)(107886003)(2616005)(956004)(5660300002)(8936002)(53546011)(6666004)(2906002)(66946007)(66476007)(8676002)(66556008)(4326008)(478600001)(6916009)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR01MB3736;H:BYAPR01MB5494.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+Received-SPF: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6agdBnKhgkrFI7Cg/1KNbJOeSJaDTLkfmWlp6zAZ/gKWbflltqe+iDDvy3u+eIX+HgnoFPsCXVMkf0h5K56dKLva2rkMoiIuIlj/OYppZ3p71koblmB88Gc8uFN2kX09Js/ccaLTDJqyRHfr00Rf7mon61U+PrasFBMqSI/PpnBC0QueLFGHYRorQGpnlTAxli+xkIaeo4sWNej2jK7rqb3YqSptRS4IUDAYhPZfxCAyMvUff5hyepxYvbgf7ZmMZ40n9me8d3WP1T7Y2jLQ6Ftjv3Ys8PhkXpLvhWzjadiuxcaXtVbheDqRavCGKxNhRt11p0XTxysGtqOWiPxc7oSxqVt56qkWUTJktbf/VDEEZIOBvhZAZckm16m2mGTdKUwWc1NQui4Bh54QFFt8lfB2MTZNUg0gQmmrzHD+WqH0XAkNkLIeI+Lt4LYeu2oCdu3Ak1R8KXuWJ0rvypaJ3ytboIp3KpU5XKFsotBn2tLwmh5nlxsqLEbRp42MDIVV/ZGIgqu0Uwm3Id6XCE7Mgg==
+X-MS-Exchange-AntiSpam-MessageData: usQYdefEjH3XOIq+/4BQB+hLVDSvkDlMKWpoijJlir9M9tIQVyWaZhyu9upwYT9iCEKWiuApPj/K0DzJf7KAVFxXcjxplsf/xhNXPfW3AiTq3lZBT9TfIYaICFSnnZ+VvtHEw+V10PMWT7aHbY3tYA==
+X-MS-Exchange-Transport-Forked: True
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54d3d8b5-7e54-4460-b40f-08d7c585dd62
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 06:31:43.7936
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RQFqhx9YXLV+dwfggihaPUBnrIJWul/Ptq0uKw+8yEPbF1AN9Lkb7IiPQxEf9GXnKyuRlFF1cZtwYhfwbh/4YQHCNu/EEZ6clfA03tgM9cs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB3736
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:26:20PM -0700, Eric Biggers wrote:
-> On Wed, Mar 11, 2020 at 04:32:21AM +0000, Luis Chamberlain wrote:
-> > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > It's long been possible to disable kernel module autoloading completely
-> > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
-> > > preferable
-> > 
-> > preferable but ... not documented. Or was this documented or recommended
-> > somewhere?
-> > 
-> > > to setting it to a nonexistent file since it avoids the
-> > > overhead of an attempted execve(), avoids potential deadlocks, and
-> > > avoids the call to security_kernel_module_request() and thus on
-> > > SELinux-based systems eliminates the need to write SELinux rules to
-> > > dontaudit module_request.
+Hi Will and All,
+
+Any chance you have time to take a look.
+
+Thanks and regards
+Hoan
+
+On 2/25/20 3:20 PM, Hoan Tran wrote:
+> Hi Will,
 > 
-> Not that I know of, though I didn't look too hard.  proc(5) mentions
-> /proc/sys/kernel/modprobe but doesn't mention the empty string case.
+> Do you have any comments?
 > 
-> In any case, it's been supported for a long time, and it's useful for the
-> reasons I mentioned.
-
-Sure. I think then its important to document it as such then, or perhaps
-make a kconfig option which sets this to empty and document it on the
-kconfig entry.
-
-> > > However, when module autoloading is disabled in this way,
-> > > request_module() returns 0.  This is broken because callers expect 0 to
-> > > mean that the module was successfully loaded.
-> > 
-> > However this is implicitly not true. For instance, as Neil recently
-> > chased down -- blacklisting a module today returns 0 as well, and so
-> > this corner case is implicitly set to return 0.
+> Thanks
+> Hoan
 > 
-> That sounds like another similar bug, but in the modprobe program instead of in
-> the kernel.  Do you have a link to the discussion about it?
-
-Nothing public yet AFAICT.
-
-> > > But
-> > > improperly returning 0 can indeed confuse a few callers, for example
-> > > get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
-> > > 
-> > > 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
-> > > 		fs = __get_fs_type(name, len);
-> > > 		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-> > > 	}
-> > > 
-> > > This is easily reproduced with:
-> > > 
-> > > 	echo > /proc/sys/kernel/modprobe
-> > > 	mount -t NONEXISTENT none /
-> > > 
-> > > It causes:
-> > > 
-> > > 	request_module fs-NONEXISTENT succeeded, but still no fs?
-> > > 	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
-> > > 	[...]
-> > 
-> > Thanks for reporting this.
-> > 
-> > > Arguably this warning is broken and should be removed, since the module
-> > > could have been unloaded already.
-> > 
-> > No, the warning is present *because* debuggins issues for when the
-> > module which did not load is a rootfs is *really* hard to debug. Then,
-> > if the culprit of the issue is a userspace modprobe bug (it happens)
-> > this makes debugging *very* difficult as you won't know what failed at
-> > all, you just get a silent failed boot.
-> 
-> I meant that it's broken to use WARN_ON(), because it's a userspace triggerable
-> condition.
-
-This and the blacklist case are now two known cases, so yes I'a agree
-now. It was not widely known before.
-
-> WARN_ON() is for kernel bugs only.  Of course, if it's a useful
-> warning, it can still be left in as pr_warn().
-
-I'll send a patch.
-
-> > > However, request_module() should also
-> > > correctly return an error when it fails.  So let's make it return
-> > > -ENOENT, which matches the error when the modprobe binary doesn't exist.
-> > 
-> > This is a user experience change though, and I wouldn't have on my radar
-> > who would use this, and expects the old behaviour. Josh, would you by
-> > chance?
-> > 
-> > I'd like this to be more an RFC first so we get vetted parties to
-> > review. I take it this and Neil's case are cases we should revisit now,
-> > properly document as we didn't before, ensure we don't break anything,
-> > and also extend the respective kmod selftests to ensure we don't break
-> > these corner cases in the future.
-> 
-> This patch only affects kernel internals, not the userspace API.
-
-Ah yes, in that case this seems fine with me.
-
-> So I don't see
-> why it would be controversial?  I already went through all callers of
-> request_module() that check its return value, and they all appear to work better
-> with -ENOENT, since they assume that 0 means the module was loaded.
-
-Thanks for doing that, but I note that getting 0 is not assurance
-either. The de-facto best practive for the request_module() call is to
-do your own in place verifier.
-
-> Incorrectly returning 0 typically causes unnecessary work (checking again
-> whether the module's functionality is available) or misleading log messages.
-
-Yes but returning 0 cannot be relied upon today for assuming the module
-is loaded. *If* we revisit that decision and want the kernel to do a
-generic verifier, then yes, we can get rid of all the caller specific
-verfifiers, but not today.
-
-> In
-> fact, I can't think of a situation where kernel code would *want* 0 returned in
-> this case, as it's ambiguous with the module being successfully loaded.
-
-Unfortunately that's just how the API (to my mind silly) grew out to.
-
-> Sure, I'll check whether it would be possible to add a test for this case in
-> lib/test_kmod.c and tools/testing/selftests/kmod/.
-
-Thanks!
-
-  Luis
+> On 2/6/20 12:01 PM, Hoan Tran wrote:
+>> Hi Will,
+>>
+>> On 2/6/20 2:23 AM, Will Deacon wrote:
+>>> On Mon, Feb 03, 2020 at 11:55:14AM -0800, Hoan Tran wrote:
+>>>> Some NUMA nodes have memory ranges that span other nodes.
+>>>> Even though a pfn is valid and between a node's start and end pfns,
+>>>> it may not reside on that node.
+>>>>
+>>>> This patch enables NODES_SPAN_OTHER_NODES config for NUMA to support
+>>>> this type of NUMA layout.
+>>>>
+>>>> Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
+>>>> ---
+>>>>   arch/arm64/Kconfig | 7 +++++++
+>>>>   1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>> index e688dfa..939d28f 100644
+>>>> --- a/arch/arm64/Kconfig
+>>>> +++ b/arch/arm64/Kconfig
+>>>> @@ -959,6 +959,13 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>>>>   config HOLES_IN_ZONE
+>>>>       def_bool y
+>>>> +# Some NUMA nodes have memory ranges that span other nodes.
+>>>> +# Even though a pfn is valid and between a node's start and end pfns,
+>>>> +# it may not reside on that node.
+>>>> +config NODES_SPAN_OTHER_NODES
+>>>> +    def_bool y
+>>>> +    depends on ACPI_NUMA
+>>>> +
+>>>
+>>> I thought we agreed to do this in the core code?
+>>>
+>>> https://lore.kernel.org/lkml/1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com 
+>>>
+>>
+>> Yes, but it looks like Thomas didn't agree to apply this patch into x86.
+>>
+>> https://lore.kernel.org/lkml/alpine.DEB.2.21.1907152042110.1767@nanos.tec.linutronix.de/ 
+>>
+>>
+>> Regards
+>> Hoan
+>>
+>>>
+>>> Will
+>>>
