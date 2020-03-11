@@ -2,192 +2,121 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B856C3F2D0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2537C18E5A
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9969420A8B
+	by mail.kernel.org (Postfix) with ESMTP id CC34320936
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPuDEimI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgCKO1n (ORCPT
+        id S1729772AbgCKO3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:27:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33774 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgCKO1n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:27:43 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r7so3300472wmg.0;
-        Wed, 11 Mar 2020 07:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KTnv9vEWwzWLAfeXWJi38+UqTVjgXBaNXXANxrQ2fKY=;
-        b=nPuDEimIQ/sISsBGOc4nQjcb+e7qhFM3eN6R4TryBSAfnh5H0slB6jv4+PLDfV0MzE
-         U4SB+aLkgHjTD16I18EeiJfobRjpu8MVMU7KTePPO+rPJc4dx88eEAUvODS5KbPfv9Pz
-         R8x7CtYU+szPDZuhpf7SIi540dXi4Nr1lNJet1REBBU6b6RVtGYi0xeGnxFKhOZZN+Gd
-         woKsOvnhiROohuSaaUYp+uz9TWEDBECRipt8LHWwbTOPM4/uQQXp5xBQSnY5Q7uKiIKL
-         r0032LvAgESNj08te3RM1I7BKbEfQYJ20KUe3JjOZ3jEgA0B3Flcb0wMUezJe2+lO/B0
-         hUWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KTnv9vEWwzWLAfeXWJi38+UqTVjgXBaNXXANxrQ2fKY=;
-        b=sX1Ji/RNAPhUuT5HGgFnk1a9vwuBBiLq6kmgtTu5i636GDLgW2MrCq3E9Mnt+yUF9n
-         Vf0R2awSdKjAd24s4yU3FIKli63hE62oiDhjsbBfF6zuUf4CPYSmUDnF7bTece1g7YuL
-         YtOTyEKHxdGie19EhciDxB7SkivmP9NSZjNkLKfQ6ib4QNKmOxXdsVg6VYCCcf0MC0J0
-         +ppA2j9RDopI6Pc3T2veuL9XN7ltYSpFEZiYu8r8dV90BYPEF6T/5+imwDjwrteVbt+c
-         IQy0/xkEEIY3sCpETWUkBXwu4EaEO7YTqkUCi/dolngpb9Sm4S+KCxBa4J58RnVecCkJ
-         0YXw==
-X-Gm-Message-State: ANhLgQ1JtAIYHxnhixHCm8FqLssnz5kP98h3Pdne5uULKXATgAOuik6i
-        h7oRMV6oYSlDkmUwHT3N8cw=
-X-Google-Smtp-Source: ADFU+vsMhdZfZocryCxRv+APUZNBwwKZxG6ZP4D4X5Cq6kmksR+h+wEHCdPwtQnDnew002x3tYsIuQ==
-X-Received: by 2002:a7b:cd83:: with SMTP id y3mr4083405wmj.176.1583936861126;
-        Wed, 11 Mar 2020 07:27:41 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id d15sm69494666wrp.37.2020.03.11.07.27.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 07:27:40 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 14:27:40 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 11 Mar 2020 10:29:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:50372 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729057AbgCKO3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:29:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CF0F31B;
+        Wed, 11 Mar 2020 07:29:10 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEA6A3F67D;
+        Wed, 11 Mar 2020 07:29:07 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 14:29:05 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v1 3/5] drivers/base/memory: store mapping between MMOP_*
- and string in an array
-Message-ID: <20200311142740.qh5it3lfaoyqzr6i@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-4-david@redhat.com>
- <20200311142002.2htiv4llyam2svta@master>
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200311142905.GI3216816@arrakis.emea.arm.com>
+References: <20200212085004.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+ <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+ <20200309155945.GA4124965@arrakis.emea.arm.com>
+ <20200309160919.GM25745@shell.armlinux.org.uk>
+ <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311142002.2htiv4llyam2svta@master>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 02:20:02PM +0000, Wei Yang wrote:
->On Wed, Mar 11, 2020 at 01:30:24PM +0100, David Hildenbrand wrote:
->>Let's use a simple array which we can reuse soon. While at it, move the
->>string->mmop conversion out of the device hotplug lock.
->>
->>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>Cc: Andrew Morton <akpm@linux-foundation.org>
->>Cc: Michal Hocko <mhocko@kernel.org>
->>Cc: Oscar Salvador <osalvador@suse.de>
->>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->>Cc: Baoquan He <bhe@redhat.com>
->>Cc: Wei Yang <richard.weiyang@gmail.com>
->>Signed-off-by: David Hildenbrand <david@redhat.com>
+On Mon, Mar 09, 2020 at 08:46:18PM +0100, Arnd Bergmann wrote:
+> On Mon, Mar 9, 2020 at 5:09 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Mon, Mar 09, 2020 at 03:59:45PM +0000, Catalin Marinas wrote:
+> > > On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
+> > > > - revisit CONFIG_VMSPLIT_4G_4G for arm32 (and maybe mips32)
+> > > >   to see if it can be done, and what the overhead is. This is probably
+> > > >   more work than the others combined, but also the most promising
+> > > >   as it allows the most user address space and physical ram to be used.
+> > >
+> > > A rough outline of such support (and likely to miss some corner cases):
+> > >
+> > > 1. Kernel runs with its own ASID and non-global page tables.
+> > >
+> > > 2. Trampoline code on exception entry/exit to handle the TTBR0 switching
+> > >    between user and kernel.
+> > >
+> > > 3. uaccess routines need to be reworked to pin the user pages in memory
+> > >    (get_user_pages()) and access them via the kernel address space.
+> > >
+> > > Point 3 is probably the ugliest and it would introduce a noticeable
+> > > slowdown in certain syscalls.
+> 
+> There are probably a number of ways to do the basic design. The idea
+> I had (again, probably missing more corner cases than either of you
+> two that actually understand the details of the mmu):
+> 
+> - Assuming we have LPAE, run the kernel vmlinux and modules inside
+>   the vmalloc space, in the top 256MB or 512MB on TTBR1
+> 
+> - Map all the physical RAM (up to 3.75GB) into a reserved ASID
+>   with TTBR0
+> 
+> - Flip TTBR0 on kernel entry/exit, and again during user access.
+> 
+> This is probably more work to implement than your idea, but
+> I would hope this has a lower overhead on most microarchitectures
+> as it doesn't require pinning the pages. Depending on the
+> microarchitecture, I'd hope the overhead would be comparable
+> to that of ARM64_SW_TTBR0_PAN.
 
-Ok, I got the reason.
-
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-
->>---
->> drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
->> 1 file changed, 23 insertions(+), 15 deletions(-)
->>
->>diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->>index e7e77cafef80..8a7f29c0bf97 100644
->>--- a/drivers/base/memory.c
->>+++ b/drivers/base/memory.c
->>@@ -28,6 +28,24 @@
->> 
->> #define MEMORY_CLASS_NAME	"memory"
->> 
->>+static const char *const online_type_to_str[] = {
->>+	[MMOP_OFFLINE] = "offline",
->>+	[MMOP_ONLINE] = "online",
->>+	[MMOP_ONLINE_KERNEL] = "online_kernel",
->>+	[MMOP_ONLINE_MOVABLE] = "online_movable",
->>+};
->>+
->>+static int memhp_online_type_from_str(const char *str)
->>+{
->>+	int i;
->>+
->>+	for (i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
->>+		if (sysfs_streq(str, online_type_to_str[i]))
->>+			return i;
->>+	}
->>+	return -EINVAL;
->>+}
->>+
->> #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
->> 
->> static int sections_per_block;
->>@@ -236,26 +254,17 @@ static int memory_subsys_offline(struct device *dev)
->> static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->> 			   const char *buf, size_t count)
->> {
->>+	const int online_type = memhp_online_type_from_str(buf);
->
->In your following patch, you did the same conversion. Is it possible to merge
->them into this one?
->
->> 	struct memory_block *mem = to_memory_block(dev);
->>-	int ret, online_type;
->>+	int ret;
->>+
->>+	if (online_type < 0)
->>+		return -EINVAL;
->> 
->> 	ret = lock_device_hotplug_sysfs();
->> 	if (ret)
->> 		return ret;
->> 
->>-	if (sysfs_streq(buf, "online_kernel"))
->>-		online_type = MMOP_ONLINE_KERNEL;
->>-	else if (sysfs_streq(buf, "online_movable"))
->>-		online_type = MMOP_ONLINE_MOVABLE;
->>-	else if (sysfs_streq(buf, "online"))
->>-		online_type = MMOP_ONLINE;
->>-	else if (sysfs_streq(buf, "offline"))
->>-		online_type = MMOP_OFFLINE;
->>-	else {
->>-		ret = -EINVAL;
->>-		goto err;
->>-	}
->>-
->> 	switch (online_type) {
->> 	case MMOP_ONLINE_KERNEL:
->> 	case MMOP_ONLINE_MOVABLE:
->>@@ -271,7 +280,6 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->> 		ret = -EINVAL; /* should never happen */
->> 	}
->> 
->>-err:
->> 	unlock_device_hotplug();
->> 
->> 	if (ret < 0)
->>-- 
->>2.24.1
->
->-- 
->Wei Yang
->Help you, Help me
+This still doesn't solve the copy_{from,to}_user() case where both
+address spaces need to be available during copy. So you either pin the
+user pages in memory and access them via the kernel mapping or you
+temporarily map (kmap?) the destination/source kernel address. The
+overhead I'd expect to be significantly greater than ARM64_SW_TTBR0_PAN
+for the uaccess routines. For user entry/exit, your suggestion is
+probably comparable with SW PAN.
 
 -- 
-Wei Yang
-Help you, Help me
+Catalin
