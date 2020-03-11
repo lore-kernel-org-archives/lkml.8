@@ -2,130 +2,237 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D10C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE550C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77AB22522
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8690C208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MP7VS+oI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iHJbBStr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgCKCU5 (ORCPT
+        id S1727920AbgCKCZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:20:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58670 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbgCKCU4 (ORCPT
+        Tue, 10 Mar 2020 22:25:17 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36970 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCKCZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:20:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=As1+POUoIPHOMCen+D9GFw1eWTMvv4YWaMUIwymo7Lk=; b=MP7VS+oIfxrHOSS0CLGhz7zMyR
-        rQbVB5ZgZ7/O/AclQd/xmxUqUq9IQvzEW4Sv7ycz6wMP6yVHEyueDbOcnt02th0D/5cXdkJjifvRS
-        EFBMhwbLtNJPo/Wh0sdbFZ1gKS5r9eTgOqfDnfMD2G92lJ6eIXg/Zb45EeDwS3YOw3f0h9EAa7z9s
-        OyKd+XmWwquTmkY2Mh9hZTCcBGb4L1KfH6Al8UZkxd/VpADA3a635fvh2lx8s36r7Yk2duBt280Rj
-        oQeoW1hmrU5hUk5kokwWI6xr6CFPXE4K0zMbIfsOjpDW3xWv1EBsoMeW4rPHd09l5eDbE5rl1sBwG
-        ciB8VwdQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jBqzJ-0000X2-AI; Wed, 11 Mar 2020 02:20:49 +0000
-Subject: Re: linux-next: Tree for Mar 10 (mtd/spi-nor/)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     John Garry <john.garry@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Joe Perches <joe@perches.com>, Mark Brown <broonie@kernel.org>
-References: <20200310201923.24e34363@canb.auug.org.au>
- <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
- <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
- <aa3b19cd-e043-e5ea-5d77-38b53bda2e60@infradead.org>
-Message-ID: <befa858c-cac9-521b-93ea-eb5722738998@infradead.org>
-Date:   Tue, 10 Mar 2020 19:20:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 22:25:17 -0400
+Received: by mail-vs1-f66.google.com with SMTP id o24so353448vsp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 19:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6o9zvEt6IYrwE+ElnVDn48jnHKonftzRMbou+m4VFt4=;
+        b=iHJbBStrT5lCa9wZXnmyeoPZDOfvkfGvFnrSpTnUNDpI8FHGkaSafTKOZRZv+o4uFD
+         jxW1iNcwui6ka32A8R1FnFHB89096I16to1pL+OZScW0nm+K1MgkyN6OL1d1Kr2U6jOe
+         KGkPOgmwUDwrPWOx4HIWvUDc4byDfuMvq2Vok=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6o9zvEt6IYrwE+ElnVDn48jnHKonftzRMbou+m4VFt4=;
+        b=udorUSEB7fu3j9dM6BdDnu++BSE5ugieNtG/bbivIArYQTRhNSZ9W/7UpjT0KpQEgx
+         ssAqVM+a09u9eV2ZihJx0D9abHLMD54u6hJUh3fGLI38DKHvUy+6wyA1KzjGAYhdtmUE
+         P9lSpuDd5OAn4dDLOsITYPQnjQy1/6xYoo83Apa8bm84S6rSQZVMcAmayLaaW+Dim7qF
+         ootnsutZAVwINFOQXJfscEmRIkIf1DpuYLDdj08ENhwHadQAFYPVdF38X453u3lq3sYN
+         ZyRap09av9XfIhK3fJsOPitxtnXe+5jKxRMQ2irxyTYLcWj8dZq2xWHrw4EB+uLvXp7f
+         tkww==
+X-Gm-Message-State: ANhLgQ3Tcm0UHqb0TY6VxzgGyVCer6Qt61hxylcN+FrEKDGnduwoHess
+        N5HV97oPRs3suTcvcxPguCVXhINnvzIfTvloPcGB8Q==
+X-Google-Smtp-Source: ADFU+vtp5uLMl3WlytXh2yLahHytv4h0LV7sRnFZjXVDDtC6hDZ6kgnPVr90KVcnWc7bMzZnT4KXS33RQ5WJ6PjFIdU=
+X-Received: by 2002:a67:fe05:: with SMTP id l5mr620139vsr.186.1583893515541;
+ Tue, 10 Mar 2020 19:25:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <aa3b19cd-e043-e5ea-5d77-38b53bda2e60@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1582707225-26815-1-git-send-email-changqi.hu@mediatek.com>
+In-Reply-To: <1582707225-26815-1-git-send-email-changqi.hu@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 11 Mar 2020 10:25:04 +0800
+Message-ID: <CANMq1KBE4kn-VamAMh71rLecy6VAE=66_4brTf811VrTcc4obg@mail.gmail.com>
+Subject: Re: [PATCH v4] serial: 8250-mtk: modify mtk uart power and clock management
+To:     Changqi Hu <changqi.hu@mediatek.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Claire Chang <tientzu@chromium.org>,
+        linux-serial@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 1:36 PM, Randy Dunlap wrote:
-> On 3/10/20 10:14 AM, John Garry wrote:
->> +
->>
->> On 10/03/2020 14:37, Randy Dunlap wrote:
->>> On 3/10/20 2:19 AM, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> Changes since 20200306:
->>>>
->>>> Removed tree: nfc-next (abanboned)
->>>
->>>                                doned
->>>
->>>
->>> on i386:
->>>
->>> WARNING: unmet direct dependencies detected for MTD_SPI_NOR
->>
->> Uh, so kbuild honors a "select" of a config option which has unmet dependencies:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/kbuild/kconfig-language.rst?h=v5.6-rc5#n143
-> 
-> Yes.
-> 
->> So this looks introduced by:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e823
->>
->>>    Depends on [m]: MTD [=m] && SPI_MASTER [=y] >    Selected by [y]:
->>>    - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
-> 
-> Would it be acceptable to move the Kconfig entry for this:
-> 
-> config SPI_HISI_SFC_V3XX
-> 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
-> 	depends on (ARM64 && ACPI) || COMPILE_TEST
-> 	depends on HAS_IOMEM
-> 	select MTD_SPI_NOR
-> 
-> into drivers/mtd/spi-nor/Kconfig, say after this one:
-> 
-> config SPI_HISI_SFC
-> 	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
-> 	depends on ARCH_HISI || COMPILE_TEST
-> 	depends on HAS_IOMEM
-> 
-> and drop the "select MTD_SPI_NOR" because when it's in drivers/mtd/spi-nor/Kconfig,
-> it will depend on MTD_SPI_NOR.
-> 
+On Wed, Feb 26, 2020 at 4:54 PM Changqi Hu <changqi.hu@mediatek.com> wrote:
+>
+> MTK uart design no need to control uart clock,
+> so we just control bus clock in runtime function.
+> Add uart clock used count to avoid repeatedly switching the clock.
 
-These changes to 2 Kconfig files does fix the kconfig warning and build errors.
-I don't know if it's acceptable, or if the source file also wants to be
-relocated.  (I almost said "needs to be relocated," but it builds fine without
-that change.)
+This patch does a lot more than that:
+ - Adds a busy loop in mtk8250_runtime_suspend
+ - Changes how you do pm_runtime stuff.
 
-> 
->>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/intel-spi.ko] undefined!
->>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/mtk-quadspi.ko] undefined!
->>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/hisi-sfc.ko] undefined!
->>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/aspeed-smc.ko] undefined!
+These probably need to be split to different patches, and can you
+please describe why you are making those changes in the commit
+message?
 
+> Signed-off-by: Changqi Hu <changqi.hu@mediatek.com>
+> ---
+>
+> Changes in v4:
+>  Modify commit-message
+>
+> Changes in v3:
+>  Merge patch v1 and v2 together.
+>
+> Changes in v2:
+>  Enable uart bus clock when probe and resume base on v1 patch,
+>  but miss v1 patch itself.
+>
+>  drivers/tty/serial/8250/8250_mtk.c | 50 ++++++++++++++++++++++++--------------
+>  1 file changed, 32 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> index 4d067f5..f839380 100644
+> --- a/drivers/tty/serial/8250/8250_mtk.c
+> +++ b/drivers/tty/serial/8250/8250_mtk.c
+> @@ -32,6 +32,7 @@
+>  #define MTK_UART_RXTRI_AD      0x14    /* RX Trigger address */
+>  #define MTK_UART_FRACDIV_L     0x15    /* Fractional divider LSB address */
+>  #define MTK_UART_FRACDIV_M     0x16    /* Fractional divider MSB address */
+> +#define MTK_UART_DEBUG0        0x18
+>  #define MTK_UART_IER_XOFFI     0x20    /* Enable XOFF character interrupt */
+>  #define MTK_UART_IER_RTSI      0x40    /* Enable RTS Modem status interrupt */
+>  #define MTK_UART_IER_CTSI      0x80    /* Enable CTS Modem status interrupt */
+> @@ -388,9 +389,18 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
+>  static int __maybe_unused mtk8250_runtime_suspend(struct device *dev)
+>  {
+>         struct mtk8250_data *data = dev_get_drvdata(dev);
+> +       struct uart_8250_port *up = serial8250_get_port(data->line);
+>
+> -       clk_disable_unprepare(data->uart_clk);
+> -       clk_disable_unprepare(data->bus_clk);
+> +       /* wait until UART in idle status */
+> +       while
+> +               (serial_in(up, MTK_UART_DEBUG0));
 
--- 
-~Randy
+No timeout?
 
+> +
+> +       if (data->clk_count == 0U) {
+> +               dev_dbg(dev, "%s clock count is 0\n", __func__);
+> +       } else {
+> +               clk_disable_unprepare(data->bus_clk);
+> +               data->clk_count--;
+> +       }
+
+The clock core already does reference counting for you, so I don't
+think you need this.
+https://elixir.bootlin.com/linux/latest/source/drivers/clk/clk.c#L1004
+
+>
+>         return 0;
+>  }
+> @@ -400,16 +410,16 @@ static int __maybe_unused mtk8250_runtime_resume(struct device *dev)
+>         struct mtk8250_data *data = dev_get_drvdata(dev);
+>         int err;
+>
+> -       err = clk_prepare_enable(data->uart_clk);
+> -       if (err) {
+> -               dev_warn(dev, "Can't enable clock\n");
+> -               return err;
+> -       }
+> -
+> -       err = clk_prepare_enable(data->bus_clk);
+> -       if (err) {
+> -               dev_warn(dev, "Can't enable bus clock\n");
+> -               return err;
+> +       if (data->clk_count > 0U) {
+> +               dev_dbg(dev, "%s clock count is %d\n", __func__,
+> +                       data->clk_count);
+> +       } else {
+> +               err = clk_prepare_enable(data->bus_clk);
+> +               if (err) {
+> +                       dev_warn(dev, "Can't enable bus clock\n");
+> +                       return err;
+> +               }
+> +               data->clk_count++;
+>         }
+>
+>         return 0;
+> @@ -419,12 +429,14 @@ static void
+>  mtk8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
+>  {
+>         if (!state)
+> -               pm_runtime_get_sync(port->dev);
+> +               if (!mtk8250_runtime_resume(port->dev))
+> +                       pm_runtime_get_sync(port->dev);
+>
+>         serial8250_do_pm(port, state, old);
+>
+>         if (state)
+> -               pm_runtime_put_sync_suspend(port->dev);
+> +               if (!pm_runtime_put_sync_suspend(port->dev))
+> +                       mtk8250_runtime_suspend(port->dev);
+>  }
+>
+>  #ifdef CONFIG_SERIAL_8250_DMA
+> @@ -501,6 +513,8 @@ static int mtk8250_probe(struct platform_device *pdev)
+>         if (!data)
+>                 return -ENOMEM;
+>
+> +       data->clk_count = 0;
+> +
+>         if (pdev->dev.of_node) {
+>                 err = mtk8250_probe_of(pdev, &uart.port, data);
+>                 if (err)
+> @@ -533,6 +547,7 @@ static int mtk8250_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, data);
+>
+> +       pm_runtime_enable(&pdev->dev);
+>         err = mtk8250_runtime_resume(&pdev->dev);
+>         if (err)
+>                 return err;
+> @@ -541,9 +556,6 @@ static int mtk8250_probe(struct platform_device *pdev)
+>         if (data->line < 0)
+>                 return data->line;
+>
+> -       pm_runtime_set_active(&pdev->dev);
+> -       pm_runtime_enable(&pdev->dev);
+> -
+>         data->rx_wakeup_irq = platform_get_irq_optional(pdev, 1);
+>
+>         return 0;
+> @@ -556,11 +568,13 @@ static int mtk8250_remove(struct platform_device *pdev)
+>         pm_runtime_get_sync(&pdev->dev);
+>
+>         serial8250_unregister_port(data->line);
+> -       mtk8250_runtime_suspend(&pdev->dev);
+>
+>         pm_runtime_disable(&pdev->dev);
+>         pm_runtime_put_noidle(&pdev->dev);
+>
+> +       if (!pm_runtime_status_suspended(&pdev->dev))
+> +               mtk8250_runtime_suspend(&pdev->dev);
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.6.4
