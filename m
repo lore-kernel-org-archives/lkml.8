@@ -2,235 +2,83 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED26EC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75519C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C11020746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31BC2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583948921;
+	bh=o6cfFMd76vbeZd9f32n4LmEvpTaX32KdbDibeKUu9jU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xf3sOkKz1Vv22gPtUeAdqcObJCXWc/MY5eBzoKka1tg/Mrhz68OXpii0WTNOObGgL
+	 aWpnuq5EHeKT12DK1uwjzs8bs/IydqltZxea0IDhKymem+6OHZsvjtQkHH+cqQBNv4
+	 wqGwBsU8MUsMhwwj52MJMlzf/WeMhH7ARf4/4zik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgCKRrh (ORCPT
+        id S1730575AbgCKRsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:47:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33124 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730500AbgCKRrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:47:37 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 04D2F291F30
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Subject: [PATCH 6/6] hantro: Refactor for V4L2 API spec compliancy
-Date:   Wed, 11 Mar 2020 14:43:00 -0300
-Message-Id: <20200311174300.19407-7-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200311174300.19407-1-ezequiel@collabora.com>
-References: <20200311174300.19407-1-ezequiel@collabora.com>
+        Wed, 11 Mar 2020 13:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730363AbgCKRsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:48:38 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C5B20734;
+        Wed, 11 Mar 2020 17:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583948919;
+        bh=o6cfFMd76vbeZd9f32n4LmEvpTaX32KdbDibeKUu9jU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lNcHirCXMuXTRjxAhcBTXM+uJDRIFTyQ7xcnNZSGcV3HXtYu50FYhlFQKyeqt5Qi+
+         ybY2UKmTNNL9si7JuFc72Uusfw+T/EyxehtOUL6ajiw4gusPq9ta9DeeW7dm3u+qzM
+         /B07T/grBRqlow0OJHle22MB4VhyWV3rB0tgMFRw=
+Date:   Wed, 11 Mar 2020 10:48:37 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux F2FS Dev Mailing List 
+        <linux-f2fs-devel@lists.sourceforge.net>
+Subject: Re: [GIT PULL] f2fs for 5.6-rc6
+Message-ID: <20200311174837.GA82207@google.com>
+References: <20200311162735.GA152176@google.com>
+ <CAHk-=wjES_Si7rUtu_EuYu4PDz4OGdA4BWhYGJ=zOoJiELiykw@mail.gmail.com>
+ <20200311173513.GA261045@google.com>
+ <CAHk-=wiVpnOo9MyOpHxAyuv0ZBGCsW2tMmOtwb+6CX-taKRtKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiVpnOo9MyOpHxAyuv0ZBGCsW2tMmOtwb+6CX-taKRtKQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor how S_FMT and TRY_FMT are handled, and also make sure
-internal initial format and format reset are done properly.
+On 03/11, Linus Torvalds wrote:
+> On Wed, Mar 11, 2020 at 10:35 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
+> >
+> > I actually merged the last three patches which were introduced yesterday.
+> >
+> > Others were merged over a week ago.
+> 
+> No, three were done just before you sent the pull request, and then
+> seven others were done yesterday.
 
-The latter is achieved by making sure the same hantro_{set,try}_fmt
-helpers are called on all paths that set the format (which is
-part of the driver state).
+Due to my rebase work. :(
 
-This commit removes the following v4l2-compliance warnings:
+> 
+> Yes, the rest were a week ago.
+> 
+> But basically, by rc6, I want to get the warm and fuzzies that the
+> code has been tested, seen review, and isn't some last-minute
+> addition.
 
-test VIDIOC_G_FMT: OK
-	fail: v4l2-test-formats.cpp(711): Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-test VIDIOC_TRY_FMT: FAIL
-	fail: v4l2-test-formats.cpp(1116): Video Capture Multiplanar: S_FMT(G_FMT) != G_FMT
-test VIDIOC_S_FMT: FAIL
+Ok, I see. Let me prepare them for next merge window.
 
-Reported-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/staging/media/hantro/hantro_v4l2.c | 70 ++++++++++++++--------
- 1 file changed, 45 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-index 458b502ff01b..f28a94e2fa93 100644
---- a/drivers/staging/media/hantro/hantro_v4l2.c
-+++ b/drivers/staging/media/hantro/hantro_v4l2.c
-@@ -30,6 +30,11 @@
- #include "hantro_hw.h"
- #include "hantro_v4l2.h"
- 
-+static int hantro_set_fmt_out(struct hantro_ctx *ctx,
-+			      struct v4l2_pix_format_mplane *pix_mp);
-+static int hantro_set_fmt_cap(struct hantro_ctx *ctx,
-+			      struct v4l2_pix_format_mplane *pix_mp);
-+
- static const struct hantro_fmt *
- hantro_get_formats(const struct hantro_ctx *ctx, unsigned int *num_fmts)
- {
-@@ -227,12 +232,12 @@ static int vidioc_g_fmt_cap_mplane(struct file *file, void *priv,
- 	return 0;
- }
- 
--static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
--			  bool capture)
-+static int hantro_try_fmt(const struct hantro_ctx *ctx,
-+			  struct v4l2_pix_format_mplane *pix_mp,
-+			  enum v4l2_buf_type type)
- {
--	struct hantro_ctx *ctx = fh_to_ctx(priv);
--	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
- 	const struct hantro_fmt *fmt, *vpu_fmt;
-+	bool capture = !V4L2_TYPE_IS_OUTPUT(type);
- 	bool coded;
- 
- 	coded = capture == hantro_is_encoder_ctx(ctx);
-@@ -246,7 +251,7 @@ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
- 	fmt = hantro_find_format(ctx, pix_mp->pixelformat);
- 	if (!fmt) {
- 		fmt = hantro_get_default_fmt(ctx, coded);
--		f->fmt.pix_mp.pixelformat = fmt->fourcc;
-+		pix_mp->pixelformat = fmt->fourcc;
- 	}
- 
- 	if (coded) {
-@@ -294,13 +299,13 @@ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
- static int vidioc_try_fmt_cap_mplane(struct file *file, void *priv,
- 				     struct v4l2_format *f)
- {
--	return vidioc_try_fmt(file, priv, f, true);
-+	return hantro_try_fmt(fh_to_ctx(priv), &f->fmt.pix_mp, f->type);
- }
- 
- static int vidioc_try_fmt_out_mplane(struct file *file, void *priv,
- 				     struct v4l2_format *f)
- {
--	return vidioc_try_fmt(file, priv, f, false);
-+	return hantro_try_fmt(fh_to_ctx(priv), &f->fmt.pix_mp, f->type);
- }
- 
- static void
-@@ -334,11 +339,12 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
- 	}
- 
- 	hantro_reset_fmt(fmt, vpu_fmt);
--	fmt->num_planes = 1;
- 	fmt->width = vpu_fmt->frmsize.min_width;
- 	fmt->height = vpu_fmt->frmsize.min_height;
--	fmt->plane_fmt[0].sizeimage = vpu_fmt->header_size +
--				fmt->width * fmt->height * vpu_fmt->max_depth;
-+	if (hantro_is_encoder_ctx(ctx))
-+		hantro_set_fmt_cap(ctx, fmt);
-+	else
-+		hantro_set_fmt_out(ctx, fmt);
- }
- 
- static void
-@@ -360,9 +366,12 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx)
- 	}
- 
- 	hantro_reset_fmt(raw_fmt, raw_vpu_fmt);
--	v4l2_fill_pixfmt_mp(raw_fmt, raw_vpu_fmt->fourcc,
--			    encoded_fmt->width,
--			    encoded_fmt->height);
-+	raw_fmt->width = encoded_fmt->width;
-+	raw_fmt->width = encoded_fmt->width;
-+	if (hantro_is_encoder_ctx(ctx))
-+		hantro_set_fmt_out(ctx, raw_fmt);
-+	else
-+		hantro_set_fmt_cap(ctx, raw_fmt);
- }
- 
- void hantro_reset_fmts(struct hantro_ctx *ctx)
-@@ -388,15 +397,15 @@ hantro_update_requires_request(struct hantro_ctx *ctx, u32 fourcc)
- 	}
- }
- 
--static int
--vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-+static int hantro_set_fmt_out(struct hantro_ctx *ctx,
-+			      struct v4l2_pix_format_mplane *pix_mp)
- {
--	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
--	struct hantro_ctx *ctx = fh_to_ctx(priv);
--	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-+	struct vb2_queue *vq;
- 	int ret;
- 
--	ret = vidioc_try_fmt_out_mplane(file, priv, f);
-+	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
-+			     V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
-+	ret = hantro_try_fmt(ctx, pix_mp, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
- 	if (ret)
- 		return ret;
- 
-@@ -458,16 +467,15 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
- 	return 0;
- }
- 
--static int vidioc_s_fmt_cap_mplane(struct file *file, void *priv,
--				   struct v4l2_format *f)
-+static int hantro_set_fmt_cap(struct hantro_ctx *ctx,
-+			      struct v4l2_pix_format_mplane *pix_mp)
- {
--	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
--	struct hantro_ctx *ctx = fh_to_ctx(priv);
- 	struct vb2_queue *vq;
- 	int ret;
- 
- 	/* Change not allowed if queue is busy. */
--	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-+	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
-+			     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
- 	if (vb2_is_busy(vq))
- 		return -EBUSY;
- 
-@@ -488,7 +496,7 @@ static int vidioc_s_fmt_cap_mplane(struct file *file, void *priv,
- 			return -EBUSY;
- 	}
- 
--	ret = vidioc_try_fmt_cap_mplane(file, priv, f);
-+	ret = hantro_try_fmt(ctx, pix_mp, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
- 	if (ret)
- 		return ret;
- 
-@@ -522,6 +530,18 @@ static int vidioc_s_fmt_cap_mplane(struct file *file, void *priv,
- 	return 0;
- }
- 
-+static int
-+vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-+{
-+	return hantro_set_fmt_out(fh_to_ctx(priv), &f->fmt.pix_mp);
-+}
-+
-+static int
-+vidioc_s_fmt_cap_mplane(struct file *file, void *priv, struct v4l2_format *f)
-+{
-+	return hantro_set_fmt_cap(fh_to_ctx(priv), &f->fmt.pix_mp);
-+}
-+
- const struct v4l2_ioctl_ops hantro_ioctl_ops = {
- 	.vidioc_querycap = vidioc_querycap,
- 	.vidioc_enum_framesizes = vidioc_enum_framesizes,
--- 
-2.25.0
-
+Thanks,
