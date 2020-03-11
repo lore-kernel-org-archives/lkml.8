@@ -1,53 +1,119 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44081 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730235AbgCKRVA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:21:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b186so2312132lfg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:20:58 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id f26sm25221210ljn.104.2020.03.11.10.20.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 10:20:57 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id l7so2388128lfe.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:20:56 -0700 (PDT)
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35177C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:46:00 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id F2259206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:46:00 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730869AbgCKSp7 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:45:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45178 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730691AbgCKSp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:45:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:45:58 -0700
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="277479353"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 11:45:57 -0700
+Subject: Re: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+        "babu.moger@amd.com" <babu.moger@amd.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
+ <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
+ <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
+ <FFF73D592F13FD46B8700F0A279B802F573084EC@ORSMSX114.amr.corp.intel.com>
+ <b83ba95d-9f0f-4d4f-b68c-c5a612afece4@intel.com>
+ <664cf142449b0a1ef7f09d04111f96ff84738e28.camel@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <518831ab-0f4e-5c5c-10c2-52c5f8492df1@intel.com>
+Date:   Wed, 11 Mar 2020 11:45:56 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200311162735.GA152176@google.com>
-In-Reply-To: <20200311162735.GA152176@google.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 11 Mar 2020 10:20:40 -0700
-Message-ID:
- <CAHk-=wjES_Si7rUtu_EuYu4PDz4OGdA4BWhYGJ=zOoJiELiykw@mail.gmail.com>
-Subject: Re: [GIT PULL] f2fs for 5.6-rc6
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux F2FS Dev Mailing List
-        <linux-f2fs-devel@lists.sourceforge.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <664cf142449b0a1ef7f09d04111f96ff84738e28.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311172040.8d0--SGXVHqp7SruIxIXDYHaRTToZRfr9re_0YukBGY@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 9:27 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
->
-> Sorry for late pull request. Could you please consider this?
+Hi Sai,
 
-I pulled this, and then immediately unpulled.
+On 3/11/2020 11:22 AM, Sai Praneeth Prakhya wrote:
+> Hi Reinette,
+> 
+> On Wed, 2020-03-11 at 11:06 -0700, Reinette Chatre wrote:
+>> Hi Sai,
+>>
+>> On 3/9/2020 3:51 PM, Prakhya, Sai Praneeth wrote:
+>>>> -----Original Message-----
+>>>> From: Reinette Chatre <reinette.chatre@intel.com>
+>>>> Sent: Monday, March 9, 2020 3:34 PM
+>>>
+>>> [SNIP]
+>>>
+>>>>> That's a good point and makes sense to me. I think we could fix it in
+>>>>> two ways 1. grep for strings in dmesg but that will still leave
+>>>>> ambiguity in deciding b/w mbm and cqm because kernel prints "resctrl:
+>>>>> L3
+>>>> monitoring detected" for both the features 2. Check in "info" directory
+>>>>> 	a. For cat_l3, we could search for info/L3
+>>>>> 	b. For mba, we could search for info/MB
+>>>>> 	c. For cqm and mbm, we could search for specified string in
+>>>>> info/L3_MON/mon_features
+>>>>>
+>>>>> I think option 2 might be better because it can handle all cases,
+>>>>> please let me
+>>>> know what you think.
+>>>>
+>>>> I agree. For the reasons you mention and also that (1) may not be
+>>>> possible if the
+>>>> loglevel prevents those lines from being printed.
+>>>
+>>> Makes sense. I will work on the fix.
+>>
+>> One more note about this ... from what I can tell the test for a feature
+>> currently fails if the platform does not support the feature. Would it
+>> be possible to just skip the test in this case instead?
+> 
+> That's because the output of the test should be just "ok" or "not ok".
 
-Most (all?) of the commits have been committed basically minutes
-before you sent the pull request.
+The output could be something like:
 
-That's simply not acceptable. Not when we're in late rc, and with
-hundreds of lines of changes, and when there is no explanation for a
-late pull request that was very very recently generated.
+ok MBA # SKIP MBA is not supported
 
-                Linus
+> I can change it to something like "# Skip <test_name> because platform doesn't
+> support the feature", but not really sure if it complies with TAP 13 protocol.
+
+Please consider the "skip" directive at
+https://testanything.org/tap-version-13-specification.html
+
+Reinette
+
 
