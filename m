@@ -3,90 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CE6C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB66C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D2620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80D020873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgCKOCD (ORCPT
+        id S1729790AbgCKOC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:02:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58686 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729646AbgCKOCC (ORCPT
+        Wed, 11 Mar 2020 10:02:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35434 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729646AbgCKOC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:02:02 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 31DA5295FF6;
-        Wed, 11 Mar 2020 14:02:01 +0000 (GMT)
-Date:   Wed, 11 Mar 2020 15:01:58 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: Re: linux-next: build failure after merge of the nand tree
-Message-ID: <20200311150158.7481ffaa@collabora.com>
-In-Reply-To: <20200311111041.2dd477f5@xps13>
-References: <20200311131616.41e728a1@canb.auug.org.au>
-        <20200311111041.2dd477f5@xps13>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 11 Mar 2020 10:02:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 7so1274673pgr.2;
+        Wed, 11 Mar 2020 07:02:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KLtJmXhCIzrNkvAdjsvCjhryZc8RxSTUaj1Utezcg4w=;
+        b=Ul/Qi53HauxzhwgPCTYwXJ5mV+gpqp+w7OlTlqBFJLkGfD4XnD0PRqpyAZxsCFimZI
+         H6I3+d3M3K5i6dxVBQfMMPzAKrZWUW2MM+TNS0e9jHUU/h9NHfuDAxOO/u7grHRFQ85K
+         Hw4v37vXOntYmAiwAJx2ixbZQjKiHHDC9cltftZC7t8AV2EymBhIWC/DBfAqRJEkO58B
+         EDNdnChnZgmLgS4xzjbJ8kyEf1c3DZILjz0BbVr29S+c7X4xKsj0u1SIYyMGEHqGtPI4
+         zuL7S4/iIxDssk7xrNY5aiLnPvCfyuWeX4LUY9qJBb5WmLx8Ra3cVVihEDJWTOxbFq76
+         qLZA==
+X-Gm-Message-State: ANhLgQ2Pd0007nsL8qlkIrbOlKwtT4fxKQ0Ey223IdPk6G2XDGx7lbjj
+        HgyBZwCxL1t0sPrKFfM2cvu5d7M1
+X-Google-Smtp-Source: ADFU+vsM1mSTO9fsERSzVPJY4Zav1t/67hGUP2jF0REJxK+KfcAyl4/qSyv2hDMWOAKT7jFhIhr87Q==
+X-Received: by 2002:a63:af58:: with SMTP id s24mr3006593pgo.15.1583935377149;
+        Wed, 11 Mar 2020 07:02:57 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:af99:b4cf:6b17:1075? ([2601:647:4000:d7:af99:b4cf:6b17:1075])
+        by smtp.gmail.com with ESMTPSA id 63sm11193597pfx.132.2020.03.11.07.02.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 07:02:55 -0700 (PDT)
+Subject: Re: [EXT] RE: [PATCH 0/1] Revert "scsi: ufs: Let the SCSI core
+ allocate per-command UFS data"
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        "huobean@gmail.com" <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200311112921.29031-1-beanhuo@micron.com>
+ <SN6PR04MB46404175998962B4FA575824FCFC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <BN7PR08MB5684DBAD57C95A40CB62B24ADBFC0@BN7PR08MB5684.namprd08.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <cfa5b0c8-1ca6-5d1c-591b-67e783d979fd@acm.org>
+Date:   Wed, 11 Mar 2020 07:02:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <BN7PR08MB5684DBAD57C95A40CB62B24ADBFC0@BN7PR08MB5684.namprd08.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 11:10:41 +0100
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On 3/11/20 5:53 AM, Bean Huo (beanhuo) wrote:
+> Hi, Avri
+> Do you want to revert all or two (scsi: ufs: Let the SCSI core allocate per-command UFS data,   scsi: core: Introduce {init,exit}_cmd_priv() )?
+> Because the patches "scsi: ufs: Simplify two tests" and  "scsi: ufs: Introduce ufshcd_init_lrb()" are ok to me.
+> No problem keeping them. Just this one "scsi: core: Introduce {init,exit}_cmd_priv()" is not necessary, since no drivers it now.
 
-> Hi Stephen,
-> 
-> + Janusz, ams-delta patch author
-> 
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote on Wed, 11 Mar 2020
-> 13:16:16 +1100:
-> 
-> > Hi all,
-> > 
-> > After merging the nand tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:  
-> 
-> Thanks for the report.
-> 
-> > 
-> > FATAL: modpost: drivers/mtd/nand/raw/ams-delta: sizeof(struct of_device_id)=200 is not a modulo of the size of section __mod_of__<identifier>_device_table=64.
-> > Fix definition of struct of_device_id in mod_devicetable.h
-> > 
-> > Maybe caused by commit
-> > 
-> >   966d708517e3 ("mtd: rawnand: ams-delta: Add module device tables")
-> > 
-> > But I have no idea why.
-> >   
-> 
-> This is strange. I think this is caused because of the addition of a
-> second device table with the same "of" scope. Changing one of them to
-> "platform" (the legacy one) seems to fix the problem.
-> 
-> Janusz, Is the following change okay for you? I would like to apply it
-> today so that linux-next get's updated with the 50+ stack of new
-> patches by tomorrow.
+I agree with Bean. The other patches from the same series are small and 
+easy to review. The SCSI core patch has been tested with other SCSI LLDs.
 
-Yep, this change looks good to me, I don't think you need to wait for
-Janusz' ack to merge it.
-
-Regards,
-
-Boris
+Bart.
