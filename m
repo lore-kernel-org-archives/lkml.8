@@ -2,140 +2,404 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2990C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1845DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51674206E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/gN7a7Y"
+	by mail.kernel.org (Postfix) with ESMTP id 8C5D820575
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387521AbgCKVkb (ORCPT
+        id S2387539AbgCKVkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:40:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40070 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgCKVk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:40:27 -0400
-Received: by mail-pf1-f193.google.com with SMTP id l184so2079345pfl.7;
-        Wed, 11 Mar 2020 14:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2mKIdIwg8KbHDu6w9UViWI8wiDkB90wIBvMjiVFqAyQ=;
-        b=O/gN7a7YMsTVWYeebxtw6UFl2ysPqYiwb05g+kFPmwOwkZ8C3w5G0+81H5koXpeVIn
-         y71X4/DXfMCVv/dzGGXukVb9XxXOL/4JDN6rhF2xqe432/RXjYQRxsgEe1PFdIygRqyU
-         A7QBzi4wpxGSHNFfdoNqs7TaCB5Q3l4LVnPy53bc2bWCy6ZaF8r8fw6gC5M2xLSBgTOv
-         15txXiaIDt3Q1xqPrB1JWFada2jxc67nVoURXDlOqiObsx+j7ekgZ+Ekqona+BLRSxNz
-         U4ByFX1t7HzwbRlY6arBfgfbwUYuHj2I2nbHiRzn2rhwUwhqvAOL2BQ9EF7y95AfpGiz
-         dj5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=2mKIdIwg8KbHDu6w9UViWI8wiDkB90wIBvMjiVFqAyQ=;
-        b=PLoq8jbgWU50Ogyv0YBbxZgvNTxsLlvh6RnUH7j0Ip5d6wKWFZ12BHpjL9UzJUGVD4
-         y8T3Kbuks+5UmDHGfGvYttTpZBmJfv1zSqBeauhGji1uY5KXdP9HshtGD1YItxAaFO6X
-         9T33Yh9YkDao4ioSZY+W4pcvQ44ysEoGUb/FBy4mC3G8dMFXnO5O0bms7hmkdyx13pku
-         mBvjRidY47fJCOs0gNss5SuNSLsT0gLgq99lDpHLvYI9A6oZQm9EtdLRV0od+RCYEHdF
-         K2xoTh/Z0KbFsfvoAbRlja4oE9QKrpTuwGKaoyldAjilq6QXm29IsaeYFKiwZOe7wBYb
-         Y+sg==
-X-Gm-Message-State: ANhLgQ33BDhD/Y2aw8E85qFTMMNprzuRv1XMxBWXW667MqrGcfz8wRNg
-        SbMrXrlx+93KAsAWpGcv3LRu5d2v
-X-Google-Smtp-Source: ADFU+vs+syx8lAXBC3VzYMZ5HX5bvjZ4r3AsJmWPFueBzbCJrQKe5zbI5hJ9FvNZnDBllvlfw+oeFA==
-X-Received: by 2002:a63:a35c:: with SMTP id v28mr4822154pgn.251.1583962825280;
-        Wed, 11 Mar 2020 14:40:25 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q13sm51155040pgh.30.2020.03.11.14.40.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 14:40:24 -0700 (PDT)
-Subject: Re: [PATCH 5.5 000/190] 5.5.9-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 11 Mar 2020 17:40:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46504 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387514AbgCKVkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 17:40:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AB7FCAD27;
+        Wed, 11 Mar 2020 21:40:28 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 50F76E0C0A; Wed, 11 Mar 2020 22:40:28 +0100 (CET)
+Message-Id: <4fda0f27da984254c3df3c9e58751134967036c9.1583962006.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1583962006.git.mkubecek@suse.cz>
+References: <cover.1583962006.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 05/15] ethtool: set netdev features with FEATURES_SET
+ request
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200311181532.692464938@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <1b23a866-f9ac-a358-c8f4-a7535eae4c4f@roeck-us.net>
-Date:   Wed, 11 Mar 2020 14:40:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200311181532.692464938@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Mar 2020 22:40:28 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 11:19 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.9 release.
-> There are 190 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 13 Mar 2020 18:14:21 +0000.
-> Anything received after that time might be too late.
-> 
+Implement FEATURES_SET netlink request to set network device features.
+These are traditionally set using ETHTOOL_SFEATURES ioctl request.
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 423 pass: 423 fail: 0
+Actual change is subject to netdev_change_features() sanity checks so that
+it can differ from what was requested. Unlike with most other SET requests,
+in addition to error code and optional extack, kernel provides an optional
+reply message (ETHTOOL_MSG_FEATURES_SET_REPLY) in the same format but with
+different semantics: information about difference between user request and
+actual result and difference between old and new state of dev->features.
+This reply message can be suppressed by setting ETHTOOL_FLAG_OMIT_REPLY
+flag in request header.
 
-Guenter
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ Documentation/networking/ethtool-netlink.rst |  56 +++++-
+ include/uapi/linux/ethtool_netlink.h         |   2 +
+ net/ethtool/features.c                       | 169 +++++++++++++++++++
+ net/ethtool/netlink.c                        |   5 +
+ net/ethtool/netlink.h                        |   1 +
+ 5 files changed, 224 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index 5713abf98534..d6706c4aa972 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -190,6 +190,7 @@ Userspace to kernel:
+   ``ETHTOOL_MSG_WOL_GET``               get wake-on-lan settings
+   ``ETHTOOL_MSG_WOL_SET``               set wake-on-lan settings
+   ``ETHTOOL_MSG_FEATURES_GET``          get device features
++  ``ETHTOOL_MSG_FEATURES_SET``          set device features
+   ===================================== ================================
+ 
+ Kernel to userspace:
+@@ -206,6 +207,7 @@ Kernel to userspace:
+   ``ETHTOOL_MSG_WOL_GET_REPLY``         wake-on-lan settings
+   ``ETHTOOL_MSG_WOL_NTF``               wake-on-lan settings notification
+   ``ETHTOOL_MSG_FEATURES_GET_REPLY``    device features
++  ``ETHTOOL_MSG_FEATURES_SET_REPLY``    optional reply to FEATURES_SET
+   ===================================== =================================
+ 
+ ``GET`` requests are sent by userspace applications to retrieve device
+@@ -554,6 +556,42 @@ provide all names when using verbose bitmap format), the other three use no
+ mask (simple bit lists).
+ 
+ 
++FEATURES_SET
++============
++
++Request to set netdev features like ``ETHTOOL_SFEATURES`` ioctl request.
++
++Request contents:
++
++  ====================================  ======  ==========================
++  ``ETHTOOL_A_FEATURES_HEADER``         nested  request header
++  ``ETHTOOL_A_FEATURES_WANTED``         bitset  requested features
++  ====================================  ======  ==========================
++
++Kernel response contents:
++
++  ====================================  ======  ==========================
++  ``ETHTOOL_A_FEATURES_HEADER``         nested  reply header
++  ``ETHTOOL_A_FEATURES_WANTED``         bitset  diff wanted vs. result
++  ``ETHTOOL_A_FEATURES_ACTIVE``         bitset  diff old vs. new active
++  ====================================  ======  ==========================
++
++Request constains only one bitset which can be either value/mask pair (request
++to change specific feature bits and leave the rest) or only a value (request
++to set all features to specified set).
++
++As request is subject to netdev_change_features() sanity checks, optional
++kernel reply (can be suppressed by ``ETHTOOL_FLAG_OMIT_REPLY`` flag in request
++header) informs client about the actual result. ``ETHTOOL_A_FEATURES_WANTED``
++reports the difference between client request and actual result: mask consists
++of bits which differ between requested features and result (dev->features
++after the operation), value consists of values of these bits in the request
++(i.e. negated values from resulting features). ``ETHTOOL_A_FEATURES_ACTIVE``
++reports the difference between old and new dev->features: mask consists of
++bits which have changed, values are their values in new dev->features (after
++the operation).
++
++
+ Request translation
+ ===================
+ 
+@@ -585,30 +623,30 @@ have their netlink replacement yet.
+   ``ETHTOOL_GPAUSEPARAM``             n/a
+   ``ETHTOOL_SPAUSEPARAM``             n/a
+   ``ETHTOOL_GRXCSUM``                 ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SRXCSUM``                 n/a
++  ``ETHTOOL_SRXCSUM``                 ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GTXCSUM``                 ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_STXCSUM``                 n/a
++  ``ETHTOOL_STXCSUM``                 ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GSG``                     ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SSG``                     n/a
++  ``ETHTOOL_SSG``                     ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_TEST``                    n/a
+   ``ETHTOOL_GSTRINGS``                ``ETHTOOL_MSG_STRSET_GET``
+   ``ETHTOOL_PHYS_ID``                 n/a
+   ``ETHTOOL_GSTATS``                  n/a
+   ``ETHTOOL_GTSO``                    ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_STSO``                    n/a
++  ``ETHTOOL_STSO``                    ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GPERMADDR``               rtnetlink ``RTM_GETLINK``
+   ``ETHTOOL_GUFO``                    ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SUFO``                    n/a
++  ``ETHTOOL_SUFO``                    ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GGSO``                    ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SGSO``                    n/a
++  ``ETHTOOL_SGSO``                    ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GFLAGS``                  ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SFLAGS``                  n/a
++  ``ETHTOOL_SFLAGS``                  ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GPFLAGS``                 n/a
+   ``ETHTOOL_SPFLAGS``                 n/a
+   ``ETHTOOL_GRXFH``                   n/a
+   ``ETHTOOL_SRXFH``                   n/a
+   ``ETHTOOL_GGRO``                    ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SGRO``                    n/a
++  ``ETHTOOL_SGRO``                    ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GRXRINGS``                n/a
+   ``ETHTOOL_GRXCLSRLCNT``             n/a
+   ``ETHTOOL_GRXCLSRULE``              n/a
+@@ -623,7 +661,7 @@ have their netlink replacement yet.
+   ``ETHTOOL_GRXFHINDIR``              n/a
+   ``ETHTOOL_SRXFHINDIR``              n/a
+   ``ETHTOOL_GFEATURES``               ``ETHTOOL_MSG_FEATURES_GET``
+-  ``ETHTOOL_SFEATURES``               n/a
++  ``ETHTOOL_SFEATURES``               ``ETHTOOL_MSG_FEATURES_SET``
+   ``ETHTOOL_GCHANNELS``               n/a
+   ``ETHTOOL_SCHANNELS``               n/a
+   ``ETHTOOL_SET_DUMP``                n/a
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index d0cc7a0334c8..6f7aaa6b7f42 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -25,6 +25,7 @@ enum {
+ 	ETHTOOL_MSG_WOL_GET,
+ 	ETHTOOL_MSG_WOL_SET,
+ 	ETHTOOL_MSG_FEATURES_GET,
++	ETHTOOL_MSG_FEATURES_SET,
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_MSG_USER_CNT,
+@@ -45,6 +46,7 @@ enum {
+ 	ETHTOOL_MSG_WOL_GET_REPLY,
+ 	ETHTOOL_MSG_WOL_NTF,
+ 	ETHTOOL_MSG_FEATURES_GET_REPLY,
++	ETHTOOL_MSG_FEATURES_SET_REPLY,
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_MSG_KERNEL_CNT,
+diff --git a/net/ethtool/features.c b/net/ethtool/features.c
+index 9814d5aa6f77..a12e73db4452 100644
+--- a/net/ethtool/features.c
++++ b/net/ethtool/features.c
+@@ -132,3 +132,172 @@ const struct ethnl_request_ops ethnl_features_request_ops = {
+ 	.reply_size		= features_reply_size,
+ 	.fill_reply		= features_fill_reply,
+ };
++
++/* FEATURES_SET */
++
++static const struct nla_policy
++features_set_policy[ETHTOOL_A_FEATURES_MAX + 1] = {
++	[ETHTOOL_A_FEATURES_UNSPEC]	= { .type = NLA_REJECT },
++	[ETHTOOL_A_FEATURES_HEADER]	= { .type = NLA_NESTED },
++	[ETHTOOL_A_FEATURES_HW]		= { .type = NLA_REJECT },
++	[ETHTOOL_A_FEATURES_WANTED]	= { .type = NLA_NESTED },
++	[ETHTOOL_A_FEATURES_ACTIVE]	= { .type = NLA_REJECT },
++	[ETHTOOL_A_FEATURES_NOCHANGE]	= { .type = NLA_REJECT },
++};
++
++static void ethnl_features_to_bitmap(unsigned long *dest, netdev_features_t val)
++{
++	const unsigned int words = BITS_TO_LONGS(NETDEV_FEATURE_COUNT);
++	unsigned int i;
++
++	bitmap_zero(dest, NETDEV_FEATURE_COUNT);
++	for (i = 0; i < words; i++)
++		dest[i] = (unsigned long)(val >> (i * BITS_PER_LONG));
++}
++
++static netdev_features_t ethnl_bitmap_to_features(unsigned long *src)
++{
++	const unsigned int nft_bits = sizeof(netdev_features_t) * BITS_PER_BYTE;
++	const unsigned int words = BITS_TO_LONGS(NETDEV_FEATURE_COUNT);
++	netdev_features_t ret = 0;
++	unsigned int i;
++
++	for (i = 0; i < words; i++)
++		ret |= (netdev_features_t)(src[i]) << (i * BITS_PER_LONG);
++	ret &= ~(netdev_features_t)0 >> (nft_bits - NETDEV_FEATURE_COUNT);
++	return ret;
++}
++
++static int features_send_reply(struct net_device *dev, struct genl_info *info,
++			       const unsigned long *wanted,
++			       const unsigned long *wanted_mask,
++			       const unsigned long *active,
++			       const unsigned long *active_mask, bool compact)
++{
++	struct sk_buff *rskb;
++	void *reply_payload;
++	int reply_len = 0;
++	int ret;
++
++	reply_len = ethnl_reply_header_size();
++	ret = ethnl_bitset_size(wanted, wanted_mask, NETDEV_FEATURE_COUNT,
++				netdev_features_strings, compact);
++	if (ret < 0)
++		goto err;
++	reply_len += ret;
++	ret = ethnl_bitset_size(active, active_mask, NETDEV_FEATURE_COUNT,
++				netdev_features_strings, compact);
++	if (ret < 0)
++		goto err;
++	reply_len += ret;
++
++	ret = -ENOMEM;
++	rskb = ethnl_reply_init(reply_len, dev, ETHTOOL_MSG_FEATURES_SET_REPLY,
++				ETHTOOL_A_FEATURES_HEADER, info,
++				&reply_payload);
++	if (!rskb)
++		goto err;
++
++	ret = ethnl_put_bitset(rskb, ETHTOOL_A_FEATURES_WANTED, wanted,
++			       wanted_mask, NETDEV_FEATURE_COUNT,
++			       netdev_features_strings, compact);
++	if (ret < 0)
++		goto nla_put_failure;
++	ret = ethnl_put_bitset(rskb, ETHTOOL_A_FEATURES_ACTIVE, active,
++			       active_mask, NETDEV_FEATURE_COUNT,
++			       netdev_features_strings, compact);
++	if (ret < 0)
++		goto nla_put_failure;
++
++	genlmsg_end(rskb, reply_payload);
++	ret = genlmsg_reply(rskb, info);
++	return ret;
++
++nla_put_failure:
++	nlmsg_free(rskb);
++	WARN_ONCE(1, "calculated message payload length (%d) not sufficient\n",
++		  reply_len);
++err:
++	GENL_SET_ERR_MSG(info, "failed to send reply message");
++	return ret;
++}
++
++int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
++{
++	DECLARE_BITMAP(wanted_diff_mask, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(active_diff_mask, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(old_active, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(new_active, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(req_wanted, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(req_mask, NETDEV_FEATURE_COUNT);
++	struct nlattr *tb[ETHTOOL_A_FEATURES_MAX + 1];
++	struct ethnl_req_info req_info = {};
++	struct net_device *dev;
++	int ret;
++
++	ret = nlmsg_parse(info->nlhdr, GENL_HDRLEN, tb,
++			  ETHTOOL_A_FEATURES_MAX, features_set_policy,
++			  info->extack);
++	if (ret < 0)
++		return ret;
++	if (!tb[ETHTOOL_A_FEATURES_WANTED])
++		return -EINVAL;
++	ret = ethnl_parse_header_dev_get(&req_info,
++					 tb[ETHTOOL_A_FEATURES_HEADER],
++					 genl_info_net(info), info->extack,
++					 true);
++	if (ret < 0)
++		return ret;
++	dev = req_info.dev;
++
++	rtnl_lock();
++	ethnl_features_to_bitmap(old_active, dev->features);
++	ret = ethnl_parse_bitset(req_wanted, req_mask, NETDEV_FEATURE_COUNT,
++				 tb[ETHTOOL_A_FEATURES_WANTED],
++				 netdev_features_strings, info->extack);
++	if (ret < 0)
++		goto out_rtnl;
++	if (ethnl_bitmap_to_features(req_mask) & ~NETIF_F_ETHTOOL_BITS) {
++		GENL_SET_ERR_MSG(info, "attempt to change non-ethtool features");
++		ret = -EINVAL;
++		goto out_rtnl;
++	}
++
++	/* set req_wanted bits not in req_mask from old_active */
++	bitmap_and(req_wanted, req_wanted, req_mask, NETDEV_FEATURE_COUNT);
++	bitmap_andnot(new_active, old_active, req_mask, NETDEV_FEATURE_COUNT);
++	bitmap_or(req_wanted, new_active, req_wanted, NETDEV_FEATURE_COUNT);
++	if (bitmap_equal(req_wanted, old_active, NETDEV_FEATURE_COUNT)) {
++		ret = 0;
++		goto out_rtnl;
++	}
++
++	dev->wanted_features = ethnl_bitmap_to_features(req_wanted);
++	__netdev_update_features(dev);
++	ethnl_features_to_bitmap(new_active, dev->features);
++
++	ret = 0;
++	if (!(req_info.flags & ETHTOOL_FLAG_OMIT_REPLY)) {
++		bool compact = req_info.flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++
++		bitmap_xor(wanted_diff_mask, req_wanted, new_active,
++			   NETDEV_FEATURE_COUNT);
++		bitmap_xor(active_diff_mask, old_active, new_active,
++			   NETDEV_FEATURE_COUNT);
++		bitmap_and(wanted_diff_mask, wanted_diff_mask, req_mask,
++			   NETDEV_FEATURE_COUNT);
++		bitmap_and(req_wanted, req_wanted, wanted_diff_mask,
++			   NETDEV_FEATURE_COUNT);
++		bitmap_and(new_active, new_active, active_diff_mask,
++			   NETDEV_FEATURE_COUNT);
++
++		ret = features_send_reply(dev, info, req_wanted,
++					  wanted_diff_mask, new_active,
++					  active_diff_mask, compact);
++	}
++
++out_rtnl:
++	rtnl_unlock();
++	dev_put(dev);
++	return ret;
++}
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index e451a75e9577..757ea3fc98a0 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -703,6 +703,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.dumpit	= ethnl_default_dumpit,
+ 		.done	= ethnl_default_done,
+ 	},
++	{
++		.cmd	= ETHTOOL_MSG_FEATURES_SET,
++		.flags	= GENL_UNS_ADMIN_PERM,
++		.doit	= ethnl_set_features,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index be2325ea8493..135836201e89 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -343,5 +343,6 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info);
++int ethnl_set_features(struct sk_buff *skb, struct genl_info *info);
+ 
+ #endif /* _NET_ETHTOOL_NETLINK_H */
+-- 
+2.25.1
+
