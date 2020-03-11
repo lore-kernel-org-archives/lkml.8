@@ -2,136 +2,257 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D43C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73705C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438C521655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rG2u9V0h"
+	by mail.kernel.org (Postfix) with ESMTP id 3A7BE2192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583910885;
+	bh=iXz4q2qWQPcHO89hOxSWWFxi1Lqa7VY6OPTeHFNILqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WQkhxW8pfPWAIpsw5cg5UvVseye6pOTG4vyedlbcIi07cfrh/ixCocxcRUClXicet
+	 eCPGHW30chHIUKnSnJIVZr0QXJ/IYuUySDMauOPHd256BNTXecoPxOKVOxSBc5Xkat
+	 eed64vuMq0dDy4zqt7PlDUzUkQL1iMWR7Mue25aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgCKHNb (ORCPT
+        id S1728359AbgCKHOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:13:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33952 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgCKHNb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:13:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B7DLYV041789;
-        Wed, 11 Mar 2020 02:13:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583910801;
-        bh=0YjQNOjI/Uoy3cXncI5ujknDbjJOtE5Hk2GYMVlQCQs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rG2u9V0hx4fwf4Me46T2rO8mG0A0p4eYL8Q9eC3UOXEqGdBEZ7CWmEyAGfhCummQK
-         O57pUX7YBHAp0IkjMUHCt2W/837ePuoUSuBvI1bNebnm6ehWFhqvARK6xjtHlHhds+
-         U/vnxooB/canxfgUN3HQX2VsKAPqwVRvMXL5wTI8=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B7DL4d105166
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Mar 2020 02:13:21 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Mar 2020 02:13:20 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Mar 2020 02:13:20 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02B7DIl4041900;
-        Wed, 11 Mar 2020 02:13:18 -0500
-Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-CC:     <hch@lst.de>, <robh+dt@kernel.org>, <nm@ti.com>, <nsekhar@ti.com>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200310115309.31354-1-rogerq@ti.com>
- <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
- <20200310154829.GS37466@atomide.com>
- <b405ca5e-4abd-7ddc-ff76-560b6c7abf86@arm.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <80fbd54e-c2c6-8580-7dcb-cd80119ed3d0@ti.com>
-Date:   Wed, 11 Mar 2020 09:13:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 03:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbgCKHOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:14:44 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03EDA21655;
+        Wed, 11 Mar 2020 07:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583910882;
+        bh=iXz4q2qWQPcHO89hOxSWWFxi1Lqa7VY6OPTeHFNILqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u/KBCjFuijTc3Cdpw6UiQcYun3vjlUiGR+ejoZxaBVjoTMYTeIMD4zEYaxm+nH9DR
+         BQUC1RgzZe28TJlhiBJEBHl6BvuE19pF7sTZXBJoVTnc5j1TvQWO42XYaS2iYQsPAo
+         seiVA4zWvOHOWYZoHQhf61zJRzCdeVheTrLwHzi8=
+Date:   Wed, 11 Mar 2020 15:14:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anson.Huang@nxp.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com
+Subject: Re: [PATCH] ARM64: dts: imx8m: fix aips dts node
+Message-ID: <20200311071435.GK29269@dragon>
+References: <1582602242-28577-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <b405ca5e-4abd-7ddc-ff76-560b6c7abf86@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582602242-28577-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/03/2020 18:16, Robin Murphy wrote:
-> On 10/03/2020 3:48 pm, Tony Lindgren wrote:
->> * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
->>> On 10/03/2020 13:53, Roger Quadros wrote:
->>>> The L3 interconnect can access only 32-bits of address.
->>>> Add the dma-ranges property to reflect this limit.
->>>>
->>>> This will ensure that no device under L3 is
->>>> given > 32-bit address for DMA.
->>>>
->>>> Issue was observed only with SATA on DRA7-EVM with 4GB RAM
->>>> and CONFIG_ARM_LPAE enabled. This is because the controller
->>>> can perform 64-bit DMA and was setting the dma_mask to 64-bit.
->>>>
->>>> Setting the correct bus_dma_limit fixes the issue.
->>>
->>> This seems kind of messy to modify almost every DT node because of this....
->>> Are you sure this is the only way to get it done? No way to modify the sata
->>> node only which is impacted somehow?
->>>
->>> Also, what if you just pass 0xffffffff to the dma-ranges property? That
->>> would avoid modifying every node I guess.
->>
->> Also, I think these interconnects are not limited to 32-bit access.
->> So yeah I too would prefer a top level dma-ranges property assuming
->> that works.
->>
->> I guess there dma-ranges should not be 0xffffffff though if
->> limited to 2GB :)
-
-Right, and the code expects it to not look like a mask.
- From of_dma_configure()
-
-         ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-	..
-                 if (size & 1) {
-                        dev_warn(dev, "Invalid size 0x%llx for dma-range\n",
-                                  size);
-                        size = size + 1;
-                 }
-
+On Tue, Feb 25, 2020 at 11:44:02AM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> It should work fine to just describe the Q3 and Q4 DDR regions as the DMA range, i.e.:
+> Per binding doc fsl,aips-bus.yaml, compatible and reg is
+> required. And for reg, the AIPS configuration space should be
+> used, not all the AIPS bus space.
 > 
->      ocp {
->          ...
->          dma-ranges = <0x80000000 0 0x80000000 0x80000000>;
->          ...
->      };
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 12 ++++++++----
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 16 ++++++++--------
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 12 ++++++------
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 12 ++++++++----
+>  4 files changed, 30 insertions(+), 22 deletions(-)
 > 
-> That would certainly be far less invasive :)
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index b3d0b29d7007..a4356d2047cd 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -227,7 +227,8 @@
+>  		ranges = <0x0 0x0 0x0 0x3e000000>;
+>  
+>  		aips1: bus@30000000 {
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
 
-This is brilliant! Thanks :)
+The binding doc says "fsl,aips-bus", not "fsl,aips".
 
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Shawn
+
+> +			reg = <0x301f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x30000000 0x30000000 0x400000>;
+> @@ -496,7 +497,8 @@
+>  		};
+>  
+>  		aips2: bus@30400000 {
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x305f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x30400000 0x30400000 0x400000>;
+> @@ -555,7 +557,8 @@
+>  		};
+>  
+>  		aips3: bus@30800000 {
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x309f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x30800000 0x30800000 0x400000>;
+> @@ -800,7 +803,8 @@
+>  		};
+>  
+>  		aips4: bus@32c00000 {
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x32df0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x32c00000 0x32c00000 0x400000>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> index f2775724377f..4848ce82f083 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> @@ -203,8 +203,8 @@
+>  		ranges = <0x0 0x0 0x0 0x3e000000>;
+>  
+>  		aips1: bus@30000000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x30000000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x301f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -401,8 +401,8 @@
+>  		};
+>  
+>  		aips2: bus@30400000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x30400000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x305f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -461,8 +461,8 @@
+>  		};
+>  
+>  		aips3: bus@30800000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x30800000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x309f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -707,8 +707,8 @@
+>  		};
+>  
+>  		aips4: bus@32c00000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x32c00000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x32df0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index 71b0c8f23693..eb67f56cdfe2 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -144,8 +144,8 @@
+>  		ranges = <0x0 0x0 0x0 0x3e000000>;
+>  
+>  		aips1: bus@30000000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x30000000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x301f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -309,8 +309,8 @@
+>  		};
+>  
+>  		aips2: bus@30400000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x30400000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x305f0000 0x400000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -369,8 +369,8 @@
+>  		};
+>  
+>  		aips3: bus@30800000 {
+> -			compatible = "simple-bus";
+> -			reg = <0x30800000 0x400000>;
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x309f0000 0x400000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 6a1e83922c71..07070464063d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -290,7 +290,8 @@
+>  		dma-ranges = <0x40000000 0x0 0x40000000 0xc0000000>;
+>  
+>  		bus@30000000 { /* AIPS1 */
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x301f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x30000000 0x30000000 0x400000>;
+> @@ -692,7 +693,8 @@
+>  		};
+>  
+>  		bus@30400000 { /* AIPS2 */
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x305f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x30400000 0x30400000 0x400000>;
+> @@ -751,7 +753,8 @@
+>  		};
+>  
+>  		bus@30800000 { /* AIPS3 */
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x309f0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x30800000 0x30800000 0x400000>,
+> @@ -1023,7 +1026,8 @@
+>  		};
+>  
+>  		bus@32c00000 { /* AIPS4 */
+> -			compatible = "simple-bus";
+> +			compatible = "fsl,aips", "simple-bus";
+> +			reg = <0x32df0000 0x10000>;
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x32c00000 0x32c00000 0x400000>;
+> -- 
+> 2.16.4
+> 
