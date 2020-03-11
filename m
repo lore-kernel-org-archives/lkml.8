@@ -1,133 +1,86 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
-Received: from retiisi.org.uk ([95.216.213.190]:42662 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729921AbgCKQRs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:17:48 -0400
-Date: Wed, 11 Mar 2020 18:16:54 +0200
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Robert Foss <robert.foss@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        ben.kao@intel.com, Rob Herring <robh+dt@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200311161654.GK2619@valkosipuli.retiisi.org.uk>
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-3-robert.foss@linaro.org>
- <20200310142652.GK1922688@smile.fi.intel.com>
- <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
- <20200311114848.GJ2619@valkosipuli.retiisi.org.uk>
- <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from mail.skyhub.de ([5.9.137.197]:40062 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730052AbgCKQRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 12:17:49 -0400
+Date: Wed, 11 Mar 2020 17:17:56 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Qian Cai <cai@lca.pw>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, elver@google.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH -next] x86/mm/pat: mark an intentional data race
+Message-ID: <20200311161756.GE3470@zn.tnic>
+References: <1581343816-6490-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
+In-Reply-To: <1581343816-6490-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, Mar 11, 2020 at 02:32:30PM +0100, Robert Foss wrote:
-> Hey Sakari,
-> 
-> On Wed, 11 Mar 2020 at 12:49, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> >
-> > Hi Robert,
-> >
-> > On Tue, Mar 10, 2020 at 04:55:20PM +0100, Robert Foss wrote:
-> > > Hi Andy,
-> > >
-> > > On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
-> > > > > Add devicetree match table, and enable ov8856_probe()
-> > > > > to initialize power, clocks and reset pins.
-> > > >
-> > > > ...
-> > > >
-> > > > > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
-> > > >
-> > > > Use ARRAY_SIZE() directly.
-> > >
-> > > Ack.
-> > >
-> > > >
-> > > > Have you seen Sakari's comments?
-> > > > Sakari, do I have déją vu or you indeed commented this driver?
-> > >
-> > > Yes, I may have missed some part of it, so please tell me if I have.
-> > >
-> > > There is a patchset floating around that implements a larger chunk of
-> > > functionality,
-> > > including a couple of new modes. This is based on that series.
-> >
-> > Please see earlier comments given against an earlier variant of this set.
-> > They're on LMML.
-> >
-> > >
-> > > >
-> > > > ...
-> > > >
-> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > > >
-> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
-> > > >
-> > > > Yes, seems this one is inverted.
-> > > >
-> > > > ...
-> > > >
-> > > > > +{
-> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > > > > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > > > > +     clk_disable_unprepare(ov8856->xvclk);
-> > > > > +}
-> > > > > +
-> > > > > +
-> > > >
-> > > > One blank line is enough.
-> > > >
-> > > > ...
-> > > >
-> > > > > +     ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> > > > > +     if (IS_ERR(ov8856->xvclk)) {
-> > > > > +             dev_err(&client->dev, "failed to get xvclk\n");
-> > > > > +             return -EINVAL;
-> > > > > +     }
-> > > >
-> > > > Previously it worked without clock provider, now you make a dependency.
-> > > >
-> > > > This won't work.
-> > >
-> > > So the ideal behavior would be to only use the xclk if it is provided?
-> >
-> > See e.g. the smiapp driver on how to do this so it continues to work on
-> > ACPI.
-> 
-> Thanks for the pointer!
-> 
-> >
-> > I think it'd be also appropriate to add the usleep() after lifting reset
-> > only if the reset GPIO is defined for the device.
-> 
-> Ack
++ Paul.
 
-On second thought, that probably applies if any of the resources needed for
-powering the device on are defined. It could be that there's no reset GPIO
-but a regulator is still there, in which case a delay is needed.
+On Mon, Feb 10, 2020 at 09:10:16AM -0500, Qian Cai wrote:
+> cpa_4k_install could be accessed concurrently as noticed by KCSAN,
+> 
+> read to 0xffffffffaa59a000 of 8 bytes by interrupt on cpu 7:
+> cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+> __change_page_attr+0x10cf/0x1840 arch/x86/mm/pat/set_memory.c:1514
+> __change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+> __set_pages_np+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2148
+> __kernel_map_pages+0xb0/0xc8 arch/x86/mm/pat/set_memory.c:2178
+> kernel_map_pages include/linux/mm.h:2719 [inline] <snip>
+> 
+> write to 0xffffffffaa59a000 of 8 bytes by task 1 on cpu 6:
+> cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+> __change_page_attr+0x10ea/0x1840 arch/x86/mm/pat/set_memory.c:1514
+> __change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+> __set_pages_p+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2129
+> __kernel_map_pages+0x2e/0xc8 arch/x86/mm/pat/set_memory.c:2176
+> kernel_map_pages include/linux/mm.h:2719 [inline] <snip>
+> 
+> Both accesses are due to the same "cpa_4k_install++" in
+> cpa_inc_4k_install. A data race here could be potentially undesirable:
+> depending on compiler optimizations or how x86 executes a non-LOCK'd
+> increment, it may lose increments, corrupt the counter, etc. Since this
+> counter only seems to be used for printing some stats, this data race
+> itself is unlikely to cause harm to the system though. Thus, mark this
+> intentional data race using the data_race() marco.
+> 
+> Suggested-by: Macro Elver <elver@google.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/x86/mm/pat/set_memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index c4aedd00c1ba..ea0b6df950ee 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -128,7 +128,7 @@ static inline void cpa_inc_2m_checked(void)
+>  
+>  static inline void cpa_inc_4k_install(void)
+>  {
+> -	cpa_4k_install++;
+> +	data_race(cpa_4k_install++);
+>  }
+>  
+>  static inline void cpa_inc_lp_sameprot(int level)
+> -- 
+
+Acked-by: Borislav Petkov <bp@suse.de>
 
 -- 
-Sakari Ailus
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
