@@ -2,142 +2,149 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC3C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA26C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F9B20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D6920575
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgCKVlX (ORCPT
+        id S1730010AbgCKVmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:41:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47116 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgCKVlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:41:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DF4EBAFAA;
-        Wed, 11 Mar 2020 21:41:18 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 91248E0C0A; Wed, 11 Mar 2020 22:41:18 +0100 (CET)
-Message-Id: <62ce4aad74028e861c4c8d28b663ee16549226e0.1583962006.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1583962006.git.mkubecek@suse.cz>
-References: <cover.1583962006.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 15/15] ethtool: add CHANNELS_NTF notification
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 22:41:18 +0100 (CET)
+        Wed, 11 Mar 2020 17:42:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40764 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729333AbgCKVmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 17:42:11 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jC977-0000vp-RB; Wed, 11 Mar 2020 22:42:05 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5FB171C2246;
+        Wed, 11 Mar 2020 22:42:05 +0100 (CET)
+Date:   Wed, 11 Mar 2020 21:42:05 -0000
+From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] x86: Select HARDIRQS_SW_RESEND on x86
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200123210242.53367-1-hdegoede@redhat.com>
+References: <20200123210242.53367-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Message-ID: <158396292503.28353.1070405680109587154.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Send ETHTOOL_MSG_CHANNELS_NTF notification whenever channel counts of
-a network device are modified using ETHTOOL_MSG_CHANNELS_SET netlink
-message or ETHTOOL_SCHANNELS ioctl request.
+The following commit has been merged into the irq/core branch of tip:
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+Commit-ID:     17e5888e4e180b45af7bafe7f3a86440d42717f3
+Gitweb:        https://git.kernel.org/tip/17e5888e4e180b45af7bafe7f3a86440d42717f3
+Author:        Hans de Goede <hdegoede@redhat.com>
+AuthorDate:    Thu, 23 Jan 2020 22:02:42 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 11 Mar 2020 22:39:39 +01:00
+
+x86: Select HARDIRQS_SW_RESEND on x86
+
+Modern x86 laptops are starting to use GPIO pins as interrupts more
+and more, e.g. touchpads and touchscreens have almost all moved away
+from PS/2 and USB to using I2C with a GPIO pin as interrupt.
+Modern x86 laptops also have almost all moved to using s2idle instead
+of using the system S3 ACPI power state to suspend.
+
+The Intel and AMD pinctrl drivers do not define irq_retrigger handlers
+for the irqchips they register, this is causing edge triggered interrupts
+which happen while suspended using s2idle to get lost.
+
+One specific example of this is the lid switch on some devices, lid
+switches used to be handled by the embedded-controller, but now the
+lid open/closed sensor is sometimes directly connected to a GPIO pin.
+On most devices the ACPI code for this looks like this:
+
+Method (_E00, ...) {
+	Notify (LID0, 0x80) // Status Change
+}
+
+Where _E00 is an ACPI event handler for changes on both edges of the GPIO
+connected to the lid sensor, this event handler is then combined with an
+_LID method which directly reads the pin. When the device is resumed by
+opening the lid, the GPIO interrupt will wake the system, but because the
+pinctrl irqchip doesn't have an irq_retrigger handler, the Notify will not
+happen. This is not a problem in the case the _LID method directly reads
+the GPIO, because the drivers/acpi/button.c code will call _LID on resume
+anyways.
+
+But some devices have an event handler for the GPIO connected to the
+lid sensor which looks like this:
+
+Method (_E00, ...) {
+	if (LID_GPIO == One)
+		LIDS = One
+	else
+		LIDS = Zero
+	Notify (LID0, 0x80) // Status Change
+}
+
+And the _LID method returns the cached LIDS value, since on open we
+do not re-run the edge-interrupt handler when we re-enable IRQS on resume
+(because of the missing irq_retrigger handler), _LID now will keep
+reporting closed, as LIDS was never changed to reflect the open status,
+this causes userspace to re-resume the laptop again shortly after opening
+the lid.
+
+The Intel GPIO controllers do not allow implementing irq_retrigger without
+emulating it in software, at which point we are better of just using the
+generic HARDIRQS_SW_RESEND mechanism rather then re-implementing software
+emulation for this separately in aprox. 14 different pinctrl drivers.
+
+Select HARDIRQS_SW_RESEND to solve the problem of edge-triggered GPIO
+interrupts not being re-triggered on resume when they were triggered during
+suspend (s2idle) and/or when they were the cause of the wakeup.
+
+This requires
+
+ 008f1d60fe25 ("x86/apic/vector: Force interupt handler invocation to irq context")
+ c16816acd086 ("genirq: Add protection against unsafe usage of generic_handle_irq()")
+
+to protect the APIC based interrupts from being wreckaged by a software
+resend.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200123210242.53367-1-hdegoede@redhat.com
+
 ---
- Documentation/networking/ethtool-netlink.rst | 1 +
- include/uapi/linux/ethtool_netlink.h         | 1 +
- net/ethtool/channels.c                       | 3 +++
- net/ethtool/ioctl.c                          | 6 +++++-
- net/ethtool/netlink.c                        | 2 ++
- 5 files changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 7df7476cf310..31a601cafa3f 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -220,6 +220,7 @@ Kernel to userspace:
-   ``ETHTOOL_MSG_RINGS_GET_REPLY``       ring sizes
-   ``ETHTOOL_MSG_RINGS_NTF``             ring sizes
-   ``ETHTOOL_MSG_CHANNELS_GET_REPLY``    channel counts
-+  ``ETHTOOL_MSG_CHANNELS_NTF``          channel counts
-   ===================================== =================================
- 
- ``GET`` requests are sent by userspace applications to retrieve device
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index f1384a8f3534..c7c7a1a550af 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -59,6 +59,7 @@ enum {
- 	ETHTOOL_MSG_RINGS_GET_REPLY,
- 	ETHTOOL_MSG_RINGS_NTF,
- 	ETHTOOL_MSG_CHANNELS_GET_REPLY,
-+	ETHTOOL_MSG_CHANNELS_NTF,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_KERNEL_CNT,
-diff --git a/net/ethtool/channels.c b/net/ethtool/channels.c
-index 412b6380766d..04d1a75a55c7 100644
---- a/net/ethtool/channels.c
-+++ b/net/ethtool/channels.c
-@@ -203,6 +203,9 @@ int ethnl_set_channels(struct sk_buff *skb, struct genl_info *info)
- 		}
- 
- 	ret = dev->ethtool_ops->set_channels(dev, &channels);
-+	if (ret < 0)
-+		goto out_ops;
-+	ethtool_notify(dev, ETHTOOL_MSG_CHANNELS_NTF, NULL);
- 
- out_ops:
- 	ethnl_ops_complete(dev);
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 06224a03139e..258840b19fb5 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -1649,6 +1649,7 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
- 	u16 from_channel, to_channel;
- 	u32 max_rx_in_use = 0;
- 	unsigned int i;
-+	int ret;
- 
- 	if (!dev->ethtool_ops->set_channels || !dev->ethtool_ops->get_channels)
- 		return -EOPNOTSUPP;
-@@ -1680,7 +1681,10 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
- 		if (xdp_get_umem_from_qid(dev, i))
- 			return -EINVAL;
- 
--	return dev->ethtool_ops->set_channels(dev, &channels);
-+	ret = dev->ethtool_ops->set_channels(dev, &channels);
-+	if (!ret)
-+		ethtool_notify(dev, ETHTOOL_MSG_CHANNELS_NTF, NULL);
-+	return ret;
- }
- 
- static int ethtool_get_pauseparam(struct net_device *dev, void __user *useraddr)
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index f61654b8f210..55c8ce4019d9 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -534,6 +534,7 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
- 	[ETHTOOL_MSG_FEATURES_NTF]	= &ethnl_features_request_ops,
- 	[ETHTOOL_MSG_PRIVFLAGS_NTF]	= &ethnl_privflags_request_ops,
- 	[ETHTOOL_MSG_RINGS_NTF]		= &ethnl_rings_request_ops,
-+	[ETHTOOL_MSG_CHANNELS_NTF]	= &ethnl_channels_request_ops,
- };
- 
- /* default notification handler */
-@@ -622,6 +623,7 @@ static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
- 	[ETHTOOL_MSG_FEATURES_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_PRIVFLAGS_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_RINGS_NTF]		= ethnl_default_notify,
-+	[ETHTOOL_MSG_CHANNELS_NTF]	= ethnl_default_notify,
- };
- 
- void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
--- 
-2.25.1
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea770..9128932 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -128,6 +128,7 @@ config X86
+ 	select GENERIC_GETTIMEOFDAY
+ 	select GENERIC_VDSO_TIME_NS
+ 	select GUP_GET_PTE_LOW_HIGH		if X86_PAE
++	select HARDIRQS_SW_RESEND
+ 	select HARDLOCKUP_CHECK_TIMESTAMP	if X86_64
+ 	select HAVE_ACPI_APEI			if ACPI
+ 	select HAVE_ACPI_APEI_NMI		if ACPI
