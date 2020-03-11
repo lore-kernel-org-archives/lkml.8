@@ -2,117 +2,147 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2830C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884A0C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAC921D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583908816;
-	bh=pmJS1KPAVu0tCjnfh13UknbuRkIWI610a6eXK2eKvFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zml6awGaytIs+tdboLqY2Q+DNRUd12/55+bxSNjdb2UG3DfAZFZ99u3qTZJp7UBkB
-	 wvVzX5VdTupetnTL8ffVDbA5vpCyN60PEsgqsfXVLa0DeDniSRHPXb8FRXRyg0TKFN
-	 42EsJkN0z8DuRv8jXanZtyO9XH9JL8ZfVU5GyLCY=
+	by mail.kernel.org (Postfix) with ESMTP id 5C6F021655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:41:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z0epLqAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgCKGkP (ORCPT
+        id S1728294AbgCKGlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:40:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgCKGkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:40:15 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 11 Mar 2020 02:41:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59748 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728126AbgCKGlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:41:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583908862; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=9Ma3v93cOhH+P2MvDLMRQOh7LMKfyPwnXpDIHPd4gMM=;
+ b=Z0epLqADKSkqpSakQ8XPh1W5xHwhffnP1TX3XZ+zNkkMhvb6DBrMWmcNYvy6BBUy16fH4iJs
+ mdkUBXGHgGlOCBnDxGtgC1EqAd5SkMJWBdOwzwjLbspOQgJpP4ydVu663BultMpAGA3gjdDB
+ xskbCnNtUYqt/ZZUKOaw45Xo0z8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6887fd.7f3e91b80030-smtp-out-n02;
+ Wed, 11 Mar 2020 06:41:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 41753C433D2; Wed, 11 Mar 2020 06:41:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E2DB2192A;
-        Wed, 11 Mar 2020 06:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583908814;
-        bh=pmJS1KPAVu0tCjnfh13UknbuRkIWI610a6eXK2eKvFU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=din59zveAKkT42o8gjyMV9c31EJn1iJ/B75t1hHffEOkhU4QFIcVZ6M7l40ltYyD0
-         4/axfTn//VT63Z/66gWFkte+SDZP2uiUoQdnywhYphWU3+2O7XRmpKd7YKwfnpVSew
-         hrKlx4q9/mJ8sfF1bHt4Mo7YHXlN+82wH0w214Wg=
-Date:   Wed, 11 Mar 2020 14:40:05 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        abel.vesa@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
-        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/4] clk: imx8mn: A53 core clock no need to be critical
-Message-ID: <20200311064005.GE29269@dragon>
-References: <1582620554-32689-1-git-send-email-Anson.Huang@nxp.com>
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D1F7C433CB;
+        Wed, 11 Mar 2020 06:41:00 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582620554-32689-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Mar 2020 12:11:00 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
+In-Reply-To: <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
+ <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+Message-ID: <05ab744dfbd83b6704bd394ce3c3dfc9@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:49:11PM +0800, Anson Huang wrote:
-> 'A53_CORE' is just a mux and no need to be critical, being critical
-> will cause its parent clock always ON which does NOT make sense,
-
-I do not quite understand what problem this patch is trying to fix.  In
-the end, all the ancestor clocks of "arm", including "arm_a53_core" will
-still be ON, as "arm" has CLK_IS_CRITICAL flag.  What is the difference
-you are trying to make here?
-
-Shawn
-
-> to make sure CPU's hardware clock source NOT being disabled during
-> clock tree setup, need to move the 'A53_SRC'/'A53_CORE' reparent
-> operations to after critical clock 'ARM_CLK' setup finished.
+On 2020-03-10 20:57, Daniel Thompson wrote:
+> On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
+>> Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
+>> callback functions to prepare the driver for adding WLED5 support.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx8mn.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Overall this code would a lot easier to review if
+>> ---
+>>  drivers/video/backlight/qcom-wled.c | 196 
+>> +++++++++++++++++++++++-------------
+>>  1 file changed, 126 insertions(+), 70 deletions(-)
+>> 
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> index 3d276b3..b73f273 100644
+>> --- a/drivers/video/backlight/qcom-wled.c
+>> +++ b/drivers/video/backlight/qcom-wled.c
+>> @@ -128,6 +128,7 @@ struct wled_config {
+>>  	bool cs_out_en;
+>>  	bool ext_gen;
+>>  	bool cabc;
+>> +	bool en_cabc;
 > 
-> diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-> index 83618af..0bc7070 100644
-> --- a/drivers/clk/imx/clk-imx8mn.c
-> +++ b/drivers/clk/imx/clk-imx8mn.c
-> @@ -428,7 +428,7 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
->  	hws[IMX8MN_CLK_GPU_SHADER_DIV] = hws[IMX8MN_CLK_GPU_SHADER];
->  
->  	/* CORE SEL */
-> -	hws[IMX8MN_CLK_A53_CORE] = imx_clk_hw_mux2_flags("arm_a53_core", base + 0x9880, 24, 1, imx8mn_a53_core_sels, ARRAY_SIZE(imx8mn_a53_core_sels), CLK_IS_CRITICAL);
-> +	hws[IMX8MN_CLK_A53_CORE] = imx_clk_hw_mux2("arm_a53_core", base + 0x9880, 24, 1, imx8mn_a53_core_sels, ARRAY_SIZE(imx8mn_a53_core_sels));
->  
->  	/* BUS */
->  	hws[IMX8MN_CLK_MAIN_AXI] = imx8m_clk_hw_composite_critical("main_axi", imx8mn_main_axi_sels, base + 0x8800);
-> @@ -559,15 +559,15 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
->  
->  	hws[IMX8MN_CLK_DRAM_ALT_ROOT] = imx_clk_hw_fixed_factor("dram_alt_root", "dram_alt", 1, 4);
->  
-> -	clk_hw_set_parent(hws[IMX8MN_CLK_A53_SRC], hws[IMX8MN_SYS_PLL1_800M]);
-> -	clk_hw_set_parent(hws[IMX8MN_CLK_A53_CORE], hws[IMX8MN_ARM_PLL_OUT]);
-> -
->  	hws[IMX8MN_CLK_ARM] = imx_clk_hw_cpu("arm", "arm_a53_core",
->  					   hws[IMX8MN_CLK_A53_CORE]->clk,
->  					   hws[IMX8MN_CLK_A53_CORE]->clk,
->  					   hws[IMX8MN_ARM_PLL_OUT]->clk,
->  					   hws[IMX8MN_CLK_A53_DIV]->clk);
->  
-> +	clk_hw_set_parent(hws[IMX8MN_CLK_A53_SRC], hws[IMX8MN_SYS_PLL1_800M]);
-> +	clk_hw_set_parent(hws[IMX8MN_CLK_A53_CORE], hws[IMX8MN_ARM_PLL_OUT]);
-> +
->  	imx_check_clk_hws(hws, IMX8MN_CLK_END);
->  
->  	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
-> -- 
-> 2.7.4
+> Does this ever get set to true?
 > 
+Yes. If user wants use the cabc pin to control the brightness and
+use the "qcom,cabc" DT property in the device tree.
+
+>>  	bool external_pfet;
+>>  	bool auto_detection_enabled;
+>>  };
+>> @@ -147,14 +148,20 @@ struct wled {
+>>  	u32 max_brightness;
+>>  	u32 short_count;
+>>  	u32 auto_detect_count;
+>> +	u32 version;
+>>  	bool disabled_by_short;
+>>  	bool has_short_detect;
+>> +	bool cabc_disabled;
+>>  	int short_irq;
+>>  	int ovp_irq;
+>> 
+>>  	struct wled_config cfg;
+>>  	struct delayed_work ovp_work;
+>>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
+>> +	int (*cabc_config)(struct wled *wled, bool enable);
+>> +	int (*wled_sync_toggle)(struct wled *wled);
+>> +	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
+>> +	int (*wled_ovp_delay)(struct wled *wled);
+> 
+> Let's get some doc comments explaining what these callbacks do (and
+> which versions they apply to).
+> 
+Sure. I will update it in the commit text in next post.
+
+> cabc_config() in particular appears to have a very odd interface for
+> wled4.  It looks like it relies on being initially called with enable
+> set a particular way and prevents itself from acting again. Therefore 
+> if
+> the comment you end up writing doesn't sound "right" then please also
+> fix the API!
+> 
+Actually this variable is useful for WLED5, where the default HW state 
+is
+CABC1 enabled mode. So, if the user doesn't want to use the CABC we are 
+configuring
+the HW state to "0" based on the DT property and then setting a flag to 
+not enable it again.
+This is not needed for WLED4. I will remove it for WLED4 in next post.
+
+> Finally, why is everything except cabc_config() prefixed with wled?
+> 
+It is typo. I will correct it in the next post.
+> 
+> Daniel.
