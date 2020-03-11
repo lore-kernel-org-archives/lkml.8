@@ -2,114 +2,191 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35074C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6785C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B77521D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:35:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YWIhUzw4"
+	by mail.kernel.org (Postfix) with ESMTP id 9D14C21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgCKLfe (ORCPT
+        id S1729156AbgCKLgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:35:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58360 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgCKLfd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:35:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02BBZT02056168;
-        Wed, 11 Mar 2020 06:35:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583926529;
-        bh=MUwhEHVo/riTzodDBSkEu4Ak1a02re6fLtL21+ejVxE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YWIhUzw4sKCVY0QCQy86cdUmgiEHKnQ64IJdNSyq9ORDHzv0rGtjdPShg4qfamtqm
-         axO1PVj42MqfBlXB3Sn2c2CSdHO5ooDEPZe2fTvWygbJqCeEdC8KgBS2pEMqVeGBZD
-         wBf3tfEbZixCJa8B1O/XNAVx2YWXMycCyIYJ7utI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02BBZTE5002667
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Mar 2020 06:35:29 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Mar 2020 06:35:29 -0500
-Received: from localhost.localdomain (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Mar 2020 06:35:29 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02BBZSRQ114003;
-        Wed, 11 Mar 2020 06:35:28 -0500
-Subject: Re: [PATCH v4 2/4] power_supply: Add additional health properties to
- the header
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sandeep Patil <sspatil@android.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@android.com>
-References: <20200116175039.1317-1-dmurphy@ti.com>
- <20200116175039.1317-3-dmurphy@ti.com>
- <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
- <20200306235548.GA187098@google.com>
- <20200310213050.si7gcr2wbmjgr7jf@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <de919edb-79b3-82ec-f55c-31a127d6c751@ti.com>
-Date:   Wed, 11 Mar 2020 06:29:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 07:36:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:61402 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgCKLgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:36:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 04:36:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="353866031"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga001.fm.intel.com with SMTP; 11 Mar 2020 04:36:04 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 11 Mar 2020 13:36:03 +0200
+Date:   Wed, 11 Mar 2020 13:36:03 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ramalingam C <ramalingam.c@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] drm/i915: Init lspcon after HPD in intel_dp_detect()
+Message-ID: <20200311113603.GU13686@intel.com>
+References: <20200214175646.25532-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310213050.si7gcr2wbmjgr7jf@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214175646.25532-1-kai.heng.feng@canonical.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+On Sat, Feb 15, 2020 at 01:56:27AM +0800, Kai-Heng Feng wrote:
+> On HP 800 G4 DM, if HDMI cable isn't plugged before boot, the HDMI port
+> becomes useless and never responds to cable hotplugging:
+> [    3.031904] [drm:lspcon_init [i915]] *ERROR* Failed to probe lspcon
+> [    3.031945] [drm:intel_ddi_init [i915]] *ERROR* LSPCON init failed on port D
+> 
+> Seems like the lspcon chip on the system in question only gets powered
+> after the cable is plugged.
+> 
+> So let's call lspcon_init() dynamically to properly initialize the
+> lspcon chip and make HDMI port work.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v4:
+>  - Trust VBT in intel_infoframe_init().
+>  - Init lspcon in intel_dp_detect().
+> 
+> v3:
+>  - Make sure it's handled under long HPD case.
+> 
+> v2: 
+>  - Move lspcon_init() inside of intel_dp_hpd_pulse().
+> 
+>  drivers/gpu/drm/i915/display/intel_ddi.c  | 17 +----------------
+>  drivers/gpu/drm/i915/display/intel_dp.c   | 13 ++++++++++++-
+>  drivers/gpu/drm/i915/display/intel_hdmi.c |  2 +-
+>  3 files changed, 14 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+> index 33f1dc3d7c1a..ca717434b406 100644
+> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+> @@ -4741,7 +4741,7 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
+>  		&dev_priv->vbt.ddi_port_info[port];
+>  	struct intel_digital_port *intel_dig_port;
+>  	struct intel_encoder *encoder;
+> -	bool init_hdmi, init_dp, init_lspcon = false;
+> +	bool init_hdmi, init_dp;
+>  	enum phy phy = intel_port_to_phy(dev_priv, port);
+>  
+>  	init_hdmi = port_info->supports_dvi || port_info->supports_hdmi;
+> @@ -4754,7 +4754,6 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
+>  		 * is initialized before lspcon.
+>  		 */
+>  		init_dp = true;
+> -		init_lspcon = true;
+>  		init_hdmi = false;
+>  		DRM_DEBUG_KMS("VBT says port %c has lspcon\n", port_name(port));
+>  	}
+> @@ -4833,20 +4832,6 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
+>  			goto err;
+>  	}
+>  
+> -	if (init_lspcon) {
+> -		if (lspcon_init(intel_dig_port))
+> -			/* TODO: handle hdmi info frame part */
+> -			DRM_DEBUG_KMS("LSPCON init success on port %c\n",
+> -				port_name(port));
+> -		else
+> -			/*
+> -			 * LSPCON init faied, but DP init was success, so
+> -			 * lets try to drive as DP++ port.
+> -			 */
+> -			DRM_ERROR("LSPCON init failed on port %c\n",
+> -				port_name(port));
+> -	}
+> -
+>  	intel_infoframe_init(intel_dig_port);
+>  
+>  	return;
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index c7424e2a04a3..43117aa86292 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -5663,8 +5663,19 @@ intel_dp_detect(struct drm_connector *connector,
+>  	/* Can't disconnect eDP */
+>  	if (intel_dp_is_edp(intel_dp))
+>  		status = edp_detect(intel_dp);
+> -	else if (intel_digital_port_connected(encoder))
+> +	else if (intel_digital_port_connected(encoder)) {
+> +		if (intel_bios_is_lspcon_present(dev_priv, dig_port->base.port) &&
+> +		    !dig_port->lspcon.active) {
+> +			if (lspcon_init(dig_port))
+> +				DRM_DEBUG_KMS("LSPCON init success on port %c\n",
+> +					      port_name(dig_port->base.port));
+> +			else
+> +				DRM_DEBUG_KMS("LSPCON init failed on port %c\n",
+> +					      port_name(dig_port->base.port));
+> +		}
 
-On 3/10/20 4:30 PM, Sebastian Reichel wrote:
-> Hi Sandeep,
->
-> On Fri, Mar 06, 2020 at 03:55:48PM -0800, Sandeep Patil wrote:
->> On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
->>> Hi,
->>>
->>> On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
->>>> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>> Looks good. But I will not merge it without a user and have comments
->>> for the driver.
->> Android has been looking for these properties for a while now [1].
->> It was added[2] when we saw that the manufacturers were implementing these
->> properties in the driver. I didn't know the properties were absent upstream
->> until yesterday. Somebody pointed out in our ongoing effort to make sure
->> all core kernel changes that android depends on are present upstream.
->>
->> I think those values are also propagated in application facing APIs in
->> Android (but I am not sure yet, let me know if that's something you want
->> to find out).
->>
->> I wanted to chime in and present you a 'user' for this if that helps.
-> With user I meant an upstream kernel driver, which exposes the
-> values. But thanks for the pointer. This should be mentioned in
-> the patch description, also the fact that the status values are
-> directly taken from JEITA spec.
+I was going to ask what happens when you unplug+replug, but looks like
+we already have lspcon_resume()in intel_dp_detect_dpcd(). This should
+be there as well. In fact I think we should just move all the logic
+into the lspcon code and let it decide on its own whether to take the init
+path or the resume path (assuming there is even any difference between
+the two).
 
-I mentioned the JEITA in the cover letter but I guess you would like the 
-description in the commit message as well
+Not sure what we should do with the lspcon_resume() call in
+intel_dp_encoder_reset()...
 
-Dan
+> +
+>  		status = intel_dp_detect_dpcd(intel_dp);
+> +	}
+>  	else
+>  		status = connector_status_disconnected;
+>  
+> diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
+> index 93ac0f296852..27a5aa8cefc9 100644
+> --- a/drivers/gpu/drm/i915/display/intel_hdmi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
+> @@ -3100,7 +3100,7 @@ void intel_infoframe_init(struct intel_digital_port *intel_dig_port)
+>  		intel_dig_port->set_infoframes = g4x_set_infoframes;
+>  		intel_dig_port->infoframes_enabled = g4x_infoframes_enabled;
+>  	} else if (HAS_DDI(dev_priv)) {
+> -		if (intel_dig_port->lspcon.active) {
+> +		if (intel_bios_is_lspcon_present(dev_priv, intel_dig_port->base.port)) {
+>  			intel_dig_port->write_infoframe = lspcon_write_infoframe;
+>  			intel_dig_port->read_infoframe = lspcon_read_infoframe;
+>  			intel_dig_port->set_infoframes = lspcon_set_infoframes;
+> -- 
+> 2.17.1
 
-
+-- 
+Ville Syrjälä
+Intel
