@@ -2,127 +2,85 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA4AC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B392C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B564D20751
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583968589;
-	bh=M70agrfssHoPC0ilpkLCRMDtLq4/+qKfN23DruDaesA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=S8Zf9+JOCl9i6KmhTWnnz1AbiabuELJ98onuhEKzwOIECda4+mfxfdQG72o8sgA7n
-	 3i8tSHHqXujeA9CoVGCWFiBnfkzZinlaXgJKKJxErQDu1fXh04bTxcR88bKuuythIE
-	 Zhrbpp1Dg0+XpHT4p51pGC1vNfLAWdqmeLHkdHSM=
+	by mail.kernel.org (Postfix) with ESMTP id 1077D20754
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbgCKXQ2 (ORCPT
+        id S1731533AbgCKXQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 19:16:53 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:58946 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731338AbgCKXQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:16:28 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BDBE2074F;
-        Wed, 11 Mar 2020 23:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583968587;
-        bh=M70agrfssHoPC0ilpkLCRMDtLq4/+qKfN23DruDaesA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zGb2nUUcfnL2QLTUh6RV9QAQrmf2L7DOqnEEoJMSonXk5Rdx7OuMhNE4y0aTvaz+L
-         LLwABvSgQouIcektbiVBBLYuFlJ2zA6HHdgnSiwQtBLpf7+fSv7KqumdZRKX2X4xGl
-         ODuwMizUBUWTKNA9g7nHU+NeVhXC4o6FZ46MGXLU=
-Date:   Wed, 11 Mar 2020 16:16:25 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
+        id S1731338AbgCKXQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 19:16:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 0C1C937024CE;
+        Thu, 12 Mar 2020 00:16:51 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rHUPSS9K2eTQ; Thu, 12 Mar 2020 00:16:48 +0100 (CET)
+Subject: Re: [PATCH v3 2/3] dt-bindings: power: supply: add cw2015_battery
+ bindings
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 10/15] ethtool: provide ring sizes with
- RINGS_GET request
-Message-ID: <20200311161625.7292f745@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <55a76ca4eecc92c7209775340ff36ba5dd32f713.1583962006.git.mkubecek@suse.cz>
-References: <cover.1583962006.git.mkubecek@suse.cz>
-        <55a76ca4eecc92c7209775340ff36ba5dd32f713.1583962006.git.mkubecek@suse.cz>
+References: <20200311093043.3636807-1-t.schramm@manjaro.org>
+ <20200311093043.3636807-3-t.schramm@manjaro.org>
+ <20200311172056.wjn3574zrfqxipw6@holly.lan>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <bd1bea1c-e42b-8ccc-7fbb-2ed268f1b1a5@manjaro.org>
+Date:   Thu, 12 Mar 2020 00:17:55 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200311172056.wjn3574zrfqxipw6@holly.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 22:40:53 +0100 (CET) Michal Kubecek wrote:
-> +static int rings_prepare_data(const struct ethnl_req_info *req_base,
-> +			      struct ethnl_reply_data *reply_base,
-> +			      struct genl_info *info)
-> +{
-> +	struct rings_reply_data *data = RINGS_REPDATA(reply_base);
-> +	struct net_device *dev = reply_base->dev;
-> +	int ret;
-> +
-> +	if (!dev->ethtool_ops->get_ringparam)
-> +		return -EOPNOTSUPP;
-> +	ret = ethnl_ops_begin(dev);
-> +	if (ret < 0)
-> +		return ret;
-> +	dev->ethtool_ops->get_ringparam(dev, &data->ringparam);
-> +	ret = 0;
-> +	ethnl_ops_complete(dev);
-> +
-> +	return ret;
+Hi Daniel,
 
-nit: just return 0 and drop ret = 0 above, there is no goto here
+thanks for reviewing. The typo will be fixed for v4.
 
-> +}
-> +
-> +static int rings_reply_size(const struct ethnl_req_info *req_base,
-> +			    const struct ethnl_reply_data *reply_base)
-> +{
-> +	return 8 * nla_total_size(sizeof(u32))
+>> +  power-supplies:
+>> +    description:
+>> +      Specifies supplies used for charging the battery connected to this gauge
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +      - minItems: 1
+>> +        maxItems: 8 # Should be enough
+> 
+> Is it necessary to set a maximum? power_supply.txt is still a text file
+> but there is no mention of a maximum there.
+> 
+I think so? Removing maxItems and running dtbs_check on a dts with more
+than one supply phandle in the power-supplies property results in an error:
+linux/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dt.yaml:
+cw2015@62: power-supplies: [[142], [50]] is too long
 
-nit: 8 is a little bit of a magic constant
+Best Regards,
 
-> +		+ 0;
-
-nit: personally not a huge fan
-
-> +}
-> +
-> +static int rings_fill_reply(struct sk_buff *skb,
-> +			    const struct ethnl_req_info *req_base,
-> +			    const struct ethnl_reply_data *reply_base)
-> +{
-> +	const struct rings_reply_data *data = RINGS_REPDATA(reply_base);
-> +	const struct ethtool_ringparam *ringparam = &data->ringparam;
-> +
-> +	if (nla_put_u32(skb, ETHTOOL_A_RINGS_RX_MAX,
-> +			ringparam->rx_max_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_MINI_MAX,
-> +			ringparam->rx_mini_max_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_JUMBO_MAX,
-> +			ringparam->rx_jumbo_max_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_TX_MAX,
-> +			ringparam->tx_max_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX,
-> +			ringparam->rx_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_MINI,
-> +			ringparam->rx_mini_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_JUMBO,
-> +			ringparam->rx_jumbo_pending) ||
-> +	    nla_put_u32(skb, ETHTOOL_A_RINGS_TX,
-> +			ringparam->tx_pending))
-> +		return -EMSGSIZE;
-
-nit: I wonder if it's necessary to report the zero values..
-
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Tobias
