@@ -2,171 +2,143 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D644AC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5D0C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC252146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583918013;
-	bh=EjP3o9Yi+hUnsxTk5SJfKSNSVhbGiQEcuon19wZ6Mfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mZP0Psquau3VHq4/g+ZTwOyx9b4Xly9vKMKe5eA7FnTfO63goXeX6wG8OKbQkY8Ip
-	 5+iqCZPDnak+BBeDyh8XYDAYsVmGNC7bTDImktvs4ZunrlBZ/1PvVaIEFN7ZsbTXB2
-	 g/KWHmnV7IBWYfWBWOhwLmUpuI1ENA8wRYnZrPL0=
+	by mail.kernel.org (Postfix) with ESMTP id 5CB1A2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgCKJNc (ORCPT
+        id S1728921AbgCKJNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:13:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37905 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgCKJNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:13:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x22so1035146lff.5;
-        Wed, 11 Mar 2020 02:13:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qhIDi5z+ZT29B7/4ImamXTHxL5IkLJQZ2qWtWxOwngg=;
-        b=feWAmBZU6jPMCLJTe4qIBRN5vfcIvDMveyJd6+gV0jN7vrMLNV0wui8EBMGQBPMegH
-         2gruLAicQvWedRyGmq7oZDFR8HOhJAXO/jcGmJfaZ9+uuTau0H7cdMQvwmkwWWMceveH
-         lUJf7zjRD/jm6d4AHqLUBoHqQc0zN37MSx8Qv5BqPNIyFydjbSQDb+3kLzU9Fw1pKwGc
-         oopIc71BJUCX/Gg5e0De+eQoRTIo9NheuaR3fsPw60BxL2JGQfL1yA4tMbcMRJ/DRpjn
-         zWXl1h3xauhzJXtORKc7SttCtlQz0hIK8kCpg+FozrSxXae83dLcjOB7vrbVvOWEApfa
-         cIdw==
-X-Gm-Message-State: ANhLgQ1gojTqkV/3oc39rq+eD/kZit270E5zDc9o9wDRrx0r8lFxUhy9
-        WOheximDPR0XLqZidEqUDq6PBdpC
-X-Google-Smtp-Source: ADFU+vs+ntekw8VoDZK1u9rzKMuU4M+2SABuMJltW7glq97SpzCU/kTbIOH0xSNS6z18yZMHJ7dctQ==
-X-Received: by 2002:a19:cbd5:: with SMTP id b204mr1517318lfg.102.1583918009861;
-        Wed, 11 Mar 2020 02:13:29 -0700 (PDT)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id i16sm619685lfl.29.2020.03.11.02.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 02:13:28 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jBxQS-0004Qy-EU; Wed, 11 Mar 2020 10:13:16 +0100
-Date:   Wed, 11 Mar 2020 10:13:16 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V4 1/1] USB: serial: f81232: Add generator for F81534A
-Message-ID: <20200311091316.GG14211@localhost>
-References: <20200304033751.8662-1-hpeter+linux_kernel@gmail.com>
-MIME-Version: 1.0
+        Wed, 11 Mar 2020 05:13:41 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:59852 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728150AbgCKJNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:13:40 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 02B9DEfJ008298;
+        Wed, 11 Mar 2020 04:13:14 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 02B9DDv2008297;
+        Wed, 11 Mar 2020 04:13:13 -0500
+Date:   Wed, 11 Mar 2020 04:13:13 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Haitao Huang <haitao.huang@linux.intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+Message-ID: <20200311091313.GA8094@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com> <20200306053210.GA16297@wind.enjellic.com> <op.0g923rgpwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304033751.8662-1-hpeter+linux_kernel@gmail.com>
+In-Reply-To: <op.0g923rgpwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 11 Mar 2020 04:13:14 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 11:37:51AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> The Fintek F81534A series is contains 1 HUB / 1 GPIO device / n UARTs,
-> but the UART is default disable and need enabled by GPIO device(2c42/16F8).
+On Tue, Mar 10, 2020 at 02:29:41PM -0500, Haitao Huang wrote:
+
+Good morning, I hope this note finds the week going well for everyone.
+
+> On Thu, 05 Mar 2020 23:32:10 -0600, Dr. Greg <greg@enjellic.com> wrote:
 > 
-> When F81534A plug to host, we can only see 1 HUB & 1 GPIO device and we
-> write 0x8fff to GPIO device register F81534A_CTRL_CMD_ENABLE_PORT(116h)
-> to enable all available serial ports.
-> 
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-> ---
-> Changelog:
-> v4:
-> 	1. Remove unused define.
-> 	2. Remove usb_translate_errors() in f81534a_ctrl_set_register()
-> 	   with short transfer.
-> 	3. Replace dev_warn() with dev_err() in f81534a_ctrl_enable_all_ports()
-> 	4. Disable & remove all usb serial port device when disconnect().
+> >On Wed, Mar 04, 2020 at 01:36:01AM +0200, Jarkko Sakkinen wrote:
+> >
+> >Good evening, I hope the end of the week is going well for everyone.
+> >
+> >>Add a selftest for SGX. It is a trivial test where a simple enclave
+> >>copies one 64-bit word of memory between two memory locations given
+> >>to the enclave as arguments. Use ENCLS[EENTER] to invoke the
+> >>enclave.
+> >
+> >Just as a clarification, are you testing the new driver against signed
+> >production class enclaves in .so format that also include metadata
+> >layout directives or is the driver just getting tested against the two
+> >page toy enclave that copies a word of memory from one memory location
+> >to another?
 
-> +static int f81534a_ctrl_set_register(struct usb_device *dev, u16 reg, u16 size,
-> +					void *val)
-> +{
-> +	int retry = F81534A_ACCESS_REG_RETRY;
-> +	int status;
-> +	u8 *tmp;
-> +
-> +	tmp = kmemdup(val, size, GFP_KERNEL);
-> +	if (!tmp)
-> +		return -ENOMEM;
-> +
-> +	while (retry--) {
-> +		status = usb_control_msg(dev,
-> +					usb_sndctrlpipe(dev, 0),
-> +					F81232_REGISTER_REQUEST,
-> +					F81232_SET_REGISTER,
-> +					reg,
-> +					0,
-> +					tmp,
-> +					size,
-> +					USB_CTRL_SET_TIMEOUT);
-> +		if (status != size) {
-> +			status = -EIO;
+> We (Intel SGX SDK/PSW team) tested this driver for enclaves in .so
+> format with metadata. Our 2.8 release supports v24 and 2.9 supports
+> v25+. Both production signed and debug signed enclaves worked.
 
-You shouldn't discard any error code you get here; only set it to -EIO
-if the transfer is short.
+Very good, this was the feedback we were hoping to get.
 
-Your previous patch didn't retry on -ENOMEM and -ENODEV (e.g. if the
-device was disconnected) which seems reasonable.
+> *Note* we did make some code changes in our runtime for v24+, mainly
+> dealing with src & EPC page alignment for EADD, open one fd per
+> enclave, use -z noexecstack linker option, etc. You can see the
+> changes on GitHub.
 
-What errors are you seeing here when you really do need to resend?
-Perhaps only retry on those specifically (and short transfers)?
+Yes, we made all of those changes as well, in a similar fashion.
 
-> +			continue;
-> +		}
-> +
-> +		status = 0;
-> +		break;
-> +	}
-> +
-> +	if (status) {
-> +		dev_err(&dev->dev, "set ctrl reg: %x, failed status: %d\n",
-> +				reg, status);
-> +	}
-> +
-> +	kfree(tmp);
-> +	return status;
-> +}
-> +
-> +static int f81534a_ctrl_enable_all_ports(struct usb_interface *intf, bool en)
-> +{
-> +	struct usb_device *dev = interface_to_usbdev(intf);
-> +	unsigned char enable[2] = {0};
-> +	int status;
-> +
-> +	/*
-> +	 * Enable all available serial ports, define as following:
-> +	 * bit 15	: Reset behavior (when HUB got soft reset)
-> +	 *			0: maintain all serial port enabled state.
-> +	 *			1: disable all serial port.
-> +	 * bit 0~11	: Serial port enable bit.
-> +	 */
-> +	if (en) {
-> +		enable[0] = 0xff;
-> +		enable[1] = 0x8f;
-> +	}
-> +
-> +	status = f81534a_ctrl_set_register(dev, F81534A_CTRL_CMD_ENABLE_PORT,
-> +			sizeof(enable), enable);
-> +	if (status)
-> +		dev_err(&dev->dev, "failed to enable ports: %d\n", status);
+This was the third time that we have changed the enclave creation
+mmap() and alignment constraints, only to take us back to what we had
+started with... :-)(
 
-Please use &intf->dev here and for the dev_err() in
-f81534a_ctrl_set_register() as that will include the driver name in the
-prefix.
+> >Our PSW/runtime is currently failing to initialize production class
+> >enclaves secondary to a return value of -4 from the ENCLU[EINIT]
+> >instruction, which means the measurement of the loaded enclave has
+> >failed to match the value in the signature structure.
+> >
+> >The same enclave loads fine with the out of kernel driver.  Our
+> >diagnostics tell us we are feeding identical page streams and
+> >permissions to the page add ioctl's of both drivers.  The identity
+> >modulus signature of the signing key for the enclave is being written
+> >to the launch control registers.
+> >
+> >We see the same behavior from both our unit test enclaves and the
+> >Quoting Enclave from the Intel SGX runtime.
 
-> +
-> +	return status;
-> +}
+> We did not see any issue loading QE in our tests. Please directly
+> email me on this test if you have specific questions.
 
-Johan
+It isn't anything specific to the QE, we just used that as an example,
+since it has no special attribute requirements and would seem to be a
+good reference test for everyone working on runtimes.
+
+We are missing some nuance with the latest version of the driver, our
+runtime was working fine with the new driver a year ago.
+
+It almost has to be a problem with metadata, we are suspicious of
+guard page processing.
+
+We are following the same strategy that we had used previously and
+leaving a 'hole' in the enclave for each guard page at its RVA offset.
+The comment in the add page ioctl indicating that the page range has
+to be contiguous caught our eye and has us questioning if this
+continues to be the correct approach.
+
+Do you remember, off the top of your head, having to address guard
+pages differently?
+
+Have a good remainder of the week.
+
+Dr. Greg
+
+> Using Opera's mail client: http://www.opera.com/mail/
+
+As always,
+Dr. Greg Wettstein, Ph.D, Worker
+IDfusion, LLC               SGX secured infrastructure and
+4206 N. 19th Ave.           autonomously self-defensive platforms.
+Fargo, ND  58102
+PH: 701-281-1686            EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"Work makes life enjoyable."
+                                -- North Dakota Germans
