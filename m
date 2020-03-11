@@ -2,98 +2,162 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60804C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F75FC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3905620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A1F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mWVm/1lK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd8rhWCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgCKHD3 (ORCPT
+        id S1728304AbgCKHD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:03:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:23861 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726310AbgCKHD3 (ORCPT
+        Wed, 11 Mar 2020 03:03:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45508 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgCKHDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:03:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583910208; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=GAuTLvEuWXt9KrX72GtkLXsGN2+/h8QdvpOamlfyA/A=;
- b=mWVm/1lKCJ2oSovS412YE27mrixrVkL6S6nMSt5C/eUhXGgvQDD+OUKCCM4imnWEQCbFPAcW
- 7JAJAyjYQYGenvPJq/wuyeLp1hHYL0rxNN+n2TphoQVMmwREb9RiLnvzUyppRYCPXl+qFE6n
- yKEcVAU5PKyot6WZDf7BuhP9bZI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e688d3d.7f0aa968d420-smtp-out-n05;
- Wed, 11 Mar 2020 07:03:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8824AC433BA; Wed, 11 Mar 2020 07:03:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1AF0C433CB;
-        Wed, 11 Mar 2020 07:03:23 +0000 (UTC)
+        Wed, 11 Mar 2020 03:03:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id w9so793464iob.12;
+        Wed, 11 Mar 2020 00:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8hb6iJ/Efn6V2wxOcA+ehqPLCrGm2i7aFEcinNiAwTg=;
+        b=rd8rhWCgH//f6swHt00TfU44oSyrPrCf9zNhKCp43xO5/c/lia8gyyB94BWGxKw6yV
+         QOm0DqL9P4U5T2uB6Inj7XI/UlbsEfDNG3do1rbezI/44mNdmxVEQCDVkll8kGrYaAts
+         AnQLHHVMbGjbmGMLgv1f/s/a2ayaX6Up7a8Mk/4/8kxlP++P1jSBtRfGYdv1fszrCbxB
+         J4YKst/ZXrjqvQcelfdiL548nQVPzdxVY02bdopH9Vz+v97xEl+GHknDNi4r2tcrPYJy
+         YXna9QlT8wDB2bvqb0c0qdd8LBkPPhhTwJblfNdloF3Yaj4tR2lznGCBm/Z0Trm4sqID
+         A62Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8hb6iJ/Efn6V2wxOcA+ehqPLCrGm2i7aFEcinNiAwTg=;
+        b=TX7LGqKGbxq1x76/M/8XNQL5kyj+DCfnxUWJg3toJsSTu54H90gp/KvgmWB5kwvM5h
+         x0za7uKNM95b19RcgoCuPPGVt65D/tS/Zgf4DmhSswhuYawVAFxwRLIWRFYmbdScUnp5
+         nEJo68k9lMJdqgDgCkNwQUk1iUHKMdYq0uHshSXG2/QF56M+CV/YlUfhA7i8p73hpZNd
+         zQ36fIFEKxjymXmn8q6mnegtl6OU9HMi2jRNbnObAOC9QCmlGdIR3duvxaSmnFOmUeXC
+         70TkusCaGFCNscOXKWO91dOY7wysHaOZpnC5cGD6YebpoEZajQ0Jv89LDcHJU3x7tiBy
+         q6Ig==
+X-Gm-Message-State: ANhLgQ0mrH0KxJfCVRGrpY1DW0O1JsU/Ras63fDjRLOaN9IIDc+u4L33
+        ogIORnBht69iiwmHIu/sgK8l8U2eHoZ3wi4D/4s=
+X-Google-Smtp-Source: ADFU+vsVx9UgJ7cAQ6SG+cvSpbW4652fcOa7BWrz3sf2jEUSFhkJmAIC862rB5+gVmJyC7VWx0RpfWNz15LQu2ii7R0=
+X-Received: by 2002:a6b:f718:: with SMTP id k24mr1627720iog.186.1583910234416;
+ Wed, 11 Mar 2020 00:03:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 11 Mar 2020 12:33:23 +0530
-From:   kgunda@codeaurora.org
-To:     Rob Herring <robh@kernel.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings to
- .yaml format
-In-Reply-To: <20200310183118.GA13818@bogus>
-References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
- <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
- <20200310183118.GA13818@bogus>
-Message-ID: <95536b5ff4f8209affc056d1900a8873@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-13-vgoyal@redhat.com>
+ <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com> <20200310203321.GF38440@redhat.com>
+In-Reply-To: <20200310203321.GF38440@redhat.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 11 Mar 2020 09:03:42 +0200
+Message-ID: <CAOQ4uxh2WdLdbcMp+qvQCX2hiBx+hLO1z5wkZtc-7GCuDdsthw@mail.gmail.com>
+Subject: Re: [PATCH 12/20] fuse: Introduce setupmapping/removemapping commands
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peng Tao <tao.peng@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-11 00:01, Rob Herring wrote:
-> On Mon,  9 Mar 2020 18:55:59 +0530, Kiran Gunda wrote:
->> Convert the qcom-wled bindings from .txt to .yaml format.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->>  .../bindings/leds/backlight/qcom-wled.txt          | 154 
->> -----------------
->>  .../bindings/leds/backlight/qcom-wled.yaml         | 184 
->> +++++++++++++++++++++
->>  2 files changed, 184 insertions(+), 154 deletions(-)
->>  delete mode 100644 
->> Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->>  create mode 100644 
->> Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml: $id:
-> relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
-> 
-> See https://patchwork.ozlabs.org/patch/1251567
-> Please check and re-submit.
-I will fix it in next post.
+On Tue, Mar 10, 2020 at 10:34 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> On Tue, Mar 10, 2020 at 08:49:49PM +0100, Miklos Szeredi wrote:
+> > On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > >
+> > > Introduce two new fuse commands to setup/remove memory mappings. This
+> > > will be used to setup/tear down file mapping in dax window.
+> > >
+> > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > > Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
+> > > ---
+> > >  include/uapi/linux/fuse.h | 37 +++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 37 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > > index 5b85819e045f..62633555d547 100644
+> > > --- a/include/uapi/linux/fuse.h
+> > > +++ b/include/uapi/linux/fuse.h
+> > > @@ -894,4 +894,41 @@ struct fuse_copy_file_range_in {
+> > >         uint64_t        flags;
+> > >  };
+> > >
+> > > +#define FUSE_SETUPMAPPING_ENTRIES 8
+> > > +#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
+> > > +struct fuse_setupmapping_in {
+> > > +       /* An already open handle */
+> > > +       uint64_t        fh;
+> > > +       /* Offset into the file to start the mapping */
+> > > +       uint64_t        foffset;
+> > > +       /* Length of mapping required */
+> > > +       uint64_t        len;
+> > > +       /* Flags, FUSE_SETUPMAPPING_FLAG_* */
+> > > +       uint64_t        flags;
+> > > +       /* Offset in Memory Window */
+> > > +       uint64_t        moffset;
+> > > +};
+> > > +
+> > > +struct fuse_setupmapping_out {
+> > > +       /* Offsets into the cache of mappings */
+> > > +       uint64_t        coffset[FUSE_SETUPMAPPING_ENTRIES];
+> > > +        /* Lengths of each mapping */
+> > > +        uint64_t       len[FUSE_SETUPMAPPING_ENTRIES];
+> > > +};
+> >
+> > fuse_setupmapping_out together with FUSE_SETUPMAPPING_ENTRIES seem to be unused.
+>
+> This looks like leftover from the old code. I will get rid of it. Thanks.
+>
+
+Hmm. I wonder if we should keep some out args for future extensions.
+Maybe return the mapped size even though it is all or nothing at this
+point?
+
+I have interest in a similar FUSE mapping functionality that was prototyped
+by Miklos and published here:
+https://lore.kernel.org/linux-fsdevel/CAJfpegtjEoE7H8tayLaQHG9fRSBiVuaspnmPr2oQiOZXVB1+7g@mail.gmail.com/
+
+In this prototype, a FUSE_MAP command is used by the server to map a
+range of file to the kernel for io. The command in args are quite similar to
+those in fuse_setupmapping_in, but since the server is on the same host,
+the mapping response is {mapfd, offset, size}.
+
+I wonder, if we decide to go forward with this prototype (and I may well decide
+to drive this forward), should the new command be overloading
+FUSE_SETUPMAPPING, by using new flags or should it be a new
+command? In either case, I think it would be best to try and make a decision
+now in order to avoid ambiguity with protocol command/flag names later on.
+
+If we decide that those are completely different beasts and it is agreed that
+the future command will be named, for example, FUSE_SETUPIOMAP
+with different arguments and that this naming will not create confusion and
+ambiguity with FUSE_SETUPMAPPING, then there is no actionable item at
+this time.
+
+But it is possible that there is something to gain from using the same
+command(?) and same book keeping mechanism for both types of
+mappings. Even server on same host could decide that it wants
+to map some file regions via mmap and some via iomap.
+In that case, perhaps we should make the FUSE_SETUPMAPPING
+response args expressive enough to be able to express an iomap
+mapping in the future and perhaps dax code should explicitly request
+for FUSE_SETUPMAPPING_FLAG_DAX mapping type?
+
+Thoughts?
+
+Amir.
