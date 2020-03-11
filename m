@@ -5,68 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BA0C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ADEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC42D222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8BE222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgwYt8hQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qvULlz99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgCKBJd (ORCPT
+        id S1727982AbgCKBJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:09:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53151 "EHLO
+        Tue, 10 Mar 2020 21:09:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51036 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgCKBJb (ORCPT
+        with ESMTP id S1727958AbgCKBJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:09:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 11so290509wmo.2;
-        Tue, 10 Mar 2020 18:09:27 -0700 (PDT)
+        Tue, 10 Mar 2020 21:09:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a5so298749wmb.0;
+        Tue, 10 Mar 2020 18:09:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qNOlzK/j2ABuDiTQyPDlyVcS7soeVQMuTQgrAWWcf9I=;
-        b=rgwYt8hQrRtJDhPqL6acSbVwj/ifctSn0OpICmzrNnRH811aS44QXkIK0YtQwU7F5L
-         V771hlOItZjHjl77Kw1rboEs1OxQEIH7/6KCMqUaqzeyAkHMox3zNhiQbBQfMs6Bg1Bn
-         paqYACEq4IdQ1pCsXEsK/pnJGvzCyidgzQl1AkzPSt36fj3wl231L636qb4RDEtHgFyG
-         56qYR2bST/BXbOV0+THwtrfBnS64s9rNpql8Nr04Rsa6NEJa6lBdhmKibjg/oNFH787L
-         A3iDpPqrVCzsEjTH/19w3Y30JcTgee1BKiy4AOJwm1Cpbx4NRvUdu+U4CYazW6B6dvkd
-         KKtw==
+        bh=vVRR4OgupYaiYbHKhmSicBHQ95FN9+SKT9CQzo7pJnM=;
+        b=qvULlz99rWRiLqex5Lnn1QU1NhB/rQU7Wu8/SvYwZHZSifBTXvmU8WAGQIj8+/k9mT
+         aOVd9vPoRvUPnFcecDzQZJE/MygViKIMPSuwXoeS/2yWxorCxdJ46MTFNPSZTs1uI7QI
+         w9FvmdwQHbfNUuGOToq0xasCIJPmi6NZSf3ctusJjmrxW+GR938JEwGd5F0JFzDPivOO
+         szaaDIuuKlTSOVORMmp5nEd/i6JMrX/UdDYo/lAEO7Nyl/St7iCJdbRVgsBFcaQhCd/r
+         4SpKYdnrvHW9Qb3RxC9tj92GCqz2Q8MuSJ6BWtEmTsTRSfNyT9COuXCLgLD+Fawc7mun
+         n6wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qNOlzK/j2ABuDiTQyPDlyVcS7soeVQMuTQgrAWWcf9I=;
-        b=gkd1RL2TxXg+TQgwG/GWg9l/W7tcBxV360BnPYrTfi78ri6OWEiUvRZE25PYMxX1P1
-         gX1LrFFo/wLD4ueS+9wRQpsB0QRiqWa+LipO/ydPL1zFKVPsXRGha87uW01j5rmKhPM0
-         voBPt24kLSPWwUd8uBAEPGBxNxBwbnXHFwZgwX292aOcGhPCDFQLIQA1t7afNyi1iVDJ
-         Mj4KhdwKrEbgXFT8Q6XP5c03Q9/B1jTQvvNXnBcrZhdJe69p2hRyjz4OabpQK0XzPLGf
-         00khDMGRyUVGPpC3x3L+lCn87O9l8IRI28Ddu5JerNS2iOynZd6NxAKraKfMA6YRwMnW
-         riTA==
-X-Gm-Message-State: ANhLgQ1E5iMWz+TKVUEYXyYkmQ6lU/HDhtFMHK4PnYOUu9E/Tf7k7I+5
-        JnpzwfoAZP4nwYedqdz7YA==
-X-Google-Smtp-Source: ADFU+vvS7Pttdevps9gifoKLvKQrBzQS8bWMSeCk2h0Mkhu5EINl/B1G/nGvhGQtr5gketgYUTQ7qw==
-X-Received: by 2002:a05:600c:280b:: with SMTP id m11mr415679wmb.93.1583888967050;
-        Tue, 10 Mar 2020 18:09:27 -0700 (PDT)
+        bh=vVRR4OgupYaiYbHKhmSicBHQ95FN9+SKT9CQzo7pJnM=;
+        b=UMmhJvxprM8hWggW5kjm/b3a+mfr9iQ0Nq0O41qahfl/oRAzROigefpOQosq1FWMsG
+         FiMjwgKIWRV0BvcDBmcRNADVhAEF97eo4ATzx+XAdz+GzHRptRfh2hzwiP+dn/mp1555
+         C/PqIduFrpmSrhNONQ/vCjeyMi/PY7tQqb5RQ2TJ9I458bdLpaTMYGLYIvWGg9TzBcwY
+         haD269S+Lw8Zjr2ktgbuT2XfrGft35NlMa0s+Gtpy6jmObdur3vVAjeRqksc4WLpTe6r
+         8DK9kuKORxc1V1ByxASNdZuoth/drsa62PDK99mHC04evH1zL7s5KcwInGLn5ZrIMqGp
+         B64w==
+X-Gm-Message-State: ANhLgQ3sbGhpFtwMXoG+sihjrdXkODJ0TDEOojpc5ZZmUAfqGZmcsCyN
+        zY4/PjbuuJWBycxVlpYCi+6IAIt0sLsZ
+X-Google-Smtp-Source: ADFU+vtXpCSp5JFuiBAC9PWH1R2+yQ8jDwpK5A9aOUQnqqdqMGMCmmBBcK5PstShOSvBnZVXdm1TtQ==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr379000wmk.104.1583888971399;
+        Tue, 10 Mar 2020 18:09:31 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-15-144.as13285.net. [2.102.15.144])
-        by smtp.googlemail.com with ESMTPSA id i6sm36658097wra.42.2020.03.10.18.09.26
+        by smtp.googlemail.com with ESMTPSA id i6sm36658097wra.42.2020.03.10.18.09.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 18:09:26 -0700 (PDT)
+        Tue, 10 Mar 2020 18:09:31 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 2/8] raw: Add missing annotations to raw_seq_start() and raw_seq_stop()
-Date:   Wed, 11 Mar 2020 01:09:02 +0000
-Message-Id: <20200311010908.42366-3-jbi.octave@gmail.com>
+        netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org (open list:NETFILTER),
+        coreteam@netfilter.org (open list:NETFILTER)
+Subject: [PATCH 5/8] netfilter: conntrack: Add missing annotations for nf_conntrack_all_lock() and nf_conntrack_all_unlock()
+Date:   Wed, 11 Mar 2020 01:09:05 +0000
+Message-Id: <20200311010908.42366-6-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200311010908.42366-1-jbi.octave@gmail.com>
 References: <0/8>
@@ -78,41 +81,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warnings at raw_seq_start() and raw_seq_stop()
+Sparse reports warnings at nf_conntrack_all_lock()
+	and nf_conntrack_all_unlock()
 
-warning: context imbalance in raw_seq_start() - wrong count at exit
-warning: context imbalance in raw_seq_stop() - unexpected unlock
+warning: context imbalance in nf_conntrack_all_lock()
+	- wrong count at exit
+warning: context imbalance in nf_conntrack_all_unlock()
+	- unexpected unlock
 
-The root cause is the missing annotations at raw_seq_start()
-	and raw_seq_stop()
-Add the missing __acquires(&h->lock) annotation
-Add the missing __releases(&h->lock) annotation
+Add the missing __acquires(&nf_conntrack_locks_all_lock)
+Add missing __releases(&nf_conntrack_locks_all_lock)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/ipv4/raw.c | 2 ++
+ net/netfilter/nf_conntrack_core.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
-index 3183413ebc6c..47665919048f 100644
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -1034,6 +1034,7 @@ static struct sock *raw_get_idx(struct seq_file *seq, loff_t pos)
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index d1305423640f..a0bc122d5df1 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -143,6 +143,7 @@ static bool nf_conntrack_double_lock(struct net *net, unsigned int h1,
  }
  
- void *raw_seq_start(struct seq_file *seq, loff_t *pos)
-+	__acquires(&h->lock)
+ static void nf_conntrack_all_lock(void)
++	__acquires(&nf_conntrack_locks_all_lock)
  {
- 	struct raw_hashinfo *h = PDE_DATA(file_inode(seq->file));
+ 	int i;
  
-@@ -1056,6 +1057,7 @@ void *raw_seq_next(struct seq_file *seq, void *v, loff_t *pos)
- EXPORT_SYMBOL_GPL(raw_seq_next);
+@@ -162,6 +163,7 @@ static void nf_conntrack_all_lock(void)
+ }
  
- void raw_seq_stop(struct seq_file *seq, void *v)
-+	__releases(&h->lock)
+ static void nf_conntrack_all_unlock(void)
++	__releases(&nf_conntrack_locks_all_lock)
  {
- 	struct raw_hashinfo *h = PDE_DATA(file_inode(seq->file));
- 
+ 	/* All prior stores must be complete before we clear
+ 	 * 'nf_conntrack_locks_all'. Otherwise nf_conntrack_lock()
 -- 
 2.24.1
 
