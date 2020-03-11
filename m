@@ -2,185 +2,76 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FE0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E82BC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F202B2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E968520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgCKRil (ORCPT
+        id S1730577AbgCKRjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:38:41 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22480 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbgCKRil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:38:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 10:38:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="261211208"
-Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2020 10:38:39 -0700
-Message-ID: <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
-Subject: Re: [PATCH V1 11/13] selftests/resctrl: Change Cache Quality
- Monitoring (CQM) test
-From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 10:33:52 -0700
-In-Reply-To: <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
-         <26086dda86f062bba4116878a012a553503924b2.1583657204.git.sai.praneeth.prakhya@intel.com>
-         <e7bd79cf-4da8-7a61-ac09-4d124315fa93@intel.com>
-         <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
-         <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 11 Mar 2020 13:39:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11629 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729852AbgCKRjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:39:22 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 43322579B4F62CF1EA02;
+        Thu, 12 Mar 2020 01:39:17 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 12 Mar 2020 01:39:08 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <broonie@kernel.org>
+CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <rdunlap@infradead.org>,
+        <linux-next@vger.kernel.org>, <joe@perches.com>,
+        <Tudor.Ambarus@microchip.com>, <sfr@canb.auug.org.au>,
+        <chenxiang66@hisilicon.com>, John Garry <john.garry@huawei.com>
+Subject: [PATCH] spi: Stop selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX
+Date:   Thu, 12 Mar 2020 01:35:15 +0800
+Message-ID: <1583948115-239907-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Reinette,
+By selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX, we may introduce unmet
+dependencies:
 
-On Wed, 2020-03-11 at 10:19 -0700, Reinette Chatre wrote:
-> Hi Sai,
-> 
-> On 3/10/2020 7:46 PM, Sai Praneeth Prakhya wrote:
-> > On Tue, 2020-03-10 at 15:18 -0700, Reinette Chatre wrote:
-> > > On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
-> > > >  		.mum_resctrlfs	= 0,
-> > > >  		.filename	= RESULT_FILE_NAME,
-> > > > -		.mask		= ~(long_mask << n) & long_mask,
-> > > > -		.span		= cache_size * n / count_of_bits,
-> > > >  		.num_of_runs	= 0,
-> > > > -		.setup		= cqm_setup,
-> > > > +		.setup		= cqm_setup
-> > > >  	};
-> > > > +	int ret;
-> > > > +	char schemata[64];
-> > > > +	unsigned long long_mask;
-> > > >  
-> > > > -	if (strcmp(benchmark_cmd[0], "fill_buf") == 0)
-> > > > -		sprintf(benchmark_cmd[1], "%lu", param.span);
-> > > > +	ret = remount_resctrlfs(1);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > 
-> > > Here resctrl is remounted and followed by some changes to the root
-> > > group's schemata. That is followed by a call to resctrl_val that
-> > > attempts to remount resctrl again that will undo all the configurations
-> > > inbetween.
-> > 
-> > No, it wouldn't because mum_resctrlfs is 0. When resctrl FS is already
-> > mounted
-> > and mum_resctrlfs is 0, then remount_resctrlfs() is a noop.
-> > 
-> 
-> I missed that. Thank you.
-> 
-> fyi ... when I tried these tests I encountered the following error
-> related to unmounting:
-> 
-> [SNIP]
-> ok Write schema "L3:1=7fff" to resctrl FS
-> ok Write schema "L3:1=ffff" to resctrl FS
-> ok Write schema "L3:1=1ffff" to resctrl FS
-> ok Write schema "L3:1=3ffff" to resctrl FS
-> # Unable to umount resctrl: Device or resource busy
-> # Results are displayed in (Bytes)
-> ok CQM: diff within 5% for mask 1
-> # alloc_llc_cache_size: 2883584
-> # avg_llc_occu_resc: 2973696
-> ok CQM: diff within 5% for mask 3
-> [SNIP]
-> 
-> This seems to originate from resctrl_val() that forces an unmount but if
-> that fails the error is not propagated.
+WARNING: unmet direct dependencies detected for MTD_SPI_NOR
+  Depends on [m]: MTD [=m] && SPI_MASTER [=y]
+  Selected by [y]:
+  - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
 
-Yes, that's right and it's a good test. I didn't encounter this issue during
-my testing because I wasn't using resctrl FS from other terminals (I think you
-were using resctrl FS from other terminal and hence resctrl_test was unable to
-unmount it).
+Since MTD_SPI_NOR is only selected by SPI_HISI_SFC_V3XX for practical
+reasons - slave devices use the spi-nor driver, enabled by MTD_SPI_NOR -
+just drop it.
 
-I think the error should not be propagated because unmounting resctrl FS
-shouldn't stop us from checking the results. If measuring values reports an
-error then we shouldn't check for results.
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-> > > > diff --git a/tools/testing/selftests/resctrl/resctrl_val.c
-> > > > b/tools/testing/selftests/resctrl/resctrl_val.c
-> > > > index 271cb5c976f5..c59fad6cb9b0 100644
-> > > > --- a/tools/testing/selftests/resctrl/resctrl_val.c
-> > > > +++ b/tools/testing/selftests/resctrl/resctrl_val.c
-> > > > @@ -705,29 +705,21 @@ int resctrl_val(char **benchmark_cmd, struct
-> > > > resctrl_val_param *param)
-> > > >  		goto out;
-> > > >  	}
-> > > >  
-> > > > -	/* Give benchmark enough time to fully run */
-> > > > -	sleep(1);
-> > > > -
-> > > >  	/* Test runs until the callback setup() tells the test to
-> > > > stop. */
-> > > >  	while (1) {
-> > > > +		ret = param->setup(param);
-> > > > +		if (ret) {
-> > > > +			ret = 0;
-> > > > +			break;
-> > > > +		}
-> > > > +
-> > > > +		/* Measure vals sleeps for a second */
-> > > >  		if ((strcmp(resctrl_val, "mbm") == 0) ||
-> > > >  		    (strcmp(resctrl_val, "mba") == 0)) {
-> > > > -			ret = param->setup(param);
-> > > > -			if (ret) {
-> > > > -				ret = 0;
-> > > > -				break;
-> > > > -			}
-> > > > -
-> 
-> (I refer to the above snippet in my comment below)
-> 
-> > > >  			ret = measure_vals(param, &bw_resc_start);
-> > > >  			if (ret)
-> > > >  				break;
-> > > >  		} else if (strcmp(resctrl_val, "cqm") == 0) {
-> > > > -			ret = param->setup(param);
-> > > > -			if (ret) {
-> > > > -				ret = 0;
-> > > > -				break;
-> > > > -			}
-> > > > -			sleep(1);
-> > > >  			ret = measure_cache_vals(param, bm_pid);
-> > > >  			if (ret)
-> > > >  				break;
-> > > 
-> > > This change affects not just the cache monitoring test. Could this
-> > > change be extracted into its own patch to be clear what is done here and
-> > > how it impacts the other tests?
-> > 
-> > This change shouldn't impact other tests (i.e. CAT) because CAT will not
-> > call
-> > resctrl_val().
-> 
-> I was referring to the snippet above that seems to impact the "mbm" and
-> "mba" tests by moving the call to "param->setup" for the them.
-
-Ok.. makes sense. Sure! I will make it into separate patch.
-
-Regards,
-Sai
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 66c6c0d77ea7..ad1a2547a414 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -299,7 +299,6 @@ config SPI_HISI_SFC_V3XX
+ 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
+ 	depends on (ARM64 && ACPI) || COMPILE_TEST
+ 	depends on HAS_IOMEM
+-	select MTD_SPI_NOR
+ 	help
+ 	  This enables support for HiSilicon v3xx SPI-NOR flash controller
+ 	  found in hi16xx chipsets.
+-- 
+2.17.1
 
