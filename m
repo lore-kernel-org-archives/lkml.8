@@ -6,40 +6,38 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB330C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC3C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7DE320746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9EA20736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731421AbgCKTd6 (ORCPT
+        id S1731115AbgCKTfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:33:58 -0400
-Received: from balrog.mythic-beasts.com ([46.235.227.24]:39983 "EHLO
-        balrog.mythic-beasts.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731232AbgCKTdx (ORCPT
+        Wed, 11 Mar 2020 15:35:01 -0400
+Received: from haggis.mythic-beasts.com ([46.235.224.141]:45905 "EHLO
+        haggis.mythic-beasts.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731048AbgCKTfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:33:53 -0400
-X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 15:33:52 EDT
-Received: from [146.90.33.204] (port=40284 helo=slartibartfast.quignogs.org.uk)
-        by balrog.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Wed, 11 Mar 2020 15:35:01 -0400
+Received: from [146.90.33.204] (port=54428 helo=slartibartfast.quignogs.org.uk)
+        by haggis.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92.3)
         (envelope-from <peter@bikeshed.quignogs.org.uk>)
-        id 1jC726-0001Gt-L7; Wed, 11 Mar 2020 19:28:46 +0000
+        id 1jC6wY-0008RB-Ah; Wed, 11 Mar 2020 19:23:02 +0000
 From:   peter@bikeshed.quignogs.org.uk
-To:     linux-doc@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
         Peter Lister <peter@bikeshed.quignogs.org.uk>
-Subject: [PATCH 0/1] Convert text to ReST list and remove doc build warnings
-Date:   Wed, 11 Mar 2020 19:28:22 +0000
-Message-Id: <20200311192823.16213-1-peter@bikeshed.quignogs.org.uk>
+Subject: [PATCH 0/1] Format kerneldoc code snippets as literal block
+Date:   Wed, 11 Mar 2020 19:22:55 +0000
+Message-Id: <20200311192256.15911-1-peter@bikeshed.quignogs.org.uk>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-BlackCat-Spam-Score: 65
+X-BlackCat-Spam-Score: 50
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -47,19 +45,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Lister <peter@bikeshed.quignogs.org.uk>
 
-A minimal patch to format a couple of multi-line return value descriptions as
-ReST lists, mostly by adding blank lines to kerneldoc comments.
-
-This is pure formatting - the actual documentation text remains unchanged.
-
-It also removes a couple of warnings from the doc build.
-
+A minimal patch to better format a couple of kerneldoc code snippets as
+literal blocks and so remove kernel doc build warnings.
 
 Peter Lister (1):
-  Reformat return value descriptions as ReST lists.
+  Added double colons and blank lines within kerneldoc to format code
+    snippets as ReST literal blocks.
 
- drivers/net/phy/sfp-bus.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/base/platform.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 -- 
 2.24.1
