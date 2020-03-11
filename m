@@ -2,174 +2,211 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62706C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21D1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA8C20691
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:41:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9d5QTHS"
+	by mail.kernel.org (Postfix) with ESMTP id 2E19D20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583937777;
+	bh=eovpXTvyVWEK9XWNC0b/YZgHbmJESrWMQgqo7YJfDec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0RHW1t1RFYvEL2qsc327qRCqKW6HKJ+ViYCuzAhQO8kXrta6Gs2W0CEr+G0LkfzFA
+	 Zj/taJUjRqADmwXYR2d8+HIi590mQac3L134sjJxm+iS4rgW9AjbFzUhnimyv1KQrC
+	 DpCwd6LFL9AEBljBhxGAjpw70KdVur8Tqq6ss00s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgCKOlj (ORCPT
+        id S1729903AbgCKOm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:41:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25217 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729057AbgCKOli (ORCPT
+        Wed, 11 Mar 2020 10:42:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43443 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbgCKOm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:41:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583937696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oi39w6c8WmZF4VD2SAl+7GXpBzzUSxdZMb4is4/iUjc=;
-        b=b9d5QTHSEa/djijfWo98S3pZKb6FhMv3c0fMPhpvyY/1jH/dxLws11WNtPQnoeQilGSRFP
-        tx5rd7slg+6fyWfK6ruYPxZy1plJlnzvglBwxsP3v/Nzm71QC7vtmIwdj38jCAn6idMl03
-        IQOsNno8MYR6mZoaacQt5w1uvbxYD58=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-oaGi-oZRO3uadCugnnOKxA-1; Wed, 11 Mar 2020 10:41:35 -0400
-X-MC-Unique: oaGi-oZRO3uadCugnnOKxA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B2B31088384;
-        Wed, 11 Mar 2020 14:41:33 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F268960C18;
-        Wed, 11 Mar 2020 14:41:24 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 84EA122021D; Wed, 11 Mar 2020 10:41:24 -0400 (EDT)
-Date:   Wed, 11 Mar 2020 10:41:24 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peng Tao <tao.peng@linux.alibaba.com>
-Subject: Re: [PATCH 12/20] fuse: Introduce setupmapping/removemapping commands
-Message-ID: <20200311144124.GB83257@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-13-vgoyal@redhat.com>
- <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com>
- <20200310203321.GF38440@redhat.com>
- <CAOQ4uxh2WdLdbcMp+qvQCX2hiBx+hLO1z5wkZtc-7GCuDdsthw@mail.gmail.com>
- <CAJfpeguwqEsPLtph73AG7bhm1Dp4ahyJtyW=Ud7L-OFwyEmwWg@mail.gmail.com>
+        Wed, 11 Mar 2020 10:42:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id dc19so3133763edb.10;
+        Wed, 11 Mar 2020 07:42:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gKDUe9P2YUubturUxI0TRyVNid6URk2e+Ed9FtxvxKk=;
+        b=EMKmZ/MrgEuNGsTb/Ze9rt1U9+lWeztu9hI+HH0of+sRAzH/ExlqFbOIRZFSxC4ADK
+         5X/26f6R0Z/iTcCYTGKuGtP2nlbh4uQE27kLyGUwGHCD3jgSs3vXN7JQHlOpGJ8PvKBK
+         WfPgkD8gcbIKMi9IN3+NCDIBuDyPVbjA9c0GIzrV/aMUB6I/1ri7oKrc75+WBo6cr0wI
+         o5ID2MMultN8P9BStIBS4wxYgcFg9edOD1Rdv1sM6CUM5bZXJ46B7Xjs1ZdBbUyY/orQ
+         vAyryO2dUh1BIfRe/cIKRLd1XpjnA0BhOkuZTP3IfrsMvh+uB+boHC0YO6AFo69jRXBx
+         VZBg==
+X-Gm-Message-State: ANhLgQ2P/ulINIycY42dj86NuoBy33Ie2susWmo+v93rpw6wYCUPbnls
+        j3LiPI1ua4HqGDo/+cPH7QA=
+X-Google-Smtp-Source: ADFU+vuaPy05McHUkVwSVh+g/+/nj6uRC/r0ZhsuPI7+uwkM3c7CJcwerQSzNIOD7sx8YKwslv43/w==
+X-Received: by 2002:aa7:d45a:: with SMTP id q26mr3263099edr.350.1583937774579;
+        Wed, 11 Mar 2020 07:42:54 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id p4sm607572eju.57.2020.03.11.07.42.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 07:42:51 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 15:42:48 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCHv3 5/5] clk: samsung: exynos542x: Move FSYS subsystem
+ clocks to its sub-CMU
+Message-ID: <20200311144248.GA4455@kozik-lap>
+References: <20200310194854.831-1-linux.amoon@gmail.com>
+ <20200310194854.831-6-linux.amoon@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJfpeguwqEsPLtph73AG7bhm1Dp4ahyJtyW=Ud7L-OFwyEmwWg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200310194854.831-6-linux.amoon@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 03:19:18PM +0100, Miklos Szeredi wrote:
-> On Wed, Mar 11, 2020 at 8:03 AM Amir Goldstein <amir73il@gmail.com> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 10:34 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > >
-> > > On Tue, Mar 10, 2020 at 08:49:49PM +0100, Miklos Szeredi wrote:
-> > > > On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > > >
-> > > > > Introduce two new fuse commands to setup/remove memory mappings. This
-> > > > > will be used to setup/tear down file mapping in dax window.
-> > > > >
-> > > > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > > > > Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
-> > > > > ---
-> > > > >  include/uapi/linux/fuse.h | 37 +++++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 37 insertions(+)
-> > > > >
-> > > > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> > > > > index 5b85819e045f..62633555d547 100644
-> > > > > --- a/include/uapi/linux/fuse.h
-> > > > > +++ b/include/uapi/linux/fuse.h
-> > > > > @@ -894,4 +894,41 @@ struct fuse_copy_file_range_in {
-> > > > >         uint64_t        flags;
-> > > > >  };
-> > > > >
-> > > > > +#define FUSE_SETUPMAPPING_ENTRIES 8
-> > > > > +#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
-> > > > > +struct fuse_setupmapping_in {
-> > > > > +       /* An already open handle */
-> > > > > +       uint64_t        fh;
-> > > > > +       /* Offset into the file to start the mapping */
-> > > > > +       uint64_t        foffset;
-> > > > > +       /* Length of mapping required */
-> > > > > +       uint64_t        len;
-> > > > > +       /* Flags, FUSE_SETUPMAPPING_FLAG_* */
-> > > > > +       uint64_t        flags;
-> > > > > +       /* Offset in Memory Window */
-> > > > > +       uint64_t        moffset;
-> > > > > +};
-> > > > > +
-> > > > > +struct fuse_setupmapping_out {
-> > > > > +       /* Offsets into the cache of mappings */
-> > > > > +       uint64_t        coffset[FUSE_SETUPMAPPING_ENTRIES];
-> > > > > +        /* Lengths of each mapping */
-> > > > > +        uint64_t       len[FUSE_SETUPMAPPING_ENTRIES];
-> > > > > +};
-> > > >
-> > > > fuse_setupmapping_out together with FUSE_SETUPMAPPING_ENTRIES seem to be unused.
-> > >
-> > > This looks like leftover from the old code. I will get rid of it. Thanks.
-> > >
-> >
-> > Hmm. I wonder if we should keep some out args for future extensions.
-> > Maybe return the mapped size even though it is all or nothing at this
-> > point?
-> >
-> > I have interest in a similar FUSE mapping functionality that was prototyped
-> > by Miklos and published here:
-> > https://lore.kernel.org/linux-fsdevel/CAJfpegtjEoE7H8tayLaQHG9fRSBiVuaspnmPr2oQiOZXVB1+7g@mail.gmail.com/
-> >
-> > In this prototype, a FUSE_MAP command is used by the server to map a
-> > range of file to the kernel for io. The command in args are quite similar to
-> > those in fuse_setupmapping_in, but since the server is on the same host,
-> > the mapping response is {mapfd, offset, size}.
+On Tue, Mar 10, 2020 at 07:48:54PM +0000, Anand Moon wrote:
+> FSYS power domain support usbdrd3, pdma and usb2 power gaiting,
+> hence move FSYS clk setting to sub-CMU block to support power domain
+> on/off sequences for device nodes.
 > 
-> Right.  So the difference is in which entity allocates the mapping.
-> IOW whether the {fd, offset, size} is input or output in the protocol.
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> New patch in the series
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c | 45 +++++++++++++++++++++-------
+>  1 file changed, 34 insertions(+), 11 deletions(-)
 > 
-> I don't remember the reasons for going with the mapping being
-> allocated by the client, not the other way round.   Vivek?
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index c9e5a1fb6653..6c4c47dfcdce 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -859,12 +859,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
+>  	DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
+>  	DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
+>  
+> -	/* USB3.0 */
+> -	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
+> -	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
+> -	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
+> -	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
 
-I think one of the main reasons is memory reclaim. Once all ranges in 
-a cache range are allocated, we need to free a memory range which can be
-reused. And client has all the logic to free up that range so that it can
-be remapped and reused for a different file/offset. Server will not know
-any of this. So I will think that for virtiofs, server might not be
-able to decide where to map a section of file and it has to be told
-explicitly by the client.
+According to clock diagram these are still in CMU TOP, not FSYS.
 
+> -
+>  	/* MMC */
+>  	DIV(0, "dout_mmc0", "mout_mmc0", DIV_FSYS1, 0, 10),
+>  	DIV(0, "dout_mmc1", "mout_mmc1", DIV_FSYS1, 10, 10),
+> @@ -1031,8 +1025,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+/>  
+>  	/* FSYS Block */
+>  	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
+> -	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+> -	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+>  	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
+>  	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
+>  	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
+> @@ -1040,9 +1032,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+>  	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
+>  	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
+>  			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
+> -	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> -	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> -	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+>  	GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
+>  			SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
+>  
+> @@ -1258,6 +1247,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
+>  	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
+>  };
+>  
+> +/* USB3.0 */
+> +static const struct samsung_div_clock exynos5x_fsys_div_clks[] __initconst = {
+> +	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
+> +	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
+> +	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
+> +	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
+> +};
+> +
+> +static const struct samsung_gate_clock exynos5x_fsys_gate_clks[] __initconst = {
+> +	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+> +	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+> +	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> +	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> +	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+> +};
+> +
+> +static struct exynos5_subcmu_reg_dump exynos5x_fsys_suspend_regs[] = {
+> +	{ GATE_IP_FSYS, 0xffffffff, 0xffffffff }, /* FSYS gates */
+
+This looks wrong. GATE_IP_FSYS has fields also for FSYS2 clocks which
+you are not suspending. They do not belong to this CMU.
+
+Don't you need to save also parts of GATE_BUS_FSYS0?
+
+> +	{ SRC_TOP3, 0, BIT(24) },                 /* SW_MUX_PCLK_200_FSYS_SEL */
+> +	{ SRC_TOP3, 0, BIT(28) },                 /* SW_MUX_ACLK_200_FSYS_SEL */
+
+Name of clocks from the driver please, not from datasheet. Look at other
+examples.
+
+Best regards,
+Krzysztof
+
+
+> +};
+> +
+>  static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
+>  	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
+>  	     CLK_SET_RATE_PARENT, 0),
+> @@ -1376,12 +1387,23 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
+>  	.pd_name	= "MAU",
+>  };
+>  
+> +static const struct exynos5_subcmu_info exynos5x_fsys_subcmu = {
+> +	.div_clks       = exynos5x_fsys_div_clks,
+> +	.nr_div_clks    = ARRAY_SIZE(exynos5x_fsys_div_clks),
+> +	.gate_clks	= exynos5x_fsys_gate_clks,
+> +	.nr_gate_clks	= ARRAY_SIZE(exynos5x_fsys_gate_clks),
+> +	.suspend_regs	= exynos5x_fsys_suspend_regs,
+> +	.nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys_suspend_regs),
+> +	.pd_name	= "FSYS",
+> +};
+> +
+>  static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
+>  	&exynos5x_disp_subcmu,
+>  	&exynos5x_gsc_subcmu,
+>  	&exynos5x_g3d_subcmu,
+>  	&exynos5x_mfc_subcmu,
+>  	&exynos5x_mscl_subcmu,
+> +	&exynos5x_fsys_subcmu,
+>  };
+>  
+>  static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+> @@ -1391,6 +1413,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+>  	&exynos5x_mfc_subcmu,
+>  	&exynos5x_mscl_subcmu,
+>  	&exynos5800_mau_subcmu,
+> +	&exynos5x_fsys_subcmu,
+>  };
+>  
+>  static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
+> -- 
+> 2.25.1
 > 
-> If the allocation were to be by the server, we could share the request
-> type and possibly some code between the two, although the I/O
-> mechanism would still be different.
-> 
-
-So input parameters of both FUSE_SETUPMAPPING and FUSE_MAP seem
-similar (except the moffset field).  Given output of FUSE_MAP reqeust
-is very different, I would think it will be easier to have it as a
-separate command.
-
-Or can it be some sort of optional output args which can differentiate
-between two types of requests. 
-
-/me personally finds it simpler to have separate command instead of
-overloading FUSE_SETUPMAPPING. But its your call. :-) 
-
-Vivek
-
