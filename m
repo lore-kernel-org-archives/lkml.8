@@ -4,41 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1217EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6950DC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCEA721D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAD321D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Seo3WcNJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="cDTBJWhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbgCKNvo (ORCPT
+        id S1729708AbgCKNvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:51:44 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36772 "EHLO
+        Wed, 11 Mar 2020 09:51:52 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36798 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbgCKNvn (ORCPT
+        with ESMTP id S1729559AbgCKNvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:51:43 -0400
+        Wed, 11 Mar 2020 09:51:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583934702; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1583934704; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=1kpQTc/BnIRMN7rLXb27AAycasWYbKztTQg5Nu/o7xw=;
-        b=Seo3WcNJymsKriUB32h2Y5oHcgVkfpcRjIOCaxuE5Jg+TkTnbeXj7fiU4eQCvvEgv3/1nl
-        kR5Jonf4XgklOwoL5/Ae9Bw4z31QlRWmodGTfgrDtIg379vJBS99A+Z7CdRG4xwyDZ1bV5
-        ULIU1or60xC0mY1M3w6eBmZrJR9pAOQ=
+         in-reply-to:in-reply-to:references:references;
+        bh=Uf8CxbVzmwwbnnhCHgFTyi0dDe8iIqyWSouTjZIutd8=;
+        b=cDTBJWhXpeHb2DRlmfmcoKB1j+nRXo7OWNmC6YAebfeNp1juvqC2wcvq7yRRaOwUY2xojK
+        PDUTzxl5JcdJS84Bj3Zw3F70lgU5Vjbq0VjbAtWgGR7oTyGVih0RHAjdZkg40jcAP7123q
+        KnFU2BVHzZkXqq/WnCU3l5qHwN1CTiE=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Bin Liu <b-liu@ti.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
         linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/5] dt-bindings: usb: Convert jz4740-musb doc to YAML
-Date:   Wed, 11 Mar 2020 14:51:29 +0100
-Message-Id: <20200311135133.16392-1-paul@crapouillou.net>
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v3 2/5] usb: musb: jz4740: Add support for DMA
+Date:   Wed, 11 Mar 2020 14:51:30 +0100
+Message-Id: <20200311135133.16392-2-paul@crapouillou.net>
+In-Reply-To: <20200311135133.16392-1-paul@crapouillou.net>
+References: <20200311135133.16392-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,144 +49,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert ingenic,jz4740-musb.txt to ingenic,musb.yaml, and add the
-new ingenic,jz4770-musb and ingenic,jz4725b-musb compatible strings
-in the process.
+Add support for using the DMA channels built into the Inventra IP.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-        v2: Changed oneOf+const to enum
-        v3: Add ingenic,jz4725b-musb compatible string with fallback to jz4740-musb
+    v2-v3: No change
 
- .../bindings/usb/ingenic,jz4740-musb.txt      | 32 --------
- .../devicetree/bindings/usb/ingenic,musb.yaml | 76 +++++++++++++++++++
- 2 files changed, 76 insertions(+), 32 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ingenic,musb.yaml
+ drivers/usb/musb/Kconfig  |  2 +-
+ drivers/usb/musb/jz4740.c | 20 ++++++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-deleted file mode 100644
-index 16808721f3ff..000000000000
---- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--Ingenic JZ4740 MUSB driver
--
--Required properties:
--
--- compatible: Must be "ingenic,jz4740-musb"
--- reg: Address range of the UDC register set
--- interrupts: IRQ number related to the UDC hardware
--- interrupt-names: must be "mc"
--- clocks: phandle to the "udc" clock
--- clock-names: must be "udc"
--- phys: phandle to the USB PHY
--
--Example:
--
--usb_phy: usb-phy@0 {
--	compatible = "usb-nop-xceiv";
--	#phy-cells = <0>;
--};
--
--udc: usb@13040000 {
--	compatible = "ingenic,jz4740-musb";
--	reg = <0x13040000 0x10000>;
--
--	interrupt-parent = <&intc>;
--	interrupts = <24>;
--	interrupt-names = "mc";
--
--	clocks = <&cgu JZ4740_CLK_UDC>;
--	clock-names = "udc";
--
--	phys = <&usb_phy>;
--};
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,musb.yaml b/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-new file mode 100644
-index 000000000000..1d6877875077
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/ingenic,musb.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+index eb2ded1026ee..c4b349e074c1 100644
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -144,7 +144,7 @@ config USB_UX500_DMA
+ 
+ config USB_INVENTRA_DMA
+ 	bool 'Inventra'
+-	depends on USB_MUSB_OMAP2PLUS || USB_MUSB_MEDIATEK
++	depends on USB_MUSB_OMAP2PLUS || USB_MUSB_MEDIATEK || USB_MUSB_JZ4740
+ 	help
+ 	  Enable DMA transfers using Mentor's engine.
+ 
+diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
+index bc0109f4700b..aa32b5af0c1f 100644
+--- a/drivers/usb/musb/jz4740.c
++++ b/drivers/usb/musb/jz4740.c
+@@ -24,11 +24,14 @@ struct jz4740_glue {
+ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
+ {
+ 	unsigned long	flags;
+-	irqreturn_t	retval = IRQ_NONE;
++	irqreturn_t	retval = IRQ_NONE, retval_dma = IRQ_NONE;
+ 	struct musb	*musb = __hci;
+ 
+ 	spin_lock_irqsave(&musb->lock, flags);
+ 
++	if (IS_ENABLED(CONFIG_USB_INVENTRA_DMA) && musb->dma_controller)
++		retval_dma = dma_controller_irq(irq, musb->dma_controller);
 +
-+title: Ingenic JZ47xx USB IP DT bindings
+ 	musb->int_usb = musb_readb(musb->mregs, MUSB_INTRUSB);
+ 	musb->int_tx = musb_readw(musb->mregs, MUSB_INTRTX);
+ 	musb->int_rx = musb_readw(musb->mregs, MUSB_INTRRX);
+@@ -46,7 +49,10 @@ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
+ 
+ 	spin_unlock_irqrestore(&musb->lock, flags);
+ 
+-	return retval;
++	if (retval == IRQ_HANDLED || retval_dma == IRQ_HANDLED)
++		return IRQ_HANDLED;
 +
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+properties:
-+  $nodename:
-+    pattern: '^usb@.*'
-+
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4770-musb
-+        - ingenic,jz4740-musb
-+      - items:
-+        - const: ingenic,jz4725b-musb
-+        - const: ingenic,jz4740-musb
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: udc
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    items:
-+      - const: mc
-+
-+  phys:
-+    description: PHY specifier for the USB PHY
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - phys
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    usb_phy: usb-phy@0 {
-+      compatible = "usb-nop-xceiv";
-+      #phy-cells = <0>;
-+    };
-+
-+    udc: usb@13040000 {
-+      compatible = "ingenic,jz4740-musb";
-+      reg = <0x13040000 0x10000>;
-+
-+      interrupt-parent = <&intc>;
-+      interrupts = <24>;
-+      interrupt-names = "mc";
-+
-+      clocks = <&cgu JZ4740_CLK_UDC>;
-+      clock-names = "udc";
-+
-+      phys = <&usb_phy>;
-+    };
++	return IRQ_NONE;
+ }
+ 
+ static struct musb_fifo_cfg jz4740_musb_fifo_cfg[] = {
+@@ -93,14 +99,14 @@ static int jz4740_musb_init(struct musb *musb)
+ 	return 0;
+ }
+ 
+-/*
+- * DMA has not been confirmed to work with CONFIG_USB_INVENTRA_DMA,
+- * so let's not set up the dma function pointers yet.
+- */
+ static const struct musb_platform_ops jz4740_musb_ops = {
+ 	.quirks		= MUSB_DMA_INVENTRA | MUSB_INDEXED_EP,
+ 	.fifo_mode	= 2,
+ 	.init		= jz4740_musb_init,
++#ifdef CONFIG_USB_INVENTRA_DMA
++	.dma_init	= musbhs_dma_controller_create_noirq,
++	.dma_exit	= musbhs_dma_controller_destroy,
++#endif
+ };
+ 
+ static const struct musb_hdrc_platform_data jz4740_musb_pdata = {
+@@ -142,6 +148,8 @@ static int jz4740_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	musb->dev.parent		= dev;
++	musb->dev.dma_mask		= &musb->dev.coherent_dma_mask;
++	musb->dev.coherent_dma_mask	= DMA_BIT_MASK(32);
+ 
+ 	glue->pdev			= musb;
+ 	glue->clk			= clk;
 -- 
 2.25.1
 
