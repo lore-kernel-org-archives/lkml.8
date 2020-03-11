@@ -2,76 +2,85 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E82BC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D76C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E968520738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA5A20750
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583948498;
+	bh=bgSmYq0cHTA9/4QmAQKlWfxb9DYO4QtAo2xGhsXLHps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kyk72aRJJfWlmUAFaSwLi5GEbSy8XWa4cE45Ty6MeJcOkQ6F9s1HBeytBAoOfa1Oa
+	 OGqLj6Kf9yU5wUxNd/FlrM8pvydwtXjx5i/J6Eo7BlDIiipn2iKZ8zLZ/D+uAtgtge
+	 FUkeMg6M23V8qD+23/LgBNeijpulpePUg/zflmMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbgCKRjW (ORCPT
+        id S1730478AbgCKRlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:39:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11629 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729852AbgCKRjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:39:22 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 43322579B4F62CF1EA02;
-        Thu, 12 Mar 2020 01:39:17 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 12 Mar 2020 01:39:08 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <broonie@kernel.org>
-CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <rdunlap@infradead.org>,
-        <linux-next@vger.kernel.org>, <joe@perches.com>,
-        <Tudor.Ambarus@microchip.com>, <sfr@canb.auug.org.au>,
-        <chenxiang66@hisilicon.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH] spi: Stop selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX
-Date:   Thu, 12 Mar 2020 01:35:15 +0800
-Message-ID: <1583948115-239907-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Wed, 11 Mar 2020 13:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgCKRlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:41:36 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF31F2073E;
+        Wed, 11 Mar 2020 17:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583948497;
+        bh=bgSmYq0cHTA9/4QmAQKlWfxb9DYO4QtAo2xGhsXLHps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yYhgVgcpvDOsH3WNqqv4VJaIHxs5wN4tGA9bBiWMCq51SV1jtYQeY/3Hg+G2tNEhf
+         OEMzIGYpDTyPBJJFUwtTeCGd6V9ckxD2m3X5NJ0dT4GXQK46sRT3I+MK1GJTAZaw43
+         6jccbBjs49GmqycJtbbyE3DYqlA03nzqLIuV2Grk=
+Date:   Wed, 11 Mar 2020 10:41:34 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH] kmod: make request_module() return an error when
+ autoloading is disabled
+Message-ID: <20200311174134.GB20006@gmail.com>
+References: <20200310223731.126894-1-ebiggers@kernel.org>
+ <202003111026.2BBE41C@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003111026.2BBE41C@keescook>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By selecting MTD_SPI_NOR for SPI_HISI_SFC_V3XX, we may introduce unmet
-dependencies:
+On Wed, Mar 11, 2020 at 10:28:07AM -0700, Kees Cook wrote:
+> On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > It's long been possible to disable kernel module autoloading completely
+> > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
+> 
+> Hunh. I've never seen that before. :) I've always used;
+> 
+> echo 1 > /proc/sys/kernel/modules_disabled
+> 
+> Regardless,
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
 
-WARNING: unmet direct dependencies detected for MTD_SPI_NOR
-  Depends on [m]: MTD [=m] && SPI_MASTER [=y]
-  Selected by [y]:
-  - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
+modules_disabled is different because it disables *all* module loading, not just
+autoloading.
 
-Since MTD_SPI_NOR is only selected by SPI_HISI_SFC_V3XX for practical
-reasons - slave devices use the spi-nor driver, enabled by MTD_SPI_NOR -
-just drop it.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 66c6c0d77ea7..ad1a2547a414 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -299,7 +299,6 @@ config SPI_HISI_SFC_V3XX
- 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
- 	depends on (ARM64 && ACPI) || COMPILE_TEST
- 	depends on HAS_IOMEM
--	select MTD_SPI_NOR
- 	help
- 	  This enables support for HiSilicon v3xx SPI-NOR flash controller
- 	  found in hi16xx chipsets.
--- 
-2.17.1
-
+- Eric
