@@ -2,320 +2,229 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60874C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F4C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF3621655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFDB208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J7XsJoCe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjhNqUul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgCKLUm (ORCPT
+        id S1729199AbgCKLVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:20:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43498 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgCKLUk (ORCPT
+        Wed, 11 Mar 2020 07:21:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59993 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726044AbgCKLVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:20:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u12so1022781pgb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=m4btOjpog/uQ4bY1laWTrOQ6YHEeLcDwWkTmIBHJjvI=;
-        b=J7XsJoCelDGLuIQNlA6IVjvm6ghgWXxx4Ed7u0wgJp/3MUIff/waejd/kZOpNhRS84
-         vMWxRf9f/WHkOhvGmws+iVQc0/dZwG0EgzgBZ9+CxMmF/0M7TCiG2KUq+Xr+DI7L+55b
-         MgKaj469n3bY7238qAy0nD18hqnky6IsMfigU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m4btOjpog/uQ4bY1laWTrOQ6YHEeLcDwWkTmIBHJjvI=;
-        b=Px5XrUfRIbBZj9H/KWMKi45TtjntpBiCdGPWTXln64GEe7IItFrZ/9cK1BKqdgY231
-         M+Y8ianwUPeSyYIhBD84gOhh/6Ls4ZSCoM1NhlwDxWLXyT9EGpisnC1UMagXx92pMb3u
-         7mTqo8JGQxjikS+qsE/c0bS2Of6ydg7st4ZcmgkTxqZhh26rX3BSQ8xyBzwu1t847PtJ
-         sTgUMVSLZj/ME+yzvHp8bKgSDXzXAvCfwP+5lanTeO8T5X3mXYjH2YRvsNxNN4TjSE27
-         NhXisgbYgK1vkNGUmwff2lQR/GEZ0Wiu2dJnjS/gYi+3VswcUScO0BFBjuSCnRfZ3ZaH
-         lg2w==
-X-Gm-Message-State: ANhLgQ0mNW9ASi5T3+nummf0qqe0N5OZgRlhXQHLDosk2H88FzPFY+W8
-        JtydrMZk+lb4u6PGJfRw5IUGnA==
-X-Google-Smtp-Source: ADFU+vuACezen4CfgtpW3WIBr9aBBH3QLeMQl8O52A3+k6HEkRDprn6i3hU6HTDtLRcSaB2cvnQkdg==
-X-Received: by 2002:a63:7b18:: with SMTP id w24mr2405617pgc.22.1583925638810;
-        Wed, 11 Mar 2020 04:20:38 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:30f2:7a9c:387e:6c7])
-        by smtp.gmail.com with ESMTPSA id i24sm33035293pfo.92.2020.03.11.04.20.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 04:20:38 -0700 (PDT)
-From:   David Stevens <stevensd@chromium.org>
-To:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
+        Wed, 11 Mar 2020 07:21:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583925678;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=FdQPzCH63BsVcARAHMlPutis6lazev92Hk00SB5XbIQ=;
+        b=gjhNqUulJqxO4uEl/uBPPqxU+aBNUON95YIU53zWZA4Qjekq/5t25wCziHHP5UQW+uZ57i
+        1i/D/EO+XqqkKKHNT9dDH+6GJchWd+8F1LTkA4XNHg5D2ihFNPj1LaGHvbuz5ZD9eDmqHR
+        anCx3GaDTrLMROyrtaSVgc4amIBGeXk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-hF1_Qk2hOxK81S-9tUgvvA-1; Wed, 11 Mar 2020 07:21:16 -0400
+X-MC-Unique: hF1_Qk2hOxK81S-9tUgvvA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2298D107ACCC;
+        Wed, 11 Mar 2020 11:21:14 +0000 (UTC)
+Received: from [10.36.118.45] (unknown [10.36.118.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 763B65D9C9;
+        Wed, 11 Mar 2020 11:21:08 +0000 (UTC)
+Subject: Re: [PATCH v3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
         Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Stevens <stevensd@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: [PATCH v3 4/4] drm/virtio: Support virtgpu exported resources
-Date:   Wed, 11 Mar 2020 20:20:04 +0900
-Message-Id: <20200311112004.47138-5-stevensd@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200311112004.47138-1-stevensd@chromium.org>
-References: <20200311112004.47138-1-stevensd@chromium.org>
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tyler Sanderson <tysand@google.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200310113854.11515-1-david@redhat.com>
+ <alpine.DEB.2.21.2003101204590.90377@chino.kir.corp.google.com>
+ <890da35b-1ac2-9c2e-b42d-96d24d3e0f4c@redhat.com>
+ <20200311070952-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <d331e630-f437-04fa-a772-9f00fd688dc8@redhat.com>
+Date:   Wed, 11 Mar 2020 12:21:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200311070952-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for UUID-based resource sharing mechanism to virtgpu. This
-implements the new virtgpu commands and hooks them up to dma-buf's
-get_uuid callback.
+On 11.03.20 12:12, Michael S. Tsirkin wrote:
+> On Tue, Mar 10, 2020 at 08:13:19PM +0100, David Hildenbrand wrote:
+>> On 10.03.20 20:05, David Rientjes wrote:
+>>> On Tue, 10 Mar 2020, David Hildenbrand wrote:
+>>>
+>>>> Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+>>>> changed the behavior when deflation happens automatically. Instead of
+>>>> deflating when called by the OOM handler, the shrinker is used.
+>>>>
+>>>> However, the balloon is not simply some other slab cache that should be
+>>>> shrunk when under memory pressure. The shrinker does not have a concept of
+>>>> priorities yet, so this behavior cannot be configured. Eventually once
+>>>> that is in place, we might want to switch back after doing proper
+>>>> testing.
+>>>>
+>>>> There was a report that this results in undesired side effects when
+>>>> inflating the balloon to shrink the page cache. [1]
+>>>> 	"When inflating the balloon against page cache (i.e. no free memory
+>>>> 	 remains) vmscan.c will both shrink page cache, but also invoke the
+>>>> 	 shrinkers -- including the balloon's shrinker. So the balloon
+>>>> 	 driver allocates memory which requires reclaim, vmscan gets this
+>>>> 	 memory by shrinking the balloon, and then the driver adds the
+>>>> 	 memory back to the balloon. Basically a busy no-op."
+>>>>
+>>>> The name "deflate on OOM" makes it pretty clear when deflation should
+>>>> happen - after other approaches to reclaim memory failed, not while
+>>>> reclaiming. This allows to minimize the footprint of a guest - memory
+>>>> will only be taken out of the balloon when really needed.
+>>>>
+>>>> Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
+>>>> this has no such side effects. Always register the shrinker with
+>>>> VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
+>>>> pages that are still to be processed by the guest. The hypervisor takes
+>>>> care of identifying and resolving possible races between processing a
+>>>> hinting request and the guest reusing a page.
+>>>>
+>>>> In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
+>>>> notifier with shrinker"), don't add a moodule parameter to configure the
+>>>> number of pages to deflate on OOM. Can be re-added if really needed.
+>>>> Also, pay attention that leak_balloon() returns the number of 4k pages -
+>>>> convert it properly in virtio_balloon_oom_notify().
+>>>>
+>>>> Testing done by Tyler for future reference:
+>>>>   Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
+>>>>   GB file full of random bytes that we continually cat to /dev/null.
+>>>>   This fills the page cache as the file is read. Meanwhile we trigger
+>>>>   the balloon to inflate, with a target size of 53 GB. This setup causes
+>>>>   the balloon inflation to pressure the page cache as the page cache is
+>>>>   also trying to grow. Afterwards we shrink the balloon back to zero (so
+>>>>   total deflate = total inflate).
+>>>>
+>>>>   Without patch (kernel 4.19.0-5):
+>>>>   Inflation never reaches the target until we stop the "cat file >
+>>>>   /dev/null" process. Total inflation time was 542 seconds. The longest
+>>>>   period that made no net forward progress was 315 seconds (see attached
+>>>>   graph).
+>>>>   Result of "grep balloon /proc/vmstat" after the test:
+>>>>   balloon_inflate 154828377
+>>>>   balloon_deflate 154828377
+>>>>
+>>>>   With patch (kernel 5.6.0-rc4+):
+>>>>   Total inflation duration was 63 seconds. No deflate-queue activity
+>>>>   occurs when pressuring the page-cache.
+>>>>   Result of "grep balloon /proc/vmstat" after the test:
+>>>>   balloon_inflate 12968539
+>>>>   balloon_deflate 12968539
+>>>>
+>>>>   Conclusion: This patch fixes the issue. In the test it reduced
+>>>>   inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
+>>>>   But more importantly, if we hadn't killed the "grep balloon
+>>>>   /proc/vmstat" process then, without the patch, the inflation process
+>>>>   would never reach the target.
+>>>>
+>>>> [1] https://www.spinics.net/lists/linux-virtualization/msg40863.html
+>>>>
+>>>> Reported-by: Tyler Sanderson <tysand@google.com>
+>>>> Tested-by: Tyler Sanderson <tysand@google.com>
+>>>> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+>>>> Cc: Michael S. Tsirkin <mst@redhat.com>
+>>>> Cc: Wei Wang <wei.w.wang@intel.com>
+>>>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>>> Cc: David Rientjes <rientjes@google.com>
+>>>> Cc: Nadav Amit <namit@vmware.com>
+>>>> Cc: Michal Hocko <mhocko@kernel.org>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>
+>>> Acked-by: David Rientjes <rientjes@google.com>
+>>>
+>>
+>> Thanks!
+> 
+> David could you repost with corrected commit log
+> so Andrew can merge? To make sure it's not missed,
+> it's probably a good idea to have a cover letter
+> mentioning mm in the subject.
 
-Signed-off-by: David Stevens <stevensd@chromium.org>
----
- drivers/gpu/drm/virtio/virtgpu_drv.c   |  3 ++
- drivers/gpu/drm/virtio/virtgpu_drv.h   | 18 +++++++++
- drivers/gpu/drm/virtio/virtgpu_kms.c   |  4 ++
- drivers/gpu/drm/virtio/virtgpu_prime.c | 41 +++++++++++++++++--
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 55 ++++++++++++++++++++++++++
- 5 files changed, 118 insertions(+), 3 deletions(-)
+Yes, on my list, busy with some other stuff. Will make sure Andrew will
+see this mail :)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index ab4bed78e656..776e6667042e 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -165,6 +165,7 @@ static unsigned int features[] = {
- 	VIRTIO_GPU_F_VIRGL,
- #endif
- 	VIRTIO_GPU_F_EDID,
-+	VIRTIO_GPU_F_RESOURCE_UUID,
- };
- static struct virtio_driver virtio_gpu_driver = {
- 	.feature_table = features,
-@@ -202,7 +203,9 @@ static struct drm_driver driver = {
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_mmap = drm_gem_prime_mmap,
-+	.gem_prime_export = virtgpu_gem_prime_export,
- 	.gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
-+	.gem_prime_get_uuid = virtgpu_gem_prime_get_uuid,
- 
- 	.gem_create_object = virtio_gpu_create_object,
- 	.fops = &virtio_gpu_driver_fops,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index af9403e1cf78..fab65f0f5a4d 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -49,6 +49,10 @@
- #define DRIVER_MINOR 1
- #define DRIVER_PATCHLEVEL 0
- 
-+#define UUID_INITIALIZING 0
-+#define UUID_INITIALIZED 1
-+#define UUID_INITIALIZATION_FAILED 2
-+
- struct virtio_gpu_object_params {
- 	uint32_t format;
- 	uint32_t width;
-@@ -75,6 +79,9 @@ struct virtio_gpu_object {
- 
- 	bool dumb;
- 	bool created;
-+
-+	int uuid_state;
-+	uuid_t uuid;
- };
- #define gem_to_virtio_gpu_obj(gobj) \
- 	container_of((gobj), struct virtio_gpu_object, base.base)
-@@ -196,6 +203,7 @@ struct virtio_gpu_device {
- 	bool has_virgl_3d;
- 	bool has_edid;
- 	bool has_indirect;
-+	bool has_resource_assign_uuid;
- 
- 	struct work_struct config_changed_work;
- 
-@@ -206,6 +214,8 @@ struct virtio_gpu_device {
- 	struct virtio_gpu_drv_capset *capsets;
- 	uint32_t num_capsets;
- 	struct list_head cap_cache;
-+
-+	spinlock_t resource_export_lock;
- };
- 
- struct virtio_gpu_fpriv {
-@@ -338,6 +348,10 @@ void virtio_gpu_dequeue_fence_func(struct work_struct *work);
- void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev);
- void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev);
- 
-+int
-+virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
-+				    struct virtio_gpu_object_array *objs);
-+
- /* virtio_gpu_display.c */
- void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
- void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev);
-@@ -366,6 +380,10 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
- 			     struct virtio_gpu_object **bo_ptr,
- 			     struct virtio_gpu_fence *fence);
- /* virtgpu_prime.c */
-+struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
-+					 int flags);
-+int virtgpu_gem_prime_get_uuid(struct drm_gem_object *obj,
-+			       uuid_t *uuid);
- struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
- 	struct drm_device *dev, struct dma_buf_attachment *attach,
- 	struct sg_table *sgt);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 4009c2f97d08..5a2aeb6d2f35 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -134,6 +134,7 @@ int virtio_gpu_init(struct drm_device *dev)
- 	vgdev->dev = dev->dev;
- 
- 	spin_lock_init(&vgdev->display_info_lock);
-+	spin_lock_init(&vgdev->resource_export_lock);
- 	ida_init(&vgdev->ctx_id_ida);
- 	ida_init(&vgdev->resource_ida);
- 	init_waitqueue_head(&vgdev->resp_wq);
-@@ -162,6 +163,9 @@ int virtio_gpu_init(struct drm_device *dev)
- 	if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
- 		vgdev->has_indirect = true;
- 	}
-+	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_RESOURCE_UUID)) {
-+		vgdev->has_resource_assign_uuid = true;
-+	}
- 
- 	DRM_INFO("features: %cvirgl %cedid\n",
- 		 vgdev->has_virgl_3d ? '+' : '-',
-diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-index 050d24c39a8f..7c6357f59877 100644
---- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-@@ -26,9 +26,44 @@
- 
- #include "virtgpu_drv.h"
- 
--/* Empty Implementations as there should not be any other driver for a virtual
-- * device that might share buffers with virtgpu
-- */
-+int virtgpu_gem_prime_get_uuid(struct drm_gem_object *obj,
-+			       uuid_t *uuid)
-+{
-+	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-+	struct virtio_gpu_device *vgdev = obj->dev->dev_private;
-+
-+	wait_event(vgdev->resp_wq, bo->uuid_state != UUID_INITIALIZING);
-+	if (bo->uuid_state != UUID_INITIALIZED)
-+		return -ENODEV;
-+
-+	uuid_copy(uuid, &bo->uuid);
-+
-+	return 0;
-+}
-+
-+struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
-+					 int flags)
-+{
-+	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-+	struct virtio_gpu_device *vgdev = obj->dev->dev_private;
-+	struct virtio_gpu_object_array *objs;
-+	int ret = 0;
-+
-+	if (vgdev->has_resource_assign_uuid) {
-+		objs = virtio_gpu_array_alloc(1);
-+		if (!objs)
-+			return ERR_PTR(-ENOMEM);
-+		virtio_gpu_array_add_obj(objs, &bo->base.base);
-+
-+		ret = virtio_gpu_cmd_resource_assign_uuid(vgdev, objs);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	} else {
-+		bo->uuid_state = UUID_INITIALIZATION_FAILED;
-+  }
-+
-+	return drm_gem_prime_export(obj, flags);
-+}
- 
- struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
- 	struct drm_device *dev, struct dma_buf_attachment *attach,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index cfe9c54f87a3..b968eaa46bb0 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -1111,3 +1111,58 @@ void virtio_gpu_cursor_ping(struct virtio_gpu_device *vgdev,
- 	memcpy(cur_p, &output->cursor, sizeof(output->cursor));
- 	virtio_gpu_queue_cursor(vgdev, vbuf);
- }
-+
-+static void virtio_gpu_cmd_resource_uuid_cb(struct virtio_gpu_device *vgdev,
-+					    struct virtio_gpu_vbuffer *vbuf)
-+{
-+	struct virtio_gpu_object *obj =
-+		gem_to_virtio_gpu_obj(vbuf->objs->objs[0]);
-+	struct virtio_gpu_resp_resource_uuid *resp =
-+		(struct virtio_gpu_resp_resource_uuid *)vbuf->resp_buf;
-+	uint32_t resp_type = le32_to_cpu(resp->hdr.type);
-+
-+	spin_lock(&vgdev->resource_export_lock);
-+	WARN_ON(obj->uuid_state != UUID_INITIALIZING);
-+
-+	if (resp_type == VIRTIO_GPU_RESP_OK_RESOURCE_UUID &&
-+			obj->uuid_state == UUID_INITIALIZING) {
-+		memcpy(&obj->uuid.b, resp->uuid, sizeof(obj->uuid.b));
-+		obj->uuid_state = UUID_INITIALIZED;
-+	} else {
-+		obj->uuid_state = UUID_INITIALIZATION_FAILED;
-+	}
-+	spin_unlock(&vgdev->resource_export_lock);
-+
-+	wake_up_all(&vgdev->resp_wq);
-+}
-+
-+int
-+virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
-+				    struct virtio_gpu_object_array *objs)
-+{
-+	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(objs->objs[0]);
-+	struct virtio_gpu_resource_assign_uuid *cmd_p;
-+	struct virtio_gpu_vbuffer *vbuf;
-+	struct virtio_gpu_resp_resource_uuid *resp_buf;
-+
-+	resp_buf = kzalloc(sizeof(*resp_buf), GFP_KERNEL);
-+	if (!resp_buf) {
-+		spin_lock(&vgdev->resource_export_lock);
-+		bo->uuid_state = UUID_INITIALIZATION_FAILED;
-+		spin_unlock(&vgdev->resource_export_lock);
-+		virtio_gpu_array_put_free(objs);
-+		return -ENOMEM;
-+	}
-+
-+	cmd_p = virtio_gpu_alloc_cmd_resp(vgdev,
-+		virtio_gpu_cmd_resource_uuid_cb, &vbuf, sizeof(*cmd_p),
-+		sizeof(struct virtio_gpu_resp_resource_uuid), resp_buf);
-+	memset(cmd_p, 0, sizeof(*cmd_p));
-+
-+	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_ASSIGN_UUID);
-+	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
-+
-+	vbuf->objs = objs;
-+	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
-+	return 0;
-+}
+
 -- 
-2.25.1.481.gfbce0eb801-goog
+Thanks,
+
+David / dhildenb
 
