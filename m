@@ -2,192 +2,97 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A299CC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D66BC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473C02072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KJ8fFFHc"
+	by mail.kernel.org (Postfix) with ESMTP id 120902072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgCKSSj (ORCPT
+        id S1730796AbgCKSSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:18:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45852 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730677AbgCKSSi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:18:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583950717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IIEuNm0s1KSd9ucNBIED5u8XC49ZUleRh3A+TtaDM9A=;
-        b=KJ8fFFHckcEzm/tOgMlOhjukcLZa6Bhpj8Y8fqcrEGjUUhkjJdL6y4N1MpXpKffmsv0CSv
-        /0T8quhQoWgflpt3zJ5o6qoiWwhZqiAyoyEBJkXSlPai30WTvPDKMA3Ac5zocoGRKs56pJ
-        ZpiJwu2uwyQ9TqGSJPEFNTtlRH935HI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-m9lhqwNmM3qj11U6qp1tYw-1; Wed, 11 Mar 2020 14:18:35 -0400
-X-MC-Unique: m9lhqwNmM3qj11U6qp1tYw-1
-Received: by mail-wr1-f69.google.com with SMTP id z13so1313506wrv.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:18:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IIEuNm0s1KSd9ucNBIED5u8XC49ZUleRh3A+TtaDM9A=;
-        b=tcaZELvTkjRCFDrGMXhTvDZB664pU/5m2KJP3ZLwVtECcxSL/joXofwYodkxVBCgV5
-         wAAU5NFnrKUO+vuBZYHbAnunKD3rHdXKpcueRkvxIwHO8Gk49GdwgKIH/x/HaHJUOxLU
-         Hxiv7H+eciswJwke28otl1QVO0IgXBugyViHQdE84wR15F0DS4TAQTCJhhVX76AylV2V
-         0NihvaWIel09muFLG7ZgRGkMwD0z/FoxbokwmTTmwXIK9F3nM9M9+Em8Whp3dO3T+pv7
-         8+hWik578hfeI14NUtFNB9icrk9kzcSMrEzU6xJpWqks4YrIgoXXA0+GGMKEwriB9xpv
-         YpMg==
-X-Gm-Message-State: ANhLgQ3Kg4ewxxLeiN2tpARFMvKQKxA15rk0W/P6SgkroeCoNAtq4Fo4
-        ybUnBp45lHUmrFDue9XyIXe9R4xqmqZ6w7BfnYJ8xMYlj7/QDEaWp5Vasm0E4oWFvBv880SMEMl
-        OeO2N2B9UzfMJwtLkPsWjsP2+
-X-Received: by 2002:a1c:cc06:: with SMTP id h6mr35462wmb.118.1583950713295;
-        Wed, 11 Mar 2020 11:18:33 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vull0VAoH6OT00g7UtPFzzvBf5edDKUbKJ3cpfh/bStE6A6kp/2YRlGvAJBVLJS4Bh77Ftt5Q==
-X-Received: by 2002:a1c:cc06:: with SMTP id h6mr35442wmb.118.1583950713010;
-        Wed, 11 Mar 2020 11:18:33 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id r9sm1977728wma.47.2020.03.11.11.18.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 11:18:32 -0700 (PDT)
-Subject: Re: [PATCH v4 1/3] x86/tsc_msr: Use named struct initializers
-To:     Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Vipul Kumar <vipulk0511@gmail.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Len Brown <len.brown@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200223140610.59612-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9705677f-f52e-938f-a84a-8db8afc9fc8f@redhat.com>
-Date:   Wed, 11 Mar 2020 19:18:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 11 Mar 2020 14:18:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56037 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730677AbgCKSSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:18:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:18:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="353937802"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Mar 2020 11:18:53 -0700
+Message-ID: <2a950833c6f2e31c987cee5101fc13eddb36a468.camel@intel.com>
+Subject: Re: [PATCH V1 09/13] selftests/resctrl: Modularize fill_buf for new
+ CAT test case
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 11 Mar 2020 11:14:06 -0700
+In-Reply-To: <2b7e2ef2-8e80-1e5e-41ac-4fc4726425ac@intel.com>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <43b368952bb006ee973311d9c9ae0eb53d8e7f60.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <4c84be1d-8839-2c85-b294-7e3c454240bb@intel.com>
+         <7a1f93d4516a7de99c5dbc4afd6279d6fe7aa126.camel@intel.com>
+         <50cb755f-e112-5d71-11fa-a7cbc951d91e@intel.com>
+         <588d18133c0ad76b375a920b6e6cc1598564163a.camel@intel.com>
+         <2b7e2ef2-8e80-1e5e-41ac-4fc4726425ac@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-In-Reply-To: <20200223140610.59612-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+HI Reinette,
 
-On 2/23/20 3:06 PM, Hans de Goede wrote:
-> Use named struct initializers for the freq_desc struct-s initialization
-> and change the "u8 msr_plat" to a "bool use_msr_plat" to make its meaning
-> more clear instead of relying on a comment to explain it.
+On Wed, 2020-03-11 at 11:10 -0700, Reinette Chatre wrote:
+> Hi Sai,
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> On 3/11/2020 10:45 AM, Sai Praneeth Prakhya wrote:
+> > On Wed, 2020-03-11 at 08:44 -0700, Reinette Chatre wrote:
+> > > On 3/10/2020 6:04 PM, Sai Praneeth Prakhya wrote:
+> > > > On Tue, 2020-03-10 at 14:59 -0700, Reinette Chatre wrote:
+> > > > > On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+> > > > > > Currently fill_buf (in-built benchmark) runs as a separate process
+> > > > > > a
+> > > > > > 
+> > 
 
-I believe that this series is ready for merging now? Can we
-please get this merged?
+[SNIP]
+
+> > > Maintaining the end pointer is unusual. The start of the buffer and the
+> > > size are known properties that the end of the buffer can be computed
+> > > from. Not a problem, it just seems inconsistent that some of the buffer
+> > > functions operate on the start pointer and size while others operate on
+> > > the start pointer and end pointer.
+> > 
+> > Ok.. makes sense. I will try to make it consistent by using endptr all the
+> > time. One advantage of using endptr is that we could just compute endptr
+> > once
+> > and use it when needed by passing it as variable (will try to not make it
+> > global variable).
+> 
+> This may add unnecessary complexity because from what I can tell some of
+> those calls require buffer size and this would then require needing to
+> recompute the buffer size based on the start and end pointers. Do you
+> really need the end pointer? Can you not just use the start pointer and
+> buffer size?
+
+Ok.. makes sense. Will use buffer size.
 
 Regards,
-
-Hans
-
-
-> ---
->   arch/x86/kernel/tsc_msr.c | 28 ++++++++++++++++++----------
->   1 file changed, 18 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-> index e0cbe4f2af49..5fa41ac3feb1 100644
-> --- a/arch/x86/kernel/tsc_msr.c
-> +++ b/arch/x86/kernel/tsc_msr.c
-> @@ -22,10 +22,10 @@
->    * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
->    * Unfortunately some Intel Atom SoCs aren't quite compliant to this,
->    * so we need manually differentiate SoC families. This is what the
-> - * field msr_plat does.
-> + * field use_msr_plat does.
->    */
->   struct freq_desc {
-> -	u8 msr_plat;	/* 1: use MSR_PLATFORM_INFO, 0: MSR_IA32_PERF_STATUS */
-> +	bool use_msr_plat;
->   	u32 freqs[MAX_NUM_FREQS];
->   };
->   
-> @@ -35,31 +35,39 @@ struct freq_desc {
->    * by MSR based on SDM.
->    */
->   static const struct freq_desc freq_desc_pnw = {
-> -	0, { 0, 0, 0, 0, 0, 99840, 0, 83200 }
-> +	.use_msr_plat = false,
-> +	.freqs = { 0, 0, 0, 0, 0, 99840, 0, 83200 },
->   };
->   
->   static const struct freq_desc freq_desc_clv = {
-> -	0, { 0, 133200, 0, 0, 0, 99840, 0, 83200 }
-> +	.use_msr_plat = false,
-> +	.freqs = { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
->   };
->   
->   static const struct freq_desc freq_desc_byt = {
-> -	1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
-> +	.use_msr_plat = true,
-> +	.freqs = { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
->   };
->   
->   static const struct freq_desc freq_desc_cht = {
-> -	1, { 83300, 100000, 133300, 116700, 80000, 93300, 90000, 88900, 87500 }
-> +	.use_msr_plat = true,
-> +	.freqs = { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
-> +		   88900, 87500 },
->   };
->   
->   static const struct freq_desc freq_desc_tng = {
-> -	1, { 0, 100000, 133300, 0, 0, 0, 0, 0 }
-> +	.use_msr_plat = true,
-> +	.freqs = { 0, 100000, 133300, 0, 0, 0, 0, 0 },
->   };
->   
->   static const struct freq_desc freq_desc_ann = {
-> -	1, { 83300, 100000, 133300, 100000, 0, 0, 0, 0 }
-> +	.use_msr_plat = true,
-> +	.freqs = { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
->   };
->   
->   static const struct freq_desc freq_desc_lgm = {
-> -	1, { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 }
-> +	.use_msr_plat = true,
-> +	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
->   };
->   
->   static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
-> @@ -91,7 +99,7 @@ unsigned long cpu_khz_from_msr(void)
->   		return 0;
->   
->   	freq_desc = (struct freq_desc *)id->driver_data;
-> -	if (freq_desc->msr_plat) {
-> +	if (freq_desc->use_msr_plat) {
->   		rdmsr(MSR_PLATFORM_INFO, lo, hi);
->   		ratio = (lo >> 8) & 0xff;
->   	} else {
-> 
+Sai
 
