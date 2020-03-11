@@ -2,108 +2,133 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A69C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD74C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3680E20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCAD20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:42:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Gfm9v9Xc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M0ZoqeGg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgCKCmj (ORCPT
+        id S1728017AbgCKCmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:42:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53714 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbgCKCmi (ORCPT
+        Tue, 10 Mar 2020 22:42:47 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45485 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbgCKCmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:42:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B2gPGM098802;
-        Wed, 11 Mar 2020 02:42:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=KfOy4Bpiplasnl/ncLcT96S4AGSmRKSa2SGlhHhNj7c=;
- b=Gfm9v9XcT6XQ+dTH+zLoCwiHouQb3XBcrrPjnFoVSULeMvPSTMRT1AYsdS+YZ/h3e+kK
- 4LNGmyUcyHVkh6jH/c00tkOF/3GQZoqbPtYA9xyZ0kk+9/uynbRkFq048YYs1v6zp4Zo
- gxGCrvRgFEyVdsrOwOOqZtjVemeQjSMQoFFQbYD9Fd35xBUFK0CCaSdCmrcXf9Qw+7wj
- ZSq2gsUJfmR3KAUOWCRSA+8OJ99ICISH7J7Dej+rFw1v0UebuiUG/XEBfkkAmf9KIrsx
- CGHydj5mEdJ0zddeM4eAfSZduPG7zVsnIu7uMVCEiXH2n2kBXNidp0HUaJJgxcFeLscF Sw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2yp9v641k0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 02:42:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B2g9Bi007440;
-        Wed, 11 Mar 2020 02:42:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2yp8pvmbc7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 02:42:24 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02B2gLke024249;
-        Wed, 11 Mar 2020 02:42:21 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 19:42:20 -0700
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-scsi@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Liu <song@kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: Re: [PATCH v3] block: refactor duplicated macros
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200311002254.121365-1-mcroce@redhat.com>
-Date:   Tue, 10 Mar 2020 22:42:17 -0400
-In-Reply-To: <20200311002254.121365-1-mcroce@redhat.com> (Matteo Croce's
-        message of "Wed, 11 Mar 2020 01:22:54 +0100")
-Message-ID: <yq1k13rr4s6.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 10 Mar 2020 22:42:46 -0400
+Received: by mail-yw1-f68.google.com with SMTP id d206so619838ywa.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 19:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z34hT5bULDEZ91B4ZRD0I3GVUqGPOkD4dMmDdKPzM1w=;
+        b=M0ZoqeGgG+H1m7mfw/LTqZ+immbVB/GDQ11/vgSYcolxH+Bclr5pw31gNg1OfvPjhl
+         Lcg2AmQA9PWp7+Ilgnvbi9Xnr/b/kSvym5zDEKyqNjdLcqtaPeSK8Nv43jaVoIhjRQTM
+         xBqlSyC8FUImBaNsGoHSklolbii9rpGHRXDSF9LYLX/k9u5Zjd4saXv5EhluzJIYsxvA
+         PwhH9biQ+OmTw3CPxCfBAt9HI2eCugdQb8KerivL+FD4kkjm99VXnJtYggu0LnAATs3T
+         PE6PXMino1OW0mK1qDUlm3w3fqky5KSppx+ugvCuJbhAQI7ap2hXZ+0qx9qe/nbjw8el
+         SDmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z34hT5bULDEZ91B4ZRD0I3GVUqGPOkD4dMmDdKPzM1w=;
+        b=F61fWLIhozaSVqUvsAS2HrnlMcmwnr6yvyRA5ffFO8Lh3+0qYBQR3KINl7B8XdLMvE
+         5HXldHrSfFhyELGwqVl/i8V8pHwG+8NBM7npltlSJCLZs/2A1/L/YeML2ArQWhb64zUP
+         4bAER1TcCFLaMb5lNlyUYzHlEKnGKK7zUs4NWlhZ6Oy+NaYr03dGWIVqxgUoy1x0FH5o
+         rAg7Ei1Rn9tG1UKAGeTz/xjYKIKn+nt5GEDTfPY+eAa4qHVVJmKkguLg7196G55rKtB3
+         XQUmi1cBLj73Etox8wznd9akqU/6RRh1klbqxxipoGV2C3JxaSuu6VTdFwi6O669sBpX
+         /oOA==
+X-Gm-Message-State: ANhLgQ0/2UYTZyXENtXQX/+w1joK+kOwLh6Q+5ozVF6i1R6NEigLpKfV
+        qO9MVGcBCMuU3vI25Amot0BiUQ==
+X-Google-Smtp-Source: ADFU+vspO2XL5NOw50R2gE7tEMV4xyqoRv+aMelSY/MVWHtUuEhnkA77KqE8WWjPSnvmSc1JOwp7wg==
+X-Received: by 2002:a25:9ac5:: with SMTP id t5mr809418ybo.305.1583894564945;
+        Tue, 10 Mar 2020 19:42:44 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id x81sm19262510ywa.96.2020.03.10.19.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 19:42:44 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
+Date:   Tue, 10 Mar 2020 21:42:40 -0500
+Message-Id: <20200311024240.26834-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 clxscore=1011 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003110015
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Define FIELD_MAX(), which supplies the maximum value that can be
+represented by a field value.  Define field_max() as well, to go
+along with the lower-case forms of the field mask functions.
 
-Matteo,
+Signed-off-by: Alex Elder <elder@linaro.org>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+---
+v3: Rebased on latest netdev-next/master.
 
-> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are
-> defined several times in different flavours across the whole tree.
-> Define them just once in a common header.
->
-> While at it, replace replace "PAGE_SHIFT - 9" with
-> "PAGE_SECTORS_SHIFT" too and rename SECTOR_MASK to PAGE_SECTORS_MASK.
+David, please take this into net-next as soon as possible.  When the
+IPA code was merged the other day this prerequisite patch was not
+included, and as a result the IPA driver fails to build.  Thank you.
 
-Looks OK to me.
+  See: https://lkml.org/lkml/2020/3/10/1839
 
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+					-Alex
 
+ include/linux/bitfield.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 4bbb5f1c8b5b..48ea093ff04c 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -55,6 +55,19 @@
+ 					      (1ULL << __bf_shf(_mask))); \
+ 	})
+ 
++/**
++ * FIELD_MAX() - produce the maximum value representable by a field
++ * @_mask: shifted mask defining the field's length and position
++ *
++ * FIELD_MAX() returns the maximum value that can be held in the field
++ * specified by @_mask.
++ */
++#define FIELD_MAX(_mask)						\
++	({								\
++		__BF_FIELD_CHECK(_mask, 0ULL, 0ULL, "FIELD_MAX: ");	\
++		(typeof(_mask))((_mask) >> __bf_shf(_mask));		\
++	})
++
+ /**
+  * FIELD_FIT() - check if value fits in the field
+  * @_mask: shifted mask defining the field's length and position
+@@ -110,6 +123,7 @@ static __always_inline u64 field_mask(u64 field)
+ {
+ 	return field / field_multiplier(field);
+ }
++#define field_max(field)	((typeof(field))field_mask(field))
+ #define ____MAKE_OP(type,base,to,from)					\
+ static __always_inline __##type type##_encode_bits(base v, base field)	\
+ {									\
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.20.1
+
