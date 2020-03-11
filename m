@@ -2,153 +2,118 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFFDC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235ACC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8495820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F103021655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzcLRaRe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtE3RCy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgCKF0Z (ORCPT
+        id S1726855AbgCKFbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:26:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44406 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgCKF0Y (ORCPT
+        Wed, 11 Mar 2020 01:31:31 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42234 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgCKFbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:26:24 -0400
-Received: by mail-oi1-f196.google.com with SMTP id d62so658967oia.11;
-        Tue, 10 Mar 2020 22:26:23 -0700 (PDT)
+        Wed, 11 Mar 2020 01:31:31 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 66so687181otd.9;
+        Tue, 10 Mar 2020 22:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8W+zYa184ZyKxjkQJutCEVqgw5AXS9GRHt9fLMAGBdg=;
-        b=PzcLRaRey6wdIFrAxa/AOcg4B2xWVVZmbG1mpCZyFXf5IqLuchpXUiBr5XxLysTbGG
-         Nduh2x8Vh+mPg82HyQygL8gT/+xM4cNz6kPLliUkbabGH2tr+4SxgSZkNZTsLr+PDmG0
-         OctjLStigR7j4pN0qY2Yik5ewCsyklaO1lee58MuymVbMHU1ZGEiM7cmIKYJRsSz+gN3
-         k6XU4UnweZ1cFFmekHZlfd7IMhdlCR2iRwpMbX9w80oOejDcoPJwbwFcWifvzGrsQWOa
-         RXtzaADFYvA8O9WeG1w39hXRzTgldFS336zYt9JGWFUUBF8ha5F5Jed4OJ9nHqtgUvYJ
-         Z8gQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mRaU0AqIThL9bVRbu+a3uE7ULIqF+zwOfxIVLuqdJ+E=;
+        b=NtE3RCy7mnABRhFQlxK7AY6bPEJM4+yH1iCZhlEN6AmfDHifT0veCYRVYxUES13rYk
+         LNMHvBu0rpvTqdPmZIPc2vPhfWyp1CdyjE6hLLjiT93fxCpf9ju6tv0c1/tdzWV7Xa8+
+         K/Xf56eBn1Nz9l9yepM3HJi+eRl51tpuAJhBoBOYp0zbVUQhmsNn02+9u28PEMVkE+Mv
+         wLDQnlX7k4zyzmjwD3yXLDdiVuaa5dd0WGsxzEv0ZWIduEc/CiOGGxxdLIOuxnZq+lqW
+         2b8+afiBXLeWUuOIK4vqcKVoKNmKXy4CZFXImK+Tg/qnPtFquaKZnAFmbkE+6LPYit5u
+         yloQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8W+zYa184ZyKxjkQJutCEVqgw5AXS9GRHt9fLMAGBdg=;
-        b=YabYhOjnS5Xknna6NNJhGnHCQ/PfdL7DFTA1ibCIH+rw32q1qsBc5hX1w1jjyoAZq4
-         yfYwL2ZlZezVVih9wQObXjgFFaMfXvh2wZhZU0zISm1S593Mt7cvD0QXYwUkWKPq8ZBD
-         BCtgyXrmyswmn4BYKmbWK/cMNTBmq5qmvLhk0VFXgbSZa3+5O3gDqKUY7sRzlAHmE9BW
-         PPmdpxEO85/el6z6ILkqkOe8T5zC9UX3WfyhDdtif1Shqs//M45j1lluZUBMw+GZubRx
-         OU2FEevjZM61gT1jX/7OtmrSX7Buza8aIbg9g/dIm+T86P/iAoe64Ch7EhOUlc8SmS14
-         mIVg==
-X-Gm-Message-State: ANhLgQ0kfliF19NDSV47m7ecB3M0liqqC2rNG+O5/RnPtTeufq0mGGtR
-        P11719e29lHeU4YhYDrMU5WfsbW6qbfjccJHavO3AZuw
-X-Google-Smtp-Source: ADFU+vu2XzxOxIEDf398NgTJGxQ8XLZbmiljOOXSim5zUgskWKUT3HnDcVnhOeqdxyBeQPERi7ieZdnjTaO3jmhsy6I=
-X-Received: by 2002:aca:d489:: with SMTP id l131mr804061oig.5.1583904383212;
- Tue, 10 Mar 2020 22:26:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mRaU0AqIThL9bVRbu+a3uE7ULIqF+zwOfxIVLuqdJ+E=;
+        b=hyKh7Kfj4gbIeqqk1YzOsW+3BOIlGDJAwdEMzFz5RPlp0lYiU2y6hGNWSQbb+fSIod
+         +ZHeupW/y7lFkGUQ9oof+opSdEkfVzvIcI/4GQn1kNkIjz5O1S1TAaVcVrr7dSongaKt
+         TMTI4yleUHc1Fnyy3W9/6R3dTC6j2GxmBD634xdkEUkqkCiODY2hjeeqYFTfZjGAe7PC
+         gnvIuf9vfIzp8C/lgM3kRGFpJAZv7p+rxfV0xSVZTIyRzhfSsa7Fr9HTOse3xThYPAUy
+         Xvx9R3L4MWiLM0TrkpMuGVjgPy0CrnftqgysI5F4KawyMYu3wntSIEqcZFMPsrOMCh/8
+         utfQ==
+X-Gm-Message-State: ANhLgQ3LhzhUNEprI0ZDuJsLfxDwdHXgff4ZuXATiXRp7YysrbdsR0Of
+        1u17SJDuGHzMSqm3k3cZ3cw=
+X-Google-Smtp-Source: ADFU+vvs2EpekK1XhQaOxK2H/diS+7ZScfO4M0urCZbqCYmSLIA7g/iGRL/1x2OE+pmtzyFhOSV3Ng==
+X-Received: by 2002:a9d:3b6:: with SMTP id f51mr1050716otf.255.1583904688182;
+        Tue, 10 Mar 2020 22:31:28 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id m124sm776958oib.46.2020.03.10.22.31.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Mar 2020 22:31:27 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 22:31:26 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
+References: <20200304203144.GA4323@alpha.franken.de>
+ <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-References: <000000000000bf5ff105a01fef33@google.com> <20200306064428.16776-1-hdanton@sina.com>
-In-Reply-To: <20200306064428.16776-1-hdanton@sina.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 10 Mar 2020 22:26:11 -0700
-Message-ID: <CAM_iQpXMZ9r_mPVVNuP6rU3=sBDkB=XoYyywD7HmTQF92fWapQ@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in tcf_queue_work
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 10:44 PM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Thu, 05 Mar 2020 10:45:10 -0800
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10535e45e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9c2df9fd5e9445b74e01
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168c4839e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10587419e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
-> > WARNING: CPU: 0 PID: 9599 at lib/debugobjects.c:485 debug_print_object+0x168/0x250 lib/debugobjects.c:485
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 0 PID: 9599 Comm: syz-executor772 Not tainted 5.6.0-rc3-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x197/0x210 lib/dump_stack.c:118
-> >  panic+0x2e3/0x75c kernel/panic.c:221
-> >  __warn.cold+0x2f/0x3e kernel/panic.c:582
-> >  report_bug+0x289/0x300 lib/bug.c:195
-> >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-> >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-> >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> > RIP: 0010:debug_print_object+0x168/0x250 lib/debugobjects.c:485
-> > Code: dd 00 e7 91 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48 8b 14 dd 00 e7 91 88 48 c7 c7 60 dc 91 88 e8 07 6e 9f fd <0f> 0b 83 05 03 6c ff 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-> > RSP: 0018:ffffc90005cd70b0 EFLAGS: 00010286
-> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: ffffffff815ebe46 RDI: fffff52000b9ae08
-> > RBP: ffffc90005cd70f0 R08: ffff888093472400 R09: fffffbfff16a3370
-> > R10: fffffbfff16a336f R11: ffffffff8b519b7f R12: 0000000000000001
-> > R13: ffffffff89bac220 R14: 0000000000000000 R15: 1ffff92000b9ae24
-> >  debug_object_activate+0x346/0x470 lib/debugobjects.c:652
-> >  debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
-> >  __call_rcu kernel/rcu/tree.c:2597 [inline]
-> >  call_rcu+0x2f/0x700 kernel/rcu/tree.c:2683
-> >  queue_rcu_work+0x8a/0xa0 kernel/workqueue.c:1742
-> >  tcf_queue_work+0xd3/0x110 net/sched/cls_api.c:206
-> >  route4_change+0x19e8/0x2250 net/sched/cls_route.c:550
-> >  tc_new_tfilter+0xb82/0x2480 net/sched/cls_api.c:2103
-> >  rtnetlink_rcv_msg+0x824/0xaf0 net/core/rtnetlink.c:5427
-> >  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2478
-> >  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5454
-> >  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-> >  netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
-> >  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
-> >  sock_sendmsg_nosec net/socket.c:652 [inline]
-> >  sock_sendmsg+0xd7/0x130 net/socket.c:672
-> >  ____sys_sendmsg+0x753/0x880 net/socket.c:2343
-> >  ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-> >  __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
-> >  __do_sys_sendmsg net/socket.c:2439 [inline]
-> >  __se_sys_sendmsg net/socket.c:2437 [inline]
-> >  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
-> >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> Add a put callback for cls_route4_ops in an attempt to pair with get.
+On Thu, Mar 05, 2020 at 05:27:53PM +0530, afzal mohammed wrote:
+> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> occur after memory allocators are ready.
+> 
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
+> 
+> Hence replace setup_irq() by request_irq().
+> 
+> remove_irq() has been replaced by free_irq() as well.
+> 
+> There were build error's during previous version, couple of which was
+> reported by kbuild test robot <lkp@intel.com> of which one was reported
+> by Thomas Bogendoerfer <tsbogend@alpha.franken.de> as well. There were a
+> few more issues including build errors, those also have been fixed.
+> 
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-This does not look like a refcnt pairing issue, it seems to be a
-double "free", more precisely, we call call_rcu() twice on the same
-object. I guess for some reason 'fold' is still visible even after
-it is scheduled to be freed by rcu work.
+This patch regresses booting malta_defconfig with both GCC and clang
+with this rootfs and QEMU 4.2.0:
 
-I will take a deeper look tomorrow.
+https://github.com/ClangBuiltLinux/continuous-integration/blob/a85e3e44c2570847e22ad8f92f317c2b007c4517/images/mipsel/rootfs.cpio
 
-Thanks.
+$ timeout 2m qemu-system-mipsel -machine malta -cpu 24Kf -initrd rootfs.cpio -kernel vmlinux -m 512m -display none -serial mon:stdio
+
+just hangs. I have not done further debugging past the initial bisect.
+
+Cheers,
+Nathan
