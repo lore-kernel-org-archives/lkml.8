@@ -2,153 +2,96 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B49EC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4A2C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC6A204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A9D204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbgCKOba convert rfc822-to-8bit (ORCPT
+        id S1729875AbgCKObn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:31:30 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:53401 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgCKOb3 (ORCPT
+        Wed, 11 Mar 2020 10:31:43 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:43183 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729719AbgCKObn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:31:29 -0400
-Received: from [172.20.10.2] (x59cc8a78.dyn.telefonica.de [89.204.138.120])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D1D5CCECDF;
-        Wed, 11 Mar 2020 15:40:55 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] Bluetooth: clean up connection in hci_cs_disconnect
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200310113816.1.I12c0712e93f74506385b67c6df287658c8fdad04@changeid>
-Date:   Wed, 11 Mar 2020 15:31:26 +0100
-Cc:     Alain Michaud <alainm@chromium.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        Joseph Hwang <josephsih@chromium.org>,
-        Yoni Shavit <yshavit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C60D1463-5B04-4C25-B4A2-0A9DD25A67B9@holtmann.org>
-References: <20200310113816.1.I12c0712e93f74506385b67c6df287658c8fdad04@changeid>
-To:     Manish Mandlik <mmandlik@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Wed, 11 Mar 2020 10:31:43 -0400
+Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXpM2-1iop5V2Doy-00Y7pz; Wed, 11 Mar 2020 15:31:41 +0100
+Received: by mail-qv1-f51.google.com with SMTP id l17so951015qvu.4;
+        Wed, 11 Mar 2020 07:31:41 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0nb0jq9k7IMpYf08xQ+SH5299hnUKxYLLXj3/69SriKK/tNsXC
+        Fcm+OJWKHCA8ppinDQXhE7YRn4sCsk7Cu+nO93M=
+X-Google-Smtp-Source: ADFU+vs7vsHRRk5DF+sIH0AM5qI2NZuKa/my/Rqt4Fil9rQRSzu8NXrbadx7Co2qeP3BJvqRxzROzp3/R4yRw9+b1xg=
+X-Received: by 2002:ad4:52eb:: with SMTP id p11mr2880124qvu.211.1583937100255;
+ Wed, 11 Mar 2020 07:31:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200311112120.30890-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200311112120.30890-1-zhang.lyra@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 11 Mar 2020 15:31:24 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a12iN4HzN3HsRSBJPLpwJzdVwhrK7Mje0V6eW3Lvd77iw@mail.gmail.com>
+Message-ID: <CAK8P3a12iN4HzN3HsRSBJPLpwJzdVwhrK7Mje0V6eW3Lvd77iw@mail.gmail.com>
+Subject: Re: [RESEND PATCH] arm64: dts: specify console via command line
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:CLt4UGhYEFuPuQIoW/xfHJnWHUF1vh0zPPhR4y6r6NbTUEGmV5V
+ QLW9hYN9gDzNQV/Wu/cJtDhyP2/ljICttwKTgusnrim6lFYY9rvJfrIai8uevx8B/bSs/bt
+ eOxvC03C25dU8QvO2zeix7G602ro0VZkwwx3Ps6Oczh9hUZyagJIUWPfwwnn7tJJCvL6aXD
+ 78H8pb9nRwls4SGXSRvdg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+t3kxDfZUqE=:PY7qPIJNe78YFLzEC/WUWm
+ SqI6fl1r3EydEtOj4vQNOcDBzFrkUeJ1rNzS2iILUFo8ngrQyQ1Lxchglbh5IK0VGodjJxvms
+ 5dAyeO/NktaE29+8RLONAyeJEoKzVbegL78sIeEjMPYeK3DFhboSaZWxQCx+V5uHHQ0oQUXTk
+ pDWdbYdg8qalRE5d42VG3u04ZGPO4vUp49Mi+tqyKdbdziI9gis+GZrCqNIKxBPHnOcXzj3Lg
+ Bl8K2bGCwUEUR1VqGVC1HoL3PbZbZpgp51jTHfRNo2RugvXmZjWrGtgX3QIF5/IWuMp67mnPF
+ CKni6tFCkpsaE42L2DQi1llQKu/pvK0TUh7VEy+YgLYwljpwYEOE58IoZ2nDBPFeCTJFRNsg/
+ wSWuNCNyXJD7LIDbtXmeqznxj+eDHpnHI6woVCvDBFb2tzK92qiOBFZOaL800C8aIa2DiI0up
+ dm+VcMvYS2fwDfbfwh96MC9DzT22IGFZByET9a0H32seTB5MBjVSl/NnDxBXlfPn4PINTqaVV
+ /ZFsJCprS2n9AUbkkMi75avJXDWUF2nLa30oE7GQSYlU2YG3qjMw7XAuNy1W07L0j2HmqJLj/
+ MvLFJPfPhWUXwW1ysP/Jwz626XppZwVekyIFK8xY/5MJGCQHiDwsmBkh3pawqh7ObhO/e0aDQ
+ xKUrQZT9IhQ6ZWTegn/E01wqoME/vKo40gfO0ck2A2twSjl/Ima68NQ1otbhLxfGwwh1jW+vT
+ WNbwXMO0uEpYxjNXHtW9C69b2J0VuEPs0Y8EoZOCmRXPGJ7wisnYVr6v/xAyieSOIxG5hEHXD
+ UtrSmnYnhAceAhwZNqUTzcobE2OSf9FbeHcf8BV2E/DBucW9Qo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manish,
+On Wed, Mar 11, 2020 at 12:21 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
 
-> In bluetooth core specification 4.2,
-> Vol 2, Part E, 7.8.9 LE Set Advertise Enable Command, it says
-> 
->    The Controller shall continue advertising until ...
->    or until a connection is created or ...
->    In these cases, advertising is then disabled.
-> 
-> Hence, advertising would be disabled before a connection is
-> established. In current kernel implementation, advertising would
-> be re-enabled when all connections are terminated.
-> 
-> The correct disconnection flow looks like
-> 
->  < HCI Command: Disconnect
-> 
->> HCI Event: Command Status
->      Status: Success
-> 
->> HCI Event: Disconnect Complete
->      Status: Success
-> 
-> Specifically, the last Disconnect Complete Event would trigger a
-> callback function hci_event.c:hci_disconn_complete_evt() to
-> cleanup the connection and re-enable advertising when proper.
-> 
-> However, sometimes, there might occur an exception in the controller
-> when disconnection is being executed. The disconnection flow might
-> then look like
-> 
->  < HCI Command: Disconnect
-> 
->> HCI Event: Command Status
->      Status: Unknown Connection Identifier
-> 
->  Note that "> HCI Event: Disconnect Complete" is missing when such an
-> exception occurs. This would result in advertising staying disabled
-> forever since the connection in question is not cleaned up correctly.
-> 
-> To fix the controller exception issue, we need to do some connection
-> cleanup when the disconnect command status indicates an error.
-> 
-> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-> Signed-off-by: Manish Mandlik <mmandlik@google.com>
-> ---
-> 
-> net/bluetooth/hci_event.c | 14 +++++++++++++-
-> 1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index a40ed31f6eb8f..7f7e5ba3974a8 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -2191,6 +2191,7 @@ static void hci_cs_disconnect(struct hci_dev *hdev, u8 status)
-> {
-> 	struct hci_cp_disconnect *cp;
-> 	struct hci_conn *conn;
-> +	u8 type;
+> diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> index 2047f7a74265..510f65f4d8b8 100644
+> --- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> +++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> @@ -28,7 +28,7 @@
+>
+>         chosen {
+>                 stdout-path = "serial1:115200n8";
+> -               bootargs = "earlycon";
+> +               bootargs = "earlycon console=ttyS1";
+>         };
+>  };
 
-remove this please.
+Hi Chunyan,
 
-> 
-> 	if (!status)
-> 		return;
-> @@ -2202,10 +2203,21 @@ static void hci_cs_disconnect(struct hci_dev *hdev, u8 status)
-> 	hci_dev_lock(hdev);
-> 
-> 	conn = hci_conn_hash_lookup_handle(hdev, __le16_to_cpu(cp->handle));
-> -	if (conn)
-> +	if (conn) {
+I would expect that you need to either specify the stdout-path, or the console=
+kernel parameter, but not both.
 
-And add this.
+If earlycon was used, shouldn't the driver know which port is the console?
 
-		u8 type = conn->type;
-
-> 		mgmt_disconnect_failed(hdev, &conn->dst, conn->type,
-> 				       conn->dst_type, status);
-> 
-> +		/* If the disconnection failed for any reason, the upper layer
-> +		 * does not retry to disconnect in current implementation.
-> +		 * Hence, we need to do some basic cleanup here and re-enable
-> +		 * advertising if necessary.
-> +		 */
-> +		type = conn->type;
-
-And then remove this.
-
-> +		hci_conn_del(conn);
-> +		if (type == LE_LINK)
-> +			hci_req_reenable_advertising(hdev);
-> +	}
-> +
-> 	hci_dev_unlock(hdev);
-> }
-
-Otherwise this looks good.
-
-Regards
-
-Marcel
-
+      Arnd
