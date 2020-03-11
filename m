@@ -2,144 +2,195 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12364C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6AEC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CFC20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AD32146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583910015;
+	bh=/6cQd4hts3gfr9WVs9lQpGGunRJhWCCe0xntAfrfvD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HtCavi9RZiGykvraVkhF7Rlej3ylxfC2BSpb+w7CYMknciAiwm70uv7efnYXDL5Fd
+	 XvwAYj8iISyFYCEFuLetOLKAzkaoLz0l0VfZwoaFV25GxDg3gyA+D4awB0YvLSrCRJ
+	 z9S5D9I+DuLX/zyHXh+/kWgtQr0eo0vtEXK0JZgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgCKG6x (ORCPT
+        id S1728328AbgCKHAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:58:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57504 "EHLO mx2.suse.de"
+        Wed, 11 Mar 2020 03:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgCKG6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:58:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 86921AECE;
-        Wed, 11 Mar 2020 06:58:50 +0000 (UTC)
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Christoph Hellwig <hch@infradead.org>,
-        John Garry <john.garry@huawei.com>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        ming.lei@redhat.com, bvanassche@acm.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <7bc94a9f-ec86-b343-0951-eba548c71b67@suse.de>
-Date:   Wed, 11 Mar 2020 07:58:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726160AbgCKHAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:00:13 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE0C20873;
+        Wed, 11 Mar 2020 07:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583910012;
+        bh=/6cQd4hts3gfr9WVs9lQpGGunRJhWCCe0xntAfrfvD0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D6lf+ymlypW+82IE80OgN42xS32HuZY/X4LY2NhGp6LknZ7ojoSXz7e3uoY+YDTBX
+         OFdI2vMa9WwS5KStwzDRZztdMmrwGWUblgjBUzhhVovsgXY8Ylfp/VsJKo70GTynGp
+         3dx76vymYve2EWiJgSLGPHj0HqrM17Y3yetqPqso=
+Date:   Wed, 11 Mar 2020 09:00:08 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH -next 003/491] MELLANOX MLX5 core VPI driver: Use
+ fallthrough;
+Message-ID: <20200311070008.GE4215@unreal>
+References: <cover.1583896344.git.joe@perches.com>
+ <3ce4519315294b9738abe6a78e2737f49af9a653.1583896347.git.joe@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311062228.GA13522@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ce4519315294b9738abe6a78e2737f49af9a653.1583896347.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 7:22 AM, Christoph Hellwig wrote:
-> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
->> On 10/03/2020 18:32, Christoph Hellwig wrote:
->>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
->>>> From: Hannes Reinecke <hare@suse.com>
->>>>
->>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
->>>
->>> Why?  Reserved command specifically are not in any way tied to queues.
->>> .
->>>
->>
->> So the v1 series used a combination of the sdev queue and the per-host
->> reserved_cmd_q. Back then you questioned using the sdev queue for virtio
->> scsi, and the unconfirmed conclusion was to use a common per-host q. This is
->> the best link I can find now:
->>
->> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
-> 
-> That was just a question on why virtio uses the per-device tags, which
-> didn't look like it made any sense.  What I'm worried about here is
-> mixing up the concept of reserved tags in the tagset, and queues to use
-> them.  Note that we already have the scsi_get_host_dev to allocate
-> a scsi_device and thus a request_queue for the host itself.  That seems
-> like the better interface to use a tag for a host wide command vs
-> introducing a parallel path.
-> 
-Ah. Right.
-Will be looking into that, and convert the patchset over to it.
+On Tue, Mar 10, 2020 at 09:51:17PM -0700, Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
+>
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h         | 2 +-
+>  drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c          | 4 ++--
+>  drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c      | 2 +-
+>  .../net/ethernet/mellanox/mlx5/core/eswitch_offloads.c    | 2 +-
+>  drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c          | 8 ++++----
+>  drivers/net/ethernet/mellanox/mlx5/core/vport.c           | 2 +-
+>  6 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+> index a226277..2a1cc2 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+> @@ -223,7 +223,7 @@ mlx5e_set_eseg_swp(struct sk_buff *skb, struct mlx5_wqe_eth_seg *eseg,
+>  	switch (swp_spec->tun_l4_proto) {
+>  	case IPPROTO_UDP:
+>  		eseg->swp_flags |= MLX5_ETH_WQE_SWP_INNER_L4_UDP;
+> -		/* fall through */
+> +		fallthrough;
+>  	case IPPROTO_TCP:
+>  		eseg->swp_inner_l4_offset = skb_inner_transport_offset(skb) / 2;
+>  		break;
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+> index f049e0a..f74e50 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+> @@ -167,11 +167,11 @@ bool mlx5e_xdp_handle(struct mlx5e_rq *rq, struct mlx5e_dma_info *di,
+>  		return true;
+>  	default:
+>  		bpf_warn_invalid_xdp_action(act);
+> -		/* fall through */
+> +		fallthrough;
+>  	case XDP_ABORTED:
+>  xdp_abort:
+>  		trace_xdp_exception(rq->netdev, prog, act);
+> -		/* fall through */
+> +		fallthrough;
+>  	case XDP_DROP:
+>  		rq->stats->xdp_drop++;
+>  		return true;
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> index 01539b8..8a3376a 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> @@ -225,7 +225,7 @@ int mlx5e_ethtool_get_sset_count(struct mlx5e_priv *priv, int sset)
+>  		return MLX5E_NUM_PFLAGS;
+>  	case ETH_SS_TEST:
+>  		return mlx5e_self_test_num(priv);
+> -	/* fallthrough */
+> +		fallthrough;
 
-And the problem of the separate queue is the fact that I'll need a queue
-to reserve tags from; trying to allocate a tag directly from the bitmap
-turns out to be major surgery in the blocklayer with no immediate gain.
-And I can't use per-device queues as for some drivers the reserved
-commands are used to query the HBA itself to figure out how many devices
-are present.
+This should be removed, there is return before.
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+> index 4b5b661..033454 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+> @@ -2426,7 +2426,7 @@ int mlx5_devlink_eswitch_inline_mode_set(struct devlink *devlink, u8 mode,
+>  	case MLX5_CAP_INLINE_MODE_NOT_REQUIRED:
+>  		if (mode == DEVLINK_ESWITCH_INLINE_MODE_NONE)
+>  			return 0;
+> -		/* fall through */
+> +		fallthrough;
+>  	case MLX5_CAP_INLINE_MODE_L2:
+>  		NL_SET_ERR_MSG_MOD(extack, "Inline mode can't be set");
+>  		return -EOPNOTSUPP;
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c b/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c
+> index 416676..a40e43 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c
+> @@ -199,13 +199,13 @@ static void mlx5_lag_fib_update(struct work_struct *work)
+>  	/* Protect internal structures from changes */
+>  	rtnl_lock();
+>  	switch (fib_work->event) {
+> -	case FIB_EVENT_ENTRY_REPLACE: /* fall through */
+> +	case FIB_EVENT_ENTRY_REPLACE:
+>  	case FIB_EVENT_ENTRY_DEL:
+>  		mlx5_lag_fib_route_event(ldev, fib_work->event,
+>  					 fib_work->fen_info.fi);
+>  		fib_info_put(fib_work->fen_info.fi);
+>  		break;
+> -	case FIB_EVENT_NH_ADD: /* fall through */
+> +	case FIB_EVENT_NH_ADD:
+>  	case FIB_EVENT_NH_DEL:
+>  		fib_nh = fib_work->fnh_info.fib_nh;
+>  		mlx5_lag_fib_nexthop_event(ldev,
+> @@ -256,7 +256,7 @@ static int mlx5_lag_fib_event(struct notifier_block *nb,
+>  		return NOTIFY_DONE;
+>
+>  	switch (event) {
+> -	case FIB_EVENT_ENTRY_REPLACE: /* fall through */
+> +	case FIB_EVENT_ENTRY_REPLACE:
+>  	case FIB_EVENT_ENTRY_DEL:
+>  		fen_info = container_of(info, struct fib_entry_notifier_info,
+>  					info);
+> @@ -279,7 +279,7 @@ static int mlx5_lag_fib_event(struct notifier_block *nb,
+>  		 */
+>  		fib_info_hold(fib_work->fen_info.fi);
+>  		break;
+> -	case FIB_EVENT_NH_ADD: /* fall through */
+> +	case FIB_EVENT_NH_ADD:
+>  	case FIB_EVENT_NH_DEL:
+>  		fnh_info = container_of(info, struct fib_nh_notifier_info,
+>  					info);
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+> index 1faac31f..aea1065 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+> @@ -125,7 +125,7 @@ void mlx5_query_min_inline(struct mlx5_core_dev *mdev,
+>  	case MLX5_CAP_INLINE_MODE_VPORT_CONTEXT:
+>  		if (!mlx5_query_nic_vport_min_inline(mdev, 0, min_inline_mode))
+>  			break;
+> -		/* fall through */
+> +		fallthrough;
+>  	case MLX5_CAP_INLINE_MODE_L2:
+>  		*min_inline_mode = MLX5_INLINE_MODE_L2;
+>  		break;
+> --
+> 2.24.0
+>
