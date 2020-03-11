@@ -2,163 +2,82 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEACCC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCA5C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56E020848
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NRkbCNZF"
+	by mail.kernel.org (Postfix) with ESMTP id B46C72192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgCKKiG (ORCPT
+        id S1729014AbgCKKip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:38:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49781 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726684AbgCKKiF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:38:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583923085; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sybUymT2tahVIh0Sofyvb7j/sJL1ubpg84loPZROPYM=; b=NRkbCNZFdlJLIWCl2JtXkaXCQpuysMPVugEXL9W0DMvDy3ajqx/fK/gXIa7iePnRphgazSm+
- XSzV6DSO8ArY2+zv7wcJLbzZlZHL4KsGEKTG9bMkGXGDB3QVJRedlg/dnn8XuMwF5Iz9bJbA
- c3kScijJi8FaJM06SRpQJ+oyp8k=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e68bf8b.7fe380132340-smtp-out-n02;
- Wed, 11 Mar 2020 10:38:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2DE3DC433BA; Wed, 11 Mar 2020 10:38:03 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E3B3C433CB;
-        Wed, 11 Mar 2020 10:38:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E3B3C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: [PATCH] block: Fix use-after-free issue accessing struct io_cq
-Date:   Wed, 11 Mar 2020 16:07:50 +0530
-Message-Id: <1583923070-22245-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 11 Mar 2020 06:38:45 -0400
+Received: from mga09.intel.com ([134.134.136.24]:10049 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726684AbgCKKip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:38:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 03:38:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="353857634"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 11 Mar 2020 03:38:41 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 11 Mar 2020 12:38:40 +0200
+Date:   Wed, 11 Mar 2020 12:38:40 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Shih-Yuan Lee (FourDollars)" <sylee@canonical.com>,
+        Tiffany <tiffany.wang@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: Thunderbolt, direct-complete and long suspend/resume time of
+ Suspend-to-idle
+Message-ID: <20200311103840.GB2540@lahna.fi.intel.com>
+References: <02700895-048F-4EA1-9E18-4883E83AE210@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02700895-048F-4EA1-9E18-4883E83AE210@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a potential race between ioc_release_fn() and
-ioc_clear_queue() as shown below, due to which below kernel
-crash is observed. It also can result into use-after-free
-issue.
+On Wed, Mar 11, 2020 at 01:39:51PM +0800, Kai-Heng Feng wrote:
+> Hi,
+> 
+> I am currently investigating long suspend and resume time of suspend-to-idle.
+> It's because Thunderbolt bridges need to wait for 1100ms [1] for runtime-resume on system suspend, and also for system resume.
+> 
+> I made a quick hack to the USB driver and xHCI driver to support direct-complete, but I failed to do so for the parent PCIe bridge as it always disables the direct-complete [2], since device_may_wakeup() returns true for the device:
+> 
+> 	/* Avoid direct_complete to let wakeup_path propagate. */
+> 		if (device_may_wakeup(dev) || dev->power.wakeup_path)
+> 			dev->power.direct_complete = false;
 
-context#1:				context#2:
-ioc_release_fn()			__ioc_clear_queue() gets the same icq
-->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
-->ioc_destroy_icq(icq);
-  ->list_del_init(&icq->q_node);
-  ->call_rcu(&icq->__rcu_head,
-  	icq_free_icq_rcu);
-->spin_unlock(&ioc->lock);
-					->ioc_destroy_icq(icq);
-					  ->hlist_del_init(&icq->ioc_node);
-					  This results into below crash as this memory
-					  is now used by icq->__rcu_head in context#1.
-					  There is a chance that icq could be free'd
-					  as well.
+You need to be careful here because otherwise you end up situation where
+the link is not properly trained and we tear down the whole tree of
+devices which is worse than waiting bit more for resume.
 
-22150.386550:   <6> Unable to handle kernel write to read-only memory
-at virtual address ffffffaa8d31ca50
-...
-Call trace:
-22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
-22150.611202:   <2>  ioc_clear_queue+0xac/0x148
-22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
-22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
-22150.623465:   <2>  scsi_forget_host+0x2c/0x78
-22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
-22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
-22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
-22150.639665:   <2>  device_release_driver_internal+0x198/0x250
-22150.644897:   <2>  device_release_driver+0x24/0x30
-22150.649176:   <2>  bus_remove_device+0xec/0x140
-22150.653204:   <2>  device_del+0x270/0x460
-22150.656712:   <2>  usb_disable_device+0x120/0x390
-22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
-22150.664684:   <2>  hub_event+0xd70/0x17e8
-22150.668197:   <2>  process_one_work+0x210/0x480
-22150.672222:   <2>  worker_thread+0x32c/0x4c8
+> Once the direct-complete is disabled, system suspend/resume is used hence the delay in [1] is making the resume really slow. 
+> So how do we make suspend-to-idle faster? I have some ideas but I am not sure if they are feasible:
+> - Make PM core know the runtime_suspend() already use the same wakeup as suspend(), so it doesn't need to use device_may_wakeup() check to determine direct-complete.
+> - Remove the DPM_FLAG_NEVER_SKIP flag in pcieport driver, and use pm_request_resume() in its complete() callback to prevent blocking the resume process.
+> - Reduce the 1100ms delay. Maybe someone knows the values used in macOS and Windows...
 
-Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
-indicate this icq is once marked as destroyed. Also, ensure
-__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
-that icq doesn't get free'd up while it is still using it.
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
- block/blk-ioc.c           | 7 +++++++
- include/linux/iocontext.h | 1 +
- 2 files changed, 8 insertions(+)
-
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 5ed59ac..9df50fb 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -84,6 +84,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
- 	 * making it impossible to determine icq_cache.  Record it in @icq.
- 	 */
- 	icq->__rcu_icq_cache = et->icq_cache;
-+	icq->flags |= ICQ_DESTROYED;
- 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
- }
- 
-@@ -212,15 +213,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
- {
- 	unsigned long flags;
- 
-+	rcu_read_lock();
- 	while (!list_empty(icq_list)) {
- 		struct io_cq *icq = list_entry(icq_list->next,
- 						struct io_cq, q_node);
- 		struct io_context *ioc = icq->ioc;
- 
- 		spin_lock_irqsave(&ioc->lock, flags);
-+		if (icq->flags & ICQ_DESTROYED) {
-+			spin_unlock_irqrestore(&ioc->lock, flags);
-+			continue;
-+		}
- 		ioc_destroy_icq(icq);
- 		spin_unlock_irqrestore(&ioc->lock, flags);
- 	}
-+	rcu_read_unlock();
- }
- 
- /**
-diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
-index dba15ca..1dcd919 100644
---- a/include/linux/iocontext.h
-+++ b/include/linux/iocontext.h
-@@ -8,6 +8,7 @@
- 
- enum {
- 	ICQ_EXITED		= 1 << 2,
-+	ICQ_DESTROYED		= 1 << 3,
- };
- 
- /*
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Which system this is? ICL? I think it is the TBT root ports only that do
+not support active link reporting. The PCIe spec is not entirely clear
+about root ports since it explictly mentions only downstream ports so
+one option would be to check for root port and that it supports gen 3
+speeds and based on that wait for max say 2 * 100ms or something like
+that.
