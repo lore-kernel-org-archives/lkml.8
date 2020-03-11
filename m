@@ -2,160 +2,163 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA24C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F6AC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDFC20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:25:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyIvZNio"
+	by mail.kernel.org (Postfix) with ESMTP id 3897322B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgCKNZy (ORCPT
+        id S1729657AbgCKN0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:25:54 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:34615 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729408AbgCKNZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:25:54 -0400
-Received: by mail-qv1-f68.google.com with SMTP id o18so842778qvf.1;
-        Wed, 11 Mar 2020 06:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=608UGPjQxMJ+t19p3V9TY1lai0zCnjMBtkdpOWI2Q18=;
-        b=jyIvZNioHmCuXgYIimQZ85RIPvniBSYqjHUK7fgpepAhhcH12BMPl3GnCNj6qSJtKr
-         qgVdEuMZgBUFB/N+l5vFCjfNER47/t/Zb211CNvlRrwPPmh0C1mu3594XPB3skICmsBo
-         dG2fjiUnlmPr9ZrA+X54mWhv8ahZqoyV5VpIQs0Y7HJWRu1wnKEoAYgVQS8Xsf9De77u
-         MVfWOvu84Wo8zmIfU5LB3doifmedVx8cdSLWlukpaV5du1tYce18sKK81Vo1sgICuHaa
-         bDQSNQm0lf204DNL3BulRWQCZrN+2PE8j1s+OxOTjnB/tbjdcHGx4wugZA3H16OAHhPs
-         OL/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=608UGPjQxMJ+t19p3V9TY1lai0zCnjMBtkdpOWI2Q18=;
-        b=eqIaBdFipnour4M60JRs6oyoCmu93Cj+AEgkIPFnEgyX3xh6FnR7xu4CASjAygeTQs
-         2x5SXsAlpu3owCErN4p4uFYuxaDKtKGr5tR2SdA80Db7infIHuJrlvH6RcFaVcmY9Yi0
-         PepBhHq67n4GuhEVj4Bp05l4Lms/U880Uitz6Aci0xBGGQG0Rp8JVoy2DV2tk6AU2NQA
-         BZqJ4+MVx+o5DqwGX1f+HE5s/IwdA+ijJpFvzSL0wzcQx/1hb9zDJC3BjimLPDDUXrE4
-         jqRvPhWuVK8sA4cwg+ai2DE88WO/A9O5P3WvhmRhErNIJSf5rX65f+KAIF6OJ96nAcCM
-         ijkQ==
-X-Gm-Message-State: ANhLgQ2y12lw1cC327Rz1FiSu2YG8MeklUKb83V6+dDR9v/t3sgnLbdQ
-        hYYSLEanMRdWuxF3ZU2qk4o=
-X-Google-Smtp-Source: ADFU+vuCTEKFWw1P+Hna1qOz8XGvd2i2fUMP/TT3VwdW0Vx55tgcseUM+m3/H7VQW8T7u90//turyA==
-X-Received: by 2002:ad4:4527:: with SMTP id l7mr2794953qvu.221.1583933152695;
-        Wed, 11 Mar 2020 06:25:52 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id a23sm25455599qko.77.2020.03.11.06.25.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 06:25:52 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7D51540009; Wed, 11 Mar 2020 10:25:49 -0300 (-03)
-Date:   Wed, 11 Mar 2020 10:25:49 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 11 Mar 2020 09:26:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59552 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729408AbgCKN0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:26:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B1030AD10;
+        Wed, 11 Mar 2020 13:26:06 +0000 (UTC)
+Subject: Re: [PATCH v11 5/5] soc / drm: mediatek: Fix mediatek-drm device
+ probing
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Masanari Iida <standby24x7@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf doc: Set man page date to last git commit
-Message-ID: <20200311132549.GB19277@kernel.org>
-References: <20200311052110.23132-1-irogers@google.com>
+        linux-mediatek@lists.infradead.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, wens@csie.org,
+        Daniel Vetter <daniel@ffwll.ch>, linux-clk@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        frank-w@public-files.de, linux-arm-kernel@lists.infradead.org,
+        hsinyi@chromium.org, Richard Fontana <rfontana@redhat.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>, sean.wang@mediatek.com,
+        rdunlap@infradead.org, matthias.bgg@kernel.org,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+References: <20200311115614.1425528-1-enric.balletbo@collabora.com>
+ <20200311115614.1425528-6-enric.balletbo@collabora.com>
+From:   Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+ HxUCQ9Y1Y/Ct
+Message-ID: <4e30f8a7-7334-494b-7ef6-205f5d6d4d36@suse.com>
+Date:   Wed, 11 Mar 2020 14:26:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311052110.23132-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200311115614.1425528-6-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 10, 2020 at 10:21:10PM -0700, Ian Rogers escreveu:
-> Currently the man page dates reflect the date the man pages were built.
-> This patch adjusts the date so that the date is when then man page
-> last had a commit against it. The date is generated using 'git log'.
-
-Thanks, applied,
-
-Please consider changing the Makefile to make it be a dependency of the
-man pages, so that when we change it we rebuild the man pages, I had to
-go fresh to see the results :-)
-
-I.e. had to do this:
-
-Committer testing:
-
-  $ git log -1 --pretty="format:%cd" --date=short tools/perf/Documentation/perf-top.txt
-  2020-01-14
-
-Before:
-
-  rm -rf /tmp/build/perf
-  mkdir -p /tmp/build/perf
-  make -C tools/perf O=/tmp/build/perf/ install
-  $ date
-  Wed 11 Mar 2020 10:21:19 AM -03
-  $ man perf-top | tail -1
-  perf                    03/11/2020           PERF-TOP(1)
-  $
-
-After:
-
-  rm -rf /tmp/build/perf
-  mkdir -p /tmp/build/perf
-  make -C tools/perf O=/tmp/build/perf/ install
-  $ date
-  $ date
-  Wed 11 Mar 2020 10:24:06 AM -03
-  $ man perf-top | tail -1
-  perf                    2020-01-14           PERF-TOP(1)
-  $
 
 
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Documentation/Makefile | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On 11/03/2020 12:56, Enric Balletbo i Serra wrote:
+> In the actual implementation the same compatible string
+> "mediatek,<chip>-mmsys" is used to bind the clock drivers
+> (drivers/soc/mediatek) as well as to the gpu driver
+> (drivers/gpu/drm/mediatek/mtk_drm_drv.c). This ends with the problem
+> that the only probed driver is the clock driver and there is no display
+> at all.
 > 
-> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-> index adc5a7e44b98..31824d5269cc 100644
-> --- a/tools/perf/Documentation/Makefile
-> +++ b/tools/perf/Documentation/Makefile
-> @@ -295,7 +295,10 @@ $(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.xml
->  $(OUTPUT)%.xml : %.txt
->  	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
->  	$(ASCIIDOC) -b docbook -d manpage \
-> -		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) -o $@+ $< && \
-> +		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) \
-> +		-aperf_date=$(shell git log -1 --pretty="format:%cd" \
-> +				--date=short $<) \
-> +		-o $@+ $< && \
->  	mv $@+ $@
->  
->  XSLT = docbook.xsl
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
+> In any case having the same compatible string for two drivers is not
+> correct and should be fixed. To fix this, and maintain backward
+> compatibility, we can consider that the mmsys driver is the top-level
+> entry point for the multimedia subsystem, so is not a pure clock
+> controller but a system controller, and the drm driver is instantiated
+> by that MMSYS driver.
 > 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
--- 
-
-- Arnaldo
+Same here.
