@@ -1,64 +1,49 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:53777 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729991AbgCKPuN (ORCPT
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_NONE,SPOOFED_FREEMAIL_NO_RDNS,SUBJ_OBFU_PUNCT_FEW,SUBJ_OBFU_PUNCT_MANY
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41642 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729841AbgCKPwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:50:13 -0400
-Date: Wed, 11 Mar 2020 16:50:11 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
-Cc: vigneshr@ti.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v4 0/2] mtd: spinand: toshiba: Support for new Kioxia
- Serial NAND
-Message-ID: <20200311165011.63a3d82e@xps13>
-In-Reply-To: <cover.1583834323.git.ytc-mb-yfuruyama7@kioxia.com>
-References: <cover.1583834323.git.ytc-mb-yfuruyama7@kioxia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Mar 2020 11:52:34 -0400
+From: Rishi Gupta <gupt21@gmail.com>
+To: thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        s.trumtrar@pengutronix.de
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rishi Gupta <gupt21@gmail.com>
+Subject: [PATCH 1/1] pwm: pca9685: use gpio core provided macro GPIO_LINE_DIRECTION_OUT
+Date: Wed, 11 Mar 2020 21:22:20 +0530
+Message-Id: <1583941940-17194-1-git-send-email-gupt21@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-Hi Yoshio,
+GPIO core recently added macro to uniformly specify direction
+of a GPIO Line, so use it.
 
-Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com> wrote on Wed, 11 Mar
-2020 10:47:04 +0900:
+Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+---
+ drivers/pwm/pwm-pca9685.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> First patch is to rename function name becase of add new device.
-> Second patch is to supprot for new device.
-> 
-> Yoshio Furuyama (2):
->   mtd: spinand: toshiba: Rename function name to change suffix and
->     prefix (8Gbit)
->   mtd: spinand: toshiba: Support for new Kioxia Serial NAND
-> 
->  drivers/mtd/nand/spi/toshiba.c | 173 +++++++++++++++++++++++++++++++----------
->  1 file changed, 130 insertions(+), 43 deletions(-)
-> 
-
-I am very sorry but actually I had issues applying all your patches not
-because they were not based on v5.6-rc1, but because since then I
-applied a patch changing the detection that changed the content of a
-lot of structures (including in Toshiba's driver).
-
-Can you please rebase again on top of the current nand/next? I am very
-sorry for this extra work, this is my mistake.
-
-Head should be:
-
-	a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers")
-
-And the culprit commit is:
-
-	f1541773af49 ("mtd: spinand: rework detect procedure for different READ_ID operation")
-
-Thanks,
-Miquèl
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index b2a9e77..e2bac1e 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -168,7 +168,7 @@ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+ 					  unsigned int offset)
+ {
+ 	/* Always out */
+-	return 0;
++	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int pca9685_pwm_gpio_direction_input(struct gpio_chip *gpio,
+-- 
+2.7.4
 
