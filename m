@@ -2,179 +2,129 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F764C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF66C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2081D2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656F62074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="cX1tvW0W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeISQDIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgCKUae (ORCPT
+        id S1729117AbgCKUcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 16:30:34 -0400
-Received: from mail-eopbgr70113.outbound.protection.outlook.com ([40.107.7.113]:32739
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725834AbgCKUad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 16:30:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NcDHzljmYiuqp8O7LBA+zCo+oUFYbd3J1K4Mvzj6yojfPMwsw87TZ9LagYXYG2lfkyokMzXXkodYsQ5suPR955waN89RMfRKvNj4e9NtE978xntCmTRvS5yyIvWg6o1yBkzZXlxswL4PZKyRag1MQ6qNcrZkrTFQEnzRfxgU+vC78tQojBVEMbOgMJ1A7Kb25lBxJtrcSbttjsbIgmt93PcV7GPZ/+yn/D/8+6CJGn9nKnFnLGwzCtZVSroVEFZLzCh3lojK0LOZOMeMZrDduBHYIt4WTgDjnePiqoCJVqsCY9hfAW+jg1K1R/mEKuf46YAinb/RrSmsCML7YR++VA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0yl7zRlyMlmgoGfqsSMtYXEC9jwdZkegJeEM5qfq9c=;
- b=MeQmh9n0FzoGvKIJA3OOqEeTbP4ba6Y0sD9LplxFPVq7d4m2gljoQ7kj5ZKQJjHvIYuu6g+JP30IlDJ/U4quWWAfaNS0Emy+j1bDJWPEBEYElTB7hHXVSWNuW9CxI+lu5fxRXTtwdPnYm2Kvs+pnTSABXNm+ml0Qg6L9AHDYI33bOpboxS8AiG8aL599fjmxbKc1GRlYhYGBlV62vaIvcHuv920xk/3IjdkEWFpcGP/EGNVRJie/cXzfyCNfRq6uSSZmA/agimg7ybXK7EjklsMElaDkvlozZhMoOtySwf3Vad1fTeKfgFpERDqge+Cxixhs43FTpQWXbVs/P7SLHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0yl7zRlyMlmgoGfqsSMtYXEC9jwdZkegJeEM5qfq9c=;
- b=cX1tvW0W02nchJuhnLOvqVEIxmHESxUFOc5V3Lj8fzjHjsT0I4SvKU8h96Xvwgu8YSlgpz2UkznxXRVmPfhHh37ikmRMy85xA9YSRuSEkXYmJ9sp0Dt7BXW1VY64pKB4v0ckZx+EzR/aPY1pet6MesIV4NDyLqsJYPfdou8j4ck=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=ktkhai@virtuozzo.com; 
-Received: from DB7PR08MB3276.eurprd08.prod.outlook.com (52.135.128.26) by
- DB7PR08MB3321.eurprd08.prod.outlook.com (52.134.111.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Wed, 11 Mar 2020 20:30:29 +0000
-Received: from DB7PR08MB3276.eurprd08.prod.outlook.com
- ([fe80::5cbb:db23:aa64:5a91]) by DB7PR08MB3276.eurprd08.prod.outlook.com
- ([fe80::5cbb:db23:aa64:5a91%3]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
- 20:30:29 +0000
-Subject: Re: [PATCH RFC 0/5] fs, ext4: Physical blocks placement hint for
- fallocate(0): fallocate2(). TP defrag.
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
-        krisman@collabora.com, surajjs@amazon.com,
-        Dmitry Monakhov <dmonakhov@gmail.com>,
-        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
-        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <20200302165637.GA6826@mit.edu>
- <2b2bb85f-8062-648a-1b6e-7d655bf43c96@virtuozzo.com>
- <C4175F35-E9D4-4B79-B1A0-047A51DE3287@dilger.ca>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <46c1ed68-ba2f-5738-1257-8fd1b6b87023@virtuozzo.com>
-Date:   Wed, 11 Mar 2020 23:29:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <C4175F35-E9D4-4B79-B1A0-047A51DE3287@dilger.ca>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HE1P189CA0007.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::20)
- To DB7PR08MB3276.eurprd08.prod.outlook.com (2603:10a6:5:21::26)
+        Wed, 11 Mar 2020 16:32:53 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35066 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgCKUcw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 16:32:52 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v15so2660870qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 13:32:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w1EPYYWs6HVF4jXQQJ+oocKs8ETWR2AXVndep1cXQyE=;
+        b=QeISQDIoe7EIb0BquIvVIQDY2tWWGvFxd1AgSN87e3ljqPZ7kQB/I83xqIAXthJCtD
+         M8nrFvW1nbg1mvE67QXFNqq+ymkmIVqyyQQPDGfNHS7/FvxHUWjKpsvroAfLVEvAhl0m
+         MO7V5hvdqFhRKCVr0mUdgbDNj3pL7HyeExdQYva/Uy2G1ABuaHcs/nSD0WSkCWMToALe
+         TA+z8CwLlbO23k0ZauRbPNqtO+lpvzUuYnaztQ/iovfp/3GcyLKDmut2Njk091o8aYH9
+         IXwMz8aZiiO5JfENs6Yl4M4AR9BuueUvArvGrTRwgiyyWVISgenMnobBPVcrT2f8DGkd
+         GlRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w1EPYYWs6HVF4jXQQJ+oocKs8ETWR2AXVndep1cXQyE=;
+        b=l2OyLKrdgt24I5NwPP0hohgtn3xuE2iWkh5wNfGixrwgnhlb2jqHT/tVbnivMfFRMT
+         6dMtJaMoWRDmIaCtYXyFRyeLYQaZijhjli/dh4DzlihpsroZOk0Yb9hUW/iwwJNpHAZ8
+         QaGzyfwh/ylxAicgxyFmhXIQLtkUzAhjUKC8kGj/23uemlpPl5y/XuKr6El8zYsmmgVa
+         3HLYKR6MvwAobf0tlmo3+j/8GcuBOXHvz5kd3xqWxbnf54wbZWpihCnNRx2HsD+qdhnH
+         CTrS6Kxh83DYLbeF60V2e2f4gOw955IWuF91X/QBZS3qyIlcjlVKB3R1nrV+59YabGII
+         IDNQ==
+X-Gm-Message-State: ANhLgQ28VsF/+ERDVNYngydhycf7CF15OzDKyo3OhDXRQOsoB9oit5z6
+        vZAV4lU4UUQ1z6yMuVXlv3JPMkFm1Nc=
+X-Google-Smtp-Source: ADFU+vvjR1yY+nJq0VMWjBuJNtaZyLQOtkI59T2HLkM0lKo7OgEdsnmtG0yx4yW5iP/QYTWAOqiVPQ==
+X-Received: by 2002:ac8:94a:: with SMTP id z10mr4439600qth.357.1583958769806;
+        Wed, 11 Mar 2020 13:32:49 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z19sm12793225qts.86.2020.03.11.13.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 13:32:49 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 11 Mar 2020 16:32:47 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
+Message-ID: <20200311203246.GA3971914@rani.riverdale.lan>
+References: <20200307010353.172991-1-cannonmatthews@google.com>
+ <20200309000820.f37opzmppm67g6et@box>
+ <20200309090630.GC8447@dhcp22.suse.cz>
+ <20200309153831.GK1454533@tassilo.jf.intel.com>
+ <20200309183704.GA1573@bombadil.infradead.org>
+ <CAJfu=UfPKZwqjGR5AdhFRo_je7X5q2=zpBSBQkrbh2KhYrOJiA@mail.gmail.com>
+ <20200311005447.jkpsaghrpk3c4rwu@box>
+ <20200311033552.GA3657254@rani.riverdale.lan>
+ <20200311081607.3ahlk4msosj4qjsj@box>
+ <20200311183240.GA3880414@rani.riverdale.lan>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (176.14.212.145) by HE1P189CA0007.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Wed, 11 Mar 2020 20:30:26 +0000
-X-Originating-IP: [176.14.212.145]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1f73dc87-1d5c-4a24-8aae-08d7c5fb0a12
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3321:
-X-Microsoft-Antispam-PRVS: <DB7PR08MB3321F2636224796328F0B471CDFC0@DB7PR08MB3321.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0339F89554
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(376002)(136003)(396003)(39850400004)(346002)(199004)(6916009)(6486002)(6506007)(478600001)(53546011)(36756003)(2906002)(31686004)(81156014)(8676002)(81166006)(8936002)(86362001)(54906003)(316002)(6512007)(52116002)(16526019)(66476007)(2616005)(956004)(186003)(66946007)(66556008)(5660300002)(26005)(4326008)(7416002)(6666004)(31696002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB7PR08MB3321;H:DB7PR08MB3276.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u3/v+7kh7T3makMNH8m+HR/wdVLpPNdvmjNT76doQ52iEZ3IZrBU9Fs66vkPKOVsGdBiXzN1EQ/IPvFtmheOw1rJVHpi8ovTW4j2GMckRdoItuZkLexWEoT2vP6x68ceItoRsN8tl0wPE1cRHdEBTvadJywW/Ru0BRoI1v1dtiqtgTTICnLgtf7Anx1PhiYtvlqWVbj97v0HPGwM7+ATuOuXybmkE/PljNODe/cKaiiDnSD6KzTQNOpD6i1D+qJHa1PQslBQAxlkMCKQ+urOtkMMZFXRCVXTHXmTgeLgddlbhv6Lt1xhtkEmEOz1qxse++GYMehF3xIpyKOF7sYbSe01VbHedgR4XYwmFuLErguOiVCgt9brcKBJKk2QDVebK5tEGr3QQgqm1azQfSqutfcTQeOJeXrRdqs9UcIqAXRZ4u3b24WkzxbpwTdVveod
-X-MS-Exchange-AntiSpam-MessageData: fDeyh5lPegIvSmGjPdzCQPqNMuT72Ws5ZnTOJo1mS/TxT7ciD3oX2bva4zsev6YqYdUdUYhjeh2MVP08GuylhYIP0AYZ/d6Da1KQ9ly2HiPEAue7mE0CSwyiTFfG76WUp+Ez+jyUt3kwI2T0PD5Bcg==
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f73dc87-1d5c-4a24-8aae-08d7c5fb0a12
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 20:30:29.4573
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0FpP9bUNiJHPX/C2ZD4s2I9cUS1yRTuVOZztD2ojnwOkdHXDzxDp6TIabHHyXLJj1j0M469FE4c0CQuVLlz8hA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3321
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200311183240.GA3880414@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.2020 22:26, Andreas Dilger wrote:
-> On Mar 3, 2020, at 2:57 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>
->> On 02.03.2020 19:56, Theodore Y. Ts'o wrote:
->>> Kirill,
->>>
->>> In a couple of your comments on this patch series, you mentioned
->>> "defragmentation".  Is that because you're trying to use this as part
->>> of e4defrag, or at least, using EXT4_IOC_MOVE_EXT?
->>>
->>> If that's the case, you should note that input parameter for that
->>> ioctl is:
->>>
->>> struct move_extent {
->>> 	__u32 reserved;		/* should be zero */
->>> 	__u32 donor_fd;		/* donor file descriptor */
->>> 	__u64 orig_start;	/* logical start offset in block for orig */
->>> 	__u64 donor_start;	/* logical start offset in block for donor */
->>> 	__u64 len;		/* block length to be moved */
->>> 	__u64 moved_len;	/* moved block length */
->>> };
->>>
->>> Note that the donor_start is separate from the start of the file that
->>> is being defragged.  So you could have the userspace application
->>> fallocate a large chunk of space for that donor file, and then use
->>> that donor file to defrag multiple files if you want to close pack
->>> them.
->>
->> The practice shows it's not so. Your suggestion was the first thing we tried,
->> but it works bad and just doubles/triples IO.
->>
->> Let we have two files of 512Kb, and they are placed in separate 1Mb clusters:
->>
->> [[512Kb file][512Kb free]][[512Kb file][512Kb free]]
->>
->> We want to pack both of files in the same 1Mb cluster. Packed together on block
->> device, they will be in the same server of underlining distributed storage file
->> system. This gives a big performance improvement, and this is the price I aimed.
->>
->> In case of I fallocate a large hunk for both of them, I have to move them
->> both to this new hunk. So, instead of moving 512Kb of data, we will have to move
->> 1Mb of data, i.e. double size, which is counterproductive.
->>
->> Imaging another situation, when we have
->> [[1020Kb file]][4Kb free]][[4Kb file][1020Kb free]]
->>
->> Here we may just move [4Kb file] into [4Kb free]. But your suggestion again
->> forces us to move 1Mb instead of 4Kb, which makes IO 256 times worse! This is
->> terrible! And this is the thing I try prevent with finding a new interface.
+On Wed, Mar 11, 2020 at 02:32:41PM -0400, Arvind Sankar wrote:
+> On Wed, Mar 11, 2020 at 11:16:07AM +0300, Kirill A. Shutemov wrote:
+> > On Tue, Mar 10, 2020 at 11:35:54PM -0400, Arvind Sankar wrote:
+> > > 
+> > > The rationale for MOVNTI instruction is supposed to be that it avoids
+> > > cache pollution. Aside from the bench that shows MOVNTI to be faster for
+> > > the move itself, shouldn't it have an additional benefit in not trashing
+> > > the CPU caches?
+> > > 
+> > > As string instructions improve, why wouldn't the same improvements be
+> > > applied to MOVNTI?
+> > 
+> > String instructions inherently more flexible. Implementation can choose
+> > caching strategy depending on the operation size (cx) and other factors.
+> > Like if operation is large enough and cache is full of dirty cache lines
+> > that expensive to free up, it can choose to bypass cache. MOVNTI is more
+> > strict on semantics and more opaque to CPU.
 > 
-> One idea I had, which may work for your use case, is to run fallocate() on
-> the *1MB-4KB file* to allocate the last 4KB in that hunk, then use that block
-> as the donor file for the 1MB+4KB file.  The ext4 allocation algorithms should
-> always give you that 4KB chunk if it is free, and that avoids the need to try
-> and force the allocator to select that block through some other method.
+> But with today's processors, wouldn't writing 1G via the string
+> operations empty out almost the whole cache? Or are there already
+> optimizations to prevent one thread from hogging the L3?
 
-Do you mean the following:
+Also, currently the stringop is only done 4k at a time, so it would
+likely not trigger any future cache-bypassing optimizations in any case.
 
-1)fallocate() 4K at the end of *1MB-4KB* the first file (==> this increases the file length).
-2)EXT4_IOC_MOVE_EXT *4KB* the second file in that new hunk.
-3)truncate 4KB at the end of the first file.
-
-?
-
-If so, this can't be an online defrag, since some process may want to increase *1MB-4KB*
-file in between. This will just bring to data corruption.
-Another problem is that power lose between 1 and 3 will result in that file length remain
-*1MB* instead of *1MB-4KB*.
-
-So, we still need some kernel support to implement this.
+> 
+> If we do want to just use the string operations, it seems like the
+> clear_page routines should just call memset instead of duplicating it.
+> 
+> > 
+> > And more importantly string instructions, unlike MOVNTI, is something that
+> > generated often by compiler and used in standard libraries a lot. It is
+> > and will be focus of optimization of CPU architects.
+> > 
+> > -- 
+> >  Kirill A. Shutemov
