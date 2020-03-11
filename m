@@ -3,70 +3,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: *
 X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
-Received: from muru.com ([72.249.23.125]:59786 "EHLO muru.com"
+	RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
+Received: from verein.lst.de ([213.95.11.211]:59977 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729473AbgCKPXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:23:51 -0400
-Date: Wed, 11 Mar 2020 08:23:47 -0700
-From: Tony Lindgren <tony@atomide.com>
-To: Roger Quadros <rogerq@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, hch@lst.de, robin.murphy@arm.com,
-        robh+dt@kernel.org, nm@ti.com, nsekhar@ti.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
-Message-ID: <20200311152347.GW37466@atomide.com>
-References: <20200310115309.31354-1-rogerq@ti.com>
- <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
- <20200310154829.GS37466@atomide.com>
- <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
+        id S1729473AbgCKPYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 11:24:55 -0400
+Date: Wed, 11 Mar 2020 16:24:53 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org, aros@gmx.com
+Subject: Re: [Bug 206175] Fedora >= 5.4 kernels instantly freeze on boot
+ without producing any display output
+Message-ID: <20200311152453.GB23704@lst.de>
+References: <bug-206175-5873@https.bugzilla.kernel.org/> <bug-206175-5873-S6PaNNClEr@https.bugzilla.kernel.org/> <CAHk-=wi4GS05j67V0D_cRXRQ=_Jh-NT0OuNpF-JFsDFj7jZK9A@mail.gmail.com> <20200310162342.GA4483@lst.de> <CAHk-=wgB2YMM6kw8W0wq=7efxsRERL14OHMOLU=Nd1OaR+sXvw@mail.gmail.com> <20200310182546.GA9268@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
+In-Reply-To: <20200310182546.GA9268@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-* Roger Quadros <rogerq@ti.com> [200311 07:21]:
-> 
-> 
-> On 10/03/2020 17:48, Tony Lindgren wrote:
-> > * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
-> > > On 10/03/2020 13:53, Roger Quadros wrote:
-> > > > The L3 interconnect can access only 32-bits of address.
-> > > > Add the dma-ranges property to reflect this limit.
-> > > > 
-> > > > This will ensure that no device under L3 is
-> > > > given > 32-bit address for DMA.
-> > > > 
-> > > > Issue was observed only with SATA on DRA7-EVM with 4GB RAM
-> > > > and CONFIG_ARM_LPAE enabled. This is because the controller
-> > > > can perform 64-bit DMA and was setting the dma_mask to 64-bit.
-> > > > 
-> > > > Setting the correct bus_dma_limit fixes the issue.
-> > > 
-> > > This seems kind of messy to modify almost every DT node because of this....
-> > > Are you sure this is the only way to get it done? No way to modify the sata
-> > > node only which is impacted somehow?
-> > > 
-> > > Also, what if you just pass 0xffffffff to the dma-ranges property? That
-> > > would avoid modifying every node I guess.
-> > 
-> > Also, I think these interconnects are not limited to 32-bit access.
-> 
-> But from Table 2-1. L3_MAIN Memory Map
-> 
-> Start address	0x0000_0000
-> End address	0xFFFF_FFFF
-> 
-> So it is 32-bit limit, right?
+As you seem to have a mfd based usb card reader per bugzilla, can you
+try the patch form Robin below?  This ensures mfd doesn't mess with the
+dma mask and thus entangling it with the parent.  And please try to
+reply to the actual mail.  I found some updates in bugzilla when
+I checked it after I haven't seen any reply for a while, but that isn't
+a very efficient way to communicate.
 
-Hmm so what war Robin saying earlier that DMA access seems to be
-limited to lower 2GB only though?
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -138,7 +138,7 @@ static int mfd_add_device(struct device *parent, int id,
 
-Regards,
-
-Tony
+  	pdev->dev.parent = parent;
+  	pdev->dev.type = &mfd_dev_type;
+-	pdev->dev.dma_mask = parent->dma_mask;
++	pdev->dma_mask = parent->dma_mask ? *parent->dma_mask : 0;
+  	pdev->dev.dma_parms = parent->dma_parms;
+  	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
 
