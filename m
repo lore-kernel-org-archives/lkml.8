@@ -2,110 +2,119 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8318C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C077FC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C132074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218D5206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgCKQ63 convert rfc822-to-8bit (ORCPT
+        id S1730179AbgCKRAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 12:58:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49755 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730059AbgCKQ63 (ORCPT
+        Wed, 11 Mar 2020 13:00:13 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:43487 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729675AbgCKRAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:58:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-61-MbdLZPIiOeOwaIAf0E2-gg-1; Wed, 11 Mar 2020 16:58:25 +0000
-X-MC-Unique: MbdLZPIiOeOwaIAf0E2-gg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 11 Mar 2020 16:58:24 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 11 Mar 2020 16:58:24 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Guru Das Srinagesh' <gurus@codeaurora.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        "Subbaraman Narayanamurthy" <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
-Thread-Topic: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
-Thread-Index: AQHV90YvPG+mI4RpM0Wy3POJxK2r86hDnJdA
-Date:   Wed, 11 Mar 2020 16:58:24 +0000
-Message-ID: <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
-References: <cover.1583889178.git.gurus@codeaurora.org>
- <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
-In-Reply-To: <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 11 Mar 2020 13:00:13 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MMY9X-1ivvRM2DLD-00Jcd8; Wed, 11 Mar 2020 18:00:11 +0100
+Received: by mail-qt1-f182.google.com with SMTP id l13so2077776qtv.10;
+        Wed, 11 Mar 2020 10:00:11 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2SxjATqTQC6mtTtIrXmjGSy1f5MNAZ2iMO52RzX+KIMu/mGUVQ
+        5v6IFyZeDSWkBKc1LLX6TBympTxZWkDV006ADzE=
+X-Google-Smtp-Source: ADFU+vu9fVJOAF+9P6CbsNSvk6tSClNpCucHRIY2BueNHAFfNflfKP7sKJEZulP0d/np9ao6uI0PuseGoAEvcwJyhAc=
+X-Received: by 2002:ac8:16b8:: with SMTP id r53mr3575245qtj.7.1583946010319;
+ Wed, 11 Mar 2020 10:00:10 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com> <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com> <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+ <20200309155945.GA4124965@arrakis.emea.arm.com> <20200309160919.GM25745@shell.armlinux.org.uk>
+ <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com> <20200311142905.GI3216816@arrakis.emea.arm.com>
+In-Reply-To: <20200311142905.GI3216816@arrakis.emea.arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 11 Mar 2020 17:59:53 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2RC+sg2Tz4M8mkQ_d78FTFdES+YsucUzDFx=UK+L8Oww@mail.gmail.com>
+Message-ID: <CAK8P3a2RC+sg2Tz4M8mkQ_d78FTFdES+YsucUzDFx=UK+L8Oww@mail.gmail.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:KDAXYoW2MxfxD7Sj0ctMmZ5aMLMVbtt5fi0P1ZQqIYgqgIK2MMv
+ qkCLT0wBmUi+ZlPtBTPkWkci1XkrRMaJe1fdGGGQ2wglRIb/CCB6+84elXs1o14Cct2h0hy
+ zkRsS5njtlvMVDe1P6BkcmY/43+4Q4rqr2V2OyiuG/NIEhrgW4xwmXcvaAGN3JZ+TR/04xi
+ SFMS7sKzb0fv6ruHUvmqw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nqV3Nz4NHWI=:N/KXbDYH0Kj/MG16jop7Qw
+ deCeyFqWaIsJssrMr8e4A41NSSvVAxxdX+0fMASw7lWg2Us62NopEeybtACbFNLij84KJt0W+
+ D/+ln4Qsy0qhPsnXN9Xd7oqCRBN2Y5K011oKgVyjkQlhWmgDwOP1A7Y1ckiwtAgI60gMXoUXm
+ fNDCgtXsV/FhuVVXLTkV73MQdjb5krQaduwqajjkU7BZfbrADtrxN0tJF57LfoMWvceDFLtsI
+ xWCwI19926M0pTdzb9Hbh5MxHniLtOJebm9JYHl4hBp03SZ3XWqKmCfKu0RD0RfflHUghqk6H
+ 2OcEP1iZO0PTY0o9NxRqrU/d2qcGIqbb0dKhtit+1m54fOSTVxQ5hLhEnkq/rQXyZ5YJdFfCX
+ GvKPng8Ffkc67GcRnpzOJtovpO4BcczQUO+TfrIVP3DBPB8b72pAi5DtH+b0jxbGpYKJWx6pA
+ 25EBH4Z0keVEvX0AVyr5imYhMnpex7i8Tc7DxbxLN6tmzvADWmb1OUGLsgLwb+m7OcUYJEpa0
+ FsTc65cGA7g+cmSJ5Ja/eHYHwqgAIctN+1QeygPa4OUUBfPXi3qPpIZRxsoSc6DUA/oEVS2bX
+ ydU0BUmtlKntQFalMHY2IDvuH69+3svMDkSoh1b6/nuYPwbV6fVRj7wH08x4nixdhO4jyevD5
+ GydfviNUlbdORr0nN7MNNZEmY15Y9t1n2RZtLQlHdxM7S8O9erG8iGKsXDp5cqDVoSJyj4NLI
+ I1tvWvJ6C861SZZipYvZcRfx8GxgtjoxVPo8dFW7CiaU0eafJDZ+s2hSWRCCxa7wwClHBbfpC
+ aSx6DxeK3BZkYv/EHxzd5v7byjzReRo/OFwboxdg0jJxmmCEn8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guru Das Srinagesh
-> Sent: 11 March 2020 01:41
-> 
-> Since the PWM framework is switching struct pwm_args.period's datatype
-> to u64, prepare for this transition by using div64_u64 to handle a
-> 64-bit divisor.
-> 
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/clk/clk-pwm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-> index 87fe0b0e..7b1f7a0 100644
-> --- a/drivers/clk/clk-pwm.c
-> +++ b/drivers/clk/clk-pwm.c
-> @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
->  	}
-> 
->  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
+On Wed, Mar 11, 2020 at 3:29 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
 
-That cannot be needed, a 32 bit division is fine.
-More interesting would be whether pargs.period is sane (eg not zero).
-I'd assign pargs.period to an 'unsigned int' variable
-prior to the division (I hate casts - been bitten by them in the past.).
+> > - Flip TTBR0 on kernel entry/exit, and again during user access.
+> >
+> > This is probably more work to implement than your idea, but
+> > I would hope this has a lower overhead on most microarchitectures
+> > as it doesn't require pinning the pages. Depending on the
+> > microarchitecture, I'd hope the overhead would be comparable
+> > to that of ARM64_SW_TTBR0_PAN.
+>
+> This still doesn't solve the copy_{from,to}_user() case where both
+> address spaces need to be available during copy. So you either pin the
+> user pages in memory and access them via the kernel mapping or you
+> temporarily map (kmap?) the destination/source kernel address. The
+> overhead I'd expect to be significantly greater than ARM64_SW_TTBR0_PAN
+> for the uaccess routines. For user entry/exit, your suggestion is
+> probably comparable with SW PAN.
 
-> 
->  	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
->  	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Good point, that is indeed a larger overhead. The simplest implementation
+I had in mind would use the code from arch/arm/lib/copy_from_user.S and
+flip ttbr0 between each ldm and stm (up to 32 bytes), but I have no idea
+of the cost of storing to ttbr0, so this might be even more expensive. Do you
+have an estimate of how long writing to TTBR0_64 takes on Cortex-A7
+and A15, respectively?
 
-	David
+Another way might be to use a use a temporary buffer that is already
+mapped, and add a memcpy() through L1-cache to reduce the number
+of ttbr0 changes. The buffer would probably have to be on the stack,
+which limits the size, but for large copies get_user_pages()+memcpy()
+may end up being faster anyway.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+      Arnd
