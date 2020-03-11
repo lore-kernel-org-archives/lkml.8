@@ -6,592 +6,113 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A822C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851C8C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E9921927
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3D621D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgCKDck (ORCPT
+        id S1728087AbgCKDco convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:32:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37344 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727659AbgCKDcj (ORCPT
+        Tue, 10 Mar 2020 23:32:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37154 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbgCKDcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:32:39 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B3TPoF026843
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:32:36 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yppmyk7dq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:32:36 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 11 Mar 2020 03:32:33 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Mar 2020 03:32:26 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02B3VPUv9503050
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 03:31:25 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CB8842045;
-        Wed, 11 Mar 2020 03:32:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A131342041;
-        Wed, 11 Mar 2020 03:32:24 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Mar 2020 03:32:24 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 834C3A0130;
-        Wed, 11 Mar 2020 14:32:19 +1100 (AEDT)
-Subject: Re: [PATCH v3 20/27] powerpc/powernv/pmem: Forward events to
- userspace
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 11 Mar 2020 14:32:23 +1100
-In-Reply-To: <7ee589c0-2c02-9b8e-95a9-743ce29674ec@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-21-alastair@au1.ibm.com>
-         <7ee589c0-2c02-9b8e-95a9-743ce29674ec@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031103-0012-0000-0000-0000038F3534
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031103-0013-0000-0000-000021CC0233
-Message-Id: <d22899af71549f2768e5e932f0f21a60c39586f6.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_17:2020-03-10,2020-03-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1015 suspectscore=2 adultscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110020
+        Tue, 10 Mar 2020 23:32:43 -0400
+Received: from mail-pj1-f70.google.com ([209.85.216.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jBs6r-0007tk-S7
+        for linux-kernel@vger.kernel.org; Wed, 11 Mar 2020 03:32:42 +0000
+Received: by mail-pj1-f70.google.com with SMTP id z20so358061pjn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:32:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=TO0qv6efKA7cZs1yfHfT13W25PN4EYUJVO1YMN34FnQ=;
+        b=hNLp50cVtbsMIiFy8L19Bm1gBBQewCRRrGaV3LQlXIqxVEhPtN/o6KtvofUId586z1
+         p8wZNtNYk6IUH/ADT3NMYDw8ehGImtMnk65GOKSb22P5KxiVJQF6Wu1fm7YoYGPf+5VC
+         bsuhJGAZklQaytwmBWsVeKQwYIjVmuYwvwdCQX7/QQruzKw5yHYUWgqu8pJvN/i2UZnO
+         siUouhzAN59Cywi1jsZ5wxCeDHJD0uKox1k+Vbx/gEaobrKdBxmPqKc9q+7JgmoXDIQ0
+         ZlM0N66AYFPav20ZpC7mahRLyKnQ0V3p06Vjpt3e7wc5IvbMdCecB9KTv4Hbl7uPY6Dk
+         xLfw==
+X-Gm-Message-State: ANhLgQ0C9zi6r5veLgbWiFO44MgrzVUcUq53Uzozd1Q0Dz4FtdJfO4n2
+        l9TehSGgyj5p/soRglq3NhM5ghETmkxVoWQbPivhS800+GTe4TY/LOzYBoeCR1l/VQ3NPoL2NcW
+        7eant6LJlIg9FlbfP3hHLx+0skb4MdPmZNBjIYItUIg==
+X-Received: by 2002:a65:53c5:: with SMTP id z5mr956094pgr.0.1583897559831;
+        Tue, 10 Mar 2020 20:32:39 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvHaCAuDG8ZXxP6dI2E0k+Q5QuKeZli0FiRJpCet81PmNlzXAF3LuHsh7RN9iPMIp47894dLg==
+X-Received: by 2002:a65:53c5:: with SMTP id z5mr956085pgr.0.1583897559542;
+        Tue, 10 Mar 2020 20:32:39 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id s23sm3567125pjp.28.2020.03.10.20.32.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Mar 2020 20:32:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [RESEND] [PATCH v2 3/3] USB: Disable LPM on WD19's Realtek Hub
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200205112633.25995-3-kai.heng.feng@canonical.com>
+Date:   Wed, 11 Mar 2020 11:32:27 +0800
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <4F77B65D-77B0-4E63-ADB3-BF127BDE3BA2@canonical.com>
+References: <20200205112633.25995-1-kai.heng.feng@canonical.com>
+ <20200205112633.25995-3-kai.heng.feng@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 12:00 +0100, Frederic Barrat wrote:
-> 
-> Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Some of the interrupts that the card generates are better handled
-> > by the userspace daemon, in particular:
-> > Controller Hardware/Firmware Fatal
-> > Controller Dump Available
-> > Error Log available
-> > 
-> > This patch allows a userspace application to register an eventfd
-> > with
-> > the driver via SCM_IOCTL_EVENTFD to receive notifications of these
-> > interrupts.
-> > 
-> > Userspace can then identify what events have occurred by calling
-> > SCM_IOCTL_EVENT_CHECK and checking against the SCM_IOCTL_EVENT_FOO
-> > masks.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 216
-> > ++++++++++++++++++
-> >   .../platforms/powernv/pmem/ocxl_internal.h    |   5 +
-> >   include/uapi/nvdimm/ocxl-pmem.h               |  16 ++
-> >   3 files changed, 237 insertions(+)
-> > 
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > index 009d4fd29e7d..e46696d3cc36 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > @@ -10,6 +10,7 @@
-> >   #include <misc/ocxl.h>
-> >   #include <linux/delay.h>
-> >   #include <linux/ndctl.h>
-> > +#include <linux/eventfd.h>
-> >   #include <linux/fs.h>
-> >   #include <linux/mm_types.h>
-> >   #include <linux/memory_hotplug.h>
-> > @@ -335,11 +336,22 @@ static void free_ocxlpmem(struct ocxlpmem
-> > *ocxlpmem)
-> >   {
-> >   	int rc;
-> >   
-> > +	// Disable doorbells
-> > +	(void)ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_CHIEC,
-> > +				     OCXL_LITTLE_ENDIAN,
-> > +				     GLOBAL_MMIO_CHI_ALL);
-> > +
-> >   	if (ocxlpmem->nvdimm_bus)
-> >   		nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
-> >   
-> >   	free_minor(ocxlpmem);
-> >   
-> > +	if (ocxlpmem->irq_addr[1])
-> > +		iounmap(ocxlpmem->irq_addr[1]);
-> > +
-> > +	if (ocxlpmem->irq_addr[0])
-> > +		iounmap(ocxlpmem->irq_addr[0]);
-> > +
-> >   	if (ocxlpmem->cdev.owner)
-> >   		cdev_del(&ocxlpmem->cdev);
-> >   
-> > @@ -443,6 +455,11 @@ static int file_release(struct inode *inode,
-> > struct file *file)
-> >   {
-> >   	struct ocxlpmem *ocxlpmem = file->private_data;
-> >   
-> > +	if (ocxlpmem->ev_ctx) {
-> > +		eventfd_ctx_put(ocxlpmem->ev_ctx);
-> > +		ocxlpmem->ev_ctx = NULL;
-> > +	}
-> > +
-> >   	ocxlpmem_put(ocxlpmem);
-> >   	return 0;
-> >   }
-> > @@ -938,6 +955,51 @@ static int ioctl_controller_stats(struct
-> > ocxlpmem *ocxlpmem,
-> >   	return rc;
-> >   }
-> >   
-> > +static int ioctl_eventfd(struct ocxlpmem *ocxlpmem,
-> > +		 struct ioctl_ocxl_pmem_eventfd __user *uarg)
-> > +{
-> > +	struct ioctl_ocxl_pmem_eventfd args;
-> > +
-> > +	if (copy_from_user(&args, uarg, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	if (ocxlpmem->ev_ctx)
-> > +		return -EINVAL;
-> 
-> EBUSY?
-> 
-Ok
+Hi Greg,
 
+> On Feb 5, 2020, at 19:26, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 > 
-> > +
-> > +	ocxlpmem->ev_ctx = eventfd_ctx_fdget(args.eventfd);
-> > +	if (!ocxlpmem->ev_ctx)
-> > +		return -EFAULT;
+> Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
+> bus when bringing underlying ports from U3 to U0.
 > 
-> Why not use what eventfd_ctx_fdget() returned? (through some
-> IS_ERR() 
-> and PTR_ERR() convolution)
+> Disabling LPM on the hub during setting link state is not enough, so
+> let's disable LPM completely for this hub.
 > 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Ok
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user
-> > *uarg)
-> > +{
-> > +	u64 val = 0;
-> > +	int rc;
-> > +	u64 chi = 0;
-> > +
-> > +	rc = ocxlpmem_chi(ocxlpmem, &chi);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	if (chi & GLOBAL_MMIO_CHI_ELA)
-> > +		val |= IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE;
-> > +
-> > +	if (chi & GLOBAL_MMIO_CHI_CDA)
-> > +		val |= IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE;
-> > +
-> > +	if (chi & GLOBAL_MMIO_CHI_CFFS)
-> > +		val |= IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL;
-> > +
-> > +	if (chi & GLOBAL_MMIO_CHI_CHFS)
-> > +		val |= IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL;
-> > +
-> > +	rc = copy_to_user((u64 __user *) uarg, &val, sizeof(val));
-> > +
-> 
-> copy_to_user doesn't return an errno. Should be:
-> 
-> if (copy_to_user((u64 __user *) uarg, &val, sizeof(val)))
-> 	return -EFAULT;
-> 
-Ok
+As Mathias stated, this patch can be considered as a separate one.
+Can you please review and merge this patch?
 
-> 
-> > +	return rc;
-> > +}
-> > +
-> >   static long file_ioctl(struct file *file, unsigned int cmd,
-> > unsigned long args)
-> >   {
-> >   	struct ocxlpmem *ocxlpmem = file->private_data;
-> > @@ -966,6 +1028,15 @@ static long file_ioctl(struct file *file,
-> > unsigned int cmd, unsigned long args)
-> >   		rc = ioctl_controller_stats(ocxlpmem,
-> >   					    (struct
-> > ioctl_ocxl_pmem_controller_stats __user *)args);
-> >   		break;
-> > +
-> > +	case IOCTL_OCXL_PMEM_EVENTFD:
-> > +		rc = ioctl_eventfd(ocxlpmem,
-> > +				   (struct ioctl_ocxl_pmem_eventfd
-> > __user *)args);
-> > +		break;
-> > +
-> > +	case IOCTL_OCXL_PMEM_EVENT_CHECK:
-> > +		rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
-> > +		break;
-> >   	}
-> >   
-> >   	return rc;
-> > @@ -1107,6 +1178,146 @@ static void dump_error_log(struct ocxlpmem
-> > *ocxlpmem)
-> >   	kfree(buf);
-> >   }
-> >   
-> > +static irqreturn_t imn0_handler(void *private)
-> > +{
-> > +	struct ocxlpmem *ocxlpmem = private;
-> > +	u64 chi = 0;
-> > +
-> > +	(void)ocxlpmem_chi(ocxlpmem, &chi);
-> > +
-> > +	if (chi & GLOBAL_MMIO_CHI_ELA) {
-> > +		dev_warn(&ocxlpmem->dev, "Error log is available\n");
-> > +
-> > +		if (ocxlpmem->ev_ctx)
-> > +			eventfd_signal(ocxlpmem->ev_ctx, 1);
-> > +	}
-> > +
-> > +	if (chi & GLOBAL_MMIO_CHI_CDA) {
-> > +		dev_warn(&ocxlpmem->dev, "Controller dump is
-> > available\n");
-> > +
-> > +		if (ocxlpmem->ev_ctx)
-> > +			eventfd_signal(ocxlpmem->ev_ctx, 1);
-> > +	}
-> > +
-> > +
-> 
-> (at least) one empty line too many.
-> 
+Kai-Heng
 
-Ok
-
+> ---
+> v2:
+> - Use quirk instead of the original approach.
 > 
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static irqreturn_t imn1_handler(void *private)
-> > +{
-> > +	struct ocxlpmem *ocxlpmem = private;
-> > +	u64 chi = 0;
-> > +
-> > +	(void)ocxlpmem_chi(ocxlpmem, &chi);
-> > +
-> > +	if (chi & (GLOBAL_MMIO_CHI_CFFS | GLOBAL_MMIO_CHI_CHFS)) {
-> > +		dev_err(&ocxlpmem->dev,
-> > +			"Controller status is fatal, chi=0x%llx, going
-> > offline\n", chi);
-> > +
-> > +		if (ocxlpmem->nvdimm_bus) {
-> > +			nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
-> > +			ocxlpmem->nvdimm_bus = NULL;
-> > +		}
-> > +
-> > +		if (ocxlpmem->ev_ctx)
-> > +			eventfd_signal(ocxlpmem->ev_ctx, 1);
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +
-> > +/**
-> > + * ocxlpmem_setup_irq() - Set up the IRQs for the OpenCAPI
-> > Persistent Memory device
-> > + * @ocxlpmem: the device metadata
-> > + * Return: 0 on success, negative on failure
-> > + */
-> > +static int ocxlpmem_setup_irq(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	int rc;
-> > +	u64 irq_addr;
-> > +
-> > +	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem-
-> > >irq_id[0]);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem-
-> > >irq_id[0],
-> > +				  imn0_handler, NULL, ocxlpmem);
-> > +
-> > +	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
-> > ocxlpmem->irq_id[0]);
-> > +	if (!irq_addr)
-> > +		return -EINVAL;
-> > +
-> > +	ocxlpmem->irq_addr[0] = ioremap(irq_addr, PAGE_SIZE);
-> > +	if (!ocxlpmem->irq_addr[0])
-> > +		return -EINVAL;
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_IMA0_OHP,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > +				      (u64)ocxlpmem->irq_addr[0]);
-> > +	if (rc)
-> > +		goto out_irq0;
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_IMA0_CFP,
-> > +				      OCXL_LITTLE_ENDIAN, 0);
-> > +	if (rc)
-> > +		goto out_irq0;
+> drivers/usb/core/quirks.c | 3 +++
+> 1 file changed, 3 insertions(+)
 > 
-> That's a few lines of duplicate code. On the other hand, there's
-> enough 
-> varying parameters between the 2 interrupts that factorizing in a 
-> subfunction would be slightly less readable. So duplicating is
-> probably ok.
+> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+> index 6b6413073584..2fb7c1602280 100644
+> --- a/drivers/usb/core/quirks.c
+> +++ b/drivers/usb/core/quirks.c
+> @@ -371,6 +371,9 @@ static const struct usb_device_id usb_quirk_list[] = {
+> 	{ USB_DEVICE(0x0b05, 0x17e0), .driver_info =
+> 			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
 > 
+> +	/* Realtek hub in Dell WD19 (Type-C) */
+> +	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
+> +
+> 	/* Action Semiconductor flash disk */
+> 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
+> 			USB_QUIRK_STRING_FETCH_255 },
+> -- 
+> 2.17.1
 > 
-> 
-> > +	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem-
-> > >irq_id[1]);
-> > +	if (rc)
-> > +		goto out_irq0;
-> > +
-> > +
-> > +	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem-
-> > >irq_id[1],
-> > +				  imn1_handler, NULL, ocxlpmem);
-> > +	if (rc)
-> > +		goto out_irq0;
-> > +
-> > +	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
-> > ocxlpmem->irq_id[1]);
-> > +	if (!irq_addr) {
-> > +		rc = -EFAULT;
-> > +		goto out_irq0;
-> > +	}
-> > +
-> > +	ocxlpmem->irq_addr[1] = ioremap(irq_addr, PAGE_SIZE);
-> > +	if (!ocxlpmem->irq_addr[1]) {
-> > +		rc = -EINVAL;
-> > +		goto out_irq0;
-> > +	}
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_IMA1_OHP,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > +				      (u64)ocxlpmem->irq_addr[1]);
-> > +	if (rc)
-> > +		goto out_irq1;
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_IMA1_CFP,
-> > +				      OCXL_LITTLE_ENDIAN, 0);
-> > +	if (rc)
-> > +		goto out_irq1;
-> > +
-> > +	// Enable doorbells
-> > +	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_CHIE,
-> > +				    OCXL_LITTLE_ENDIAN,
-> > +				    GLOBAL_MMIO_CHI_ELA |
-> > GLOBAL_MMIO_CHI_CDA |
-> > +				    GLOBAL_MMIO_CHI_CFFS |
-> > GLOBAL_MMIO_CHI_CHFS |
-> > +				    GLOBAL_MMIO_CHI_NSCRA);
-> 
-> GLOBAL_MMIO_CHI_NSCRA doesn't seem to be handled in the handlers.
-> 
-
-This will be moved to the overwrite patch.
-
-> 
-> 
-> > +	if (rc)
-> > +		goto out_irq1;
-> > +
-> > +	return 0;
-> > +
-> > +out_irq1:
-> > +	iounmap(ocxlpmem->irq_addr[1]);
-> > +	ocxlpmem->irq_addr[1] = NULL;
-> > +
-> > +out_irq0:
-> > +	iounmap(ocxlpmem->irq_addr[0]);
-> > +	ocxlpmem->irq_addr[0] = NULL;
-> > +
-> > +	return rc;
-> > +}
-> > +
-> >   /**
-> >    * probe_function0() - Set up function 0 for an OpenCAPI
-> > persistent memory device
-> >    * This is important as it enables templates higher than 0 across
-> > all other functions,
-> > @@ -1216,6 +1427,11 @@ static int probe(struct pci_dev *pdev, const
-> > struct pci_device_id *ent)
-> >   		goto err;
-> >   	}
-> >   
-> > +	if (ocxlpmem_setup_irq(ocxlpmem)) {
-> > +		dev_err(&pdev->dev, "Could not set up OCXL IRQs\n");
-> 
-> Like with other patches, rc needs to be set.
-> 
-ok
-
-> 
-> > +		goto err;
-> > +	}
-> > +
-> >   	if (setup_command_metadata(ocxlpmem)) {
-> >   		dev_err(&pdev->dev, "Could not read OCXL command
-> > matada\n");
-> >   		goto err;
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > index b953ee522ed4..927690f4888f 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > @@ -103,6 +103,10 @@ struct ocxlpmem {
-> >   	struct pci_dev *pdev;
-> >   	struct cdev cdev;
-> >   	struct ocxl_fn *ocxl_fn;
-> > +#define SCM_IRQ_COUNT 2
-> > +	int irq_id[SCM_IRQ_COUNT];
-> > +	struct dev_pagemap irq_pgmap[SCM_IRQ_COUNT];
-> 
-> irq_pgmap is not used.
-
-Ok
-> 
-> 
-> > +	void *irq_addr[SCM_IRQ_COUNT];
-> >   	struct nd_interleave_set nd_set;
-> >   	struct nvdimm_bus_descriptor bus_desc;
-> >   	struct nvdimm_bus *nvdimm_bus;
-> > @@ -113,6 +117,7 @@ struct ocxlpmem {
-> >   	struct command_metadata ns_command;
-> >   	struct resource pmem_res;
-> >   	struct nd_region *nd_region;
-> > +	struct eventfd_ctx *ev_ctx;
-> >   	char fw_version[8+1];
-> >   	u32 timeouts[ADMIN_COMMAND_MAX+1];
-> >   
-> > diff --git a/include/uapi/nvdimm/ocxl-pmem.h
-> > b/include/uapi/nvdimm/ocxl-pmem.h
-> > index add223aa2fdb..988eb0bc413d 100644
-> > --- a/include/uapi/nvdimm/ocxl-pmem.h
-> > +++ b/include/uapi/nvdimm/ocxl-pmem.h
-> > @@ -66,6 +66,20 @@ struct ioctl_ocxl_pmem_controller_stats {
-> >   	__u64 cache_write_latency; /* nanoseconds */
-> >   };
-> >   
-> > +struct ioctl_ocxl_pmem_eventfd {
-> > +	__s32 eventfd;
-> > +	__u32 reserved;
-> > +};
-> > +
-> > +#ifndef BIT_ULL
-> > +#define BIT_ULL(nr)	(1ULL << (nr))
-> > +#endif
-> > +
-> > +#define IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE	BIT_ULL
-> > (0)
-> > +#define IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE	BIT_ULL(1)
-> > +#define IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL		BIT_ULL
-> > (2)
-> > +#define IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL		BIT_ULL
-> > (3)
-> > +
-> 
-> I'm not fond of adding a macro with such a generic name as BIT_ULL()
-> in 
-> a user header file. What's wrong with:
-> 
-> #define IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE	0x1
-> #define IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE	0x2
-> #define IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL		0x4
-> #define IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL		0x8
-> 
-> 
-
-Nothing, I'll change it.
-
->    Fred
-> 
-> 
-> >   /* ioctl numbers */
-> >   #define OCXL_PMEM_MAGIC 0x5C
-> >   /* SCM devices */
-> > @@ -74,5 +88,7 @@ struct ioctl_ocxl_pmem_controller_stats {
-> >   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_DATA		_IOWR(O
-> > CXL_PMEM_MAGIC, 0x03, struct ioctl_ocxl_pmem_controller_dump_data)
-> >   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE	_IO(OCXL_PMEM_M
-> > AGIC, 0x04)
-> >   #define IOCTL_OCXL_PMEM_CONTROLLER_STATS		_IO(OCXL_PMEM_M
-> > AGIC, 0x05)
-> > +#define IOCTL_OCXL_PMEM_EVENTFD				_IOW(OC
-> > XL_PMEM_MAGIC, 0x06, struct ioctl_ocxl_pmem_eventfd)
-> > +#define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OC
-> > XL_PMEM_MAGIC, 0x07, __u64)
-> >   
-> >   #endif /* _UAPI_OCXL_SCM_H */
-> > 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
 
