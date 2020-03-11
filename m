@@ -2,123 +2,161 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188AFC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51466C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D361B2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583962052;
-	bh=V0aA7UasCK47EmOKF5Y3PsBJ7bIa17UgjnhNkhWXQ+8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r4RxiuJzI9TN9Jul/LMIjoeAr1brdlSUunWd45YGtQvhw4FJG0C6aODzvSgA6KztQ
-	 7q0aidpfI8Salc9gtXhaBml37oycdsLAIVyxsqM7m+ziXHBgoxaO++PUirmDcelq/4
-	 0Y7fw4jAE6QTJIiyhjmvK9mYgpzyaf/zvHzVywxo=
+	by mail.kernel.org (Postfix) with ESMTP id 21A652074C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgCKV1a (ORCPT
+        id S1729573AbgCKV1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:27:30 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:25270 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgCKV1a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:27:30 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02BLRBlU030179;
-        Thu, 12 Mar 2020 06:27:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02BLRBlU030179
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583962032;
-        bh=kbWqPD/5BVvh1Qw3PprVads8y98YV6jmA2+olTbwLms=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=18Say0DVwJzy3gpsxMTKW5SkOv+13lGEM7tgb+0qmFhEIyEkRf84WpHoZuotGExam
-         l28CjbWiBsjOYYXTXVorUHVhMrd7MzH9Q32umpYDelnuV0sU4A8VADqP1ALhjFP4G0
-         mRsBJ5/NDhplezTHmOFa9ArTTcj/4Lg7ADJoKM4fs4JVIMP+8M2AzRfdnusdbRg4hW
-         Uy3sDgiK0Zzi9/OYCXPEN273qR3jrQDjsuOQh307z9hswIZ26qEdFPEfVQTPiEGT3R
-         5DrFo5wwbv+b6l/JJfDmNeDWI5Rk5H3kl1HLU7aBLvf/0JkU66+W6clD8/mhlFKXD7
-         GVevVj14Bht7A==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id v16so228158ual.9;
-        Wed, 11 Mar 2020 14:27:12 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3yK2KfmUhOoNwwSbvDgEtB/IG0gXSlwyl6pE9+rO5fgdBTm2xW
-        qvvXoRSvmkeh0tB3pNYPcBZMNMJ5gf05C9EIpQo=
-X-Google-Smtp-Source: ADFU+vthn3wrUbYgxaw18lalX3Fw7yiaP0FsvMtzVrj2ofhcX57g6NmsivMdiollhWbVip3FO3S0/MuqENwOOl0kuY8=
-X-Received: by 2002:ab0:28d8:: with SMTP id g24mr1754195uaq.121.1583962030875;
- Wed, 11 Mar 2020 14:27:10 -0700 (PDT)
+        Wed, 11 Mar 2020 17:27:44 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6943 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729328AbgCKV1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 17:27:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 14:27:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,542,1574150400"; 
+   d="scan'208";a="261277420"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2020 14:27:42 -0700
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id 938225804A0;
+        Wed, 11 Mar 2020 14:27:42 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+To:     Bjorn Helgaas <helgaas@kernel.org>, Austin.Bolen@dell.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200311203326.GA163074@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <ddf5d142-09e7-67ee-16e4-37447df6b112@linux.intel.com>
+Date:   Wed, 11 Mar 2020 14:25:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200311062925.5163-1-masahiroy@kernel.org> <20200311093143.GB279080@splinter>
- <20200311104756.GA1972672@hmswarspite.think-freely.org> <20200311112833.GA284417@splinter>
- <20200311173053.GB1972672@hmswarspite.think-freely.org>
-In-Reply-To: <20200311173053.GB1972672@hmswarspite.think-freely.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 12 Mar 2020 06:26:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARSbP-DY5wdXtB0cxHfwgmFYE0QvxYACk8GuMQhTvj_WQ@mail.gmail.com>
-Message-ID: <CAK7LNARSbP-DY5wdXtB0cxHfwgmFYE0QvxYACk8GuMQhTvj_WQ@mail.gmail.com>
-Subject: Re: [PATCH] net: drop_monitor: use IS_REACHABLE() to guard net_dm_hw_report()
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Networking <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200311203326.GA163074@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 2:31 AM Neil Horman <nhorman@tuxdriver.com> wrote:
+Hi,
+
+On 3/11/20 1:33 PM, Bjorn Helgaas wrote:
+> On Wed, Mar 11, 2020 at 05:27:35PM +0000, Austin.Bolen@dell.com wrote:
+>> On 3/11/2020 12:12 PM, Bjorn Helgaas wrote:
+>>> [EXTERNAL EMAIL]
+>>>
+>> <SNIP>
+>>> I'm probably missing your intent, but that sounds like "the OS can
+>>> read/write AER bits whenever it wants, regardless of ownership."
+>>>
+>>> That doesn't sound practical to me, and I don't think it's really
+>>> similar to DPC, where it's pretty clear that the OS can touch DPC bits
+>>> it doesn't own but only *during the EDR processing window*.
+>> Yes, by treating AER bits like DPC bits I meant I'd define the specific
+>> time windows when OS can touch the AER status bits similar to how it's
+>> done for DPC in the current ECN.
+> Makes sense, thanks.
 >
-> On Wed, Mar 11, 2020 at 01:28:33PM +0200, Ido Schimmel wrote:
-> > On Wed, Mar 11, 2020 at 06:47:56AM -0400, Neil Horman wrote:
-> > > On Wed, Mar 11, 2020 at 11:31:43AM +0200, Ido Schimmel wrote:
-> > > > On Wed, Mar 11, 2020 at 03:29:25PM +0900, Masahiro Yamada wrote:
-> > > > > In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
-> > > > >
-> > > > > The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
-> > > > > from being 'm' when NET_DEVLINK=y.
-> > > > >
-> > > > > With the planned Kconfig change that relaxes the 'imply', the
-> > > > > combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
-> > > > >
-> > > > > Use IS_REACHABLE() to avoid the vmlinux link error for this case.
-> > > > >
-> > > > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > > >
-> > > > Thanks, Masahiro.
-> > > >
-> > > > Neil, Jiri, another option (long term) is to add a raw tracepoint (not
-> > > > part of ABI) in devlink and have drop monitor register its probe on it
-> > > > when monitoring.
-> > > >
-> > > > Two advantages:
-> > > > 1. Consistent with what drop monitor is already doing with kfree_skb()
-> > > > tracepoint
-> > > > 2. We can remove 'imply NET_DROP_MONITOR' altogether
-> > > >
-> > > > What do you think?
-> > > >
-> > > Agreed, I think I like this implementation better.
-> >
-> > OK, but I don't want to block Masahiro. I think we can go with his patch
-> > and then I'll add the raw tracepoint in the next release.
-> >
-> Yeah, ok, I can agree with that
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
-
-
-Thanks, I will insert this patch before the kconfig change
-with your Ack.
-
+>>>>>> For the normative text describing when OS clears the AER bits
+>>>>>> following the informative flow chart, it could say that OS clears
+>>>>>> AER as soon as possible after OST returns and before OS processes
+>>>>>> _HPX and loading drivers.  Open to other suggestions as well.
+>>>>> I'm not sure what to do with "as soon as possible" either.  That
+>>>>> doesn't seem like something firmware and the OS can agree on.
+>>>> I can just state that it's done after OST returns but before _HPX or
+>>>> driver is loaded. Any time in that range is fine. I can't get super
+>>>> specific here because different OSes do different things.  Even for
+>>>> a given OS they change over time. And I need something generic
+>>>> enough to support a wide variety of OS implementations.
+>>> Yeah.  I don't know how to solve this.
+>>>
+>>> Linux doesn't actually unload and reload drivers for the child devices
+>>> (Sathy, correct me if I'm wrong here) even though DPC containment
+>>> takes the link down and effectively unplugs and replugs the device.  I
+>>> would *like* to handle it like hotplug, but some higher-level software
+>>> doesn't deal well with things like storage devices disappearing and
+>>> reappearing.
+>>>
+>>> Since Linux doesn't actually re-enumerate the child devices, it
+>>> wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
+>>> but it's all tied up with the whole unplug/replug problem.
+>> DPC resets everything below it and so to get it back up and running it
+>> would mean that all buses and resources need to be assigned, _HPX
+>> evaluated, and drivers reloaded. If those things don't happen then the
+>> whole hierarchy below the port that triggered DPC will be inaccessible.
+> Hmm, I think I might be confusing this with another situation.  Sathy,
+> can you help me understand this?  I don't have a way to actually
+> exercise this EDR path.  Is there some way the pciehp hotplug driver
+> gets involved here?
+>
+> Here's how this seems to work as far as I can tell:
+>
+>    - Linux does not have DPC or AER control
+>
+>    - Linux installs EDR notify handler
+>
+>    - Linux evaluates DPC Enable _DSM
+>
+>    - DPC containment event occurs
+>
+>    - Firmware fields DPC interrupt
+>
+>    - DPC event is not a surprise remove
+>
+>    - Firmware sends EDR notification
+>
+>    - Linux EDR notify handler evaluates Locate _DSM
+>
+>    - Linux reads and logs DPC and AER error information for port in
+>      containment mode.  [If it was an RP PIO error, Linux clears RP PIO
+>      error status, which is an asymmetry with the non-RP PIO path.]
+>
+>    - Linux clears AER error status (pci_aer_raw_clear_status())
+>
+>    - Linux calls driver .error_detected() methods for all child devices
+>      of the port in containment mode (pcie_do_recovery()).  These
+>      devices are inaccessible because the link is down.
+>
+>    - Linux clears DPC Trigger Status (dpc_reset_link() from
+>      pcie_do_recovery()).
+>
+>    - Linux calls driver .mmio_enabled() methods for all child devices.
+>
+> This is where I get lost.  These child devices are now accessible, but
+> they've been reset, so I don't know how their config space got
+> restored.  Did pciehp enumerate them?  Did we do something like
+> pci_restore_state()?  I don't see where either of these happens.
+AFAIK, AER error status registers  are sticky (RW1CS) and hence
+will be preserved during reset.
+>
+> So they want to basically do native AER handling even though firmware
+> owns AER?  My head hurts.
+No, Its meant only for clearing AER registers. In EDR path, since
+OS owns clearing DPC registers, they want to let OS own clearing AER
+registers as well. Also,  it would give OS a chance to decide whether
+we want to keep the device on based on error status and history of the
+device attached.
+>
+> Bjorn
 
 -- 
-Best Regards
-Masahiro Yamada
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
