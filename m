@@ -2,75 +2,73 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D44C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4676C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6068222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25052146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgCKLEr (ORCPT
+        id S1729113AbgCKLFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:04:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:48152 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 07:05:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33196 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgCKLEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:04:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8D051FB;
-        Wed, 11 Mar 2020 04:04:46 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD2D73F6CF;
-        Wed, 11 Mar 2020 04:04:45 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 11:04:43 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Alan Mikhak <alan.mikhak@sifive.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
-Message-ID: <20200311110443.GB30083@e121166-lin.cambridge.arm.com>
-References: <20200303103752.13076-1-kishon@ti.com>
+        id S1726000AbgCKLFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:05:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6C0DBACC6;
+        Wed, 11 Mar 2020 11:05:39 +0000 (UTC)
+Received: from localhost (webern.olymp [local])
+        by webern.olymp (OpenSMTPD) with ESMTPA id 9ec4e936;
+        Wed, 11 Mar 2020 11:05:38 +0000 (WET)
+Date:   Wed, 11 Mar 2020 11:05:38 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     Marc Roos <M.Roos@f1-outsourcing.eu>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ceph: fix snapshot directory timestamps
+Message-ID: <20200311110538.GB58729@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303103752.13076-1-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:07:47PM +0530, Kishon Vijay Abraham I wrote:
-> Patch series uses dma engine APIs in pci-epf-test to transfer data using
-> DMA. It also adds an option "-d" in pcitest for the user to indicate
-> whether DMA has to be used for data transfer. This also prints
-> throughput information for data transfer.
-> 
-> Changes from v1:
-> *) Fixed some of the function names from pci_epf_* to pci_epf_test_*
-> since the DMA support is now been moved to pci-epf-test.c
-> 
-> Kishon Vijay Abraham I (5):
->   PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer
->     data
->   PCI: endpoint: functions/pci-epf-test: Print throughput information
->   misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
->   tools: PCI: Add 'd' command line option to support DMA
->   misc: pci_endpoint_test: Add support to get DMA option from userspace
-> 
->  drivers/misc/pci_endpoint_test.c              | 165 ++++++++++--
->  drivers/pci/endpoint/functions/pci-epf-test.c | 253 +++++++++++++++++-
->  include/uapi/linux/pcitest.h                  |   5 +
->  tools/pci/pcitest.c                           |  20 +-
->  4 files changed, 412 insertions(+), 31 deletions(-)
+The .snap directory timestamps are kept at 0 (1970-01-01 00:00), which
+isn't consistent with what the fuse client does.  This patch makes the
+behaviour consistent, by setting these timestamps (atime, btime, ctime,
+mtime) to those of the parent directory.
 
-Applied to pci/endpoint for v5.7, thanks.
+Cc: Marc Roos <M.Roos@f1-outsourcing.eu>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Lorenzo
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index d01710a16a4a..968d55ca898d 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -82,10 +82,14 @@ struct inode *ceph_get_snapdir(struct inode *parent)
+ 	inode->i_mode = parent->i_mode;
+ 	inode->i_uid = parent->i_uid;
+ 	inode->i_gid = parent->i_gid;
++	inode->i_mtime = parent->i_mtime;
++	inode->i_ctime = parent->i_ctime;
++	inode->i_atime = parent->i_atime;
+ 	inode->i_op = &ceph_snapdir_iops;
+ 	inode->i_fop = &ceph_snapdir_fops;
+ 	ci->i_snap_caps = CEPH_CAP_PIN; /* so we can open */
+ 	ci->i_rbytes = 0;
++	ci->i_btime = ceph_inode(parent)->i_btime;
+ 
+ 	if (inode->i_state & I_NEW)
+ 		unlock_new_inode(inode);
