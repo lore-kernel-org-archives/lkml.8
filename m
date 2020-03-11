@@ -1,72 +1,126 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36629 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbgCKP6R (ORCPT
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56686 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729995AbgCKQB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:58:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g12so2943931ljj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:58:16 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id h24sm13849546ljc.36.2020.03.11.08.58.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 08:58:13 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id j15so2178624lfk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:58:12 -0700 (PDT)
+        Wed, 11 Mar 2020 12:01:26 -0400
+Received: by mail-qk1-f199.google.com with SMTP id m6so1782137qkm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 09:01:23 -0700 (PDT)
+Date: Wed, 11 Mar 2020 12:01:19 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v6 03/14] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200311160119.GF479302@xz-x1>
+References: <20200309214424.330363-1-peterx@redhat.com>
+ <20200309214424.330363-4-peterx@redhat.com>
+ <20200310150637.GB7600@linux.intel.com>
 MIME-Version: 1.0
-References: <bug-206175-5873@https.bugzilla.kernel.org/> <bug-206175-5873-S6PaNNClEr@https.bugzilla.kernel.org/>
- <CAHk-=wi4GS05j67V0D_cRXRQ=_Jh-NT0OuNpF-JFsDFj7jZK9A@mail.gmail.com>
- <20200310162342.GA4483@lst.de> <CAHk-=wgB2YMM6kw8W0wq=7efxsRERL14OHMOLU=Nd1OaR+sXvw@mail.gmail.com>
- <20200310182546.GA9268@lst.de> <20200311152453.GB23704@lst.de>
- <e70dd793-e8b8-ab0c-6027-6c22b5a99bfc@gmx.com> <20200311154328.GA24044@lst.de>
- <19498990-fb97-b739-cd19-6a6415ba88a2@gmx.com>
-In-Reply-To: <19498990-fb97-b739-cd19-6a6415ba88a2@gmx.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 11 Mar 2020 08:57:56 -0700
-Message-ID: <CAHk-=widmu42C4eTQ9uDM+njZE1s5ARmx7E+1SHH1XznTFOwyg@mail.gmail.com>
-Subject: Re: [Bug 206175] Fedora >= 5.4 kernels instantly freeze on boot
- without producing any display output
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200310150637.GB7600@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, Mar 11, 2020 at 8:53 AM Artem S. Tashkinov <aros@gmx.com> wrote:
->
-> I'm not sure I can call or do anything because the system is dead and
-> I'm looking at the kernel panic message. The console is dead. The root
-> file system is not yet mounted. Initrd can't be loaded either. I have no
-> COM port/console. I have no debugging abilities whatsoever. I can only
-> compile kernels and try running them.
+On Tue, Mar 10, 2020 at 08:06:37AM -0700, Sean Christopherson wrote:
+> On Mon, Mar 09, 2020 at 05:44:13PM -0400, Peter Xu wrote:
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 40b1e6138cd5..fc638a164e03 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -3467,34 +3467,26 @@ static bool guest_state_valid(struct kvm_vcpu *vcpu)
+> >  	return true;
+> >  }
+> >  
+> > -static int init_rmode_tss(struct kvm *kvm)
+> > +static int init_rmode_tss(struct kvm *kvm, void __user *ua)
+> >  {
+> > -	gfn_t fn;
+> > +	const void *zero_page = (const void *) __va(page_to_phys(ZERO_PAGE(0)));
+> >  	u16 data = 0;
+> 
+> "data" doesn't need to be intialized to zero, it's set below before it's used.
 
-Christoph just wanted you to use the image you booted with - you can
-do it while using a working and entirely unrealted kernel.
+Yeah I didn't touch it because this change is irrelevant to the rest.
+But I can remove it altogether.
 
-But I think Christoph's second email was right on the money: the
-platform device code used to (accidentally) always use that special
-kmalloc()'ed memory, and the "always use kfree() to release" then
-happened to work.
+> 
+> >  	int idx, r;
+> 
+> nit: I'd prefer to rename "idx" to "i" to make it more obvious it's a plain
+> ole loop counter.  Reusing the srcu index made me do a double take :-)
 
-But with the change, platform devices use that allocations inside the
-platform device itself, and the kfree() now does bad things and
-corrupts the kmalloc lists.
+Another irrelevant change, but ok.
 
-So that finally makes sense of why that commit would cause odd
-problems for you. I'm actually surprised it didn't cause problems for
-others, but it's an error path, and presumably it normally never
-triggers.
+> 
+> >  
+> > -	idx = srcu_read_lock(&kvm->srcu);
+> > -	fn = to_kvm_vmx(kvm)->tss_addr >> PAGE_SHIFT;
+> > -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
+> > -	if (r < 0)
+> > -		goto out;
+> > +	for (idx = 0; idx < 3; idx++) {
+> > +		r = __copy_to_user(ua + PAGE_SIZE * idx, zero_page, PAGE_SIZE);
+> > +		if (r)
+> > +			return -EFAULT;
+> > +	}
+> 
+> Can this be done in a single __copy_to_user(), or do those helpers not like
+> crossing page boundaries?
 
-                Linus
+Maybe because the zero_page is only PAGE_SIZE long? :)
 
-              Linus
+[...]
+
+> > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> > +/**
+> > + * __x86_set_memory_region: Setup KVM internal memory slot
+> > + *
+> > + * @kvm: the kvm pointer to the VM.
+> > + * @id: the slot ID to setup.
+> > + * @gpa: the GPA to install the slot (unused when @size == 0).
+> > + * @size: the size of the slot. Set to zero to uninstall a slot.
+> > + *
+> > + * This function helps to setup a KVM internal memory slot.  Specify
+> > + * @size > 0 to install a new slot, while @size == 0 to uninstall a
+> > + * slot.  The return code can be one of the following:
+> > + *
+> > + *   - An error number if error happened, or,
+> > + *   - For installation: the HVA of the newly mapped memory slot, or,
+> > + *   - For uninstallation: zero if we successfully uninstall a slot.
+> 
+> Maybe tweak this so the return it stands out?  And returning zero on
+> uninstallation is no longer true in kvm/queue, at least not without further
+> modifications (as is it'll return 0xdead000000000000 on 64-bit).  The
+> 0xdead shenanigans won't trigger IS_ERR(), so I think this can simply be:
+> 
+>  * Returns:
+>  *   hva:    on success
+>  *   -errno: on error
+> 
+> With the blurb below calling out that hva is bogus uninstallation.
+
+Sure, I'll rebase to kvm/queue for the next version with the
+suggestion.
+
+Thanks,
+
+-- 
+Peter Xu
 
