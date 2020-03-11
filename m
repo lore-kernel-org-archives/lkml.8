@@ -2,247 +2,277 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC30FC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED39C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415A420746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D742072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:35:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cE+csesK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NvKtUY0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbgCKRe0 (ORCPT
+        id S1730594AbgCKRfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:34:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34596 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726099AbgCKReZ (ORCPT
+        Wed, 11 Mar 2020 13:35:07 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35456 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729852AbgCKRfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:34:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583948063;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YxDI+gJiBUTsbW70/4a/jRnjqZbO21J+vKCSG+NYW2I=;
-        b=cE+csesKC5qSYLInQPHHV5C5JwoxFIPEnYtnABqYpnLSDCMfL9XVV2NdozsE7Q1BwLBGXA
-        tq00mS7iHGwakVJ8Ylksw47cy3FyjCMtOcwFgulBxbUGm41S9eji1HTYLvKH3Fai5KGFJI
-        Ztykffe+ySserYSq6aW8t0kkgifw29o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-65-x_M0gZcdMA-ImuOio__G3Q-1; Wed, 11 Mar 2020 13:34:20 -0400
-X-MC-Unique: x_M0gZcdMA-ImuOio__G3Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB2B2107ACC4;
-        Wed, 11 Mar 2020 17:34:18 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0554D60FC2;
-        Wed, 11 Mar 2020 17:34:06 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 17:34:05 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        dgilbert@redhat.com, mst@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
-Message-ID: <20200311173405.GI281087@stefanha-x1.localdomain>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-5-vgoyal@redhat.com>
- <20200310110437.GI140737@stefanha-x1.localdomain>
- <20200310181936.GC38440@redhat.com>
+        Wed, 11 Mar 2020 13:35:07 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d8so2914665qka.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fa8m8jYa1TakhUMQnyj4bRdIQUor/ug/z2CxDzEB9h0=;
+        b=NvKtUY0DBLe1tfvvtp1Z2SVROwsagGCASov9STUry2x/j89DDCMXFq7bTl43l8AGVI
+         dauIcZr3TbHcXlxLkHjZ1HaALtly7ZKcj4YRAVXPbDz+LdJcYzZT/NXrYKScb9e+Ei5N
+         gJ7ILUSrdZyN4SOI8U3ZXxqCY8ncrnOZ39FxNJ2WkTrAwUzwL4NnM4/B+8qBscfQmrkb
+         e6KciU7DZvc8xlBAaNtyjL2BhdEh6Cn9C8cpZuKKF4KrVcCXqKtYq5zS3rhf3bRheu1U
+         eRcnHjk6998Lcii8yvZmUMqBodbevhTGL+WIKcbSzy+N3bjKQcSFZ0kJrITTD/BLGs6T
+         auUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fa8m8jYa1TakhUMQnyj4bRdIQUor/ug/z2CxDzEB9h0=;
+        b=fW5Q+pPRdApPBVM8C+vl3oOonwnRWimCmd4MF4eiKpm6P1f8c+pbr29BwW/5jAp9vl
+         LU+RI+XLudTKfZW8gIktej7aGhu56joV9ACIOOZFEzV/fMBn4tsQI6lBIkANyKqvyU0r
+         /5QyE9PghpRMg0HQ82eIJw8rE8Hw3MnSSzVMWR2wDKIvR6FQjz57ZSvzKTrxqJmhhgyw
+         0d1vlFJAp6XLfth8MM2qWmJc93225ST/gej9NjcXfbyZBH4lTZvI/AJpLrxo/FVCiMDt
+         AUOJgEwVg8SfHj1vUmYJhvAXthAHxUuH/k+UTbIzyuylHYL9fNcWX2O5bzCl1lyINA+n
+         X36w==
+X-Gm-Message-State: ANhLgQ3tItvxVmXxsVg5jVHm+IQamBUaDLLvf4YhAcYOUutHBOJnCx+u
+        RGLqFKhX4XFVFe2SNTKVIu1+y59W9M50PiQCJmZ5Uw==
+X-Google-Smtp-Source: ADFU+vtZ68BUMbFjWWp0dDmlvZtbGDKtdC2vup/8asz8+RCIjbaersqICeqVV48kr0D/uCraVlheoXyRtxUgba5qPZE=
+X-Received: by 2002:a37:8b01:: with SMTP id n1mr3423155qkd.407.1583948104591;
+ Wed, 11 Mar 2020 10:35:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200310181936.GC38440@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TKDEsImF70pdVIl+"
-Content-Disposition: inline
+References: <20200226004608.8128-1-trishalfonso@google.com>
+ <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
+ <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net> <674ad16d7de34db7b562a08b971bdde179158902.camel@sipsolutions.net>
+In-Reply-To: <674ad16d7de34db7b562a08b971bdde179158902.camel@sipsolutions.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 11 Mar 2020 18:34:53 +0100
+Message-ID: <CACT4Y+bdxmRmr57JO_k0whhnT2BqcSA=Jwa5M6=9wdyOryv6Ug@mail.gmail.com>
+Subject: Re: [PATCH] UML: add support for KASAN under x86_64
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---TKDEsImF70pdVIl+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 11, 2020 at 12:19 PM Johannes Berg
+<johannes@sipsolutions.net> wrote:
+>
+> On Wed, 2020-03-11 at 11:32 +0100, Johannes Berg wrote:
+> >
+> > I do see issues with modules though, e.g.
+> > https://p.sipsolutions.net/1a2df5f65d885937.txt
+> >
+> > where we seem to get some real confusion when lockdep is storing the
+> > stack trace??
+> >
+> > And https://p.sipsolutions.net/9a97e8f68d8d24b7.txt, where something
+> > convinces ASAN that an address is a user address (it might even be
+> > right?) and it disallows kernel access to it?
+>
+> I can work around both of these by not freeing the original module copy
+> in kernel/module.c:
+>
+>         /* Get rid of temporary copy. */
+> //      free_copy(info);
+>
+> but I really have no idea why we get this in the first place?
+>
+> Another interesting data point is that it never happens on the first
+> module.
+>
+> Also, I've managed to get a report like this:
+>
+> Memory state around the buggy address:
+>  000000007106cf00: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+>  000000007106cf80: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> >000000007106d000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+>                    ^
+>  000000007106d080: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+>  000000007106d100: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+>
+>
+> which indicates that something's _really_ off with the KASAN shadow?
+>
+>
+> Ohhh ...
+>
+> $ gdb -p ...
+> (gdb) p/x task_size
+> $1 =3D 0x7fc0000000
+> (gdb) p/x __end_of_fixed_addresses
+> $2 =3D 0x0
+> (gdb) p/x end_iomem
+> $3 =3D 0x70000000
+> (gdb) p/x __va_space
+>
+> #define TASK_SIZE (task_size)
+> #define FIXADDR_TOP        (TASK_SIZE - 2 * PAGE_SIZE)
+>
+> #define FIXADDR_START      (FIXADDR_TOP - FIXADDR_SIZE)
+> #define FIXADDR_SIZE       (__end_of_fixed_addresses << PAGE_SHIFT)
+>
+> #define VMALLOC_END       (FIXADDR_START-2*PAGE_SIZE)
+>
+> #define MODULES_VADDR   VMALLOC_START
+> #define MODULES_END       VMALLOC_END
+> #define VMALLOC_START ((end_iomem + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)=
+)
+> #define VMALLOC_OFFSET  (__va_space)
+> #define __va_space (8*1024*1024)
+>
+>
+> So from that, it would look like the UML vmalloc area is from
+> 0x  70800000 all the way to
+> 0x7fbfffc000, which obviously clashes with the KASAN_SHADOW_OFFSET being
+> just 0x7fff8000.
+>
+>
+> I'm guessing that basically the module loading overwrote the kasan
+> shadow then?
 
-On Tue, Mar 10, 2020 at 02:19:36PM -0400, Vivek Goyal wrote:
-> On Tue, Mar 10, 2020 at 11:04:37AM +0000, Stefan Hajnoczi wrote:
-> > On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
-> > > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virt=
-io_pci_modern.c
-> > > index 7abcc50838b8..52f179411015 100644
-> > > --- a/drivers/virtio/virtio_pci_modern.c
-> > > +++ b/drivers/virtio/virtio_pci_modern.c
-> > > @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *i=
-nfo)
-> > >  =09vring_del_virtqueue(vq);
-> > >  }
-> > > =20
-> > > +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
-> > > +                                   u8 required_id,
-> > > +                                   u8 *bar, u64 *offset, u64 *len)
-> > > +{
-> > > +=09int pos;
-> > > +
-> > > +        for (pos =3D pci_find_capability(dev, PCI_CAP_ID_VNDR);
-> >=20
-> > Please fix the mixed tabs vs space indentation in this patch.
->=20
-> Will do. There are plenty of these in this patch.
->=20
-> >=20
-> > > +static bool vp_get_shm_region(struct virtio_device *vdev,
-> > > +=09=09=09      struct virtio_shm_region *region, u8 id)
-> > > +{
-> > > +=09struct virtio_pci_device *vp_dev =3D to_vp_device(vdev);
-> > > +=09struct pci_dev *pci_dev =3D vp_dev->pci_dev;
-> > > +=09u8 bar;
-> > > +=09u64 offset, len;
-> > > +=09phys_addr_t phys_addr;
-> > > +=09size_t bar_len;
-> > > +=09int ret;
-> > > +
-> > > +=09if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
-> > > +=09=09return false;
-> > > +=09}
-> > > +
-> > > +=09ret =3D pci_request_region(pci_dev, bar, "virtio-pci-shm");
-> > > +=09if (ret < 0) {
-> > > +=09=09dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
-> > > +=09=09=09__func__);
-> > > +=09=09return false;
-> > > +=09}
-> > > +
-> > > +=09phys_addr =3D pci_resource_start(pci_dev, bar);
-> > > +=09bar_len =3D pci_resource_len(pci_dev, bar);
-> > > +
-> > > +        if (offset + len > bar_len) {
-> > > +                dev_err(&pci_dev->dev,
-> > > +                        "%s: bar shorter than cap offset+len\n",
-> > > +                        __func__);
-> > > +                return false;
-> > > +        }
-> > > +
-> > > +=09region->len =3D len;
-> > > +=09region->addr =3D (u64) phys_addr + offset;
-> > > +
-> > > +=09return true;
-> > > +}
-> >=20
-> > Missing pci_release_region()?
->=20
-> Good catch. We don't have a mechanism to call pci_relese_region() and=20
-> virtio-mmio device's ->get_shm_region() implementation does not even
-> seem to reserve the resources.
->=20
-> So how about we leave this resource reservation to the caller.
-> ->get_shm_region() just returns the addr/len pair of requested resource.
->=20
-> Something like this patch.
->=20
-> ---
->  drivers/virtio/virtio_pci_modern.c |    8 --------
->  fs/fuse/virtio_fs.c                |   13 ++++++++++---
->  2 files changed, 10 insertions(+), 11 deletions(-)
->=20
-> Index: redhat-linux/fs/fuse/virtio_fs.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- redhat-linux.orig/fs/fuse/virtio_fs.c=092020-03-10 09:13:34.624565666=
- -0400
-> +++ redhat-linux/fs/fuse/virtio_fs.c=092020-03-10 14:11:10.970284651 -040=
-0
-> @@ -763,11 +763,18 @@ static int virtio_fs_setup_dax(struct vi
->  =09if (!have_cache) {
->  =09=09dev_notice(&vdev->dev, "%s: No cache capability\n", __func__);
->  =09=09return 0;
-> -=09} else {
-> -=09=09dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n",
-> -=09=09=09   cache_reg.len, cache_reg.addr);
->  =09}
-> =20
-> +=09if (!devm_request_mem_region(&vdev->dev, cache_reg.addr, cache_reg.le=
-n,
-> +=09=09=09=09     dev_name(&vdev->dev))) {
-> +=09=09dev_warn(&vdev->dev, "could not reserve region addr=3D0x%llx"
-> +=09=09=09 " len=3D0x%llx\n", cache_reg.addr, cache_reg.len);
-> +=09=09return -EBUSY;
-> +        }
-> +
-> +=09dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n", cache_reg.len,
-> +=09=09   cache_reg.addr);
-> +
->  =09pgmap =3D devm_kzalloc(&vdev->dev, sizeof(*pgmap), GFP_KERNEL);
->  =09if (!pgmap)
->  =09=09return -ENOMEM;
-> Index: redhat-linux/drivers/virtio/virtio_pci_modern.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- redhat-linux.orig/drivers/virtio/virtio_pci_modern.c=092020-03-10 08:=
-51:36.886565666 -0400
-> +++ redhat-linux/drivers/virtio/virtio_pci_modern.c=092020-03-10 13:43:15=
-.168753543 -0400
-> @@ -511,19 +511,11 @@ static bool vp_get_shm_region(struct vir
->  =09u64 offset, len;
->  =09phys_addr_t phys_addr;
->  =09size_t bar_len;
-> -=09int ret;
-> =20
->  =09if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
->  =09=09return false;
->  =09}
-> =20
-> -=09ret =3D pci_request_region(pci_dev, bar, "virtio-pci-shm");
-> -=09if (ret < 0) {
-> -=09=09dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
-> -=09=09=09__func__);
-> -=09=09return false;
-> -=09}
-> -
->  =09phys_addr =3D pci_resource_start(pci_dev, bar);
->  =09bar_len =3D pci_resource_len(pci_dev, bar);
+Well, ok, this is definitely not going to fly :)
 
-Do pci_resource_start()/pci_resource_len() work on a BAR where
-pci_request_region() hasn't been called yet?  (I haven't checked the
-code, sorry...)
+I don't know if it's easy to move modules to a different location. It
+would be nice because 0x7fbfffc000 is the shadow start that's used in
+userspace asan and it allows to faster instrumentation (if offset is
+within first 2 gigs, the instruction encoding is much more compact,
+for >2gigs it will require several instructions).
+But if it's not really easy, I guess we go with a large shadow start
+(at least initially). A slower but working KASAN is better than fast
+non-working KASAN :)
 
-Assuming yes, then my next question is whether devm_request_mem_region()
-works in both the VIRTIO PCI and MMIO cases?
+> I tried changing it
+>
+>  config KASAN_SHADOW_OFFSET
+>         hex
+>         depends on KASAN
+> -       default 0x7fff8000
+> +       default 0x8000000000
+>
+>
+> and also put a check in like this:
+>
+> +++ b/arch/um/kernel/um_arch.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/sched/task.h>
+>  #include <linux/kmsg_dump.h>
+> +#include <linux/kasan.h>
+>
+>  #include <asm/pgtable.h>
+>  #include <asm/processor.h>
+> @@ -267,9 +268,11 @@ int __init linux_main(int argc, char **argv)
+>         /*
+>          * TASK_SIZE needs to be PGDIR_SIZE aligned or else exit_mmap cra=
+ps
+>          * out
+>          */
+>         task_size =3D host_task_size & PGDIR_MASK;
+>
+> +       if (task_size > KASAN_SHADOW_OFFSET)
+> +               panic("KASAN shadow offset must be bigger than task size"=
+);
+>
+>
+> but now I just crash accessing the shadow even though it was mapped fine?
 
-If yes, then this looks like a solution, though the need for
-devm_request_mem_region() should be explained in the vp_get_shm_region()
-doc comments so that callers remember to make that call.  Or maybe it
-can be included in vp_get_shm_region().
+Yes, this is puzzling.
+I noticed that RIP is the same in both cases and it relates to vmap code.
+A support for shadow for vmalloced-memory was added to KASAN recently
+and I suspect it may conflict with UML.
+See:
+https://elixir.bootlin.com/linux/v5.6-rc5/ident/kasan_populate_vmalloc
 
-Stefan
+I think we simply don't need any of that because we already mapped
+shadow for all potentially used memory.
+A simple thing to try is to disable CONFIG_KASAN_VMALLOC. If it fixes
+the problem, we need to either force-disable CONFIG_KASAN_VMALLOC
+under UML or return early from these functions.
 
---TKDEsImF70pdVIl+
-Content-Type: application/pgp-signature; name="signature.asc"
+What does pte-manipulation code even do under UML?
 
------BEGIN PGP SIGNATURE-----
+Looking at the code around, kasan_mem_notifier may be a problem too,
+or at least excessive and confusing. We already have shadow for
+everything, we don't need _any_ of dynamic/lazy shadow mapping.
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5pIQ0ACgkQnKSrs4Gr
-c8hRcwgAllE7XHaHgyhW//Kd35rBaIMwficvtTMl5oYcfsKBVGTrjWnaAYzbseXT
-s/UX6DzqH/qO3skX5n9rq5tlVwW1POLhLYSjtXB0GFeC/utVMyQKrcdlYUAYeHFF
-bROTGHuMNT0b3YbZiiHbA08BWfcuTOfhtzEwUPajlf+D8LvY11d1lyDGXb2GxcRI
-vIx5hpsok29/NpOn2KgYcUSTZ1f8jk7mHnMscCRjvp9o8WJVCt7nIT2tJYYRuOKE
-+VCiza9iW/P8w+PrwdQj1lraakETWKPmDXQPjCz5BUyyDrqDJr7RMDY+KdPrll0l
-kDFkAzr2D64PwzwaXaM3sNXecZXK4w==
-=pAoo
------END PGP SIGNATURE-----
 
---TKDEsImF70pdVIl+--
-
+> Pid: 504, comm: modprobe Tainted: G           O      5.5.0-rc6-00009-g094=
+62ab4014b-dirty
+> RIP:
+> RSP: 000000006d68fa90  EFLAGS: 00010202
+> RAX: 000000800e0210cd RBX: 000000007010866f RCX: 00000000601a9777
+> RDX: 000000800e0210ce RSI: 0000000000000004 RDI: 000000007010866c
+> RBP: 000000006d68faa0 R08: 000000800e0210cd R09: 0000000060041432
+> R10: 000000800e0210ce R11: 0000000000000001 R12: 000000800e0210cd
+> R13: 0000000000000000 R14: 0000000000000001 R15: 00000000601c2e82
+> Kernel panic - not syncing: Kernel mode fault at addr 0x800e0210cd, ip 0x=
+601c332b
+> CPU: 0 PID: 504 Comm: modprobe Tainted: G           O      5.5.0-rc6-0000=
+9-g09462ab4014b-dirty #24
+> Stack:
+> 601c2f89 70108638 6d68fab0 601c1209
+> 6d68fad0 601a9777 6cf2b240 7317f000
+> 6d68fb40 601a2ae9 6f15b118 00000001
+> Call Trace:
+> ? __asan_load8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> __kasan_check_write (/home/tester/vlab/linux/mm/kasan/common.c:102)
+> __free_pages (/home/tester/vlab/linux/./arch/x86/include/asm/atomic.h:125=
+ /home/tester/vlab/linux/./include/asm-generic/atomic-instrumented.h:748 /h=
+ome/tester/vlab/linux/./include/linux/page_ref.h:139 /home/tester/vlab/linu=
+x/./include/linux/mm.h:593 /home/tester/vlab/linux/mm/page_alloc.c:4823)
+> __vunmap (/home/tester/vlab/linux/mm/vmalloc.c:2303 (discriminator 2))
+> ? __asan_load4 (/home/tester/vlab/linux/mm/kasan/generic.c:251)
+> ? sysfs_create_bin_file (/home/tester/vlab/linux/fs/sysfs/file.c:537)
+> __vfree (/home/tester/vlab/linux/mm/vmalloc.c:2356)
+> ? delete_object_full (/home/tester/vlab/linux/mm/kmemleak.c:693)
+> vfree (/home/tester/vlab/linux/mm/vmalloc.c:2386)
+> ? sysfs_create_bin_file (/home/tester/vlab/linux/fs/sysfs/file.c:537)
+> ? __asan_load8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> load_module (/home/tester/vlab/linux/./include/linux/jump_label.h:254 /ho=
+me/tester/vlab/linux/./include/linux/jump_label.h:264 /home/tester/vlab/lin=
+ux/./include/trace/events/module.h:31 /home/tester/vlab/linux/kernel/module=
+.c:3927)
+> ? kernel_read_file_from_fd (/home/tester/vlab/linux/fs/exec.c:993)
+> ? __asan_load8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> __do_sys_finit_module (/home/tester/vlab/linux/kernel/module.c:4019)
+> ? sys_finit_module (/home/tester/vlab/linux/kernel/module.c:3995)
+> ? __asan_store8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> sys_finit_module (/home/tester/vlab/linux/kernel/module.c:3995)
+> handle_syscall (/home/tester/vlab/linux/arch/um/kernel/skas/syscall.c:44)
+> userspace (/home/tester/vlab/linux/arch/um/os-Linux/skas/process.c:173 /h=
+ome/tester/vlab/linux/arch/um/os-Linux/skas/process.c:416)
+> ? save_registers (/home/tester/vlab/linux/arch/um/os-Linux/registers.c:18=
+)
+> ? arch_prctl (/home/tester/vlab/linux/arch/x86/um/syscalls_64.c:65)
+> ? calculate_sigpending (/home/tester/vlab/linux/kernel/signal.c:200)
+> ? __asan_load8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> ? __asan_load8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> ? __asan_load8 (/home/tester/vlab/linux/mm/kasan/generic.c:252)
+> fork_handler (/home/tester/vlab/linux/arch/um/kernel/process.c:154)
+>
+> johannes
+>
