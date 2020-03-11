@@ -2,91 +2,134 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5A8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DD2C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC2B21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A47215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583887377;
+	bh=p6sORrfT1V0PaoGW/6AwSQMJqP8nSuPuvQgcEOAt+n0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wnNgSBVR+l1hpEn19UAjK8Hy1yrJRbYZKXKlwSxO8OpO+E84pgGYx7VqFaoFqXwmO
+	 041mgiTvnGq/SU4Ridlg5dHjSfR/4agfVB8MeV7LIfYR634Ajw3STO6Op6PPdufFIk
+	 6PREeCsQiNsmvfGgl9QobY7VhrpaKMoaO5JCQF3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgCKAlo (ORCPT
+        id S1727883AbgCKAm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:41:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11220 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727484AbgCKAln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:41:43 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DCDE26520FF5B53561BA;
-        Wed, 11 Mar 2020 08:41:41 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 11 Mar
- 2020 08:41:36 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/5] f2fs: change default compression algorithm
-To:     Eric Biggers <ebiggers@kernel.org>
-CC:     <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200310125009.12966-1-yuchao0@huawei.com>
- <20200310161515.GA1067@sol.localdomain>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <4d8384b9-88fe-2a15-13ff-238d9fd4027a@huawei.com>
-Date:   Wed, 11 Mar 2020 08:41:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 10 Mar 2020 20:42:56 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37821 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbgCKAmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 20:42:55 -0400
+Received: by mail-pj1-f66.google.com with SMTP id ca13so86065pjb.2;
+        Tue, 10 Mar 2020 17:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gHHd1XziN8r2/wEQeuyvT+MVwzlvctKNbvynCtX7SU4=;
+        b=ilfxLzPMly8T61Cp2sCcvvVUuTptmdD9og/HClPYWlqrJKAVePF962agnyALlTmHTi
+         +VDTAn03M2plBXxTMGd0eqr3c+MDYEgIABqfisrJGsmUo9mgpn4/yvMWA4ENpk2XbjUV
+         ObIgwgnJfYdBOaFVztTIwvbd7rJLfMx8wBnUgX1q7AtgcePddjcslyG31+Xngh8Uw6iA
+         GwB6zT+0ZwYzbglEm3MdWfioBxkS/fSnVQbnUlqboo8TQsOjAmRsaFhxdNjR5LJR5ArI
+         tT1KL62/OzUAXjy1VqMLMkdVf2cLvkUZqhUt0GcwU3JsgR7QEJgNvVW2e8BkUkFh6DwP
+         ktOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gHHd1XziN8r2/wEQeuyvT+MVwzlvctKNbvynCtX7SU4=;
+        b=X7Frxpy7sGh6/e/vzRUa4y1LKonC2xvPSVwg0tIRw+5Zrswa47pedJVns+4tdq3wa7
+         cNMqEJLqJEQApNgVT/EgOPUHmj0zjwkz0Q9M30fQy24QaEHH5AboEuRbodVwswlBhsDo
+         njKrI3dWmPFKd2SaIJBl82VDaG7cMtIFY2Ey1jc/Q/5vqpDA2hcihPR+6jtCWPjcSx4X
+         FEIKn2fxqoshpR4F+8LVvlCU3Mc42lrNRt9REiAKdpGzftHeTrv0jRAcdhXnAQckM7p3
+         hxlluVeP1fSlgSpAGjC7UmJ/ylqKyT/XqSHIXJBctv3amU/3gftPrQ22pu5gq7OvfxOd
+         dKUQ==
+X-Gm-Message-State: ANhLgQ2Ap91Rul5Q/YIsKBzBmYodqHqs1RFbd22lvZ892hFa5Ats5Zj8
+        pvnht/6OtCy1phpVEb3GKeM=
+X-Google-Smtp-Source: ADFU+vtkqg5VizyxXJML/iGAsxbuKOdG2Pz7RWPAabfqCEVfSKSq8AotbODi3m8GStFforD7SxWgAg==
+X-Received: by 2002:a17:90a:c482:: with SMTP id j2mr609701pjt.71.1583887374578;
+        Tue, 10 Mar 2020 17:42:54 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id i2sm12018641pfr.151.2020.03.10.17.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 17:42:53 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 17:42:51 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        Christian Brauner <christian@brauner.io>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: Re: [PATCH v7 5/7] mm: support both pid and pidfd for process_madvise
+Message-ID: <20200311004251.GB87930@google.com>
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-6-minchan@kernel.org>
+ <14089609-5fb1-b082-716f-c2e129d27c48@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200310161515.GA1067@sol.localdomain>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14089609-5fb1-b082-716f-c2e129d27c48@suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/11 0:15, Eric Biggers wrote:
-> On Tue, Mar 10, 2020 at 08:50:05PM +0800, Chao Yu wrote:
->> Use LZ4 as default compression algorithm, as compared to LZO, it shows
->> almost the same compression ratio and much better decompression speed.
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/super.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->> index db3a63f7c769..ebffe7aa08ee 100644
->> --- a/fs/f2fs/super.c
->> +++ b/fs/f2fs/super.c
->> @@ -1577,7 +1577,7 @@ static void default_options(struct f2fs_sb_info *sbi)
->>  	F2FS_OPTION(sbi).test_dummy_encryption = false;
->>  	F2FS_OPTION(sbi).s_resuid = make_kuid(&init_user_ns, F2FS_DEF_RESUID);
->>  	F2FS_OPTION(sbi).s_resgid = make_kgid(&init_user_ns, F2FS_DEF_RESGID);
->> -	F2FS_OPTION(sbi).compress_algorithm = COMPRESS_LZO;
->> +	F2FS_OPTION(sbi).compress_algorithm = COMPRESS_LZ4;
->>  	F2FS_OPTION(sbi).compress_log_size = MIN_COMPRESS_LOG_SIZE;
->>  	F2FS_OPTION(sbi).compress_ext_cnt = 0;
->>  	F2FS_OPTION(sbi).bggc_mode = BGGC_MODE_ON;
+On Fri, Mar 06, 2020 at 12:14:19PM +0100, Vlastimil Babka wrote:
+> On 3/2/20 8:36 PM, Minchan Kim wrote:
+> > There is a demand[1] to support pid as well pidfd for process_madvise
+> > to reduce unnecessary syscall to get pidfd if the user has control of
+> > the target process(ie, they could guarantee the process is not gone
+> > or pid is not reused).
+> > 
+> > This patch aims for supporting both options like waitid(2). So, the
+> > syscall is currently,
+> > 
+> > 	int process_madvise(int which, pid_t pid, void *addr,
+> > 		size_t length, int advise, unsigned long flag);
 > 
-> This makes sense, but it's unclear to me why comparing the different compression
-> algorithms is happening just now, after support for both LZO and LZ4 was already
-> merged into mainline and now has to be supported forever.  During review months
-> ago, multiple people suggested that LZ4 is better than LZO, so there's not much
-> reason to support LZO at all.
+> This is again halfway between kernel and userspace description, so if we stick
+> to userspace then it's:
+> 
+>  	int process_madvise(idtype_t idtype, id_t id, void *addr,
+>  		size_t length, int advice, unsigned long flags);
 
-Agreed,
-
-Jaegeuk, thoughts?
-
-Let me remove lzo if you have no objection on this.
-
-Thanks,
+Yub.
 
 > 
-> - Eric
-> .
 > 
+> > @which is actually idtype_t for userspace libray and currently,
+> > it supports P_PID and P_PIDFD.
+> > 
+> > [1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
+> > 
+> > Cc: Christian Brauner <christian@brauner.io>
+> > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> > Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> 
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
+Thanks!
