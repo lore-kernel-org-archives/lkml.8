@@ -2,58 +2,54 @@ Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_NONE autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38879 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbgCKQMq (ORCPT
+X-Spam-Status: No, score=-6.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MENTIONS_GIT_HOSTING,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE
+	autolearn=ham autolearn_force=no version=3.4.0
+Received: from gateway20.websitewelcome.com ([192.185.4.169]:44397 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730172AbgCKQM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:12:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t11so3400093wrw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 09:12:45 -0700 (PDT)
-From: Jack Wang <jinpu.wang@cloud.ionos.com>
-To: linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Cc: axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
-        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
-        pankaj.gupta@cloud.ionos.com,
-        Roman Pen <roman.penyaev@profitbricks.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v10 01/26] sysfs: export sysfs_remove_file_self()
-Date: Wed, 11 Mar 2020 17:12:15 +0100
-Message-Id: <20200311161240.30190-2-jinpu.wang@cloud.ionos.com>
-In-Reply-To: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
-References: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
+        Wed, 11 Mar 2020 12:12:57 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id BADF740DBE61B
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 09:28:43 -0500 (CDT)
+Subject: Re: [PATCH] mmc: Replace zero-length array with flexible-array member
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200226223125.GA20630@embeddedor>
+ <CAPDyKFpCczkLfzbRHV5WEzuMOseMj19mV=j1w6=hNX9K8YN1JQ@mail.gmail.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <7fe54f8f-52ed-c819-550c-a775c2afdde6@embeddedor.com>
+Date: Wed, 11 Mar 2020 10:46:01 -0500
+MIME-Version: 1.0
+In-Reply-To: <CAPDyKFpCczkLfzbRHV5WEzuMOseMj19mV=j1w6=hNX9K8YN1JQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-Function is going to be used in transport over RDMA module
-in subsequent patches, so export it to GPL modules.
 
-Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-[jwang: extend the commit message]
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
----
- fs/sysfs/file.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 130fc6fbcc03..1ff4672d7746 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
- 	kernfs_put(kn);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
- 
- void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
- {
--- 
-2.17.1
+On 3/11/20 10:34, Ulf Hansson wrote:
+
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Applied for next, thanks!
+> 
+
+Thanks, Ulf.
+--
+Gustavo
+
+> Kind regards
+> Uffe
+> 
 
