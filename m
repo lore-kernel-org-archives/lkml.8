@@ -2,128 +2,135 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EDAC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5272C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32562146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OzXiZdZx"
+	by mail.kernel.org (Postfix) with ESMTP id A37872146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgCKLDI (ORCPT
+        id S1729068AbgCKLDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:03:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33235 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgCKLDI (ORCPT
+        Wed, 11 Mar 2020 07:03:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44228 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726044AbgCKLDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:03:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so2374384ede.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:03:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jb6YNfpy0i4p0prPq7fXurxyCpu3UioYP/wK0SXZz40=;
-        b=OzXiZdZxcla8lff01e5y1xu8R1or7O5akJh7vkF0kGDv+FIl4k+KI5dt7+u7bNa22f
-         pEgi1+VeIA0u2roWjwGSIIVN7DccoliwZNCmhlmVo4+QDcI5e0XEPbQld3FfpR1P8z8I
-         MP4yhJz3sMk7jvtXq8o0TB7XLMZod2m/M8uIQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jb6YNfpy0i4p0prPq7fXurxyCpu3UioYP/wK0SXZz40=;
-        b=HEFpaGwcT1VSJIS745CNWs1EsXKzfK7FoKw4REHj8oEhRfxATI03mVWFudfvouhHOZ
-         426JtFhLMkwrTR9nmSjsdmWyI0fhySOPOW1EjLbiKc5+nyj8H1pq3Tm/+dTrnwJQ1zl8
-         tJl41U7G1bSw+UxnRQSMcsGe754FUkrtiBSlQTtV7HksP9pt8D/gb3zrnPW5KH8CxqAS
-         1u9OVsjA7Dlnbk6PZWNJU5f2jWsc2KMVMkMSAy8M5TlApGFJDlJbpUkaF2iEIrKdKYvY
-         T7TbVgqD7/mrXPcOKGRq64cTXLeRuTpIr2GsPz2Rc/f+zKBD9PziTCxGY+DqNPsPRQZu
-         eTmg==
-X-Gm-Message-State: ANhLgQ0BycNgDZFO3Qks+h+1H3mmeVJXdvjK+P+LAptlkKrPasCS7mto
-        sZoHmTp8QF2NeRzcHd3x1rMm+dgvuvQatQ==
-X-Google-Smtp-Source: ADFU+vsOAJoSM+Lckvqu+CgHW/ok3f41wf+W5PjPDRUFI2ur+Q6Ak7PNRh5Nk1asj0uIZEBNcuaqFg==
-X-Received: by 2002:a50:9ae4:: with SMTP id p91mr2185773edb.114.1583924581947;
-        Wed, 11 Mar 2020 04:03:01 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id m3sm1415728ejj.22.2020.03.11.04.03.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id t11so2026469wrw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
-X-Received: by 2002:adf:f545:: with SMTP id j5mr3918965wrp.295.1583924580138;
- Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200303123446.20095-1-xia.jiang@mediatek.com> <20200303123446.20095-4-xia.jiang@mediatek.com>
-In-Reply-To: <20200303123446.20095-4-xia.jiang@mediatek.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 11 Mar 2020 20:02:48 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5AA6NtLDsqL3Ph8cwv5=ZYoPOiu4Wa85ky037qOyMH1QQ@mail.gmail.com>
-Message-ID: <CAAFQd5AA6NtLDsqL3Ph8cwv5=ZYoPOiu4Wa85ky037qOyMH1QQ@mail.gmail.com>
-Subject: Re: [PATCH v7 03/11] media: platform: Improve s_selection flow for
- bug fixing
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Mar 2020 07:03:52 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BB2ADt136879
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:03:51 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypv2m82rv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:03:50 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Wed, 11 Mar 2020 11:03:13 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Mar 2020 11:03:08 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BB37IO50856086
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 11:03:08 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA98752054;
+        Wed, 11 Mar 2020 11:03:07 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.102.25.51])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4B90852050;
+        Wed, 11 Mar 2020 11:03:04 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 2/3] powerpc/numa: Prefer node id queried from vphn
+Date:   Wed, 11 Mar 2020 16:32:36 +0530
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
+References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20031111-0028-0000-0000-000003E31109
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031111-0029-0000-0000-000024A85504
+Message-Id: <20200311110237.5731-3-srikar@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_04:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+Node id queried from the static device tree may not
+be correct. For example: it may always show 0 on a shared processor.
+Hence prefer the node id queried from vphn and fallback on the device tree
+based node id if vphn query fails.
 
-On Tue, Mar 3, 2020 at 9:35 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> Get correct compose value in mtk_jpeg_s_selection function.
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Christopher Lameter <cl@linux.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+ arch/powerpc/mm/numa.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-It's a good practice to describe why the current code is wrong and new is good.
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 54dcd49..8735fed 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -719,20 +719,20 @@ static int __init parse_numa_properties(void)
+ 	 */
+ 	for_each_present_cpu(i) {
+ 		struct device_node *cpu;
+-		int nid;
+-
+-		cpu = of_get_cpu_node(i, NULL);
+-		BUG_ON(!cpu);
+-		nid = of_node_to_nid_single(cpu);
+-		of_node_put(cpu);
++		int nid = vphn_get_nid(i);
+ 
+ 		/*
+ 		 * Don't fall back to default_nid yet -- we will plug
+ 		 * cpus into nodes once the memory scan has discovered
+ 		 * the topology.
+ 		 */
+-		if (nid < 0)
+-			continue;
++		if (nid == NUMA_NO_NODE) {
++			cpu = of_get_cpu_node(i, NULL);
++			if (cpu) {
++				nid = of_node_to_nid_single(cpu);
++				of_node_put(cpu);
++			}
++		}
+ 		node_set_online(nid);
+ 	}
+ 
+-- 
+1.8.3.1
 
->
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-
-Thanks for the patch. Please see my comment inline.
-
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index da0dae4b0fc9..fb2c8d026580 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -492,8 +492,8 @@ static int mtk_jpeg_s_selection(struct file *file, void *priv,
->         case V4L2_SEL_TGT_COMPOSE:
->                 s->r.left = 0;
->                 s->r.top = 0;
-> -               s->r.width = ctx->out_q.w;
-> -               s->r.height = ctx->out_q.h;
-> +               ctx->out_q.w = s->r.width;
-> +               ctx->out_q.h = s->r.height;
->                 break;
->         default:
->                 return -EINVAL;
-
-The decoder compose target means the visible rectangle of the decoded
-image, which comes from the stream metadata. It's not something that
-can be set by the userspace.
-
-Best regards,
-Tomasz
