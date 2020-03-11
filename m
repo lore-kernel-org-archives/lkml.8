@@ -2,70 +2,146 @@ Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-db8eur05on2056.outbound.protection.outlook.com ([40.107.20.56]:6017
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbgCKDWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:22:37 -0400
-From: Robin Gong <yibin.gong@nxp.com>
-To: Rob Herring <robh@kernel.org>
-CC: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Date: Wed, 11 Mar 2020 03:22:33 +0000
-Message-ID:
- <VE1PR04MB6638FF9C3ED1A93FD5A6C2C289FC0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
- <20200310184103.GA2192@bogus>
-In-Reply-To: <20200310184103.GA2192@bogus>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44135 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbgCKDYr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 23:24:47 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u24so393727vso.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:24:44 -0700 (PDT)
 MIME-Version: 1.0
+References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Date: Wed, 11 Mar 2020 11:24:33 +0800
+Message-ID:
+ <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
+Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support"
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311032233.F1mtwwb2I6bxF0kqWviJnFeqh6PIdaPs2q07JZnDw-w@z>
+Message-ID: <20200311032433.edexCyvjNcABofQH5u9ZMgV6i-Yh9HXraEs5H5sDXYA@z>
 
-On 2020/03/11 Rob Herring <robh@kernel.org> wrote:
-> On Tue, 10 Mar 2020 19:31:57 +0800, Robin Gong wrote:
-> > ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->=20
-> If a tag was not added on purpose, please state why and what changed.
-Sorry, Rob, I forgot to add your reviewed tag on v5, will add it back incid=
-entally in v7.
+Thanks, much better. Just one issue left.
+
+On Tue, Mar 10, 2020 at 6:10 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
+>
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
+>
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile                 |   2 +-
+>  drivers/mfd/mt6358-irq.c             | 238 +++++++++++++++++++++++++++++
+>  drivers/mfd/mt6397-core.c            |  55 ++++++-
+>  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+>  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |   3 +
+>  6 files changed, 733 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
+>
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index b83f172..9af1414 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
+> -mt6397-objs    := mt6397-core.o mt6397-irq.o
+> +mt6397-objs                    := mt6397-core.o mt6397-irq.o mt6358-irq.o
+>  obj-$(CONFIG_MFD_MT6397)       += mt6397.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)     += intel_soc_pmic_mrfld.o
+>
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..0b99a39
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,238 @@
+> [snip]
+> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
+> +{
+> +       struct mt6397_chip *chip = data;
+> +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
+> +       unsigned int bit, i, top_irq_status;
+> +       int ret;
+> +
+> +       ret = regmap_read(chip->regmap,
+> +                         mt6358_irq_data->top_int_status_reg,
+> +                         &top_irq_status);
+> +       if (ret) {
+> +               dev_err(chip->dev,
+> +                       "Failed to read status from the device, ret=%d\n", ret);
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
+> +               for (i = 0; i < mt6358_irq_data->num_top; i++) {
+
+Only one loop needed.
+
+> +                       bit = BIT(mt6358_ints[i].top_offset);
+> +                       if (top_irq_status & bit) {
+> +                               mt6358_irq_sp_handler(chip, i);
+> +                               top_irq_status &= ~bit;
+> +                               if (!top_irq_status)
+> +                                       break;
+> +                       }
+> +               }
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +                              irq_hw_number_t hw)
+> +{
+> +       struct mt6397_chip *mt6397 = d->host_data;
+> +
+> +       irq_set_chip_data(irq, mt6397);
+> +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
+> +       irq_set_nested_thread(irq, 1);
+> +       irq_set_noprobe(irq);
+> +
+> +       return 0;
+> +}
+> [snip]
 
