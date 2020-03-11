@@ -2,69 +2,230 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7598C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC600C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C4320578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0CE20736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CsZQhdl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbgCKT1u (ORCPT
+        id S1731120AbgCKT3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:27:50 -0400
-Received: from elvis.franken.de ([193.175.24.41]:34845 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbgCKT1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:27:50 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jC713-0008JO-02; Wed, 11 Mar 2020 20:27:41 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 06771C1038; Wed, 11 Mar 2020 20:20:50 +0100 (CET)
-Date:   Wed, 11 Mar 2020 20:20:49 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Joe Perches <joe@perches.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH -next 004/491] PERFORMANCE EVENTS SUBSYSTEM: Use
- fallthrough;
-Message-ID: <20200311192049.GC3588@alpha.franken.de>
-References: <cover.1583896344.git.joe@perches.com>
- <73d22360c5c665fd7f480a209ae46807dfb07bbe.1583896348.git.joe@perches.com>
+        Wed, 11 Mar 2020 15:29:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23357 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730913AbgCKT3x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:29:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583954991;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=X8sydDPk2Nziuyx/YyOIFR5RvqNJQK0GeXPzyVTGcAM=;
+        b=CsZQhdl5XIJBkEczceIUYFu2BUZ3jKyRV6fymH08Fecexx//317+qqK7GUWuK4VLpT4zdk
+        fZkTNQ5TLd/ad58tMbEYyrvm6Cp2jgVIWe38l/GEwBsoPJ1U0kO2oUvAY4wcJgsIk4Tqgs
+        OMBV7fxNZ9JtgS3+5PsD6jQ5sik7QGo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-OS115hD8P9auQI74FymxuA-1; Wed, 11 Mar 2020 15:29:50 -0400
+X-MC-Unique: OS115hD8P9auQI74FymxuA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8EB1A800D48;
+        Wed, 11 Mar 2020 19:29:48 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E32660BF1;
+        Wed, 11 Mar 2020 19:29:40 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id DB87522021D; Wed, 11 Mar 2020 15:29:39 -0400 (EDT)
+Date:   Wed, 11 Mar 2020 15:29:39 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        dgilbert@redhat.com, mst@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
+Message-ID: <20200311192939.GD83257@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-5-vgoyal@redhat.com>
+ <20200310110437.GI140737@stefanha-x1.localdomain>
+ <20200310181936.GC38440@redhat.com>
+ <20200311173405.GI281087@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <73d22360c5c665fd7f480a209ae46807dfb07bbe.1583896348.git.joe@perches.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200311173405.GI281087@stefanha-x1.localdomain>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 09:51:18PM -0700, Joe Perches wrote:
-> Convert the various uses of fallthrough comments to fallthrough;
+On Wed, Mar 11, 2020 at 05:34:05PM +0000, Stefan Hajnoczi wrote:
+> On Tue, Mar 10, 2020 at 02:19:36PM -0400, Vivek Goyal wrote:
+> > On Tue, Mar 10, 2020 at 11:04:37AM +0000, Stefan Hajnoczi wrote:
+> > > On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
+> > > > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> > > > index 7abcc50838b8..52f179411015 100644
+> > > > --- a/drivers/virtio/virtio_pci_modern.c
+> > > > +++ b/drivers/virtio/virtio_pci_modern.c
+> > > > @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *info)
+> > > >  	vring_del_virtqueue(vq);
+> > > >  }
+> > > >  
+> > > > +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
+> > > > +                                   u8 required_id,
+> > > > +                                   u8 *bar, u64 *offset, u64 *len)
+> > > > +{
+> > > > +	int pos;
+> > > > +
+> > > > +        for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
+> > > 
+> > > Please fix the mixed tabs vs space indentation in this patch.
+> > 
+> > Will do. There are plenty of these in this patch.
+> > 
+> > > 
+> > > > +static bool vp_get_shm_region(struct virtio_device *vdev,
+> > > > +			      struct virtio_shm_region *region, u8 id)
+> > > > +{
+> > > > +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> > > > +	struct pci_dev *pci_dev = vp_dev->pci_dev;
+> > > > +	u8 bar;
+> > > > +	u64 offset, len;
+> > > > +	phys_addr_t phys_addr;
+> > > > +	size_t bar_len;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> > > > +		return false;
+> > > > +	}
+> > > > +
+> > > > +	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> > > > +	if (ret < 0) {
+> > > > +		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> > > > +			__func__);
+> > > > +		return false;
+> > > > +	}
+> > > > +
+> > > > +	phys_addr = pci_resource_start(pci_dev, bar);
+> > > > +	bar_len = pci_resource_len(pci_dev, bar);
+> > > > +
+> > > > +        if (offset + len > bar_len) {
+> > > > +                dev_err(&pci_dev->dev,
+> > > > +                        "%s: bar shorter than cap offset+len\n",
+> > > > +                        __func__);
+> > > > +                return false;
+> > > > +        }
+> > > > +
+> > > > +	region->len = len;
+> > > > +	region->addr = (u64) phys_addr + offset;
+> > > > +
+> > > > +	return true;
+> > > > +}
+> > > 
+> > > Missing pci_release_region()?
+> > 
+> > Good catch. We don't have a mechanism to call pci_relese_region() and 
+> > virtio-mmio device's ->get_shm_region() implementation does not even
+> > seem to reserve the resources.
+> > 
+> > So how about we leave this resource reservation to the caller.
+> > ->get_shm_region() just returns the addr/len pair of requested resource.
+> > 
+> > Something like this patch.
+> > 
+> > ---
+> >  drivers/virtio/virtio_pci_modern.c |    8 --------
+> >  fs/fuse/virtio_fs.c                |   13 ++++++++++---
+> >  2 files changed, 10 insertions(+), 11 deletions(-)
+> > 
+> > Index: redhat-linux/fs/fuse/virtio_fs.c
+> > ===================================================================
+> > --- redhat-linux.orig/fs/fuse/virtio_fs.c	2020-03-10 09:13:34.624565666 -0400
+> > +++ redhat-linux/fs/fuse/virtio_fs.c	2020-03-10 14:11:10.970284651 -0400
+> > @@ -763,11 +763,18 @@ static int virtio_fs_setup_dax(struct vi
+> >  	if (!have_cache) {
+> >  		dev_notice(&vdev->dev, "%s: No cache capability\n", __func__);
+> >  		return 0;
+> > -	} else {
+> > -		dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n",
+> > -			   cache_reg.len, cache_reg.addr);
+> >  	}
+> >  
+> > +	if (!devm_request_mem_region(&vdev->dev, cache_reg.addr, cache_reg.len,
+> > +				     dev_name(&vdev->dev))) {
+> > +		dev_warn(&vdev->dev, "could not reserve region addr=0x%llx"
+> > +			 " len=0x%llx\n", cache_reg.addr, cache_reg.len);
+> > +		return -EBUSY;
+> > +        }
+> > +
+> > +	dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n", cache_reg.len,
+> > +		   cache_reg.addr);
+> > +
+> >  	pgmap = devm_kzalloc(&vdev->dev, sizeof(*pgmap), GFP_KERNEL);
+> >  	if (!pgmap)
+> >  		return -ENOMEM;
+> > Index: redhat-linux/drivers/virtio/virtio_pci_modern.c
+> > ===================================================================
+> > --- redhat-linux.orig/drivers/virtio/virtio_pci_modern.c	2020-03-10 08:51:36.886565666 -0400
+> > +++ redhat-linux/drivers/virtio/virtio_pci_modern.c	2020-03-10 13:43:15.168753543 -0400
+> > @@ -511,19 +511,11 @@ static bool vp_get_shm_region(struct vir
+> >  	u64 offset, len;
+> >  	phys_addr_t phys_addr;
+> >  	size_t bar_len;
+> > -	int ret;
+> >  
+> >  	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> >  		return false;
+> >  	}
+> >  
+> > -	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> > -	if (ret < 0) {
+> > -		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> > -			__func__);
+> > -		return false;
+> > -	}
+> > -
+> >  	phys_addr = pci_resource_start(pci_dev, bar);
+> >  	bar_len = pci_resource_len(pci_dev, bar);
 > 
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> Do pci_resource_start()/pci_resource_len() work on a BAR where
+> pci_request_region() hasn't been called yet?  (I haven't checked the
+> code, sorry...)
+
+It should. Infact, pci_request_region() itself is calling
+pci_resource_start() and pci_resource_len().
+
 > 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
+> Assuming yes, then my next question is whether devm_request_mem_region()
+> works in both the VIRTIO PCI and MMIO cases?
 
-Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+It should work on MMIO case as well. This basically works on /proc/iomem
+resource tree to reserve resources. So as long as MMIO memory range
+has been registered by driver in /proc/iomem, it will work.
 
-Thomas.
+> 
+> If yes, then this looks like a solution, though the need for
+> devm_request_mem_region() should be explained in the vp_get_shm_region()
+> doc comments so that callers remember to make that call.  Or maybe it
+> can be included in vp_get_shm_region().
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+How about adding a line in include/linux/virtio_config.h right below the
+@get_shm_region descrition which says.
+
+"This does not reserve the resources and caller is expected to call
+ devm_request_mem_region() or similar to reserve resources."
+
+Vivek
+
