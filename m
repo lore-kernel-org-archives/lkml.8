@@ -2,106 +2,146 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A49CC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011AFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1B8208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAECB208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="lTVVuMBW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fa1Mst/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgCKKdM (ORCPT
+        id S1729010AbgCKKes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:33:12 -0400
-Received: from vps.xff.cz ([195.181.215.36]:54436 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbgCKKdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:33:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-        t=1583922789; bh=dRISzFx2JBnu+jblONlXo7Qz3C235IdzslaBDbRSJHw=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=lTVVuMBW551I+CuYrT2Oxr3TGIBNfsxiJ1SiQdI+OsJhMR+XiqK2ksEvOKHZ98q2H
-         C2/OtC4nHLT7KTA4QTSDyYmzgcjKUxeUOpLsaYCgxlMh6Mwxw2c6AJlcL/K4faBiWd
-         0usBx2r7fLnIWusnXeVqJdru43cWl2x3aWIF/yp0=
-Date:   Wed, 11 Mar 2020 11:33:09 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
- support was added
-Message-ID: <20200311103309.m52hdut7mt7crt7g@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-References: <20200224143149.au6hvmmfw4ajsq2g@core.my.home>
- <39712bf4-210b-d7b6-cbb1-eb57585d991a@huawei.com>
- <20200225120814.gjm4dby24cs22lux@core.my.home>
- <20200225122706.d6pngz62iwyowhym@core.my.home>
- <72d28eba-53b9-b6f4-01a5-45b2352f4285@huawei.com>
- <20200226121143.uag224cqzqossvlv@core.my.home>
- <20200226180557.le2fr66fyuvrqker@core.my.home>
- <7b62f506-f737-9fb2-6e8e-4b1c454f03b2@huawei.com>
- <20200306120203.2p34ezryzxb2jeuk@core.my.home>
- <0ce08d13-ca00-2823-94eb-8274c332a8ef@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ce08d13-ca00-2823-94eb-8274c332a8ef@huawei.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        Wed, 11 Mar 2020 06:34:48 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:61397 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgCKKes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:34:48 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200311103445epoutp01fd170a3262182e243725c2bb47dd9e66~7OXjf67mg0723607236epoutp01d
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:34:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200311103445epoutp01fd170a3262182e243725c2bb47dd9e66~7OXjf67mg0723607236epoutp01d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583922885;
+        bh=62Jjuc6/Y2f5Kkiso4Xvn+Oim+hE7rByIazg5bBNNFc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Fa1Mst/DFQzsQQ3rhgKg2CdAEy32LGEScI0fBVn2DAiB7K13uyksgGk1UjbPrJurc
+         4HKnRmcMSjm0aijbWYWqGpxSiKr8Q3PLVfVMq16vkd9xLpILdii2bTkOK/h2jwLR0O
+         hN14+c3kYXQstHoDPX+KrvHqo8DaXKErf0pqzzJ4=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200311103443epcas5p12d9bfa8ad90323226af85bebe48394e7~7OXiK0hBp2624126241epcas5p12;
+        Wed, 11 Mar 2020 10:34:43 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        53.21.19726.3CEB86E5; Wed, 11 Mar 2020 19:34:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132~7OXhpAlqY0906409064epcas5p2b;
+        Wed, 11 Mar 2020 10:34:43 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200311103443epsmtrp2f3a4b66906b00296d07588e581cb6a9a~7OXhoUU822380023800epsmtrp2V;
+        Wed, 11 Mar 2020 10:34:43 +0000 (GMT)
+X-AuditID: b6c32a49-7a9ff70000014d0e-a9-5e68bec380a4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1E.A6.06569.3CEB86E5; Wed, 11 Mar 2020 19:34:43 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200311103438epsmtip2c7aa065bd8c5b47fe95f57da41cb28f3~7OXc4Eu6C2573525735epsmtip2k;
+        Wed, 11 Mar 2020 10:34:37 +0000 (GMT)
+From:   Shradha Todi <shradha.t@samsung.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        pankaj.dubey@samsung.com, Shradha Todi <shradha.t@samsung.com>,
+        Sriram Dash <sriram.dash@samsung.com>
+Subject: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+Date:   Wed, 11 Mar 2020 15:58:52 +0530
+Message-Id: <20200311102852.5207-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsWy7bCmhu7hfRlxBssf6lgsacqwuPC0h83i
+        8q45bBZn5x1ns3jz+wW7xaKtX9gteg/XWtxYz+7A4bFm3hpGjwWbSj36tqxi9Dh+YzuTx+dN
+        cgGsUVw2Kak5mWWpRfp2CVwZrx81MBWc4a1Yt2I/UwPjE+4uRg4OCQETiRl35boYuTiEBHYz
+        Smz4d4IFwvnEKHF8ew+U841RorFjF2MXIydYx+ujV9ghEnsZJR4cuwbltDBJXLvzFayKTUBL
+        ovFrFzOILSJgLdHwahUrSBGzwBpGiVVLV4ElhAWCJZY/essKYrMIqEqs+XCYDcTmFbCUmLX2
+        JzvEOnmJ1RsOMIM0Swg0skm8XzoPKuEi8e77elYIW1ji1fEtUHEpic/v9rJB2PkSUy88ZYH4
+        tEJieU8dRNhe4sCVOWBhZgFNifW79EHCzAJ8Er2/nzBBVPNKdLQJQVQrS3z5u4cFwpaUmHfs
+        MtRSD4mvEy4wgdhCArESU1s/sk9glJmFMHQBI+MqRsnUguLc9NRi0wLDvNRyveLE3OLSvHS9
+        5PzcTYzgCNfy3ME465zPIUYBDkYlHt4XdelxQqyJZcWVuYcYJTiYlUR44+WBQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHknsV6NERJITyxJzU5NLUgtgskycXBKNTDmai7f66iwxCVuaVah68zo
+        vOJbk4NOtZU9Y5x1+Vl9+JP4CeGpvNt4TWZUzpbaVVYU3l34ccpZy/6/2pPd332f7LXlckzN
+        sbZkg5LsVuks+4eRcu9PX7re5vt1d8fNl9ZrZT+oSi4Mq4mbWxpeEhu7nHXGiYquRV57T4So
+        pb3jyyk8xDKvNESJpTgj0VCLuag4EQBTPQyR7AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjluLIzCtJLcpLzFFi42LZdlhJXvfwvow4gyuneSyWNGVYXHjaw2Zx
+        edccNouz846zWbz5/YLdYtHWL+wWvYdrLW6sZ3fg8Fgzbw2jx4JNpR59W1Yxehy/sZ3J4/Mm
+        uQDWKC6blNSczLLUIn27BK6M148amArO8FasW7GfqYHxCXcXIyeHhICJxOujV9i7GLk4hAR2
+        M0qsW7eMHSIhKfH54jomCFtYYuW/51BFTUwSs1/uYwRJsAloSTR+7WIGsUUEbCUa/nYwgxQx
+        C2xilHh6uYsNJCEsECjR03odzGYRUJVY8+EwmM0rYCkxa+1PqG3yEqs3HGCewMizgJFhFaNk
+        akFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcChpae1gPHEi/hCjAAejEg/vi7r0OCHWxLLi
+        ytxDjBIczEoivPHyQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2Cy
+        TBycUg2Mui7/tTKrHLPjLrl/zNuWeLXQ2k5CxFtr9vFzUu3pT7OOc1z//k8rtCp3zvneI3ns
+        Ec+e6MVZrXgjm+GS37vWuuLelE9KJ2N1dJJ2Ptavf7D+77e6V5Nzpi8VKZ8YdIvrtr3YljV+
+        TpaP3yffsjc4tG+DsldH0M/FQav/9C5ISRBffW6v/5bbSizFGYmGWsxFxYkA29JrryECAAA=
+X-CMS-MailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
+References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+get_features ops of pci_epc_ops may return NULL, causing NULL pointer
+dereference in pci_epf_test_bind function. Let us add a check for
+pci_epc_feature pointer in pci_epf_test_bind before we access it to
+avoid any such NULL pointer dereference and return -ENOTSUPP in case
+pci_epc_feature is not found.
 
-On Wed, Mar 11, 2020 at 05:02:10PM +0800, Chao Yu wrote:
-> Hi,
-> 
-> Sorry for the delay.
-> 
-> On 2020/3/6 20:02, Ondřej Jirman wrote:
-> > Hello,
-> > 
-> > On Thu, Feb 27, 2020 at 10:01:50AM +0800, Chao Yu wrote:
-> >> On 2020/2/27 2:05, Ondřej Jirman wrote:
-> >>>
-> >>> No issue after 7h uptime either. So I guess this patch solved it for some
-> >>> reason.
-> >>
-> >> I hope so as well, I will send a formal patch for this.
-> > 
-> > So I had it happen again, even with the patches. This time in f2fs_rename2:
-> 
-> Oops, it looks previous fix patch just cover the root cause... :(
-> 
-> Did this issue still happen frequently? If it is, would you please apply patch
-> that prints log during down/up semaphore.
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-Not frequently. Just once. I couldn't afford FS corruption during update,
-so I reverted the compression support shortly after.
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index c9121b1b9fa9..af4537a487bf 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+ 		return -EINVAL;
+ 
+ 	epc_features = pci_epc_get_features(epc, epf->func_no);
+-	if (epc_features) {
+-		linkup_notifier = epc_features->linkup_notifier;
+-		msix_capable = epc_features->msix_capable;
+-		msi_capable = epc_features->msi_capable;
+-		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+-		pci_epf_configure_bar(epf, epc_features);
++	if (!epc_features) {
++		dev_err(dev, "epc_features not implemented\n");
++		return -ENOTSUPP;
+ 	}
+ 
++	linkup_notifier = epc_features->linkup_notifier;
++	msix_capable = epc_features->msix_capable;
++	msi_capable = epc_features->msi_capable;
++	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
++	pci_epf_configure_bar(epf, epc_features);
++
+ 	epf_test->test_reg_bar = test_reg_bar;
+ 	epf_test->epc_features = epc_features;
+ 
+-- 
+2.17.1
 
-But I wasn't stressing the system much with FS activity after applying the
-initial fix.
-
-> And once we revert compression support patch, this issue will disappear, right?
-
-Yes, AFAIK. I reverted it and run a few cycles of install 500MiB worth of
-packages, uninstall the packages with pacman. And it didn't re-occur. I never
-saw any issues with compression support patch reverted.
-
-> Btw, did you try other hardware which is not Arm v7?
-
-Yes, but I didn't ever see it on anything else. Just on two 8 core cortexes A7.
-(2 clusters)
-
-regards,
-	o.
