@@ -1,127 +1,109 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE,
-	SPOOFED_FREEMAIL_NO_RDNS autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36804 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCKBYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:24:12 -0400
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FD6C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:09:46 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id D929920735
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583950186;
+	bh=84idXkfq9afH+SLCq3/gwGj7XheWFxhNcrTBQayHQiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SLqU64gmGKSwALdWZolGV0s9D2UBQe3OiJa8sKv2+rl3R9RFChQe6nBV9P3EHaTYJ
+	 sCqO0N23wYerKzr93UA3nXL9VuVlT8K8TVqV+e0EHgMWGlum43tlL++W1fOl6F8NKS
+	 cqZjUAFvlpnVhUpywbZcRPqBZXep4HiGT5HUCEDI=
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730702AbgCKSJp (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730468AbgCKSJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:09:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF6E3206BE;
+        Wed, 11 Mar 2020 18:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583950185;
+        bh=84idXkfq9afH+SLCq3/gwGj7XheWFxhNcrTBQayHQiQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R4ro9euCi/6eYEGt55wEAEp+ff20imnXhflL3Jlv536IplPQq0O7IwxB5VaTFvr6L
+         XL8lwoc782tGsy2cegRhDnoc/ePRbDLVvvHHaMesq2cAriNDnZV6TwT+lyfO9tKuM5
+         buLnNN+0RIE5C2jXcJgFW7L9FZMqNJTm0yyt+65Q=
+Date:   Wed, 11 Mar 2020 19:09:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Holger =?iso-8859-1?Q?Hoffst=E4tte?= 
+        <holger@applied-asynchrony.com>
+Cc:     linux-kernel@vger.kernel.org, linux@roeck-us.net, shuah@kernel.org,
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>
+Subject: Re: [PATCH 5.4 000/168] 5.4.25-stable review
+Message-ID: <20200311180941.GA3970258@kroah.com>
+References: <20200310123635.322799692@linuxfoundation.org>
+ <d97347d3-4eea-f5e1-8a3c-a12410e9ad5f@applied-asynchrony.com>
+ <20200310143527.GB3376131@kroah.com>
+ <daf30758-fe28-0709-7908-91bb99ee5e39@applied-asynchrony.com>
+ <20200310150018.GA3422873@kroah.com>
+ <1371d06f-306b-7e42-3871-fb1a0d7936bf@applied-asynchrony.com>
 MIME-Version: 1.0
-References: <20200311010138.10465-1-aford173@gmail.com>
-In-Reply-To: <20200311010138.10465-1-aford173@gmail.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Tue, 10 Mar 2020 22:24:01 -0300
-Message-ID:
- <CAOMZO5AqjrQxGcHVLPRQXC0nRUM+hOeWtnAK2vJ=O_P28FZ3-g@mail.gmail.com>
-Subject: Re: [PATCH V2] arm64: dts: imx: Add Beacon i.mx8mm development kit
-To: Adam Ford <aford173@gmail.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
-        <linux-arm-kernel@lists.infradead.org>,
-        aford@beaconembeddedworks.com, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1371d06f-306b-7e42-3871-fb1a0d7936bf@applied-asynchrony.com>
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311012401.0NhSuAxHPT6urUmAw-txGP6IHnsPhbji4vZQmP0Yg2Y@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On Tue, Mar 10, 2020 at 04:07:23PM +0100, Holger Hoffstätte wrote:
+> On 3/10/20 4:00 PM, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 10, 2020 at 03:51:01PM +0100, Holger Hoffstätte wrote:
+> > > On 3/10/20 3:35 PM, Greg Kroah-Hartman wrote:
+> > > > On Tue, Mar 10, 2020 at 03:02:37PM +0100, Holger Hoffstätte wrote:
+> > > > > On 3/10/20 1:37 PM, Greg Kroah-Hartman wrote:
+> > > > > > This is the start of the stable review cycle for the 5.4.25 release.
+> > > > > 
+> > > > > This fails to compile due to broken patch 001/168:
+> > > > > "block, bfq: get a ref to a group when adding it to a service tree":
+> > > > > 
+> > > > > ..
+> > > > > block/bfq-wf2q.c: In function 'bfq_get_entity':
+> > > > > ./include/linux/kernel.h:994:51: error: 'struct bfq_group' has no member named 'entity'
+> > > > > ..
+> > > > > 
+> > > > > The calls to bfq_get_entity::bfqg_and_blkg_get and bfq_forget_entity::bfqg_and_blkg_put
+> > > > > in bfq-wf2q.c need to be wrapped in #ifdef CONFIG_BFQ_GROUP_IOSCHED, otherwise
+> > > > > the build will fail when CONFIG_BFQ_GROUP_IOSCHED is not enabled.
+> > > > > This horribly error-prone #ifdef mess was finally removed in upstream commit
+> > > > > 4d8340d0d4d9. For 5.4 we'll either need that as well or add them back.
+> > > > 
+> > > > Ick, that's a mess.
+> > > > 
+> > > > I'll go drop that patch now, odd that it passed my build tests...
+> > > 
+> > > Uh, please no? It fixes a rather nasty UAF when cgroups are in use.
+> > > Please just add the other upstream commit as well, I confirmed it applies
+> > > cleanly and fixes the problem.
+> > 
+> > I didn't get that from your email at all, sorry.
+> > 
+> > So, what commits, and in what order, should be applied to 5.4.y at the
+> > moment to resolve this issue?
+> 
+> Just add upstream 4d8340d0d4d9 and it should work. Order shouldn't matter
+> (built for me either way) unless you want to follow upstream, in which case
+> it should come before "get a ref to a group..". Easy :)
 
-On Tue, Mar 10, 2020 at 10:01 PM Adam Ford <aford173@gmail.com> wrote:
+Ok, I've added both back now, and to the 5.5.y tree as well.  Hopefully
+that should resolve these build issues.
 
-> +&ecspi2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_espi2>;
-> +       cs-gpios = <&gpio5 9 0>;
+thanks,
 
-You could use GPIO_ACTIVE_HIGH instead of hardcoded 0.
-
-> +       status = "okay";
-> +
-> +       at25@0 {
-
-Node names should be generic:
-
-eeprom@0
-
-> +               compatible = "atmel,at25";
-
-Documentation/devicetree/bindings/eeprom/at25.txt states:
-
-"- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
-  Example "<vendor>,<type>" values:
-    "microchip,25lc040"
-    "st,m95m02"
-    "st,m95256"
-
-> +&i2c4 {
-> +
-
-Unneeded blank line.
-
-> diff --git a/arch/arm64/boot/dts/freescale/beacon-imx8mm-kit.dts b/arch/arm64/boot/dts/freescale/beacon-imx8mm-kit.dts
-> new file mode 100644
-> index 000000000000..417b15d345d5
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/beacon-imx8mm-kit.dts
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright 2020 Compass Electronics Group, LLC
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8mm.dtsi"
-> +#include "beacon-imx8mm-som.dtsi"
-> +#include "beacon-imx8mm-baseboard.dtsi"
-
-The naming convention we use is to start the dts names with the i.MX
-SoC name, so:
-
-imx8mm-beacon-som.dtsi
-imx8mm-beacon-baseboard.dtsi
-
-> +/ {
-> +       model = "Beacon EmbeddedWorks i.MX8M Mini Development Kit";
-> +       compatible = "fsl,imx8mm";
-
-You should add an Entry for Beacon in
-Documentation/devicetree/bindings/vendor-prefixes.yaml on a separate
-patch.
-
-and then:
-
-compatible = "beacon,imx8mm-beacon-kit", "fsl,imx8mm"
-
-Also, please add an entry for this board in
-Documentation/devicetree/bindings/arm/fsl.yaml
-
-> +&i2c3 {
-> +       clock-frequency = <400000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c3>;
-> +       status = "okay";
-> +
-> +       eeprom@50 {
-> +               compatible = "atmel,24c64";
-
-Same comment about the compatible.
-
-> +&iomuxc {
-> +
-
-Unneeded blank line.
-
-> +               pinctrl_fec1: fec1grp {
-
+greg k-h
