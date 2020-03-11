@@ -1,92 +1,81 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32904 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729887AbgCKPtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:49:01 -0400
-Received: by mail-qk1-f199.google.com with SMTP id b82so1739534qkc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:48:54 -0700 (PDT)
-Date: Wed, 11 Mar 2020 11:48:50 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v6 02/14] KVM: Cache as_id in kvm_memory_slot
-Message-ID: <20200311154850.GE479302@xz-x1>
-References: <20200309214424.330363-1-peterx@redhat.com>
- <20200309214424.330363-3-peterx@redhat.com>
- <20200310144858.GA7600@linux.intel.com>
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from muru.com ([72.249.23.125]:59804 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730088AbgCKPtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 11:49:14 -0400
+Date: Wed, 11 Mar 2020 08:49:09 -0700
+From: Tony Lindgren <tony@atomide.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        hch@lst.de, robh+dt@kernel.org, nm@ti.com, nsekhar@ti.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Message-ID: <20200311154909.GX37466@atomide.com>
+References: <20200310115309.31354-1-rogerq@ti.com>
+ <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
+ <20200310154829.GS37466@atomide.com>
+ <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
+ <20200311152347.GW37466@atomide.com>
+ <e031b768-8fb8-ce62-a644-69925757cbc6@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310144858.GA7600@linux.intel.com>
+In-Reply-To: <e031b768-8fb8-ce62-a644-69925757cbc6@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Tue, Mar 10, 2020 at 07:48:59AM -0700, Sean Christopherson wrote:
-> On Mon, Mar 09, 2020 at 05:44:12PM -0400, Peter Xu wrote:
-> > Cache the address space ID just like the slot ID.  It will be used in
-> > order to fill in the dirty ring entries.
+* Robin Murphy <robin.murphy@arm.com> [200311 15:48]:
+> On 11/03/2020 3:23 pm, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [200311 07:21]:
+> > > 
+> > > 
+> > > On 10/03/2020 17:48, Tony Lindgren wrote:
+> > > > * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
+> > > > > On 10/03/2020 13:53, Roger Quadros wrote:
+> > > > > > The L3 interconnect can access only 32-bits of address.
+> > > > > > Add the dma-ranges property to reflect this limit.
+> > > > > > 
+> > > > > > This will ensure that no device under L3 is
+> > > > > > given > 32-bit address for DMA.
+> > > > > > 
+> > > > > > Issue was observed only with SATA on DRA7-EVM with 4GB RAM
+> > > > > > and CONFIG_ARM_LPAE enabled. This is because the controller
+> > > > > > can perform 64-bit DMA and was setting the dma_mask to 64-bit.
+> > > > > > 
+> > > > > > Setting the correct bus_dma_limit fixes the issue.
+> > > > > 
+> > > > > This seems kind of messy to modify almost every DT node because of this....
+> > > > > Are you sure this is the only way to get it done? No way to modify the sata
+> > > > > node only which is impacted somehow?
+> > > > > 
+> > > > > Also, what if you just pass 0xffffffff to the dma-ranges property? That
+> > > > > would avoid modifying every node I guess.
+> > > > 
+> > > > Also, I think these interconnects are not limited to 32-bit access.
+> > > 
+> > > But from Table 2-1. L3_MAIN Memory Map
+> > > 
+> > > Start address	0x0000_0000
+> > > End address	0xFFFF_FFFF
+> > > 
+> > > So it is 32-bit limit, right?
 > > 
-> > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  include/linux/kvm_host.h | 1 +
-> >  virt/kvm/kvm_main.c      | 2 ++
-> >  2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index bcb9b2ac0791..afa0e9034881 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -346,6 +346,7 @@ struct kvm_memory_slot {
-> >  	unsigned long userspace_addr;
-> >  	u32 flags;
-> >  	short id;
-> > +	u8 as_id;
+> > Hmm so what war Robin saying earlier that DMA access seems to be
+> > limited to lower 2GB only though?
 > 
-> My vote is to store this as a u16 and remove the BUILD_BUG_ON.  Using a u8
-> doesn't save any memory since the compiler will pad out the struct.
+> That's the lower 2GB *of DRAM*, which occupies the upper 2GB of the L3
+> memory map ;)
 
-Sure. Indeed that BUILD_BUG_ON does not help much in this case.  Thanks,
+OK thanks for clarifying it.
 
-> 
-> >  };
-> >  
-> >  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 70f03ce0e5c1..e6484dabfc59 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -1036,6 +1036,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >  
-> >  	new = old = *slot;
-> >  
-> > +	BUILD_BUG_ON(U8_MAX < KVM_ADDRESS_SPACE_NUM);
-> > +	new.as_id = as_id;
-> >  	new.id = id;
-> >  	new.base_gfn = base_gfn;
-> >  	new.npages = npages;
-> > -- 
-> > 2.24.1
-> > 
-> 
+Regards,
 
--- 
-Peter Xu
+Tony
 
