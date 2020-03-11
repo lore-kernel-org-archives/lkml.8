@@ -2,107 +2,138 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8BEC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DAEC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16D02146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kQkT9Ezw"
+	by mail.kernel.org (Postfix) with ESMTP id CBF3021D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583931146;
+	bh=qKa9nNQ1MofSahdaXqzA+xpTPWxW3MYh12rIeqGd2m4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=CxErRHE/ZRJVIeZVgjUNRQegKdKnxKHr90sUo99FIEIx2k66w/2Ug00w10ZfVwtNA
+	 7KYHCZxSGDSafMohDUjWFwEaDAiuDbeos/vuBO2OMIFXYDWwUPWTiry5J7qOCITTj1
+	 OBdOEeeZVadGHHZpl7v6gmswXaJ3FOI2UWxNFx9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgCKMv6 (ORCPT
+        id S1729509AbgCKMwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:51:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51806 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbgCKMvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:51:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a132so1962201wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pSjQ4E8m+1eJQtkq/G98lOplM8W5Ztx8OcIT9w8yzWE=;
-        b=kQkT9EzwcJjSKnzy+NKeVejeHTj4PwXiL/sGNgNxD5ZaWR1Gl4dCKxja87SheHDQx8
-         8ImI4VYg/nu2S/0ClrmWEnr6KQdwgfGkKdeJTWlsiUdtSndr+6MSPgLEEEkYReUq2I6Z
-         ewMbunHmOqMd8boJ6bNii0vJ/3rk22U87HDVcTTNjcPquRyC9zgyzOpedudW+3mXbto3
-         tTxmNB0bKRk1v3plqEL1e80H9WeG2y+c87mZ/NQgjm4/5xWWXoG9XwC6FQ7zuG0rjyux
-         NHYjgZvKrZmraz7RY5iLoHN2kGtHKJDT1tII7t5pzU+PSHso8d885+MUdvpWMQYVox76
-         GiKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pSjQ4E8m+1eJQtkq/G98lOplM8W5Ztx8OcIT9w8yzWE=;
-        b=JZ7RtpN4s8FyytKKk43jgO1BkA1Q53eMvBS7cixFCdY/7qNHKLYh0lWy5mJaj4E2oN
-         uSANYPvaFekHJQ3t9lhBg8dckM59pQF1ptimkIQgpl9Zz4BbDK+lNywBEcCmtljv7JUC
-         6EJ1F8vJu+s49ZaQkeGZbFJt0QcM81H8XuzDyC6+9kMh3JNmOCAElLSEBh162QACP8HA
-         jrhbA/3Y7gq3voXcvL9KFjcDsOfvumPtyOL3Re1a4OjY9/BHRzqm4oPTvp6ucANSiJId
-         kRarG/MVMRmj8rsTXSdy4xl73Dv2oALNGfuxSXBHNmoIC/NQXzextZx+Ys7TLSNGCUDR
-         HTLg==
-X-Gm-Message-State: ANhLgQ1xcE7NZbYAnDP9BE+Im4feD0RX2EgbSc5F1iPKQJj87yfO5Lpg
-        KRbBdNVLmoRKaL4rQXslgkyqVw==
-X-Google-Smtp-Source: ADFU+vsqrlP7LpT3iV/tyxVYbgWkwmJe3brNDlGyKZHhOh2/BIESgTAtpdl5ra7zbk0yaBxY2Y4sVQ==
-X-Received: by 2002:a1c:c906:: with SMTP id f6mr3806905wmb.16.1583931107436;
-        Wed, 11 Mar 2020 05:51:47 -0700 (PDT)
-Received: from robin.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o3sm8843538wme.36.2020.03.11.05.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 05:51:46 -0700 (PDT)
-From:   Phong LE <ple@baylibre.com>
-To:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com
-Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
-        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
-        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] MAINTAINERS: add it66121 HDMI bridge driver entry
-Date:   Wed, 11 Mar 2020 13:51:35 +0100
-Message-Id: <20200311125135.30832-5-ple@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200311125135.30832-1-ple@baylibre.com>
-References: <20200311125135.30832-1-ple@baylibre.com>
+        Wed, 11 Mar 2020 08:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbgCKMwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:52:25 -0400
+Received: from vulkan (unknown [170.249.165.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C9CB2146E;
+        Wed, 11 Mar 2020 12:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583931144;
+        bh=qKa9nNQ1MofSahdaXqzA+xpTPWxW3MYh12rIeqGd2m4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ElYwNHGgCBYXMvyK9CJH91A3qCD4rIvTtGPf5KNjEQnsCurhyBhexzoIyhog3W7pk
+         U5ygdQHa73kHaWGaFuajrmT+Dkv0eiripQMO01Djf/qo2aCfGaQAP6XV7NQmDkihzA
+         8OFXcTpnTbK07YeIrfMdnNmpF35o4BYkIZ1f50VI=
+Message-ID: <9ff6eee403d293dd069935ca6979f72131fe5217.camel@kernel.org>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   Jeff Layton <jlayton@kernel.org>
+To:     yangerkun <yangerkun@huawei.com>, NeilBrown <neilb@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Wed, 11 Mar 2020 07:52:23 -0500
+In-Reply-To: <f9db707f-74ef-9439-1aec-e1ce8234888e@huawei.com>
+References: <20200308140314.GQ5972@shao2-debian>
+         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+         <87blp5urwq.fsf@notabene.neil.brown.name>
+         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
+         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+         <878sk7vs8q.fsf@notabene.neil.brown.name>
+         <f9db707f-74ef-9439-1aec-e1ce8234888e@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Neil Armstrong and myself as maintainers
+On Wed, 2020-03-11 at 09:57 +0800, yangerkun wrote:
 
-Signed-off-by: Phong LE <ple@baylibre.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+[snip]
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 37c2963226d4..3d722d723686 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8977,6 +8977,14 @@ T:	git git://linuxtv.org/anttip/media_tree.git
- S:	Maintained
- F:	drivers/media/tuners/it913x*
- 
-+ITE IT66121 HDMI BRIDGE DRIVER
-+M:	Phong LE <ple@baylibre.com>
-+M:	Neil Armstrong <narmstrong@baylibre.com>
-+S:	Maintained
-+F:	drivers/gpu/drm/bridge/ite-it66121.c
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
-+F:	Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-+
- IVTV VIDEO4LINUX DRIVER
- M:	Andy Walls <awalls@md.metrocast.net>
- L:	linux-media@vger.kernel.org
+> 
+> On 2020/3/11 5:01, NeilBrown wrote:
+> > 
+> > I think this patch contains an assumption which is not justified.  It
+> > assumes that if a wait_event completes without error, then the wake_up()
+> > must have happened.  I don't think that is correct.
+> > 
+> > In the patch that caused the recent regression, the race described
+> > involved a signal arriving just as __locks_wake_up_blocks() was being
+> > called on another thread.
+> > So the waiting process was woken by a signal *after* ->fl_blocker was set
+> > to NULL, and *before* the wake_up().  If wait_event_interruptible()
+> > finds that the condition is true, it will report success whether there
+> > was a signal or not.
+> Neil and Jeff, Hi,
+> 
+> But after this, like in flock_lock_inode_wait, we will go another 
+> flock_lock_inode. And the flock_lock_inode it may return 
+> -ENOMEM/-ENOENT/-EAGAIN/0.
+> 
+> - 0: If there is a try lock, it means that we have call 
+> locks_move_blocks, and fl->fl_blocked_requests will be NULL, no need to 
+> wake up at all. If there is a unlock, no one call wait for me, no need 
+> to wake up too.
+> 
+> - ENOENT: means we are doing unlock, no one will wait for me, no need to 
+> wake up.
+> 
+> - ENOMEM: since last time we go through flock_lock_inode someone may 
+> wait for me, so for this error, we need to wake up them.
+> 
+> - EAGAIN: since we has go through flock_lock_inode before, these may 
+> never happen because FL_SLEEP will not lose.
+> 
+> So the assumption may be ok and for some error case we need to wake up 
+> someone may wait for me before(the reason for the patch "cifs: call 
+> locks_delete_block for all error case in cifs_posix_lock_set"). If I am 
+> wrong, please point out!
+> 
+> 
+
+That's the basic dilemma. We need to know whether we'll need to delete
+the block before taking the blocked_lock_lock.
+
+Your most recent patch used the return code from the wait to determine
+this, but that's not 100% reliable (as Neil pointed out). Could we try
+to do this by doing the delete only when we get certain error codes?
+Maybe, but that's a bit fragile-sounding.
+
+Neil's most recent patch used presence on the fl_blocked_requests list
+to determine whether to take the lock, but that relied on some very
+subtle memory ordering. We could of course do that, but that's a bit
+brittle too.
+
+That's the main reason I'm leaning toward the patch Neil sent
+originally and that uses the fl_wait.lock. The existing alternate lock
+managers (nfsd and lockd) don't use fl_wait at all, so I don't think
+doing that will cause any issues.
+
 -- 
-2.17.1
+Jeff Layton <jlayton@kernel.org>
 
