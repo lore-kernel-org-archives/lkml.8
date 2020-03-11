@@ -2,301 +2,127 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20EBC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A0FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA7E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417B820727
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXF9HzEt"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iyj05Fw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgCKNFd (ORCPT
+        id S1729489AbgCKNGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:05:33 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:41873 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbgCKNFd (ORCPT
+        Wed, 11 Mar 2020 09:06:01 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51271 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729345AbgCKNGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:05:33 -0400
-Received: by mail-wr1-f47.google.com with SMTP id s14so2500523wrt.8;
-        Wed, 11 Mar 2020 06:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AhLkhUvdXLfO1SrTt7a8DDpSIYACsGN+xMVAxW5xB8M=;
-        b=mXF9HzEtB49zv112z2A8Vvho3B+cvcgVwObY0OKhMIIH0zMdzxIODt0Vg8N8IXQW+a
-         BYud6KydFWAaPuTpjxPwQn3MpdLCSItW9dq76Xu5t0IXhqV3lZXq9DQZBYhLFmkH9lut
-         mFotv9s4g3TkexMUQ2HGK9DsSDG1Kr77JWRepmuJZ5T+fa/cQqCfk2Za2nRkVJV2uJiv
-         NwFi5xgjYLx1yasq9tLUKKLTh8J0ZFmVEPU7lfbwJwBG9FP0uTiHy58OcXopIYsYHmU9
-         R2rCP964fW3UgdzIoht5/tTBOALSrdLQSTyh5dEXCIcTjw1L3oCmggFgVPRDx92R6Ska
-         OVYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AhLkhUvdXLfO1SrTt7a8DDpSIYACsGN+xMVAxW5xB8M=;
-        b=EZiaLxKn1NcW+CDKF6B20tGLK/p3QyrDPWKsavINADq/QSgPwB6PSPREtsJkMjAT7k
-         rQVPF21ElCiSqZMBiE51gjx6ehcGLZEQhs7NRMmKs4NCkT+eIMzBwphCuM6wwyzzRPpi
-         Ea/scSfOY3Po/L1yzIlQw//n5L1lCQjKw8dJOH2M6TF6ARwbHs3aAkn7wR6/KHQkiAgk
-         GP7hs2LIJKdo5D5utnz1KKThpYAZGOr3phLaa09NljI/ds+tDNMqMisFvndXiUSdk70Z
-         7vsCVRHgDkfejsJ5yyYqU4r/O3gTNCeTLjTjbtdWh2S2Pkh9/hUDsSWhDrIZTYFht6nD
-         ETfw==
-X-Gm-Message-State: ANhLgQ2KN4qyZDGRzYZdDJUT/tblb7nrvxvY+S0hw6vDgxqf9SYO9ugl
-        86PhwNrQ5vuNTBjXNDS34ps=
-X-Google-Smtp-Source: ADFU+vtmZ8OBwTwqf9IfppxfqWVwowjIoq/aKh+H9Xn5exxfAlSTYe0p2TQSbD+CzHz9OEbbKlBwtQ==
-X-Received: by 2002:a5d:6aca:: with SMTP id u10mr4223866wrw.99.1583931929923;
-        Wed, 11 Mar 2020 06:05:29 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id p10sm69291517wrx.81.2020.03.11.06.05.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 06:05:29 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: display: convert rockchip vop bindings to yaml
-Date:   Wed, 11 Mar 2020 14:05:15 +0100
-Message-Id: <20200311130515.10663-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 11 Mar 2020 09:06:01 -0400
+X-UUID: a88d23ee84d24c6f87ab8de3e23780a0-20200311
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Mp2aZPUa6vRdl4F4YlSPXJ1sI5MSD/01Q/eOy0GtTQI=;
+        b=iyj05Fw0ZIkoFngYSieienICJb8iu/QUVoBTVNlGmL+GyI5SB+CJ59Cq8HqSyTeO4MJQ7s3q3FxEE1+RhG1IhFZvT4bP32K4AzR1jDPhL4jZjPjQ8oBpIWtb64oiqmQQ2uiAKz6A4NMBGx6gWHuUGcQN/xX66qoKzUDU9JKN+9k=;
+X-UUID: a88d23ee84d24c6f87ab8de3e23780a0-20200311
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 257172720; Wed, 11 Mar 2020 21:05:54 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Mar 2020 21:05:52 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Mar 2020 21:05:01 +0800
+Message-ID: <1583931952.29614.5.camel@mtksdaap41>
+Subject: Re: [PATCH v11 3/5] clk / soc: mediatek: Move mt8173 MMSYS to
+ platform driver
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>,
+        "Allison Randal" <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-mediatek@lists.infradead.org>,
+        "Collabora Kernel ML" <kernel@collabora.com>,
+        <dri-devel@lists.freedesktop.org>,
+        "Seiya Wang" <seiya.wang@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, <wens@csie.org>,
+        Daniel Vetter <daniel@ffwll.ch>, <linux-clk@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        <devicetree@vger.kernel.org>,
+        "Matthias Brugger" <mbrugger@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <frank-w@public-files.de>, <linux-arm-kernel@lists.infradead.org>,
+        <hsinyi@chromium.org>, Richard Fontana <rfontana@redhat.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>, <sean.wang@mediatek.com>,
+        <rdunlap@infradead.org>, <matthias.bgg@kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Owen Chen <owen.chen@mediatek.com>
+Date:   Wed, 11 Mar 2020 21:05:52 +0800
+In-Reply-To: <20200311115614.1425528-4-enric.balletbo@collabora.com>
+References: <20200311115614.1425528-1-enric.balletbo@collabora.com>
+         <20200311115614.1425528-4-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: D784D3DAEEA661B9A0D6E2A96065163283990E8ECB339D1E7BA070311362A5752000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'vop' nodes are manually verified.
-In order to automate this process rockchip-vop.txt
-has to be converted to yaml.
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changes v2:
-  No new properties
----
- .../bindings/display/rockchip/rockchip-vop.txt     |  74 ------------
- .../bindings/display/rockchip/rockchip-vop.yaml    | 126 +++++++++++++++++++++
- 2 files changed, 126 insertions(+), 74 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-deleted file mode 100644
-index 8b3a5f514..000000000
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-+++ /dev/null
-@@ -1,74 +0,0 @@
--device-tree bindings for rockchip soc display controller (vop)
--
--VOP (Visual Output Processor) is the Display Controller for the Rockchip
--series of SoCs which transfers the image data from a video memory
--buffer to an external LCD interface.
--
--Required properties:
--- compatible: value should be one of the following
--		"rockchip,rk3036-vop";
--		"rockchip,rk3126-vop";
--		"rockchip,px30-vop-lit";
--		"rockchip,px30-vop-big";
--		"rockchip,rk3066-vop";
--		"rockchip,rk3188-vop";
--		"rockchip,rk3288-vop";
--		"rockchip,rk3368-vop";
--		"rockchip,rk3366-vop";
--		"rockchip,rk3399-vop-big";
--		"rockchip,rk3399-vop-lit";
--		"rockchip,rk3228-vop";
--		"rockchip,rk3328-vop";
--
--- reg: Must contain one entry corresponding to the base address and length
--	of the register space. Can optionally contain a second entry
--	corresponding to the CRTC gamma LUT address.
--
--- interrupts: should contain a list of all VOP IP block interrupts in the
--		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
--		 format depends on the interrupt controller used.
--
--- clocks: must include clock specifiers corresponding to entries in the
--		clock-names property.
--
--- clock-names: Must contain
--		aclk_vop: for ddr buffer transfer.
--		hclk_vop: for ahb bus to R/W the phy regs.
--		dclk_vop: pixel clock.
--
--- resets: Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names: Must include the following entries:
--  - axi
--  - ahb
--  - dclk
--
--- iommus: required a iommu node
--
--- port: A port node with endpoint definitions as defined in
--  Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--SoC specific DT entry:
--	vopb: vopb@ff930000 {
--		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
--		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
--		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
--		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
--		reset-names = "axi", "ahb", "dclk";
--		iommus = <&vopb_mmu>;
--		vopb_out: port {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			vopb_out_edp: endpoint@0 {
--				reg = <0>;
--				remote-endpoint=<&edp_in_vopb>;
--			};
--			vopb_out_hdmi: endpoint@1 {
--				reg = <1>;
--				remote-endpoint=<&hdmi_in_vopb>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-new file mode 100644
-index 000000000..cb88849f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip-vop.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip soc display controller (VOP)
-+
-+description:
-+  VOP (Visual Output Processor) is the Display Controller for the Rockchip
-+  series of SoCs which transfers the image data from a video memory
-+  buffer to an external LCD interface.
-+
-+maintainers:
-+  - Sandy Huang <hjc@rock-chips.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,px30-vop-big
-+      - const: rockchip,px30-vop-lit
-+      - const: rockchip,rk3036-vop
-+      - const: rockchip,rk3066-vop
-+      - const: rockchip,rk3126-vop
-+      - const: rockchip,rk3188-vop
-+      - const: rockchip,rk3228-vop
-+      - const: rockchip,rk3288-vop
-+      - const: rockchip,rk3328-vop
-+      - const: rockchip,rk3366-vop
-+      - const: rockchip,rk3368-vop
-+      - const: rockchip,rk3399-vop-big
-+      - const: rockchip,rk3399-vop-lit
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description:
-+          Must contain one entry corresponding to the base address and length
-+          of the register space.
-+      - description:
-+          Can optionally contain a second entry corresponding to
-+          the CRTC gamma LUT address.
-+
-+  interrupts:
-+    maxItems: 1
-+    description:
-+      Should contain a list of all VOP IP block interrupts in the
-+      order VSYNC, LCD_SYSTEM. The interrupt specifier
-+      format depends on the interrupt controller used.
-+
-+  clocks:
-+    items:
-+      - description: Clock for ddr buffer transfer.
-+      - description: Pixel clock.
-+      - description: Clock for the ahb bus to R/W the phy regs.
-+
-+  clock-names:
-+    items:
-+      - const: aclk_vop
-+      - const: dclk_vop
-+      - const: hclk_vop
-+
-+  resets:
-+    minItems: 3
-+    maxItems: 3
-+
-+  reset-names:
-+    items:
-+      - const: axi
-+      - const: ahb
-+      - const: dclk
-+
-+  port:
-+    type: object
-+    description:
-+      A port node with endpoint definitions as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+  iommus:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3288-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    vopb: vopb@ff930000 {
-+      compatible = "rockchip,rk3288-vop";
-+      reg = <0x0 0xff930000 0x0 0x19c>,
-+            <0x0 0xff931000 0x0 0x1000>;
-+      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru ACLK_VOP0>,
-+               <&cru DCLK_VOP0>,
-+               <&cru HCLK_VOP0>;
-+      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+      resets = <&cru SRST_LCDC1_AXI>,
-+               <&cru SRST_LCDC1_AHB>,
-+               <&cru SRST_LCDC1_DCLK>;
-+      reset-names = "axi", "ahb", "dclk";
-+      iommus = <&vopb_mmu>;
-+      vopb_out: port {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        vopb_out_edp: endpoint@0 {
-+          reg = <0>;
-+          remote-endpoint=<&edp_in_vopb>;
-+        };
-+        vopb_out_hdmi: endpoint@1 {
-+          reg = <1>;
-+          remote-endpoint=<&hdmi_in_vopb>;
-+        };
-+      };
-+    };
--- 
-2.11.0
+SGksIEVucmljOg0KDQpPbiBXZWQsIDIwMjAtMDMtMTEgYXQgMTI6NTYgKzAxMDAsIEVucmljIEJh
+bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IEZyb206IE1hdHRoaWFzIEJydWdnZXIgPG1icnVnZ2Vy
+QHN1c2UuY29tPg0KPiANCj4gVGhlcmUgaXMgbm8gc3Ryb25nIHJlYXNvbiBmb3IgdGhpcyB0byB1
+c2UgQ0xLX09GX0RFQ0xBUkUgaW5zdGVhZCBvZg0KPiBiZWluZyBhIHBsYXRmb3JtIGRyaXZlci4g
+UGx1cywgTU1TWVMgcHJvdmlkZXMgY2xvY2tzIGJ1dCBhbHNvIGEgc2hhcmVkDQo+IHJlZ2lzdGVy
+IHNwYWNlIGZvciB0aGUgbWVkaWF0ZWstZHJtIGFuZCB0aGUgbWVkaWF0ZWstbWRwDQo+IGRyaXZl
+ci4gU28gbW92ZSB0aGUgTU1TWVMgY2xvY2tzIHRvIGEgbmV3IHBsYXRmb3JtIGRyaXZlciBhbmQg
+YWxzbw0KPiBjcmVhdGUgYSBuZXcgTU1TWVMgcGxhdGZvcm0gZHJpdmVyIGluIGRyaXZlcnMvc29j
+L21lZGlhdGVrIHRoYXQNCj4gaW5zdGFudGlhdGVzIHRoZSBjbG9jayBkcml2ZXIuDQo+IA0KDQpS
+ZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiBTaWduZWQtb2ZmLWJ5
+OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTog
+RW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4NCj4g
+LS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYxMToNCj4gLSBMZWF2ZSB0aGUgY2xvY2tzIHBhcnQgaW4g
+ZHJpdmVycy9jbGsgKGNsay1tdDgxNzMtbW0pDQo+IC0gSW5zdGFudGlhdGUgdGhlIGNsb2NrIGRy
+aXZlciBmcm9tIHRoZSBtdGstbW1zeXMgZHJpdmVyLg0KPiAtIEFkZCBkZWZhdWx0IGNvbmZpZyBv
+cHRpb24gdG8gbm90IGJyZWFrIGFueXRoaW5nLg0KPiAtIFJlbW92ZWQgdGhlIFJldmlld2VkLWJ5
+IENLIHRhZyBhcyBjaGFuZ2VkIHRoZSBvcmdhbml6YXRpb24uDQo+IA0KPiBDaGFuZ2VzIGluIHYx
+MDoNCj4gLSBSZW5hbWVkIHRvIGJlIGdlbmVyaWMgbXRrLW1tc3lzDQo+IC0gQWRkIGRyaXZlciBk
+YXRhIHN1cHBvcnQgdG8gYmUgYWJsZSB0byBzdXBwb3J0IGRpZmVyZW50IFNvQ3MNCj4gDQo+IENo
+YW5nZXMgaW4gdjk6DQo+IC0gTW92ZSBtbXN5cyB0byBkcml2ZXJzL3NvYy9tZWRpYXRlayAoQ0sp
+DQo+IA0KPiBDaGFuZ2VzIGluIHY4Og0KPiAtIEJlIGEgYnVpbHRpbl9wbGF0Zm9ybV9kcml2ZXIg
+bGlrZSBvdGhlciBtZWRpYXRlayBtbXN5cyBkcml2ZXJzLg0KPiANCj4gQ2hhbmdlcyBpbiB2NzoN
+Cj4gLSBGcmVlIGNsa19kYXRhLT5jbGtzIGFzIHdlbGwNCj4gLSBHZXQgcmlkIG9mIHByaXZhdGUg
+ZGF0YSBzdHJ1Y3R1cmUNCj4gDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9LY29uZmlnICAgICAg
+ICAgfCAgIDcgKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL01ha2VmaWxlICAgICAgICB8ICAg
+MSArDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTczLW1tLmMgfCAxNDYgKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTcz
+LmMgICAgfCAxMDQgLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+S2NvbmZpZyAgICAgICAgIHwgICA4ICsrDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmls
+ZSAgICAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMgICAg
+IHwgIDUwICsrKysrKysrKw0KPiAgNyBmaWxlcyBjaGFuZ2VkLCAyMTMgaW5zZXJ0aW9ucygrKSwg
+MTA0IGRlbGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlh
+dGVrL2Nsay1tdDgxNzMtbW0uYw0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1tbXN5cy5jDQo+IA0KDQo+ICBvYmotJChDT05GSUdfQ09NTU9OX0NMS19NVDgx
+ODNfQ0FNU1lTKSArPSBjbGstbXQ4MTgzLWNhbS5vDQoNCg0K
 
