@@ -6,87 +6,136 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E209C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2CCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E651C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2C32082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgCKMkJ (ORCPT
+        id S1729422AbgCKMlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:40:09 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:23511 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729383AbgCKMkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:40:08 -0400
-X-IronPort-AV: E=Sophos;i="5.70,540,1574092800"; 
-   d="scan'208";a="86170022"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 11 Mar 2020 20:39:37 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id E669850A9980;
-        Wed, 11 Mar 2020 20:29:38 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Wed, 11 Mar 2020 20:39:35 +0800
-Subject: Re: Is this code chunk in init_apic_mappings() superfluous?
-To:     Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-References: <978293b9-8e9f-55f6-6ec4-e2d66c4db0de@cn.fujitsu.com>
- <87imjg9zgp.fsf@nanos.tec.linutronix.de>
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-Message-ID: <3859d094-676d-7e17-0655-9d0091a0d47c@cn.fujitsu.com>
-Date:   Wed, 11 Mar 2020 20:39:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Mar 2020 08:41:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:49196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729317AbgCKMlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:41:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F3091FB;
+        Wed, 11 Mar 2020 05:41:00 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7CEC3F6CF;
+        Wed, 11 Mar 2020 05:40:58 -0700 (PDT)
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        qperret@google.com, linux-pm@vger.kernel.org
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <c49ca012-bb3e-580d-9b45-359caa67d7c1@arm.com>
+ <20200210132133.GH14897@hirez.programming.kicks-ass.net>
+ <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
+ <20200214133708.GM14879@hirez.programming.kicks-ass.net>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <e3355173-9e3d-0207-8656-005537f4c64f@arm.com>
+Date:   Wed, 11 Mar 2020 12:40:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <87imjg9zgp.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200214133708.GM14879@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB-large
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: E669850A9980.A881E
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/7/20 7:27 PM, Thomas Gleixner wrote:
-> Cao jin <caoj.fnst@cn.fujitsu.com> writes:
->> Hi,
->>
->> I am trying to figure the following code chunk out:
->>
->> 	if (x2apic_mode) {
->> 		boot_cpu_physical_apicid = read_apic_id();
->> 		return;
->> 	}
->>
->> As my understanding, even in x2APIC mode, boot_cpu_physical_apicid is
->> also got via early_acpi_process_madt --> ... --> register_lapic_address,
->> so, is it for any corner case I am not aware?
+
+
+On 2/14/20 1:37 PM, Peter Zijlstra wrote:
+> On Thu, Feb 13, 2020 at 05:49:48PM +0000, Douglas Raillard wrote:
 > 
-> The case when there are neither ACPI nor valid mptables. Unlikely, but
-> possible in theory.
+>>> description of it all somewhere.
+>>
+>> Now a textual version of it:
+>>
+>> em_pd_get_higher_freq() does the following:
+>>
+>> # Turn the abstract cost margin on the EM_COST_MARGIN_SCALE into a
+>> # concrete value. cost_margin=EM_COST_MARGIN_SCALE will give a concrete
+>> # value of "max_cost", which is the highest OPP on that CPU.
+>> concrete_margin = (cost_margin * max_cost) / EM_COST_MARGIN_SCALE;
+>>
+>> # Then it finds the lowest OPP satisfying min_freq:
+>> min_opp = OPP_AT_FREQ(min_freq)
+>>
+>> # It takes the cost associated, and finds the highest OPP that has a
+>> # cost lower than that:
+>> max_cost = COST_OF(min_opp) + concrete_margin
+>>
+>> final_freq = MAX(
+>> 	FREQ_OF(opp)
+>> 	for opp in available_opps
+>> 	if COST_OF(opp) <= max_cost
+>> )
 > 
+> Right; I got that.
+> 
+>> So this means that:
+>>    util - util_est_enqueued ~= 0
+> 
+> Only if you assume the task will get scheduled out reasonably frequent.
+> 
+>> => cost_margin              ~= 0
+>> => concrete_cost_margin     ~= 0
+>> => max_cost   = COST_OF(min_opp) + 0
+>> => final_freq = FREQ_OF(min_opp)
+>>
+>> The effective boost is ~0, so you will get the current behaviour of
+>> schedutil.
+> 
+> But the argument holds; because if things don't get scheduled out, we'll
+> peg u = 1 and hit f = 1 and all is well anyway.
+> 
+> Which is a useful property; it shows that in the steady state, this
+> patch-set is a NOP, but the above argument only relies on 'util_avg >
+> util_est' being used a trigger.
 
-I noticed this case in its calling comments, but failed to associate it
-with a x2APIC...
+Yes, `util_avg > util_est` can only happen when the task's duty cycle is
+changing, which does not happen at steady state.
 
-So init_apic_mapping() is for 2 corner cases that doesn't map APIC
-register before: one you mentioned here, and MP default configuration
-the other.
+Either it's periodic and the boost is legitimate, or it's not periodic
+and we assume it's a periodic task well represented by its last
+activation and sleep (for the purpose of boosting).
 
-Thanks Thomas.
+Tasks with a high variability in their activation durations (i.e. not
+periodic at all) will likely get more boosting on average, which is
+probably good since we can't predict much about them, so in doubt we
+tilt the behaviour of schedutil toward racing to completion.
 
--- 
-Sincerely,
-Cao jin
+>> If the task starts needing more cycles than during its previous period,
+>> `util - util_est_enqueued` will grow like util since util_est_enqueued
+>> is constant. The longer we wait, the higher the boost, until the task
+>> goes to sleep again.
+>>
+>> At next wakeup, util_est_enqueued has caught up and either:
+>> 1) util becomes stable, so no more boosting
+>> 2) util keeps increasing, so go for another round of boosting
+> 
+> Agreed; however elsewhere you wrote:
+> 
+>> 1) If you care more about predictable battery life (or energy bill) than
+>> predictability of the boost feature, EM should be used.
+>>
+>> 2) If you don't have an EM or you care more about having a predictable
+>> boost for a given workload, use util (or disable that boost).
+> 
+> This is the part I'm still not sure about; how do the specifics of the
+> cost_margin setup lead to 1), or how would some frobbing with frequency
+> selection destroy that property.
 
+This should be answered by this other thread:
+https://lore.kernel.org/lkml/5d732dc1-d343-24d2-bda9-072021a510ed@arm.com/#t
 
