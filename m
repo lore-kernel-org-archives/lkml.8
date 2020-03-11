@@ -6,39 +6,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3F5C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91366C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0071C208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C666208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbgCKFHt (ORCPT
+        id S1727659AbgCKFIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:07:49 -0400
-Received: from smtprelay0041.hostedemail.com ([216.40.44.41]:52618 "EHLO
+        Wed, 11 Mar 2020 01:08:15 -0400
+Received: from smtprelay0123.hostedemail.com ([216.40.44.123]:55896 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728337AbgCKFHo (ORCPT
+        by vger.kernel.org with ESMTP id S1728345AbgCKFHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:07:44 -0400
+        Wed, 11 Mar 2020 01:07:41 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 45D6C841B;
-        Wed, 11 Mar 2020 05:07:43 +0000 (UTC)
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id E122A837F24F;
+        Wed, 11 Mar 2020 05:07:39 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fuel84_2627d25592301
-X-Filterd-Recvd-Size: 5022
+X-HE-Tag: mark80_258ebdd83b35f
+X-Filterd-Recvd-Size: 2037
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:07:42 +0000 (UTC)
+        Wed, 11 Mar 2020 05:07:37 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Ariel Elior <aelior@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-everest-linux-l2@marvell.com
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH -next 028/491] BROADCOM BNX2X 10 GIGABIT ETHERNET DRIVER: Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:42 -0700
-Message-Id: <dc611bfdc1f2f77aa7ddda8b91d12e03541ccba5.1583896349.git.joe@perches.com>
+Subject: [PATCH -next 026/491] INTEL GVT-g DRIVERS (Intel GPU Virtualization): Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:40 -0700
+Message-Id: <c80b7545125fb7e9fd40c6d4c55d720899fc8250.1583896349.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -56,115 +61,22 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c  | 14 +++++++-------
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  6 ++----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c |  4 ++--
- 3 files changed, 11 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/i915/gvt/handlers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-index 9638d65..07bc87 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-@@ -4708,14 +4708,14 @@ static void bnx2x_sync_link(struct link_params *params,
- 			LINK_STATUS_SPEED_AND_DUPLEX_MASK) {
- 		case LINK_10THD:
- 			vars->duplex = DUPLEX_HALF;
--			/* Fall thru */
-+			fallthrough;
- 		case LINK_10TFD:
- 			vars->line_speed = SPEED_10;
- 			break;
- 
- 		case LINK_100TXHD:
- 			vars->duplex = DUPLEX_HALF;
--			/* Fall thru */
-+			fallthrough;
- 		case LINK_100T4:
- 		case LINK_100TXFD:
- 			vars->line_speed = SPEED_100;
-@@ -4723,14 +4723,14 @@ static void bnx2x_sync_link(struct link_params *params,
- 
- 		case LINK_1000THD:
- 			vars->duplex = DUPLEX_HALF;
--			/* Fall thru */
-+			fallthrough;
- 		case LINK_1000TFD:
- 			vars->line_speed = SPEED_1000;
- 			break;
- 
- 		case LINK_2500THD:
- 			vars->duplex = DUPLEX_HALF;
--			/* Fall thru */
-+			fallthrough;
- 		case LINK_2500TFD:
- 			vars->line_speed = SPEED_2500;
- 			break;
-@@ -6335,7 +6335,7 @@ int bnx2x_set_led(struct link_params *params,
- 		 */
- 		if (!vars->link_up)
- 			break;
+diff --git a/drivers/gpu/drm/i915/gvt/handlers.c b/drivers/gpu/drm/i915/gvt/handlers.c
+index 1793f69..0e792f9 100644
+--- a/drivers/gpu/drm/i915/gvt/handlers.c
++++ b/drivers/gpu/drm/i915/gvt/handlers.c
+@@ -1225,7 +1225,7 @@ static int handle_g2v_notification(struct intel_vgpu *vgpu, int notification)
+ 	switch (notification) {
+ 	case VGT_G2V_PPGTT_L3_PAGE_TABLE_CREATE:
+ 		root_entry_type = GTT_TYPE_PPGTT_ROOT_L3_ENTRY;
 -		/* fall through */
 +		fallthrough;
- 	case LED_MODE_ON:
- 		if (((params->phy[EXT_PHY1].type ==
- 			  PORT_HW_CFG_XGXS_EXT_PHY_TYPE_BCM8727) ||
-@@ -12503,13 +12503,13 @@ static void bnx2x_phy_def_cfg(struct link_params *params,
- 	switch (link_config  & PORT_FEATURE_LINK_SPEED_MASK) {
- 	case PORT_FEATURE_LINK_SPEED_10M_HALF:
- 		phy->req_duplex = DUPLEX_HALF;
--		/* fall through */
-+		fallthrough;
- 	case PORT_FEATURE_LINK_SPEED_10M_FULL:
- 		phy->req_line_speed = SPEED_10;
- 		break;
- 	case PORT_FEATURE_LINK_SPEED_100M_HALF:
- 		phy->req_duplex = DUPLEX_HALF;
--		/* fall through */
-+		fallthrough;
- 	case PORT_FEATURE_LINK_SPEED_100M_FULL:
- 		phy->req_line_speed = SPEED_100;
- 		break;
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index db5107e7..d0580d 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -8583,12 +8583,10 @@ int bnx2x_set_int_mode(struct bnx2x *bp)
- 		BNX2X_DEV_INFO("Failed to enable multiple MSI-X (%d), set number of queues to %d\n",
- 			       bp->num_queues,
- 			       1 + bp->num_cnic_queues);
--
--		/* fall through */
-+		fallthrough;
- 	case BNX2X_INT_MODE_MSI:
- 		bnx2x_enable_msi(bp);
--
--		/* fall through */
-+		fallthrough;
- 	case BNX2X_INT_MODE_INTX:
- 		bp->num_ethernet_queues = 1;
- 		bp->num_queues = bp->num_ethernet_queues + bp->num_cnic_queues;
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-index 5097a44..eeaeb9 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-@@ -1830,7 +1830,7 @@ int bnx2x_iov_eq_sp_event(struct bnx2x *bp, union event_ring_elem *elem)
- 		DP(BNX2X_MSG_IOV, "got VF [%d:%d] RSS update ramrod\n",
- 		   vf->abs_vfid, qidx);
- 		bnx2x_vf_handle_rss_update_eqe(bp, vf);
--		/* fall through */
-+		fallthrough;
- 	case EVENT_RING_OPCODE_VF_FLR:
- 		/* Do nothing for now */
- 		return 0;
-@@ -2228,7 +2228,7 @@ int bnx2x_vf_free(struct bnx2x *bp, struct bnx2x_virtf *vf)
- 		rc = bnx2x_vf_close(bp, vf);
- 		if (rc)
- 			goto op_err;
--		/* Fall through - to release resources */
-+		fallthrough;	/* to release resources */
- 	case VF_ACQUIRED:
- 		DP(BNX2X_MSG_IOV, "about to free resources\n");
- 		bnx2x_vf_free_resc(bp, vf);
+ 	case VGT_G2V_PPGTT_L4_PAGE_TABLE_CREATE:
+ 		mm = intel_vgpu_get_ppgtt_mm(vgpu, root_entry_type, pdps);
+ 		return PTR_ERR_OR_ZERO(mm);
 -- 
 2.24.0
 
