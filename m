@@ -2,158 +2,105 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150DAC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4221C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCD120578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lydMUqD/"
+	by mail.kernel.org (Postfix) with ESMTP id 9E89520578
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583954126;
+	bh=tWjtrN3EYxtPfMBnQ+JyIm5gSDI020THAazkKUZAa4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MGQ8UC9tQ1CpNUJyUhMN7e88ksowHouZ+KQfDdIVLaZg5DkwV3n+XPGGWXJ3GO08g
+	 dXcv5F+/tLZlPcFle01qnwh7Qc+5polGmDxApxjfkQH1v3xhi6EMog1GWigvCNyTw9
+	 LonVaMwU/3yHLLhr68CKUQbc4dW/JvRThJVFMpfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731295AbgCKTPS (ORCPT
+        id S1731309AbgCKTPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:15:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38933 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731279AbgCKTPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:15:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r15so4126528wrx.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7bRjcqFkN2E/+4KIrK48jV+JLqx1FghcnIorb93T/eA=;
-        b=lydMUqD/qQqb4NmEt19y3aDFglH7QjMpDZK4mSJnhH8fBLFNA0WVXA53okYhiBBk4L
-         +EEJIE8SGvoBIABALTjx0NyYQV1iKWEBlnFVU/bia9DhSi/mQmXrHHwffILepWEwsdzd
-         uevzMDFNOC8qV3GFBCs/fKtphnd2fuwV/QKcR3wY3S67pJBfG9jDVVc2mkVdS/4zAd6k
-         xl7GI+Br2jiA7sZi1Kdo03MOCWbRKVdygHLYVjY2Wb6FUatpXClFSKqsu/hc3S23BxaE
-         B/m+fugry0/oN0sZWsWmuF9j6NWF1lfrAj20p3aczRGDAnAVxhQSDQzx+yXYgK3OYXns
-         Ln9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7bRjcqFkN2E/+4KIrK48jV+JLqx1FghcnIorb93T/eA=;
-        b=mMRJdTzp9qb3tfFOcYuvvsfExwia1z+XDMJfbwv9QwhvGrk9PkZVwJDkjZFawqkOyr
-         v8t0Am/7MAS34q6qpmKiIq1M1vP24/Ui5QNpqpACqIVon4ONlKuM6xAeQApw3nGwa1Ny
-         ic4Fb6NBENQy54J2GP5YqX/O14PAymqgyy+LOvrJOrGmptxyu00YTuKpAnC8tz9Un/EX
-         WLgdF6FizZuOUKJFi/0oLKS0IVVXb5nLrhs1U/JgIuFJCIGwq4aGi5DrpywzHVauCRua
-         gJvhZfirIoiZoL+7CFJz8ywxRGQ43TcNh0o1F6avhV0uWKsYj2jNYYhvy0OLJO58zTsK
-         vQPg==
-X-Gm-Message-State: ANhLgQ3l9GcjEh8LbGWvEUw1D7Skeo3EfPUDm52TO19a9tRfXbZW0+Yl
-        YsqDm8vddyAz0FOq+h3WrcCrug==
-X-Google-Smtp-Source: ADFU+vtvAOkVEpVHj6kBiwJ5k7QJBkvLfgLVjEBQpl2Hx3I0Gy9j8faRiHWcgsgTVtDYnMGAAfxWEg==
-X-Received: by 2002:adf:f504:: with SMTP id q4mr5772708wro.28.1583954109743;
-        Wed, 11 Mar 2020 12:15:09 -0700 (PDT)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id c85sm9687437wmd.48.2020.03.11.12.15.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:15:09 -0700 (PDT)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-usb@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org, robh@kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 6/6] arm64: dts: qcom: qcs404-evb: Enable USB controllers
-Date:   Wed, 11 Mar 2020 19:15:17 +0000
-Message-Id: <20200311191517.8221-7-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200311191517.8221-1-bryan.odonoghue@linaro.org>
-References: <20200311191517.8221-1-bryan.odonoghue@linaro.org>
+        Wed, 11 Mar 2020 15:15:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:53884 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731297AbgCKTPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:15:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E81C21FB;
+        Wed, 11 Mar 2020 12:15:21 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02A0A3F534;
+        Wed, 11 Mar 2020 12:15:21 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 19:15:19 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Richard Henderson <richard.henderson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu" <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v8 00/11] arm64: Branch Target Identification support
+Message-ID: <20200311191519.GK5411@sirena.org.uk>
+References: <20200227174417.23722-1-broonie@kernel.org>
+ <562edd23-9d86-800e-aae3-e54c92601929@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mGCtrYeZ202LI9ZG"
+Content-Disposition: inline
+In-Reply-To: <562edd23-9d86-800e-aae3-e54c92601929@linaro.org>
+X-Cookie: I'm a Lisp variable -- bind me!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables the primary and secondary USB controllers on the
-qcs404-evb.
 
-Primary:
-The primary USB controller has
+--mGCtrYeZ202LI9ZG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- One USB3 SS PHY using gpio-usb-conn
-- One USB2 HS PHY in device mode only and no connector driver
-  associated.
+On Thu, Feb 27, 2020 at 05:35:39PM -0800, Richard Henderson wrote:
+> On 2/27/20 9:44 AM, Mark Brown wrote:
+> >  * Binutils trunk supports the new ELF note, but this wasn't in a release
+> >    the last time I posted this series.  (The situation _might_ have changed
+> >    in the meantime...)
 
-Secondary:
-The second DWC3 controller which has one USB Hi-Speed PHY attached to it.
+> I believe this support is in binutils 2.32.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 40 ++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+It looks like it's actually 2.33 but either way it's in a release,
+thanks for prompting me to check.  I've updated this for v9.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 44c7dda1e1fc..4dc3f45282fe 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -319,6 +319,46 @@ pinconf {
- 	};
- };
- 
-+&usb2 {
-+	status = "okay";
-+};
-+
-+&usb2_phy_sec {
-+	vdd-supply = <&vreg_l4_1p2>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	vdda3p3-supply = <&vreg_l12_3p3>;
-+	status = "okay";
-+};
-+
-+&usb3 {
-+	status = "okay";
-+	dwc3@7580000 {
-+		usb-role-switch;
-+		usb_con: connector {
-+			compatible = "gpio-usb-b-connector";
-+			label = "USB-C";
-+			id-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-+			vbus-supply = <&usb3_vbus_reg>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&usb2_phy_prim {
-+	vdd-supply = <&vreg_l4_1p2>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	vdda3p3-supply = <&vreg_l12_3p3>;
-+	status = "okay";
-+};
-+
-+&usb3_phy {
-+	vdd-supply = <&vreg_l3_1p05>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	status = "okay";
-+};
-+
- &wifi {
- 	status = "okay";
- 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
--- 
-2.25.1
+--mGCtrYeZ202LI9ZG
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5pOMYACgkQJNaLcl1U
+h9AOkgf/SY/gSI7QW/Lbe29z6/u9w1lrepP1itRV8ICgiWASwxjzBxEUDfHMgTsV
+Ng7Lx+w79lkeoWKj1id3jmu9SXG8pAmKiBpnc/iGNpkUs1evKFp2XyaqMLl5w1mO
+DaNzX4HwWOKK6mjLXS1ferTsYgP0h0SnrJpODS/3HbvD6Txoi8b/m+XvAqiKrJi9
+UiPK06ESXjNibgAx2JUDWtuKumjSFWEEGXDx2q6lCI06ZEvBIdkSK5aB0yJwYJqc
+k60lhGcyCoMK6T9zNOCutbhZbQpGMlr+GInkEjkuuf/xo6SLfmuZx5hiFJHAumim
+NrgBSedG1UXpaC5rINKAgEc2IacPkQ==
+=4P3c
+-----END PGP SIGNATURE-----
+
+--mGCtrYeZ202LI9ZG--
