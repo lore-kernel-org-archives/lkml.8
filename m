@@ -2,127 +2,101 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AFFC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08847C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401F120727
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01B2222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHPHEWna"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WG4E40h5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgCKBPS (ORCPT
+        id S1727936AbgCKBPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:15:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38600 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCKBPR (ORCPT
+        Tue, 10 Mar 2020 21:15:22 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52442 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727841AbgCKBPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:15:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x7so243896pgh.5;
-        Tue, 10 Mar 2020 18:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A15QzXUJHdqLavarexM8lDiWIzTL32zBjxHi4bfoIu8=;
-        b=HHPHEWnasrSuhZ8msIcJIPDRSICT44TWWhYK8cJGNTRWWBf94u/wtX38qcyBqutfS5
-         WOdog+lPUs1WJDgz0SmMdX3AQEH4RLcwgw/NUq01wuxZ4TOrP49hHqeL9cPp4/958eKP
-         i4whc2JJiXiUve3HK2luPZqgs4l7tuuvXYljmQaB60rrBaRgp8o6MkaB44mQUzCZXPLa
-         JXJFtd7FLhSnBjqqfaRtp2KKO/LW8NwHr3me7RDfa9fw71KE90sNXE93P22GiMTq03Re
-         9FHDvboOofWP8NCTVJ+1ypUcfyNpO33eLQwz7GVtHNBhhFo7ytBibyoG6XppN6z4Atsc
-         IJEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A15QzXUJHdqLavarexM8lDiWIzTL32zBjxHi4bfoIu8=;
-        b=eCl7aAi4TRsTIeMIIbeGbUe0scYWYN/IamT/QyeTSqF4pq2hD2XvMZvctDPNjTj5b4
-         muYYu5vZ2nZFXyWadclD/J1gGd4bl9o65EWtyZwFqob5SWLZDSEBDNZjv4Mu8XdCvzUI
-         /gblZMLnrbULdyslxt5n3GBHKYnAhSK4kVdTEehfGshBhThNMEsM/t575cD/S7cJ0+NQ
-         1+GJ2khSjyH+WOv0Ki/DA9XI0mSfuniQ2oOz9BvL+4jngYaoYcMX2VsewRw3NL3Lwwxl
-         9V+HRdOonx92uf05UTAZo50wDRHPEjSEorLkV5P5sOm5OZGNtX36kGmWEyZ4scJgL0ym
-         YHTA==
-X-Gm-Message-State: ANhLgQ1xPXzwoYKFo+WiO4qalfACYQh81dTv4CdbeR5Y/UHfmOsV7mA8
-        UPc8QfgJS8cemfRz7EKRtAs=
-X-Google-Smtp-Source: ADFU+vvTiR+oyqn7Ggieg9DuI8wHNgO3nLYJEnq5YcGX1uIe8op9GCGagh/UxDFE4jYVmUoXH/8ozQ==
-X-Received: by 2002:aa7:87ca:: with SMTP id i10mr315625pfo.169.1583889315740;
-        Tue, 10 Mar 2020 18:15:15 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id k24sm46896103pgf.59.2020.03.10.18.15.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 18:15:14 -0700 (PDT)
-Subject: Re: [PATCH 2/8] raw: Add missing annotations to raw_seq_start() and
- raw_seq_stop()
-To:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-References: <0/8> <20200311010908.42366-1-jbi.octave@gmail.com>
- <20200311010908.42366-3-jbi.octave@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <af9016d1-c224-ea61-3290-330ed0fe8d60@gmail.com>
-Date:   Tue, 10 Mar 2020 18:15:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 10 Mar 2020 21:15:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583889316;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XHNqNcapHNYcvUWYaYS5wNa5BPRKhXutIKImD0HOT6s=;
+        b=WG4E40h5GFMzS8vYWmUpGrQI2ekCZ+wVV8N3ys5UiUbpFuCCqGYiMFAeQ2Gc3ltkihoSus
+        c2lvhhVu6UHSpBBT7ycgdF0oH2c0gyg4ynzY9eT0BWauqs/tsWD2NeA8D6DQVcroTFkV2e
+        0tO5Fr0YGsbFczWf9xFPhV++Gw/KcOw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-fGbS7vi4Pl-Tlw9EUtWfxw-1; Tue, 10 Mar 2020 21:15:15 -0400
+X-MC-Unique: fGbS7vi4Pl-Tlw9EUtWfxw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E469B13F6;
+        Wed, 11 Mar 2020 01:15:13 +0000 (UTC)
+Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2257C909FA;
+        Wed, 11 Mar 2020 01:15:12 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 09:15:10 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, x86@kernel.org
+Subject: Re: [PATCH] x86/mm: Remove the redundant conditional check
+Message-ID: <20200311011510.GH27711@MiWiFi-R3L-srv>
+References: <20200308013511.12792-1-bhe@redhat.com>
+ <20200310101044.GE8447@dhcp22.suse.cz>
+ <20200310142341.GG27711@MiWiFi-R3L-srv>
+ <20200310143240.GL8447@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200311010908.42366-3-jbi.octave@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310143240.GL8447@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/10/20 at 03:32pm, Michal Hocko wrote:
+> On Tue 10-03-20 22:23:41, Baoquan He wrote:
+> > On 03/10/20 at 11:10am, Michal Hocko wrote:
+> > > On Sun 08-03-20 09:35:11, Baoquan He wrote:
+> > > > In commit f70029bbaacbfa8f0 ("mm, memory_hotplug: drop CONFIG_MOVABLE_NODE"),
+> > > > the dependency on CONFIG_MOVABLE_NODE was removed for N_MEMORY, so the
+> > > > conditional check in paging_init() doesn't make any sense any more.
+> > > > Remove it.
+> > > 
+> > > Please expand more. I would really have to refresh the intention of the
+> > > code but from a quick look at the code CONFIG_HIGHMEM still makes
+> > > N_MEMORY != N_NORMAL_MEMORY. So what what does this change mean for that
+> > > config?
+> > 
+> > Thanks for looking into this. I was trying to explain that
+> > CONFIG_MOVABLE_NODE made N_MEMORY have chance to take different enum
+> > value.
+> >  
+> > Do you think the below saying is OK to you?
+> >  
+> > ~~~
+> > In commit f70029bbaacb ("mm, memory_hotplug: drop CONFIG_MOVABLE_NODE"),
+> > the dependency on CONFIG_MOVABLE_NODE was removed for N_MEMORY.  Before
+> > commit f70029bbaacb, CONFIG_HIGHMEM && !CONFIG_MOVABLE_NODE could make
+> > (N_MEMORY == N_NORMAL_MEMORY) be true. After commit f70029bbaacb, N_MEMORY
+> > doesn't have any chance to be equal to N_NORMAL_MEMORY. So the  conditional
+> > check in paging_init() doesn't make any sense any more. Let's remove it.
+> 
+> Yes this describes the matter much better. I have obviously misread the
+> code when looking at it this morning. Being explicit in the changelog
+> would have helped at least me. Thanks!
 
+Will update log and repost, thanks.
 
-On 3/10/20 6:09 PM, Jules Irenge wrote:
-> Sparse reports warnings at raw_seq_start() and raw_seq_stop()
-> 
-> warning: context imbalance in raw_seq_start() - wrong count at exit
-> warning: context imbalance in raw_seq_stop() - unexpected unlock
-> 
-> The root cause is the missing annotations at raw_seq_start()
-> 	and raw_seq_stop()
-> Add the missing __acquires(&h->lock) annotation
-> Add the missing __releases(&h->lock) annotation
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  net/ipv4/raw.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
-> index 3183413ebc6c..47665919048f 100644
-> --- a/net/ipv4/raw.c
-> +++ b/net/ipv4/raw.c
-> @@ -1034,6 +1034,7 @@ static struct sock *raw_get_idx(struct seq_file *seq, loff_t pos)
->  }
->  
->  void *raw_seq_start(struct seq_file *seq, loff_t *pos)
-> +	__acquires(&h->lock)
-
-I dunno, h variable is not yet defined/declared at this point,
-this looks weird.
-
->  {
->  	struct raw_hashinfo *h = PDE_DATA(file_inode(seq->file));
->  
-> @@ -1056,6 +1057,7 @@ void *raw_seq_next(struct seq_file *seq, void *v, loff_t *pos)
->  EXPORT_SYMBOL_GPL(raw_seq_next);
->  
->  void raw_seq_stop(struct seq_file *seq, void *v)
-> +	__releases(&h->lock)
->  {
->  	struct raw_hashinfo *h = PDE_DATA(file_inode(seq->file));
->  
-> 
