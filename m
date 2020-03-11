@@ -2,144 +2,98 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E87C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0E2C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC962082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QAlhgRn1"
+	by mail.kernel.org (Postfix) with ESMTP id 474832082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgCKIL2 (ORCPT
+        id S1728461AbgCKIOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:11:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46615 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726198AbgCKIL1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:11:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583914286;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mclFMWusgTyOtMcXNsfUg9sVqxkjUF7Bq9avEjcdG/I=;
-        b=QAlhgRn1m8LI6avl4qT+oMSftsWS8txCzkBiOOX9P4bxj7lOg2NvyhRyp5+CkM2POdcAbb
-        PaWTtlAuTqiYCbSRXMC7FJM/2ZtY2py59elONVcQvS/FBp+sFYQ01DvK7VRKIshBZmiid+
-        eVMNJtUTVqD/1ofeVovtPQPahQJ8o4c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-sWznBkZzPgyeEBOnUFWxYg-1; Wed, 11 Mar 2020 04:11:22 -0400
-X-MC-Unique: sWznBkZzPgyeEBOnUFWxYg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 980BC107ACC4;
-        Wed, 11 Mar 2020 08:11:20 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1E6610372C5;
-        Wed, 11 Mar 2020 08:11:06 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 16:10:59 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        hare@suse.de, bvanassche@acm.org, hch@infradead.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [PATCH RFC v2 12/24] hpsa: use reserved commands
-Message-ID: <20200311081059.GC31504@ming.t460p>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-13-git-send-email-john.garry@huawei.com>
+        Wed, 11 Mar 2020 04:14:52 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11849 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgCKIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:14:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:14:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="236215354"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Mar 2020 01:14:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jBwVu-008gZ3-U2; Wed, 11 Mar 2020 10:14:50 +0200
+Date:   Wed, 11 Mar 2020 10:14:50 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
+ driver
+Message-ID: <20200311081450.GZ1922688@smile.fi.intel.com>
+References: <20200309160346.2203680-1-t.schramm@manjaro.org>
+ <20200309160346.2203680-3-t.schramm@manjaro.org>
+ <20200310101050.GG1922688@smile.fi.intel.com>
+ <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583857550-12049-13-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:25:38AM +0800, John Garry wrote:
-> From: Hannes Reinecke <hare@suse.com>
-> 
-> Enable the use of reserved commands, and drop the hand-crafted
-> command allocation.
-> 
-> Signed-off-by: Hannes Reinecke <hare@suse.com>
-> ---
->  drivers/scsi/hpsa.c | 147 ++++++++++++++------------------------------
->  drivers/scsi/hpsa.h |   1 -
->  2 files changed, 45 insertions(+), 103 deletions(-)
-> 
-> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-> index 703f824584fe..c14dd4b6e598 100644
-> --- a/drivers/scsi/hpsa.c
-> +++ b/drivers/scsi/hpsa.c
-> @@ -244,10 +244,6 @@ static struct hpsa_scsi_dev_t
->  	*hpsa_find_device_by_sas_rphy(struct ctlr_info *h,
->  		struct sas_rphy *rphy);
->  
-> -#define SCSI_CMD_BUSY ((struct scsi_cmnd *)&hpsa_cmd_busy)
-> -static const struct scsi_cmnd hpsa_cmd_busy;
-> -#define SCSI_CMD_IDLE ((struct scsi_cmnd *)&hpsa_cmd_idle)
-> -static const struct scsi_cmnd hpsa_cmd_idle;
->  static int number_of_controllers;
->  
->  static irqreturn_t do_hpsa_intr_intx(int irq, void *dev_id);
-> @@ -342,7 +338,7 @@ static inline struct ctlr_info *shost_to_hba(struct Scsi_Host *sh)
->  
->  static inline bool hpsa_is_cmd_idle(struct CommandList *c)
->  {
-> -	return c->scsi_cmd == SCSI_CMD_IDLE;
-> +	return c->scsi_cmd == NULL;
->  }
->  
->  /* extract sense key, asc, and ascq from sense data.  -1 means invalid. */
-> @@ -2445,7 +2441,12 @@ static void hpsa_cmd_resolve_events(struct ctlr_info *h,
->  	 * this command has completed.  Then, check to see if the handler is
->  	 * waiting for this command, and, if so, wake it.
->  	 */
-> -	c->scsi_cmd = SCSI_CMD_IDLE;
-> +	if (c->scsi_cmd && c->cmd_type == CMD_IOCTL_PEND) {
-> +		struct scsi_cmnd *scmd = c->scsi_cmd;
-> +
-> +		scsi_put_reserved_cmd(scmd);
-> +	}
-> +	c->scsi_cmd = NULL;
->  	mb();	/* Declare command idle before checking for pending events. */
->  	if (dev) {
->  		atomic_dec(&dev->commands_outstanding);
-> @@ -5502,7 +5503,6 @@ static void hpsa_cmd_init(struct ctlr_info *h, int index,
->  	c->ErrDesc.Addr = cpu_to_le64((u64) err_dma_handle);
->  	c->ErrDesc.Len = cpu_to_le32((u32) sizeof(*c->err_info));
->  	c->h = h;
-> -	c->scsi_cmd = SCSI_CMD_IDLE;
->  }
->  
->  static void hpsa_preinitialize_commands(struct ctlr_info *h)
-> @@ -5803,6 +5803,7 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
->  	sh->max_lun = HPSA_MAX_LUN;
->  	sh->max_id = HPSA_MAX_LUN;
->  	sh->can_queue = h->nr_cmds - HPSA_NRESERVED_CMDS;
-> +	sh->nr_reserved_cmds = HPSA_NRESERVED_CMDS;
+On Tue, Mar 10, 2020 at 07:55:42PM +0100, Tobias Schramm wrote:
 
-Now .nr_reserved_cmds has been passed to blk-mq, you need to increase
-sh->can_queue to h->nr_cmds, because .can_queue is the whole queue depth
-(include the part of reserved tags), otherwise, IO tags will be
-decreased.
+> >> +static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
+> >> +{
+> >> +	u8 reg_val[2];
+> >> +	int ret;
+> >> +
+> >> +	ret = regmap_raw_read(cw_bat->regmap, reg, reg_val, 2);
+> >> +	*val = (reg_val[0] << 8) + reg_val[1];
+> >> +	return ret;
+> >> +}
+> > 
+> > NIH BE type of readings? Can REGMAP_ENDIAN_BIG help?
+> 
+> Not really, or can it? Registers on the cw2015 are a wild mix of single
+> bytes and words. There does not seem to be a per register override for
+> reg_/val_bits.
 
-Not look into other drivers, I guess they need such change too.
+I see.
+Perhaps
 
-Thanks,
-Ming
+	__be16 value;
+
+
+	ret = regmap(..., (...)value, sizeof(value));
+	if (ret)
+		return ret; // note, you missed this in above.
+
+	*val = be16_to_cpu(value);
+	return 0;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
