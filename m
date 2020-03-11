@@ -2,118 +2,151 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF85C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F42B21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:08:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XKAgSNj3"
+	by mail.kernel.org (Postfix) with ESMTP id 9F7F121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgCKBIL (ORCPT
+        id S1727867AbgCKBJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:08:11 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42123 "EHLO ozlabs.org"
+        Tue, 10 Mar 2020 21:09:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:12990 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgCKBIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:08:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cYjf3Bbpz9sPJ;
-        Wed, 11 Mar 2020 12:08:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583888888;
-        bh=xL5gRERG+tXKda/H6O66oGES5jwZVd7h6GReVkqNsc0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XKAgSNj3aolnLdBSQ7axiO3n7rde7Bq9OVrapzK+DQyZESY8kqHoAjecHhVXZB5So
-         dGUqlVE1zA5Nwmj6felmbnxASi5FsKx7QyJlmX3jFLPHMZ7h10rA4ECbAbRyGd1zys
-         WNJqRsDlR8cQ8db3zBJxaIjvXs5oFGwtVT3OVJblgfIJU76ql/UoH4UW32ymjw7u+6
-         aFtnjwg+/jQ743qK7dYjwOCmDtd0vK/3Tih6TgnSiH8haA19TeOlqc9fE4lnUabBQZ
-         6gJPfKeQGLT0b+b/HFLULeh7MZPTfld0eMRgWH5bIFvvc7dwccXQobHEw/Eh8qGRoZ
-         dNDrI9pr7cMEA==
-Date:   Wed, 11 Mar 2020 12:07:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: linux-next: manual merge of the jc_docs tree with the kbuild tree
-Message-ID: <20200311120742.074ca2ff@canb.auug.org.au>
+        id S1726463AbgCKBJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 21:09:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 18:09:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,539,1574150400"; 
+   d="scan'208";a="242515528"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by orsmga003.jf.intel.com with ESMTP; 10 Mar 2020 18:09:22 -0700
+Message-ID: <7a1f93d4516a7de99c5dbc4afd6279d6fe7aa126.camel@intel.com>
+Subject: Re: [PATCH V1 09/13] selftests/resctrl: Modularize fill_buf for new
+ CAT test case
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 10 Mar 2020 18:04:34 -0700
+In-Reply-To: <4c84be1d-8839-2c85-b294-7e3c454240bb@intel.com>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <43b368952bb006ee973311d9c9ae0eb53d8e7f60.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <4c84be1d-8839-2c85-b294-7e3c454240bb@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+DiTLaWpe0SVmX41DLPgh_l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+DiTLaWpe0SVmX41DLPgh_l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Reinette,
 
-Hi all,
+On Tue, 2020-03-10 at 14:59 -0700, Reinette Chatre wrote:
+> Hi Sai,
+> 
+> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+> > Currently fill_buf (in-built benchmark) runs as a separate process and it
+> > runs indefinitely looping around given buffer either reading it or writing
+> > to it. But, some future test cases might want to start and stop looping
+> > around the buffer as they see fit. So, modularize fill_buf to support this
+> > use case.
+> > 
+> > Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> > ---
+> >  tools/testing/selftests/resctrl/fill_buf.c | 66 ++++++++++++++++++++-----
+> > -----
+> >  1 file changed, 44 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/resctrl/fill_buf.c
+> > b/tools/testing/selftests/resctrl/fill_buf.c
+> > index 9ede7b63f059..204ae8870a32 100644
+> > --- a/tools/testing/selftests/resctrl/fill_buf.c
+> > +++ b/tools/testing/selftests/resctrl/fill_buf.c
+> > @@ -23,7 +23,7 @@
+> >  #define PAGE_SIZE		(4 * 1024)
+> >  #define MB			(1024 * 1024)
+> >  
+> > -static unsigned char *startptr;
+> > +static unsigned char *startptr, *endptr;
 
-Today's linux-next merge of the jc_docs tree got a conflict in:
+[Snipped.. assuming code over here might not be needed for discussion]
 
-  Documentation/kbuild/index.rst
+> > +static int use_buffer_forever(int op, char *resctrl_val)
+> > +{
+> > +	int ret;
+> > +
+> >  	if (op == 0)
+> > -		ret = fill_cache_read(start_ptr, end_ptr, resctrl_val);
+> > +		ret = fill_cache_read(resctrl_val);
+> >  	else
+> > -		ret = fill_cache_write(start_ptr, end_ptr, resctrl_val);
+> > +		ret = fill_cache_write(resctrl_val);
+> >  
+> >  	if (ret) {
+> >  		printf("\n Errror in fill cache read/write...\n");
+> >  		return -1;
+> >  	}
+> >  
+> > +	return 0;
+> > +}
+> > +
+> > +static int
+> > +fill_cache(unsigned long long buf_size, int malloc_and_init, int
+> > memflush,
+> > +	   int op, char *resctrl_val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = init_buffer(buf_size, malloc_and_init, memflush);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = use_buffer_forever(op, resctrl_val);
+> > +	if (ret)
+> > +		return ret;
+> 
+> Should buffer be freed on this error path?
 
-between commit:
+Yes, that's right.. my bad. Will fix it. But the right fix is,
+use_buffer_forever() should not return at all. It's meant to loop around the
+buffer _forever_.
 
-  fcf1b6a35c16 ("Documentation/llvm: add documentation on building w/ Clang=
-/LLVM")
+> I think the asymmetrical nature of the memory allocation and release
+> creates traps like this.
+> 
+> It may be less error prone to have the pointer returned by init_buffer
+> and the acted on and released within fill_cache(), passed to
+> "use_buffer_forever()" as a parameter.  The buffer size is known here,
+> there is no need to keep an "end pointer" around.
 
-from the kbuild tree and commit:
+The main reason for having "startptr" as a global variable is to free memory
+when fill_buf is killed. fill_buf runs as a separate process (for test cases
+like MBM, MBA and CQM) and when user issues Ctrl_c or when the test kills
+benchmark_pid (i.e. fill_buf), the buffer is freed (please see
+ctrl_handler()).
 
-  2b4cbd5c9505 ("docs: move gcc-plugins to the kbuild manual")
+So, I thought, as "startptr" is anyways global, why pass it around as an
+argument? While making this change I thought it's natural to make "endptr"
+global as well because the function didn't really look good to just take
+endptr as an argument without startptr.
 
-from the jc_docs tree.
+I do agree that asymmetrical nature of the memory allocation and release might
+create traps, I will try to overcome this for CAT test case (other test cases
+will not need it).
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Regards,
+Sai
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/kbuild/index.rst
-index 3882bd5f7728,82daf2efcb73..000000000000
---- a/Documentation/kbuild/index.rst
-+++ b/Documentation/kbuild/index.rst
-@@@ -19,7 -19,7 +19,8 @@@ Kernel Build Syste
- =20
-      issues
-      reproducible-builds
- +    llvm
-+     gcc-plugins
- =20
-  .. only::  subproject and html
- =20
-
---Sig_/+DiTLaWpe0SVmX41DLPgh_l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oOd4ACgkQAVBC80lX
-0GylkAf/X2jioLnGX2xfzj/Hj8inJiy66h8hEn5KoYraroxYITX0cpOEhrb3DqDV
-B3t2d81OIf682ui7vRBcLMi1jYTu5LAGSkJwaOxIdrtfo0DYPQLZvBjrPtzORI0F
-6D2UjPQ67SvTzpCGbvJPywER1zerzcHMM9BX86OeGNYPWht75kU2PSa6clQEb38d
-sKvqIHglur5qPyp8/o7s2Vsrs7lPMp+RNZWyVm22yzDT+XWhjquf8CGHDTS+9058
-VsCplAIDxPy4zCX12HU11ErLZfN1zZ93ipEdP5T1UrVj71kG+inEH7fbMt1Uzwrb
-y1BIv8184i3cE8cTxmbtUXgWP64h3w==
-=vuhw
------END PGP SIGNATURE-----
-
---Sig_/+DiTLaWpe0SVmX41DLPgh_l--
