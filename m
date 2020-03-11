@@ -2,142 +2,191 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0014C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29797C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A99820848
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DDA2192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="vPQwHgJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgCKKp6 (ORCPT
+        id S1729030AbgCKKqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:45:58 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3022 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgCKKp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:45:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 03:45:56 -0700
-X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
-   d="scan'208";a="289344053"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 03:45:54 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id A1EA82096B; Wed, 11 Mar 2020 12:45:52 +0200 (EET)
-Date:   Wed, 11 Mar 2020 12:45:52 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>
-Subject: Re: [PATCH] media: i2c: ov5695: Fix power on and off sequences
-Message-ID: <20200311104552.GK5379@paasikivi.fi.intel.com>
-References: <20191220130800.61589-1-tfiga@chromium.org>
- <20191220151939.GA19828@paasikivi.fi.intel.com>
- <CAAFQd5AvAk3D34VsC3kKqHZQY9=wHHttf6_R0orEcfWsiA2PHA@mail.gmail.com>
+        Wed, 11 Mar 2020 06:46:16 -0400
+Received: from mail-bn8nam12on2052.outbound.protection.outlook.com ([40.107.237.52]:50049
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726000AbgCKKqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:46:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n2Oc/Fla7MYHcdTjwS4Lvha+3iLDAdTsYJF1lp91LA8GEd0cuqVj4JElnOndQyDwqFZJp+1YnOaUmDjQT1KXEAeLgl+8gqe5a3jjXJ+gAQ4xkGiSlB0Gtqx6STfE0gsbgLI3Ms3EYLhinGWfAzCDGI7CSNJkI49HWRiL1NrjiwwuJKgKA2kwZHb5DEKw1Dacx5NGidxAjbXMjbw/rKETK7Ng7uhg0NbHJeW79t0bYVlv8hlQBfOPquq4Iu4job2L0yDhRCOZtoxlH/875+SMez0qwj5+bTUnjGNULM1mQDr6o1VfNEaSaxxxlq4tj2I3nIHjf3NfG36zuX/D6tRLwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7zrrZy+C/nbNfF/QoVkp0ypT1XtO38jMkqz/R2+qjc=;
+ b=jOeJgtP5G7Po6Tn61llPzCoAo0+JKq0Z08BO8nmBAB1JuV50aavR4IRB5pnTf6BEc+j+0j0eqCJCooCkErXExGyijhyAYOgKR1HxW0q9iowoHoF/nnYgKDMplVF2gNY/39lhJkjflRaLThEq6rgMeBi2POkSJ1t8b/YnlGiNbPrp+ehvm+PY0IRSIZndcfdv2Kw2QEdOUuvVGq6n3oKKV59iTfYOBNMydZqHGYDdYK6eq/JKpv+8hcjykFChhBrwGsn1aRMMNV517ZQvBuJZIGZNFgEILvDskJE9EpZtTv52X2S1s8Bcves8nQjLn4CA4A9nXE0u+cD+rceVqBvsbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7zrrZy+C/nbNfF/QoVkp0ypT1XtO38jMkqz/R2+qjc=;
+ b=vPQwHgJLYM4ujfZ36hxhjJYi89CpGSqegYL5mvNl1Bx7HcsZM/Qe0PFSr7IpqbY4CMiCBc9I2xaXyU6wLyE89vBbafZ9s8gm87f2P8SkrhZ2DGGdpnf7lr+TXh2yyOkoLipP9OJj5KWXG3SXXZOw3TshT2lHhUzi6/lS/Wjjkgc=
+Received: from MN2PR08MB6397.namprd08.prod.outlook.com (2603:10b6:208:1aa::10)
+ by MN2PR08MB6173.namprd08.prod.outlook.com (2603:10b6:208:11d::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Wed, 11 Mar
+ 2020 10:46:10 +0000
+Received: from MN2PR08MB6397.namprd08.prod.outlook.com
+ ([fe80::884a:b0f5:3cf5:f4a4]) by MN2PR08MB6397.namprd08.prod.outlook.com
+ ([fe80::884a:b0f5:3cf5:f4a4%4]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
+ 10:46:10 +0000
+From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>
+Subject: RE: [EXT] [PATCH v6 0/6] Add new series Micron SPI NAND devices
+Thread-Topic: [EXT] [PATCH v6 0/6] Add new series Micron SPI NAND devices
+Thread-Index: AQHV9gmnJCpFuJN0LkOTHmMRqJbTd6hDJ4lA
+Date:   Wed, 11 Mar 2020 10:46:10 +0000
+Message-ID: <MN2PR08MB6397D2050B70490F28AFEAABB8FC0@MN2PR08MB6397.namprd08.prod.outlook.com>
+References: <20200309115230.7207-1-sshivamurthy@micron.com>
+In-Reply-To: <20200309115230.7207-1-sshivamurthy@micron.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-rorf: true
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc3NoaXZhbXVydGh5XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctODMxNjVjYTEtNjM4NS0xMWVhLWIxZWEtOTgzYjhmNzQ1MjUxXGFtZS10ZXN0XDgzMTY1Y2EzLTYzODUtMTFlYS1iMWVhLTk4M2I4Zjc0NTI1MWJvZHkudHh0IiBzej0iMjk5OCIgdD0iMTMyMjgzOTcxNjc5NDczMjU1IiBoPSJFNWJiWU10UEh2dHVNWUg5aTZ3a3VTUWtEc0k9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUJuem01Rmt2ZlZBUmNCNitmOWV6amdGd0hyNS8xN09PQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQUlTQjI1d0FBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sshivamurthy@micron.com; 
+x-originating-ip: [165.225.86.136]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c296afdc-141e-4ef0-249e-08d7c5a9697c
+x-ms-traffictypediagnostic: MN2PR08MB6173:|MN2PR08MB6173:|MN2PR08MB6173:
+x-microsoft-antispam-prvs: <MN2PR08MB617352620B04D63325994CAEB8FC0@MN2PR08MB6173.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(346002)(136003)(199004)(8936002)(55236004)(186003)(8676002)(86362001)(71200400001)(316002)(33656002)(81156014)(81166006)(7696005)(54906003)(6506007)(2906002)(4326008)(5660300002)(66476007)(9686003)(76116006)(55016002)(66446008)(966005)(66556008)(6916009)(52536014)(66946007)(26005)(64756008)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB6173;H:MN2PR08MB6397.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HqAW16m6SRrIiNHOMKdCMA3+xXUFIp7mOA3LjWvc1eHM8MwYA3qse6tba6vp/8o2Zb9yRvqtK7mrEKiz+CeCMa4mg9sv9wCAv99WFRbddXEA5VSoknlRJH8gCZccEJUD5Xl0Y626j9nNx0Lnw7jrFPWHYT8sstYh+/zwtgWNF/zw9AbOY3WDQRiOIm8yH1vQA3uHz/SpLEgcBmk/bq5FO4+UxdyjT1srEu7sSP1oR0nlb0NE22pebtGtFGjM0X41RTR3zzJqdERaYbozUByYcZYIGrJIT6EPanUoY+85Qx8PADra3qBKeq6vZypdr3Ttk3cOjeVzoLbzzAuvsWzgZZ6q3YzpCcvzBsAVax/nUPK3ph6PW0tfkDf8OnEIptYWCLM55EAmE9X32PChN7pLY26Wuu5SrcP8ZSarqGrK7DLokbt3z5POqBy4VhfzNovhdAJ3WoOgKurmyY0jQq7VSZ2Z9PKaGbZgE71Fl6wzfLYwzMKTQYaYfanTzrds42hmSiToJIMvPJEtGuzWuvTaSg==
+x-ms-exchange-antispam-messagedata: OFVrI9Xk5LlOg+48Aai2fP7/0w84NJ4+XZdR0DGbaTvRUf/qJeHbUIlF/iLH+XG6UmEtSlqCnCBAzBnPv1/W5VvlaOaRsOxEJYs+aAij2rjibl6RUXBkpkb73IRtVwMpFq7Wy8lBTCtoF6wbjLB5gA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5AvAk3D34VsC3kKqHZQY9=wHHttf6_R0orEcfWsiA2PHA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c296afdc-141e-4ef0-249e-08d7c5a9697c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 10:46:10.4345
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kgp5MZ//c6T0IbtKJrnJH71JWKTdtv2SvORacaMC8TBipaDx+At8RuTEnzoM/lPoBXrK3vPHEDVjD0MGrpWk/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB6173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+Hi Miquel,
 
-On Wed, Mar 11, 2020 at 07:39:15PM +0900, Tomasz Figa wrote:
-> Hi Sakari,
-> 
-> On Sat, Dec 21, 2019 at 12:19 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Hi Tomasz,
-> >
-> > On Fri, Dec 20, 2019 at 10:08:00PM +0900, Tomasz Figa wrote:
-> > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > >
-> > > From the measured hardware signal, OV5695 reset pin goes high for a
-> > > short period of time during boot-up. From the sensor specification, the
-> > > reset pin is active low and the DT binding defines the pin as active
-> > > low, which means that the values set by the driver are inverted and thus
-> > > the value requested in probe ends up high.
-> > >
-> > > Fix it by changing probe to request the reset GPIO initialized to high,
-> > > which makes the initial state of the physical signal low.
-> > >
-> > > In addition, DOVDD rising must occur before DVDD rising from spec., but
-> > > regulator_bulk_enable() API enables all the regulators asynchronously.
-> > > Use an explicit loops of regulator_enable() instead.
-> > >
-> > > For power off sequence, it is required that DVDD falls first. Given the
-> > > bulk API does not give any guarantee about the order of regulators,
-> > > change the driver to use regulator_disable() instead.
-> > >
-> > > The sensor also requires a delay between reset high and first I2C
-> > > transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
-> > > recommended by the vendor. Fix this as well.
-> > >
-> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> > > ---
-> > >  drivers/media/i2c/ov5695.c | 41 +++++++++++++++++++++-----------------
-> > >  1 file changed, 23 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-> > > index d6cd15bb699ac..8d0cc3893fcfc 100644
-> > > --- a/drivers/media/i2c/ov5695.c
-> > > +++ b/drivers/media/i2c/ov5695.c
-> > > @@ -971,16 +971,9 @@ static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
-> > >       return ret;
-> > >  }
-> > >
-> > > -/* Calculate the delay in us by clock rate and clock cycles */
-> > > -static inline u32 ov5695_cal_delay(u32 cycles)
-> > > -{
-> > > -     return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
-> > > -}
-> > > -
-> > >  static int __ov5695_power_on(struct ov5695 *ov5695)
-> > >  {
-> > > -     int ret;
-> > > -     u32 delay_us;
-> > > +     int i, ret;
-> > >       struct device *dev = &ov5695->client->dev;
-> > >
-> > >       ret = clk_prepare_enable(ov5695->xvclk);
-> > > @@ -991,21 +984,24 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
-> > >
-> > >       gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
-> > >
-> > > -     ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
-> > > -     if (ret < 0) {
-> > > -             dev_err(dev, "Failed to enable regulators\n");
-> > > -             goto disable_clk;
-> > > +     for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
-> > > +             ret = regulator_enable(ov5695->supplies[i].consumer);
-> >
-> > The regulator voltage takes some time before it settles. If the hardware
-> > requires a particular order, then presumably there should be a small delay
-> > to ensure that. 1 ms should be plenty.
-> 
-> The regulator API guarantees that when regulator_enable() returns, the
-> voltage is stable. Regulator ramp up delays can be also configured via
-> DT to take care for per-platform variability.
+I have rebased these patches to v5.6-rc1 as you suggested.
+Please let me know, if there is still a problem.
 
-Ack. In practice not many drivers do that still. But that should probably
-be seen as a driver bug indeed.
+Thanks,
+Shiva
 
--- 
-Regards,
+>=20
+> From: Shivamurthy Shastri <sshivamurthy@micron.com>
+>=20
+> This patchset is for the new series of Micron SPI NAND devices, and the
+> following links are their datasheets.
+>=20
+> M78A:
+> [1] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m78a_1gb_3v_nand_spi.pdf
+> [2] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m78a_1gb_1_8v_nand_spi.pdf
+>=20
+> M79A:
+> [3] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m79a_2gb_1_8v_nand_spi.pdf
+> [4] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m79a_ddp_4gb_3v_nand_spi.pdf
+>=20
+> M70A:
+> [5] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m70a_4gb_3v_nand_spi.pdf
+> [6] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m70a_4gb_1_8v_nand_spi.pdf
+> [7] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m70a_ddp_8gb_3v_nand_spi.pdf
+> [8] https://www.micron.com/~/media/documents/products/data-
+> sheet/nand-flash/70-series/m70a_ddp_8gb_1_8v_nand_spi.pdf
+>=20
+> Changes since v5:
+> -----------------
+>=20
+> 1. Rebased series to v5.6-rc1.
+>=20
+> Changes since v4:
+> -----------------
+>=20
+> 1. Patch 2 is separated into two as per the comment by Boris.
+> 2. Renamed MICRON_CFG_CONTI_READ into MICRON_CFG_CR.
+> 3. Reworked die selection function as per the comment by Boris.
+>=20
+> Changes since v3:
+> -----------------
+>=20
+> 1. Patch 3 and 4 reworked as follows
+>    - Patch 3 introducing the Continuous read feature
+>    - Patch 4 adding devices with the feature
+>=20
+> Changes since v2:
+> -----------------
+>=20
+> 1. Patch commit messages have been modified.
+> 2. Handled devices with Continuous Read feature with vendor specific flag=
+.
+> 3. Reworked die selection function as per the comment.
+>=20
+> Changes since v1:
+> -----------------
+>=20
+> 1. The patch split into multiple patches.
+> 2. Added comments for selecting the die.
+>=20
+> Shivamurthy Shastri (6):
+>   mtd: spinand: micron: Generalize the OOB layout structure and function
+>     names
+>   mtd: spinand: micron: Describe the SPI NAND device MT29F2G01ABAGD
+>   mtd: spinand: micron: Add new Micron SPI NAND devices
+>   mtd: spinand: micron: identify SPI NAND device with Continuous Read
+>     mode
+>   mtd: spinand: micron: Add M70A series Micron SPI NAND devices
+>   mtd: spinand: micron: Add new Micron SPI NAND devices with multiple
+>     dies
+>=20
+>  drivers/mtd/nand/spi/micron.c | 150
+> ++++++++++++++++++++++++++++++----
+>  include/linux/mtd/spinand.h   |   1 +
+>  2 files changed, 137 insertions(+), 14 deletions(-)
+>=20
+> --
+> 2.17.1
 
-Sakari Ailus
