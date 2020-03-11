@@ -2,208 +2,91 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F6C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD3AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E20C20739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583966323;
-	bh=oPp4EkQ44kkIEd0r92X5mOvaTzTNgMSALQjfags1c9w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DG17xJDFgz4VHw3Ba5mMSImtYxwReNx7Fy5fLB/Ge1DYCwfapCNSSy/Rxnnx0DKAt
-	 jKHDc0Lk+meuxhjeWCuOAzSpx8ZBFMENLpTp976sSIoFGRr1QM2GZYZ2pXI+gWJb+z
-	 que5afV4l6IdsJm9zGH9UsxV0ovzFul9w3XFW1Jk=
+	by mail.kernel.org (Postfix) with ESMTP id 3662220746
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbgCKWil (ORCPT
+        id S1731331AbgCKWkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:38:41 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:26361 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729739AbgCKWik (ORCPT
+        Wed, 11 Mar 2020 18:40:00 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:39881 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729881AbgCKWkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:38:40 -0400
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 02BMbYqg019805;
-        Thu, 12 Mar 2020 07:37:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 02BMbYqg019805
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583966256;
-        bh=eV641mEtJcxSe/x4CJ7sZRwpUKMRqHWiX6uSM6ikt7k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Qv5mtexJ95oplfw3jKx4O598pCAJ9biXotcsFjwC37RUh5mjkalSW2Su/e7k5GrF
-         CS+dF74fN/6vnlWySkPqixNggjqPy8/vvoeZI/XfCS8+MT55iddwww1YHT2NIcvd9H
-         L7eToIXaLjE/X+We9JBBFEIVZaiI2urFw0llbu8b8UGdOaKOsjXnflKOIXLS9Q+E2r
-         kH2uBh+8b4vIuVYQ3X+EdkrkSfZS8jgjFnNKWw0V3D0sueyPh6wmd3sh66n3b0+dX8
-         5RI5gFGxW3DikjUcQbcGMRHsUpX/8Lo/z7yIbB73Z3AfdoAWlwm5f5h3JTqnkLXMz8
-         xLmnzEShuHyjQ==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        clang-built-linux@googlegroups.com,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH v2 2/2] kbuild: link lib-y objects to vmlinux forcibly when CONFIG_MODULES=y
-Date:   Thu, 12 Mar 2020 07:37:25 +0900
-Message-Id: <20200311223725.27662-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200311223725.27662-1-masahiroy@kernel.org>
-References: <20200311223725.27662-1-masahiroy@kernel.org>
+        Wed, 11 Mar 2020 18:40:00 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 8A115200004;
+        Wed, 11 Mar 2020 22:39:58 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] rtc: 88pm860x: fix possible race condition
+Date:   Wed, 11 Mar 2020 23:39:51 +0100
+Message-Id: <20200311223956.51352-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild supports not only obj-y but also lib-y to list objects linked to
-vmlinux.
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in the IRQ handler.
 
-The difference between them is that all the objects from obj-y are
-forcibly linked to vmlinux by using --whole-archive, whereas the objects
-from lib-y are linked as needed; if there is no user of a lib-y object,
-it is not linked.
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
 
-lib-y is intended to list utility functions that may be called from all
-over the place (and may be unused at all), but it is a problem for
-EXPORT_SYMBOL(). Even if there is no call-site in the vmlinux, we need
-to keep exported symbols for the use from loadable modules.
+Also remove the unnecessary error message as the core already prints the
+info.
 
-Commit 7f2084fa55e6 ("[kbuild] handle exports in lib-y objects reliably")
-worked around it by linking a dummy object, lib-ksyms.o, which contains
-references to all the symbols exported from lib.a in that directory.
-It uses the linker script command, EXTERN. Unfortunately, the meaning of
-EXTERN of ld.lld is different from that of ld.bfd. Therefore, this does
-not work with LD=ld.lld (CBL issue #515).
-
-Anyway, the build rule of lib-ksyms.o is somewhat tricky. So, I want to
-get rid of it.
-
-At first, I was thinking of accumulating lib-y objects into obj-y
-(or even replacing lib-y with obj-y entirely), but the lib-y syntax
-is used beyond the ordinary use in lib/ and arch/*/lib/.
-
-Examples:
-
- - drivers/firmware/efi/libstub/Makefile builds lib.a, which is linked
-   into vmlinux in the own way (arm64), or linked to the decompressor
-   (arm, x86).
-
- - arch/alpha/lib/Makefile builds lib.a which is linked not only to
-   vmlinux, but also to bootloaders in arch/alpha/boot/Makefile.
-
- - arch/xtensa/boot/lib/Makefile builds lib.a for use from
-   arch/xtensa/boot/boot-redboot/Makefile.
-
-One more thing, adding everything to obj-y would increase the vmlinux
-size of allnoconfig (or tinyconfig).
-
-For less impact, I tweaked the destination of lib.a at the top Makefile;
-when CONFIG_MODULES=y, lib.a goes to KBUILD_VMLINUX_OBJS, which is
-forcibly linked to vmlinux, otherwise lib.a goes to KBUILD_VMLINUX_LIBS
-as before.
-
-The size impact for normal usecases is quite small since at lease one
-symbol in every lib-y object is eventually called by someone. In case
-you are intrested, here are the figures.
-
-x86_64_defconfig:
-
-   text	   data	    bss	    dec	    hex	filename
-19566602 5422072 1589328 26578002 1958c52 vmlinux.before
-19566932 5422104 1589328 26578364 1958dbc vmlinux.after
-
-The case with the biggest impact is allnoconfig + CONFIG_MODULES=y.
-
-ARCH=x86 allnoconfig + CONFIG_MODULES=y:
-
-   text	   data	    bss	    dec	    hex	filename
-1175162	 254740	1220608	2650510	 28718e	vmlinux.before
-1177974	 254836	1220608	2653418	 287cea	vmlinux.after
-
-Hopefully this is still not a big deal. The per-file trimming with the
-static library is not so effective after all.
-
-If fine-grained optimization is desired, some architectures support
-CONFIG_LD_DEAD_CODE_DATA_ELIMINATION, which trims dead code per-symbol
-basis. When LTO is supported in mainline, even better optimization will
-be possible.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/515
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
+ drivers/rtc/rtc-88pm860x.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Changes in v2: None
-
- Makefile               |  7 ++++++-
- scripts/Makefile.build | 17 -----------------
- 2 files changed, 6 insertions(+), 18 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 6a538b79e61e..2cdbd4b3e36d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1034,8 +1034,13 @@ init-y		:= $(patsubst %/, %/built-in.a, $(init-y))
- core-y		:= $(patsubst %/, %/built-in.a, $(core-y))
- drivers-y	:= $(patsubst %/, %/built-in.a, $(drivers-y))
- net-y		:= $(patsubst %/, %/built-in.a, $(net-y))
-+libs-y2		:= $(patsubst %/, %/built-in.a, $(filter %/, $(libs-y)))
-+ifdef CONFIG_MODULES
-+libs-y1		:= $(filter-out %/, $(libs-y))
-+libs-y2		+= $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
-+else
- libs-y1		:= $(patsubst %/, %/lib.a, $(libs-y))
--libs-y2		:= $(patsubst %/, %/built-in.a, $(filter-out %.a, $(libs-y)))
-+endif
- virt-y		:= $(patsubst %/, %/built-in.a, $(virt-y))
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 4743b16a8d84..1526402e126b 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -336,6 +336,10 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 	info->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, info);
  
- # Externally visible symbols (used by link-vmlinux.sh)
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index a1730d42e5f3..356601994f3a 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -65,7 +65,6 @@ endif
++	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(info->rtc_dev))
++		return PTR_ERR(info->rtc_dev);
++
+ 	ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
+ 					rtc_update_handler, IRQF_ONESHOT, "rtc",
+ 					info);
+@@ -377,13 +381,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
- ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
- lib-target := $(obj)/lib.a
--real-obj-y += $(obj)/lib-ksyms.o
- endif
+-	info->rtc_dev = devm_rtc_device_register(&pdev->dev, "88pm860x-rtc",
+-					    &pm860x_rtc_ops, THIS_MODULE);
+-	ret = PTR_ERR(info->rtc_dev);
+-	if (IS_ERR(info->rtc_dev)) {
+-		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
++	info->rtc_dev->ops = &pm860x_rtc_ops;
++
++	ret = rtc_register_device(info->rtc_dev);
++	if (ret)
+ 		return ret;
+-	}
  
- ifdef need-builtin
-@@ -410,22 +409,6 @@ $(lib-target): $(lib-y) FORCE
- 
- targets += $(lib-target)
- 
--dummy-object = $(obj)/.lib_exports.o
--ksyms-lds = $(dot-target).lds
--
--quiet_cmd_export_list = EXPORTS $@
--cmd_export_list = $(OBJDUMP) -h $< | \
--	sed -ne '/___ksymtab/s/.*+\([^ ]*\).*/EXTERN(\1)/p' >$(ksyms-lds);\
--	rm -f $(dummy-object);\
--	echo | $(CC) $(a_flags) -c -o $(dummy-object) -x assembler -;\
--	$(LD) $(ld_flags) -r -o $@ -T $(ksyms-lds) $(dummy-object);\
--	rm $(dummy-object) $(ksyms-lds)
--
--$(obj)/lib-ksyms.o: $(lib-target) FORCE
--	$(call if_changed,export_list)
--
--targets += $(obj)/lib-ksyms.o
--
- endif
- 
- # NOTE:
+ 	/*
+ 	 * enable internal XO instead of internal 3.25MHz clock since it can
 -- 
-2.17.1
+2.24.1
 
