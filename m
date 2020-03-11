@@ -2,74 +2,127 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DA7C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8418C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8A9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583917371;
-	bh=23cfMjij0qcBZlWnralLu2AGBY/YdFpxzNPldyRcKbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nQlJxAF+xHEo1diu+jNnAanWBcW2J0dVl4SYI79+YXdrrzGh3m3VxgDkbIk1PEark
-	 xcpUNp1ZCjNcGYKGdiI8alZJMAsxHJ4NHroJbZDb9P3Gu4WLh+xMaYGM0aZ+vRJ5nC
-	 XaaA5biwWQ2/VikU6LsPAyprITwvOLhv9XwufzLc=
+	by mail.kernel.org (Postfix) with ESMTP id C0BC920873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MREjE9QB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgCKJCv (ORCPT
+        id S1728639AbgCKJDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgCKJCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:02:50 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3597020873;
-        Wed, 11 Mar 2020 09:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583917370;
-        bh=23cfMjij0qcBZlWnralLu2AGBY/YdFpxzNPldyRcKbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y6Cz2SHfUoMJnre2zw3Ay9x5+RsW1JBv28aF3xb56rLcWRsEZ1TW/FShfBT1kHqvp
-         j25Dw4dJ0cixneKL2fNm+7SEAfnHfDLF3+5o7xF43toyPwbsVRN42EaLj59Hdodbj3
-         HVU5L0GtOHcOEzNZACiH67GFg7g1qJ0835vYEzZQ=
-Date:   Wed, 11 Mar 2020 17:02:42 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
-        Han Xu <han.xu@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] arm64: dts: enable fspi in imx8mm dts
-Message-ID: <20200311090242.GI29269@dragon>
-References: <20200306101957.1229406-1-aford173@gmail.com>
+        Wed, 11 Mar 2020 05:03:12 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37064 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCKJDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:03:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f16so784585plj.4;
+        Wed, 11 Mar 2020 02:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8bM/wCwSXrnJCqsSvi8wWOGSbVzcZwUzc890uChHZBM=;
+        b=MREjE9QBCCArLm3xVHXuKh2eNZCJvpe+U6eHgBpAqgXckRvOTJXvl4rYPKvUsIuZft
+         jSJc8Y9dEKJhD5RYe2r0DsZpdV9SzwzZeRyMzui9EsDm72JpbYGCzLRSNFsJ+iBi6iI+
+         Rxhn6PWNk7akIN5WNAiF3YsIMwWOFHSnyBSVP64A2yUNuOD9jjCwCzq3Ze8QSEr7xZ0r
+         CrX1ZjcHqj0shB7vUkzeN802e9xi7CVc2d1IV31kH5CEce+i3iNygy0t8ZUMlfSNop+1
+         4of2bEMFwEzqcuH/8QYIhAv5sbGJ2PThpb+CRC8AIhMywlqC1z0x95Vkt5bAki6IHgux
+         dO0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8bM/wCwSXrnJCqsSvi8wWOGSbVzcZwUzc890uChHZBM=;
+        b=qq6/SXNGBDAcZDZCr+HRyd2BRCkroeFUYDhSPtBybXoq4NPUGKpmEaqRHouUwGl1Aj
+         OTR+cBoyTO3xZ512Iwyd0X/qIh4gFzrWNzC+F2OIWMVdR3up/8DLgVEmsxQfTyt+4B11
+         m2TvL3BgQQJiiYRhtSIYUqi3LWBc5dlAHkn+lgHgwehAN+BUU7hksIKJprm75csmjGuc
+         B5XdDly8+goNV2mGsJsUc5lUfrlQIA79+DB8KuFGstV3iyYcEbWg7JUc0wuPGbs38SnZ
+         I2GHwySakcWoc1t/LbjK3t2keKbVBPZ1sIUIbf6f4hjGxXRLjYRwvqvZ12pTu8BuBduL
+         jC7A==
+X-Gm-Message-State: ANhLgQ2JqEb+6FLzZIMVeUUMufsd1wLdCK32rj04t6sgReJNwZS0xwml
+        VHrYkN9MGFuQDoMP86w40aa5hKEm
+X-Google-Smtp-Source: ADFU+vuCDnh7w1xvfOVYsJQClMX8OE3C43uqARqIQzLzcdQQglFS7AAInUSwAo9xL8M4KffExDMNxA==
+X-Received: by 2002:a17:902:7248:: with SMTP id c8mr2219680pll.282.1583917391010;
+        Wed, 11 Mar 2020 02:03:11 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id i6sm10456074pfe.62.2020.03.11.02.03.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 02:03:10 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 14:33:08 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200311090308.GA5060@afzalpc>
+References: <20200304203144.GA4323@alpha.franken.de>
+ <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
+ <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306101957.1229406-1-aford173@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:19:57AM -0600, Adam Ford wrote:
-> Pull in upstream patch from NXP repo to:
-> enable fspi in imx8mm DT file
+Hi,
+
+On Tue, Mar 10, 2020 at 10:31:26PM -0700, Nathan Chancellor wrote:
+
+> This patch regresses booting malta_defconfig with both GCC and clang
+> with this rootfs and QEMU 4.2.0:
+
+On a quick debug, Diff at the end seems to fix the issue. i realize that
+all the execution sequences that can alter the earlier statically
+defined struct irqaction fields needs to be taken care carefully,let me
+recheck the resolution here as well as other instances where this kind
+of issue can happen. i will sent a proper patch later.
+
 > 
-> Signed-off-by: Han Xu <han.xu@nxp.com>
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> https://github.com/ClangBuiltLinux/continuous-integration/blob/a85e3e44c2570847e22ad8f92f317c2b007c4517/images/mipsel/rootfs.cpio
+> 
+> $ timeout 2m qemu-system-mipsel -machine malta -cpu 24Kf -initrd rootfs.cpio -kernel vmlinux -m 512m -display none -serial mon:stdio
+> 
+> just hangs. I have not done further debugging past the initial bisect.
 
-I reworded the commit log a bit and applied patch.
+Thanks for the reproducer.
 
-Shawn
+Regards
+afzal
+
+
+diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+index 64e917dfe6b2..d24e4f2985c3 100644
+--- a/arch/mips/kernel/cevt-r4k.c
++++ b/arch/mips/kernel/cevt-r4k.c
+@@ -252,7 +252,7 @@ unsigned int __weak get_c0_compare_int(void)
+ 
+ int r4k_clockevent_init(void)
+ {
+-	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
++	unsigned long flags = IRQF_PERCPU | IRQF_TIMER;
+ 	unsigned int cpu = smp_processor_id();
+ 	struct clock_event_device *cd;
+ 	unsigned int irq, min_delta;
