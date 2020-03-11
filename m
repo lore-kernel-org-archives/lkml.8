@@ -3,145 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44135 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbgCKDYr (ORCPT
+	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52289 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727648AbgCKD0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:24:47 -0400
-Received: by mail-vs1-f66.google.com with SMTP id u24so393727vso.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:24:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-From: Nicolas Boichat <drinkcat@chromium.org>
-Date: Wed, 11 Mar 2020 11:24:33 +0800
-Message-ID:
- <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
-Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
+        Tue, 10 Mar 2020 23:26:53 -0400
+Date: Wed, 11 Mar 2020 12:18:54 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Jules Irenge <jbi.octave@gmail.com>
+Cc: boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support"
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Allison Randal <allison@lohutok.net>,
+        "moderated list:FIREWIRE AUDIO DRIVERS and IEC 61883-1/6 PACKET..."
+        <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 8/8] ALSA: firewire-tascam: Add missing annotation for
+ tscm_hwdep_read_locked()
+Message-ID: <20200311031853.GA8197@workstation>
+References: <0/8>
+ <20200311010908.42366-1-jbi.octave@gmail.com>
+ <20200311010908.42366-9-jbi.octave@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311010908.42366-9-jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311032433.edexCyvjNcABofQH5u9ZMgV6i-Yh9HXraEs5H5sDXYA@z>
+Message-ID: <20200311031854.J07bz5swEiKyfuwzMnQ0Un-shn-1rbW9H06CZRJtA-g@z>
 
-Thanks, much better. Just one issue left.
+Hi,
 
-On Tue, Mar 10, 2020 at 6:10 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
->
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
->
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
->
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+On Wed, Mar 11, 2020 at 01:09:08AM +0000, Jules Irenge wrote:
+> Sparse reports a warning at tscm_hwdep_read_locked()
+> 
+> warning: context imbalance in tscm_hwdep_read_locked() - unexpected unlock
+> 
+> The root cause is the missing annotation at tscm_hwdep_read_locked()
+> Add the missing __releases(&tscm->lock) annotation
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 > ---
->  drivers/mfd/Makefile                 |   2 +-
->  drivers/mfd/mt6358-irq.c             | 238 +++++++++++++++++++++++++++++
->  drivers/mfd/mt6397-core.c            |  55 ++++++-
->  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
->  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |   3 +
->  6 files changed, 733 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
->
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index b83f172..9af1414 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
-> -mt6397-objs    := mt6397-core.o mt6397-irq.o
-> +mt6397-objs                    := mt6397-core.o mt6397-irq.o mt6358-irq.o
->  obj-$(CONFIG_MFD_MT6397)       += mt6397.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)     += intel_soc_pmic_mrfld.o
->
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..0b99a39
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,238 @@
-> [snip]
-> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
-> +{
-> +       struct mt6397_chip *chip = data;
-> +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
-> +       unsigned int bit, i, top_irq_status;
-> +       int ret;
-> +
-> +       ret = regmap_read(chip->regmap,
-> +                         mt6358_irq_data->top_int_status_reg,
-> +                         &top_irq_status);
-> +       if (ret) {
-> +               dev_err(chip->dev,
-> +                       "Failed to read status from the device, ret=%d\n", ret);
-> +               return IRQ_NONE;
-> +       }
-> +
-> +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
-> +               for (i = 0; i < mt6358_irq_data->num_top; i++) {
+>  sound/firewire/tascam/tascam-hwdep.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Only one loop needed.
+Thanks for your care of the warning. Although I have found it, I had
+no idea to suppress it.
 
-> +                       bit = BIT(mt6358_ints[i].top_offset);
-> +                       if (top_irq_status & bit) {
-> +                               mt6358_irq_sp_handler(chip, i);
-> +                               top_irq_status &= ~bit;
-> +                               if (!top_irq_status)
-> +                                       break;
-> +                       }
-> +               }
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
-> +                              irq_hw_number_t hw)
-> +{
-> +       struct mt6397_chip *mt6397 = d->host_data;
-> +
-> +       irq_set_chip_data(irq, mt6397);
-> +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
-> +       irq_set_nested_thread(irq, 1);
-> +       irq_set_noprobe(irq);
-> +
-> +       return 0;
-> +}
-> [snip]
+Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+
+> diff --git a/sound/firewire/tascam/tascam-hwdep.c b/sound/firewire/tascam/tascam-hwdep.c
+> index 9801e33e7f2a..6f38335fe10b 100644
+> --- a/sound/firewire/tascam/tascam-hwdep.c
+> +++ b/sound/firewire/tascam/tascam-hwdep.c
+> @@ -17,6 +17,7 @@
+>  
+>  static long tscm_hwdep_read_locked(struct snd_tscm *tscm, char __user *buf,
+>  				   long count, loff_t *offset)
+> +	__releases(&tscm->lock)
+>  {
+>  	struct snd_firewire_event_lock_status event = {
+>  		.type = SNDRV_FIREWIRE_EVENT_LOCK_STATUS,
+> -- 
+> 2.24.1
+> 
 
