@@ -2,101 +2,133 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B89C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14793C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9C0206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583950411;
-	bh=ywyU0I2pFfVGHGXJ3lsV7XvDHc17/BALKZKiVvbKPvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JT6VCdj9esdsToZrIcLJRqdZKjGUkNXuLizZfplbSpstfWEpSByGJCle7xAXOujyS
-	 kppTeEJLdIA5iKYNACLXiuEN8DZSmI7Fh77uzFyriHn3ANv0laR1jRyfg2jIr50u2p
-	 JJhSl2uuACfe/GlKOR1jao3UQSVirY50QL8X4URA=
+	by mail.kernel.org (Postfix) with ESMTP id B5F472072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbgCKSN3 (ORCPT
+        id S1730751AbgCKSPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57278 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 14:15:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22310 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgCKSN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:13:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 348BC206BE;
-        Wed, 11 Mar 2020 18:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583950409;
-        bh=ywyU0I2pFfVGHGXJ3lsV7XvDHc17/BALKZKiVvbKPvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zXX8nF7OoRzxs30fAd20+QRXUUDSh4Il9PolKoz+3ww95VqTPfoEcg1nDM0RoMi4W
-         Su9Jk2kCxiFpTpGNKPuAKTty0PoysAHKqFvaC66M3OVsc1By4efUGW2lax623Cc4j6
-         j6+PE1qxGZ5KVBL3Ij1ppHYnDpAPy3JNggk+M6sY=
-Date:   Wed, 11 Mar 2020 19:13:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/189] 5.5.9-stable review
-Message-ID: <20200311181326.GD3970258@kroah.com>
-References: <20200310123639.608886314@linuxfoundation.org>
- <a98e88fd-8e52-4f27-5e06-878241d65d4e@roeck-us.net>
+        id S1730524AbgCKSPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:15:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:15:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="231776262"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 11 Mar 2020 11:15:07 -0700
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id E147758033E;
+        Wed, 11 Mar 2020 11:15:06 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+To:     Bjorn Helgaas <helgaas@kernel.org>, Austin.Bolen@dell.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200311171203.GA137848@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <c405ec9a-550d-cd97-162f-c41560f40cdf@linux.intel.com>
+Date:   Wed, 11 Mar 2020 11:12:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a98e88fd-8e52-4f27-5e06-878241d65d4e@roeck-us.net>
+In-Reply-To: <20200311171203.GA137848@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 03:05:59PM -0700, Guenter Roeck wrote:
-> On 3/10/20 5:37 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.9 release.
-> > There are 189 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> For v5.5.8-190-g11e07aec0780:
-> 
-> 
-> Build results:
-> 	total: 157 pass: 152 fail: 5
-> Failed builds:
-> 	csky:defconfig
-> 	csky:allnoconfig
-> 	csky:tinyconfig
-> 	m68k:defconfig
-> 	m68k:sun3_defconfig
-> Qemu test results:
-> 	total: 423 pass: 418 fail: 5
-> Failed tests:
-> 	arm:sx1:sx1_defconfig:initrd
-> 	arm:sx1:sx1_defconfig:sd:rootfs
-> 	arm:sx1:sx1_defconfig:flash32,26,3:rootfs
-> 	q800:m68040:mac_defconfig:initrd
-> 	q800:m68040:mac_defconfig:rootfs
-> 
-> csky:
-> 
-> kernel/fork.c:2588:2: error: #error clone3 requires copy_thread_tls support in arch
->  2588 | #error clone3 requires copy_thread_tls support in arch
 
-Ok, found this one.  Sasha was wiring up csky syscalls and missed this
-one...
+On 3/11/20 10:12 AM, Bjorn Helgaas wrote:
+>
+>> I can just state that it's done after OST returns but before _HPX or
+>> driver is loaded. Any time in that range is fine. I can't get super
+>> specific here because different OSes do different things.  Even for
+>> a given OS they change over time. And I need something generic
+>> enough to support a wide variety of OS implementations.
+> Yeah.  I don't know how to solve this.
+>
+> Linux doesn't actually unload and reload drivers for the child devices
+> (Sathy, correct me if I'm wrong here) even though DPC containment
+> takes the link down and effectively unplugs and replugs the device.  I
+> would *like* to handle it like hotplug, but some higher-level software
+> doesn't deal well with things like storage devices disappearing and
+> reappearing.
+>
+> Since Linux doesn't actually re-enumerate the child devices, it
+> wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
+> but it's all tied up with the whole unplug/replug problem.
+Yes, re-enumeration of child devices is handled by hot-plug path.
+AFAIK, with current PCI driver design, I think its very difficult to create
+dependency between current DPC handler and hot-plug device
+enumeration handler.
 
-thanks,
+>
+>>> For child devices of that port, obviously it's impossible to
+>>> access AER registers until DPC Trigger Status is cleared, and the
+>>> flowchart says the OS shouldn't access them until after _OST.
+>>>
+>>> I'm actually not sure we currently do *anything* with child device
+>>> AER info in the EDR path.  pcie_do_recovery() does walk the
+>>> sub-hierarchy of child devices, but it only calls error handling
+>>> callbacks in the child drivers; it doesn't do anything with the
+>>> child AER registers itself.  And of course, this happens before
+>>> _OST, so it would be too early in any case.  But maybe I'm missing
+>>> something here.
+>> My understanding is that the OS read/clears AER in the case where OS
+>> has native control of AER.  Feedback from OSVs is they wanted to
+>> continue to do that to keep the native OS controlled AER and FF
+>> mechanism similar.  The other way we could have done it would be to
+>> have the firmware read/clear AER and report them to OS via APEI.
+> When Linux has native control of AER, it reads/clears AER status.
+> The flowchart is for the case where firmware has AER control, so I
+> guess Linux would not field AER interrupts and wouldn't expect to
+> read/clear AER status.  So I *guess* Linux would assume APEI?  But
+> that doesn't seem to be what the flowchart assumes.
+Yes, in EDR case, based on our current Linux driver design, without
+some spec changes it will be very difficult to implement the
+clear the AER status of child devices part of the flow chart. This is the
+reason why I did not implement that part in current patch set.
 
-greg k-h
+I think instead of depending on DPC status trigger to end the EDR
+notification window, we should depend on some sort of handshake
+between OS and firmware (may be some changes to _OST arg1 0:15 and
+use _OST for it). Above change would give us a window to clear the
+AER registers properly.
+>
+>>> BTW, if/when this is updated, I have another question: the _OSC
+>>> DPC control bit currently allows the OS to write DPC Control
+>>> during that window.  I understand the OS writing the RW1C *Status*
+>>> bits to clear them, but it seems like writing the DPC Control
+>>> register is likely to cause issues.  The same question would apply
+>>> to the AER access we're talking about.
+>> We could specify which particular bits can and can't be touched.
+>> But it's hard to maintain as new bits are added.  Probably better to
+>> add some guidance that OS should read/clear error status, DPC
+>> Trigger Status, etc. but shouldn't change masks/severity/control
+>> bits/etc.
+> Yeah.  I didn't mean at the level of individual bits; I was thinking
+> more of status/log/etc vs control registers.  But maybe even that is
+> hard, I dunno.
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
