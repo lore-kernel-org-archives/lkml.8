@@ -2,105 +2,125 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19330C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AD9C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEC920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIAiHixS"
+	by mail.kernel.org (Postfix) with ESMTP id B811120873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgCKH4d (ORCPT
+        id S1728534AbgCKH4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:56:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44072 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgCKH4c (ORCPT
+        Wed, 11 Mar 2020 03:56:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54778 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgCKH4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:56:32 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 37so724575pgm.11;
-        Wed, 11 Mar 2020 00:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hKRLUEOkt4uqRQRU+kMzzPavE35BURSZlwqA28UO4lM=;
-        b=hIAiHixSgSB8CG6jFRazUx7eGmIVELTjcRzoaclR4wisH+6SF02A+mqUStcmGTI//M
-         ndmIAOXWtDjRUhWawWx9q9jdRdlyHTK01mSj5VCDaq3jtVPrKl+5GZU8GR0WDxsJNTVI
-         KIRuPbPOIq6HdU1pZdj64n5zHlxC/AJQWTHAGwVKTuE1+jtM1zzzv6u5JRUSvubNgnOO
-         JaQq6F68Vp8t2AsRBMQpIf4gfk6fdJ+ISRcEdcrvRfqjnZdLMWj0PujOWQOOgu8vCZEq
-         3HdcqqwBIk2ZWOZDlEc3O3GJBcphdaRPbe4UxAtk6JsHXf54RS0UYhcNo36XBOz7CHvf
-         xYCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hKRLUEOkt4uqRQRU+kMzzPavE35BURSZlwqA28UO4lM=;
-        b=BjpWuCzad5Loko7rrbjmL5FNGWP1KEmG1LwuY/diEKWoZ4qG0dS7U3wzGr8mCzyrjB
-         oMLthuo7MeDcO57S5fI4F7/agZ+mVROvUH5mcEEo9LcVQdebhi5FZ4i58ZHslOykBhVi
-         6Xqw/gedXbeLKeTE9feFt6RNz3GaKDJmqveJm0g49QUKTfM3e1j1yMEgwhC4IEbzXAMP
-         5CQ4CdCpgrBwJLRaVZbolVGucRFbpp/vFzDbvfqnJeU7kojsCvhU+RE05pGExiWpA6MT
-         6FEfoU1PXLdxyXV2tSQfDBhX0UHLd/uQ51ZjkFjoqh+eVd0KwT2jYugZydnVzgWPwann
-         89wQ==
-X-Gm-Message-State: ANhLgQ0oX/lsQTpg4E5VSn41iKydzO9faPybRVLJPASopSA6vSr0jxnY
-        fQiHY3SAId2O7jGtJ2PXW78=
-X-Google-Smtp-Source: ADFU+vsj5VHBIH60lW4mWAjTEbLfKzxmDR2I9/6w7rOrbhTOb6WgKGPMCYdlyg7RtNUnAx7/rd5wlA==
-X-Received: by 2002:a63:6203:: with SMTP id w3mr1710913pgb.35.1583913390950;
-        Wed, 11 Mar 2020 00:56:30 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id y7sm10093247pfq.159.2020.03.11.00.56.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 00:56:30 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 13:26:28 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>
-Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
-Message-ID: <20200311075628.GA6313@afzalpc>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
+        Wed, 11 Mar 2020 03:56:48 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 94DC628B02D;
+        Wed, 11 Mar 2020 07:56:45 +0000 (GMT)
+Date:   Wed, 11 Mar 2020 08:56:42 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     masonccyang@mxic.com.tw, allison@lohutok.net,
+        bbrezillon@kernel.org, frieder.schrempf@kontron.de,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, rfontana@redhat.com, richard@nod.at,
+        s.hauer@pengutronix.de, stefan@agner.ch, tglx@linutronix.de,
+        vigneshr@ti.com, yuehaibing@huawei.com
+Subject: Re: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific
+ suspend/resume operation
+Message-ID: <20200311085642.36d91673@collabora.com>
+In-Reply-To: <20200311084304.580bec79@xps13>
+References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
+        <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
+        <20200310203310.5fe74c57@collabora.com>
+        <OF5C883176.AD73134D-ON48258528.000F5185-48258528.001F3544@mxic.com.tw>
+        <20200311084304.580bec79@xps13>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+On Wed, 11 Mar 2020 08:43:04 +0100
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-On Tue, Mar 10, 2020 at 10:31:26PM -0700, Nathan Chancellor wrote:
-
-> This patch regresses booting malta_defconfig with both GCC and clang
-> with this rootfs and QEMU 4.2.0:
+> Hi Mason,
 > 
-> https://github.com/ClangBuiltLinux/continuous-integration/blob/a85e3e44c2570847e22ad8f92f317c2b007c4517/images/mipsel/rootfs.cpio
+> masonccyang@mxic.com.tw wrote on Wed, 11 Mar 2020 13:40:52 +0800:
 > 
-> $ timeout 2m qemu-system-mipsel -machine malta -cpu 24Kf -initrd rootfs.cpio -kernel vmlinux -m 512m -display none -serial mon:stdio
+> > Hi Boris,
+> >   
+> > > > diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> > > > index bc2fa3c..c0055ed 100644
+> > > > --- a/include/linux/mtd/rawnand.h
+> > > > +++ b/include/linux/mtd/rawnand.h
+> > > > @@ -1064,6 +1064,8 @@ struct nand_legacy {
+> > > >   * @lock:      lock protecting the suspended field. Also used to
+> > > >   *         serialize accesses to the NAND device.
+> > > >   * @suspended:      set to 1 when the device is suspended, 0 when     
+> > it's not.  
+> > > > + * @_suspend:      [REPLACEABLE] specific NAND device suspend     
+> > operation  
+> > > > + * @_resume:      [REPLACEABLE] specific NAND device resume operation
+> > > >   * @bbt:      [INTERN] bad block table pointer
+> > > >   * @bbt_td:      [REPLACEABLE] bad block table descriptor for flash
+> > > >   *         lookup.
+> > > > @@ -1119,6 +1121,8 @@ struct nand_chip {
+> > > > 
+> > > >     struct mutex lock;
+> > > >     unsigned int suspended : 1;
+> > > > +   int (*_suspend)(struct nand_chip *chip);
+> > > > +   void (*_resume)(struct nand_chip *chip);    
+> > > 
+> > > I thought we agreed on not prefixing new hooks with _ ?    
+> > 
+> > For [PATCH v2] series, you mentioned to drop the _ prefix 
+> > of _lock/_unlock only and we finally patched to lock_area/unlock_area.
+> >   
 > 
-> just hangs. I have not done further debugging past the initial bisect.
+> I missed this _, this is not something we want to add.
+> 
+> Also, when applying your patches I had several issues because they
+> where not base on the last -rc1.
+> 
+> Finally, I think I forgot a line when patching manually so it produces
+> a warning now.
+> 
+> I am dropping patch 3 and 4, I keep patch 1 and 2 which seem fine.
+> 
+> Please send a rebased and edited v4 for these, don't forget to drop the
+> kbuildtest robot tag and please also follow these slightly edited
+> commit logs:
+> 
+> 2/4
+> 
+>     mtd: rawnand: Add support for manufacturer specific suspend/resume operation
+>     
+>     Patch nand_suspend() & nand_resume() to let manufacturers overwrite
+>     suspend/resume operations.
+> 
+> 3/4
+> 
+>     mtd: rawnand: macronix: Add support for deep power down mode
+>     
+>     Macronix AD series support deep power down mode for a minimum
+>     power consumption state.
+>     
+>     Overlaod nand_suspend() & nand_resume() in Macronix specific code to
+>     support deep power down mode.
 
-i will look into it.
-
-Regards
-afzal
+And don't forget to propagate the ->suspend() error code to the upper
+layer.
