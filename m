@@ -2,132 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C2CC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6011C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B76520578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25BC20759
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cskmlpgv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ARE6qGsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgCKTVb (ORCPT
+        id S1731059AbgCKTYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:21:31 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54305 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbgCKTVa (ORCPT
+        Wed, 11 Mar 2020 15:24:15 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34445 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730858AbgCKTYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:21:30 -0400
-Received: by mail-pj1-f66.google.com with SMTP id np16so1434668pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:21:30 -0700 (PDT)
+        Wed, 11 Mar 2020 15:24:15 -0400
+Received: by mail-il1-f196.google.com with SMTP id c8so3193062ilm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=VEJi8Ua1KT556ICDNdI7F0+UTqFndAFbSPbblW/yU4g=;
-        b=CskmlpgvnMkA+wCApbaonRYRAZxJC54spPJq8d7JehKzT58xoCzRO6Mve3c49n44zK
-         PWaabpLQB2dYbC1TL0adRVYluFtMdH6VS6c57Nq+R2wCQ1fnEEBFcVQbzwH9RJ2dW0Gf
-         YlkYkImwr4Pw4lwLfm270n07AFNPb1Mw2sLP0=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8N/7KqaO2uHDIYZv/eBCikgO0CGFEy0TUrj3C3ZKTKg=;
+        b=ARE6qGsmx2gNgSWJCSYU0TNiWLYMwyiRcF6ENWM3CzZ22PibB5K9mK6zqiGKXRuzWy
+         KopIQ+9mN/zayHYAau1eIEgQO/CVEKQFu7DTE9CQOd0YytHsopNF7ePGCmgBn4lttdgq
+         MMEyPTdXGQ7lKTsi+rgkBT4ejvtJ6j+kWqLpE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=VEJi8Ua1KT556ICDNdI7F0+UTqFndAFbSPbblW/yU4g=;
-        b=qoChOHA2BYF9N3fkibWNVp387XE+GZd5mCbRvDnLzqFyLJh0vcGa4YNNtUfKalBpba
-         lwvjD/L4h3saJ43benAFXSqgcTw/3Ry30pc1YGBfLnfE1rvYH0mgaBfU7su/QLOnmYdK
-         U0DGYCxvvRVkjIr1dNkTkQrsxbOo3efqj0UAtfymRXIvQoKFOXeCEL6vQa7VLRNAXvJs
-         A01Kg2ijOwp0F4PTdNRh/Oa8Mheu245JFQYhTOTCDkNu6f8NvnuuZl5ibS7P/t9SNFne
-         pACiz99vW/wJ+ftxsGbyILu5HBWLLkrgflTNfyb9NvmRTq9k8HBBJWAmerTOpCYbklNS
-         59PQ==
-X-Gm-Message-State: ANhLgQ24VLRCwc9YishHEpHWNPlXxQRp2kUB9QmoZfPh9MB79KdM4Rcw
-        GkH8iPOwzeMehdy0LUpSjnocEw==
-X-Google-Smtp-Source: ADFU+vsktVXh9K4NFSSqaFcAbmhWXGfMzDHwE2OpVAMfq8OnBjo81CK/wXvkV7Zt9DyhUeVelrrm9w==
-X-Received: by 2002:a17:902:bb82:: with SMTP id m2mr4510185pls.197.1583954489691;
-        Wed, 11 Mar 2020 12:21:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k1sm48202611pgt.70.2020.03.11.12.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:21:28 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 12:21:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/seccomp: Adjust test fixture counts
-Message-ID: <202003111220.2D3AD27460@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8N/7KqaO2uHDIYZv/eBCikgO0CGFEy0TUrj3C3ZKTKg=;
+        b=MC9mcp9kZ61Q0aUUW0Gnf8X20UbmfRXsiZiln6L82RWqu/1Ck+h2HfovLMucjNHwku
+         +ZojlvcBvGDIQz243ClXSq+dwM49m+4QgxDjeMyTp6dguGp1j8iGNeMdwFFtsecKblqN
+         E88dSnf9faEF9nIo+W3ea0eUbOA7hLqbZVt2IPW6g3taf3lc85ypa84sKkhCz6BSoEdA
+         5wpYD85fvbWq/3rygqVyblWJmPRhSC5ohFeNrSXq2iAXjUnkLIg00Sqv9UGrzA1ST3Ng
+         ww/ou8sr09aYDGMvq9WYA0eNgfu/YrN1QFtTaBt95DoRv+Klv/28dh/27ry/GkqNeFhQ
+         7fRQ==
+X-Gm-Message-State: ANhLgQ0m4F+NJTVIazF3eOU6z+wukENhn+uZd+pUrvYlOHaB/a98ust4
+        q6bEutAZm7Ub/5qAavxGmTeCqdpEuTyvFCUUyHlSzA==
+X-Google-Smtp-Source: ADFU+vu73cL6OluZ5si943eP+eQIpQ8nGNRk/kAu29sLxMb2Kjpld2YYVtSCdcWAgwpjVWtWsQ9Tjb7Cnb1d1i9YbQA=
+X-Received: by 2002:a92:52:: with SMTP id 79mr4698842ila.41.1583954653040;
+ Wed, 11 Mar 2020 12:24:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net> <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com> <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com> <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
+ <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com> <CAKz_xw2T1UceCwFZnBxg6WVp2D4+MziyvQPdU6tEnR_BdLh-PQ@mail.gmail.com>
+ <ad28aa47-0490-937f-898f-0e4695ef6ec6@amlogic.com>
+In-Reply-To: <ad28aa47-0490-937f-898f-0e4695ef6ec6@amlogic.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Wed, 11 Mar 2020 12:24:01 -0700
+Message-ID: <CAODwPW9oxx33hkO3kv2_G8YyLWvigVHkfJU7xUHLVgB7QU2i3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Evan Benn <evanbenn@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The seccomp selftest reported the wrong test counts since it was using
-slightly the wrong API for defining text fixtures. Adjust the API usage.
+> - *_INIT and *GETTIMEOUT.      Although your driver does not need them, could you take them as options in your driver ?
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+The driver already has SMCWD_INFO which is used during probe to
+retrieve the minimum and maximum timeout values supported by the
+hardware at probe time. Maybe it would make sense to rename that to
+INIT (which would still return those values, but can also do whatever
+initialization needs to be done in TF)? GETTIMELEFT I agree we can
+implement optionally, and other platforms would just return a
+PSCI_RET_NOT_SUPPORTED for that.
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index a9ad3bd8b2ad..89fb3e0b552e 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -913,7 +913,7 @@ TEST(ERRNO_order)
- 	EXPECT_EQ(12, errno);
- }
- 
--FIXTURE_DATA(TRAP) {
-+FIXTURE(TRAP) {
- 	struct sock_fprog prog;
- };
- 
-@@ -1024,7 +1024,7 @@ TEST_F(TRAP, handler)
- 	EXPECT_NE(0, (unsigned long)sigsys->_call_addr);
- }
- 
--FIXTURE_DATA(precedence) {
-+FIXTURE(precedence) {
- 	struct sock_fprog allow;
- 	struct sock_fprog log;
- 	struct sock_fprog trace;
-@@ -1513,7 +1513,7 @@ void tracer_poke(struct __test_metadata *_metadata, pid_t tracee, int status,
- 	EXPECT_EQ(0, ret);
- }
- 
--FIXTURE_DATA(TRACE_poke) {
-+FIXTURE(TRACE_poke) {
- 	struct sock_fprog prog;
- 	pid_t tracer;
- 	long poked;
-@@ -1821,7 +1821,7 @@ void tracer_ptrace(struct __test_metadata *_metadata, pid_t tracee,
- 		change_syscall(_metadata, tracee, -1, -ESRCH);
- }
- 
--FIXTURE_DATA(TRACE_syscall) {
-+FIXTURE(TRACE_syscall) {
- 	struct sock_fprog prog;
- 	pid_t tracer, mytid, mypid, parent;
- };
-@@ -2326,7 +2326,7 @@ struct tsync_sibling {
- 		}							\
- 	} while (0)
- 
--FIXTURE_DATA(TSYNC) {
-+FIXTURE(TSYNC) {
- 	struct sock_fprog root_prog, apply_prog;
- 	struct tsync_sibling sibling[TSYNC_SIBLINGS];
- 	sem_t started;
--- 
-2.20.1
+> - *_RESETNOW.      It is used to reset the system right now, similar to your SOFT RESET. could you reserve an operation index in ATF ?
 
-
--- 
-Kees Cook
+Just curious, why do you need this? Shouldn't you use the PSCI
+standard SYSTEM_RESET SMC for that? (If you want to control exactly
+how the platform is reset, you could also use SYSTEM_RESET2 with a
+vendor-defined reset_type.)
