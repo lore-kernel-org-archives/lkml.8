@@ -1,181 +1,110 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_NONE,SPOOFED_FREEMAIL_NO_RDNS autolearn=no autolearn_force=no
-	version=3.4.0
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35398 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgCKP14 (ORCPT
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40069 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgCKP2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:27:56 -0400
-Date: Wed, 11 Mar 2020 20:57:51 +0530
-From: afzal mohammed <afzal.mohd.ma@gmail.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Nathan Chancellor <natechancellor@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>
-Subject: [PATCH] MIPS: pass non-NULL dev_id on shared request_irq()
-Message-ID: <20200311152751.GA5044@afzalpc>
-References: <20200304203144.GA4323@alpha.franken.de>
- <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
- <20200311053126.GA48442@ubuntu-m2-xlarge-x86>
- <20200311090308.GA5060@afzalpc>
- <20200311104217.GA10615@alpha.franken.de>
+        Wed, 11 Mar 2020 11:28:03 -0400
+Received: by mail-vs1-f65.google.com with SMTP id c18so1580416vsq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:28:02 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id g1sm9848514uak.5.2020.03.11.08.27.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 08:27:59 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id g21so877023uaj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:27:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311104217.GA10615@alpha.franken.de>
+References: <20200306235951.214678-1-dianders@chromium.org>
+ <20200306155707.RFT.2.Iaddc29b72772e6ea381238a0ee85b82d3903e5f2@changeid> <285d3315-7558-d9f6-fe65-24d8ad07949d@codeaurora.org>
+In-Reply-To: <285d3315-7558-d9f6-fe65-24d8ad07949d@codeaurora.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 11 Mar 2020 08:27:44 -0700
+Message-ID: <CAD=FV=W5RGwu=ywtM7aCv3H-EpJ1i23S0awgVc8QtOsXtige4w@mail.gmail.com>
+Subject: Re: [RFT PATCH 2/9] drivers: qcom: rpmh-rsc: Document the register
+ layout better
+To: Maulik Shah <mkshah@codeaurora.org>
+Cc: Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-Recently all usages of setup_irq() was replaced by request_irq().
-request_irq() does a few sanity checks that were not done in
-setup_irq(), if they fail irq registration will fail. One of the check is
-to ensure that non-NULL dev_id is passed in the case of shared irq. This
-caused malta on qemu to hang.
+Hi,
 
-Fix it by passing a dev_id to all request_irq()'s that are shared.
+On Wed, Mar 11, 2020 at 2:35 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> Hi Doug,
+>
+> On 3/7/2020 5:29 AM, Douglas Anderson wrote:
+> > Perhaps it's just me, it took a really long time to understand what
+> > the register layout of rpmh-rsc was just from the #defines.
+> i don't understand why register layout is so important for you to understand?
+>
+> besides, i think all required registers are properly named with #define
+>
+> for e.g.
+> /* Register offsets */
+> #define RSC_DRV_IRQ_ENABLE              0x00
+> #define RSC_DRV_IRQ_STATUS              0x04
+> #define RSC_DRV_IRQ_CLEAR               0x08
+>
+> now when you want to enable/disable irq in driver code, its pretty simple to figure out
+> that we need to read/write at RSC_DRV_IRQ_ENABLE offset.
 
-Fixes: ac8fd122e070 ("MIPS: Replace setup_irq() by request_irq()")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
+It's not the specific layout that's important to me.  It's the
+relationships between everything.  In other words:
 
-Hi Thomas,
+a) one rpmh-rsc contains some registers and then a whole bunch of TCS blocks
 
-i am assuming your next tree is immutable, hence referring to the SHA-ID
-of the original commit in your tree. Else if you prefer a fixup'ed
-patch, let me know, i will send v5 with this fixup over v4.
+b) one TCS block contains some registers and space for up to 16 commands.
 
-REgards
-afzal
+c) each command has a handful of registers
 
- arch/mips/dec/setup.c                 | 2 +-
- arch/mips/kernel/cevt-r4k.c           | 2 +-
- arch/mips/loongson2ef/lemote-2f/irq.c | 2 +-
- arch/mips/pmcs-msp71xx/msp_time.c     | 2 +-
- arch/mips/sni/a20r.c                  | 2 +-
- arch/mips/sni/pcit.c                  | 4 ++--
- arch/mips/sni/rm200.c                 | 4 ++--
- 7 files changed, 9 insertions(+), 9 deletions(-)
+Nothing describes this in the existing code--you've gotta read through
+all the code and figure out how it's reading/writing registers to
+figure it out.
 
-diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
-index c8bbac0c5051..cbbb27fbab19 100644
---- a/arch/mips/dec/setup.c
-+++ b/arch/mips/dec/setup.c
-@@ -758,7 +758,7 @@ void __init arch_init_irq(void)
- 	/* Register the bus error interrupt. */
- 	if (dec_interrupt[DEC_IRQ_BUS] >= 0 && busirq_handler) {
- 		if (request_irq(dec_interrupt[DEC_IRQ_BUS], busirq_handler,
--				busirq_flags, "bus error", NULL))
-+				busirq_flags, "bus error", "bus error"))
- 			pr_err("Failed to register bus error interrupt\n");
- 	}
- 	/* Register the HALT interrupt. */
-diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
-index 64e917dfe6b2..4b19810c67d4 100644
---- a/arch/mips/kernel/cevt-r4k.c
-+++ b/arch/mips/kernel/cevt-r4k.c
-@@ -292,7 +292,7 @@ int r4k_clockevent_init(void)
- 
- 	cp0_timer_irq_installed = 1;
- 
--	if (request_irq(irq, c0_compare_interrupt, flags, "timer", NULL))
-+	if (request_irq(irq, c0_compare_interrupt, flags, "timer", cd))
- 		pr_err("Failed to request irq %d (timer)\n", irq);
- 
- 	return 0;
-diff --git a/arch/mips/loongson2ef/lemote-2f/irq.c b/arch/mips/loongson2ef/lemote-2f/irq.c
-index 34e15e8b7a8f..1c99e83cabae 100644
---- a/arch/mips/loongson2ef/lemote-2f/irq.c
-+++ b/arch/mips/loongson2ef/lemote-2f/irq.c
-@@ -109,7 +109,7 @@ void __init mach_init_irq(void)
- 
- 	/* setup north bridge irq (bonito) */
- 	if (request_irq(LOONGSON_NORTH_BRIDGE_IRQ, ip6_action,
--			IRQF_SHARED | IRQF_NO_THREAD, "cascade", NULL))
-+			IRQF_SHARED | IRQF_NO_THREAD, "cascade", "cascade"))
- 		pr_err("Failed to register north bridge cascade interrupt\n");
- 	/* setup source bridge irq (i8259) */
- 	if (request_irq(LOONGSON_SOUTH_BRIDGE_IRQ, no_action,
-diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
-index baf0da8b4c98..0601a3f7f8f6 100644
---- a/arch/mips/pmcs-msp71xx/msp_time.c
-+++ b/arch/mips/pmcs-msp71xx/msp_time.c
-@@ -81,7 +81,7 @@ unsigned int get_c0_compare_int(void)
- 	/* MIPS_MT modes may want timer for second VPE */
- 	if ((get_current_vpe()) && !tim_installed) {
- 		if (request_irq(MSP_INT_VPE1_TIMER, c0_compare_interrupt, flags,
--				"timer", NULL))
-+				"timer", "timer"))
- 			pr_err("Failed to register timer interrupt\n");
- 		tim_installed++;
- 	}
-diff --git a/arch/mips/sni/a20r.c b/arch/mips/sni/a20r.c
-index ba966d62fb4b..1bfea4aae124 100644
---- a/arch/mips/sni/a20r.c
-+++ b/arch/mips/sni/a20r.c
-@@ -223,7 +223,7 @@ void __init sni_a20r_irq_init(void)
- 	sni_hwint = a20r_hwint;
- 	change_c0_status(ST0_IM, IE_IRQ0);
- 	if (request_irq(SNI_A20R_IRQ_BASE + 3, sni_isa_irq_handler,
--			IRQF_SHARED, "ISA", NULL))
-+			IRQF_SHARED, "ISA", "ISA"))
- 		pr_err("Failed to register ISA interrupt\n");
- }
- 
-diff --git a/arch/mips/sni/pcit.c b/arch/mips/sni/pcit.c
-index 4a850ab03398..15080155cc9a 100644
---- a/arch/mips/sni/pcit.c
-+++ b/arch/mips/sni/pcit.c
-@@ -245,7 +245,7 @@ void __init sni_pcit_irq_init(void)
- 	sni_hwint = sni_pcit_hwint;
- 	change_c0_status(ST0_IM, IE_IRQ1);
- 	if (request_irq(SNI_PCIT_INT_START + 6, sni_isa_irq_handler,
--			IRQF_SHARED, "ISA", NULL))
-+			IRQF_SHARED, "ISA", "ISA"))
- 		pr_err("Failed to register ISA interrupt\n");
- }
- 
-@@ -260,7 +260,7 @@ void __init sni_pcit_cplus_irq_init(void)
- 	sni_hwint = sni_pcit_hwint_cplus;
- 	change_c0_status(ST0_IM, IE_IRQ0);
- 	if (request_irq(MIPS_CPU_IRQ_BASE + 3, sni_isa_irq_handler,
--			IRQF_SHARED, "ISA", NULL))
-+			IRQF_SHARED, "ISA", "ISA"))
- 		pr_err("Failed to register ISA interrupt\n");
- }
- 
-diff --git a/arch/mips/sni/rm200.c b/arch/mips/sni/rm200.c
-index ba1f2fc6a43e..2b4a6448b428 100644
---- a/arch/mips/sni/rm200.c
-+++ b/arch/mips/sni/rm200.c
-@@ -473,10 +473,10 @@ void __init sni_rm200_irq_init(void)
- 	sni_hwint = sni_rm200_hwint;
- 	change_c0_status(ST0_IM, IE_IRQ0);
- 	if (request_irq(SNI_RM200_INT_START + 0, sni_rm200_i8259A_irq_handler,
--			IRQF_SHARED, "onboard ISA", NULL))
-+			IRQF_SHARED, "onboard ISA", "onboard ISA"))
- 		pr_err("Failed to register onboard ISA interrupt\n");
- 	if (request_irq(SNI_RM200_INT_START + 1, sni_isa_irq_handler,
--			IRQF_SHARED, "ISA", NULL))
-+			IRQF_SHARED, "ISA", "ISA"))
- 		pr_err("Failed to register ISA interrupt\n");
- }
- 
--- 
-2.18.0
+
+> this seems unnecessary change to me, can you please drop this when you spin v2?
+
+In v2 I'll replace this with the prose below.  Personally I find this
+inferior to the struct definitions which are easier to read
+at-a-glance, but it seems like it would be less controversial...
+
+/*
+ * Here's a high level overview of how all the registers in RPMH work
+ * together:
+ *
+ * - The main rpmh-rsc address is the base of a register space that can
+ *   be used to find overall configuration of the hardware
+ *   (DRV_PRNT_CHLD_CONFIG).  Also found within the rpmh-rsc register
+ *   space are all the TCS blocks.  The offset of the TCS blocks is
+ *   specified in the device tree by "qcom,tcs-offset" and used to
+ *   compute tcs_base.
+ * - TCS blocks come one after another.  Type, count, and order are
+ *   specified by the device tree as "qcom,tcs-config".
+ * - Each TCS block has some registers, then space for up to 16 commands.
+ *   Note that though address space is reserved for 16 commands, fewer
+ *   might be present.  See ncpt (num cmds per TCS).
+ * - The first TCS block is special in that it has registers to control
+ *   interrupts (RSC_DRV_IRQ_XXX).  Space for these registers is reserved
+ *   in all TCS blocks to make the math easier, but only the first one
+ *   matters.
+ */
+
+I'll also move the documentation of "irq_clear", "cmd_wait_for_cmpl",
+"status", and "cmd_enable" next to the respective #defines.
 
