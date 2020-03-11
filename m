@@ -2,177 +2,250 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAECCC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAEEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7DA2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1D120749
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583965436;
-	bh=VxuBiG8OFio/B5ZtjRsG29WpYhE8YxkKdDWuBasRt2w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=AbuAuIj9X5bcl2RPf9z11hzLA/Nq8e80/t8g3uiJoUgHb17O6KrJxK0Z7cz74ckTz
-	 guzRh+0k8ztD52azHO2huq/pydtsA2X1zYB3JC0Xv21u6L/0PWglnknQMOTv44hkSu
-	 WEM77kTNnkAHqWF7he90xZ82OTrwbUIYDn1tSffE=
+	s=default; t=1583965496;
+	bh=UZudGW4ntWR2WDjFg7rUyYyM4uljMpWCzCsi4J+ORvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YEa7KSnLA0e9QYniq252Ng8cLOPCqcVmB6vZMFgBQF3o/4c54HMRJemXIZRC/3KJV
+	 ua4aRH3hRcXXYIIqpGTvM+34z2vVhprkYk2EEntGCJ2aUa+NeK06Xyzp9AmYw6zjld
+	 IWakUBN+GjsAUfjfbUr2hoMp1r4IAy0mbBXwrCrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbgCKWXz (ORCPT
+        id S1731250AbgCKWYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 18:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgCKWXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:23:55 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        id S1729506AbgCKWYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:24:55 -0400
+Received: from jupiter.universe (dyndsl-037-138-186-138.ewe-ip-backbone.de [37.138.186.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FBAC2074F;
-        Wed, 11 Mar 2020 22:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4904820575;
+        Wed, 11 Mar 2020 22:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583965434;
-        bh=VxuBiG8OFio/B5ZtjRsG29WpYhE8YxkKdDWuBasRt2w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fDGv/SDkCtTHXBh8kW0vBN8kem9XC4ovtOXnyjOBM+1pp4g2/Va+d1cnO0IiElwvA
-         241pXhPDe/ac5hQcwfeX+qu+ILSg3vKYyWeFPlkxf87j3XmS6BEBSBsp/RIsd5Qxrd
-         tMNCXTIXxAtHH0/IkDgKdsCVjTEtgct/q+yXsIWw=
-Date:   Wed, 11 Mar 2020 17:23:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Message-ID: <20200311222352.GA200510@google.com>
+        s=default; t=1583965494;
+        bh=UZudGW4ntWR2WDjFg7rUyYyM4uljMpWCzCsi4J+ORvk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gfGX/r286WMLdJy5TKyVTTLMx6xyzdGvb1b0jKt8PBaYqHqLf+JvTFGPC9iB6rcxK
+         sLrugxbZURjcvYnT7DmgWKnw+/NSDwe+QkcNCSlHXH89QgTBay2LsWf1FCHihdRlhf
+         e5wgd8i82/7gEPDbFUU7lRaAnJx1O3gj8l8OlSEs=
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 8F7CB4800FC; Wed, 11 Mar 2020 23:24:52 +0100 (CET)
+Date:   Wed, 11 Mar 2020 23:24:52 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200311222452.nxeajmbbpidbwyal@jupiter.universe>
+References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="h2zavgzncyp2cq5o"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5328126a-7cf0-58c9-7dff-978fe2cae0ee@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 03:11:06PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On 3/11/20 2:53 PM, Austin.Bolen@dell.com wrote:
-> > On 3/11/2020 4:27 PM, Kuppuswamy Sathyanarayanan wrote:
-> > > On 3/11/20 1:33 PM, Bjorn Helgaas wrote:
-> > > > On Wed, Mar 11, 2020 at 05:27:35PM +0000, Austin.Bolen@dell.com wrote:
-> > > > > On 3/11/2020 12:12 PM, Bjorn Helgaas wrote:
-> > > > > <SNIP>
-> > > > > > I'm probably missing your intent, but that sounds like "the OS can
-> > > > > > read/write AER bits whenever it wants, regardless of ownership."
-> > > > > > 
-> > > > > > That doesn't sound practical to me, and I don't think it's really
-> > > > > > similar to DPC, where it's pretty clear that the OS can touch DPC bits
-> > > > > > it doesn't own but only *during the EDR processing window*.
-> > > > > Yes, by treating AER bits like DPC bits I meant I'd define the specific
-> > > > > time windows when OS can touch the AER status bits similar to how it's
-> > > > > done for DPC in the current ECN.
-> > > > Makes sense, thanks.
-> > > > 
-> > > > > > > > > For the normative text describing when OS clears the AER bits
-> > > > > > > > > following the informative flow chart, it could say that OS clears
-> > > > > > > > > AER as soon as possible after OST returns and before OS processes
-> > > > > > > > > _HPX and loading drivers.  Open to other suggestions as well.
-> > > > > > > > I'm not sure what to do with "as soon as possible" either.  That
-> > > > > > > > doesn't seem like something firmware and the OS can agree on.
-> > > > > > > I can just state that it's done after OST returns but before _HPX or
-> > > > > > > driver is loaded. Any time in that range is fine. I can't get super
-> > > > > > > specific here because different OSes do different things.  Even for
-> > > > > > > a given OS they change over time. And I need something generic
-> > > > > > > enough to support a wide variety of OS implementations.
-> > > > > > Yeah.  I don't know how to solve this.
-> > > > > > 
-> > > > > > Linux doesn't actually unload and reload drivers for the child devices
-> > > > > > (Sathy, correct me if I'm wrong here) even though DPC containment
-> > > > > > takes the link down and effectively unplugs and replugs the device.  I
-> > > > > > would *like* to handle it like hotplug, but some higher-level software
-> > > > > > doesn't deal well with things like storage devices disappearing and
-> > > > > > reappearing.
-> > > > > > 
-> > > > > > Since Linux doesn't actually re-enumerate the child devices, it
-> > > > > > wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
-> > > > > > but it's all tied up with the whole unplug/replug problem.
-> > > > > DPC resets everything below it and so to get it back up and running it
-> > > > > would mean that all buses and resources need to be assigned, _HPX
-> > > > > evaluated, and drivers reloaded. If those things don't happen then the
-> > > > > whole hierarchy below the port that triggered DPC will be inaccessible.
-> > > > Hmm, I think I might be confusing this with another situation.  Sathy,
-> > > > can you help me understand this?  I don't have a way to actually
-> > > > exercise this EDR path.  Is there some way the pciehp hotplug driver
-> > > > gets involved here?
-> > If the port has hot-plug enabled then DPC trigger will cause the link to
-> > go down (disabled state) and will generate a DLLSC hot-plug interrupt.
-> > When DPC is released, the link will become active and generate another
-> > DLLSC hot-plug interrupt.
-> Yes, device/driver enumeration and removal will triggered by DLLSC
-> state change interrupt in pciehp driver.
-> > 
-> > > > Here's how this seems to work as far as I can tell:
-> > > > 
-> > > >      - Linux does not have DPC or AER control
-> > > > 
-> > > >      - Linux installs EDR notify handler
-> > > > 
-> > > >      - Linux evaluates DPC Enable _DSM
-> > > > 
-> > > >      - DPC containment event occurs
-> > > > 
-> > > >      - Firmware fields DPC interrupt
-> > > > 
-> > > >      - DPC event is not a surprise remove
-> > > > 
-> > > >      - Firmware sends EDR notification
-> > > > 
-> > > >      - Linux EDR notify handler evaluates Locate _DSM
-> > > > 
-> > > >      - Linux reads and logs DPC and AER error information for port in
-> > > >        containment mode.  [If it was an RP PIO error, Linux clears RP PIO
-> > > >        error status, which is an asymmetry with the non-RP PIO path.]
-> > > > 
-> > > >      - Linux clears AER error status (pci_aer_raw_clear_status())
-> > > > 
-> > > >      - Linux calls driver .error_detected() methods for all child devices
-> > > >        of the port in containment mode (pcie_do_recovery()).  These
-> > > >        devices are inaccessible because the link is down.
-> > > > 
-> > > >      - Linux clears DPC Trigger Status (dpc_reset_link() from
-> > > >        pcie_do_recovery()).
-> > > > 
-> > > >      - Linux calls driver .mmio_enabled() methods for all child devices.
-> > > > 
-> > > > This is where I get lost.  These child devices are now accessible, but
-> > > > they've been reset, so I don't know how their config space got
-> > > > restored.  Did pciehp enumerate them?  Did we do something like
-> > > > pci_restore_state()?  I don't see where either of these happens.
-> > > AFAIK, AER error status registers  are sticky (RW1CS) and hence
-> > > will be preserved during reset.
-> > In our testing, the device directly connected to the port that was
-> > contained does get reprogrammed and the driver is reloaded.  These are
-> > hot-plug slots and so might be due to DLLSC hot-plug interrupt when
-> > containment is released and link goes back to active state.
-> > 
-> > However, if a switch is connected to the port where DPC was triggered
-> > then we do not see the whole switch hierarchy being re-enumerated.
-> Now that I have a hardware to verify this scenario, I will look into
-> it. I suspect there is a transient state in link status which causes
-> this disconnect issue. But I think this issue is not related to
-> EDR support and hence should be reproducible in native handling
-> as well.
-> > 
-> > Also, DPC could be enabled on non-hot-plug slots so can't always rely on
-> > hot-plug to re-init devices in the recovery path.
-> If hotplug is not supported then there is support to enumerate
-> devices via polling  or ACPI events. But a point to note
-> here is, enumeration path is independent of error handler path, and
-> hence there is no explicit trigger or event from error handler path
-> to enumeration path to kick start the enumeration.
 
-Is any synchronization needed here between the EDR path and the
-hotplug/enumeration path?
+--h2zavgzncyp2cq5o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Mar 11, 2020 at 05:17:02PM +0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+>=20
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> driver which only needed by armv7 CPU without ATF.
+>=20
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+
+Should be fine to simply merge this through RTC:
+
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  drivers/power/reset/mt6323-poweroff.c |  2 +-
+>  drivers/rtc/rtc-mt6397.c              | 32 ++++++++++++++++++++++++-----=
+---
+>  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+>  3 files changed, 33 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/=
+mt6323-poweroff.c
+> index 1caf43d..0532803 100644
+> --- a/drivers/power/reset/mt6323-poweroff.c
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
+>  	int ret;
+> =20
+>  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+> =20
+>  	ret =3D regmap_read_poll_timeout(pwrc->regmap,
+>  					pwrc->base + RTC_BBPU, val,
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index cda238d..7a5a9e2 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,18 +9,38 @@
+>  #include <linux/mfd/mt6397/core.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+>  #include <linux/mfd/mt6397/rtc.h>
+>  #include <linux/mod_devicetable.h>
+> =20
+> +static const struct mtk_rtc_data mt6358_rtc_data =3D {
+> +	.wrtgr =3D RTC_WRTGR_MT6358,
+> +};
+> +
+> +static const struct mtk_rtc_data mt6397_rtc_data =3D {
+> +	.wrtgr =3D RTC_WRTGR_MT6397,
+> +};
+> +
+> +static const struct of_device_id mt6397_rtc_of_match[] =3D {
+> +	{ .compatible =3D "mediatek,mt6323-rtc",
+> +		.data =3D (void *)&mt6397_rtc_data, },
+> +	{ .compatible =3D "mediatek,mt6358-rtc",
+> +		.data =3D (void *)&mt6358_rtc_data, },
+> +	{ .compatible =3D "mediatek,mt6397-rtc",
+> +		.data =3D (void *)&mt6397_rtc_data, },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+> +
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+>  	int ret;
+>  	u32 data;
+> =20
+> -	ret =3D regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret =3D regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> @@ -269,6 +289,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base =3D res->start;
+> =20
+> +	rtc->data =3D (struct mtk_rtc_data *)
+> +			of_device_get_match_data(&pdev->dev);
+> +
+>  	rtc->irq =3D platform_get_irq(pdev, 0);
+>  	if (rtc->irq < 0)
+>  		return rtc->irq;
+> @@ -325,13 +348,6 @@ static int mt6397_rtc_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+>  			mt6397_rtc_resume);
+> =20
+> -static const struct of_device_id mt6397_rtc_of_match[] =3D {
+> -	{ .compatible =3D "mediatek,mt6323-rtc", },
+> -	{ .compatible =3D "mediatek,mt6397-rtc", },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+> -
+>  static struct platform_driver mtk_rtc_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "mt6397-rtc",
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rt=
+c.h
+> index 7dfb63b..66534ed 100644
+> --- a/include/linux/mfd/mt6397/rtc.h
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -18,7 +18,9 @@
+>  #define RTC_BBPU_CBUSY         BIT(6)
+>  #define RTC_BBPU_KEY            (0x43 << 8)
+> =20
+> -#define RTC_WRTGR              0x003c
+> +#define RTC_WRTGR_MT6358       0x3a
+> +#define RTC_WRTGR_MT6397       0x3c
+> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+> =20
+>  #define RTC_IRQ_STA            0x0002
+>  #define RTC_IRQ_STA_AL         BIT(0)
+> @@ -65,6 +67,10 @@
+>  #define MTK_RTC_POLL_DELAY_US  10
+>  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+> =20
+> +struct mtk_rtc_data {
+> +	u32			wrtgr;
+> +};
+> +
+>  struct mt6397_rtc {
+>  	struct device           *dev;
+>  	struct rtc_device       *rtc_dev;
+> @@ -74,6 +80,7 @@ struct mt6397_rtc {
+>  	struct regmap           *regmap;
+>  	int                     irq;
+>  	u32                     addr_base;
+> +	const struct mtk_rtc_data *data;
+>  };
+> =20
+>  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> --=20
+> 2.6.4
+
+--h2zavgzncyp2cq5o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5pZTQACgkQ2O7X88g7
++pq9wQ/+KoirFKK4cM7Qw34TtpdNX2uGtfuzcUmBKNjfJl/5WCUE/qo5WgaKcplR
+VgE7uQWOzATqT3mQxG0iH2lzyXd2BVP2PJyEbswUyWTw/hZYLsrT2i+DKvQ4UKQa
+WDKOvNwWsZMJrVAYnyV35Xsp4pWr2yFER61UiAMLlaXhhRzOLQE+P8dd4dr0cFhu
+OgWclCmPjvLgVJsRbLvbyhQ2cLmTwnwBJICbHG+j8FQ0se2EgwzLyOl/45/6Oae+
+qIzjAlZwYAwTmSpwCUeTLSJBp8i4BRg/xETQYpGf6cfBrf7VzBnQFZMo7rdGfj5G
+gTJtq7yqAHlCXN1xQsYhy1Xx+SCl9y6Afjr7jyPW3iHnGvjrVeD1SR7tpDL3G9aT
+iRviJlgdfpp7SrT0PwQkQ+Nk2OS2CqUcdWoTjODOtUPxQeAVcE2Hj14qjlcvftVa
++TGsljzNgIu8rfjwyqnf4ppfSMzK+M5tWCyzPLmKxZSchgvHILQ5DFlpYYG8HV/E
+rUWRsEO9o1KZdlaOne98g90WZqbbqPRa3qpPUihmvj0yUlNsB7cPWBalFx8A8kAc
+dGXnDj36egCGIb4Y5R3GtStgE6J4aDctSQuQzlm6vfk2C7sebUuTLmuy44TWMxez
+L8QZ8aytJjFJ2dDAyUkHuTDJ47im2TyeIAbPfB/HkA7UYSM/Ars=
+=P8yi
+-----END PGP SIGNATURE-----
+
+--h2zavgzncyp2cq5o--
