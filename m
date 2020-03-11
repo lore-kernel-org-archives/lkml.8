@@ -1,132 +1,126 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39209 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729481AbgCKNcn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:32:43 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a9so1925510otl.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:32:42 -0700 (PDT)
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9D2C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:33:33 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 4E3F1206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:33:34 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730880AbgCKSdc (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:33:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:53410 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730468AbgCKSdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:33:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 290011FB;
+        Wed, 11 Mar 2020 11:33:31 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 29FAB3F6CF;
+        Wed, 11 Mar 2020 11:33:30 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: [RFC PATCH 0/3] sched: Instrument sched domain flags
+Date:   Wed, 11 Mar 2020 18:33:17 +0000
+Message-Id: <20200311183320.19186-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-3-robert.foss@linaro.org> <20200310142652.GK1922688@smile.fi.intel.com>
- <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com> <20200311114848.GJ2619@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200311114848.GJ2619@valkosipuli.retiisi.org.uk>
-From: Robert Foss <robert.foss@linaro.org>
-Date: Wed, 11 Mar 2020 14:32:30 +0100
-Message-ID:
- <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        ben.kao@intel.com, Rob Herring <robh+dt@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311133230.EvcRCSUVhSLn6dclf690l9jYeu0sfTJz5nl_O1KJed0@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Sakari,
+Hi,
 
-On Wed, 11 Mar 2020 at 12:49, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Robert,
->
-> On Tue, Mar 10, 2020 at 04:55:20PM +0100, Robert Foss wrote:
-> > Hi Andy,
-> >
-> > On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
-> > > > Add devicetree match table, and enable ov8856_probe()
-> > > > to initialize power, clocks and reset pins.
-> > >
-> > > ...
-> > >
-> > > > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
-> > >
-> > > Use ARRAY_SIZE() directly.
-> >
-> > Ack.
-> >
-> > >
-> > > Have you seen Sakari's comments?
-> > > Sakari, do I have d=C3=A9j=C4=85 vu or you indeed commented this driv=
-er?
-> >
-> > Yes, I may have missed some part of it, so please tell me if I have.
-> >
-> > There is a patchset floating around that implements a larger chunk of
-> > functionality,
-> > including a couple of new modes. This is based on that series.
->
-> Please see earlier comments given against an earlier variant of this set.
-> They're on LMML.
->
-> >
-> > >
-> > > ...
-> > >
-> > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW=
-);
-> > >
-> > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIG=
-H);
-> > >
-> > > Yes, seems this one is inverted.
-> > >
-> > > ...
-> > >
-> > > > +{
-> > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW=
-);
-> > > > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies)=
-;
-> > > > +     clk_disable_unprepare(ov8856->xvclk);
-> > > > +}
-> > > > +
-> > > > +
-> > >
-> > > One blank line is enough.
-> > >
-> > > ...
-> > >
-> > > > +     ov8856->xvclk =3D devm_clk_get(&client->dev, "xvclk");
-> > > > +     if (IS_ERR(ov8856->xvclk)) {
-> > > > +             dev_err(&client->dev, "failed to get xvclk\n");
-> > > > +             return -EINVAL;
-> > > > +     }
-> > >
-> > > Previously it worked without clock provider, now you make a dependenc=
-y.
-> > >
-> > > This won't work.
-> >
-> > So the ideal behavior would be to only use the xclk if it is provided?
->
-> See e.g. the smiapp driver on how to do this so it continues to work on
-> ACPI.
+I've repeatedly stared at an SD flag and asked myself "how should that be
+set up in the domain hierarchy anyway?". I figured that if we formalize our
+flags zoology a bit, we could also do some runtime assertions on them -
+this is what this series is all about.
 
-Thanks for the pointer!
+Note that this is based on top of my select_task_rq() series [1], since it
+removes SD_LOAD_BALANCE. If that other series dies I can go and rebase this
+again on a branch that still has the flag.
 
->
-> I think it'd be also appropriate to add the usleep() after lifting reset
-> only if the reset GPIO is defined for the device.
+Patches
+=======
 
-Ack
+The idea is to associate the flags with a metatype that describes how they
+should be set in a sched domain hierarchy - details are in the comments and
+commit logs. For now it's just a simple parent/children relationship
+description ("if this SD has it, all its {parents, children} have it").
+
+The good thing is that this all goes away when CONFIG_SCHED_DEBUG isn't
+set. The bad thing is that replaces SD_* flags definitions with some
+unsavoury macros. This is mainly because I wanted to avoid having to
+duplicate work between declaring the flags and declaring their types.
+
+Discussion points
+=================
+
+I've gone with a flags field so that several behaviours can be associated
+with a given SD flag, but right now they only get assigned one. An enum
+could fit that job, although it's more constraining.
+
+Naming is also a pain. I'm not really hot on "shared", but that's as
+explicit as I managed to be.
+
+I've inserted the reasoning behind the metaflag assignment in
+comments. They might be a bit too wordy, so we may want to make them a bit
+more broad to lessen the maintenance burden.
+
+Lastly, since this adds an infrastructure to store flag names, we could use
+that to pretty-print /proc/sys/kernel/sched_domain/cpu*/domain*/flags.
+
+Some deltas
+===========
+
+I get a small codesize increase with SCHED_DEBUG=n due to the first
+patch:
+
+$ compare.sh before after vmlinux.o
+SYMBOL                   BEFORE     AFTER  DELTA
+build_sched_domains      4552       4588   +36
+
+For instance, while my baseline would have this (this is all in sd_init()):
+
+0078    a90c8:	d63f0000 	blr	x0
+007c    a90cc:	1284b801 	mov	w1, #0xffffda3f // ~TOPOLOGY_SD_FLAGS
+0080    a90d0:	6a010001 	ands	w1, w0, w1
+0084    a90d4:	54000c81 	b.ne	a9264 <sd_init+0x214>
+
+The change would have this:
+
+0078    a90c8:	d63f0000 	blr	x0
+007c    a90cc:	2a0003e1	mov	w1, w0
+0080    a90d0:	1284b800	mov	w0, #0xffffda3f // ~TOPOLOGY_SD_FLAGS
+0084    a90d4:	6a00003f	tst	w1, w0
+0088    a90d8:	54000c81	b.ne	a9268 <sd_init+0x218>
+
+Sadly, the exact reasons why elude me.
+
+[1]: https://lore.kernel.org/lkml/20200311181601.18314-1-valentin.schneider@arm.com/
+
+Valentin Schneider (3):
+  sched/topology: Split out SD_* flags declaration to its own file
+  sched/topology: Define and assign sched_domain flag metadata
+  sched/topology: Verify SD_* flags setup when sched_debug is on
+
+ include/linux/sched/sd_flags.h | 139 +++++++++++++++++++++++++++++++++
+ include/linux/sched/topology.h |  29 +++----
+ kernel/sched/topology.c        |  16 ++++
+ 3 files changed, 170 insertions(+), 14 deletions(-)
+ create mode 100644 include/linux/sched/sd_flags.h
+
+--
+2.24.0
 
