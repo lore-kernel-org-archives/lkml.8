@@ -2,191 +2,104 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18858C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B9D21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8EF21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="M56im9O3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgCKJR3 (ORCPT
+        id S1728150AbgCKJRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:17:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38286 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728726AbgCKJRW (ORCPT
+        Wed, 11 Mar 2020 05:17:17 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58454 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728606AbgCKJRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:17:22 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i14so1184850otp.5;
-        Wed, 11 Mar 2020 02:17:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rvu2wq6L7cDE7hL6tvDHxFsplTLAIH45fU5iEHgqS2M=;
-        b=lWyQGedIWMaOGzC3Brn452zcK7eTgOikP24wnD8heLs4RtcesajvqFYLdmMTP8h+Lp
-         ighuIVGcuHU/Q4e/9ngAtIUMhTVTJL6pLGy//AKwDfp+e48Huf7DkKdYGG6Dua7F4nOE
-         YO+6zSpH0geuvk78++C0JXlYXGPGESE5z6K1Re7f3roFh8QkVqvV2ExZwBovz/pULtIq
-         yre1SUUqxw7spzDvuCopgmhqXmVJGUHdv5YhZBwfqJk61wGe/UcRkNe8g/suPooggEzY
-         Fj31GglWbsRGHJ7IkIXMDmUGdtkYFgZCY3aYq7DOCo5X2zDwEbCPSwF6K3/Io6vjWjWi
-         ZRhQ==
-X-Gm-Message-State: ANhLgQ3kxuJ6IqbUHBE8VjPeF3oLqTMTqAVfea3/+a3M7rxbf+JsW/QJ
-        frUSRWMoiRKH8YFPAFVUS7fHUq0IZPPMmfWrmQo=
-X-Google-Smtp-Source: ADFU+vurMX1TBb2LbwR48anEMdh/Z0UhZIiQ6sBsCWyzWJOmgi1sbQq+hHLjY+kkZy2egeaHRHSwDAbZI1I2oMtjzk4=
-X-Received: by 2002:a9d:1708:: with SMTP id i8mr1589448ota.250.1583918240450;
- Wed, 11 Mar 2020 02:17:20 -0700 (PDT)
+        Wed, 11 Mar 2020 05:17:16 -0400
+X-UUID: e5f77489817f46938285fbb914e26390-20200311
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=w/OFvaAVqelVRqsmT335UVcjfyRxqRhg1qlxZpxXnpY=;
+        b=M56im9O3gMpK9T2JmCngoiZYscMXlR4BpT6C5tbfeOd32LrLxKi7PInM16+ItyscRh0xCoyMs+p0m3GQbvbL5z4uPiNR+XEWIkVMt6JkeoBlUfWXUJjh/6dVispN67R5AXBlEYcZTHvmoccDAdSD/zWnS2YHhuKC0TVZiEBvO24=;
+X-UUID: e5f77489817f46938285fbb914e26390-20200311
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 4283539; Wed, 11 Mar 2020 17:17:12 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Mar 2020 17:15:37 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Mar 2020 17:17:12 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>
+Subject: [PATCH v10 0/5] Add Support for MediaTek PMIC MT6358
+Date:   Wed, 11 Mar 2020 17:16:58 +0800
+Message-ID: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
 MIME-Version: 1.0
-References: <20200220233454.31514-1-f.fainelli@gmail.com> <20200223.205911.1667092059432885700.davem@davemloft.net>
- <CAMuHMdWuP1_3vqOpf7KEimLLTKiWpWku9fUAdP3CCR6WbHyQdg@mail.gmail.com> <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com>
-In-Reply-To: <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 11 Mar 2020 10:17:09 +0100
-Message-ID: <CAMuHMdUMM0Q6W7A0mVgSf7XmF8yROZb3uzHPU1ETbMAfvTtfow@mail.gmail.com>
-Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 5:47 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 3/10/20 7:16 AM, Geert Uytterhoeven wrote:
-> > Hi Florian, David,
-> >
-> > On Mon, Feb 24, 2020 at 5:59 AM David Miller <davem@davemloft.net> wrote:
-> >> From: Florian Fainelli <f.fainelli@gmail.com>
-> >> Date: Thu, 20 Feb 2020 15:34:53 -0800
-> >>
-> >>> It is currently possible for a PHY device to be suspended as part of a
-> >>> network device driver's suspend call while it is still being attached to
-> >>> that net_device, either via phy_suspend() or implicitly via phy_stop().
-> >>>
-> >>> Later on, when the MDIO bus controller get suspended, we would attempt
-> >>> to suspend again the PHY because it is still attached to a network
-> >>> device.
-> >>>
-> >>> This is both a waste of time and creates an opportunity for improper
-> >>> clock/power management bugs to creep in.
-> >>>
-> >>> Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
-> >>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >>
-> >> Applied, and queued up for -stable, thanks Florian.
-> >
-> > This patch causes a regression on r8a73a4/ape6evm and sh73a0/kzm9g.
-> > After resume from s2ram, Ethernet no longer works:
-> >
-> >         PM: suspend exit
-> >         nfs: server aaa.bbb.ccc.ddd not responding, still trying
-> >         ...
-> >
-> > Reverting commit 503ba7c6961034ff ("net: phy: Avoid multiple suspends")
-> > fixes the issue.
-> >
-> > On both boards, an SMSC LAN9220 is connected to a power-managed local
-> > bus.
-> >
-> > I added some debug code to check when the clock driving the local bus
-> > is stopped and started, but I see no difference before/after.  Hence I
-> > suspect the Ethernet chip is no longer reinitialized after resume.
->
-> Can you provide a complete log?
+VGhpcyBwYXRjaHNldCBpbmNsdWRpbmcgbW9kaWZ5aW5nIHN1c3BlbmQvcmVzdW1lIGJlaGF2aW9y
+IGFkZCBzdXBwb3J0IHRvIE1UNjM1OCBQTUlDLg0KTVQ2MzU4IGlzIHRoZSBwcmltYXJ5IFBNSUMg
+Zm9yIE1UODE4MyBwbGF0Zm9ybS4NCg0KY2hhbmdlcyBzaW5jZSB2OToNCi0gcmVtb3ZlIHJlZHVu
+ZGFudCBsb29wIGluIG1mZCBkcml2ZXIuDQotIG1vdmUgbXRrX3J0Y19kYXRhIGZyb20gcnRjLmgg
+dG8gcnRjLW10NjM5Ny5jDQoNCkhzaW4tSHNpdW5nIFdhbmcgKDQpOg0KICBtZmQ6IG10NjM5Nzog
+bW9kaWZ5IHN1c3BlbmQvcmVzdW1lIGJlaGF2aW9yDQogIGR0LWJpbmRpbmdzOiBtZmQ6IEFkZCBj
+b21wYXRpYmxlIGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFBNSUMNCiAgbWZkOiBBZGQgc3VwcG9y
+dCBmb3IgdGhlIE1lZGlhVGVrIE1UNjM1OCBQTUlDDQogIGFybTY0OiBkdHM6IG10NjM1ODogYWRk
+IFBNSUMgTVQ2MzU4IHJlbGF0ZWQgbm9kZXMNCg0KUmFuIEJpICgxKToNCiAgcnRjOiBtdDYzOTc6
+IEFkZCBzdXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQw0KDQogRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tdDYzOTcudHh0IHwgIDE0ICstDQogYXJjaC9hcm02
+NC9ib290L2R0cy9tZWRpYXRlay9tdDYzNTguZHRzaSAgICAgICAgIHwgMzU4ICsrKysrKysrKysr
+KysrKysrKysrKysrDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMtZXZiLmR0
+cyAgICAgIHwgICAxICsNCiBkcml2ZXJzL21mZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDIgKy0NCiBkcml2ZXJzL21mZC9tdDYzNTgtaXJxLmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAyMzYgKysrKysrKysrKysrKysrDQogZHJpdmVycy9tZmQvbXQ2Mzk3LWNv
+cmUuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDg1ICsrKy0tLQ0KIGRyaXZlcnMvbWZkL210
+NjM5Ny1pcnEuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAzMyArKysNCiBkcml2ZXJzL3Bv
+d2VyL3Jlc2V0L210NjMyMy1wb3dlcm9mZi5jICAgICAgICAgICAgfCAgIDIgKy0NCiBkcml2ZXJz
+L3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMzIgKy0NCiBpbmNs
+dWRlL2xpbnV4L21mZC9tdDYzNTgvY29yZS5oICAgICAgICAgICAgICAgICAgfCAxNTggKysrKysr
+KysrKw0KIGluY2x1ZGUvbGludXgvbWZkL210NjM1OC9yZWdpc3RlcnMuaCAgICAgICAgICAgICB8
+IDI4MiArKysrKysrKysrKysrKysrKysNCiBpbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvY29yZS5o
+ICAgICAgICAgICAgICAgICAgfCAgIDUgKw0KIGluY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMu
+aCAgICAgICAgICAgICAgICAgICB8ICAgOSArLQ0KIDEzIGZpbGVzIGNoYW5nZWQsIDExNjggaW5z
+ZXJ0aW9ucygrKSwgNDkgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJt
+NjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2MzU4LmR0c2kNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9tZmQvbXQ2MzU4LWlycS5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgv
+bWZkL210NjM1OC9jb3JlLmgNCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9tZmQv
+bXQ2MzU4L3JlZ2lzdGVycy5oDQoNCi0tIA0KMi42LjQNCg==
 
-With some debug info:
-
-    SDHI0 Vcc: disabling
-    PM: suspend entry (deep)
-    Filesystems sync: 0.002 seconds
-    Freezing user space processes ... (elapsed 0.001 seconds) done.
-    OOM killer disabled.
-    Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-    PM: ==== a3sp/ee120000.sd: stop
-    PM: ==== a3sp/ee100000.sd: stop
-    smsc911x 8000000.ethernet: smsc911x_suspend:2577
-    smsc911x 8000000.ethernet: smsc911x_suspend:2579 running
-    smsc911x 8000000.ethernet: smsc911x_suspend:2584
-    PM: ==== a3sp/ee200000.mmc: stop
-    PM: ==== c4/fec10000.bus: stop
-    PM: ==== a3sp/e6c40000.serial: stop
-    PM: ==== c5/e61f0000.thermal: stop
-    PM: ==== c4/e61c0200.interrupt-controller: stop
-    PM: == a3sp: power off
-    rmobile_pd_power_down: a3sp
-    Disabling non-boot CPUs ...
-    PM: ==== c4/e61c0200.interrupt-controller: start
-    PM: ==== c5/e61f0000.thermal: start
-    PM: ==== a3sp/e6c40000.serial: start
-    PM: ==== c4/fec10000.bus: start
-    PM: ==== a3sp/ee200000.mmc: start
-    smsc911x 8000000.ethernet: smsc911x_resume:2606
-    smsc911x 8000000.ethernet: smsc911x_resume:2625 running
-    PM: ==== a3sp/ee100000.sd: start
-    OOM killer enabled.
-    Restarting tasks ... done.
-    PM: ==== a3sp/ee120000.sd: start
-    PM: suspend exit
-    nfs: server aaa.bbb.ccc.ddd not responding, still trying
-    ...
-
-But no difference between the good and the bad case, except for the nfs
-failures.
-
-> Do you use the Generic PHY driver or a
-> specialized one?
-
-CONFIG_FIXED_PHY=y
-CONFIG_SMSC_PHY=y
-
-Just the smsc,lan9115 node, cfr. arch/arm/boot/dts/r8a73a4-ape6evm.dts
-
-> Do you have a way to dump the registers at the time of
-> failure and see if BMCR.PDOWN is still set somehow?
-
-Added a hook into "nfs: server not responding", which prints:
-
-    MII_BMCR = 0x1900
-
-i.e. BMCR_PDOWN = 0x0800 is still set.
-
-> Does the following help:
->
-> diff --git a/drivers/net/ethernet/smsc/smsc911x.c
-> b/drivers/net/ethernet/smsc/smsc911x.c
-> index 49a6a9167af4..df17190c76c0 100644
-> --- a/drivers/net/ethernet/smsc/smsc911x.c
-> +++ b/drivers/net/ethernet/smsc/smsc911x.c
-> @@ -2618,6 +2618,7 @@ static int smsc911x_resume(struct device *dev)
->         if (netif_running(ndev)) {
->                 netif_device_attach(ndev);
->                 netif_start_queue(ndev);
-> +               phy_resume(dev->phydev);
->         }
->
-
-Yes i does, after s/dev->/ndev->/.
-Thanks!
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
