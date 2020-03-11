@@ -2,132 +2,205 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D81C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477FAC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D1A20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8250120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/xX+dGk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9hyoRKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgCKOiA (ORCPT
+        id S1729879AbgCKOjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:38:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51694 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729479AbgCKOiA (ORCPT
+        Wed, 11 Mar 2020 10:39:32 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34325 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729795AbgCKOjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:38:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a132so2376428wme.1;
-        Wed, 11 Mar 2020 07:37:59 -0700 (PDT)
+        Wed, 11 Mar 2020 10:39:31 -0400
+Received: by mail-il1-f193.google.com with SMTP id c8so2238910ilm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IlF8vjliItStxT/wjkL77PBDGb3h75JlHH9lrCWsv7g=;
-        b=a/xX+dGk8qG9dJT0zL2ydBvoiWjouFszn+yYzln3gWsVfTFuTOzoA/iKMUxUUQ65p1
-         MkkBGNNdb40Nqbn1Ds2k2tJHD+9fgUZtfNtfVl5KDitE1UdnkybGMZs3VEjI4hyvEoD3
-         aieTv9AycjqQKOai/utCiHvR4BFoBWzmZXHgq04w+UT6jbx/Omk2KdMuLxDtUMMGL7Kz
-         t3jIIfycEX37PLVzKnoe3BSUGZSkVP+BmRX5385zZxGNZ0mkZZsgCPaxLAImo4Sf0hRt
-         ky61nji8UhJ4rH6iysQ7Yba4zqPUYViJwljVVN4u3yJ0XfCo534DoBScWunJVYIzswoK
-         6QEg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wy+o8H7bDaEo8BGddDsCo4a2Cywi6MmVF56mviUaRRY=;
+        b=x9hyoRKSsjcNql8Vs3VDhHu71U7F4mVlz+l+9FFNuzzath0jvqI2Dy20OaCZrSbi64
+         8n7VekEx3zlK1oMbjct/nFIPRc9TFXpuqiM7kigXd5fqYqGpv3Slvldg4Qc7R6PV2xih
+         IXwB6jOdD7D/4nMP5juQIBgH4PDziLPcKEz1EJ19eD79TdJR40mzNUIX9vb1rc1gySzX
+         FIgMzmFkRKfEH0xeeyhy6d0IvS97CZP54idilKEoybizu/hSnMFoYgHv71n5Jz+4Gsts
+         0a/h8tBSKBHSlTWjvfxw6wsQQ/ddTuCD+cqE8/rZd176hzJbW+ZzVJWR67I4Jy83dI2W
+         dCZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IlF8vjliItStxT/wjkL77PBDGb3h75JlHH9lrCWsv7g=;
-        b=gK+0ud4X77DLf7U0WNcUB0xFbWAMj1mM3aG0lFkvoDV8X4oKpnQjF1v9WHu19RDdeg
-         yfW0XC9MABIXpJoJYbutwHWKHFxbBvv8CiGVPHyk95npo85KqQHsFd1js8WfKM/7SfXw
-         eauCHbwRlk+2uW/EqkVZQDJcL/K+T88OYbFtMxlFivtXxnFnlGshdrytdN/wMuJW6jgd
-         4lSmI5m2e69QKO9bsSe8Q6fTqcpG6z71gFLFOoZ3HoQttCl0Itjs5XY1qACtsQjip8Mg
-         cSzzzo8jIA3OZWT8uKPSo5HBQpYLPpvnP68JQ38FLdgoOR3dqx2jmmsmu0BEWFT4B/92
-         UnJg==
-X-Gm-Message-State: ANhLgQ0aHC0Q1a1Fs/pu/4+4zq/T3gh1rFx+sRswLVN+FwIb4OI/O0at
-        h1n4LIG0PxpvYI//kfRWL2n7Zb/Z
-X-Google-Smtp-Source: ADFU+vuCH5zFJfC/erOCWEF28PPs9YZ/845sNE9/1798jBMHK7sfbsYetQ8tFwb8XA/8esL2KHJ42Q==
-X-Received: by 2002:a1c:9802:: with SMTP id a2mr4213927wme.117.1583937475882;
-        Wed, 11 Mar 2020 07:37:55 -0700 (PDT)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id o16sm56960179wrj.5.2020.03.11.07.37.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 07:37:53 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:37:53 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     daniel@ffwll.ch, airlied@linux.ie,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 10/21] drm/tegra: remove checks for debugfs functions
- return value
-Message-ID: <20200311143753.GC494173@ulmo>
-References: <20200227120232.19413-1-wambui.karugax@gmail.com>
- <20200227120232.19413-11-wambui.karugax@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wy+o8H7bDaEo8BGddDsCo4a2Cywi6MmVF56mviUaRRY=;
+        b=jCcF8EQ5yiyZPrYkZbGtrXol5JPjJEtRNVJCtNgwRSjf5ojAn0uEGSo/UcvScsfff9
+         aj/YWRkd0VkycCjnxfD8kUB6uzFo1YoDPDDEcB2C7wIXsDKLduZbPQgU8nlo241UaJEu
+         wcJk8AlS2c2tMkDgCA2KpTD/haYSlUmI8VwYuwLCy/lwNlZ5BqosFcxnBx/KpqWnXiJl
+         eQJRKxlO/Un542oHWsiCyBfBXZq7NMaeVOfxhiZ1aPX3II0XvlQzvYS027wVijIuJNmd
+         0G0M1UtgoQmcWfirw5ZF86bEEwbD37G/MVfi9M4Zfn9Rz41oTXJOEmOe2hh54dzdvM6A
+         ByMQ==
+X-Gm-Message-State: ANhLgQ3BNLCidgF4cpFi0Sb7lHSJYsslv2VK33A+ypyyk8NPJuc9aJqR
+        VqSote+8WOQSaiyDyDlrNK0hed4IGRM=
+X-Google-Smtp-Source: ADFU+vsoLXbHGd59x7Q6lscbF+LgH2AFuhNx/jrcSAvda5RCT92+oTo8i3ASrpHiJWGnWl/FdM3Wng==
+X-Received: by 2002:a92:d9d0:: with SMTP id n16mr3509344ilq.200.1583937570436;
+        Wed, 11 Mar 2020 07:39:30 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id h14sm8868430iow.23.2020.03.11.07.39.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 07:39:29 -0700 (PDT)
+Subject: Re: [PATCH v2 17/17] arm64: dts: sdm845: add IPA information
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dcbw@redhat.com>,
+        Evan Green <evgreen@google.com>,
+        Eric Caruso <ejcaruso@google.com>,
+        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
+        Chaitanya Pratapa <cpratapa@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306042831.17827-1-elder@linaro.org>
+ <20200306042831.17827-18-elder@linaro.org>
+ <ec9776b3-ac79-8f9d-8c4d-012d62dc8f72@nvidia.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <4decbc8a-b0a6-8f10-b439-ade9008a4cff@linaro.org>
+Date:   Wed, 11 Mar 2020 09:39:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="69pVuxX8awAiJ7fD"
-Content-Disposition: inline
-In-Reply-To: <20200227120232.19413-11-wambui.karugax@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <ec9776b3-ac79-8f9d-8c4d-012d62dc8f72@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/11/20 5:49 AM, Jon Hunter wrote:
+> 
+> On 06/03/2020 04:28, Alex Elder wrote:
+>> Add IPA-related nodes and definitions to "sdm845.dtsi".
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ++++++++++++++++++++++++++++
+>>  1 file changed, 51 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index d42302b8889b..58fd1c611849 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -675,6 +675,17 @@
+>>  			interrupt-controller;
+>>  			#interrupt-cells = <2>;
+>>  		};
+>> +
+>> +		ipa_smp2p_out: ipa-ap-to-modem {
+>> +			qcom,entry-name = "ipa";
+>> +			#qcom,smem-state-cells = <1>;
+>> +		};
+>> +
+>> +		ipa_smp2p_in: ipa-modem-to-ap {
+>> +			qcom,entry-name = "ipa";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +		};
+>>  	};
+>>  
+>>  	smp2p-slpi {
+>> @@ -1435,6 +1446,46 @@
+>>  			};
+>>  		};
+>>  
+>> +		ipa@1e40000 {
+>> +			compatible = "qcom,sdm845-ipa";
+>> +
+>> +			modem-init;
+>> +			modem-remoteproc = <&mss_pil>;
+>> +
+>> +			reg = <0 0x1e40000 0 0x7000>,
+>> +			      <0 0x1e47000 0 0x2000>,
+>> +			      <0 0x1e04000 0 0x2c000>;
+>> +			reg-names = "ipa-reg",
+>> +				    "ipa-shared",
+>> +				    "gsi";
+>> +
+>> +			interrupts-extended =
+>> +					<&intc 0 311 IRQ_TYPE_EDGE_RISING>,
+>> +					<&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
+>> +					<&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+>> +					<&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
+>> +			interrupt-names = "ipa",
+>> +					  "gsi",
+>> +					  "ipa-clock-query",
+>> +					  "ipa-setup-ready";
+>> +
+>> +			clocks = <&rpmhcc RPMH_IPA_CLK>;
+>> +			clock-names = "core";
+>> +
+>> +			interconnects =
+>> +				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
+>> +				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
+>> +				<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
+>> +			interconnect-names = "memory",
+>> +					     "imem",
+>> +					     "config";
+>> +
+>> +			qcom,smem-states = <&ipa_smp2p_out 0>,
+>> +					   <&ipa_smp2p_out 1>;
+>> +			qcom,smem-state-names = "ipa-clock-enabled-valid",
+>> +						"ipa-clock-enabled";
+>> +		};
+>> +
+>>  		tcsr_mutex_regs: syscon@1f40000 {
+>>  			compatible = "syscon";
+>>  			reg = <0 0x01f40000 0 0x40000>;
+>>
+> 
+> 
+> This change is causing the following build error on today's -next ...
+> 
+>  DTC     arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi:1710.15-1748.5: ERROR (phandle_references): /soc@0/ipa@1e40000: Reference to non-existent node or label "rsc_hlos"
 
---69pVuxX8awAiJ7fD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This problem arises because a commit in the Qualcomm SoC tree affects
+"arch/arm64/boot/dts/qcom/sdm845.dtsi", changing the interconnect provider
+node(s) used by IPA:
+  b303f9f0050b arm64: dts: sdm845: Redefine interconnect provider DT nodes
 
-On Thu, Feb 27, 2020 at 03:02:21PM +0300, Wambui Karuga wrote:
-> Since 987d65d01356 (drm: debugfs: make
-> drm_debugfs_create_files() never fail) there is no need to check the
-> return value of drm_debugfs_create_files(). Therefore, remove the
-> return checks and error handling of the drm_debugfs_create_files()
-> function from various debugfs init functions in drm/tegra and have
-> them return 0 directly.
->=20
-> This change also includes removing the use of drm_debugfs_create_files
-> as a return value in tegra_debugfs_init() and have the function declared
-> as void.
->=20
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/gpu/drm/tegra/dc.c   | 11 +----------
->  drivers/gpu/drm/tegra/drm.c  |  8 ++++----
->  drivers/gpu/drm/tegra/dsi.c  | 11 +----------
->  drivers/gpu/drm/tegra/hdmi.c | 11 +----------
->  drivers/gpu/drm/tegra/sor.c  | 11 +----------
->  5 files changed, 8 insertions(+), 44 deletions(-)
+I will send out a patch today that updates the IPA node in "sdm845.dtsi"
+to correct that.
 
-Applied, thanks.
+In the mean time, David, perhaps you should revert this change in net-next:
+  9cc5ae125f0e arm64: dts: sdm845: add IPA information
+and let me work out fixing "sdm845.dtsi" with Andy and Bjorn in the
+Qualcomm tree.
 
-Thierry
+Thanks.
 
---69pVuxX8awAiJ7fD
-Content-Type: application/pgp-signature; name="signature.asc"
+				-Alex
 
------BEGIN PGP SIGNATURE-----
+> Cheers
+> Jon
+> 
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5o98AACgkQ3SOs138+
-s6HZYhAAkiP6QpzzL7CdD6Z9Ope+DJuC3IiLOgXlUk62gu0rPNgHNHn8qo6QoLN9
-lj+yH2lxtBKcNjdbWhbwl7Y0kPcF/NnaIwlNa0DXqeOibQ/25kwTxEUVGLjui5tr
-tfuv80lAwAiTBMdkt3j/NYVFAPn593+XIuLTxpmWp1lndf6JJ4q6f7x7oWLKyH2P
-4GUNrcGqLjrEvTlL0kSrcnSFt4Lj1+/E/L8S5TduQtnFMJdDX1cRVol9bsFtaYdz
-NWKixSEf7MyNXVhSDqAQq6lKd6+MQtjjfA/nBrY2g0dxmlwhKklYcgdsO9RVHnK8
-ChFqVsMcu4ekbblHTgZ9aUfsFlR2SsFBGdrXgjXscf95BhK1LeZtkLFHZwSho5jW
-25mvVeY0BBCHDzvSdhLBt6c2ib2a3KGTwm0geLuWlEczczQEkyNLYRpESCARrNHx
-FGtEQR30sVzRvnkBl+35xthXJ1/d/vzYOkbxjgAgYfBeK/H2NkJQuBxNaolkvTuv
-fcQ7mqY71PLwYX/fNtVx9nGxcswa5m1FYxz4NEOykTr9bJIsjyP9gph6nb6zaGNh
-mmN74mDvLdyvMZpdOUYgqLkf3bh9I43fECfrpnxkjVRrZhMDDfIVA/I1pw2ChqNQ
-CaF+O8yIQIEWeNi/kyamiROf9Pzsyo7ov3RNnk+5t7W34h/+k1k=
-=Kgul
------END PGP SIGNATURE-----
-
---69pVuxX8awAiJ7fD--
