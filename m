@@ -2,136 +2,122 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC8C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58935C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF1E2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5200F20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDYbUc5F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SehN6XSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbgCKTkC (ORCPT
+        id S1731201AbgCKTl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:40:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40851 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731165AbgCKTkA (ORCPT
+        Wed, 11 Mar 2020 15:41:27 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36867 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730705AbgCKTl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:40:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583955599;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0iJaznCc2W6ynUzCi8XYKyKVbQgxJcuIbZRmVPm98Cs=;
-        b=FDYbUc5Fb0l3MoVWXKjoymfbE5lhKYehKWVVN/q9/W+N0zFtrSX5DheAUDual40LZjFmLv
-        6yz5JAU7oSJBKOyHAuiiTh3FkG6RFPcSCmh/YYNmSwFFrkMJxc+ycVbcONWeATJp9iiVyh
-        vH8vkqouhyqpOf8Futc7QqDfaXASe7E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-3ir9tEcdPryhDjRmk-jl7w-1; Wed, 11 Mar 2020 15:39:53 -0400
-X-MC-Unique: 3ir9tEcdPryhDjRmk-jl7w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9D85190D340;
-        Wed, 11 Mar 2020 19:39:51 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ECDA92D24;
-        Wed, 11 Mar 2020 19:39:44 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9763222021D; Wed, 11 Mar 2020 15:39:43 -0400 (EDT)
-Date:   Wed, 11 Mar 2020 15:39:43 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, mst@redhat.com
-Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
-Message-ID: <20200311193943.GE83257@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <CAOQ4uxi_Xrf+iyP6KVugFgLOfzUvscMr0de0KxQo+jHNBCA9oA@mail.gmail.com>
- <20200311184830.GC83257@redhat.com>
- <CAOQ4uxjja3cReO28qOd-YGmhU-_KrLxOCaBeqZYydxPAte9_pg@mail.gmail.com>
+        Wed, 11 Mar 2020 15:41:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w13so3101583oih.4;
+        Wed, 11 Mar 2020 12:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dI6sJcdtz7nc50Bt/3fFcsotsOXM7BkdNH0XrYOC1w0=;
+        b=SehN6XSBNOQwcDg+tUtHwa4z9mz9AKT2G4MyjvG9P/Njven5E6k/+A7jTHT0fsbIZX
+         lq1MLTmaPi7/b8Ywj3yEvI0YzFJtG156VCEtUj40e0b5d7/8lupkyNFWYwIpPt2/loEC
+         Zf4HWeGBHoxunIf/knTwmVCmjdB9K9dIgscInoJGZiemQlEt5lDL9cNi/qThD5t2Tdp4
+         4DVuVEv7NkHPOf6N0RE+QKpuH+SVc4x2iGrvFlzslkG3S2l9D7LUBUOUGttIw82ZN3IP
+         KPBwYquOsu3Q/h7vj/lb56SdtvDeCglDuJZT5nhU6mEwjg2dPKb35mXDxjizci1Z2uvC
+         VHIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dI6sJcdtz7nc50Bt/3fFcsotsOXM7BkdNH0XrYOC1w0=;
+        b=kNqzEdbrQQbS3d0HYihsMwmDCEDlGOaprtUiC3qBDNMFIGYj91rwz25fEi6mDgnBoL
+         9teSRnw34t04M0s0JRZnM0Gwc/RXpBvUC6YwIr49v99hCFwkhOHDIjDCI+ITh8AO72U4
+         TPkUQmunKomWY8v0Cqhx3cbBbhEHYjKzeSb56YaJuLGe3JI1X729hx9hU2Obxge9aJzb
+         cikrkuVqm8ryIQsDXWAmVgVaJEhI6rIFQh7KLV34Ah42Gkii5780buI/dZ4T42GR6ZyS
+         66nFS3GswuWmbJ2FQOwcb0Ldoxc1X2IbIyiBr1INiMSMxCLefVLR9So0knZBiVM6BgJp
+         eU9g==
+X-Gm-Message-State: ANhLgQ19RRbidOZj8oqA6rXJ2Z1xX3ONlGOBVll9fLxHltk+HS+Y+tqg
+        Jea7W9kzEN230i9bcC1RlPrRNLYTTGI=
+X-Google-Smtp-Source: ADFU+vtzYTnJDvxK3gb2rD75KnJUGe55yv0DIIhmKiswyMDrFoILdSz87k7h9AgbWJhsFx+vO/bAgQ==
+X-Received: by 2002:aca:db56:: with SMTP id s83mr192818oig.171.1583955686120;
+        Wed, 11 Mar 2020 12:41:26 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id c3sm4520955otl.81.2020.03.11.12.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 12:41:25 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] kbuild: Disable -Wpointer-to-enum-cast
+Date:   Wed, 11 Mar 2020 12:41:21 -0700
+Message-Id: <20200311194121.38047-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0.rc1
+In-Reply-To: <20200308073400.23398-1-natechancellor@gmail.com>
+References: <20200308073400.23398-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjja3cReO28qOd-YGmhU-_KrLxOCaBeqZYydxPAte9_pg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 09:32:17PM +0200, Amir Goldstein wrote:
-> On Wed, Mar 11, 2020 at 8:48 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> > On Wed, Mar 11, 2020 at 07:22:51AM +0200, Amir Goldstein wrote:
-> > > On Wed, Mar 4, 2020 at 7:01 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > This patch series adds DAX support to virtiofs filesystem. This allows
-> > > > bypassing guest page cache and allows mapping host page cache directly
-> > > > in guest address space.
-> > > >
-> > > > When a page of file is needed, guest sends a request to map that page
-> > > > (in host page cache) in qemu address space. Inside guest this is
-> > > > a physical memory range controlled by virtiofs device. And guest
-> > > > directly maps this physical address range using DAX and hence gets
-> > > > access to file data on host.
-> > > >
-> > > > This can speed up things considerably in many situations. Also this
-> > > > can result in substantial memory savings as file data does not have
-> > > > to be copied in guest and it is directly accessed from host page
-> > > > cache.
-> > > >
-> > > > Most of the changes are limited to fuse/virtiofs. There are couple
-> > > > of changes needed in generic dax infrastructure and couple of changes
-> > > > in virtio to be able to access shared memory region.
-> > > >
-> > > > These patches apply on top of 5.6-rc4 and are also available here.
-> > > >
-> > > > https://github.com/rhvgoyal/linux/commits/vivek-04-march-2020
-> > > >
-> > > > Any review or feedback is welcome.
-> > > >
-> > > [...]
-> > > >  drivers/dax/super.c                |    3 +-
-> > > >  drivers/virtio/virtio_mmio.c       |   32 +
-> > > >  drivers/virtio/virtio_pci_modern.c |  107 +++
-> > > >  fs/dax.c                           |   66 +-
-> > > >  fs/fuse/dir.c                      |    2 +
-> > > >  fs/fuse/file.c                     | 1162 +++++++++++++++++++++++++++-
-> > >
-> > > That's a big addition to already big file.c.
-> > > Maybe split dax specific code to dax.c?
-> > > Can be a post series cleanup too.
-> >
-> > How about fs/fuse/iomap.c instead. This will have all the iomap related logic
-> > as well as all the dax range allocation/free logic which is required
-> > by iomap logic. That moves about 900 lines of code from file.c to iomap.c
-> >
-> 
-> Fine by me. I didn't take time to study the code in file.c
-> I just noticed is has grown a lot bigger and wasn't sure that
-> it made sense. Up to you. Only if you think the result would be nicer
-> to maintain.
+Clang's -Wpointer-to-int-cast deviates from GCC in that it warns when
+casting to enums. The kernel does this in certain places, such as device
+tree matches to set the version of the device being used, which allows
+the kernel to avoid using a gigantic union.
 
-I am happy to move this code to a separate file. In fact I think we could
-probably break it further into another file say dax-mapping.c or something
-like that where all the memory range allocation/reclaim logic goes and
-iomap logic remains in iomap.c.
+https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L428
+https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L402
+https://elixir.bootlin.com/linux/v5.5.8/source/include/linux/mod_devicetable.h#L264
 
-But that's probably a future cleanup if code in this file continues to grow.
+To avoid a ton of false positive warnings, disable this particular part
+of the warning, which has been split off into a separate diagnostic so
+that the entire warning does not need to be turned off for clang. It
+will be visible under W=1 in case people want to go about fixing these
+easily and enabling the warning treewide.
 
-Vivek
+Cc: stable@vger.kernel.org
+Link: https://github.com/ClangBuiltLinux/linux/issues/887
+Link: https://github.com/llvm/llvm-project/commit/2a41b31fcdfcb67ab7038fc2ffb606fd50b83a84
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Move under scripts/Makefile.extrawarn, as requested by Masahiro
+
+ scripts/Makefile.extrawarn | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index ecddf83ac142..ca08f2fe7c34 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -48,6 +48,7 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
+ KBUILD_CFLAGS += -Wno-format
+ KBUILD_CFLAGS += -Wno-sign-compare
+ KBUILD_CFLAGS += -Wno-format-zero-length
++KBUILD_CFLAGS += $(call cc-disable-warning, pointer-to-enum-cast)
+ endif
+ 
+ endif
+-- 
+2.26.0.rc1
 
