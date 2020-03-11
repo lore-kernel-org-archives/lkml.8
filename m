@@ -2,113 +2,95 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7498C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB414C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A2820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E56E20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMZJz01m"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jzc8Slbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgCKNi2 (ORCPT
+        id S1729608AbgCKNlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:38:28 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52921 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbgCKNi2 (ORCPT
+        Wed, 11 Mar 2020 09:41:21 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:50464 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729345AbgCKNlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:38:28 -0400
-Received: by mail-pj1-f65.google.com with SMTP id f15so1018451pjq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=iwO+qWgIM9f3My2kQh2h35ZK0GeUk2RHl41oBvJStTA=;
-        b=eMZJz01mXe3/ifT+hdwJkqR2hwnztmZqsn/QxoJpTI7gXv9Hq7Mho/K3STadVNsqnJ
-         Jx9efTHHul5gLpGYUqgE+I7KKMWhi54bV6FDskbH3N8PpmF7QAepzxONG3RQPwIfm1FY
-         EFbD9hs6enLO4wjYYQS3FeNT7JymO2VaJToosruysIL++2mTBak1+80XCKaphPE0Pww1
-         yhtQl+5WsH/zw3Ne0klDkA8tkO1R91+BvoGZftBIF5zK6tiCwqzLubSKJ3NDhj77PGVN
-         EdCBc/RmqQy3E8C4/YfnfMYDa6N3Q1bO7+ACYUGVnVM0JZpGSJogyiUQNz5ZaMDTlLl+
-         fTjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=iwO+qWgIM9f3My2kQh2h35ZK0GeUk2RHl41oBvJStTA=;
-        b=kK9jIqcWfrhkcQuhAep+uEwQok/ol7CTHjIsJf4MmSqsOQ9EspmANVHGyjhiqjNFH9
-         CzbodLzpzJxfIuE3blTq4OZMUB+2JqVFSuf+MgNSWIKcz3uI5S/HpqbYOMelzZrhqvTP
-         4a0ULJZqNTkyhlggvnw8wVF5o7txAvadLtFUuVC+C7PTCxgxz07f1u3x7Gm/klHBPdrC
-         F/2xfPP8CNfyjifCsjVSxxCkQMcV86rqkDDDZMC74z2z2xjyP9pE+f3RjFclLBTaGLGN
-         ZM1M65TdlO2gwQThFJOjipUS6DlxjFNOR0T5w9JCgMAlyoY8dhWF03+YVoGQFqWv9Fby
-         Mydg==
-X-Gm-Message-State: ANhLgQ3RUl4QxpV3yk/ukjXr1c10XuQrB6BUXF3C2fYaBCkOliOD21KP
-        aXl2ydL8BehW/72QKaf7KxI=
-X-Google-Smtp-Source: ADFU+vt+TmQHSgrVjNtg41NbMfFfFtaXhBRGeiR+y3qUhNsfgthVTB1cd+qPq8B4smxq2g4cVswDVQ==
-X-Received: by 2002:a17:902:bcc5:: with SMTP id o5mr3126671pls.174.1583933905596;
-        Wed, 11 Mar 2020 06:38:25 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:287:fb4d:18bc:a849:c699:3914])
-        by smtp.gmail.com with ESMTPSA id k5sm5668922pju.29.2020.03.11.06.38.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 06:38:25 -0700 (PDT)
-From:   Shreeya Patel <shreeya.patel23498@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
-        sbrivio@redhat.com, daniel.baluta@gmail.com,
-        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
-        shreeya.patel23498@gmail.com, Larry.Finger@lwfinger.net
-Subject: [Outreachy kernel] [PATCH] Staging: rtl8723bs: sdio_halinit: Remove unnecessary conditions
-Date:   Wed, 11 Mar 2020 19:08:11 +0530
-Message-Id: <20200311133811.2246-1-shreeya.patel23498@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Mar 2020 09:41:20 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3383643B13;
+        Wed, 11 Mar 2020 13:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583934080; bh=Jsae6YmAanO4z9FCcsjbrAEHTLrNXGOZPwk43q6ik60=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jzc8SlbhBKj3TbiyL2YRoFTe5fhXmG1Z0VAoSeJbljwzo/7pZuO533oHLT1M8RNoZ
+         TABbi9Pza/pL5Y2fJpzD6/cH5X8yaBSI+NJ1e/8P8bFUvLVoQvTmUzwA3KlRfhzc/7
+         7zSLlza3k2qtD15FVKjXgigCzRH+gOoCDHg5Z42yg7TXRJc68nDVAUHhg5FBzJBnOA
+         qVQ6Li/zeCIlTIhKaZrL4gQn4itl3tNz9DS8HX+rld77XFmNfKyqPC3rZzocq7bdu0
+         W89agejxYGrlH/bmhkip6R8VOvaS1zOU9iMqXzCz5asMeX/gQWGAIVrtKMbk44LX49
+         8CzvI7N1QzUWg==
+Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.79])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5A381A0062;
+        Wed, 11 Mar 2020 13:41:18 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 1/3] CLK: HSDK: CGU: check if PLL is bypassed first
+Date:   Wed, 11 Mar 2020 16:41:13 +0300
+Message-Id: <20200311134115.13257-2-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200311134115.13257-1-Eugeniy.Paltsev@synopsys.com>
+References: <20200311134115.13257-1-Eugeniy.Paltsev@synopsys.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove if and else conditions since both are leading to the
-initialization of "valueDMATimeout" and "valueDMAPageCount" with
-the same value.
+If PLL is bypassed the EN (enable) bit has no effect on
+output clock.
 
-Found using coccinelle script.
-
-Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- drivers/staging/rtl8723bs/hal/sdio_halinit.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+ drivers/clk/clk-hsdk-pll.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-index e813382e78a6..643592b0bd38 100644
---- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-+++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-@@ -551,18 +551,11 @@ static void HalRxAggr8723BSdio(struct adapter *padapter)
+diff --git a/drivers/clk/clk-hsdk-pll.c b/drivers/clk/clk-hsdk-pll.c
+index 97d1e8c35b71..b47a559f3528 100644
+--- a/drivers/clk/clk-hsdk-pll.c
++++ b/drivers/clk/clk-hsdk-pll.c
+@@ -172,14 +172,14 @@ static unsigned long hsdk_pll_recalc_rate(struct clk_hw *hw,
  
- 	pregistrypriv = &padapter->registrypriv;
+ 	dev_dbg(clk->dev, "current configuration: %#x\n", val);
  
--	if (pregistrypriv->wifi_spec) {
--		/*  2010.04.27 hpfan */
--		/*  Adjust RxAggrTimeout to close to zero disable RxAggr, suggested by designer */
--		/*  Timeout value is calculated by 34 / (2^n) */
--		valueDMATimeout = 0x06;
--		valueDMAPageCount = 0x06;
--	} else {
--		/*  20130530, Isaac@SD1 suggest 3 kinds of parameter */
--		/*  TX/RX Balance */
--		valueDMATimeout = 0x06;
--		valueDMAPageCount = 0x06;
--	}
-+	/*  2010.04.27 hpfan */
-+	/*  Adjust RxAggrTimeout to close to zero disable RxAggr, suggested by designer */
-+	/*  Timeout value is calculated by 34 / (2^n) */
-+	valueDMATimeout = 0x06;
-+	valueDMAPageCount = 0x06;
+-	/* Check if PLL is disabled */
+-	if (val & CGU_PLL_CTRL_PD)
+-		return 0;
+-
+ 	/* Check if PLL is bypassed */
+ 	if (val & CGU_PLL_CTRL_BYPASS)
+ 		return parent_rate;
  
- 	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH + 1, valueDMATimeout);
- 	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH, valueDMAPageCount);
++	/* Check if PLL is disabled */
++	if (val & CGU_PLL_CTRL_PD)
++		return 0;
++
+ 	/* input divider = reg.idiv + 1 */
+ 	idiv = 1 + ((val & CGU_PLL_CTRL_IDIV_MASK) >> CGU_PLL_CTRL_IDIV_SHIFT);
+ 	/* fb divider = 2*(reg.fbdiv + 1) */
 -- 
-2.17.1
+2.21.1
 
