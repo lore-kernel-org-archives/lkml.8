@@ -2,101 +2,140 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921A9C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581FC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6B220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wgPQQuMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 04814208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgCKMgN (ORCPT
+        id S1729371AbgCKMjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:36:13 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44871 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgCKMgM (ORCPT
+        Wed, 11 Mar 2020 08:39:05 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:40463 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729272AbgCKMjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:36:12 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f198so1824758qke.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A2JAdo/ZGdZq7oAsk87CcGhLsAyVSDl8Hklf8ueXEq0=;
-        b=wgPQQuMZanHLFj2mJqcSX3W583odW+PfyBhx+oB83ccqbeyp/tn2ub5mKFECqZa0Si
-         jIwq7qZlEQ5kGwLMgTSiEoqV1qUGGPH4kYRduf0BtouMitKa7Kj1+uTePCaVxPUnuyOD
-         oIUtFCxLdTOjxJSZGa5TqhD4dQeFNi3D/DALvmvVtA1gGFtPp5aL2glAhsEjt1YHC05L
-         C/K7TJki+AYy+AvudHg1wEF4KB9uqVNtiwyU6XsoH2oaewfvs3SdWryJqH8gCGUbTpet
-         vNCon0cKrHvTCT0A9FC/ZEYORA8Z5mIw4qz28t3XSpWFEVpN1KPT6Pl2FgGen2Lrca/A
-         FvkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A2JAdo/ZGdZq7oAsk87CcGhLsAyVSDl8Hklf8ueXEq0=;
-        b=mrgp/e9HZeebfujtRTcuMWCGz+r9Dtc3zPp5Yau67Z/6gOX3BQYcxTCbnONnzky4Gc
-         o5LhgQL7eQNCGizmwqPnDthHw16JVsJXrqzDoh8DCi+EgeKY2GY4pICMapUnwQ1wj3Wg
-         u6T0WNnruevE7iXE8xb2h702gn8DUGGK+74t7kSIXJphH7593d0yfLhqOYTXKzICbZ8e
-         yi5F7LC4aBY7UAvYHgdUj44llMG6ClT+RRX0B2qlOxSIkl+LDfdzVc+lsYGhVMcxlgyS
-         ZauxqaQKEK1vq5uoneoe2+mA0CUFlPcGfHAN1S4teV1rdpgxaA7kjUsZ1Gvi+ohqnlUf
-         x7nw==
-X-Gm-Message-State: ANhLgQ1Rw02GFanVBRuS3HerllC+MjPlVdxzpqW/rPhPqwvJ4jh6RxOI
-        2fVpdfMIbIzr+VuW2Q1Glft8PJAHhuucFPzDvRasSg==
-X-Google-Smtp-Source: ADFU+vvI3YYQBWkmn8OFmWq6mlrvnzaHNr5OEC4rlUVY6+vpzh1cGiwciVD2yz9bUxl9LcLzbaVdyHUMxZzXdYvBNls=
-X-Received: by 2002:a37:3c9:: with SMTP id 192mr2595902qkd.330.1583930171453;
- Wed, 11 Mar 2020 05:36:11 -0700 (PDT)
+        Wed, 11 Mar 2020 08:39:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TsIgzPL_1583930331;
+Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TsIgzPL_1583930331)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 11 Mar 2020 20:38:59 +0800
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>
+Subject: [PATCH v3] mm: fix tick timer stall during deferred page init
+Date:   Wed, 11 Mar 2020 20:38:48 +0800
+Message-Id: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.0.rc2
 MIME-Version: 1.0
-References: <1583587917-7032-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1583587917-7032-1-git-send-email-Anson.Huang@nxp.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Mar 2020 13:36:00 +0100
-Message-ID: <CAMpxmJX6QPA-PZ=GGqp2B2prMEX3wAHCxMCijg2xdXztr9Rn=A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: Add COMPILE_TEST support for GPIO_MXC
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 7 mar 2020 o 14:38 Anson Huang <Anson.Huang@nxp.com> napisa=C5=82(a):
->
-> Add COMPILE_TEST support to GPIO_MXC driver for better compile
-> testing coverage.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/gpio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index b8013cf..b411226 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -394,7 +394,7 @@ config GPIO_MVEBU
->
->  config GPIO_MXC
->         def_bool y
-> -       depends on ARCH_MXC
-> +       depends on ARCH_MXC || COMPILE_TEST
->         select GPIO_GENERIC
->         select GENERIC_IRQ_CHIP
->
-> --
-> 2.7.4
->
+When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
+initialise the deferred pages with local interrupts disabled. It is
+introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+initializing deferred pages").
 
-Patch applied, thanks!
+On machine with NCPUS <= 2, the 'pgdatinit' kthread could be bound to
+the boot CPU, which could caused the tick timer long time stall, system
+jiffies not be updated in time.
 
-Bartosz
+The dmesg shown that:
+
+    [    0.197975] node 0 initialised, 32170688 pages in 1ms
+
+Obviously, 1ms is unreasonable.
+
+Now, fix it by restore in the pending interrupts for every 32*1204 pages
+(128MB) initialized, give the chance to update the systemd jiffies.
+The reasonable demsg shown likes:
+
+    [    1.069306] node 0 initialised, 32203456 pages in 894ms
+
+Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages").
+
+Co-developed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+---
+ mm/page_alloc.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3c4eb750a199..a3a47845e150 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1763,12 +1763,17 @@ deferred_init_maxorder(u64 *i, struct zone *zone, unsigned long *start_pfn,
+ 	return nr_pages;
+ }
+ 
++/*
++ * Release the pending interrupts for every TICK_PAGE_COUNT pages.
++ */
++#define TICK_PAGE_COUNT	(32 * 1024)
++
+ /* Initialise remaining memory on a node */
+ static int __init deferred_init_memmap(void *data)
+ {
+ 	pg_data_t *pgdat = data;
+ 	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+-	unsigned long spfn = 0, epfn = 0, nr_pages = 0;
++	unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
+ 	unsigned long first_init_pfn, flags;
+ 	unsigned long start = jiffies;
+ 	struct zone *zone;
+@@ -1779,6 +1784,7 @@ static int __init deferred_init_memmap(void *data)
+ 	if (!cpumask_empty(cpumask))
+ 		set_cpus_allowed_ptr(current, cpumask);
+ 
++again:
+ 	pgdat_resize_lock(pgdat, &flags);
+ 	first_init_pfn = pgdat->first_deferred_pfn;
+ 	if (first_init_pfn == ULONG_MAX) {
+@@ -1790,7 +1796,6 @@ static int __init deferred_init_memmap(void *data)
+ 	/* Sanity check boundaries */
+ 	BUG_ON(pgdat->first_deferred_pfn < pgdat->node_start_pfn);
+ 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+-	pgdat->first_deferred_pfn = ULONG_MAX;
+ 
+ 	/* Only the highest zone is deferred so find it */
+ 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+@@ -1809,9 +1814,23 @@ static int __init deferred_init_memmap(void *data)
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
+ 	 */
+-	while (spfn < epfn)
++	while (spfn < epfn) {
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		/*
++		 * Release the interrupts for every TICK_PAGE_COUNT pages
++		 * (128MB) to give tick timer the chance to update the
++		 * system jiffies.
++		 */
++		if ((nr_pages - prev_nr_pages) > TICK_PAGE_COUNT) {
++			prev_nr_pages = nr_pages;
++			pgdat->first_deferred_pfn = spfn;
++			pgdat_resize_unlock(pgdat, &flags);
++			goto again;
++		}
++	}
++
+ zone_empty:
++	pgdat->first_deferred_pfn = ULONG_MAX;
+ 	pgdat_resize_unlock(pgdat, &flags);
+ 
+ 	/* Sanity check that the next zone really is unpopulated */
+-- 
+2.24.0.rc2
+
