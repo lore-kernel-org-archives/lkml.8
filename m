@@ -4,33 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B51C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FCEC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899DE20746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8315920746
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbgCKWkI (ORCPT
+        id S1731375AbgCKWkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:40:08 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38069 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731376AbgCKWkE (ORCPT
+        Wed, 11 Mar 2020 18:40:03 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:36401 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729919AbgCKWkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:40:04 -0400
+        Wed, 11 Mar 2020 18:40:01 -0400
+X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id BB972200005;
-        Wed, 11 Mar 2020 22:40:02 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 720E8C0003;
+        Wed, 11 Mar 2020 22:39:59 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] rtc: 88pm860x: switch to rtc_time64_to_tm/rtc_tm_to_time64
-Date:   Wed, 11 Mar 2020 23:39:56 +0100
-Message-Id: <20200311223956.51352-6-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/6] rtc: 88pm860x: stop setting a default time
+Date:   Wed, 11 Mar 2020 23:39:52 +0100
+Message-Id: <20200311223956.51352-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200311223956.51352-1-alexandre.belloni@bootlin.com>
 References: <20200311223956.51352-1-alexandre.belloni@bootlin.com>
@@ -41,53 +42,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the 64bit versions of rtc_tm time conversion.
+It doesn't make sense to set the RTC to a default value at probe time. Let
+the core handle invalid date and time.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-88pm860x.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/rtc/rtc-88pm860x.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
 diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index e0b18227514b..88bda3e072d8 100644
+index 1526402e126b..d6aca28905e3 100644
 --- a/drivers/rtc/rtc-88pm860x.c
 +++ b/drivers/rtc/rtc-88pm860x.c
-@@ -95,7 +95,7 @@ static int pm860x_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
- 
--	rtc_time_to_tm(ticks, tm);
-+	rtc_time64_to_tm(ticks, tm);
- 
- 	return 0;
- }
-@@ -112,7 +112,7 @@ static int pm860x_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 			1900 + tm->tm_year);
- 		return -EINVAL;
+@@ -360,19 +360,6 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "Failed to read initial time.\n");
+ 		return ret;
  	}
--	rtc_tm_to_time(tm, &ticks);
-+	ticks = rtc_tm_to_time64(tm);
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
-@@ -150,7 +150,7 @@ static int pm860x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
- 
--	rtc_time_to_tm(ticks, &alrm->time);
-+	rtc_time64_to_tm(ticks, &alrm->time);
- 	ret = pm860x_reg_read(info->i2c, PM8607_RTC1);
- 	alrm->enabled = (ret & ALARM_EN) ? 1 : 0;
- 	alrm->pending = (ret & (ALARM | ALARM_WAKEUP)) ? 1 : 0;
-@@ -172,7 +172,7 @@ static int pm860x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
- 		(buf[5] << 8) | buf[7];
- 
--	rtc_tm_to_time(&alrm->time, &ticks);
-+	ticks = rtc_tm_to_time64(&alrm->time);
- 	data = ticks - base;
- 
- 	buf[0] = data & 0xff;
+-	if ((tm.tm_year < 70) || (tm.tm_year > 138)) {
+-		tm.tm_year = 70;
+-		tm.tm_mon = 0;
+-		tm.tm_mday = 1;
+-		tm.tm_hour = 0;
+-		tm.tm_min = 0;
+-		tm.tm_sec = 0;
+-		ret = pm860x_rtc_set_time(&pdev->dev, &tm);
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "Failed to set initial time.\n");
+-			return ret;
+-		}
+-	}
+ 	rtc_tm_to_time(&tm, &ticks);
+ 	if (pm860x_rtc_dt_init(pdev, info)) {
+ 		if (pdata && pdata->sync) {
 -- 
 2.24.1
 
