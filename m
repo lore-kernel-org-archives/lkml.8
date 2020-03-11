@@ -2,116 +2,123 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CEFC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6575BC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAC120751
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E7620750
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583965306;
+	bh=Iw5tunA79qSoa9UkFxsQ+cINZMOh4duF6Ea2G6vBt18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O+XwZjDM+8tf5+3oN2sXNi8mF9IEXn5HGdD0BFJjV8mOOh9DSW492Uxf0MKRb+8MF
+	 M2ttn+OSXgbXyGe9qQtJOY3x3z6rnWWu+NrxRIZPJUhdRfTR2ET5RLdETRdad5o5Jm
+	 GyrH+P93x0LeEvqcmL8lEG4/7A74e/TZEQmi3ihg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgCKWVV (ORCPT
+        id S1730753AbgCKWVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:21:21 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:50763 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbgCKWVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:21:20 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MfYHQ-1jniWk46VU-00g00q; Wed, 11 Mar 2020 23:21:19 +0100
-Received: by mail-qk1-f170.google.com with SMTP id f3so3803357qkh.1;
-        Wed, 11 Mar 2020 15:21:18 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1NrVE1szSl2hCxhmSdG53rWyaQCTZZHUSFzuAvOX7qz9FlmnF+
-        FKpe+9KgM7wU5O4JEd9eVVyBlyY95z4mRI9ndsM=
-X-Google-Smtp-Source: ADFU+vtUX6596ckwbsQtKLPYKkjWdRNNv2OExbN7pWVykWRKgnRWddSMydtufZDaxYnGmzl5giJGitq9nSLOAiz/v+U=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr2513764qkd.394.1583965277788;
- Wed, 11 Mar 2020 15:21:17 -0700 (PDT)
+        Wed, 11 Mar 2020 18:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729506AbgCKWVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:21:44 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC2D2074F;
+        Wed, 11 Mar 2020 22:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583965304;
+        bh=Iw5tunA79qSoa9UkFxsQ+cINZMOh4duF6Ea2G6vBt18=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qKenIVJjY7T4b/LEWbxWpxa2EAJPvsvk/r1udrxoZeqQ+i/UO5KkHlwcHCw5ewWPs
+         QbAhEunq7x6To2VqorVzErWGi52jX+aT0HAttrgW1ovpUi/Fj3IYpn1L96mr8V+44L
+         6avzwzhrdnUcuisWpzWMjYoanxmWxyaYCT+57qLE=
+Date:   Wed, 11 Mar 2020 23:21:41 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>
+Subject: Re: [patch part-II V2 02/13] x86/entry: Mark enter_from_user_mode()
+ notrace and NOKPROBE
+Message-ID: <20200311222140.GA15323@lenoir>
+References: <20200308222359.370649591@linutronix.de>
+ <20200308222609.125574449@linutronix.de>
+ <20200309151423.GE9615@lenoir>
+ <87pndl7czd.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
- <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
- <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com> <20200306203439.peytghdqragjfhdx@kahuna>
- <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
- <20200309155945.GA4124965@arrakis.emea.arm.com> <20200309160919.GM25745@shell.armlinux.org.uk>
- <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com>
- <20200311142905.GI3216816@arrakis.emea.arm.com> <CAK8P3a2RC+sg2Tz4M8mkQ_d78FTFdES+YsucUzDFx=UK+L8Oww@mail.gmail.com>
- <20200311172631.GN3216816@arrakis.emea.arm.com>
-In-Reply-To: <20200311172631.GN3216816@arrakis.emea.arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 11 Mar 2020 23:21:01 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0QTKsqoxE7HS7aNrASSHOfFJHfp3+KZNTVoQ12wHi3VQ@mail.gmail.com>
-Message-ID: <CAK8P3a0QTKsqoxE7HS7aNrASSHOfFJHfp3+KZNTVoQ12wHi3VQ@mail.gmail.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Y0fVglcNi3gC72aK5fXtxypkAayJT+12w8tKLgShmO81/UTcoGJ
- NdV/92mYk8imJkqroooPsdEHiKdRRN6F6UWDDjRr8+bYhc5r4TIZ8WmnatiYiN/Kg5yr1M/
- UbHjNq/hbtQbj/6+qkvyNKI17QCXz12qQ+d9JGjmlQin9Ezop/VL7stF0tRA2/xPKpmofuX
- M5f18TPitTjgFno3DmrZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sKJPphkq4EU=:s0gkVx3Zr91ZibRaHVQ6T/
- Bx8qEqbhocegEone2+WgCDYZxhn76WohWqU0SDLTtKHCR43POf57Tf3V3ZG5qvdShaZH2saWT
- 9c/h9McjfTbNrnwr7DEjlVE3/R0c97BQkA8TLFDnZYbYP268BHe9Kg8OZlHcsVdD4d6+TAUCs
- xf8OWwH9BdY/cbBSp+zrturUtr2K35c76uOVGPACWaf4xPjCRI9BnzvxobPiP7UP2w659Q+sC
- 7FdYkx0UPJTgeoeoREOBKODGMXQunqlZJqgTkrEXquJAQTdKNEB83gbf9Hcgwjhyppy4/tqa3
- akkuLAOvHM3GcRco3ahM3Le3IAcA3vWLUGMxt7bCqp/os1B7KNZ5YZLOgXiaaDwhFEn/Gw4zv
- XM113yRMdhImu3iDti7OfwGUa05JZYAy9Nll1mwi1MsnjOWf+k6erTmQ62Gfm6K19N6x4BM97
- i6DOpdVI5fGlypTbHVF49Qbi2rBcTx5UI/U4mUj0vcp3mAze9bOcHeGnXqzEwHAlGtv+VxIel
- DWp0mwQBglh5NPtiNazlec1dBFHNx9ssGPbMkqr92HLp4EA3+/jVl6EKnMzEHemFmO+3pVyZJ
- 3+y0wXpOp/8hgUhHqOXUTq28EP6996iCf+NzM2d1qEHIyt3na19BBl9bpCtNRHhb5hLlZkgja
- YK0MvMJwRmZ7osBuNW55IRjuX8adIzLY/hKRhX9hFNI7c+thIT7q1uToHb0tQi/3HSlti/xQf
- huMxHQy/crOq5HKWWAar/Sc6wAEN+v1C0y3+FjA+2EYT2dFD4wZrU1WDUmd+gLe/Uv7Q6NQY3
- UwHZ2s00xnp47xalH6ACgrI14db+S11O2zzm/D9pic+xBS6wwQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pndl7czd.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 6:26 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> On Wed, Mar 11, 2020 at 05:59:53PM +0100, Arnd Bergmann wrote:
-> > On Wed, Mar 11, 2020 at 3:29 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > Do you have an estimate of how long writing to TTBR0_64 takes on Cortex-A7
-> > and A15, respectively?
->
-> I don't have numbers but it's usually not cheap since you need an ISB to
-> synchronise the context after TTBR0 update (basically flushing the
-> pipeline).
+On Mon, Mar 09, 2020 at 04:40:54PM +0100, Thomas Gleixner wrote:
+> Frederic Weisbecker <frederic@kernel.org> writes:
+> 
+> > On Sun, Mar 08, 2020 at 11:24:01PM +0100, Thomas Gleixner wrote:
+> >> Both the callers in the low level ASM code and __context_tracking_exit()
+> >> which is invoked from enter_from_user_mode() via user_exit_irqoff() are
+> >> marked NOKPROBE. Allowing enter_from_user_mode() to be probed is
+> >> inconsistent at best.
+> >> 
+> >> Aside of that while function tracing per se is safe the function trace
+> >> entry/exit points can be used via BPF as well which is not safe to use
+> >> before context tracking has reached CONTEXT_KERNEL and adjusted RCU.
+> >> 
+> >> Mark it notrace and NOKROBE.
+> >
+> > Ok for the NOKPROBE, also I remember from the inclusion of kprobes
+> > that spreading those NOKPROBE couldn't be more than some sort of best
+> > effort to mitigate the accidents and it's up to the user to keep some
+> > common sense and try to stay away from the borderline functions. The same
+> > would apply to breakpoints, steps, etc...
+> >
+> > Now for the BPF and function tracer, the latter has been made robust to
+> > deal with these fragile RCU blind spots. Probably the same requirements should be
+> > expected from the function tracer users. Perhaps we should have a specific
+> > version of __register_ftrace_function() which protects the given probes
+> > inside rcu_nmi_enter()? As it seems the BPF maintainer doesn't want the whole
+> > BPF execution path to be hammered.
+> 
+> Right. The problem is that as things stand e.g. for tracepoints you need
+> to invoke trace_foo_rcuidle() which then does the scru/rcu_irq dance
+> around the invocation, but then the functions attached need to be fixed
+> that they are not issuing rcu_read_lock() or such.
+> 
+> While that is halfways doable for tracepoints when you place them, the
+> whole function entry/exit hooks along with kprobes are even more
+> interesting because functions can be called from arbitrary contexts...
+> 
+> So to make this sane, you'd need to do:
+> 
+>    if (!rcu_watching()) {
+>    	....
+>    } else {
+>         ....
+>    }
+> 
+> and the reverse when leaving the thing. So in the worst case you end up
+> with a gazillion of scru/rcu_irq pairs which really make crap slow.
+> 
+> So we are way better off to have well defined off limit regions and are
+> careful about them and then switch over ONCE and be done with it.
+> 
+> Thanks,
+> 
+>         tglx
 
-Ok.
+Ok given the discussion on the big tracing thread I think I got convinced that early
+entry code is best left out of tracing anyway.
 
-> > Another way might be to use a use a temporary buffer that is already
-> > mapped, and add a memcpy() through L1-cache to reduce the number
-> > of ttbr0 changes. The buffer would probably have to be on the stack,
-> > which limits the size, but for large copies get_user_pages()+memcpy()
-> > may end up being faster anyway.
->
-> IIRC, the x86 attempt from Ingo some years ago was using
-> get_user_pages() for uaccess. Depending on the size of the buffer, this
-> may be faster than copying twice.
-
-I guess the tradeoffs for that were rather different, as x86 back
-then had no ASIDs, so changing the page tables required a full
-TLB flush.
-
-         Arnd
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
