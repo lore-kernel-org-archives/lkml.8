@@ -2,98 +2,140 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3684C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DDC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C8E22525
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7CC2192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USusKr2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgCKL3x (ORCPT
+        id S1729128AbgCKLbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:29:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55266 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726000AbgCKL3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:29:52 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2C5005F22DA3ED759626;
-        Wed, 11 Mar 2020 19:29:47 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 11 Mar 2020
- 19:29:37 +0800
-Subject: Re: [RFC PATCH v1 0/3] arm64: tlb: add support for TTL field
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <aneesh.kumar@linux.ibm.com>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-References: <20200311025309.1743-1-yezhenyu2@huawei.com>
- <247ad619edf17eb266f856d937dac826@kernel.org>
-From:   "yezhenyu (A)" <yezhenyu2@huawei.com>
-Message-ID: <6279257b-2b8c-10d0-8bb8-b0f4b851febb@huawei.com>
-Date:   Wed, 11 Mar 2020 19:29:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 11 Mar 2020 07:31:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40267 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCKLbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:31:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e26so1685965wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+qi8Gsy+phH8WfKkqtpOwo0DUN440dJfBPdiDNKzZv0=;
+        b=USusKr2+/LjqIljnqjUN7DohKHee85EjKx+StCQUGw7AqB1NylzxED+zXCPiFtcmu+
+         QsaYzsXP6As1w78W81uzKwVSIfx+BiJuxH0nmYRflHGoR4iim5IFwealghWlYXNSFPWC
+         AlUpFUsNRYrFg3g5899YGHoxrGl2xBzDZ9LqxfvmYhn3ai5PjbkCtqh9wzRCC6wjGbh0
+         ACBnkce2FcS6nb8vwgmUxGun68fmRwpBjQjeCBhqwSh0u5MkSAY9t34GLsIMJBLJsB0P
+         dq6GZpIRj/eSTPacBH+l4Co6EFwpgYAx9uVWbYn2DhgVmC4Lx2xmvZWDY2ZD3Hsb8g3Z
+         /B+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+qi8Gsy+phH8WfKkqtpOwo0DUN440dJfBPdiDNKzZv0=;
+        b=fJKeeg2HRJyn6wc0Pu/4A9itimQZm/EuKFETPdtJx97nxgiw5viOqpeb2lFFNsWPwJ
+         SPHUGs/ZlED4K4vJwPYtyM6Qfz7DxuHZNG48t6Yn/WGsx+cj97KGjcwFz+ZOz4WrKjoU
+         lc2OcPCS2WDB8fX9lVRyq3EjGJ2syg+GS/azA3z7VKvXfEKASD4xKslKJE9s8DJTi7v+
+         dxFU+UdzD0stbtjybSVVwNgvjwb6a2MPKLLpA/2dwJmFwwLhAvqtvc+odjZvsMHlLzzU
+         GuQ0NzWcXfAju9ZRx1JDbf0wKl45tdiScgmxMOcI0w1FQVpWKQzdP5K1I0q/2ybsihHR
+         nCYg==
+X-Gm-Message-State: ANhLgQ20VSCbjDLcfrL54xL9fka5ufdgHA1KIzCaTjpXtFXnhWIRh8G2
+        DGALCb/NPrLXptR89n8s4IH0ky46irI=
+X-Google-Smtp-Source: ADFU+vu8yQwphkn83vEuD1GGYen9Zs60Do+28oOVyU/sJjeCMep301H0NxJVRU99RGuiKzeLl72aJQ==
+X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr3399437wmf.100.1583926260082;
+        Wed, 11 Mar 2020 04:31:00 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id f2sm10373193wrv.48.2020.03.11.04.30.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Mar 2020 04:30:59 -0700 (PDT)
+Subject: Re: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as
+ readonly
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        vkoul@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
+ <d94fca16-ed61-632a-6f8c-84e3a97869c7@linux.intel.com>
+ <92d3ae1b-bace-1d20-ef99-82f7e1a0a644@linaro.org>
+ <a2b24f84-0f9a-29ab-8748-dc5a26c05ffa@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <dec47c3a-08e9-e9a0-707c-2610cb10fe64@linaro.org>
+Date:   Wed, 11 Mar 2020 11:30:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <247ad619edf17eb266f856d937dac826@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a2b24f84-0f9a-29ab-8748-dc5a26c05ffa@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Thanks for the inputs
 
-On 2020/3/11 17:12, Marc Zyngier wrote:
-> Zhenyu,
+On 10/03/2020 15:53, Pierre-Louis Bossart wrote:
+> Hi Srinivas,
 > 
-> On 2020-03-11 02:53, Zhenyu Ye wrote:
->> ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
->> the level of translation table walk holding the leaf entry for the
->> address that is being invalidated. Hardware can use this information
->> to determine if there was a risk of splintering.
+>>>  > My recommendation would be to add a DisCo property stating the
+>>> WordLength value can be used by the bus code but not written to the 
+>>> Slave device registers.
 >>
->> This set of patches adds TTL field to __TLBI_ADDR, and uses
->> Architecture-specific MM context to pass the TTL value to tlb interface.
->>
->> The default value of TTL is 0, which will not have any impact on the
->> TLB maintenance instructions. The last patch trys to use TTL field in
->> some obviously tlb-flush interface.
+>> Does something like "mipi-sdw-read-only-wordlength" as slave property, 
+>> make sense?
 > 
-> I have already posted some support for ARMv8.4-TTL as part of my NV series [1],
-> patches 62, 67, 68 and 69. This only deals with Stage-2 translation so far.
-> If you intend to add Stage-1, please build on top of what I have already posted
-> (I can extract the patches on a separate branch if you want).
+> The properties can be handled at two levels.
 > 
-> Thanks,
+> First, you'd want to change include/linux/soundwire/sdw.h, and add a new 
+> field in
 > 
->         M.
+> struct sdw_dpn_prop {
+>      u32 num;
+>      u32 max_word;
+>      u32 min_word;
+>      u32 num_words;
+>      u32 *words;
+> +       bool read_only_wordlength;
 > 
-> [1] https://lore.kernel.org/linux-arm-kernel/20200211174938.27809-1-maz@kernel.org/
+> Once this is added, along with the code that bypasses the programming of 
+> DPn_BlockCtrl1, the implementation has two choices:
+> 
+> a) hard-code the field value in the codec driver.
 
-I just readed your code changes to TTL. You pass the TTL value by changing the
-function interface, which only involves the ARM and ARM64 architectures in Stage-2
-translation.
+This totally works for me.
 
-However, in Stage-1, many common interfaces(such as flush_tlb_range) need to be
-modified, which involves very much architectures. So I try to use MM context in
-mm_struct to pass the TTL value.
+> 
+> b) read the property from firmware with the DisCo helpers.
+> 
 
-I will send patch v2 based on top of your kvm-arm64/nv-5.6-rc1 branch soon.
+I would defer adding this for now till there is a real users for this.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm64/nv-5.6-rc1
+> There is no requirement that all properties be read from firmware, and 
+> if you look at existing code base sdw_slave_read_prop() is currently 
+> unused, each codec implements its own .read_prop() callback.
+> 
+> We really wanted to be pragmatic, and give the possibility to either 
+> override bad firmware or extend incomplete firmware to avoid coupling OS 
+> and firmware too much. If you foresee cases where this implementation 
+> might vary and firmware distribution is not a problem, then a property 
+> read would make sense.
+> 
+> Just once procedural reminder that all 'mipi-sdw' properties are handled 
+> by the MIPI software WG, so we'd need to have this property added in a 
+> formal MIPI document update.
+> 
+> I suggest you talk with Lior first on this.
 
+Sure, I will talk to him.
 
-Thanks,
-Zhenyu
-
+> 
+> Hope this helps
+> -Pierre
