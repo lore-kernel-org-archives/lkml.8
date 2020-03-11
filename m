@@ -2,198 +2,130 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D6EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A836BC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3395720738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD6820736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DWMg+i0R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ytxtuf3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgCKTb6 (ORCPT
+        id S1731182AbgCKTca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:31:58 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40795 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730705AbgCKTb5 (ORCPT
+        Wed, 11 Mar 2020 15:32:30 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39217 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730705AbgCKTca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:31:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id l184so1892128pfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:31:56 -0700 (PDT)
+        Wed, 11 Mar 2020 15:32:30 -0400
+Received: by mail-il1-f195.google.com with SMTP id a14so3183847ilk.6;
+        Wed, 11 Mar 2020 12:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=nrr0UrVgn5X3zlkkY/AvuhDFOpNyA1sBfPxPwX99Zio=;
-        b=DWMg+i0RW/xutS/C0lrLv5qkdOkRJdJrd7AEzJ+nhuFzo5UDID2I7osmZjKepfTMG4
-         QQ67+/sCPNIZ7NiaU8mRmDgy1xa+7fBGAeZZZkoTx0ai5DVbYNyxHYdGOZP0auhU1pUF
-         UePGYNNb68RUudvV922Q5HtVehqC2USEIk+jpbQq+gqi7fI8y+o1huJ0sJdj4YlbDaNc
-         a+tkRUGnWS+VXaa4CUwX7hR+D1hdRnZIhTJ92Lgzzk3/jj1uAGlq0dC5KMSpGWJr/Wmn
-         sId2NEwJHNKE/JOvxQjgupkfsriJZ9/JR7Q0YcDQmyz76MrrEKq3+0syQOUAMb6O47t8
-         CX2Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2mXGK5i6t3MsASMxT0lG83kEdxLaxyp7/VkTyiOzfWA=;
+        b=Ytxtuf3QQxZWXFhnUaNGSp6HRtTjU2rvi2VTtDUKIWrIxcTF08sJcrGYYDSZ0cjYVi
+         NC7Jr18qi45Tn2TxgwNtbFQJyxoGPpldN77YOO65Z1kc2htI75AljVGHwZtqXl4WFh09
+         II9VBsbHtPSWuTzSj8DU2x+vAkcTNO12e6wd0JHiEtKO2fSJv+IyvIKGAf31Vwlh/6le
+         fGg/uJ53yaXQU8x+y+MF9ACDtFn+SNGFV7s3uD000Qka0NXvCcWm88thMuialB2aMbeW
+         LTTNeVSpoAVa+tcRkDxn2Zcdp7Mw05sgFo6hkmJTrwxWy7LCnul4OZtHXyEwSBI41s5K
+         c7lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=nrr0UrVgn5X3zlkkY/AvuhDFOpNyA1sBfPxPwX99Zio=;
-        b=XJUvYkuFLIHYQw1qZbPXPDumUmJFAkj1kIisaTglSWQjyg8WuJhX3Qe2cu3Spdbh+s
-         xDA5a12iAUXGaGBpWjQZUpwDiDlJgl+8QGrii0/N/qviPZXu1BJ9I+2abAngYH1X4Edf
-         BgB9kF06iEaUDfV117rUBbWEXPhaN7T9t6xI/trhVfjGj2tq3masY91LtHX7DDgkVlHT
-         8LjqxcC7JoaE0JvGa6vDc5pZEuuhMhnGljQXKfn/BTJjpsDBffeR5n99eCPoBGu4yydh
-         plTxRyFd0KfGK3FBMzBGGHERAbxxbPvl9UTrqcd+1POOU2rephZSptScbkREdhBBCpNF
-         UYcg==
-X-Gm-Message-State: ANhLgQ2ETs5dTj5nfaMg0NnkEoIelwDkdHA65Ln57PRZFFL01PMeJksh
-        m0v7h3Mrrt+1SZQq2Jmamjq/DQ==
-X-Google-Smtp-Source: ADFU+vukvfW+3meQvVc7eQJOnbW2y3Dt9sKRma1Xy4nV73Wr4TLb+pJSKHj51H8zu6dSS6TupFT38g==
-X-Received: by 2002:a62:7f8f:: with SMTP id a137mr4368557pfd.145.1583955115898;
-        Wed, 11 Mar 2020 12:31:55 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id k20sm29707459pfk.123.2020.03.11.12.31.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:31:54 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 12:31:53 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Ivan Teterevkov <ivan.teterevkov@nutanix.com>
-cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "oneukum@suse.com" <oneukum@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH] mm/vmscan: add vm_swappiness configuration knobs
-In-Reply-To: <BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com>
-Message-ID: <alpine.DEB.2.21.2003111227230.171292@chino.kir.corp.google.com>
-References: <BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2mXGK5i6t3MsASMxT0lG83kEdxLaxyp7/VkTyiOzfWA=;
+        b=uGzgB+ob1lCNqciuuiptR1YJlSCpHTMJZ83z7LCH8WP1LyoGy2ku46I8V0sUWoUZ73
+         P/5EUSe/OiFD2xDw/N/GiFp6ghh0NLM7cSxbX9KQpVzzJ1fdsWra0Ks9YNvHTF96ZP3L
+         hK7lEjlxRL+AU/tcriuHYH3Mm0x08Jq9XSXM8NtXc4WvXeQGbrMPs4nE4u6/eYyz796u
+         Trx+H4T4o/oC0TtED58Anvy3OJIdBmrrTMQtis5yDeVwjktVzVIwbuH9hPTHuiRJjwyJ
+         JsCU1MVOlH/ZjX2RoZSplabkcEYlt5Aj01VC3TTw8mzC9xPaG6TKqHzyrCusj5NqBdcD
+         CrmQ==
+X-Gm-Message-State: ANhLgQ1j9V+TWXItMWftRBQrr+oIRJVGtOLXsdlmaQsxdz+0NTMgUbIz
+        bwTw30dDJOTx/X5puOrnY4ZWyvscxNYzNcx+IpU=
+X-Google-Smtp-Source: ADFU+vv0awZxCRaxLNBtprB5PP6XxG/N9GF146xOmYHuD2pw5NVQaGTRY7PIOTDoXzSifgO7fcQC19biON6GFFI5zP8=
+X-Received: by 2002:a92:6f10:: with SMTP id k16mr4651309ilc.275.1583955149310;
+ Wed, 11 Mar 2020 12:32:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200304165845.3081-1-vgoyal@redhat.com> <CAOQ4uxi_Xrf+iyP6KVugFgLOfzUvscMr0de0KxQo+jHNBCA9oA@mail.gmail.com>
+ <20200311184830.GC83257@redhat.com>
+In-Reply-To: <20200311184830.GC83257@redhat.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 11 Mar 2020 21:32:17 +0200
+Message-ID: <CAOQ4uxjja3cReO28qOd-YGmhU-_KrLxOCaBeqZYydxPAte9_pg@mail.gmail.com>
+Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, mst@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020, Ivan Teterevkov wrote:
+On Wed, Mar 11, 2020 at 8:48 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> On Wed, Mar 11, 2020 at 07:22:51AM +0200, Amir Goldstein wrote:
+> > On Wed, Mar 4, 2020 at 7:01 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > This patch series adds DAX support to virtiofs filesystem. This allows
+> > > bypassing guest page cache and allows mapping host page cache directly
+> > > in guest address space.
+> > >
+> > > When a page of file is needed, guest sends a request to map that page
+> > > (in host page cache) in qemu address space. Inside guest this is
+> > > a physical memory range controlled by virtiofs device. And guest
+> > > directly maps this physical address range using DAX and hence gets
+> > > access to file data on host.
+> > >
+> > > This can speed up things considerably in many situations. Also this
+> > > can result in substantial memory savings as file data does not have
+> > > to be copied in guest and it is directly accessed from host page
+> > > cache.
+> > >
+> > > Most of the changes are limited to fuse/virtiofs. There are couple
+> > > of changes needed in generic dax infrastructure and couple of changes
+> > > in virtio to be able to access shared memory region.
+> > >
+> > > These patches apply on top of 5.6-rc4 and are also available here.
+> > >
+> > > https://github.com/rhvgoyal/linux/commits/vivek-04-march-2020
+> > >
+> > > Any review or feedback is welcome.
+> > >
+> > [...]
+> > >  drivers/dax/super.c                |    3 +-
+> > >  drivers/virtio/virtio_mmio.c       |   32 +
+> > >  drivers/virtio/virtio_pci_modern.c |  107 +++
+> > >  fs/dax.c                           |   66 +-
+> > >  fs/fuse/dir.c                      |    2 +
+> > >  fs/fuse/file.c                     | 1162 +++++++++++++++++++++++++++-
+> >
+> > That's a big addition to already big file.c.
+> > Maybe split dax specific code to dax.c?
+> > Can be a post series cleanup too.
+>
+> How about fs/fuse/iomap.c instead. This will have all the iomap related logic
+> as well as all the dax range allocation/free logic which is required
+> by iomap logic. That moves about 900 lines of code from file.c to iomap.c
+>
 
-> This patch adds a couple of knobs:
-> 
-> - The configuration option (CONFIG_VM_SWAPPINESS).
-> - The command line parameter (vm_swappiness).
-> 
-> The default value is preserved, but now defined by CONFIG_VM_SWAPPINESS.
-> 
-> Historically, the default swappiness is set to the well-known value 60,
-> and this works well for the majority of cases. The vm_swappiness is also
-> exposed as the kernel parameter that can be changed at runtime too, e.g.
-> with sysctl.
-> 
-> This approach might not suit well some configurations, e.g. systemd-based
-> distros, where systemd is put in charge of the cgroup controllers,
-> including the memory one. In such cases, the default swappiness 60
-> is copied across the cgroup subtrees early at startup, when systemd
-> is arranging the slices for its services, before the sysctl.conf
-> or tmpfiles.d/*.conf changes are applied.
-> 
+Fine by me. I didn't take time to study the code in file.c
+I just noticed is has grown a lot bigger and wasn't sure that
+it made sense. Up to you. Only if you think the result would be nicer
+to maintain.
 
-Seems like something that can be fully handled by an initscript that would 
-set the sysctl and then iterate the memcg hierarchy propagating the 
-non-default value.  I don't think that's too much of an ask if userspace 
-wants to manipulate the swappiness value.
-
-Or maybe we can be more clever: have memcg->swappiness store -1 by default 
-unless it is changed by the user explicitly and then have 
-mem_cgroup_swappiness() return vm_swappiness for this value.  If the user 
-overwrites it, it's intended.
-
-So there are a couple options here but I don't think one of them is to add 
-a new config option or kernel command line option.
-
-> One could run a script to traverse the cgroup trees later and set the
-> desired memory.swappiness individually in each occurrence when the runtime
-> is set up, but this would require some amount of work to implement
-> properly. Instead, why not set the default swappiness as early as possible?
-> 
-> Signed-off-by: Ivan Teterevkov <ivan.teterevkov@nutanix.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  4 ++++
->  mm/Kconfig                                    | 10 ++++++++
->  mm/vmscan.c                                   | 24 ++++++++++++++++++-
->  3 files changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c07815d230bc..5d54a4303522 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5317,6 +5317,10 @@
->  			  P	Enable page structure init time poisoning
->  			  -	Disable all of the above options
->  
-> +	vm_swappiness=	[KNL]
-> +			Sets the default vm_swappiness.
-> +			Ranges from 0 to 100, the default value is 60.
-> +
->  	vmalloc=nn[KMG]	[KNL,BOOT] Forces the vmalloc area to have an exact
->  			size of <nn>. This can be used to increase the
->  			minimum size (128MB on x86). It can also be used to diff --git a/mm/Kconfig b/mm/Kconfig index ab80933be65f..ec59c19e578e 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -739,4 +739,14 @@ config ARCH_HAS_HUGEPD  config MAPPING_DIRTY_HELPERS
->          bool
->  
-> +config VM_SWAPPINESS
-> +	int "Default memory swappiness"
-> +	default 60
-> +	range 0 100
-> +	help
-> +	  Sets the default vm_swappiness, that could be changed later
-> +	  in the runtime, e.g. kernel command line, sysctl, etc.
-> +
-> +	  Higher value means more swappy. Historically, defaults to 60.
-> +
->  endmenu
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 876370565455..7d2d3550f698 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -163,7 +163,29 @@ struct scan_control {
->  /*
->   * From 0 .. 100.  Higher means more swappy.
->   */
-> -int vm_swappiness = 60;
-> +int vm_swappiness = CONFIG_VM_SWAPPINESS;
-> +
-> +static int __init swappiness_cmdline(char *str) {
-> +	int val, err;
-> +
-> +	if (!str)
-> +		return -EINVAL;
-> +
-> +	err = kstrtoint(str, 10, &val);
-> +	if (err)
-> +		return -EINVAL;
-> +
-> +	if (val < 0 || val > 100)
-> +		return -EINVAL;
-> +
-> +	vm_swappiness = val;
-> +
-> +	return 0;
-> +}
-> +
-> +early_param("vm_swappiness", swappiness_cmdline);
-> +
->  /*
->   * The total number of pages which are beyond the high watermark within all
->   * zones.
+Thanks,
+Amir.
