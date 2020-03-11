@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ECAC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5607DC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8771E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A8A20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgCKJ3I (ORCPT
+        id S1728855AbgCKJ3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:29:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58018 "EHLO mx2.suse.de"
+        Wed, 11 Mar 2020 05:29:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58292 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgCKJ3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:29:08 -0400
+        id S1728263AbgCKJ3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:29:33 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 718A7AFA1;
-        Wed, 11 Mar 2020 09:29:06 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 256BEAB7F;
+        Wed, 11 Mar 2020 09:29:32 +0000 (UTC)
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: nozomi: Use scnprintf() for avoiding potential buffer overflow
-Date:   Wed, 11 Mar 2020 10:29:05 +0100
-Message-Id: <20200311092905.24362-1-tiwai@suse.de>
+Subject: [PATCH] tty: serial: pch_uart: Use scnprintf() for avoiding potential buffer overflow
+Date:   Wed, 11 Mar 2020 10:29:30 +0100
+Message-Id: <20200311092930.24433-1-tiwai@suse.de>
 X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -40,92 +40,59 @@ Since snprintf() returns the would-be-output size instead of the
 actual output size, the succeeding calls may go beyond the given
 buffer limit.  Fix it by replacing with scnprintf().
 
-Also rewrite the code in a standard if-form instead of ugly
-conditional operators.
-
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
- drivers/tty/nozomi.c | 67 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 33 insertions(+), 34 deletions(-)
+ drivers/tty/serial/pch_uart.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/tty/nozomi.c b/drivers/tty/nozomi.c
-index ed99948f3b7f..3af193343f60 100644
---- a/drivers/tty/nozomi.c
-+++ b/drivers/tty/nozomi.c
-@@ -839,40 +839,39 @@ static char *interrupt2str(u16 interrupt)
- 	static char buf[TMP_BUF_MAX];
- 	char *p = buf;
+diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
+index 0a96217dba67..40fa7a27722d 100644
+--- a/drivers/tty/serial/pch_uart.c
++++ b/drivers/tty/serial/pch_uart.c
+@@ -310,32 +310,32 @@ static ssize_t port_show_regs(struct file *file, char __user *user_buf,
+ 	if (!buf)
+ 		return 0;
  
--	interrupt & MDM_DL1 ? p += snprintf(p, TMP_BUF_MAX, "MDM_DL1 ") : NULL;
--	interrupt & MDM_DL2 ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"MDM_DL2 ") : NULL;
--
--	interrupt & MDM_UL1 ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"MDM_UL1 ") : NULL;
--	interrupt & MDM_UL2 ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"MDM_UL2 ") : NULL;
--
--	interrupt & DIAG_DL1 ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"DIAG_DL1 ") : NULL;
--	interrupt & DIAG_DL2 ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"DIAG_DL2 ") : NULL;
--
--	interrupt & DIAG_UL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"DIAG_UL ") : NULL;
--
--	interrupt & APP1_DL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"APP1_DL ") : NULL;
--	interrupt & APP2_DL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"APP2_DL ") : NULL;
--
--	interrupt & APP1_UL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"APP1_UL ") : NULL;
--	interrupt & APP2_UL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"APP2_UL ") : NULL;
--
--	interrupt & CTRL_DL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"CTRL_DL ") : NULL;
--	interrupt & CTRL_UL ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"CTRL_UL ") : NULL;
--
--	interrupt & RESET ? p += snprintf(p, TMP_BUF_MAX - (p - buf),
--					"RESET ") : NULL;
-+	if (interrupt & MDM_DL1)
-+		p += scnprintf(p, TMP_BUF_MAX, "MDM_DL1 ");
-+	if (interrupt & MDM_DL2)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "MDM_DL2 ");
-+	if (interrupt & MDM_UL1)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "MDM_UL1 ");
-+	if (interrupt & MDM_UL2)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "MDM_UL2 ");
-+	if (interrupt & DIAG_DL1)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "DIAG_DL1 ");
-+	if (interrupt & DIAG_DL2)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "DIAG_DL2 ");
-+
-+	if (interrupt & DIAG_UL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "DIAG_UL ");
-+
-+	if (interrupt & APP1_DL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "APP1_DL ");
-+	if (interrupt & APP2_DL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "APP2_DL ");
-+
-+	if (interrupt & APP1_UL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "APP1_UL ");
-+	if (interrupt & APP2_UL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "APP2_UL ");
-+
-+	if (interrupt & CTRL_DL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "CTRL_DL ");
-+	if (interrupt & CTRL_UL)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "CTRL_UL ");
-+
-+	if (interrupt & RESET)
-+		p += scnprintf(p, TMP_BUF_MAX - (p - buf), "RESET ");
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"PCH EG20T port[%d] regs:\n", priv->port.line);
  
- 	return buf;
- }
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"=================================\n");
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"IER: \t0x%02x\n", ioread8(priv->membase + UART_IER));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"IIR: \t0x%02x\n", ioread8(priv->membase + UART_IIR));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"LCR: \t0x%02x\n", ioread8(priv->membase + UART_LCR));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"MCR: \t0x%02x\n", ioread8(priv->membase + UART_MCR));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"LSR: \t0x%02x\n", ioread8(priv->membase + UART_LSR));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"MSR: \t0x%02x\n", ioread8(priv->membase + UART_MSR));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"BRCSR: \t0x%02x\n",
+ 			ioread8(priv->membase + PCH_UART_BRCSR));
+ 
+ 	lcr = ioread8(priv->membase + UART_LCR);
+ 	iowrite8(PCH_UART_LCR_DLAB, priv->membase + UART_LCR);
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"DLL: \t0x%02x\n", ioread8(priv->membase + UART_DLL));
+-	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
++	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
+ 			"DLM: \t0x%02x\n", ioread8(priv->membase + UART_DLM));
+ 	iowrite8(lcr, priv->membase + UART_LCR);
+ 
 -- 
 2.16.4
 
