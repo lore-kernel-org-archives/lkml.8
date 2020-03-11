@@ -2,71 +2,110 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8FFC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8318C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F3220735
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C132074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgCKQ6Y (ORCPT
+        id S1730340AbgCKQ63 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 12:58:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35795 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730031AbgCKQ6X (ORCPT
+        Wed, 11 Mar 2020 12:58:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49755 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730059AbgCKQ63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:58:23 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jC4gU-0003xs-3A; Wed, 11 Mar 2020 16:58:18 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     ajayg@nvidia.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-i2c@vger.kernel.org (open list:I2C CONTROLLER DRIVER FOR NVIDIA
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-Date:   Thu, 12 Mar 2020 00:58:06 +0800
-Message-Id: <20200311165806.12365-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Mar 2020 12:58:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-61-MbdLZPIiOeOwaIAf0E2-gg-1; Wed, 11 Mar 2020 16:58:25 +0000
+X-MC-Unique: MbdLZPIiOeOwaIAf0E2-gg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 11 Mar 2020 16:58:24 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 11 Mar 2020 16:58:24 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Guru Das Srinagesh' <gurus@codeaurora.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        "Subbaraman Narayanamurthy" <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: RE: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
+Thread-Topic: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
+Thread-Index: AQHV90YvPG+mI4RpM0Wy3POJxK2r86hDnJdA
+Date:   Wed, 11 Mar 2020 16:58:24 +0000
+Message-ID: <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
+References: <cover.1583889178.git.gurus@codeaurora.org>
+ <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
+In-Reply-To: <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nvidia card may come with a "phantom" UCSI device, and its driver gets
-stuck in probe routine, prevents any system PM operations like suspend.
+From: Guru Das Srinagesh
+> Sent: 11 March 2020 01:41
+> 
+> Since the PWM framework is switching struct pwm_args.period's datatype
+> to u64, prepare for this transition by using div64_u64 to handle a
+> 64-bit divisor.
+> 
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> 
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/clk/clk-pwm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+> index 87fe0b0e..7b1f7a0 100644
+> --- a/drivers/clk/clk-pwm.c
+> +++ b/drivers/clk/clk-pwm.c
+> @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+>  	}
+> 
+>  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+> -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
+> +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
 
-Let's handle the unaccounted case that the target time equals to jiffies
-in gpu_i2c_check_status(), so the UCSI driver can let the probe fail as
-it should.
+That cannot be needed, a 32 bit division is fine.
+More interesting would be whether pargs.period is sane (eg not zero).
+I'd assign pargs.period to an 'unsigned int' variable
+prior to the division (I hate casts - been bitten by them in the past.).
 
-Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/i2c/busses/i2c-nvidia-gpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+>  	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
+>  	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 
-diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
-index 62e18b4db0ed..1988e93c7925 100644
---- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-+++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-@@ -88,7 +88,7 @@ static int gpu_i2c_check_status(struct gpu_i2c_dev *i2cd)
- 		usleep_range(500, 600);
- 	} while (time_is_after_jiffies(target));
- 
--	if (time_is_before_jiffies(target)) {
-+	if (time_is_before_eq_jiffies(target)) {
- 		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
- 		return -ETIMEDOUT;
- 	}
--- 
-2.17.1
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
