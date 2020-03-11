@@ -2,241 +2,183 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93CAC10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A20EC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0839208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583905913;
-	bh=tT0LNztPzW2QQo07E6zLHtsWUx2RZWIcbKFDhkjs3gw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TD2A0U5Qst+dqafWeaBFvOCK8YYs0YopEtodw5YAuglHb+ccpSVjsGtB++AcYclDv
-	 BTYSR26XnGX+aJa2BseACLJeumqRh+7lCLb+MA7tfRnAMdHON8Bv23O1KPwQbel88r
-	 5ZrKXU00xfjwpJOxcCyEQx+D3lmLMLxWXEOM3Fuc=
+	by mail.kernel.org (Postfix) with ESMTP id 2370D208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:54:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="h5NCiVzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgCKFvw (ORCPT
+        id S1728183AbgCKFx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:51:52 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:43733 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgCKFvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:51:52 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 02B5nsuH014142;
-        Wed, 11 Mar 2020 14:49:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 02B5nsuH014142
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583905796;
-        bh=5Jc1qPKc/LTqMzP9XLekz19E/apKl3IBuLq7/cwJG8I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qKIo3vnRkKNIGbUBiV1sBODVoHVXID/IcuZaQCzQHn1gLgiWbpcJkF8Df6wTAsw00
-         p+IP9mJLMw3dr4JEaNZflZpCVdkfONLcYtpDVDyxP/1dAVZ+Of2GWyFA09Zul4/bU4
-         QMOYyjoqJ4qNJzm6y1l+r75G3hT9PG/gtEbXInWt44kj0i/fPiz2GUGlqA98eeGYsA
-         WKB8/wUBbIphBZ3sMuZx5eRhwGHYYM6oF6LVVq6MUdBOJrvj8aSjV8LcCyaLUNiDR0
-         hzpwV6VAGHAtiAULkZZniYp0lHm/VrlOZilt3wE4HxIzRVW72+szP5/jEICp1wNKlU
-         oUcN6SCGIMzOg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Neil Horman <nhorman@tuxdriver.com>, netdev@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Nicolas Pitre <nico@fluxnic.net>, linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: drop_monitor: make drop_monitor built-in
-Date:   Wed, 11 Mar 2020 14:49:53 +0900
-Message-Id: <20200311054953.11956-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Mar 2020 01:53:59 -0400
+Received: from mail-vi1eur05on2082.outbound.protection.outlook.com ([40.107.21.82]:37057
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726160AbgCKFx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 01:53:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aLqG8exrZXxbauFrGf3ljltSuyt2RzpcTr7+g1dhc3ieTjTLKdKyLgqvHxmhBEvbAhsT1dxJQKPcIFqps4aKASrfhQqNw5ADifgiyyZYn4I87ZFz4Pp+lEogfYCb2Mmd6tVtC2Q95VtpzJdpDrja7vO10XQ7UGBBMU3Rbyp0JPd8+cx9WTM+DnQY3Tr5ZucdHsGHONwx1dj/zjRfAGlWZ6iiO7gj2teZQt1UAK1CuMP7mcX760QHO+XGjznkofi+lbvlddEAQB6FR7b8ig9Zu6/06wnjm1Mz7/o7Xr6MfmjTiCEfVZYoo3Ti5aMBubHMuZ4EOjaScD40hP4k/LHq5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=87rttV+1yuEH2RahdK7TcjO1im8BnWFwYQfyBBFsx+0=;
+ b=jWQmtd63OXavTKgdLeFOGMimav1WFx2+2e+b5UbOBHCJmyDzLYX/SRiduT4LdwlrSS6b/8sNx+gHLlOAONTwl6OtLkE1RDaxx914gKeZsjD1i1qo9cpQhGsmGWgGPcdwA4qfT0T70vdhaFOSeJJvzliGwl1aQRtl66XCIB9BaIeZkg9rMd0zRCv9q+iA7oxnAZ9iNX4CpHmlnxQKxSe9evAb3cuuKfJSjkITO1uG2XLBmvg6DSd9xzacDMIZqY7VnbroHqIVHOJacfxKIDUrsBPyPm1R9GGiSAwBWjPG0nLxzcWYkKewGKWhCagM7odU97QtY1PVbEZEpc6vZGr/iA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=87rttV+1yuEH2RahdK7TcjO1im8BnWFwYQfyBBFsx+0=;
+ b=h5NCiVzsguVrBiOKf6QqVXNDKQ21L1WiI9wlr34sO3DLz1IdY+Oi+W3r/ZBvm/EzHcaZq15zENbOvObgkDmnLXNA+KjHjB1oS/poRp8p1X4cYfbUEkJNIywbr7h4qV/YoWDmK8zce+pAMYhB/iUPanpdJ1jnPbbcFFMwAQGPrgo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=calvin.johnson@oss.nxp.com; 
+Received: from DB8PR04MB5643.eurprd04.prod.outlook.com (20.179.10.153) by
+ DB8PR04MB5802.eurprd04.prod.outlook.com (20.179.9.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Wed, 11 Mar 2020 05:53:53 +0000
+Received: from DB8PR04MB5643.eurprd04.prod.outlook.com
+ ([fe80::e1be:98ef:d81c:1eef]) by DB8PR04MB5643.eurprd04.prod.outlook.com
+ ([fe80::e1be:98ef:d81c:1eef%2]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 05:53:53 +0000
+Date:   Wed, 11 Mar 2020 11:23:39 +0530
+From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
+To:     dan.carpenter@oracle.com
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ajay Gupta <ajayg@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH net] device property: change device_get_phy_mode() to
+ prevent signedess bugs
+Message-ID: <20200311055339.GA22511@lsv03152.swis.in-blr01.nxp.com>
+References: <20200131045953.wbj66jkvijnmf5s2@kili.mountain>
+ <202002031247.fhmzF9z1%lkp@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202002031247.fhmzF9z1%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SG2PR02CA0079.apcprd02.prod.outlook.com
+ (2603:1096:4:90::19) To DB8PR04MB5643.eurprd04.prod.outlook.com
+ (2603:10a6:10:aa::25)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0079.apcprd02.prod.outlook.com (2603:1096:4:90::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Wed, 11 Mar 2020 05:53:47 +0000
+X-Originating-IP: [14.142.151.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e5b4970f-1d53-4c77-6f34-08d7c580943e
+X-MS-TrafficTypeDiagnostic: DB8PR04MB5802:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB58022965533541FB586A6464D2FC0@DB8PR04MB5802.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(396003)(376002)(366004)(199004)(956004)(8676002)(1006002)(4326008)(966005)(44832011)(9686003)(7696005)(6666004)(52116002)(6506007)(55236004)(478600001)(55016002)(8936002)(81156014)(6916009)(81166006)(66556008)(66946007)(66476007)(16526019)(186003)(316002)(54906003)(1076003)(7416002)(86362001)(33656002)(5660300002)(2906002)(26005)(110426005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5802;H:DB8PR04MB5643.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6IOVktekxdlG08PF3bCr3OjxPwh24/AOps4wXQ0ktCUtSFXHFK+MDHbd5j/IAR4OWrShfAvh4zYiH3wusoEHzAkFPkTthYH0IT9iB2sn0I0FXsGBgHznFrrVN0Sbfn2oQUVpwZXsT2oqhwXrYbumrck6BK4R97GbVa6A8uX/XMFoOJPemNiuRnvR+uGg3xYmoU1uSXYaFO0noIZGAqUPxS7ZD2pZqa/tQSzne01a6JCUmHNLq9F2/u/kQh/O4t2yBif/FVQSxtkAzLlhY+ZDK5yuWT7gw1UJcOhZNhEejRjdQ6TAj+nipf/ONym2jFO/SvFvNbsKx7w3mUjnIaDrWs2H0h1goxtCQuoz9GD5gcQGg2dWSnAWHWZwkCXCIn9GHjbMQWWzzg1IzYlldf9D/5tk9tJHFUwKx7jNRgTQgDea4hsrUigrPaYAlvBQ2AH5cPOaY2YRHKfh4YYlvaLuUcmUq99JKwvsCcV4WpW7dNIsM9cQ1gp9TCrtejSBsmx+t7Y9iAotr0zHZRA2YYFkV+jqCu+8vdDc/W8H1JTzwOjMaErahMKBOFXFBAadwb17
+X-MS-Exchange-AntiSpam-MessageData: ojdF8xquXkdcER073Fu8K0vbCkFu52sl/NnolF/pR6nNLJBmqR4/gAQ45xeH7r5FnLVR6GE9nmF84kcMY+pa5Yc0axoBf08eVjGjovLegqW+t+yhQJHjojK0T/NKcvuXSDr+cQYAru9XNm4QScKLiw==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5b4970f-1d53-4c77-6f34-08d7c580943e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 05:53:53.5866
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8jxq6DdOProjWeYYcPbQUkttCu/lqTfTgp8Db0+MfqNWmdNsUp5AHoPkll5dZ2JoRIBbvsaOWkzIc6TZHaYG5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5802
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
+Hi Dan,
 
-The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
-from being 'm' when NET_DEVLINK=y.
+Do you plan to send v2 of this patch set?
+https://lkml.org/lkml/2020/1/31/1
+I'm preparing my patch set on top of this. Hence the query.
 
-With the planned Kconfig change that relaxes the 'imply', the
-combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed,
-causing a link error of vmlinux.
+Thanks
+Calvin
 
-As far as I see the mainline code, NET_DROP_MONITOR=m does not provide
-any useful case.
-
-The call-site of net_dm_hw_report() only exists in net/core/devlink.c,
-which is always built-in since NET_DEVLINK is a bool type option.
-
-So, NET_DROP_MONITOR=m causes a build error, or creates an unused
-module at best.
-
-Make NET_DROP_MONITOR a bool option, and remove the module exit code.
-I also unexported net_dm_hw_report because I see no other call-site
-in upstream.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-This build error was reported in linux-next.
-https://lkml.org/lkml/2020/3/10/1936
-
-A less invasive change would be to change
-IS_ENABLED(CONFIG_NET_DROP_MONITOR) in include/net/drop_monitor.h
-to IS_REACHABLE(CONFIG_NET_DROP_MONITOR).
-
-If you want to keep this modular, it is fine too.
-
-If this patch is acceptable,
-I'd like to get Ack from the maintainers,
-and insert this patch before my Kconfig change.
-
-
- include/net/drop_monitor.h |  2 +-
- net/Kconfig                |  2 +-
- net/core/drop_monitor.c    | 56 ++------------------------------------
- 3 files changed, 4 insertions(+), 56 deletions(-)
-
-diff --git a/include/net/drop_monitor.h b/include/net/drop_monitor.h
-index 2ab668461463..aa775f243b61 100644
---- a/include/net/drop_monitor.h
-+++ b/include/net/drop_monitor.h
-@@ -19,7 +19,7 @@ struct net_dm_hw_metadata {
- 	struct net_device *input_dev;
- };
- 
--#if IS_ENABLED(CONFIG_NET_DROP_MONITOR)
-+#ifdef CONFIG_NET_DROP_MONITOR
- void net_dm_hw_report(struct sk_buff *skb,
- 		      const struct net_dm_hw_metadata *hw_metadata);
- #else
-diff --git a/net/Kconfig b/net/Kconfig
-index 2eeb0e55f7c9..6ad5d3e95be6 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -347,7 +347,7 @@ config NET_PKTGEN
- 	  module will be called pktgen.
- 
- config NET_DROP_MONITOR
--	tristate "Network packet drop alerting service"
-+	bool "Network packet drop alerting service"
- 	depends on INET && TRACEPOINTS
- 	---help---
- 	  This feature provides an alerting service to userspace in the
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 31700e0c3928..25466b7a0176 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -13,6 +13,7 @@
- #include <linux/if_arp.h>
- #include <linux/inetdevice.h>
- #include <linux/inet.h>
-+#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/netpoll.h>
- #include <linux/sched.h>
-@@ -25,7 +26,6 @@
- #include <linux/timer.h>
- #include <linux/bitops.h>
- #include <linux/slab.h>
--#include <linux/module.h>
- #include <net/drop_monitor.h>
- #include <net/genetlink.h>
- #include <net/netevent.h>
-@@ -962,7 +962,6 @@ void net_dm_hw_report(struct sk_buff *skb,
- out:
- 	rcu_read_unlock();
- }
--EXPORT_SYMBOL_GPL(net_dm_hw_report);
- 
- static int net_dm_hw_monitor_start(struct netlink_ext_ack *extack)
- {
-@@ -1581,11 +1580,6 @@ static void __net_dm_cpu_data_init(struct per_cpu_dm_data *data)
- 	u64_stats_init(&data->stats.syncp);
- }
- 
--static void __net_dm_cpu_data_fini(struct per_cpu_dm_data *data)
--{
--	WARN_ON(!skb_queue_empty(&data->drop_queue));
--}
--
- static void net_dm_cpu_data_init(int cpu)
- {
- 	struct per_cpu_dm_data *data;
-@@ -1594,18 +1588,6 @@ static void net_dm_cpu_data_init(int cpu)
- 	__net_dm_cpu_data_init(data);
- }
- 
--static void net_dm_cpu_data_fini(int cpu)
--{
--	struct per_cpu_dm_data *data;
--
--	data = &per_cpu(dm_cpu_data, cpu);
--	/* At this point, we should have exclusive access
--	 * to this struct and can free the skb inside it.
--	 */
--	consume_skb(data->skb);
--	__net_dm_cpu_data_fini(data);
--}
--
- static void net_dm_hw_cpu_data_init(int cpu)
- {
- 	struct per_cpu_dm_data *hw_data;
-@@ -1614,15 +1596,6 @@ static void net_dm_hw_cpu_data_init(int cpu)
- 	__net_dm_cpu_data_init(hw_data);
- }
- 
--static void net_dm_hw_cpu_data_fini(int cpu)
--{
--	struct per_cpu_dm_data *hw_data;
--
--	hw_data = &per_cpu(dm_hw_cpu_data, cpu);
--	kfree(hw_data->hw_entries);
--	__net_dm_cpu_data_fini(hw_data);
--}
--
- static int __init init_net_drop_monitor(void)
- {
- 	int cpu, rc;
-@@ -1661,29 +1634,4 @@ static int __init init_net_drop_monitor(void)
- out:
- 	return rc;
- }
--
--static void exit_net_drop_monitor(void)
--{
--	int cpu;
--
--	BUG_ON(unregister_netdevice_notifier(&dropmon_net_notifier));
--
--	/*
--	 * Because of the module_get/put we do in the trace state change path
--	 * we are guarnateed not to have any current users when we get here
--	 */
--
--	for_each_possible_cpu(cpu) {
--		net_dm_hw_cpu_data_fini(cpu);
--		net_dm_cpu_data_fini(cpu);
--	}
--
--	BUG_ON(genl_unregister_family(&net_drop_monitor_family));
--}
--
--module_init(init_net_drop_monitor);
--module_exit(exit_net_drop_monitor);
--
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR("Neil Horman <nhorman@tuxdriver.com>");
--MODULE_ALIAS_GENL_FAMILY("NET_DM");
-+device_initcall(init_net_drop_monitor);
--- 
-2.17.1
-
+On Mon, Feb 03, 2020 at 05:11:49AM +0000, kbuild test robot wrote:
+> Hi Dan,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on net/master]
+> [also build test WARNING on driver-core/driver-core-testing linus/master v5.5 next-20200131]
+> [cannot apply to sparc-next/master]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Dan-Carpenter/device-property-change-device_get_phy_mode-to-prevent-signedess-bugs/20200203-043126
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git b7c3a17c6062701d97a0959890a2c882bfaac537
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.1-154-g1dc00f87-dirty
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>    arch/x86/boot/compressed/cmdline.c:5:20: sparse: sparse: multiple definitions for function 'set_fs'
+> >> arch/x86/include/asm/uaccess.h:29:20: sparse:  the previous one is here
+>    arch/x86/boot/compressed/../cmdline.c:28:5: sparse: sparse: symbol '__cmdline_find_option' was not declared. Should it be static?
+>    arch/x86/boot/compressed/../cmdline.c:100:5: sparse: sparse: symbol '__cmdline_find_option_bool' was not declared. Should it be static?
+> 
+> vim +29 arch/x86/include/asm/uaccess.h
+> 
+> ca23386216b9d4 include/asm-x86/uaccess.h      Glauber Costa   2008-06-13  27  
+> 13d4ea097d18b4 arch/x86/include/asm/uaccess.h Andy Lutomirski 2016-07-14  28  #define get_fs()	(current->thread.addr_limit)
+> 5ea0727b163cb5 arch/x86/include/asm/uaccess.h Thomas Garnier  2017-06-14 @29  static inline void set_fs(mm_segment_t fs)
+> 5ea0727b163cb5 arch/x86/include/asm/uaccess.h Thomas Garnier  2017-06-14  30  {
+> 5ea0727b163cb5 arch/x86/include/asm/uaccess.h Thomas Garnier  2017-06-14  31  	current->thread.addr_limit = fs;
+> 5ea0727b163cb5 arch/x86/include/asm/uaccess.h Thomas Garnier  2017-06-14  32  	/* On user-mode return, check fs is correct */
+> 5ea0727b163cb5 arch/x86/include/asm/uaccess.h Thomas Garnier  2017-06-14  33  	set_thread_flag(TIF_FSCHECK);
+> 5ea0727b163cb5 arch/x86/include/asm/uaccess.h Thomas Garnier  2017-06-14  34  }
+> ca23386216b9d4 include/asm-x86/uaccess.h      Glauber Costa   2008-06-13  35  
+> 
+> :::::: The code at line 29 was first introduced by commit
+> :::::: 5ea0727b163cb5575e36397a12eade68a1f35f24 x86/syscalls: Check address limit on user-mode return
+> 
+> :::::: TO: Thomas Garnier <thgarnie@google.com>
+> :::::: CC: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
