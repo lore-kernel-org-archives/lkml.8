@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C06C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0184C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092892072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534DA20735
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgCKSQv (ORCPT
+        id S1730803AbgCKSQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:16:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:53188 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 14:16:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:53198 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730626AbgCKSQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:16:51 -0400
+        id S1730626AbgCKSQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:16:53 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2C287FA;
-        Wed, 11 Mar 2020 11:16:50 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F9FFFEC;
+        Wed, 11 Mar 2020 11:16:53 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1AEA13F6CF;
-        Wed, 11 Mar 2020 11:16:50 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9BDD23F6CF;
+        Wed, 11 Mar 2020 11:16:52 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
         dietmar.eggemann@arm.com
-Subject: [PATCH v2 1/9] sched/fair: find_idlest_group(): Remove unused sd_flag parameter
-Date:   Wed, 11 Mar 2020 18:15:53 +0000
-Message-Id: <20200311181601.18314-2-valentin.schneider@arm.com>
+Subject: [PATCH v2 2/9] sched/debug: Make sd->flags sysctl read-only
+Date:   Wed, 11 Mar 2020 18:15:54 +0000
+Message-Id: <20200311181601.18314-3-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200311181601.18314-1-valentin.schneider@arm.com>
 References: <20200311181601.18314-1-valentin.schneider@arm.com>
@@ -42,50 +42,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The last use of that parameter was removed by commit
+Writing to the sysctl of a sched_domain->flags directly updates the value of
+the field, and goes nowhere near update_top_cache_domain(). This means that
+the cached domain pointers can end up containing stale data (e.g. the
+domain pointed to doesn't have the relevant flag set anymore).
 
-  57abff067a08 ("sched/fair: Rework find_idlest_group()")
+Explicit domain walks that check for flags will be affected by
+the write, but this won't be in sync with the cached pointers which will
+still point to the domains that were cached at the last sched_domain
+build.
 
-Get rid of the parameter.
+In other words, writing to this interface is playing a dangerous game. It
+could be made to trigger an update of the cached sched_domain pointers when
+written to, but this does not seem to be worth the trouble. Make it
+read-only.
 
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- kernel/sched/fair.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ kernel/sched/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fcc968669aea..1c3311277fb3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5782,8 +5782,7 @@ static int wake_affine(struct sched_domain *sd, struct task_struct *p,
- }
- 
- static struct sched_group *
--find_idlest_group(struct sched_domain *sd, struct task_struct *p,
--		  int this_cpu, int sd_flag);
-+find_idlest_group(struct sched_domain *sd, struct task_struct *p, int this_cpu);
- 
- /*
-  * find_idlest_group_cpu - find the idlest CPU among the CPUs in the group.
-@@ -5866,7 +5865,7 @@ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p
- 			continue;
- 		}
- 
--		group = find_idlest_group(sd, p, cpu, sd_flag);
-+		group = find_idlest_group(sd, p, cpu);
- 		if (!group) {
- 			sd = sd->child;
- 			continue;
-@@ -8624,8 +8623,7 @@ static bool update_pick_idlest(struct sched_group *idlest,
-  * Assumes p is allowed on at least one CPU in sd.
-  */
- static struct sched_group *
--find_idlest_group(struct sched_domain *sd, struct task_struct *p,
--		  int this_cpu, int sd_flag)
-+find_idlest_group(struct sched_domain *sd, struct task_struct *p, int this_cpu)
- {
- 	struct sched_group *idlest = NULL, *local = NULL, *group = sd->groups;
- 	struct sg_lb_stats local_sgs, tmp_sgs;
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 8331bc04aea2..d86f7c21feff 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -258,7 +258,7 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
+ 	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
+ 	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
+ 	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
++	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, proc_dointvec_minmax);
+ 	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
+ 	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
+ 	/* &table[8] is terminator */
 -- 
 2.24.0
 
