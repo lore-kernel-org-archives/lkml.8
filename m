@@ -2,503 +2,177 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1817BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAECCC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AC52074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sEVwc1UO"
+	by mail.kernel.org (Postfix) with ESMTP id 9E7DA2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583965436;
+	bh=VxuBiG8OFio/B5ZtjRsG29WpYhE8YxkKdDWuBasRt2w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=AbuAuIj9X5bcl2RPf9z11hzLA/Nq8e80/t8g3uiJoUgHb17O6KrJxK0Z7cz74ckTz
+	 guzRh+0k8ztD52azHO2huq/pydtsA2X1zYB3JC0Xv21u6L/0PWglnknQMOTv44hkSu
+	 WEM77kTNnkAHqWF7he90xZ82OTrwbUIYDn1tSffE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgCKWXh (ORCPT
+        id S1731058AbgCKWXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:23:37 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:34907 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbgCKWXh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:23:37 -0400
-Received: by mail-pg1-f201.google.com with SMTP id w8so2175546pgr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 15:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=U1iDEFww1El8Gt3tduRVoHHQdOCf1b56TafCNW0JF/k=;
-        b=sEVwc1UOBv3VuEQdbGvIlYBgWBX9D5LBgKc0pHQga6mdAVXEcAhDqMVylP1BOQq9eF
-         95IpyRVVUevnLdQPbuGavljctufDUdoUnDjn3g0O4BK69JGE3V5pWtp6Oz6RsNT5Auhc
-         Uu52Q47dquYxfNtPVchhlmv88Dbv68m2kIi1urohmXZoVklMGNpDku+awGzifErSK+dd
-         kJMfYOTDi0KUXPa3DXFeeAgqRq6zpEnuU9DLvl5WUrhvGE0jP1CzPvSZdYJg++UXWTV7
-         jdJjwDZnUooCQwEr1xla9kX0a17STbuZlnHJhFk5Yss1ujt5Zgrrk3TeMCYL5p0HILDS
-         fovg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=U1iDEFww1El8Gt3tduRVoHHQdOCf1b56TafCNW0JF/k=;
-        b=daO0yOUrBJjh5FTF72kvcBKdL7BGl/D/NHI2okdm36UTn5LGey9USS5S3yNaSHLmED
-         yJ5UGk6BYCCiqO3T32WkT975Loecy6xEQb7348eWhLe62Xnj6XA7/ddSVLYa0B+JJUgO
-         1qMwddd2UAfpRm0EXvwHtSwxmOLM+0ATiYvYKxViaNIW6/qhRAu89qCPJp/xmknyAD6w
-         97ITmHAq2gIe84zWWSYiXssPbQa3FQWpsD0jJ8iV0VKWyTzw3JxidWTCNqgTfg/PEPrV
-         FSBhwrG/2OCPGjMpdviDFL+VH1CLo27WveX9D5EGa5GWUIJr39mAHzYU65d7HFUlTaxr
-         91Ig==
-X-Gm-Message-State: ANhLgQ3H07Vit6vxgGeae0YM1K7oHCQbM+F5NdlBdDTolPvcZGt1LTcl
-        MClF1oGXAiVia8teiCl+V5Mx6LY8ACZPdg==
-X-Google-Smtp-Source: ADFU+vtPmQMywB2cfUJ8IMDMCSLvMM0dwQYxNSolQ4ed+sEYHP4nCR3VOvylDNPizZTqIGFDCYaWDmt8o2dbUw==
-X-Received: by 2002:a63:cb:: with SMTP id 194mr1177160pga.37.1583965413686;
- Wed, 11 Mar 2020 15:23:33 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:21:58 -0700
-Message-Id: <20200311222157.259707-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [RFC PATCH kunit-next] kunit: kunit_tool: Separate out config/build/exec/parse
-From:   David Gow <davidgow@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Mar 2020 18:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729506AbgCKWXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:23:55 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FBAC2074F;
+        Wed, 11 Mar 2020 22:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583965434;
+        bh=VxuBiG8OFio/B5ZtjRsG29WpYhE8YxkKdDWuBasRt2w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fDGv/SDkCtTHXBh8kW0vBN8kem9XC4ovtOXnyjOBM+1pp4g2/Va+d1cnO0IiElwvA
+         241pXhPDe/ac5hQcwfeX+qu+ILSg3vKYyWeFPlkxf87j3XmS6BEBSBsp/RIsd5Qxrd
+         tMNCXTIXxAtHH0/IkDgKdsCVjTEtgct/q+yXsIWw=
+Date:   Wed, 11 Mar 2020 17:23:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311222352.GA200510@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5328126a-7cf0-58c9-7dff-978fe2cae0ee@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new subcommands to kunit.py to allow stages of the existing 'run'
-subcommand to be run independently:
-- 'config': Verifies that .config is a subset of .kunitconfig
-- 'build': Compiles a UML kernel for KUnit
-- 'exec': Runs the kernel, and outputs the test results.
-- 'parse': Parses test results from a file or stdin
+On Wed, Mar 11, 2020 at 03:11:06PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On 3/11/20 2:53 PM, Austin.Bolen@dell.com wrote:
+> > On 3/11/2020 4:27 PM, Kuppuswamy Sathyanarayanan wrote:
+> > > On 3/11/20 1:33 PM, Bjorn Helgaas wrote:
+> > > > On Wed, Mar 11, 2020 at 05:27:35PM +0000, Austin.Bolen@dell.com wrote:
+> > > > > On 3/11/2020 12:12 PM, Bjorn Helgaas wrote:
+> > > > > <SNIP>
+> > > > > > I'm probably missing your intent, but that sounds like "the OS can
+> > > > > > read/write AER bits whenever it wants, regardless of ownership."
+> > > > > > 
+> > > > > > That doesn't sound practical to me, and I don't think it's really
+> > > > > > similar to DPC, where it's pretty clear that the OS can touch DPC bits
+> > > > > > it doesn't own but only *during the EDR processing window*.
+> > > > > Yes, by treating AER bits like DPC bits I meant I'd define the specific
+> > > > > time windows when OS can touch the AER status bits similar to how it's
+> > > > > done for DPC in the current ECN.
+> > > > Makes sense, thanks.
+> > > > 
+> > > > > > > > > For the normative text describing when OS clears the AER bits
+> > > > > > > > > following the informative flow chart, it could say that OS clears
+> > > > > > > > > AER as soon as possible after OST returns and before OS processes
+> > > > > > > > > _HPX and loading drivers.  Open to other suggestions as well.
+> > > > > > > > I'm not sure what to do with "as soon as possible" either.  That
+> > > > > > > > doesn't seem like something firmware and the OS can agree on.
+> > > > > > > I can just state that it's done after OST returns but before _HPX or
+> > > > > > > driver is loaded. Any time in that range is fine. I can't get super
+> > > > > > > specific here because different OSes do different things.  Even for
+> > > > > > > a given OS they change over time. And I need something generic
+> > > > > > > enough to support a wide variety of OS implementations.
+> > > > > > Yeah.  I don't know how to solve this.
+> > > > > > 
+> > > > > > Linux doesn't actually unload and reload drivers for the child devices
+> > > > > > (Sathy, correct me if I'm wrong here) even though DPC containment
+> > > > > > takes the link down and effectively unplugs and replugs the device.  I
+> > > > > > would *like* to handle it like hotplug, but some higher-level software
+> > > > > > doesn't deal well with things like storage devices disappearing and
+> > > > > > reappearing.
+> > > > > > 
+> > > > > > Since Linux doesn't actually re-enumerate the child devices, it
+> > > > > > wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
+> > > > > > but it's all tied up with the whole unplug/replug problem.
+> > > > > DPC resets everything below it and so to get it back up and running it
+> > > > > would mean that all buses and resources need to be assigned, _HPX
+> > > > > evaluated, and drivers reloaded. If those things don't happen then the
+> > > > > whole hierarchy below the port that triggered DPC will be inaccessible.
+> > > > Hmm, I think I might be confusing this with another situation.  Sathy,
+> > > > can you help me understand this?  I don't have a way to actually
+> > > > exercise this EDR path.  Is there some way the pciehp hotplug driver
+> > > > gets involved here?
+> > If the port has hot-plug enabled then DPC trigger will cause the link to
+> > go down (disabled state) and will generate a DLLSC hot-plug interrupt.
+> > When DPC is released, the link will become active and generate another
+> > DLLSC hot-plug interrupt.
+> Yes, device/driver enumeration and removal will triggered by DLLSC
+> state change interrupt in pciehp driver.
+> > 
+> > > > Here's how this seems to work as far as I can tell:
+> > > > 
+> > > >      - Linux does not have DPC or AER control
+> > > > 
+> > > >      - Linux installs EDR notify handler
+> > > > 
+> > > >      - Linux evaluates DPC Enable _DSM
+> > > > 
+> > > >      - DPC containment event occurs
+> > > > 
+> > > >      - Firmware fields DPC interrupt
+> > > > 
+> > > >      - DPC event is not a surprise remove
+> > > > 
+> > > >      - Firmware sends EDR notification
+> > > > 
+> > > >      - Linux EDR notify handler evaluates Locate _DSM
+> > > > 
+> > > >      - Linux reads and logs DPC and AER error information for port in
+> > > >        containment mode.  [If it was an RP PIO error, Linux clears RP PIO
+> > > >        error status, which is an asymmetry with the non-RP PIO path.]
+> > > > 
+> > > >      - Linux clears AER error status (pci_aer_raw_clear_status())
+> > > > 
+> > > >      - Linux calls driver .error_detected() methods for all child devices
+> > > >        of the port in containment mode (pcie_do_recovery()).  These
+> > > >        devices are inaccessible because the link is down.
+> > > > 
+> > > >      - Linux clears DPC Trigger Status (dpc_reset_link() from
+> > > >        pcie_do_recovery()).
+> > > > 
+> > > >      - Linux calls driver .mmio_enabled() methods for all child devices.
+> > > > 
+> > > > This is where I get lost.  These child devices are now accessible, but
+> > > > they've been reset, so I don't know how their config space got
+> > > > restored.  Did pciehp enumerate them?  Did we do something like
+> > > > pci_restore_state()?  I don't see where either of these happens.
+> > > AFAIK, AER error status registers  are sticky (RW1CS) and hence
+> > > will be preserved during reset.
+> > In our testing, the device directly connected to the port that was
+> > contained does get reprogrammed and the driver is reloaded.  These are
+> > hot-plug slots and so might be due to DLLSC hot-plug interrupt when
+> > containment is released and link goes back to active state.
+> > 
+> > However, if a switch is connected to the port where DPC was triggered
+> > then we do not see the whole switch hierarchy being re-enumerated.
+> Now that I have a hardware to verify this scenario, I will look into
+> it. I suspect there is a transient state in link status which causes
+> this disconnect issue. But I think this issue is not related to
+> EDR support and hence should be reproducible in native handling
+> as well.
+> > 
+> > Also, DPC could be enabled on non-hot-plug slots so can't always rely on
+> > hot-plug to re-init devices in the recovery path.
+> If hotplug is not supported then there is support to enumerate
+> devices via polling  or ACPI events. But a point to note
+> here is, enumeration path is independent of error handler path, and
+> hence there is no explicit trigger or event from error handler path
+> to enumeration path to kick start the enumeration.
 
-Most of these are not hugely useful by themselves yet, and there's room
-for plenty of bikeshedding on the names, but this hopefully can form a
-foundation for future improvements.
-
-Signed-off-by: David Gow <davidgow@google.com>
----
-[Whoops: typo-ed Brendan's email. Sorry about that!]
-
-As was briefly disccussed in [1], this change is part of a "separation
-of concerns" in kunit_tool. This should make it easier to integrate
-kunit_tool into other setups.
-
-Of particular intrest is probably 'kunit.py parse', which should allow
-KUnit results to be parsed from other sources, such as after loading a
-module, or from a non-UML kernel, or from debugfs when that's
-supported[2].
-
-[1]: https://lkml.org/lkml/2020/2/5/552
-[2]: https://patchwork.kernel.org/patch/11419901/
-
- tools/testing/kunit/kunit.py           | 236 ++++++++++++++++++++-----
- tools/testing/kunit/kunit_tool_test.py |  55 ++++++
- 2 files changed, 242 insertions(+), 49 deletions(-)
-
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 180ad1e1b04f..92a634594cf6 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -20,8 +20,12 @@ import kunit_config
- import kunit_kernel
- import kunit_parser
- 
--KunitResult = namedtuple('KunitResult', ['status','result'])
-+KunitResult = namedtuple('KunitResult', ['status','result','elapsed_time'])
- 
-+KunitConfigRequest = namedtuple('KunitConfigRequest', ['build_dir', 'defconfig'])
-+KunitBuildRequest = namedtuple('KunitBuildRequest', ['jobs', 'build_dir'])
-+KunitExecRequest = namedtuple('KunitExecRequest', ['timeout', 'build_dir'])
-+KunitParseRequest = namedtuple('KunitParseRequest', ['raw_output', 'input_data'])
- KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
- 
- KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
-@@ -44,14 +48,25 @@ def get_kernel_root_path():
- 		sys.exit(1)
- 	return parts[0]
- 
--def run_tests(linux: kunit_kernel.LinuxSourceTree,
--	      request: KunitRequest) -> KunitResult:
-+def config_tests(linux: kunit_kernel.LinuxSourceTree,
-+		 request: KunitConfigRequest) -> KunitResult:
-+	kunit_parser.print_with_timestamp('Configuring KUnit Kernel ...')
-+
- 	config_start = time.time()
-+	if request.defconfig:
-+		create_default_kunitconfig()
- 	success = linux.build_reconfig(request.build_dir)
- 	config_end = time.time()
- 	if not success:
--		return KunitResult(KunitStatus.CONFIG_FAILURE, 'could not configure kernel')
-+		return KunitResult(KunitStatus.CONFIG_FAILURE,
-+				   'could not configure kernel',
-+				   config_end - config_start)
-+	return KunitResult(KunitStatus.SUCCESS,
-+			   'configured kernel successfully',
-+			   config_end - config_start)
- 
-+def build_tests(linux: kunit_kernel.LinuxSourceTree,
-+		request: KunitBuildRequest) -> KunitResult:
- 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
- 
- 	build_start = time.time()
-@@ -59,73 +74,156 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	build_end = time.time()
- 	if not success:
- 		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
-+	if not success:
-+		return KunitResult(KunitStatus.BUILD_FAILURE,
-+				   'could not build kernel',
-+				   build_end - build_start)
-+	return KunitResult(KunitStatus.SUCCESS,
-+			   'built kernel successfully',
-+			   build_end - build_start)
- 
-+def exec_tests(linux: kunit_kernel.LinuxSourceTree,
-+	       request: KunitExecRequest) -> KunitResult:
- 	kunit_parser.print_with_timestamp('Starting KUnit Kernel ...')
- 	test_start = time.time()
- 
-+	result = linux.run_kernel(timeout=request.timeout,
-+				  build_dir=request.build_dir)
-+	test_end = time.time()
-+
-+	return KunitResult(KunitStatus.SUCCESS,
-+			   result,
-+			   test_end - test_start)
-+
-+def parse_tests(request: KunitParseRequest) -> KunitResult:
-+	parse_start = time.time()
-+
- 	test_result = kunit_parser.TestResult(kunit_parser.TestStatus.SUCCESS,
- 					      [],
- 					      'Tests not Parsed.')
- 	if request.raw_output:
--		kunit_parser.raw_output(
--			linux.run_kernel(timeout=request.timeout,
--					 build_dir=request.build_dir))
-+		kunit_parser.raw_output(request.input_data)
- 	else:
--		kunit_output = linux.run_kernel(timeout=request.timeout,
--						build_dir=request.build_dir)
--		test_result = kunit_parser.parse_run_tests(kunit_output)
--	test_end = time.time()
-+		test_result = kunit_parser.parse_run_tests(request.input_data)
-+	parse_end = time.time()
-+
-+	if test_result.status != kunit_parser.TestStatus.SUCCESS:
-+		return KunitResult(KunitStatus.TEST_FAILURE, test_result,
-+				   parse_end - parse_start)
-+
-+	return KunitResult(KunitStatus.SUCCESS, test_result,
-+				parse_end - parse_start)
-+
-+
-+def run_tests(linux: kunit_kernel.LinuxSourceTree,
-+	      request: KunitRequest) -> KunitResult:
-+	run_start = time.time()
-+
-+	config_request = KunitConfigRequest(request.build_dir, request.defconfig)
-+	config_result = config_tests(linux, config_request)
-+	if config_result.status != KunitStatus.SUCCESS:
-+		return config_result
-+
-+	build_request = KunitBuildRequest(request.jobs, request.build_dir)
-+	build_result = build_tests(linux, build_request)
-+	if build_result.status != KunitStatus.SUCCESS:
-+		return build_result
-+
-+	exec_request = KunitExecRequest(request.timeout, request.build_dir)
-+	exec_result = exec_tests(linux, exec_request)
-+	if exec_result.status != KunitStatus.SUCCESS:
-+		return exec_result
-+
-+	parse_request = KunitParseRequest(request.raw_output, exec_result.result)
-+	parse_result = parse_tests(parse_request)
-+
-+	run_end = time.time()
- 
- 	kunit_parser.print_with_timestamp((
- 		'Elapsed time: %.3fs total, %.3fs configuring, %.3fs ' +
- 		'building, %.3fs running\n') % (
--				test_end - config_start,
--				config_end - config_start,
--				build_end - build_start,
--				test_end - test_start))
-+				run_end - run_start,
-+				config_result.elapsed_time,
-+				build_result.elapsed_time,
-+				exec_result.elapsed_time))
-+	return parse_result
-+
-+def add_common_opts(parser):
-+	parser.add_argument('--build_dir',
-+			    help='As in the make command, it specifies the build '
-+			    'directory.',
-+			    type=str, default='', metavar='build_dir')
-+
-+def add_config_opts(parser):
-+	parser.add_argument('--defconfig',
-+				help='Uses a default .kunitconfig.',
-+				action='store_true')
-+
-+def add_build_opts(parser):
-+	parser.add_argument('--jobs',
-+			    help='As in the make command, "Specifies  the number of '
-+			    'jobs (commands) to run simultaneously."',
-+			    type=int, default=8, metavar='jobs')
-+
-+def add_exec_opts(parser):
-+	parser.add_argument('--timeout',
-+			    help='maximum number of seconds to allow for all tests '
-+			    'to run. This does not include time taken to build the '
-+			    'tests.',
-+			    type=int,
-+			    default=300,
-+			    metavar='timeout')
-+
-+def add_parse_opts(parser):
-+	parser.add_argument('--raw_output', help='don\'t format output from kernel',
-+			    action='store_true')
- 
--	if test_result.status != kunit_parser.TestStatus.SUCCESS:
--		return KunitResult(KunitStatus.TEST_FAILURE, test_result)
--	else:
--		return KunitResult(KunitStatus.SUCCESS, test_result)
- 
- def main(argv, linux=None):
- 	parser = argparse.ArgumentParser(
- 			description='Helps writing and running KUnit tests.')
- 	subparser = parser.add_subparsers(dest='subcommand')
- 
-+	# The 'run' command will config, build, exec, and parse in one go.
- 	run_parser = subparser.add_parser('run', help='Runs KUnit tests.')
--	run_parser.add_argument('--raw_output', help='don\'t format output from kernel',
--				action='store_true')
-+	add_common_opts(run_parser)
-+	add_config_opts(run_parser)
-+	add_build_opts(run_parser)
-+	add_exec_opts(run_parser)
-+	add_parse_opts(run_parser)
- 
--	run_parser.add_argument('--timeout',
--				help='maximum number of seconds to allow for all tests '
--				'to run. This does not include time taken to build the '
--				'tests.',
--				type=int,
--				default=300,
--				metavar='timeout')
--
--	run_parser.add_argument('--jobs',
--				help='As in the make command, "Specifies  the number of '
--				'jobs (commands) to run simultaneously."',
--				type=int, default=8, metavar='jobs')
--
--	run_parser.add_argument('--build_dir',
--				help='As in the make command, it specifies the build '
--				'directory.',
--				type=str, default='', metavar='build_dir')
--
--	run_parser.add_argument('--defconfig',
--				help='Uses a default .kunitconfig.',
--				action='store_true')
-+	config_parser = subparser.add_parser('config',
-+						help='Ensures that .config contains all of '
-+						'the options in .kunitconfig')
-+	add_common_opts(config_parser)
-+	add_config_opts(config_parser)
- 
--	cli_args = parser.parse_args(argv)
-+	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
-+	add_common_opts(build_parser)
-+	add_build_opts(build_parser)
- 
--	if cli_args.subcommand == 'run':
--		if get_kernel_root_path():
--			os.chdir(get_kernel_root_path())
-+	exec_parser = subparser.add_parser('exec', help='Run a kernel with KUnit tests')
-+	add_common_opts(exec_parser)
-+	add_exec_opts(exec_parser)
-+	add_parse_opts(exec_parser)
-+
-+	# The 'parse' option is special, as it doesn't need the kernel source
-+	# (therefore there is no need for a build_dir, hence no add_common_opts)
-+	# and the '--file' argument is not relevant to 'run', so isn't in
-+	# add_parse_opts()
-+	parse_parser = subparser.add_parser('parse',
-+					    help='Parses KUnit results from a file, '
-+					    'and parses formatted results.')
-+	add_parse_opts(parse_parser)
-+	parse_parser.add_argument('file',
-+				  help='Specifies the file to read results from.',
-+				  type=str, default='-', metavar='input_file')
-+
-+	cli_args = parser.parse_args(argv)
- 
-+	# Set up the build_dir and source tree for commands which use it
-+	# (everything but 'parse')
-+	if cli_args.subcommand != 'parse':
- 		if cli_args.build_dir:
- 			if not os.path.exists(cli_args.build_dir):
- 				os.mkdir(cli_args.build_dir)
-@@ -133,12 +231,11 @@ def main(argv, linux=None):
- 				cli_args.build_dir,
- 				kunit_kernel.kunitconfig_path)
- 
--		if cli_args.defconfig:
--			create_default_kunitconfig()
--
- 		if not linux:
- 			linux = kunit_kernel.LinuxSourceTree()
- 
-+
-+	if cli_args.subcommand == 'run':
- 		request = KunitRequest(cli_args.raw_output,
- 				       cli_args.timeout,
- 				       cli_args.jobs,
-@@ -147,6 +244,47 @@ def main(argv, linux=None):
- 		result = run_tests(linux, request)
- 		if result.status != KunitStatus.SUCCESS:
- 			sys.exit(1)
-+	elif cli_args.subcommand == 'config':
-+		request = KunitConfigRequest(cli_args.build_dir,
-+					     cli_args.defconfig)
-+		result = config_tests(linux, request)
-+		kunit_parser.print_with_timestamp((
-+			'Elapsed time: %.3fs\n') % (
-+				result.elapsed_time))
-+		if result.status != KunitStatus.SUCCESS:
-+			sys.exit(1)
-+	elif cli_args.subcommand == 'build':
-+		request = KunitBuildRequest(cli_args.jobs,
-+					    cli_args.build_dir)
-+		result = build_tests(linux, request)
-+		kunit_parser.print_with_timestamp((
-+			'Elapsed time: %.3fs\n') % (
-+				result.elapsed_time))
-+		if result.status != KunitStatus.SUCCESS:
-+			sys.exit(1)
-+	elif cli_args.subcommand == 'exec':
-+		exec_request = KunitExecRequest(cli_args.timeout,
-+						cli_args.build_dir)
-+		exec_result = exec_tests(linux, exec_request)
-+		parse_request = KunitParseRequest(cli_args.raw_output,
-+						  exec_result.result)
-+		result = parse_tests(parse_request)
-+		kunit_parser.print_with_timestamp((
-+			'Elapsed time: %.3fs\n') % (
-+				exec_result.elapsed_time))
-+		if result.status != KunitStatus.SUCCESS:
-+			sys.exit(1)
-+	elif cli_args.subcommand == 'parse':
-+		if cli_args.file == '-':
-+			kunit_output = sys.stdin
-+		else:
-+			with open(cli_args.file, 'r') as f:
-+				kunit_output = f.read().splitlines()
-+		request = KunitParseRequest(cli_args.raw_output,
-+					    kunit_output)
-+		result = parse_tests(request)
-+		if result.status != KunitStatus.SUCCESS:
-+			sys.exit(1)
- 	else:
- 		parser.print_help()
- 
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index cba97756ac4a..0d04425ead04 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -170,6 +170,24 @@ class KUnitMainTest(unittest.TestCase):
- 		self.print_patch.stop()
- 		pass
- 
-+	def test_config_passes_args_pass(self):
-+		kunit.main(['config'], self.linux_source_mock)
-+		assert self.linux_source_mock.build_reconfig.call_count == 1
-+		assert self.linux_source_mock.run_kernel.call_count == 0
-+
-+	def test_build_passes_args_pass(self):
-+		kunit.main(['build'], self.linux_source_mock)
-+		assert self.linux_source_mock.build_reconfig.call_count == 0
-+		self.linux_source_mock.build_um_kernel.assert_called_once_with(8, '')
-+		assert self.linux_source_mock.run_kernel.call_count == 0
-+
-+	def test_exec_passes_args_pass(self):
-+		kunit.main(['exec'], self.linux_source_mock)
-+		assert self.linux_source_mock.build_reconfig.call_count == 0
-+		assert self.linux_source_mock.run_kernel.call_count == 1
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
-+		self.print_mock.assert_any_call(StrContains('Testing complete.'))
-+
- 	def test_run_passes_args_pass(self):
- 		kunit.main(['run'], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
-@@ -177,6 +195,13 @@ class KUnitMainTest(unittest.TestCase):
- 		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
-+	def test_exec_passes_args_fail(self):
-+		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
-+		with self.assertRaises(SystemExit) as e:
-+			kunit.main(['exec'], self.linux_source_mock)
-+		assert type(e.exception) == SystemExit
-+		assert e.exception.code == 1
-+
- 	def test_run_passes_args_fail(self):
- 		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
- 		with self.assertRaises(SystemExit) as e:
-@@ -187,6 +212,14 @@ class KUnitMainTest(unittest.TestCase):
- 		assert self.linux_source_mock.run_kernel.call_count == 1
- 		self.print_mock.assert_any_call(StrContains(' 0 tests run'))
- 
-+	def test_exec_raw_output(self):
-+		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
-+		kunit.main(['exec', '--raw_output'], self.linux_source_mock)
-+		assert self.linux_source_mock.run_kernel.call_count == 1
-+		for kall in self.print_mock.call_args_list:
-+			assert kall != mock.call(StrContains('Testing complete.'))
-+			assert kall != mock.call(StrContains(' 0 tests run'))
-+
- 	def test_run_raw_output(self):
- 		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
- 		kunit.main(['run', '--raw_output'], self.linux_source_mock)
-@@ -196,6 +229,12 @@ class KUnitMainTest(unittest.TestCase):
- 			assert kall != mock.call(StrContains('Testing complete.'))
- 			assert kall != mock.call(StrContains(' 0 tests run'))
- 
-+	def test_exec_timeout(self):
-+		timeout = 3453
-+		kunit.main(['exec', '--timeout', str(timeout)], self.linux_source_mock)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
-+		self.print_mock.assert_any_call(StrContains('Testing complete.'))
-+
- 	def test_run_timeout(self):
- 		timeout = 3453
- 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
-@@ -210,5 +249,21 @@ class KUnitMainTest(unittest.TestCase):
- 		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
-+	def test_config_builddir(self):
-+		build_dir = '.kunit'
-+		kunit.main(['config', '--build_dir', build_dir], self.linux_source_mock)
-+		assert self.linux_source_mock.build_reconfig.call_count == 1
-+
-+	def test_build_builddir(self):
-+		build_dir = '.kunit'
-+		kunit.main(['build', '--build_dir', build_dir], self.linux_source_mock)
-+		self.linux_source_mock.build_um_kernel.assert_called_once_with(8, build_dir)
-+
-+	def test_exec_builddir(self):
-+		build_dir = '.kunit'
-+		kunit.main(['exec', '--build_dir', build_dir], self.linux_source_mock)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
-+		self.print_mock.assert_any_call(StrContains('Testing complete.'))
-+
- if __name__ == '__main__':
- 	unittest.main()
--- 
-2.25.1.481.gfbce0eb801-goog
-
+Is any synchronization needed here between the EDR path and the
+hotplug/enumeration path?
