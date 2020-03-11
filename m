@@ -2,142 +2,123 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFABEC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9196AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61546206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583938021;
-	bh=ruBwn5wDj74e/K+r4986L1gfq+eU0+k3w7VbVctWE10=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0rp4q8rbm8SGyEMVBvMXypOEwua9glXbK+uMCnk9/LVIpHwgCrYzzOePa5uxrM+1J
-	 /aVS/EHPUqo5PfMWTV7emBq06Qm5hNug4rkixmoPbR40fsAVIpypTiFqluDpYxrEVN
-	 qxHEi515KcWrXSTS3rJxnmM7s5/XTlYS4AqQimms=
+	by mail.kernel.org (Postfix) with ESMTP id 168B7206B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="O7l+serY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbgCKOrB (ORCPT
+        id S1729858AbgCKOr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:47:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbgCKOrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:47:01 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 117C2206EB;
-        Wed, 11 Mar 2020 14:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583938019;
-        bh=ruBwn5wDj74e/K+r4986L1gfq+eU0+k3w7VbVctWE10=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NzjBVMdxDd+Kl49LOjGaBd3WYnkCvYkNm1wU4P9GhVG5t0/K9oS+4AIwW69cVpoMV
-         FPtGYDiYkuwXkUld5nRYYBRD3nWNrbrJGDY5/wC8JnVTMzsNRttYPblFKwfKsM7WD3
-         T0z2XFq1FUMLJpWJd+zpaTrZ9ieDU6xdTQqMWoJI=
-Received: by mail-wr1-f43.google.com with SMTP id d5so2619762wrc.2;
-        Wed, 11 Mar 2020 07:47:00 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2VqtpSJHOVVtNYxMKjNo79jpup53wcZ/uPZnSk39/zha38kjTB
-        pl8KiKyH5yaM7/UsDxZOJtX8Oe0Q2GEGsZzP8M8=
-X-Google-Smtp-Source: ADFU+vs8B8EgCnwrcFOwMq4EMagcV8OTKEEHRsPEaHmM1MNKm2z5pWXx/gJgkDDoe/YZ41fGgMvzQ6EnRqYtBNoKsaY=
-X-Received: by 2002:adf:97c1:: with SMTP id t1mr618684wrb.365.1583938018853;
- Wed, 11 Mar 2020 07:46:58 -0700 (PDT)
+        Wed, 11 Mar 2020 10:47:56 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36966 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgCKOr4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:47:56 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y126so2313982qke.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:47:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BOUrshlmd64iGTeHVHzh1lBRPXu23AyN5Nnmq3KzE6w=;
+        b=O7l+serYmAbtoyZb7Way1eOmtqdMAPT5stve0l0ooG9ny3e4bGBbwKBRRjlQiar7Ti
+         MF1wjJ/pGpKG+S9UR8lkBGo3NwP5/nHXNLvpcxBTdfgF2lmEXmga82VupDDZK8SEtX/r
+         ya+qAc23/J8Mvuyql73riRdxu6jfNAlePON7q39W08x1mLYU7xnfp/ABPUS2HByFgY1j
+         0tKl6PULXkoWbg1cfHNar1khYiaCuSaPR/CmTMhHadMU8oSTHIXkGZA1bEfJhuKqaGz+
+         sVU8rFAk5A7xA+/IQCWn5T2MeQI71fw7wFLDHIU8vhi21pKlQL6pNbv8Juj12Dig4/op
+         DNXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BOUrshlmd64iGTeHVHzh1lBRPXu23AyN5Nnmq3KzE6w=;
+        b=iyJuQGnyIKsTNX2uB/ZhCxDtTOdwtt+qFLXsVKx5XHuCNyu4T+UJTEWnMoTy+1aQ35
+         K42yu0Ooodwp/BhmPUuxnXPNM1VX0TYrRRyc3jQLKG6f6kIeiBkjyQVPFm01cYHH62eH
+         SBPFciUSvjCH3ZMvYC8x5a1mA2Kz2p0n2vsHGbNFDhDGegEYqbHVU2HYzW5U93OKxndm
+         tbYvTGoZVscTJ3GccW2KRV7OKBb1DBy94nSy0jI3/2nYelik8ygx/DuftuLvOcAbMK6W
+         Xx2s06lFeRL2zPrCQ5mgjPyDhI09Uz6lzIOd0VlyaS1mhzIMwD26DoqIBz4f6R8GCeCG
+         AtiA==
+X-Gm-Message-State: ANhLgQ0C1z8Jd8DlQjjo2AJywq8ngvieNouM4+CQIeG1IN5OLCMA5eJU
+        5UQQtA1mCBKWW/k987pSil69nA==
+X-Google-Smtp-Source: ADFU+vvQXun96za+DjYFW6UuPN81X4lp0zCuOkb0lhVTCjaqQyj+2+822GXzi2x0Y47GY1gpLd+CNA==
+X-Received: by 2002:a37:4b4c:: with SMTP id y73mr3022722qka.467.1583938073760;
+        Wed, 11 Mar 2020 07:47:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::d51c])
+        by smtp.gmail.com with ESMTPSA id l2sm2141844qtq.69.2020.03.11.07.47.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 07:47:53 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 10:47:51 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] mm: Add more comments for MADV_FREE
+Message-ID: <20200311144751.GA29835@cmpxchg.org>
+References: <20200311011117.1656744-1-ying.huang@intel.com>
+ <alpine.DEB.2.21.2003102204450.255869@chino.kir.corp.google.com>
+ <87imjbv51t.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-References: <20200310174709.24174-1-wens@kernel.org> <20200310174709.24174-2-wens@kernel.org>
- <20200311105937.040cd947@donnerap.cambridge.arm.com>
-In-Reply-To: <20200311105937.040cd947@donnerap.cambridge.arm.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Wed, 11 Mar 2020 22:46:49 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66dWGSJD0sS6BmbT6nb3J0xFex=3ATwm2s9Hot4ua4kcw@mail.gmail.com>
-Message-ID: <CAGb2v66dWGSJD0sS6BmbT6nb3J0xFex=3ATwm2s9Hot4ua4kcw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: sun8i: r40: Move AHCI device node based on
- address order
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imjbv51t.fsf@yhuang-dev.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 6:59 PM Andre Przywara <andre.przywara@arm.com> wrote:
->
-> On Wed, 11 Mar 2020 01:47:07 +0800
-> Chen-Yu Tsai <wens@kernel.org> wrote:
->
-> > From: Chen-Yu Tsai <wens@csie.org>
+On Wed, Mar 11, 2020 at 01:22:54PM +0800, Huang, Ying wrote:
+> David Rientjes <rientjes@google.com> writes:
+> 
+> > On Wed, 11 Mar 2020, Huang, Ying wrote:
 > >
-> > When the AHCI device node was added, it was added in the wrong location
-> > in the device tree file. The device nodes should be sorted by register
-> > address.
+> >> diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
+> >> index 6f2fef7b0784..01144dd02a5f 100644
+> >> --- a/include/linux/mm_inline.h
+> >> +++ b/include/linux/mm_inline.h
+> >> @@ -9,10 +9,11 @@
+> >>   * page_is_file_cache - should the page be on a file LRU or anon LRU?
+> >>   * @page: the page to test
+> >>   *
+> >> - * Returns 1 if @page is page cache page backed by a regular filesystem,
+> >> - * or 0 if @page is anonymous, tmpfs or otherwise ram or swap backed.
+> >> - * Used by functions that manipulate the LRU lists, to sort a page
+> >> - * onto the right LRU list.
+> >> + * Returns 1 if @page is page cache page backed by a regular filesystem or
+> >> + * anonymous page lazily freed (e.g. via MADV_FREE).  Returns 0 if @page is
+> >> + * normal anonymous page, tmpfs or otherwise ram or swap backed.  Used by
+> >> + * functions that manipulate the LRU lists, to sort a page onto the right LRU
+> >> + * list.
 > >
-> > Move the device node to before EHCI1, where it belongs.
-> >
-> > Fixes: 41c64d3318aa ("ARM: dts: sun8i: r40: add sata node")
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-r40.dtsi | 22 +++++++++++-----------
-> >  1 file changed, 11 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > index d5442b5b6fd2..b278686d0c22 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > @@ -307,6 +307,17 @@ crypto: crypto@1c15000 {
-> >                       resets = <&ccu RST_BUS_CE>;
-> >               };
-> >
-> > +             ahci: sata@1c18000 {
-> > +                     compatible = "allwinner,sun8i-r40-ahci";
-> > +                     reg = <0x01c18000 0x1000>;
-> > +                     interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
-> > +                     resets = <&ccu RST_BUS_SATA>;
-> > +                     reset-names = "ahci";
-> > +                     status = "disabled";
-> > +
->
-> Did this empty line serve any particular purpose before? If not, you could remove it on the way.
+> > The function name is misleading: anonymous pages that can be lazily freed 
+> > are not file cache.  This returns 1 because of the question it is asking: 
+> > anonymous lazily freeable pages should be on the file lru, not the anon 
+> > lru.  So before adjusting the comment I'd suggest renaming the function to 
+> > something like page_is_file_lru().
+> 
+> Yes.  I think page_is_file_lru() is a better name too.  And whether
+> tmpfs pages are file cache pages is confusing too.  But I think we can
+> do that after this patch if others think this is a good idea too.
 
-Can't say there is. Removed when applied.
+I also think the rename is a great idea.
 
-> With that fixed:
->
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
->
-> Thanks,
-> Andre.
-
-Thanks
-ChenYu
-
-> > +             };
-> > +
-> >               ehci1: usb@1c19000 {
-> >                       compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
-> >                       reg = <0x01c19000 0x100>;
-> > @@ -733,17 +744,6 @@ spi3: spi@1c0f000 {
-> >                       #size-cells = <0>;
-> >               };
-> >
-> > -             ahci: sata@1c18000 {
-> > -                     compatible = "allwinner,sun8i-r40-ahci";
-> > -                     reg = <0x01c18000 0x1000>;
-> > -                     interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> > -                     clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
-> > -                     resets = <&ccu RST_BUS_SATA>;
-> > -                     reset-names = "ahci";
-> > -                     status = "disabled";
-> > -
-> > -             };
-> > -
-> >               gmac: ethernet@1c50000 {
-> >                       compatible = "allwinner,sun8i-r40-gmac";
-> >                       syscon = <&ccu>;
->
+Personally, I'd prefer it in the same patch. Right now the name and
+the documentation are out of date, but at least they're consistent in
+their view of the world. Fixing this interface - name and
+documentation - to reflect the existence of MADV_FREE anon pages is
+one logical change, not two.
