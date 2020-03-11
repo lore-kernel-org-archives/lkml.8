@@ -2,73 +2,87 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388F1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A473C20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1056F20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCKCIa (ORCPT
+        id S1727929AbgCKCLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:08:30 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:48892 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCKCIa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:08:30 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5e6847394c0-6e133; Wed, 11 Mar 2020 10:04:42 +0800 (CST)
-X-RM-TRANSID: 2eeb5e6847394c0-6e133
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e684735012-97a6c;
-        Wed, 11 Mar 2020 10:04:42 +0800 (CST)
-X-RM-TRANSID: 2ee45e684735012-97a6c
-From:   tangbin <tangbin@cmss.chinamobile.com>
-To:     davem@davemloft.net
-Cc:     andrew@lunn.ch, corbet@lwn.net, benh@kernel.crashing.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tangbin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] net:ftgmac100:remove redundant judgement
-Date:   Wed, 11 Mar 2020 10:05:37 +0800
-Message-Id: <20200311020537.12420-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Tue, 10 Mar 2020 22:11:25 -0400
+Received: from gofer.mess.org ([88.97.38.141]:46303 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbgCKCLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 22:11:25 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id EF0C3C6372; Wed, 11 Mar 2020 02:11:22 +0000 (GMT)
+Date:   Wed, 11 Mar 2020 02:11:22 +0000
+From:   Sean Young <sean@mess.org>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v8 04/12] ir-rx51: Use 64-bit division macro
+Message-ID: <20200311021122.GA13338@gofer.mess.org>
+References: <cover.1583889178.git.gurus@codeaurora.org>
+ <fdb2c5092005f5f149ff71123ff1b895fc3a2249.1583889178.git.gurus@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fdb2c5092005f5f149ff71123ff1b895fc3a2249.1583889178.git.gurus@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this function, ftgmac100_probe() can be triggered only
-if the platform_device and platform_driver matches, so the
-judgement at the beginning is redundant.
+On Tue, Mar 10, 2020 at 06:41:13PM -0700, Guru Das Srinagesh wrote:
+> Since the PWM framework is switching struct pwm_state.period's datatype
+> to u64, prepare for this transition by using DIV_ROUND_CLOSEST_ULL to
+> handle a 64-bit dividend.
+> 
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Richard Fontana <rfontana@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: linux-media@vger.kernel.org
 
-Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
----
- drivers/net/ethernet/faraday/ftgmac100.c | 3 ---
- 1 file changed, 3 deletions(-)
+Acked-by: Sean Young <sean@mess.org>
 
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index 4572797f0..c7ed7e871 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -1757,9 +1757,6 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 	struct device_node *np;
- 	int err = 0;
- 
--	if (!pdev)
--		return -ENODEV;
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
- 		return -ENXIO;
--- 
-2.20.1.windows.1
-
-
-
+> 
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/media/rc/ir-rx51.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
+> index 8574eda..9a5dfd7 100644
+> --- a/drivers/media/rc/ir-rx51.c
+> +++ b/drivers/media/rc/ir-rx51.c
+> @@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
+>  	}
+>  
+>  	/* Use default, in case userspace does not set the carrier */
+> -	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
+> +	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
+> +			NSEC_PER_SEC);
+>  	pwm_put(pwm);
+>  
+>  	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
