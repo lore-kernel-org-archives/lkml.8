@@ -4,45 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB85C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C95DC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8DB24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DACE24649
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgCKFHp (ORCPT
+        id S1728404AbgCKFHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:07:45 -0400
-Received: from smtprelay0238.hostedemail.com ([216.40.44.238]:42608 "EHLO
+        Wed, 11 Mar 2020 01:07:51 -0400
+Received: from smtprelay0211.hostedemail.com ([216.40.44.211]:44666 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728326AbgCKFHg (ORCPT
+        by vger.kernel.org with ESMTP id S1728349AbgCKFHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:07:36 -0400
+        Wed, 11 Mar 2020 01:07:42 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 568831802E2B9;
-        Wed, 11 Mar 2020 05:07:35 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5379A1802E2C7;
+        Wed, 11 Mar 2020 05:07:41 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bell19_24f02882e935b
-X-Filterd-Recvd-Size: 3579
+X-HE-Tag: magic61_25e9dec9d9c62
+X-Filterd-Recvd-Size: 2826
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:07:33 +0000 (UTC)
+        Wed, 11 Mar 2020 05:07:40 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH -next 024/491] AMD DISPLAY CORE: Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:38 -0700
-Message-Id: <4ee79adcba4e5ea80b3ef6271caeef6df4bf8ca7.1583896349.git.joe@perches.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH -next 027/491] AMD XGBE DRIVER: Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:41 -0700
+Message-Id: <05794ab3463ec40162689e651e3b6c2245e27984.1583896349.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -60,59 +54,40 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 4 ++--
- drivers/gpu/drm/amd/display/dc/dce/dce_aux.c       | 2 +-
- drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index 2f1c958..37fa7b 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -267,7 +267,7 @@ static struct atom_display_object_path_v2 *get_bios_object(
- 					&& id.enum_id == obj_id.enum_id)
- 				return &bp->object_info_tbl.v1_4->display_path[i];
- 		}
--		/* fall through */
-+		fallthrough;
- 	case OBJECT_TYPE_CONNECTOR:
- 	case OBJECT_TYPE_GENERIC:
- 		/* Both Generic and Connector Object ID
-@@ -280,7 +280,7 @@ static struct atom_display_object_path_v2 *get_bios_object(
- 					&& id.enum_id == obj_id.enum_id)
- 				return &bp->object_info_tbl.v1_4->display_path[i];
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		return NULL;
- 	}
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-index 68c4049..743042 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-@@ -645,7 +645,7 @@ bool dce_aux_transfer_with_retries(struct ddc_service *ddc,
- 			case AUX_TRANSACTION_REPLY_AUX_DEFER:
- 			case AUX_TRANSACTION_REPLY_I2C_OVER_AUX_DEFER:
- 				retry_on_defer = true;
--				/* fall through */
-+				fallthrough;
- 			case AUX_TRANSACTION_REPLY_I2C_OVER_AUX_NACK:
- 				if (++aux_defer_retries >= AUX_MAX_DEFER_RETRIES) {
- 					goto fail;
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c b/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
-index 8aa937f..51481e 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
-@@ -479,7 +479,7 @@ static void program_grph_pixel_format(
- 	case SURFACE_PIXEL_FORMAT_GRPH_ABGR16161616F:
- 		sign = 1;
- 		floating = 1;
--		/* fall through */
-+		fallthrough;
- 	case SURFACE_PIXEL_FORMAT_GRPH_ARGB16161616F: /* shouldn't this get float too? */
- 	case SURFACE_PIXEL_FORMAT_GRPH_ARGB16161616:
- 		grph_depth = 3;
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+index b71f9b0..a51abf 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -1612,7 +1612,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
+ 	/* PTP v2, UDP, any kind of event packet */
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+-		/* Fall through - to PTP v1, UDP, any kind of event packet */
++		fallthrough;	/* to PTP v1, UDP, any kind of event packet */
+ 	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
+@@ -1623,7 +1623,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
+ 	/* PTP v2, UDP, Sync packet */
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+-		/* Fall through - to PTP v1, UDP, Sync packet */
++		fallthrough;	/* to PTP v1, UDP, Sync packet */
+ 	case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
+@@ -1634,7 +1634,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
+ 	/* PTP v2, UDP, Delay_req packet */
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+-		/* Fall through - to PTP v1, UDP, Delay_req packet */
++		fallthrough;	/* to PTP v1, UDP, Delay_req packet */
+ 	case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
 -- 
 2.24.0
 
