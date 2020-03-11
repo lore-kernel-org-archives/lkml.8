@@ -2,107 +2,139 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B7CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E3EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99DB21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xvp73QVk"
+	by mail.kernel.org (Postfix) with ESMTP id 18955222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583887012;
+	bh=4kRfeINODboa2z4c+8D8exjL2sbcQ0JoaVZFJvfMarE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b370exOMnD+fLLzxEcDk+qLAN0tmI1YAZnHRwTvkmba2d9YZsRGanarVNx4T3OjKd
+	 eZJUjoVQndwKoKj0PbKdUZUdumYQtGiw/P3rn1XaiQdFHPbZXmdzzzwDjSxB7F5vW3
+	 wMsv64CAdn9uOqmbkuAkoUt+HhX37zVhIB60PTe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgCKAf6 (ORCPT
+        id S1727910AbgCKAgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:35:58 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34771 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbgCKAf6 (ORCPT
+        Tue, 10 Mar 2020 20:36:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40479 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbgCKAgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:35:58 -0400
-Received: by mail-vs1-f66.google.com with SMTP id t10so239737vsp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:35:57 -0700 (PDT)
+        Tue, 10 Mar 2020 20:36:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t24so200696pgj.7;
+        Tue, 10 Mar 2020 17:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dj9AJ6DgaDsv1owS/OBbLL2hfYDA+jQ+pn99BxM6NK0=;
-        b=Xvp73QVkE935ImkOQZQ+bEOpPwsbuCXEDpTploRsshH27YQ78Xl8+Y0jFMALJsZJZr
-         COzdzjlC79Gv7YvIvlLm5q5CV+nQ2Ev6nEv7Vjcy3ZClRMVySqOoIRpKLvz0puB76HFz
-         JEwAyCg6gASt+sShiUPPEjJJxdmcSiyvoLNac=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Vd8wwy++z15II2/dBTfgFL0hl+Hgv4lR23h2vNOMvr8=;
+        b=gxytofn9W2QC+J7wiTxoPyNReGrF4fQbxnTPT7y1SfofqH/tO7P9KaK/AxJ7YDULR2
+         llXuUYi3KZ30I/0U78DBzoH9KwNNhT0pI6h8BrLZWEl3sOtXyQNTOPVDB7Y7h+ZtXUgD
+         8YqZ2meiORv/1U7kCKZLyOKflDgrGkFPbJGeneIvb0sJfYQhG2E3yWOQ21Xmt6q/Xv0N
+         Ejxkv4cx2XagjdiNXWYwaWUN7m2Wkqff4SFMyFb3NBn8ZzbEk1lN07bcJ7xzpT70UST3
+         BDbPtAAvqOCVIbTQRBZ1lM3JSa5f3a2Vn3/ygxh5TWRBuhJcE4x2BmKwcVtEzA6rVCBw
+         dEtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dj9AJ6DgaDsv1owS/OBbLL2hfYDA+jQ+pn99BxM6NK0=;
-        b=Dd8Oi6M9ocvyZv+vy4A3fuLZunpoO65aCL5nr6QninG6yeNyh5r7V/WnlICrHtkBZF
-         O7pN0TSC75kTPZKylT2PHSESspDPVmOY1GvDcW3ktmGucfizAfK4BiqioxaE02NH71om
-         N0akyZdFgbf7om2EdkYswnWEF5tOgblVYNta8I7a0Dl4gMTGED5vUWwvRZ2dnPyt05RZ
-         Xy3O5ByVJHKoRxzF1+69x4Aa4B5Vgx6AJKdvYHsxpTeGBjOTx1roSCkFXWnOVMYM/Hqz
-         0qWQnfEGmnAVzhUtYbsMkEL447uAS0gNIC33nE1rix0iiuvfS4R0G3Txj1doWiRvjSHi
-         creA==
-X-Gm-Message-State: ANhLgQ3AHsBE6GMOXd6BC6zTgLVtQ+otBMvhfH97/VjI8BnBajIokjat
-        GVvQbQHtiVKAMXkm0ZQwxdrZWpr9jH8=
-X-Google-Smtp-Source: ADFU+vv0FsyfBydr4Cj57x4IFdXQ8aEjP5S5/X2DkgCqvbEDC2XgaA3pZMexUgBtjgLSFIBBEFuwog==
-X-Received: by 2002:a67:fbcd:: with SMTP id o13mr469863vsr.174.1583886956716;
-        Tue, 10 Mar 2020 17:35:56 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id i66sm13856047vkh.28.2020.03.10.17.35.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 17:35:55 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id z125so198824vsb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:35:55 -0700 (PDT)
-X-Received: by 2002:a05:6102:1cf:: with SMTP id s15mr403204vsq.109.1583886954828;
- Tue, 10 Mar 2020 17:35:54 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vd8wwy++z15II2/dBTfgFL0hl+Hgv4lR23h2vNOMvr8=;
+        b=PxhGNO5IEcAj8y0DwUpNhwGcKSpI/voYTRMGs6ikuXYFIOpg1urYff7H55yXoiSWVg
+         ivfFXDOaWZUAvg6N1CoPpiU/minHXbZBREd5fVjK8FnnIjoUbuoO3jFcxg4yXPJUDxy3
+         J1lFxl7oM2FnYJ3MTrOnnTCuE1rorkK472cx7zMOURkdrGmr3GXbPx2MvFkcxsUQjBzX
+         NVQGvRsZpGiWVLXhnOAJNI5vziMET79lmi+ntbtNU3B8RYXQBcD2beacfjMe3de2PdSx
+         kW7xXE3zo4X4W2A3CNF4fwdEyT0oNhG+K+H+2sAu0zs/9OwOPv+W1DsRZ2/P5MxkoLGi
+         b5Cg==
+X-Gm-Message-State: ANhLgQ3Emf/sEevdCgN3jXNSuj2MpaKuses0d5eHg3s92iP9dKsRbfIJ
+        o1L3p1aaF2GPVm464H8ykMc=
+X-Google-Smtp-Source: ADFU+vswEpqqcw4XX2RthZfi5bdsShhNz14MpEtyAQ7rosc6C1e6e/ydxWEzoYFqo+CzmwWPJVNYHQ==
+X-Received: by 2002:a65:685a:: with SMTP id q26mr284721pgt.29.1583887009162;
+        Tue, 10 Mar 2020 17:36:49 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id m26sm2440274pgc.77.2020.03.10.17.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 17:36:48 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 17:36:46 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
+Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
+Message-ID: <20200311003646.GA87930@google.com>
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-3-minchan@kernel.org>
+ <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
+ <20200310222008.GB72963@google.com>
 MIME-Version: 1.0
-References: <20200306235951.214678-1-dianders@chromium.org> <20200306155707.RFT.9.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
-In-Reply-To: <20200306155707.RFT.9.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 10 Mar 2020 17:35:43 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UrUMSf9005eCta0rf=4BaSWNGwTDsuja2pFtqauaC25Q@mail.gmail.com>
-Message-ID: <CAD=FV=UrUMSf9005eCta0rf=4BaSWNGwTDsuja2pFtqauaC25Q@mail.gmail.com>
-Subject: Re: [RFT PATCH 9/9] drivers: qcom: rpmh-rsc: Kill cmd_cache and
- find_match() with fire
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310222008.GB72963@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 10, 2020 at 03:20:08PM -0700, Minchan Kim wrote:
+> On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
+> > On 3/2/20 8:36 PM, Minchan Kim wrote:
+> > > There is usecase that System Management Software(SMS) want to give
+> > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > > in the case of Android, it is the ActivityManagerService.
+> > > 
+> > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > 
+> > You mean MADV_DONTNEED?
+> 
+> Mean to DONT_NEED's future version.
+> 
+> > 
+> > > required to make the reclaim decision is not known to the app.
+> > 
+> > This seems to be mixing up the differences between MADV_DONTNEED and
+> > COLD/PAGEOUT and self-imposed vs external memory hints?
+> 
+> Sorry, I don't understand what you want here.
+> 
+> > 
+> > > Instead,
+> > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > and that daemon must be able to initiate reclaim on its own without
+> > > any app involvement.
+> > > 
+> > > To solve the issue, this patch introduces a new syscall process_madvise(2).
+> > > It uses pidfd of an external process to give the hint.
+> > > 
+> > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > > 			unsigned long flag);
+> > 
+> > It's more common to call the argument 'flags' not 'flag'? The code seems to call
+> > it flags. Also in line with madvise(2), the 'advise' argument should rather be
+> > 'advice'. This is more important for the manpage, but let's be consistent.
+> 
+> Yub, I will send the patch along with your comment in previous patch.
 
-On Fri, Mar 6, 2020 at 4:00 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> @@ -889,12 +793,6 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
->                  */
->                 if (tcs->type == ACTIVE_TCS)
->                         continue;
-> -
-> -               tcs->cmd_cache = devm_kcalloc(&pdev->dev,
-> -                                             tcs->num_tcs * ncpt, sizeof(u32),
-> -                                             GFP_KERNEL);
-> -               if (!tcs->cmd_cache)
-> -                       return -ENOMEM;
-
-During later code inspection I happened to notice that the "if" test
-above the code I removed can also be removed.  I'll do that in v2.
-The code after the v1 patch doesn't hurt, it's just silly to have the
-"if (blah) continue" at the end of the loop.
-
-I'll wait on sending a v2 until I get some testing / review feedback
-on v1 or enough time passes.
-
--Doug
+Only place to use *advice* in kernel is comment in madvise_willneed.
+Al other places use advise in kernel so I wanted to be more consistent
+with other kernel sources. For man page, we could use the term "advice",
+no problem.
