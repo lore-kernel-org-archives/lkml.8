@@ -2,196 +2,195 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1555FC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23A3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6264A206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9DB206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMUA9OTv"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="MlMIupwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbgCKRGH (ORCPT
+        id S1730418AbgCKRGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:06:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21941 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729989AbgCKRGH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:06:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583946365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=je90USJKR+qX8CW4PnAIwI3lfXfPD9r1oxUluad12NQ=;
-        b=CMUA9OTvc07frkEPw8empHEcCxv928PMct2clmriKWBNqtMt0RvNFJy02fU9MGIA/oPydf
-        rx2mtL42303ti4ChhhYbPMRUvVEEWjuld0zUxRTgxVBu1sANk0E39cr/qQlm7fxx2ZSgBz
-        fn6zv1PClR4CGNhMG9A7943dTF3LJ3g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-377-pUS6AdafN8SMKZhswSdNsw-1; Wed, 11 Mar 2020 13:06:04 -0400
-X-MC-Unique: pUS6AdafN8SMKZhswSdNsw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C51E01050945;
-        Wed, 11 Mar 2020 17:06:01 +0000 (UTC)
-Received: from [10.36.116.132] (ovpn-116-132.ams2.redhat.com [10.36.116.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 36CFE8F37D;
-        Wed, 11 Mar 2020 17:05:59 +0000 (UTC)
-Subject: Re: [PATCH v1 5/5] mm/memory_hotplug: allow to specify a default
- online_type
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-6-david@redhat.com>
- <877dzqsuej.fsf@vitty.brq.redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <2586b3aa-42aa-c8e1-837d-5ba76f3de30c@redhat.com>
-Date:   Wed, 11 Mar 2020 18:05:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <877dzqsuej.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 11 Mar 2020 13:06:21 -0400
+Received: from mail-vi1eur05on2135.outbound.protection.outlook.com ([40.107.21.135]:19105
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730195AbgCKRGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:06:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XKCpXqk9iPhOZzNubhSy5ccsawODPPm9U5T+0hBBHBp6eboJ8WkHHb74iIhIhc8EQne//eDLGXp0uTSXAHFpsw6YXxAzLL3EHNDEJgQ27Uf8UmdHHgKJ1G9GNeUbCRBd1ZCRcDzhzU/P1EXczrg7CY2JnX3OsxOEdhfk7jNEWcsH1sVLo+JiuvG2yQ0PKQ16+Y2CApg4t9gVHjLbikyJ2sJh1VHGtrsQh9LeryfcUJ4gs4lE9y1yQwlZTaBnnZgXAXufI46X+P18L8hxdKvWsAU8ojDdodpfiPmxh+iWJ60EXarJFDNJUQJ3BW/h+SGmmNuuE9L+yXWckk415Jt1Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IVHIYHEEP1VFEiiN52h63DtTSXQmSBXeDuj5RBfou0s=;
+ b=R1ce3TSwk7unDejWU1SIjarzaiXpunMh2wKgQWNwKo6rQ/GPojPOYHTs2rNpGlNNrXpIJ+aob0LeCQS7lZbAO+Rr+Sn69rsKcBYS/VSLNR6DnRA9ZWvE+HT+t5z2VXwz7IjVDIJyAvdJsMjlt9+JciBZac8EyN7SprmB5wCbTJgIVuSRp/il4DMUmpMW3XU0hyRMln+n0+ZlzQ8lIRn0giHnRA0IXM73xPmsgdAv9OVKHiSJUA/V2wOKQY6xFOMTixbEnxKxgDzTWpQxaen6+ecSclnrf+lDG6c36fhIzmzzt1vu5pZ/EbJHdmqZO7kpVrqfQ6UH2tH+YHtzDCxg+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IVHIYHEEP1VFEiiN52h63DtTSXQmSBXeDuj5RBfou0s=;
+ b=MlMIupwFx4zEYhtF+vIPmlLH9LZXMyViAnjTFwXQm6SkbGB+k1t7Q1nLz8Hxr8rlWycRAVUFATJ2Z6R3s4G/XFInWsfpfD8ReN1+xrg89wfOQotw4yGArbXqbM6RFtYB1jgHf+DCwSJmFegXo3D2NVODnb+08DpcMMxnP5BadwE=
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (10.167.127.12) by
+ HE1PR0702MB3770.eurprd07.prod.outlook.com (10.167.126.145) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.9; Wed, 11 Mar 2020 17:06:16 +0000
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::2806:c34c:d469:8e87]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::2806:c34c:d469:8e87%5]) with mapi id 15.20.2814.007; Wed, 11 Mar 2020
+ 17:06:16 +0000
+From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+To:     "hch@lst.de" <hch@lst.de>,
+        "david@fromorbit.com" <david@fromorbit.com>
+CC:     "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: 5.5 XFS getdents regression?
+Thread-Topic: 5.5 XFS getdents regression?
+Thread-Index: AQHV9rhRbXPUS+vCVkG2reFy3jRV26hCZPwAgAE8UoA=
+Date:   Wed, 11 Mar 2020 17:06:16 +0000
+Message-ID: <862b6c718957aff7156bf04964b7242f5075e8a7.camel@nokia.com>
+References: <72c5fd8e9a23dde619f70f21b8100752ec63e1d2.camel@nokia.com>
+         <20200310221406.GO10776@dread.disaster.area>
+In-Reply-To: <20200310221406.GO10776@dread.disaster.area>
+Accept-Language: fi-FI, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tommi.t.rantala@nokia.com; 
+x-originating-ip: [131.228.2.4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 91210b19-268b-4ee3-1c11-08d7c5de82e1
+x-ms-traffictypediagnostic: HE1PR0702MB3770:
+x-microsoft-antispam-prvs: <HE1PR0702MB37709AEACBFD60E17F6AFD23B4FC0@HE1PR0702MB3770.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(39860400002)(366004)(346002)(136003)(199004)(81166006)(81156014)(4326008)(8676002)(966005)(26005)(8936002)(6506007)(5660300002)(66446008)(64756008)(66476007)(86362001)(186003)(66556008)(66946007)(54906003)(6512007)(2616005)(478600001)(6486002)(7116003)(110136005)(36756003)(76116006)(316002)(2906002)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3770;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: T3A/fDYqLVQ0gd9KHVP+wkW4wf1GKdRWUSliMnmNc44j5Du1PHuaPIsS/xvEljfibsghu0YFHN5oHrGkT2KXnW4bV2ZtcSpGzpAb5Z2ZNbax07wTPs4NWzJYsDN4rfTt+0y3bxcx8u/e2hM1TBK0vYaJTREFdMHEDGIO5lb9aqiATXen4L6CgxdcT9Q/PQcAcT074YTX8iPNuES8w8BD4rZjRS6ObafukZgSPabB4z/bOmP1MQRnvqjx3rIkhbVl7t8v/7qxEzxJZbnwummiDaf3qNglNQByMWfsyOSfPGbaZ8QVyXUxZMGvKFUNwabwtzVvVgy/i1OuSBXPkNfBrMmKrlqEWXDF21vMUQiEgoxmgVkR/0Nc3dyH3hz5elOP6jxl4byjxasQZ+nHDFYfTGYHFBu0ETTgBk/nu/GhGb73Lm9hZujGXwW81fUwj7Kl6Ij0OFlmDcpgTvYFBEuzN8xyqOso9A8u7sBwlHVbiMN/tXt2xB825whLWw5B0UqhryTDHFKUvcdDndnXCn765Q==
+x-ms-exchange-antispam-messagedata: tpeyWjVk/wTN0WtrntwfdbRUleaUxgzY0fg24c8PdLATO6AVESu5TWZYBn4kW2fKrd8ueJuFl1kyGo9o43E8AgAvmvxhdUw+2I3iad8CfWZGQt7VbOWmXnqm8TC5fjG6tJ8kMF2qopXE9XxemEI4FQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <40C93D37D0BB1D41AB69874ED488E844@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91210b19-268b-4ee3-1c11-08d7c5de82e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 17:06:16.4287
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nxZWHFy28gJpHvzDiWQ8/ZCEcTsZ0PK1O7JMfbQpqzzomTSMYA1VEQ49kjgvOpe3u5+IEDhPc/Yalry7MuCGBS4NJHOfWV3vk3+9e0MeI8k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3770
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.20 17:55, Vitaly Kuznetsov wrote:
-> David Hildenbrand <david@redhat.com> writes:
->=20
->> For now, distributions implement advanced udev rules to essentially
->> - Don't online any hotplugged memory (s390x)
->> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
->>   hyperv)
->> - Online all memory to ZONE_MOVABLE in case the zone imbalance is take=
-n
->>   care of (e.g., bare metal, special virt environments)
->>
->> In summary: All memory is usually onlined the same way, however, the
->> kernel always has to ask userspace to come up with the same answer.
->> E.g., HyperV always waits for a memory block to get onlined before
->> continuing, otherwise it might end up adding memory faster than
->> hotplugging it, which can result in strange OOM situations.
->>
->> Let's allow to specify a default online_type, not just "online" and
->> "offline". This allows distributions to configure the default online_t=
-ype
->> when booting up and be done with it.
->>
->> We can now specify "offline", "online", "online_movable" and
->> "online_kernel" via
->> - "memhp_default_state=3D" on the kernel cmdline
->> - /sys/devices/systemn/memory/auto_online_blocks
->> just like we are able to specify for a single memory block via
->> /sys/devices/systemn/memory/memoryX/state
->>
->=20
-> Thank you for picking this up!=20
->=20
-> It's been awhile since I've added CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE
-> but I vaguely recall one problem: memory hotplug may happen *very* earl=
-y
-> (just because some memory is presented to a VM as hotplug memory, it is
-> not in e820). It happens way before we launch userspace (including
-> udev). The question is -- which ZONE will this memory be assigned too?
-
-If it's added via add_memory() ("hot/cold plugged memory") like ACPI
-DIMMs not part of e820, Hyper-V balloon added memory, XEN balloon added
-memory, s390x standby memory etc. the memory will be onlined as
-configured via memhp_default_online_type. Assume that one is set to
-"offline".
-
-*If* userspace changes memhp_default_online_type (as in my script in the
-cover letter), userspace has to online all memory that has been added
-before userspace was active itself (again, as done in my script).
-
-Memory not added via add_memory() is considered "initial memory" and not
-as hot/cold plugged memory.
-
-Same handling as for now using udev rules. (once userspace is up, udev
-rules for all early added memory is triggered as well)
-
->=20
-> 'memhp_default_state=3D' resolves the issue but nobody likes additional
-> kernel parameters for anything but
-> debug. CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE was supposed to help, but i=
-t
-> is binary and distro-wide (so *all* deployments will get the same
-> default and as you validly stated we want it differently).
->=20
-> We could've added something like your example onlining script to the
-> kernel itself but this is likely going to be hard to sell: "policies
-> belong to userspace!" will likely be the answer.=20
-
-Exactly my thought.
-
---=20
-Thanks,
-
-David / dhildenb
-
+T24gV2VkLCAyMDIwLTAzLTExIGF0IDA5OjE0ICsxMTAwLCBEYXZlIENoaW5uZXIgd3JvdGU6DQo+
+IE9uIFR1ZSwgTWFyIDEwLCAyMDIwIGF0IDA4OjQ1OjU4QU0gKzAwMDAsIFJhbnRhbGEsIFRvbW1p
+IFQuIChOb2tpYSAtDQo+IEZJL0VzcG9vKSB3cm90ZToNCj4gPiBIZWxsbywNCj4gPiANCj4gPiBP
+bmUgb2YgbXkgR2l0TGFiIENJIGpvYnMgc3RvcHBlZCB3b3JraW5nIGFmdGVyIHVwZ3JhZGluZyBz
+ZXJ2ZXINCj4gPiA1LjQuMTgtDQo+ID4gMTAwLmZjMzAueDg2XzY0IC0+IDUuNS43LTEwMC5mYzMw
+Lng4Nl82NC4NCj4gPiAodGVzdGVkIDUuNS44LTEwMC5mYzMwLng4Nl82NCB0b28sIG5vIGNoYW5n
+ZSkNCj4gPiBUaGUgc2VydmVyIGlzIGZlZG9yYTMwIHdpdGggWEZTIHJvb3Rmcy4NCj4gPiBUaGUg
+cHJvYmxlbSByZXByb2R1Y2VzIGFsd2F5cywgYW5kIHRha2VzIG9ubHkgY291cGxlIG1pbnV0ZXMg
+dG8gcnVuLg0KPiA+IA0KPiA+IFRoZSBDSSBqb2IgZmFpbHMgaW4gdGhlIGJlZ2lubmluZyB3aGVu
+IGRvaW5nICJnaXQgY2xlYW4iIGluIGRvY2tlcg0KPiA+IGNvbnRhaW5lciwgYW5kIGZhaWxpbmcg
+dG8gcm1kaXIgc29tZSBkaXJlY3Rvcnk6DQo+ID4gIndhcm5pbmc6IGZhaWxlZCB0byByZW1vdmUg
+DQo+ID4gLnZlbmRvci9wa2cvbW9kL2dvbGFuZy5vcmcveC9uZXRAdjAuMC4wLTIwMjAwMTE0MTU1
+NDEzLTZhZmI1MTk1ZTVhYS9pbg0KPiA+IHRlcm4NCj4gPiBhbC9zb2NrZXQ6IERpcmVjdG9yeSBu
+b3QgZW1wdHkiDQo+ID4gDQo+ID4gUXVpY2sgZ29vZ2xlIHNlYXJjaCBmaW5kcyBzb21lIG90aGVy
+IHBlb3BsZSByZXBvcnRpbmcgc2ltaWxhciBwcm9ibGVtcw0KPiA+IHdpdGggNS41LjA6DQo+ID4g
+aHR0cHM6Ly9naXRsYWIuY29tL2dpdGxhYi1vcmcvZ2l0bGFiLXJ1bm5lci9pc3N1ZXMvMzE4NQ0K
+PiANCj4gV2hpY2ggYXBwZWFycyB0byBiZSBjYXVzZWQgYnkgbXVsdGlwbGUgZ2l0bGFiIHByb2Nl
+c3NlcyBtb2RpZnlpbmcNCj4gdGhlIGRpcmVjdG9yeSBhdCB0aGUgc2FtZSB0aW1lLiBpLmUuIHNv
+bWV0aGluZyBpcyBhZGRpbmcgYW4gZW50cnkgdG8NCj4gdGhlIGRpcmVjdG9yeSBhdCB0aGUgc2Ft
+ZSB0aW1lIHNvbWV0aGluZyBpcyB0cnlpbmcgdG8gcm0gLXJmIGl0Lg0KPiBUaGF0J3MgYSByYWNl
+IGNvbmRpdGlvbiwgYW5kIHdvdWxkIGxlYWQgdG8gdGhlIGV4YWN0IHN5bXB0b21zIHlvdQ0KPiBz
+ZWUgaGVyZSwgZGVwZW5kaW5nIG9uIHdoZXJlIGluIHRoZSBkaXJlY3RvcnkgdGhlIG5ldyBlbnRy
+eSBpcw0KPiBhZGRlZC4NCg0KT0sgdHJhY2VkICJleGVjdmUiIHdpdGggc3RyYWNlIHRvbywgYW5k
+IGl0IHNob3dzIHRoYXQgaXQncyAiZ2l0IGNsZWFuDQotZmZkeCIgY29tbWFuZCAoc2luZ2xlIHBy
+b2Nlc3MpIHRoYXQgaXMgYmVpbmcgZXhlY3V0ZWQgaW4gdGhlIGNvbnRhaW5lciwNCndoaWNoIGlz
+IGRvaW5nIHRoZSBjbGVhbnVwLg0KDQpUZXN0ZWQgd2l0aCA1LjYtcmM1LCBpdCdzIGZhaWxpbmcg
+dGhlIHNhbWUgd2F5Lg0KDQpTcGVudCBzb21lIHRpbWUgdG8gYmlzZWN0IHRoaXMsIGFuZCB0aGUg
+cHJvYmxlbSBpcyBpbnRyb2R1Y2VkIGJ5IHRoaXM6DQoNCmNvbW1pdCAyNjNkZGU4NjliZDA5YjFh
+NzA5ZmQ5MjExOGM3ZmZmODMyNzczNjg5DQpBdXRob3I6IENocmlzdG9waCBIZWxsd2lnIDxoY2hA
+bHN0LmRlPg0KRGF0ZTogICBGcmkgTm92IDggMTU6MDU6MzIgMjAxOSAtMDgwMA0KDQogICAgeGZz
+OiBjbGVhbnVwIHhmc19kaXIyX2Jsb2NrX2dldGRlbnRzDQogICAgDQogICAgVXNlIGFuIG9mZnNl
+dCBhcyB0aGUgbWFpbiBtZWFucyBmb3IgaXRlcmF0aW9uLCBhbmQgb25seSBkbyBwb2ludGVyDQog
+ICAgYXJpdGhtZXRpY3MgdG8gZmluZCB0aGUgZGF0YS91bnVzZWQgZW50cmllcy4NCiAgICANCiAg
+ICBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4NCiAgICBSZXZp
+ZXdlZC1ieTogRGFycmljayBKLiBXb25nIDxkYXJyaWNrLndvbmdAb3JhY2xlLmNvbT4NCiAgICBT
+aWduZWQtb2ZmLWJ5OiBEYXJyaWNrIEouIFdvbmcgPGRhcnJpY2sud29uZ0BvcmFjbGUuY29tPg0K
+DQoNCg0KSG1tbW1tLCBsb29raW5nIGF0IHRoYXQgY29tbWl0LCBJIHRoaW5rIGl0IHNsaWdodHkg
+Y2hhbmdlZCBob3cgdGhlDQoib2Zmc2V0IiBpcyB1c2VkIGNvbXBhcmVkIHRvIGhvdyB0aGUgcG9p
+bnRlcnMgd2VyZSB1c2VkLg0KDQpUaGlzIGN1cmVzIHRoZSBpc3N1ZSBmb3IgbWUsIHRlc3RlZCAo
+YnJpZWZseSkgb24gdG9wIG9mIDUuNi1yYzUuDQpEb2VzIGl0IG1ha2Ugc2Vuc2UuLi4/DQooRW1h
+aWwgY2xpZW50IHByb2JhYmx5IGRhbWFnZXMgd2hpdGUtc3BhY2UsIHNvcnJ5LCBJJ2xsIHNlbmQg
+dGhpcyBwcm9wZXJseQ0Kc2lnbmVkLW9mZiB3aXRoIGdpdC1zZW5kLWVtYWlsIGlmIGl0J3MgT0sp
+DQoNCg0KZGlmZiAtLWdpdCBhL2ZzL3hmcy94ZnNfZGlyMl9yZWFkZGlyLmMgYi9mcy94ZnMveGZz
+X2RpcjJfcmVhZGRpci5jDQppbmRleCAwZDNiNjQwY2YxY2MuLmFmOTQ1ZWM5ZGYzYiAxMDA2NDQN
+Ci0tLSBhL2ZzL3hmcy94ZnNfZGlyMl9yZWFkZGlyLmMNCisrKyBiL2ZzL3hmcy94ZnNfZGlyMl9y
+ZWFkZGlyLmMNCkBAIC0xNzksNiArMTc5LDcgQEAgeGZzX2RpcjJfYmxvY2tfZ2V0ZGVudHMoDQog
+ICAgICAgIHN0cnVjdCB4ZnNfZGlyMl9kYXRhX3VudXNlZCAgICAgKmR1cCA9IGJwLT5iX2FkZHIg
+KyBvZmZzZXQ7DQogICAgICAgIHN0cnVjdCB4ZnNfZGlyMl9kYXRhX2VudHJ5ICAgICAgKmRlcCA9
+IGJwLT5iX2FkZHIgKyBvZmZzZXQ7DQogICAgICAgIHVpbnQ4X3QgZmlsZXR5cGU7DQorICAgICAg
+IHVuc2lnbmVkIGludCBkZXBfb2Zmc2V0Ow0KIA0KICAgICAgICAvKg0KICAgICAgICAgKiBVbnVz
+ZWQsIHNraXAgaXQuDQpAQCAtMTg4LDE4ICsxODksMjEgQEAgeGZzX2RpcjJfYmxvY2tfZ2V0ZGVu
+dHMoDQogICAgICAgICAgICAgICAgY29udGludWU7DQogICAgICAgIH0NCiANCisgICAgICAgZGVw
+X29mZnNldCA9IG9mZnNldDsNCisNCiAgICAgICAgLyoNCi0gICAgICAgICogQnVtcCBwb2ludGVy
+IGZvciB0aGUgbmV4dCBpdGVyYXRpb24uDQorICAgICAgICAqIEJ1bXAgb2Zmc2V0IGZvciB0aGUg
+bmV4dCBpdGVyYXRpb24uDQogICAgICAgICAqLw0KICAgICAgICBvZmZzZXQgKz0geGZzX2RpcjJf
+ZGF0YV9lbnRzaXplKGRwLT5pX21vdW50LCBkZXAtPm5hbWVsZW4pOw0KDQogICAgICAgIC8qDQog
+ICAgICAgICAqIFRoZSBlbnRyeSBpcyBiZWZvcmUgdGhlIGRlc2lyZWQgc3RhcnRpbmcgcG9pbnQs
+IHNraXAgaXQuDQogICAgICAgICAqLw0KLSAgICAgICBpZiAob2Zmc2V0IDwgd2FudG9mZikNCisg
+ICAgICAgaWYgKGRlcF9vZmZzZXQgPCB3YW50b2ZmKQ0KICAgICAgICAgICAgICAgIGNvbnRpbnVl
+Ow0KIA0KLSAgICAgICBjb29rID0geGZzX2RpcjJfZGJfb2ZmX3RvX2RhdGFwdHIoZ2VvLCBnZW8t
+PmRhdGFibGssIG9mZnNldCk7DQorICAgICAgIGNvb2sgPSB4ZnNfZGlyMl9kYl9vZmZfdG9fZGF0
+YXB0cihnZW8sIGdlby0+ZGF0YWJsaywNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGRlcF9vZmZzZXQpOw0KIA0KICAgICAgICBjdHgtPnBvcyA9IGNvb2sgJiAweDdm
+ZmZmZmZmOw0KICAgICAgICBmaWxldHlwZSA9IHhmc19kaXIyX2RhdGFfZ2V0X2Z0eXBlKGRwLT5p
+X21vdW50LCBkZXApOw0KDQoNCg0KPiA+IENvbGxlY3RlZCBzb21lIGRhdGEgd2l0aCBzdHJhY2Us
+IGFuZCBpdCBzZWVtcyB0aGF0IGdldGRlbnRzIGlzIG5vdA0KPiA+IHJldHVybmluZyBhbGwgZW50
+cmllczoNCj4gPiANCj4gPiA1LjQgZ2V0ZGVudHM2NCgpIHJldHVybnMgNTIrNTArMSswIGVudHJp
+ZXMgDQo+ID4gPT4gYWxsIGZpbGVzIGluIGRpcmVjdG9yeSBhcmUgZGVsZXRlZCBhbmQgcm1kaXIo
+KSBpcyBPSw0KPiA+IA0KPiA+IDUuNSBnZXRkZW50czY0KCkgcmV0dXJucyA1Mis1MCswKzAgZW50
+cmllcw0KPiA+ID0+IHJtZGlyKCkgZmFpbHMgd2l0aCBFTk9URU1QVFkNCj4gDQo+IFl1cCwgdGhh
+dCdzIGEgY2xhc3NpYyB1c2Vyc3BhY2UgVE9DVE9VIHJhY2UuDQo+IA0KPiBSZW1lbWJlciwgZ2V0
+ZGVudHMoKSBpcyBlZmZlY3RpdmVseSBhIHNlcXVlbnRpYWwgd2FsayB0aHJvdWdoIHRoZQ0KPiBk
+aXJlY3RvcnkgZGF0YSAtIHN1YnNlcXVlbnQgY2FsbHMgc3RhcnQgYXQgdGhlIG9mZnNldCAoY29v
+a2llKSB3aGVyZQ0KPiB0aGUgcHJldmlvdXMgb25lIGxlZnQgb2ZmLiBOZXcgZW50cmllcyBjYW4g
+YmUgYWRkZWQgYmV0d2Vlbg0KPiBnZXRkZW50cygpIHN5c2NhbGxzLg0KPiANCj4gSWYgdGhhdCBu
+ZXcgZW50cnkgaXMgcHV0IGF0IHRoZSB0YWlsIG9mIHRoZSBkaXJlY3RvcnksIHRoZW4gdGhlIGxh
+c3QNCj4gZ2V0ZGVudHMoKSBjYWxsIHdpbGwgcmV0dXJuIHRoYXQgZW50cnkgcmF0aGVyIHRoYW4g
+bm9uZSBiZWNhdXNlIGl0DQo+IHdhcyBwbGFjZWQgYXQgYW4gb2Zmc2V0IGluIHRoZSBkaXJlY3Rv
+cnkgdGhhdCB0aGUgZ2V0ZGVudHMoKSBzd2VlcA0KPiBoYXMgbm90IHlldCByZWFjaGVkLCBhbmQg
+aGVuY2Ugd2lsbCBiZSBmb3VuZCBieSBhIGZ1dHVyZSBnZXRkZW50cygpDQo+IGNhbGwgaW4gdGhl
+IHN3ZWVwLg0KPiANCj4gDQo+IEhvd2V2ZXIsIGlmIHRoZXJlIGlzIGEgaG9sZSBpbiB0aGUgZGly
+ZWN0b3J5IHN0cnVjdHVyZSBiZWZvcmUgdGhlDQo+IGN1cnJlbnQgZ2V0ZGVudHMgY29va2llIG9m
+ZnNldCwgYSBuZXcgZW50cnkgY2FuIGJlIGFkZGVkIGluIHRoYXQNCj4gaG9sZS4gaS5lLiBhdCBh
+biBvZmZzZXQgaW4gdGhlIGRpcmVjdG9yeSB0aGF0IGdldGRlbnRzIGhhcyBhbHJlYWR5DQo+IHBh
+c3NlZCBvdmVyLiBUaGF0IGRpcmVudCB3aWxsIG5ldmVyIGJlIHJlcG9ydGVkIGJ5IHRoZSBjdXJy
+ZW50DQo+IGdldGRlbnRzKCkgc2VxdWVuY2UgLSBhIGRpcmVjdG9yeSByZXdpbmQgYW5kIHJlLXJl
+YWQgaXMgcmVxdWlyZWQgdG8NCj4gZmluZCBpdC4gaS5lLiB0aGVyZSdzIGFuIGluaGVyZW50IHVz
+ZXJzcGFjZSBUT1VUT0MgcmFjZSBjb25kaXRpb24gaW4NCj4gJ3JtIC1yZicgb3BlcmF0aW9ucy4N
+Cj4gDQo+IElPV3MsIHRoaXMgaXMgZXhhY3RseSB3aGF0IHlvdSdkIGV4cGVjdCB0byBzZWUgd2hl
+biB0aGVyZSBhcmUNCj4gY29uY3VycmVudCB1c2Vyc3BhY2UgbW9kaWZpY2F0aW9ucyB0byBhIGRp
+cmVjdG9yeSB0aGF0IGlzIGN1cnJlbnRseQ0KPiBiZWluZyByZWFkLiBIZW5jZSB5b3UgbmVlZCB0
+byBydWxlIG91dCBhbiBhcHBsaWNhdGlvbiBhbmQgdXNlcnNwYWNlDQo+IGxldmVsIGlzc3VlcyBi
+ZWZvcmUgbG9va2luZyBmb3IgZmlsZXN5c3RlbSBsZXZlbCBwcm9ibGVtcy4NCj4gDQo+IENoZWVy
+cywNCj4gDQo+IERhdmUuDQoNCg==
