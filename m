@@ -1,134 +1,231 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8916 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729408AbgCKPiD (ORCPT
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3514C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:37:13 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 7C6D2206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:37:14 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730867AbgCKShM (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:37:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12248 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730779AbgCKShM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:38:03 -0400
-From: Olivier MOYSAN <olivier.moysan@st.com>
-To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com"
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to
- json-schema
-Date: Wed, 11 Mar 2020 15:37:01 +0000
-Message-ID: <d792a2b8-3b59-f04e-c24d-06185d60c734@st.com>
-References: <20200117170352.16040-1-olivier.moysan@st.com>
-In-Reply-To: <20200117170352.16040-1-olivier.moysan@st.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DE5E72739C615C4AACA966C364D359B6@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 11 Mar 2020 14:37:12 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BIasI0114213
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:37:11 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yq5bh0366-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:36:58 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
+        Wed, 11 Mar 2020 18:35:52 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Mar 2020 18:35:48 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BIZlvR42729688
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 18:35:47 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 201334203F;
+        Wed, 11 Mar 2020 18:35:47 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B723C4204F;
+        Wed, 11 Mar 2020 18:35:46 +0000 (GMT)
+Received: from laptop2-ibm.local (unknown [9.152.212.60])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Mar 2020 18:35:46 +0000 (GMT)
+Date:   Wed, 11 Mar 2020 19:35:45 +0100
+From:   Philipp Rudo <prudo@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org,
+        x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, zohar@linux.ibm.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3] ima: add a new CONFIG for loading arch-specific
+ policies
+In-Reply-To: <1583715471-15525-1-git-send-email-nayna@linux.ibm.com>
+References: <1583715471-15525-1-git-send-email-nayna@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031118-0028-0000-0000-000003E33C88
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031118-0029-0000-0000-000024A881D7
+Message-Id: <20200311193545.2f0e5ea3@laptop2-ibm.local>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_09:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 clxscore=1015 adultscore=0 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110105
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpLaW5kIHJlbWluZGVyIGZvciB0aGlzIHBhdGNoLg0KVGhhbmtzDQpPbGl2aWVyDQoNCk9u
-IDEvMTcvMjAgNjowMyBQTSwgT2xpdmllciBNb3lzYW4gd3JvdGU6DQo+IENvbnZlcnQgdGhlIFNU
-TTMyIFNQRElGUlggYmluZGluZ3MgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVt
-YS4NCj4NCj4gU2lnbmVkLW9mZi1ieTogT2xpdmllciBNb3lzYW4gPG9saXZpZXIubW95c2FuQHN0
-LmNvbT4NCj4gLS0tDQo+IENoYW5nZXMgaW4gdjI6DQo+IC0gQWRkICJhZGRpdGlvbmFsUHJvcGVy
-dGllczogZmFsc2UiDQo+IC0gQWxzbyBjaGFuZ2UgbWluSXRlbXMgdG8gMiBmb3IgZG1hcyBwcm9w
-ZXJ0eSwgYXMgYm90aCBETUFzIGFyZSByZXF1aXJlZC4NCj4NCj4gQ2hhbmdlcyBpbiB2MzoNCj4g
-LSBEcm9wIG1pbkl0ZW1zL21heEl0ZW1zIGZvciBkbWFzIHByb3BlcnR5LCByZW1vdmUgcmVmIHRv
-IHN0bTMyLWRtYS50eHQuDQo+IC0tLQ0KPiAgIC4uLi9iaW5kaW5ncy9zb3VuZC9zdCxzdG0zMi1z
-cGRpZnJ4LnR4dCAgICAgICB8IDU2IC0tLS0tLS0tLS0tLS0NCj4gICAuLi4vYmluZGluZ3Mvc291
-bmQvc3Qsc3RtMzItc3BkaWZyeC55YW1sICAgICAgfCA4MCArKysrKysrKysrKysrKysrKysrDQo+
-ICAgMiBmaWxlcyBjaGFuZ2VkLCA4MCBpbnNlcnRpb25zKCspLCA1NiBkZWxldGlvbnMoLSkNCj4g
-ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
-dW5kL3N0LHN0bTMyLXNwZGlmcngudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdCxzdG0zMi1zcGRpZnJ4LnlhbWwNCj4N
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9z
-dCxzdG0zMi1zcGRpZnJ4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b3VuZC9zdCxzdG0zMi1zcGRpZnJ4LnR4dA0KPiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQNCj4g
-aW5kZXggMzM4MjZmMjQ1OWZhLi4wMDAwMDAwMDAwMDANCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3N0LHN0bTMyLXNwZGlmcngudHh0DQo+ICsrKyAvZGV2
-L251bGwNCj4gQEAgLTEsNTYgKzAsMCBAQA0KPiAtU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMyIFMv
-UERJRiByZWNlaXZlciAoU1BESUZSWCkuDQo+IC0NCj4gLVRoZSBTUERJRlJYIHBlcmlwaGVyYWws
-IGlzIGRlc2lnbmVkIHRvIHJlY2VpdmUgYW4gUy9QRElGIGZsb3cgY29tcGxpYW50IHdpdGgNCj4g
-LUlFQy02MDk1OCBhbmQgSUVDLTYxOTM3Lg0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-PiAtICAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSAic3Qsc3RtMzJoNy1zcGRpZnJ4Ig0KPiAtICAt
-IHJlZzogY3B1IERBSSBJUCBiYXNlIGFkZHJlc3MgYW5kIHNpemUNCj4gLSAgLSBjbG9ja3M6IG11
-c3QgY29udGFpbiBhbiBlbnRyeSBmb3Iga2NsayAodXNlZCBhcyBTL1BESUYgc2lnbmFsIHJlZmVy
-ZW5jZSkNCj4gLSAgLSBjbG9jay1uYW1lczogbXVzdCBjb250YWluICJrY2xrIg0KPiAtICAtIGlu
-dGVycnVwdHM6IGNwdSBEQUkgaW50ZXJydXB0IGxpbmUNCj4gLSAgLSBkbWFzOiBETUEgc3BlY2lm
-aWVycyBmb3IgYXVkaW8gZGF0YSBETUEgYW5kIGllYyBjb250cm9sIGZsb3cgRE1BDQo+IC0gICAg
-U2VlIFNUTTMyIERNQSBiaW5kaW5ncywgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2RtYS9zdG0zMi1kbWEudHh0DQo+IC0gIC0gZG1hLW5hbWVzOiB0d28gZG1hcyBoYXZlIHRvIGJl
-IGRlZmluZWQsICJyeCIgYW5kICJyeC1jdHJsIg0KPiAtDQo+IC1PcHRpb25hbCBwcm9wZXJ0aWVz
-Og0KPiAtICAtIHJlc2V0czogUmVmZXJlbmNlIHRvIGEgcmVzZXQgY29udHJvbGxlciBhc3NlcnRp
-bmcgdGhlIFNQRElGUlgNCj4gLQ0KPiAtVGhlIGRldmljZSBub2RlIHNob3VsZCBjb250YWluIG9u
-ZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9uZSBjaGlsZCAnZW5kcG9pbnQnDQo+IC1ub2RlLCBh
-Y2NvcmRpbmcgdG8gdGhlIGJpbmRpbmdzIGRlZmluZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzLw0KPiAtZ3JhcGgudHh0Lg0KPiAtDQo+IC1FeGFtcGxlOg0KPiAtc3BkaWZy
-eDogc3BkaWZyeEA0MDAwNDAwMCB7DQo+IC0JY29tcGF0aWJsZSA9ICJzdCxzdG0zMmg3LXNwZGlm
-cngiOw0KPiAtCXJlZyA9IDwweDQwMDA0MDAwIDB4NDAwPjsNCj4gLQljbG9ja3MgPSA8JnJjYyBT
-UERJRlJYX0NLPjsNCj4gLQljbG9jay1uYW1lcyA9ICJrY2xrIjsNCj4gLQlpbnRlcnJ1cHRzID0g
-PDk3PjsNCj4gLQlkbWFzID0gPCZkbWFtdXgxIDIgOTMgMHg0MDAgMHgwPiwNCj4gLQkgICAgICAg
-PCZkbWFtdXgxIDMgOTQgMHg0MDAgMHgwPjsNCj4gLQlkbWEtbmFtZXMgPSAicngiLCAicngtY3Ry
-bCI7DQo+IC0JcGluY3RybC0wID0gPCZzcGRpZnJ4X3BpbnM+Ow0KPiAtCXBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7DQo+IC0NCj4gLQlzcGRpZnJ4X3BvcnQ6IHBvcnQgew0KPiAtCQljcHVfZW5k
-cG9pbnQ6IGVuZHBvaW50IHsNCj4gLQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmY29kZWNfZW5kcG9p
-bnQ+Ow0KPiAtCQl9Ow0KPiAtCX07DQo+IC19Ow0KPiAtDQo+IC1zcGRpZl9pbjogc3BkaWYtaW4g
-ew0KPiAtCWNvbXBhdGlibGUgPSAibGludXgsc3BkaWYtZGlyIjsNCj4gLQ0KPiAtCWNvZGVjX3Bv
-cnQ6IHBvcnQgew0KPiAtCQljb2RlY19lbmRwb2ludDogZW5kcG9pbnQgew0KPiAtCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZjcHVfZW5kcG9pbnQ+Ow0KPiAtCQl9Ow0KPiAtCX07DQo+IC19Ow0KPiAt
-DQo+IC1zb3VuZGNhcmQgew0KPiAtCWNvbXBhdGlibGUgPSAiYXVkaW8tZ3JhcGgtY2FyZCI7DQo+
-IC0JZGFpcyA9IDwmc3BkaWZyeF9wb3J0PjsNCj4gLX07DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc3Qsc3RtMzItc3BkaWZyeC55YW1sIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3N0LHN0bTMyLXNwZGlmcngu
-eWFtbA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmI3Zjdk
-YzQ1MjIzMQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb3VuZC9zdCxzdG0zMi1zcGRpZnJ4LnlhbWwNCj4gQEAgLTAsMCArMSw4MCBA
-QA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1D
-bGF1c2UpDQo+ICslWUFNTCAxLjINCj4gKy0tLQ0KPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5v
-cmcvc2NoZW1hcy9zb3VuZC9zdCxzdG0zMi1zcGRpZnJ4LnlhbWwjDQo+ICskc2NoZW1hOiBodHRw
-Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gKw0KPiArdGl0bGU6
-IFNUTWljcm9lbGVjdHJvbmljcyBTVE0zMiBTL1BESUYgcmVjZWl2ZXIgKFNQRElGUlgpDQo+ICsN
-Cj4gK21haW50YWluZXJzOg0KPiArICAtIE9saXZpZXIgTW95c2FuIDxvbGl2aWVyLm1veXNhbkBz
-dC5jb20+DQo+ICsNCj4gK2Rlc2NyaXB0aW9uOiB8DQo+ICsgIFRoZSBTUERJRlJYIHBlcmlwaGVy
-YWwsIGlzIGRlc2lnbmVkIHRvIHJlY2VpdmUgYW4gUy9QRElGIGZsb3cgY29tcGxpYW50IHdpdGgN
-Cj4gKyAgSUVDLTYwOTU4IGFuZCBJRUMtNjE5MzcuDQo+ICsNCj4gK3Byb3BlcnRpZXM6DQo+ICsg
-IGNvbXBhdGlibGU6DQo+ICsgICAgZW51bToNCj4gKyAgICAgIC0gc3Qsc3RtMzJoNy1zcGRpZnJ4
-DQo+ICsNCj4gKyAgIiNzb3VuZC1kYWktY2VsbHMiOg0KPiArICAgIGNvbnN0OiAwDQo+ICsNCj4g
-KyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAgY2xvY2tzOg0KPiArICAgIG1h
-eEl0ZW1zOiAxDQo+ICsNCj4gKyAgY2xvY2stbmFtZXM6DQo+ICsgICAgaXRlbXM6DQo+ICsgICAg
-ICAtIGNvbnN0OiBrY2xrDQo+ICsNCj4gKyAgaW50ZXJydXB0czoNCj4gKyAgICBtYXhJdGVtczog
-MQ0KPiArDQo+ICsgIGRtYXM6DQo+ICsgICAgaXRlbXM6DQo+ICsgICAgICAtIGRlc2NyaXB0aW9u
-OiBhdWRpbyBkYXRhIGNhcHR1cmUgRE1BDQo+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBJRUMgc3Rh
-dHVzIGJpdHMgY2FwdHVyZSBETUENCj4gKw0KPiArICBkbWEtbmFtZXM6DQo+ICsgICAgaXRlbXM6
-DQo+ICsgICAgICAtIGNvbnN0OiByeA0KPiArICAgICAgLSBjb25zdDogcngtY3RybA0KPiArDQo+
-ICsgIHJlc2V0czoNCj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAg
-LSBjb21wYXRpYmxlDQo+ICsgIC0gIiNzb3VuZC1kYWktY2VsbHMiDQo+ICsgIC0gcmVnDQo+ICsg
-IC0gY2xvY2tzDQo+ICsgIC0gY2xvY2stbmFtZXMNCj4gKyAgLSBpbnRlcnJ1cHRzDQo+ICsgIC0g
-ZG1hcw0KPiArICAtIGRtYS1uYW1lcw0KPiArDQo+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFs
-c2UNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgICNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+ICsgICAgI2luY2x1ZGUgPGR0
-LWJpbmRpbmdzL2Nsb2NrL3N0bTMybXAxLWNsa3MuaD4NCj4gKyAgICBzcGRpZnJ4OiBzcGRpZnJ4
-QDQwMDA0MDAwIHsNCj4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxzdG0zMmg3LXNwZGlmcngi
-Ow0KPiArICAgICAgICAjc291bmQtZGFpLWNlbGxzID0gPDA+Ow0KPiArICAgICAgICByZWcgPSA8
-MHg0MDAwNDAwMCAweDQwMD47DQo+ICsgICAgICAgIGNsb2NrcyA9IDwmcmNjIFNQRElGX0s+Ow0K
-PiArICAgICAgICBjbG9jay1uYW1lcyA9ICJrY2xrIjsNCj4gKyAgICAgICAgaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDk3IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiArICAgICAgICBkbWFzID0gPCZk
-bWFtdXgxIDIgOTMgMHg0MDAgMHgwPiwNCj4gKyAgICAgICAgICAgICAgIDwmZG1hbXV4MSAzIDk0
-IDB4NDAwIDB4MD47DQo+ICsgICAgICAgIGRtYS1uYW1lcyA9ICJyeCIsICJyeC1jdHJsIjsNCj4g
-KyAgICAgICAgcGluY3RybC0wID0gPCZzcGRpZnJ4X3BpbnM+Ow0KPiArICAgICAgICBwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOw0KPiArICAgIH07DQo+ICsNCj4gKy4uLg0K
+On Sun,  8 Mar 2020 20:57:51 -0400
+Nayna Jain <nayna@linux.ibm.com> wrote:
+
+> From: Nayna Jain <nayna@linux.vnet.ibm.com>
+> 
+> Every time a new architecture defines the IMA architecture specific
+> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> include file needs to be updated. To avoid this "noise", this patch
+> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> the different architectures to select it.
+> 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Philipp Rudo <prudo@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> ---
+> v3:
+> * Removes CONFIG_IMA dependency. Thanks Ard.
+> * Updated the patch with improvements suggested by Michael. It now uses
+> "imply" instead of "select". Thanks Michael.
+> * Replaced the CONFIG_IMA in x86 and s390 with new config, else it was
+> resulting in redefinition when the IMA_SECURE_AND_OR_TRUSTED_BOOT
+> is not enabled. Thanks to Mimi for identifying the problem.
+> * Removed "#ifdef EFI" check in the arch/x86/Makefile for compiling
+> ima_arch.c file.
+> * Ard, Thanks for your Acked-by. I have changed the arch/x86/Makefile in
+> this version. Can you please review again and confirm ?
+> * Rudo, Thanks for your review. I have changed arch/s390/Makefile as well.
+> Can you also please review again ?
+
+Looks good to me
+
+for the s390 part
+Acked-by: Philipp Rudo <prudo@linux.ibm.com>
+
+Thanks
+Philipp
+
+> 
+> v2:
+> * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
+> discussing the fix.
+> 
+>  arch/powerpc/Kconfig           | 1 +
+>  arch/s390/Kconfig              | 1 +
+>  arch/s390/kernel/Makefile      | 2 +-
+>  arch/x86/Kconfig               | 1 +
+>  arch/x86/kernel/Makefile       | 4 +---
+>  include/linux/ima.h            | 3 +--
+>  security/integrity/ima/Kconfig | 7 +++++++
+>  7 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 497b7d0b2d7e..5b9f1cba2a44 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
+>  	bool
+>  	depends on PPC_POWERNV
+>  	depends on IMA_ARCH_POLICY
+> +	imply IMA_SECURE_AND_OR_TRUSTED_BOOT
+>  	help
+>  	  Systems with firmware secure boot enabled need to define security
+>  	  policies to extend secure boot to the OS. This config allows a user
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 8abe77536d9d..59c216af6264 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -195,6 +195,7 @@ config S390
+>  	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+>  	select SWIOTLB
+>  	select GENERIC_ALLOCATOR
+> +	imply IMA_SECURE_AND_OR_TRUSTED_BOOT
+>  
+>  
+>  config SCHED_OMIT_FRAME_POINTER
+> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
+> index 2b1203cf7be6..578a6fa82ea4 100644
+> --- a/arch/s390/kernel/Makefile
+> +++ b/arch/s390/kernel/Makefile
+> @@ -70,7 +70,7 @@ obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
+>  obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_image.o
+>  obj-$(CONFIG_KEXEC_FILE)	+= kexec_elf.o
+>  
+> -obj-$(CONFIG_IMA)		+= ima_arch.o
+> +obj-$(CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT)	+= ima_arch.o
+>  
+>  obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_cpum_cf_common.o
+>  obj-$(CONFIG_PERF_EVENTS)	+= perf_cpum_cf.o perf_cpum_sf.o
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index beea77046f9b..dcf5b1729f7c 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -230,6 +230,7 @@ config X86
+>  	select VIRT_TO_BUS
+>  	select X86_FEATURE_NAMES		if PROC_FS
+>  	select PROC_PID_ARCH_STATUS		if PROC_FS
+> +	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>  
+>  config INSTRUCTION_DECODER
+>  	def_bool y
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 9b294c13809a..cfef37a27def 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -154,6 +154,4 @@ ifeq ($(CONFIG_X86_64),y)
+>  	obj-y				+= vsmp_64.o
+>  endif
+>  
+> -ifdef CONFIG_EFI
+> -obj-$(CONFIG_IMA)			+= ima_arch.o
+> -endif
+> +obj-$(CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT)	+= ima_arch.o
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 1659217e9b60..aefe758f4466 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+>  #endif
+>  
+> -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> -	|| defined(CONFIG_PPC_SECURE_BOOT)
+> +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+>  extern bool arch_ima_get_secureboot(void);
+>  extern const char * const *arch_get_ima_policy(void);
+>  #else
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 3f3ee4e2eb0d..edde88dbe576 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -327,3 +327,10 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+>  	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+>  	depends on SYSTEM_TRUSTED_KEYRING
+>  	default y
+> +
+> +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> +       bool
+> +       depends on IMA_ARCH_POLICY
+> +       help
+> +          This option is selected by architectures to enable secure and/or
+> +          trusted boot based on IMA runtime policies.
 
