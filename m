@@ -2,111 +2,88 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEEEC10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C17FC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A143321D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9B42192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583908973;
-	bh=LI8rbNA8wJc83S2WR1/sE0Ht53AWmB5tHGMzGWEUODg=;
+	s=default; t=1583909013;
+	bh=v3Kb+BE2jej1X8dtgFX8w+1zK9ac6+08Ps4La6EyeUw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TWIsyQ/uNc0LGaC4dqxHIrr3oBi6RnOym9JYBS2TGddgRYXSi9FLrkxfxcZBjX5sB
-	 UoG3fKn+jTKQjE+YoS0YiwWm+U4qFPUS1eAbvTUjAkby9SeAiYjY+zidUbfIAXDlnK
-	 L3xkqpeKcC1KDYQCdSgJg2ZMoS8xeJM98poAH3js=
+	b=DYzKx8e6yrrEnSVuJCKi3JCvOarI3Zas6BOou9arXhdhrIjdkwQ6EGwcCNh5E/SaN
+	 C6hldqsPOhVHBUIBGHelKfscCRDYR/ihCUl6Nuk+gsMLw0+5gJoOklr4f7+XDaq+0o
+	 QGUC4/Kc50In80dURg0F8g7ryphg4w8t+WJaCO3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgCKGmw (ORCPT
+        id S1728261AbgCKGnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:42:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 02:43:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgCKGmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:42:52 -0400
-Received: from localhost (unknown [106.201.105.99])
+        id S1726160AbgCKGnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:43:32 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C1821655;
-        Wed, 11 Mar 2020 06:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EA7C21655;
+        Wed, 11 Mar 2020 06:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583908971;
-        bh=LI8rbNA8wJc83S2WR1/sE0Ht53AWmB5tHGMzGWEUODg=;
+        s=default; t=1583909011;
+        bh=v3Kb+BE2jej1X8dtgFX8w+1zK9ac6+08Ps4La6EyeUw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M26G4X0UgwEGh4VvB4h8EhSAmXLwIUI3RrvAC1rXFaHYjFSmydS6eC2mH78OUax1D
-         NiPWOlTwLO1RKZs61ALXNh6VG6oFv3Xm5RNq3boFdB2WKh7n1h7cBr8fW21JQFkkQ7
-         87pnEdS5lWLdqmfV+/o4dTszFH+1ouannbTnzC2Y=
-Date:   Wed, 11 Mar 2020 12:12:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     pierre-louis.bossart@linux.intel.com, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as
- readonly
-Message-ID: <20200311064243.GI4885@vkoul-mobl>
-References: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
+        b=mTNZDK9xVIJKDweX9qVjLncu2FEeKgdVih0D6ZD8ogyGWuuGQjsK6SvRtE0ea5h5C
+         GWlPD31eLZD1/gZagIjHLTFauIIgXIWZ/KYrvq/Fu5PI8I3CrRmljkMCYrXKUJwpgB
+         7jOO8CJgSo4k4aNkeMjwrbqF69v9vQmmvrRMeVPs=
+Date:   Wed, 11 Mar 2020 14:43:20 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] ARM: dts: imx7s: add snvs clock to pwrkey
+Message-ID: <20200311064320.GF29269@dragon>
+References: <20200225161201.1975-1-git@andred.net>
+ <20200225161201.1975-2-git@andred.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225161201.1975-2-git@andred.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-03-20, 17:37, Srinivas Kandagatla wrote:
-> According to SoundWire Specification Version 1.2.
-> "A Data Port number X (in the range 0-14) which supports only one
-> value of WordLength may implement the WordLength field in the
-> DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
-> WordLength in response to reads."
+On Tue, Feb 25, 2020 at 04:11:57PM +0000, André Draszik wrote:
+> On i.MX7, the SNVS requires a clock. This is similar to the clock
+> bound to the SNVS RTC node, but if the SNVS RTC driver isn't enabled,
+> then SNVS doesn't work, and as such the pwrkey driver doesn't
+> work (i.e. hangs the kernel, as the clock isn't enabled).
 > 
-> As WSA881x interfaces in PDM mode making the only field "WordLength"
-> in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
-> register on WSA881x soundwire slave with Qualcomm Soundwire Controller
-> is throwing up an error. Not sure how other controllers deal with
-> writing to readonly registers, but this patch provides a way to avoid
-> writes to DPN_BlockCtrl1 register by providing a ro_blockctrl1_reg
-> flag in struct sdw_port_runtime.
+> Also see commit ec2a844ef7c1
+> ("ARM: dts: imx7s: add snvs rtc clock")
+> for a similar fix.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> 
-> I will send patch for WSA881x to include this change once this patch
-> is accepted.
-> 
->  drivers/soundwire/bus.h    |  2 ++
->  drivers/soundwire/stream.c | 17 ++++++++++-------
->  2 files changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-> index 204204a26db8..791e8d14093e 100644
-> --- a/drivers/soundwire/bus.h
-> +++ b/drivers/soundwire/bus.h
-> @@ -79,6 +79,7 @@ int sdw_find_col_index(int col);
->   * @num: Port number. For audio streams, valid port number ranges from
->   * [1,14]
->   * @ch_mask: Channel mask
-> + * @ro_blockctrl1_reg: Read Only flag for DPN_BlockCtrl1 register
->   * @transport_params: Transport parameters
->   * @port_params: Port parameters
->   * @port_node: List node for Master or Slave port_list
-> @@ -89,6 +90,7 @@ int sdw_find_col_index(int col);
->  struct sdw_port_runtime {
->  	int num;
->  	int ch_mask;
-> +	bool ro_blockctrl1_reg;
+> Signed-off-by: André Draszik <git@andred.net>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Let us use properties for this so it should be added in struct
-sdw_dpn_prop or struct sdw_slave_prop (I dont think that we would have
-different properties for each DPn when we are dealing with these simple
-codecs)
-
-Also the property should not have mipi tag as this is not in DiSCo spec
-(yet), so I would suggest sdw_ro_wordlen for this.
-
-Thanks
--- 
-~Vinod
+Applied, thanks.
