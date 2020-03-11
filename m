@@ -2,140 +2,165 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCCBC4CC9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122CAC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516CB20736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8533206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gy6OvkUe"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ivqedFCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbgCKSxx (ORCPT
+        id S1730985AbgCKSyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:53:53 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43342 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730927AbgCKSxx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:53:53 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c144so1832538pfb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VDvnNzuVZRF1OQ+owZ2HapaaeoLU1qYO7HZNkHLtFHQ=;
-        b=gy6OvkUeXGeKaiQsNa9fM23j5TYpXenPdxP8SzNFiO3ORUUU4+FO2hEMgeun8Qne5v
-         vd4GU6iwXK9iudf6/mOVqAbdPSbMtFm1ANBBbYj5HHUy0M6X3mtgb4LMBFtWX8scU8PR
-         Ad9FOFuKRowitYA2nAxkqTi8vG/9U34BWV/2o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VDvnNzuVZRF1OQ+owZ2HapaaeoLU1qYO7HZNkHLtFHQ=;
-        b=ZqaUHp5IKEWxK/qME0Ib6UWMeN/5vlvGcVRF+cqBcXD4pb5KFm9Ugq5xc/IZ3btdl1
-         f4QEgCBKahvJwrkGQN0Eu2E5eLd7of5kg0+/VHbhMxzw24gjlhHlNA16JrtEf5VxDOQW
-         muTVHLr4VvulZnzesRUt6lSB1ml6Io3NLDPkL64o1ZCt2xhyEdDtkrTgLcfG3crD5IVk
-         uQ2pTcWqX1kmeyFo+5J0ZiNBDb3l4y5I4Y6Rjba9x0gTL7YzqnS50FOHSZ2UT0a+SmHu
-         W0e2BXdjlXVYqSp1vMEO3k/u+z3bPe0AJigKdkv3L1yzq03MR4XUPpXOLg+Y6seNA3bI
-         75XQ==
-X-Gm-Message-State: ANhLgQ3eAn6lADfVTiqurJJDSpjcXuWdjEKf1ywgMKRsO5ZkMB9ZTqjr
-        p8HWDtoJEmL5xmFIHg9pfZdzaQ==
-X-Google-Smtp-Source: ADFU+vvTWaKfyc2n6gEYsa1Kpaa2di3XtHi232URM9zPqVf3eyBLvR6B2d0u5N8KlTiOP7L1tPCgUw==
-X-Received: by 2002:a62:cdcc:: with SMTP id o195mr2111873pfg.323.1583952832074;
-        Wed, 11 Mar 2020 11:53:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i13sm431770pfd.180.2020.03.11.11.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:53:51 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 11:53:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 3/4] mm: docs: Fix a comment in process_vm_rw_core
-Message-ID: <202003111153.A77D048@keescook>
-References: <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org>
- <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170ED6D4D216EEEEF400136E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Wed, 11 Mar 2020 14:54:05 -0400
+Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:6990
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730799AbgCKSyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:54:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BJz43VyAZkD9THS7ekaFpjGwjJPNZt61B8Ar4u3Mlx5ogTXqipINciOl4cEtMEjLXI+9i9UZZ2e5LqagBRkkrJywGBZAwqGFVTd7W461x84gBqmHuKpJ/WT0zPmrSeYQ58PE92DlABxShqMuen8RCyCsct7eKW695MquMPKdkAbJ+Hz810W3W5+0JGOXNEASNsZc0TfmMF+xWWuJHjF2jFgNWSs3/GsRxzI98M2t0Qk/Vn91Sh7vim2EeImmKaV+jrdAa3lXiKISxWfTtRiRFZRHgz3tfepfpZJXDrIzrnUP52IhHf2MNCbL9DHWldDgz+nO0GNcLV23cQdQ/YyCBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TT/mhrumhx/kPJ+Qzls4qcJ5p9rq3U2CQATIhES8/bU=;
+ b=Kge+2wKo+LOdOwNHTZGyWSMTyw22hG4+wx/27FWdbDakwbxUjQub7ux+HwFwJdrUPGF1atMcwxeaaIOTELEgyA5LYn0xDz+ScyaBzg4050xNy+VJQHoIICDeeAPAQADAe3bbfTdL5d3MSC0Dqxjdrc8dEsGfKFGYDVLIZ7OnSJpxi9eY58EW8D3z1vRUaGE3BeIu+c3D+4FTI+coY0fiTiwIbpHAXiZZDV+wtQuSeiZbRo82O805rXsIS63U1JWtyD4WVOQXmTgZ0YJdDie5igYKO4n7xB2Kl90CIgJXuCdzPrmVKnsHaXqaljTctONe6UW2PrGunjeRFa4eB1Gsgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TT/mhrumhx/kPJ+Qzls4qcJ5p9rq3U2CQATIhES8/bU=;
+ b=ivqedFCmGxJILbwlBHuwH9695KqBcywX5xeiyjj6pg+6nbcDtmQ6DC04+mLQSetDP58m1OMS8KFM9E1zaWdxL7QphWtER8mDxJw0i1/ErlPt0ainkWS/5KqtuGSCgZQS0jVno7biC53MHZg57rb7CK5M0HKdoZOyvHQXmtMtrZY=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
+ VE1PR04MB6446.eurprd04.prod.outlook.com (20.179.233.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.16; Wed, 11 Mar 2020 18:54:01 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::b896:5bc0:c4dd:bd23]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::b896:5bc0:c4dd:bd23%2]) with mapi id 15.20.2814.007; Wed, 11 Mar 2020
+ 18:54:01 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 07/15] arm64: defconfig: Enable QorIQ cpufreq driver
+Thread-Topic: [PATCH 07/15] arm64: defconfig: Enable QorIQ cpufreq driver
+Thread-Index: AQHV62dVL2g/wtlvM02iwpLe9+E/l6hDAT2AgADUc2A=
+Date:   Wed, 11 Mar 2020 18:54:00 +0000
+Message-ID: <VE1PR04MB66873A9B6773FFBF96F37C6B8FFC0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <1582585690-463-1-git-send-email-leoyang.li@nxp.com>
+ <1582585690-463-8-git-send-email-leoyang.li@nxp.com>
+ <20200311061220.GB29269@dragon>
+In-Reply-To: <20200311061220.GB29269@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [136.49.234.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0cc9e7c3-8e39-469f-5a3d-08d7c5ed9000
+x-ms-traffictypediagnostic: VE1PR04MB6446:
+x-microsoft-antispam-prvs: <VE1PR04MB64462FCD5B19BB32A73750278FFC0@VE1PR04MB6446.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(199004)(81156014)(55016002)(8676002)(52536014)(81166006)(66556008)(64756008)(9686003)(66476007)(76116006)(66446008)(71200400001)(66946007)(5660300002)(8936002)(86362001)(26005)(33656002)(316002)(2906002)(54906003)(966005)(7696005)(4326008)(6916009)(186003)(53546011)(6506007)(45080400002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6446;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qjmSUFgSpmC2U7TGBhSJ5rLFOD4UnqtMK0wpdJKn5F5gGUaX+wuVsSP3C+GT496kA+pNVmXtO49cWzrBSF8I4t9wlZhzravffIolZmtOXr9iuHLpaJyqewqM6YAdD58Ghu0E5UCHgzTTU/lXyGdyXe8wFWT+4ArfVyQcXAl98iItNREuLxiMZZh2er2BG+FxiIGry1kC1m5a56P6/ZDQdcCMTuTpobhSdInzFB/RYH71YBvyMGQr/WsfyAvOeNgQAg/ZxI9DQoak1VxxLzEoWIjSUaZV35DxvjJ7/1kSlQ62XE39ceaZlzB/b/Vvbw7M2IA3ZLf4iVZPu3K2ltXolcKuSTwJa6p0E2EDXCxqdsh539awlRtCYuovBQG7AfF/gN/eUKBsja0755nwqOYoygQjL3HTnqW06V0u8hB8Fgbe9ekld+jUV6EA5yc5NdplJDGcuFdW+uyrW+cjrkLUrED3omMA4mSmrgPieZ8mpNybio00BNjy4IA+u6XpSIB1A2gpcef01bXSUyibL6PSaA==
+x-ms-exchange-antispam-messagedata: zSPtdTizLfRkqscBofGghrdxvY9CIIXo52qeKqZmVpxnEfnTq1uR1GM1cqOytyg5wGp8YCGebMQzivlCyYjmHti/6okQEP5RBs0o+jpc+Rlg2FK293gTDIdP0FcTdbionUdKT3+BzX21rJ+D+QWv+g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB5170ED6D4D216EEEEF400136E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cc9e7c3-8e39-469f-5a3d-08d7c5ed9000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 18:54:00.8348
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AA1rA46SWinpYAwaZZHPWCrKD4ocM/Mtyb5G0BUh+Zq64xSykJzECJxzNYDk9sn89vNSpbicWv9e8L9xjFCbug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6446
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:44:10PM +0100, Bernd Edlinger wrote:
-> This removes a duplicate "a" in the comment in process_vm_rw_core.
-> 
-> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
 
--Kees
+> -----Original Message-----
+> From: Shawn Guo <shawnguo@kernel.org>
+> Sent: Wednesday, March 11, 2020 1:12 AM
+> To: Leo Li <leoyang.li@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 07/15] arm64: defconfig: Enable QorIQ cpufreq driver
+>=20
+> On Mon, Feb 24, 2020 at 05:08:02PM -0600, Li Yang wrote:
+> > Enables the generic QorIQ cpufreq driver to support frequency scaling
+> > for various QorIQ SoCs.  Enabled as built-in as it is a core feature.
+> >
+> > Signed-off-by: Li Yang <leoyang.li@nxp.com>
+> > ---
+> >  arch/arm64/configs/defconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
+g
+> > index e97ef8b944b8..996dc749ea5c 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -90,6 +90,7 @@ CONFIG_ARM_QCOM_CPUFREQ_NVMEM=3Dy
+> >  CONFIG_ARM_QCOM_CPUFREQ_HW=3Dy
+> >  CONFIG_ARM_RASPBERRYPI_CPUFREQ=3Dm
+> >  CONFIG_ARM_TEGRA186_CPUFREQ=3Dy
+> > +CONFIG_QORIQ_CPUFREQ=3Dy
+> >  CONFIG_ARM_SCPI_PROTOCOL=3Dy
+> >  CONFIG_RASPBERRYPI_FIRMWARE=3Dy
+> >  CONFIG_INTEL_STRATIX10_SERVICE=3Dy
+> > @@ -722,7 +723,6 @@ CONFIG_COMMON_CLK_RK808=3Dy
+> >  CONFIG_COMMON_CLK_SCPI=3Dy
+> >  CONFIG_COMMON_CLK_CS2000_CP=3Dy
+> >  CONFIG_COMMON_CLK_S2MPS11=3Dy
+> > -CONFIG_CLK_QORIQ=3Dy
+>=20
+> Why is this getting removed?
 
-> ---
->  mm/process_vm_access.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-> index 357aa7b..b3e6eb5 100644
-> --- a/mm/process_vm_access.c
-> +++ b/mm/process_vm_access.c
-> @@ -204,7 +204,7 @@ static ssize_t process_vm_rw_core(pid_t pid, struct iov_iter *iter,
->  	if (!mm || IS_ERR(mm)) {
->  		rc = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
->  		/*
-> -		 * Explicitly map EACCES to EPERM as EPERM is a more a
-> +		 * Explicitly map EACCES to EPERM as EPERM is a more
->  		 * appropriate error code for process_vw_readv/writev
->  		 */
->  		if (rc == -EACCES)
-> -- 
-> 1.9.1
+Newly added QORIQ_CPUFREQ selects CLK_QORIQ, so it is removed by savedefcon=
+fig.
 
--- 
-Kees Cook
+Regards,
+Leo
+
+>=20
+> Shawn
+>=20
+> >  CONFIG_COMMON_CLK_PWM=3Dy
+> >  CONFIG_CLK_RASPBERRYPI=3Dm
+> >  CONFIG_CLK_IMX8MM=3Dy
+> > --
+> > 2.17.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> >
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Flists.=
+inf
+> radead.org%2Fmailman%2Flistinfo%2Flinux-arm-
+> kernel&amp;data=3D02%7C01%7Cleoyang.li%40nxp.com%7C9fc5f6a95bf74523
+> 717708d7c5832d15%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C
+> 637195039498757892&amp;sdata=3DnsR%2F3bVYD61W2%2BE393dhJNgKCp%2
+> FfvH9cYSdRLckOxns%3D&amp;reserved=3D0
