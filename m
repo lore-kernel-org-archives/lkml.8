@@ -2,266 +2,256 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE82C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1D2C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970762146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EE22146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgCKJiP (ORCPT
+        id S1728782AbgCKJlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:38:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5324 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728907AbgCKJiE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:38:04 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B9TE5u089093;
-        Wed, 11 Mar 2020 05:37:55 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypw1s9u20-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 05:37:55 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02B9Z8KC026658;
-        Wed, 11 Mar 2020 09:37:55 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 2ypjxrvqhm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 09:37:54 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02B9brEA50528718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 09:37:53 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A40426E056;
-        Wed, 11 Mar 2020 09:37:53 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1252C6E04E;
-        Wed, 11 Mar 2020 09:37:53 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.122.202])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Mar 2020 09:37:53 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 167922E3ABE; Wed, 11 Mar 2020 15:07:48 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v3 6/6] pseries/sysfs: Minimise IPI noise while reading [idle_][s]purr
-Date:   Wed, 11 Mar 2020 15:07:41 +0530
-Message-Id: <1583919461-27405-7-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1583919461-27405-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1583919461-27405-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_02:2020-03-10,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 clxscore=1015 spamscore=0 suspectscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110061
+        Wed, 11 Mar 2020 05:41:07 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:41324 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726160AbgCKJlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:41:07 -0400
+Received: from [10.130.0.70] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxH+gosmheUX0ZAA--.0S3;
+        Wed, 11 Mar 2020 17:40:57 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Loongson: Add model name to /proc/cpuinfo
+To:     YunQiang Su <wzssyqa@gmail.com>
+References: <1583908414-22858-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAKcpw6VBiFddr=QsB_HDYStX8Mh7=tf3B_onFDViAq8s_G0gbQ@mail.gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8f0eaa0b-e95c-4612-f3a3-9efcd523ae66@loongson.cn>
+Date:   Wed, 11 Mar 2020 17:40:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <CAKcpw6VBiFddr=QsB_HDYStX8Mh7=tf3B_onFDViAq8s_G0gbQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9AxH+gosmheUX0ZAA--.0S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3WrWUAF13uryrur4UuF1UAwb_yoWxCFWrp3
+        ykAan3Gr4xKryDGa4fJryj9rWYvr13XFyv9ay3tFWUZa9Yq3W5J397JF15ArsFvr1q9w1f
+        ZFZY9rsI9FWDZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY
+        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+        73UjIFyTuYvjfUeID7DUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On 03/11/2020 03:18 PM, YunQiang Su wrote:
+> Tiezhu Yang <yangtiezhu@loongson.cn> 于2020年3月11日周三 下午2:33写道：
+>> In the current code, when execute command "cat /proc/cpuinfo" or "lscpu",
+>> it can not get cpu type and frequency directly because the model name is
+>> not exist, so add it.
+> You patch is almost the same with the previous Huacai's.
+> How do you think about the copyright issue?
+>
+> FYI: GPL is copyleft instead of no-copyright-exists-at-all.
+> I have no idea about whether Loongson has any consideration about copyright,
+> while it is really quite important.
 
-Currently purr, spurr, idle_purr, idle_spurr are exposed for every CPU
-via the sysfs interface
-/sys/devices/system/cpu/cpuX/[idle_][s]purr. Each sysfs read currently
-generates an IPI to obtain the desired value from the target CPU X.
-Since these aforementioned sysfs files are typically read one after
-another, we end up generating 4 IPIs per CPU in a short duration.
+Hi YunQiang & Jiaxun,
 
-In order to minimize the IPI noise, this patch caches the values of
-all the four entities whenever one of them is read. If subsequently
-any of these are read within the next 10ms, the cached value is
-returned. With this, we will generate at most one IPI every 10ms for
-every CPU.
+Frankly, I don't know there exists a similar patch in 2018
+which has not been merged into the mainline tree, I just
+want to fix the issue of model name when execute cmd
+"cat /proc/cpuinfo" or "lscpu".
 
-Test-results: While reading the four sysfs files back-to-back for a
-given CPU every second for 100 seconds.
+How to avoid and solve this case?
+Add a proper label in the patch?
 
-Without the patch:
-		 16 [XICS 2 Edge IPI] = 422 times
-		 DBL [Doorbell interrupts] = 13 times
-		 Total : 435 IPIs.
+Thanks,
 
-With the patch:
-		  16 [XICS 2 Edge IPI] = 111 times
-		  DBL [Doorbell interrupts] = 17 times
-		  Total : 128 IPIs.
+Tiezhu Yang
 
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/sysfs.c | 109 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 90 insertions(+), 19 deletions(-)
-
-diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-index c9ddb83..db8fc90 100644
---- a/arch/powerpc/kernel/sysfs.c
-+++ b/arch/powerpc/kernel/sysfs.c
-@@ -586,8 +586,6 @@ void ppc_enable_pmcs(void)
-  * SPRs which are not related to PMU.
-  */
- #ifdef CONFIG_PPC64
--SYSFS_SPRSETUP(purr, SPRN_PURR);
--SYSFS_SPRSETUP(spurr, SPRN_SPURR);
- SYSFS_SPRSETUP(pir, SPRN_PIR);
- SYSFS_SPRSETUP(tscr, SPRN_TSCR);
- 
-@@ -596,8 +594,6 @@ void ppc_enable_pmcs(void)
-   enable write when needed with a separate function.
-   Lets be conservative and default to pseries.
- */
--static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
--static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
- static DEVICE_ATTR(pir, 0400, show_pir, NULL);
- static DEVICE_ATTR(tscr, 0600, show_tscr, store_tscr);
- #endif /* CONFIG_PPC64 */
-@@ -761,39 +757,114 @@ static void create_svm_file(void)
- }
- #endif /* CONFIG_PPC_SVM */
- 
--static void read_idle_purr(void *val)
-+/*
-+ * The duration (in ms) from the last IPI to the target CPU until
-+ * which a cached value of purr, spurr, idle_purr, idle_spurr can be
-+ * reported to the user on a corresponding sysfs file read. Beyond
-+ * this duration, fresh values need to be obtained by sending IPIs to
-+ * the target CPU when the sysfs files are read.
-+ */
-+static unsigned long util_stats_staleness_tolerance_ms = 10;
-+struct util_acct_stats {
-+	u64 latest_purr;
-+	u64 latest_spurr;
-+	u64 latest_idle_purr;
-+	u64 latest_idle_spurr;
-+	unsigned long last_update_jiffies;
-+};
-+
-+DEFINE_PER_CPU(struct util_acct_stats, util_acct_stats);
-+
-+static void update_util_acct_stats(void *ptr)
- {
--	u64 *ret = val;
-+	struct util_acct_stats *stats = ptr;
- 
--	*ret = read_this_idle_purr();
-+	stats->latest_purr = mfspr(SPRN_PURR);
-+	stats->latest_spurr = mfspr(SPRN_SPURR);
-+	stats->latest_idle_purr = read_this_idle_purr();
-+	stats->latest_idle_spurr = read_this_idle_spurr();
-+	stats->last_update_jiffies = jiffies;
- }
- 
--static ssize_t idle_purr_show(struct device *dev,
--			      struct device_attribute *attr, char *buf)
-+struct util_acct_stats *get_util_stats_ptr(int cpu)
-+{
-+	struct util_acct_stats *stats = per_cpu_ptr(&util_acct_stats, cpu);
-+	unsigned long delta_jiffies;
-+
-+	delta_jiffies = jiffies - stats->last_update_jiffies;
-+
-+	/*
-+	 * If we have a recent enough data, reuse that instead of
-+	 * sending an IPI.
-+	 */
-+	if (jiffies_to_msecs(delta_jiffies) < util_stats_staleness_tolerance_ms)
-+		return stats;
-+
-+	smp_call_function_single(cpu, update_util_acct_stats, stats, 1);
-+	return stats;
-+}
-+
-+static ssize_t show_purr(struct device *dev,
-+			 struct device_attribute *attr, char *buf)
- {
- 	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	u64 val;
-+	struct util_acct_stats *stats;
- 
--	smp_call_function_single(cpu->dev.id, read_idle_purr, &val, 1);
--	return sprintf(buf, "%llx\n", val);
-+	stats = get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_purr);
- }
--static DEVICE_ATTR(idle_purr, 0400, idle_purr_show, NULL);
- 
--static void read_idle_spurr(void *val)
-+static void write_purr(void *val)
- {
--	u64 *ret = val;
-+	mtspr(SPRN_PURR, *(unsigned long *)val);
-+}
- 
--	*ret = read_this_idle_spurr();
-+static ssize_t __used store_purr(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	unsigned long val;
-+	int ret = kstrtoul(buf, 16, &val);
-+
-+	if (ret != 0)
-+		return -EINVAL;
-+
-+	smp_call_function_single(cpu->dev.id, write_purr, &val, 1);
-+	return count;
-+}
-+static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
-+
-+static ssize_t show_spurr(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	struct util_acct_stats *stats;
-+
-+	stats = get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_spurr);
- }
-+static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
-+
-+static ssize_t idle_purr_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	struct util_acct_stats *stats;
-+
-+	stats = get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_idle_purr);
-+}
-+static DEVICE_ATTR(idle_purr, 0400, idle_purr_show, NULL);
- 
- static ssize_t idle_spurr_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
- 	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	u64 val;
-+	struct util_acct_stats *stats;
- 
--	smp_call_function_single(cpu->dev.id, read_idle_spurr, &val, 1);
--	return sprintf(buf, "%llx\n", val);
-+	stats =  get_util_stats_ptr(cpu->dev.id);
-+	return sprintf(buf, "%llx\n", stats->latest_idle_spurr);
- }
- static DEVICE_ATTR(idle_spurr, 0400, idle_spurr_show, NULL);
- 
--- 
-1.9.4
+>
+>> E.g. without this patch:
+>>
+>> [loongson@localhost ~]$ lscpu
+>> Architecture:          mips64
+>> Byte Order:            Little Endian
+>> CPU(s):                4
+>> On-line CPU(s) list:   0-3
+>> Thread(s) per core:    1
+>> Core(s) per socket:    4
+>> Socket(s):             1
+>> NUMA node(s):          1
+>> L1d cache:             64K
+>> L1i cache:             64K
+>> L2 cache:              2048K
+>> NUMA node0 CPU(s):     0-3
+>>
+>> With this patch:
+>>
+>> [loongson@localhost ~]$ lscpu
+>> Architecture:          mips64
+>> Byte Order:            Little Endian
+>> CPU(s):                4
+>> On-line CPU(s) list:   0-3
+>> Thread(s) per core:    1
+>> Core(s) per socket:    4
+>> Socket(s):             1
+>> NUMA node(s):          1
+>> Model name:            Loongson-3A R3 (Loongson-3A3000) @ 1449MHz
+>> L1d cache:             64K
+>> L1i cache:             64K
+>> L2 cache:              2048K
+>> NUMA node0 CPU(s):     0-3
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/mips/include/asm/cpu-info.h |  1 +
+>>   arch/mips/kernel/cpu-probe.c     | 27 +++++++++++++++++++++++----
+>>   arch/mips/kernel/proc.c          |  4 ++++
+>>   3 files changed, 28 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/mips/include/asm/cpu-info.h b/arch/mips/include/asm/cpu-info.h
+>> index ed7ffe4..50e924e 100644
+>> --- a/arch/mips/include/asm/cpu-info.h
+>> +++ b/arch/mips/include/asm/cpu-info.h
+>> @@ -115,6 +115,7 @@ extern struct cpuinfo_mips cpu_data[];
+>>   extern void cpu_probe(void);
+>>   extern void cpu_report(void);
+>>
+>> +extern const char *__model_name[];
+>>   extern const char *__cpu_name[];
+>>   #define cpu_name_string()      __cpu_name[raw_smp_processor_id()]
+>>
+>> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+>> index 6ab6b03..3ae40cc 100644
+>> --- a/arch/mips/kernel/cpu-probe.c
+>> +++ b/arch/mips/kernel/cpu-probe.c
+>> @@ -1548,6 +1548,7 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+>>                          set_elf_platform(cpu, "loongson2e");
+>>                          set_isa(c, MIPS_CPU_ISA_III);
+>>                          c->fpu_msk31 |= FPU_CSR_CONDX;
+>> +                       __model_name[cpu] = "Loongson-2E";
+>>                          break;
+>>                  case PRID_REV_LOONGSON2F:
+>>                          c->cputype = CPU_LOONGSON2EF;
+>> @@ -1555,23 +1556,37 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
+>>                          set_elf_platform(cpu, "loongson2f");
+>>                          set_isa(c, MIPS_CPU_ISA_III);
+>>                          c->fpu_msk31 |= FPU_CSR_CONDX;
+>> +                       __model_name[cpu] = "Loongson-2F";
+>>                          break;
+>>                  case PRID_REV_LOONGSON3A_R1:
+>>                          c->cputype = CPU_LOONGSON64;
+>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>                          set_elf_platform(cpu, "loongson3a");
+>>                          set_isa(c, MIPS_CPU_ISA_M64R1);
+>> -                       c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
+>> -                               MIPS_ASE_LOONGSON_EXT);
+>> +                       c->ases |= (MIPS_ASE_LOONGSON_MMI |
+>> +                                   MIPS_ASE_LOONGSON_CAM |
+>> +                                   MIPS_ASE_LOONGSON_EXT);
+>> +                       __model_name[cpu] = "Loongson-3A R1 (Loongson-3A1000)";
+>>                          break;
+>>                  case PRID_REV_LOONGSON3B_R1:
+>> +                       c->cputype = CPU_LOONGSON64;
+>> +                       __cpu_name[cpu] = "ICT Loongson-3";
+>> +                       set_elf_platform(cpu, "loongson3b");
+>> +                       set_isa(c, MIPS_CPU_ISA_M64R1);
+>> +                       c->ases |= (MIPS_ASE_LOONGSON_MMI |
+>> +                                   MIPS_ASE_LOONGSON_CAM |
+>> +                                   MIPS_ASE_LOONGSON_EXT);
+>> +                       __model_name[cpu] = "Loongson-3B R1 (Loongson-3B1000)";
+>> +                       break;
+>>                  case PRID_REV_LOONGSON3B_R2:
+>>                          c->cputype = CPU_LOONGSON64;
+>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>                          set_elf_platform(cpu, "loongson3b");
+>>                          set_isa(c, MIPS_CPU_ISA_M64R1);
+>> -                       c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
+>> -                               MIPS_ASE_LOONGSON_EXT);
+>> +                       c->ases |= (MIPS_ASE_LOONGSON_MMI |
+>> +                                   MIPS_ASE_LOONGSON_CAM |
+>> +                                   MIPS_ASE_LOONGSON_EXT);
+>> +                       __model_name[cpu] = "Loongson-3B R2 (Loongson-3B1500)";
+>>                          break;
+>>                  }
+>>
+>> @@ -1926,6 +1941,7 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>                          set_elf_platform(cpu, "loongson3a");
+>>                          set_isa(c, MIPS_CPU_ISA_M64R2);
+>> +                       __model_name[cpu] = "Loongson-3A R2 (Loongson-3A2000)";
+>>                          break;
+>>                  case PRID_REV_LOONGSON3A_R3_0:
+>>                  case PRID_REV_LOONGSON3A_R3_1:
+>> @@ -1933,6 +1949,7 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>                          set_elf_platform(cpu, "loongson3a");
+>>                          set_isa(c, MIPS_CPU_ISA_M64R2);
+>> +                       __model_name[cpu] = "Loongson-3A R3 (Loongson-3A3000)";
+>>                          break;
+>>                  }
+>>
+>> @@ -1952,6 +1969,7 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+>>                  c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+>>                  c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
+>>                          MIPS_ASE_LOONGSON_EXT | MIPS_ASE_LOONGSON_EXT2);
+>> +               __model_name[cpu] = "Loongson-3A R4 (Loongson-3A4000)";
+>>                  break;
+>>          default:
+>>                  panic("Unknown Loongson Processor ID!");
+>> @@ -2111,6 +2129,7 @@ u64 __ua_limit;
+>>   EXPORT_SYMBOL(__ua_limit);
+>>   #endif
+>>
+>> +const char *__model_name[NR_CPUS];
+>>   const char *__cpu_name[NR_CPUS];
+>>   const char *__elf_platform;
+>>
+>> diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+>> index f8d3671..5fc74e6 100644
+>> --- a/arch/mips/kernel/proc.c
+>> +++ b/arch/mips/kernel/proc.c
+>> @@ -15,6 +15,7 @@
+>>   #include <asm/mipsregs.h>
+>>   #include <asm/processor.h>
+>>   #include <asm/prom.h>
+>> +#include <asm/time.h>
+>>
+>>   unsigned int vced_count, vcei_count;
+>>
+>> @@ -63,6 +64,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+>>          seq_printf(m, fmt, __cpu_name[n],
+>>                        (version >> 4) & 0x0f, version & 0x0f,
+>>                        (fp_vers >> 4) & 0x0f, fp_vers & 0x0f);
+>> +       if (__model_name[n])
+>> +               seq_printf(m, "model name\t\t: %s @ %uMHz\n",
+>> +                     __model_name[n], mips_hpt_frequency / 500000);
+>>          seq_printf(m, "BogoMIPS\t\t: %u.%02u\n",
+>>                        cpu_data[n].udelay_val / (500000/HZ),
+>>                        (cpu_data[n].udelay_val / (5000/HZ)) % 100);
+>> --
+>> 2.1.0
+>>
+>
 
