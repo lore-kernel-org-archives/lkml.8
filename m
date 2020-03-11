@@ -2,81 +2,98 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3020C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60804C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C54EA20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3905620873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mWVm/1lK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgCKHCD (ORCPT
+        id S1728222AbgCKHD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:02:03 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52394 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726160AbgCKHCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:02:03 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DC51B1098833C4977055;
-        Wed, 11 Mar 2020 15:01:47 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 15:01:40 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <willy@infradead.org>, <andrew@lunn.ch>, <hkallweit1@gmail.com>,
-        <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] net: ibm: remove set but not used variables 'err'
-Date:   Wed, 11 Mar 2020 14:54:11 +0800
-Message-ID: <20200311065411.172692-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Mar 2020 03:03:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23861 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726310AbgCKHD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:03:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583910208; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GAuTLvEuWXt9KrX72GtkLXsGN2+/h8QdvpOamlfyA/A=;
+ b=mWVm/1lKCJ2oSovS412YE27mrixrVkL6S6nMSt5C/eUhXGgvQDD+OUKCCM4imnWEQCbFPAcW
+ 7JAJAyjYQYGenvPJq/wuyeLp1hHYL0rxNN+n2TphoQVMmwREb9RiLnvzUyppRYCPXl+qFE6n
+ yKEcVAU5PKyot6WZDf7BuhP9bZI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e688d3d.7f0aa968d420-smtp-out-n05;
+ Wed, 11 Mar 2020 07:03:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8824AC433BA; Wed, 11 Mar 2020 07:03:24 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1AF0C433CB;
+        Wed, 11 Mar 2020 07:03:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Mar 2020 12:33:23 +0530
+From:   kgunda@codeaurora.org
+To:     Rob Herring <robh@kernel.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings to
+ .yaml format
+In-Reply-To: <20200310183118.GA13818@bogus>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+ <20200310183118.GA13818@bogus>
+Message-ID: <95536b5ff4f8209affc056d1900a8873@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/net/ethernet/ibm/emac/core.c: In function __emac_mdio_write:
-drivers/net/ethernet/ibm/emac/core.c:875:9: warning:
-	variable err set but not used [-Wunused-but-set-variable]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/ethernet/ibm/emac/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/ibm/emac/core.c b/drivers/net/ethernet/ibm/emac/core.c
-index b7fc177..06248a7 100644
---- a/drivers/net/ethernet/ibm/emac/core.c
-+++ b/drivers/net/ethernet/ibm/emac/core.c
-@@ -872,7 +872,7 @@ static void __emac_mdio_write(struct emac_instance *dev, u8 id, u8 reg,
- {
- 	struct emac_regs __iomem *p = dev->emacp;
- 	u32 r = 0;
--	int n, err = -ETIMEDOUT;
-+	int n;
- 
- 	mutex_lock(&dev->mdio_lock);
- 
-@@ -919,7 +919,6 @@ static void __emac_mdio_write(struct emac_instance *dev, u8 id, u8 reg,
- 			goto bail;
- 		}
- 	}
--	err = 0;
-  bail:
- 	if (emac_has_feature(dev, EMAC_FTR_HAS_RGMII))
- 		rgmii_put_mdio(dev->rgmii_dev, dev->rgmii_port);
--- 
-2.7.4
-
+On 2020-03-11 00:01, Rob Herring wrote:
+> On Mon,  9 Mar 2020 18:55:59 +0530, Kiran Gunda wrote:
+>> Convert the qcom-wled bindings from .txt to .yaml format.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> ---
+>>  .../bindings/leds/backlight/qcom-wled.txt          | 154 
+>> -----------------
+>>  .../bindings/leds/backlight/qcom-wled.yaml         | 184 
+>> +++++++++++++++++++++
+>>  2 files changed, 184 insertions(+), 154 deletions(-)
+>>  delete mode 100644 
+>> Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml: $id:
+> relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
+> 
+> See https://patchwork.ozlabs.org/patch/1251567
+> Please check and re-submit.
+I will fix it in next post.
