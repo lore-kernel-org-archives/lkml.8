@@ -2,113 +2,150 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA2CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D9DC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96C320749
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E8D20746
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583966829;
-	bh=UcNd5rYmINjwGgfboOi/vC/8shoIdG5DtpBHMlvH6Ls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=erSqN6sjrvTjiBhmw9qZ+rtjIIgrYrS1YdNjpSWyWGRDuURuyf41Nug8q2CFpwPSQ
-	 wFUDXxUIwssEFP/YeCKpR99YbNRpn5tubzo+1kdxvfxcaHVYPbASMrFaCAUoU2h2ut
-	 exc7Pr/KnDCklZ35abBFy2hiGaYUOZrWin0V5iZM=
+	s=default; t=1583966953;
+	bh=XDMWLM9ZHsVTFkpy0uJjXIAczv20ViLNNjhPI5zknsg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DR2aH1pwFN+8nD2HXAnyg+R1NHxBfVsOXf20qGzPoJEc1XF1khxEjkgKQ+w+o7l8/
+	 xZ54kODqUTM7T45POgSWCzGwEBSBx6rS0ofn+slIN8HHN+LH8FPgBh1e163S9NEe4C
+	 K62xe/h0TWGjhUjXrQTDuvo6jpWdjOsuiLw1i1dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731341AbgCKWrI (ORCPT
+        id S1731376AbgCKWtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50840 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 18:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbgCKWrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:47:08 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1729739AbgCKWtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:49:12 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0331F206E7;
-        Wed, 11 Mar 2020 22:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6A2206E7;
+        Wed, 11 Mar 2020 22:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583966828;
-        bh=UcNd5rYmINjwGgfboOi/vC/8shoIdG5DtpBHMlvH6Ls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KZVa7ZPGNaqaiG4v4C38D6UvLLRqNoYWMAZH4Bi8oTEMEozqM9VjVHGBgUWyZPXDd
-         XKSKgE7dJEWJbeSxZNDL+XP7wwA0dldCByvGTYYwEnUP/l80mCfAa4Pbh9FuAPTkWg
-         IgtwL2rWjAYE5FLiLZ91QnjvjX6VfJ+8g28vdft8=
-Received: by pali.im (Postfix)
-        id 96068803; Wed, 11 Mar 2020 23:47:05 +0100 (CET)
-Date:   Wed, 11 Mar 2020 23:47:05 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     'Linux Next Mailing List' <linux-next@vger.kernel.org>,
-        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] staging: exfat: remove staging version of exfat
- filesystem
-Message-ID: <20200311224705.z3sn3taxjap67jle@pali>
-References: <003501d5f66b$7fe3b260$7fab1720$@samsung.com>
- <20200310105421.GA2810679@kroah.com>
+        s=default; t=1583966951;
+        bh=XDMWLM9ZHsVTFkpy0uJjXIAczv20ViLNNjhPI5zknsg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1w/KIC0mZ0s4oZnaEPtBnHleQZ6kopaDqTWirZwjawbTR9KjRTFAFIM88rUl2BTPM
+         OoQuXoXxJ8H39IJx3Zf5bwYtMIFeVPXauFBPYBCwQi7azq+aBm8WZgd5uNd7nTXq/u
+         VrP6MGat6sMTkAEfvs/HGdCjARGgOfSYwhzEaMSo=
+Date:   Wed, 11 Mar 2020 15:49:08 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 03/15] ethtool: provide netdev features with
+ FEATURES_GET request
+Message-ID: <20200311154908.7fd7047d@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <a3ed11c43f5ac0a68d3b3dfdf62de755ad240e59.1583962006.git.mkubecek@suse.cz>
+References: <cover.1583962006.git.mkubecek@suse.cz>
+        <a3ed11c43f5ac0a68d3b3dfdf62de755ad240e59.1583962006.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200310105421.GA2810679@kroah.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 10 March 2020 11:54:21 Greg Kroah-Hartman wrote:
-> Now that there is a "real" solution for exfat in the vfs tree queued up
-> to be merged in 5.7-rc1 the "old" exfat code in staging can be removed.
-> 
-> Many thanks to Valdis for doing the work to get this into the tree in
-> the first place, it was greatly appreciated.
-> 
-> Cc: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> Cc: Pali Rohár <pali@kernel.org>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Al Viro <viro@ZenIV.linux.org.uk>
-> Cc: Namjae Jeon <namjae.jeon@samsung.com>
-> Cc: Sungjong Seo <sj1557.seo@samsung.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, 11 Mar 2020 22:40:18 +0100 (CET) Michal Kubecek wrote:
+> diff --git a/net/ethtool/common.h b/net/ethtool/common.h
+> index 40ba74e0b9bb..82211430d3db 100644
+> --- a/net/ethtool/common.h
+> +++ b/net/ethtool/common.h
+> @@ -6,6 +6,8 @@
+>  #include <linux/netdevice.h>
+>  #include <linux/ethtool.h>
+>  
+> +#define ETHTOOL_DEV_FEATURE_WORDS	((NETDEV_FEATURE_COUNT + 31) / 32)
 
-Acked-by: Pali Rohár <pali@kernel.org>
+nit: since this line is touched perhaps worth converting to
+DIV_ROUND_UP()?
 
-> ---
->  MAINTAINERS                          |    6 -
->  drivers/staging/Kconfig              |    2 -
->  drivers/staging/Makefile             |    1 -
->  drivers/staging/exfat/Kconfig        |   41 -
->  drivers/staging/exfat/Makefile       |   10 -
->  drivers/staging/exfat/TODO           |   69 -
->  drivers/staging/exfat/exfat.h        |  760 ------
->  drivers/staging/exfat/exfat_blkdev.c |  138 --
->  drivers/staging/exfat/exfat_cache.c  |  514 ----
->  drivers/staging/exfat/exfat_core.c   | 2529 --------------------
->  drivers/staging/exfat/exfat_nls.c    |  212 --
->  drivers/staging/exfat/exfat_super.c  | 3296 --------------------------
->  drivers/staging/exfat/exfat_upcase.c |  740 ------
->  13 files changed, 8318 deletions(-)
->  delete mode 100644 drivers/staging/exfat/Kconfig
->  delete mode 100644 drivers/staging/exfat/Makefile
->  delete mode 100644 drivers/staging/exfat/TODO
->  delete mode 100644 drivers/staging/exfat/exfat.h
->  delete mode 100644 drivers/staging/exfat/exfat_blkdev.c
->  delete mode 100644 drivers/staging/exfat/exfat_cache.c
->  delete mode 100644 drivers/staging/exfat/exfat_core.c
->  delete mode 100644 drivers/staging/exfat/exfat_nls.c
->  delete mode 100644 drivers/staging/exfat/exfat_super.c
->  delete mode 100644 drivers/staging/exfat/exfat_upcase.c
+>  /* compose link mode index from speed, type and duplex */
+>  #define ETHTOOL_LINK_MODE(speed, type, duplex) \
+>  	ETHTOOL_LINK_MODE_ ## speed ## base ## type ## _ ## duplex ## _BIT
+
+> +static void ethnl_features_to_bitmap32(u32 *dest, netdev_features_t src)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ETHTOOL_DEV_FEATURE_WORDS; i++)
+> +		dest[i] = (u32)(src >> (32 * i));
+
+nit: cast unnecessary
+
+> +}
+> +
+> +static int features_prepare_data(const struct ethnl_req_info *req_base,
+> +				 struct ethnl_reply_data *reply_base,
+> +				 struct genl_info *info)
+> +{
+> +	struct features_reply_data *data = FEATURES_REPDATA(reply_base);
+> +	struct net_device *dev = reply_base->dev;
+> +	netdev_features_t all_features;
+> +
+> +	ethnl_features_to_bitmap32(data->hw, dev->hw_features);
+> +	ethnl_features_to_bitmap32(data->wanted, dev->wanted_features);
+> +	ethnl_features_to_bitmap32(data->active, dev->features);
+> +	ethnl_features_to_bitmap32(data->nochange, NETIF_F_NEVER_CHANGE);
+> +	all_features = ~(netdev_features_t)0 >>
+> +		       (8 * sizeof(all_features) - NETDEV_FEATURE_COUNT);
+
+nit: GENMASK_ULL(NETDEV_FEATURE_COUNT % 32 - 1, 0) ?
+
+> +	ethnl_features_to_bitmap32(data->all, all_features);
+> +
+> +	return 0;
+> +}
+
+> +static int features_fill_reply(struct sk_buff *skb,
+> +			       const struct ethnl_req_info *req_base,
+> +			       const struct ethnl_reply_data *reply_base)
+> +{
+> +	const struct features_reply_data *data = FEATURES_REPDATA(reply_base);
+> +	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+> +	int ret;
+> +
+> +	ret = ethnl_put_bitset32(skb, ETHTOOL_A_FEATURES_HW, data->hw,
+> +				 data->all, NETDEV_FEATURE_COUNT,
+> +				 netdev_features_strings, compact);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = ethnl_put_bitset32(skb, ETHTOOL_A_FEATURES_WANTED, data->wanted,
+> +				 NULL, NETDEV_FEATURE_COUNT,
+> +				 netdev_features_strings, compact);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = ethnl_put_bitset32(skb, ETHTOOL_A_FEATURES_ACTIVE, data->active,
+> +				 NULL, NETDEV_FEATURE_COUNT,
+> +				 netdev_features_strings, compact);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = ethnl_put_bitset32(skb, ETHTOOL_A_FEATURES_NOCHANGE,
+> +				 data->nochange, NULL, NETDEV_FEATURE_COUNT,
+> +				 netdev_features_strings, compact);
+> +
+> +	return ret;
+
+nit: return directly?
+
+> +}
+
+Probably not worth respinning for just those nits:
+
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+
