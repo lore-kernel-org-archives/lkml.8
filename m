@@ -1,124 +1,197 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957E6C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:48 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9D4206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsHVNura"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbgCKScr (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:32:47 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40658 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730784AbgCKScq (ORCPT
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from outils.crapouillou.net ([89.234.176.41]:35792 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgCKNUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:32:46 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m2so3084683qka.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PMlJ0CCM2ETRao/Z/x1Z86bkEWgQuSAvpITBlu5A7Ik=;
-        b=GsHVNura2eRqqet/zqMCRx+4UATBBNXBlkdjyf760G2mIglKf0RCQsU2N9XDzUtMID
-         QOG6zFpKUeZhp6O3MYB9yzjPslgY4XcfmdM/hdPwv5gb8UV/IKebOp+1qOGbfdzUbBPw
-         9AR0C06BREbED/nGqz1/MikJY3hy6t/5at9PShhTx37TJf2aW491moWc/W0MZQUfSBsP
-         vNpuR9okDgiyWAt8bpKK33D5Quc3CW1GlLXA3ov7/4oSEqyoKeP1Uu3Juf1/XHfbg0rM
-         m2oeoGJS8K5ESND7Tz3zgE4yqVsVO5wLgraKFSg6iQlDt8VR/ZtS0TVptvtPiHFfYWf4
-         C+FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PMlJ0CCM2ETRao/Z/x1Z86bkEWgQuSAvpITBlu5A7Ik=;
-        b=eDt23OVp7mGDos2SjrYjiGeFHZ/3BGaLANjLQ4Uf6ESrLWVcL5ez87uzALh2cOcfiP
-         yZvbqw0RP+3fXlhCgk+TCS+VxKtnZGVYhFJuCg9dfaQBzOG8jBua/9iX+neVvoeiAa2n
-         IZuit8tDj03LnQkk84sGJUvao0xoTABZSGXvKFZFBDigIrHxcVMFJNTBXzKRu/5P9Eb+
-         IwnecAUKtWN+H8VDNPxrZGyb9M/yRUFi77dCyEX5KCx5vnABcrgX5h+LlUAbVLX08AZt
-         N1IC+TIrPpPqqQlHnGQMiIaPDD6CRZw4yv54v15LhUX6LEbkAgtfwKeR+iU9jC0bxUhr
-         kn+w==
-X-Gm-Message-State: ANhLgQ36TmpBLNoNzW2W5Pf/Es4uY6pRJb2w60pqkYxNsA58qy2F+HBM
-        eM320MeHRY8YU3R4+R+M9oQ=
-X-Google-Smtp-Source: ADFU+vuM3E1+agajz5s4tUI3265OjGZw2LgwOJgXOunpsr50yTdq+JhLk2aPugNEWTHtVYnSf1er0w==
-X-Received: by 2002:a05:620a:1236:: with SMTP id v22mr4091581qkj.101.1583951563826;
-        Wed, 11 Mar 2020 11:32:43 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id p191sm9264884qke.6.2020.03.11.11.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:32:43 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 11 Mar 2020 14:32:41 -0400
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Wed, 11 Mar 2020 09:20:21 -0400
+Date: Wed, 11 Mar 2020 14:20:09 +0100
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver
+ and LCD controller
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Andi Kleen <ak@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
-Message-ID: <20200311183240.GA3880414@rani.riverdale.lan>
-References: <20200307010353.172991-1-cannonmatthews@google.com>
- <20200309000820.f37opzmppm67g6et@box>
- <20200309090630.GC8447@dhcp22.suse.cz>
- <20200309153831.GK1454533@tassilo.jf.intel.com>
- <20200309183704.GA1573@bombadil.infradead.org>
- <CAJfu=UfPKZwqjGR5AdhFRo_je7X5q2=zpBSBQkrbh2KhYrOJiA@mail.gmail.com>
- <20200311005447.jkpsaghrpk3c4rwu@box>
- <20200311033552.GA3657254@rani.riverdale.lan>
- <20200311081607.3ahlk4msosj4qjsj@box>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel
+        <letux-kernel@openphoenux.org>,
+        MIPS Creator CI20 Development
+        <mips-creator-ci20-dev@googlegroups.com>
+Message-Id: <1583932809.3.0@crapouillou.net>
+In-Reply-To: <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
+        <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+        <1583177253.3.5@crapouillou.net>
+        <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200311081607.3ahlk4msosj4qjsj@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200311132009.U1qsbSkhH79hf5LO0loqRS_UR6ZOuFwNgNjMoEBQbmU@z>
 
-On Wed, Mar 11, 2020 at 11:16:07AM +0300, Kirill A. Shutemov wrote:
-> On Tue, Mar 10, 2020 at 11:35:54PM -0400, Arvind Sankar wrote:
-> > 
-> > The rationale for MOVNTI instruction is supposed to be that it avoids
-> > cache pollution. Aside from the bench that shows MOVNTI to be faster for
-> > the move itself, shouldn't it have an additional benefit in not trashing
-> > the CPU caches?
-> > 
-> > As string instructions improve, why wouldn't the same improvements be
-> > applied to MOVNTI?
-> 
-> String instructions inherently more flexible. Implementation can choose
-> caching strategy depending on the operation size (cx) and other factors.
-> Like if operation is large enough and cache is full of dirty cache lines
-> that expensive to free up, it can choose to bypass cache. MOVNTI is more
-> strict on semantics and more opaque to CPU.
+Hi Nikolaus,
 
-But with today's processors, wouldn't writing 1G via the string
-operations empty out almost the whole cache? Or are there already
-optimizations to prevent one thread from hogging the L3?
 
-If we do want to just use the string operations, it seems like the
-clear_page routines should just call memset instead of duplicating it.
+Le mer., mars 11, 2020 at 13:43, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+>=20
+>>  Am 02.03.2020 um 20:27 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>  Hi Nikolaus,
+>>=20
+>>=20
+>>  Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a =E9crit :
+>>>  From: Paul Boddie <paul@boddie.org.uk>
+>>>  A specialisation of the generic Synopsys HDMI driver is employed=20
+>>> for JZ4780
+>>>  HDMI support. This requires a new driver, plus device tree and=20
+>>> configuration
+>>>  modifications.
+>>>  Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>  ---
+>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 32=20
+>>> ++++++++++++++++++++++++++
+>>>  1 file changed, 32 insertions(+)
+>>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+>>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  index f928329b034b..391d4e1efd35 100644
+>>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  @@ -433,4 +433,36 @@
+>>>  		status =3D "disabled";
+>>>  	};
+>>>  +
+>>>  +	hdmi: hdmi@10180000 {
+>>>  +		compatible =3D "ingenic,jz4780-dw-hdmi";
+>>>  +		reg =3D <0x10180000 0x8000>;
+>>>  +		reg-io-width =3D <4>;
+>>>  +
+>>>  +		clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+>>>  +		clock-names =3D "isfr" , "iahb";
+>>>  +
+>>>  +		assigned-clocks =3D <&cgu JZ4780_CLK_HDMI>;
+>>>  +		assigned-clock-rates =3D <27000000>;
+>>=20
+>>  I *think* this should go to the board file.
+>>=20
+>>>  +
+>>>  +		interrupt-parent =3D <&intc>;
+>>>  +		interrupts =3D <3>;
+>>>  +
+>>>  +		/* ddc-i2c-bus =3D <&i2c4>; */
+>>>  +
+>>>  +		status =3D "disabled";
+>>>  +	};
+>>>  +
+>>>  +	lcd: lcd@13050000 {
+>>=20
+>>  The node name should be 'lcd-controller'.
+>>=20
+>>>  +		compatible =3D "ingenic,jz4740-lcd";
+>>=20
+>>  The JZ4780's LCD controller is much newer than the JZ4740 one, so=20
+>> even if it works with the "ingenic,jz4740-lcd" compatible string,=20
+>> you want it as a fallback.
+>>  So this should be: compatible =3D "ingenic,jz4780-lcd",=20
+>> "ingenic,jz4740-lcd".
+>>=20
+>>  That means the YAML should be updated too.
+>=20
+> I have started to look into jz4780 HDMI setup again.
+>=20
+> Well, there is no driver compatible to "ingenic,jz4780-lcd" so far
+> and it is questionalbe if we need a different one.
+>=20
+> I think we should rather make the driver also compatible
+> than adding a fallback to ingenic,jz4740-lcdto the DTS.
+>=20
+> The reason why this is better even if both LCDC are almost
+> compatible is that the jz4780 allows for much bigger displays
+> and therefore should have its own jz_soc_info with 4k x 2k
+> as maximum.
 
-> 
-> And more importantly string instructions, unlike MOVNTI, is something that
-> generated often by compiler and used in standard libraries a lot. It is
-> and will be focus of optimization of CPU architects.
-> 
-> -- 
->  Kirill A. Shutemov
+Sure, feel free to extend the driver.
+
+> Next I tried to find out if the LCDC are really compatible.
+>=20
+> Well the jz4780 has two lcdc instances but they are separated
+> by the reg addr. Next, there are unique features (like picture in
+> picture with alpha blending) but those are probably disabled
+> if not programmed from reset state. This may become a reason
+> to separate or augment the driver for the jz4780 but at the
+> moment we can ignore that.
+
+Two LCDC instances -> two lcd-controller@... nodes. It's that simple.
+
+The other features you listed are outside the LCDC, so outside the=20
+scope of this driver.
+
+> There are also subtly different bit definitions and register
+> widths (e.g. 24 bit in addition to 16/18 bit modes or more bits
+> for the sync position) but it looks as if the ingenic_drm
+> driver already handles this.
+>=20
+> Then I tried to read back the registers. Strangely they
+> are all 0x00000000. So there is no programming of the
+> lcd-controller in our DT setup with HDMI at all!
+
+How did you read them?
+Do it from the regmap: should be "cat=20
+/sys/kernel/debug/regmap/13050000.lcd-controller/registers" (not sure=20
+about the path)
+
+> I also checked that ingenic_drm_probe() is called and
+> returns successfully 0. It also reports that a /dev/fb
+> has been created:
+>=20
+> [    7.908830] ingenic-drm 13050000.lcd-controller: fb0:=20
+> ingenic-drmdrmf frame buffer device
+>=20
+> But for example ingenic_drm_encoder_atomic_mode_set() is
+> never called which should write some registers of the LCDC.
+>=20
+> I only did see some calls to ingenic_drm_encoder_atomic_check().
+>=20
+> This of course explains why we have no HDMI signals despite
+> proper HPD and a /dev/fb0. Because the LCDC is not being
+> programmed.
+
+It won't be called until the HDMI driver says that the cable is=20
+plugged, and there's a client application (e.g. fbdev emulation)=20
+running. So the problem is most likely within the HDMI driver.
+
+Cheers,
+-Paul
+
+> Any ideas / hints how to check or improve?
+>=20
+> BR and thanks,
+> Nikolaus
+>=20
+
+=
+
