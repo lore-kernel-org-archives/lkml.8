@@ -2,404 +2,198 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61926C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D6EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C2520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3395720738
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GLj3Wnaw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DWMg+i0R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731209AbgCKTa7 (ORCPT
+        id S1731161AbgCKTb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:30:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45305 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731003AbgCKTa7 (ORCPT
+        Wed, 11 Mar 2020 15:31:58 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40795 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730705AbgCKTb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:30:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583955058;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4MsnGKBoKbUHjxKFCV9MFRXrnFbkyAN1oNyLornIrgI=;
-        b=GLj3WnawHchQVqZbSpOl4JdUxJ1O4QaVbctauUGV8zKCYgmVk3NJTCvYRmNXbOXBszRBzU
-        Vy5R1Vszaa2ccyJ/qq+JGv3xNryxNPt82UL5yoElyZ6GQsLI7IU4485lRDtHdaR21grh5h
-        m5J8Y1jIYesA8QVkbuWNqKeliK/DrhQ=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-q6Xvp9iSPcSS6EeNIli0OA-1; Wed, 11 Mar 2020 15:30:56 -0400
-X-MC-Unique: q6Xvp9iSPcSS6EeNIli0OA-1
-Received: by mail-io1-f69.google.com with SMTP id k5so2205724ioa.22
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:30:56 -0700 (PDT)
+        Wed, 11 Mar 2020 15:31:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id l184so1892128pfl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=nrr0UrVgn5X3zlkkY/AvuhDFOpNyA1sBfPxPwX99Zio=;
+        b=DWMg+i0RW/xutS/C0lrLv5qkdOkRJdJrd7AEzJ+nhuFzo5UDID2I7osmZjKepfTMG4
+         QQ67+/sCPNIZ7NiaU8mRmDgy1xa+7fBGAeZZZkoTx0ai5DVbYNyxHYdGOZP0auhU1pUF
+         UePGYNNb68RUudvV922Q5HtVehqC2USEIk+jpbQq+gqi7fI8y+o1huJ0sJdj4YlbDaNc
+         a+tkRUGnWS+VXaa4CUwX7hR+D1hdRnZIhTJ92Lgzzk3/jj1uAGlq0dC5KMSpGWJr/Wmn
+         sId2NEwJHNKE/JOvxQjgupkfsriJZ9/JR7Q0YcDQmyz76MrrEKq3+0syQOUAMb6O47t8
+         CX2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4MsnGKBoKbUHjxKFCV9MFRXrnFbkyAN1oNyLornIrgI=;
-        b=t2mkDXFpKojD1yKL/X7/WXIN9m2CTEnIXSx/l5tLyJWccNmABv5+oNpZuvAlQSK+RA
-         ZVDRNQD/ICuufm67/k4C0JWMuFrJYx8FN5ivSR2dPrDLC1NIO79A6haLaMyxn3ut/iFG
-         UiBtSJyv9ADwvbPdxU8cMw1HtyixVTCM7s0o0P5PSLyCwfv4XRxQ9vcoA4oGClrRDnmy
-         fChQ58dprcVCarns/7+Ph/ooqzpUGfX6pPmSGC3mP62R94/In9hMNS7ToNDCajie2Wqk
-         sn0qEmklo5ZuFBAREEfrA9NeOuYm8+TiTN9o2etu9MmJMobyGBwmji+tDMQx1FAzQ/cl
-         nGzw==
-X-Gm-Message-State: ANhLgQ2kMw4v0O4PJZ08pnnEBxQ2os8lg7su9xLsd3xsH4J0LOwmEiBo
-        3Gj4xx1iQi6jbsmWY04/W+LrzLiCGji/rTap/MzrCd/PyLhbol5SqcEDYZn4pv9eexSNc7t1zlR
-        5J6PVvxoXEMRr7FvnqBbePr7x/dQInH8wg1pXAIKz
-X-Received: by 2002:a92:3c1c:: with SMTP id j28mr4614083ila.304.1583955055636;
-        Wed, 11 Mar 2020 12:30:55 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuSsj2tAxhrE+BKIj+y/8raYDOLnxF1p5GVPt5zhuZEpJrbolE+V94bDBtKzObKoHWUWU1GayL162N3iMX8xK4=
-X-Received: by 2002:a92:3c1c:: with SMTP id j28mr4614049ila.304.1583955055221;
- Wed, 11 Mar 2020 12:30:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=nrr0UrVgn5X3zlkkY/AvuhDFOpNyA1sBfPxPwX99Zio=;
+        b=XJUvYkuFLIHYQw1qZbPXPDumUmJFAkj1kIisaTglSWQjyg8WuJhX3Qe2cu3Spdbh+s
+         xDA5a12iAUXGaGBpWjQZUpwDiDlJgl+8QGrii0/N/qviPZXu1BJ9I+2abAngYH1X4Edf
+         BgB9kF06iEaUDfV117rUBbWEXPhaN7T9t6xI/trhVfjGj2tq3masY91LtHX7DDgkVlHT
+         8LjqxcC7JoaE0JvGa6vDc5pZEuuhMhnGljQXKfn/BTJjpsDBffeR5n99eCPoBGu4yydh
+         plTxRyFd0KfGK3FBMzBGGHERAbxxbPvl9UTrqcd+1POOU2rephZSptScbkREdhBBCpNF
+         UYcg==
+X-Gm-Message-State: ANhLgQ2ETs5dTj5nfaMg0NnkEoIelwDkdHA65Ln57PRZFFL01PMeJksh
+        m0v7h3Mrrt+1SZQq2Jmamjq/DQ==
+X-Google-Smtp-Source: ADFU+vukvfW+3meQvVc7eQJOnbW2y3Dt9sKRma1Xy4nV73Wr4TLb+pJSKHj51H8zu6dSS6TupFT38g==
+X-Received: by 2002:a62:7f8f:: with SMTP id a137mr4368557pfd.145.1583955115898;
+        Wed, 11 Mar 2020 12:31:55 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id k20sm29707459pfk.123.2020.03.11.12.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 12:31:54 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 12:31:53 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Ivan Teterevkov <ivan.teterevkov@nutanix.com>
+cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "oneukum@suse.com" <oneukum@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm/vmscan: add vm_swappiness configuration knobs
+In-Reply-To: <BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com>
+Message-ID: <alpine.DEB.2.21.2003111227230.171292@chino.kir.corp.google.com>
+References: <BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
-From:   Nathaniel McCallum <npmccallum@redhat.com>
-Date:   Wed, 11 Mar 2020 15:30:44 -0400
-Message-ID: <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 6:40 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
->
-> An SGX runtime must be aware of the exceptions, which happen inside an
-> enclave. Introduce a vDSO call that wraps EENTER/ERESUME cycle and returns
-> the CPU exception back to the caller exactly when it happens.
->
-> Kernel fixups the exception information to RDI, RSI and RDX. The SGX call
-> vDSO handler fills this information to the user provided buffer or
-> alternatively trigger user provided callback at the time of the exception.
->
-> The calling convention is custom and does not follow System V x86-64 ABI.
->
-> Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Cedric Xing <cedric.xing@intel.com>
-> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
-> Tested-by: Jethro Beekman <jethro@fortanix.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Wed, 11 Mar 2020, Ivan Teterevkov wrote:
+
+> This patch adds a couple of knobs:
+> 
+> - The configuration option (CONFIG_VM_SWAPPINESS).
+> - The command line parameter (vm_swappiness).
+> 
+> The default value is preserved, but now defined by CONFIG_VM_SWAPPINESS.
+> 
+> Historically, the default swappiness is set to the well-known value 60,
+> and this works well for the majority of cases. The vm_swappiness is also
+> exposed as the kernel parameter that can be changed at runtime too, e.g.
+> with sysctl.
+> 
+> This approach might not suit well some configurations, e.g. systemd-based
+> distros, where systemd is put in charge of the cgroup controllers,
+> including the memory one. In such cases, the default swappiness 60
+> is copied across the cgroup subtrees early at startup, when systemd
+> is arranging the slices for its services, before the sysctl.conf
+> or tmpfiles.d/*.conf changes are applied.
+> 
+
+Seems like something that can be fully handled by an initscript that would 
+set the sysctl and then iterate the memcg hierarchy propagating the 
+non-default value.  I don't think that's too much of an ask if userspace 
+wants to manipulate the swappiness value.
+
+Or maybe we can be more clever: have memcg->swappiness store -1 by default 
+unless it is changed by the user explicitly and then have 
+mem_cgroup_swappiness() return vm_swappiness for this value.  If the user 
+overwrites it, it's intended.
+
+So there are a couple options here but I don't think one of them is to add 
+a new config option or kernel command line option.
+
+> One could run a script to traverse the cgroup trees later and set the
+> desired memory.swappiness individually in each occurrence when the runtime
+> is set up, but this would require some amount of work to implement
+> properly. Instead, why not set the default swappiness as early as possible?
+> 
+> Signed-off-by: Ivan Teterevkov <ivan.teterevkov@nutanix.com>
 > ---
->  arch/x86/entry/vdso/Makefile             |   2 +
->  arch/x86/entry/vdso/vdso.lds.S           |   1 +
->  arch/x86/entry/vdso/vsgx_enter_enclave.S | 187 +++++++++++++++++++++++
->  arch/x86/include/uapi/asm/sgx.h          |  37 +++++
->  4 files changed, 227 insertions(+)
->  create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
->
-> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> index 657e01d34d02..fa50c76a17a8 100644
-> --- a/arch/x86/entry/vdso/Makefile
-> +++ b/arch/x86/entry/vdso/Makefile
-> @@ -24,6 +24,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)       := y
->
->  # files to link into the vdso
->  vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-> +vobjs-$(VDSO64-y)              += vsgx_enter_enclave.o
->
->  # files to link into kernel
->  obj-y                          += vma.o extable.o
-> @@ -90,6 +91,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS
->  CFLAGS_REMOVE_vclock_gettime.o = -pg
->  CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
->  CFLAGS_REMOVE_vgetcpu.o = -pg
-> +CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
->
->  #
->  # X32 processes use x32 vDSO to access 64bit kernel data.
-> diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-> index 36b644e16272..4bf48462fca7 100644
-> --- a/arch/x86/entry/vdso/vdso.lds.S
-> +++ b/arch/x86/entry/vdso/vdso.lds.S
-> @@ -27,6 +27,7 @@ VERSION {
->                 __vdso_time;
->                 clock_getres;
->                 __vdso_clock_getres;
-> +               __vdso_sgx_enter_enclave;
->         local: *;
->         };
->  }
-> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> new file mode 100644
-> index 000000000000..94a8e5f99961
-> --- /dev/null
-> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> @@ -0,0 +1,187 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+>  .../admin-guide/kernel-parameters.txt         |  4 ++++
+>  mm/Kconfig                                    | 10 ++++++++
+>  mm/vmscan.c                                   | 24 ++++++++++++++++++-
+>  3 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..5d54a4303522 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5317,6 +5317,10 @@
+>  			  P	Enable page structure init time poisoning
+>  			  -	Disable all of the above options
+>  
+> +	vm_swappiness=	[KNL]
+> +			Sets the default vm_swappiness.
+> +			Ranges from 0 to 100, the default value is 60.
 > +
-> +#include <linux/linkage.h>
-> +#include <asm/export.h>
-> +#include <asm/errno.h>
+>  	vmalloc=nn[KMG]	[KNL,BOOT] Forces the vmalloc area to have an exact
+>  			size of <nn>. This can be used to increase the
+>  			minimum size (128MB on x86). It can also be used to diff --git a/mm/Kconfig b/mm/Kconfig index ab80933be65f..ec59c19e578e 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -739,4 +739,14 @@ config ARCH_HAS_HUGEPD  config MAPPING_DIRTY_HELPERS
+>          bool
+>  
+> +config VM_SWAPPINESS
+> +	int "Default memory swappiness"
+> +	default 60
+> +	range 0 100
+> +	help
+> +	  Sets the default vm_swappiness, that could be changed later
+> +	  in the runtime, e.g. kernel command line, sysctl, etc.
 > +
-> +#include "extable.h"
+> +	  Higher value means more swappy. Historically, defaults to 60.
 > +
-> +#define EX_LEAF                0*8
-> +#define EX_TRAPNR      0*8+4
-> +#define EX_ERROR_CODE  0*8+6
-> +#define EX_ADDRESS     1*8
+>  endmenu
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 876370565455..7d2d3550f698 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -163,7 +163,29 @@ struct scan_control {
+>  /*
+>   * From 0 .. 100.  Higher means more swappy.
+>   */
+> -int vm_swappiness = 60;
+> +int vm_swappiness = CONFIG_VM_SWAPPINESS;
 > +
-> +.code64
-> +.section .text, "ax"
+> +static int __init swappiness_cmdline(char *str) {
+> +	int val, err;
 > +
-> +/**
-> + * __vdso_sgx_enter_enclave() - Enter an SGX enclave
-> + * @leaf:      ENCLU leaf, must be EENTER or ERESUME
-> + * @tcs:       TCS, must be non-NULL
-> + * @e:         Optional struct sgx_enclave_exception instance
-> + * @handler:   Optional enclave exit handler
-> + *
-> + * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant with the
-> + * x86-64 ABI, i.e. cannot be called from standard C code.
-> + *
-> + * Input ABI:
-> + *  @leaf      %eax
-> + *  @tcs       8(%rsp)
-> + *  @e                 0x10(%rsp)
-> + *  @handler   0x18(%rsp)
-> + *
-> + * Output ABI:
-> + *  @ret       %eax
-> + *
-> + * All general purpose registers except RAX, RBX and RCX are passed as-is to
-> + * the enclave. RAX, RBX and RCX are consumed by EENTER and ERESUME and are
-> + * loaded with @leaf, asynchronous exit pointer, and @tcs respectively.
-> + *
-> + * RBP and the stack are used to anchor __vdso_sgx_enter_enclave() to the
-> + * pre-enclave state, e.g. to retrieve @e and @handler after an enclave exit.
-> + * All other registers are available for use by the enclave and its runtime,
-> + * e.g. an enclave can push additional data onto the stack (and modify RSP) to
-> + * pass information to the optional exit handler (see below).
-> + *
-> + * Most exceptions reported on ENCLU, including those that occur within the
-> + * enclave, are fixed up and reported synchronously instead of being delivered
-> + * via a standard signal. Debug Exceptions (#DB) and Breakpoints (#BP) are
-> + * never fixed up and are always delivered via standard signals. On synchrously
-> + * reported exceptions, -EFAULT is returned and details about the exception are
-> + * recorded in @e, the optional sgx_enclave_exception struct.
+> +	if (!str)
+> +		return -EINVAL;
 > +
-> + * If an exit handler is provided, the handler will be invoked on synchronous
-> + * exits from the enclave and for all synchronously reported exceptions. In
-> + * latter case, @e is filled prior to invoking the handler.
-> + *
-> + * The exit handler's return value is interpreted as follows:
-> + *  >0:                continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
-> + *   0:                success, return @ret to the caller
-> + *  <0:                error, return @ret to the caller
-> + *
-> + * The userspace exit handler is responsible for unwinding the stack, e.g. to
-> + * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
-
-Unless I misunderstand, this documentation...
-
-> + * The exit handler may also transfer control, e.g. via longjmp() or a C++
-> + * exception, without returning to __vdso_sgx_enter_enclave().
-> + *
-> + * Return:
-> + *  0 on success,
-> + *  -EINVAL if ENCLU leaf is not allowed,
-> + *  -EFAULT if an exception occurs on ENCLU or within the enclave
-> + *  -errno for all other negative values returned by the userspace exit handler
-> + */
-> +#ifdef SGX_KERNEL_DOC
-> +/* C-style function prototype to coerce kernel-doc into parsing the comment. */
-> +int __vdso_sgx_enter_enclave(int leaf, void *tcs,
-> +                            struct sgx_enclave_exception *e,
-> +                            sgx_enclave_exit_handler_t handler);
-> +#endif
-> +SYM_FUNC_START(__vdso_sgx_enter_enclave)
-> +       /* Prolog */
-> +       .cfi_startproc
-> +       push    %rbp
-> +       .cfi_adjust_cfa_offset  8
-> +       .cfi_rel_offset         %rbp, 0
-> +       mov     %rsp, %rbp
-> +       .cfi_def_cfa_register   %rbp
+> +	err = kstrtoint(str, 10, &val);
+> +	if (err)
+> +		return -EINVAL;
 > +
-> +.Lenter_enclave:
-> +       /* EENTER <= leaf <= ERESUME */
-> +       cmp     $0x2, %eax
-> +       jb      .Linvalid_leaf
-> +       cmp     $0x3, %eax
-> +       ja      .Linvalid_leaf
+> +	if (val < 0 || val > 100)
+> +		return -EINVAL;
 > +
-> +       /* Load TCS and AEP */
-> +       mov     0x10(%rbp), %rbx
-> +       lea     .Lasync_exit_pointer(%rip), %rcx
+> +	vm_swappiness = val;
 > +
-> +       /* Single ENCLU serving as both EENTER and AEP (ERESUME) */
-> +.Lasync_exit_pointer:
-> +.Lenclu_eenter_eresume:
-> +       enclu
+> +	return 0;
+> +}
 > +
-> +       /* EEXIT jumps here unless the enclave is doing something fancy. */
-> +       xor     %eax, %eax
+> +early_param("vm_swappiness", swappiness_cmdline);
 > +
-> +       /* Invoke userspace's exit handler if one was provided. */
-> +.Lhandle_exit:
-> +       cmp     $0, 0x20(%rbp)
-> +       jne     .Linvoke_userspace_handler
-> +
-> +.Lout:
-> +       leave
-> +       .cfi_def_cfa            %rsp, 8
-> +       ret
-> +
-> +       /* The out-of-line code runs with the pre-leave stack frame. */
-> +       .cfi_def_cfa            %rbp, 16
-> +
-> +.Linvalid_leaf:
-> +       mov     $(-EINVAL), %eax
-> +       jmp     .Lout
-> +
-> +.Lhandle_exception:
-> +       mov     0x18(%rbp), %rcx
-> +       test    %rcx, %rcx
-> +       je      .Lskip_exception_info
-> +
-> +       /* Fill optional exception info. */
-> +       mov     %eax, EX_LEAF(%rcx)
-> +       mov     %di,  EX_TRAPNR(%rcx)
-> +       mov     %si,  EX_ERROR_CODE(%rcx)
-> +       mov     %rdx, EX_ADDRESS(%rcx)
-> +.Lskip_exception_info:
-> +       mov     $(-EFAULT), %eax
-> +       jmp     .Lhandle_exit
-> +
-> +.Linvoke_userspace_handler:
-> +       /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
-> +       mov     %rsp, %rcx
-> +
-> +       /* Save the untrusted RSP in %rbx (non-volatile register). */
-> +       mov     %rsp, %rbx
-> +
-> +       /*
-> +        * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
-> +        * _after_ pushing the parameters on the stack, hence the bonus push.
-> +        */
-> +       and     $-0x10, %rsp
-> +       push    %rax
-> +
-> +       /* Push @e, the "return" value and @tcs as params to the callback. */
-> +       push    0x18(%rbp)
-> +       push    %rax
-> +       push    0x10(%rbp)
-> +
-> +       /* Clear RFLAGS.DF per x86_64 ABI */
-> +       cld
-> +
-> +       /* Load the callback pointer to %rax and invoke it via retpoline. */
-> +       mov     0x20(%rbp), %rax
-> +       call    .Lretpoline
-> +
-> +       /* Restore %rsp to its post-exit value. */
-> +       mov     %rbx, %rsp
-
-... doesn't seem to match this code.
-
-If the handler pops from the stack and then we restore the stack here,
-the handler had no effect.
-
-Also, one difference between this interface and a raw ENCLU[EENTER] is
-that we can't pass arguments on the untrusted stack during EEXIT. If
-we want to support that workflow, then we need to allow the ability
-for the handler to pop "additional" values without restoring the stack
-pointer to the exact value here.
-
-> +       /*
-> +        * If the return from callback is zero or negative, return immediately,
-> +        * else re-execute ENCLU with the postive return value interpreted as
-> +        * the requested ENCLU leaf.
-> +        */
-> +       cmp     $0, %eax
-> +       jle     .Lout
-> +       jmp     .Lenter_enclave
-> +
-> +.Lretpoline:
-> +       call    2f
-> +1:     pause
-> +       lfence
-> +       jmp     1b
-> +2:     mov     %rax, (%rsp)
-> +       ret
-> +       .cfi_endproc
-> +
-> +_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
-> +
-> +SYM_FUNC_END(__vdso_sgx_enter_enclave)
-> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-> index 57d0d30c79b3..e196cfd44b70 100644
-> --- a/arch/x86/include/uapi/asm/sgx.h
-> +++ b/arch/x86/include/uapi/asm/sgx.h
-> @@ -74,4 +74,41 @@ struct sgx_enclave_set_attribute {
->         __u64 attribute_fd;
->  };
->
-> +/**
-> + * struct sgx_enclave_exception - structure to report exceptions encountered in
-> + *                               __vdso_sgx_enter_enclave()
-> + *
-> + * @leaf:      ENCLU leaf from \%eax at time of exception
-> + * @trapnr:    exception trap number, a.k.a. fault vector
-> + * @error_code:        exception error code
-> + * @address:   exception address, e.g. CR2 on a #PF
-> + * @reserved:  reserved for future use
-> + */
-> +struct sgx_enclave_exception {
-> +       __u32 leaf;
-> +       __u16 trapnr;
-> +       __u16 error_code;
-> +       __u64 address;
-> +       __u64 reserved[2];
-> +};
-> +
-> +/**
-> + * typedef sgx_enclave_exit_handler_t - Exit handler function accepted by
-> + *                                     __vdso_sgx_enter_enclave()
-> + *
-> + * @rdi:       RDI at the time of enclave exit
-> + * @rsi:       RSI at the time of enclave exit
-> + * @rdx:       RDX at the time of enclave exit
-> + * @ursp:      RSP at the time of enclave exit (untrusted stack)
-> + * @r8:                R8 at the time of enclave exit
-> + * @r9:                R9 at the time of enclave exit
-> + * @tcs:       Thread Control Structure used to enter enclave
-> + * @ret:       0 on success (EEXIT), -EFAULT on an exception
-> + * @e:         Pointer to struct sgx_enclave_exception (as provided by caller)
-> + */
-> +typedef int (*sgx_enclave_exit_handler_t)(long rdi, long rsi, long rdx,
-> +                                         long ursp, long r8, long r9,
-> +                                         void *tcs, int ret,
-> +                                         struct sgx_enclave_exception *e);
-> +
->  #endif /* _UAPI_ASM_X86_SGX_H */
-> --
-> 2.25.0
->
-
+>  /*
+>   * The total number of pages which are beyond the high watermark within all
+>   * zones.
