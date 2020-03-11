@@ -2,142 +2,207 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66C4C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C08C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B562D21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583912913;
-	bh=h63yO/1roKktV4/aGFgyvBaApa9Kyssf1SJdq2X5Omc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gKaSkcFmIG6pyL41/k1M/xXOUU9U8GJHZ6D3vW9ZCk827Uz0lDyoNdNt1LQRy2tP0
-	 HzGCmA7ewcBNj/vhTPbQkFtKt1wsikmzf8SnoE6sNV5TJjRRMShY/tTuQvZEpK3Mzg
-	 Iliy0UHdsWR5bY0BtukLUuCSpFm4+fMSnedsUVZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 1738B206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:49:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GYNFIGyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgCKHsc (ORCPT
+        id S1728515AbgCKHtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgCKHsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:48:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11DAC206B7;
-        Wed, 11 Mar 2020 07:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583912911;
-        bh=h63yO/1roKktV4/aGFgyvBaApa9Kyssf1SJdq2X5Omc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MPM3l4NWa55jBhrfZOgMq+GGJK3rPcGnuS9FxXMhgvZBXnsJA1EFTx2dTVwovOb5M
-         poXUheXyzwgGWPTUxdLBb3P24gEDdrI/dU+3qtF93S+TELZ4DjM6Wf8Fe63JzFpCzW
-         5Ffy+wqm1PyyDf+maUwfPDkZchIZAPYp4T/z4Eqg=
-Date:   Wed, 11 Mar 2020 16:48:26 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        paulmck <paulmck@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>
-Subject: Re: Instrumentation and RCU
-Message-Id: <20200311164826.0e7eab4bcf7d58b922d59ae9@kernel.org>
-In-Reply-To: <831351096.24668.1583887061530.JavaMail.zimbra@efficios.com>
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
-        <87fteh73sp.fsf@nanos.tec.linutronix.de>
-        <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org>
-        <87pndk5tb4.fsf@nanos.tec.linutronix.de>
-        <450878559.23455.1583854311078.JavaMail.zimbra@efficios.com>
-        <20200310114657.099122fd@gandalf.local.home>
-        <1760242532.23694.1583857291763.JavaMail.zimbra@efficios.com>
-        <20200311091815.fce458348bb7641b60f600d9@kernel.org>
-        <831351096.24668.1583887061530.JavaMail.zimbra@efficios.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 11 Mar 2020 03:49:22 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53100 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgCKHtV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:49:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B7mwkl001284;
+        Wed, 11 Mar 2020 02:48:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583912938;
+        bh=Dt0IRyKZEWT9JVFxfFR5odUXV0yBX2GKXRx7gN7gnOE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GYNFIGyJW6mG2Fcwh3k1R+B6NNy2+4VdkMPbpJ+3xJe+1CFjQt4rWycyaUJPXOL3s
+         VR28Mo7e1bzqG1to06qRMH4XRVc8yukHvA0G8UREFuAKBN94EHH+ZJ4gwMqUeImEgt
+         VuLfSbr7PP1EoPEldH3aaegJRBtyL/hw0EKQFETM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B7mwYJ061412
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Mar 2020 02:48:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Mar 2020 02:48:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Mar 2020 02:48:57 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02B7mtZJ104143;
+        Wed, 11 Mar 2020 02:48:56 -0500
+Subject: Re: [PATCHv2 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
+ watchdog
+To:     Rob Herring <robh@kernel.org>
+CC:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200302200426.6492-1-t-kristo@ti.com>
+ <20200302200426.6492-2-t-kristo@ti.com> <20200310193721.GA24150@bogus>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <90e0e943-5b84-ba61-1b6f-fe9259415df7@ti.com>
+Date:   Wed, 11 Mar 2020 09:48:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200310193721.GA24150@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 20:37:41 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-
-> ----- On Mar 10, 2020, at 8:18 PM, Masami Hiramatsu mhiramat@kernel.org wrote:
-> [...]
->  
-> >> An approach where the "in_tracer" flag is tested and set by the instrumentation
-> >> (function tracer, kprobes, tracepoints) would work here. Let's say the beginning
-> >> of the int3 ISR is part of the code which is invisible to instrumentation, and
-> >> before we issue rcu_nmi_enter(), we handle the in_tracer flag:
-> >> 
-> >> rcu_nmi_enter();
-> >>  <int3>
-> >>     (recursion_ctx->in_tracer == false)
-> >>     set recursion_ctx->in_tracer = true
-> >>     do_int3() {
-> >>        rcu_nmi_enter();
-> >>          <int3>
-> >>             if (recursion_ctx->in_tracer == true)
-> >>                 iret
-> >> 
-> >> We can change "in_tracer" for "in_breakpoint", "in_tracepoint" and
-> >> "in_function_trace" if we ever want to allow different types of instrumentation
-> >> to nest. I'm not sure whether this is useful or not through.
-> > 
-> > Kprobes already has its own "in_kprobe" flag, and the recursion path is
-> > not so simple. Since the int3 replaces the original instruction, we have to
-> > execute the original instruction with single-step and fixup.
-> > 
-> > This means it involves do_debug() too. Thus, we can not do iret directly
-> > from do_int3 like above, but if recursion happens, we have no way to
-> > recover to origonal execution path (and call BUG()).
+On 10/03/2020 21:37, Rob Herring wrote:
+> On Mon, Mar 02, 2020 at 10:04:23PM +0200, Tero Kristo wrote:
+>> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
+>> used to implement a windowed watchdog functionality. Windowed watchdog
+>> will generate an error if it is petted outside the time window, either
+>> too early or too late.
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   .../bindings/watchdog/ti,rti-wdt.yaml         | 52 +++++++++++++++++++
+>>   1 file changed, 52 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+>> new file mode 100644
+>> index 000000000000..3813f59fb6c3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+>> @@ -0,0 +1,52 @@
+>> +# SPDX-License-Identifier: GPL-2.0
 > 
-> I think that all the code involved when hitting a breakpoint which would
-> be the minimal subset required to act as if the kprobe was not there in the
-> first place (single-step, fixup) should be hidden from kprobes
-> instrumentation. I suspect this is the current intent today with noprobe
-> annotations, but Thomas' proposal brings this a step further.
+> Dual license new bindings please:
 > 
-> However, any other kprobe code (and tracer callbacks) beyond that
-> minimalistic "effect-less" kprobe could be protected by a
-> per-recursion-context in_kprobe flag.
+> (GPL-2.0-only OR BSD-2-Clause)
 
-Would you mean "in_kprobe" flag will prevent recursive execution of
-kprobes but not prevent other tracer like tracepoint? If so, it is
-already done I think. As I pointed, kprobe itself has in_kprobe like
-flag for checking re-entrance. Thus the kprobe handler can call the
-function which has a tracepoint safely.
+Ok, will fix this.
 
-Anyway, I agree with you to port all kprobe int3/debug handling parts
-to the effect-less (offlimit) area, except for its pre/post handlers.
-
-> > As my previous email, I showed a patch which is something like
-> > "bust_kprobes()" for oops path. That is not safe but no other way to escape
-> > from this recursion hell. (Maybe we can try to call it instead of calling
-> > BUG() so that the kernel can continue to run, but I'm not sure we can
-> > safely make the pagetable to readonly again.)
 > 
-> As long as we provide a minimalistic "effect-less" kprobe implementation
-> in a non-instrumentable section which can be used whenever we are in a
-> recursion scenario, I think we could achieve something recursion-free without
-> requiring a bust_kprobes() work-around.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Texas Instruments K3 SoC Watchdog Timer
+>> +
+>> +maintainers:
+>> +  - Tero Kristo <t-kristo@ti.com>
+>> +
+>> +description: |+
+> 
+> You can drop '|+' as there's no formatting to preserve.
 
-Yeah, I hope so. The bust_kprobes() is something like an emergency escape
-hammer which everyone hopes never be used :)
+Ok.
 
-Thank you,
+> 
+>> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
+>> +  Interrupt) IP module. This timer adds a support for windowed watchdog
+>> +  mode, which will signal an error if it is pinged outside the watchdog
+>> +  time window, meaning either too early or too late. The error signal
+>> +  generated can be routed to either interrupt a safety controller or
+>> +  to directly reset the SoC.
+>> +
+> 
+> Reference the common watchdog.yaml schema.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+I believe you mean just adding:
+
+allOf:
+   - $ref: "watchdog.yaml#"
+
+
+> 
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ti,rti-wdt
+> 
+> Should be SoC specific possibly with a fallback.
+
+Ok, will change this.
+
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +examples:
+>> +  - |
+>> +    /*
+>> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
+>> +     * select the source clock for the watchdog, forcing it to tick with
+>> +     * a 32kHz clock in this case.
+>> +     */
+>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>> +
+>> +    main_rti0: rti@2200000 {
+> 
+> watchdog@...
+
+Right.
+
+> 
+>> +        compatible = "ti,rti-wdt";
+>> +        reg = <0x0 0x2200000 0x0 0x100>;
+>> +        clocks = <&k3_clks 252 1>;
+>> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
+> 
+> Not documented.
+
+For this and assigned-clocks below...
+
+> 
+>> +        assigned-clocks = <&k3_clks 252 1>;
+>> +        assigned-clock-parents = <&k3_clks 252 5>;
+> 
+> Not documented.
+
+Ok will fix these, I was grepping for examples under the yaml files and 
+some seem to document these standard props, some not. But, I guess 
+everything listed in the examples should be documented.
+
+Sorry all this yaml stuff is still pretty new to me. >.<
+
+-Tero
+
+> 
+>> +    };
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
