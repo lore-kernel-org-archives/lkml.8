@@ -2,96 +2,73 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5646CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DAC20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:07:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fQ9TlMHs"
+	by mail.kernel.org (Postfix) with ESMTP id A473C20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgCKCHD (ORCPT
+        id S1727937AbgCKCIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:07:03 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56817 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgCKCHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:07:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cb1G6ZwWz9sPF;
-        Wed, 11 Mar 2020 13:06:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583892421;
-        bh=stRdRWNv5YaKlTh7eqaHiBGxhax7fUt8NJXuvnDHIOQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fQ9TlMHsoe5lUVDvD1G/QXfsFUh70LJqWZ8YNr2JVAXuKUu/uc3jgK8tducIcMBpW
-         bZkKU6pizbJePcLwz9f7iGnTrPwEiqOJ8HAhfTbRHaSpR33J4jnUQ44RNObTWNiEzm
-         icSOl5z3CCALRPnXEu4AG7WoTS0nS1a00jmvhW5n3lt8FpwDYF78JMAprs/6ZEaAg3
-         RtRq8rKtTeTpvIqiNloI0jD9lEtae/QudEr5N+DCQ32qSWD/mcHYzNXaqe1lx1OfAU
-         aRvKa2PnFMAejDZwBi4hv925Nakcdc1J06lPkHH82NwPGwKFCQ+ydYg34A+V3RKsYm
-         MMmvtedAVTzIw==
-Date:   Wed, 11 Mar 2020 13:06:38 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: linux-next: build warning after merge of the nand tree
-Message-ID: <20200311130638.37e937fa@canb.auug.org.au>
+        Tue, 10 Mar 2020 22:08:30 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:48892 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbgCKCIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 22:08:30 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5e6847394c0-6e133; Wed, 11 Mar 2020 10:04:42 +0800 (CST)
+X-RM-TRANSID: 2eeb5e6847394c0-6e133
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e684735012-97a6c;
+        Wed, 11 Mar 2020 10:04:42 +0800 (CST)
+X-RM-TRANSID: 2ee45e684735012-97a6c
+From:   tangbin <tangbin@cmss.chinamobile.com>
+To:     davem@davemloft.net
+Cc:     andrew@lunn.ch, corbet@lwn.net, benh@kernel.crashing.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tangbin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] net:ftgmac100:remove redundant judgement
+Date:   Wed, 11 Mar 2020 10:05:37 +0800
+Message-Id: <20200311020537.12420-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ACw=fCJaCMbYXfuOHfXyrxZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ACw=fCJaCMbYXfuOHfXyrxZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In this function, ftgmac100_probe() can be triggered only
+if the platform_device and platform_driver matches, so the
+judgement at the beginning is redundant.
 
-Hi all,
+Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
+---
+ drivers/net/ethernet/faraday/ftgmac100.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-After merging the nand tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
+index 4572797f0..c7ed7e871 100644
+--- a/drivers/net/ethernet/faraday/ftgmac100.c
++++ b/drivers/net/ethernet/faraday/ftgmac100.c
+@@ -1757,9 +1757,6 @@ static int ftgmac100_probe(struct platform_device *pdev)
+ 	struct device_node *np;
+ 	int err = 0;
+ 
+-	if (!pdev)
+-		return -ENODEV;
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+ 		return -ENXIO;
+-- 
+2.20.1.windows.1
 
-drivers/mtd/nand/raw/nand_macronix.c:301:13: warning: 'macronix_nand_deep_p=
-ower_down_support' defined but not used [-Wunused-function]
-  301 | static void macronix_nand_deep_power_down_support(struct nand_chip =
-*chip)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Introduced by commit
 
-  18870c34d1a8 ("mtd: rawnand: macronix: Add support for deep power down mo=
-de")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ACw=fCJaCMbYXfuOHfXyrxZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oR64ACgkQAVBC80lX
-0GwLqwf+JvEHos2BTJHk7Wtq5siUFKJo7PfxJlby5eoyeUAopdbXZvzPUcDHUvAl
-X+xCmQ6eA/rzXWaeX2qib5k77Lz6PNeqo3KnCh2vU/Yq6P48PazR4DT+iFAvdkZs
-eMSo64RRwpwyHBaVF1aERhF5FApuacIHS9RtTnSYkz36XAtvyIxsSMJ3Gjt12/c1
-aCInB8KI8guX2h9wrsIMevIiDKKsBgNrjGKwwIvbSblOaE+2fv0JTMOj4yxYvbq+
-dWJmkCahYrp647uBT26Xdrt1hptS6v2QctZk+hCsnCSlsaKuWd80/hS+bY0c9dNe
-XtbMY5A/Ipzn8w6yNz/K06V229BCCA==
-=RIhJ
------END PGP SIGNATURE-----
-
---Sig_/ACw=fCJaCMbYXfuOHfXyrxZ--
