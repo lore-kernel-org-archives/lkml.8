@@ -2,112 +2,160 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95918C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B2DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618B8205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BB4205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YoXB69XD"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="E3uml6Qx";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="IQfGZ9aU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgCKBa0 (ORCPT
+        id S1727928AbgCKBbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:30:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:36730 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727506AbgCKBa0 (ORCPT
+        Tue, 10 Mar 2020 21:31:09 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:18828 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727506AbgCKBbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:30:26 -0400
-X-UUID: eb7ded84783d4dce8be9535cc7fa05f2-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YjL6GvaGAfKjZb4Bd10orYHd/UlpZ+NB3DEOe0Lavh4=;
-        b=YoXB69XDWQdnyGX6KxCdgfsfteS7hA6mEy8dvqfhOxRYvyo/CEFy61t6OuaAN4NuCWiQQ0QZ+5n96W+2UwtOg6Quu2ZMbNA0SA1ld80eo1PfGjeULUQh4q64BPUcPNMwvyuC1Ct08iRLsYO1Ni3S+FZzUhMQqI/JELq86JXlPrQ=;
-X-UUID: eb7ded84783d4dce8be9535cc7fa05f2-20200311
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 376188209; Wed, 11 Mar 2020 09:30:17 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 09:30:15 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 09:30:25 +0800
-Message-ID: <1583890215.17522.3.camel@mtksdccf07>
-Subject: Re: mmotm 2020-03-03-22-28 uploaded (warning: objtool:)
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Randy Dunlap <rdunlap@infradead.org>, <akpm@linux-foundation.org>,
-        <broonie@kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
-        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, <dvyukov@google.com>
-Date:   Wed, 11 Mar 2020 09:30:15 +0800
-In-Reply-To: <20200305095436.GV2596@hirez.programming.kicks-ass.net>
-References: <20200304062843.9yA6NunM5%akpm@linux-foundation.org>
-         <cd1c6bd2-3db3-0058-f3b4-36b2221544a0@infradead.org>
-         <20200305081717.GT2596@hirez.programming.kicks-ass.net>
-         <20200305081842.GB2619@hirez.programming.kicks-ass.net>
-         <1583399782.17146.14.camel@mtksdccf07>
-         <20200305095436.GV2596@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 10 Mar 2020 21:31:09 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B1UwEv017793;
+        Tue, 10 Mar 2020 18:30:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=6EeIkShzRpx8LtESmqO9Bq/tK1ZOH/TIoM37hWYXVpk=;
+ b=E3uml6Qx/mnNC5aRAFFRG3n4tVuWhS6yrR/j/srLUK1Qsu08neIUDC3hsLk++8VdnrbZ
+ SbEwFAa+tkErSnLjJvymd6+U+WxNLFH5ugKLzeWJ/OMgl8mTlnsQ7jwuMlE8JDImnFJT
+ 2Y1hTjW8Y2l8isTUImCBWM0W7fhIH2cntl8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yp25fntj6-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 10 Mar 2020 18:30:58 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 10 Mar 2020 18:30:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AK2qXzNlFGRaVOZYB9pKgERqK42WF+Sk8gBRbPWlz/xtlNnZXBj/P/tUn68gh6xi+/lwaoki3L84gwgBpLFEhVGqieb+ezKh+tcRPNoqJxNZMWlUe57J3505RFIQvBIwxmEcI6u/qyBIZXuxlnZqaJR/n946aA6MrzdQsSnOnEbeZeOxGHP0RRMJ+8FrYVsLRQWEwUP6EoByeprRDQTWpAXpolE0bI5GaAZDdTmTEVVC8vBpBEDoUmPZQnpko4OZ0+uTkk73DM3j0Qcnqh7irbqya6+qmhVM72bG0dbD2IZ3//NdbZlKfR73kYcxRaRlJl79wjJInrM1Z8ODl1SVyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6EeIkShzRpx8LtESmqO9Bq/tK1ZOH/TIoM37hWYXVpk=;
+ b=gMRvHnSWCSGfU9yiyTskhJiJgKNLoglrM17FaUbc5bkOf3N89sA1CqXDp/vYsWPBxAT1IfSBNMKMpxOTZCB8EudD4XS8AZ/M8QfaQUjAcDYvEQE5umHtXYgBvrqfYrGRc8q3oOeKXZrwh+W1YhCAureTtzXKUiFaCmnY7iJq6WELFgUjdOfS6aY0/hppq/PMbfbH79Vhr/fhtmooEzDnDicFaxL+3vj51FwQbrlDJIUWtHQ870+OgbZojhvUgVoEufX+zIutG3q5/+1TsF5kT8Iv5cPy1gqM//fZoKi/Cp1BaVcM/8OMudx2MOJ51tPYGmCcAj/EhwHmtO98Qtq3jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6EeIkShzRpx8LtESmqO9Bq/tK1ZOH/TIoM37hWYXVpk=;
+ b=IQfGZ9aUCPbLNR87YzAErYdQl8t63fXVE6XDoe+GbqcTVudFVnMcXvKGZXkN6GX/43GN2EmvYn7g5YDc9/KGlhHAXE/boszC6ANK1B0YspJaZCFI2NH/gzkynKYhOOP31XGCpM9np3yY6lwYs0h+mVibpkBMiPpukPI4gGzRzc0=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1805.namprd15.prod.outlook.com (2603:10b6:301:57::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Wed, 11 Mar
+ 2020 01:30:34 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 01:30:33 +0000
+Date:   Tue, 10 Mar 2020 18:30:29 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     <dsterba@suse.cz>, Josef Bacik <josef@toxicpanda.com>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v3] btrfs: implement migratepage callback
+Message-ID: <20200311013029.GE96999@carbon.dhcp.thefacebook.com>
+References: <20200305005735.583008-1-guro@fb.com>
+ <20200311004012.GC12659@twin.jikos.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311004012.GC12659@twin.jikos.cz>
+X-ClientProxiedBy: CO2PR04CA0204.namprd04.prod.outlook.com
+ (2603:10b6:104:5::34) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 8D5D6D17B14E3DAC78B6AD865BB500C3DE8345FEE21D4308EE916AB05D77B12C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:272d) by CO2PR04CA0204.namprd04.prod.outlook.com (2603:10b6:104:5::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Wed, 11 Mar 2020 01:30:32 +0000
+X-Originating-IP: [2620:10d:c090:400::5:272d]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a0b5f23d-0ba4-4ad2-76c5-08d7c55bcb14
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1805:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR15MB180557F0E397D91D830967DEBEFC0@MWHPR15MB1805.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(396003)(346002)(366004)(136003)(199004)(52116002)(7696005)(6506007)(66946007)(8936002)(66476007)(66556008)(316002)(8676002)(110136005)(55016002)(5660300002)(186003)(9686003)(81156014)(81166006)(86362001)(478600001)(2906002)(6666004)(33656002)(1076003)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1805;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gJjug8M0z1GDaWmp5ExcgpWvHpmFSmvxeKguBcQzJnCEJ7dKTbmVnu9tVO3oJ8UB/cPRsjA5uAgHI5OOqYvS5Y2AWU2i/YKJSOXNeGT79Zeleotmib3tKdeCU1Emd8yDQz22W16gneRDkKkoUEQQWhp77acxLdiRFDcSeDjexW2f7bt2RD72rhO68DxKu6F/Lc9ioSCrhIEzq5MwY9YxHvnjfIm/yX0GudkuGxaPSS7p0BCh7KSb6+oscdKA4dY2PKmWzuUImtWur30KTT7XFg4X5vWDVb+my+itPeRClqIvaSen7u6i2DwGXB5Y+j3RtmQ64kkciZiObwftKwJ/f+akq8wzAWKXOAi/FStBfCBxxJcoo4ysUflmkQ6vmyFi9fzIMFbrnCglzjBofGVua+mLaHMZMxnFezncTxoHSrVJcoGp0jAwia1p8luC/TgV
+X-MS-Exchange-AntiSpam-MessageData: zmN9eVkLyB/dNXn61+8DNsChbv0dvdYcuYSapNw0Mjw3uKCyATf2mBdq7W/KW5b+JkQZTRh2V1MOLscfGQzcv6CFALqDT5iyZxjUYiSE5Q15C59fuUCab9uZBPpMK6nUhhmjzz5AH8x4z7HjQG7ObXraiWtTbrccHhJYlCjxW0iCUYlZ+pNbg57oReb8kGZJ
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0b5f23d-0ba4-4ad2-76c5-08d7c55bcb14
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 01:30:33.8635
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jn2L/84iQ027Ym/fB2LtgAVDPmz9FQ6Ru8KJghkPFCkCXirBhD4Vb3NRgrfGZ8gh
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1805
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_17:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ phishscore=0 malwarescore=0 suspectscore=1 clxscore=1011 spamscore=0
+ mlxscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=963
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110007
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTA1IGF0IDEwOjU0ICswMTAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
-Cj4gT24gVGh1LCBNYXIgMDUsIDIwMjAgYXQgMDU6MTY6MjJQTSArMDgwMCwgV2FsdGVyIFd1IHdy
-b3RlOg0KPiA+IE9uIFRodSwgMjAyMC0wMy0wNSBhdCAwOToxOCArMDEwMCwgUGV0ZXIgWmlqbHN0
-cmEgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIE1hciAwNSwgMjAyMCBhdCAwOToxNzoxN0FNICswMTAw
-LCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gPiA+ID4gT24gV2VkLCBNYXIgMDQsIDIwMjAgYXQg
-MDk6MzQ6NDlBTSAtMDgwMCwgUmFuZHkgRHVubGFwIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+ID4g
-bW0va2FzYW4vY29tbW9uLm86IHdhcm5pbmc6IG9ianRvb2w6IGthc2FuX3JlcG9ydCgpKzB4MTM6
-IGNhbGwgdG8gcmVwb3J0X2VuYWJsZWQoKSB3aXRoIFVBQ0NFU1MgZW5hYmxlZA0KPiA+ID4gPiAN
-Cj4gPiA+ID4gSSB1c2VkIG5leHQvbWFzdGVyIGluc3RlYWQsIGFuZCBmb3VuZCB0aGUgYmVsb3cg
-YnJva2VuIGNvbW1pdA0KPiA+ID4gPiByZXNwb25zaWJsZSBmb3IgdGhpcy4NCj4gPiA+IA0KPiA+
-ID4gPiBAQCAtNjM0LDEyICs2MzcsMjAgQEAgdm9pZCBrYXNhbl9mcmVlX3NoYWRvdyhjb25zdCBz
-dHJ1Y3Qgdm1fc3RydWN0ICp2bSkNCj4gPiA+ID4gICNlbmRpZg0KPiA+ID4gPiAgDQo+ID4gPiA+
-ICBleHRlcm4gdm9pZCBfX2thc2FuX3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBz
-aXplLCBib29sIGlzX3dyaXRlLCB1bnNpZ25lZCBsb25nIGlwKTsNCj4gPiA+ID4gK2V4dGVybiBi
-b29sIHJlcG9ydF9lbmFibGVkKHZvaWQpOw0KPiA+ID4gPiAgDQo+ID4gPiA+IC12b2lkIGthc2Fu
-X3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBzaXplLCBib29sIGlzX3dyaXRlLCB1
-bnNpZ25lZCBsb25nIGlwKQ0KPiA+ID4gPiArYm9vbCBrYXNhbl9yZXBvcnQodW5zaWduZWQgbG9u
-ZyBhZGRyLCBzaXplX3Qgc2l6ZSwgYm9vbCBpc193cml0ZSwgdW5zaWduZWQgbG9uZyBpcCkNCj4g
-PiA+ID4gIHsNCj4gPiA+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdzID0gdXNlcl9hY2Nlc3Nfc2F2
-ZSgpOw0KPiA+ID4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+ICsNCj4gPiA+ID4g
-KwlpZiAobGlrZWx5KCFyZXBvcnRfZW5hYmxlZCgpKSkNCj4gPiA+ID4gKwkJcmV0dXJuIGZhbHNl
-Ow0KPiA+ID4gDQo+ID4gPiBUaGlzIGFkZHMgYW4gZXhwbGljaXQgY2FsbCBiZWZvcmUgdGhlIHVz
-ZXJfYWNjZXNzX3NhdmUoKSBhbmQgdGhhdCBpcyBhDQo+ID4gPiBzdHJhaWdodCBvbiBidWcuDQo+
-ID4gPiANCj4gPiBIaSBQZXRlciwNCj4gPiANCj4gPiBUaGFua3MgZm9yIHlvdXIgaGVscC4gVW5m
-b3J0dW5hdGVseSwgSSBkb24ndCByZXByb2R1Y2UgaXQgaW4gb3VyDQo+ID4gZW52aXJvbm1lbnQs
-IHNvIEkgaGF2ZSBhc2tlZCBTdGVwaGVuLCBpZiBJIGNhbiByZXByb2R1Y2UgaXQsIHRoZW4gd2UN
-Cj4gPiB3aWxsIHNlbmQgbmV3IHBhdGNoLg0KPiANCj4gVGhlIHBhdGNoIGlzIHRyaXZpYWw7IGFu
-ZCBhbGwgeW91IG5lZWQgaXMgYW4geDg2XzY0IChjcm9zcykgY29tcGlsZXIgdG8NCj4gcmVwcm9k
-dWNlLg0KPiANCj4gDQo+IGRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24uYyBiL21tL2thc2Fu
-L2NvbW1vbi5jDQo+IGluZGV4IGFkMmRjMGM5Y2MxNy4uMjkwNjM1OGU0MmYwIDEwMDY0NA0KPiAt
-LS0gYS9tbS9rYXNhbi9jb21tb24uYw0KPiArKysgYi9tbS9rYXNhbi9jb21tb24uYw0KPiBAQCAt
-NjE4LDE2ICs2MTgsMTcgQEAgZXh0ZXJuIGJvb2wgcmVwb3J0X2VuYWJsZWQodm9pZCk7DQo+ICAN
-Cj4gIGJvb2wga2FzYW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUsIGJv
-b2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcgaXApDQo+ICB7DQo+IC0JdW5zaWduZWQgbG9uZyBm
-bGFnczsNCj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzID0gdXNlcl9hY2Nlc3Nfc2F2ZSgpOw0KPiAr
-CWJvb2wgcmV0ID0gZmFsc2U7DQo+ICANCj4gLQlpZiAobGlrZWx5KCFyZXBvcnRfZW5hYmxlZCgp
-KSkNCj4gLQkJcmV0dXJuIGZhbHNlOw0KPiArCWlmIChsaWtlbHkocmVwb3J0X2VuYWJsZWQoKSkp
-IHsNCj4gKwkJX19rYXNhbl9yZXBvcnQoYWRkciwgc2l6ZSwgaXNfd3JpdGUsIGlwKTsNCj4gKwkJ
-cmV0ID0gdHJ1ZTsNCj4gKwl9DQo+ICANCj4gLQlmbGFncyA9IHVzZXJfYWNjZXNzX3NhdmUoKTsN
-Cj4gLQlfX2thc2FuX3JlcG9ydChhZGRyLCBzaXplLCBpc193cml0ZSwgaXApOw0KPiAgCXVzZXJf
-YWNjZXNzX3Jlc3RvcmUoZmxhZ3MpOw0KPiAgDQo+IC0JcmV0dXJuIHRydWU7DQo+ICsJcmV0dXJu
-IHJldDsNCj4gIH0NCj4gIA0KPiAgI2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0KDQpSZXZp
-ZXdlZC1hbmQtdGVzdGVkLWJ5Og0KDQoNCg0KDQoNCg0K
+On Wed, Mar 11, 2020 at 01:40:12AM +0100, David Sterba wrote:
+> On Wed, Mar 04, 2020 at 04:57:35PM -0800, Roman Gushchin wrote:
+> > Currently btrfs doesn't provide a migratepage callback. It means that
+> > fallback_migrate_page()	is used to migrate btrfs pages.
+> 
+> The callback exists for the metadata pages (btree_migratepage), so I've
+> added 'for data pages' where appropriate.
 
+Agree.
+
+> 
+> > fallback_migrate_page() cannot move dirty pages, instead it tries to
+> > flush them (in sync mode) or just fails (in async mode).
+> > 
+> > In the sync mode pages which are scheduled to be processed by
+> > btrfs_writepage_fixup_worker() can't be effectively flushed by the
+> > migration code, because there is no established way to wait for the
+> > completion of the delayed work.
+> > 
+> > It all leads to page migration failures.
+> > 
+> > To fix it the patch implements a btrs-specific migratepage callback,
+> > which is similar to iomap_migrate_page() used by some other fs, except
+> > it does take care of the PagePrivate2 flag which is used for data
+> > ordering purposes.
+> > 
+> > v3: fixed the build issue once again
+> > v2: fixed the build issue found by the kbuild test robot <lkp@intel.com>
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Reviewed-by: Chris Mason <clm@fb.com>
+> 
+> Added to devel queue, thanks.
+
+Thank you!
+
+Roman
