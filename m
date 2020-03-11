@@ -2,115 +2,115 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FCCC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A2CC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F02620650
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583938454;
-	bh=FTqUtXYIF4iIuJ+yTfQiXiyt2Svw9cpfJ6cRAAT55kk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=t/MJcah+V4JPih+nc42rLf+xExlGKLbDUpmrfFAwv7TtTIKue5hYyUAk4NQ7YdrVN
-	 XrtbUFqslMhUydO60EDPA3nUpzTa1rYRxIY4RRWwdoqNyjbtI2qU8y4M+XD8y1BrFZ
-	 s0TYFWJHil0J7XyHySNIw7jUmDdy7w8UBXcSz26o=
+	by mail.kernel.org (Postfix) with ESMTP id F126020736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:55:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpR821mE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgCKOyO (ORCPT
+        id S1729923AbgCKOzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:54:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41124 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729584AbgCKOyO (ORCPT
+        Wed, 11 Mar 2020 10:55:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45367 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729460AbgCKOzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:54:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Mime-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=V5VwQ3DE+z7Gin8QWO2wlhFBBFKjYu8MYUyeDZvDjTA=; b=s7mN0sk0ngR79fsppXGLXlZ25a
-        BbEbycKQ6SlQpPxENYqRwMB3Ui4KjmHwO8VuX+i/7Gcp6xhg07dPwX2TQDU9gfA6O9DbWuUWrx9oN
-        5voV9t1b+QRgSacgBtgO/BSXQaOZJILYXddD+l6j1yh6WN3NHXhuh2UkkLcnWjJ0GJ2BaMrjS0Vyk
-        mogt6hgkeMc3gs+2RlX7SpqbSZeij2R1crYr/BrNDaR4LT18Ej5OBoP0h6/SlRDYye4ylj4gsLNmN
-        vlJkiVIPrWRgf0kUpoSf8/2npEwkHMNJ6bYx/OA78Kbc3tRTcIKYjClnz09vNknffTV/2d2U/amsp
-        RicCxsqQ==;
-Received: from [54.239.6.186] (helo=u0c626add9cce5a.drs10.amazon.com)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jC2kC-0000sD-0Z; Wed, 11 Mar 2020 14:54:00 +0000
-Message-ID: <f09bacf3029edfc7f90097f7fc6e41176ddd4873.camel@kernel.org>
-Subject: Re: [PATCH] virtio: virtio_console: add missing
- MODULE_DEVICE_TABLE() for rproc serial
-From:   Amit Shah <amit@kernel.org>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sjur Brandeland <sjur.brandeland@stericsson.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 15:53:56 +0100
-In-Reply-To: <20200310110538.19254-1-alobakin@dlink.ru>
-References: <20200310110538.19254-1-alobakin@dlink.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 11 Mar 2020 10:55:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m9so2986944wro.12;
+        Wed, 11 Mar 2020 07:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=T6dhYyYvJS/8Bl4FjnByulc+SHG/kFSfXU5KSrYTgvo=;
+        b=YpR821mEYGSQYCAJdxDmyyX1QVwPDu7Rb+v0SpjUUf77rpGL4EX+ni4S+CA2f5Ddd4
+         Tn6GVumWKMkc+KSE4/YRS9Bh9EXH07aq1OGbWacOITIjyrgjPKWp5s8QtRFCtElId6ap
+         loh9EfaNtUHKS0cARkPlOA5W3ZvPDVQe4YKYApAG4RFW2sO+D4lojIESO+ye4U8YfB0U
+         OA7UmdyO96F/KOBzabiUxreqyVAmzi4lLfGFxNyETOZu5z/8kdcwLFq4eTsGGz3FN+Qt
+         Zq9+pswIm00N4KRxKmDlZZouEd/pvKvXEVr3JS3V9AZ8rQJlOaDRPFtcDijkVtvYv9mf
+         QLUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=T6dhYyYvJS/8Bl4FjnByulc+SHG/kFSfXU5KSrYTgvo=;
+        b=NRgBx/07bnOHz1vHwnZ+kpO/r8pxWqonrmp0/7Zeto4BTzspdNp8ak/Qi8Bp7TcY2g
+         MIg18Kvpn5TiwrTahqCXFVta0L6LqRW3nIBkJA0zu5X7Du1a5YWxdBl0Wb29wCXbOhik
+         lz0/W4erX0UXGZI5YIU1d9JbBCjCaEX/kWAK3XoTYBQzxxq1n2kBzivvFdRt2eaX+tO5
+         Sc3kJNOgRlYtBIx8gML8EqzVuts5jFcM/qWJeFR1wuVFcEAFy+piNLa1Lvi26m1gO/gf
+         3hkMdG2SQxKDBaJvoAzyMxTskxbK15yODxoX/HReFyHQ+2u30VOYgaY+5ykwaH1laeiX
+         AVfA==
+X-Gm-Message-State: ANhLgQ0otppPNH6iaySJc1mwqZLFwurqxlKIRKgMvpxflAMqzwBMPQ8F
+        kDqZ6FauZ3+L9iyGDCCiqF4=
+X-Google-Smtp-Source: ADFU+vs4BWU2lMGWUFQMXyBURcsQiYdsefcfXhTiCwDFmuMlBP9RvmVVDzc5UzvPBDK9q9P6PpDWBQ==
+X-Received: by 2002:adf:a506:: with SMTP id i6mr4636282wrb.146.1583938503671;
+        Wed, 11 Mar 2020 07:55:03 -0700 (PDT)
+Received: from wambui.local ([197.237.61.225])
+        by smtp.googlemail.com with ESMTPSA id i7sm56001662wro.87.2020.03.11.07.54.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 07:55:02 -0700 (PDT)
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+X-Google-Original-From: Wambui Karuga <wambui@wambui>
+Date:   Wed, 11 Mar 2020 17:54:46 +0300 (EAT)
+To:     Thierry Reding <thierry.reding@gmail.com>
+cc:     Wambui Karuga <wambui.karugax@gmail.com>, daniel@ffwll.ch,
+        airlied@linux.ie, Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 10/21] drm/tegra: remove checks for debugfs functions
+ return value
+In-Reply-To: <20200311143753.GC494173@ulmo>
+Message-ID: <alpine.LNX.2.21.99999.375.2003111750360.14786@wambui>
+References: <20200227120232.19413-1-wambui.karugax@gmail.com> <20200227120232.19413-11-wambui.karugax@gmail.com> <20200311143753.GC494173@ulmo>
+User-Agent: Alpine 2.21.99999 (LNX 375 2019-10-29)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-10 at 14:05 +0300, Alexander Lobakin wrote:
-> rproc_serial_id_table lacks an exposure to module devicetable, so
-> when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
-> is generated and no module autoloading occurs.
-> Add missing MODULE_DEVICE_TABLE() annotation and move the existing
-> one for VIRTIO_ID_CONSOLE right to the table itself.
-> 
-> Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc
-> serial")
-> Cc: <stable@vger.kernel.org> # v3.8+
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Hey Thierry,
 
-Reviewed-by: Amit Shah <amit@kernel.org>
+On Wed, 11 Mar 2020, Thierry Reding wrote:
+
+> On Thu, Feb 27, 2020 at 03:02:21PM +0300, Wambui Karuga wrote:
+>> Since 987d65d01356 (drm: debugfs: make
+>> drm_debugfs_create_files() never fail) there is no need to check the
+>> return value of drm_debugfs_create_files(). Therefore, remove the
+>> return checks and error handling of the drm_debugfs_create_files()
+>> function from various debugfs init functions in drm/tegra and have
+>> them return 0 directly.
+>>
+>> This change also includes removing the use of drm_debugfs_create_files
+>> as a return value in tegra_debugfs_init() and have the function declared
+>> as void.
+>>
+>> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+>> ---
+>>  drivers/gpu/drm/tegra/dc.c   | 11 +----------
+>>  drivers/gpu/drm/tegra/drm.c  |  8 ++++----
+>>  drivers/gpu/drm/tegra/dsi.c  | 11 +----------
+>>  drivers/gpu/drm/tegra/hdmi.c | 11 +----------
+>>  drivers/gpu/drm/tegra/sor.c  | 11 +----------
+>>  5 files changed, 8 insertions(+), 44 deletions(-)
+>
+> Applied, thanks.
+>
+There's a newer version[1] of this patch series as this specific patch 
+depends on other work in drm.
 
 Thanks,
+wambui karuga.
 
-> ---
->  drivers/char/virtio_console.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/virtio_console.c
-> b/drivers/char/virtio_console.c
-> index 4df9b40d6342..7e1bc0f580a2 100644
-> --- a/drivers/char/virtio_console.c
-> +++ b/drivers/char/virtio_console.c
-> @@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[] = {
->  	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
->  	{ 0 },
->  };
-> +MODULE_DEVICE_TABLE(virtio, id_table);
->  
->  static unsigned int features[] = {
->  	VIRTIO_CONSOLE_F_SIZE,
-> @@ -2128,6 +2129,7 @@ static struct virtio_device_id
-> rproc_serial_id_table[] = {
->  #endif
->  	{ 0 },
->  };
-> +MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
->  
->  static unsigned int rproc_serial_features[] = {
->  };
-> @@ -2280,6 +2282,5 @@ static void __exit fini(void)
->  module_init(init);
->  module_exit(fini);
->  
-> -MODULE_DEVICE_TABLE(virtio, id_table);
->  MODULE_DESCRIPTION("Virtio console driver");
->  MODULE_LICENSE("GPL");
-
+[1] https://lists.freedesktop.org/archives/dri-devel/2020-March/258793.html
+> Thierry
+>
