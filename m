@@ -2,181 +2,119 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB83C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1062BC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A9320727
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F5224081
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPZBKHUz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gkc0L1z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbgCKOUH (ORCPT
+        id S1729812AbgCKOVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:20:07 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37233 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbgCKOUG (ORCPT
+        Wed, 11 Mar 2020 10:21:37 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34024 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729584AbgCKOVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:20:06 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a141so2342342wme.2;
-        Wed, 11 Mar 2020 07:20:05 -0700 (PDT)
+        Wed, 11 Mar 2020 10:21:37 -0400
+Received: by mail-vs1-f68.google.com with SMTP id t10so1434206vsp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:21:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U8yHxOLld6I5yONtEEjc1KYpMfk+7prWIw3BzC1un4I=;
-        b=XPZBKHUzoxtFiu/PBGZnp0TlZJM7RHTR+pRT3HJmGJGEzlUfiPsSCfxa86Kjh+2qxg
-         nfzi+qJIaliw91wL4h/v5MEVCFwDWiv5kYkfNrkcFrAK50mruIgOyvLnuhraVwcyz/T+
-         +caYMZLv+5eWwP1Tq7ocIDcc1Tfmoc2/La9I5YBDPVTo4TXDqmmLbOKfv4MI92bmeN3b
-         eK3S+N7LCjikrA7tRfFTxtIVdj97FWJ8kLFfqNifcV9hf1GEy1pIbxxcTa9BfTiYKO21
-         +TiuPN48K2Vpk821PF7hLxze5YkrYxGkZmEyrwfXKvovX71eikmV3M35gWi+sVMLFclT
-         kYPw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AA36Z3gXSwJUntGmt4TTG30h5qvPXt0r2XDT/8zcsfI=;
+        b=Gkc0L1z8chPU37ylfxfld8kL1758g6oY0Td7cWlPBhRSaljv0nEP9i+wF1FJLm0Drg
+         7zQLQnQGtshFfkBxcXQOD8UJjfPEBJlxiQbOQQRDjlQyYcs4GHopCD3WQpPexAJCvhto
+         8XN93qTBP25DLXymYoqMYfRDFiCDl00Tu7l7HwjPGS2KJhr2hl68CUYN42965CRUP9pQ
+         ZDPNq0D/OlBZjkMIJz112kgpsvq2mG8Y0bHAG6O4T5kI9wyjM5tx9FQxhltw0y0ATKH4
+         ttb7rdiO3me+gomGLr9dPZ6NNBAkBHLub4H4YSPSffAKhD/PJ/7fQfqhDsJtoj4Mb2vw
+         xi5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U8yHxOLld6I5yONtEEjc1KYpMfk+7prWIw3BzC1un4I=;
-        b=M7Sy788BvyxveC23pZQc8GriThpT+8RlDD9Efj1H7P9uSdIvZJxTQE9wlWSr4b0JkI
-         Hg0LpoC5QHLumbl/fK/bvJqBkV3rFH0yGqZzjKX+ANl1AfZCNnR8MI0YnUG/4Vu/7QJr
-         BpuYXG51B9YrvRPTeY8iQJdZsWgGfoqGPT8+0gCJ27sUvhFzLLsaeoegQXL19z7b8+6V
-         EBf5UKA+SXNrI/XnY8zF/Il/SNEQ+YPWOlVGH4ff9EH2lSWCNPawC1wmbMVE2ObNoRi1
-         7u2Bq7sKNjfYNYIfm5cB9foEsLXUl6McFybMiHGDkiUoNHCS5nF1I5X2UkTrHqRAllBs
-         P8ZA==
-X-Gm-Message-State: ANhLgQ2nE6Kro7ykARvP9eyI88JSb6X2dMsHADqLdkxsOAFKPO5LZtjk
-        xyQ8cbSNM1HYmc9fRglKypE=
-X-Google-Smtp-Source: ADFU+vu6XvNhjX9fUk/vGR9XwGi4Kb+PTmIwG/KCc8VoVTWG4HjFikyiQTu493sCs87Z+jnc8lzQFQ==
-X-Received: by 2002:a7b:c354:: with SMTP id l20mr3892521wmj.40.1583936404859;
-        Wed, 11 Mar 2020 07:20:04 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id i6sm6083016wru.40.2020.03.11.07.20.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 07:20:03 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 14:20:02 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 3/5] drivers/base/memory: store mapping between MMOP_*
- and string in an array
-Message-ID: <20200311142002.2htiv4llyam2svta@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-4-david@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AA36Z3gXSwJUntGmt4TTG30h5qvPXt0r2XDT/8zcsfI=;
+        b=Q1eJ4oiRAr7zKxXdybM0zvlmPQc7NMBd/a7waeDQxZXbkqOu1t9HbwooP5RkmHMvts
+         /j/HS6JtGNqyNvDPWpOKNlZMnKniqED4QiWi4jPkpb1jp4cOd9mo+EJ87RyaqXw/jeYN
+         QIfAHGWHy7j6d+PyjuweI/aTg9oOPjkJtuMV5xezt0cqvh8ujW9A1vm1cXh8ElxE1+pn
+         Bo1YIkyQEAhTyWA3YkHIgJPUQ/SjO38hnSmdZK+DwU8+tpRzpr5VxazFGQrNqSsu+Fhh
+         MB5n1LpgOeH/Kh70+p8tnIyvaeytbdjvn9PRF8vhNwiYgYkPB5Hgo68k/yZU/C5XmhwN
+         IVcg==
+X-Gm-Message-State: ANhLgQ3zGPPIMPJLRPJ5KIv90eG6WlEOe8D8Cpk8Aq/In0qUjRf1eM1Y
+        kYEof7Vb4EfCQyx9tDBLMfnC4nAOsi0d76oLFofN1Q==
+X-Google-Smtp-Source: ADFU+vvAwSiaVqdqSV80/n9skavFztB4aCTDjE1foC884CVvIqJg8m9aPx1YictIGAray0JPA7so3t3+znzsKWxY1WY=
+X-Received: by 2002:a05:6102:2051:: with SMTP id q17mr2225224vsr.165.1583936495390;
+ Wed, 11 Mar 2020 07:21:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311123026.16071-4-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <cover.1583896344.git.joe@perches.com> <ad408ff8dc4e5fae0884312cb0aa618664e546e5.1583896348.git.joe@perches.com>
+ <20200311084052.3ca3c331@xps13>
+In-Reply-To: <20200311084052.3ca3c331@xps13>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 11 Mar 2020 15:20:59 +0100
+Message-ID: <CAPDyKFo2UensmH_gYkH+u22bs=K9Xn0q3Dr9v6tq6GPNRg_Lew@mail.gmail.com>
+Subject: Re: [PATCH -next 013/491] INGENIC JZ47xx SoCs: Use fallthrough;
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joe Perches <joe@perches.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:30:24PM +0100, David Hildenbrand wrote:
->Let's use a simple array which we can reuse soon. While at it, move the
->string->mmop conversion out of the device hotplug lock.
+On Wed, 11 Mar 2020 at 08:40, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 >
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Michal Hocko <mhocko@kernel.org>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
-> 1 file changed, 23 insertions(+), 15 deletions(-)
+> Hi Joe,
 >
->diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->index e7e77cafef80..8a7f29c0bf97 100644
->--- a/drivers/base/memory.c
->+++ b/drivers/base/memory.c
->@@ -28,6 +28,24 @@
-> 
-> #define MEMORY_CLASS_NAME	"memory"
-> 
->+static const char *const online_type_to_str[] = {
->+	[MMOP_OFFLINE] = "offline",
->+	[MMOP_ONLINE] = "online",
->+	[MMOP_ONLINE_KERNEL] = "online_kernel",
->+	[MMOP_ONLINE_MOVABLE] = "online_movable",
->+};
->+
->+static int memhp_online_type_from_str(const char *str)
->+{
->+	int i;
->+
->+	for (i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
->+		if (sysfs_streq(str, online_type_to_str[i]))
->+			return i;
->+	}
->+	return -EINVAL;
->+}
->+
-> #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
-> 
-> static int sections_per_block;
->@@ -236,26 +254,17 @@ static int memory_subsys_offline(struct device *dev)
-> static ssize_t state_store(struct device *dev, struct device_attribute *attr,
-> 			   const char *buf, size_t count)
-> {
->+	const int online_type = memhp_online_type_from_str(buf);
+> Joe Perches <joe@perches.com> wrote on Tue, 10 Mar 2020 21:51:27 -0700:
+>
+> > Convert the various uses of fallthrough comments to fallthrough;
+> >
+> > Done via script
+> > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> >
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >  drivers/gpu/drm/ingenic/ingenic-drm.c           | 2 +-
+> >  drivers/mmc/host/jz4740_mmc.c                   | 6 ++----
+> >  drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 2 +-
+> >  drivers/mtd/nand/raw/ingenic/jz4725b_bch.c      | 4 ++--
+> >  drivers/mtd/nand/raw/ingenic/jz4780_bch.c       | 4 ++--
+> >  sound/soc/codecs/jz4770.c                       | 2 +-
+> >  6 files changed, 9 insertions(+), 11 deletions(-)
+>
+> I like very much the new way to advertise for fallthrough statements,
+> but I am not willing to take any patch converting a single driver
+> anymore. I had too many from Gustavo when these comments had to be
+> inserted. I would really prefer a MTD-wide or a NAND-wide or at least a
+> raw-NAND-wide single patch (anything inside drivers/mtd/nand/raw/).
+>
+> Hope you'll understand!
 
-In your following patch, you did the same conversion. Is it possible to merge
-them into this one?
+I fully agree (for mmc). One patch please.
 
-> 	struct memory_block *mem = to_memory_block(dev);
->-	int ret, online_type;
->+	int ret;
->+
->+	if (online_type < 0)
->+		return -EINVAL;
-> 
-> 	ret = lock_device_hotplug_sysfs();
-> 	if (ret)
-> 		return ret;
-> 
->-	if (sysfs_streq(buf, "online_kernel"))
->-		online_type = MMOP_ONLINE_KERNEL;
->-	else if (sysfs_streq(buf, "online_movable"))
->-		online_type = MMOP_ONLINE_MOVABLE;
->-	else if (sysfs_streq(buf, "online"))
->-		online_type = MMOP_ONLINE;
->-	else if (sysfs_streq(buf, "offline"))
->-		online_type = MMOP_OFFLINE;
->-	else {
->-		ret = -EINVAL;
->-		goto err;
->-	}
->-
-> 	switch (online_type) {
-> 	case MMOP_ONLINE_KERNEL:
-> 	case MMOP_ONLINE_MOVABLE:
->@@ -271,7 +280,6 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
-> 		ret = -EINVAL; /* should never happen */
-> 	}
-> 
->-err:
-> 	unlock_device_hotplug();
-> 
-> 	if (ret < 0)
->-- 
->2.24.1
+Another option is to make a big fat tree wide patch and ask Linus if
+he want to pick up immediately after an rc1. That should cause less
+disturbance for everyone, no?
 
--- 
-Wei Yang
-Help you, Help me
+Kind regards
+Uffe
