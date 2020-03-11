@@ -2,156 +2,250 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD7CC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7761C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C283D2072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DFD2072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:53:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583956401;
+	bh=tdw1K1yZNkMlalSB2DrIpOQZ4ZujojveOndEdIh1POE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DXgogMqZhQCIEdPRXWxZtQ/Wbp6E6suf0vfEglEm16b0y3sQz4iwIsXpWSz/pdH+a
+	 oT7HuGPxp2cf26bi1+vO9cTJhJhF4jXrY7Z5Y01Ies4h4ZGmVRXJa+dXGHo28aZH0r
+	 oerns3QttbqTYuR6FlED/9svA4av3635ZkbXhSuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbgCKTvR (ORCPT
+        id S2387427AbgCKTxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:51:17 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:48866 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731030AbgCKTvQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:51:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jC7Nn-0003gw-M1; Wed, 11 Mar 2020 13:51:11 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jC7Nm-0007Ul-Q4; Wed, 11 Mar 2020 13:51:11 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <87r1y12yc7.fsf@x220.int.ebiederm.org>
-        <87k13t2xpd.fsf@x220.int.ebiederm.org>
-        <87d09l2x5n.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <871rq12vxu.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <877dzt1fnf.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <875zfcxlwy.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170BD2476E35068E182EFA4E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003111203.738487D@keescook>
-Date:   Wed, 11 Mar 2020 14:48:50 -0500
-In-Reply-To: <202003111203.738487D@keescook> (Kees Cook's message of "Wed, 11
-        Mar 2020 12:08:08 -0700")
-Message-ID: <87pndin04d.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 11 Mar 2020 15:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731030AbgCKTxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:53:19 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D008C20738;
+        Wed, 11 Mar 2020 19:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583956399;
+        bh=tdw1K1yZNkMlalSB2DrIpOQZ4ZujojveOndEdIh1POE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mjp6ttGth2utmaXT57xPBZagIByGCbPpqqz+SQJ9Nuj4p33UyxfReRVBEu5glEa6e
+         1+NviPHVfW6ruFOVdVCpBG/OuOlWbsNRRwVnIJm8xNtdAGDHjiZTgvOO+JXn7BRNSP
+         dWslNT+B1zX/wTNv/N0TZ3Ty1l6/YnEplWO2QP30=
+Received: by mail-qk1-f178.google.com with SMTP id f3so3384153qkh.1;
+        Wed, 11 Mar 2020 12:53:17 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ19Qv59L+JezdnKvEntKNcwgFkFwo9t2gpV+x5Hk6Q29pIDajtk
+        cqrHKhQCZbzXPUry7s+6v1bnfunZxu6v9N9udQ==
+X-Google-Smtp-Source: ADFU+vucVpbYPdluXnU/rbjyy9j5DWdSrdu9Uo5rswhWT4MR6C36BDlqrvkEqWEYhW37ivNZ71WxhDQlWTYiNiRtkfg=
+X-Received: by 2002:a37:2cc6:: with SMTP id s189mr4492038qkh.223.1583956396701;
+ Wed, 11 Mar 2020 12:53:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jC7Nm-0007Ul-Q4;;;mid=<87pndin04d.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+d5+rrjcsoE4xtiynlnq3fJUCLMY6zpyU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 3/4] proc: io_accounting: Use new infrastructure to fix deadlocks in execve
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <1580969461-16981-1-git-send-email-yamonkar@cadence.com> <1580969461-16981-3-git-send-email-yamonkar@cadence.com>
+In-Reply-To: <1580969461-16981-3-git-send-email-yamonkar@cadence.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 11 Mar 2020 14:53:05 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKRjJEJCr51HW178JSDmwEGMwfN-eHKDRkb482bQ2yALg@mail.gmail.com>
+Message-ID: <CAL_JsqKRjJEJCr51HW178JSDmwEGMwfN-eHKDRkb482bQ2yALg@mail.gmail.com>
+Subject: Re: [PATCH v4 02/13] dt-bindings: phy: Add Cadence MHDP PHY bindings
+ in YAML format.
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>, Jyri Sarha <jsarha@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-
-> On Tue, Mar 10, 2020 at 06:45:47PM +0100, Bernd Edlinger wrote:
->> This changes do_io_accounting to use the new exec_update_mutex
->> instead of cred_guard_mutex.
->> 
->> This fixes possible deadlocks when the trace is accessing
->> /proc/$pid/io for instance.
->> 
->> This should be safe, as the credentials are only used for reading.
+On Thu, Feb 6, 2020 at 12:11 AM Yuti Amonkar <yamonkar@cadence.com> wrote:
 >
-> I'd like to see the rationale described better here for why it should be
-> safe. I'm still not seeing why this is safe here, as we might check
-> ptrace_may_access() with one cred and then iterate io accounting with a
-> different credential...
+> - Add Cadence MHDP PHY bindings in YAML format.
+> - Add Torrent PHY reference clock bindings.
+> - Add sub-node bindings for each group of PHY lanes based on PHY type.
+>   Each sub-node includes properties such as master lane number, link reset,
+>   phy type, number of lanes etc.
+> - Add reset support including PHY reset and individual lane reset.
+> - Add a new compatible string used for TI SoCs using Torrent PHY.
+> This will not affect ABI as the driver has never been functional,
+> and therefore do not exist in any active use case.
 >
-> What am I missing?
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  .../bindings/phy/phy-cadence-torrent.yaml     | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> new file mode 100644
+> index 000000000000..9f94be1dce6e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/phy-cadence-torrent.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence Torrent SD0801 PHY binding for DisplayPort
+> +
+> +description:
+> +  This binding describes the Cadence SD0801 PHY (also known as Torrent PHY)
+> +  hardware included with the Cadence MHDP DisplayPort controller.
+> +
+> +maintainers:
+> +  - Swapnil Jakhade <sjakhade@cadence.com>
+> +  - Yuti Amonkar <yamonkar@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cdns,torrent-phy
+> +      - ti,j721e-serdes-10g
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      PHY reference clock. Must contain an entry in clock-names.
+> +
+> +  clock-names:
+> +    const: refclk
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: Offset of the Torrent PHY configuration registers.
+> +      - description: Offset of the DPTX PHY configuration registers.
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: torrent_phy
+> +      - const: dptx_phy
+> +
+> +  resets:
+> +    maxItems: 1
+> +    description:
+> +      Torrent PHY reset.
+> +      See Documentation/devicetree/bindings/reset/reset.txt
+> +
+> +patternProperties:
+> +  '^phy@[0-7]+$':
+> +    type: object
+> +    description:
+> +      Each group of PHY lanes with a single master lane should be represented as a sub-node.
+> +    properties:
+> +      reg:
+> +        description:
+> +          The master lane number. This is the lowest numbered lane in the lane group.
+> +
+> +      resets:
+> +        minItems: 1
+> +        maxItems: 4
+> +        description:
+> +          Contains list of resets, one per lane, to get all the link lanes out of reset.
+> +
+> +      "#phy-cells":
+> +        const: 0
+> +
+> +      cdns,phy-type:
+> +        description:
+> +          Specifies the type of PHY for which the group of PHY lanes is used.
+> +          Refer include/dt-bindings/phy/phy.h. Constants from the header should be used.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [1, 2, 3, 4, 5, 6]
+> +
+> +      cdns,num-lanes:
+> +        description:
+> +          Number of DisplayPort lanes.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [1, 2, 4]
+> +        default: 4
+> +
+> +      cdns,max-bit-rate:
+> +        description:
+> +          Maximum DisplayPort link bit rate to use, in Mbps
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+> +        default: 8100
+> +
+> +    required:
+> +      - reg
+> +      - resets
+> +      - "#phy-cells"
+> +      - cdns,phy-type
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - clock-names
+> +  - reg
+> +  - reg-names
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/phy/phy.h>
+> +    torrent_phy: phy@f0fb500000 {
 
-The rational for non-regression is that exec_update_mutex covers all
-of the same tsk->cred changes as cred_guard_mutex.  Therefore we are not
-any worse off, and we avoid the deadlock.
+The example still fails, now in linux-next:
 
-As for safety.  Jann's argument that the only interesting credential
-change is in exec applies.  All other credential changes that have any
-effect on permission checks make the new cred non-dumpable (excepions
-apply see the code).
+Documentation/devicetree/bindings/phy/phy-cadence-torrent.example.dt.yaml:
+phy@f0fb500000: '#phy-cells' is a required property
 
-So I think this is a non-regressing change.  A safe change.
+This is because of the node name 'phy' and this node is not a phy
+provider (the child nodes are). Just use 'torrent-phy@...' here.
 
-I don't think either version of this code is fully correct.
-
-Eric
-
->> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->> ---
->>  fs/proc/base.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/fs/proc/base.c b/fs/proc/base.c
->> index 4fdfe4f..529d0c6 100644
->> --- a/fs/proc/base.c
->> +++ b/fs/proc/base.c
->> @@ -2770,7 +2770,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
->>  	unsigned long flags;
->>  	int result;
->>  
->> -	result = mutex_lock_killable(&task->signal->cred_guard_mutex);
->> +	result = mutex_lock_killable(&task->signal->exec_update_mutex);
->>  	if (result)
->>  		return result;
->>  
->> @@ -2806,7 +2806,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
->>  	result = 0;
->>  
->>  out_unlock:
->> -	mutex_unlock(&task->signal->cred_guard_mutex);
->> +	mutex_unlock(&task->signal->exec_update_mutex);
->>  	return result;
->>  }
->>  
->> -- 
->> 1.9.1
+> +          compatible = "cdns,torrent-phy";
+> +          reg = <0xf0 0xfb500000 0x0 0x00100000>,
+> +                <0xf0 0xfb030a00 0x0 0x00000040>;
+> +          reg-names = "torrent_phy", "dptx_phy";
+> +          resets = <&phyrst 0>;
+> +          clocks = <&ref_clk>;
+> +          clock-names = "refclk";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          torrent_phy_dp: phy@0 {
+> +                    reg = <0>;
+> +                    resets = <&phyrst 1>, <&phyrst 2>,
+> +                             <&phyrst 3>, <&phyrst 4>;
+> +                    #phy-cells = <0>;
+> +                    cdns,phy-type = <PHY_TYPE_DP>;
+> +                    cdns,num-lanes = <4>;
+> +                    cdns,max-bit-rate = <8100>;
+> +          };
+> +    };
+> +...
+> --
+> 2.20.1
+>
