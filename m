@@ -1,193 +1,177 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729921AbgCKQGB (ORCPT
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_NONE,SPOOFED_FREEMAIL_NO_RDNS autolearn=no autolearn_force=no
+	version=3.4.0
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51603 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730004AbgCKQGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:06:01 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BG1pBj076682
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:06:00 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yq0hbqer3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:05:58 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 11 Mar 2020 16:00:50 -0000
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To: Kim Phillips <kim.phillips@amd.com>
-Cc: Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>,
-        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
- <df966d6e-8898-029f-e697-8496500a1663@amd.com>
- <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
- <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date: Wed, 11 Mar 2020 21:30:18 +0530
-MIME-Version: 1.0
-In-Reply-To: <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Message-Id: <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
+        Wed, 11 Mar 2020 12:06:17 -0400
+From: afzal mohammed <afzal.mohd.ma@gmail.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Afzal Mohammed <afzal.mohd.ma@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: [PATCH] MIPS: pass non-NULL dev_id on shared request_irq()
+Date: Wed, 11 Mar 2020 21:36:02 +0530
+Message-Id: <20200311160602.3571-1-afzal.mohd.ma@gmail.com>
+In-Reply-To: <20200311104217.GA10615@alpha.franken.de>
+References: 
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-Hi Kim,
+Recently all usages of setup_irq() was replaced by request_irq().
+request_irq() does a few sanity checks that were not done in
+setup_irq(), if they fail irq registration will fail. One of the check is
+to ensure that non-NULL dev_id is passed in the case of shared irq. This
+caused malta on qemu to hang.
 
-On 3/6/20 3:36 AM, Kim Phillips wrote:
->> On 3/3/20 3:55 AM, Kim Phillips wrote:
->>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
->>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>>>
->>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>>>>> Modern processors export such hazard data in Performance
->>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>>>>> AMD[3] provides similar information.
->>>>>>
->>>>>> Implementation detail:
->>>>>>
->>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>>>>> If it's set, kernel converts arch specific hazard information
->>>>>> into generic format:
->>>>>>
->>>>>>     struct perf_pipeline_haz_data {
->>>>>>            /* Instruction/Opcode type: Load, Store, Branch .... */
->>>>>>            __u8    itype;
->>>>>>            /* Instruction Cache source */
->>>>>>            __u8    icache;
->>>>>>            /* Instruction suffered hazard in pipeline stage */
->>>>>>            __u8    hazard_stage;
->>>>>>            /* Hazard reason */
->>>>>>            __u8    hazard_reason;
->>>>>>            /* Instruction suffered stall in pipeline stage */
->>>>>>            __u8    stall_stage;
->>>>>>            /* Stall reason */
->>>>>>            __u8    stall_reason;
->>>>>>            __u16   pad;
->>>>>>     };
->>>>>
->>>>> Kim, does this format indeed work for AMD IBS?
->>>
->>> It's not really 1:1, we don't have these separations of stages
->>> and reasons, for example: we have missed in L2 cache, for example.
->>> So IBS output is flatter, with more cycle latency figures than
->>> IBM's AFAICT.
->>
->> AMD IBS captures pipeline latency data incase Fetch sampling like the
->> Fetch latency, tag to retire latency, completion to retire latency and
->> so on. Yes, Ops sampling do provide more data on load/store centric
->> information. But it also captures more detailed data for Branch instructions.
->> And we also looked at ARM SPE, which also captures more details pipeline
->> data and latency information.
->>
->>>> Personally, I don't like the term hazard. This is too IBM Power
->>>> specific. We need to find a better term, maybe stall or penalty.
->>>
->>> Right, IBS doesn't have a filter to only count stalled or otherwise
->>> bad events.  IBS' PPR descriptions has one occurrence of the
->>> word stall, and no penalty.  The way I read IBS is it's just
->>> reporting more sample data than just the precise IP: things like
->>> hits, misses, cycle latencies, addresses, types, etc., so words
->>> like 'extended', or the 'auxiliary' already used today even
->>> are more appropriate for IBS, although I'm the last person to
->>> bikeshed.
->>
->> We are thinking of using "pipeline" word instead of Hazard.
-> 
-> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
+Fix it by passing a dev_id to all request_irq()'s that are shared.
 
-NP. We thought pipeline is generic hw term so we proposed "pipeline"
-word. We are open to term which can be generic enough.
+Fixes: ac8fd122e070 ("MIPS: Replace setup_irq() by request_irq()")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
 
-> 
-> I realize there are a couple of core pipeline-specific pieces
-> of information coming out of it, but the vast majority
-> are addresses, latencies of various components in the memory
-> hierarchy, and various component hit/miss bits.
+[ resending since in the archives not seen, apologies if duplicate ]
 
-Yes. we should capture core pipeline specific details. For example,
-IBS generates Branch unit information(IbsOpData1) and Icahce related
-data(IbsFetchCtl) which is something that shouldn't be extended as
-part of perf-mem, IMO.
+Hi Thomas,
 
-> 
-> What's needed here is a vendor-specific extended
-> sample information that all these technologies gather,
-> of which things like e.g., 'L1 TLB cycle latency' we
-> all should have in common.
+i am assuming your next tree is immutable, hence referring to the SHA-ID
+of the original commit in your tree. Else if you prefer a fixup'ed
+patch, let me know, i will send v5 with this fixup over v4.
 
-Yes. We will include fields to capture the latency cycles (like Issue
-latency, Instruction completion latency etc..) along with other pipeline
-details in the proposed structure.
+REgards
+afzal
 
-> 
-> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
-> either.  Can we use PERF_SAMPLE_AUX instead?
+ arch/mips/dec/setup.c                 | 2 +-
+ arch/mips/kernel/cevt-r4k.c           | 2 +-
+ arch/mips/loongson2ef/lemote-2f/irq.c | 2 +-
+ arch/mips/pmcs-msp71xx/msp_time.c     | 2 +-
+ arch/mips/sni/a20r.c                  | 2 +-
+ arch/mips/sni/pcit.c                  | 4 ++--
+ arch/mips/sni/rm200.c                 | 4 ++--
+ 7 files changed, 9 insertions(+), 9 deletions(-)
 
-We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is intended when
-large volume of data needs to be captured as part of perf.data without
-frequent PMIs. But proposed type is to address the capture of pipeline
-information on each sample using PMI at periodic intervals. Hence proposing
-PERF_SAMPLE_PIPELINE_HAZ.
-
->  Take a look at
-> commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
-> definitions".  The sample identifier can be used to determine
-> which vendor's sampling IP's data is in it, and events can
-> be recorded just by copying the content of the SIER, etc.
-> registers, and then events get synthesized from the aux
-> sample at report/inject/annotate etc. time.  This allows
-> for less sample recording overhead, and moves all the vendor
-> specific decoding and common event conversions for userspace
-> to figure out.
-
-When AUX buffer data is structured, tool side changes added to present the
-pipeline data can be re-used.
-
-> 
->>>> Also worth considering is the support of ARM SPE (Statistical
->>>> Profiling Extension) which is their version of IBS.
->>>> Whatever gets added need to cover all three with no limitations.
->>>
->>> I thought Intel's various LBR, PEBS, and PT supported providing
->>> similar sample data in perf already, like with perf mem/c2c?
->>
->> perf-mem is more of data centric in my opinion. It is more towards
->> memory profiling. So proposal here is to expose pipeline related
->> details like stalls and latencies.
-> 
-> Like I said, I don't see it that way, I see it as "any particular
-> vendor's event's extended details', and these pipeline details
-> have overlap with existing infrastructure within perf, e.g., L2
-> cache misses.
-> 
-> Kim
-> 
+diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
+index c8bbac0c5051..cbbb27fbab19 100644
+--- a/arch/mips/dec/setup.c
++++ b/arch/mips/dec/setup.c
+@@ -758,7 +758,7 @@ void __init arch_init_irq(void)
+ 	/* Register the bus error interrupt. */
+ 	if (dec_interrupt[DEC_IRQ_BUS] >= 0 && busirq_handler) {
+ 		if (request_irq(dec_interrupt[DEC_IRQ_BUS], busirq_handler,
+-				busirq_flags, "bus error", NULL))
++				busirq_flags, "bus error", "bus error"))
+ 			pr_err("Failed to register bus error interrupt\n");
+ 	}
+ 	/* Register the HALT interrupt. */
+diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+index 64e917dfe6b2..4b19810c67d4 100644
+--- a/arch/mips/kernel/cevt-r4k.c
++++ b/arch/mips/kernel/cevt-r4k.c
+@@ -292,7 +292,7 @@ int r4k_clockevent_init(void)
+ 
+ 	cp0_timer_irq_installed = 1;
+ 
+-	if (request_irq(irq, c0_compare_interrupt, flags, "timer", NULL))
++	if (request_irq(irq, c0_compare_interrupt, flags, "timer", cd))
+ 		pr_err("Failed to request irq %d (timer)\n", irq);
+ 
+ 	return 0;
+diff --git a/arch/mips/loongson2ef/lemote-2f/irq.c b/arch/mips/loongson2ef/lemote-2f/irq.c
+index 34e15e8b7a8f..1c99e83cabae 100644
+--- a/arch/mips/loongson2ef/lemote-2f/irq.c
++++ b/arch/mips/loongson2ef/lemote-2f/irq.c
+@@ -109,7 +109,7 @@ void __init mach_init_irq(void)
+ 
+ 	/* setup north bridge irq (bonito) */
+ 	if (request_irq(LOONGSON_NORTH_BRIDGE_IRQ, ip6_action,
+-			IRQF_SHARED | IRQF_NO_THREAD, "cascade", NULL))
++			IRQF_SHARED | IRQF_NO_THREAD, "cascade", "cascade"))
+ 		pr_err("Failed to register north bridge cascade interrupt\n");
+ 	/* setup source bridge irq (i8259) */
+ 	if (request_irq(LOONGSON_SOUTH_BRIDGE_IRQ, no_action,
+diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
+index baf0da8b4c98..0601a3f7f8f6 100644
+--- a/arch/mips/pmcs-msp71xx/msp_time.c
++++ b/arch/mips/pmcs-msp71xx/msp_time.c
+@@ -81,7 +81,7 @@ unsigned int get_c0_compare_int(void)
+ 	/* MIPS_MT modes may want timer for second VPE */
+ 	if ((get_current_vpe()) && !tim_installed) {
+ 		if (request_irq(MSP_INT_VPE1_TIMER, c0_compare_interrupt, flags,
+-				"timer", NULL))
++				"timer", "timer"))
+ 			pr_err("Failed to register timer interrupt\n");
+ 		tim_installed++;
+ 	}
+diff --git a/arch/mips/sni/a20r.c b/arch/mips/sni/a20r.c
+index ba966d62fb4b..1bfea4aae124 100644
+--- a/arch/mips/sni/a20r.c
++++ b/arch/mips/sni/a20r.c
+@@ -223,7 +223,7 @@ void __init sni_a20r_irq_init(void)
+ 	sni_hwint = a20r_hwint;
+ 	change_c0_status(ST0_IM, IE_IRQ0);
+ 	if (request_irq(SNI_A20R_IRQ_BASE + 3, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++			IRQF_SHARED, "ISA", "ISA"))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+diff --git a/arch/mips/sni/pcit.c b/arch/mips/sni/pcit.c
+index 4a850ab03398..15080155cc9a 100644
+--- a/arch/mips/sni/pcit.c
++++ b/arch/mips/sni/pcit.c
+@@ -245,7 +245,7 @@ void __init sni_pcit_irq_init(void)
+ 	sni_hwint = sni_pcit_hwint;
+ 	change_c0_status(ST0_IM, IE_IRQ1);
+ 	if (request_irq(SNI_PCIT_INT_START + 6, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++			IRQF_SHARED, "ISA", "ISA"))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+@@ -260,7 +260,7 @@ void __init sni_pcit_cplus_irq_init(void)
+ 	sni_hwint = sni_pcit_hwint_cplus;
+ 	change_c0_status(ST0_IM, IE_IRQ0);
+ 	if (request_irq(MIPS_CPU_IRQ_BASE + 3, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++			IRQF_SHARED, "ISA", "ISA"))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+diff --git a/arch/mips/sni/rm200.c b/arch/mips/sni/rm200.c
+index ba1f2fc6a43e..2b4a6448b428 100644
+--- a/arch/mips/sni/rm200.c
++++ b/arch/mips/sni/rm200.c
+@@ -473,10 +473,10 @@ void __init sni_rm200_irq_init(void)
+ 	sni_hwint = sni_rm200_hwint;
+ 	change_c0_status(ST0_IM, IE_IRQ0);
+ 	if (request_irq(SNI_RM200_INT_START + 0, sni_rm200_i8259A_irq_handler,
+-			IRQF_SHARED, "onboard ISA", NULL))
++			IRQF_SHARED, "onboard ISA", "onboard ISA"))
+ 		pr_err("Failed to register onboard ISA interrupt\n");
+ 	if (request_irq(SNI_RM200_INT_START + 1, sni_isa_irq_handler,
+-			IRQF_SHARED, "ISA", NULL))
++			IRQF_SHARED, "ISA", "ISA"))
+ 		pr_err("Failed to register ISA interrupt\n");
+ }
+ 
+-- 
+2.18.0
 
