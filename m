@@ -2,98 +2,100 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C27AC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87094C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E766A22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583932145;
-	bh=6ca9lA8jh4w8D6Pag4DBz2MdpAPLBlItf7WOD0hTDI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hEu1o4EvqRHjKdZBk7uv40cvYgttZkuqM69tpmn3ue9lxiMM62dVwPuXKs3YM+4gj
-	 wN+PbWVk0wa7fQlji7Yw/Mj01IC1IiDkOCdGXmGS/t1Z/9qbyUUBaDpvLRcT55eyi8
-	 6s1KwHL1ZZoBwOOA0zTm45oI+9Ry597yNje+Qvac=
+	by mail.kernel.org (Postfix) with ESMTP id 5E16122527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWbcIJHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgCKNJE (ORCPT
+        id S1729554AbgCKNJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgCKNJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:09:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAC6E22464;
-        Wed, 11 Mar 2020 13:09:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583932142;
-        bh=6ca9lA8jh4w8D6Pag4DBz2MdpAPLBlItf7WOD0hTDI0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tC3pKbkHDAzIpNGPXe9tCgxbGPWh3fcrZLcYFPcjqwC32CM5WPSbo7LK7vsqN8rM6
-         DK7lUEK3riFoZkssrOlCLrp5jpucuqJ3YVLzGyuOZOhaeTaCaFDxeqv5Dto3UT6Mnx
-         BWeYdMQgnynX2fRWPiUyKmFeZviBslGmMlDNtiRo=
-Date:   Wed, 11 Mar 2020 14:09:00 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.5 000/189] 5.5.9-stable review
-Message-ID: <20200311130900.GC3833342@kroah.com>
-References: <20200310123639.608886314@linuxfoundation.org>
- <d5975b9f-e97b-2cf4-9c1a-c52b4fed7191@nvidia.com>
+        Wed, 11 Mar 2020 09:09:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33161 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729320AbgCKNJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:09:28 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r7so3143624wmg.0;
+        Wed, 11 Mar 2020 06:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jJVm6/W/dblC5li5BDXut06eK44rSmFM2nibZMhRJDo=;
+        b=BWbcIJHoZwo9oAvL97RDHBdAr9fP8kRFLjxrO14whg3Xmm3XixNXV3x/k2NanQGTuF
+         W4SDNsNuGw9ohhTCjpp87w7loUocSf3Iy13sx8CWXEJFIpqnA6W5qUeJLolBqRlUxw3A
+         Sw2vJQUKcjPUDyx4sjL8ymmqA88Rp0UPdUKMOxFPE0nKSritIDG8g87hHwHplrupaCL4
+         6yHqzfx4HdRp4axZnZe9f/Dm4ACApZowgTya5LajwJesH/Lc1Ra8nvYSCR9rO5AfI/43
+         N1RdEIfhU+1LRKekrX7KozOA3eZ+38+hCJ3WP6/HwY2KflrglJ7hp4tbxwWTcsQv4m5e
+         JHiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jJVm6/W/dblC5li5BDXut06eK44rSmFM2nibZMhRJDo=;
+        b=PNbcXn3z0+k0Z0SUglBYNXB751Zd2Am1mGUkMrMB01ILuLDQs+4+GXBa/wikpvhs97
+         7c6eJLQKIHmTBgHRX9ymhE8HisE+9yVTOTBhKn4fe5kntlEIslEj9tyraDx77coSwMiN
+         iVk0deZ2Lu3EIiiViAjc/ulwk+zOvduKCsUE6Eqb4hKTEqPxQ3aDFmNyQgAPN4oPc/q7
+         BoxniRk2uR0xGxVY0uO+JMyNA3W6Rlp5cj65FhuD4Ul3PqS5Zuv4usnFR700/2rrTPTZ
+         ykfr8YpDUDwpgbt6KSQoxsZ/QXV0+tTqkLcdCgzpxygmwRW8vUa67k2b9n9Wyf73b9Va
+         G+Rw==
+X-Gm-Message-State: ANhLgQ3f3CdXfDhKQL0Hqj7RX1WuYTJhw8lVWz9GmEfJROAX+LDuC7Lx
+        ozd1k185k7dxSe20sNHFc+g=
+X-Google-Smtp-Source: ADFU+vvnRqN0lS4mnL0B64o23avXBDhQxgQee42NMi5dTA5M2tbGj4N54ks/aPJbrEnGRZXSBJj5xg==
+X-Received: by 2002:a05:600c:204:: with SMTP id 4mr3656396wmi.112.1583932166510;
+        Wed, 11 Mar 2020 06:09:26 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id f187sm4984036wme.31.2020.03.11.06.09.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 06:09:25 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     agross@kernel.org
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] firmware: qcom_scm: add ipq806x with no clock
+Date:   Wed, 11 Mar 2020 14:09:17 +0100
+Message-Id: <20200311130918.753-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5975b9f-e97b-2cf4-9c1a-c52b4fed7191@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 08:08:58PM +0000, Jon Hunter wrote:
-> 
-> On 10/03/2020 12:37, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.9 release.
-> > There are 189 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.9-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.5:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     40 tests:	40 pass, 0 fail
-> 
-> Linux version:	5.5.9-rc1-g11e07aec0780
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
+ipq806x rpm definition was missing for a long time.
+Add this to make this soc support rpm.
 
-Thanks for testing all of these and letting me know.
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/firmware/qcom_scm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-greg k-h
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 059bb0fbae9e..d13ef3cd8cf5 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -1144,6 +1144,7 @@ static const struct of_device_id qcom_scm_dt_match[] = {
+ 							     SCM_HAS_BUS_CLK)
+ 	},
+ 	{ .compatible = "qcom,scm-ipq4019" },
++	{ .compatible = "qcom,scm-ipq806x" },
+ 	{ .compatible = "qcom,scm-msm8660", .data = (void *) SCM_HAS_CORE_CLK },
+ 	{ .compatible = "qcom,scm-msm8960", .data = (void *) SCM_HAS_CORE_CLK },
+ 	{ .compatible = "qcom,scm-msm8916", .data = (void *)(SCM_HAS_CORE_CLK |
+-- 
+2.25.0
+
