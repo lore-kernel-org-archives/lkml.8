@@ -1,138 +1,131 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C205C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:12:38 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0E2206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:12:38 +0000 (UTC)
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbgCKSMh (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:12:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55536 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgCKSMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:12:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:12:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="261223466"
-Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2020 11:12:32 -0700
-Message-ID: <32b35b12e5e80f309f45b3a17a8d681e7e1fa33f.camel@intel.com>
-Subject: Re: [PATCH V1 11/13] selftests/resctrl: Change Cache Quality
- Monitoring (CQM) test
-From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39927 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbgCKDoI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 23:44:08 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w65so497129pfb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:44:07 -0700 (PDT)
+From: Jason Ekstrand <jason@jlekstrand.net>
+Cc: airlied@redhat.com, christian.koenig@amd.com, jessehall@google.com,
+        jajones@nvidia.com, daniels@collabora.com, hoegsberg@google.com,
+        daniel.vetter@ffwll.ch, bas@basnieuwenhuizen.nl,
+        =?UTF-8?q?Christian=20K=C3=B6nig?=
+        <ckoenig.leichtzumerken@gmail.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Hackmann <ghackmann@google.com>,
+        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 11:07:45 -0700
-In-Reply-To: <e0bada87-9464-2d08-c4cb-751e30866585@intel.com>
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
-         <26086dda86f062bba4116878a012a553503924b2.1583657204.git.sai.praneeth.prakhya@intel.com>
-         <e7bd79cf-4da8-7a61-ac09-4d124315fa93@intel.com>
-         <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
-         <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
-         <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
-         <e0bada87-9464-2d08-c4cb-751e30866585@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+Subject: [PATCH 1/3] dma-buf: add dma_fence_array_for_each (v2)
+Date: Tue, 10 Mar 2020 22:43:46 -0500
+Message-Id: <20200311034351.1275197-1-jason@jlekstrand.net>
+In-Reply-To: <20200303190318.522103-1-jason@jlekstrand.net>
+References: <20200303190318.522103-1-jason@jlekstrand.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: unlisted-recipients:; (no To-header on input)@rostedt.homelinux.com
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200311034346.mTuMARs3G1EIYbZHwqowwx3YYaaVzViGiWYPeO58g78@z>
 
-Hi Reinette,
+From: Christian König <ckoenig.leichtzumerken@gmail.com>
 
-On Wed, 2020-03-11 at 11:03 -0700, Reinette Chatre wrote:
-> > > > > > 
+Add a helper to iterate over all fences in a dma_fence_array object.
 
-[SNIP]
+v2 (Jason Ekstrand)
+ - Return NULL from dma_fence_array_first if head == NULL.  This matches
+   the iterator behavior of dma_fence_chain_for_each in that it iterates
+   zero times if head == NULL.
+ - Return NULL from dma_fence_array_next if index > array->num_fences.
 
-> Hi Sai,
-> 
-> On 3/11/2020 10:33 AM, Sai Praneeth Prakhya wrote:
-> > On Wed, 2020-03-11 at 10:19 -0700, Reinette Chatre wrote:
-> > > On 3/10/2020 7:46 PM, Sai Praneeth Prakhya wrote:
-> > > > On Tue, 2020-03-10 at 15:18 -0700, Reinette Chatre wrote:
-> > > > > On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
-> > > I missed that. Thank you.
-> > > 
-> > > fyi ... when I tried these tests I encountered the following error
-> > > related to unmounting:
-> > > 
-> > > [SNIP]
-> > > ok Write schema "L3:1=7fff" to resctrl FS
-> > > ok Write schema "L3:1=ffff" to resctrl FS
-> > > ok Write schema "L3:1=1ffff" to resctrl FS
-> > > ok Write schema "L3:1=3ffff" to resctrl FS
-> > > # Unable to umount resctrl: Device or resource busy
-> > > # Results are displayed in (Bytes)
-> > > ok CQM: diff within 5% for mask 1
-> > > # alloc_llc_cache_size: 2883584
-> > > # avg_llc_occu_resc: 2973696
-> > > ok CQM: diff within 5% for mask 3
-> > > [SNIP]
-> > > 
-> > > This seems to originate from resctrl_val() that forces an unmount but if
-> > > that fails the error is not propagated.
-> > 
-> > Yes, that's right and it's a good test. I didn't encounter this issue
-> > during
-> > my testing because I wasn't using resctrl FS from other terminals (I think
-> > you
-> > were using resctrl FS from other terminal and hence resctrl_test was
-> > unable to
-> > unmount it).
-> 
-> I was not explicitly testing for this but this may have been the case.
-> 
-> As a sidenote ... could remount_resctrlfs() be called consistently? It
-> seems to switch between being called with true/false and 1/0. Since its
-> parameter type is boolean using true/false seems most appropriate.
+Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+---
+ drivers/dma-buf/dma-fence-array.c | 27 +++++++++++++++++++++++++++
+ include/linux/dma-fence-array.h   | 17 +++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-Agreed and make sense. I will fix this in a separate patch.
-
-> > I think the error should not be propagated because unmounting resctrl FS
-> > shouldn't stop us from checking the results. If measuring values reports
-> > an
-> > error then we shouldn't check for results.
-> 
-> This sounds right. It is inconsistent though ... the CQM test unmounts
-> resctrl after it is run but the CAT test does not. Looking closer the
-> CAT test seems to leave its artifacts around in resctrl and this should
-> be cleaned up.
-
-Yes makes sense. I will fix CAT test to cleanup things.
-
-> I am not sure about the expectations here. Unmounting resctrl after a
-> test is run is indeed the easiest to clean up and may be ok.
-
-The main reason for unmounting is that assume user hasn't mounted resctrl FS
-before running the test then we want to make sure we get back to the same
-state as before running test and also to clean up any changes made to resctrl
-FS during test.
-
-> It may be a
-> surprise to the user though. Perhaps there can be a snippet in the
-> README that warns people about this?
-
-Sure! makes sense. I will add it.
-
-Regards,
-Sai
+diff --git a/drivers/dma-buf/dma-fence-array.c b/drivers/dma-buf/dma-fence-array.c
+index d3fbd950be94..2ac1afc697d0 100644
+--- a/drivers/dma-buf/dma-fence-array.c
++++ b/drivers/dma-buf/dma-fence-array.c
+@@ -201,3 +201,30 @@ bool dma_fence_match_context(struct dma_fence *fence, u64 context)
+ 	return true;
+ }
+ EXPORT_SYMBOL(dma_fence_match_context);
++
++struct dma_fence *dma_fence_array_first(struct dma_fence *head)
++{
++	struct dma_fence_array *array;
++
++	if (!head)
++		return NULL;
++
++	array = to_dma_fence_array(head);
++	if (!array)
++		return head;
++
++	return array->fences[0];
++}
++EXPORT_SYMBOL(dma_fence_array_first);
++
++struct dma_fence *dma_fence_array_next(struct dma_fence *head,
++				       unsigned int index)
++{
++	struct dma_fence_array *array = to_dma_fence_array(head);
++
++	if (!array || index >= array->num_fences)
++		return NULL;
++
++	return array->fences[index];
++}
++EXPORT_SYMBOL(dma_fence_array_next);
+diff --git a/include/linux/dma-fence-array.h b/include/linux/dma-fence-array.h
+index 303dd712220f..588ac8089dd6 100644
+--- a/include/linux/dma-fence-array.h
++++ b/include/linux/dma-fence-array.h
+@@ -74,6 +74,19 @@ to_dma_fence_array(struct dma_fence *fence)
+ 	return container_of(fence, struct dma_fence_array, base);
+ }
+ 
++/**
++ * dma_fence_array_for_each - iterate over all fences in array
++ * @fence: current fence
++ * @index: index into the array
++ * @head: potential dma_fence_array object
++ *
++ * Test if @array is a dma_fence_array object and if yes iterate over all fences
++ * in the array. If not just iterate over the fence in @array itself.
++ */
++#define dma_fence_array_for_each(fence, index, head)			\
++	for (index = 0, fence = dma_fence_array_first(head); fence;	\
++	     ++(index), fence = dma_fence_array_next(head, index))
++
+ struct dma_fence_array *dma_fence_array_create(int num_fences,
+ 					       struct dma_fence **fences,
+ 					       u64 context, unsigned seqno,
+@@ -81,4 +94,8 @@ struct dma_fence_array *dma_fence_array_create(int num_fences,
+ 
+ bool dma_fence_match_context(struct dma_fence *fence, u64 context);
+ 
++struct dma_fence *dma_fence_array_first(struct dma_fence *head);
++struct dma_fence *dma_fence_array_next(struct dma_fence *head,
++				       unsigned int index);
++
+ #endif /* __LINUX_DMA_FENCE_ARRAY_H */
+-- 
+2.24.1
 
