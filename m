@@ -2,120 +2,202 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E33C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B428C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A024D21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BFF2192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="byWNOnaB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QOi6dwvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgCKKqY (ORCPT
+        id S1729047AbgCKKro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:46:24 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33788 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCKKqY (ORCPT
+        Wed, 11 Mar 2020 06:47:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36181 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCKKro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:46:24 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d22so1183246qtn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 03:46:23 -0700 (PDT)
+        Wed, 11 Mar 2020 06:47:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i13so1104121pfe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 03:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q8RSBQ1awf7J0+pbXujt6gnSJdQq7hBnAow/IoAFi0c=;
-        b=byWNOnaBSpcX4NgglDMaAl/iu/+Se3lc7hoi0h+nNEWULQmNMK1lsgjxTzb82gp/VF
-         5cJCyhQrSwzYySv1MAkIjiotOuSnlZY1qtUV8cX5+o7aPYgFXBbgO1WCcDTn0gWrgmxI
-         1cGW9tx0SckKW9lrIHfxte/TacXzDe/6zNeA8LjEEUWUVFUgehnf7irKNs3/piBl5Te3
-         r8HV5dSUvdYp0qFBuXosUVXhlewJ4EBkzJxGHxrn1IdlERUO26R0Sa4U01MSYYOXqRsE
-         a9ItxmXAH+fbjeibEqTPho121UE/eTz8r/SHy2CMuzJfodDlCXCO+eD2/Nb6kpl3Ge+2
-         xi/Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7nixSWZgQM/dFUC8bWhHj5VYHF/zROxg8FtVN7hFmLo=;
+        b=QOi6dwvPN8OHaV1bE2retGQzAs7SOWAk2T47xslQl9YraTvgXmCCIqVnM1rCc23jll
+         kwzAixFcXlbPjOHXWMZGrKRm9hjgCygzy38WX73XQ+LEdD/80K854Fg2poCLTXWIhX3i
+         ECedpadbpwpK8OffP6IuuDF1PyCt8xL4uFXCM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q8RSBQ1awf7J0+pbXujt6gnSJdQq7hBnAow/IoAFi0c=;
-        b=FPbL79z2hDACWjRZ467zEFuakJflx79FOt25EP0HNO1K9BqTOV4oxaaGOSbmr4P4QE
-         KwCGEYscnVofX0o2rvyWATKZeRYA/ZDCw4qZbpTyRpz417hmrqfxgQWJ1Hi99S+uTDIx
-         WW07hrKmEokt+qPQ9X3MXr6NOpi+yJhlgrQIPwmsQMCAL4JA86zSsKabVIHdPAr7a0Nt
-         /9O+a5ZU0GRBapv/81bIQCsDrzzxvbu/ePMYUJdz9xswVKTtE3pV0WqbhSc6RSfHPZxs
-         mgy+pxpVB6hlWFgGCbIFeKi3l2+nzw+vaz4P4jlYBE+FVPEsf7WaAW+CZi+PHMjx2i9A
-         tjBA==
-X-Gm-Message-State: ANhLgQ3C3AzsxCSkqoESgDUfUVKKIOZljy2TEgKJG1b3rfZmP+rl6+at
-        j8g2PhkVGurSeQmxtAjTMamEcXjkUvPb9TcTbpuAbA==
-X-Google-Smtp-Source: ADFU+vvPq796XwuNZCzNOH45PgR6QT2y52wU+cBX8IJQOGhpAaAOnl3rh8/h047At8I49vKAmG414LX/0zWfixX7xJQ=
-X-Received: by 2002:ac8:6697:: with SMTP id d23mr1966498qtp.257.1583923582471;
- Wed, 11 Mar 2020 03:46:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7nixSWZgQM/dFUC8bWhHj5VYHF/zROxg8FtVN7hFmLo=;
+        b=HeCecKHdkn2sxypwMeBP1D8L41IeuYjrZtxzDNmMSi+30K2uakCQv8uguzJMV6iso9
+         pGq95HdoRpC/caHRLKB2K1i9zk4NWBPDCiVlhWJprGmc/00fMO/LdIh097gWdpqdx/Zf
+         +dM2s0sfn54tzFelnBpC4XGnBKJRTknAAMyjkac0hivGUIux+D5+oXt1KmRv3ZM6BJ+z
+         EgHf4U+KroCfSxUGGwrPtQ78VU2enoi/U7wILeOwC+87tuIExBZ5ahGJgHcUQp0QAKbm
+         LDU+ebYd4j7jmk0cI4CcmfnyqzakDzK5/eh3KNjYMMK5xmGFHidicUwaiWbDAIEo8jly
+         g6Qw==
+X-Gm-Message-State: ANhLgQ0VJYE0itPW2PPyeWbDJdr8lECfffEQoZRQiTHqW26vPPtGKl1W
+        csZqs1J9VJe3KpvWy7CwrT6OamnK1cgVIg==
+X-Google-Smtp-Source: ADFU+vtONaLRs0MZ77NKdNRX2SZFe5YG+WPFREn7udU5gZ2+UjRAxfCMIWKN+J2IPHDqDv5/vV6VdQ==
+X-Received: by 2002:aa7:8d82:: with SMTP id i2mr2252091pfr.179.1583923662803;
+        Wed, 11 Mar 2020 03:47:42 -0700 (PDT)
+Received: from tfiga.tok.corp.google.com ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
+        by smtp.gmail.com with ESMTPSA id o19sm6181965pjr.2.2020.03.11.03.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 03:47:42 -0700 (PDT)
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     linux-media@vger.kernel.org
+Cc:     Shunqian Zheng <zhengsq@rock-chips.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH v2] media: i2c: ov5695: Fix power on and off sequences
+Date:   Wed, 11 Mar 2020 19:47:28 +0900
+Message-Id: <20200311104728.62909-1-tfiga@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-References: <20200226004608.8128-1-trishalfonso@google.com>
- <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com> <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
-In-Reply-To: <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 11 Mar 2020 11:46:10 +0100
-Message-ID: <CACT4Y+ZypjEidZQ6E8ajY1yBU6XA2t6eVz56sJ1JaBjCniRMUQ@mail.gmail.com>
-Subject: Re: [PATCH] UML: add support for KASAN under x86_64
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 11:32 AM Johannes Berg
-<johannes@sipsolutions.net> wrote:
->
-> Hi,
->
-> > Hi all, I just want to bump this so we can get all the comments while
-> > this is still fresh in everyone's minds. I would love if some UML
-> > maintainers could give their thoughts!
->
-> I'm not the maintainer, and I don't know where Richard is, but I just
-> tried with the test_kasan.ko module, and that seems to work. Did you
-> test that too? I was surprised to see this because you said you didn't
-> test modules, but surely this would've been the easiest way?
->
-> Anyway, as expected, stack (and of course alloca) OOB access is not
-> detected right now, but otherwise it seems great.
->
-> Here's the log:
-> https://p.sipsolutions.net/ca9b4157776110fe.txt
->
-> I'll repost my module init thing as a proper patch then, I guess.
->
->
-> I do see issues with modules though, e.g.
-> https://p.sipsolutions.net/1a2df5f65d885937.txt
->
-> where we seem to get some real confusion when lockdep is storing the
-> stack trace??
->
-> And https://p.sipsolutions.net/9a97e8f68d8d24b7.txt, where something
-> convinces ASAN that an address is a user address (it might even be
-> right?) and it disallows kernel access to it?
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-Please pass these reports via scripts/decode_stacktrace.sh to add line
-numbers (or any other symbolization script). What is the base
-revision?
-Hard to analyze without line numbers.
+From the measured hardware signal, OV5695 reset pin goes high for a
+short period of time during boot-up. From the sensor specification, the
+reset pin is active low and the DT binding defines the pin as active
+low, which means that the values set by the driver are inverted and thus
+the value requested in probe ends up high.
 
-> Also, do you have any intention to work on the stack later? For me,
-> enabling that doesn't even report any issues, it just hangs at 'boot'.
->
-> johannes
->
+Fix it by changing probe to request the reset GPIO initialized to high,
+which makes the initial state of the physical signal low.
+
+In addition, DOVDD rising must occur before DVDD rising from spec., but
+regulator_bulk_enable() API enables all the regulators asynchronously.
+Use an explicit loops of regulator_enable() instead.
+
+For power off sequence, it is required that DVDD falls first. Given the
+bulk API does not give any guarantee about the order of regulators,
+change the driver to use regulator_disable() instead.
+
+The sensor also requires a delay between reset high and first I2C
+transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
+recommended by the vendor. Fix this as well.
+
+Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+---
+ drivers/media/i2c/ov5695.c | 49 ++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
+
+Changes since v1:
+(https://patchwork.kernel.org/patch/11305411/)
+ - Add comments explaining why the regulators are controlled one by one.
+   (Sakari)
+
+diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+index d6cd15bb699ac..cc678d9d2e0da 100644
+--- a/drivers/media/i2c/ov5695.c
++++ b/drivers/media/i2c/ov5695.c
+@@ -971,16 +971,9 @@ static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
+ 	return ret;
+ }
+ 
+-/* Calculate the delay in us by clock rate and clock cycles */
+-static inline u32 ov5695_cal_delay(u32 cycles)
+-{
+-	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
+-}
+-
+ static int __ov5695_power_on(struct ov5695 *ov5695)
+ {
+-	int ret;
+-	u32 delay_us;
++	int i, ret;
+ 	struct device *dev = &ov5695->client->dev;
+ 
+ 	ret = clk_prepare_enable(ov5695->xvclk);
+@@ -991,21 +984,28 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+ 
+-	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enable regulators\n");
+-		goto disable_clk;
++	/*
++	 * The hardware requires the regulators to be powered on in order,
++	 * so enable them one by one.
++	 */
++	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
++		ret = regulator_enable(ov5695->supplies[i].consumer);
++		if (ret) {
++			dev_err(dev, "Failed to enable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++			goto disable_reg_clk;
++		}
+ 	}
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
+ 
+-	/* 8192 cycles prior to first SCCB transaction */
+-	delay_us = ov5695_cal_delay(8192);
+-	usleep_range(delay_us, delay_us * 2);
++	usleep_range(1000, 1200);
+ 
+ 	return 0;
+ 
+-disable_clk:
++disable_reg_clk:
++	for (--i; i >= 0; i--)
++		regulator_disable(ov5695->supplies[i].consumer);
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 
+ 	return ret;
+@@ -1013,9 +1013,22 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+ 
+ static void __ov5695_power_off(struct ov5695 *ov5695)
+ {
++	struct device *dev = &ov5695->client->dev;
++	int i, ret;
++
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+-	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
++
++	/*
++	 * The hardware requires the regulators to be powered off in order,
++	 * so disable them one by one.
++	 */
++	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
++		ret = regulator_disable(ov5695->supplies[i].consumer);
++		if (ret)
++			dev_err(dev, "Failed to disable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++	}
+ }
+ 
+ static int __maybe_unused ov5695_runtime_resume(struct device *dev)
+@@ -1285,7 +1298,7 @@ static int ov5695_probe(struct i2c_client *client,
+ 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
+ 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
+ 
+-	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ov5695->reset_gpio)) {
+ 		dev_err(dev, "Failed to get reset-gpios\n");
+ 		return -EINVAL;
+-- 
+2.25.1.481.gfbce0eb801-goog
+
