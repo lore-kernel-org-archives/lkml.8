@@ -2,103 +2,73 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6355DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9B4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E82020650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7DB206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388187AbgCLIEp (ORCPT
+        id S1726895AbgCLIFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:04:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:9243 "EHLO mga07.intel.com"
+        Thu, 12 Mar 2020 04:05:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3476 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387930AbgCLIEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:04:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726254AbgCLIFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 04:05:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 01:04:44 -0700
-X-ExtLoop1: 1
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 01:05:20 -0700
 X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
-   d="scan'208";a="354073180"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 12 Mar 2020 01:04:25 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 12 Mar 2020 10:04:24 +0200
-Date:   Thu, 12 Mar 2020 10:04:24 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Skip link training delay for S3 resume
-Message-ID: <20200312080424.GH2540@lahna.fi.intel.com>
-References: <20200311045249.5200-1-kai.heng.feng@canonical.com>
- <20200311102811.GA2540@lahna.fi.intel.com>
- <2C20385C-4BA4-4D6D-935A-AFDB97FAB5ED@canonical.com>
+   d="scan'208";a="236744025"
+Received: from fpirou-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.195])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 01:05:18 -0700
+From:   "Patrick Ohly" <patrick.ohly@intel.com>
+To:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        virtio-fs@redhat.com, miklos@szeredi.hu
+Cc:     stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
+In-Reply-To: <20200304165845.3081-1-vgoyal@redhat.com>
+Organization: Intel GmbH, Dornacher Strasse 1, D-85622 Feldkirchen/Munich
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+Date:   Wed, 11 Mar 2020 14:38:03 +0100
+Message-ID: <yrjh1rpzggg4.fsf@pohly-mobl1.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2C20385C-4BA4-4D6D-935A-AFDB97FAB5ED@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 12:23:46PM +0800, Kai-Heng Feng wrote:
-> Hi,
-> 
-> > On Mar 11, 2020, at 18:28, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> > 
-> > Hi,
-> > 
-> > On Wed, Mar 11, 2020 at 12:52:49PM +0800, Kai-Heng Feng wrote:
-> >> Commit ad9001f2f411 ("PCI/PM: Add missing link delays required by the
-> >> PCIe spec") added a 1100ms delay on resume for bridges that don't
-> >> support Link Active Reporting.
-> >> 
-> >> The commit also states that the delay can be skipped for S3, as the
-> >> firmware should already handled the case for us.
-> > 
-> > Delay can be skipped if the firmware provides _DSM with function 8
-> > implemented according to PCI firmwre spec 3.2 sec 4.6.8.
-> 
-> As someone who doesn't have access to the PCI spec...
-> Questions below.
-> 
-> > 
-> >> So let's skip the link training delay for S3, to save 1100ms resume
-> >> time.
-> >> 
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> drivers/pci/pci-driver.c | 3 ++-
-> >> 1 file changed, 2 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> >> index 0454ca0e4e3f..3050375bad04 100644
-> >> --- a/drivers/pci/pci-driver.c
-> >> +++ b/drivers/pci/pci-driver.c
-> >> @@ -916,7 +916,8 @@ static int pci_pm_resume_noirq(struct device *dev)
-> >> 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
-> >> 	pcie_pme_root_status_cleanup(pci_dev);
-> >> 
-> >> -	if (!skip_bus_pm && prev_state == PCI_D3cold)
-> >> +	if (!skip_bus_pm && prev_state == PCI_D3cold
-> >> +	    && !pm_resume_via_firmware())
-> > 
-> > So this would need to check for the _DSM result as well. We do evaluate
-> > it in pci_acpi_optimize_delay() (drivers/pci/pci-acpi.c) and that ends
-> > up lowering ->d3cold_delay so maybe check that here.
-> 
-> Do we need to wait for d3cold_delay here?
-> Or we can also skip that as long as pci_acpi_dsm_guid and FUNCTION_DELAY_DSM present?
+Vivek Goyal <vgoyal@redhat.com> writes:
+> This patch series adds DAX support to virtiofs filesystem. This allows
+> bypassing guest page cache and allows mapping host page cache directly
+> in guest address space.
+>
+> When a page of file is needed, guest sends a request to map that page
+> (in host page cache) in qemu address space. Inside guest this is
+> a physical memory range controlled by virtiofs device. And guest
+> directly maps this physical address range using DAX and hence gets
+> access to file data on host.
+>
+> This can speed up things considerably in many situations. Also this
+> can result in substantial memory savings as file data does not have
+> to be copied in guest and it is directly accessed from host page
+> cache.
 
-Actually I think pci_bridge_wait_for_secondary_bus() already takes it
-into account. Have you checked if the BIOS has this _DSM implemented in
-the first place?
+As a potential user of this, let me make sure I understand the expected
+outcome: is the goal to let virtiofs use DAX (for increased performance,
+etc.) or also let applications that use virtiofs use DAX?
+
+You are mentioning using the host's page cache, so it's probably the
+former and MAP_SYNC on virtiofs will continue to be rejected, right?
+
+-- 
+Best Regards
+
+Patrick Ohly
