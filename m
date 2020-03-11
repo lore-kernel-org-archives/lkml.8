@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CBEC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6976C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3B6222C3
+	by mail.kernel.org (Postfix) with ESMTP id AA1D5208C3
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgCKBl3 (ORCPT
+        id S1728010AbgCKBl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:41:29 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:26789 "EHLO
+        Tue, 10 Mar 2020 21:41:28 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:26769 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727929AbgCKBl0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727588AbgCKBlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:41:26 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+        Tue, 10 Mar 2020 21:41:25 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
   by alexa-out-sd-01.qualcomm.com with ESMTP; 10 Mar 2020 18:41:24 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 10 Mar 2020 18:41:24 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 10 Mar 2020 18:41:23 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 167834559; Tue, 10 Mar 2020 18:41:24 -0700 (PDT)
+        id DAD954559; Tue, 10 Mar 2020 18:41:23 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,44 +33,61 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v8 05/12] pwm: clps711x: Use 64-bit division macro
-Date:   Tue, 10 Mar 2020 18:41:14 -0700
-Message-Id: <150969930ee5cfa038b6f20b4ca2291a81097c2b.1583889178.git.gurus@codeaurora.org>
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v8 02/12] drm/i915: Use 64-bit division macro
+Date:   Tue, 10 Mar 2020 18:41:11 -0700
+Message-Id: <2287dc418793b74c3fe97ed328980e9d62ee9b83.1583889178.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583889178.git.gurus@codeaurora.org>
 References: <cover.1583889178.git.gurus@codeaurora.org>
 In-Reply-To: <cover.1583889178.git.gurus@codeaurora.org>
 References: <cover.1583889178.git.gurus@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
-handle a 64-bit divisor.
+Since the PWM framework is switching struct pwm_state.duty_cycle's
+datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
+to handle a 64-bit dividend.
 
-Cc: Alexander Shiyan <shc_work@mail.ru>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-clps711x.c | 2 +-
+ drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..ba9500a 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
- }
+diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
+index bc14e9c..843cac1 100644
+--- a/drivers/gpu/drm/i915/display/intel_panel.c
++++ b/drivers/gpu/drm/i915/display/intel_panel.c
+@@ -1868,7 +1868,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
  
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	panel->backlight.min = 0; /* 0% */
+ 	panel->backlight.max = 100; /* 100% */
+-	panel->backlight.level = DIV_ROUND_UP(
++	panel->backlight.level = DIV_ROUND_UP_ULL(
+ 				 pwm_get_duty_cycle(panel->backlight.pwm) * 100,
+ 				 CRC_PMIC_PWM_PERIOD_NS);
+ 	panel->backlight.enabled = panel->backlight.level != 0;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
