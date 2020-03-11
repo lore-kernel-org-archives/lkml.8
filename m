@@ -2,130 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE1C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D937AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1553C2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583969521;
-	bh=pqH2gD8vz1tcgbvk8nKS/2i0+P0FgUGY6BHcL+Tkx3A=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=YL5woNwKgR7VvLnMlJHAZ49gDmZhKIoOIjWeg8WFfpTl2//2FLRgo/Wez+wDJp9fz
-	 bl5AFRwF3O56qc1WL/ifiSZwsF/RaYTicpIpuFJ6mLQxfH0c5dxWUaoNzyfpA10C8/
-	 tTcLpzoxhjgP8nJ5z1hzVuIq1z+BP7h3Nx0XrKs0=
+	by mail.kernel.org (Postfix) with ESMTP id D39A42074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RQnJ/B/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731520AbgCKXb7 (ORCPT
+        id S1731546AbgCKXcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:31:59 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44652 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731364AbgCKXb7 (ORCPT
+        Wed, 11 Mar 2020 19:32:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33241 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731364AbgCKXcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:31:59 -0400
-Received: by mail-il1-f196.google.com with SMTP id j69so3734486ila.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:31:58 -0700 (PDT)
+        Wed, 11 Mar 2020 19:32:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m5so2057715pgg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tWMg+vrny6yAnLZ7P1+Uq3GSafHzz2ZiJHHvFx+tZ+Q=;
-        b=VrP/U/elKH+pog6YRt0R7QB8ZGkgty6E35ojdAtd5sL2GKz1jEg4osj8N6DyDrDTDA
-         yhzO33zMD9xi3xkYRBLOyYTpGe9X9BroyoGSgiwHdiFEDKOdbAGPv5xeJBo83VP4fpjP
-         Bh+gNtxZNR1ji390quo6DWINdj8nVunK0fGGg=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZAFxnU3NgpJMRLveB1Jihkaz6R/8FOdMPSF2gijKBWE=;
+        b=RQnJ/B/XeSshmnos7GbXMEoonGg2/3cDqgKr1Pp8lC9PlWN7SkhRbcX7KTF7i3dkkZ
+         ZnNwYPwTVpxTdi1m9i21YZACZzEdehahf5C8jse8o0DAIa0WHeJ2Cuodt8MExVHa7XC5
+         hvOPCnF7rT6SrSdz29jq4rBXUyc8wLhQTEYfIFfJq6cwKWIHEofYDSv5Tpcjc5f3oK5C
+         6koZQsAjIwMgnVps0Q6exeHjuc1D/DRvax8MqIe8Ll47uX3X1C/GHUPd/BlhDE6eLSlm
+         pNQ3D3PmRgVmJ01pXu8eWHSgXt4CLXsqRlUefG6iN7PZ/Erk/VlsSVC35pJxlmpY1Wyt
+         lwfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tWMg+vrny6yAnLZ7P1+Uq3GSafHzz2ZiJHHvFx+tZ+Q=;
-        b=kpOUkhKpqzD0g85IQqev9v7sXfolgTqf8YrKai1fz1FnsfKUFayUsX7EPXbbPA/sSY
-         yWT89uxGlKqyi0dl+NO9TIWwOkZxjGROtVb9s/EvI9np5uQyiWY+q+mGGPO0L9Ev1g06
-         0jJbm7qlViDpbBmQV1ZwcwzBBMCSFd1aYmrOPKw/hY3NtSrst8zRIqHSVjrQAs/fJ55U
-         olmBF0N4ZHbaZNcNrcKQkrHvSknZz8fbT3VNRVdlxv7GXrkrcogBqZ9wxB9bQaMEw6uL
-         KKjiEXu5FucupYL59jFJ0X1SVJDy2K8c4VreNl8VS84cNJ2aWpQuwlAocRIWb+u2IXCn
-         2Iag==
-X-Gm-Message-State: ANhLgQ3MdQ99AmrBL/6Tqj/3ePnZpbGGWMorVkl3z7jlprsVIrXFE5W4
-        yBHUH9OEPA+w9aGRnc5ZbhoI1Q==
-X-Google-Smtp-Source: ADFU+vtFXxSt5AFuuZzVRZiUmKdtjk4VJ4VPJuuo7GpY1CyX4omGF7b4hkWMjEmRoqTiTD61+FeMeA==
-X-Received: by 2002:a92:88d0:: with SMTP id m77mr5234082ilh.282.1583969518243;
-        Wed, 11 Mar 2020 16:31:58 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id b5sm2334097iln.64.2020.03.11.16.31.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 16:31:57 -0700 (PDT)
-Subject: Re: [PATCH 1/4] selftests: Fix kselftest O=objdir build from
- cluttering top level objdir
-To:     Kevin Hilman <khilman@baylibre.com>, shuah@kernel.org
-Cc:     mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1583358715.git.skhan@linuxfoundation.org>
- <58d954867391c90fe0792d87e09a82bda26ba4fc.1583358715.git.skhan@linuxfoundation.org>
- <7hwo7qijn0.fsf@baylibre.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ceb910b1-2ab7-b27f-7e53-c445d96cdeb1@linuxfoundation.org>
-Date:   Wed, 11 Mar 2020 17:31:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=ZAFxnU3NgpJMRLveB1Jihkaz6R/8FOdMPSF2gijKBWE=;
+        b=gkr2/E124TKOuPa5GiLOgnpbb/HrjP665b9MZOiKHPgbkg4UPDkOY2aZ+T4TZz3cMC
+         mb8rLn9UXRlQFdFDEC7PMRt2MLnPYJk6kJfw/If9Fzoi8J8xMPnrq3SVKFJXXA1272qf
+         hhAgiT1/MnpeXI4/21jUJY+ziGnD2428iaruW+HWSw7sq179thTqs96NjwSax8fQgRJj
+         ms/S2WzaIdwEUIvU8wNaP57BCE13+yg5jNi1Ds4u5OFaiAbGkxhoVEkFdXCo0a9vwLbL
+         5HWNqTMd2uQQgh9cWe+eF2QadW1p0hFRF2vFK8JWwhYn+YcsUkAl3V/eo30X7dzsWd9n
+         otCQ==
+X-Gm-Message-State: ANhLgQ15gkRz6RzYApct9xx5ukIkNtUc2Gfnmg1bDa3n/U+UFntaOaTP
+        UzT4Y48KEzqFThnna2BaVRgUEg==
+X-Google-Smtp-Source: ADFU+vssJZbi4+8lRsENa/Dx4wELabrI5tBFSOR/chzDO+9tWUirfJxgeaXL9W7NYjIV1v7Tyvfs1Q==
+X-Received: by 2002:a63:441e:: with SMTP id r30mr4888212pga.51.1583969532339;
+        Wed, 11 Mar 2020 16:32:12 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d77sm40505835pfd.109.2020.03.11.16.32.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 16:32:11 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] arm64: defconfig: Enable Truly NT35597 WQXGA panel
+Date:   Wed, 11 Mar 2020 16:30:39 -0700
+Message-Id: <20200311233039.928605-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <7hwo7qijn0.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 4:58 PM, Kevin Hilman wrote:
-> Shuah Khan <skhan@linuxfoundation.org> writes:
-> 
->> make kselftest-all O=objdir builds create generated objects in objdir.
->> This clutters the top level directory with kselftest objects. Fix it
->> to create sub-directory under objdir for kselftest objects.
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> 
-> Only somewhat related to this patch, another problem that wasn't in your
-> doci is that the current O= support doesn't support relative paths.
-> 
+The Truly NT35597 WQXGA panel is found on the Qualcomm SDM845 MTP,
+enable the driver for it.
 
-Yes I am aware of it and it is in the document as something that will
-be addressed later.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-"Note: Relative paths don’t work - supporting relative paths breaks 
-work-flows e.g:
-powerpc. Explore fix. Compile work-flows. Not planning to support at the 
-moment."
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e8be14b93b40..07b57510394b 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -573,6 +573,7 @@ CONFIG_DRM_TEGRA=m
+ CONFIG_DRM_PANEL_LVDS=m
+ CONFIG_DRM_PANEL_SIMPLE=m
+ CONFIG_DRM_DUMB_VGA_DAC=m
++CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+ CONFIG_DRM_SII902X=m
+ CONFIG_DRM_THINE_THC63LVD1024=m
+ CONFIG_DRM_TI_SN65DSI86=m
+-- 
+2.24.0
 
-> For example, using O=/tmp/build-arm64 works, but O=build-arm64 doesn't.
-> Try this:
-> 
-> $ make ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- O=build-arm64 defconfig
-> $ make ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- O=build-arm64 kselftest-all
-> make[1]: Entering directory '/work/kernel/linux/build-arm64'
-> make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
-> 	ARCH=arm64 -C ../../.. headers_install
-> make[4]: ../scripts/Makefile.build: No such file or directory
-> make[4]: *** No rule to make target '../scripts/Makefile.build'.  Stop.
-> Makefile:500: recipe for target 'scripts_basic' failed
-> make[3]: *** [scripts_basic] Error 2
-> Makefile:151: recipe for target 'khdr' failed
-> make[2]: *** [khdr] Error 2
-> /work/kernel/linux/Makefile:1220: recipe for target 'kselftest-all' failed
-> make[1]: *** [kselftest-all] Error 2
-> make[1]: Leaving directory '/work/kernel/linux/build-arm64'
-> Makefile:179: recipe for target 'sub-make' failed
-> make: *** [sub-make] Error 2
-> 
-
-I am looking to address build and install issues first.
-
-thanks,
--- Shuah
