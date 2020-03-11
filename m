@@ -7,70 +7,69 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B16C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EFAC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39D720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66B320736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DPWQJm2K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6VLu240"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbgCKTO7 (ORCPT
+        id S1731272AbgCKTPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:14:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46320 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731191AbgCKTO4 (ORCPT
+        Wed, 11 Mar 2020 15:15:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38922 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731238AbgCKTPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:14:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n15so4078238wrw.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:14:53 -0700 (PDT)
+        Wed, 11 Mar 2020 15:15:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r15so4126167wrx.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:15:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2FvaQYbh+DmrT5z3VnA+Z2hjXjMayiHnru+yMFyYikU=;
-        b=DPWQJm2K/cI6KBQ4ezXYmGMA25WEQ0ytHwNBg4ktboMQIFi6QjJRR73DRuP1QwgyDj
-         9X/j+a7cxRkLSovdPvsZ6F+0BjpNKW2Ob+l7HXzXVa7f1URSmV0BcI6ZrXJ2CqdHlkqc
-         I6RATi2h+yO31tVEmcny45DoKPlOOUarpT5g2EgiRsLErYeac3mbQrpp4R86wTJAUyFr
-         bVfLxzd043elz0qc/kicrIzJ0X1JDNIMOxB6j+Ce+O+ai8hH4jyIw9YWKhY1nacgvaQx
-         jxBi0J52wjhqqkgYogryjDJ4l3pMQ7xVmpvkiXPv/oT6eLeiyg/EZQaxzLjN/r5BKZV+
-         eLzg==
+        bh=3BfHSzn4UCeA2FP5LolQzAR+/B6SLs4bxqX8bC/4tNE=;
+        b=r6VLu240RNeUWsOOl/nPDVFRYxuT3S+GA+WHQHy7Qk7RE4h3c4+0YKO6YBXyDbZzT4
+         Xz22tvQTRnWpAe8YTCxuecuzAiFNpSQT+6MYPQROStcQB93+7tvEpPZ/0sl75U4kFQRl
+         +LoQAG0h1kPrR0dq4ibDKX0pDuuwordljTWwhmhiFijm17jrT49Fb+k9dFDsvYefArYT
+         iWKoffTcpa83MvIOUi93QzR4aXISdImP1AY/3D5XBgkNbyTyswnpkK1+fIGBUSeoMxYH
+         3FNQWn3r9lSIig4ZamF8nFb7j67hYLU38XyBMeAZL+mRwKIrJfKmmLZCFI+gjnoNX89R
+         Q6MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2FvaQYbh+DmrT5z3VnA+Z2hjXjMayiHnru+yMFyYikU=;
-        b=LaaJMwOEyzA1vvRToi5b5Q/4urB+bD8G63zXYMAX+YFU0aFeXF1imD1iiqkP/U6p9i
-         nlubFKYm2inpv4kogU15U0p0UCv4C0/axmicM9s/6Z9TA7DRKTQVc+6v2Ium+R1RIc74
-         pL417NmSgZqMfNJxPGuf6MP18l0y4DUZ+Dfcedxaffa7jYKygzoLq7r+kmAzDMlsELrJ
-         sCA6U+rSO2nL4sm2LYiYYMermba6galnplYrrCOhrCW9Jpk4GQqwG9MtCxrghSIoORxl
-         iIZaIjl5Y/59T2tAOqcP1QFeBX9SBrn3LfMGPOWcZSXgvhy4eew19iDuciSebJ2LPPqg
-         DqVg==
-X-Gm-Message-State: ANhLgQ3imJ9jNWl9uwdSAxEyt/sfLUi3sXhM52Wvs5M5V9vVX7PDHpIq
-        uJyirwhB2BjLNO/+Osd8BDO05KzN2y4=
-X-Google-Smtp-Source: ADFU+vtpowS0bzwahGC7y224TiYbPRgsAKOlwjrIN096zE6Y/8gR2auOuAGzRIpzTboXSxLs3FbKtA==
-X-Received: by 2002:a05:6000:12c3:: with SMTP id l3mr5912716wrx.70.1583954093196;
-        Wed, 11 Mar 2020 12:14:53 -0700 (PDT)
+        bh=3BfHSzn4UCeA2FP5LolQzAR+/B6SLs4bxqX8bC/4tNE=;
+        b=KV/TmYcB/hKd16SDUt2daqGYHbUa2HI7JbGxo38VC64mJFDXO6LmHC570wGxRffhch
+         vfruMSzsNMSIaTuYr9IZI/GGgC5s2xZMOeQK7zls+ZNrS0zn4hdQYxw1vZDgpwSy78kQ
+         up0Qe/BMuQv/v0Zk7fLPK4PKG6UV+pSahVQgwyJlnsKn4nNWrhtnKILq2ztObheoeaVR
+         16YeAiNNExxgi5RDex4koBbPPetk/GREwAmDfp0FV4UvZuEzEL2kbGQUDFIaA5OFGu9o
+         1alsEMdNFWGNqyeEm56Q7JvvhGlHWRDPGLsikvJrEWatJkb/QL/5xYSmvJXpjcrMcKFr
+         MWxg==
+X-Gm-Message-State: ANhLgQ3oSEKWlr8IqRi7AdvGqSSB46RLVQy1l+GaEgOimDWSNT5ZNmWS
+        MqzJI+vPd3LXgmR85kjyU1jtSA==
+X-Google-Smtp-Source: ADFU+vuGmQZPjPDr1rIXs8EjGenquDs/gL0Bo11Ca0LpJc0B56nEbdNtKiu0Ui9qgntKs9aBD/Kq4g==
+X-Received: by 2002:a5d:4d48:: with SMTP id a8mr6094375wru.246.1583954104420;
+        Wed, 11 Mar 2020 12:15:04 -0700 (PDT)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id n24sm32958496wra.61.2020.03.11.12.14.52
+        by smtp.gmail.com with ESMTPSA id c85sm9687437wmd.48.2020.03.11.12.15.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:14:52 -0700 (PDT)
+        Wed, 11 Mar 2020 12:15:03 -0700 (PDT)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
         linux-usb@vger.kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
+        jackp@codeaurora.org, robh@kernel.org,
         Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 4/7] usb: dwc3: qcom: Add support for usb-conn-gpio connectors
-Date:   Wed, 11 Mar 2020 19:14:58 +0000
-Message-Id: <20200311191501.8165-5-bryan.odonoghue@linaro.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH 2/6] arm64: dts: qcom: qcs404-evb: Define VBUS pins
+Date:   Wed, 11 Mar 2020 19:15:13 +0000
+Message-Id: <20200311191517.8221-3-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200311191501.8165-1-bryan.odonoghue@linaro.org>
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org>
+In-Reply-To: <20200311191517.8221-1-bryan.odonoghue@linaro.org>
+References: <20200311191517.8221-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,52 +77,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a routine to find a usb-conn-gpio in the main DWC3 code.
-This will be useful in a subsequent patch where we will reuse the current
-extcon VBUS notifier with usb-conn-gpio.
+Defines VBUS detect and VBUS boost for the QCS404 EVB.
+
+Detect:
+VBUS present/absent is presented to the SoC via a GPIO on the EVB. Define
+the pin mapping for later use by gpio-usb-conn.
+
+Boost:
+An external regulator is used to trigger VBUS on/off via GPIO. This patch
+defines the relevant GPIO in the EVB dts.
 
 Cc: Andy Gross <agross@kernel.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Acked-by: Felipe Balbi <balbi@kernel.org>
 Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 1dfd024cd06b..6f4b2b3cffce 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -550,6 +550,21 @@ static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
- 	.ss_phy_irq_index = 2
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 522d3ef72df5..62ef9c34b04e 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -4,6 +4,8 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include "qcs404.dtsi"
+ #include "pms405.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ 
+ / {
+ 	aliases {
+@@ -271,6 +273,26 @@ rclk {
+ 	};
  };
  
-+static bool dwc3_qcom_find_gpio_usb_connector(struct platform_device *pdev)
-+{
-+	struct device_node	*np;
-+	bool			retval = false;
++&pms405_gpios {
++	usb_vbus_boost_pin: usb-vbus-boost-pin {
++		pinconf {
++			pins = "gpio3";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			output-low;
++			power-source = <1>;
++		};
++	};
++	usb3_vbus_pin: usb3-vbus-pin {
++		pinconf {
++			pins = "gpio12";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			input-enable;
++			bias-pull-down;
++			power-source = <1>;
++		};
++	};
++};
 +
-+	np = of_get_child_by_name(pdev->dev.of_node, "connector");
-+	if (np) {
-+		if (of_device_is_compatible(np, "gpio-usb-b-connector"))
-+			retval = true;
-+	}
-+	of_node_put(np);
-+
-+	return retval;
-+}
-+
- static int dwc3_qcom_probe(struct platform_device *pdev)
- {
- 	struct device_node	*np = pdev->dev.of_node;
+ &wifi {
+ 	status = "okay";
+ 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
 -- 
 2.25.1
 
