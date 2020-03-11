@@ -2,109 +2,149 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53323C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A1EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21852215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03FD20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="WSmMpUZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgCKAsu (ORCPT
+        id S1727729AbgCKAyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:48:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:31891 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727591AbgCKAsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:48:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 17:48:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="277172633"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Mar 2020 17:48:47 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] page-flags: fix a crash at SetPageError(THP_SWAP)
-References: <20200310235846.1319-1-cai@lca.pw>
-Date:   Wed, 11 Mar 2020 08:48:47 +0800
-In-Reply-To: <20200310235846.1319-1-cai@lca.pw> (Qian Cai's message of "Tue,
-        10 Mar 2020 19:58:46 -0400")
-Message-ID: <87pndjwwb4.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 10 Mar 2020 20:54:50 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33511 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbgCKAyu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 20:54:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c20so236461lfb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dU7rtCVt6go/gNNK8rtDCCujWIWJ/R6M8Id+CxlENYo=;
+        b=WSmMpUZsEPdj4pzVZWkKiN2YJ2Xi/GcQiJMhcJAb0574DSfV2UkfOcbsZtw64fN819
+         RWXkgIKwU851T08tcRgLSg54v9iVaGeZYkaaivk6T2m3S6m1YvP90hIvc6EhAQ8C0lNo
+         MTjDnnpP1YzW5/19aJ4rIEKxuCiL1MFm8mRrK7aHKtfpFU9RL7AnSD03Q2m4uJqn5+QZ
+         tyiF+GdemDV3kfurtm6Kt6/CSFiiWxaC4LrOEH1LyWihqsq5yivUvVXH5DHVNe8Ux5rA
+         DhBMK6hGceXQhAm+5gLO71tmopU4AAUPsI1bs3qdXLJMO62dktnNNsqPMSwu+jqdveUa
+         NECQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dU7rtCVt6go/gNNK8rtDCCujWIWJ/R6M8Id+CxlENYo=;
+        b=KiqNDZ4SdjotCzp3cyn+FG7L/occZFruvfP/LJOpoDGcPUQWKuX8LLoTFGn/B/L6oh
+         QoVoyjZEQaFCOSSV02hAco/tXBSS8X+Dfkqecs8OltQUTKB0zYhPzVvlmHCE2Mh+Mmae
+         8of6FYWOVWHKD1iMSwmJPnan1aUHmUXELrN6nPaAl5JfEAVGd/VbIW797TLtAdeq9L57
+         yggzt1C+F5SNX+8tErrBJ7d2iE7nYfXlYRo3ESfu4DAU4XDrBJsliu6lKQHS8BZv5ZFC
+         D+n2ZUs4Td5wDz9/rTuI1vMDDJmoOkC3BGeWZyWVogkVs8JajMoUKiXwdvKa6AkudslL
+         l27g==
+X-Gm-Message-State: ANhLgQ0qZ8/ZwcQLhrsp+8tXBTFs6SjkxxHtwpkT/44Z534lD6ZZH5RE
+        62t83E5dvJGqiU0I35ei69jwPw==
+X-Google-Smtp-Source: ADFU+vsXiPvXIDKQPuN/RXNRI1rzt32lyC92lEXxkc2mW2G48M5+okJRIYfpt0ctOGr7QqHYwldSVw==
+X-Received: by 2002:ac2:4565:: with SMTP id k5mr436749lfm.8.1583888087712;
+        Tue, 10 Mar 2020 17:54:47 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id k2sm5652992lfo.36.2020.03.10.17.54.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 17:54:46 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 81493100F99; Wed, 11 Mar 2020 03:54:47 +0300 (+03)
+Date:   Wed, 11 Mar 2020 03:54:47 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Cannon Matthews <cannonmatthews@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
+Message-ID: <20200311005447.jkpsaghrpk3c4rwu@box>
+References: <20200307010353.172991-1-cannonmatthews@google.com>
+ <20200309000820.f37opzmppm67g6et@box>
+ <20200309090630.GC8447@dhcp22.suse.cz>
+ <20200309153831.GK1454533@tassilo.jf.intel.com>
+ <20200309183704.GA1573@bombadil.infradead.org>
+ <CAJfu=UfPKZwqjGR5AdhFRo_je7X5q2=zpBSBQkrbh2KhYrOJiA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfu=UfPKZwqjGR5AdhFRo_je7X5q2=zpBSBQkrbh2KhYrOJiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
+On Tue, Mar 10, 2020 at 05:21:30PM -0700, Cannon Matthews wrote:
+> On Mon, Mar 9, 2020 at 11:37 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Mon, Mar 09, 2020 at 08:38:31AM -0700, Andi Kleen wrote:
+> > > > Gigantic huge pages are a bit different. They are much less dynamic from
+> > > > the usage POV in my experience. Micro-optimizations for the first access
+> > > > tends to not matter at all as it is usually pre-allocation scenario. On
+> > > > the other hand, speeding up the initialization sounds like a good thing
+> > > > in general. It will be a single time benefit but if the additional code
+> > > > is not hard to maintain then I would be inclined to take it even with
+> > > > "artificial" numbers state above. There really shouldn't be other downsides
+> > > > except for the code maintenance, right?
+> > >
+> > > There's a cautious tale of the old crappy RAID5 XOR assembler functions which
+> > > were optimized a long time ago for the Pentium1, and stayed around,
+> > > even though the compiler could actually do a better job.
+> > >
+> > > String instructions are constantly improving in performance (Broadwell is
+> > > very old at this point) Most likely over time (and maybe even today
+> > > on newer CPUs) you would need much more sophisticated unrolled MOVNTI variants
+> > > (or maybe even AVX-*) to be competitive.
+> >
+> > Presumably you have access to current and maybe even some unreleased
+> > CPUs ... I mean, he's posted the patches, so you can test this hypothesis.
+> 
+> I don't have the data at hand, but could reproduce it if strongly
+> desired, but I've also tested this on skylake and  cascade lake, and
+> we've had success running with this for a while now.
+> 
+> When developing this originally, I tested all of this compared with
+> AVX-* instructions as well as the string ops, they all seemed to be
+> functionally equivalent, and all were beat out by this MOVNTI thing for
+> large regions of 1G pages.
+> 
+> There is probably room to further optimize the MOVNTI stuff with better
+> loop unrolling or optimizations, if anyone has specific suggestions I'm
+> happy to try to incorporate them, but this has shown to be effective as
+> written so far, and I think I lack that assembly expertise to micro
+> optimize further on my own.
 
-> The commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
-> swapped out") supported writing THP to a swap device but forgot to
-> upgrade an older commit df8c94d13c7e ("page-flags: define behavior of
-> FS/IO-related flags on compound pages") which could trigger a crash
-> during THP swapping out with DEBUG_VM_PGFLAGS=y,
->
-> kernel BUG at include/linux/page-flags.h:317!
->
-> page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
-> page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c
-> index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0
-> compound_pincount:0
-> anon flags:
-> 0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
->
-> end_swap_bio_write()
->   SetPageError(page)
->     VM_BUG_ON_PAGE(1 && PageCompound(page))
->
-> <IRQ>
-> bio_endio+0x297/0x560
-> dec_pending+0x218/0x430 [dm_mod]
-> clone_endio+0xe4/0x2c0 [dm_mod]
-> bio_endio+0x297/0x560
-> blk_update_request+0x201/0x920
-> scsi_end_request+0x6b/0x4b0
-> scsi_io_completion+0x509/0x7e0
-> scsi_finish_command+0x1ed/0x2a0
-> scsi_softirq_done+0x1c9/0x1d0
-> __blk_mqnterrupt+0xf/0x20
-> </IRQ>
->
-> Fix by checking PF_NO_TAIL in those places instead.
->
-> Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Andi's point is that string instructions might be a better bet in a long
+run. You may win something with MOVNTI on current CPUs, but it may become
+a burden on newer microarchitectures when string instructions improves.
+Nobody realistically would re-validate if MOVNTI microoptimazation still
+make sense for every new microarchitecture.
 
-Good catch!  Thanks!
+> 
+> But just in general, while there are probably some ways this could be
+> made better, it does a good job so far for the workloads that are more
+> specific to 1G pages.
+> 
+> Making it work for 2MiB in a convincing general purpose way is a harder
+> problem and feels out of scope, and further optimizations can always be
+> added later on for some other things.
+> 
+> I'm working on a v2 of this patch addressing some of the nits mentioned
+> by Andrew, should have that hopefully soon.
 
-Acked-by: "Huang, Ying" <ying.huang@intel.com>
+Have you got any data for a macrobenchmark?
 
-> ---
->  include/linux/page-flags.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 1bf83c8fcaa7..77de28bfefb0 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -311,7 +311,7 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
->  
->  __PAGEFLAG(Locked, locked, PF_NO_TAIL)
->  PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
-> -PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
-> +PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
->  PAGEFLAG(Referenced, referenced, PF_HEAD)
->  	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
->  	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
+-- 
+ Kirill A. Shutemov
