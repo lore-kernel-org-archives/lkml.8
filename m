@@ -2,112 +2,154 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132A4C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E22C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8F521D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33CC21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pVx/8nb2"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Fv5Iqnyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgCKNwQ (ORCPT
+        id S1729829AbgCKNwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:52:16 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36828 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbgCKNwN (ORCPT
+        Wed, 11 Mar 2020 09:52:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37421 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729816AbgCKNwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:52:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583934707; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CoA7xlA0w+953l1MsfjjT/sDgjQ3qpKDYEH1X6p3aGM=;
-        b=pVx/8nb2vj09o7vHt4BFglowN4kDvaJ6k60RGK2hCHqrjcKZNz1bsht2S6R1PmGq3rAjxl
-        U3qfUgX1HbnKZKQEv//SK6KGjG8CHW9iJ1ouf8lj7GMXLj6sNMcmHbxL8EIXPHaSY9sf3n
-        6wa8JDIBqYyecZKyBYwhDqU6PHYipg4=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bin Liu <b-liu@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 5/5] usb: musb: jz4740: Add support for the JZ4770
-Date:   Wed, 11 Mar 2020 14:51:33 +0100
-Message-Id: <20200311135133.16392-5-paul@crapouillou.net>
-In-Reply-To: <20200311135133.16392-1-paul@crapouillou.net>
-References: <20200311135133.16392-1-paul@crapouillou.net>
+        Wed, 11 Mar 2020 09:52:43 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a141so2229960wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=rxH11306lWeDbP7QaiW9KYqcGSQz8G6vvv/cRVSV/WM=;
+        b=Fv5Iqnyn1gdF978L/4cLKCAkNKGWgjBiwOreoEv3QaRNWO/9DU7Xs2ybmv7z3AGE1u
+         nZ1rX5+bKy8apT8M5SzmjL7GBXPTR24m4NqPPubcDE8cFOq+FabTGxkPWqW6xOteisLR
+         bTZx34JTds4l88bNzgi6++PQ+lhHGZw6spHno=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=rxH11306lWeDbP7QaiW9KYqcGSQz8G6vvv/cRVSV/WM=;
+        b=AeqyWTq50CCycctHuTy47P/xaBV+xYcBvLCa5fEs1XBl87UJ4MAP2B0CjFWE8YY636
+         MMPWOwpyl7ffohir2KB2IW4YOCnatu2YMF6unlCOtVAkRgUmrdFi3ofiE+cmqSoAmXgD
+         SReFZbUPMrTrCYmiD6AiC44EqikZWRDZ7YeUbnaJZ8UgIOTqugHfgbqRDhWMpdqfTbQA
+         QG1XPVTnfojA46DPbNZxne8e+e9Rqrhk0870zjJOFK0ps/v9zewLOxvAMfr+FFqa5T2p
+         HGZa5Nep2n3WK3qqikLqg9dliNXVdhiacH34jw2VWvDPccuBgZtNn0ayzuLEYrR3W6cR
+         j0kA==
+X-Gm-Message-State: ANhLgQ3DW0PdxUdNvbj+BgrSFKh/YOBJ3pxm79tX1ih3CpzdclszdLDP
+        s3buTaQuBOD90XPRm9TGamzfjg==
+X-Google-Smtp-Source: ADFU+vuo+4xqkMzJGeG6/6DyfbLS3Y3jsPMS2HMgekvRv41TjxsVjFE/ARVg3j+ncuoQDcnGNjCfmQ==
+X-Received: by 2002:a7b:ce0d:: with SMTP id m13mr3766203wmc.135.1583934761107;
+        Wed, 11 Mar 2020 06:52:41 -0700 (PDT)
+Received: from cloudflare.com ([176.221.114.230])
+        by smtp.gmail.com with ESMTPSA id w1sm7920404wmc.11.2020.03.11.06.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 06:52:40 -0700 (PDT)
+References: <20200310174711.7490-1-lmb@cloudflare.com> <20200310174711.7490-6-lmb@cloudflare.com>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        kernel-team@cloudflare.com, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] bpf: sockmap, sockhash: test looking up fds
+In-reply-to: <20200310174711.7490-6-lmb@cloudflare.com>
+Date:   Wed, 11 Mar 2020 14:52:39 +0100
+Message-ID: <87wo7rxal4.fsf@cloudflare.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for probing the jz4740-musb driver on the JZ4770 SoC.
+On Tue, Mar 10, 2020 at 06:47 PM CET, Lorenz Bauer wrote:
+> Make sure that looking up an element from the map succeeds,
+> and that the fd is valid by using it an fcntl call.
+>
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
+>  .../selftests/bpf/prog_tests/sockmap_listen.c | 26 ++++++++++++++-----
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+> index 52aa468bdccd..929e1e77ecc6 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+> @@ -453,7 +453,7 @@ static void test_lookup_after_delete(int family, int sotype, int mapfd)
+>  	xclose(s);
+>  }
+>
+> -static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+> +static void test_lookup_fd(int family, int sotype, int mapfd)
+>  {
+>  	u32 key, value32;
+>  	int err, s;
+> @@ -466,7 +466,7 @@ static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+>  			       sizeof(value32), 1, 0);
+>  	if (mapfd < 0) {
+>  		FAIL_ERRNO("map_create");
+> -		goto close;
+> +		goto close_sock;
+>  	}
+>
+>  	key = 0;
+> @@ -475,11 +475,25 @@ static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+>
+>  	errno = 0;
+>  	err = bpf_map_lookup_elem(mapfd, &key, &value32);
+> -	if (!err || errno != ENOSPC)
+> -		FAIL_ERRNO("map_lookup: expected ENOSPC");
+> +	if (err) {
+> +		FAIL_ERRNO("map_lookup");
+> +		goto close_map;
+> +	}
+>
+> +	if ((int)value32 == s) {
+> +		FAIL("return value is identical");
+> +		goto close;
+> +	}
+> +
+> +	err = fcntl(value32, F_GETFD);
+> +	if (err == -1)
+> +		FAIL_ERRNO("fcntl");
 
-The USB IP in the JZ4770 works the same Inventra IP as for the JZ4740,
-but it features more endpoints, and officially supports OTG.
+I would call getsockopt()/getsockname() to assert that the FD lookup
+succeeded.  We want to know not only that it's an FD (-EBADFD case), but
+also that it's associated with a socket (-ENOTSOCK).
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+We can go even further, and compare socket cookies to ensure we got an
+FD for the expected socket.
 
-Notes:
-    v2-v3: No change
+Also, I'm wondering if we could keep the -ENOSPC case test-covered by
+temporarily dropping NET_ADMIN capability.
 
- drivers/usb/musb/jz4740.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index 22eebe43ae1e..e64dd30e80e7 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -163,6 +163,33 @@ static const struct musb_hdrc_platform_data jz4740_musb_pdata = {
- 	.platform_ops	= &jz4740_musb_ops,
- };
- 
-+static struct musb_fifo_cfg jz4770_musb_fifo_cfg[] = {
-+	{ .hw_ep_num = 1, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 1, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 3, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 3, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 4, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 4, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 5, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 5, .style = FIFO_RX, .maxpacket = 512, },
-+};
-+
-+static struct musb_hdrc_config jz4770_musb_config = {
-+	.multipoint	= 1,
-+	.num_eps	= 11,
-+	.ram_bits	= 11,
-+	.fifo_cfg	= jz4770_musb_fifo_cfg,
-+	.fifo_cfg_size	= ARRAY_SIZE(jz4770_musb_fifo_cfg),
-+};
-+
-+static const struct musb_hdrc_platform_data jz4770_musb_pdata = {
-+	.mode		= MUSB_PERIPHERAL, /* TODO: support OTG */
-+	.config		= &jz4770_musb_config,
-+	.platform_ops	= &jz4740_musb_ops,
-+};
-+
- static int jz4740_probe(struct platform_device *pdev)
- {
- 	struct device			*dev = &pdev->dev;
-@@ -250,6 +277,7 @@ static int jz4740_remove(struct platform_device *pdev)
- 
- static const struct of_device_id jz4740_musb_of_match[] = {
- 	{ .compatible = "ingenic,jz4740-musb", .data = &jz4740_musb_pdata },
-+	{ .compatible = "ingenic,jz4770-musb", .data = &jz4770_musb_pdata },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, jz4740_musb_of_match);
--- 
-2.25.1
-
+> +
+> +close:
+> +	xclose(value32);
+> +close_map:
+>  	xclose(mapfd);
+> -close:
+> +close_sock:
+>  	xclose(s);
+>  }
+>
+> @@ -1456,7 +1470,7 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
+>  		/* lookup */
+>  		TEST(test_lookup_after_insert),
+>  		TEST(test_lookup_after_delete),
+> -		TEST(test_lookup_32_bit_value),
+> +		TEST(test_lookup_fd),
+>  		/* update */
+>  		TEST(test_update_existing),
+>  		/* races with insert/delete */
