@@ -2,89 +2,80 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FEEC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A9EC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D79F222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583917615;
-	bh=bl70ZTDTBge6jnrLfGymPXU8SZtUF9eRxaWa5J+K1hc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gZDTJK3iCy2qaHBh8QFg3Ez+Drde0Jzob5Rpw4J0vvkjOICnhQQZ/VKiCMWNSkGSZ
-	 70Du0l473VQIqzWBmUNPvEDdaKugdBrydp36YK+Yi4rxWdOz/+w8OeLqq+wB17XhPM
-	 6M+wiDxTANAfdCzDxbXTd70OQ0LLwVKV+qRutjB0=
+	by mail.kernel.org (Postfix) with ESMTP id 018A9208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgCKJGy (ORCPT
+        id S1728848AbgCKJIC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45240 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 05:08:02 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37994 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCKJGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:06:53 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BBDE2192A;
-        Wed, 11 Mar 2020 09:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583917612;
-        bh=bl70ZTDTBge6jnrLfGymPXU8SZtUF9eRxaWa5J+K1hc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aNw2LHdEFw/xpNtVwu2diZ3DRw+K+MH0wUGaGW/1+kXqIiJdFyOFWYI0OSfjRWrn4
-         vifhKaDjZQLTumfVGM1bpw1aX1cX0RjsO0y51ws7FEH7Gu2kKgDcjROJ6oRdOFpx2M
-         504YdyX1JF09LzSjpbqvzLlFrbzOv+SAWxGDa2MA=
-Date:   Wed, 11 Mar 2020 17:06:47 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] drivers: soc: Fix COMPILE_TEST for IMX SCU
-Message-ID: <20200311090646.GJ29269@dragon>
-References: <20200306113119.56577-1-vincenzo.frascino@arm.com>
+        id S1726934AbgCKJIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:08:01 -0400
+Received: from p5b127c69.dip0.t-ipconnect.de ([91.18.124.105] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jBxLH-0000Xw-Dr; Wed, 11 Mar 2020 10:07:55 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] ARM: dts: rockchip: fix vqmmc-supply property name for rk3188-bqedison2qc
+Date:   Wed, 11 Mar 2020 10:07:54 +0100
+Message-ID: <37714750.JZCpAI0Cju@phil>
+In-Reply-To: <20200307134841.13803-1-jbx6244@gmail.com>
+References: <20200307134841.13803-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306113119.56577-1-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 11:31:19AM +0000, Vincenzo Frascino wrote:
-> IMX SCU SoCs support COMPILE_TEST that allows to compile the driver on a
-> different platform for development purposes.
-> These SoCs depend on a firmware interface that is not built on COMPILE_TEST
-> mode. This results in triggering the following errors at compile time (on
-> arm64):
+Am Samstag, 7. März 2020, 14:48:37 CET schrieb Johan Jonker:
+> A test with the command below does not detect all errors
+> in combination with 'additionalProperties: false' and
+> allOf:
+>   - $ref: "synopsys-dw-mshc-common.yaml#"
+> allOf:
+>   - $ref: "mmc-controller.yaml#"
 > 
-> aarch64-none-linux-gnu-ld:
-> drivers/soc/imx/soc-imx-scu.o: in function `imx_scu_soc_probe':
-> soc-imx-scu.c:(.text+0x24): undefined reference to `imx_scu_get_handle'
-> aarch64-none-linux-gnu-ld:
-> soc-imx-scu.c:(.text+0xac): undefined reference to `imx_scu_call_rpc'
-> aarch64-none-linux-gnu-ld:
-> soc-imx-scu.c:(.text+0xd8): undefined reference to `imx_scu_call_rpc'
-> linux/Makefile:1078: recipe for target 'vmlinux' failed
-> make[1]: *** [vmlinux] Error 1
-> Makefile:180: recipe for target 'sub-make' failed
-> make: *** [sub-make] Error 2
+> 'additionalProperties' applies to all properties that are not
+> accounted-for by 'properties' or 'patternProperties' in
+> the immediate schema.
 > 
-> Enable the relevant compilation units in the Makefile when the config option
-> is selected to address the issue.
+> First when we combine rockchip-dw-mshc.yaml,
+> synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
+> this error:
 > 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: mmc@10218000:
+> 'vmmcq-supply' does not match any of the regexes:
+> '^.*@[0-9]+$',
+> '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
+> uhs-(sdr(12|25|50|104)|ddr50))$',
+> 'pinctrl-[0-9]+'
+> 
+> 'vmmcq-supply' is not a valid property name for mmc nodes.
+> Fix this error by renaming it to 'vqmmc-supply'.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Thanks for the patch.  But we already queued Peng's version [1].
+applied all 5 for 5.7
 
-Shawn
+Thanks
+Heiko
 
-[1] https://www.spinics.net/lists/arm-kernel/msg787548.html
+
