@@ -2,92 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA081C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCECBC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAB5222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD4E222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J1ZrczZY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UrOQhSD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgCKMK1 (ORCPT
+        id S1729290AbgCKMKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:10:27 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:35624 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgCKMK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:10:27 -0400
-Received: by mail-vk1-f201.google.com with SMTP id g131so864532vke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=YodtrD4c+iO7ZsJ4tIPUxivxHJJzFvG5BVbI/GfdvIo=;
-        b=J1ZrczZYyKxvFWBu8yTxaf9m6NkUPWLsq7MPPdcAPmS4BQvlawnfj3YdNYsP+NLm/Q
-         OocU4IG/wQBnHMTCMvFWfX1ICUioZd7YQI6I7vYv7n7eQ6pmeYgWtesaZa2BmkxXsKIl
-         /4zKR/Fae2B/ol+C9cbkMc5mUv1z3BX++G2NYuusSI3o/6y+iSlDK59oAd5b7pa2uS01
-         /yyKqZQeie4VBAYfa6Ew6IP026mKYS7PemDiWkAcf833/XxE8N4he/Fp7I87v3HuvEDM
-         5zEXKMAFivjA/golRRKhrTQ+SGE85WEbqcOuEMqBRuKAdYhhuBGGTheWkQoHtKpjlA8Z
-         XFSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=YodtrD4c+iO7ZsJ4tIPUxivxHJJzFvG5BVbI/GfdvIo=;
-        b=MowGE4rp5hV8l70h5R/oTnAkkfT+Bi0F+1EtCG4RzHpDijEt/kiFbZKE4UNY2TM9jX
-         mfVzQlenQ8Q8+vLSrRBCwMKEsXJ3GV6nej69FqEExEIUDvtXXAEjJZXFA+AkNaSW9rOv
-         6WeZ4AIQnvBMc1OOAUOXEV/w9gLtVbwbztxr4XUwkyOmek1eEQvBUw9tp91E+IgesaOA
-         mUiyVUWvjrRe4ptfCB7jbVWhbyO8ZjBCmrfi0LJaawRUHCpRRZzSjy5NBv+ExmiqfwV/
-         kochlTv44600ulnwwlLfr9V69FL2vmbI22XeeynLA6zCFa8XwPA+lmd/KcEVnrIPveBt
-         BxIg==
-X-Gm-Message-State: ANhLgQ1GM8J1v6cWTu+xbbEtQ7cUXb/6mxfuR8QXiF0uLfbPoEaSZqJU
-        IdHP6DTFiDYw2hgK9HQ+S78nLKQq3Jk=
-X-Google-Smtp-Source: ADFU+vtvNwvld4hNXzu4dHEiNmN0mWLQk9delEO/J3qN4PY2cdXlyrvp1yUpGauRN780SIUAj56UlqOcPjs=
-X-Received: by 2002:ab0:2a0c:: with SMTP id o12mr1404538uar.72.1583928625509;
- Wed, 11 Mar 2020 05:10:25 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 13:10:02 +0100
-Message-Id: <20200311121002.241430-1-glider@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH 1/2] nds32: linker script: add SOFTIRQENTRY_TEXT
-From:   glider@google.com
-To:     green.hu@gmail.com, deanbo422@gmail.com
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        Alexander Potapenko <glider@google.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Mar 2020 08:10:35 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57152 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729130AbgCKMKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:10:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=RGRedE7yQEY4gTaGAIkq3EmD+XbZElrK80vPnapDIPI=; b=UrOQhSD3l9KySCzVTkWXrGdcRz
+        a6RfvhjpNNPjVDknvXKKbvacnMmqncrxAY4cHQhY8b3rB4mk9ienutLmQP8IJPUoa/w9qtcwnorUK
+        p1KgCJnn5t52ntkvc/7QMCEfLhst1xqljxpTsx/gPnFr2IUVkMmjAlttWmlaylxi3+kQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jC0Bo-0003L7-0F; Wed, 11 Mar 2020 13:10:20 +0100
+Date:   Wed, 11 Mar 2020 13:10:19 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     davem@davemloft.net, josua@solid-run.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mvmdio: avoid error message for optional IRQ
+Message-ID: <20200311121019.GH5932@lunn.ch>
+References: <20200311024131.1289-1-chris.packham@alliedtelesis.co.nz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311024131.1289-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This section is required for lib/stackdepot.c to link, as
-filter_irq_stacks() accesses __softirqentry_text_start and
-__softirqentry_text_end.
+On Wed, Mar 11, 2020 at 03:41:30PM +1300, Chris Packham wrote:
+> Per the dt-binding the interrupt is optional so use
+> platform_get_irq_optional() instead of platform_get_irq(). Since
+> commit 7723f4c5ecdb ("driver core: platform: Add an error message to
+> platform_get_irq*()") platform_get_irq() produces an error message
+> 
+>   orion-mdio f1072004.mdio: IRQ index 0 not found
+> 
+> which is perfectly normal if one hasn't specified the optional property
+> in the device tree.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  drivers/net/ethernet/marvell/mvmdio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
+> index 0b9e851f3da4..d14762d93640 100644
+> --- a/drivers/net/ethernet/marvell/mvmdio.c
+> +++ b/drivers/net/ethernet/marvell/mvmdio.c
+> @@ -347,7 +347,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
+>  	}
+>  
+>  
+> -	dev->err_interrupt = platform_get_irq(pdev, 0);
+> +	dev->err_interrupt = platform_get_irq_optional(pdev, 0);
+>  	if (dev->err_interrupt > 0 &&
+>  	    resource_size(r) < MVMDIO_ERR_INT_MASK + 4) {
+>  		dev_err(&pdev->dev,
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexander Potapenko <glider@google.com>
----
- arch/nds32/kernel/vmlinux.lds.S | 1 +
- 1 file changed, 1 insertion(+)
+Hi Chris
 
-diff --git a/arch/nds32/kernel/vmlinux.lds.S b/arch/nds32/kernel/vmlinux.lds.S
-index f679d33974366..7a6c1cefe3fe5 100644
---- a/arch/nds32/kernel/vmlinux.lds.S
-+++ b/arch/nds32/kernel/vmlinux.lds.S
-@@ -47,6 +47,7 @@ SECTIONS
- 		LOCK_TEXT
- 		KPROBES_TEXT
- 		IRQENTRY_TEXT
-+		SOFTIRQENTRY_TEXT
- 		*(.fixup)
- 	}
- 
--- 
-2.25.1.481.gfbce0eb801-goog
+This is the minimum fix. So:
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+However, you could also simplify
+
+        } else if (dev->err_interrupt == -EPROBE_DEFER) {
+                ret = -EPROBE_DEFER;
+                goto out_mdio;
+        }
+
+
+to just
+
+        } else {
+                ret = dev->err_interrupt;
+                goto out_mdio;
+        }
+
+    Andrew
