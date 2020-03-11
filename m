@@ -2,202 +2,100 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A996C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CA0C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9D921655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF8F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583907148;
+	bh=vamP7d+KnGr3p/Y17yl3FP+noKI2Kol6BSNnY5Hhrdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ibOPF6qGhxX+SnvX8RT62Mdj+a9U+WPuS7sGyKa5FNfooWZWUI8KPZl0XRYr0OnuR
+	 8baxkUlWwfMolsqRB0s0R1rehY0NRmBRakVnBy1cAY0HBEnQqP6EPfq3YDbVEXPwpR
+	 P3aBYGZOmenTwM7UCeTgKlCDqFCIxJFnAg4jYWeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgCKGMD convert rfc822-to-8bit (ORCPT
+        id S1728167AbgCKGM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:12:03 -0400
-Received: from mail-vi1eur05olkn2099.outbound.protection.outlook.com ([40.92.90.99]:43233
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726160AbgCKGMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:12:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fyeVOP+zgVlCJQbCBDx+B116RNep18NgrU9htCv7ST+MJOSVg8cwp9ZIB3hkP2NBI7ShqF90TGI5jaRfds3rKmY24FSo69jKcQZFBtREIw5PxtTjw/D+Qdhej0JG1O52zoQYNz0mvnPOJslAh6CU8P3k6tGkOMTTaf6e0o1kCgg5Y/ASDaZShUbzwVxRy2I9Hisz/yPXLhmw6kS1ihn7IgZRiH7zriqxhf4lVjbBO5n3Bhhsc4sXPLQCO/maN7MFr2tkrdMaAKAE7eZbbv/2nzOeP/NIpyoweNq2z2za/g+pHZBFycXbWKKhRFYRZDFkIzLW3ft6G+BmCvRqJeH9Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CG2lVs5buT64yAQDQfrF4BRc4UVsw/DyRi3By56IKCM=;
- b=dXG89GsJ0Y9X6eSav4NaS4dlDwH33LKl14VfSg3sCpJfO7dhjQydJOWPkBO2yxwT7qkPT3ebDzhJ0UcAaWiTEGNLsUqTu5S5Mli726h4G0QxhIe02F+bdNVoVPraCmQ7W5Ym0HIsuQYzp3ZkJo2vNlsrTB6ZavL8lhiV22dmswkYLMs3kj6kmvN25EMgfxZwB2SLYsjJFmHPI4lc9G9CAsg3gROjWpogx9N0G8ylCv0CgG1MIyjnQVwl7NZV/+sIambLiKGPsWpg8mW5VBJKoW/SNg0VEf7YCzkiiz91vLiPnsTOuEXzSHgcdVcn4/Krr+2LHg/pVmSe2TwiYnLqyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB8EUR05FT054.eop-eur05.prod.protection.outlook.com
- (2a01:111:e400:fc0f::38) by
- DB8EUR05HT078.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::64)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Wed, 11 Mar
- 2020 06:11:57 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.238.51) by
- DB8EUR05FT054.mail.protection.outlook.com (10.233.238.111) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13 via Frontend Transport; Wed, 11 Mar 2020 06:11:57 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
- 06:11:57 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "jannh@google.com" <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "duyuyang@gmail.com" <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "christian@kellner.me" <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "sargun@sargun.me" <sargun@sargun.me>
-Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
-Thread-Topic: [PATCH] pidfd: Stop taking cred_guard_mutex
-Thread-Index: AQHV9w1dmrKXzF1nwkisARGyb9pH3qhCMseAgAADrsOAAAiGgIAAAvGAgAADRYCAABelgA==
-Date:   Wed, 11 Mar 2020 06:11:57 +0000
-Message-ID: <5a8b2794-b498-af33-1327-ff2861cff83f@hotmail.de>
-References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
- <20200309195909.h2lv5uawce5wgryx@wittgenstein>
- <877dztz415.fsf@x220.int.ebiederm.org>
- <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
- <87k13txnig.fsf@x220.int.ebiederm.org>
- <20200310085540.pztaty2mj62xt2nm@wittgenstein>
- <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
- <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
- <87k13sui1p.fsf@x220.int.ebiederm.org>
- <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
- <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
- <AM6PR03MB5170AF454A8A9C37891B12B2E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB5170AF454A8A9C37891B12B2E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-imapappendstamp: AM6PR03MB5170.eurprd03.prod.outlook.com
- (15.20.2793.013)
-x-incomingtopheadermarker: OriginalChecksum:E45BB2544C586090C38E17B315A565CEFA66D1F593396D52DAAE1552D59B5643;UpperCasedChecksum:2881F61324411814D5BD39D5E91F8B9BFFC3FB3659E7CFB2B10D286FB4DA4128;SizeAsReceived:9446;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [eh/3gyuvAApi+J5fKmcZx0IZizg7sx9B]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 6ad72773-1414-481b-1f48-08d7c5831a75
-x-ms-traffictypediagnostic: DB8EUR05HT078:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NfTADmGC1X+ro3AgRFa5jiXEPF/PZbjhVW3gyBcdaIVOtPvcqdXzCg8gJ+m3xR2dnLJ0fSskghFTCcGwt0LlrCCjGvieDSKzEKG47Ka2YwgLypxbw3Axkj+pRYJZiYDZYuJu1BEi0b9Mc13mUn44FbCSixv41dxO8slYF0XYE6i42RvEIW7WNpIZc+lb5zSY
-x-ms-exchange-antispam-messagedata: RlAc0obM4Rtx1hnUd47wm4nKK7N3WXtMU16xqSFI+VJJzdrEQjVPzeNO54iVuvlsGTyCas3uLCavV9d+1NnwqwRScf2SzP3TnPtLjqBrOCyk3Tt5kEeEHjNreDrWZtsQia6cDyoVRCs0DCr2cC2M9w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <FC9F08256EEC25479D356BD08BCB1DED@sct-15-20-2387-20-msonline-outlook-45755.templateTenant>
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Mar 2020 02:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbgCKGMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:12:25 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9CA208C4;
+        Wed, 11 Mar 2020 06:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583907145;
+        bh=vamP7d+KnGr3p/Y17yl3FP+noKI2Kol6BSNnY5Hhrdw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WSsAwIOZyHa/yhRXc4BWgxfY/x1VkRyVWZyUUjUoiDxRASFO77bfNYrekZ7ggUxzZ
+         +8h2ItRnouwujq5NTCwhtxtfjjCto/ERQInWTzSF3vukyP5VbnXLSOAp3XlC8d1hyV
+         FiWOcVGLr2te0d1TpV0LLJ1XwxqvMLcVj4fMUuAU=
+Date:   Wed, 11 Mar 2020 14:12:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/15] arm64: defconfig: Enable QorIQ cpufreq driver
+Message-ID: <20200311061220.GB29269@dragon>
+References: <1582585690-463-1-git-send-email-leoyang.li@nxp.com>
+ <1582585690-463-8-git-send-email-leoyang.li@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ad72773-1414-481b-1f48-08d7c5831a75
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 06:11:57.0825
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582585690-463-8-git-send-email-leoyang.li@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 9:22 PM, Bernd Edlinger wrote:
-> On 3/10/20 9:10 PM, Jann Horn wrote:
->> On Tue, Mar 10, 2020 at 9:00 PM Jann Horn <jannh@google.com> wrote:
->>> On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>>> Jann Horn <jannh@google.com> writes:
->>>>> On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>>>>> During exec some file descriptors are closed and the files struct is
->>>>>> unshared.  But all of that can happen at other times and it has the
->>>>>> same protections during exec as at ordinary times.  So stop taking the
->>>>>> cred_guard_mutex as it is useless.
->>>>>>
->>>>>> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
->>>>>> prone, as it is held in serveral while waiting possibly indefinitely
->>>>>> for userspace to do something.
->> [...]
->>>>> If you make this change, then if this races with execution of a setuid
->>>>> program that afterwards e.g. opens a unix domain socket, an attacker
->>>>> will be able to steal that socket and inject messages into
->>>>> communication with things like DBus. procfs currently has the same
->>>>> race, and that still needs to be fixed, but at least procfs doesn't
->>>>> let you open things like sockets because they don't have a working
->>>>> ->open handler, and it enforces the normal permission check for
->>>>> opening files.
->>>>
->>>> It isn't only exec that can change credentials.  Do we need a lock for
->>>> changing credentials?
->> [...]
->>>> If we need a lock around credential change let's design and build that.
->>>> Having a mismatch between what a lock is designed to do, and what
->>>> people use it for can only result in other bugs as people get confused.
->>>
->>> Hmm... what benefits do we get from making it a separate lock? I guess
->>> it would allow us to make it a per-task lock instead of a
->>> signal_struct-wide one? That might be helpful...
->>
->> But actually, isn't the core purpose of the cred_guard_mutex to guard
->> against concurrent credential changes anyway? That's what almost
->> everyone uses it for, and it's in the name...
->>
+On Mon, Feb 24, 2020 at 05:08:02PM -0600, Li Yang wrote:
+> Enables the generic QorIQ cpufreq driver to support frequency scaling
+> for various QorIQ SoCs.  Enabled as built-in as it is a core feature.
 > 
-> The main reason d'etre of exec_update_mutex is to get a consitent
-> view of task->mm and task credentials.
-> > The reason why you want the cred_guard_mutex, is that some action
-> is changing the resulting credentials that the execve is about
-> to install, and that is the data flow in the opposite direction.
+> Signed-off-by: Li Yang <leoyang.li@nxp.com>
+> ---
+>  arch/arm64/configs/defconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index e97ef8b944b8..996dc749ea5c 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -90,6 +90,7 @@ CONFIG_ARM_QCOM_CPUFREQ_NVMEM=y
+>  CONFIG_ARM_QCOM_CPUFREQ_HW=y
+>  CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
+>  CONFIG_ARM_TEGRA186_CPUFREQ=y
+> +CONFIG_QORIQ_CPUFREQ=y
+>  CONFIG_ARM_SCPI_PROTOCOL=y
+>  CONFIG_RASPBERRYPI_FIRMWARE=y
+>  CONFIG_INTEL_STRATIX10_SERVICE=y
+> @@ -722,7 +723,6 @@ CONFIG_COMMON_CLK_RK808=y
+>  CONFIG_COMMON_CLK_SCPI=y
+>  CONFIG_COMMON_CLK_CS2000_CP=y
+>  CONFIG_COMMON_CLK_S2MPS11=y
+> -CONFIG_CLK_QORIQ=y
 
-So in other words, you need the exec_update_mutex when you
-access another thread's credentials and possibly the mmap at the
-same time.
+Why is this getting removed?
 
-You need the cred_guard_mutex when you *change* the credentials
-of another thread.  (Where you cannot be sure that the other thread
-just started to execve something)
+Shawn
 
-You need no mutex at all when you are just accessing or
-even changing the credentials of the current thread.  (If another
-thread is doing execve, your task will be killed, and wether
-or not the credentials were changed does not matter any more)
-
+>  CONFIG_COMMON_CLK_PWM=y
+>  CONFIG_CLK_RASPBERRYPI=m
+>  CONFIG_CLK_IMX8MM=y
+> -- 
+> 2.17.1
 > 
-> Bernd.
 > 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
