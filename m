@@ -2,177 +2,126 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AA9C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13983C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CD320866
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J2DX4Bve"
+	by mail.kernel.org (Postfix) with ESMTP id E05E720848
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583915263;
+	bh=YA9GhQZV5L6bynEq7gS0i8wlNt1x1Jqt9yMiyPHrT8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x7nrSKEtt4cY2tgriLHazvIvzFIo/mm/yyZoJfl0lgBzFF8AnigtWTeqEDrcQA+h5
+	 Ct7PI1U2aL/BENPCrzU596kOuB1jKkHuyS21+FwQ/lotVCNlRz3X46lfLk8OZ5bx1E
+	 CfZEc3vshK3bnGz6EyMqMBLTGv24TbdvKcLI0CpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgCKI1M (ORCPT
+        id S1728556AbgCKI1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:27:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39476 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgCKI1L (ORCPT
+        Wed, 11 Mar 2020 04:27:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55436 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgCKI1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:27:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f10so1293565ljn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NWQU7YCcR/s5BfakGwEM5MbP1hNswxlqWffpTanXogY=;
-        b=J2DX4Bveq98DNDNLQytIzyqNO5U/1AlZAea10CrmXpFd7AVX90yX5Tdtt+c1ZwmWBZ
-         fnvYHqNq/BJufaeH84JB+sQjUiXLFXeaTifVEvrmHuiDonL/w9rW4NDoo9gCju2Dl/uo
-         92ROgYAY+nNd2sqIH4YekmH8HwlZ6JuBBRQsWxmOiiilOB9ivaFB5mgwNHFSOq6GqvmG
-         XYAEumikhY4sYyW8zmTqNh2JpUimiMOYo4K1+CWkHjkpq5kQobVPWERlz52TuW7OzqND
-         D5qGNapWdFpE4kihUbV51Sbe3VJveaBctzaZgQREo6+0ZclVJVf1bdwNSMkGk2rPCgpc
-         fFEA==
+        Wed, 11 Mar 2020 04:27:42 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 6so1035489wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:27:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NWQU7YCcR/s5BfakGwEM5MbP1hNswxlqWffpTanXogY=;
-        b=GZAFARrrfnTLGoSqtpOXF4d4bWdvqetY7jaxoEs1Nkp/Rl3smOKk4ISTxRLOVClKFp
-         js7uh+uiZ3/c1hN7up5AEARLhchYvsSsKt26YhoO6GMAwXUMjAJR9kqnBE0nCGwVnFfe
-         OJyBR2cbpwo+jnU+soVoreg3bo53gs2jN/uXDQCaq32NLuzmG5eXVVYoWV9HATgnTOoF
-         IULUzklvnbQuLFjzMBwpEXsQ6j6REGKQ/TXWFfglOyhAoieGATt8BOmmQFkSu4SlwkA7
-         Esdo6CShkp+b+sdibNODHq+cqJCtCmwHYta7ihW+UhDcyG20vVP+b+zEM3f7X31cXe2Z
-         XD2Q==
-X-Gm-Message-State: ANhLgQ3pXmJJB4Vxh49AZERAV6FdT+T8/8D9P927/Pl/WHY/zyF1QAny
-        4Ib+a5rQwnKmRu4o7ETTqb572z0AM+GJohIAUGGUyA==
-X-Google-Smtp-Source: ADFU+vvaBLQx0v3t5e1U81RlRAcTudqkB2UQUvNAnj10TA+zBwZty+uumu0htJHaLHRRaMeDZa+YsS6rF0AAu8Ma6cs=
-X-Received: by 2002:a2e:a0cc:: with SMTP id f12mr1365444ljm.154.1583915228511;
- Wed, 11 Mar 2020 01:27:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t/jUgb2WsM9EoAjEAHRyAbPDuMelzLd2J5nybEhmsYU=;
+        b=jHuIGIPOTjRCns6e64/dXbYgRrRsDy+pS6K8S4EmExmqKFFbUgBTaLKS4L5ZwUkSzM
+         SPQn9Xlo7E6IjBDgvDbIJ+Kb0eaBIU2dSDHtm5jjesh0aZ2ks/HtL8gHNN4l8j4SHcBW
+         d/j/znw+ORjHUBrQrpgvdlbuqrqNKDRUuoyIp1OS7n8tTS3t0Mjr+atdWtVNFge92vvo
+         MJFqHvO3eUkl4/ZJ+ljSx8qy7T0+MiZyC1VprLhkuzRU+RXTyo5+y1+wiDiKeFQZU6O1
+         yV3dTWSzv238IubogBkkJbe0RPjVPd9AV5/OzTr9CbofAuhatDfPnCcnC+VqCdQ0Zr8B
+         YJlw==
+X-Gm-Message-State: ANhLgQ0dShsrGl9ByBHtY4HExhaOoiJckSJxlgeFeQ9NpPcvdFGFE2Ky
+        79mDbRyI7np5NjsORZU6sOU=
+X-Google-Smtp-Source: ADFU+vt1rzvjovs9Fqx3ZtwpZNkzPk0A8oKdn7NCmBdaEs2hWB3Vz0N8ji7oL3cMOzx5S1SulIhugw==
+X-Received: by 2002:a1c:9904:: with SMTP id b4mr2565466wme.34.1583915258992;
+        Wed, 11 Mar 2020 01:27:38 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id y184sm7683553wmd.43.2020.03.11.01.27.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 01:27:38 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 09:27:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <20200311082736.GA23944@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
+ <20200310221019.GE8447@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
 MIME-Version: 1.0
-References: <cover.1583412540.git.amit.kucheria@linaro.org> <93466e6c031c0084de09bd6b448556a6c5080880.1583412540.git.amit.kucheria@linaro.org>
-In-Reply-To: <93466e6c031c0084de09bd6b448556a6c5080880.1583412540.git.amit.kucheria@linaro.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 11 Mar 2020 09:26:56 +0100
-Message-ID: <CAKfTPtBXaVww5fdU5HpWWH1-H3dKr2s=Uvdr==wf669BtKnyvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add yaml bindings for
- thermal sensors
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 at 13:56, Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> As part of moving the thermal bindings to YAML, split it up into 3
-> bindings: thermal sensors, cooling devices and thermal zones.
->
-> The property #thermal-sensor-cells is required in each device that acts
-> as a thermal sensor. It is used to uniquely identify the instance of the
-> thermal sensor inside the system.
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  .../bindings/thermal/thermal-sensor.yaml      | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-> new file mode 100644
-> index 0000000000000..920ee7667591d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +# Copyright 2020 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/thermal-sensor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Thermal sensor binding
-> +
-> +maintainers:
-> +  - Amit Kucheria <amitk@kernel.org>
-> +
-> +description: |
-> +  Thermal management is achieved in devicetree by describing the sensor hardware
-> +  and the software abstraction of thermal zones required to take appropriate
-> +  action to mitigate thermal overloads.
-> +
-> +  The following node types are used to completely describe a thermal management
-> +  system in devicetree:
-> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-> +   - cooling-device: device used to dissipate heat either passively or artively
+On Tue 10-03-20 16:02:23, David Rientjes wrote:
+> On Tue, 10 Mar 2020, Michal Hocko wrote:
+> 
+> > > When a process is oom killed as a result of memcg limits and the victim
+> > > is waiting to exit, nothing ends up actually yielding the processor back
+> > > to the victim on UP systems with preemption disabled.  Instead, the
+> > > charging process simply loops in memcg reclaim and eventually soft
+> > > lockups.
+> > > 
+> > > Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB oom_score_adj:0
+> > > watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
+> > > CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
+> > > RIP: 0010:shrink_lruvec+0x4e9/0xa40
+> > > ...
+> > > Call Trace:
+> > >  shrink_node+0x40d/0x7d0
+> > >  do_try_to_free_pages+0x13f/0x470
+> > >  try_to_free_mem_cgroup_pages+0x16d/0x230
+> > >  try_charge+0x247/0xac0
+> > >  mem_cgroup_try_charge+0x10a/0x220
+> > >  mem_cgroup_try_charge_delay+0x1e/0x40
+> > >  handle_mm_fault+0xdf2/0x15f0
+> > >  do_user_addr_fault+0x21f/0x420
+> > >  page_fault+0x2f/0x40
+> > > 
+> > > Make sure that something ends up actually yielding the processor back to
+> > > the victim to allow for memory freeing.  Most appropriate place appears to
+> > > be shrink_node_memcgs() where the iteration of all decendant memcgs could
+> > > be particularly lengthy.
+> > 
+> > There is a cond_resched in shrink_lruvec and another one in
+> > shrink_page_list. Why doesn't any of them hit? Is it because there are
+> > no pages on the LRU list? Because rss data suggests there should be
+> > enough pages to go that path. Or maybe it is shrink_slab path that takes
+> > too long?
+> > 
+> 
+> I think it can be a number of cases, most notably mem_cgroup_protected() 
+> checks which is why the cond_resched() is added above it.  Rather than add 
+> cond_resched() only for MEMCG_PROT_MIN and for certain MEMCG_PROT_LOW, the 
+> cond_resched() is added above the switch clause because the iteration 
+> itself may be potentially very lengthy.
 
-typo: s/artively/actively/
+Was any of the above the case for your soft lockup case? How have you
+managed to trigger it? As I've said I am not against the patch but I
+would really like to see an actual explanation what happened rather than
+speculations of what might have happened. If for nothing else then for
+the future reference.
 
-> +   - thermal-zones: a container of the following node types used to describe all
-> +     thermal data for the platform
-> +
-> +  This binding describes the thermal-sensor.
-> +
-> +  Thermal sensor devices provide temperature sensing capabilities on thermal
-> +  zones. Typical devices are I2C ADC converters and bandgaps. Thermal sensor
-> +  devices may control one or more internal sensors.
-> +
-> +properties:
-> +  "#thermal-sensor-cells":
-> +    description:
-> +      Used to uniquely identify a thermal sensor instance within an IC. Will be
-> +      0 on sensor nodes with only a single sensor and at least 1 on nodes
-> +      containing several internal sensors.
-> +    enum: [0, 1]
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    // Example 1: SDM845 TSENS
-> +    soc: soc@0 {
-> +            #address-cells = <2>;
-> +            #size-cells = <2>;
-> +
-> +            /* ... */
-> +
-> +            tsens0: thermal-sensor@c263000 {
-> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> +                          <0 0x0c222000 0 0x1ff>; /* SROT */
-> +                    #qcom,sensors = <13>;
-> +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "uplow", "critical";
-> +                    #thermal-sensor-cells = <1>;
-> +            };
-> +
-> +            tsens1: thermal-sensor@c265000 {
-> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> +                          <0 0x0c223000 0 0x1ff>; /* SROT */
-> +                    #qcom,sensors = <8>;
-> +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "uplow", "critical";
-> +                    #thermal-sensor-cells = <1>;
-> +            };
-> +    };
-> +...
-> --
-> 2.20.1
->
+If this is really about all the hierarchy being MEMCG_PROT_MIN protected
+and that results in a very expensive and pointless reclaim walk that can
+trigger soft lockup then it should be explicitly mentioned in the
+changelog.
+-- 
+Michal Hocko
+SUSE Labs
