@@ -2,92 +2,136 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18571C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC8C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0586020738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583955601;
-	bh=VMxT2QHrTbpDF4vMVOmSH47H3kHkpy2JLspFU5J/RY0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=eWt32HxEMt8xsanfHD1z4Udl6obOO26fbJToFU4HVJ9oAgtS49kkrcVbrpA6uQIMN
-	 RuLBUrhsvTOO/9R472r1xM1qgSHGNZvgS+6lA5VhJGOGWztpSLsEh63/8s6gasSU00
-	 U4W93a+lzTV9c3Q0ldGUxC65ok6EfQxGo8swrnIY=
+	by mail.kernel.org (Postfix) with ESMTP id CAF1E2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDYbUc5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbgCKTj7 (ORCPT
+        id S1731199AbgCKTkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730913AbgCKTj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:39:58 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 11 Mar 2020 15:40:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40851 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731165AbgCKTkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:40:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583955599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0iJaznCc2W6ynUzCi8XYKyKVbQgxJcuIbZRmVPm98Cs=;
+        b=FDYbUc5Fb0l3MoVWXKjoymfbE5lhKYehKWVVN/q9/W+N0zFtrSX5DheAUDual40LZjFmLv
+        6yz5JAU7oSJBKOyHAuiiTh3FkG6RFPcSCmh/YYNmSwFFrkMJxc+ycVbcONWeATJp9iiVyh
+        vH8vkqouhyqpOf8Futc7QqDfaXASe7E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-3ir9tEcdPryhDjRmk-jl7w-1; Wed, 11 Mar 2020 15:39:53 -0400
+X-MC-Unique: 3ir9tEcdPryhDjRmk-jl7w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAEAF20737;
-        Wed, 11 Mar 2020 19:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583955599;
-        bh=VMxT2QHrTbpDF4vMVOmSH47H3kHkpy2JLspFU5J/RY0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=xO0n23G3AJarC0pu4GYyAz+NzOxr8qIxPFGzgu1L8H8NW6vD0RnIELhPaeTDOK5Js
-         58muMRPTirG4BZlSIjGvDeuErhuu+kRQTFg2UP8BlCidApUrp1X+fh4AXCx6GWquPu
-         Z72PmZ8QxvUBWai9JX51af5qgjidMkMRx7V47dpw=
-Subject: Re: [PATCH 4.14 000/126] 4.14.173-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200310124203.704193207@linuxfoundation.org>
- <20200311131135.GA3856613@kroah.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b9917046-393a-0314-0836-61003fd3d8e8@kernel.org>
-Date:   Wed, 11 Mar 2020 13:39:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9D85190D340;
+        Wed, 11 Mar 2020 19:39:51 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ECDA92D24;
+        Wed, 11 Mar 2020 19:39:44 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 9763222021D; Wed, 11 Mar 2020 15:39:43 -0400 (EDT)
+Date:   Wed, 11 Mar 2020 15:39:43 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, mst@redhat.com
+Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
+Message-ID: <20200311193943.GE83257@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <CAOQ4uxi_Xrf+iyP6KVugFgLOfzUvscMr0de0KxQo+jHNBCA9oA@mail.gmail.com>
+ <20200311184830.GC83257@redhat.com>
+ <CAOQ4uxjja3cReO28qOd-YGmhU-_KrLxOCaBeqZYydxPAte9_pg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311131135.GA3856613@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjja3cReO28qOd-YGmhU-_KrLxOCaBeqZYydxPAte9_pg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 7:11 AM, Greg Kroah-Hartman wrote:
-> On Tue, Mar 10, 2020 at 01:40:21PM +0100, Greg Kroah-Hartman wrote:
->> This is the start of the stable review cycle for the 4.14.173 release.
->> There are 126 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
->>
->> Responses should be made by Thu, 12 Mar 2020 12:41:42 +0000.
->> Anything received after that time might be too late.
->>
->> The whole patch series can be found in one patch at:
->> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.173-rc1.gz
->> or in the git tree and branch at:
->> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
->> and the diffstat can be found below.
+On Wed, Mar 11, 2020 at 09:32:17PM +0200, Amir Goldstein wrote:
+> On Wed, Mar 11, 2020 at 8:48 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> >
+> > On Wed, Mar 11, 2020 at 07:22:51AM +0200, Amir Goldstein wrote:
+> > > On Wed, Mar 4, 2020 at 7:01 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > This patch series adds DAX support to virtiofs filesystem. This allows
+> > > > bypassing guest page cache and allows mapping host page cache directly
+> > > > in guest address space.
+> > > >
+> > > > When a page of file is needed, guest sends a request to map that page
+> > > > (in host page cache) in qemu address space. Inside guest this is
+> > > > a physical memory range controlled by virtiofs device. And guest
+> > > > directly maps this physical address range using DAX and hence gets
+> > > > access to file data on host.
+> > > >
+> > > > This can speed up things considerably in many situations. Also this
+> > > > can result in substantial memory savings as file data does not have
+> > > > to be copied in guest and it is directly accessed from host page
+> > > > cache.
+> > > >
+> > > > Most of the changes are limited to fuse/virtiofs. There are couple
+> > > > of changes needed in generic dax infrastructure and couple of changes
+> > > > in virtio to be able to access shared memory region.
+> > > >
+> > > > These patches apply on top of 5.6-rc4 and are also available here.
+> > > >
+> > > > https://github.com/rhvgoyal/linux/commits/vivek-04-march-2020
+> > > >
+> > > > Any review or feedback is welcome.
+> > > >
+> > > [...]
+> > > >  drivers/dax/super.c                |    3 +-
+> > > >  drivers/virtio/virtio_mmio.c       |   32 +
+> > > >  drivers/virtio/virtio_pci_modern.c |  107 +++
+> > > >  fs/dax.c                           |   66 +-
+> > > >  fs/fuse/dir.c                      |    2 +
+> > > >  fs/fuse/file.c                     | 1162 +++++++++++++++++++++++++++-
+> > >
+> > > That's a big addition to already big file.c.
+> > > Maybe split dax specific code to dax.c?
+> > > Can be a post series cleanup too.
+> >
+> > How about fs/fuse/iomap.c instead. This will have all the iomap related logic
+> > as well as all the dax range allocation/free logic which is required
+> > by iomap logic. That moves about 900 lines of code from file.c to iomap.c
+> >
 > 
-> I have pushed out a -rc2 release to resolve a reported KVM problem now.
->   	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.173-rc2.gz
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Fine by me. I didn't take time to study the code in file.c
+> I just noticed is has grown a lot bigger and wasn't sure that
+> it made sense. Up to you. Only if you think the result would be nicer
+> to maintain.
 
-All clear now on rc2. The kvm problem is gone.
+I am happy to move this code to a separate file. In fact I think we could
+probably break it further into another file say dax-mapping.c or something
+like that where all the memory range allocation/reclaim logic goes and
+iomap logic remains in iomap.c.
 
-thanks,
--- Shuah
+But that's probably a future cleanup if code in this file continues to grow.
+
+Vivek
+
