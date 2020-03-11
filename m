@@ -2,117 +2,112 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E86C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95918C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4711F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618B8205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge+bTOm5"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YoXB69XD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgCKB27 (ORCPT
+        id S1727916AbgCKBa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:28:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41842 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCKB26 (ORCPT
+        Tue, 10 Mar 2020 21:30:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36730 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727506AbgCKBa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:28:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s14so455685wrt.8;
-        Tue, 10 Mar 2020 18:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=i2GXwUO3qDNgYDRB9ez8I/6iO72/MRbkR6e7aAcVV0A=;
-        b=Ge+bTOm5BYPgFpr5KskZa8tzox1HvhGVvVAdSXCMkAgacvZTQvg25yVy2z63vxWNiZ
-         wSjsxpkN6tdYJ2QpOUAd8y37Wd+4wtfDTa/bUHaBO8kHjhiqBy76RdZaTD9hOh4paPlG
-         qPi1XQskPxgRlUGUXZ8Ci3JfWuFXJdQZ9ziEbrIRsQj3E2dq9+lU+W9so7Oyx0Ef82V3
-         9+wODufvk02QtXrWBhpubnnSEsgTF9KRiL/qGWoH9mHmz5QVXQNrlSJdWQOL7htaCzGB
-         ykIJakogtGGUZW5qDxp0WKfX6liAyLMwgtWeioo5z8WJ1HhDsQk+SWLn6EbIsyK8yiEC
-         xEsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=i2GXwUO3qDNgYDRB9ez8I/6iO72/MRbkR6e7aAcVV0A=;
-        b=qXPhoihmodU6dMsez5EMThDioKgAvWkAApaHYYw4lQINlnbY9UumLILapEBTXWKm3N
-         b3do+s4q7dkOua3qLUtJYCQ2NzWD8fsSC1ej5nfL8p1Fr2V3xOMJUNOswkIuKTJqefnp
-         sf2XbZ0aCVCHFfF9ed05TjazdxTXRQjCsKrYvahYhNVVmdufjbS83ezYEzN8yxIdG3fx
-         0w1lYXRnAd2XX6848KREZq3aDL64DykUXDMXPmNR4fwqpiOqXo+FsNjMbWSbtCotdUqD
-         747hfLKhQZneWN/znfO5tG79w5DbnYc/RRlfVBlcKSQEtHO35lEtRAeGZLBWFhzxJbra
-         M4hg==
-X-Gm-Message-State: ANhLgQ0ql2yKTdCHu0ruDfTE5sjgxPlWqRBJFec6lh9/QJ/IAnB7OsKa
-        pft7fdJnsycM89sxJsUjsg==
-X-Google-Smtp-Source: ADFU+vuMDrEPIvbWT0QtIlkI3Vb5ORn9kagCSARcSjQ0D7WOfTVUMOL5UowmRsaSiG0hhio/8Gn8KQ==
-X-Received: by 2002:adf:ef0f:: with SMTP id e15mr869826wro.213.1583890137091;
-        Tue, 10 Mar 2020 18:28:57 -0700 (PDT)
-Received: from ninjahub.lan (host-2-102-15-144.as13285.net. [2.102.15.144])
-        by smtp.gmail.com with ESMTPSA id a7sm5929804wmb.0.2020.03.10.18.28.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 18:28:56 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
-Date:   Wed, 11 Mar 2020 01:28:49 +0000 (GMT)
-To:     Eric Dumazet <edumazet@google.com>
-cc:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH 3/8] tcp: Add missing annotation for
- tcp_child_process()
-In-Reply-To: <CANn89iJc9e5fQEWerHgDM1g2vp_1EEj0EntbCvccCzAyusHtdg@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.2003110127440.25519@ninjahub.org>
-References: <20200311010908.42366-1-jbi.octave@gmail.com> <20200311010908.42366-4-jbi.octave@gmail.com> <CANn89iJc9e5fQEWerHgDM1g2vp_1EEj0EntbCvccCzAyusHtdg@mail.gmail.com>
+        Tue, 10 Mar 2020 21:30:26 -0400
+X-UUID: eb7ded84783d4dce8be9535cc7fa05f2-20200311
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YjL6GvaGAfKjZb4Bd10orYHd/UlpZ+NB3DEOe0Lavh4=;
+        b=YoXB69XDWQdnyGX6KxCdgfsfteS7hA6mEy8dvqfhOxRYvyo/CEFy61t6OuaAN4NuCWiQQ0QZ+5n96W+2UwtOg6Quu2ZMbNA0SA1ld80eo1PfGjeULUQh4q64BPUcPNMwvyuC1Ct08iRLsYO1Ni3S+FZzUhMQqI/JELq86JXlPrQ=;
+X-UUID: eb7ded84783d4dce8be9535cc7fa05f2-20200311
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 376188209; Wed, 11 Mar 2020 09:30:17 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Mar 2020 09:30:15 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Mar 2020 09:30:25 +0800
+Message-ID: <1583890215.17522.3.camel@mtksdccf07>
+Subject: Re: mmotm 2020-03-03-22-28 uploaded (warning: objtool:)
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Randy Dunlap <rdunlap@infradead.org>, <akpm@linux-foundation.org>,
+        <broonie@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
+        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, <dvyukov@google.com>
+Date:   Wed, 11 Mar 2020 09:30:15 +0800
+In-Reply-To: <20200305095436.GV2596@hirez.programming.kicks-ass.net>
+References: <20200304062843.9yA6NunM5%akpm@linux-foundation.org>
+         <cd1c6bd2-3db3-0058-f3b4-36b2221544a0@infradead.org>
+         <20200305081717.GT2596@hirez.programming.kicks-ass.net>
+         <20200305081842.GB2619@hirez.programming.kicks-ass.net>
+         <1583399782.17146.14.camel@mtksdccf07>
+         <20200305095436.GV2596@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 8D5D6D17B14E3DAC78B6AD865BB500C3DE8345FEE21D4308EE916AB05D77B12C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the feedbacks. Good to know I have not used lockdep but I will 
-try it.
+T24gVGh1LCAyMDIwLTAzLTA1IGF0IDEwOjU0ICswMTAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
+Cj4gT24gVGh1LCBNYXIgMDUsIDIwMjAgYXQgMDU6MTY6MjJQTSArMDgwMCwgV2FsdGVyIFd1IHdy
+b3RlOg0KPiA+IE9uIFRodSwgMjAyMC0wMy0wNSBhdCAwOToxOCArMDEwMCwgUGV0ZXIgWmlqbHN0
+cmEgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIE1hciAwNSwgMjAyMCBhdCAwOToxNzoxN0FNICswMTAw
+LCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gPiA+ID4gT24gV2VkLCBNYXIgMDQsIDIwMjAgYXQg
+MDk6MzQ6NDlBTSAtMDgwMCwgUmFuZHkgRHVubGFwIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+ID4g
+bW0va2FzYW4vY29tbW9uLm86IHdhcm5pbmc6IG9ianRvb2w6IGthc2FuX3JlcG9ydCgpKzB4MTM6
+IGNhbGwgdG8gcmVwb3J0X2VuYWJsZWQoKSB3aXRoIFVBQ0NFU1MgZW5hYmxlZA0KPiA+ID4gPiAN
+Cj4gPiA+ID4gSSB1c2VkIG5leHQvbWFzdGVyIGluc3RlYWQsIGFuZCBmb3VuZCB0aGUgYmVsb3cg
+YnJva2VuIGNvbW1pdA0KPiA+ID4gPiByZXNwb25zaWJsZSBmb3IgdGhpcy4NCj4gPiA+IA0KPiA+
+ID4gPiBAQCAtNjM0LDEyICs2MzcsMjAgQEAgdm9pZCBrYXNhbl9mcmVlX3NoYWRvdyhjb25zdCBz
+dHJ1Y3Qgdm1fc3RydWN0ICp2bSkNCj4gPiA+ID4gICNlbmRpZg0KPiA+ID4gPiAgDQo+ID4gPiA+
+ICBleHRlcm4gdm9pZCBfX2thc2FuX3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBz
+aXplLCBib29sIGlzX3dyaXRlLCB1bnNpZ25lZCBsb25nIGlwKTsNCj4gPiA+ID4gK2V4dGVybiBi
+b29sIHJlcG9ydF9lbmFibGVkKHZvaWQpOw0KPiA+ID4gPiAgDQo+ID4gPiA+IC12b2lkIGthc2Fu
+X3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBzaXplLCBib29sIGlzX3dyaXRlLCB1
+bnNpZ25lZCBsb25nIGlwKQ0KPiA+ID4gPiArYm9vbCBrYXNhbl9yZXBvcnQodW5zaWduZWQgbG9u
+ZyBhZGRyLCBzaXplX3Qgc2l6ZSwgYm9vbCBpc193cml0ZSwgdW5zaWduZWQgbG9uZyBpcCkNCj4g
+PiA+ID4gIHsNCj4gPiA+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdzID0gdXNlcl9hY2Nlc3Nfc2F2
+ZSgpOw0KPiA+ID4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+ICsNCj4gPiA+ID4g
+KwlpZiAobGlrZWx5KCFyZXBvcnRfZW5hYmxlZCgpKSkNCj4gPiA+ID4gKwkJcmV0dXJuIGZhbHNl
+Ow0KPiA+ID4gDQo+ID4gPiBUaGlzIGFkZHMgYW4gZXhwbGljaXQgY2FsbCBiZWZvcmUgdGhlIHVz
+ZXJfYWNjZXNzX3NhdmUoKSBhbmQgdGhhdCBpcyBhDQo+ID4gPiBzdHJhaWdodCBvbiBidWcuDQo+
+ID4gPiANCj4gPiBIaSBQZXRlciwNCj4gPiANCj4gPiBUaGFua3MgZm9yIHlvdXIgaGVscC4gVW5m
+b3J0dW5hdGVseSwgSSBkb24ndCByZXByb2R1Y2UgaXQgaW4gb3VyDQo+ID4gZW52aXJvbm1lbnQs
+IHNvIEkgaGF2ZSBhc2tlZCBTdGVwaGVuLCBpZiBJIGNhbiByZXByb2R1Y2UgaXQsIHRoZW4gd2UN
+Cj4gPiB3aWxsIHNlbmQgbmV3IHBhdGNoLg0KPiANCj4gVGhlIHBhdGNoIGlzIHRyaXZpYWw7IGFu
+ZCBhbGwgeW91IG5lZWQgaXMgYW4geDg2XzY0IChjcm9zcykgY29tcGlsZXIgdG8NCj4gcmVwcm9k
+dWNlLg0KPiANCj4gDQo+IGRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24uYyBiL21tL2thc2Fu
+L2NvbW1vbi5jDQo+IGluZGV4IGFkMmRjMGM5Y2MxNy4uMjkwNjM1OGU0MmYwIDEwMDY0NA0KPiAt
+LS0gYS9tbS9rYXNhbi9jb21tb24uYw0KPiArKysgYi9tbS9rYXNhbi9jb21tb24uYw0KPiBAQCAt
+NjE4LDE2ICs2MTgsMTcgQEAgZXh0ZXJuIGJvb2wgcmVwb3J0X2VuYWJsZWQodm9pZCk7DQo+ICAN
+Cj4gIGJvb2wga2FzYW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUsIGJv
+b2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcgaXApDQo+ICB7DQo+IC0JdW5zaWduZWQgbG9uZyBm
+bGFnczsNCj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzID0gdXNlcl9hY2Nlc3Nfc2F2ZSgpOw0KPiAr
+CWJvb2wgcmV0ID0gZmFsc2U7DQo+ICANCj4gLQlpZiAobGlrZWx5KCFyZXBvcnRfZW5hYmxlZCgp
+KSkNCj4gLQkJcmV0dXJuIGZhbHNlOw0KPiArCWlmIChsaWtlbHkocmVwb3J0X2VuYWJsZWQoKSkp
+IHsNCj4gKwkJX19rYXNhbl9yZXBvcnQoYWRkciwgc2l6ZSwgaXNfd3JpdGUsIGlwKTsNCj4gKwkJ
+cmV0ID0gdHJ1ZTsNCj4gKwl9DQo+ICANCj4gLQlmbGFncyA9IHVzZXJfYWNjZXNzX3NhdmUoKTsN
+Cj4gLQlfX2thc2FuX3JlcG9ydChhZGRyLCBzaXplLCBpc193cml0ZSwgaXApOw0KPiAgCXVzZXJf
+YWNjZXNzX3Jlc3RvcmUoZmxhZ3MpOw0KPiAgDQo+IC0JcmV0dXJuIHRydWU7DQo+ICsJcmV0dXJu
+IHJldDsNCj4gIH0NCj4gIA0KPiAgI2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0KDQpSZXZp
+ZXdlZC1hbmQtdGVzdGVkLWJ5Og0KDQoNCg0KDQoNCg0K
 
-On Tue, 10 Mar 2020, Eric Dumazet wrote:
-
-> On Tue, Mar 10, 2020 at 6:09 PM Jules Irenge <jbi.octave@gmail.com> wrote:
-> >
-> > Sparse reports warning at tcp_child_process()
-> > warning: context imbalance in tcp_child_process() - unexpected unlock
-> > The root cause is the missing annotation at tcp_child_process()
-> >
-> > Add the missing __releases(&((child)->sk_lock.slock)) annotation
-> >
-> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> > ---
-> >  net/ipv4/tcp_minisocks.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-> > index ad3b56d9fa71..0e8a5b6e477c 100644
-> > --- a/net/ipv4/tcp_minisocks.c
-> > +++ b/net/ipv4/tcp_minisocks.c
-> > @@ -817,6 +817,7 @@ EXPORT_SYMBOL(tcp_check_req);
-> >
-> >  int tcp_child_process(struct sock *parent, struct sock *child,
-> >                       struct sk_buff *skb)
-> > +       __releases(&((child)->sk_lock.slock))
-> >  {
-> >         int ret = 0;
-> >         int state = child->sk_state;
-> 
-> 
-> Yeah, although we prefer to use lockdep these days ;)
-> 
-> Reviewed-by: Eric Dumazet <edumazet@google.com>
-> 
