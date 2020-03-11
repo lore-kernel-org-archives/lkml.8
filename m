@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB72C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A3AC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FED02192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B768208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgCKFH2 (ORCPT
+        id S1728276AbgCKFH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:07:28 -0400
-Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:51826 "EHLO
+        Wed, 11 Mar 2020 01:07:26 -0400
+Received: from smtprelay0156.hostedemail.com ([216.40.44.156]:51814 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728258AbgCKFHY (ORCPT
+        by vger.kernel.org with ESMTP id S1728245AbgCKFHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:07:24 -0400
+        Wed, 11 Mar 2020 01:07:21 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 103FF10185974;
-        Wed, 11 Mar 2020 05:07:22 +0000 (UTC)
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id BCF9E10185974;
+        Wed, 11 Mar 2020 05:07:19 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: dolls43_23050b1e12945
-X-Filterd-Recvd-Size: 3010
+X-HE-Tag: waves19_22ae4c1b18b41
+X-Filterd-Recvd-Size: 6872
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:07:20 +0000 (UTC)
+        Wed, 11 Mar 2020 05:07:18 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH -next 019/491] Hyper-V CORE AND DRIVERS: Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:33 -0700
-Message-Id: <84677022b8ec4ad14bddab57d871dcbfc0b4a1bf.1583896348.git.joe@perches.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH -next 018/491] KERNEL VIRTUAL MACHINE for s390 (KVM/s390): Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:32 -0700
+Message-Id: <d63c86429f3e5aa806aa3e185c97d213904924a5.1583896348.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -58,59 +58,172 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/hv/hv_kvp.c             | 4 +---
- drivers/hv/vmbus_drv.c          | 2 +-
- drivers/video/fbdev/hyperv_fb.c | 4 ++--
- 3 files changed, 4 insertions(+), 6 deletions(-)
+ arch/s390/kvm/gaccess.c   | 23 +++++++++++++----------
+ arch/s390/kvm/interrupt.c |  2 +-
+ arch/s390/kvm/kvm-s390.c  |  4 ++--
+ arch/s390/mm/gmap.c       |  6 +++---
+ 4 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index e74b144..da4686 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -353,9 +353,7 @@ static void process_ib_ipinfo(void *in_msg, void *out_msg, int op)
- 				MAX_IP_ADDR_SIZE);
- 
- 		out->body.kvp_ip_val.dhcp_enabled = in->kvp_ip_val.dhcp_enabled;
--
+diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+index 07d30f..47a67a 100644
+--- a/arch/s390/kvm/gaccess.c
++++ b/arch/s390/kvm/gaccess.c
+@@ -505,7 +505,7 @@ static int trans_exc(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+ 		switch (prot) {
+ 		case PROT_TYPE_IEP:
+ 			tec->b61 = 1;
+-			/* FALL THROUGH */
++			fallthrough;
+ 		case PROT_TYPE_LA:
+ 			tec->b56 = 1;
+ 			break;
+@@ -514,12 +514,12 @@ static int trans_exc(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+ 			break;
+ 		case PROT_TYPE_ALC:
+ 			tec->b60 = 1;
+-			/* FALL THROUGH */
++			fallthrough;
+ 		case PROT_TYPE_DAT:
+ 			tec->b61 = 1;
+ 			break;
+ 		}
+-		/* FALL THROUGH */
++		fallthrough;
+ 	case PGM_ASCE_TYPE:
+ 	case PGM_PAGE_TRANSLATION:
+ 	case PGM_REGION_FIRST_TRANS:
+@@ -534,7 +534,7 @@ static int trans_exc(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+ 		tec->addr = gva >> PAGE_SHIFT;
+ 		tec->fsi = mode == GACC_STORE ? FSI_STORE : FSI_FETCH;
+ 		tec->as = psw_bits(vcpu->arch.sie_block->gpsw).as;
+-		/* FALL THROUGH */
++		fallthrough;
+ 	case PGM_ALEN_TRANSLATION:
+ 	case PGM_ALE_SEQUENCE:
+ 	case PGM_ASTE_VALIDITY:
+@@ -677,7 +677,7 @@ static unsigned long guest_translate(struct kvm_vcpu *vcpu, unsigned long gva,
+ 			dat_protection |= rfte.p;
+ 		ptr = rfte.rto * PAGE_SIZE + vaddr.rsx * 8;
+ 	}
 -		/* fallthrough */
--
 +		fallthrough;
- 	case KVP_OP_GET_IP_INFO:
- 		utf16s_to_utf8s((wchar_t *)in->kvp_ip_val.adapter_id,
- 				MAX_ADAPTER_ID_SIZE,
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 029378..0befc0 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1188,7 +1188,7 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
+ 	case ASCE_TYPE_REGION2: {
+ 		union region2_table_entry rste;
  
- 			case HV_CALL_BATCHED:
- 				hv_begin_read(&channel->inbound);
--				/* fallthrough */
-+				fallthrough;
- 			case HV_CALL_DIRECT:
- 				tasklet_schedule(&channel->callback_event);
- 			}
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index e4c3c8b..02411d 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -648,13 +648,13 @@ static int synthvid_connect_vsp(struct hv_device *hdev)
- 		ret = synthvid_negotiate_ver(hdev, SYNTHVID_VERSION_WIN10);
- 		if (!ret)
+@@ -695,7 +695,7 @@ static unsigned long guest_translate(struct kvm_vcpu *vcpu, unsigned long gva,
+ 			dat_protection |= rste.p;
+ 		ptr = rste.rto * PAGE_SIZE + vaddr.rtx * 8;
+ 	}
+-		/* fallthrough */
++		fallthrough;
+ 	case ASCE_TYPE_REGION3: {
+ 		union region3_table_entry rtte;
+ 
+@@ -723,7 +723,7 @@ static unsigned long guest_translate(struct kvm_vcpu *vcpu, unsigned long gva,
+ 			dat_protection |= rtte.fc0.p;
+ 		ptr = rtte.fc0.sto * PAGE_SIZE + vaddr.sx * 8;
+ 	}
+-		/* fallthrough */
++		fallthrough;
+ 	case ASCE_TYPE_SEGMENT: {
+ 		union segment_table_entry ste;
+ 
+@@ -1050,7 +1050,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
+ 		rc = gmap_shadow_r2t(sg, saddr, rfte.val, *fake);
+ 		if (rc)
+ 			return rc;
+-	} /* fallthrough */
++	}
++		fallthrough;
+ 	case ASCE_TYPE_REGION2: {
+ 		union region2_table_entry rste;
+ 
+@@ -1076,7 +1077,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
+ 		rc = gmap_shadow_r3t(sg, saddr, rste.val, *fake);
+ 		if (rc)
+ 			return rc;
+-	} /* fallthrough */
++	}
++		fallthrough;
+ 	case ASCE_TYPE_REGION3: {
+ 		union region3_table_entry rtte;
+ 
+@@ -1111,7 +1113,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
+ 		rc = gmap_shadow_sgt(sg, saddr, rtte.val, *fake);
+ 		if (rc)
+ 			return rc;
+-	} /* fallthrough */
++	}
++		fallthrough;
+ 	case ASCE_TYPE_SEGMENT: {
+ 		union segment_table_entry ste;
+ 
+diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+index 028167d6..819110 100644
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -886,7 +886,7 @@ static int __must_check __deliver_prog(struct kvm_vcpu *vcpu)
+ 	case PGM_PRIMARY_AUTHORITY:
+ 	case PGM_SECONDARY_AUTHORITY:
+ 		nullifying = true;
+-		/* fall through */
++		fallthrough;
+ 	case PGM_SPACE_SWITCH:
+ 		rc = put_guest_lc(vcpu, pgm_info.trans_exc_code,
+ 				  (u64 *)__LC_TRANS_EXC_CODE);
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 6b1842a..d590f3 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3752,7 +3752,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+ 		rc = kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR_LOAD);
+ 		break;
+ 	case KVM_MP_STATE_CHECK_STOP:
+-		/* fall through - CHECK_STOP and LOAD are not supported yet */
++		fallthrough;	/* CHECK_STOP and LOAD are not supported yet */
+ 	default:
+ 		rc = -ENXIO;
+ 	}
+@@ -4985,7 +4985,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 					old->npages * PAGE_SIZE);
+ 		if (rc)
  			break;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case KVM_MR_CREATE:
+ 		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+ 				      mem->guest_phys_addr, mem->memory_size);
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 27926a0..03c899 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -804,7 +804,7 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+ 		if (*table & _REGION_ENTRY_INVALID)
+ 			return NULL;
+ 		table = (unsigned long *)(*table & _REGION_ENTRY_ORIGIN);
 -		/* Fallthrough */
 +		fallthrough;
- 	case VERSION_WIN8:
- 	case VERSION_WIN8_1:
- 		ret = synthvid_negotiate_ver(hdev, SYNTHVID_VERSION_WIN8);
- 		if (!ret)
- 			break;
+ 	case _ASCE_TYPE_REGION2:
+ 		table += (gaddr & _REGION2_INDEX) >> _REGION2_SHIFT;
+ 		if (level == 3)
+@@ -812,7 +812,7 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+ 		if (*table & _REGION_ENTRY_INVALID)
+ 			return NULL;
+ 		table = (unsigned long *)(*table & _REGION_ENTRY_ORIGIN);
 -		/* Fallthrough */
 +		fallthrough;
- 	case VERSION_WS2008:
- 	case VERSION_WIN7:
- 		ret = synthvid_negotiate_ver(hdev, SYNTHVID_VERSION_WIN7);
+ 	case _ASCE_TYPE_REGION3:
+ 		table += (gaddr & _REGION3_INDEX) >> _REGION3_SHIFT;
+ 		if (level == 2)
+@@ -820,7 +820,7 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+ 		if (*table & _REGION_ENTRY_INVALID)
+ 			return NULL;
+ 		table = (unsigned long *)(*table & _REGION_ENTRY_ORIGIN);
+-		/* Fallthrough */
++		fallthrough;
+ 	case _ASCE_TYPE_SEGMENT:
+ 		table += (gaddr & _SEGMENT_INDEX) >> _SEGMENT_SHIFT;
+ 		if (level == 1)
 -- 
 2.24.0
 
