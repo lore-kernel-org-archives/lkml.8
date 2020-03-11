@@ -2,224 +2,176 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF02C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9D3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6246520739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84A920739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+YG/4LL"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="D66Yb8In";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="lZMBb4FC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgCKVJc (ORCPT
+        id S1729354AbgCKVKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:09:32 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36201 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCKVJb (ORCPT
+        Wed, 11 Mar 2020 17:10:54 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43622 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbgCKVKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:09:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s5so4584014wrg.3;
-        Wed, 11 Mar 2020 14:09:27 -0700 (PDT)
+        Wed, 11 Mar 2020 17:10:54 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4C947C0F6D;
+        Wed, 11 Mar 2020 21:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583961053; bh=WNC6DozOlP+L7U2CmsQjwoA4wovARtHTV7A5RcFjaks=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=D66Yb8InCdlmwWZXGUhyc3Tk/G4cI1sYjwmmcwnwuStUz1Ya7bfTYZmhyQ5uAhnf2
+         e9Ym4w1X/lbR8YcyVpA7ABJsHCuRbtUAnLbYA6Z5xz5LxWa+CFEE8HGTFyeHcwuzfJ
+         0fOcG3+1lxvyzyaJn6xpTFOKbeioGZ2fe2sRWAVvaVjkdKNL5h/zXuW00SlvE8KKE9
+         UkwK/Ikgw8fxid9qbkkqMKDpBF7Ra6VS1g422uDYjLDuuRwBkRm0VsN1q4RS0nkkM7
+         OYH5ORujOXEMiFMwz8mPaWXpjIugC2Bv3aV1ezVQRZvMe41+4N57ykrNSudVkTPbp/
+         i37MCwMKY9wwg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 1ED54A0083;
+        Wed, 11 Mar 2020 21:10:53 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 11 Mar 2020 14:10:33 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 11 Mar 2020 14:10:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SXtMeFdR8bam+Kz4uz+HowZIqyDRBiEPc4V1RcwLzvQZ6zw7XXgcmYCle2ZYebguRjnn1vQtMvvaL7uvq9DPMReY3siQPEmJoe/SxkMPK7gbSwsR3yCYEi2A6RrIguTiJB1Q0FS0W+CGNECFVrVbb9+HF5jrBZcXa4QqDpzjaAo13Njn72S7c2eNE7z5IXIx8tlTylwMqf3WcC2bLB1mILL6mh6Z/37ZZfFDbPtfkedifKdeAtRg6iM4sBKnWdHOV7p9Vp9/a8106KQLXxxVDUAgWy2hjBgScezV27zMG1ssWKuqY7TpCrIlLCYcXAKROe5zdc847Ow20Dm3V7fwqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WNC6DozOlP+L7U2CmsQjwoA4wovARtHTV7A5RcFjaks=;
+ b=h7WvhlyC/OlrxvtWxNol6PLYQzqhT8xEcb6ktRODaU/oSNl/hZ0whvrH7W7w7c09eOvGXEDh9RJfBr34sfwmckqibkL8GMGzZfurq0o5RLeiZTVZgQ9d9hP/4uVUlGnJXRPOytjDEM9tPZSJbAOMO0Tzlh55/gcAKoAHYVhok2myNmqILFCUnCXrIThaT1mcnI3WtATyOzPZogmJ1YpeTVJsIlbCdHa7mODY1XZH4cMF7mPLGmd8gAOgIvVhruUppPNTHlc/Sgj0c8r+YDz+aYDdGRExDPCrajxVBWucGtrzil3BQvTfb7zHd7XznZ7Z6m9VIXZEFRQGi4AgKDqdSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fTZjX2Qt5zZtRrUwaM8FUjsTVZowWsIsSOV5vP0emPA=;
-        b=E+YG/4LLCyCh59X0PxhDL9iWdZo7MYwgAQ4BHHRIDt6or7pLlw+/E90ipyeZA7BRrz
-         pi9hNr1M16kUi5NgtUeOCI08hyxtcXneSjC88/tyRxSfxoGDBih5HDtz19ayl1xyFeW2
-         uIezeeaxFS9Cfr1ySzRIK7bmfK77Q0B1wJeImpg8qMQg9WHmLpXfOMOCqmm6Iy3zL8B1
-         BCMVqE12mntEmfHrFM0+4W/+zKMazMrmx5oFnv9tTRkkWGgeyWFvETfanWpi63As6+C+
-         OGn1k+uYoBlQgGmp6UiXo1l2CiTZkPx5l7klspgvF5b6PUjPeXJcDQJwXxt9PDJXksbE
-         7ySw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fTZjX2Qt5zZtRrUwaM8FUjsTVZowWsIsSOV5vP0emPA=;
-        b=hzSKcSV62nW7BIf+ryTrzNYG7+voMpJXr5irI+bXghDiMPaEr/RBmIJq6sIdvZ6BEN
-         v0oVAdvgfNNBtiOKR6nR7k1gSaflzEZ3figtyyV5n9o7Bp0eWc1MaPXTgFs226U6fkBY
-         Txo3/swEgbG57xlk17U2/lIgXHm+zoK+/k3b60FxgWV8UseVrRw8jBcNdNMYo8tQcSf8
-         VGnrYkl5HS0td0nr5+pWtEyViQ1KyYdH3ea5kK7kPGWbFGhr7kcYrAjyJw9Y2Wkvwsai
-         K5q4shHTHPx1NNJq0ZWbg8hhSw2Gj/xa3yUefrcFwv3NftIQ0y4pO/JkJ1l/+2m7rKWi
-         Sk7A==
-X-Gm-Message-State: ANhLgQ2oZtT5zf9u8XcxXqk1j77J5lJtNR8LfJvRy6SNlPepxsS5xq9k
-        COfnDYgSV1+jt3csDpyQ9c8=
-X-Google-Smtp-Source: ADFU+vvw0GtahpTcBmWGtm1vTFhtcwFVWFchlv8G73LA38QjalVH0P0gU8ngsN6NVN/G4Ag3z8L+RQ==
-X-Received: by 2002:a5d:4683:: with SMTP id u3mr6690807wrq.251.1583960966505;
-        Wed, 11 Mar 2020 14:09:26 -0700 (PDT)
-Received: from [192.168.1.23] (afcs84.neoplus.adsl.tpnet.pl. [95.49.70.84])
-        by smtp.gmail.com with ESMTPSA id v8sm69746920wrw.2.2020.03.11.14.09.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 14:09:25 -0700 (PDT)
-Subject: Re: [PATCH 3/3] leds: add sgm3140 driver
-To:     Dan Murphy <dmurphy@ti.com>, Luca Weiss <luca@z3ntu.xyz>,
-        linux-leds@vger.kernel.org
-Cc:     Heiko Stuebner <heiko@sntech.de>, Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20200309203558.305725-1-luca@z3ntu.xyz>
- <20200309203558.305725-4-luca@z3ntu.xyz>
- <22341236-8298-dc97-217b-46071a362207@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b3019ea0-a02f-9056-b8cd-8743a146570a@gmail.com>
-Date:   Wed, 11 Mar 2020 22:09:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <22341236-8298-dc97-217b-46071a362207@ti.com>
-Content-Type: text/plain; charset=utf-8
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WNC6DozOlP+L7U2CmsQjwoA4wovARtHTV7A5RcFjaks=;
+ b=lZMBb4FCE3QwjSjiufcho/ebE9sXNpqM3mWdKp2A+2lgspMI7AKkcr9lx8ebh3IEFhowdaC9YqO88HBfGDYhYiLzF1GZ407yNc+WKTn8SRbu6pQct/Y8AhGFxTGyJMNtpxHjjo0q/dT9UtKOBwrbEQZVdKWn9jdmV7C1kIxzA5o=
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
+ by BYAPR12MB2728.namprd12.prod.outlook.com (2603:10b6:a03:61::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.18; Wed, 11 Mar
+ 2020 21:10:32 +0000
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 21:10:32 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 2/2] ARC: don't align ret_from_exception function
+Thread-Topic: [PATCH 2/2] ARC: don't align ret_from_exception function
+Thread-Index: AQHV98Hv9KDgib9650awLwyjmkVe16hDqFKAgAA3uQCAAANwAA==
+Date:   Wed, 11 Mar 2020 21:10:31 +0000
+Message-ID: <a6728afe-10e4-ce85-b133-17395ac99b86@synopsys.com>
+References: <20200311162644.7667-1-Eugeniy.Paltsev@synopsys.com>
+ <20200311162644.7667-2-Eugeniy.Paltsev@synopsys.com>
+ <448ba208-56a5-d8b2-9675-7be03b872c23@synopsys.com>
+ <BY5PR12MB40348292DA303489C1DA2B66DEFC0@BY5PR12MB4034.namprd12.prod.outlook.com>
+In-Reply-To: <BY5PR12MB40348292DA303489C1DA2B66DEFC0@BY5PR12MB4034.namprd12.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-originating-ip: [149.117.75.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e4f3352d-71f4-4786-504d-08d7c600a23c
+x-ms-traffictypediagnostic: BYAPR12MB2728:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB2728AD3D2291780400279238B6FC0@BYAPR12MB2728.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(396003)(366004)(346002)(136003)(199004)(64756008)(66476007)(66946007)(54906003)(8676002)(66446008)(66556008)(8936002)(81156014)(71200400001)(81166006)(316002)(186003)(53546011)(26005)(6506007)(110136005)(31686004)(76116006)(36756003)(4326008)(86362001)(2906002)(107886003)(6486002)(478600001)(2616005)(6512007)(31696002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB2728;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1SEFvrW7yfsRk9wkDvsEayrPRstBECRZ0Jcjnd6C8iz9epnQkmdYTyp+VRL2kanKWG5STFvjGQYdR45uguhWrURUSeDVVSG5WGwcvqlNloCk1HtlnGEguqFXxkU7+vEI9fWJbDzQyhTgmWnKxigNaJqB8Wxo0mKLUBDWU3+kquN4lIESpnokXB2UYMTmsMwGQxJpfHEIm//3obxghHTmtJoLOMRiyA01lLq+YAoQ4Eay3kTo228vEKTfqW7BuNrxgnfpnbWJSqH/5x4VE+OWLuDWRZAO1FkBJvo7y6EAnw3e/DzbwGwb9Ck04r8qbVHDtri6mH3bbAOgSaXB1mQVIR7+GViZb7SdZJ7K/DLFnDp5tb6Srk4zbuAhMQNsyVTKlIItQWRVw91hA64mE1Tv7e6YE0rMgIHVgWSE40uJJOq9lgu48EQkvX6Yh27G1DKL
+x-ms-exchange-antispam-messagedata: 3IRTVE5KjML6Ht5a5m2r/anIlYMp+EqaMwjxH6k+tAouotVjfGbQ7Ezx9dL6aPPqe16gS6ct0ZIpY2CkDh89PLifgqGCFGO8kpP6SY+ymND45k26W8FEwTzOvAeUGiPHZDU0ZcnfCc7z6ON9G9GqGg==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <175F414B7612564092E7BF61F1044787@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4f3352d-71f4-4786-504d-08d7c600a23c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 21:10:31.8237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zoC2j7FYJ/QdsXZPOtVZ6wfVRPxL2Pdl5950dw2wPlcP4V0lkMhEM6n0scyh4gtE6GtYTJLFVgGdAgEgBrzB9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2728
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
-
-On 3/11/20 2:02 PM, Dan Murphy wrote:
-> Luca
-> 
-> On 3/9/20 3:35 PM, Luca Weiss wrote:
->> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
->>
->> This device is controlled by two GPIO pins, one for enabling and the
->> second one for switching between torch and flash mode.
-> 
-> How does one enable torch and one enable flash?
-> 
-> Is the flash-gpio control this or does the enable-gpio enable the flash?
-> 
-> The DT binding did not indicate what the GPIOs are really going to control.
-> 
->>
->> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
->> ---
->> Changes since RFC:
->> - address review comments from Jacek Anaszewski:
->>    - implement strobe_get op
->>    - implement timeout_set op
->>    - init v4l2_sd_cfg variable
->>    - remove init_data.devicename assignemnt
->>    - use devm_ version of led_classdev_flash_register_ext
->>    - release child_node in case of success
->>
->>   drivers/leds/Kconfig        |   9 ++
->>   drivers/leds/Makefile       |   1 +
->>   drivers/leds/leds-sgm3140.c | 260 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 270 insertions(+)
->>   create mode 100644 drivers/leds/leds-sgm3140.c
->>
->> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->> index 4b68520ac251..9206fc66799d 100644
->> --- a/drivers/leds/Kconfig
->> +++ b/drivers/leds/Kconfig
->> @@ -836,6 +836,15 @@ config LEDS_LM36274
->>         Say Y to enable the LM36274 LED driver for TI LMU devices.
->>         This supports the LED device LM36274.
->>   +config LEDS_SGM3140
->> +    tristate "LED support for the SGM3140"
->> +    depends on LEDS_CLASS_FLASH
->> +    depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
-> 
-> What is the purpose of this?  Enable if V4L2_FLASH_LED_CLASS is enabled
-> or if it is not enabled?
-> 
-> Seems to be a do nothing dependency in the Kconfig
-
-See the patch: 58d1809b9d61 ("leds: fix aat1290 build errors")
-
-and Documentation/kbuild/kconfig-language.rst,
-chapter "Menu dependencies".
-
-According to that ('!' <expr>)  boils down to (2-/expr/),
-where
-
-"An expression can have a value of 'n', 'm' or 'y' (or 0, 1, 2
-respectively for calculations)".
-
-In a result:
-- in case V4L2_FLASH_LED_CLASS=n it evaluates to 2,
-- in case V4L2_FLASH_LED_CLASS=m it evaluates to 1,
-- in case V4L2_FLASH_LED_CLASS=y it evaluates to 0
-
-And (<expr> '||' <expr>) returns the result of max(/expr/, /expr/).
-
-It allows to restrict LEDS_SGM3140 to m if CONFIG_V4L2_FLASH_LED_CLASS=m
-(we will have max(1,1) then)
-and ignore the dependency if CONFIG_V4L2_FLASH_LED_CLASS=n
-(max(0,2)).
-
--- 
-Best regards,
-Jacek Anaszewski
+T24gMy8xMS8yMCAxOjU4IFBNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+Pg0KPj4gSSB3b3Vs
+ZCBsaWtlIHRvIGtlZXAgaXQgYWxpZ25lZC4NCj4+DQo+PiBBUkM3MDAgZGVmaW5pdGVseSBoYXMg
+cGVuYWx0eSBmb3IgdW5hbGlnbmVkIGJyYW5jaCB0YXJnZXRzLCBzbyBpdCB3aWxsIGRlZmluaXRl
+bHkNCj4+IHN1ZmZlciB0aGVyZS4NCj4gDQo+IERvIHlvdSBrbm93IHNvbWUgZXhhY3QgbnVtYmVy
+cz8gSSdtIG5vdCBhbiBleHBlcnQgaW4gQVJDNzAwIChmb3J0dW5hdGVseSA9KQ0KDQpJIGRvbid0
+IHJlbWVtYmVyIHRoZSBleGFjdCBudW1iZXJzIGVpdGhlci4NCg0KPj4gRm9yIEhTLCB1bmFsaWdu
+ZWQgYnJhbmNoIHRhcmdldHMgaGF2ZSBubyBwZW5hbHR5IChmb3IgdGhlIGdlbmVyYWwgY2FzZSBh
+dGxlYXN0KSwNCj4+IGJ1dCBpZiBpdCBkb2VzIGdldCB1bmFsaWduZWQsIHRoZSBlbnRpcmUgZW50
+cnkgcHJvbG9ndWUgY29kZSB3aWxsIGJlIC0gaS5lLiBlYWNoDQo+PiBvbmUgb2YgdGhlIHN1YnNl
+cXVlbnQgMTMwIG9yIHNvIGluc3RydWN0aW9ucy4gVGhhdCBkb2Vzbid0IHNlZW0gbGlrZSBhIGdv
+b2QgaWRlYQ0KPj4gaW4gZ2VuZXJhbCB0byBtZS4NCj4gDQo+IEkgcmVhbGx5IGRvbid0IGluc2lz
+dCBhYm91dCBhcHBseWluZyB0aGlzIHBhdGNoIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQgeW91cg0K
+PiBhcmd1bWVudGF0aW9uIGFib3V0IEFSQyBIUyBsaWtlIGF0IGFsbC4NCg0KSSBrbmV3IHlvdSB3
+b3VsZCBhcmd1ZSBoZW5jZSBJIGFscmVhZHkgY29weS9wYXN0ZWQgdGhlIHN0YXJ0IGFuZCBlbmQg
+b2YgdGhlDQplcGlsb2d1ZSBhbHJlYWR5IGluIG15IHByZXYgcmVwbHkgd2hpY2ggeW91IGRpZG4n
+dCBjYXJlIHRvIHJlYWQgdGhydS4NCg0KSWYgeW91IHN0YXJ0IGNvdW50aW5nIGluc3RydWN0aW9u
+cyBmcm9tIDxyZXRfZnJvbV9leGNlcHRpb24+IGFsbCB0aGUgd2F5IHRvIGVuZCBvZg0KPGRlYnVn
+X21hcmtlcl9kcz4gdGhlcmUgYXJlIG92ZXIgMTMwIGluc3RydWN0aW9ucyBhbGwgb2Ygd2hpY2gg
+Y2FuIGJlIHJlbmRlcmVkDQp1bmFsaWduZWQgYnkgeW91ciBwYXRjaC4gV2hhdCBpcyB3b3JzZSBp
+cyB0aGF0IHRoaXMgd291bGQgYmUgdW5wcmVkaWN0YWJsZTogdGhlDQp1bmFsaWduZWQgY2FzZSB3
+aWxsIG1vc3RseSBOT1QgaGFwcGVuLCBidXQgYSBuZXcgY29tcGlsZXIgb3Igc29tZSBzdWJ0bGUg
+Y29kZQ0KY2hhbmdlIGNvdWxkIGNhdXNpbmcgcG90ZW50aWFsbHkgc2lkZS1lZmZlY3RzIHdlIHdv
+bid0IGV2ZW4ga25vdyB3aGVyZSB0byBsb29rLg0KDQo+PiBJIGZha2VkIGl0IHVzaW5nIGEgbm9w
+X3MgYW5kIHRoZSBTWU1fRlVOQ19TVEFSVF9OT0FMSUdOKCApIGFubm90YXRpb24gYW5kIGNhbiBz
+ZWUNCj4+IGFsbCBpbnN0cnVjdGlvbnMgZ2V0dGluZyB1bmFsaWduZWQuDQo+IA0KPiBXaGF0IGlz
+IHRoZSBwcm9ibGVtIHdpdGggaXQ/IEl0J3MgdG90YWxseSB2YWxpZCBhbmQgZmluZSBmb3IgQVJD
+IEhTIHRvIGhhdmUgaW5zdHJ1Y3Rpb25zDQo+IGFsaWduZWQgYnkgMiBieXRlLiBPciBhcmUgeW91
+IHRhbGtpbmcgYWJvdXQgQVJDNzAwIGFnYWluPw0KDQpZZXMgSSBrbm93IHRoYXQgYWxyZWFkeS4g
+SXQgaXMgZmluZSBpbiBnZW5lcmFsIGFzIEkgZXhwbGFpbmVkIGVhcmxpZXIsIGJ1dCBjYW4NCnBv
+dGVudGlhbGx5IE5PVCB3aGVuIDEzMCBpbnN0cnVjdGlvbnMgYXJlIHVuYWxpZ25lZC4NCg0KPj4g
+QmVmb3JlOw0KPj4NCj4+IDkyMTIzOGU0IDxyZXRfZnJvbV9leGNlcHRpb24+Og0KPj4gOTIxMjM4
+ZTQ6ICAgIGxkICAgIHI4LFtzcCwxMjRdDQo+PiA5MjEyMzhlODogICAgYmJpdDAubnQgICAgcjgs
+MHg3LDIxMg0KPj4gLi4uDQo+PiA5MjEyM2FjODogICAgcnRpZQ0KPj4gOTIxMjNhY2MgPGRlYnVn
+X21hcmtlcl9kcz46DQo+PiA5MjEyM2FjYzogICAgbGQgICAgcjIsWzB4OTI3ZDgxZDhdDQo+PiA5
+MjEyM2FkNDogICAgYWRkICAgIHIyLHIyLDB4MQ0KPj4gOTIxMjNhZDg6ICAgIHN0ICAgIHIyLFsw
+eDkyN2Q4MWQ4XQ0KPj4gOTIxMjNhZTA6ICAgIGJtc2tuICAgIHIxMSxyMTAsMHhmDQo+PiA5MjEy
+M2FlNDogICAgc3IgICAgcjExLFthdXhfaXJxX2FjdF0NCj4+IDkyMTIzYWU4OiAgICBiICAgIC0x
+NDAgICAgOzkyMTIzYTVjDQo+Pg0KPj4gQWZ0ZXI6DQo+Pg0KPj4gOTIxMjM5M2M6ICAgIG5vcF9z
+DQo+PiA5MjEyMzkzZSA8cmV0X2Zyb21fZXhjZXB0aW9uPjoNCj4+IDkyMTIzOTNlOiAgICBsZCAg
+ICByOCxbc3AsMTI0XQ0KPj4gOTIxMjM5NDI6ICAgIGJiaXQwLm50ICAgIHI4LDB4NywyMTQNCj4+
+IC4uLg0KPj4gOTIxMjNiMjI6ICAgIHJ0aWUNCj4+IDkyMTIzYjI2IDxkZWJ1Z19tYXJrZXJfZHM+
+Og0KPj4gOTIxMjNiMjY6ICAgIGxkICAgIHIyLFsweDkyN2Q4MWQ4XQ0KPj4gOTIxMjNiMmU6ICAg
+IGFkZCAgICByMixyMiwweDENCj4+IDkyMTIzYjMyOiAgICBzdCAgICByMixbMHg5MjdkODFkOF0N
+Cj4+IDkyMTIzYjNhOiAgICBibXNrbiAgICByMTEscjEwLDB4Zg0KPj4gOTIxMjNiM2U6ICAgIHNy
+ICAgIHIxMSxbYXV4X2lycV9hY3RdDQo+PiA5MjEyM2I0MjogICAgYiAgICAtMTM4ICAgIDs5MjEy
+M2FiNiA8ZGVidWdfbWFya2VyX3N5c2NhbGw+DQo+PiA5MjEyM2I0NjogICAgbm9wX3MNCg==
