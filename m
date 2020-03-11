@@ -2,118 +2,185 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FD3C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49908C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58368206E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6014620739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgCKWEo (ORCPT
+        id S1729764AbgCKWFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:04:44 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63006 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbgCKWEo (ORCPT
+        Wed, 11 Mar 2020 18:05:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40801 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729223AbgCKWFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:04:44 -0400
-Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02BM4PjA051123;
-        Thu, 12 Mar 2020 07:04:25 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
- Thu, 12 Mar 2020 07:04:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02BM4K9b051090
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 12 Mar 2020 07:04:25 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
- <0e5ca6ee-d460-db8e-aba2-79aa7a66fad1@I-love.SAKURA.ne.jp>
- <alpine.DEB.2.21.2003101555050.177273@chino.kir.corp.google.com>
- <7a6170fc-b247-e327-321a-b99fb53f552d@i-love.sakura.ne.jp>
- <alpine.DEB.2.21.2003111235080.171292@chino.kir.corp.google.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <993e7783-60e9-ba03-b512-c829b9e833fd@i-love.sakura.ne.jp>
-Date:   Thu, 12 Mar 2020 07:04:20 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 11 Mar 2020 18:05:21 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jC9TZ-0001hC-J6; Wed, 11 Mar 2020 23:05:17 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 367D31C224A;
+        Wed, 11 Mar 2020 23:05:17 +0100 (CET)
+Date:   Wed, 11 Mar 2020 22:05:16 -0000
+From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/timers] x86/tsc_msr: Fix MSR_FSB_FREQ mask for Cherry Trail devices
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200223140610.59612-2-hdegoede@redhat.com>
+References: <20200223140610.59612-2-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2003111235080.171292@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <158396431695.28353.14027321767001755746.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/12 4:38, David Rientjes wrote:
-> On Wed, 11 Mar 2020, Tetsuo Handa wrote:
-> 
->>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>>>> --- a/mm/vmscan.c
->>>>> +++ b/mm/vmscan.c
->>>>> @@ -2637,6 +2637,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
->>>>>  		unsigned long reclaimed;
->>>>>  		unsigned long scanned;
->>>>>  
->>>>> +		cond_resched();
->>>>> +
->>>>
->>>> Is this safe for CONFIG_PREEMPTION case? If current thread has realtime priority,
->>>> can we guarantee that the OOM victim (well, the OOM reaper kernel thread rather
->>>> than the OOM victim ?) gets scheduled?
->>>>
->>>
->>> I think it's the best we can do that immediately solves the issue unless 
->>> you have another idea in mind?
->>
->> "schedule_timeout_killable(1) outside of oom_lock" or "the OOM reaper grabs oom_lock
->> so that allocating threads guarantee that the OOM reaper gets scheduled" or "direct OOM
->> reaping so that allocating threads guarantee that some memory is reclaimed".
->>
-> 
-> The cond_resched() here is needed if the iteration is lengthy depending on 
-> the number of descendant memcgs already.
+The following commit has been merged into the x86/timers branch of tip:
 
-No. cond_resched() here will become no-op if CONFIG_PREEMPTION=y and current
-thread has realtime priority.
+Commit-ID:     c8810e2ffc30c7e1577f9c057c4b85d984bbc35a
+Gitweb:        https://git.kernel.org/tip/c8810e2ffc30c7e1577f9c057c4b85d984bbc35a
+Author:        Hans de Goede <hdegoede@redhat.com>
+AuthorDate:    Sun, 23 Feb 2020 15:06:09 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 11 Mar 2020 22:57:39 +01:00
 
-> 
-> schedule_timeout_killable(1) does not make any guarantees that current 
-> will be scheduled after the victim or oom_reaper on UP systems.
+x86/tsc_msr: Fix MSR_FSB_FREQ mask for Cherry Trail devices
 
-The point of schedule_timeout_*(1) is to guarantee that current thread
-will yield CPU to other threads even if CONFIG_PREEMPTION=y and current
-thread has realtime priority case. There is no guarantee that current
-thread will be rescheduled immediately after a sleep is irrelevant.
+According to the "Intel 64 and IA-32 Architectures Software Developer's
+Manual Volume 4: Model-Specific Registers" on Cherry Trail (Airmont)
+devices the 4 lowest bits of the MSR_FSB_FREQ mask indicate the bus freq
+unlike on e.g. Bay Trail where only the lowest 3 bits are used.
 
-> 
-> If you have an alternate patch to try, we can test it.  But since this 
-> cond_resched() is needed anyway, I'm not sure it will change the result.
+This is also the reason why MAX_NUM_FREQS is defined as 9, since Cherry
+Trail SoCs have 9 possible frequencies, so the lo value from the MSR needs
+to be masked with 0x0f, not with 0x07 otherwise the 9th frequency will get
+interpreted as the 1st.
 
-schedule_timeout_killable(1) is an alternate patch to try; I don't think
-that this cond_resched() is needed anyway.
+Bump MAX_NUM_FREQS to 16 to avoid any possibility of addressing the array
+out of bounds and makes the mask part of the cpufreq struct so it can be
+set it per model.
 
-> 
->>>
->>>>>  		switch (mem_cgroup_protected(target_memcg, memcg)) {
->>>>>  		case MEMCG_PROT_MIN:
->>>>>  			/*
->>>>>
->>>>
->>
->>
+While at it also log an error when the index points to an uninitialized
+part of the freqs lookup-table.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200223140610.59612-2-hdegoede@redhat.com
+
+---
+ arch/x86/kernel/tsc_msr.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index 5fa41ac..9503089 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -15,7 +15,7 @@
+ #include <asm/param.h>
+ #include <asm/tsc.h>
+ 
+-#define MAX_NUM_FREQS	9
++#define MAX_NUM_FREQS	16 /* 4 bits to select the frequency */
+ 
+ /*
+  * If MSR_PERF_STAT[31] is set, the maximum resolved bus ratio can be
+@@ -27,6 +27,7 @@
+ struct freq_desc {
+ 	bool use_msr_plat;
+ 	u32 freqs[MAX_NUM_FREQS];
++	u32 mask;
+ };
+ 
+ /*
+@@ -37,37 +38,44 @@ struct freq_desc {
+ static const struct freq_desc freq_desc_pnw = {
+ 	.use_msr_plat = false,
+ 	.freqs = { 0, 0, 0, 0, 0, 99840, 0, 83200 },
++	.mask = 0x07,
+ };
+ 
+ static const struct freq_desc freq_desc_clv = {
+ 	.use_msr_plat = false,
+ 	.freqs = { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
++	.mask = 0x07,
+ };
+ 
+ static const struct freq_desc freq_desc_byt = {
+ 	.use_msr_plat = true,
+ 	.freqs = { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
++	.mask = 0x07,
+ };
+ 
+ static const struct freq_desc freq_desc_cht = {
+ 	.use_msr_plat = true,
+ 	.freqs = { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
+ 		   88900, 87500 },
++	.mask = 0x0f,
+ };
+ 
+ static const struct freq_desc freq_desc_tng = {
+ 	.use_msr_plat = true,
+ 	.freqs = { 0, 100000, 133300, 0, 0, 0, 0, 0 },
++	.mask = 0x07,
+ };
+ 
+ static const struct freq_desc freq_desc_ann = {
+ 	.use_msr_plat = true,
+ 	.freqs = { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
++	.mask = 0x0f,
+ };
+ 
+ static const struct freq_desc freq_desc_lgm = {
+ 	.use_msr_plat = true,
+ 	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
++	.mask = 0x0f,
+ };
+ 
+ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
+@@ -93,6 +101,7 @@ unsigned long cpu_khz_from_msr(void)
+ 	const struct freq_desc *freq_desc;
+ 	const struct x86_cpu_id *id;
+ 	unsigned long res;
++	int index;
+ 
+ 	id = x86_match_cpu(tsc_msr_cpu_ids);
+ 	if (!id)
+@@ -109,13 +118,17 @@ unsigned long cpu_khz_from_msr(void)
+ 
+ 	/* Get FSB FREQ ID */
+ 	rdmsr(MSR_FSB_FREQ, lo, hi);
++	index = lo & freq_desc->mask;
+ 
+ 	/* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz) */
+-	freq = freq_desc->freqs[lo & 0x7];
++	freq = freq_desc->freqs[index];
+ 
+ 	/* TSC frequency = maximum resolved freq * maximum resolved bus ratio */
+ 	res = freq * ratio;
+ 
++	if (freq == 0)
++		pr_err("Error MSR_FSB_FREQ index %d is unknown\n", index);
++
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	lapic_timer_period = (freq * 1000) / HZ;
+ #endif
