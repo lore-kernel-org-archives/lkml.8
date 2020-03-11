@@ -4,14 +4,14 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35273 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730153AbgCKPyS (ORCPT
+	SPF_NONE autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46674 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730039AbgCKPyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:54:18 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 7so1444322pgr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:54:16 -0700 (PDT)
+        Wed, 11 Mar 2020 11:54:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y30so1418080pga.13
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:54:12 -0700 (PDT)
 From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 To: marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
 Cc: linux-bluetooth@vger.kernel.org,
@@ -21,9 +21,9 @@ Cc: linux-bluetooth@vger.kernel.org,
         Johan Hedberg <johan.hedberg@gmail.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [RFC PATCH v6 4/5] Bluetooth: Pause discovery and advertising during suspend
-Date: Wed, 11 Mar 2020 08:54:03 -0700
-Message-Id: <20200311085359.RFC.v6.4.Iccdad520469ca3524a7e5966c5f88e5bca756e13@changeid>
+Subject: [RFC PATCH v6 1/5] Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
+Date: Wed, 11 Mar 2020 08:54:00 -0700
+Message-Id: <20200311085359.RFC.v6.1.I62f17edc39370044c75ad43a55a7382b4b8a5ceb@changeid>
 In-Reply-To: <20200311155404.209990-1-abhishekpandit@chromium.org>
 References: <20200311155404.209990-1-abhishekpandit@chromium.org>
 MIME-Version: 1.0
@@ -31,214 +31,253 @@ Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-To prevent spurious wake ups, we disable any discovery or advertising
-when we enter suspend and restore it when we exit suspend. While paused,
-we disable any management requests to modify discovery or advertising.
+Register for PM_SUSPEND_PREPARE and PM_POST_SUSPEND to make sure the
+Bluetooth controller is prepared correctly for suspend/resume. Implement
+the registration, scheduling and task handling portions only in this
+patch.
 
 Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 ---
 
 Changes in v6:
-* Add int old_state to this patch
+* Removed unused variables in hci_req_prepare_suspend
 
 Changes in v5:
-* Changed BT_DBG to bt_dev_dbg
+* Convert BT_DBG to bt_dev_dbg
 
-Changes in v4: None
+Changes in v4:
+* Added check for mgmt_powering_down and hdev_is_powered in notifier
+
 Changes in v3: None
 Changes in v2:
-* Refactored pause discovery + advertising into its own patch
+* Moved pm notifier registration into its own patch and moved params out
+  of separate suspend_state
 
- include/net/bluetooth/hci_core.h | 11 ++++++++
- net/bluetooth/hci_request.c      | 44 ++++++++++++++++++++++++++++++++
- net/bluetooth/mgmt.c             | 41 +++++++++++++++++++++++++++++
- 3 files changed, 96 insertions(+)
+ include/net/bluetooth/hci_core.h | 23 +++++++++
+ net/bluetooth/hci_core.c         | 86 ++++++++++++++++++++++++++++++++
+ net/bluetooth/hci_request.c      | 15 ++++++
+ net/bluetooth/hci_request.h      |  2 +
+ 4 files changed, 126 insertions(+)
 
 diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 2d58485d0335..d4e28773d378 100644
+index c498ac113930..d6f694b436bf 100644
 --- a/include/net/bluetooth/hci_core.h
 +++ b/include/net/bluetooth/hci_core.h
-@@ -91,6 +91,12 @@ struct discovery_state {
- #define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
+@@ -88,6 +88,20 @@ struct discovery_state {
+ 	unsigned long		scan_duration;
+ };
  
- enum suspend_tasks {
-+	SUSPEND_PAUSE_DISCOVERY,
-+	SUSPEND_UNPAUSE_DISCOVERY,
++#define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
 +
-+	SUSPEND_PAUSE_ADVERTISING,
-+	SUSPEND_UNPAUSE_ADVERTISING,
++enum suspend_tasks {
++	SUSPEND_POWERING_DOWN,
 +
- 	SUSPEND_SCAN_DISABLE,
- 	SUSPEND_SCAN_ENABLE,
- 	SUSPEND_DISCONNECTING,
-@@ -410,6 +416,11 @@ struct hci_dev {
++	SUSPEND_PREPARE_NOTIFIER,
++	__SUSPEND_NUM_TASKS
++};
++
++enum suspended_state {
++	BT_RUNNING = 0,
++	BT_SUSPENDED,
++};
++
+ struct hci_conn_hash {
+ 	struct list_head list;
+ 	unsigned int     acl_num;
+@@ -390,6 +404,15 @@ struct hci_dev {
+ 	void			*smp_bredr_data;
  
  	struct discovery_state	discovery;
- 
-+	int			discovery_old_state;
-+	bool			discovery_paused;
-+	int			advertising_old_state;
-+	bool			advertising_paused;
 +
- 	struct notifier_block	suspend_notifier;
- 	struct work_struct	suspend_prepare;
- 	enum suspended_state	suspend_state_next;
++	struct notifier_block	suspend_notifier;
++	struct work_struct	suspend_prepare;
++	enum suspended_state	suspend_state_next;
++	enum suspended_state	suspend_state;
++
++	wait_queue_head_t	suspend_wait_q;
++	DECLARE_BITMAP(suspend_tasks, __SUSPEND_NUM_TASKS);
++
+ 	struct hci_conn_hash	conn_hash;
+ 
+ 	struct list_head	mgmt_pending;
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 196edc039b8e..39aa21a1fe92 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -31,6 +31,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/crypto.h>
+ #include <linux/property.h>
++#include <linux/suspend.h>
++#include <linux/wait.h>
+ #include <asm/unaligned.h>
+ 
+ #include <net/bluetooth/bluetooth.h>
+@@ -1787,6 +1789,9 @@ int hci_dev_do_close(struct hci_dev *hdev)
+ 	clear_bit(HCI_RUNNING, &hdev->flags);
+ 	hci_sock_dev_event(hdev, HCI_DEV_CLOSE);
+ 
++	if (test_and_clear_bit(SUSPEND_POWERING_DOWN, hdev->suspend_tasks))
++		wake_up(&hdev->suspend_wait_q);
++
+ 	/* After this point our queues are empty
+ 	 * and no tasks are scheduled. */
+ 	hdev->close(hdev);
+@@ -3264,6 +3269,78 @@ void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
+ 	}
+ }
+ 
++static int hci_suspend_wait_event(struct hci_dev *hdev)
++{
++#define WAKE_COND                                                              \
++	(find_first_bit(hdev->suspend_tasks, __SUSPEND_NUM_TASKS) ==           \
++	 __SUSPEND_NUM_TASKS)
++
++	int i;
++	int ret = wait_event_timeout(hdev->suspend_wait_q,
++				     WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
++
++	if (ret == 0) {
++		bt_dev_dbg(hdev, "Timed out waiting for suspend");
++		for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
++			if (test_bit(i, hdev->suspend_tasks))
++				bt_dev_dbg(hdev, "Bit %d is set", i);
++			clear_bit(i, hdev->suspend_tasks);
++		}
++
++		ret = -ETIMEDOUT;
++	} else {
++		ret = 0;
++	}
++
++	return ret;
++}
++
++static void hci_prepare_suspend(struct work_struct *work)
++{
++	struct hci_dev *hdev =
++		container_of(work, struct hci_dev, suspend_prepare);
++
++	hci_dev_lock(hdev);
++	hci_req_prepare_suspend(hdev, hdev->suspend_state_next);
++	hci_dev_unlock(hdev);
++}
++
++static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
++				void *data)
++{
++	struct hci_dev *hdev =
++		container_of(nb, struct hci_dev, suspend_notifier);
++	int ret = 0;
++
++	/* If powering down, wait for completion. */
++	if (mgmt_powering_down(hdev)) {
++		set_bit(SUSPEND_POWERING_DOWN, hdev->suspend_tasks);
++		ret = hci_suspend_wait_event(hdev);
++		if (ret)
++			goto done;
++	}
++
++	/* Suspend notifier should only act on events when powered. */
++	if (!hdev_is_powered(hdev))
++		goto done;
++
++	if (action == PM_SUSPEND_PREPARE) {
++		hdev->suspend_state_next = BT_SUSPENDED;
++		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
++
++		ret = hci_suspend_wait_event(hdev);
++	} else if (action == PM_POST_SUSPEND) {
++		hdev->suspend_state_next = BT_RUNNING;
++		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
++
++		ret = hci_suspend_wait_event(hdev);
++	}
++
++done:
++	return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
++}
+ /* Alloc HCI device */
+ struct hci_dev *hci_alloc_dev(void)
+ {
+@@ -3341,6 +3418,7 @@ struct hci_dev *hci_alloc_dev(void)
+ 	INIT_WORK(&hdev->tx_work, hci_tx_work);
+ 	INIT_WORK(&hdev->power_on, hci_power_on);
+ 	INIT_WORK(&hdev->error_reset, hci_error_reset);
++	INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
+ 
+ 	INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
+ 
+@@ -3349,6 +3427,7 @@ struct hci_dev *hci_alloc_dev(void)
+ 	skb_queue_head_init(&hdev->raw_q);
+ 
+ 	init_waitqueue_head(&hdev->req_wait_q);
++	init_waitqueue_head(&hdev->suspend_wait_q);
+ 
+ 	INIT_DELAYED_WORK(&hdev->cmd_timer, hci_cmd_timeout);
+ 
+@@ -3460,6 +3539,11 @@ int hci_register_dev(struct hci_dev *hdev)
+ 	hci_sock_dev_event(hdev, HCI_DEV_REG);
+ 	hci_dev_hold(hdev);
+ 
++	hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
++	error = register_pm_notifier(&hdev->suspend_notifier);
++	if (error)
++		goto err_wqueue;
++
+ 	queue_work(hdev->req_workqueue, &hdev->power_on);
+ 
+ 	return id;
+@@ -3493,6 +3577,8 @@ void hci_unregister_dev(struct hci_dev *hdev)
+ 
+ 	hci_dev_do_close(hdev);
+ 
++	unregister_pm_notifier(&hdev->suspend_notifier);
++
+ 	if (!test_bit(HCI_INIT, &hdev->flags) &&
+ 	    !hci_dev_test_flag(hdev, HCI_SETUP) &&
+ 	    !hci_dev_test_flag(hdev, HCI_CONFIG)) {
 diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index 11624645cfcf..bf83179ab9d1 100644
+index 53179ae856ae..2343166614f0 100644
 --- a/net/bluetooth/hci_request.c
 +++ b/net/bluetooth/hci_request.c
-@@ -1021,6 +1021,7 @@ static void suspend_req_complete(struct hci_dev *hdev, u8 status, u16 opcode)
- /* Call with hci_dev_lock */
- void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
+@@ -918,6 +918,21 @@ static u8 get_adv_instance_scan_rsp_len(struct hci_dev *hdev, u8 instance)
+ 	return adv_instance->scan_rsp_len;
+ }
+ 
++/* Call with hci_dev_lock */
++void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
++{
++	if (next == hdev->suspend_state) {
++		bt_dev_dbg(hdev, "Same state before and after: %d", next);
++		goto done;
++	}
++
++	hdev->suspend_state = next;
++
++done:
++	clear_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++	wake_up(&hdev->suspend_wait_q);
++}
++
+ static u8 get_cur_adv_instance_scan_rsp_len(struct hci_dev *hdev)
  {
-+	int old_state;
- 	struct hci_conn *conn;
- 	struct hci_request req;
- 	u8 page_scan;
-@@ -1038,6 +1039,28 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
- 		/* Mark device as suspended */
- 		hdev->suspended = true;
+ 	u8 instance = hdev->cur_adv_instance;
+diff --git a/net/bluetooth/hci_request.h b/net/bluetooth/hci_request.h
+index a7019fbeadd3..0e81614d235e 100644
+--- a/net/bluetooth/hci_request.h
++++ b/net/bluetooth/hci_request.h
+@@ -68,6 +68,8 @@ void __hci_req_update_eir(struct hci_request *req);
+ void hci_req_add_le_scan_disable(struct hci_request *req);
+ void hci_req_add_le_passive_scan(struct hci_request *req);
  
-+		/* Pause discovery if not already stopped */
-+		old_state = hdev->discovery.state;
-+		if (old_state != DISCOVERY_STOPPED) {
-+			set_bit(SUSPEND_PAUSE_DISCOVERY, hdev->suspend_tasks);
-+			hci_discovery_set_state(hdev, DISCOVERY_STOPPING);
-+			queue_work(hdev->req_workqueue, &hdev->discov_update);
-+		}
++void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next);
 +
-+		hdev->discovery_paused = true;
-+		hdev->discovery_old_state = old_state;
-+
-+		/* Stop advertising */
-+		old_state = hci_dev_test_flag(hdev, HCI_ADVERTISING);
-+		if (old_state) {
-+			set_bit(SUSPEND_PAUSE_ADVERTISING, hdev->suspend_tasks);
-+			cancel_delayed_work(&hdev->discov_off);
-+			queue_delayed_work(hdev->req_workqueue,
-+					   &hdev->discov_off, 0);
-+		}
-+
-+		hdev->advertising_paused = true;
-+		hdev->advertising_old_state = old_state;
- 		/* Disable page scan */
- 		page_scan = SCAN_DISABLED;
- 		hci_req_add(&req, HCI_OP_WRITE_SCAN_ENABLE, 1, &page_scan);
-@@ -1084,6 +1107,27 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
- 		hci_req_clear_event_filter(&req);
- 		/* Reset passive/background scanning to normal */
- 		hci_req_config_le_suspend_scan(&req);
-+
-+		/* Unpause advertising */
-+		hdev->advertising_paused = false;
-+		if (hdev->advertising_old_state) {
-+			set_bit(SUSPEND_UNPAUSE_ADVERTISING,
-+				hdev->suspend_tasks);
-+			hci_dev_set_flag(hdev, HCI_ADVERTISING);
-+			queue_work(hdev->req_workqueue,
-+				   &hdev->discoverable_update);
-+			hdev->advertising_old_state = 0;
-+		}
-+
-+		/* Unpause discovery */
-+		hdev->discovery_paused = false;
-+		if (hdev->discovery_old_state != DISCOVERY_STOPPED &&
-+		    hdev->discovery_old_state != DISCOVERY_STOPPING) {
-+			set_bit(SUSPEND_UNPAUSE_DISCOVERY, hdev->suspend_tasks);
-+			hci_discovery_set_state(hdev, DISCOVERY_STARTING);
-+			queue_work(hdev->req_workqueue, &hdev->discov_update);
-+		}
-+
- 		hci_req_run(&req, suspend_req_complete);
- 	}
- 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index b3a7f387da32..6552003a170e 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -1390,6 +1390,12 @@ static int set_discoverable(struct sock *sk, struct hci_dev *hdev, void *data,
- 		goto failed;
- 	}
- 
-+	if (hdev->advertising_paused) {
-+		err = mgmt_cmd_status(sk, hdev->id, MGMT_OP_SET_DISCOVERABLE,
-+				      MGMT_STATUS_BUSY);
-+		goto failed;
-+	}
-+
- 	if (!hdev_is_powered(hdev)) {
- 		bool changed = false;
- 
-@@ -3929,6 +3935,13 @@ void mgmt_start_discovery_complete(struct hci_dev *hdev, u8 status)
- 	}
- 
- 	hci_dev_unlock(hdev);
-+
-+	/* Handle suspend notifier */
-+	if (test_and_clear_bit(SUSPEND_UNPAUSE_DISCOVERY,
-+			       hdev->suspend_tasks)) {
-+		bt_dev_dbg(hdev, "Unpaused discovery");
-+		wake_up(&hdev->suspend_wait_q);
-+	}
- }
- 
- static bool discovery_type_is_valid(struct hci_dev *hdev, uint8_t type,
-@@ -3990,6 +4003,13 @@ static int start_discovery_internal(struct sock *sk, struct hci_dev *hdev,
- 		goto failed;
- 	}
- 
-+	/* Can't start discovery when it is paused */
-+	if (hdev->discovery_paused) {
-+		err = mgmt_cmd_complete(sk, hdev->id, op, MGMT_STATUS_BUSY,
-+					&cp->type, sizeof(cp->type));
-+		goto failed;
-+	}
-+
- 	/* Clear the discovery filter first to free any previously
- 	 * allocated memory for the UUID list.
- 	 */
-@@ -4157,6 +4177,12 @@ void mgmt_stop_discovery_complete(struct hci_dev *hdev, u8 status)
- 	}
- 
- 	hci_dev_unlock(hdev);
-+
-+	/* Handle suspend notifier */
-+	if (test_and_clear_bit(SUSPEND_PAUSE_DISCOVERY, hdev->suspend_tasks)) {
-+		bt_dev_dbg(hdev, "Paused discovery");
-+		wake_up(&hdev->suspend_wait_q);
-+	}
- }
- 
- static int stop_discovery(struct sock *sk, struct hci_dev *hdev, void *data,
-@@ -4388,6 +4414,17 @@ static void set_advertising_complete(struct hci_dev *hdev, u8 status,
- 	if (match.sk)
- 		sock_put(match.sk);
- 
-+	/* Handle suspend notifier */
-+	if (test_and_clear_bit(SUSPEND_PAUSE_ADVERTISING,
-+			       hdev->suspend_tasks)) {
-+		bt_dev_dbg(hdev, "Paused advertising");
-+		wake_up(&hdev->suspend_wait_q);
-+	} else if (test_and_clear_bit(SUSPEND_UNPAUSE_ADVERTISING,
-+				      hdev->suspend_tasks)) {
-+		bt_dev_dbg(hdev, "Unpaused advertising");
-+		wake_up(&hdev->suspend_wait_q);
-+	}
-+
- 	/* If "Set Advertising" was just disabled and instance advertising was
- 	 * set up earlier, then re-enable multi-instance advertising.
- 	 */
-@@ -4439,6 +4476,10 @@ static int set_advertising(struct sock *sk, struct hci_dev *hdev, void *data,
- 		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_SET_ADVERTISING,
- 				       MGMT_STATUS_INVALID_PARAMS);
- 
-+	if (hdev->advertising_paused)
-+		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_SET_ADVERTISING,
-+				       MGMT_STATUS_BUSY);
-+
- 	hci_dev_lock(hdev);
- 
- 	val = !!cp->val;
+ void hci_req_reenable_advertising(struct hci_dev *hdev);
+ void __hci_req_enable_advertising(struct hci_request *req);
+ void __hci_req_disable_advertising(struct hci_request *req);
 -- 
 2.25.1.481.gfbce0eb801-goog
 
