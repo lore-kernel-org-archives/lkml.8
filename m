@@ -2,219 +2,134 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6C0C4CEC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CFAC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B02B20739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 15:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDE2206E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZeSdqsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgCKPXO (ORCPT
+        id S1730238AbgCKQql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 11:23:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59652 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729473AbgCKPXO (ORCPT
+        Wed, 11 Mar 2020 12:46:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59979 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730175AbgCKQql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:23:14 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id AA96427FD37
-Subject: Re: [PATCH] dt-bindings: input: atmel_mxt_ts: convert
- atmel,maxtouch.txt to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-References: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
- <20200310211437.GA18992@bogus>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <f612396e-e5e2-db76-6297-a108b53e4000@collabora.com>
-Date:   Wed, 11 Mar 2020 16:23:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 12:46:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583945199;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ADDrO4QRY1lhdD1iQPV3hdTUF0WjB+BNSCx2nCz9XEE=;
+        b=FZeSdqsJM3f8wip7JeTiN7q2vrF6w1e62iLEpJqFGH1Bj/GXwVtq7n+zuvJXBk+MQApGHO
+        HCQKblTEPOwi9XLoItptg5frKpqXtZ1DNYAMXrY0bMcZ7FlrnudaEfaOw8t0ZnDvTYKbiv
+        NhEZPSKaQEjtc5/uieBaPtAKLPO6thQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-ERRbUndcPbCQJOpqCIO01g-1; Wed, 11 Mar 2020 12:46:33 -0400
+X-MC-Unique: ERRbUndcPbCQJOpqCIO01g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44D5CA0CDB;
+        Wed, 11 Mar 2020 16:46:32 +0000 (UTC)
+Received: from ovpn-120-185.rdu2.redhat.com (ovpn-120-185.rdu2.redhat.com [10.10.120.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6024810013A1;
+        Wed, 11 Mar 2020 16:46:31 +0000 (UTC)
+Message-ID: <2d277b96875e2320a3a7ccd8bfb8881f68e1353c.camel@redhat.com>
+Subject: Re: [PATCH] irqchip/gic-v3: Workaround Cavium erratum 38539 when
+ reading GICD_TYPER2
+From:   Mark Salter <msalter@redhat.com>
+To:     Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>
+Date:   Wed, 11 Mar 2020 12:46:30 -0400
+In-Reply-To: <20200311115649.26060-1-maz@kernel.org>
+References: <20200311115649.26060-1-maz@kernel.org>
+Organization: Red Hat, Inc
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200310211437.GA18992@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-Thanks for the review
+On Wed, 2020-03-11 at 11:56 +0000, Marc Zyngier wrote:
+> Despite the architecture spec requiring that reserved registers in the GIC
+> distributor memory map are RES0 (and thus are not allowed to generate
+> an exception), the Cavium ThunderX (aka TX1) SoC explodes as such:
+> 
+> [    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+> [    0.000000] GICv3: 128 SPIs implemented
+> [    0.000000] GICv3: 0 Extended SPIs implemented
+> [    0.000000] Internal error: synchronous external abort: 96000210 [#1] SMP
+> [    0.000000] Modules linked in:
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc4-00035-g3cf6a3d5725f #7956
+> [    0.000000] Hardware name: cavium,thunder-88xx (DT)
+> [    0.000000] pstate: 60000085 (nZCv daIf -PAN -UAO)
+> [    0.000000] pc : __raw_readl+0x0/0x8
+> [    0.000000] lr : gic_init_bases+0x110/0x560
+> [    0.000000] sp : ffff800011243d90
+> [    0.000000] x29: ffff800011243d90 x28: 0000000000000000
+> [    0.000000] x27: 0000000000000018 x26: 0000000000000002
+> [    0.000000] x25: ffff8000116f0000 x24: ffff000fbe6a2c80
+> [    0.000000] x23: 0000000000000000 x22: ffff010fdc322b68
+> [    0.000000] x21: ffff800010a7a208 x20: 00000000009b0404
+> [    0.000000] x19: ffff80001124dad0 x18: 0000000000000010
+> [    0.000000] x17: 000000004d8d492b x16: 00000000f67eb9af
+> [    0.000000] x15: ffffffffffffffff x14: ffff800011249908
+> [    0.000000] x13: ffff800091243ae7 x12: ffff800011243af4
+> [    0.000000] x11: ffff80001126e000 x10: ffff800011243a70
+> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff80001069c828
+> [    0.000000] x7 : 0000000000000059 x6 : ffff8000113fb4d1
+> [    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
+> [    0.000000] x3 : 0000000000000000 x2 : 0000000000000000
+> [    0.000000] x1 : 0000000000000000 x0 : ffff8000116f000c
+> [    0.000000] Call trace:
+> [    0.000000]  __raw_readl+0x0/0x8
+> [    0.000000]  gic_of_init+0x188/0x224
+> [    0.000000]  of_irq_init+0x200/0x3cc
+> [    0.000000]  irqchip_init+0x1c/0x40
+> [    0.000000]  init_IRQ+0x160/0x1d0
+> [    0.000000]  start_kernel+0x2ec/0x4b8
+> [    0.000000] Code: a8c47bfd d65f03c0 d538d080 d65f03c0 (b9400000)
+> 
+> when reading the GICv4.1 GICD_TYPER2 register, which is unexpected...
+> 
+> Work around it by adding a new quirk for the following variants:
+> 
+>  ThunderX: CN88xx
+>  OCTEON TX: CN83xx, CN81xx
+>  OCTEON TX2: CN93xx, CN96xx, CN98xx, CNF95xx*
+> 
+> and use this flag to avoid accessing GICD_TYPER2. Note that all
+> reserved registers (including redistributors and ITS) are impacted
+> by this erratum, but that only GICD_TYPER2 has to be worked around
+> so far.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Salter <msalter@redhat.com>
+> Cc: Robert Richter <rrichter@marvell.com>
+> ---
+> This is a respin of [1], with the erratum number and affected
+> platform list provided by Robert.
+> 
+> [1] https://lore.kernel.org/lkml/20191027144234.8395-11-maz@kernel.org/
 
-On 10.03.20 22:14, Rob Herring wrote:
-> On Tue, Mar 03, 2020 at 07:25:33PM +0200, Dafna Hirschfeld wrote:
->> Convert the binding file atmel,maxtouch.txt to yaml format.
->> Also change the file name in the MAINTAINERS file.
->>
->> This was tested and verified on ARM and ARM64 with:
->>
->> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>
->> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
->> ---
->>   .../bindings/input/atmel,maxtouch.txt         | 41 ------------
->>   .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
->>   MAINTAINERS                                   |  2 +-
->>   3 files changed, 65 insertions(+), 42 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->>   create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> deleted file mode 100644
->> index c88919480d37..000000000000
->> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> +++ /dev/null
->> @@ -1,41 +0,0 @@
->> -Atmel maXTouch touchscreen/touchpad
->> -
->> -Required properties:
->> -- compatible:
->> -    atmel,maxtouch
->> -
->> -    The following compatibles have been used in various products but are
->> -    deprecated:
->> -	atmel,qt602240_ts
->> -	atmel,atmel_mxt_ts
->> -	atmel,atmel_mxt_tp
->> -	atmel,mXT224
->> -
->> -- reg: The I2C address of the device
->> -
->> -- interrupts: The sink for the touchpad's IRQ output
->> -    See ../interrupt-controller/interrupts.txt
->> -
->> -Optional properties for main touchpad device:
->> -
->> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
->> -    on GPIO bit changes. An array of up to 8 entries can be provided
->> -    indicating the Linux keycode mapped to each bit of the status byte,
->> -    starting at the LSB. Linux keycodes are defined in
->> -    <dt-bindings/input/input.h>.
->> -
->> -    Note: the numbering of the GPIOs and the bit they start at varies between
->> -    maXTouch devices. You must either refer to the documentation, or
->> -    experiment to determine which bit corresponds to which input. Use
->> -    KEY_RESERVED for unused padding values.
->> -
->> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
->> -
->> -Example:
->> -
->> -	touch@4b {
->> -		compatible = "atmel,maxtouch";
->> -		reg = <0x4b>;
->> -		interrupt-parent = <&gpio>;
->> -		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
->> -	};
->> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->> new file mode 100644
->> index 000000000000..024dc4ded4f3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->> @@ -0,0 +1,64 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Atmel maXTouch touchscreen/touchpad
->> +
->> +maintainers:
->> +  - Nick Dyer <nick@shmanahar.org>
->> +
->> +description: |
->> +  Atmel maXTouch touchscreen/touchpad
->> +
->> +properties:
->> +  compatible:
->> +    const: atmel,maxtouch
->> +
->> +  reg:
->> +    description: The I2C address of the device
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    description: The sink for the touchpad's IRQ output
-> 
-> How many? Needs 'maxItems: 1'> 
-> You can drop the description.
-> 
->> +
->> +  linux,gpio-keymap:
->> +    description:
->> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
->> +      on GPIO bit changes. An array of up to 8 entries can be provided
->> +      indicating the Linux keycode mapped to each bit of the status byte,
->> +      starting at the LSB. Linux keycodes are defined in
->> +      <dt-bindings/input/input.h>.
->> +      Note, the numbering of the GPIOs and the bit they start at varies between
->> +      maXTouch devices. You must either refer to the documentation, or
->> +      experiment to determine which bit corresponds to which input. Use
->> +      KEY_RESERVED for unused padding values.
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    maxItems: 8
->> +
->> +  reset-gpios:
->> +    description: GPIO specifier for the touchscreen's reset pin (active low)
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +
->> +additionalProperties: true
-> 
-> That's the default and we generally want this to be 'false'.
-but many nodes has more properties not described here so I could not
-set it to false.
+Tested-by: Mark Salter <msalter@redhat.com>
 
-thanks,
-Dafna
-> 
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    #include <dt-bindings/gpio/tegra-gpio.h>
->> +    i2c {
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +          touch@4b {
->> +                compatible = "atmel,maxtouch";
->> +                reg = <0x4b>;
->> +                interrupt-parent = <&gpio>;
->> +                interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
->> +          };
->> +    };
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 46fdb834d1fb..d553aa315734 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2877,7 +2877,7 @@ ATMEL MAXTOUCH DRIVER
->>   M:	Nick Dyer <nick@shmanahar.org>
->>   T:	git git://github.com/ndyer/linux.git
->>   S:	Maintained
->> -F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> +F:	Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>   F:	drivers/input/touchscreen/atmel_mxt_ts.c
->>   
->>   ATMEL WIRELESS DRIVER
->> -- 
->> 2.17.1
->>
+
