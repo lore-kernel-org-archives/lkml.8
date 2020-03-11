@@ -2,100 +2,151 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A28C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DE9C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0603E222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C3B215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qXsTTh3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgCKDpn (ORCPT
+        id S1728109AbgCKDss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:45:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11625 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727685AbgCKDpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:45:43 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B66BC64527A1541740A0;
-        Wed, 11 Mar 2020 11:45:41 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 11 Mar
- 2020 11:45:37 +0800
-Subject: Re: [PATCH 2/5] f2fs: force compressed data into warm area
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200310125009.12966-1-yuchao0@huawei.com>
- <20200310125009.12966-2-yuchao0@huawei.com>
- <20200310163239.GC240315@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <303612de-fa66-8e8a-0d02-dac322832e46@huawei.com>
-Date:   Wed, 11 Mar 2020 11:45:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 10 Mar 2020 23:48:48 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:47795 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727659AbgCKDsr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 23:48:47 -0400
+X-UUID: e20a39dccc694c7abdaad7ccee920932-20200311
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cMby1nCgA1pDUmKWXFEsXyQ9QhGgBEre690yHGxnHko=;
+        b=qXsTTh3r0gGGJwE3in7s8hEI7gDm3EFS8mST4H1eGhl+D6/GzUo75Wfc2Y4HtGZlW7rnTQ49Nq2Tr1+/H6n29TO+8JyVQdtVKxq1GlZ/1o3/9gGeOlB9m4w6atDhFDO4IqNJnsoOJONLxB3utkv+JKG1VwV6yZcAtu8l+Zzhxe8=;
+X-UUID: e20a39dccc694c7abdaad7ccee920932-20200311
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 890007444; Wed, 11 Mar 2020 11:48:41 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Mar 2020 11:47:13 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Mar 2020 11:47:48 +0800
+Message-ID: <1583898520.17060.1.camel@mtksdaap41>
+Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
+From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "Frank Wunderlich" <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Wed, 11 Mar 2020 11:48:40 +0800
+In-Reply-To: <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
+References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200310163239.GC240315@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/11 0:32, Jaegeuk Kim wrote:
-> On 03/10, Chao Yu wrote:
->> Generally, data shows better continuity in warm data area as its
->> default allocation direction is right, in order to enhance
->> sequential read/write performance of compress inode, let's force
->> compress data into warm area.
+SGksDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQpJIHdpbGwgZml4IHRoZSBtaXN0YWtlIGluIHRo
+ZSBuZXh0IHZlcnNpb24uDQoNCk9uIFdlZCwgMjAyMC0wMy0xMSBhdCAxMToyNCArMDgwMCwgTmlj
+b2xhcyBCb2ljaGF0IHdyb3RlOg0KPiBUaGFua3MsIG11Y2ggYmV0dGVyLiBKdXN0IG9uZSBpc3N1
+ZSBsZWZ0Lg0KPiANCj4gT24gVHVlLCBNYXIgMTAsIDIwMjAgYXQgNjoxMCBQTSBIc2luLUhzaXVu
+ZyBXYW5nDQo+IDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4g
+PiBUaGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIE1lZGlhVGVrIE1UNjM1OCBQTUlDLiBUaGlzIGlz
+IGENCj4gPiBtdWx0aWZ1bmN0aW9uIGRldmljZSB3aXRoIHRoZSBmb2xsb3dpbmcgc3ViIG1vZHVs
+ZXM6DQo+ID4NCj4gPiAtIFJlZ3VsYXRvcg0KPiA+IC0gUlRDDQo+ID4gLSBDb2RlYw0KPiA+IC0g
+SW50ZXJydXB0DQo+ID4NCj4gPiBJdCBpcyBpbnRlcmZhY2VkIHRvIHRoZSBob3N0IGNvbnRyb2xs
+ZXIgdXNpbmcgU1BJIGludGVyZmFjZQ0KPiA+IGJ5IGEgcHJvcHJpZXRhcnkgaGFyZHdhcmUgY2Fs
+bGVkIFBNSUMgd3JhcHBlciBvciBwd3JhcC4NCj4gPiBNVDYzNTggTUZEIGlzIGEgY2hpbGQgZGV2
+aWNlIG9mIHRoZSBwd3JhcC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdh
+bmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
+L21mZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAgZHJpdmVycy9tZmQv
+bXQ2MzU4LWlycS5jICAgICAgICAgICAgIHwgMjM4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrDQo+ID4gIGRyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMgICAgICAgICAgICB8ICA1NSArKysr
+KystDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL210NjM1OC9jb3JlLmggICAgICB8IDE1OCArKysr
+KysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L21mZC9tdDYzNTgvcmVnaXN0ZXJz
+LmggfCAyODIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVk
+ZS9saW51eC9tZmQvbXQ2Mzk3L2NvcmUuaCAgICAgIHwgICAzICsNCj4gPiAgNiBmaWxlcyBjaGFu
+Z2VkLCA3MzMgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+aW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L2NvcmUuaA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+aW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L3JlZ2lzdGVycy5oDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9tZmQvTWFrZWZpbGUgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IGluZGV4
+IGI4M2YxNzIuLjlhZjE0MTQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvTWFrZWZpbGUN
+Cj4gPiArKysgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IEBAIC0yMzgsNyArMjM4LDcgQEAg
+b2JqLSQoQ09ORklHX0lOVEVMX1NPQ19QTUlDKSAgICAgICAgKz0gaW50ZWwtc29jLXBtaWMubw0K
+PiA+ICBvYmotJChDT05GSUdfSU5URUxfU09DX1BNSUNfQlhUV0MpICAgICArPSBpbnRlbF9zb2Nf
+cG1pY19ieHR3Yy5vDQo+ID4gIG9iai0kKENPTkZJR19JTlRFTF9TT0NfUE1JQ19DSFRXQykgICAg
+ICs9IGludGVsX3NvY19wbWljX2NodHdjLm8NCj4gPiAgb2JqLSQoQ09ORklHX0lOVEVMX1NPQ19Q
+TUlDX0NIVERDX1RJKSAgKz0gaW50ZWxfc29jX3BtaWNfY2h0ZGNfdGkubw0KPiA+IC1tdDYzOTct
+b2JqcyAgICA6PSBtdDYzOTctY29yZS5vIG10NjM5Ny1pcnEubw0KPiA+ICttdDYzOTctb2JqcyAg
+ICAgICAgICAgICAgICAgICAgOj0gbXQ2Mzk3LWNvcmUubyBtdDYzOTctaXJxLm8gbXQ2MzU4LWly
+cS5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfTVQ2Mzk3KSAgICAgICArPSBtdDYzOTcubw0KPiA+
+ICBvYmotJChDT05GSUdfSU5URUxfU09DX1BNSUNfTVJGTEQpICAgICArPSBpbnRlbF9zb2NfcG1p
+Y19tcmZsZC5vDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5j
+IGIvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
+PiBpbmRleCAwMDAwMDAwLi4wYjk5YTM5DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2Ry
+aXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+IEBAIC0wLDAgKzEsMjM4IEBADQo+ID4gW3NuaXBd
+DQo+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtdDYzNThfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9p
+ZCAqZGF0YSkNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0g
+ZGF0YTsNCj4gPiArICAgICAgIHN0cnVjdCBwbWljX2lycV9kYXRhICptdDYzNThfaXJxX2RhdGEg
+PSBjaGlwLT5pcnFfZGF0YTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBiaXQsIGksIHRvcF9p
+cnFfc3RhdHVzOw0KPiA+ICsgICAgICAgaW50IHJldDsNCj4gPiArDQo+ID4gKyAgICAgICByZXQg
+PSByZWdtYXBfcmVhZChjaGlwLT5yZWdtYXAsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICBtdDYzNThfaXJxX2RhdGEtPnRvcF9pbnRfc3RhdHVzX3JlZywNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICZ0b3BfaXJxX3N0YXR1cyk7DQo+ID4gKyAgICAgICBpZiAocmV0KSB7DQo+
+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoY2hpcC0+ZGV2LA0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICJGYWlsZWQgdG8gcmVhZCBzdGF0dXMgZnJvbSB0aGUgZGV2aWNlLCByZXQ9JWRc
+biIsIHJldCk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBJUlFfTk9ORTsNCj4gPiArICAg
+ICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXQ2MzU4X2lycV9kYXRh
+LT5udW1fdG9wOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8IG10
+NjM1OF9pcnFfZGF0YS0+bnVtX3RvcDsgaSsrKSB7DQo+IA0KPiBPbmx5IG9uZSBsb29wIG5lZWRl
+ZC4NCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYml0ID0gQklUKG10NjM1OF9pbnRz
+W2ldLnRvcF9vZmZzZXQpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICh0b3BfaXJx
+X3N0YXR1cyAmIGJpdCkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXQ2
+MzU4X2lycV9zcF9oYW5kbGVyKGNoaXAsIGkpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgdG9wX2lycV9zdGF0dXMgJj0gfmJpdDsNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGlmICghdG9wX2lycV9zdGF0dXMpDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+IH0NCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAg
+ICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBw
+bWljX2lycV9kb21haW5fbWFwKHN0cnVjdCBpcnFfZG9tYWluICpkLCB1bnNpZ25lZCBpbnQgaXJx
+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcnFfaHdfbnVtYmVyX3QgaHcp
+DQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBtdDYzOTdfY2hpcCAqbXQ2Mzk3ID0gZC0+aG9z
+dF9kYXRhOw0KPiA+ICsNCj4gPiArICAgICAgIGlycV9zZXRfY2hpcF9kYXRhKGlycSwgbXQ2Mzk3
+KTsNCj4gPiArICAgICAgIGlycV9zZXRfY2hpcF9hbmRfaGFuZGxlcihpcnEsICZtdDYzNThfaXJx
+X2NoaXAsIGhhbmRsZV9sZXZlbF9pcnEpOw0KPiA+ICsgICAgICAgaXJxX3NldF9uZXN0ZWRfdGhy
+ZWFkKGlycSwgMSk7DQo+ID4gKyAgICAgICBpcnFfc2V0X25vcHJvYmUoaXJxKTsNCj4gPiArDQo+
+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+IFtzbmlwXQ0KDQo=
 
-It looks cold data's allocation direction is right as well, I missed
-to notice that previously due to I tested in small-sized image, and
-f2fs_tuning_parameters() enables ALLOC_MODE_REUSE, then cold data
-allocation always searchs free segment from segno #0, it breaks
-continuity of physical blocks.
-
-> 
-> Not quite sure tho, compressed blocks are logically cold, no?
-
-Correct.
-
-Please ignore this patch. :P
-
-Thanks,
-
-> 
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/segment.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->> index 601d67e72c50..ab1bc750712a 100644
->> --- a/fs/f2fs/segment.c
->> +++ b/fs/f2fs/segment.c
->> @@ -3037,9 +3037,10 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
->>  	if (fio->type == DATA) {
->>  		struct inode *inode = fio->page->mapping->host;
->>  
->> -		if (is_cold_data(fio->page) || file_is_cold(inode) ||
->> -				f2fs_compressed_file(inode))
->> +		if (is_cold_data(fio->page) || file_is_cold(inode))
->>  			return CURSEG_COLD_DATA;
->> +		if (f2fs_compressed_file(inode))
->> +			return CURSEG_WARM_DATA;
->>  		if (file_is_hot(inode) ||
->>  				is_inode_flag_set(inode, FI_HOT_DATA) ||
->>  				f2fs_is_atomic_file(inode) ||
->> -- 
->> 2.18.0.rc1
-> .
-> 
