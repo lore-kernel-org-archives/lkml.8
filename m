@@ -6,32 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E8FC2BAEE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6763FC0044D
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B7420739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B8020739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgCKWkE (ORCPT
+        id S1731400AbgCKWkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:40:04 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:28793 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729881AbgCKWkC (ORCPT
+        Wed, 11 Mar 2020 18:40:05 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:37801 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731352AbgCKWkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:40:02 -0400
-X-Originating-IP: 86.202.105.35
+        Wed, 11 Mar 2020 18:40:04 -0400
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 447A6240004;
-        Wed, 11 Mar 2020 22:40:00 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id DF560100003;
+        Wed, 11 Mar 2020 22:40:01 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] rtc: 88pm860x: stop calling unused callback
-Date:   Wed, 11 Mar 2020 23:39:53 +0100
-Message-Id: <20200311223956.51352-3-alexandre.belloni@bootlin.com>
+Subject: [PATCH 5/6] rtc: 88pm860x: stop mangling alarm time
+Date:   Wed, 11 Mar 2020 23:39:55 +0100
+Message-Id: <20200311223956.51352-5-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200311223956.51352-1-alexandre.belloni@bootlin.com>
 References: <20200311223956.51352-1-alexandre.belloni@bootlin.com>
@@ -42,63 +41,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pdata->sync is not defined by any platform, stop calling it.
+The RTC core always passes a valid alarm time there is no need to modify
+it.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-88pm860x.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+ drivers/rtc/rtc-88pm860x.c | 41 +-------------------------------------
+ 1 file changed, 1 insertion(+), 40 deletions(-)
 
 diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index d6aca28905e3..0abf2b194938 100644
+index f5933a08454c..e0b18227514b 100644
 --- a/drivers/rtc/rtc-88pm860x.c
 +++ b/drivers/rtc/rtc-88pm860x.c
-@@ -28,7 +28,6 @@ struct pm860x_rtc_info {
- 
- 	int			irq;
- 	int			vrtc;
--	int			(*sync)(unsigned int ticks);
- };
- 
- #define REG_VRTC_MEAS1		0x7D
-@@ -155,8 +154,6 @@ static int pm860x_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	pm860x_page_reg_write(info->i2c, REG2_DATA, (base >> 8) & 0xFF);
- 	pm860x_page_reg_write(info->i2c, REG3_DATA, base & 0xFF);
- 
--	if (info->sync)
--		info->sync(ticks);
+@@ -75,33 +75,6 @@ static int pm860x_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
  	return 0;
  }
  
-@@ -317,8 +314,6 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 	struct pm860x_chip *chip = dev_get_drvdata(pdev->dev.parent);
- 	struct pm860x_rtc_pdata *pdata = NULL;
- 	struct pm860x_rtc_info *info;
--	struct rtc_time tm;
--	unsigned long ticks = 0;
- 	int ret;
- 
- 	pdata = dev_get_platdata(&pdev->dev);
-@@ -355,18 +350,7 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 	pm860x_page_reg_write(info->i2c, REG2_ADDR, REG2_DATA);
- 	pm860x_page_reg_write(info->i2c, REG3_ADDR, REG3_DATA);
- 
--	ret = pm860x_rtc_read_time(&pdev->dev, &tm);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to read initial time.\n");
--		return ret;
+-/*
+- * Calculate the next alarm time given the requested alarm time mask
+- * and the current time.
+- */
+-static void rtc_next_alarm_time(struct rtc_time *next, struct rtc_time *now,
+-				struct rtc_time *alrm)
+-{
+-	unsigned long next_time;
+-	unsigned long now_time;
+-
+-	next->tm_year = now->tm_year;
+-	next->tm_mon = now->tm_mon;
+-	next->tm_mday = now->tm_mday;
+-	next->tm_hour = alrm->tm_hour;
+-	next->tm_min = alrm->tm_min;
+-	next->tm_sec = alrm->tm_sec;
+-
+-	rtc_tm_to_time(now, &now_time);
+-	rtc_tm_to_time(next, &next_time);
+-
+-	if (next_time < now_time) {
+-		/* Advance one day */
+-		next_time += 60 * 60 * 24;
+-		rtc_time_to_tm(next_time, next);
 -	}
--	rtc_tm_to_time(&tm, &ticks);
--	if (pm860x_rtc_dt_init(pdev, info)) {
--		if (pdata && pdata->sync) {
--			pdata->sync(ticks);
--			info->sync = pdata->sync;
--		}
--	}
-+	pm860x_rtc_dt_init(pdev, info);
+-}
+-
+ static int pm860x_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct pm860x_rtc_info *info = dev_get_drvdata(dev);
+@@ -187,7 +160,6 @@ static int pm860x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ static int pm860x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ {
+ 	struct pm860x_rtc_info *info = dev_get_drvdata(dev);
+-	struct rtc_time now_tm, alarm_tm;
+ 	unsigned long ticks, base, data;
+ 	unsigned char buf[8];
+ 	int mask;
+@@ -200,18 +172,7 @@ static int pm860x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
+ 		(buf[5] << 8) | buf[7];
  
- 	info->rtc_dev->ops = &pm860x_rtc_ops;
+-	/* load 32-bit read-only counter */
+-	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
+-		(buf[1] << 8) | buf[0];
+-	ticks = base + data;
+-	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+-		base, data, ticks);
+-
+-	rtc_time_to_tm(ticks, &now_tm);
+-	rtc_next_alarm_time(&alarm_tm, &now_tm, &alrm->time);
+-	/* get new ticks for alarm in 24 hours */
+-	rtc_tm_to_time(&alarm_tm, &ticks);
++	rtc_tm_to_time(&alrm->time, &ticks);
+ 	data = ticks - base;
  
+ 	buf[0] = data & 0xff;
 -- 
 2.24.1
 
