@@ -2,272 +2,92 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B991AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D77C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2E22074C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAC52074C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMF8S/Ho"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoO6oVmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgCKVWj (ORCPT
+        id S1729460AbgCKVYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:22:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39244 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgCKVWj (ORCPT
+        Wed, 11 Mar 2020 17:24:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42075 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgCKVYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:22:39 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f7so3834931wml.4;
-        Wed, 11 Mar 2020 14:22:36 -0700 (PDT)
+        Wed, 11 Mar 2020 17:24:09 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v11so4599966wrm.9;
+        Wed, 11 Mar 2020 14:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zEBGqNmWMkfjp7ivVWJDStnNO+UDHuPLvuDXhLZVQUs=;
-        b=UMF8S/HobM25YsLhi/9YE5JMe1VZlxnGiXBgNrvzJoAxzniYqtDbtNWNn+B1Y+Ztpz
-         MfsSDuCIyK1RDV4vWnFfwz0cQqFdT/fJejeIzSidn7FMlEQyhbOWniV5ZlW5SHjgdllb
-         SzTQYiIONoIqMgwJ0aPHgZJuG9d3z50uWdIPaVPuakXQdpVnRFfM5G8/5jzF9KaQ04bt
-         Y2UYwg1GuYHxisoyyxbcIG9KKxogzm6C66URrEUTVcWxr6krxXadHbYu4Jchh0mwFbWq
-         q4yIE7P9VgIXRX26DAEVTYDUAxhIO/S5OXECQud15b6g0lwntgNUlkjXzlr/0oFOSzIp
-         Mfhw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fuyIUQ7b5CBLSZ8E0QJGAyWVlbMJzgaunPSPgIViZwk=;
+        b=uoO6oVmZhvWxJWeOAuN27RkZ8JajNoW3OSeQqgmgf+5HU/hC0/ku1AZ2Svf3gScae3
+         wpwfXGX0G4yNg2krZ2dRWnHF5IqZOxyBNVDYlZ1l08JxLa3a6Fm6UEn2VP7pxh/VbNxg
+         N7p7HZabg6+wW+NTCbkdYaJ0txe+RB3FDQJUnhh91XP/Sv3tKe8FQqBe5zvZDc8qLLf/
+         hdWTfdxA6gslW2U2WdZSW866CQ3/T6uQPIDF2gtYSjoAbaxCWdWNF78Qkt9nCpvTUgPz
+         22ZOgs9ZOKsWn8MlZQ5HE6WNoroDDwbYA4tpsQkSx+tdl95+EbT8whx21NA5/cwdzhA5
+         1+AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zEBGqNmWMkfjp7ivVWJDStnNO+UDHuPLvuDXhLZVQUs=;
-        b=gzh5dDIxELl0XrCIZQIAXZk72h4tvHKOpa+rnaA6HmIOnPRbTRbKu9VFFSNJ1SqbCM
-         ObNQ27pKvqoFVwUOCWCR99EPEimU9Mcc2/Bts1xnGWx5WUyxyXPd1WX1Mmg/BniM021K
-         r/tI1HDvHIgsmfK8foJAepQuv5CjDzyjqbxa/LEeizf+536Dol/bc50onJx1I4XHhW9x
-         hxKGLXzfh7VBh4tnrrhEfdlbIsmgJr4cb4E+wzADHyJsU5JAMOcm9YTlAU4cnuumD0Vh
-         stiW4TACYdITXfHGSPmbGvxnlnAGsoqYGDGO4hf6B7jA3PYEXTMsg/WFcBkssEDpxXEK
-         csHA==
-X-Gm-Message-State: ANhLgQ0Hug7DbhddtICcROwK1Qc8amo9cbG5vNay2ywBzzjBgZwFwqJo
-        saP7J9hfIA4gf98EcpeOl/w+9OYr
-X-Google-Smtp-Source: ADFU+vtTPgkZUZ+xcybs1bUaKk0QR5IVaGjMmnyNIP8AFwmwlOexaMQ/KMxo3oADFhzLkBH4YzKK7g==
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr648895wmi.140.1583961755916;
-        Wed, 11 Mar 2020 14:22:35 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:cddc:500b:7233:8488? (p200300EA8F296000CDDC500B72338488.dip0.t-ipconnect.de. [2003:ea:8f29:6000:cddc:500b:7233:8488])
-        by smtp.googlemail.com with ESMTPSA id n11sm295851wrt.74.2020.03.11.14.22.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 14:22:35 -0700 (PDT)
-Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <20200220233454.31514-1-f.fainelli@gmail.com>
- <20200223.205911.1667092059432885700.davem@davemloft.net>
- <CAMuHMdWuP1_3vqOpf7KEimLLTKiWpWku9fUAdP3CCR6WbHyQdg@mail.gmail.com>
- <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com>
- <CAMuHMdUMM0Q6W7A0mVgSf7XmF8yROZb3uzHPU1ETbMAfvTtfow@mail.gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <ca2abe1a-a9ed-23c9-ceaa-b0042be49be9@gmail.com>
-Date:   Wed, 11 Mar 2020 22:22:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUMM0Q6W7A0mVgSf7XmF8yROZb3uzHPU1ETbMAfvTtfow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fuyIUQ7b5CBLSZ8E0QJGAyWVlbMJzgaunPSPgIViZwk=;
+        b=bdPTulpWtxooXZO/I3g9TGYMukXlYzDqG0lroHfIuYayikePfy7eIFbbF4TGd3S0sT
+         vzLwusQL/ANtPdoQxB65BlcyKjf7IjUIVklrIdbubWqlYFG3oYO0cgtyelCypMQKZiL0
+         2I9AS6XHLF+KB9iEWioT7+37s6O6SVdH5hUAaQTdNxjY04yqWISs3dXzM+H5pTjpzVhz
+         mCHSC0T5PUQvRLeMdLDYRatsOL56bkN28tNjHVVe0VmZl7N0vViAc1aXvL0UTd/pc8EG
+         8Ece8Gv+mt7/ynCydJXOP05vgJQfDm9BE+3JTXuzyq0BGFbnt6emIGfiwJzjvdvVQTvv
+         wepA==
+X-Gm-Message-State: ANhLgQ2P/yzVZb6lqyyK85ZcHjX9f9Mydi/vx/2BLDtegCAstl3H4wrT
+        ztIiQkYXes6szK3AJ9XIaGjZKMGS
+X-Google-Smtp-Source: ADFU+vuYd5Vi6zFvxP8WvwEA4pSeyb50560+pVCwg9vjetJLFM971+3tweYm9Zyh/wW8Sf20AjkZhw==
+X-Received: by 2002:a5d:4683:: with SMTP id u3mr6742903wrq.251.1583961846711;
+        Wed, 11 Mar 2020 14:24:06 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p8sm3023577wrw.19.2020.03.11.14.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 14:24:05 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com, nick.hudson@gmx.co.uk,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Nick Hudson <skrll@netbsd.org>
+Subject: Re: [PATCH] ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
+Date:   Wed, 11 Mar 2020 14:24:02 -0700
+Message-Id: <20200311212402.9934-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200310182537.8156-1-nick.hudson@gmx.co.uk>
+References: <20200310182537.8156-1-nick.hudson@gmx.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.2020 10:17, Geert Uytterhoeven wrote:
-> On Tue, Mar 10, 2020 at 5:47 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> On 3/10/20 7:16 AM, Geert Uytterhoeven wrote:
->>> Hi Florian, David,
->>>
->>> On Mon, Feb 24, 2020 at 5:59 AM David Miller <davem@davemloft.net> wrote:
->>>> From: Florian Fainelli <f.fainelli@gmail.com>
->>>> Date: Thu, 20 Feb 2020 15:34:53 -0800
->>>>
->>>>> It is currently possible for a PHY device to be suspended as part of a
->>>>> network device driver's suspend call while it is still being attached to
->>>>> that net_device, either via phy_suspend() or implicitly via phy_stop().
->>>>>
->>>>> Later on, when the MDIO bus controller get suspended, we would attempt
->>>>> to suspend again the PHY because it is still attached to a network
->>>>> device.
->>>>>
->>>>> This is both a waste of time and creates an opportunity for improper
->>>>> clock/power management bugs to creep in.
->>>>>
->>>>> Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
->>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>
->>>> Applied, and queued up for -stable, thanks Florian.
->>>
->>> This patch causes a regression on r8a73a4/ape6evm and sh73a0/kzm9g.
->>> After resume from s2ram, Ethernet no longer works:
->>>
->>>         PM: suspend exit
->>>         nfs: server aaa.bbb.ccc.ddd not responding, still trying
->>>         ...
->>>
->>> Reverting commit 503ba7c6961034ff ("net: phy: Avoid multiple suspends")
->>> fixes the issue.
->>>
->>> On both boards, an SMSC LAN9220 is connected to a power-managed local
->>> bus.
->>>
->>> I added some debug code to check when the clock driving the local bus
->>> is stopped and started, but I see no difference before/after.  Hence I
->>> suspect the Ethernet chip is no longer reinitialized after resume.
->>
->> Can you provide a complete log?
+On Tue, 10 Mar 2020 18:25:37 +0000, nick.hudson@gmx.co.uk wrote:
+> From: Nick Hudson <nick.hudson@gmx.co.uk>
 > 
-> With some debug info:
+> Define the sdhci pinctrl state as "default" so it gets applied
+> correctly and to match all other RPis.
 > 
->     SDHI0 Vcc: disabling
->     PM: suspend entry (deep)
->     Filesystems sync: 0.002 seconds
->     Freezing user space processes ... (elapsed 0.001 seconds) done.
->     OOM killer disabled.
->     Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
->     PM: ==== a3sp/ee120000.sd: stop
->     PM: ==== a3sp/ee100000.sd: stop
->     smsc911x 8000000.ethernet: smsc911x_suspend:2577
->     smsc911x 8000000.ethernet: smsc911x_suspend:2579 running
->     smsc911x 8000000.ethernet: smsc911x_suspend:2584
->     PM: ==== a3sp/ee200000.mmc: stop
->     PM: ==== c4/fec10000.bus: stop
->     PM: ==== a3sp/e6c40000.serial: stop
->     PM: ==== c5/e61f0000.thermal: stop
->     PM: ==== c4/e61c0200.interrupt-controller: stop
->     PM: == a3sp: power off
->     rmobile_pd_power_down: a3sp
->     Disabling non-boot CPUs ...
->     PM: ==== c4/e61c0200.interrupt-controller: start
->     PM: ==== c5/e61f0000.thermal: start
->     PM: ==== a3sp/e6c40000.serial: start
->     PM: ==== c4/fec10000.bus: start
->     PM: ==== a3sp/ee200000.mmc: start
->     smsc911x 8000000.ethernet: smsc911x_resume:2606
->     smsc911x 8000000.ethernet: smsc911x_resume:2625 running
->     PM: ==== a3sp/ee100000.sd: start
->     OOM killer enabled.
->     Restarting tasks ... done.
->     PM: ==== a3sp/ee120000.sd: start
->     PM: suspend exit
->     nfs: server aaa.bbb.ccc.ddd not responding, still trying
->     ...
+> Fixes: 2c7c040c73e9 ("ARM: dts: bcm2835: Add Raspberry Pi Zero W")
 > 
-> But no difference between the good and the bad case, except for the nfs
-> failures.
-> 
->> Do you use the Generic PHY driver or a
->> specialized one?
-> 
-> CONFIG_FIXED_PHY=y
-> CONFIG_SMSC_PHY=y
-> 
-> Just the smsc,lan9115 node, cfr. arch/arm/boot/dts/r8a73a4-ape6evm.dts
-> 
->> Do you have a way to dump the registers at the time of
->> failure and see if BMCR.PDOWN is still set somehow?
-> 
-> Added a hook into "nfs: server not responding", which prints:
-> 
->     MII_BMCR = 0x1900
-> 
-> i.e. BMCR_PDOWN = 0x0800 is still set.
-> 
->> Does the following help:
->>
->> diff --git a/drivers/net/ethernet/smsc/smsc911x.c
->> b/drivers/net/ethernet/smsc/smsc911x.c
->> index 49a6a9167af4..df17190c76c0 100644
->> --- a/drivers/net/ethernet/smsc/smsc911x.c
->> +++ b/drivers/net/ethernet/smsc/smsc911x.c
->> @@ -2618,6 +2618,7 @@ static int smsc911x_resume(struct device *dev)
->>         if (netif_running(ndev)) {
->>                 netif_device_attach(ndev);
->>                 netif_start_queue(ndev);
->> +               phy_resume(dev->phydev);
->>         }
->>
-> 
-> Yes i does, after s/dev->/ndev->/.
-> Thanks!
-> 
+> Signed-off-by: Nick Hudson <skrll@netbsd.org>
+> ---
 
-This seems to be a workaround. And the same issue we may have with
-other drivers too. Could you please alternatively test the following?
-It tackles the issue that mdio_bus_phy_may_suspend() is used in
-suspend AND resume, and both calls may return different values.
-
-With this patch we call mdio_bus_phy_may_suspend() only when
-suspending, and let the phy_device store whether it was suspended
-by MDIO bus PM.
-
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 32a5ceddc..6d6c6a178 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -286,6 +286,8 @@ static int mdio_bus_phy_suspend(struct device *dev)
- 	if (!mdio_bus_phy_may_suspend(phydev))
- 		return 0;
- 
-+	phydev->suspended_by_mdio_bus = 1;
-+
- 	return phy_suspend(phydev);
- }
- 
-@@ -294,9 +296,11 @@ static int mdio_bus_phy_resume(struct device *dev)
- 	struct phy_device *phydev = to_phy_device(dev);
- 	int ret;
- 
--	if (!mdio_bus_phy_may_suspend(phydev))
-+	if (!phydev->suspended_by_mdio_bus)
- 		goto no_resume;
- 
-+	phydev->suspended_by_mdio_bus = 0;
-+
- 	ret = phy_resume(phydev);
- 	if (ret < 0)
- 		return ret;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8b299476b..118de9f5b 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -357,6 +357,7 @@ struct macsec_ops;
-  * is_gigabit_capable: Set to true if PHY supports 1000Mbps
-  * has_fixups: Set to true if this phy has fixups/quirks.
-  * suspended: Set to true if this phy has been suspended successfully.
-+ * suspended_by_mdio_bus: Set to true if this phy was suspended by MDIO bus.
-  * sysfs_links: Internal boolean tracking sysfs symbolic links setup/removal.
-  * loopback_enabled: Set true if this phy has been loopbacked successfully.
-  * state: state of the PHY for management purposes
-@@ -396,6 +397,7 @@ struct phy_device {
- 	unsigned is_gigabit_capable:1;
- 	unsigned has_fixups:1;
- 	unsigned suspended:1;
-+	unsigned suspended_by_mdio_bus:1;
- 	unsigned sysfs_links:1;
- 	unsigned loopback_enabled:1;
- 
--- 
-2.25.1
-
-
-
-
-
-
+Applied to devicetree/fixes, thanks!
+--
+Florian
