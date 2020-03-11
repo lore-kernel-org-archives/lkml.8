@@ -2,122 +2,111 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58935C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C104EC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5200F20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5437D20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SehN6XSB"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="DaPQKPvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbgCKTl1 (ORCPT
+        id S1731206AbgCKTmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:41:27 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36867 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730705AbgCKTl0 (ORCPT
+        Wed, 11 Mar 2020 15:42:00 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:33062 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730705AbgCKTl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:41:26 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w13so3101583oih.4;
-        Wed, 11 Mar 2020 12:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dI6sJcdtz7nc50Bt/3fFcsotsOXM7BkdNH0XrYOC1w0=;
-        b=SehN6XSBNOQwcDg+tUtHwa4z9mz9AKT2G4MyjvG9P/Njven5E6k/+A7jTHT0fsbIZX
-         lq1MLTmaPi7/b8Ywj3yEvI0YzFJtG156VCEtUj40e0b5d7/8lupkyNFWYwIpPt2/loEC
-         Zf4HWeGBHoxunIf/knTwmVCmjdB9K9dIgscInoJGZiemQlEt5lDL9cNi/qThD5t2Tdp4
-         4DVuVEv7NkHPOf6N0RE+QKpuH+SVc4x2iGrvFlzslkG3S2l9D7LUBUOUGttIw82ZN3IP
-         KPBwYquOsu3Q/h7vj/lb56SdtvDeCglDuJZT5nhU6mEwjg2dPKb35mXDxjizci1Z2uvC
-         VHIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dI6sJcdtz7nc50Bt/3fFcsotsOXM7BkdNH0XrYOC1w0=;
-        b=kNqzEdbrQQbS3d0HYihsMwmDCEDlGOaprtUiC3qBDNMFIGYj91rwz25fEi6mDgnBoL
-         9teSRnw34t04M0s0JRZnM0Gwc/RXpBvUC6YwIr49v99hCFwkhOHDIjDCI+ITh8AO72U4
-         TPkUQmunKomWY8v0Cqhx3cbBbhEHYjKzeSb56YaJuLGe3JI1X729hx9hU2Obxge9aJzb
-         cikrkuVqm8ryIQsDXWAmVgVaJEhI6rIFQh7KLV34Ah42Gkii5780buI/dZ4T42GR6ZyS
-         66nFS3GswuWmbJ2FQOwcb0Ldoxc1X2IbIyiBr1INiMSMxCLefVLR9So0knZBiVM6BgJp
-         eU9g==
-X-Gm-Message-State: ANhLgQ19RRbidOZj8oqA6rXJ2Z1xX3ONlGOBVll9fLxHltk+HS+Y+tqg
-        Jea7W9kzEN230i9bcC1RlPrRNLYTTGI=
-X-Google-Smtp-Source: ADFU+vtzYTnJDvxK3gb2rD75KnJUGe55yv0DIIhmKiswyMDrFoILdSz87k7h9AgbWJhsFx+vO/bAgQ==
-X-Received: by 2002:aca:db56:: with SMTP id s83mr192818oig.171.1583955686120;
-        Wed, 11 Mar 2020 12:41:26 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c3sm4520955otl.81.2020.03.11.12.41.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:41:25 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] kbuild: Disable -Wpointer-to-enum-cast
-Date:   Wed, 11 Mar 2020 12:41:21 -0700
-Message-Id: <20200311194121.38047-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.0.rc1
-In-Reply-To: <20200308073400.23398-1-natechancellor@gmail.com>
-References: <20200308073400.23398-1-natechancellor@gmail.com>
+        Wed, 11 Mar 2020 15:41:59 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A3FA0891AF;
+        Thu, 12 Mar 2020 08:41:57 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1583955717;
+        bh=g98wG8WC2CahiRzoVUwtQdsdYBgfJpe+m0ZeRfNV880=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=DaPQKPvIYiwp6jZS6MdbCk1WeermGpFB1l62YuDeoJO9VtHnCR3xzFt2QqjScmxbc
+         MmXw/09XjhNzkzwdZhARirBh1KEujbKxxJ09z+fNM9pI7a5iumyAUtbAjQ2+9PQO52
+         6WngUURNSOfevKYlyTlFw/cqmaZHG4ZsVDPAHEy58YRKHq/pwlejeBYRvJCUzdve5E
+         ZTeWZWPP4wumFeMc5FFnyZYQ0IWH+17LFcZsiwHn6EvtHxgCAA+bTmPkrdNtzsWjI9
+         /dj/wv3bgRFyHa3j+T6TnLB57j3KDwOGCOn/kyY2srqYmxwRYbWN+gq1W/KMKhB77o
+         +2afZ6G/Z5bFA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e693f030001>; Thu, 12 Mar 2020 08:41:55 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Thu, 12 Mar 2020 08:41:57 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Thu, 12 Mar 2020 08:41:57 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "andrew@lunn.ch" <andrew@lunn.ch>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "josua@solid-run.com" <josua@solid-run.com>
+Subject: Re: [PATCH] net: mvmdio: avoid error message for optional IRQ
+Thread-Topic: [PATCH] net: mvmdio: avoid error message for optional IRQ
+Thread-Index: AQHV906TQEy52yaMuUeP8DHX6vlJ/qhCc4WAgAB+LgA=
+Date:   Wed, 11 Mar 2020 19:41:56 +0000
+Message-ID: <c99160a5fea2ac3c9e5be5093a3635bfd94710ca.camel@alliedtelesis.co.nz>
+References: <20200311024131.1289-1-chris.packham@alliedtelesis.co.nz>
+         <20200311121019.GH5932@lunn.ch>
+In-Reply-To: <20200311121019.GH5932@lunn.ch>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d0d:cc28:ebac:1152]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2CD552B9960E0241B58E9FF096CDE41A@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang's -Wpointer-to-int-cast deviates from GCC in that it warns when
-casting to enums. The kernel does this in certain places, such as device
-tree matches to set the version of the device being used, which allows
-the kernel to avoid using a gigantic union.
-
-https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L428
-https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L402
-https://elixir.bootlin.com/linux/v5.5.8/source/include/linux/mod_devicetable.h#L264
-
-To avoid a ton of false positive warnings, disable this particular part
-of the warning, which has been split off into a separate diagnostic so
-that the entire warning does not need to be turned off for clang. It
-will be visible under W=1 in case people want to go about fixing these
-easily and enabling the warning treewide.
-
-Cc: stable@vger.kernel.org
-Link: https://github.com/ClangBuiltLinux/linux/issues/887
-Link: https://github.com/llvm/llvm-project/commit/2a41b31fcdfcb67ab7038fc2ffb606fd50b83a84
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
-
-v1 -> v2:
-
-* Move under scripts/Makefile.extrawarn, as requested by Masahiro
-
- scripts/Makefile.extrawarn | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index ecddf83ac142..ca08f2fe7c34 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -48,6 +48,7 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
- KBUILD_CFLAGS += -Wno-format
- KBUILD_CFLAGS += -Wno-sign-compare
- KBUILD_CFLAGS += -Wno-format-zero-length
-+KBUILD_CFLAGS += $(call cc-disable-warning, pointer-to-enum-cast)
- endif
- 
- endif
--- 
-2.26.0.rc1
-
+T24gV2VkLCAyMDIwLTAzLTExIGF0IDEzOjEwICswMTAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+T24gV2VkLCBNYXIgMTEsIDIwMjAgYXQgMDM6NDE6MzBQTSArMTMwMCwgQ2hyaXMgUGFja2hhbSB3
+cm90ZToNCj4gPiBQZXIgdGhlIGR0LWJpbmRpbmcgdGhlIGludGVycnVwdCBpcyBvcHRpb25hbCBz
+byB1c2UNCj4gPiBwbGF0Zm9ybV9nZXRfaXJxX29wdGlvbmFsKCkgaW5zdGVhZCBvZiBwbGF0Zm9y
+bV9nZXRfaXJxKCkuIFNpbmNlDQo+ID4gY29tbWl0IDc3MjNmNGM1ZWNkYiAoImRyaXZlciBjb3Jl
+OiBwbGF0Zm9ybTogQWRkIGFuIGVycm9yIG1lc3NhZ2UgdG8NCj4gPiBwbGF0Zm9ybV9nZXRfaXJx
+KigpIikgcGxhdGZvcm1fZ2V0X2lycSgpIHByb2R1Y2VzIGFuIGVycm9yIG1lc3NhZ2UNCj4gPiAN
+Cj4gPiAgIG9yaW9uLW1kaW8gZjEwNzIwMDQubWRpbzogSVJRIGluZGV4IDAgbm90IGZvdW5kDQo+
+ID4gDQo+ID4gd2hpY2ggaXMgcGVyZmVjdGx5IG5vcm1hbCBpZiBvbmUgaGFzbid0IHNwZWNpZmll
+ZCB0aGUgb3B0aW9uYWwgcHJvcGVydHkNCj4gPiBpbiB0aGUgZGV2aWNlIHRyZWUuDQo+ID4gDQo+
+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxl
+c2lzLmNvLm56Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL212
+bWRpby5jIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVs
+ZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFy
+dmVsbC9tdm1kaW8uYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21hcnZlbGwvbXZtZGlvLmMNCj4g
+PiBpbmRleCAwYjllODUxZjNkYTQuLmQxNDc2MmQ5MzY0MCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL212bWRpby5jDQo+ID4gKysrIGIvZHJpdmVycy9uZXQv
+ZXRoZXJuZXQvbWFydmVsbC9tdm1kaW8uYw0KPiA+IEBAIC0zNDcsNyArMzQ3LDcgQEAgc3RhdGlj
+IGludCBvcmlvbl9tZGlvX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4g
+IAl9DQo+ID4gIA0KPiA+ICANCj4gPiAtCWRldi0+ZXJyX2ludGVycnVwdCA9IHBsYXRmb3JtX2dl
+dF9pcnEocGRldiwgMCk7DQo+ID4gKwlkZXYtPmVycl9pbnRlcnJ1cHQgPSBwbGF0Zm9ybV9nZXRf
+aXJxX29wdGlvbmFsKHBkZXYsIDApOw0KPiA+ICAJaWYgKGRldi0+ZXJyX2ludGVycnVwdCA+IDAg
+JiYNCj4gPiAgCSAgICByZXNvdXJjZV9zaXplKHIpIDwgTVZNRElPX0VSUl9JTlRfTUFTSyArIDQp
+IHsNCj4gPiAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsDQo+IA0KPiBIaSBDaHJpcw0KPiANCj4gVGhp
+cyBpcyB0aGUgbWluaW11bSBmaXguIFNvOg0KPiANCj4gUmV2aWV3ZWQtYnk6IEFuZHJldyBMdW5u
+IDxhbmRyZXdAbHVubi5jaD4NCj4gDQo+IEhvd2V2ZXIsIHlvdSBjb3VsZCBhbHNvIHNpbXBsaWZ5
+DQo+IA0KPiAgICAgICAgIH0gZWxzZSBpZiAoZGV2LT5lcnJfaW50ZXJydXB0ID09IC1FUFJPQkVf
+REVGRVIpIHsNCj4gICAgICAgICAgICAgICAgIHJldCA9IC1FUFJPQkVfREVGRVI7DQo+ICAgICAg
+ICAgICAgICAgICBnb3RvIG91dF9tZGlvOw0KPiAgICAgICAgIH0NCj4gDQo+IA0KPiB0byBqdXN0
+DQo+IA0KPiAgICAgICAgIH0gZWxzZSB7DQo+ICAgICAgICAgICAgICAgICByZXQgPSBkZXYtPmVy
+cl9pbnRlcnJ1cHQ7DQo+ICAgICAgICAgICAgICAgICBnb3RvIG91dF9tZGlvOw0KPiAgICAgICAg
+IH0NCg0KTWFrZXMgc2Vuc2UuIE1heSBhcyB3ZWxsIGluY2x1ZGUgdGhhdCB3aGlsZSBJJ20gaGVy
+ZS4NCg0KPiANCj4gICAgIEFuZHJldw0K
