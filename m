@@ -2,105 +2,175 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B92C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AC9C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2D920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A0720873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="pNxDDKgB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGiA0ZAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgCKI6H (ORCPT
+        id S1728709AbgCKI60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:58:07 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:36720 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgCKI6H (ORCPT
+        Wed, 11 Mar 2020 04:58:26 -0400
+Received: from mail-ua1-f45.google.com ([209.85.222.45]:43609 "EHLO
+        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbgCKI6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:58:07 -0400
-Received: by mail-vs1-f65.google.com with SMTP id n6so813797vsc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:58:06 -0700 (PDT)
+        Wed, 11 Mar 2020 04:58:25 -0400
+Received: by mail-ua1-f45.google.com with SMTP id o42so425564uad.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gU9ErITT1QpCPjL82L11n7TGUqA4ycf13KZv8wmMFUs=;
-        b=pNxDDKgBb9qmnTlpnjI08oEZvwCsHtVy6nFYbnGtUf+nLRY4z2KyI2VjERT72GdI4I
-         L6GI7YXSQtT07fB1OTdwOQkEsLsIKvspk1bw6zURmukghssL6foEBt9BcxyxyJLv6grl
-         2vTouZHCkvqXfKWmArJ9BrKfqY4305jpiWQ1UZ4D0DXxiOUadjY9LdsJ2GdphQCBxe56
-         Q9bhQsWAqXRvI9zgYkfoiAfB2FyMjm7XytZrRwo/1x1SM3Lnf7f22Kmj7qhIPMaHBtfH
-         /oqIs74MNOc9RVbolhE6iLDaZqUu/N59WvyEbsnhxRryrgsLvg+Pjmv/s/q6gWI09ut5
-         i//Q==
+        bh=fLNxk8O6Gh8TsCWdxPFKykWAzp8mOJGuS0q7kCK4jy0=;
+        b=fGiA0ZAktSjoWl9DDT85ZeYkJ/uEVjJpeb9D+ohfkIR+yM76gHK2IpxSSIwpuF2uM2
+         f2KVUbuOiRqkDOo+27dpkmhtlKA8GVE7nLmTUaOrTtsS3Vg5TtujomGQ2OB+nDzSn0Eu
+         jP7Gn/B2Nf+N4OyS4QKWwxRYqyWMgNgMff8ZQ181MSjcvYeNjOxr0Lm9MWarNKssfHFj
+         aiGjMskNZhn5mY6RZodwxcRSfIaO8vcIeGJXTUccmJWaJAw1VHj5sJ/YiEG+CcqCqZo6
+         1r54TV302rzRYwz8muKtxckcsEPENmI/kg+QWD5YvScsB1RsdsEY78Ha3Gkw8jf0kf+5
+         NybA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gU9ErITT1QpCPjL82L11n7TGUqA4ycf13KZv8wmMFUs=;
-        b=QQZA6+FqHh34ILcgPg8spJomeqRnl98Drxnt00weHWiolaTiaQkOs3+m0Jdg/vmkag
-         8m3uetnyddgjHqKE3B29oQ4T0DoPJ/4DPrzhxUX6lRx7rbXoWzGsnFC0CRulndz75KkQ
-         IbQ4OqiJDyUonLHC2YH7jLFdLqbdjBFrdmqFgv3448sH89euvR/0iDGXhBeWfQCGqinT
-         V6igRlbVGw8BKi85My/5NC8ocZ2wvHGUHslCttsetHQIyLAhaLJohHva9V0Q/UjL1O+C
-         Bg2CDj863CJ+CGcKYk1sQ/Zf19+dAJUwxjMWBuRpVli6IcNsECQjWCUm/wqRxrZXk2J0
-         bk3Q==
-X-Gm-Message-State: ANhLgQ22qGwVf0CbR6UkqQK+g8DjRnAJvfUaFPub9rTFTenqF0lTaa/F
-        /Fxr69b9itaC7P8hstLMVyWupnUdW7tB5bOpGRVvfA==
-X-Google-Smtp-Source: ADFU+vtOR68AAuws2jiKlsA3945WHYipYLNHGQ2Ef2RWnrCXylZalAG4BHR0y5+N6tGeQ66q3W76CQ/Cw+FS06wgxlw=
-X-Received: by 2002:a67:870f:: with SMTP id j15mr1212241vsd.95.1583917085791;
- Wed, 11 Mar 2020 01:58:05 -0700 (PDT)
+        bh=fLNxk8O6Gh8TsCWdxPFKykWAzp8mOJGuS0q7kCK4jy0=;
+        b=iOR/kn3zfE48iGYoqA0iAjUZ8nvsWuj6If6cI7mY3mnAKgMocFD3m9yef23ifDkbGW
+         Thnt7kMvGxOSoc0jUHH0ikExQz4RmhAprStRhUaA8eD5ALIXx5nIPtP82361/RAOAWH9
+         f/QJpzqdXgQQaPVL6AAxBXVJAH8THwX58anJpJnGcl+apHsAooLFah3J2iU1Qqaz4e+x
+         aR9JSr9YsOqy+jEyHG9x43J8IG95/acrDyRYOQRgS8Vn4lYJvcwXttO3xSx4FFtu5gNw
+         2ri9JVjNR0EglTYzHk1yjZndk7NljAPlUcan5YHb/6SH8SnGyya8EzlkCyQYQlX69Tyn
+         MBkA==
+X-Gm-Message-State: ANhLgQ1RRrR+f5irfvBtZf5Xtxymn+3t7Ni58E1LvPh8BjjybPRgAdAK
+        HeY9FT+23BKdE5Ims5KfL4JfPTpzUe8TVvNjZF1FyA==
+X-Google-Smtp-Source: ADFU+vvAY1hloT57HCPzA8/FbRSet7fJZ0ZjIpEDUNDE3WhJyVBOXTHiqYoQ7JQeBWuQaOvXqocGgd1G1twm2cIJlf8=
+X-Received: by 2002:ab0:7802:: with SMTP id x2mr1058363uaq.100.1583917104040;
+ Wed, 11 Mar 2020 01:58:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583903252-2058-1-git-send-email-Anson.Huang@nxp.com> <1583903252-2058-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1583903252-2058-2-git-send-email-Anson.Huang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 11 Mar 2020 14:27:54 +0530
-Message-ID: <CAHLCerOLaXqejgAZYB1_QZ5WiUK4p+nsmhfVQqgKDW--DSC0bA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] thermal: qoriq: Sort includes alphabetically
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Linux-imx@nxp.com
+References: <20200212024220.GA32111@seokyung-mobl1> <CAPDyKFr9H2XcgCk9AmHgJfHC+PySh66KxegMJ4yb4aqKSVt3kg@mail.gmail.com>
+ <BYAPR11MB269638142E2BF2C6E108B40A9CE20@BYAPR11MB2696.namprd11.prod.outlook.com>
+ <CAPDyKFr=hE6diZmaVy-os3rFScHe+8OphBS+edkVGK+Z-J_=HA@mail.gmail.com>
+ <BYAPR11MB2696D160D6F5B7C98E0503E79CFF0@BYAPR11MB2696.namprd11.prod.outlook.com>
+ <CAPDyKFqqDWMsHEb493p__FNzYaEzE6Ry0bkd-2ng7cdM886zjw@mail.gmail.com>
+ <5f3b8cb9-5e55-ee47-46e5-af019d6328b6@intel.com> <CAPDyKFosrju6y5mOKePsNwqgDr=QeBozFTrWKz4MNpsMmeZdCA@mail.gmail.com>
+ <1583892806.24941.7.camel@mhfsdcap03>
+In-Reply-To: <1583892806.24941.7.camel@mhfsdcap03>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 11 Mar 2020 09:57:47 +0100
+Message-ID: <CAPDyKFrdiiVUrCKR2N=Xbtfy3NhXSaq4m_ziXScdJU3x8G2F+w@mail.gmail.com>
+Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
+To:     Chaotian Jing <chaotian.jing@mediatek.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "Seo, Kyungmin" <kyungmin.seo@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:44 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+On Wed, 11 Mar 2020 at 03:13, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
 >
-> Sort includes alphabetically for consistency, and take this chance
-> to remove unused include of of_address.h.
+> On Tue, 2020-03-10 at 16:41 +0100, Ulf Hansson wrote:
+> > On Tue, 10 Mar 2020 at 11:44, Adrian Hunter <adrian.hunter@intel.com> wrote:
+> > >
+> > > On 10/03/20 11:05 am, Ulf Hansson wrote:
+> > > > On Tue, 10 Mar 2020 at 05:28, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
+> > > >>
+> > > >> I read the link and patch of Chaotian Jing.
+> > > >> I also point out what Chaotian said.
+> > > >> Most host controllers have DLL tuning values for each mode. When host controller is set as HS400 mode with 50MHz clock, host controller uses DLL value which is tuned with 200MHz clock.
+> > > >>
+> > > >> If DLL value in HS400 mode doesn't have the pass range in HS mode, command transfer failing may fail.
+> > > >> In order to make robust sdhci driver, I think the patch needs to be considered.
+> > > >
+> > > > I have, but I am not picking it up in its current form.
+> > > >
+> > > >> Of course, CMD6 with HS400 mode and 200MHz clock should not cause any problem because it's correct configuration.
+> > > >
+> > > > Yes, but not for all cases, as I said in my reply in those email-threads.
+> > > >
+> > > > What I had in mind, is that I I think we should inform
+> > > > mmc_hs400_to_hs200() about under what situation it's getting called.
+> > > > Depending on that, we should either decrease the clock rate before or
+> > > > after we send the CMD6.
+> > > >
+> > > > Would that work for your case?
+> > >
+> > > Ulf, would you consider a new call back e.g.
+> >
+> > That could work, but I am not sure what's best, honestly.
+> >
+> > The problem may be generic or it could be specific to some host
+> > controller? I think we need to answer that question first.
+> >
+> > What do you think?
+> >
+> > Br
+> > Uffe
+> >
+> When start to send CMD6 to switch to HS mode, both Host & eMMC device
+> are working on HS400 mode, so the timing used is MUST at HS400 mode and
+> the clock MUST keep at current clock(usually 200Mhz). after received the
+> response of CMD6, Never use CMD13 to polling card status for timing
+> switch. if host has ops->card_busy() or caps WAIT_WHILE_BUSY, then use
+> it, if not,just do mmc_delay() for specific time.
 
+The CMD13 is currently not used when polling, because we set the
+send_status parameter to false in the calls to __mmc_switch(). So this
+should already be covered, according to your suggestions. Right?
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+When it comes to keeping the clock rate as is, before sending the CMD6
+- I fully agree that it's a good idea when doing a periodic retuning.
+As you would expect things to work as they are.
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/thermal/qoriq_thermal.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+The problem is, when you have received a CRC error and the re-tuning
+is being triggered because of that. In that case it may be a better
+option to decrease the clock rate, at least that is what I recall
+Adrian needs for his cases. Adrian?
+
+What will happen when you receive a CRC error and there is re-tuning
+triggered, is that something you have seen happening on you boards?
+
 >
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> index 67a8d84..028a6bb 100644
-> --- a/drivers/thermal/qoriq_thermal.c
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -3,12 +3,11 @@
->  // Copyright 2016 Freescale Semiconductor, Inc.
+> the next step is that call mmc_set_ios() to set current timing to HS
+> mode and clock to 50Mhz to let Host driver that eMMC device has been
+> switched to HS mode and Host can switch to HS mode at 50Mhz(may apply
+> parameters for this low speed).
+
+Yep, makes sense.
+
+> > >
+> > > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> > > index c2abd417a84a..1bc18fe2632f 100644
+> > > --- a/drivers/mmc/core/mmc.c
+> > > +++ b/drivers/mmc/core/mmc.c
+> > > @@ -1237,7 +1237,10 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
+> > >
+> > >         /* Reduce frequency to HS */
+> > >         max_dtr = card->ext_csd.hs_max_dtr;
+> > > -       mmc_set_clock(host, max_dtr);
+> > > +       if (host->ops->hs400_to_hs200_prep)
+> > > +               host->ops->hs400_to_hs200_prep(host, max_dtr);
+> > > +       else
+> > > +               mmc_set_clock(host, max_dtr);
+> > >
+> > >         /* Switch HS400 to HS DDR */
+> > >         val = EXT_CSD_TIMING_HS;
+> > >
+> > >
+> >
+> > [...]
+> >
+> > Kind regards
+> > Uffe
 >
->  #include <linux/clk.h>
-> -#include <linux/module.h>
-> -#include <linux/platform_device.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/sizes.h>
->  #include <linux/thermal.h>
-> --
-> 2.7.4
->
+
+Kind regards
+Uffe
