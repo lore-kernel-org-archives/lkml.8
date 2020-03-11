@@ -2,143 +2,147 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19022C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540D2C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51D421D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583908613;
-	bh=xz+sZJFmubD4ssEsM3A90XjoRD6psOOwHmjKnsrsbRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fkA0PECngSiHsbr+LMJ1YuEDrrLB8Ze9d9SxsoHvILeiyBO4Iu86hnj7TgdYm1rOP
-	 PjGwBKhCp2lCf0sXGbtgK72EJwUEK8XtX+0oKDMSRoaWwwNRnX8ugEQecFLNThjTJW
-	 97tdilGp2A7miQxKtPmgjfgcT4TCL15YapVKPmFM=
+	by mail.kernel.org (Postfix) with ESMTP id 2D67F21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgCKGgv (ORCPT
+        id S1728238AbgCKGhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55342 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 02:37:25 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63106 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgCKGgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:36:51 -0400
-Received: from localhost (unknown [106.201.105.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8FE2208C4;
-        Wed, 11 Mar 2020 06:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583908610;
-        bh=xz+sZJFmubD4ssEsM3A90XjoRD6psOOwHmjKnsrsbRM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P1oqWI0bB64jxOIKXemfToG1CvrCaC6br86A0kjyJxQhPHifa7j2i9ugHhLGczlyo
-         DPtJBSxqsush0+l/FD/Jlvdk9DM9kDk6X37pe3phnpMGJ0eByGOfBxisXuo70PzBxX
-         +LSeueSF3WTfjkpcVDO1HuyZLHg6rx2tp//ZoDmI=
-Date:   Wed, 11 Mar 2020 12:06:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
-Message-ID: <20200311063645.GH4885@vkoul-mobl>
-References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
- <20200227223206.5020-2-pierre-louis.bossart@linux.intel.com>
- <20200303054136.GP4148@vkoul-mobl>
- <8a04eda6-cbcf-582f-c229-5d6e4557344b@linux.intel.com>
- <20200304095312.GT4148@vkoul-mobl>
- <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
- <20200305063646.GW4148@vkoul-mobl>
- <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
- <20200306050115.GC4148@vkoul-mobl>
- <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
+        id S1726198AbgCKGhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:37:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 23:37:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,539,1574150400"; 
+   d="scan'208";a="236188930"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Mar 2020 23:37:22 -0700
+Date:   Wed, 11 Mar 2020 14:35:19 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH 4/7] fpga: dfl: afu: add interrupt support for error
+  reporting
+Message-ID: <20200311063519.GC4193@yilunxu-OptiPlex-7050>
+References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
+ <1583749790-10837-5-git-send-email-yilun.xu@intel.com>
+ <20200310103921.GD28396@hao-dev>
+ <20200310164738.GC30868@yilunxu-OptiPlex-7050>
+ <20200311024356.GA26202@hao-dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
+In-Reply-To: <20200311024356.GA26202@hao-dev>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-03-20, 09:40, Pierre-Louis Bossart wrote:
-> > > > Why do you need a extra driver for this. Do you have another set of
-> > > > device object and driver for DSP code? But you do manage that, right?
-> > > > I am proposing to simplify the device model here and have only one
-> > > > device (SOF PCI) and driver (SOF PCI driver), which is created by actual
-> > > > bus (PCI here) as you have in rest of the driver like HDA, DSP etc.
+On Wed, Mar 11, 2020 at 10:43:56AM +0800, Wu Hao wrote:
+> On Wed, Mar 11, 2020 at 12:47:38AM +0800, Xu Yilun wrote:
+> > On Tue, Mar 10, 2020 at 06:39:21PM +0800, Wu Hao wrote:
+> > > On Mon, Mar 09, 2020 at 06:29:47PM +0800, Xu Yilun wrote:
+> > > > Error reporting interrupt is very useful to notify users that some
+> > > > errors are detected by the hardware. Once users are notified, they
+> > > > could query hardware logged error states, no need to continuously
+> > > > poll on these states.
 > > > > 
-> > > > I have already recommended is to make the int-sdw a module which is
-> > > > invoked by SOF PCI driver code (thereby all code uses SOF PCI device and
-> > > > SOF PCI driver) directly. The DSP in my time for skl was a separate
-> > > > module but used the parent objects.
+> > > > This patch follows the common DFL interrupt notification and handling
+> > > > mechanism, implements two ioctl commands below for user to query
+> > > > hardware capability, and set/unset interrupt triggers.
 > > > > 
-> > > > The SOF sdw init (the place where sdw routines are invoked after DSP
-> > > > load) can call sdw_probe and startup. Based on DSP sequencing you can
-> > > > call these functions directly without waiting for extra device to be
-> > > > probed etc.
+> > > >  Ioctls:
+> > > >  * DFL_FPGA_PORT_ERR_GET_INFO
+> > > >    get error reporting feature info, including num_irqs which is used to
+> > > >    determine whether/how many interrupts it supports.
 > > > > 
-> > > > I feel your flows will be greatly simplified as a result of this.
+> > > >  * DFL_FPGA_PORT_ERR_SET_IRQ
+> > > >    set/unset given eventfds as error interrupt triggers.
+> > > > 
+> > > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > > ---
+> > > >  drivers/fpga/dfl-afu-error.c  | 69 +++++++++++++++++++++++++++++++++++++++++++
+> > > >  drivers/fpga/dfl-afu-main.c   |  4 +++
+> > > >  include/uapi/linux/fpga-dfl.h | 34 +++++++++++++++++++++
+> > > >  3 files changed, 107 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
+> > > > index c1467ae..a2c5454 100644
+> > > > --- a/drivers/fpga/dfl-afu-error.c
+> > > > +++ b/drivers/fpga/dfl-afu-error.c
+> > > > @@ -15,6 +15,7 @@
+> > > >   */
+> > > >  
+> > > >  #include <linux/uaccess.h>
+> > > > +#include <linux/fpga-dfl.h>
+> > > >  
+> > > >  #include "dfl-afu.h"
+> > > >  
+> > > > @@ -219,6 +220,73 @@ static void port_err_uinit(struct platform_device *pdev,
+> > > >  	afu_port_err_mask(&pdev->dev, true);
+> > > >  }
+> > > >  
+> > > > +static long
+> > > > +port_err_get_info(struct platform_device *pdev,
+> > > > +		  struct dfl_feature *feature, unsigned long arg)
+> > > > +{
+> > > > +	struct dfl_fpga_port_err_info info;
+> > > > +
+> > > > +	info.flags = 0;
+> > > > +	info.capability = 0;
 > > > 
-> > > Not at all, no. This is not a simplification but an extremely invasive
-> > > proposal.
+> > > as flags and capability are not used at this moment, so actually it only exposes
+> > > irq information to user. I understand flags and capability are used for
+> > > future extension, but it may not work without argsz, as we never know what
+> > > comes next, e.g. a capability requires > 32bit can't fit into this ioctl.
+> > > So maybe just a ioctl for IRQ_INFO is enough for now.
 > > > 
-> > > The parent-child relationship is extremely useful for power management, and
-> > > guarantees that the PCI device remains on while one or more of the masters
-> > > are used, and conversely can suspend when all links are idle. I currently
-> > > don't need to do anything, it's all taken care of by the framework.
-> > > 
-> > > If I have to do all the power management at the PCI device level, then I
-> > > will need to keep track of which links are currently active. All these links
-> > > are used independently, so it's racy as hell to keep track of the usage when
-> > > the pm framework already does so quite elegantly. You really want to use the
-> > > pm_runtime_get/put refcount for each master device, not manage them from the
-> > > PCI level.
+> > > How do you think?
 > > 
-> > Not at all, you still can call pm_runtime_get/put() calls in sdw module
-> > for PCI device. That doesn't change at all.
+> > Yes the flags & capability are for future extension.
 > > 
-> > Only change is for suspend/resume you have callbacks from PCI driver
-> > rather than pm core.
-> There are two other related issues that you didn't mention.
+> > The capability field is planned to a bitmask, each bit could indicate the feature
+> > has some capability or not. So it could describe up to 32 capabilities.
+> > I think it would be enough for one sub feature.
+> > 
+> > With this field, users could get a general description of capabilities with one
+> > ioctl. If some capability has more detailed info, we may add addtional ioctl to
+> > fetch it. This is how it works without argsz. Does it make sense?
+> > 
+> > And same definition for flag field. The flag fields could contain some
+> > bool running state represented by each bit.
 > 
-> the ASoC layer does require a driver with a 'name' for the components
-> registered with the master device. So if you don't have a driver for the
-> master device, the DAIs will be associated with the PCI device.
-> 
-> But the ASoC core does make pm_runtime calls on its own,
-> 
-> soc_pcm_open(struct snd_pcm_substream *substream)
-> {
-> ...
-> 	for_each_rtd_components(rtd, i, component)
-> 		pm_runtime_get_sync(component->dev);
-> 
-> and if the device that's associated with the DAI is the PCI device, then
-> that will not result in the relevant master IP being activated, only the PCI
-> device refcount will be increased - meaning there is no hook that would tell
-> the PCI layer to turn on a specific link.
-> 
-> What you are recommending would be an all-or-nothing solution with all links
-> on or all links off, which beats the purpose of having independent
-> link-level power management.
+> This should work for some cases, but kernel doc (core-api/ioctl.rst) says it's
+> better to avoid bitfield completely. I understand it's possible to extend this
+> ioctl with flags and capability, even we can define if flags = A, then given 
+> capability = definition B, if flags = C, then capbaility definition is D, to
+> maximum the usage for extension, but it may make this interface very very
+> complicated to users. This should be the same reason why you didn't put irq
+> info into capability directly. Another reason is, in my understanding, it
+> choices ioctl to expose irq info becasue user must use ioctl to set irq, for
+> other capabilities which doesn't use device file, then some sysfs may be enough
+> for their own functions.
 
-Why can't you use dai .startup callback for this?
+Thanks for clarify this, I'll remove the flags & capability fields
 
-The ASoC core will do pm_runtime calls that will ensure PCI device is
-up, DSP firmware downloaded and running.
+Yilun
 
-You can use .startup() to turn on your link and .shutdown to turn off
-the link.
-
--- 
-~Vinod
+> 
+> Thanks
+> Hao
