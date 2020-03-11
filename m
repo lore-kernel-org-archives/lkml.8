@@ -1,77 +1,138 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:35191 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727506AbgCKD0x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:26:53 -0400
-Date: Wed, 11 Mar 2020 12:19:38 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Jules Irenge <jbi.octave@gmail.com>
-Cc: boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "moderated list:FIREWIRE AUDIO DRIVERS and IEC 61883-1/6 PACKET..."
-        <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH 7/8] ALSA: firewire-tascam: Add missing annotation for
- tscm_hwdep_read_queue()
-Message-ID: <20200311031937.GB8197@workstation>
-References: <0/8>
- <20200311010908.42366-1-jbi.octave@gmail.com>
- <20200311010908.42366-8-jbi.octave@gmail.com>
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C205C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:12:38 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id EB0E2206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:12:38 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730716AbgCKSMh (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:12:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55536 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730468AbgCKSMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:12:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:12:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="261223466"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2020 11:12:32 -0700
+Message-ID: <32b35b12e5e80f309f45b3a17a8d681e7e1fa33f.camel@intel.com>
+Subject: Re: [PATCH V1 11/13] selftests/resctrl: Change Cache Quality
+ Monitoring (CQM) test
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 11 Mar 2020 11:07:45 -0700
+In-Reply-To: <e0bada87-9464-2d08-c4cb-751e30866585@intel.com>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <26086dda86f062bba4116878a012a553503924b2.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <e7bd79cf-4da8-7a61-ac09-4d124315fa93@intel.com>
+         <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
+         <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
+         <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
+         <e0bada87-9464-2d08-c4cb-751e30866585@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311010908.42366-8-jbi.octave@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311031938.4b82V4Z6sc7n1y5OL0vzKb92_D9Glta2fU4DCXaYQAk@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:09:07AM +0000, Jules Irenge wrote:
-> Sparse reports a warning at tscm_hwdep_read_queue()
+Hi Reinette,
+
+On Wed, 2020-03-11 at 11:03 -0700, Reinette Chatre wrote:
+> > > > > > 
+
+[SNIP]
+
+> Hi Sai,
 > 
-> warning: context imbalance in tscm_hwdep_read_queue() - unexpected unlock
+> On 3/11/2020 10:33 AM, Sai Praneeth Prakhya wrote:
+> > On Wed, 2020-03-11 at 10:19 -0700, Reinette Chatre wrote:
+> > > On 3/10/2020 7:46 PM, Sai Praneeth Prakhya wrote:
+> > > > On Tue, 2020-03-10 at 15:18 -0700, Reinette Chatre wrote:
+> > > > > On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+> > > I missed that. Thank you.
+> > > 
+> > > fyi ... when I tried these tests I encountered the following error
+> > > related to unmounting:
+> > > 
+> > > [SNIP]
+> > > ok Write schema "L3:1=7fff" to resctrl FS
+> > > ok Write schema "L3:1=ffff" to resctrl FS
+> > > ok Write schema "L3:1=1ffff" to resctrl FS
+> > > ok Write schema "L3:1=3ffff" to resctrl FS
+> > > # Unable to umount resctrl: Device or resource busy
+> > > # Results are displayed in (Bytes)
+> > > ok CQM: diff within 5% for mask 1
+> > > # alloc_llc_cache_size: 2883584
+> > > # avg_llc_occu_resc: 2973696
+> > > ok CQM: diff within 5% for mask 3
+> > > [SNIP]
+> > > 
+> > > This seems to originate from resctrl_val() that forces an unmount but if
+> > > that fails the error is not propagated.
+> > 
+> > Yes, that's right and it's a good test. I didn't encounter this issue
+> > during
+> > my testing because I wasn't using resctrl FS from other terminals (I think
+> > you
+> > were using resctrl FS from other terminal and hence resctrl_test was
+> > unable to
+> > unmount it).
 > 
-> The root cause is the missing annotation at tscm_hwdep_read_queue()
-> Add the missing __releases(&tscm->lock) annotation
+> I was not explicitly testing for this but this may have been the case.
 > 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  sound/firewire/tascam/tascam-hwdep.c | 1 +
->  1 file changed, 1 insertion(+)
- 
-This looks good.
+> As a sidenote ... could remount_resctrlfs() be called consistently? It
+> seems to switch between being called with true/false and 1/0. Since its
+> parameter type is boolean using true/false seems most appropriate.
 
-Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Agreed and make sense. I will fix this in a separate patch.
 
-> diff --git a/sound/firewire/tascam/tascam-hwdep.c b/sound/firewire/tascam/tascam-hwdep.c
-> index c29a97f6f638..9801e33e7f2a 100644
-> --- a/sound/firewire/tascam/tascam-hwdep.c
-> +++ b/sound/firewire/tascam/tascam-hwdep.c
-> @@ -36,6 +36,7 @@ static long tscm_hwdep_read_locked(struct snd_tscm *tscm, char __user *buf,
->  
->  static long tscm_hwdep_read_queue(struct snd_tscm *tscm, char __user *buf,
->  				  long remained, loff_t *offset)
-> +	__releases(&tscm->lock)
->  {
->  	char __user *pos = buf;
->  	unsigned int type = SNDRV_FIREWIRE_EVENT_TASCAM_CONTROL;
-> -- 
-> 2.24.1
+> > I think the error should not be propagated because unmounting resctrl FS
+> > shouldn't stop us from checking the results. If measuring values reports
+> > an
+> > error then we shouldn't check for results.
+> 
+> This sounds right. It is inconsistent though ... the CQM test unmounts
+> resctrl after it is run but the CAT test does not. Looking closer the
+> CAT test seems to leave its artifacts around in resctrl and this should
+> be cleaned up.
 
+Yes makes sense. I will fix CAT test to cleanup things.
 
-Regards
+> I am not sure about the expectations here. Unmounting resctrl after a
+> test is run is indeed the easiest to clean up and may be ok.
 
-Takashi Sakamoto
+The main reason for unmounting is that assume user hasn't mounted resctrl FS
+before running the test then we want to make sure we get back to the same
+state as before running test and also to clean up any changes made to resctrl
+FS during test.
+
+> It may be a
+> surprise to the user though. Perhaps there can be a snippet in the
+> README that warns people about this?
+
+Sure! makes sense. I will add it.
+
+Regards,
+Sai
 
