@@ -2,91 +2,116 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181F8C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A68BC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AF020873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA542146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQioROWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCKFW7 (ORCPT
+        id S1727074AbgCKFXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:22:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:27105 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgCKFW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:22:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 22:22:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,539,1574150400"; 
-   d="scan'208";a="236305814"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga008.jf.intel.com with ESMTP; 10 Mar 2020 22:22:55 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Michal Hocko" <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Mel Gorman" <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] mm: Add more comments for MADV_FREE
-References: <20200311011117.1656744-1-ying.huang@intel.com>
-        <alpine.DEB.2.21.2003102204450.255869@chino.kir.corp.google.com>
-Date:   Wed, 11 Mar 2020 13:22:54 +0800
-In-Reply-To: <alpine.DEB.2.21.2003102204450.255869@chino.kir.corp.google.com>
-        (David Rientjes's message of "Tue, 10 Mar 2020 22:08:54 -0700")
-Message-ID: <87imjbv51t.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 11 Mar 2020 01:23:06 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37256 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgCKFXF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 01:23:05 -0400
+Received: by mail-io1-f65.google.com with SMTP id k4so634783ior.4;
+        Tue, 10 Mar 2020 22:23:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vhWEqnexHgncpvxDS2l8sBNTUU1im25PrBPC7w+tOLk=;
+        b=FQioROWeCZRT5RbT70b6aS3L4z5A8Xh9+TkXcRo1x7CAqq0IA0ua0MEGE5Uykqe0FL
+         s7mGcH8etLLtylbbbK6FSbTb6IJjRhs43A8ysMHl6swkDiSbevywH8PsYFGAc5tuTu4F
+         hx5OcZDYIvjseSVuRKJfka41SHIGYvXKH88DsabLaszJEEo8W3EyzPcO//PwBEE3M3gH
+         e8lIZX3B3ofO7IvWP08ivloJcQzyEW6krILi2rllnwhYD/9lqaIRca+M2m313QFn0KyF
+         ArCoRx8xQTINJyLzKbBhKUuuPeE0059amPOESX5qE3B8OeqEICFbnYjaivOd08jIc7RP
+         nwqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vhWEqnexHgncpvxDS2l8sBNTUU1im25PrBPC7w+tOLk=;
+        b=n3/N032rmrj9R99Ha7f+uJs9DCRupeRZV3QHXyxcOiig2sXcCCwcecQSIeRn7ova1S
+         y6e0jINgm4wQWfDKcGJjYInk4PfYTtg+ET3VxVXxxUB5mA0tFh8mgkDfjIMSJm24Wp67
+         SOvCABNrajYhgZIR9bcCOEVbyPRXbjNRRPx/yhNd/OkUeXWGACnkBCpkmAl5w1he8jtJ
+         CWb8MFqRKFpMYNhE6ua/Gp1wCX4LbxISCvITgGwo9pTgv0IWvTO7QEwVIUT0DDRbFWIX
+         emH4uq5oBzS8bwVux0MmG2podFv4WwoGrqjAjk/B/spSFZDJPUBT1dK0qIidDQb8R63A
+         jiYg==
+X-Gm-Message-State: ANhLgQ1Qbx6sWtTCHDlVSCfAePTxBHVBreHAsdVT4cbGobcwF84DW0Tb
+        IMNCLMoEMJc3FqSYgVRf4gnyqCBRzxhBU0Ma4Nk=
+X-Google-Smtp-Source: ADFU+vtANanN8/PEuGjCzSXszWB2s1uvEicvF+tk9dez9cHRd+Aa9rbD4VGIuhF4w32MFOQw+Ll20yj+6BJ6OuZClyY=
+X-Received: by 2002:a6b:784a:: with SMTP id h10mr1383631iop.64.1583904182703;
+ Tue, 10 Mar 2020 22:23:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+In-Reply-To: <20200304165845.3081-1-vgoyal@redhat.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 11 Mar 2020 07:22:51 +0200
+Message-ID: <CAOQ4uxi_Xrf+iyP6KVugFgLOfzUvscMr0de0KxQo+jHNBCA9oA@mail.gmail.com>
+Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, mst@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Rientjes <rientjes@google.com> writes:
-
-> On Wed, 11 Mar 2020, Huang, Ying wrote:
+On Wed, Mar 4, 2020 at 7:01 PM Vivek Goyal <vgoyal@redhat.com> wrote:
 >
->> diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
->> index 6f2fef7b0784..01144dd02a5f 100644
->> --- a/include/linux/mm_inline.h
->> +++ b/include/linux/mm_inline.h
->> @@ -9,10 +9,11 @@
->>   * page_is_file_cache - should the page be on a file LRU or anon LRU?
->>   * @page: the page to test
->>   *
->> - * Returns 1 if @page is page cache page backed by a regular filesystem,
->> - * or 0 if @page is anonymous, tmpfs or otherwise ram or swap backed.
->> - * Used by functions that manipulate the LRU lists, to sort a page
->> - * onto the right LRU list.
->> + * Returns 1 if @page is page cache page backed by a regular filesystem or
->> + * anonymous page lazily freed (e.g. via MADV_FREE).  Returns 0 if @page is
->> + * normal anonymous page, tmpfs or otherwise ram or swap backed.  Used by
->> + * functions that manipulate the LRU lists, to sort a page onto the right LRU
->> + * list.
+> Hi,
 >
-> The function name is misleading: anonymous pages that can be lazily freed 
-> are not file cache.  This returns 1 because of the question it is asking: 
-> anonymous lazily freeable pages should be on the file lru, not the anon 
-> lru.  So before adjusting the comment I'd suggest renaming the function to 
-> something like page_is_file_lru().
+> This patch series adds DAX support to virtiofs filesystem. This allows
+> bypassing guest page cache and allows mapping host page cache directly
+> in guest address space.
+>
+> When a page of file is needed, guest sends a request to map that page
+> (in host page cache) in qemu address space. Inside guest this is
+> a physical memory range controlled by virtiofs device. And guest
+> directly maps this physical address range using DAX and hence gets
+> access to file data on host.
+>
+> This can speed up things considerably in many situations. Also this
+> can result in substantial memory savings as file data does not have
+> to be copied in guest and it is directly accessed from host page
+> cache.
+>
+> Most of the changes are limited to fuse/virtiofs. There are couple
+> of changes needed in generic dax infrastructure and couple of changes
+> in virtio to be able to access shared memory region.
+>
+> These patches apply on top of 5.6-rc4 and are also available here.
+>
+> https://github.com/rhvgoyal/linux/commits/vivek-04-march-2020
+>
+> Any review or feedback is welcome.
+>
+[...]
+>  drivers/dax/super.c                |    3 +-
+>  drivers/virtio/virtio_mmio.c       |   32 +
+>  drivers/virtio/virtio_pci_modern.c |  107 +++
+>  fs/dax.c                           |   66 +-
+>  fs/fuse/dir.c                      |    2 +
+>  fs/fuse/file.c                     | 1162 +++++++++++++++++++++++++++-
 
-Yes.  I think page_is_file_lru() is a better name too.  And whether
-tmpfs pages are file cache pages is confusing too.  But I think we can
-do that after this patch if others think this is a good idea too.
+That's a big addition to already big file.c.
+Maybe split dax specific code to dax.c?
+Can be a post series cleanup too.
 
-Best Regards,
-Huang, Ying
+Thanks,
+Amir.
