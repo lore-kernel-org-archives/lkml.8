@@ -2,141 +2,113 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC38CC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8FCC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBA720637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAD120637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="DgLSRBQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgCKIlD (ORCPT
+        id S1728631AbgCKImc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:41:03 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46458 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726934AbgCKIlC (ORCPT
+        Wed, 11 Mar 2020 04:42:32 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38918 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728195AbgCKImc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:41:02 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02B8dgfP004402;
-        Wed, 11 Mar 2020 04:40:54 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yp9x3bwgj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Mar 2020 04:40:53 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02B8eqsI032334
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 11 Mar 2020 04:40:52 -0400
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 11 Mar 2020 01:40:51 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 11 Mar 2020 01:39:42 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 11 Mar 2020 01:40:50 -0700
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02B8eSGL028151;
-        Wed, 11 Mar 2020 04:40:47 -0400
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <Michael.Hennerich@analog.com>, <biabeniamin@outlook.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 4/4] iio: adc: ad7476: implement devm_add_action_or_reset
-Date:   Wed, 11 Mar 2020 10:43:28 +0200
-Message-ID: <20200311084328.17680-4-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200311084328.17680-1-beniamin.bia@analog.com>
-References: <20200311084328.17680-1-beniamin.bia@analog.com>
+        Wed, 11 Mar 2020 04:42:32 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j15so960583lfk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HSW/+5dQsu/FqLoyL9jf+9ZZDs2OGV9dnsgXg37rKKk=;
+        b=DgLSRBQUrCDt/5nBAjCAkkyg2P+43TXZODJ95anLVv5NU++tsUo06UW3OkHWu83+g7
+         nmhMf5fweE4BGTYxQQN5I6UMHRoF3TzoUrSn84LoRkhTb4Btrv2WLiS7syKdnM0QTZ2c
+         viVJFORB/ckRZHyDyVluU4L012uH/Rom6oOXPav6af6abuCO1txfmQ7GRaZj2NdNQp0z
+         U0JOoaiwk00j2KSoA5lfW0+r+fD9gxySNRDFWyeQXTDXMlhTOOnosBeCv66xHzkKHtEB
+         jjelGy4N+XdYZsRS8YPjhzPHRECZ0SmbpwqslniF4eI+M4oozeEKpSID1jjSGusoVX0T
+         rE+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HSW/+5dQsu/FqLoyL9jf+9ZZDs2OGV9dnsgXg37rKKk=;
+        b=RlzLzimUgIm1bTp1gdePZY3tCpmJhS+94RAp9hgM3xrg5J9eb0GaoVHvIqEd/mhfuq
+         AJDZ41a5HTjt52RISQTXkxOIUB6zSPALIosIL6wb75BTR9IRJyWUTHZP1kkAYUPnSkrx
+         CrECE0aq1OPKH0qvVzWMjgzfihmUa7nTA7KJxdoytCwcHkYk9xpa9PHu/kKbjnqXJTXc
+         N/CWf1E6d1n+CRgubDt4LXXnflMVKu0gynPxJq+g8d+u9B+pXeKonJPqJp17lEuosPO2
+         kBZvG5NPSnVcmPW2wiRWU5OvpKZsIJKvMTXnNyIqpNIBFiiGK6nNB1AYT86OA7lL5GYV
+         UV5Q==
+X-Gm-Message-State: ANhLgQ2bqU7peOepLsUD6pwLGICi9bv1MMFS1pD18xyHiE7SFseSt8kP
+        WT0sLS9mF2bpnIzEj3i7KZ3xi+1+DLdFQjbkw4DlPQ==
+X-Google-Smtp-Source: ADFU+vsWmsyleV5atqo3bIBY6SuDEIEvfcD5+QWymQfMOOR21g3oLM74WmtdBbzz2ztzPfm6tEUFggv3ukELlgKYS4A=
+X-Received: by 2002:a19:cbc3:: with SMTP id b186mr1524321lfg.182.1583916149757;
+ Wed, 11 Mar 2020 01:42:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_02:2020-03-10,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=1 adultscore=0 mlxlogscore=796 phishscore=0 impostorscore=0
- mlxscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110056
+References: <20200310131230.106427-1-maco@android.com> <BYAPR04MB5749104A80045EB0BD3EB28886FF0@BYAPR04MB5749.namprd04.prod.outlook.com>
+In-Reply-To: <BYAPR04MB5749104A80045EB0BD3EB28886FF0@BYAPR04MB5749.namprd04.prod.outlook.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Wed, 11 Mar 2020 09:42:18 +0100
+Message-ID: <CAB0TPYHZmsMMpOi709gSbCkF7F+E5XfPu0JBZiavn0v=u=26fQ@mail.gmail.com>
+Subject: Re: [PATCH] loop: Only change blocksize when needed.
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_add_action_or_reset to automatically disable the device
-when it is removed or an error occurs during probe routine.
+Hi Chaitanya,
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- drivers/iio/adc/ad7476.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+On Tue, Mar 10, 2020 at 9:23 PM Chaitanya Kulkarni
+<Chaitanya.Kulkarni@wdc.com> wrote:
+>
+> Logically this is a right thing to do, but I wonder how much speedup
+> you are getting with these improvements ?
+> It will be great if you have some numbers so we all know the speedup.
 
-diff --git a/drivers/iio/adc/ad7476.c b/drivers/iio/adc/ad7476.c
-index cd7d42df2033..e9984a38fc4c 100644
---- a/drivers/iio/adc/ad7476.c
-+++ b/drivers/iio/adc/ad7476.c
-@@ -256,6 +256,13 @@ static const struct iio_info ad7476_info = {
- 	.read_raw = &ad7476_read_raw,
- };
- 
-+static void ad7476_reg_disable(void *data)
-+{
-+	struct ad7476_state *st = data;
-+
-+	regulator_disable(st->reg);
-+}
-+
- static int ad7476_probe(struct spi_device *spi)
- {
- 	struct ad7476_state *st;
-@@ -278,6 +285,11 @@ static int ad7476_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
-+	ret = devm_add_action_or_reset(&spi->dev, ad7476_reg_disable,
-+				       st);
-+	if (ret)
-+		return ret;
-+
- 	st->convst_gpio = devm_gpiod_get_optional(&spi->dev,
- 						  "adi,conversion-start",
- 						  GPIOD_OUT_LOW);
-@@ -328,18 +340,6 @@ static int ad7476_probe(struct spi_device *spi)
- 	return ret;
- }
- 
--static int ad7476_remove(struct spi_device *spi)
--{
--	struct iio_dev *indio_dev = spi_get_drvdata(spi);
--	struct ad7476_state *st = iio_priv(indio_dev);
--
--	iio_device_unregister(indio_dev);
--	iio_triggered_buffer_cleanup(indio_dev);
--	regulator_disable(st->reg);
--
--	return 0;
--}
--
- static const struct spi_device_id ad7476_id[] = {
- 	{"ad7091", ID_AD7091R},
- 	{"ad7091r", ID_AD7091R},
-@@ -377,7 +377,6 @@ static struct spi_driver ad7476_driver = {
- 		.name	= "ad7476",
- 	},
- 	.probe		= ad7476_probe,
--	.remove		= ad7476_remove,
- 	.id_table	= ad7476_id,
- };
- module_spi_driver(ad7476_driver);
--- 
-2.17.1
+What makes blk_mq_freeze_queue() relatively expensive is that the
+implementation of that function calls synchronize_rcu() (for good
+reasons); on our x86 devices, I've seen that take 15-20ms on average.
+Recent Android versions configure a lot (~30) of loop devices at boot,
+and so this saves us about 600ms of boot time. I strongly suspect this
+benefits other usecases besides Android.
 
+There is another call in loop_set_status() which is harder to remove;
+eg, if you use loop_set_status() to change the offset of a loop
+device, you shouldn't do that if there are still requests outstanding,
+and blk_mq_freeze_queue() ensures that. But in our specific case, we
+know that there won't be requests outstanding, because during this
+phase of boot the loop device hasn't been mounted yet. But we can't
+tell the kernel that. So I will follow up with a patch that tries to
+address that issue, which will also have some more detailed numbers.
+If you have ideas or suggestions, feel free to let me know!
+
+Thanks,
+Martijn
+
+>
+> Irrespective of that, this looks good to me.
+>
+> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+>
+> On 03/10/2020 06:17 AM, Martijn Coenen wrote:
+> > Return early in loop_set_block_size() if the requested block size is
+> > identical to the one we already have; this avoids expensive calls to
+> > freeze the block queue.
+> >
+> > Signed-off-by: Martijn Coenen<maco@android.com>
+>
