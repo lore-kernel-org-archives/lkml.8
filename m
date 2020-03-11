@@ -2,237 +2,139 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE550C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF61C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8690C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCDE20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iHJbBStr"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="byC3Zym4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgCKCZR (ORCPT
+        id S1727927AbgCKChM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:25:17 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36970 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCKCZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:25:17 -0400
-Received: by mail-vs1-f66.google.com with SMTP id o24so353448vsp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 19:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6o9zvEt6IYrwE+ElnVDn48jnHKonftzRMbou+m4VFt4=;
-        b=iHJbBStrT5lCa9wZXnmyeoPZDOfvkfGvFnrSpTnUNDpI8FHGkaSafTKOZRZv+o4uFD
-         jxW1iNcwui6ka32A8R1FnFHB89096I16to1pL+OZScW0nm+K1MgkyN6OL1d1Kr2U6jOe
-         KGkPOgmwUDwrPWOx4HIWvUDc4byDfuMvq2Vok=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6o9zvEt6IYrwE+ElnVDn48jnHKonftzRMbou+m4VFt4=;
-        b=udorUSEB7fu3j9dM6BdDnu++BSE5ugieNtG/bbivIArYQTRhNSZ9W/7UpjT0KpQEgx
-         ssAqVM+a09u9eV2ZihJx0D9abHLMD54u6hJUh3fGLI38DKHvUy+6wyA1KzjGAYhdtmUE
-         P9lSpuDd5OAn4dDLOsITYPQnjQy1/6xYoo83Apa8bm84S6rSQZVMcAmayLaaW+Dim7qF
-         ootnsutZAVwINFOQXJfscEmRIkIf1DpuYLDdj08ENhwHadQAFYPVdF38X453u3lq3sYN
-         ZyRap09av9XfIhK3fJsOPitxtnXe+5jKxRMQ2irxyTYLcWj8dZq2xWHrw4EB+uLvXp7f
-         tkww==
-X-Gm-Message-State: ANhLgQ3Tcm0UHqb0TY6VxzgGyVCer6Qt61hxylcN+FrEKDGnduwoHess
-        N5HV97oPRs3suTcvcxPguCVXhINnvzIfTvloPcGB8Q==
-X-Google-Smtp-Source: ADFU+vtp5uLMl3WlytXh2yLahHytv4h0LV7sRnFZjXVDDtC6hDZ6kgnPVr90KVcnWc7bMzZnT4KXS33RQ5WJ6PjFIdU=
-X-Received: by 2002:a67:fe05:: with SMTP id l5mr620139vsr.186.1583893515541;
- Tue, 10 Mar 2020 19:25:15 -0700 (PDT)
+        Tue, 10 Mar 2020 22:37:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46073 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbgCKChM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 22:37:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cbgs1DRzz9sPF;
+        Wed, 11 Mar 2020 13:36:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583894228;
+        bh=+JH45CaJ8RQ/br5Hf0W4Xq5hn+PXWNj2y+4emeie5wI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=byC3Zym4NutwqTImCcrtNlHWWJ7KK3rLjQP5yRiWg9wgwsBYwuNKh9HflAVBDQcNm
+         ocfdgkGgFozYLDZUhQrH1lPoHBuI0avdI5uD6v6NyqtbB3fUWEEhacgV/WHmUlNYU3
+         dx1y376SwRSWyIU58Yls8ihRzOMgMinuypHeIeQ+2irvEvsVT/j/ZyYZHnvnPaBp+w
+         Qu0eTtrc7NUywKnQj2OpbIut6NbOuClNq4qCf6Jvvzl4w7VojsviW1JBVzi/es0gWb
+         lN8sNUChe4zF58IA4N/LxWqa1eJzWfBraK/vqzp9R1SpZSr1n7Ta6ltldYbuasoqD7
+         bOWgfB5URtq0Q==
+Date:   Wed, 11 Mar 2020 13:36:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Subject: linux-next: manual merge of the drm-intel tree with the
+ drm-intel-fixes tree
+Message-ID: <20200311133635.7fcb422e@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1582707225-26815-1-git-send-email-changqi.hu@mediatek.com>
-In-Reply-To: <1582707225-26815-1-git-send-email-changqi.hu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 11 Mar 2020 10:25:04 +0800
-Message-ID: <CANMq1KBE4kn-VamAMh71rLecy6VAE=66_4brTf811VrTcc4obg@mail.gmail.com>
-Subject: Re: [PATCH v4] serial: 8250-mtk: modify mtk uart power and clock management
-To:     Changqi Hu <changqi.hu@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Claire Chang <tientzu@chromium.org>,
-        linux-serial@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Cm=kxNYzaFTdCCtVhbFDBzh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 4:54 PM Changqi Hu <changqi.hu@mediatek.com> wrote:
->
-> MTK uart design no need to control uart clock,
-> so we just control bus clock in runtime function.
-> Add uart clock used count to avoid repeatedly switching the clock.
+--Sig_/Cm=kxNYzaFTdCCtVhbFDBzh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch does a lot more than that:
- - Adds a busy loop in mtk8250_runtime_suspend
- - Changes how you do pm_runtime stuff.
+Hi all,
 
-These probably need to be split to different patches, and can you
-please describe why you are making those changes in the commit
-message?
+Today's linux-next merge of the drm-intel tree got a conflict in:
 
-> Signed-off-by: Changqi Hu <changqi.hu@mediatek.com>
-> ---
->
-> Changes in v4:
->  Modify commit-message
->
-> Changes in v3:
->  Merge patch v1 and v2 together.
->
-> Changes in v2:
->  Enable uart bus clock when probe and resume base on v1 patch,
->  but miss v1 patch itself.
->
->  drivers/tty/serial/8250/8250_mtk.c | 50 ++++++++++++++++++++++++--------------
->  1 file changed, 32 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index 4d067f5..f839380 100644
-> --- a/drivers/tty/serial/8250/8250_mtk.c
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -32,6 +32,7 @@
->  #define MTK_UART_RXTRI_AD      0x14    /* RX Trigger address */
->  #define MTK_UART_FRACDIV_L     0x15    /* Fractional divider LSB address */
->  #define MTK_UART_FRACDIV_M     0x16    /* Fractional divider MSB address */
-> +#define MTK_UART_DEBUG0        0x18
->  #define MTK_UART_IER_XOFFI     0x20    /* Enable XOFF character interrupt */
->  #define MTK_UART_IER_RTSI      0x40    /* Enable RTS Modem status interrupt */
->  #define MTK_UART_IER_CTSI      0x80    /* Enable CTS Modem status interrupt */
-> @@ -388,9 +389,18 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
->  static int __maybe_unused mtk8250_runtime_suspend(struct device *dev)
->  {
->         struct mtk8250_data *data = dev_get_drvdata(dev);
-> +       struct uart_8250_port *up = serial8250_get_port(data->line);
->
-> -       clk_disable_unprepare(data->uart_clk);
-> -       clk_disable_unprepare(data->bus_clk);
-> +       /* wait until UART in idle status */
-> +       while
-> +               (serial_in(up, MTK_UART_DEBUG0));
+  drivers/gpu/drm/i915/gvt/vgpu.c
 
-No timeout?
+between commit:
 
-> +
-> +       if (data->clk_count == 0U) {
-> +               dev_dbg(dev, "%s clock count is 0\n", __func__);
-> +       } else {
-> +               clk_disable_unprepare(data->bus_clk);
-> +               data->clk_count--;
-> +       }
+  04d6067f1f19 ("drm/i915/gvt: Fix unnecessary schedule timer when no vGPU =
+exits")
 
-The clock core already does reference counting for you, so I don't
-think you need this.
-https://elixir.bootlin.com/linux/latest/source/drivers/clk/clk.c#L1004
+from the drm-intel-fixes tree and commit:
 
->
->         return 0;
->  }
-> @@ -400,16 +410,16 @@ static int __maybe_unused mtk8250_runtime_resume(struct device *dev)
->         struct mtk8250_data *data = dev_get_drvdata(dev);
->         int err;
->
-> -       err = clk_prepare_enable(data->uart_clk);
-> -       if (err) {
-> -               dev_warn(dev, "Can't enable clock\n");
-> -               return err;
-> -       }
-> -
-> -       err = clk_prepare_enable(data->bus_clk);
-> -       if (err) {
-> -               dev_warn(dev, "Can't enable bus clock\n");
-> -               return err;
-> +       if (data->clk_count > 0U) {
-> +               dev_dbg(dev, "%s clock count is %d\n", __func__,
-> +                       data->clk_count);
-> +       } else {
-> +               err = clk_prepare_enable(data->bus_clk);
-> +               if (err) {
-> +                       dev_warn(dev, "Can't enable bus clock\n");
-> +                       return err;
-> +               }
-> +               data->clk_count++;
->         }
->
->         return 0;
-> @@ -419,12 +429,14 @@ static void
->  mtk8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
->  {
->         if (!state)
-> -               pm_runtime_get_sync(port->dev);
-> +               if (!mtk8250_runtime_resume(port->dev))
-> +                       pm_runtime_get_sync(port->dev);
->
->         serial8250_do_pm(port, state, old);
->
->         if (state)
-> -               pm_runtime_put_sync_suspend(port->dev);
-> +               if (!pm_runtime_put_sync_suspend(port->dev))
-> +                       mtk8250_runtime_suspend(port->dev);
->  }
->
->  #ifdef CONFIG_SERIAL_8250_DMA
-> @@ -501,6 +513,8 @@ static int mtk8250_probe(struct platform_device *pdev)
->         if (!data)
->                 return -ENOMEM;
->
-> +       data->clk_count = 0;
-> +
->         if (pdev->dev.of_node) {
->                 err = mtk8250_probe_of(pdev, &uart.port, data);
->                 if (err)
-> @@ -533,6 +547,7 @@ static int mtk8250_probe(struct platform_device *pdev)
->
->         platform_set_drvdata(pdev, data);
->
-> +       pm_runtime_enable(&pdev->dev);
->         err = mtk8250_runtime_resume(&pdev->dev);
->         if (err)
->                 return err;
-> @@ -541,9 +556,6 @@ static int mtk8250_probe(struct platform_device *pdev)
->         if (data->line < 0)
->                 return data->line;
->
-> -       pm_runtime_set_active(&pdev->dev);
-> -       pm_runtime_enable(&pdev->dev);
-> -
->         data->rx_wakeup_irq = platform_get_irq_optional(pdev, 1);
->
->         return 0;
-> @@ -556,11 +568,13 @@ static int mtk8250_remove(struct platform_device *pdev)
->         pm_runtime_get_sync(&pdev->dev);
->
->         serial8250_unregister_port(data->line);
-> -       mtk8250_runtime_suspend(&pdev->dev);
->
->         pm_runtime_disable(&pdev->dev);
->         pm_runtime_put_noidle(&pdev->dev);
->
-> +       if (!pm_runtime_status_suspended(&pdev->dev))
-> +               mtk8250_runtime_suspend(&pdev->dev);
-> +
->         return 0;
->  }
->
-> --
-> 2.6.4
+  12d5861973c7 ("drm/i915/gvt: Make WARN* drm specific where vgpu ptr is av=
+ailable")
+
+from the drm-intel tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/gvt/vgpu.c
+index 345c2aa3b491,abcde8ce1a9a..000000000000
+--- a/drivers/gpu/drm/i915/gvt/vgpu.c
++++ b/drivers/gpu/drm/i915/gvt/vgpu.c
+@@@ -271,18 -272,12 +272,19 @@@ void intel_gvt_release_vgpu(struct inte
+  void intel_gvt_destroy_vgpu(struct intel_vgpu *vgpu)
+  {
+  	struct intel_gvt *gvt =3D vgpu->gvt;
++ 	struct drm_i915_private *i915 =3D gvt->gt->i915;
+ =20
+- 	WARN(vgpu->active, "vGPU is still active!\n");
+ -	mutex_lock(&vgpu->vgpu_lock);
+ -
++ 	drm_WARN(&i915->drm, vgpu->active, "vGPU is still active!\n");
+ =20
+ +	/*
+ +	 * remove idr first so later clean can judge if need to stop
+ +	 * service if no active vgpu.
+ +	 */
+ +	mutex_lock(&gvt->lock);
+ +	idr_remove(&gvt->vgpu_idr, vgpu->id);
+ +	mutex_unlock(&gvt->lock);
+ +
+ +	mutex_lock(&vgpu->vgpu_lock);
+  	intel_gvt_debugfs_remove_vgpu(vgpu);
+  	intel_vgpu_clean_sched_policy(vgpu);
+  	intel_vgpu_clean_submission(vgpu);
+
+--Sig_/Cm=kxNYzaFTdCCtVhbFDBzh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oTrMACgkQAVBC80lX
+0GxCfwf8DF6UZIwJBxtfb8gzkqDJvX/8pPbpOWpeUrdQTiqxjvVkMLh9wg2em+U5
+TeNW2XcAameNYoShX3Vd1m72DRtsBhkzWSlhDvvTcb/bJ26nFUAUqZmR8UouGCnw
+99Sfw5k13EFOYXN9hLocEEi63T5Stlo9Sd97XyJuky3MFObStnc+38WAAspTioyC
+FNIZwHjC6+MtY95jeuH81GlsjQcDl42GrK+/Quxc2xEi61BI5FrTFC20TskItmYp
+0beAHa0nZ42ZoMwU7QhCTzDMzcFD1O/GRhmTxEtcm0BxXnz5G+Z+oTmkkEwQWbgg
+QufOTS0DpsdJ3dogPO5z1Ew4wr3AIA==
+=H4EQ
+-----END PGP SIGNATURE-----
+
+--Sig_/Cm=kxNYzaFTdCCtVhbFDBzh--
