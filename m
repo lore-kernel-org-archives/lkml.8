@@ -6,32 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0184C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EE7C4CEC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534DA20735
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A89320735
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgCKSQy (ORCPT
+        id S1730831AbgCKSRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:16:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:53198 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 14:17:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:53230 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730626AbgCKSQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:16:53 -0400
+        id S1730808AbgCKSQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:16:59 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F9FFFEC;
-        Wed, 11 Mar 2020 11:16:53 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8558FEC;
+        Wed, 11 Mar 2020 11:16:59 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9BDD23F6CF;
-        Wed, 11 Mar 2020 11:16:52 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 74BA53F6CF;
+        Wed, 11 Mar 2020 11:16:58 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com
-Subject: [PATCH v2 2/9] sched/debug: Make sd->flags sysctl read-only
-Date:   Wed, 11 Mar 2020 18:15:54 +0000
-Message-Id: <20200311181601.18314-3-valentin.schneider@arm.com>
+        dietmar.eggemann@arm.com, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2 5/9] sched: Add WF_TTWU, WF_EXEC wakeup flags
+Date:   Wed, 11 Mar 2020 18:15:57 +0000
+Message-Id: <20200311181601.18314-6-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200311181601.18314-1-valentin.schneider@arm.com>
 References: <20200311181601.18314-1-valentin.schneider@arm.com>
@@ -42,39 +44,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Writing to the sysctl of a sched_domain->flags directly updates the value of
-the field, and goes nowhere near update_top_cache_domain(). This means that
-the cached domain pointers can end up containing stale data (e.g. the
-domain pointed to doesn't have the relevant flag set anymore).
+To remove the sd_flag parameter of select_task_rq(), we need another way of
+encoding wakeup kinds. There already is a WF_FORK flag, add the missing
+ones.
 
-Explicit domain walks that check for flags will be affected by
-the write, but this won't be in sync with the cached pointers which will
-still point to the domains that were cached at the last sched_domain
-build.
-
-In other words, writing to this interface is playing a dangerous game. It
-could be made to trigger an update of the cached sched_domain pointers when
-written to, but this does not seem to be worth the trouble. Make it
-read-only.
-
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- kernel/sched/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/sched.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 8331bc04aea2..d86f7c21feff 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -258,7 +258,7 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
- 	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
- 	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
- 	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
--	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0644, proc_dointvec_minmax);
-+	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, proc_dointvec_minmax);
- 	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
- 	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
- 	/* &table[8] is terminator */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 2a0caf394dd4..0d1ab04622d0 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1654,11 +1654,13 @@ static inline int task_on_rq_migrating(struct task_struct *p)
+ }
+ 
+ /*
+- * wake flags
++ * Wake flags
+  */
+ #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
+-#define WF_FORK			0x02		/* Child wakeup after fork */
+-#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
++#define WF_TTWU                 0x02            /* Regular task wakeup */
++#define WF_FORK			0x04		/* Child wakeup after fork */
++#define WF_EXEC			0x08		/* "Fake" wakeup at exec */
++#define WF_MIGRATED		0x10		/* Internal use, task got migrated */
+ 
+ /*
+  * To aid in avoiding the subversion of "niceness" due to uneven distribution
 -- 
 2.24.0
 
