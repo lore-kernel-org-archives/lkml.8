@@ -1,128 +1,136 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9EAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:26:14 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5D52072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RJDG2r5h"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgCKS0N (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:26:13 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:40929 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730779AbgCKS0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:26:12 -0400
-Received: by mail-vk1-f196.google.com with SMTP id k63so816474vka.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qSTO/qgdxH6bi8PzikSAQgbIeZmagWyxAFGQFRnsxM0=;
-        b=RJDG2r5hZ7Fa4gKvOb6pCPMrNGIdb/yHB7y2MSErjlsY7DUNkWh3ZEca8aPPbLj0VE
-         ul6gkiQlxlyJ/oy4EVgannnB3f34MaqcrdBRY3NjNzJw+MC8doRaRH7czlERR29oZ7++
-         XYgZ+a+e0GmSpGSW3PT5McijvKzbFCJfGGATRrEVCXhrhJvZ8sjZbJFhTfZWIu5pT+/0
-         CE8s2xJ/zkUwJ75LtNCMyNOk99ot3gpGEzwc2DGOzuAcgDj8+bf6Wg8pUBdhHYtj4zqj
-         1kzbY7mdKIMO1CScVFA8I+qyVi62JAK/5fBe+cSzveK3TknfkrVuCQQyXf/GO4cqHQOe
-         BEAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qSTO/qgdxH6bi8PzikSAQgbIeZmagWyxAFGQFRnsxM0=;
-        b=fwYnqa1mRbhbcCbD7DXpiqk3ky24HYnBvp2jlrYCzwJsINqVD43nDHazV0pAuGCVO6
-         wp/fvKFYxyysSNmgEPLEaOi4rvz+xClru0wGugMJv/I/iTDNvODc3dqYi3iYKd/bJsK9
-         DZWBlWpHCfzHuytasToHw/FVaJOgGwW2Exp0e2JUP/tMbmr2c4ot0niHFX4Czb5fJRXc
-         J2vRMzLUgIx9w9P+JazWR6KYLrVryXRhSvauSatYm32a2ivYq5vsDgvA8u2t9bPvHYvB
-         YuEMlRXEdypyxtOvun81CnPo6QNA0iCivm0rZdW2YSEdXjxC6CySV/4RlHon+kkGp+vl
-         /hEA==
-X-Gm-Message-State: ANhLgQ3pqBi1I1lfG92BDwzNdDQurGJg3G1rAVo0Vbay60gqGzIC5H/C
-        S+/GmHQBLNwR9rb/N5B52nZ1vYeI2l+7Xz8D3VSEtA==
-X-Google-Smtp-Source: ADFU+vuIP9IDVuL0y634tAQhisn3M2xsRFEZFWHFyFy7XLhjtLGyNWdbdNXlCC9/Qu0OTuevDsb+8mNaGPDTKJZbW+M=
-X-Received: by 2002:a1f:cbc1:: with SMTP id b184mr2790877vkg.73.1583951170072;
- Wed, 11 Mar 2020 11:26:10 -0700 (PDT)
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_PASS,SPF_NONE
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-eopbgr1400119.outbound.protection.outlook.com ([40.107.140.119]:64288
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726684AbgCKKtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:49:02 -0400
+From: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v3 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with
+ idk-1110wr display
+Date: Wed, 11 Mar 2020 10:48:56 +0000
+Message-ID:
+ <OSBPR01MB35902F7A2B38C875C731318EAAFC0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+References: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVqwLEavjnPgZaevFqjTytAPMmT042yRrcDw9YpkjE3bg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVqwLEavjnPgZaevFqjTytAPMmT042yRrcDw9YpkjE3bg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CA+G9fYusdfg7PMfC9Xce-xLT7NiyKSbgojpK35GOm=Pf9jXXrA@mail.gmail.com>
- <20200311105309.1742827-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20200311105309.1742827-1-christian.brauner@ubuntu.com>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Wed, 11 Mar 2020 11:25:58 -0700
-Message-ID: <CAHRSSEwF_UX7=6PLsmd62PfJwzdwScjqi=JxjtWkAmGorn+Xkw@mail.gmail.com>
-Subject: Re: [PATCH] binderfs: use refcount for binder control devices too
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     naresh.kamboju@linaro.org, ard.biesheuvel@linaro.org,
-        ardb@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, lkft-triage@lists.linaro.org,
-        shuah@kernel.org, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200311104856.F9Rxld6Q6w7u0HMPlbBerCrQyxa3i-h02kaTB0aykvc@z>
 
-On Wed, Mar 11, 2020 at 3:53 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> Binderfs binder-control devices are cleaned up via binderfs_evict_inode
-> too() which will use refcount_dec_and_test(). However, we missed to set
-> the refcount for binderfs binder-control devices and so we underflowed
-> when the binderfs instance got unmounted. Pretty obvious oversight and
-> should have been part of the more general UAF fix. The good news is that
-> having test cases (suprisingly) helps.
->
-> Technically, we could detect that we're about to cleanup the
-> binder-control dentry in binderfs_evict_inode() and then simply clean it
-> up. But that makes the assumption that the binder driver itself will
-> never make use of a binderfs binder-control device after the binderfs
-> instance it belongs to has been unmounted and the superblock for it been
-> destroyed. While it is unlikely to ever come to this let's be on the
-> safe side. Performance-wise this also really doesn't matter since the
-> binder-control device is only every really when creating the binderfs
-> filesystem or creating additional binder devices. Both operations are
-> pretty rare.
->
-> Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> Link: https://lore.kernel.org/r/CA+G9fYusdfg7PMfC9Xce-xLT7NiyKSbgojpK35GOm=Pf9jXXrA@mail.gmail.com
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: stable@vger.kernel.org
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldy4NCg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02
+OGsub3JnPg0KPiBTZW50OiAxMSBNYXJjaCAyMDIwIDEwOjA4DQo+IFRvOiBQcmFiaGFrYXIgTWFo
+YWRldiBMYWQgPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4NCj4gQ2M6
+IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+OyBTYW0gUmF2bmJvcmcN
+Cj4gPHNhbUByYXZuYm9yZy5vcmc+OyBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+OyBE
+YW5pZWwgVmV0dGVyDQo+IDxkYW5pZWxAZmZ3bGwuY2g+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IE1hZ251
+cyBEYW1tIDxtYWdudXMuZGFtbUBnbWFpbC5jb20+Ow0KPiBEUkkgRGV2ZWxvcG1lbnQgPGRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+OyBvcGVuIGxpc3Q6T1BFTg0KPiBGSVJNV0FSRSBB
+TkQgRkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdl
+ci5rZXJuZWwub3JnPjsgTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0NCj4gc29jQHZnZXIu
+a2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIGFybTY0OiBkdHM6IHJl
+bmVzYXM6IEFkZCBIaUhvcGUgUlovRzJNIGJvYXJkDQo+IHdpdGggaWRrLTExMTB3ciBkaXNwbGF5
+DQo+DQo+IEhpIExhZCwNCj4NCj4gT24gVHVlLCBNYXIgMTAsIDIwMjAgYXQgOTo0MiBQTSBMYWQg
+UHJhYmhha2FyIDxwcmFiaGFrYXIubWFoYWRldi0NCj4gbGFkLnJqQGJwLnJlbmVzYXMuY29tPiB3
+cm90ZToNCj4gPiBGcm9tOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
+c2FzLmNvbT4NCj4gPg0KPiA+IFRoZSBIaUhvcGUgUlovRzJNIGlzIGFkdmVydGlzZWQgYXMgY29t
+cGF0aWJsZSB3aXRoIHBhbmVsIGlkay0xMTEwd3INCj4gPiBmcm9tIEFkdmFudGVjaCwgaG93ZXZl
+ciB0aGUgcGFuZWwgaXNuJ3Qgc29sZCBhbG9uZ3NpZGUgdGhlIGJvYXJkLg0KPiA+IEEgbmV3IGR0
+cywgYWRkaW5nIGV2ZXJ5dGhpbmcgdGhhdCdzIHJlcXVpcmVkIHRvIGdldCB0aGUgcGFuZWwgdG8g
+d29yaw0KPiA+IHRoZSBIaUhvcGUgUlovRzJNLCBpcyB0aGUgbW9zdCBjb252ZW5pZW50IHdheSB0
+byBzdXBwb3J0IHRoZSBIaUhvcGUNCj4gPiBSWi9HMk0gd2hlbiBpdCdzIGNvbm5lY3RlZCB0byB0
+aGUgaWRrLTExMTB3ci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8
+ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+IEFja2VkLWJ5OiBMYXVyZW50IFBp
+bmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogTGFkIFByYWJoYWthciA8cHJhYmhha2FyLm1haGFkZXYtDQo+IGxhZC5yakBicC5yZW5l
+c2FzLmNvbT4NCj4NCj4gVGhhbmtzIGZvciBwaWNraW5nIHVwIHRoaXMgcGF0Y2ghDQo+DQo+ID4g
+LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3
+NzRhMS1oaWhvcGUtcnpnMm0tZXgtaWRrLQ0KPiAxMTEwd3IuDQo+ID4gKysrIGR0cw0KPiA+IEBA
+IC0wLDAgKzEsODYgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
+Cj4gPiArLyoNCj4gPiArICogRGV2aWNlIFRyZWUgU291cmNlIGZvciB0aGUgSGlIb3BlIFJaL0cy
+TSBzdWIgYm9hcmQgY29ubmVjdGVkIHRvIGFuDQo+ID4gKyAqIEFkdmFudGVjaCBJREstMTExMFdS
+IDEwLjEiIExWRFMgcGFuZWwNCj4gPiArICoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDIwIFJl
+bmVzYXMgRWxlY3Ryb25pY3MgQ29ycC4NCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAi
+cjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LmR0cyINCj4gPiArDQo+ID4gKy8gew0KPiA+ICsgICAg
+ICAgYmFja2xpZ2h0IHsNCj4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJwd20tYmFj
+a2xpZ2h0IjsNCj4gPiArICAgICAgICAgICAgICAgcHdtcyA9IDwmcHdtMCAwIDUwMDAwPjsNCj4g
+PiArDQo+ID4gKyAgICAgICAgICAgICAgIGJyaWdodG5lc3MtbGV2ZWxzID0gPDAgMiA4IDE2IDMy
+IDY0IDEyOCAyNTU+Ow0KPiA+ICsgICAgICAgICAgICAgICBkZWZhdWx0LWJyaWdodG5lc3MtbGV2
+ZWwgPSA8Nj47DQo+ID4gKyAgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgIHBhbmVsLWx2ZHMg
+ew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFkdmFudGVjaCxpZGstMTExMHdy
+IiwgInBhbmVsLWx2ZHMiOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgd2lkdGgtbW0gPSA8
+MjIzPjsNCj4gPiArICAgICAgICAgICAgICAgaGVpZ2h0LW1tID0gPDEyNT47DQo+ID4gKw0KPiA+
+ICsgICAgICAgICAgICAgICBkYXRhLW1hcHBpbmcgPSAiamVpZGEtMjQiOw0KPiA+ICsNCj4gPiAr
+ICAgICAgICAgICAgICAgcGFuZWwtdGltaW5nIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAvKiAxMDI0eDYwMCBANjBIeiAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2Nr
+LWZyZXF1ZW5jeSA9IDw1MTIwMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaGFj
+dGl2ZSA9IDwxMDI0PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB2YWN0aXZlID0gPDYw
+MD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtbGVuID0gPDI0MD47DQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgaGZyb250LXBvcmNoID0gPDQwPjsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBoYmFjay1wb3JjaCA9IDw0MD47DQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgdmZyb250LXBvcmNoID0gPDE1PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICB2YmFjay1wb3JjaCA9IDwxMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdnN5bmMt
+bGVuID0gPDEwPjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAg
+ICAgICAgIHBvcnQgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBhbmVsX2luOiBlbmRw
+b2ludCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9p
+bnQgPSA8Jmx2ZHMwX291dD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiAr
+ICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgIH07DQo+DQo+IEkgYmVsaWV2ZSB0aGUgcGxh
+biB3YXMgdG8gaW5jbHVkZSB0aGUgZXhpc3RpbmcgcnpnMi1hZHZhbnRlY2gtaWRrLTExMTB3ci0N
+Cj4gcGFuZWwuZHRzaSBpbnN0ZWFkLCB0byBwcm92aWRlIHRoZSBwYW5lbC1sdmRzIG5vZGUuLi4N
+Cj4NCkFoaGEgbWlzc2VkIGl0LCBJJ2xsIHF1aWNrbHkgcmVzcGluIHRoZSBzZXJpZXMgZml4aW5n
+IGl0Lg0KDQo+ID4gK307DQo+ID4gKw0KPiA+ICsmZ3BpbzEgew0KPiA+ICsgICAgICAgLyoNCj4g
+PiArICAgICAgICAqIFdoZW4gR1AxXzIwIGlzIExPVyBMVkRTMCBpcyBjb25uZWN0ZWQgdG8gdGhl
+IExWRFMgY29ubmVjdG9yDQo+ID4gKyAgICAgICAgKiBXaGVuIEdQMV8yMCBpcyBISUdIIExWRFMw
+IGlzIGNvbm5lY3RlZCB0byB0aGUgTFQ4OTE4TA0KPiA+ICsgICAgICAgICovDQo+ID4gKyAgICAg
+ICBsdmRzLWNvbm5lY3Rvci1lbi1ncGlvIHsNCj4gPiArICAgICAgICAgICAgICAgZ3Bpby1ob2c7
+DQo+ID4gKyAgICAgICAgICAgICAgIGdwaW9zID0gPDIwIEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+
+ICsgICAgICAgICAgICAgICBvdXRwdXQtbG93Ow0KPiA+ICsgICAgICAgICAgICAgICBsaW5lLW5h
+bWUgPSAibHZkcy1jb25uZWN0b3ItZW4tZ3BpbyI7DQo+ID4gKyAgICAgICB9Ow0KPiA+ICt9Ow0K
+PiA+ICsNCj4gPiArJmx2ZHMwIHsNCj4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiAr
+DQo+ID4gKyAgICAgICBwb3J0cyB7DQo+ID4gKyAgICAgICAgICAgICAgIHBvcnRAMSB7DQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgbHZkczBfb3V0OiBlbmRwb2ludCB7DQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICB9Ow0K
+PiA+ICsgICAgICAgfTsNCj4gPiArfTsNCj4NCj4gLi4uIGFuZCB0aGUgbHZkc19jb25uZWN0b3Ig
+ZW5kcG9pbnQgY29uZmlndXJhdGlvbi4NCj4NCkFncmVlZC4NCg0KQ2hlZXJzLA0KLS1QcmFiaGFr
+YXINCg0KPiBUaGUgcmVzdCBsb29rcyBnb29kIHRvIG1lLg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9
+cywNCj4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQg
+VXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVy
+dEBsaW51eC0NCj4gbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRo
+IHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEkn
+bSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0
+aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGlu
+dXMgVG9ydmFsZHMNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBHbWJILCBHZXNjaGFl
+ZnRzZnVlaHJlci9QcmVzaWRlbnQ6IENhcnN0ZW4gSmF1Y2gsIFNpdHogZGVyIEdlc2VsbHNjaGFm
+dC9SZWdpc3RlcmVkIG9mZmljZTogRHVlc3NlbGRvcmYsIEFyY2FkaWFzdHJhc3NlIDEwLCA0MDQ3
+MiBEdWVzc2VsZG9yZiwgR2VybWFueSwgSGFuZGVsc3JlZ2lzdGVyL0NvbW1lcmNpYWwgUmVnaXN0
+ZXI6IER1ZXNzZWxkb3JmLCBIUkIgMzcwOCBVU3QtSUROci4vVGF4IGlkZW50aWZpY2F0aW9uIG5v
+LjogREUgMTE5MzUzNDA2IFdFRUUtUmVnLi1Oci4vV0VFRSByZWcuIG5vLjogREUgMTQ5Nzg2NDcN
+Cg==
 
-Acked-by: Todd Kjos <tkjos@google.com>
-
-> ---
->  drivers/android/binderfs.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> index 110e41f920c2..f303106b3362 100644
-> --- a/drivers/android/binderfs.c
-> +++ b/drivers/android/binderfs.c
-> @@ -448,6 +448,7 @@ static int binderfs_binder_ctl_create(struct super_block *sb)
->         inode->i_uid = info->root_uid;
->         inode->i_gid = info->root_gid;
->
-> +       refcount_set(&device->ref, 1);
->         device->binderfs_inode = inode;
->         device->miscdev.minor = minor;
->
->
-> base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
-> --
-> 2.25.1
->
