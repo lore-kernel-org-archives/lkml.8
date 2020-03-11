@@ -6,41 +6,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A3AC10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB700C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B768208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD11208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgCKFH0 (ORCPT
+        id S1728190AbgCKFIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:07:26 -0400
-Received: from smtprelay0156.hostedemail.com ([216.40.44.156]:51814 "EHLO
+        Wed, 11 Mar 2020 01:08:32 -0400
+Received: from smtprelay0194.hostedemail.com ([216.40.44.194]:42474 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728245AbgCKFHV (ORCPT
+        by vger.kernel.org with ESMTP id S1728189AbgCKFHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:07:21 -0400
+        Wed, 11 Mar 2020 01:07:12 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id BCF9E10185974;
-        Wed, 11 Mar 2020 05:07:19 +0000 (UTC)
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 69F6618224519;
+        Wed, 11 Mar 2020 05:07:10 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: waves19_22ae4c1b18b41
-X-Filterd-Recvd-Size: 6872
+X-HE-Tag: cream52_212c176dc7e35
+X-Filterd-Recvd-Size: 5395
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:07:18 +0000 (UTC)
+        Wed, 11 Mar 2020 05:07:07 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH -next 018/491] KERNEL VIRTUAL MACHINE for s390 (KVM/s390): Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:32 -0700
-Message-Id: <d63c86429f3e5aa806aa3e185c97d213904924a5.1583896348.git.joe@perches.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, alsa-devel@alsa-project.org
+Subject: [PATCH -next 013/491] INGENIC JZ47xx SoCs: Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:27 -0700
+Message-Id: <ad408ff8dc4e5fae0884312cb0aa618664e546e5.1583896348.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -58,172 +64,111 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- arch/s390/kvm/gaccess.c   | 23 +++++++++++++----------
- arch/s390/kvm/interrupt.c |  2 +-
- arch/s390/kvm/kvm-s390.c  |  4 ++--
- arch/s390/mm/gmap.c       |  6 +++---
- 4 files changed, 19 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/ingenic/ingenic-drm.c           | 2 +-
+ drivers/mmc/host/jz4740_mmc.c                   | 6 ++----
+ drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 2 +-
+ drivers/mtd/nand/raw/ingenic/jz4725b_bch.c      | 4 ++--
+ drivers/mtd/nand/raw/ingenic/jz4780_bch.c       | 4 ++--
+ sound/soc/codecs/jz4770.c                       | 2 +-
+ 6 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-index 07d30f..47a67a 100644
---- a/arch/s390/kvm/gaccess.c
-+++ b/arch/s390/kvm/gaccess.c
-@@ -505,7 +505,7 @@ static int trans_exc(struct kvm_vcpu *vcpu, int code, unsigned long gva,
- 		switch (prot) {
- 		case PROT_TYPE_IEP:
- 			tec->b61 = 1;
--			/* FALL THROUGH */
-+			fallthrough;
- 		case PROT_TYPE_LA:
- 			tec->b56 = 1;
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index 9dfe7c..8eefe7 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -305,7 +305,7 @@ static void ingenic_drm_crtc_update_ctrl(struct ingenic_drm *priv,
+ 	switch (finfo->format) {
+ 	case DRM_FORMAT_XRGB1555:
+ 		ctrl |= JZ_LCD_CTRL_RGB555;
+-		/* fall-through */
++		fallthrough;
+ 	case DRM_FORMAT_RGB565:
+ 		ctrl |= JZ_LCD_CTRL_BPP_15_16;
+ 		break;
+diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+index fbae87..9026af6 100644
+--- a/drivers/mmc/host/jz4740_mmc.c
++++ b/drivers/mmc/host/jz4740_mmc.c
+@@ -737,8 +737,7 @@ static irqreturn_t jz_mmc_irq_worker(int irq, void *devid)
  			break;
-@@ -514,12 +514,12 @@ static int trans_exc(struct kvm_vcpu *vcpu, int code, unsigned long gva,
- 			break;
- 		case PROT_TYPE_ALC:
- 			tec->b60 = 1;
--			/* FALL THROUGH */
-+			fallthrough;
- 		case PROT_TYPE_DAT:
- 			tec->b61 = 1;
+ 
+ 		jz_mmc_prepare_data_transfer(host);
+-		/* fall through */
+-
++		fallthrough;
+ 	case JZ4740_MMC_STATE_TRANSFER_DATA:
+ 		if (host->use_dma) {
+ 			/* Use DMA if enabled.
+@@ -772,8 +771,7 @@ static irqreturn_t jz_mmc_irq_worker(int irq, void *devid)
  			break;
  		}
--		/* FALL THROUGH */
+ 		jz4740_mmc_write_irq_reg(host, JZ_MMC_IRQ_DATA_TRAN_DONE);
+-		/* fall through */
+-
 +		fallthrough;
- 	case PGM_ASCE_TYPE:
- 	case PGM_PAGE_TRANSLATION:
- 	case PGM_REGION_FIRST_TRANS:
-@@ -534,7 +534,7 @@ static int trans_exc(struct kvm_vcpu *vcpu, int code, unsigned long gva,
- 		tec->addr = gva >> PAGE_SHIFT;
- 		tec->fsi = mode == GACC_STORE ? FSI_STORE : FSI_FETCH;
- 		tec->as = psw_bits(vcpu->arch.sie_block->gpsw).as;
--		/* FALL THROUGH */
-+		fallthrough;
- 	case PGM_ALEN_TRANSLATION:
- 	case PGM_ALE_SEQUENCE:
- 	case PGM_ASTE_VALIDITY:
-@@ -677,7 +677,7 @@ static unsigned long guest_translate(struct kvm_vcpu *vcpu, unsigned long gva,
- 			dat_protection |= rfte.p;
- 		ptr = rfte.rto * PAGE_SIZE + vaddr.rsx * 8;
- 	}
--		/* fallthrough */
-+		fallthrough;
- 	case ASCE_TYPE_REGION2: {
- 		union region2_table_entry rste;
- 
-@@ -695,7 +695,7 @@ static unsigned long guest_translate(struct kvm_vcpu *vcpu, unsigned long gva,
- 			dat_protection |= rste.p;
- 		ptr = rste.rto * PAGE_SIZE + vaddr.rtx * 8;
- 	}
--		/* fallthrough */
-+		fallthrough;
- 	case ASCE_TYPE_REGION3: {
- 		union region3_table_entry rtte;
- 
-@@ -723,7 +723,7 @@ static unsigned long guest_translate(struct kvm_vcpu *vcpu, unsigned long gva,
- 			dat_protection |= rtte.fc0.p;
- 		ptr = rtte.fc0.sto * PAGE_SIZE + vaddr.sx * 8;
- 	}
--		/* fallthrough */
-+		fallthrough;
- 	case ASCE_TYPE_SEGMENT: {
- 		union segment_table_entry ste;
- 
-@@ -1050,7 +1050,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
- 		rc = gmap_shadow_r2t(sg, saddr, rfte.val, *fake);
- 		if (rc)
- 			return rc;
--	} /* fallthrough */
-+	}
-+		fallthrough;
- 	case ASCE_TYPE_REGION2: {
- 		union region2_table_entry rste;
- 
-@@ -1076,7 +1077,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
- 		rc = gmap_shadow_r3t(sg, saddr, rste.val, *fake);
- 		if (rc)
- 			return rc;
--	} /* fallthrough */
-+	}
-+		fallthrough;
- 	case ASCE_TYPE_REGION3: {
- 		union region3_table_entry rtte;
- 
-@@ -1111,7 +1113,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
- 		rc = gmap_shadow_sgt(sg, saddr, rtte.val, *fake);
- 		if (rc)
- 			return rc;
--	} /* fallthrough */
-+	}
-+		fallthrough;
- 	case ASCE_TYPE_SEGMENT: {
- 		union segment_table_entry ste;
- 
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 028167d6..819110 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -886,7 +886,7 @@ static int __must_check __deliver_prog(struct kvm_vcpu *vcpu)
- 	case PGM_PRIMARY_AUTHORITY:
- 	case PGM_SECONDARY_AUTHORITY:
- 		nullifying = true;
+ 	case JZ4740_MMC_STATE_SEND_STOP:
+ 		if (!req->stop)
+ 			break;
+diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+index 49afeb..935c49 100644
+--- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
++++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+@@ -253,7 +253,7 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
+ 		chip->ecc.hwctl = ingenic_nand_ecc_hwctl;
+ 		chip->ecc.calculate = ingenic_nand_ecc_calculate;
+ 		chip->ecc.correct = ingenic_nand_ecc_correct;
 -		/* fall through */
 +		fallthrough;
- 	case PGM_SPACE_SWITCH:
- 		rc = put_guest_lc(vcpu, pgm_info.trans_exc_code,
- 				  (u64 *)__LC_TRANS_EXC_CODE);
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 6b1842a..d590f3 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3752,7 +3752,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
- 		rc = kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR_LOAD);
+ 	case NAND_ECC_SOFT:
+ 		dev_info(nfc->dev, "using %s (strength %d, size %d, bytes %d)\n",
+ 			 (nfc->ecc) ? "hardware ECC" : "software ECC",
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c b/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
+index 6c852ea..2d0e0a 100644
+--- a/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
++++ b/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
+@@ -145,10 +145,10 @@ static void jz4725b_bch_read_parity(struct ingenic_ecc *bch, u8 *buf,
+ 	switch (size8) {
+ 	case 3:
+ 		dest8[2] = (val >> 16) & 0xff;
+-		/* fall-through */
++		fallthrough;
+ 	case 2:
+ 		dest8[1] = (val >> 8) & 0xff;
+-		/* fall-through */
++		fallthrough;
+ 	case 1:
+ 		dest8[0] = val & 0xff;
  		break;
- 	case KVM_MP_STATE_CHECK_STOP:
--		/* fall through - CHECK_STOP and LOAD are not supported yet */
-+		fallthrough;	/* CHECK_STOP and LOAD are not supported yet */
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+index 079266a..d67dbf 100644
+--- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
++++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+@@ -123,10 +123,10 @@ static void jz4780_bch_read_parity(struct ingenic_ecc *bch, void *buf,
+ 	switch (size8) {
+ 	case 3:
+ 		dest8[2] = (val >> 16) & 0xff;
+-		/* fall through */
++		fallthrough;
+ 	case 2:
+ 		dest8[1] = (val >> 8) & 0xff;
+-		/* fall through */
++		fallthrough;
+ 	case 1:
+ 		dest8[0] = val & 0xff;
+ 		break;
+diff --git a/sound/soc/codecs/jz4770.c b/sound/soc/codecs/jz4770.c
+index e7cf2c..6e2a91 100644
+--- a/sound/soc/codecs/jz4770.c
++++ b/sound/soc/codecs/jz4770.c
+@@ -202,7 +202,7 @@ static int jz4770_codec_set_bias_level(struct snd_soc_component *codec,
+ 				   REG_CR_VIC_SB_SLEEP, REG_CR_VIC_SB_SLEEP);
+ 		regmap_update_bits(regmap, JZ4770_CODEC_REG_CR_VIC,
+ 				   REG_CR_VIC_SB, REG_CR_VIC_SB);
+-	/* fall-through */
++		fallthrough;
  	default:
- 		rc = -ENXIO;
+ 		break;
  	}
-@@ -4985,7 +4985,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 					old->npages * PAGE_SIZE);
- 		if (rc)
- 			break;
--		/* FALLTHROUGH */
-+		fallthrough;
- 	case KVM_MR_CREATE:
- 		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
- 				      mem->guest_phys_addr, mem->memory_size);
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 27926a0..03c899 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -804,7 +804,7 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
- 		if (*table & _REGION_ENTRY_INVALID)
- 			return NULL;
- 		table = (unsigned long *)(*table & _REGION_ENTRY_ORIGIN);
--		/* Fallthrough */
-+		fallthrough;
- 	case _ASCE_TYPE_REGION2:
- 		table += (gaddr & _REGION2_INDEX) >> _REGION2_SHIFT;
- 		if (level == 3)
-@@ -812,7 +812,7 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
- 		if (*table & _REGION_ENTRY_INVALID)
- 			return NULL;
- 		table = (unsigned long *)(*table & _REGION_ENTRY_ORIGIN);
--		/* Fallthrough */
-+		fallthrough;
- 	case _ASCE_TYPE_REGION3:
- 		table += (gaddr & _REGION3_INDEX) >> _REGION3_SHIFT;
- 		if (level == 2)
-@@ -820,7 +820,7 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
- 		if (*table & _REGION_ENTRY_INVALID)
- 			return NULL;
- 		table = (unsigned long *)(*table & _REGION_ENTRY_ORIGIN);
--		/* Fallthrough */
-+		fallthrough;
- 	case _ASCE_TYPE_SEGMENT:
- 		table += (gaddr & _SEGMENT_INDEX) >> _SEGMENT_SHIFT;
- 		if (level == 1)
 -- 
 2.24.0
 
