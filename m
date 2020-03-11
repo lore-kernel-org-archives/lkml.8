@@ -2,121 +2,89 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA96C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584EAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9571B20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hNUtg/Sm"
+	by mail.kernel.org (Postfix) with ESMTP id 5199720739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583956129;
+	bh=NTCCQBA/qngUM9vruihaGQpLvV8cowQXBnlryjh7duc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Lgowv2TeoZWuoXTC9dH9aBhAdoTAHmlDQ1eoSNO4MQGrSi49DigpWI6XJfqBbmB0k
+	 8UPaJSm5C70ceRy49cO4wsqIAaNXPXRjsnGwH3hRCknlHL8zYpPuQ5GSoWbm3LIOYe
+	 Zev6DC47bsKyTp2tBD96+iZksQyicMBj8NuZ1ihY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbgCKTsm (ORCPT
+        id S1731233AbgCKTso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 15:48:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387394AbgCKTsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 15:48:42 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:33071 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731054AbgCKTsl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:48:41 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CE81A891AF;
-        Thu, 12 Mar 2020 08:48:37 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1583956117;
-        bh=m1xJPSmempHGz3Lu+lC3i1E6ZFpg/65OK7kZOFZo+Uk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=hNUtg/SmsUzEYWFe1a6ysaNRnZqwO9T9pZZ5BH7+JuJS+9RfhlB8tNbs7HTaHoj7p
-         VsyCEdFXEH7kKSW9MPji5I3ucrBK6zY8Cn5eQNr3ZMTHydaXePmtAP3439NJ9DBeyd
-         OXMkXUTs0RBXm9lsqggA3cBFNHec3gXYlD85rlwhqQ7A8X7CO8y8Di4489BezyaEGb
-         MwW+MoBV7lWneM2blN9gYdNjS9DZDRk0zi+XOBqBaK+F4ZtV2iOOW+A2WtRMdk0ll1
-         BG83cnRBmZpHEdwKt94UhsAylP6QtAUOhnMAyOYDnpHqeocB5ytY/fhf/N7Mai9Coo
-         sCF6BLEHoyr5A==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e6940930001>; Thu, 12 Mar 2020 08:48:35 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 12 Mar 2020 08:48:37 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Thu, 12 Mar 2020 08:48:37 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "josua@solid-run.com" <josua@solid-run.com>
-Subject: Re: [PATCH] net: mvmdio: avoid error message for optional IRQ
-Thread-Topic: [PATCH] net: mvmdio: avoid error message for optional IRQ
-Thread-Index: AQHV906TQEy52yaMuUeP8DHX6vlJ/qhCc4WAgAB+LgCAAAHegA==
-Date:   Wed, 11 Mar 2020 19:48:37 +0000
-Message-ID: <e03346a415bc6dafd6f9aab5b5e8bbe2a0c6d2aa.camel@alliedtelesis.co.nz>
-References: <20200311024131.1289-1-chris.packham@alliedtelesis.co.nz>
-         <20200311121019.GH5932@lunn.ch>
-         <c99160a5fea2ac3c9e5be5093a3635bfd94710ca.camel@alliedtelesis.co.nz>
-In-Reply-To: <c99160a5fea2ac3c9e5be5093a3635bfd94710ca.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:d0d:cc28:ebac:1152]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9284A709B26424098BD99AF793670BD@atlnz.lc>
-Content-Transfer-Encoding: base64
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6A020691;
+        Wed, 11 Mar 2020 19:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583956122;
+        bh=NTCCQBA/qngUM9vruihaGQpLvV8cowQXBnlryjh7duc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=v/jab1Mtz7GdBG9uHSDV6k2H9A5ugStqAz7qXsT5oSvLW0R8a6a71HOmgfCea5clU
+         G66Us11UI+4tNO3Dj0FH7tIcAgD6G5vzcw6dOTDobm5SYL6M1oFXxg7KIYICRZtMGR
+         9CaWX6LC7nIdux3wMMCMyiTs0f5kOJR5zRFuyh0M=
+Date:   Wed, 11 Mar 2020 12:48:39 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [GIT PULL] fscrypt fix for v5.6-rc6
+Message-ID: <20200311194839.GB41227@sol.localdomain>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTEyIGF0IDA4OjQxICsxMzAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
-PiBPbiBXZWQsIDIwMjAtMDMtMTEgYXQgMTM6MTAgKzAxMDAsIEFuZHJldyBMdW5uIHdyb3RlOg0K
-PiA+IE9uIFdlZCwgTWFyIDExLCAyMDIwIGF0IDAzOjQxOjMwUE0gKzEzMDAsIENocmlzIFBhY2to
-YW0gd3JvdGU6DQo+ID4gPiBQZXIgdGhlIGR0LWJpbmRpbmcgdGhlIGludGVycnVwdCBpcyBvcHRp
-b25hbCBzbyB1c2UNCj4gPiA+IHBsYXRmb3JtX2dldF9pcnFfb3B0aW9uYWwoKSBpbnN0ZWFkIG9m
-IHBsYXRmb3JtX2dldF9pcnEoKS4gU2luY2UNCj4gPiA+IGNvbW1pdCA3NzIzZjRjNWVjZGIgKCJk
-cml2ZXIgY29yZTogcGxhdGZvcm06IEFkZCBhbiBlcnJvciBtZXNzYWdlIHRvDQo+ID4gPiBwbGF0
-Zm9ybV9nZXRfaXJxKigpIikgcGxhdGZvcm1fZ2V0X2lycSgpIHByb2R1Y2VzIGFuIGVycm9yIG1l
-c3NhZ2UNCj4gPiA+IA0KPiA+ID4gICBvcmlvbi1tZGlvIGYxMDcyMDA0Lm1kaW86IElSUSBpbmRl
-eCAwIG5vdCBmb3VuZA0KPiA+ID4gDQo+ID4gPiB3aGljaCBpcyBwZXJmZWN0bHkgbm9ybWFsIGlm
-IG9uZSBoYXNuJ3Qgc3BlY2lmaWVkIHRoZSBvcHRpb25hbCBwcm9wZXJ0eQ0KPiA+ID4gaW4gdGhl
-IGRldmljZSB0cmVlLg0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFt
-IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+ID4gPiAtLS0NCj4gPiA+ICBk
-cml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL212bWRpby5jIHwgMiArLQ0KPiA+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gDQo+ID4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVsbC9tdm1kaW8uYyBiL2RyaXZl
-cnMvbmV0L2V0aGVybmV0L21hcnZlbGwvbXZtZGlvLmMNCj4gPiA+IGluZGV4IDBiOWU4NTFmM2Rh
-NC4uZDE0NzYyZDkzNjQwIDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-bWFydmVsbC9tdm1kaW8uYw0KPiA+ID4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVs
-bC9tdm1kaW8uYw0KPiA+ID4gQEAgLTM0Nyw3ICszNDcsNyBAQCBzdGF0aWMgaW50IG9yaW9uX21k
-aW9fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiA+ICAJfQ0KPiA+ID4g
-IA0KPiA+ID4gIA0KPiA+ID4gLQlkZXYtPmVycl9pbnRlcnJ1cHQgPSBwbGF0Zm9ybV9nZXRfaXJx
-KHBkZXYsIDApOw0KPiA+ID4gKwlkZXYtPmVycl9pbnRlcnJ1cHQgPSBwbGF0Zm9ybV9nZXRfaXJx
-X29wdGlvbmFsKHBkZXYsIDApOw0KPiA+ID4gIAlpZiAoZGV2LT5lcnJfaW50ZXJydXB0ID4gMCAm
-Jg0KPiA+ID4gIAkgICAgcmVzb3VyY2Vfc2l6ZShyKSA8IE1WTURJT19FUlJfSU5UX01BU0sgKyA0
-KSB7DQo+ID4gPiAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsDQo+ID4gDQo+ID4gSGkgQ2hyaXMNCj4g
-PiANCj4gPiBUaGlzIGlzIHRoZSBtaW5pbXVtIGZpeC4gU286DQo+ID4gDQo+ID4gUmV2aWV3ZWQt
-Ynk6IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCj4gPiANCj4gPiBIb3dldmVyLCB5b3Ug
-Y291bGQgYWxzbyBzaW1wbGlmeQ0KPiA+IA0KPiA+ICAgICAgICAgfSBlbHNlIGlmIChkZXYtPmVy
-cl9pbnRlcnJ1cHQgPT0gLUVQUk9CRV9ERUZFUikgew0KPiA+ICAgICAgICAgICAgICAgICByZXQg
-PSAtRVBST0JFX0RFRkVSOw0KPiA+ICAgICAgICAgICAgICAgICBnb3RvIG91dF9tZGlvOw0KPiA+
-ICAgICAgICAgfQ0KPiA+IA0KPiA+IA0KPiA+IHRvIGp1c3QNCj4gPiANCj4gPiAgICAgICAgIH0g
-ZWxzZSB7DQo+ID4gICAgICAgICAgICAgICAgIHJldCA9IGRldi0+ZXJyX2ludGVycnVwdDsNCj4g
-PiAgICAgICAgICAgICAgICAgZ290byBvdXRfbWRpbzsNCj4gPiAgICAgICAgIH0NCj4gDQo+IE1h
-a2VzIHNlbnNlLiBNYXkgYXMgd2VsbCBpbmNsdWRlIHRoYXQgd2hpbGUgSSdtIGhlcmUuDQo+IA0K
-DQpBY3R1YWxseSBhZnRlciBsb29raW5nIGNsb3NlciB0aGF0IHdvbid0IHF1aXRlIHdvcmsuIFdl
-IHN0aWxsIG5lZWQgdG8NCmhhbmRsZSB0aGUgY2FzZSB3aGVyZSBkZXYtPmVycl9pbnRlcnJ1cHQg
-PT0gMCBlaXRoZXIgYmVjYXVzZSBpdCdzIG5vdA0KaW4gdGhlIGR0IG9yIGJlY2F1c2UgdGhlIGV4
-dHJhIHJlc291cmNlIGlzIG5vdCBwcmVzZW50ICh0aGF0IHByb2JhYmx5DQpzaG91bGQgYmUgYW4g
-ZXJyb3IgYnV0IHRoZSBleGlzdGluZyBjb2RlIHNlZW1zIHRvIHdhbnQgdG8gYWxsb3cgaXQpLg0K
-DQpJJ2xsIHBvc3QgYSB2MiB3aXRoIH0gZWxzZSBpZiAoZGV2LT5lcnJfaW50ZXJydXB0IDwgMCkg
-eyBhbmQgd2UgY2FuIGdvDQpmcm9tIHRoZXJlLg0KDQo+ID4gDQo+ID4gICAgIEFuZHJldw0K
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt-for-linus
+
+for you to fetch changes up to 2b4eae95c7361e0a147b838715c8baa1380a428f:
+
+  fscrypt: don't evict dirty inodes after removing key (2020-03-07 18:43:07 -0800)
+
+----------------------------------------------------------------
+
+Fix a bug where if userspace is writing to encrypted files while the
+FS_IOC_REMOVE_ENCRYPTION_KEY ioctl (introduced in v5.4) is running,
+dirty inodes could be evicted, causing writes could be lost or the
+filesystem to hang due to a use-after-free.  This was encountered during
+real-world use, not just theoretical.
+
+Tested with the existing fscrypt xfstests, and with a new xfstest I
+wrote to reproduce this bug.  This fix does expose an existing bug with
+'-o lazytime' that Ted is working on fixing, but this fscrypt fix is
+more critical and is needed anyway regardless of the lazytime fix.
+
+----------------------------------------------------------------
+Eric Biggers (1):
+      fscrypt: don't evict dirty inodes after removing key
+
+ fs/crypto/keysetup.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
