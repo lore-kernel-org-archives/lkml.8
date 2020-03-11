@@ -6,39 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C5DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0E1C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC71208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC835208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgCKFG7 (ORCPT
+        id S1728139AbgCKFHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:06:59 -0400
-Received: from smtprelay0135.hostedemail.com ([216.40.44.135]:52494 "EHLO
+        Wed, 11 Mar 2020 01:07:02 -0400
+Received: from smtprelay0107.hostedemail.com ([216.40.44.107]:42626 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727965AbgCKFGy (ORCPT
+        by vger.kernel.org with ESMTP id S1727984AbgCKFGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:06:54 -0400
+        Wed, 11 Mar 2020 01:06:52 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 73E108410;
-        Wed, 11 Mar 2020 05:06:52 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id B7691181D3025;
+        Wed, 11 Mar 2020 05:06:50 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hose56_1ec53cd19b31a
-X-Filterd-Recvd-Size: 4270
+X-HE-Tag: jewel27_1e8115a6f7d16
+X-Filterd-Recvd-Size: 2301
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:06:51 +0000 (UTC)
+        Wed, 11 Mar 2020 05:06:49 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH -next 006/491] ARM/RISCPC ARCHITECTURE: Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:20 -0700
-Message-Id: <fb956ff22b89ac7a7f97489b29ecf13a32de8d06.1583896348.git.joe@perches.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH -next 005/491] ARM/UNIPHIER ARCHITECTURE: Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:19 -0700
+Message-Id: <dae0878058223a42c77d725b8d7c5845a7ef9dc0.1583896348.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -56,85 +55,39 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- arch/arm/mach-rpc/riscpc.c |  2 +-
- drivers/scsi/arm/fas216.c  | 17 ++++++-----------
- 2 files changed, 7 insertions(+), 12 deletions(-)
+ drivers/tty/serial/8250/8250_uniphier.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/riscpc.c b/arch/arm/mach-rpc/riscpc.c
-index ea2c842..d23970b 100644
---- a/arch/arm/mach-rpc/riscpc.c
-+++ b/arch/arm/mach-rpc/riscpc.c
-@@ -46,7 +46,7 @@ static int __init parse_tag_acorn(const struct tag *tag)
- 	switch (tag->u.acorn.vram_pages) {
- 	case 512:
- 		vram_size += PAGE_SIZE * 256;
--		/* Fall through - ??? */
-+		fallthrough;	/* ??? */
- 	case 256:
- 		vram_size += PAGE_SIZE * 256;
- 	default:
-diff --git a/drivers/scsi/arm/fas216.c b/drivers/scsi/arm/fas216.c
-index 6c68c230..bb18be 100644
---- a/drivers/scsi/arm/fas216.c
-+++ b/drivers/scsi/arm/fas216.c
-@@ -603,8 +603,7 @@ static void fas216_handlesync(FAS216_Info *info, char *msg)
- 		msgqueue_flush(&info->scsi.msgs);
- 		msgqueue_addmsg(&info->scsi.msgs, 1, MESSAGE_REJECT);
- 		info->scsi.phase = PHASE_MSGOUT_EXPECT;
--		/* fall through */
--
-+		fallthrough;
- 	case async:
- 		dev->period = info->ifcfg.asyncperiod / 4;
- 		dev->sof    = 0;
-@@ -916,8 +915,7 @@ static void fas216_disconnect_intr(FAS216_Info *info)
- 			fas216_done(info, DID_ABORT);
- 			break;
- 		}
--		/* else, fall through */
--
-+		fallthrough;
- 	default:				/* huh?					*/
- 		printk(KERN_ERR "scsi%d.%c: unexpected disconnect in phase %s\n",
- 			info->host->host_no, fas216_target(info), fas216_drv_phase(info));
-@@ -1413,8 +1411,7 @@ static void fas216_busservice_intr(FAS216_Info *info, unsigned int stat, unsigne
- 	case STATE(STAT_STATUS, PHASE_DATAOUT): /* Data Out     -> Status       */
- 	case STATE(STAT_STATUS, PHASE_DATAIN):  /* Data In      -> Status       */
- 		fas216_stoptransfer(info);
--		/* fall through */
--
-+		fallthrough;
- 	case STATE(STAT_STATUS, PHASE_SELSTEPS):/* Sel w/ steps -> Status       */
- 	case STATE(STAT_STATUS, PHASE_MSGOUT):  /* Message Out  -> Status       */
- 	case STATE(STAT_STATUS, PHASE_COMMAND): /* Command      -> Status       */
-@@ -1426,8 +1423,7 @@ static void fas216_busservice_intr(FAS216_Info *info, unsigned int stat, unsigne
- 	case STATE(STAT_MESGIN, PHASE_DATAOUT): /* Data Out     -> Message In   */
- 	case STATE(STAT_MESGIN, PHASE_DATAIN):  /* Data In      -> Message In   */
- 		fas216_stoptransfer(info);
--		/* fall through */
--
-+		fallthrough;
- 	case STATE(STAT_MESGIN, PHASE_COMMAND):	/* Command	-> Message In	*/
- 	case STATE(STAT_MESGIN, PHASE_SELSTEPS):/* Sel w/ steps -> Message In   */
- 	case STATE(STAT_MESGIN, PHASE_MSGOUT):  /* Message Out  -> Message In   */
-@@ -1581,8 +1577,7 @@ static void fas216_funcdone_intr(FAS216_Info *info, unsigned int stat, unsigned
- 			fas216_message(info);
- 			break;
- 		}
--		/* else, fall through */
--
-+		fallthrough;
- 	default:
- 		fas216_log(info, 0, "internal phase %s for function done?"
- 			"  What do I do with this?",
-@@ -1964,7 +1959,7 @@ static void fas216_kick(FAS216_Info *info)
- 	switch (where_from) {
- 	case TYPE_QUEUE:
- 		fas216_allocate_tag(info, SCpnt);
+diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+index e0b73a5..a2978ab 100644
+--- a/drivers/tty/serial/8250/8250_uniphier.c
++++ b/drivers/tty/serial/8250/8250_uniphier.c
+@@ -75,7 +75,7 @@ static unsigned int uniphier_serial_in(struct uart_port *p, int offset)
+ 		break;
+ 	case UART_LCR:
+ 		valshift = 8;
 -		/* fall through */
 +		fallthrough;
- 	case TYPE_OTHER:
- 		fas216_start_command(info, SCpnt);
+ 	case UART_MCR:
+ 		offset = UNIPHIER_UART_LCR_MCR;
+ 		break;
+@@ -101,7 +101,7 @@ static void uniphier_serial_out(struct uart_port *p, int offset, int value)
+ 	case UART_SCR:
+ 		/* No SCR for this hardware.  Use CHAR as a scratch register */
+ 		valshift = 8;
+-		/* fall through */
++		fallthrough;
+ 	case UART_FCR:
+ 		offset = UNIPHIER_UART_CHAR_FCR;
+ 		break;
+@@ -109,7 +109,7 @@ static void uniphier_serial_out(struct uart_port *p, int offset, int value)
+ 		valshift = 8;
+ 		/* Divisor latch access bit does not exist. */
+ 		value &= ~UART_LCR_DLAB;
+-		/* fall through */
++		fallthrough;
+ 	case UART_MCR:
+ 		offset = UNIPHIER_UART_LCR_MCR;
  		break;
 -- 
 2.24.0
