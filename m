@@ -2,138 +2,150 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DAEC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10243C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF3021D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583931146;
-	bh=qKa9nNQ1MofSahdaXqzA+xpTPWxW3MYh12rIeqGd2m4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=CxErRHE/ZRJVIeZVgjUNRQegKdKnxKHr90sUo99FIEIx2k66w/2Ug00w10ZfVwtNA
-	 7KYHCZxSGDSafMohDUjWFwEaDAiuDbeos/vuBO2OMIFXYDWwUPWTiry5J7qOCITTj1
-	 OBdOEeeZVadGHHZpl7v6gmswXaJ3FOI2UWxNFx9M=
+	by mail.kernel.org (Postfix) with ESMTP id C85C82146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="EgWwWIx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgCKMwZ (ORCPT
+        id S1729456AbgCKMxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgCKMwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:52:25 -0400
-Received: from vulkan (unknown [170.249.165.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C9CB2146E;
-        Wed, 11 Mar 2020 12:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583931144;
-        bh=qKa9nNQ1MofSahdaXqzA+xpTPWxW3MYh12rIeqGd2m4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ElYwNHGgCBYXMvyK9CJH91A3qCD4rIvTtGPf5KNjEQnsCurhyBhexzoIyhog3W7pk
-         U5ygdQHa73kHaWGaFuajrmT+Dkv0eiripQMO01Djf/qo2aCfGaQAP6XV7NQmDkihzA
-         8OFXcTpnTbK07YeIrfMdnNmpF35o4BYkIZ1f50VI=
-Message-ID: <9ff6eee403d293dd069935ca6979f72131fe5217.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     yangerkun <yangerkun@huawei.com>, NeilBrown <neilb@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Wed, 11 Mar 2020 07:52:23 -0500
-In-Reply-To: <f9db707f-74ef-9439-1aec-e1ce8234888e@huawei.com>
-References: <20200308140314.GQ5972@shao2-debian>
-         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-         <878sk7vs8q.fsf@notabene.neil.brown.name>
-         <f9db707f-74ef-9439-1aec-e1ce8234888e@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 11 Mar 2020 08:53:10 -0400
+Received: from mail-co1nam11on2058.outbound.protection.outlook.com ([40.107.220.58]:6638
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729283AbgCKMxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:53:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F3ma4VJ3oda17loLkEyv6Zy70kYDtDZ1YQ1qzpXpAu4WCLAoGiTtJSE5/zd+ziEyuNJIjWrPsDho2RQaMt8V34WFpltw2f0kN8qWJq3VWM4Qgxxg/npOF71NkAAq0vsfCg8zHryyzsR7PfjPOfH8Evq1Yg6sUzSddCsMpzjSc3wo6s58PC6QGypitAMk1atV7txz1q8SluG5OpBkssEyBgxSYEYMJIXbiHEsyKrOUcemj26vzMNsA0W/aEmvvxYG0y79CCeeP1g8faj/RS+0s9ikXu5BWy2JRDtloQuP8B1gxvL4XxQ2/Ss3ULVtORKCsWtQZj36+MfZ3nuDoTAHfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ViRyt2wALr3pPlYD+ZHkj9qnI/C9+foif2T/IWbn42Q=;
+ b=B1o9EDPEnLXbj12difNpm5irNPqMPYuT1g350iUbqgLu9xR0uj9SgL0u30W60RxJkbBJuhHFRvpgMInoYBlSV1OY72xxIxX7mN864AiWW2JrLHvOWbjRbgd5BnxMrTpRT3E1KojcsTTC7/X3as5DYjW5TV0NzIzkyp9KiOfd0C/gA8enq+Q85/dwZHtmDwY+czCutkLtsRfrlW9KokRrY4/GAQSHHR9v1cI8a8S8VLCYe2Qi6FOUuaN2wyafBFaVSAqo7xT+n3+kFpuBVi10NxKshbLWBom/ReRtCYjeck3bRHV5SL9zo92XnrAhzLIjY6m2W+2YqAfYNuo2dJEMHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ViRyt2wALr3pPlYD+ZHkj9qnI/C9+foif2T/IWbn42Q=;
+ b=EgWwWIx+DqxP2E5jgS4tGrMSQXqnH9UkPN2TSTXvtnthexjzEZNEVIRg7C1KFmzKl6dCKijXPVVb6v+Ou+39ND4f5QtLUSkc8qu8oHjzQddWZWgzUxfgpTmv7l21J0Jqb1zHw7PyFWtFfISO2Wh8oliZegaviqzdUhYqpRxLq6g=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (2603:10b6:408:35::23)
+ by BN7PR08MB4769.namprd08.prod.outlook.com (2603:10b6:408:27::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Wed, 11 Mar
+ 2020 12:53:07 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::589d:e16:907b:5135]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::589d:e16:907b:5135%5]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 12:53:07 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "huobean@gmail.com" <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] RE: [PATCH 0/1] Revert "scsi: ufs: Let the SCSI core
+ allocate per-command UFS data"
+Thread-Topic: [EXT] RE: [PATCH 0/1] Revert "scsi: ufs: Let the SCSI core
+ allocate per-command UFS data"
+Thread-Index: AQHV96A3H5vu8h64PUWShi5i74/3jahDVomg
+Date:   Wed, 11 Mar 2020 12:53:07 +0000
+Message-ID: <BN7PR08MB5684DBAD57C95A40CB62B24ADBFC0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20200311112921.29031-1-beanhuo@micron.com>
+ <SN6PR04MB46404175998962B4FA575824FCFC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+In-Reply-To: <SN6PR04MB46404175998962B4FA575824FCFC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTNmMGU5YThhLTYzOTctMTFlYS04YjhkLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwzZjBlOWE4Yy02Mzk3LTExZWEtOGI4ZC1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjExNjMiIHQ9IjEzMjI4NDA0Nzg0NzU0NDU4MyIgaD0icm8xUUlGNDZTWFByWERmZ0xEbG95dWF2VHd3PSIgaWQ9IiIgYmw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBSEFBQUFBSFYyY0JwUGZWQVZ6SFEzN2JXMTNxWE1kRGZ0dGJYZW9BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQkFBQUE5cm1ud1FBQUFBQUFBQUFBQUFBQUFBPT0iLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.86.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 404d9a00-1133-407d-fe75-08d7c5bb257a
+x-ms-traffictypediagnostic: BN7PR08MB4769:|BN7PR08MB4769:|BN7PR08MB4769:
+x-microsoft-antispam-prvs: <BN7PR08MB47692554CB93E26C1BC065F8DBFC0@BN7PR08MB4769.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:883;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(376002)(396003)(136003)(199004)(2906002)(316002)(4744005)(6506007)(81166006)(8936002)(55236004)(81156014)(478600001)(186003)(54906003)(86362001)(110136005)(26005)(9686003)(71200400001)(8676002)(7696005)(7416002)(4326008)(55016002)(76116006)(66556008)(66446008)(64756008)(66476007)(52536014)(5660300002)(33656002)(66946007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4769;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QmydGT6yAVzDZL5HqgHKt0Xe9DA9rXFPxlYew9zZ2ENQ14CQ2Dc/EhO/q88oW76ZmlwypbnKET1M/jM8NQnXpVPpmrUtJzzIBaTEC/MOWFz9vuJrIEQt9nNvl4+fAjXenYCsymcx43iNTqxTuc8UaDrXU1VJRA8Ary4mU18+dIMJZ7dV8ySNBICpsCzTX3iefEQcL52jEfKLGePOjs5VawTMrYkRDO3nYEnbEkPaiZSokrL5X7xJB/ygFlRuMtT1Ox44NaeNJy6bJj/nTS88tWubqinPiuW/+aF5eVJ+++U5gtG98fbQuRcCA+Nv8/ldT2pbCZEVngIP2AvB5hedccv5pwTt0P4WNvTJXNjPy2o4nfWxlQOiRDtI7RBKYMSI5PcXNeJ9bunfwq2SNFiFf+FdxIgp3vj4IY3VIX59aZatrlwaZuusIFpE3lBiXM0b5DyhHaH0VabGCt4yT18z3NLPoai91/z8ldjcLA5DGDwV5+LgL6I/DlYM9QTPNYIZ
+x-ms-exchange-antispam-messagedata: 4Vbv8PpJCpRBJvw2mHvadbZpmyWDPbm5nqBoE0WgbDeS4ExStn+ax4h6GX2bqEAcAoXTiXkKibfvBI0ogFjKSWXdDWIU13pQmrrxqA8xEdE1r07d7o7YZqXworOQGtkn30VClVHYTafQgdYnG+EbrQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 404d9a00-1133-407d-fe75-08d7c5bb257a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 12:53:07.2289
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j+Crf06BNVMz0taRzQ0xjwt+e/qrBH4cliKd1W+Lid5+xRu24zF1QHm8NeMC1WBoP6uoau6rd6sxk06sOk5lPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4769
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 09:57 +0800, yangerkun wrote:
+Hi, Avri
+Do you want to revert all or two (scsi: ufs: Let the SCSI core allocate per=
+-command UFS data,   scsi: core: Introduce {init,exit}_cmd_priv() )?
+Because the patches "scsi: ufs: Simplify two tests" and  "scsi: ufs: Introd=
+uce ufshcd_init_lrb()" are ok to me.
+No problem keeping them. Just this one "scsi: core: Introduce {init,exit}_c=
+md_priv()" is not necessary, since no drivers it now.=20
 
-[snip]
+//Bean
 
-> 
-> On 2020/3/11 5:01, NeilBrown wrote:
-> > 
-> > I think this patch contains an assumption which is not justified.  It
-> > assumes that if a wait_event completes without error, then the wake_up()
-> > must have happened.  I don't think that is correct.
-> > 
-> > In the patch that caused the recent regression, the race described
-> > involved a signal arriving just as __locks_wake_up_blocks() was being
-> > called on another thread.
-> > So the waiting process was woken by a signal *after* ->fl_blocker was set
-> > to NULL, and *before* the wake_up().  If wait_event_interruptible()
-> > finds that the condition is true, it will report success whether there
-> > was a signal or not.
-> Neil and Jeff, Hi,
-> 
-> But after this, like in flock_lock_inode_wait, we will go another 
-> flock_lock_inode. And the flock_lock_inode it may return 
-> -ENOMEM/-ENOENT/-EAGAIN/0.
-> 
-> - 0: If there is a try lock, it means that we have call 
-> locks_move_blocks, and fl->fl_blocked_requests will be NULL, no need to 
-> wake up at all. If there is a unlock, no one call wait for me, no need 
-> to wake up too.
-> 
-> - ENOENT: means we are doing unlock, no one will wait for me, no need to 
-> wake up.
-> 
-> - ENOMEM: since last time we go through flock_lock_inode someone may 
-> wait for me, so for this error, we need to wake up them.
-> 
-> - EAGAIN: since we has go through flock_lock_inode before, these may 
-> never happen because FL_SLEEP will not lose.
-> 
-> So the assumption may be ok and for some error case we need to wake up 
-> someone may wait for me before(the reason for the patch "cifs: call 
-> locks_delete_block for all error case in cifs_posix_lock_set"). If I am 
-> wrong, please point out!
-> 
-> 
 
-That's the basic dilemma. We need to know whether we'll need to delete
-the block before taking the blocked_lock_lock.
-
-Your most recent patch used the return code from the wait to determine
-this, but that's not 100% reliable (as Neil pointed out). Could we try
-to do this by doing the delete only when we get certain error codes?
-Maybe, but that's a bit fragile-sounding.
-
-Neil's most recent patch used presence on the fl_blocked_requests list
-to determine whether to take the lock, but that relied on some very
-subtle memory ordering. We could of course do that, but that's a bit
-brittle too.
-
-That's the main reason I'm leaning toward the patch Neil sent
-originally and that uses the fl_wait.lock. The existing alternate lock
-managers (nfsd and lockd) don't use fl_wait at all, so I don't think
-doing that will cause any issues.
-
--- 
-Jeff Layton <jlayton@kernel.org>
+>=20
+> Hi,
+>=20
+> >
+> > From: Bean Huo <beanhuo@micron.com>
+> >
+> > Hi, Martin
+> >
+> > Based on Bart's feedack, the less risky way is to revert commit:
+> >
+> > 34656dda81ac "scsi: ufs: Let the SCSI core allocate per-command UFS dat=
+a"
+> >
+> > Bean Huo (1):
+> >   Revert "scsi: ufs: Let the SCSI core allocate per-command UFS data"
+> Maybe it's safer to revert the entire series?
+>=20
+> Thanks,
+> Avri
+>=20
+>=20
+> >
+> >  drivers/scsi/ufs/ufshcd.c | 198 ++++++++++++++------------------------
+> >  drivers/scsi/ufs/ufshcd.h |   5 +
+> >  2 files changed, 75 insertions(+), 128 deletions(-)
+> >
+> > --
+> > 2.17.1
 
