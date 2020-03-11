@@ -2,108 +2,118 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54139C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FD3C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579A9206E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583964167;
-	bh=R2ukKVtGqJhnC1ilGWgY4/Zl2rEDFE7kX01YX4vtHmw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TEDy3zmR3fVglFijnWToW0goYcftLVEryEveJEOrqGWi0RKAMmqIUhon9/kJM0X+5
-	 er7v9XfVdi+/1Sh70ORwBEwt/ccpzb6lwwJCI5jNn8kj9VXdTBvwucrwME0a7FFa5E
-	 TgZex6Ak2hl6QzSRnmaV3EVPDYE5cBVIORnEhnYg=
+	by mail.kernel.org (Postfix) with ESMTP id 58368206E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729623AbgCKWCq (ORCPT
+        id S1729685AbgCKWEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:02:46 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:37094 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbgCKWCp (ORCPT
+        Wed, 11 Mar 2020 18:04:44 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:63006 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729223AbgCKWEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:02:45 -0400
-Received: by mail-pg1-f181.google.com with SMTP id a32so1083838pga.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 15:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3iE2aDq3GTpvrSPuFDVQi35URZrSY5lu16FU58AXYfg=;
-        b=FpIFqf52l4N0Bk/gaxJ14yLDj94qCfKyrcTpcFNDiURdFNH0NC/dnSCXnb38EFA773
-         y2NhcaRzUDo+YFDy+PdU8XIH6nV7zEfPq4943R3UKpoFa79ze6YFdL9SsZRkBIPhPfUa
-         mv4AD1GrmzS0MHSZmORWkG+sQ8koe5Nzan6dEWhXo5SrcohWY0jDN3R1gHDoJLpE0f2P
-         YEUgYoI9ZdMvgW6I9gJRx2L5ruWyQfibF5wN5bkpgvtK1+WEh9pUhHtq4hkzDizBqY95
-         nLozpnJGhD7q/vhRKbKF7dkog4oXh37yfubqAFxD32DAQWX/RSr9HtporoowTU9PDaTr
-         H2UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3iE2aDq3GTpvrSPuFDVQi35URZrSY5lu16FU58AXYfg=;
-        b=UDVpGkSFAmhSiJEGIwPES3xodIRPbEiSu3TQZh6kI1YMEIeWAPXButTGKqESS1Jxn2
-         TkhgA8GZ1mJrjkguAr5UUzhXlPNMywV9TaZWnM7RW5KM1OweoUGrIE65IvR5A8dSQ0nH
-         pg+fkEMV8iSoIDGwrg/lc935FVvanjhIaM7FkekIepqY3U+ElRVWRS5+KhmMVcfxczAy
-         XEnbWSxDk9Ni1qV33MKkIH90OZUbvYEmUx+ipffKPdEm4kWmq0S7YJMqRdLWHERixxUu
-         KVktNVecyp5tKH5tvHXSMhzBz32kj+zlPm4B0mTUJKCO90T/TwNAIzBLN6j/usOVFSG/
-         MnjA==
-X-Gm-Message-State: ANhLgQ0bwwW6n4mtL4fME9yH6GFtVmTSY5lV/IwB+Td5h9mJOcHrhowf
-        61UPGNkG5HVpsItzFTszdNMRby8c
-X-Google-Smtp-Source: ADFU+vtmGxg9TwVB1VBj2GMpXmCb7ujUpMkxwfLzu1g/Ntf3tf2h6zt1i1H7Sa8ZUQsRk15Ro/Sr7Q==
-X-Received: by 2002:aa7:9906:: with SMTP id z6mr4997401pff.112.1583964164216;
-        Wed, 11 Mar 2020 15:02:44 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id c18sm50034963pgw.17.2020.03.11.15.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 15:02:42 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:02:41 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200311220241.GA252592@google.com>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200310184814.GA8447@dhcp22.suse.cz>
- <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
- <20200310210906.GD8447@dhcp22.suse.cz>
- <cf95db88-968d-fee5-1c15-10d024c09d8a@intel.com>
- <20200311084513.GD23944@dhcp22.suse.cz>
+        Wed, 11 Mar 2020 18:04:44 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02BM4PjA051123;
+        Thu, 12 Mar 2020 07:04:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
+ Thu, 12 Mar 2020 07:04:25 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02BM4K9b051090
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 12 Mar 2020 07:04:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
+ <0e5ca6ee-d460-db8e-aba2-79aa7a66fad1@I-love.SAKURA.ne.jp>
+ <alpine.DEB.2.21.2003101555050.177273@chino.kir.corp.google.com>
+ <7a6170fc-b247-e327-321a-b99fb53f552d@i-love.sakura.ne.jp>
+ <alpine.DEB.2.21.2003111235080.171292@chino.kir.corp.google.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <993e7783-60e9-ba03-b512-c829b9e833fd@i-love.sakura.ne.jp>
+Date:   Thu, 12 Mar 2020 07:04:20 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311084513.GD23944@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <alpine.DEB.2.21.2003111235080.171292@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 09:45:13AM +0100, Michal Hocko wrote:
-> On Tue 10-03-20 15:48:31, Dave Hansen wrote:
-> > Maybe instead of just punting on MADV_PAGEOUT for map_count>1 we should
-> > only let it affect the *local* process.  We could still put the page in
-> > the swap cache, we just wouldn't go do the rmap walk.
+On 2020/03/12 4:38, David Rientjes wrote:
+> On Wed, 11 Mar 2020, Tetsuo Handa wrote:
 > 
-> Is it really worth medling with the reclaim code and special case
-> MADV_PAGEOUT there? I mean it is quite reasonable to have an initial
-> implementation that doesn't really touch shared pages because that can
-> lead to all sorts of hard to debug and unexpected problems. So I would
-> much rather go with a simple patch to check map count first and see
-> whether somebody actually cares about those shared pages and go from
-> there.
+>>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>>> --- a/mm/vmscan.c
+>>>>> +++ b/mm/vmscan.c
+>>>>> @@ -2637,6 +2637,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>  		unsigned long reclaimed;
+>>>>>  		unsigned long scanned;
+>>>>>  
+>>>>> +		cond_resched();
+>>>>> +
+>>>>
+>>>> Is this safe for CONFIG_PREEMPTION case? If current thread has realtime priority,
+>>>> can we guarantee that the OOM victim (well, the OOM reaper kernel thread rather
+>>>> than the OOM victim ?) gets scheduled?
+>>>>
+>>>
+>>> I think it's the best we can do that immediately solves the issue unless 
+>>> you have another idea in mind?
+>>
+>> "schedule_timeout_killable(1) outside of oom_lock" or "the OOM reaper grabs oom_lock
+>> so that allocating threads guarantee that the OOM reaper gets scheduled" or "direct OOM
+>> reaping so that allocating threads guarantee that some memory is reclaimed".
+>>
 > 
-> Minchan, do you want to take my diff and turn it into the proper patch
-> or should I do it.
+> The cond_resched() here is needed if the iteration is lengthy depending on 
+> the number of descendant memcgs already.
 
-Hey Michal,
+No. cond_resched() here will become no-op if CONFIG_PREEMPTION=y and current
+thread has realtime priority.
 
-It would be great if you could send it.
-Thanks.
+> 
+> schedule_timeout_killable(1) does not make any guarantees that current 
+> will be scheduled after the victim or oom_reaper on UP systems.
+
+The point of schedule_timeout_*(1) is to guarantee that current thread
+will yield CPU to other threads even if CONFIG_PREEMPTION=y and current
+thread has realtime priority case. There is no guarantee that current
+thread will be rescheduled immediately after a sleep is irrelevant.
+
+> 
+> If you have an alternate patch to try, we can test it.  But since this 
+> cond_resched() is needed anyway, I'm not sure it will change the result.
+
+schedule_timeout_killable(1) is an alternate patch to try; I don't think
+that this cond_resched() is needed anyway.
+
+> 
+>>>
+>>>>>  		switch (mem_cgroup_protected(target_memcg, memcg)) {
+>>>>>  		case MEMCG_PROT_MIN:
+>>>>>  			/*
+>>>>>
+>>>>
+>>
+>>
