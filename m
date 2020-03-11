@@ -2,180 +2,95 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1537C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBCDC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34242071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1287A2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgCKKIZ (ORCPT
+        id S1728514AbgCKKKp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:08:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44989 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCKKIZ (ORCPT
+        Wed, 11 Mar 2020 06:10:45 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:55301 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbgCKKKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:08:25 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d62so1272582oia.11;
-        Wed, 11 Mar 2020 03:08:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/N+yzapZ4CfcV7bsbXkQFj5z2ofXrJQJFHA0Ipv5B8o=;
-        b=m1zJ/z7lnPk0ywDxPqrpzjGF/MBw4d0iiz+Ia4DByxMBLf69oJ3/6NVHcKXbg/h517
-         +vyLrgnw3UVedEgzgtXmBEyjH1pJo+ojoNb6OBZcP2vx5ea7uoH7cQq6QDhVPW3t99vm
-         IeF6eHiRD0s8BwebH3vyvg8+oH7L98RdkFRVpAFAzrW6xnKdFjhJtTZeDWecrEjLaJ8U
-         KE0aKU9ODhNUfNxvlMHpiedjMVYcMkB5A/F5q+IFa1FcKqqyK6EH/rkdfXeS01KhTEQI
-         wuFvWka161EinaP8IZlKyazo6Sy5pTR3N0MpbLVhc1hM6IpJqVODA3jwQ1QCp9eSO8jT
-         fdXQ==
-X-Gm-Message-State: ANhLgQ3oE0QoM3BgwtxA51mEycyg23O8NCMZDJy3ijRhzE1/UFOoS4ZC
-        rxXtuFNY9nfJnSmMdR5URQSYeXxMy6uF90K3UM4=
-X-Google-Smtp-Source: ADFU+vuJF5N7hcpWcUqis0h4qQPQ9BT3gGHT7sA30i5r95zDWMPwoXmGgIl1ccKJXdZJyPzfyRcoKuUqYhmzJwx2CTA=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1304567oia.148.1583921304665;
- Wed, 11 Mar 2020 03:08:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 11 Mar 2020 11:08:13 +0100
-Message-ID: <CAMuHMdVqwLEavjnPgZaevFqjTytAPMmT042yRrcDw9YpkjE3bg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with
- idk-1110wr display
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Wed, 11 Mar 2020 06:10:44 -0400
+X-Originating-IP: 90.89.41.158
+Received: from xps13 (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8F6E040003;
+        Wed, 11 Mar 2020 10:10:42 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 11:10:41 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: Re: linux-next: build failure after merge of the nand tree
+Message-ID: <20200311111041.2dd477f5@xps13>
+In-Reply-To: <20200311131616.41e728a1@canb.auug.org.au>
+References: <20200311131616.41e728a1@canb.auug.org.au>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+Hi Stephen,
 
-On Tue, Mar 10, 2020 at 9:42 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> The HiHope RZ/G2M is advertised as compatible with panel idk-1110wr
-> from Advantech, however the panel isn't sold alongside the board.
-> A new dts, adding everything that's required to get the panel to
-> work the HiHope RZ/G2M, is the most convenient way to support the
-> HiHope RZ/G2M when it's connected to the idk-1110wr.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++ Janusz, ams-delta patch author
 
-Thanks for picking up this patch!
+Stephen Rothwell <sfr@canb.auug.org.au> wrote on Wed, 11 Mar 2020
+13:16:16 +1100:
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the HiHope RZ/G2M sub board connected to an
-> + * Advantech IDK-1110WR 10.1" LVDS panel
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include "r8a774a1-hihope-rzg2m-ex.dts"
-> +
-> +/ {
-> +       backlight {
-> +               compatible = "pwm-backlight";
-> +               pwms = <&pwm0 0 50000>;
-> +
-> +               brightness-levels = <0 2 8 16 32 64 128 255>;
-> +               default-brightness-level = <6>;
-> +       };
-> +
-> +       panel-lvds {
-> +               compatible = "advantech,idk-1110wr", "panel-lvds";
-> +
-> +               width-mm = <223>;
-> +               height-mm = <125>;
-> +
-> +               data-mapping = "jeida-24";
-> +
-> +               panel-timing {
-> +                       /* 1024x600 @60Hz */
-> +                       clock-frequency = <51200000>;
-> +                       hactive = <1024>;
-> +                       vactive = <600>;
-> +                       hsync-len = <240>;
-> +                       hfront-porch = <40>;
-> +                       hback-porch = <40>;
-> +                       vfront-porch = <15>;
-> +                       vback-porch = <10>;
-> +                       vsync-len = <10>;
-> +               };
-> +
-> +               port {
-> +                       panel_in: endpoint {
-> +                               remote-endpoint = <&lvds0_out>;
-> +                       };
-> +               };
-> +       };
+> Hi all,
+> 
+> After merging the nand tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
 
-I believe the plan was to include the existing
-rzg2-advantech-idk-1110wr-panel.dtsi instead, to provide the
-panel-lvds node...
+Thanks for the report.
 
-> +};
-> +
-> +&gpio1 {
-> +       /*
-> +        * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
-> +        * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
-> +        */
-> +       lvds-connector-en-gpio {
-> +               gpio-hog;
-> +               gpios = <20 GPIO_ACTIVE_HIGH>;
-> +               output-low;
-> +               line-name = "lvds-connector-en-gpio";
-> +       };
-> +};
-> +
-> +&lvds0 {
-> +       status = "okay";
-> +
-> +       ports {
-> +               port@1 {
-> +                       lvds0_out: endpoint {
-> +                               remote-endpoint = <&panel_in>;
-> +                       };
-> +               };
-> +       };
-> +};
+> 
+> FATAL: modpost: drivers/mtd/nand/raw/ams-delta: sizeof(struct of_device_id)=200 is not a modulo of the size of section __mod_of__<identifier>_device_table=64.
+> Fix definition of struct of_device_id in mod_devicetable.h
+> 
+> Maybe caused by commit
+> 
+>   966d708517e3 ("mtd: rawnand: ams-delta: Add module device tables")
+> 
+> But I have no idea why.
+> 
 
-... and the lvds_connector endpoint configuration.
+This is strange. I think this is caused because of the addition of a
+second device table with the same "of" scope. Changing one of them to
+"platform" (the legacy one) seems to fix the problem.
 
-The rest looks good to me.
+Janusz, Is the following change okay for you? I would like to apply it
+today so that linux-next get's updated with the 50+ stack of new
+patches by tomorrow.
 
-Gr{oetje,eeting}s,
+	--- a/drivers/mtd/nand/raw/ams-delta.c
+	+++ b/drivers/mtd/nand/raw/ams-delta.c
+	@@ -411,7 +411,7 @@ static const struct platform_device_id gpio_nand_plat_id_table[] = {
+	                /* sentinel */
+	        },
+	 };
+	-MODULE_DEVICE_TABLE(of, gpio_nand_plat_id_table);
+	+MODULE_DEVICE_TABLE(platform, gpio_nand_plat_id_table);
+ 
+	 static struct platform_driver gpio_nand_driver = {
+	        .probe          = gpio_nand_probe,
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Miquèl
