@@ -2,106 +2,112 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A136C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3367C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE8020737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583947570;
-	bh=S+RgHi0f88gJM9qhcjf/Imb64fipFgVlZGnzFNUVNPg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vJd2LqB2fQrJp1+864s75kbYgpTNa2yyeAL71jyctxp0zUb6aoZW37QaxIupYQiU9
-	 IOC7RwD9UJT/KTchE5OGqDVCcoqC6UoZiHdLHZty8H6QTt0p8WRi8XjhSh7dVtnUEx
-	 EFCk/Cr8qePwAKVsZhNGnttwoGm4TDwLBguGwymg=
+	by mail.kernel.org (Postfix) with ESMTP id 4D86020736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgCKR0J (ORCPT
+        id S1730520AbgCKR0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:26:09 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40696 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730193AbgCKR0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:26:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so2408901lfe.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8UQVTnSguLvRHX8NkQfjS8un3uykC9cqMpLahtA/RCg=;
-        b=GrfSUxt32RjLZyaJPIAa3ArKZfFLgmyXUhhc6z9ZYUHpqkjsZJXWpZTdbOeR0enVyY
-         cErHS778dqtMr3tuFGIFaNXU7LUM/bueoJ9eXLgY0fNFghVCnkTw99fpgxs9DerMYc71
-         sTgy2oVN6YxRd7pO9A9+Fj5ve8WsIRlC/QPTM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8UQVTnSguLvRHX8NkQfjS8un3uykC9cqMpLahtA/RCg=;
-        b=nc8sJSrkx1lgrF+UzbP9i2zDtEgS9PnTOyJbJBzFcUte6UdfdrDzEO8iq2/40uo4I6
-         +7zeRFrMEmn86e8eOmyB2hqGp9NoeYEDc5A4QU7v8ZUf9jFXs+Szfr1TscCcEqrc04KN
-         FX4htAMw6vF3CClAQyBAzjsqztXh20G9L0blvpEirFTXDwIj6QBY70RR8F6XszY2t/QB
-         yB3Qux+RhKaYiRA+SMnwPux5QN2VgBZrx4jnSlV4xteTz9u+rbmF/iUBrAMXj6B5VlZA
-         n2+c0P6XMxfGuc0pNLzwu3toqSu6H8zkydbeAqahgkYfKAmmKTp9VNHmAeET0h/YF55d
-         Yj2w==
-X-Gm-Message-State: ANhLgQ3h/dq/clINv4ZABdxVFj1OWvJ4qHhKtcxiVtCRkQC+Fs+Wl0N7
-        wq2NbpQGsGxeikhSIj2YSwA/88RpaNc=
-X-Google-Smtp-Source: ADFU+vu7FNiwmmJ2Km4l2zlwJKVF3dTORJCs7vzH2pgHEjcdM1sCL/lsv4BaR2zwHrdhPS63I1Btiw==
-X-Received: by 2002:a19:98a:: with SMTP id 132mr2722690lfj.171.1583947565534;
-        Wed, 11 Mar 2020 10:26:05 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id j17sm10472903ljc.0.2020.03.11.10.26.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 10:26:04 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id 19so3241029ljj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:26:04 -0700 (PDT)
-X-Received: by 2002:a05:651c:502:: with SMTP id o2mr2749942ljp.150.1583947564287;
- Wed, 11 Mar 2020 10:26:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311160710.376090-1-hch@lst.de> <20200311161423.GA3941932@kroah.com>
- <20200311161551.GA24878@lst.de> <20200311171802.GA3952198@kroah.com>
-In-Reply-To: <20200311171802.GA3952198@kroah.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 11 Mar 2020 10:25:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj5hFUTG8qEzfJTecND2pSuxe0XcVPMjBpX7f1m19Wjqw@mail.gmail.com>
-Message-ID: <CAHk-=wj5hFUTG8qEzfJTecND2pSuxe0XcVPMjBpX7f1m19Wjqw@mail.gmail.com>
-Subject: Re: [PATCH] device core: fix dma_mask handling in platform_device_register_full
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
+        Wed, 11 Mar 2020 13:26:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:52486 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730193AbgCKR0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:26:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FC8C1FB;
+        Wed, 11 Mar 2020 10:26:36 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0166D3F6CF;
+        Wed, 11 Mar 2020 10:26:33 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 17:26:31 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200311172631.GN3216816@arrakis.emea.arm.com>
+References: <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+ <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+ <20200309155945.GA4124965@arrakis.emea.arm.com>
+ <20200309160919.GM25745@shell.armlinux.org.uk>
+ <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com>
+ <20200311142905.GI3216816@arrakis.emea.arm.com>
+ <CAK8P3a2RC+sg2Tz4M8mkQ_d78FTFdES+YsucUzDFx=UK+L8Oww@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2RC+sg2Tz4M8mkQ_d78FTFdES+YsucUzDFx=UK+L8Oww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:18 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> Is this still needed with the patch that Linus just committed to his
-> tree?
+On Wed, Mar 11, 2020 at 05:59:53PM +0100, Arnd Bergmann wrote:
+> On Wed, Mar 11, 2020 at 3:29 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> 
+> > > - Flip TTBR0 on kernel entry/exit, and again during user access.
+> > >
+> > > This is probably more work to implement than your idea, but
+> > > I would hope this has a lower overhead on most microarchitectures
+> > > as it doesn't require pinning the pages. Depending on the
+> > > microarchitecture, I'd hope the overhead would be comparable
+> > > to that of ARM64_SW_TTBR0_PAN.
+> >
+> > This still doesn't solve the copy_{from,to}_user() case where both
+> > address spaces need to be available during copy. So you either pin the
+> > user pages in memory and access them via the kernel mapping or you
+> > temporarily map (kmap?) the destination/source kernel address. The
+> > overhead I'd expect to be significantly greater than ARM64_SW_TTBR0_PAN
+> > for the uaccess routines. For user entry/exit, your suggestion is
+> > probably comparable with SW PAN.
+> 
+> Good point, that is indeed a larger overhead. The simplest implementation
+> I had in mind would use the code from arch/arm/lib/copy_from_user.S and
+> flip ttbr0 between each ldm and stm (up to 32 bytes), but I have no idea
+> of the cost of storing to ttbr0, so this might be even more expensive. Do you
+> have an estimate of how long writing to TTBR0_64 takes on Cortex-A7
+> and A15, respectively?
 
-My patch is basically the same, just with the field renamed too, and
-not blindly just assigning to "*pdev->dev.dma_mask" (my variant does
+I don't have numbers but it's usually not cheap since you need an ISB to
+synchronise the context after TTBR0 update (basically flushing the
+pipeline).
 
-        pdev->platform_dma_mask = pdevinfo->dma_mask;
-        pdev->dev.dma_mask = &pdev->platform_dma_mask;
+> Another way might be to use a use a temporary buffer that is already
+> mapped, and add a memcpy() through L1-cache to reduce the number
+> of ttbr0 changes. The buffer would probably have to be on the stack,
+> which limits the size, but for large copies get_user_pages()+memcpy()
+> may end up being faster anyway.
 
-instead of that incomprehensible
+IIRC, the x86 attempt from Ingo some years ago was using
+get_user_pages() for uaccess. Depending on the size of the buffer, this
+may be faster than copying twice.
 
-        *pdev->dev.dma_mask = pdevinfo->dma_mask;
-
-which depends on that dev.dma_mask pointer having been initialized in
-a random place earlier).
-
-I had the cleanups (uncommited) in my tree, and just removed the
-kfree() as per Christoph.
-
-             Linus
+-- 
+Catalin
