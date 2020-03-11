@@ -2,227 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15756C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2D6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE31D21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CF921927
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:57:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPSqjFvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgCKC4h (ORCPT
+        id S1728002AbgCKC5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:56:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11623 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727588AbgCKC43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:56:29 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E566E10B137EED2D985F;
-        Wed, 11 Mar 2020 10:56:23 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 10:56:15 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <aneesh.kumar@linux.ibm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>
-Subject: [RFC PATCH v1 1/3] arm64: tlb: add TTL field to __TLBI_ADDR
-Date:   Wed, 11 Mar 2020 10:53:07 +0800
-Message-ID: <20200311025309.1743-2-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200311025309.1743-1-yezhenyu2@huawei.com>
-References: <20200311025309.1743-1-yezhenyu2@huawei.com>
+        Tue, 10 Mar 2020 22:57:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34363 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgCKC5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 22:57:38 -0400
+Received: by mail-lj1-f193.google.com with SMTP id s13so614289ljm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 19:57:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WHJo9jwMYPaGt5B4QvwDpgXAg2phkjBbDHGzsQU+N3I=;
+        b=aPSqjFvWjvdtvp8nVXfAoj+kYZWu3nVRyQ/p2DoRhOKX2zIof1/W9HuOfjtGrhEGo4
+         bTFVId/1UJUexP0vZx+GLFATndJeJVGjdNhylTAZEBrB9UgSVpeDcY0fbd2URSPeYcAl
+         uln5TeOcLUBapk8RcBr7zH8fXVeJOekRmKyEvK47RdG5LZ3ocCVMNhKNjZ03DENuk6He
+         bJmiSgv6cySFXzmKebaDhjhnLhOwRDhTvJ0AgMubjeXowbLQfIakEXUutx4lQpg3Q94B
+         Z/2TJ35EkOsIWZ5j8j3QTWqq0f5Eg/ApTvcCQFe1Vv3LRkP2drM+ML2uT6oy1bfcG9p1
+         F90w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WHJo9jwMYPaGt5B4QvwDpgXAg2phkjBbDHGzsQU+N3I=;
+        b=LAB8HRVrh0ZqI3iiCLTZXePJofcTpRgdgJLLGGw7odf0451msTFX2PRbAxbhc/ugnZ
+         5F0dJ5/LMptk8edWQ3E+RWo3J42Ccs7yqfjqbiK9tENyQr9X7CBm4/tcLw/HrnBs4xO1
+         5rdPJXZjO028Hnn4whTqjoYX8NNyFi/3N3gLiBAnKnlup52R0gs3/uDZm2wtX0IrZdCY
+         QH2ax2fmI+uonpXcZa7q+qRf5d7BihETCEYT0pF6Nda96L09fClwhqloS0H7NWy/f7zf
+         IB7To8rWsBk7VKIetjXrIUKuTaIi8D1a7jrkyoqHS2U466HQ9j06+LupDjRacG+rNZBh
+         PBTQ==
+X-Gm-Message-State: ANhLgQ2OFx8UuZL1t9/etfPGUihQcSjsMgRjrHzkFd1N7b3sT230cU8j
+        6m4kJFtbop6lryt+Zp2V+hKtCr6QuekSt5JSZOE=
+X-Google-Smtp-Source: ADFU+vtshCj9Q46hlfgr5TbhM+vuzc2+J73V4+7Gd94s/qMzp0Krh6P6wbjzZlyrgRoXzp6uwiFGbcKdgYSlllh+tYg=
+X-Received: by 2002:a2e:87d7:: with SMTP id v23mr670025ljj.10.1583895456295;
+ Tue, 10 Mar 2020 19:57:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+References: <20200309021747.626-1-zhenzhong.duan@gmail.com>
+ <20200309021747.626-2-zhenzhong.duan@gmail.com> <CAK8P3a2jy3+7tPFPjN5pfrQdfkhReCdPFjAnw144pXzpHCGDdQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2jy3+7tPFPjN5pfrQdfkhReCdPFjAnw144pXzpHCGDdQ@mail.gmail.com>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Wed, 11 Mar 2020 10:57:25 +0800
+Message-ID: <CAFH1YnNe6MELofTJNdtS3cxJOiFB8vco0oGTj3t7ZERUQA5gHQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/3] misc: cleanup minor number definitions in c file
+ into miscdevice.h
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        Willy Tarreau <willy@haproxy.com>,
+        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan@buzzard.org.uk,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        David Miller <davem@davemloft.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
-the level of translation table walk holding the leaf entry for the
-address that is being invalidated.
+On Mon, Mar 9, 2020 at 9:08 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Mar 9, 2020 at 3:18 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
+> >
+> > HWRNG_MINOR and RNG_MISCDEV_MINOR are duplicate definitions, use
+> > unified RNG_MINOR instead and moved into miscdevice.h
+> >
+> > ANSLCD_MINOR and LCD_MINOR are duplicate definitions, use unified
+> > LCD_MINOR instead and moved into miscdevice.h
+> >
+> > MISCDEV_MINOR is renamed to PXA3XXX_GCU_MINOR and moved into
+> > miscdevice.h
+>
+> This should be PXA3XX_GCU_MINOR (with 2 X, not 3).
 
-This patch add support for TTL feature and set the default value 0
-where __TLBI_ADDR is called.
+Will fix in next version, thanks for pointing out.
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- arch/arm64/include/asm/cpucaps.h  |  3 ++-
- arch/arm64/include/asm/sysreg.h   |  4 ++++
- arch/arm64/include/asm/tlbflush.h | 33 ++++++++++++++++++++++---------
- arch/arm64/kernel/cpufeature.c    | 10 ++++++++++
- arch/arm64/kernel/sys_compat.c    |  2 +-
- 5 files changed, 41 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-index 865e0253fc1e..60f3b090ea9a 100644
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -58,7 +58,8 @@
- #define ARM64_WORKAROUND_SPECULATIVE_AT_NVHE	48
- #define ARM64_HAS_E0PD				49
- #define ARM64_HAS_RNG				50
-+#define ARM64_HAS_TLBI_TTL			51
- 
--#define ARM64_NCAPS				51
-+#define ARM64_NCAPS				52
- 
- #endif /* __ASM_CPUCAPS_H */
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index b91570ff9db1..7caa3c9facfe 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -685,6 +685,7 @@
- 
- /* id_aa64mmfr2 */
- #define ID_AA64MMFR2_E0PD_SHIFT		60
-+#define ID_AA64MMFR2_TTL_SHIFT		48
- #define ID_AA64MMFR2_FWB_SHIFT		40
- #define ID_AA64MMFR2_AT_SHIFT		32
- #define ID_AA64MMFR2_LVA_SHIFT		16
-@@ -693,6 +694,9 @@
- #define ID_AA64MMFR2_UAO_SHIFT		4
- #define ID_AA64MMFR2_CNP_SHIFT		0
- 
-+#define ID_AA64MMFR2_TTL_NI		0x0
-+#define ID_AA64MMFR2_TTL_SUPPORTED	0x1
-+
- /* id_aa64dfr0 */
- #define ID_AA64DFR0_PMSVER_SHIFT	32
- #define ID_AA64DFR0_CTX_CMPS_SHIFT	28
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index bc3949064725..10b12710b7cc 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -50,15 +50,30 @@
- 		__tlbi(op, (arg) | USER_ASID_FLAG);				\
- } while (0)
- 
--/* This macro creates a properly formatted VA operand for the TLBI */
--#define __TLBI_VADDR(addr, asid)				\
-+/* This macro creates a properly formatted VA operand for the TLBI.
-+ * The TTL field is introduced since ARMv8.4. ARMv8.4-TTL provides the TTL
-+ * field to indicate the level of translation table walk holding the leaf entry
-+ * for the address that is being invalidated.
-+ */
-+#define __TLBI_VADDR(addr, asid, ttl)				\
- 	({							\
- 		unsigned long __ta = (addr) >> 12;		\
- 		__ta &= GENMASK_ULL(43, 0);			\
-+		if (cpus_have_const_cap(ARM64_HAS_TLBI_TTL))	\
-+			__ta |= (unsigned long)(ttl) << 44;	\
- 		__ta |= (unsigned long)(asid) << 48;		\
- 		__ta;						\
- 	})
- 
-+/*
-+ * __TLB_TG defines translation granule of the system, which is defined by
-+ * PAGE_SHIFT.  Used by TTL.
-+ *  - 4KB	: 1
-+ *  - 16KB	: 2
-+ *  - 64KB	: 3
-+ */
-+#define __TLB_TG	((PAGE_SHIFT - 12) / 2 + 1)
-+
- /*
-  *	TLB Invalidation
-  *	================
-@@ -146,7 +161,7 @@ static inline void flush_tlb_all(void)
- 
- static inline void flush_tlb_mm(struct mm_struct *mm)
- {
--	unsigned long asid = __TLBI_VADDR(0, ASID(mm));
-+	unsigned long asid = __TLBI_VADDR(0, ASID(mm), 0);
- 
- 	dsb(ishst);
- 	__tlbi(aside1is, asid);
-@@ -157,7 +172,7 @@ static inline void flush_tlb_mm(struct mm_struct *mm)
- static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
- 					 unsigned long uaddr)
- {
--	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
-+	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm), 0);
- 
- 	dsb(ishst);
- 	__tlbi(vale1is, addr);
-@@ -195,8 +210,8 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 	/* Convert the stride into units of 4k */
- 	stride >>= 12;
- 
--	start = __TLBI_VADDR(start, asid);
--	end = __TLBI_VADDR(end, asid);
-+	start = __TLBI_VADDR(start, asid, 0);
-+	end = __TLBI_VADDR(end, asid, 0);
- 
- 	dsb(ishst);
- 	for (addr = start; addr < end; addr += stride) {
-@@ -230,8 +245,8 @@ static inline void flush_tlb_kernel_range(unsigned long start, unsigned long end
- 		return;
- 	}
- 
--	start = __TLBI_VADDR(start, 0);
--	end = __TLBI_VADDR(end, 0);
-+	start = __TLBI_VADDR(start, 0, 0);
-+	end = __TLBI_VADDR(end, 0, 0);
- 
- 	dsb(ishst);
- 	for (addr = start; addr < end; addr += 1 << (PAGE_SHIFT - 12))
-@@ -246,7 +261,7 @@ static inline void flush_tlb_kernel_range(unsigned long start, unsigned long end
-  */
- static inline void __flush_tlb_kernel_pgtable(unsigned long kaddr)
- {
--	unsigned long addr = __TLBI_VADDR(kaddr, 0);
-+	unsigned long addr = __TLBI_VADDR(kaddr, 0, 0);
- 
- 	dsb(ishst);
- 	__tlbi(vaae1is, addr);
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 0b6715625cf6..9a84c59e1482 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1672,6 +1672,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.min_field_value = 1,
- 	},
- #endif
-+	{
-+		.desc = "TTL field in TLBI operation",
-+		.capability = ARM64_HAS_TLBI_TTL,
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.matches = has_cpuid_feature,
-+		.sys_reg = SYS_ID_AA64MMFR2_EL1,
-+		.field_pos = ID_AA64MMFR2_TTL_SHIFT,
-+		.sign = FTR_UNSIGNED,
-+		.min_field_value = ID_AA64MMFR2_TTL_SUPPORTED,
-+	},
- 	{},
- };
- 
-diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
-index 3c18c2454089..5d1570354d29 100644
---- a/arch/arm64/kernel/sys_compat.c
-+++ b/arch/arm64/kernel/sys_compat.c
-@@ -37,7 +37,7 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
- 			 * The workaround requires an inner-shareable tlbi.
- 			 * We pick the reserved-ASID to minimise the impact.
- 			 */
--			__tlbi(aside1is, __TLBI_VADDR(0, 0));
-+			__tlbi(aside1is, __TLBI_VADDR(0, 0, 0));
- 			dsb(ish);
- 		}
- 
--- 
-2.19.1
-
-
+Zhenzhong
