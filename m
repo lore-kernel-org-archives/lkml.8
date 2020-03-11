@@ -4,149 +4,223 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85159C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7391FC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564D120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C19220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P8p0NuTI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lnn57H92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgCKHwb (ORCPT
+        id S1728383AbgCKHxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:52:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42259 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728383AbgCKHwa (ORCPT
+        Wed, 11 Mar 2020 03:53:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33549 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgCKHxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:52:30 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q19so1171968ljp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 00:52:29 -0700 (PDT)
+        Wed, 11 Mar 2020 03:53:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c20so867279lfb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 00:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=OL34kr6b7JTbb1MQ43TrVAqLSZ/nro50ISzwyt4kVeo=;
-        b=P8p0NuTI6Ati72RfbgQ6lL2Md8sNmfCq5FvEnYGQHHkQ8XqoMY1TCTDUjPrrxhHMJg
-         r1RvBWtub64HsrW/BSh08NOtlmx/J6gxMepiKESyvbXawgFmGFESbDg0zKOMtKK7t0AB
-         7rnYgykbam4b5NG+OtjKCD1GaCWU6orJtQ1t8MwB2wpk/DHorHQ7BB5PGVnb83TlUs2U
-         qERtRRYU6qv4gl1pGgOFCXZZwraVoOpbzwb009qn2qOIl+u4GT4mCipCE0Yzx/LDb7eV
-         85uAoegfmEPktTkt+Qp6p3t0Oy8ForbFjqoWsqbNAqlApRUMEoYiyQLNhPgzs6nPpd60
-         aGIg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dmYpz/aYVnj1bUh+RSDK8X311SKNrr0dk2BrKf5slAo=;
+        b=lnn57H92SdNASu+2A/R6UAAKJ+dWpQA2U1nV6pNZiM1cr/0Ln+gEkCR+zZrGXyS7+X
+         fvZ05Mp8Ei+KOe/9zt2SjWDynKlCyrKu4UGWCLWh9AfDGFwbxzcCH/g6DQCK81xa8Adn
+         R69XkTp4XMSFN54l2XgczZhCgw3phSfCYX3qHFxmP+NmUqq7X7dNr2ZxqWBEp5MO4jTA
+         VkS4G6EFH+bvFIJJvC6lHE7wi+iDVOZtbXevt79LhROGLnBRvA1wHpHlgUTayXcJgGlX
+         9VN5XSoWJLkQB7YURB7AcoeEMcz5dV/65P6GZEUGTg/r8YfJRJpdu05O5aSYNsN3vf8b
+         RGZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=OL34kr6b7JTbb1MQ43TrVAqLSZ/nro50ISzwyt4kVeo=;
-        b=GUAWdJZx81nH86hT2eXy09szRthytHQGLd9hNMzsvUj0yH6UfUTrGEWC4X4SBI/mD8
-         2BFaF7uEQQLFvEL2X7jcVXCSWeEPbMwnrD6mvjVW0nkQ8pFp7ZCF0Ejl3lW9pKJIlJp2
-         9A0FJ/7L1d84UIl8DaFP1HQarAu6ig/uA5mOEjL7Q0TiSqPZ/09od6POFbgsx6tQZBJi
-         /tQsTNvi4Hdn+6pv93pQhN+6xeQ7RBNgbpcFNYE5T6NBkDoDGtMYLQmodo/b/HGwW0mI
-         hDm5VpAkzWOkhTzGOHGjVw4SXwIhbp3JggDOOh3J/0HGX/YFW2UgSVuiUOPEHnUK87U+
-         liQA==
-X-Gm-Message-State: ANhLgQ2U2lCHuAtj2eeYcQvGItSJqNSuuECELKKUr+3EqO+gwM3Karkw
-        GwLdIqTGGMa4aLWdGXvhDsxm+sWgV0rFW6o8Bn8Izg==
-X-Google-Smtp-Source: ADFU+vt8utAgxIICuVTvEgeo/cYPXD3JL0b57liRt3lgFXb5j7BBuyyNQVZpYnkep4nwyNaUlR7cpvQbIkxJmDW732Y=
-X-Received: by 2002:a2e:2419:: with SMTP id k25mr1158121ljk.165.1583913148198;
- Wed, 11 Mar 2020 00:52:28 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dmYpz/aYVnj1bUh+RSDK8X311SKNrr0dk2BrKf5slAo=;
+        b=WzqtjG1i+DZpi90DA4udEfdfR7DlBQa3ZmY4qfPmwE34thP9afY4FqZqwoqtHxop8m
+         6mlSVsVn18eWREfmP+Gjmgs9IrlPya9SG618/NMoTK7oRHbbpw16es7/RaILyreAlv8M
+         LcJkXUiyomqqRnF8IYn3FEePPe0jUeHfCUDNUXANRgrUbazk2Yx8OeVgq8JfBGluqQPP
+         EmAiggwCq3YJWtx8DWKZr4esHC1N1AITGqdrpy1Pl6kjb/KfosryZDTwcV9IZts/2YUR
+         AgY70OElwSJ0XwDP70h4m90RWAPN/fIUm1Id9VN3KPdKpaNLh6d1elucL3pQjOhz5LWq
+         lVFQ==
+X-Gm-Message-State: ANhLgQ00XH5cvCsNlK6iUsu79rKJxhOH14u+gbqreYcZlJrGiESfV8cw
+        Xl43ECmU4J5qRX7y0xBnZ5OegGIlKXxxg4FjdoSQXQ==
+X-Google-Smtp-Source: ADFU+vsNiDJQhI3JYt02VwGMK03BIvdCMAH8jElfm3TdyDiJXGGw/8PAaypyOh6jVmy0oBjylxkwATDLsLWyFA3mqwQ=
+X-Received: by 2002:a19:4c08:: with SMTP id z8mr1315189lfa.95.1583913186300;
+ Wed, 11 Mar 2020 00:53:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200310123635.322799692@linuxfoundation.org>
+In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 11 Mar 2020 13:22:16 +0530
-Message-ID: <CA+G9fYusdfg7PMfC9Xce-xLT7NiyKSbgojpK35GOm=Pf9jXXrA@mail.gmail.com>
-Subject: WARNING: at refcount.c:190 refcount_sub_and_test_checked+0xac/0xc8 -
- refcount_t: underflow; use-after-free.
-To:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>, tkjos@google.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, ardb@kernel.org,
-        Kees Cook <keescook@chromium.org>, lkft-triage@lists.linaro.org
+Date:   Wed, 11 Mar 2020 13:22:54 +0530
+Message-ID: <CA+G9fYtAjT1iBMCpPjKBcjrPPuqQ-WPU-axgikmoifyxJYJ5vA@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/168] 5.4.25-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While running selftest binderfs_test on linux mainline the following
-warning on arm64, arm, x86_64 and i386.
+On Tue, 10 Mar 2020 at 18:19, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.25 release.
+> There are 168 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.25-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-[  329.383391] refcount_t: underflow; use-after-free.
-[  329.391025] WARNING: CPU: 0 PID: 2604 at
-/usr/src/kernel/lib/refcount.c:28 refcount_warn_saturate+0xd4/0x150
-[  329.403319] Modules linked in: cls_bpf sch_fq algif_hash af_alg
-rfkill tda998x drm_kms_helper drm crct10dif_ce fuse
-[  329.413828] CPU: 0 PID: 2604 Comm: binderfs_test Not tainted 5.6.0-rc5 #1
-[  329.420640] Hardware name: ARM Juno development board (r2) (DT)
-[  329.426584] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  329.431402] pc : refcount_warn_saturate+0xd4/0x150
-[  329.436216] lr : refcount_warn_saturate+0xd4/0x150
-[  329.441026] sp : ffff800013d03a70
-[  329.444356] x29: ffff800013d03a70 x28: ffff00092c3f8000
-[  329.449694] x27: 0000000000000000 x26: ffff80001236f000
-[  329.455033] x25: ffff800012656000 x24: 0000000000000001
-[  329.460371] x23: ffff800012656f76 x22: ffff80001265b2c0
-[  329.465709] x21: ffff000929035c00 x20: ffff00095cd8ce00
-[  329.471048] x19: ffff80001261c848 x18: ffffffffffffffff
-[  329.476386] x17: 0000000000000000 x16: 0000000000000000
-[  329.481724] x15: ffff80001236fa88 x14: ffff800093d03767
-[  329.487062] x13: ffff800013d03775 x12: ffff80001239e000
-[  329.492400] x11: 0000000005f5e0ff x10: ffff800013d03700
-[  329.497738] x9 : ffff8000126ddc68 x8 : 0000000000000028
-[  329.503076] x7 : ffff800010190a5c x6 : ffff00097ef0b428
-[  329.508414] x5 : ffff00097ef0b428 x4 : ffff00092c3f8000
-[  329.513752] x3 : ffff800012370000 x2 : 0000000000000000
-[  329.519090] x1 : 295161095161e100 x0 : 0000000000000000
-[  329.524429] Call trace:
-[  329.526894]  refcount_warn_saturate+0xd4/0x150
-[  329.531362]  binderfs_evict_inode+0xcc/0xe8
-[  329.535567]  evict+0xa8/0x188
-[  329.538552]  iput+0x278/0x318
-[  329.541537]  dentry_unlink_inode+0x154/0x170
-[  329.545827]  __dentry_kill+0xc4/0x1d8
-[  329.549509]  shrink_dentry_list+0xf4/0x210
-[  329.553625]  shrink_dcache_parent+0x124/0x210
-[  329.558002]  do_one_tree+0x20/0x50
-[  329.561423]  shrink_dcache_for_umount+0x30/0x98
-[  329.565975]  generic_shutdown_super+0x2c/0xf8
-[  329.570354]  kill_anon_super+0x24/0x48
-[  329.574122]  kill_litter_super+0x2c/0x38
-[  329.578065]  binderfs_kill_super+0x24/0x48
-[  329.582182]  deactivate_locked_super+0x74/0xa0
-[  329.586647]  deactivate_super+0x8c/0x98
-[  329.590502]  cleanup_mnt+0xd8/0x130
-[  329.594008]  __cleanup_mnt+0x20/0x30
-[  329.597605]  task_work_run+0x90/0x150
-[  329.601287]  do_notify_resume+0x130/0x498
-[  329.605317]  work_pending+0x8/0x14
-[  329.608736] irq event stamp: 1612
-[  329.612072] hardirqs last  enabled at (1611): [<ffff800010190bf4>]
-console_unlock+0x514/0x5d8
-[  329.620631] hardirqs last disabled at (1612): [<ffff8000100a904c>]
-debug_exception_enter+0xac/0xe8
-[  329.629622] softirqs last  enabled at (1608): [<ffff8000100818bc>]
-__do_softirq+0x4c4/0x578
-[  329.638005] softirqs last disabled at (1561): [<ffff80001010b6ac>]
-irq_exit+0x144/0x150
-[  329.646035] ---[ end trace bac6584738d9306f ]---
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Metadata:
----------------
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  git describe: v5.6-rc5
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2518/config
+Summary
+------------------------------------------------------------------------
 
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/1273667#L6591
-https://lkft.validation.linaro.org/scheduler/job/1273569#L6222
-https://lkft.validation.linaro.org/scheduler/job/1273548#L6126
-https://lkft.validation.linaro.org/scheduler/job/1273596#L4687
+kernel: 5.4.25-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 877097a6286abcb4d5eaa7d683640e3a86b7a95c
+git describe: v5.4.24-168-g877097a6286a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.24-168-g877097a6286a
 
--- 
+No regressions (compared to build v5.4.24)
+
+No fixes (compared to build v5.4.24)
+
+Ran 26864 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-mm-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* kvm-unit-tests
+* ltp-crypto-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
 Linaro LKFT
 https://lkft.linaro.org
