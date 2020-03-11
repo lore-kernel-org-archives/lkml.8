@@ -2,106 +2,101 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A5AC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921A9C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1AF21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6B220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mTSFsTwT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wgPQQuMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgCKMfJ (ORCPT
+        id S1729486AbgCKMgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:35:09 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40497 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgCKMfJ (ORCPT
+        Wed, 11 Mar 2020 08:36:13 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44871 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729336AbgCKMgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:35:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e26so1915116wme.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:35:06 -0700 (PDT)
+        Wed, 11 Mar 2020 08:36:12 -0400
+Received: by mail-qk1-f196.google.com with SMTP id f198so1824758qke.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:36:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kaarF50dxbS3Z8Mh0BzIdcf7YKpiLwN04fKYbKDEJfo=;
-        b=mTSFsTwTgQ395aAGTlSYACy3RpEti3lHZ/SdKLzuPJUEhPFwgtcD/0x7JD1LmsEyLz
-         vLr8lEFv/uOg5+Hi5xuDDqecCPjxNi02fn6naqQ5/M/q4Q36F88RiOq/ovCCK48Ar+Dc
-         0P34UBq5R1Jexx3KgTxx4vBU5PM8e/XP45Dxnf6oz2y0ZKKS2nAfn4tCxyECf+0moQgl
-         DBaHI3o9o7jlpRQNCThE0/fSZpqYxbOA8VJE7eSxzaBnqfo+wHr/D/bQrHnsfazug5gC
-         5j4YTLOoliD+IuU/K2E8FRl51ekJyN3da0utLjH0xJ/aWYgNoW9EyzQas3GGEipaYAQm
-         Vosg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=A2JAdo/ZGdZq7oAsk87CcGhLsAyVSDl8Hklf8ueXEq0=;
+        b=wgPQQuMZanHLFj2mJqcSX3W583odW+PfyBhx+oB83ccqbeyp/tn2ub5mKFECqZa0Si
+         jIwq7qZlEQ5kGwLMgTSiEoqV1qUGGPH4kYRduf0BtouMitKa7Kj1+uTePCaVxPUnuyOD
+         oIUtFCxLdTOjxJSZGa5TqhD4dQeFNi3D/DALvmvVtA1gGFtPp5aL2glAhsEjt1YHC05L
+         C/K7TJki+AYy+AvudHg1wEF4KB9uqVNtiwyU6XsoH2oaewfvs3SdWryJqH8gCGUbTpet
+         vNCon0cKrHvTCT0A9FC/ZEYORA8Z5mIw4qz28t3XSpWFEVpN1KPT6Pl2FgGen2Lrca/A
+         FvkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kaarF50dxbS3Z8Mh0BzIdcf7YKpiLwN04fKYbKDEJfo=;
-        b=CScB6iadYmgFNj/9ggS59yb0Fgo0S5W2L7lilhdI2+r5ddLt2HQkLr/CrqheFwZtRX
-         /FSLL0OdfxdQuYjKcLs+3r4+1trwV7NWrR216qzz7vM8jSu0xIsIGns9KOoe+IlxBgNA
-         FI1HUWStDr66NfZTqK0dcB5TmeGRGNAgxQW3gHCeVyZiaGwGK1aDY+yeoV5jgn/lAqsb
-         8HOIssc+gtfZmKH2qL8tW2l/Py3S+ZxreiuohaV5qakD2sZ/Cp69oCM7lHmaUSJhsydZ
-         yWqpp4pmd1+iD3jEpPLMSHtS84u4+7FcPbZHqG5UXa89rsJ6w7BjSo7Nhv+cUpEFl2sS
-         /c2Q==
-X-Gm-Message-State: ANhLgQ2oZIWh1U101iHdDFamrHoYBtrCkYFFOk4OT6IQHP045MMy81GL
-        n9ulkTlV6N0OltYIdUZiyG+j6A==
-X-Google-Smtp-Source: ADFU+vtijpANu3z4d1JWR353H0zygtSe8oto36au5GoaVFlUBSvVn7Jemj9lTKV4zXVdPkwgCr0WiQ==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr3676317wmk.172.1583930105627;
-        Wed, 11 Mar 2020 05:35:05 -0700 (PDT)
-Received: from xps7590.local ([2a02:2450:102f:13b8:9087:3e80:4ebc:ae7b])
-        by smtp.gmail.com with ESMTPSA id m25sm7822732wml.35.2020.03.11.05.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 05:35:04 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, olof@lixom.net, Anson.Huang@nxp.com,
-        maxime@cerno.tech, leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v1 0/6] Qualcomm CCI & Camera for db410c & db845c
-Date:   Wed, 11 Mar 2020 13:34:55 +0100
-Message-Id: <20200311123501.18202-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=A2JAdo/ZGdZq7oAsk87CcGhLsAyVSDl8Hklf8ueXEq0=;
+        b=mrgp/e9HZeebfujtRTcuMWCGz+r9Dtc3zPp5Yau67Z/6gOX3BQYcxTCbnONnzky4Gc
+         o5LhgQL7eQNCGizmwqPnDthHw16JVsJXrqzDoh8DCi+EgeKY2GY4pICMapUnwQ1wj3Wg
+         u6T0WNnruevE7iXE8xb2h702gn8DUGGK+74t7kSIXJphH7593d0yfLhqOYTXKzICbZ8e
+         yi5F7LC4aBY7UAvYHgdUj44llMG6ClT+RRX0B2qlOxSIkl+LDfdzVc+lsYGhVMcxlgyS
+         ZauxqaQKEK1vq5uoneoe2+mA0CUFlPcGfHAN1S4teV1rdpgxaA7kjUsZ1Gvi+ohqnlUf
+         x7nw==
+X-Gm-Message-State: ANhLgQ1Rw02GFanVBRuS3HerllC+MjPlVdxzpqW/rPhPqwvJ4jh6RxOI
+        2fVpdfMIbIzr+VuW2Q1Glft8PJAHhuucFPzDvRasSg==
+X-Google-Smtp-Source: ADFU+vvI3YYQBWkmn8OFmWq6mlrvnzaHNr5OEC4rlUVY6+vpzh1cGiwciVD2yz9bUxl9LcLzbaVdyHUMxZzXdYvBNls=
+X-Received: by 2002:a37:3c9:: with SMTP id 192mr2595902qkd.330.1583930171453;
+ Wed, 11 Mar 2020 05:36:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1583587917-7032-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1583587917-7032-1-git-send-email-Anson.Huang@nxp.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 11 Mar 2020 13:36:00 +0100
+Message-ID: <CAMpxmJX6QPA-PZ=GGqp2B2prMEX3wAHCxMCijg2xdXztr9Rn=A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxc: Add COMPILE_TEST support for GPIO_MXC
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series depends on the Qualcom CCI I2C driver series:
-https://patchwork.kernel.org/cover/10569957/
+sob., 7 mar 2020 o 14:38 Anson Huang <Anson.Huang@nxp.com> napisa=C5=82(a):
+>
+> Add COMPILE_TEST support to GPIO_MXC driver for better compile
+> testing coverage.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/gpio/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index b8013cf..b411226 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -394,7 +394,7 @@ config GPIO_MVEBU
+>
+>  config GPIO_MXC
+>         def_bool y
+> -       depends on ARCH_MXC
+> +       depends on ARCH_MXC || COMPILE_TEST
+>         select GPIO_GENERIC
+>         select GENERIC_IRQ_CHIP
+>
+> --
+> 2.7.4
+>
 
-This series enables basic camera functionality on the Qualcomm db410c and
-db845c (RB3) platforms.
+Patch applied, thanks!
 
-This includes building drivers as modules, adding devicetree nodes
-for camera controllers, clocks, regulators and sensor nodes.
-
-Loic Poulain (2):
-  arm64: dts: msm8916: Add i2c-qcom-cci node
-  arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
-
-Robert Foss (4):
-  arm64: dts: sdm845: Add i2c-qcom-cci node
-  arm64: dts: sdm845-db845c: Add pm_8998 gpio names
-  arm64: dts: sdm845-db845c: Add ov8856 & ov7251 camera nodes
-  arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
-
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi  |  75 ++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      |  27 ++
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 273 +++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 110 +++++++++
- arch/arm64/configs/defconfig               |   4 +
- 5 files changed, 489 insertions(+)
-
--- 
-2.20.1
-
+Bartosz
