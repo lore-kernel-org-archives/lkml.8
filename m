@@ -2,228 +2,157 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A635CC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A53C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700C3208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="xgQwRmjy"
+	by mail.kernel.org (Postfix) with ESMTP id 835E0208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 07:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgCKHaq (ORCPT
+        id S1728391AbgCKHfJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:30:46 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:44023 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgCKHaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:30:46 -0400
-Received: by mail-ua1-f66.google.com with SMTP id o42so352653uad.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 00:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Nk9d88tir1z9F+OfZqa+RxpSNCU78XfSYzCiKpe64Q=;
-        b=xgQwRmjyFp8+taCvHKFUoeqURRY7TiuLf89r+llmJb6qciItR+j4GtXgiRI5Exwd45
-         8jY928jqPvHCyGb0XL6Yw1dwNw+V6ErLpr7mxnrq88bL4/4l1fxxvnk+5Blu4/kH7/Xh
-         ueBcClS0plhlOrAmI5a1ehlI88tkTnKwZWqqm8hMJRkWRy+Uxw5CgXOrrXvyPuXDCxv0
-         KA1o+PY55P+eaR+1D47waYAVPaIv8GIphtvyWcwDUCvIXPNyBcE+WQBFo2jMEYI2q8hC
-         mq4en4mQHKnr8MdkVJrpwwvrNzg8SMAcgndxI3YXecLM6bqw65F4rBuie5VlWe9l4yiD
-         3zbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Nk9d88tir1z9F+OfZqa+RxpSNCU78XfSYzCiKpe64Q=;
-        b=UDHZXog9FMZwIqtiIG1sBLkQi1HBMNsi+YtgtBXF997+tU8EkFvyZoNf4WQQKuQSN2
-         sb0SUUXXG35AvUvlxRzOANbsiFSwdPdvkr3+AuZ1FsNReqmnF5SqiePJdK1tvwWU68nn
-         9ihwTni+CXkJ2R/nJBeMZYKVWfiAU8LBFQWr/8wlR2TwSNMy/ErRuyRvDVe4f+cFXHGp
-         sQHV4+M0NBJQYTmGuwTxQaBAQXQNNX4riNV30LRsu2BZ2Z2npvUSg/95gJEZ1MYdmPPO
-         cjQJQhYgvbkUqTvw+UaltbpQk8Doi2+HzZCExoLGbuvLw2WSdwGiuoXC/1L2afvGIZcS
-         vV5Q==
-X-Gm-Message-State: ANhLgQ3FYcFe58KPu+ap9DSrgslFZc+7fSqRU+j5ByUeFBt51SHr/Ers
-        w9+o8g28e8AAHzghwo1KpaQVIdZw18hLZV7kBFqQ1A==
-X-Google-Smtp-Source: ADFU+vt1Nj01BNrpKA6Wcf6tdySvJn+95tH2Jbcar3F9/LL7ZtoYmUEKyaT4NHRuBSPHRz11S0Tm9XGr1rpoOymRoko=
-X-Received: by 2002:ab0:3089:: with SMTP id h9mr877616ual.48.1583911843276;
- Wed, 11 Mar 2020 00:30:43 -0700 (PDT)
+        Wed, 11 Mar 2020 03:35:09 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:37010 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726160AbgCKHfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 03:35:09 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 8A9A3905D61B99ACD7FD;
+        Wed, 11 Mar 2020 15:35:03 +0800 (CST)
+Received: from DGGEMM421-HUB.china.huawei.com (10.1.198.38) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 11 Mar 2020 15:35:02 +0800
+Received: from DGGEMM528-MBX.china.huawei.com ([169.254.8.90]) by
+ dggemm421-hub.china.huawei.com ([10.1.198.38]) with mapi id 14.03.0439.000;
+ Wed, 11 Mar 2020 15:34:56 +0800
+From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
+To:     zhukeqian <zhukeqian1@huawei.com>, Marc Zyngier <maz@kernel.org>
+CC:     "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Huangweidong (C)" <weidong.huang@huawei.com>,
+        "wangxin (U)" <wangxinxin.wang@huawei.com>
+Subject: RE: [RFC] KVM: arm64: support enabling dirty log graually in small
+ chunks
+Thread-Topic: [RFC] KVM: arm64: support enabling dirty log graually in small
+ chunks
+Thread-Index: AQHV9fES7bnu3RiLvUOZvoLEbVPgkKg/noOAgAFalYCAAFE+gIABLpcAgACIxzA=
+Date:   Wed, 11 Mar 2020 07:34:55 +0000
+Message-ID: <B2D15215269B544CADD246097EACE7474BB64495@DGGEMM528-MBX.china.huawei.com>
+References: <20200309085727.1106-1-zhukeqian1@huawei.com>
+ <4b85699ec1d354cc73f5302560231f86@misterjones.org>
+ <64925c8b-af3d-beb5-bc9b-66ef1e47f92d@huawei.com>
+ <a642a79ea9190542a9098e4c9dc5a9f2@kernel.org>
+ <9ddefc54-dd5b-0555-0aaa-00a3a23febcf@huawei.com>
+In-Reply-To: <9ddefc54-dd5b-0555-0aaa-00a3a23febcf@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.228.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200310154358.39367-1-swboyd@chromium.org> <20200310154358.39367-3-swboyd@chromium.org>
-In-Reply-To: <20200310154358.39367-3-swboyd@chromium.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 11 Mar 2020 13:00:00 +0530
-Message-ID: <CAHLCerNVX844nUwaYHCRQdUhYbpfjRxQQp445bd_v7hnQ3YbyA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] i2c: qcom-geni: Grow a dev pointer to simplify code
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-i2c@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 9:14 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Some lines are long here. Use a struct dev pointer to shorten lines and
-> simplify code. The clk_get() call can fail because of EPROBE_DEFER
-> problems too, so just remove the error print message because it isn't
-> useful. Finally, platform_get_irq() already prints an error so just
-> remove that error message.
->
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 57 ++++++++++++++----------------
->  1 file changed, 26 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index 4efca130035a..2f5fb2e83f95 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -502,45 +502,40 @@ static int geni_i2c_probe(struct platform_device *pdev)
->         struct resource *res;
->         u32 proto, tx_depth;
->         int ret;
-> +       struct device *dev = &pdev->dev;
->
-> -       gi2c = devm_kzalloc(&pdev->dev, sizeof(*gi2c), GFP_KERNEL);
-> +       gi2c = devm_kzalloc(dev, sizeof(*gi2c), GFP_KERNEL);
->         if (!gi2c)
->                 return -ENOMEM;
->
-> -       gi2c->se.dev = &pdev->dev;
-> -       gi2c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
-> +       gi2c->se.dev = dev;
-> +       gi2c->se.wrapper = dev_get_drvdata(dev->parent);
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       gi2c->se.base = devm_ioremap_resource(&pdev->dev, res);
-> +       gi2c->se.base = devm_ioremap_resource(dev, res);
->         if (IS_ERR(gi2c->se.base))
->                 return PTR_ERR(gi2c->se.base);
->
-> -       gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
-> -       if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
-> -               ret = PTR_ERR(gi2c->se.clk);
-> -               dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
-> -               return ret;
-> -       }
-> +       gi2c->se.clk = devm_clk_get(dev, "se");
-> +       if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(dev))
-> +               return PTR_ERR(gi2c->se.clk);
->
-> -       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
-> -                                                       &gi2c->clk_freq_out);
-> +       ret = device_property_read_u32(dev, "clock-frequency",
-> +                                      &gi2c->clk_freq_out);
->         if (ret) {
-> -               dev_info(&pdev->dev,
-> -                       "Bus frequency not specified, default to 100kHz.\n");
-> +               dev_info(dev, "Bus frequency not specified, default to 100kHz.\n");
->                 gi2c->clk_freq_out = KHZ(100);
->         }
->
-> -       if (has_acpi_companion(&pdev->dev))
-> -               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
-> +       if (has_acpi_companion(dev))
-> +               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
->
->         gi2c->irq = platform_get_irq(pdev, 0);
-> -       if (gi2c->irq < 0) {
-> -               dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
-> +       if (gi2c->irq < 0)
->                 return gi2c->irq;
-> -       }
->
->         ret = geni_i2c_clk_map_idx(gi2c);
->         if (ret) {
-> -               dev_err(&pdev->dev, "Invalid clk frequency %d Hz: %d\n",
-> +               dev_err(dev, "Invalid clk frequency %d Hz: %d\n",
->                         gi2c->clk_freq_out, ret);
->                 return ret;
->         }
-> @@ -549,29 +544,29 @@ static int geni_i2c_probe(struct platform_device *pdev)
->         init_completion(&gi2c->done);
->         spin_lock_init(&gi2c->lock);
->         platform_set_drvdata(pdev, gi2c);
-> -       ret = devm_request_irq(&pdev->dev, gi2c->irq, geni_i2c_irq, 0,
-> -                              dev_name(&pdev->dev), gi2c);
-> +       ret = devm_request_irq(dev, gi2c->irq, geni_i2c_irq, 0,
-> +                              dev_name(dev), gi2c);
->         if (ret) {
-> -               dev_err(&pdev->dev, "Request_irq failed:%d: err:%d\n",
-> +               dev_err(dev, "Request_irq failed:%d: err:%d\n",
->                         gi2c->irq, ret);
->                 return ret;
->         }
->         /* Disable the interrupt so that the system can enter low-power mode */
->         disable_irq(gi2c->irq);
->         i2c_set_adapdata(&gi2c->adap, gi2c);
-> -       gi2c->adap.dev.parent = &pdev->dev;
-> -       gi2c->adap.dev.of_node = pdev->dev.of_node;
-> +       gi2c->adap.dev.parent = dev;
-> +       gi2c->adap.dev.of_node = dev->of_node;
->         strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
->
->         ret = geni_se_resources_on(&gi2c->se);
->         if (ret) {
-> -               dev_err(&pdev->dev, "Error turning on resources %d\n", ret);
-> +               dev_err(dev, "Error turning on resources %d\n", ret);
->                 return ret;
->         }
->         proto = geni_se_read_proto(&gi2c->se);
->         tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
->         if (proto != GENI_SE_I2C) {
-> -               dev_err(&pdev->dev, "Invalid proto %d\n", proto);
-> +               dev_err(dev, "Invalid proto %d\n", proto);
->                 geni_se_resources_off(&gi2c->se);
->                 return -ENXIO;
->         }
-> @@ -581,11 +576,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
->                                                         true, true, true);
->         ret = geni_se_resources_off(&gi2c->se);
->         if (ret) {
-> -               dev_err(&pdev->dev, "Error turning off resources %d\n", ret);
-> +               dev_err(dev, "Error turning off resources %d\n", ret);
->                 return ret;
->         }
->
-> -       dev_dbg(&pdev->dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
-> +       dev_dbg(dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
->
->         gi2c->suspended = 1;
->         pm_runtime_set_suspended(gi2c->se.dev);
-> @@ -595,12 +590,12 @@ static int geni_i2c_probe(struct platform_device *pdev)
->
->         ret = i2c_add_adapter(&gi2c->adap);
->         if (ret) {
-> -               dev_err(&pdev->dev, "Error adding i2c adapter %d\n", ret);
-> +               dev_err(dev, "Error adding i2c adapter %d\n", ret);
->                 pm_runtime_disable(gi2c->se.dev);
->                 return ret;
->         }
->
-> -       dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
-> +       dev_dbg(dev, "Geni-I2C adaptor successfully added\n");
->
->         return 0;
->  }
-> --
-> Sent by a computer, using git, on the internet
->
+> -----Original Message-----
+> From: zhukeqian
+> Sent: Wednesday, March 11, 2020 3:20 PM
+> To: Marc Zyngier <maz@kernel.org>
+> Cc: kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org;
+> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Zhoujian (jay)
+> <jianjay.zhou@huawei.com>; Sean Christopherson
+> <sean.j.christopherson@intel.com>; Paolo Bonzini <pbonzini@redhat.com>;
+> James Morse <james.morse@arm.com>; Julien Thierry
+> <julien.thierry.kdev@gmail.com>; Suzuki K Poulose <suzuki.poulose@arm.com>
+> Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small chunks
+> 
+> Hi Marc,
+> 
+> On 2020/3/10 21:16, Marc Zyngier wrote:
+> > On 2020-03-10 08:26, zhukeqian wrote:
+> >> Hi Marc,
+> >>
+> >> On 2020/3/9 19:45, Marc Zyngier wrote:
+> >>> Kegian,
+> >
+> > [...]
+> >
+> >>> Is there a userspace counterpart to it?
+> >>>
+> >> As this KVM/x86 related changes have not been merged to mainline
+> >> kernel, some little modification is needed on mainline Qemu.
+> >
+> > Could you please point me to these changes?
+> I made some changes locally listed below.
+> 
+> However, Qemu can choose to enable KVM_DIRTY_LOG_INITIALLY_SET or not.
+> Here I made no judgement on dirty_log_manual_caps because I just want to
+> verify the optimization of this patch.
+> 
+> diff --git a/accel/kvm/kvm-all.c b/accel/kvm/kvm-all.c index
+> 439a4efe52..1611f644a4 100644
+> --- a/accel/kvm/kvm-all.c
+> +++ b/accel/kvm/kvm-all.c
+> @@ -2007,14 +2007,16 @@ static int kvm_init(MachineState *ms)
+>      s->coalesced_pio = s->coalesced_mmio &&
+>                         kvm_check_extension(s,
+> KVM_CAP_COALESCED_PIO);
+> 
+> -    s->manual_dirty_log_protect =
+> +    uint64_t dirty_log_manual_caps =
+>          kvm_check_extension(s,
+> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
+> -    if (s->manual_dirty_log_protect) {
+> -        ret = kvm_vm_enable_cap(s,
+> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0, 1);
+> +    if (dirty_log_manual_caps) {
+> +        ret = kvm_vm_enable_cap(s,
+> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0,
+> +                                dirty_log_manual_caps);
+>          if (ret) {
+>              warn_report("Trying to enable
+> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 "
+>                          "but failed.  Falling back to the legacy mode. ");
+> -            s->manual_dirty_log_protect = false;
+> +        } else {
+> +            s->manual_dirty_log_protect = true;
+>          }
+>      }
+
+FYI: I had submitted a patch to the Qemu community some days ago:
+https://patchwork.kernel.org/patch/11419191/
+
+> >
+> >> As I tested this patch on a 128GB RAM Linux VM with no huge pages,
+> >> the time of enabling dirty log will decrease obviously.
+> >
+> > I'm not sure how realistic that is. Not having huge pages tends to
+> > lead to pretty bad performance in general...
+> Sure, this has no effect on guests which are all of huge pages.
+> 
+> For my understanding, once a guest has normal pages (maybe are initialized at
+> beginning or dissloved from huge pages), it can benefit from this patch.
+
+Yes, I agree.
+
+
+
+Regards,
+Jay Zhou
