@@ -2,140 +2,153 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E091C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B49EC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C193204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHqlZFnV"
+	by mail.kernel.org (Postfix) with ESMTP id 3CC6A204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgCKObC (ORCPT
+        id S1729866AbgCKOba convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:31:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39693 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgCKObB (ORCPT
+        Wed, 11 Mar 2020 10:31:30 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:53401 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729309AbgCKOb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:31:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r15so2906223wrx.6;
-        Wed, 11 Mar 2020 07:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VjzeEKChSA5U1RVRAuBtpoNW2CBTxFFw13vMlkz5Qxk=;
-        b=EHqlZFnV23fFnJW6akKlxvTs10LaICmJ/QCOlISSxIB0cw/p6s1ifiyS3OZVNq7Cra
-         /3936DKt8/JFJz9DaopJG5InbBeZvZQeuOQZ6Aed3ghopyfvrWaRZCF1LE/x6R5kBpJn
-         0/A1PFt0H4dOR0eMsY0VrYnR0krQmusq1cJRptn09df4Qfb6qmziQ+zua6UH2O+eMec2
-         Bw8N02JXEbs4uNpXpKNEvAUIqsava8YurAY6JtdU3NoMUaC9nfqn1m24q5apukcQLlnC
-         b1m2mUIIDODwT1Dp8udTeIrQeUioqm9GfvpINHA4RYsiD3ooKoLqmsKQjaZJENIv0tX0
-         dBGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjzeEKChSA5U1RVRAuBtpoNW2CBTxFFw13vMlkz5Qxk=;
-        b=DzRst48KUcc5LxTJIMV84RcHd5Zq9i5tTZEs5gVRaQs+VNV+VEFCOeaNDmaVmg90uf
-         uaDyXF6E7KnF5SOSQjLZAq9GH2wJ2JRFDv3iF/XBG3ya8qXO819JHRDtDTVW+eaMIhxh
-         2yqb6Ld9lBAjxCAWH4ShfM5LTXwOvbb/02fgccV1/bN5RdzB1EBs1duAexRQeZVECQhF
-         T1OSBqaXSb4ZxX248UN56K82DJ5qwwu5M5g6+S9hTMk0pVVKNn9/iXwAOOSYketdqNXF
-         pIMhNthn+oMUFMfZMi25rfMPPFr+sepu3JP4Lm5p4E8pf7+e1ETjTGdgueRc44EGW2LL
-         lZlw==
-X-Gm-Message-State: ANhLgQ3/7b/RwVt7OfnVXNpbROxeoa+blDIczej8jd+bTiRrLFXidvRS
-        lSN+sJ1iGevVqig3tTHcvCc=
-X-Google-Smtp-Source: ADFU+vuCLwEwQ5JWv5ljZuN0njk0gngoUTdcQ0yYvpJ5vzAu66rQL6Q1YmXNCUN1Wmmj/p+P6gqpCA==
-X-Received: by 2002:a5d:5090:: with SMTP id a16mr4872952wrt.191.1583937058668;
-        Wed, 11 Mar 2020 07:30:58 -0700 (PDT)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id 138sm3297085wmb.21.2020.03.11.07.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 07:30:57 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:30:53 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
-        robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com,
-        kishon@ti.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 0/5] Add support for PCIe endpoint mode in Tegra194
-Message-ID: <20200311143053.GB494173@ulmo>
-References: <20200303181052.16134-1-vidyas@nvidia.com>
- <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Content-Disposition: inline
-In-Reply-To: <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        Wed, 11 Mar 2020 10:31:29 -0400
+Received: from [172.20.10.2] (x59cc8a78.dyn.telefonica.de [89.204.138.120])
+        by mail.holtmann.org (Postfix) with ESMTPSA id D1D5CCECDF;
+        Wed, 11 Mar 2020 15:40:55 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] Bluetooth: clean up connection in hci_cs_disconnect
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200310113816.1.I12c0712e93f74506385b67c6df287658c8fdad04@changeid>
+Date:   Wed, 11 Mar 2020 15:31:26 +0100
+Cc:     Alain Michaud <alainm@chromium.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Joseph Hwang <josephsih@chromium.org>,
+        Yoni Shavit <yshavit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C60D1463-5B04-4C25-B4A2-0A9DD25A67B9@holtmann.org>
+References: <20200310113816.1.I12c0712e93f74506385b67c6df287658c8fdad04@changeid>
+To:     Manish Mandlik <mmandlik@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Manish,
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> In bluetooth core specification 4.2,
+> Vol 2, Part E, 7.8.9 LE Set Advertise Enable Command, it says
+> 
+>    The Controller shall continue advertising until ...
+>    or until a connection is created or ...
+>    In these cases, advertising is then disabled.
+> 
+> Hence, advertising would be disabled before a connection is
+> established. In current kernel implementation, advertising would
+> be re-enabled when all connections are terminated.
+> 
+> The correct disconnection flow looks like
+> 
+>  < HCI Command: Disconnect
+> 
+>> HCI Event: Command Status
+>      Status: Success
+> 
+>> HCI Event: Disconnect Complete
+>      Status: Success
+> 
+> Specifically, the last Disconnect Complete Event would trigger a
+> callback function hci_event.c:hci_disconn_complete_evt() to
+> cleanup the connection and re-enable advertising when proper.
+> 
+> However, sometimes, there might occur an exception in the controller
+> when disconnection is being executed. The disconnection flow might
+> then look like
+> 
+>  < HCI Command: Disconnect
+> 
+>> HCI Event: Command Status
+>      Status: Unknown Connection Identifier
+> 
+>  Note that "> HCI Event: Disconnect Complete" is missing when such an
+> exception occurs. This would result in advertising staying disabled
+> forever since the connection in question is not cleaned up correctly.
+> 
+> To fix the controller exception issue, we need to do some connection
+> cleanup when the disconnect command status indicates an error.
+> 
+> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> Signed-off-by: Manish Mandlik <mmandlik@google.com>
+> ---
+> 
+> net/bluetooth/hci_event.c | 14 +++++++++++++-
+> 1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index a40ed31f6eb8f..7f7e5ba3974a8 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -2191,6 +2191,7 @@ static void hci_cs_disconnect(struct hci_dev *hdev, u8 status)
+> {
+> 	struct hci_cp_disconnect *cp;
+> 	struct hci_conn *conn;
+> +	u8 type;
 
-On Wed, Mar 11, 2020 at 10:52:00AM +0000, Lorenzo Pieralisi wrote:
-> On Tue, Mar 03, 2020 at 11:40:47PM +0530, Vidya Sagar wrote:
-> > Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can op=
-erate
-> > either in root port mode or in end point mode but only in one mode at a=
- time.
-> > Platform P2972-0000 supports enabling endpoint mode for C5 controller. =
-This
-> > patch series adds support for PCIe endpoint mode in both the driver as =
-well as
-> > in DT.
-> > This patch series depends on the changes made for Synopsys DesignWare e=
-ndpoint
-> > mode subsystem that are recently accepted.
-> > @ https://patchwork.kernel.org/project/linux-pci/list/?series=3D202211
-> > which in turn depends on the patch made by Kishon
-> > @ https://patchwork.kernel.org/patch/10975123/
-> > which is also under review.
-> >=20
-> > V5:
-> > * Rebased patch-2 on top of Lorenzo's pci/endpoint branch
-> > * Removed unwanted header files inclusion in patch-5
->=20
-> Applied patches 1,2,5 to pci/endpoint for v5.7, please let me know
-> if something is missing.
+remove this please.
 
-Great, thanks! I've picked up patches 3 and 4 into the Tegra tree for
-v5.7.
+> 
+> 	if (!status)
+> 		return;
+> @@ -2202,10 +2203,21 @@ static void hci_cs_disconnect(struct hci_dev *hdev, u8 status)
+> 	hci_dev_lock(hdev);
+> 
+> 	conn = hci_conn_hash_lookup_handle(hdev, __le16_to_cpu(cp->handle));
+> -	if (conn)
+> +	if (conn) {
 
-Thierry
+And add this.
 
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
+		u8 type = conn->type;
 
------BEGIN PGP SIGNATURE-----
+> 		mgmt_disconnect_failed(hdev, &conn->dst, conn->type,
+> 				       conn->dst_type, status);
+> 
+> +		/* If the disconnection failed for any reason, the upper layer
+> +		 * does not retry to disconnect in current implementation.
+> +		 * Hence, we need to do some basic cleanup here and re-enable
+> +		 * advertising if necessary.
+> +		 */
+> +		type = conn->type;
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5o9hkACgkQ3SOs138+
-s6EhXg//cjYE1EBraQovAb9Meb89XpZgwlbTBz4wVpX5gGBnmOdMVLAJdqSbXdVQ
-AxZT3EVQOzy24ZqGwb118iN3a28CNYU9FLUdZM/UoPnA4NHC0Dk62cIeWUly7FU7
-geukEaBFNJSl/6EPuAo0Qobgow0Yn5anvPjKgpZ+0BKK/e/+aUYZNzFs0vpde9xq
-9PPsB1rGj0KrrDSnAFS1hxrL85yL8B5Hz2X//Zm/WFgC3C7X2lSSCL9z4RWyeT1F
-pNc41o45blCOmcA2wZi7WbaMCYkyBvQyjEmBPBTnF/6P3R+J3XWtyWcTJOSwgjby
-MHLshrbG0T4HNxFtbZ38G14Q//mCu5kYuGWLW/P3187nejD2XF1wNGYSqmwE9Eny
-zcOH7tqEofowLvCjLa3BZtHiSiAxRdwuLY4Q6nh1tEydpQqo5bKp3A52B6vjdqoo
-7GBhLvJ6tIal+dZUxI7nMz7wPdb53TrMws6rhQ4/bcb1oprZwXQzL8DGoNij6aBl
-kYU0OvWb1Wh9t+EbLa3BKdupY/OuBVK1zu6/mH1+MYTD/FZviyj+EXH8rPLbzki5
-THwdnIDEs0dvf3nEfIjXnyVfr+QrVOsrsKOpyfjHq3N0yGeOXavt1Su/XHZ8mBDX
-r2nBg9NWA2vPlngiW49ndo080lFoiG3mGmRwgk21+1HJIDdPcys=
-=QA1n
------END PGP SIGNATURE-----
+And then remove this.
 
---i9LlY+UWpKt15+FH--
+> +		hci_conn_del(conn);
+> +		if (type == LE_LINK)
+> +			hci_req_reenable_advertising(hdev);
+> +	}
+> +
+> 	hci_dev_unlock(hdev);
+> }
+
+Otherwise this looks good.
+
+Regards
+
+Marcel
+
