@@ -2,180 +2,135 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA12C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7EBC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505E62074E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583960408;
-	bh=cgZnGVPb4sNdIH/d7qEKrXYWL0lUs+dV8Yjvgv2y6h4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=r64XJAv0zAvErrrnlEWTW3Zyb0ncoVBKf+r+dePldvBcP9I68y9x6PxH3c7bGwLGN
-	 QViWaMCN97Rpw+RuwHsfepIDxilsOdJczLlJqoEvgH5Y3mjxmW3KTBKEz4urEqQ0cd
-	 HjNqbscgY3h5bLmlg6oUOT/d/nY1XnpNPeQx45gs=
+	by mail.kernel.org (Postfix) with ESMTP id D44EF206B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DU3ilcmf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgCKVAG (ORCPT
+        id S1729310AbgCKVGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:00:06 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40180 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgCKVAG (ORCPT
+        Wed, 11 Mar 2020 17:06:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41131 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgCKVGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:00:06 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y71so3302469oia.7;
-        Wed, 11 Mar 2020 14:00:03 -0700 (PDT)
+        Wed, 11 Mar 2020 17:06:12 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s14so4542076wrt.8
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cbllDlkzkFL575haOotAoXD3bI1Ek80WA29nBWikMdA=;
+        b=DU3ilcmfups5VC2Z9PcVv//2ubpy+I8X+kzIHojcN1MKe01MDVq9SexUMXSjlANIxM
+         U74eFhYGIHc7iMRkMixUMCMTrvQAU4M2G3j27h/xprRU8lbgcLPAVit9R0PSSMbKVmgs
+         hP2dN71v4IrUjx+Hh8H/ADf9moSaSXVtBZqeltGZ4aw0NeJJzV+JeVcwQccNDxr+W/CC
+         gEw+tKx/O03wTH16WVcozY8ZKN5ovRvlo4uGNzVdheaxGeH51PUA3UpiXYFCxklmwmI3
+         prcyaUWvdqoZGhw39OLwExb+bHQdGH3AtH0rIqNHEAyskDBU8SMEgH5V0IaJf2+DGcNe
+         Jlrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7phUkchvkdDhI0qJQteXXrbvWqBV29LumyqHqAKAGfw=;
-        b=T+Y8EyLy5UhiYZsyuZPZJIIrj7m90yI8r7BLZZLB2HkAN4ZRw2+Yp59QAn40113cNa
-         vfBXmeCAoEIsX9ZobWLjj9Fg1Rarz1nD/J7blg0D534YD+yXbO6e85h0qNuspVV4oHQF
-         L9q/POeB7DmAv5VQur3J3N1cKRdsf+qvVgxQ5M/NQv3EuOOP2gRLCKunLPec818NB6vd
-         qinhpQ/T+1KYeaRXI3l6jRPRhqSF5Xs9dw87N+czBPjzQYYhw5z1RMTrIMayVW7A4sKt
-         XerJlWy5MEnSrK2aEBJ5J4t9FdqAS+N0p6cILFkKmMPZntlNIA4nyC0yBBjPV/qNxb7U
-         iCuQ==
-X-Gm-Message-State: ANhLgQ3Zr3H8CEDHmBn32Sl5v264gD+vFd93hrMexhDZV7zmA1A7YQ0C
-        dRxHwq2Pq4BLFsomn2S7jg==
-X-Google-Smtp-Source: ADFU+vt16JBJitN1b4tjKD/58wMS3bY1wUUrgmNH3EbK4CL9Ke6XCgMF9CDaBHhmiDnMFZbI7bhplQ==
-X-Received: by 2002:a05:6808:248:: with SMTP id m8mr403527oie.91.1583960403280;
-        Wed, 11 Mar 2020 14:00:03 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id z22sm634145oog.45.2020.03.11.14.00.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cbllDlkzkFL575haOotAoXD3bI1Ek80WA29nBWikMdA=;
+        b=AFvwlwt6u37rW0CQ2bigMkyyBGd9rOHAStpTEyetqnhiIpKJR5krp25HA4t3Y1M7jS
+         ZRLNgmfrC+adzuW8OX4QHfwIORCnkXNmjfHtN+PXG+BdivQ1PMhcjSwPPGne/oNqL1nr
+         SPUhIwBRnW18T/c+uvPZ/hKdr3w6HOH7g+W1gVbAXt4qHLQFoxiCkydzMsGD8nFvVJiL
+         3nG6VsSdrY7Np0VGvbTnO1c8s69/xASc5qQ7zz/dRoLKQUC0XBcmWyIcqhwzk07HyqrB
+         LbGTtJNGVNBRx63AYC0lQj/Cqppo2MtV3xbTLYNIHGnMLuqU/Ix9G6QBtcH+TQvzIZMW
+         0CXQ==
+X-Gm-Message-State: ANhLgQ08WaES+fGUAdAZCOXNSMpDYl9E6MDS5bq1TBvxHDXI5WGNrhj+
+        x3SRSJClOeSUas2qKJ/SMQ==
+X-Google-Smtp-Source: ADFU+vub3tKY58Vqfb86AajngZcx+Kt+kUb10x29J2/efgzGhtTu6cWF3/z1k8i9v1e3d5UFQFoBiw==
+X-Received: by 2002:a5d:4c8e:: with SMTP id z14mr4371381wrs.259.1583960771292;
+        Wed, 11 Mar 2020 14:06:11 -0700 (PDT)
+Received: from avx2 ([46.53.249.42])
+        by smtp.gmail.com with ESMTPSA id c4sm9906003wml.7.2020.03.11.14.06.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 14:00:02 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH] dt-bindings: display: Fix dtc unit-address warnings in examples
-Date:   Wed, 11 Mar 2020 16:00:01 -0500
-Message-Id: <20200311210001.5102-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Mar 2020 14:06:10 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 00:06:08 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] sched: make nr_running() return "unsigned int"
+Message-ID: <20200311210608.GA4517@avx2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-when building the binding examples. These were fixed treewide in
-5.6-rc5, but some new display bindings have been added with new
-warnings:
+I don't anyone have been crazy enough to spawn 2^32 threads.
+It'd require absurd amounts of physical memory.
 
-Documentation/devicetree/bindings/display/panel/raydium,rm68200.example.dts:17.7-27.11: Warning (unit_address_vs_reg): /example-0/dsi@0: node has a unit name, but no reg property
-Documentation/devicetree/bindings/display/panel/panel-simple-dsi.example.dts:17.19-31.11: Warning (unit_address_vs_reg): /example-0/mdss_dsi@fd922800: node has a unit name, but no reg property
-Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.example.dts:17.7-26.11: Warning (unit_address_vs_reg): /example-0/dsi@0: node has a unit name, but no reg property
-Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
+Meanwhile save few bits on REX prefixes.
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+And remove "extern" from prototypes while I'm at it.
+
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
- .../devicetree/bindings/display/panel/orisetech,otm8009a.yaml  | 3 +--
- .../devicetree/bindings/display/panel/panel-simple-dsi.yaml    | 2 +-
- .../devicetree/bindings/display/panel/raydium,rm68200.yaml     | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
- 6 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-index 6e6ac995c27b..2e7c65b093d7 100644
---- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-@@ -39,7 +39,7 @@ required:
- 
- examples:
-   - |
--    dsi@0 {
-+    dsi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-       panel@0 {
-@@ -50,4 +50,3 @@ examples:
-       };
-     };
- ...
--
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-index 8b60368a2425..b2e8742fd6af 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-@@ -50,7 +50,7 @@ required:
- 
- examples:
-   - |
--    mdss_dsi@fd922800 {
-+    dsi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-       panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-index 09149f140d5f..a35ba16fc000 100644
---- a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
-@@ -42,7 +42,7 @@ required:
- 
- examples:
-   - |
--    dsi@0 {
-+    dsi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-       panel@0 {
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index cac61a998203..aa5543a64526 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -121,7 +121,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/irq.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
--    dss: dss@04a00000 {
-+    dss: dss@4a00000 {
-             compatible = "ti,am65x-dss";
-             reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
-                     <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-index ade9b2f513f5..6d47cd7206c2 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-@@ -154,7 +154,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/irq.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
--    dss: dss@04a00000 {
-+    dss: dss@4a00000 {
-             compatible = "ti,j721e-dss";
-             reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
-                     <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-index 385bd060ccf9..7cb37053e95b 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-@@ -81,7 +81,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
- 
--    dss: dss@02540000 {
-+    dss: dss@2540000 {
-             compatible = "ti,k2g-dss";
-             reg =   <0x02540000 0x400>,
-                     <0x02550000 0x1000>,
--- 
-2.20.1
+ fs/proc/loadavg.c          |    2 +-
+ fs/proc/stat.c             |    2 +-
+ include/linux/sched/stat.h |    2 +-
+ kernel/sched/core.c        |    4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
+--- a/fs/proc/loadavg.c
++++ b/fs/proc/loadavg.c
+@@ -16,7 +16,7 @@ static int loadavg_proc_show(struct seq_file *m, void *v)
+ 
+ 	get_avenrun(avnrun, FIXED_1/200, 0);
+ 
+-	seq_printf(m, "%lu.%02lu %lu.%02lu %lu.%02lu %ld/%d %d\n",
++	seq_printf(m, "%lu.%02lu %lu.%02lu %lu.%02lu %u/%d %d\n",
+ 		LOAD_INT(avnrun[0]), LOAD_FRAC(avnrun[0]),
+ 		LOAD_INT(avnrun[1]), LOAD_FRAC(avnrun[1]),
+ 		LOAD_INT(avnrun[2]), LOAD_FRAC(avnrun[2]),
+--- a/fs/proc/stat.c
++++ b/fs/proc/stat.c
+@@ -197,7 +197,7 @@ static int show_stat(struct seq_file *p, void *v)
+ 		"\nctxt %llu\n"
+ 		"btime %llu\n"
+ 		"processes %lu\n"
+-		"procs_running %lu\n"
++		"procs_running %u\n"
+ 		"procs_blocked %lu\n",
+ 		nr_context_switches(),
+ 		(unsigned long long)boottime.tv_sec,
+--- a/include/linux/sched/stat.h
++++ b/include/linux/sched/stat.h
+@@ -16,7 +16,7 @@ extern unsigned long total_forks;
+ extern int nr_threads;
+ DECLARE_PER_CPU(unsigned long, process_counts);
+ extern int nr_processes(void);
+-extern unsigned long nr_running(void);
++unsigned int nr_running(void);
+ extern bool single_task_running(void);
+ extern unsigned long nr_iowait(void);
+ extern unsigned long nr_iowait_cpu(int cpu);
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3389,9 +3389,9 @@ context_switch(struct rq *rq, struct task_struct *prev,
+  * externally visible scheduler statistics: current number of runnable
+  * threads, total number of context switches performed since bootup.
+  */
+-unsigned long nr_running(void)
++unsigned int nr_running(void)
+ {
+-	unsigned long i, sum = 0;
++	unsigned int i, sum = 0;
+ 
+ 	for_each_online_cpu(i)
+ 		sum += cpu_rq(i)->nr_running;
