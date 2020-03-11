@@ -2,130 +2,162 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D52C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E402D20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AA220739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cEKMyEQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbgCKS7H (ORCPT
+        id S1731000AbgCKS7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:59:07 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25674 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730734AbgCKS7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:59:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:59:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="234797582"
-Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Mar 2020 11:59:06 -0700
-Message-ID: <d185e125da333953e7a78eeab8538652905fd978.camel@intel.com>
-Subject: Re: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
-From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     Reinette Chatre <reinette.chatre@intel.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-        "babu.moger@amd.com" <babu.moger@amd.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 11 Mar 2020 11:54:19 -0700
-In-Reply-To: <518831ab-0f4e-5c5c-10c2-52c5f8492df1@intel.com>
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
-         <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
-         <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
-         <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
-         <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
-         <FFF73D592F13FD46B8700F0A279B802F573084EC@ORSMSX114.amr.corp.intel.com>
-         <b83ba95d-9f0f-4d4f-b68c-c5a612afece4@intel.com>
-         <664cf142449b0a1ef7f09d04111f96ff84738e28.camel@intel.com>
-         <518831ab-0f4e-5c5c-10c2-52c5f8492df1@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 11 Mar 2020 14:59:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33046 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730944AbgCKS7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:59:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m5so1704040pgg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZLCmQGD2nYRFngV6EM0JVcVHQdhqOzhhGYnboeZx+J8=;
+        b=cEKMyEQqNjfrWLH7u32sjCQs4hChIhKsIZ0FmnXtkC4MfbJpY9o3rNlK4rYMDjh+45
+         TETh5DQbErQLvzWXaM972+gECBSACcKku69Qsqowk2Q+HH8YsxB50x9QUNsub6EDIwnL
+         4s6qwTsKVQ00/U+uZE5pymcXQkSM0FEMRbO4o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZLCmQGD2nYRFngV6EM0JVcVHQdhqOzhhGYnboeZx+J8=;
+        b=SU6+wY/GKBH/ANN/II71OBVnqUQQ6eIjxUzIYeYbxXsgSZ9bp//n8nks86aTGvJuhc
+         fwfVSlZEqMNL1q3KUouHSJTr4bjXfcrPEUdfPHAvasxNC6M4rPQhYZ6wR/i5Io9Mo415
+         KQvdFPoRB7kxVs8D0hBW5zSffIt3soWuXC2mQcP/kI+dQKlYaKPH9cpf7+Rt/MI4U2xm
+         VcxDf/57UfN3j1GoGbULydnGhuu1XFosp5qsSzzy+HHB8vZSx4sg/6MOya4RoUE4RBnb
+         qwh5TwQwojj5Gdk2bs3gev+PaI/6eo8bPH/7K+Gs1gfWWAUAwJ+WnoqWCzmgwsbHaejd
+         nwxw==
+X-Gm-Message-State: ANhLgQ3uJMW2RiZa8t3CUYyr/yvar4Q+Vx8fWXwof5a82RKaHr0qdqjU
+        Mg1mmiCh8QCBdojS5Jb55wuSvg==
+X-Google-Smtp-Source: ADFU+vtJO9kiWA5K8fGpjclsKmfTQP+X/SjYQbVg72YZU8IhHMuYBgcwUyPQP2L+QH+kQwQAMxmaFA==
+X-Received: by 2002:aa7:988f:: with SMTP id r15mr4221796pfl.252.1583953179891;
+        Wed, 11 Mar 2020 11:59:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 11sm1155601pfv.43.2020.03.11.11.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 11:59:39 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 11:59:38 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 2/4] proc: Use new infrastructure to fix deadlocks in
+ execve
+Message-ID: <202003111159.5D5B240F@keescook>
+References: <87r1y12yc7.fsf@x220.int.ebiederm.org>
+ <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <877dzt1fnf.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfcxlwy.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705D211EC8E7EA270627B1E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR03MB51705D211EC8E7EA270627B1E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Reinette,
-
-On Wed, 2020-03-11 at 11:45 -0700, Reinette Chatre wrote:
-> Hi Sai,
+On Tue, Mar 10, 2020 at 06:45:32PM +0100, Bernd Edlinger wrote:
+> This changes lock_trace to use the new exec_update_mutex
+> instead of cred_guard_mutex.
 > 
-> On 3/11/2020 11:22 AM, Sai Praneeth Prakhya wrote:
-> > Hi Reinette,
-> > 
-> > On Wed, 2020-03-11 at 11:06 -0700, Reinette Chatre wrote:
-> > > Hi Sai,
-> > > 
-> > > On 3/9/2020 3:51 PM, Prakhya, Sai Praneeth wrote:
-> > > > > -----Original Message-----
-> > > > > From: Reinette Chatre <reinette.chatre@intel.com>
-> > > > > Sent: Monday, March 9, 2020 3:34 PM
-> > > > 
-> > > > [SNIP]
-> > > > 
-> > > > > > That's a good point and makes sense to me. I think we could fix it
-> > > > > > in
-> > > > > > two ways 1. grep for strings in dmesg but that will still leave
-> > > > > > ambiguity in deciding b/w mbm and cqm because kernel prints
-> > > > > > "resctrl:
-> > > > > > L3
-> > > > > monitoring detected" for both the features 2. Check in "info"
-> > > > > directory
-> > > > > > 	a. For cat_l3, we could search for info/L3
-> > > > > > 	b. For mba, we could search for info/MB
-> > > > > > 	c. For cqm and mbm, we could search for specified string in
-> > > > > > info/L3_MON/mon_features
-> > > > > > 
-> > > > > > I think option 2 might be better because it can handle all cases,
-> > > > > > please let me
-> > > > > know what you think.
-> > > > > 
-> > > > > I agree. For the reasons you mention and also that (1) may not be
-> > > > > possible if the
-> > > > > loglevel prevents those lines from being printed.
-> > > > 
-> > > > Makes sense. I will work on the fix.
-> > > 
-> > > One more note about this ... from what I can tell the test for a feature
-> > > currently fails if the platform does not support the feature. Would it
-> > > be possible to just skip the test in this case instead?
-> > 
-> > That's because the output of the test should be just "ok" or "not ok".
+> This fixes possible deadlocks when the trace is accessing
+> /proc/$pid/stack for instance.
 > 
-> The output could be something like:
+> This should be safe, as the credentials are only used for reading,
+> and task->mm is updated on execve under the new exec_update_mutex.
 > 
-> ok MBA # SKIP MBA is not supported
+> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-Makes sense.. I will fix it.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> > I can change it to something like "# Skip <test_name> because platform
-> > doesn't
-> > support the feature", but not really sure if it complies with TAP 13
-> > protocol.
+-Kees
+
+> ---
+>  fs/proc/base.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Please consider the "skip" directive at
-> https://testanything.org/tap-version-13-specification.html
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index ebea950..4fdfe4f 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -403,11 +403,11 @@ static int proc_pid_wchan(struct seq_file *m, struct pid_namespace *ns,
+>  
+>  static int lock_trace(struct task_struct *task)
+>  {
+> -	int err = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> +	int err = mutex_lock_killable(&task->signal->exec_update_mutex);
+>  	if (err)
+>  		return err;
+>  	if (!ptrace_may_access(task, PTRACE_MODE_ATTACH_FSCREDS)) {
+> -		mutex_unlock(&task->signal->cred_guard_mutex);
+> +		mutex_unlock(&task->signal->exec_update_mutex);
+>  		return -EPERM;
+>  	}
+>  	return 0;
+> @@ -415,7 +415,7 @@ static int lock_trace(struct task_struct *task)
+>  
+>  static void unlock_trace(struct task_struct *task)
+>  {
+> -	mutex_unlock(&task->signal->cred_guard_mutex);
+> +	mutex_unlock(&task->signal->exec_update_mutex);
+>  }
+>  
+>  #ifdef CONFIG_STACKTRACE
+> -- 
+> 1.9.1
 
-Sure! thanks for the link :)
-
-Regards,
-Sai
-
+-- 
+Kees Cook
