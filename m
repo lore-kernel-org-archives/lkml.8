@@ -2,136 +2,182 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A24C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AC1C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954FB222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E39D20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rVXx1Hw9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CtPgrXa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgCKDWi (ORCPT
+        id S1728024AbgCKDYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:22:38 -0400
-Received: from mail-db8eur05on2056.outbound.protection.outlook.com ([40.107.20.56]:6017
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbgCKDWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:22:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FQNlL3ZxzYgOATAHY6dc5/UJoXd7ftF8BZdKA488BHY19dQR+P7TyWRQgTfZUWVcuyj4nkANMKbTY3Zm//71E6DU5fnf1OLGjLArjz85G6+lT0PXpfYjoDuYBB46mKaEGxKPl255VpdQzP8F0aG9W8/nMHuxqHaa2qh0p1HsxMAOzPXTALtimQvBE6e4KSMi/Ohzbh10K9vkchnW8cS3Osg6MyM6yxrg63PAX+kD3KptnfKbVnTJ4QT6MX69t4rrYFAWsNKYeJxaNyd7YfTy6ICMSkPW46ovlvjvks5jqN7xOMoXZ6NMxNFU4YKBzb6yfysWypzg5YDbyXz82QS9CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Je2YVo1kUJNHFYL0EYH5Nir7tjrKjvEMQHdvfBU23T8=;
- b=Aw85tMl8VKU/cr4VB2w/bL8S+iiXmH5M3LHStSqtWU8Auc1ZSYIJTu3W6METp7A8y+GZGoNvVBbGD7Pe3wGO75veA5cNIns0RlR8PyAPyjDnVBVbAkmhg969JGPIdSVyus7nXVxvMYckeoD55xNxIggVNvu3W0NBV6mPf/aaQQ/GuveRWzKVY37uM6ihU+9L2Y8gtsoN9fUtyqPufayk3qzhfgfBb89Fd1axIw0d/TwTXeRYTqVwTvWEwEcAR+MLkc5R9YtSaCLgMvtWmqV2WgIVoUejG5VJUMkdRVNgbPdENygeH4mHaNehSuIBZs0JVNXDq0J6E/0BKLxQ51yIeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Je2YVo1kUJNHFYL0EYH5Nir7tjrKjvEMQHdvfBU23T8=;
- b=rVXx1Hw9ozNoxwVkH1wiR6pGiWTi6z0FIAdEWf5fHUaJBIMZA4VpXxNfy4LCbpzBe7cJdU8+BS/bg/hcibiPoxAy2LZQ5l3UeSzMB8Xvad3Na8CzMSger9QSU98Dp8rESoDkKvv1hJs4drOYi8v7sqOsqfEdhnoLV497EE+7tJ8=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6735.eurprd04.prod.outlook.com (20.179.234.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11; Wed, 11 Mar 2020 03:22:33 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
- 03:22:33 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Thread-Topic: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Thread-Index: AQHV9oxfw7CsQoETxUioWYNmo+gC4ahCKc6AgACQhpA=
-Date:   Wed, 11 Mar 2020 03:22:33 +0000
-Message-ID: <VE1PR04MB6638FF9C3ED1A93FD5A6C2C289FC0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
- <20200310184103.GA2192@bogus>
-In-Reply-To: <20200310184103.GA2192@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d933de75-8e82-4930-6acc-08d7c56b70a7
-x-ms-traffictypediagnostic: VE1PR04MB6735:|VE1PR04MB6735:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6735BBB1F617FFD91A1FD91D89FC0@VE1PR04MB6735.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0339F89554
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(66556008)(7696005)(54906003)(66946007)(64756008)(66446008)(52536014)(33656002)(5660300002)(478600001)(76116006)(4326008)(66476007)(86362001)(316002)(9686003)(55016002)(71200400001)(2906002)(81166006)(8936002)(81156014)(8676002)(4744005)(186003)(6506007)(6916009)(7416002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6735;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ny4Hh7E36twGFm9BQBpTW96RTok6vMqJ69xILpeBWWCe5i3zYCSpgjw8NvCeXjpHw3Y8/79hqFhYDxpzXiHYaoO1zLQmhDum1/lfM4oubDltD8hTkyS1XPFyfK3UPk4IXDclci0c7jBpsOiCE57IqZC6tGCH6wzShqVjWawynSvkcWVTVV8BecZlhEpCMv0pxugeLCVT4uS6d2PoznS/BjQ0IuKw9JxvCG+y5HMWe+Plpf/3MgOBvGh/nvdjsPTp9ux2pRyntfRhR/1nDIqX9cCgbzwyk2fY0cMIS2gbrrZOyjosP03vgq04XmT3TcMhtgbtzGxsAthSBBvtVnVPdvF+8yQJgEahInPM2UXXlDdBrcPGszaXoBDirNHbsVjgjA20b9ciiQHSQC5F0ixqo7SYjVPMrp1hEXJrdNf0CWK9Shp8WNCQBSQjU02jEOnl
-x-ms-exchange-antispam-messagedata: 1i2/kg39UMNcvHR8w6zcd4K8qMm2fWo7h6bNhqogRsYoNPBWzgT9tUp8KxfqyHKZblgulmRMPKOHZuLWOT7LlIqamkvcSzucLA1n0ouTcc2DLNsOtyiVv3tqdRtLAllKaXX8CyX2THEscAr0slOViA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 23:24:47 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44135 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbgCKDYr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 23:24:47 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u24so393727vso.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 20:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0CaP0wmRgm/BeB7X7G0uC38j94dJCuNhBHwKXDeM8MY=;
+        b=CtPgrXa2cnSfiHSesbp0ZgIPKUi/e/8l6UQAKfhwBQeoYmLZENk2RTJeifkVDa4N2f
+         6TtIjeG759VrQk6UUS9OiVg5AhhTraLWaiYKRvJawx2Nu8X7hZSWYY36zxVFRzYyC/u9
+         CzSzh16ZRuZ92L+OvQ7dIu+0DnNo8kd2T144U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0CaP0wmRgm/BeB7X7G0uC38j94dJCuNhBHwKXDeM8MY=;
+        b=te47np7MYbFHPmTyAB0/t8owEYj5E/v30sa/07ChDcK5nf9DX/zlnumCMgfcTRyHRx
+         CfLjHZc4vg+oTU3LCXuMFbG9grH2GOJy60lMZUi8izsrU2zkSQ9ytCnelEkBMAkyS2f6
+         HLNXFBXGoIxII9rlB66vujEGP/vF2WcwBssseApyPaVqK1rvaXhnCJjbbLvB51napGP0
+         JNA1Vk4W+wDNjrkrMT4KCIkBnGECGARoZvayG7IaH2YMhOCuYVcXTHSIHAK7zL6TUC/H
+         Sf+wEaWkXph3UTbEaUXIKvJ0d/3QgS7+Gl7GpiAMP4psS/bxk6aBuitPey3h5vYri/P0
+         ul0Q==
+X-Gm-Message-State: ANhLgQ1LFzeLFxPeRIZ5rWZSDoHgTyEAMbHEqCOprwsLMQ2D9HIm49u4
+        hg9TwsSXvU+OuUOSM2yVgppLs/VrD2ZWmqyRaX87yw==
+X-Google-Smtp-Source: ADFU+vvzY+bxois87ERnhOsmkCaLgyI2emx+UgxVfcr4o9pfSIalK4aZScMpftN+vS9C9nrgv5qWlZCt5m4WJIdzyeE=
+X-Received: by 2002:a67:3201:: with SMTP id y1mr765745vsy.54.1583897084227;
+ Tue, 10 Mar 2020 20:24:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d933de75-8e82-4930-6acc-08d7c56b70a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 03:22:33.6428
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ChaF6tWiTMb3S8P8VbiuOH1uiuCa4z09MrnqWI48OpFbpWfKxU5kNkQkBlYB0eUQfuP7KmP3QnQlLJxJacmQww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6735
+References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 11 Mar 2020 11:24:33 +0800
+Message-ID: <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
+Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/11 Rob Herring <robh@kernel.org> wrote:
-> On Tue, 10 Mar 2020 19:31:57 +0800, Robin Gong wrote:
-> > ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->=20
-> If a tag was not added on purpose, please state why and what changed.
-Sorry, Rob, I forgot to add your reviewed tag on v5, will add it back incid=
-entally in v7.
+Thanks, much better. Just one issue left.
+
+On Tue, Mar 10, 2020 at 6:10 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
+>
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
+>
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile                 |   2 +-
+>  drivers/mfd/mt6358-irq.c             | 238 +++++++++++++++++++++++++++++
+>  drivers/mfd/mt6397-core.c            |  55 ++++++-
+>  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+>  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |   3 +
+>  6 files changed, 733 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
+>
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index b83f172..9af1414 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
+> -mt6397-objs    := mt6397-core.o mt6397-irq.o
+> +mt6397-objs                    := mt6397-core.o mt6397-irq.o mt6358-irq.o
+>  obj-$(CONFIG_MFD_MT6397)       += mt6397.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)     += intel_soc_pmic_mrfld.o
+>
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..0b99a39
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,238 @@
+> [snip]
+> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
+> +{
+> +       struct mt6397_chip *chip = data;
+> +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
+> +       unsigned int bit, i, top_irq_status;
+> +       int ret;
+> +
+> +       ret = regmap_read(chip->regmap,
+> +                         mt6358_irq_data->top_int_status_reg,
+> +                         &top_irq_status);
+> +       if (ret) {
+> +               dev_err(chip->dev,
+> +                       "Failed to read status from the device, ret=%d\n", ret);
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
+> +               for (i = 0; i < mt6358_irq_data->num_top; i++) {
+
+Only one loop needed.
+
+> +                       bit = BIT(mt6358_ints[i].top_offset);
+> +                       if (top_irq_status & bit) {
+> +                               mt6358_irq_sp_handler(chip, i);
+> +                               top_irq_status &= ~bit;
+> +                               if (!top_irq_status)
+> +                                       break;
+> +                       }
+> +               }
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +                              irq_hw_number_t hw)
+> +{
+> +       struct mt6397_chip *mt6397 = d->host_data;
+> +
+> +       irq_set_chip_data(irq, mt6397);
+> +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
+> +       irq_set_nested_thread(irq, 1);
+> +       irq_set_noprobe(irq);
+> +
+> +       return 0;
+> +}
+> [snip]
