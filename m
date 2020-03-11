@@ -4,47 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE2CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C5DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4840622464
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC71208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgCKFGx (ORCPT
+        id S1728118AbgCKFG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:06:53 -0400
-Received: from smtprelay0027.hostedemail.com ([216.40.44.27]:42604 "EHLO
+        Wed, 11 Mar 2020 01:06:59 -0400
+Received: from smtprelay0135.hostedemail.com ([216.40.44.135]:52494 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727184AbgCKFGu (ORCPT
+        by vger.kernel.org with ESMTP id S1727965AbgCKFGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:06:50 -0400
+        Wed, 11 Mar 2020 01:06:54 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id EC692181D330D;
-        Wed, 11 Mar 2020 05:06:48 +0000 (UTC)
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 73E108410;
+        Wed, 11 Mar 2020 05:06:52 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: earth44_1e21c7c654313
-X-Filterd-Recvd-Size: 4150
+X-HE-Tag: hose56_1ec53cd19b31a
+X-Filterd-Recvd-Size: 4270
 Received: from joe-laptop.perches.com (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 05:06:46 +0000 (UTC)
+        Wed, 11 Mar 2020 05:06:51 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH -next 004/491] PERFORMANCE EVENTS SUBSYSTEM: Use fallthrough;
-Date:   Tue, 10 Mar 2020 21:51:18 -0700
-Message-Id: <73d22360c5c665fd7f480a209ae46807dfb07bbe.1583896348.git.joe@perches.com>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH -next 006/491] ARM/RISCPC ARCHITECTURE: Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:20 -0700
+Message-Id: <fb956ff22b89ac7a7f97489b29ecf13a32de8d06.1583896348.git.joe@perches.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1583896344.git.joe@perches.com>
 References: <cover.1583896344.git.joe@perches.com>
@@ -62,94 +56,86 @@ Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- arch/mips/kernel/perf_event_mipsxx.c | 6 +++---
- arch/x86/events/intel/core.c         | 7 +++----
- arch/x86/events/intel/lbr.c          | 2 +-
- kernel/events/core.c                 | 3 +--
- 4 files changed, 8 insertions(+), 10 deletions(-)
+ arch/arm/mach-rpc/riscpc.c |  2 +-
+ drivers/scsi/arm/fas216.c  | 17 ++++++-----------
+ 2 files changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index 128fc9..484948 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -790,15 +790,15 @@ static void reset_counters(void *arg)
- 	case 4:
- 		mipsxx_pmu_write_control(3, 0);
- 		mipspmu.write_counter(3, 0);
--		/* fall through */
-+		fallthrough;
- 	case 3:
- 		mipsxx_pmu_write_control(2, 0);
- 		mipspmu.write_counter(2, 0);
--		/* fall through */
-+		fallthrough;
- 	case 2:
- 		mipsxx_pmu_write_control(1, 0);
- 		mipspmu.write_counter(1, 0);
--		/* fall through */
-+		fallthrough;
- 	case 1:
- 		mipsxx_pmu_write_control(0, 0);
- 		mipspmu.write_counter(0, 0);
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 332954..8cd3bb 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4637,8 +4637,7 @@ __init int intel_pmu_init(void)
- 
- 	case INTEL_FAM6_CORE2_MEROM:
- 		x86_add_quirk(intel_clovertown_quirk);
+diff --git a/arch/arm/mach-rpc/riscpc.c b/arch/arm/mach-rpc/riscpc.c
+index ea2c842..d23970b 100644
+--- a/arch/arm/mach-rpc/riscpc.c
++++ b/arch/arm/mach-rpc/riscpc.c
+@@ -46,7 +46,7 @@ static int __init parse_tag_acorn(const struct tag *tag)
+ 	switch (tag->u.acorn.vram_pages) {
+ 	case 512:
+ 		vram_size += PAGE_SIZE * 256;
+-		/* Fall through - ??? */
++		fallthrough;	/* ??? */
+ 	case 256:
+ 		vram_size += PAGE_SIZE * 256;
+ 	default:
+diff --git a/drivers/scsi/arm/fas216.c b/drivers/scsi/arm/fas216.c
+index 6c68c230..bb18be 100644
+--- a/drivers/scsi/arm/fas216.c
++++ b/drivers/scsi/arm/fas216.c
+@@ -603,8 +603,7 @@ static void fas216_handlesync(FAS216_Info *info, char *msg)
+ 		msgqueue_flush(&info->scsi.msgs);
+ 		msgqueue_addmsg(&info->scsi.msgs, 1, MESSAGE_REJECT);
+ 		info->scsi.phase = PHASE_MSGOUT_EXPECT;
 -		/* fall through */
 -
 +		fallthrough;
- 	case INTEL_FAM6_CORE2_MEROM_L:
- 	case INTEL_FAM6_CORE2_PENRYN:
- 	case INTEL_FAM6_CORE2_DUNNINGTON:
-@@ -5017,7 +5016,7 @@ __init int intel_pmu_init(void)
- 
- 	case INTEL_FAM6_SKYLAKE_X:
- 		pmem = true;
--		/* fall through */
-+		fallthrough;
- 	case INTEL_FAM6_SKYLAKE_L:
- 	case INTEL_FAM6_SKYLAKE:
- 	case INTEL_FAM6_KABYLAKE_L:
-@@ -5069,7 +5068,7 @@ __init int intel_pmu_init(void)
- 	case INTEL_FAM6_ICELAKE_X:
- 	case INTEL_FAM6_ICELAKE_D:
- 		pmem = true;
--		/* fall through */
-+		fallthrough;
- 	case INTEL_FAM6_ICELAKE_L:
- 	case INTEL_FAM6_ICELAKE:
- 	case INTEL_FAM6_TIGERLAKE_L:
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 65113b1..2e2c6fb 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -967,7 +967,7 @@ static int branch_type(unsigned long from, unsigned long to, int abort)
- 			ret = X86_BR_ZERO_CALL;
+ 	case async:
+ 		dev->period = info->ifcfg.asyncperiod / 4;
+ 		dev->sof    = 0;
+@@ -916,8 +915,7 @@ static void fas216_disconnect_intr(FAS216_Info *info)
+ 			fas216_done(info, DID_ABORT);
  			break;
  		}
+-		/* else, fall through */
+-
++		fallthrough;
+ 	default:				/* huh?					*/
+ 		printk(KERN_ERR "scsi%d.%c: unexpected disconnect in phase %s\n",
+ 			info->host->host_no, fas216_target(info), fas216_drv_phase(info));
+@@ -1413,8 +1411,7 @@ static void fas216_busservice_intr(FAS216_Info *info, unsigned int stat, unsigne
+ 	case STATE(STAT_STATUS, PHASE_DATAOUT): /* Data Out     -> Status       */
+ 	case STATE(STAT_STATUS, PHASE_DATAIN):  /* Data In      -> Status       */
+ 		fas216_stoptransfer(info);
+-		/* fall through */
+-
++		fallthrough;
+ 	case STATE(STAT_STATUS, PHASE_SELSTEPS):/* Sel w/ steps -> Status       */
+ 	case STATE(STAT_STATUS, PHASE_MSGOUT):  /* Message Out  -> Status       */
+ 	case STATE(STAT_STATUS, PHASE_COMMAND): /* Command      -> Status       */
+@@ -1426,8 +1423,7 @@ static void fas216_busservice_intr(FAS216_Info *info, unsigned int stat, unsigne
+ 	case STATE(STAT_MESGIN, PHASE_DATAOUT): /* Data Out     -> Message In   */
+ 	case STATE(STAT_MESGIN, PHASE_DATAIN):  /* Data In      -> Message In   */
+ 		fas216_stoptransfer(info);
+-		/* fall through */
+-
++		fallthrough;
+ 	case STATE(STAT_MESGIN, PHASE_COMMAND):	/* Command	-> Message In	*/
+ 	case STATE(STAT_MESGIN, PHASE_SELSTEPS):/* Sel w/ steps -> Message In   */
+ 	case STATE(STAT_MESGIN, PHASE_MSGOUT):  /* Message Out  -> Message In   */
+@@ -1581,8 +1577,7 @@ static void fas216_funcdone_intr(FAS216_Info *info, unsigned int stat, unsigned
+ 			fas216_message(info);
+ 			break;
+ 		}
+-		/* else, fall through */
+-
++		fallthrough;
+ 	default:
+ 		fas216_log(info, 0, "internal phase %s for function done?"
+ 			"  What do I do with this?",
+@@ -1964,7 +1959,7 @@ static void fas216_kick(FAS216_Info *info)
+ 	switch (where_from) {
+ 	case TYPE_QUEUE:
+ 		fas216_allocate_tag(info, SCpnt);
 -		/* fall through */
 +		fallthrough;
- 	case 0x9a: /* call far absolute */
- 		ret = X86_BR_CALL;
+ 	case TYPE_OTHER:
+ 		fas216_start_command(info, SCpnt);
  		break;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6a47c3..7a8ed4d5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9762,8 +9762,7 @@ perf_event_parse_addr_filter(struct perf_event *event, char *fstr,
- 		case IF_SRC_KERNELADDR:
- 		case IF_SRC_KERNEL:
- 			kernel = 1;
--			/* fall through */
--
-+			fallthrough;
- 		case IF_SRC_FILEADDR:
- 		case IF_SRC_FILE:
- 			if (state != IF_STATE_SOURCE)
 -- 
 2.24.0
 
