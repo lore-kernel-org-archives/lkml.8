@@ -2,48 +2,43 @@ Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,
-	SPOOFED_FREEMAIL_NO_RDNS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44004 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729631AbgCKQgD (ORCPT
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:58034 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730324AbgCKQgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:36:03 -0400
-Subject: Re: [PATCH -next 030/491] BROADCOM GENET ETHERNET DRIVER: Use
- fallthrough;
-To: Joe Perches <joe@perches.com>, Doug Berger <opendmb@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583896344.git.joe@perches.com>
- <e78fb08d1dcf0d95175fc2866c344fbef2ff7065.1583896349.git.joe@perches.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a61c388f-bb42-e6e6-7381-5e99c8dad95e@gmail.com>
-Date: Wed, 11 Mar 2020 09:35:54 -0700
-MIME-Version: 1.0
-In-Reply-To: <e78fb08d1dcf0d95175fc2866c344fbef2ff7065.1583896349.git.joe@perches.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 11 Mar 2020 12:36:09 -0400
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org"
+        <linux-snps-arc@lists.infradead.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 1/2] ARC: define __ALIGN_STR and __ALIGN symbols for ARC
+Date: Wed, 11 Mar 2020 16:35:40 +0000
+Message-ID: <e7b583c8-6189-cf4d-1df5-402fdc2e896c@synopsys.com>
+References: <20200311162644.7667-1-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <20200311162644.7667-1-Eugeniy.Paltsev@synopsys.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9FF97FDEE15A044FA388AB0F0025DDC9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On 3/10/20 9:51 PM, Joe Perches wrote:
-> Convert the various uses of fallthrough comments to fallthrough;
-> 
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-
-Please fix the subject to be:
-
-net: bcmgenet: Use fallthrough;
-
-to match commits done to this file.
--- 
-Florian
+T24gMy8xMS8yMCA5OjI2IEFNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+IEFzIG9mIHRvZGF5
+IEFSQyB1c2VzIGdlbmVyaWMgX19BTElHTl9TVFIgYW5kIF9fQUxJR04gc3ltYm9sDQo+IGRlZmlu
+aXRpb25zIGZyb20gImluY2x1ZGUvbGludXgvbGlua2FnZS5oIg0KPiBUaGV5IGFyZSBkZWZpbmVk
+IHRvICIuYWxpZ24gNCwweDkwIiB3aGljaCBpbnN0cnVjdGVkIHRoZSBhc3NlbWJsZXINCj4gdG8g
+dXNlIGAweDkwYCBhcyBhIGZpbGwgYnl0ZSB3aGVuIGFsaWduaW5nIGZ1bmN0aW9ucyBkZWNsYXJl
+ZCB3aXRoDQo+IEVOVFJZIG9yIHNpbWlsYXIgbWFjcm9zZXMuIFRoaXMgbGVhZHMgdG8gZ2VuZXJh
+dGVkIHdlaXJkIGluc3RydWN0aW9ucw0KPiBpbiBjb2RlICh3aGVuIGFsaWdubWVudCBpcyB1c2Vk
+KSBsaWtlICJsZGhfcyByMTIsW3IwLDB4MjBdIiB3aGljaCBpcw0KPiBlbmNvZGVkIGFzIDB4OTA5
+MCBmb3IgQVJDdjIuDQo+IA0KPiBMZXQncyB1c2UgIi5hbGlnbiA0IiB3aGljaCBpbnNlcnQgYSAi
+bm9wX3MiIGluc3RydWN0aW9uIGluc3RlYWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5
+IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQoNCkFja2VkLWJ5OiBWaW5l
+ZXQgR3VwdGEgPHZndXB0YUBzeW5vcHN5cy5jb20+DQoNCi1WaW5lZXQNCg==
 
