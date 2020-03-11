@@ -2,116 +2,318 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A68BC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB156C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA542146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDCA20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQioROWe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KQwCs+/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgCKFXG (ORCPT
+        id S1728113AbgCKFXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:23:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37256 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgCKFXF (ORCPT
+        Wed, 11 Mar 2020 01:23:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38148 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgCKFXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:23:05 -0400
-Received: by mail-io1-f65.google.com with SMTP id k4so634783ior.4;
-        Tue, 10 Mar 2020 22:23:03 -0700 (PDT)
+        Wed, 11 Mar 2020 01:23:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h5so1343710edn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:23:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vhWEqnexHgncpvxDS2l8sBNTUU1im25PrBPC7w+tOLk=;
-        b=FQioROWeCZRT5RbT70b6aS3L4z5A8Xh9+TkXcRo1x7CAqq0IA0ua0MEGE5Uykqe0FL
-         s7mGcH8etLLtylbbbK6FSbTb6IJjRhs43A8ysMHl6swkDiSbevywH8PsYFGAc5tuTu4F
-         hx5OcZDYIvjseSVuRKJfka41SHIGYvXKH88DsabLaszJEEo8W3EyzPcO//PwBEE3M3gH
-         e8lIZX3B3ofO7IvWP08ivloJcQzyEW6krILi2rllnwhYD/9lqaIRca+M2m313QFn0KyF
-         ArCoRx8xQTINJyLzKbBhKUuuPeE0059amPOESX5qE3B8OeqEICFbnYjaivOd08jIc7RP
-         nwqA==
+        bh=JM9zu4grKzwKY2OIbM2yqTOoFgqOAS5Vs32abRmGmUM=;
+        b=KQwCs+/l9EaTxy3RwXy50wGVDvK1dSgCff/KUauW5pN1fszV3LSPQc2T2D0ZiwIx9t
+         It135UhmhIw3RafGKWFO5x46JRKtPf/yCz3+ghgGnnBX0vLOrx8pa7ofGX5mLaBZ/FU9
+         KNfPSwQwjCMRyuMwYpUTRRnmURbl3WDAw8ZuJO+7SSiVfLYLDkV0hxkTkbGrufYD2xq9
+         LUVrfmy/I7z1CrtTBF9CzaixYTGyHPvApKxsAxYr4bms5hIc+bhw6HeVx6RgQ3+5H/UD
+         tQJtbuSVnpB0YgV/ePW0f6Po03AqU3xPr34KwUBX0xzTVlNvjK4PZx7zbGbUeT+ggO+k
+         Mbrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vhWEqnexHgncpvxDS2l8sBNTUU1im25PrBPC7w+tOLk=;
-        b=n3/N032rmrj9R99Ha7f+uJs9DCRupeRZV3QHXyxcOiig2sXcCCwcecQSIeRn7ova1S
-         y6e0jINgm4wQWfDKcGJjYInk4PfYTtg+ET3VxVXxxUB5mA0tFh8mgkDfjIMSJm24Wp67
-         SOvCABNrajYhgZIR9bcCOEVbyPRXbjNRRPx/yhNd/OkUeXWGACnkBCpkmAl5w1he8jtJ
-         CWb8MFqRKFpMYNhE6ua/Gp1wCX4LbxISCvITgGwo9pTgv0IWvTO7QEwVIUT0DDRbFWIX
-         emH4uq5oBzS8bwVux0MmG2podFv4WwoGrqjAjk/B/spSFZDJPUBT1dK0qIidDQb8R63A
-         jiYg==
-X-Gm-Message-State: ANhLgQ1Qbx6sWtTCHDlVSCfAePTxBHVBreHAsdVT4cbGobcwF84DW0Tb
-        IMNCLMoEMJc3FqSYgVRf4gnyqCBRzxhBU0Ma4Nk=
-X-Google-Smtp-Source: ADFU+vtANanN8/PEuGjCzSXszWB2s1uvEicvF+tk9dez9cHRd+Aa9rbD4VGIuhF4w32MFOQw+Ll20yj+6BJ6OuZClyY=
-X-Received: by 2002:a6b:784a:: with SMTP id h10mr1383631iop.64.1583904182703;
- Tue, 10 Mar 2020 22:23:02 -0700 (PDT)
+        bh=JM9zu4grKzwKY2OIbM2yqTOoFgqOAS5Vs32abRmGmUM=;
+        b=ZjkRZC3bqpNOGydvhHAhurLKcBFazkU5ayzHEPskjBdrhrIgRdM9bT+i9tVwAja8xi
+         3U7U40x5Z/TzCl35l3wlLLwavS0Q1ZZevFQaahRtpCQXz0jiNWSBWVHn2ktp+VICxK+f
+         Y2YW0QlFOaRoOPhwzNWQzC0uVLEwwHJC2LClB1aKNTmF6wiKdIdvar6S+hSh1PbyXPEE
+         KbnP7yFsiNTe3XhtUwu7lFtJrK0d0RDQAvOzzwZ90xeuTJrGGEIvPDCNKE8FpAXyIUqH
+         1PYm6bUon58p9KmZmYktywGNW0MSfwAseXoCTvXr5VBNKpSKxqyrziBpkcVO6dpnSKFO
+         Er+g==
+X-Gm-Message-State: ANhLgQ3nxiNpB0OPu0iYOXCfuL3nrdk47BTFUm0iucWVJQ9kqU1kwHEY
+        5KZc0YcMF8KtFT+g5w3QTWomEqSg2LBP7ocjZwx+6g==
+X-Google-Smtp-Source: ADFU+vuTDvC9t080L+LZ2YE+PW/zd8Eu9TQJoE8XAM9NvA1Xqm/2oKnjT2jJhZKEQMuGlrbALvs8u36+drjZYwbvN/E=
+X-Received: by 2002:a17:906:385:: with SMTP id b5mr913477eja.268.1583904194983;
+ Tue, 10 Mar 2020 22:23:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200304165845.3081-1-vgoyal@redhat.com>
-In-Reply-To: <20200304165845.3081-1-vgoyal@redhat.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 11 Mar 2020 07:22:51 +0200
-Message-ID: <CAOQ4uxi_Xrf+iyP6KVugFgLOfzUvscMr0de0KxQo+jHNBCA9oA@mail.gmail.com>
-Subject: Re: [PATCH 00/20] virtiofs: Add DAX support
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, mst@redhat.com
+References: <cover.1583896344.git.joe@perches.com> <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
+In-Reply-To: <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 11 Mar 2020 10:53:03 +0530
+Message-ID: <CAHLCerPFWFoUpt6Soc1awDiCy6aBn=qTbQ8G5vjhmX-g2=8znA@mail.gmail.com>
+Subject: Re: [PATCH -next 011/491] ARM/QUALCOMM SUPPORT: Use fallthrough;
+To:     Joe Perches <joe@perches.com>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-media@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 7:01 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+On Wed, Mar 11, 2020 at 10:37 AM Joe Perches <joe@perches.com> wrote:
 >
-> Hi,
+> Convert the various uses of fallthrough comments to fallthrough;
 >
-> This patch series adds DAX support to virtiofs filesystem. This allows
-> bypassing guest page cache and allows mapping host page cache directly
-> in guest address space.
->
-> When a page of file is needed, guest sends a request to map that page
-> (in host page cache) in qemu address space. Inside guest this is
-> a physical memory range controlled by virtiofs device. And guest
-> directly maps this physical address range using DAX and hence gets
-> access to file data on host.
->
-> This can speed up things considerably in many situations. Also this
-> can result in substantial memory savings as file data does not have
-> to be copied in guest and it is directly accessed from host page
-> cache.
->
-> Most of the changes are limited to fuse/virtiofs. There are couple
-> of changes needed in generic dax infrastructure and couple of changes
-> in virtio to be able to access shared memory region.
->
-> These patches apply on top of 5.6-rc4 and are also available here.
->
-> https://github.com/rhvgoyal/linux/commits/vivek-04-march-2020
->
-> Any review or feedback is welcome.
->
-[...]
->  drivers/dax/super.c                |    3 +-
->  drivers/virtio/virtio_mmio.c       |   32 +
->  drivers/virtio/virtio_pci_modern.c |  107 +++
->  fs/dax.c                           |   66 +-
->  fs/fuse/dir.c                      |    2 +
->  fs/fuse/file.c                     | 1162 +++++++++++++++++++++++++++-
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
 
-That's a big addition to already big file.c.
-Maybe split dax specific code to dax.c?
-Can be a post series cleanup too.
 
-Thanks,
-Amir.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/media/platform/qcom/venus/vdec.c |  2 +-
+>  drivers/phy/qualcomm/phy-qcom-usb-hs.c   |  2 +-
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c |  4 ++--
+>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  2 +-
+>  drivers/rpmsg/qcom_glink_native.c        |  4 ++--
+>  drivers/soc/qcom/socinfo.c               | 16 ++++++++--------
+>  drivers/thermal/qcom/tsens-v0_1.c        |  8 ++++----
+>  drivers/thermal/qcom/tsens-v1.c          |  4 ++--
+>  8 files changed, 21 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+> index f34920..9e0451 100644
+> --- a/drivers/media/platform/qcom/venus/vdec.c
+> +++ b/drivers/media/platform/qcom/venus/vdec.c
+> @@ -983,7 +983,7 @@ static int vdec_stop_capture(struct venus_inst *inst)
+>         switch (inst->codec_state) {
+>         case VENUS_DEC_STATE_DECODING:
+>                 ret = hfi_session_flush(inst, HFI_FLUSH_ALL);
+> -               /* fallthrough */
+> +               fallthrough;
+>         case VENUS_DEC_STATE_DRAIN:
+>                 vdec_cancel_dst_buffers(inst);
+>                 inst->codec_state = VENUS_DEC_STATE_STOPPED;
+> diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+> index 610542..327df1a 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+> @@ -53,7 +53,7 @@ static int qcom_usb_hs_phy_set_mode(struct phy *phy,
+>                 case PHY_MODE_USB_OTG:
+>                 case PHY_MODE_USB_HOST:
+>                         val |= ULPI_INT_IDGRD;
+> -                       /* fall through */
+> +                       fallthrough;
+>                 case PHY_MODE_USB_DEVICE:
+>                         val |= ULPI_INT_SESS_VALID;
+>                 default:
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index fe0be8..3b0ab0e 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -793,13 +793,13 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+>         switch (subtype) {
+>         case PMIC_GPIO_SUBTYPE_GPIO_4CH:
+>                 pad->have_buffer = true;
+> -               /* Fall through */
+> +               fallthrough;
+>         case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
+>                 pad->num_sources = 4;
+>                 break;
+>         case PMIC_GPIO_SUBTYPE_GPIO_8CH:
+>                 pad->have_buffer = true;
+> -               /* Fall through */
+> +               fallthrough;
+>         case PMIC_GPIO_SUBTYPE_GPIOC_8CH:
+>                 pad->num_sources = 8;
+>                 break;
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> index 338a15..b5949f7 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> @@ -346,7 +346,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
+>                                 return -EINVAL;
+>                         }
+>                         pin->pull_up_strength = arg;
+> -                       /* FALLTHROUGH */
+> +                       fallthrough;
+>                 case PIN_CONFIG_BIAS_PULL_UP:
+>                         pin->bias = pin->pull_up_strength;
+>                         banks |= BIT(2);
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 1995f5b..f40312 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -553,7 +553,7 @@ static void qcom_glink_receive_version(struct qcom_glink *glink,
+>                 break;
+>         case GLINK_VERSION_1:
+>                 glink->features &= features;
+> -               /* FALLTHROUGH */
+> +               fallthrough;
+>         default:
+>                 qcom_glink_send_version_ack(glink);
+>                 break;
+> @@ -584,7 +584,7 @@ static void qcom_glink_receive_version_ack(struct qcom_glink *glink,
+>                         break;
+>
+>                 glink->features &= features;
+> -               /* FALLTHROUGH */
+> +               fallthrough;
+>         default:
+>                 qcom_glink_send_version(glink);
+>                 break;
+> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> index 7864b7..8ae5646 100644
+> --- a/drivers/soc/qcom/socinfo.c
+> +++ b/drivers/soc/qcom/socinfo.c
+> @@ -325,7 +325,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>                 debugfs_create_x32("raw_device_number", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.raw_device_num);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 11):
+>         case SOCINFO_VERSION(0, 10):
+>         case SOCINFO_VERSION(0, 9):
+> @@ -333,12 +333,12 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>
+>                 debugfs_create_u32("foundry_id", 0400, qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.foundry_id);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 8):
+>         case SOCINFO_VERSION(0, 7):
+>                 DEBUGFS_ADD(info, pmic_model);
+>                 DEBUGFS_ADD(info, pmic_die_rev);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 6):
+>                 qcom_socinfo->info.hw_plat_subtype =
+>                         __le32_to_cpu(info->hw_plat_subtype);
+> @@ -346,7 +346,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>                 debugfs_create_u32("hardware_platform_subtype", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.hw_plat_subtype);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 5):
+>                 qcom_socinfo->info.accessory_chip =
+>                         __le32_to_cpu(info->accessory_chip);
+> @@ -354,27 +354,27 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>                 debugfs_create_u32("accessory_chip", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.accessory_chip);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 4):
+>                 qcom_socinfo->info.plat_ver = __le32_to_cpu(info->plat_ver);
+>
+>                 debugfs_create_u32("platform_version", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.plat_ver);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 3):
+>                 qcom_socinfo->info.hw_plat = __le32_to_cpu(info->hw_plat);
+>
+>                 debugfs_create_u32("hardware_platform", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.hw_plat);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 2):
+>                 qcom_socinfo->info.raw_ver  = __le32_to_cpu(info->raw_ver);
+>
+>                 debugfs_create_u32("raw_version", 0400, qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.raw_ver);
+> -               /* Fall through */
+> +               fallthrough;
+>         case SOCINFO_VERSION(0, 1):
+>                 DEBUGFS_ADD(info, build_id);
+>                 break;
+> diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+> index 4b8dd6..893ce1 100644
+> --- a/drivers/thermal/qcom/tsens-v0_1.c
+> +++ b/drivers/thermal/qcom/tsens-v0_1.c
+> @@ -163,7 +163,7 @@ static int calibrate_8916(struct tsens_priv *priv)
+>                 p2[4] = (qfprom_cdata[1] & MSM8916_S4_P2_MASK) >> MSM8916_S4_P2_SHIFT;
+>                 for (i = 0; i < priv->num_sensors; i++)
+>                         p2[i] = ((base1 + p2[i]) << 3);
+> -               /* Fall through */
+> +               fallthrough;
+>         case ONE_PT_CALIB2:
+>                 base0 = (qfprom_cdata[0] & MSM8916_BASE0_MASK);
+>                 p1[0] = (qfprom_cdata[0] & MSM8916_S0_P1_MASK) >> MSM8916_S0_P1_SHIFT;
+> @@ -228,7 +228,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+>                         p2[8] = (calib[5] & S8_P2_BKP_MASK) >> S8_P2_BKP_SHIFT;
+>                         p2[9] = (calib[5] & S9_P2_BKP_MASK) >> S9_P2_BKP_SHIFT;
+>                         p2[10] = (calib[5] & S10_P2_BKP_MASK) >> S10_P2_BKP_SHIFT;
+> -                       /* Fall through */
+> +                       fallthrough;
+>                 case ONE_PT_CALIB:
+>                 case ONE_PT_CALIB2:
+>                         base1 = bkp[0] & BASE1_MASK;
+> @@ -263,7 +263,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+>                         p2[8] = (calib[4] & S8_P2_MASK) >> S8_P2_SHIFT;
+>                         p2[9] = (calib[4] & S9_P2_MASK) >> S9_P2_SHIFT;
+>                         p2[10] = (calib[4] & S10_P2_MASK) >> S10_P2_SHIFT;
+> -                       /* Fall through */
+> +                       fallthrough;
+>                 case ONE_PT_CALIB:
+>                 case ONE_PT_CALIB2:
+>                         base1 = calib[0] & BASE1_MASK;
+> @@ -293,7 +293,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+>                         p2[i] <<= 2;
+>                         p2[i] |= BIT_APPEND;
+>                 }
+> -               /* Fall through */
+> +               fallthrough;
+>         case ONE_PT_CALIB2:
+>                 for (i = 0; i < priv->num_sensors; i++) {
+>                         p1[i] += base1;
+> diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+> index bd2ddb..d096d3 100644
+> --- a/drivers/thermal/qcom/tsens-v1.c
+> +++ b/drivers/thermal/qcom/tsens-v1.c
+> @@ -202,7 +202,7 @@ static int calibrate_v1(struct tsens_priv *priv)
+>                 p2[9] = (qfprom_cdata[3] & S9_P2_MASK) >> S9_P2_SHIFT;
+>                 for (i = 0; i < priv->num_sensors; i++)
+>                         p2[i] = ((base1 + p2[i]) << 2);
+> -               /* Fall through */
+> +               fallthrough;
+>         case ONE_PT_CALIB2:
+>                 base0 = (qfprom_cdata[4] & BASE0_MASK) >> BASE0_SHIFT;
+>                 p1[0] = (qfprom_cdata[0] & S0_P1_MASK) >> S0_P1_SHIFT;
+> @@ -263,7 +263,7 @@ static int calibrate_8976(struct tsens_priv *priv)
+>
+>                 for (i = 0; i < priv->num_sensors; i++)
+>                         p2[i] = ((base1 + p2[i]) << 2);
+> -               /* Fall through */
+> +               fallthrough;
+>         case ONE_PT_CALIB2:
+>                 base0 = qfprom_cdata[0] & MSM8976_BASE0_MASK;
+>                 p1[0] = (qfprom_cdata[0] & MSM8976_S0_P1_MASK) >> MSM8976_S0_P1_SHIFT;
+> --
+> 2.24.0
+>
