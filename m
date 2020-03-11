@@ -2,333 +2,97 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C75C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DD8C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C5D21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="QBcIL3XC"
+	by mail.kernel.org (Postfix) with ESMTP id 2AFFF21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:18:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583932718;
+	bh=G4uTYK2xRhHMdOjbTICLxaFDjb8wtIesdVb4/zO0XI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FfRlMyiSe/lrvwveaXtMlT+1uoUXy6V4avfpmmscWaZPHrS526lmc99h1Kdv0l5dq
+	 FL1qPNVtqLL5oMHU+Rw88Zb0Hml5+v5gUbinbdg3klVgMeNf3UaRyKc9/ifvN02lWS
+	 E/9J/sOq2FgDTE/8T8bFy0KTQ5/h3CtZPpqeNF/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgCKNSY (ORCPT
+        id S1729560AbgCKNSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:18:24 -0400
-Received: from mail-co1nam11on2055.outbound.protection.outlook.com ([40.107.220.55]:64385
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729232AbgCKNSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:18:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LGJDu7BfAJbJW6M5fCzrHAMJl/W9KjiGn9B39tTx1MHJvrN74cZ3Bte7vwsY37oGSO0DH+Ua78l7QF1BilREb2nvEwiH322bAdOgnNRw5fhigxtP8qpcr1gVWmjiaolAl9R/FSQTbVmn69xG4AtKst7qOA+FT6uAcIFEQusJnvt7wPmZkrTkfmEZzWrb5t8HRhxKinjqiKZq6pNGBCuy8zCPIGoeRCTCMs6dBsYIuiahCXrFf0+jbQYb4/dLwAv0tEsjNT1rprd8nDOw3jHZvjcOTZ0HmuRxBLl8FCnWJP2TXa0Cqae7eWegSfg8AHWgYLxe6+kQhuyn6Cfr2lBYHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lrThXZkjgIZaBgvlf0qoh0kcPiuLhBphetOpt30Wl7M=;
- b=ng+VRtyWnSYvMUWlw52vsYh6w2toT3XA3B1HHGpqvmIdeb8rC+r6B7sOpzzOzI6dFBRJhLFnryqkwgIh+mczP5qRGiV1T2qt4q3MLMN07r/zrlSntIajqZI9+QUk+9GYWIxUe3Us2kEGI5MQFV8wW14TDCVz3ss6pbF18uLYP4kLycY2tcTVQ9yzp64EbdMbu2QNXMh6I1x9FOU0r3ZAd90wSfgJ9E/byjXiLzIR1VxwHo+SWOzOJILyt1gJwY7RcHyeKJfZkZgdT+gy4WHax+rSKtx5ufVUuMHDm3Hf2uIvZXx7SBenyX7po/HpQWx5d3QmCDacLtR6z8EqCp8gnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lrThXZkjgIZaBgvlf0qoh0kcPiuLhBphetOpt30Wl7M=;
- b=QBcIL3XCsK3kzYSoN6rs+XqkiPxPNphg14fMQsKOKEvjFzE+83kwkxNIgFadcYQpWZEw0lbQaPKz6sJfMg8O/yhKHu1lRNx5FpteAPre9rMSUl4tz7h2lWaOCz21c8sdg5EC+qht/0aGueLgQSjeHb9Qdqe49I+ZQb1uAY7rhDc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
- by DM5PR12MB1451.namprd12.prod.outlook.com (2603:10b6:4:d::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Wed, 11 Mar 2020 13:18:20 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2793.018; Wed, 11 Mar
- 2020 13:18:20 +0000
-Subject: Re: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting
- sync files (v4)
-To:     Jason Ekstrand <jason@jlekstrand.net>
-Cc:     airlied@redhat.com, jessehall@google.com, jajones@nvidia.com,
-        daniels@collabora.com, hoegsberg@google.com,
-        daniel.vetter@ffwll.ch, bas@basnieuwenhuizen.nl,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Greg Hackmann <ghackmann@google.com>,
-        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20200303190318.522103-1-jason@jlekstrand.net>
- <20200311034351.1275197-1-jason@jlekstrand.net>
- <20200311034351.1275197-3-jason@jlekstrand.net>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
-Date:   Wed, 11 Mar 2020 14:18:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200311034351.1275197-3-jason@jlekstrand.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::21) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
+        Wed, 11 Mar 2020 09:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729232AbgCKNSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:18:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30F6721D56;
+        Wed, 11 Mar 2020 13:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583932716;
+        bh=G4uTYK2xRhHMdOjbTICLxaFDjb8wtIesdVb4/zO0XI8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VKKNuK8dxXBa204Ij7VVdQzQmls+EBquSanejRNiG+ZiKfUhtgpN1q97o7/frr77E
+         q4JgWrpE+hFhZdmHQKTgxbHA5skjc98gmZCAGUrgESWdCUYwykl5nqc+64x5qpq/5f
+         OXP5tSl0pSa/Vj3rAxghB8amnqHTOPWrHOVMX28M=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jC1Fq-00Buul-IR; Wed, 11 Mar 2020 13:18:34 +0000
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Wed, 11 Mar 2020 13:18:17 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4cc76f37-e918-47ac-288f-08d7c5beab23
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1451:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB14519AD72BA75A88E6A6AE9483FC0@DM5PR12MB1451.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0339F89554
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(36756003)(86362001)(31686004)(6666004)(31696002)(478600001)(4326008)(6486002)(5660300002)(8936002)(66946007)(54906003)(316002)(2906002)(16526019)(8676002)(7416002)(6916009)(186003)(66556008)(81156014)(2616005)(52116002)(81166006)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1451;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tunja+SRvum3Ce13cC9n9/QqbdfiCzMiatwCY1xpsDVXyjy8IuTetZK6t8/LdG07ddYFZ08p9kEeS6JNdrJf1TYrJVjuPy9igadEw5FJJU/ALNFF6YryCxY3kPvKPpdUNOye+66i/9vjw+N/vVbL2UIZxFEfeYWq4aTMBNqWp9eRK4l15yuyK0CRUTaPuK7Hrxf5LZoUsYiXO1YJTXWPz8rxN/xKLUTlVXCNZmIQmBE0Ud+ACE8fOxXiUzTgTe9c3Y/5D5A811D61tQm4bH2lMYqRXP4W+xgcUW6VtffKCe3q7zmU+OQN87Mi89+EOqME8XlhzHYGO0W/ja0ZYHrsnDfauQjthBqyicHrHX680pYJU0ovpsRsFUjX8gOpd6jetYPcFylHmNNYPXkgISrqdLbjBCT7Uz9SyZZ7jrN4G6chec8ANvYnKd4VDs09cXc
-X-MS-Exchange-AntiSpam-MessageData: 321WkAqk8XNkss6YSG5o0GiCp1tHsfSTzT9mPPYcsakwN7fJ9Yi1RZJUVBJFGSLTpk70cwgp8tEDnKlFOM1BqQZQSU01oiQWBxQH5D3B95eIyubkF/PWdowxhDCU50t19vGuQkc/vuTQL46IGbP25/wGO3QEz46PN96EKkaxhp6v2P1BBrkX3/kwHwUMHH0PV2d5NZaRoHebZeDaZE6ItA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cc76f37-e918-47ac-288f-08d7c5beab23
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 13:18:20.7248
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8OJATtBygH+gYcDrZMYVFHUVRJ5eP/6D3fJUGWvSiuOtqej8ecLizU7MQRQG6fco
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1451
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Mar 2020 13:18:34 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Ming Lei <ming.lei@redhat.com>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Balance initial LPI affinity across
+ CPUs
+In-Reply-To: <e65af3fd-e7c8-bd9b-75ff-f2d990338221@huawei.com>
+References: <20200119190554.1002-1-maz@kernel.org>
+ <5d04d904-d7ea-04ea-ac3b-8cdc90074a92@huawei.com>
+ <afb60c5f9a176470449a83126db326a9@kernel.org>
+ <83eb55b0-2f2d-3335-85cf-6d7ed379b3c7@huawei.com>
+ <7dc37b35d8ec6c78e75969d8c6c2d2e9@kernel.org>
+ <87h80q2aoc.fsf@nanos.tec.linutronix.de>
+ <e65af3fd-e7c8-bd9b-75ff-f2d990338221@huawei.com>
+Message-ID: <1d7a7c445538c8352fc2391a06184b59@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, jason@lakedaemon.net, ming.lei@redhat.com, chenxiang66@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 11.03.20 um 04:43 schrieb Jason Ekstrand:
-> Explicit synchronization is the future.  At least, that seems to be what
-> most userspace APIs are agreeing on at this point.  However, most of our
-> Linux APIs (both userspace and kernel UAPI) are currently built around
-> implicit synchronization with dma-buf.  While work is ongoing to change
-> many of the userspace APIs and protocols to an explicit synchronization
-> model, switching over piecemeal is difficult due to the number of
-> potential components involved.  On the kernel side, many drivers use
-> dma-buf including GPU (3D/compute), display, v4l, and others.  In
-> userspace, we have X11, several Wayland compositors, 3D drivers, compute
-> drivers (OpenCL etc.), media encode/decode, and the list goes on.
->
-> This patch provides a path forward by allowing userspace to manually
-> manage the fences attached to a dma-buf.  Alternatively, one can think
-> of this as making dma-buf's implicit synchronization simply a carrier
-> for an explicit fence.  This is accomplished by adding two IOCTLs to
-> dma-buf for importing and exporting a sync file to/from the dma-buf.
-> This way a userspace component which is uses explicit synchronization,
-> such as a Vulkan driver, can manually set the write fence on a buffer
-> before handing it off to an implicitly synchronized component such as a
-> Wayland compositor or video encoder.  In this way, each of the different
-> components can be upgraded to an explicit synchronization model one at a
-> time as long as the userspace pieces connecting them are aware of it and
-> import/export fences at the right times.
->
-> There is a potential race condition with this API if userspace is not
-> careful.  A typical use case for implicit synchronization is to wait for
-> the dma-buf to be ready, use it, and then signal it for some other
-> component.  Because a sync_file cannot be created until it is guaranteed
-> to complete in finite time, userspace can only signal the dma-buf after
-> it has already submitted the work which uses it to the kernel and has
-> received a sync_file back.  There is no way to atomically submit a
-> wait-use-signal operation.  This is not, however, really a problem with
-> this API so much as it is a problem with explicit synchronization
-> itself.  The way this is typically handled is to have very explicit
-> ownership transfer points in the API or protocol which ensure that only
-> one component is using it at any given time.  Both X11 (via the PRESENT
-> extension) and Wayland provide such ownership transfer points via
-> explicit present and idle messages.
->
-> The decision was intentionally made in this patch to make the import and
-> export operations IOCTLs on the dma-buf itself rather than as a DRM
-> IOCTL.  This makes it the import/export operation universal across all
-> components which use dma-buf including GPU, display, v4l, and others.
-> It also means that a userspace component can do the import/export
-> without access to the DRM fd which may be tricky to get in cases where
-> the client communicates with DRM via a userspace API such as OpenGL or
-> Vulkan.  At a future date we may choose to add direct import/export APIs
-> to components such as drm_syncobj to avoid allocating a file descriptor
-> and going through two ioctls.  However, that seems to be something of a
-> micro-optimization as import/export operations are likely to happen at a
-> rate of a few per frame of rendered or decoded video.
->
-> v2 (Jason Ekstrand):
->   - Use a wrapper dma_fence_array of all fences including the new one
->     when importing an exclusive fence.
->
-> v3 (Jason Ekstrand):
->   - Lock around setting shared fences as well as exclusive
->   - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
->   - Initialize ret to 0 in dma_buf_wait_sync_file
->
-> v4 (Jason Ekstrand):
->   - Use the new dma_resv_get_singleton helper
->
-> Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
-> ---
->   drivers/dma-buf/dma-buf.c    | 96 ++++++++++++++++++++++++++++++++++++
->   include/uapi/linux/dma-buf.h | 13 ++++-
->   2 files changed, 107 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> index d4097856c86b..09973c689866 100644
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -20,6 +20,7 @@
->   #include <linux/debugfs.h>
->   #include <linux/module.h>
->   #include <linux/seq_file.h>
-> +#include <linux/sync_file.h>
->   #include <linux/poll.h>
->   #include <linux/dma-resv.h>
->   #include <linux/mm.h>
-> @@ -348,6 +349,95 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
->   	return ret;
->   }
->   
-> +static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
-> +				   const void __user *user_data)
-> +{
-> +	struct dma_buf_sync_file arg;
-> +	struct dma_fence *fence;
-> +	int ret = 0;
-> +
-> +	if (copy_from_user(&arg, user_data, sizeof(arg)))
-> +		return -EFAULT;
-> +
-> +	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
-> +		return -EINVAL;
-> +
-> +	fence = sync_file_get_fence(arg.fd);
-> +	if (!fence)
-> +		return -EINVAL;
-> +
-> +	dma_resv_lock(dmabuf->resv, NULL);
-> +
-> +	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
-> +		struct dma_fence *singleton = NULL;
-> +		ret = dma_resv_get_singleton(dmabuf->resv, fence, &singleton);
-> +		if (!ret && singleton)
-> +			dma_resv_add_excl_fence(dmabuf->resv, singleton);
-> +	} else {
-> +		dma_resv_add_shared_fence(dmabuf->resv, fence);
-> +	}
+On 2020-03-10 11:33, John Garry wrote:
 
-You also need to create a singleton when adding a shared fences.
+[...]
 
-The problem is that shared fences must always signal after exclusive 
-ones and you can't guarantee that for the fence you add here.
+> Hi Marc,
+> 
+> I was wondering if there is anything we can do to progress this patch?
+> 
+> Apart from being a good change in itself, I need to do some SMMU
+> testing for nextgen product development and I would like to include
+> this patch, most preferably from mainline.
 
-Regards,
-Christian.
+Let me revive it and see how to apply a similar logic as what Thomas
+was describing. Shouldn't take too long...
 
-> +
-> +	dma_resv_unlock(dmabuf->resv);
-> +
-> +	dma_fence_put(fence);
-> +
-> +	return ret;
-> +}
-> +
-> +static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
-> +				     void __user *user_data)
-> +{
-> +	struct dma_buf_sync_file arg;
-> +	struct dma_fence *fence = NULL;
-> +	struct sync_file *sync_file;
-> +	int fd, ret;
-> +
-> +	if (copy_from_user(&arg, user_data, sizeof(arg)))
-> +		return -EFAULT;
-> +
-> +	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
-> +		return -EINVAL;
-> +
-> +	fd = get_unused_fd_flags(O_CLOEXEC);
-> +	if (fd < 0)
-> +		return fd;
-> +
-> +	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
-> +		/* We need to include both the exclusive fence and all of
-> +		 * the shared fences in our fence.
-> +		 */
-> +		ret = dma_resv_get_singleton(dmabuf->resv, NULL, &fence);
-> +		if (ret)
-> +			goto err_put_fd;
-> +	} else {
-> +		fence = dma_resv_get_excl_rcu(dmabuf->resv);
-> +	}
-> +
-> +	if (!fence)
-> +		fence = dma_fence_get_stub();
-> +
-> +	sync_file = sync_file_create(fence);
-> +
-> +	dma_fence_put(fence);
-> +
-> +	if (!sync_file) {
-> +		ret = -EINVAL;
-> +		goto err_put_fd;
-> +	}
-> +
-> +	fd_install(fd, sync_file->file);
-> +
-> +	arg.fd = fd;
-> +	if (copy_to_user(user_data, &arg, sizeof(arg)))
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +
-> +err_put_fd:
-> +	put_unused_fd(fd);
-> +	return ret;
-> +}
-> +
->   static long dma_buf_ioctl(struct file *file,
->   			  unsigned int cmd, unsigned long arg)
->   {
-> @@ -390,6 +480,12 @@ static long dma_buf_ioctl(struct file *file,
->   	case DMA_BUF_SET_NAME:
->   		return dma_buf_set_name(dmabuf, (const char __user *)arg);
->   
-> +	case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
-> +		return dma_buf_wait_sync_file(dmabuf, (const void __user *)arg);
-> +
-> +	case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
-> +		return dma_buf_signal_sync_file(dmabuf, (void __user *)arg);
-> +
->   	default:
->   		return -ENOTTY;
->   	}
-> diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
-> index dbc7092e04b5..86e07acca90c 100644
-> --- a/include/uapi/linux/dma-buf.h
-> +++ b/include/uapi/linux/dma-buf.h
-> @@ -37,8 +37,17 @@ struct dma_buf_sync {
->   
->   #define DMA_BUF_NAME_LEN	32
->   
-> +struct dma_buf_sync_file {
-> +	__u32 flags;
-> +	__s32 fd;
-> +};
-> +
-> +#define DMA_BUF_SYNC_FILE_SYNC_WRITE	(1 << 0)
-> +
->   #define DMA_BUF_BASE		'b'
-> -#define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-> -#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
-> +#define DMA_BUF_IOCTL_SYNC	    _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-> +#define DMA_BUF_SET_NAME	    _IOW(DMA_BUF_BASE, 1, const char *)
-> +#define DMA_BUF_IOCTL_WAIT_SYNC_FILE	_IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
-> +#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE	_IOWR(DMA_BUF_BASE, 3, struct dma_buf_sync)
->   
->   #endif
+Thanks,
 
+         M.
+-- 
+Jazz is not dead. It just smells funny...
