@@ -2,150 +2,98 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D337CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0297EC10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD932146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:58:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LxyfcpIh"
+	by mail.kernel.org (Postfix) with ESMTP id CB2BE208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgCKE6U (ORCPT
+        id S1726706AbgCKFGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 00:58:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59540 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgCKE6U (ORCPT
+        Wed, 11 Mar 2020 01:06:42 -0400
+Received: from smtprelay0146.hostedemail.com ([216.40.44.146]:44512 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725813AbgCKFGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 00:58:20 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B4vliK085472;
-        Tue, 10 Mar 2020 23:57:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583902667;
-        bh=MFTqGdrDyTmeaJQ1bZpBzfDtbpnP3ovZ3eA6y3Etkpg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LxyfcpIh2W+Bsk5crUUjzOQjTkD+k2r8DTKINGYZI4hjjSWMWyIekWRblL9BFyK0r
-         2CMSJJG9jE6OdD55+B0kykLUyHNFd98Vp+AmDZQeCmo21uMDzycgsEKRFEkd4fOB8i
-         o6DR36lvZrdupylA+QzkBojFkE/TCocpBSkg1tFs=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B4vlbe057182
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Mar 2020 23:57:47 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Mar 2020 23:57:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Mar 2020 23:57:47 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02B4vgLT066746;
-        Tue, 10 Mar 2020 23:57:42 -0500
-Subject: Re: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for
- {request,release}_resources
-To:     Tim Harvey <tharvey@gateworks.com>
-CC:     Marc Zyngier <marc.zyngier@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20190430101230.21794-1-lokeshvutla@ti.com>
- <20190430101230.21794-8-lokeshvutla@ti.com>
- <CAJ+vNU2gnKKxX2YL1JUSnpF7qNqKVAsPhC2emv=Y79HPJbZXzw@mail.gmail.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <ed6472a7-5bd8-25bd-e2bc-f88f97a82607@ti.com>
-Date:   Wed, 11 Mar 2020 10:26:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 11 Mar 2020 01:06:42 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 42C761802E2A0;
+        Wed, 11 Mar 2020 05:06:41 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shelf51_1d1f85e6c0b09
+X-Filterd-Recvd-Size: 2682
+Received: from joe-laptop.perches.com (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 11 Mar 2020 05:06:40 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     Boris Pismenny <borisp@mellanox.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH -next 001/491] MELLANOX ETHERNET INNOVA DRIVERS: Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:15 -0700
+Message-Id: <605f5d4954fcb254fe6fc5c22dc707f29b3b7405.1583896347.git.joe@perches.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1583896344.git.joe@perches.com>
+References: <cover.1583896344.git.joe@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJ+vNU2gnKKxX2YL1JUSnpF7qNqKVAsPhC2emv=Y79HPJbZXzw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
+Convert the various uses of fallthrough comments to fallthrough;
 
-On 11/03/20 4:57 AM, Tim Harvey wrote:
-> On Tue, Apr 30, 2019 at 3:14 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
->>
->> thunderx_gpio_irq_{request,release}_resources apis are trying to
->> {request,release} resources on parent interrupt. There are default
->> apis doing the same. Use the default parent apis instead of writing
->> the same code snippet.
->>
->> Cc: linux-gpio@vger.kernel.org
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->> ---
->> Changes since v7:
->> - None
->>
->>  drivers/gpio/gpio-thunderx.c | 16 ++++------------
->>  1 file changed, 4 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
->> index 1306722faa5a..715371b5102a 100644
->> --- a/drivers/gpio/gpio-thunderx.c
->> +++ b/drivers/gpio/gpio-thunderx.c
->> @@ -363,22 +363,16 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
->>  {
->>         struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
->>         struct thunderx_gpio *txgpio = txline->txgpio;
->> -       struct irq_data *parent_data = data->parent_data;
->>         int r;
->>
->>         r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
->>         if (r)
->>                 return r;
->>
->> -       if (parent_data && parent_data->chip->irq_request_resources) {
->> -               r = parent_data->chip->irq_request_resources(parent_data);
->> -               if (r)
->> -                       goto error;
->> -       }
->> +       r = irq_chip_request_resources_parent(data);
->> +       if (r)
->> +               gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-> 
-> Lokesh,
-> 
-> This patch breaks irq resources for thunderx-gpio as
-> parent_data->chip->irq_request_resources is undefined thus your new
-> irq_chip_request_resources_parent() returns -ENOSYS causing this
-> function to return an error where as before it would happily return 0.
+Done via script
+Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
 
-Returning -ENOSYS is the right behaviour. If the parent doesn't have the
-resources, child driver should not hook it at all.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c        | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> Is the following the correct fix or should we qualify
-> data->parent_data->chip->irq_request_resources before calling
-> irq_chip_request_resources_parent() in thunderx-gpio?
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+index f260dd..42978f8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+@@ -466,7 +466,7 @@ struct sk_buff *mlx5e_ktls_handle_tx_skb(struct net_device *netdev,
+ 			if (likely(!skb->decrypted))
+ 				goto out;
+ 			WARN_ON_ONCE(1);
+-			/* fall-through */
++			fallthrough;
+ 		default: /* MLX5E_KTLS_SYNC_FAIL */
+ 			goto err_out;
+ 		}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+index 6102113..d35bbc 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+@@ -339,14 +339,14 @@ static void mlx5_fpga_conn_handle_cqe(struct mlx5_fpga_conn *conn,
+ 	switch (opcode) {
+ 	case MLX5_CQE_REQ_ERR:
+ 		status = ((struct mlx5_err_cqe *)cqe)->syndrome;
+-		/* Fall through */
++		fallthrough;
+ 	case MLX5_CQE_REQ:
+ 		mlx5_fpga_conn_sq_cqe(conn, cqe, status);
+ 		break;
+ 
+ 	case MLX5_CQE_RESP_ERR:
+ 		status = ((struct mlx5_err_cqe *)cqe)->syndrome;
+-		/* Fall through */
++		fallthrough;
+ 	case MLX5_CQE_RESP_SEND:
+ 		mlx5_fpga_conn_rq_cqe(conn, cqe, status);
+ 		break;
+-- 
+2.24.0
 
-If there are no parent resources why should  thunderx-gpio request parent
-resources at all?
-
-Thanks and regards,
-Lokesh
