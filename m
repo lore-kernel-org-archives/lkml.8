@@ -2,138 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2A2C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D205DC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A96208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69A421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b4DElPDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbgCKMq4 (ORCPT
+        id S1729384AbgCKMvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:46:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54256 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgCKMq4 (ORCPT
+        Wed, 11 Mar 2020 08:51:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40628 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729232AbgCKMvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:46:56 -0400
-Received: from mail-wm1-f70.google.com ([209.85.128.70])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1jC0lB-0002tx-9z
-        for linux-kernel@vger.kernel.org; Wed, 11 Mar 2020 12:46:53 +0000
-Received: by mail-wm1-f70.google.com with SMTP id y7so864694wmd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:46:53 -0700 (PDT)
+        Wed, 11 Mar 2020 08:51:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e26so1972025wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 05:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=6mmjs1zoy21HGdXRuhBisBs86sD1UMcUpSzszzdWpvA=;
+        b=b4DElPDmtlbb1xvN5jVD3o8QZeGR+7PKcSdOSRtSbXEFwkPrylJcMqnZvKNSJRh14V
+         6aqZwiXB5y2Av1kqYMGRFyyVSV3hRn51Jy2RF+Aq6a2j0g1Mf/fUv7KjHILYBHyInEdv
+         c5nB8+tBPOpMZgR4su7kn0zyVCJ/DZr2rT7LmbjigMSE74S+SNtoV6NIRDD1zpCuGcMV
+         TIP2Ui1s9OocJKnffxQPNBM+2cwn0nrQMe0Q11kYSdT43tjYvZJOEoOo+Fv0mlbQL4d3
+         aRgfdZLWl/+ZZvGmp+v4pwZpEdLZsof/+5jRrn7XJP6H0cnzRseS16efUHf3bVll7sxL
+         APOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tvJQ44fhgXDdQWn9cAVor3F6zkLzPnJd2Xj0RCMCHmY=;
-        b=nduHtIep0fyr6ZpZ0p7e6BmfoCm7ct6slTMO/qlCgUfg3is3mN+4/uUWbDOr3kQdN8
-         hg9CqCf93lNF0I732E8bhBasmxldLkdHNn7OMivjSc45NQdCEsGIRsg/5wPbOS4aFte6
-         RvbrIeRcuMrwfu/DJahoahreLdhA3Xv7mdBZjzwN34gI9Nm8hqlr4WLrO8CUYu7OkYbI
-         /dVBT1sHJIW+XHysmOZbGdp14PqiD+PkacNTfvR6fU7NIo7mpcfZDbGw+q5gMW4FYWWs
-         Fug1DM5Qdaw4xoOqwPzrt7E8QTlyYnrP0ehHk/sZtUyx3CPGSsgyVl6GCSlzfFnWkVDQ
-         Le9A==
-X-Gm-Message-State: ANhLgQ3svYaVW9YIgEYDkorxP8HAT85pXXJ2kP8iD+Cywsjv/0dhn3mn
-        ePBoablrzVCrD+DiYccNzygzQlSTakgjmYSkGBSjRQi/V5tWdqqEHFpdOmbjZcmeaZNEe9IQpy8
-        QTLYw2VFmZpD3fdESmL1cyDQRIbg4Uq2DhaZhgxKCDw==
-X-Received: by 2002:adf:a4d2:: with SMTP id h18mr4479065wrb.90.1583930812954;
-        Wed, 11 Mar 2020 05:46:52 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtAy92hJw4Au2IdrMrzzgrgGedx1iAVmYY2M7Bh+NAeJKr0TODVlWeXtDrPpdu/KAZGYTygCg==
-X-Received: by 2002:adf:a4d2:: with SMTP id h18mr4479040wrb.90.1583930812703;
-        Wed, 11 Mar 2020 05:46:52 -0700 (PDT)
-Received: from [192.168.1.75] (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
-        by smtp.gmail.com with ESMTPSA id b5sm28652028wrj.1.2020.03.11.05.46.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 05:46:51 -0700 (PDT)
-Subject: Re: [PATCH] panic: Add sysctl/cmdline to dump all CPUs backtraces on
- oops event
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        tglx@linutronix.de, kernel@gpiccoli.net
-References: <20200310163700.19186-1-gpiccoli@canonical.com>
- <93f20e59-41b1-48ad-b0eb-e670b18994d5@infradead.org>
- <20200310182647.59f6ea73aad3aca619065f1e@linux-foundation.org>
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
- Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
- 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
- irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
- 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
- AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
- AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
- 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
- 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
- q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
- iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
- LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
- aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
- pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
- kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
- nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
- bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
- BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
- 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
- egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
- Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
- kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
- X18zwLgdiQ==
-Message-ID: <64a6c1c0-9514-e823-3507-a131c7daa578@canonical.com>
-Date:   Wed, 11 Mar 2020 09:46:45 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200310182647.59f6ea73aad3aca619065f1e@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6mmjs1zoy21HGdXRuhBisBs86sD1UMcUpSzszzdWpvA=;
+        b=fzvFAQ31BetQSO0iaXzH1Xbiedi5M9mz8NbFakz99MNSa6Fh8cOcDFGXbheU7kH5JP
+         1UNmmflFCNwNgHiFGExYoN8AHZOM+vYqLSuGiwXPaArFOoX5nDQ9AuyPLEeg0vgBW4oA
+         NF7VowGPdikrgV2ZLTzkUxFH30RmzzMMXDs6EUr6f+Ukch8SrKBA3utlzIdzebb+6J9x
+         8TqjpxnaLIHzJ/oAEYWAx5KToSTXgGNZGknFLGyo9GnX9U9hpGn+4teVvw2sdkBhORvq
+         rcNGxzf0mVESsyJJtMaEshjYuoW+mYM/pleEi69ot1MnadWgKbBNX+FY6o/HJZddVhhm
+         YvoQ==
+X-Gm-Message-State: ANhLgQ0Lzh8KWxL0gFHX9LsT/FtSZL7TpNszk6wcdsffwXFX/AB2Bhc6
+        JElgqoGgmYtz2a6IxS1eRR2TEw==
+X-Google-Smtp-Source: ADFU+vvH+0ONZuHFXRlr54VYaPW++G9wGrbF1sWPr8MKp+jdH72w07T55RveDBX31y81xSMCnFPsBA==
+X-Received: by 2002:a7b:c0c7:: with SMTP id s7mr3536712wmh.187.1583931102518;
+        Wed, 11 Mar 2020 05:51:42 -0700 (PDT)
+Received: from robin.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o3sm8843538wme.36.2020.03.11.05.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 05:51:41 -0700 (PDT)
+From:   Phong LE <ple@baylibre.com>
+To:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com
+Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
+        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
+        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] Add it66121 driver
+Date:   Wed, 11 Mar 2020 13:51:31 +0100
+Message-Id: <20200311125135.30832-1-ple@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/2020 22:26, Andrew Morton wrote:
-> On Tue, 10 Mar 2020 13:59:15 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->>> +oops_all_cpu_backtrace:
->>> +================
->>> +
->>> +Determines if kernel should NMI all CPUs to dump their backtraces when
->>
->> I would much prefer that to be written without using NMI as a verb.
-> 
-> "Non maskably interrupt" ;)
-> 
-> I think it's OK.  Concise and the meaning is clear.
+The IT66121 is a high-performance and low-power single channel HDMI
+transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward
+compatible to DVI 1.0 specifications.
+It supports pixel rates from 25MHz to 165MHz.
 
-Hi Andrew, good idea heheh
-Thank you and all that reviewed the grammar/wording, certainly I can
-change that and resubmit.
+This series contains document bindings, add vendor prefix, Kconfig to
+enable or not.
+For now, the driver handles only RGB without color conversion.
+Audio, CEC and HDCP are not implemented yet.
 
+Phong LE (4):
+  dt-bindings: add ITE vendor
+  dt-bindings: display: bridge: add it66121 bindings
+  drm: bridge: add it66121 driver
+  MAINTAINERS: add it66121 HDMI bridge driver entry
 
-> 
-> 
-> Why do we need the kernel boot parameter?  Isn't
-> /proc/sys/kernel/oops_all_cpu_backtrace sufficient?
-> 
+ .../bindings/display/bridge/ite,it66121.yaml  |  98 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   8 +
+ drivers/gpu/drm/bridge/Kconfig                |   8 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/ite-it66121.c          | 997 ++++++++++++++++++
+ 6 files changed, 1114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
+ create mode 100644 drivers/gpu/drm/bridge/ite-it66121.c
 
-I kept the kernel parameter as a consistency thing - every sysctl
-"*_all_cpubacktrace" has a respective kernel parameter, so I did the
-same (and if we get an oops booting a new kernel, this is maybe useful
-depending on the point we get the oops). But if it's a problem for you,
-I can remove the kernel parameter, your choice.
+-- 
+2.17.1
 
-Cheers,
-
-
-Guilherme
