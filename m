@@ -2,249 +2,333 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BC2C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C75C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F03222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C5D21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ib3HXPLI"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="QBcIL3XC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgCKNRz (ORCPT
+        id S1729542AbgCKNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:17:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39628 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbgCKNRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:17:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w65so1319357pfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:17:54 -0700 (PDT)
+        Wed, 11 Mar 2020 09:18:24 -0400
+Received: from mail-co1nam11on2055.outbound.protection.outlook.com ([40.107.220.55]:64385
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729232AbgCKNSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:18:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LGJDu7BfAJbJW6M5fCzrHAMJl/W9KjiGn9B39tTx1MHJvrN74cZ3Bte7vwsY37oGSO0DH+Ua78l7QF1BilREb2nvEwiH322bAdOgnNRw5fhigxtP8qpcr1gVWmjiaolAl9R/FSQTbVmn69xG4AtKst7qOA+FT6uAcIFEQusJnvt7wPmZkrTkfmEZzWrb5t8HRhxKinjqiKZq6pNGBCuy8zCPIGoeRCTCMs6dBsYIuiahCXrFf0+jbQYb4/dLwAv0tEsjNT1rprd8nDOw3jHZvjcOTZ0HmuRxBLl8FCnWJP2TXa0Cqae7eWegSfg8AHWgYLxe6+kQhuyn6Cfr2lBYHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lrThXZkjgIZaBgvlf0qoh0kcPiuLhBphetOpt30Wl7M=;
+ b=ng+VRtyWnSYvMUWlw52vsYh6w2toT3XA3B1HHGpqvmIdeb8rC+r6B7sOpzzOzI6dFBRJhLFnryqkwgIh+mczP5qRGiV1T2qt4q3MLMN07r/zrlSntIajqZI9+QUk+9GYWIxUe3Us2kEGI5MQFV8wW14TDCVz3ss6pbF18uLYP4kLycY2tcTVQ9yzp64EbdMbu2QNXMh6I1x9FOU0r3ZAd90wSfgJ9E/byjXiLzIR1VxwHo+SWOzOJILyt1gJwY7RcHyeKJfZkZgdT+gy4WHax+rSKtx5ufVUuMHDm3Hf2uIvZXx7SBenyX7po/HpQWx5d3QmCDacLtR6z8EqCp8gnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=vrtm4mTBXLkyB+Sw62aumVRdIfeHDvffoJwWFM/8N3Y=;
-        b=Ib3HXPLIXFOBbWd+GDPehqS/CfQFc0ubSOsPABUHVsJMsJzu7B74aQP8OEzbVXoBdC
-         Fsbcx/GcKDDoG4Cbz4wlOLbGgsIxMYbfdokVaCHR5HqmyTPyA8hi+JTKsgQgu1QdvAlR
-         R9zzJhro1lKKzRVqYXnTEYQwolr/0e1WfDQSEklDyIqVIY2CnsAvGDPkjOD2t43qYpRJ
-         B9LkIseutQRVjumEytN2E3QKCK+5QgrPZo6MsxxL30VcXvP/rhAA/cP4p9/fbdLm+Y5L
-         s1/iwO4Tthwtej2xoKeyCO6tNFtk9XcNMQE0VdjRTgJ/i2wFY/eyUY/fUqLS0pznHBOo
-         c+2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=vrtm4mTBXLkyB+Sw62aumVRdIfeHDvffoJwWFM/8N3Y=;
-        b=nCK+wdH8UM5V6HSSlT1xvex7egYn9+CjB+IGVOVGYXp9JXWCYWQBdjHfr576E7FmKp
-         sfShgArTjV7xETOmQgztyJ6n3nEpdcUk0HkDXH9WdO+TOvJXbp8534ta9d3KWP9D8wMh
-         NozR91XZ5gi0MeRS1Ehj1P38Cgd8UO4RCzc/sbkdTYK5HnvRcvIEBLJ0EatOSCrdJTFq
-         34JhkZzc/E1CxiNhhDHUHLLZQUQQ2uZe/bhsYBEB5MQvuJWtTCReOXkdXCG50RObcCjq
-         TlWUptMW+R6kTstQuNkERQh9f2LLh4kBxuWmrVwKSe6D2UzrUZFVzVNFC2YPCtE/d7h2
-         o2cA==
-X-Gm-Message-State: ANhLgQ3EOXcqJAHyvMRzNh0MFwigitcjGdCLUXEkRZtEle3Eafarqkju
-        CZsW56C12h634qOHMIaVuqM=
-X-Google-Smtp-Source: ADFU+vtq1nWVaSzlbgb6ufEbxbvcCnfC+F9Npcyl4jGZnsg6Jp5RR8NJfxXGq4d+0B0QQ7ozSM5qOA==
-X-Received: by 2002:a62:6490:: with SMTP id y138mr2854394pfb.96.1583932673834;
-        Wed, 11 Mar 2020 06:17:53 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:287:fb4d:18bc:a849:c699:3914])
-        by smtp.gmail.com with ESMTPSA id s18sm637434pfe.194.2020.03.11.06.17.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 06:17:53 -0700 (PDT)
-From:   Shreeya Patel <shreeya.patel23498@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
-        sbrivio@redhat.com, daniel.baluta@gmail.com,
-        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
-        shreeya.patel23498@gmail.com, Larry.Finger@lwfinger.net
-Subject: [Outreachy kernel] [PATCH v4] Staging: rtl8188eu: rtw_mlme: Add space around operators
-Date:   Wed, 11 Mar 2020 18:47:42 +0530
-Message-Id: <20200311131742.31068-1-shreeya.patel23498@gmail.com>
-X-Mailer: git-send-email 2.17.1
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lrThXZkjgIZaBgvlf0qoh0kcPiuLhBphetOpt30Wl7M=;
+ b=QBcIL3XCsK3kzYSoN6rs+XqkiPxPNphg14fMQsKOKEvjFzE+83kwkxNIgFadcYQpWZEw0lbQaPKz6sJfMg8O/yhKHu1lRNx5FpteAPre9rMSUl4tz7h2lWaOCz21c8sdg5EC+qht/0aGueLgQSjeHb9Qdqe49I+ZQb1uAY7rhDc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
+ by DM5PR12MB1451.namprd12.prod.outlook.com (2603:10b6:4:d::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Wed, 11 Mar 2020 13:18:20 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2793.018; Wed, 11 Mar
+ 2020 13:18:20 +0000
+Subject: Re: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting
+ sync files (v4)
+To:     Jason Ekstrand <jason@jlekstrand.net>
+Cc:     airlied@redhat.com, jessehall@google.com, jajones@nvidia.com,
+        daniels@collabora.com, hoegsberg@google.com,
+        daniel.vetter@ffwll.ch, bas@basnieuwenhuizen.nl,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Greg Hackmann <ghackmann@google.com>,
+        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20200303190318.522103-1-jason@jlekstrand.net>
+ <20200311034351.1275197-1-jason@jlekstrand.net>
+ <20200311034351.1275197-3-jason@jlekstrand.net>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
+Date:   Wed, 11 Mar 2020 14:18:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20200311034351.1275197-3-jason@jlekstrand.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::21) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Wed, 11 Mar 2020 13:18:17 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4cc76f37-e918-47ac-288f-08d7c5beab23
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1451:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB14519AD72BA75A88E6A6AE9483FC0@DM5PR12MB1451.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(36756003)(86362001)(31686004)(6666004)(31696002)(478600001)(4326008)(6486002)(5660300002)(8936002)(66946007)(54906003)(316002)(2906002)(16526019)(8676002)(7416002)(6916009)(186003)(66556008)(81156014)(2616005)(52116002)(81166006)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1451;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tunja+SRvum3Ce13cC9n9/QqbdfiCzMiatwCY1xpsDVXyjy8IuTetZK6t8/LdG07ddYFZ08p9kEeS6JNdrJf1TYrJVjuPy9igadEw5FJJU/ALNFF6YryCxY3kPvKPpdUNOye+66i/9vjw+N/vVbL2UIZxFEfeYWq4aTMBNqWp9eRK4l15yuyK0CRUTaPuK7Hrxf5LZoUsYiXO1YJTXWPz8rxN/xKLUTlVXCNZmIQmBE0Ud+ACE8fOxXiUzTgTe9c3Y/5D5A811D61tQm4bH2lMYqRXP4W+xgcUW6VtffKCe3q7zmU+OQN87Mi89+EOqME8XlhzHYGO0W/ja0ZYHrsnDfauQjthBqyicHrHX680pYJU0ovpsRsFUjX8gOpd6jetYPcFylHmNNYPXkgISrqdLbjBCT7Uz9SyZZ7jrN4G6chec8ANvYnKd4VDs09cXc
+X-MS-Exchange-AntiSpam-MessageData: 321WkAqk8XNkss6YSG5o0GiCp1tHsfSTzT9mPPYcsakwN7fJ9Yi1RZJUVBJFGSLTpk70cwgp8tEDnKlFOM1BqQZQSU01oiQWBxQH5D3B95eIyubkF/PWdowxhDCU50t19vGuQkc/vuTQL46IGbP25/wGO3QEz46PN96EKkaxhp6v2P1BBrkX3/kwHwUMHH0PV2d5NZaRoHebZeDaZE6ItA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cc76f37-e918-47ac-288f-08d7c5beab23
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 13:18:20.7248
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8OJATtBygH+gYcDrZMYVFHUVRJ5eP/6D3fJUGWvSiuOtqej8ecLizU7MQRQG6fco
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1451
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add space around operators for improving the code
-readability.
-Reported by checkpatch.pl
+Am 11.03.20 um 04:43 schrieb Jason Ekstrand:
+> Explicit synchronization is the future.  At least, that seems to be what
+> most userspace APIs are agreeing on at this point.  However, most of our
+> Linux APIs (both userspace and kernel UAPI) are currently built around
+> implicit synchronization with dma-buf.  While work is ongoing to change
+> many of the userspace APIs and protocols to an explicit synchronization
+> model, switching over piecemeal is difficult due to the number of
+> potential components involved.  On the kernel side, many drivers use
+> dma-buf including GPU (3D/compute), display, v4l, and others.  In
+> userspace, we have X11, several Wayland compositors, 3D drivers, compute
+> drivers (OpenCL etc.), media encode/decode, and the list goes on.
+>
+> This patch provides a path forward by allowing userspace to manually
+> manage the fences attached to a dma-buf.  Alternatively, one can think
+> of this as making dma-buf's implicit synchronization simply a carrier
+> for an explicit fence.  This is accomplished by adding two IOCTLs to
+> dma-buf for importing and exporting a sync file to/from the dma-buf.
+> This way a userspace component which is uses explicit synchronization,
+> such as a Vulkan driver, can manually set the write fence on a buffer
+> before handing it off to an implicitly synchronized component such as a
+> Wayland compositor or video encoder.  In this way, each of the different
+> components can be upgraded to an explicit synchronization model one at a
+> time as long as the userspace pieces connecting them are aware of it and
+> import/export fences at the right times.
+>
+> There is a potential race condition with this API if userspace is not
+> careful.  A typical use case for implicit synchronization is to wait for
+> the dma-buf to be ready, use it, and then signal it for some other
+> component.  Because a sync_file cannot be created until it is guaranteed
+> to complete in finite time, userspace can only signal the dma-buf after
+> it has already submitted the work which uses it to the kernel and has
+> received a sync_file back.  There is no way to atomically submit a
+> wait-use-signal operation.  This is not, however, really a problem with
+> this API so much as it is a problem with explicit synchronization
+> itself.  The way this is typically handled is to have very explicit
+> ownership transfer points in the API or protocol which ensure that only
+> one component is using it at any given time.  Both X11 (via the PRESENT
+> extension) and Wayland provide such ownership transfer points via
+> explicit present and idle messages.
+>
+> The decision was intentionally made in this patch to make the import and
+> export operations IOCTLs on the dma-buf itself rather than as a DRM
+> IOCTL.  This makes it the import/export operation universal across all
+> components which use dma-buf including GPU, display, v4l, and others.
+> It also means that a userspace component can do the import/export
+> without access to the DRM fd which may be tricky to get in cases where
+> the client communicates with DRM via a userspace API such as OpenGL or
+> Vulkan.  At a future date we may choose to add direct import/export APIs
+> to components such as drm_syncobj to avoid allocating a file descriptor
+> and going through two ioctls.  However, that seems to be something of a
+> micro-optimization as import/export operations are likely to happen at a
+> rate of a few per frame of rendered or decoded video.
+>
+> v2 (Jason Ekstrand):
+>   - Use a wrapper dma_fence_array of all fences including the new one
+>     when importing an exclusive fence.
+>
+> v3 (Jason Ekstrand):
+>   - Lock around setting shared fences as well as exclusive
+>   - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
+>   - Initialize ret to 0 in dma_buf_wait_sync_file
+>
+> v4 (Jason Ekstrand):
+>   - Use the new dma_resv_get_singleton helper
+>
+> Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+> ---
+>   drivers/dma-buf/dma-buf.c    | 96 ++++++++++++++++++++++++++++++++++++
+>   include/uapi/linux/dma-buf.h | 13 ++++-
+>   2 files changed, 107 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index d4097856c86b..09973c689866 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/debugfs.h>
+>   #include <linux/module.h>
+>   #include <linux/seq_file.h>
+> +#include <linux/sync_file.h>
+>   #include <linux/poll.h>
+>   #include <linux/dma-resv.h>
+>   #include <linux/mm.h>
+> @@ -348,6 +349,95 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+>   	return ret;
+>   }
+>   
+> +static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
+> +				   const void __user *user_data)
+> +{
+> +	struct dma_buf_sync_file arg;
+> +	struct dma_fence *fence;
+> +	int ret = 0;
+> +
+> +	if (copy_from_user(&arg, user_data, sizeof(arg)))
+> +		return -EFAULT;
+> +
+> +	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
+> +		return -EINVAL;
+> +
+> +	fence = sync_file_get_fence(arg.fd);
+> +	if (!fence)
+> +		return -EINVAL;
+> +
+> +	dma_resv_lock(dmabuf->resv, NULL);
+> +
+> +	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
+> +		struct dma_fence *singleton = NULL;
+> +		ret = dma_resv_get_singleton(dmabuf->resv, fence, &singleton);
+> +		if (!ret && singleton)
+> +			dma_resv_add_excl_fence(dmabuf->resv, singleton);
+> +	} else {
+> +		dma_resv_add_shared_fence(dmabuf->resv, fence);
+> +	}
 
-git diff -w shows no difference.
-diff of the .o files before and after the changes shows no difference.
+You also need to create a singleton when adding a shared fences.
 
-Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
----
+The problem is that shared fences must always signal after exclusive 
+ones and you can't guarantee that for the fence you add here.
 
-shreeya@Shreeya-Patel:~git/kernels/staging$ git diff -w drivers/staging/rtl8188eu/core/
-shreeya@Shreeya-Patel:~git/kernels/staging$
+Regards,
+Christian.
 
-shreeya@Shreeya-Patel:~git/kernels/staging/drivers/staging/rtl8188eu/core$ diff rtw_mlme_old.o rtw_mlme.o
-shreeya@Shreeya-Patel:~git/kernels/staging/drivers/staging/rtl8188eu/core$
-
-Changes in v4
-  - Move important statements into the commit message.
-Changes in v3
-  - Make the diff output explanation more readable.
-
-Changes in v2
-  - Include the file name in Subject to make it more specific.
-  - Add the output of diff of the .o files before and after the changes
-to show no difference.
-  - Add the output of git diff -w to show no difference.
-
- drivers/staging/rtl8188eu/core/rtw_mlme.c | 40 +++++++++++------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-index 8da955e8343b..9de2d421f6b1 100644
---- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-@@ -149,7 +149,7 @@ static void _rtw_free_network(struct mlme_priv *pmlmepriv, struct wlan_network *
- 	    (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE)))
- 		lifetime = 1;
- 	if (!isfreeall) {
--		delta_time = (curr_time - pnetwork->last_scanned)/HZ;
-+		delta_time = (curr_time - pnetwork->last_scanned) / HZ;
- 		if (delta_time < lifetime)/*  unit:sec */
- 			return;
- 	}
-@@ -249,8 +249,8 @@ void rtw_generate_random_ibss(u8 *pibss)
- 	pibss[1] = 0x11;
- 	pibss[2] = 0x87;
- 	pibss[3] = (u8)(curtime & 0xff);/* p[0]; */
--	pibss[4] = (u8)((curtime>>8) & 0xff);/* p[1]; */
--	pibss[5] = (u8)((curtime>>16) & 0xff);/* p[2]; */
-+	pibss[4] = (u8)((curtime >> 8) & 0xff);/* p[1]; */
-+	pibss[5] = (u8)((curtime >> 16) & 0xff);/* p[2]; */
- }
- 
- u8 *rtw_get_capability_from_ie(u8 *ie)
-@@ -357,9 +357,9 @@ void update_network(struct wlan_bssid_ex *dst, struct wlan_bssid_ex *src,
- 			rssi_final = rssi_ori;
- 	} else {
- 		if (sq_smp != 101) { /* from the right channel */
--			ss_final = ((u32)(src->PhyInfo.SignalStrength)+(u32)(dst->PhyInfo.SignalStrength)*4)/5;
--			sq_final = ((u32)(src->PhyInfo.SignalQuality)+(u32)(dst->PhyInfo.SignalQuality)*4)/5;
--			rssi_final = (src->Rssi+dst->Rssi*4)/5;
-+			ss_final = ((u32)(src->PhyInfo.SignalStrength) + (u32)(dst->PhyInfo.SignalStrength) * 4) / 5;
-+			sq_final = ((u32)(src->PhyInfo.SignalQuality) + (u32)(dst->PhyInfo.SignalQuality) * 4) / 5;
-+			rssi_final = (src->Rssi + dst->Rssi * 4) / 5;
- 		} else {
- 			/* bss info not receiving from the right channel, use the original RX signal infos */
- 			ss_final = dst->PhyInfo.SignalStrength;
-@@ -510,7 +510,7 @@ static int rtw_is_desired_network(struct adapter *adapter, struct wlan_network *
- 	privacy = pnetwork->network.Privacy;
- 
- 	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
--		if (rtw_get_wps_ie(pnetwork->network.ies+_FIXED_IE_LENGTH_, pnetwork->network.ie_length-_FIXED_IE_LENGTH_, NULL, &wps_ielen))
-+		if (rtw_get_wps_ie(pnetwork->network.ies + _FIXED_IE_LENGTH_, pnetwork->network.ie_length - _FIXED_IE_LENGTH_, NULL, &wps_ielen))
- 			return true;
- 		else
- 			return false;
-@@ -925,7 +925,7 @@ static void rtw_joinbss_update_network(struct adapter *padapter, struct wlan_net
- 	switch (pnetwork->network.InfrastructureMode) {
- 	case Ndis802_11Infrastructure:
- 		if (pmlmepriv->fw_state & WIFI_UNDER_WPS)
--			pmlmepriv->fw_state = WIFI_STATION_STATE|WIFI_UNDER_WPS;
-+			pmlmepriv->fw_state = WIFI_STATION_STATE | WIFI_UNDER_WPS;
- 		else
- 			pmlmepriv->fw_state = WIFI_STATION_STATE;
- 		break;
-@@ -1097,14 +1097,14 @@ static u8 search_max_mac_id(struct adapter *padapter)
- #if defined(CONFIG_88EU_AP_MODE)
- 	if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
- 		for (aid = pstapriv->max_num_sta; aid > 0; aid--) {
--			if (pstapriv->sta_aid[aid-1])
-+			if (pstapriv->sta_aid[aid - 1])
- 				break;
- 		}
- 		mac_id = aid + 1;
- 	} else
- #endif
- 	{/* adhoc  id =  31~2 */
--		for (mac_id = NUM_STA-1; mac_id >= IBSS_START_MAC_ID; mac_id--) {
-+		for (mac_id = NUM_STA - 1; mac_id >= IBSS_START_MAC_ID; mac_id--) {
- 			if (pmlmeinfo->FW_sta_info[mac_id].status == 1)
- 				break;
- 		}
-@@ -1123,7 +1123,7 @@ void rtw_stassoc_hw_rpt(struct adapter *adapter, struct sta_info *psta)
- 
- 	macid = search_max_mac_id(adapter);
- 	rtw_hal_set_hwreg(adapter, HW_VAR_TX_RPT_MAX_MACID, (u8 *)&macid);
--	media_status = (psta->mac_id<<8)|1; /*   MACID|OPMODE:1 connect */
-+	media_status = (psta->mac_id << 8) | 1; /*   MACID|OPMODE:1 connect */
- 	rtw_hal_set_hwreg(adapter, HW_VAR_H2C_MEDIA_STATUS_RPT, (u8 *)&media_status);
- }
- 
-@@ -1213,7 +1213,7 @@ void rtw_stadel_event_callback(struct adapter *adapter, u8 *pbuf)
- 	if (mac_id >= 0) {
- 		u16 media_status;
- 
--		media_status = (mac_id<<8)|0; /*   MACID|OPMODE:0 means disconnect */
-+		media_status = (mac_id << 8) | 0; /*   MACID|OPMODE:0 means disconnect */
- 		/* for STA, AP, ADHOC mode, report disconnect stauts to FW */
- 		rtw_hal_set_hwreg(adapter, HW_VAR_H2C_MEDIA_STATUS_RPT, (u8 *)&media_status);
- 	}
-@@ -1640,7 +1640,7 @@ int rtw_restruct_wmm_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
- 	for (i = 12; i < in_len; i += (in_ie[i + 1] + 2) /* to the next IE element */) {
- 		ielength = initial_out_len;
- 
--		if (in_ie[i] == 0xDD && in_ie[i+2] == 0x00 && in_ie[i+3] == 0x50  && in_ie[i+4] == 0xF2 && in_ie[i+5] == 0x02 && i+5 < in_len) {
-+		if (in_ie[i] == 0xDD && in_ie[i + 2] == 0x00 && in_ie[i + 3] == 0x50  && in_ie[i + 4] == 0xF2 && in_ie[i + 5] == 0x02 && i + 5 < in_len) {
- 			/* WMM element ID and OUI */
- 			/* Append WMM IE to the last index of out_ie */
- 
-@@ -1734,13 +1734,13 @@ int rtw_restruct_sec_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
- 		authmode = _WPA2_IE_ID_;
- 
- 	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
--		memcpy(out_ie+ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
-+		memcpy(out_ie + ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
- 
- 		ielength += psecuritypriv->wps_ie_len;
- 	} else if ((authmode == _WPA_IE_ID_) || (authmode == _WPA2_IE_ID_)) {
- 		/* copy RSN or SSN */
--		memcpy(&out_ie[ielength], &psecuritypriv->supplicant_ie[0], psecuritypriv->supplicant_ie[1]+2);
--		ielength += psecuritypriv->supplicant_ie[1]+2;
-+		memcpy(&out_ie[ielength], &psecuritypriv->supplicant_ie[0], psecuritypriv->supplicant_ie[1] + 2);
-+		ielength += psecuritypriv->supplicant_ie[1] + 2;
- 		rtw_report_sec_ie(adapter, authmode, psecuritypriv->supplicant_ie);
- 	}
- 
-@@ -1865,7 +1865,7 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
- 
- 	phtpriv->ht_option = false;
- 
--	p = rtw_get_ie(in_ie+12, _HT_CAPABILITY_IE_, &ielen, in_len-12);
-+	p = rtw_get_ie(in_ie + 12, _HT_CAPABILITY_IE_, &ielen, in_len - 12);
- 
- 	if (p && ielen > 0) {
- 		struct ieee80211_ht_cap ht_cap;
-@@ -1904,16 +1904,16 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
- 		else
- 			ht_cap.ampdu_params_info |= IEEE80211_HT_CAP_AMPDU_DENSITY & 0x00;
- 
--		rtw_set_ie(out_ie+out_len, _HT_CAPABILITY_IE_,
-+		rtw_set_ie(out_ie + out_len, _HT_CAPABILITY_IE_,
- 			   sizeof(struct ieee80211_ht_cap),
- 			   (unsigned char *)&ht_cap, pout_len);
- 
- 		phtpriv->ht_option = true;
- 
--		p = rtw_get_ie(in_ie+12, _HT_ADD_INFO_IE_, &ielen, in_len-12);
-+		p = rtw_get_ie(in_ie + 12, _HT_ADD_INFO_IE_, &ielen, in_len - 12);
- 		if (p && (ielen == sizeof(struct ieee80211_ht_addt_info))) {
- 			out_len = *pout_len;
--			rtw_set_ie(out_ie+out_len, _HT_ADD_INFO_IE_, ielen, p+2, pout_len);
-+			rtw_set_ie(out_ie + out_len, _HT_ADD_INFO_IE_, ielen, p + 2, pout_len);
- 		}
- 	}
- 	return phtpriv->ht_option;
--- 
-2.17.1
+> +
+> +	dma_resv_unlock(dmabuf->resv);
+> +
+> +	dma_fence_put(fence);
+> +
+> +	return ret;
+> +}
+> +
+> +static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
+> +				     void __user *user_data)
+> +{
+> +	struct dma_buf_sync_file arg;
+> +	struct dma_fence *fence = NULL;
+> +	struct sync_file *sync_file;
+> +	int fd, ret;
+> +
+> +	if (copy_from_user(&arg, user_data, sizeof(arg)))
+> +		return -EFAULT;
+> +
+> +	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
+> +		return -EINVAL;
+> +
+> +	fd = get_unused_fd_flags(O_CLOEXEC);
+> +	if (fd < 0)
+> +		return fd;
+> +
+> +	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
+> +		/* We need to include both the exclusive fence and all of
+> +		 * the shared fences in our fence.
+> +		 */
+> +		ret = dma_resv_get_singleton(dmabuf->resv, NULL, &fence);
+> +		if (ret)
+> +			goto err_put_fd;
+> +	} else {
+> +		fence = dma_resv_get_excl_rcu(dmabuf->resv);
+> +	}
+> +
+> +	if (!fence)
+> +		fence = dma_fence_get_stub();
+> +
+> +	sync_file = sync_file_create(fence);
+> +
+> +	dma_fence_put(fence);
+> +
+> +	if (!sync_file) {
+> +		ret = -EINVAL;
+> +		goto err_put_fd;
+> +	}
+> +
+> +	fd_install(fd, sync_file->file);
+> +
+> +	arg.fd = fd;
+> +	if (copy_to_user(user_data, &arg, sizeof(arg)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +
+> +err_put_fd:
+> +	put_unused_fd(fd);
+> +	return ret;
+> +}
+> +
+>   static long dma_buf_ioctl(struct file *file,
+>   			  unsigned int cmd, unsigned long arg)
+>   {
+> @@ -390,6 +480,12 @@ static long dma_buf_ioctl(struct file *file,
+>   	case DMA_BUF_SET_NAME:
+>   		return dma_buf_set_name(dmabuf, (const char __user *)arg);
+>   
+> +	case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
+> +		return dma_buf_wait_sync_file(dmabuf, (const void __user *)arg);
+> +
+> +	case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
+> +		return dma_buf_signal_sync_file(dmabuf, (void __user *)arg);
+> +
+>   	default:
+>   		return -ENOTTY;
+>   	}
+> diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+> index dbc7092e04b5..86e07acca90c 100644
+> --- a/include/uapi/linux/dma-buf.h
+> +++ b/include/uapi/linux/dma-buf.h
+> @@ -37,8 +37,17 @@ struct dma_buf_sync {
+>   
+>   #define DMA_BUF_NAME_LEN	32
+>   
+> +struct dma_buf_sync_file {
+> +	__u32 flags;
+> +	__s32 fd;
+> +};
+> +
+> +#define DMA_BUF_SYNC_FILE_SYNC_WRITE	(1 << 0)
+> +
+>   #define DMA_BUF_BASE		'b'
+> -#define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
+> -#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
+> +#define DMA_BUF_IOCTL_SYNC	    _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
+> +#define DMA_BUF_SET_NAME	    _IOW(DMA_BUF_BASE, 1, const char *)
+> +#define DMA_BUF_IOCTL_WAIT_SYNC_FILE	_IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
+> +#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE	_IOWR(DMA_BUF_BASE, 3, struct dma_buf_sync)
+>   
+>   #endif
 
