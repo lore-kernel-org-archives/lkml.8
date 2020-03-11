@@ -2,97 +2,104 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DCEC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC44C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261002146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA1721D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583917978;
+	bh=JmnH83cEqMuYqwzSAJmmIggEZjH2zaw0Mir9SbgqzBg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YZWoLTi8T57EL2AoOIL5yDhDDAbB4bg5BLRf/4ES9FBdbe3WA9TH1q680PZGdJsUm
+	 4OrJne9oRWtYHowy0SACvrtgNp6AhGYQOSs/HI8txshmBeqH5bJvSbwlp1QU1+it3V
+	 YtGMgx0QA2tLaEevXS4xqueM6R5EXVDWb2TVOZ20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgCKJMw convert rfc822-to-8bit (ORCPT
+        id S1728909AbgCKJM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:12:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46735 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgCKJMw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:12:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n15so1507796wrw.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 02:12:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=DjVadGIIur79/OuZIKT94tQZE5zzLHXHVbjho/zrSHw=;
-        b=hpSr4oM+pdZbXPQuOFGeVbIYLembHKbDuBywdcC9W0Csv+yYQdcvGxx0Ojj2x4ffkq
-         +qH36o1p+6ofEtOxIbWjhyjiBGRgy1omL77oRt5ky7OkYaQJKkvj8XukUknXUXAPxcb+
-         nKFVlJJmQfZK7yoTCMg/eBcqAXWrDlGlGlc2mjSfCxuHVlwkSWf+agSE7k/buvRtHhHY
-         uBOPDA175fGPsO3UeCYOcjs2+Pu0am/N+Q0wlw1s+CdpcciGFYH0uHiareGVU3lC/2da
-         nTCbAnWYxkhE3kJdZIbrcDpU5oRxGropPeX8DA2AA2SI5p/fx5KfGyOhrHc5t43BQGv2
-         P9Bw==
-X-Gm-Message-State: ANhLgQ3QMoPSBcQRNOJPP7/oHqwoOFa4/Yr99X/HAfBQpyo5mUl30a2R
-        SolJBwDP35i7vB+oMr9twcB9Ew==
-X-Google-Smtp-Source: ADFU+vuDpI2JRPXpT7JNNMSexbsuj8A1c5B6CChe1t0n69G3u0BdAObvAUcr85rIrdmKlq5+/Fasfg==
-X-Received: by 2002:adf:ee48:: with SMTP id w8mr3259969wro.290.1583917970100;
-        Wed, 11 Mar 2020 02:12:50 -0700 (PDT)
-Received: from Google-Pixel-3a.fritz.box (ip5f5bf7ec.dynamic.kabel-deutschland.de. [95.91.247.236])
-        by smtp.gmail.com with ESMTPSA id 133sm8119781wmd.5.2020.03.11.02.12.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 02:12:49 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 10:12:48 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1583914756-45674-1-git-send-email-tangbin@cmss.chinamobile.com>
-References: <1583914756-45674-1-git-send-email-tangbin@cmss.chinamobile.com>
+        Wed, 11 Mar 2020 05:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbgCKJM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:12:57 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CB812146E;
+        Wed, 11 Mar 2020 09:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583917976;
+        bh=JmnH83cEqMuYqwzSAJmmIggEZjH2zaw0Mir9SbgqzBg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ILo3w++eSM5mDVtsHN7CfbOR+uFkOP8FGJV4g+jMwBHXf7Gp1Oq+92oifNxxhL+rA
+         yGwUU0UbGeQwBbvp1Q38b4ryrd9AdHkucGojc6tgmNRWfgs46M7A/Cyb3wJUGk6Z8Y
+         lVUKVDQ56EDE59d8xVIZCG7rSZjnK0cvMv158vw0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jBxQ6-00BrX3-KP; Wed, 11 Mar 2020 09:12:54 +0000
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH] pid:fix a return value in alloc_pid
-To:     tangbin <tangbin@cmss.chinamobile.com>
-CC:     oleg@redhat.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-Message-ID: <AB48A556-E570-42B7-A7C2-5CCEA7AD6696@ubuntu.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Mar 2020 09:12:54 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com
+Subject: Re: [RFC PATCH v1 0/3] arm64: tlb: add support for TTL field
+In-Reply-To: <20200311025309.1743-1-yezhenyu2@huawei.com>
+References: <20200311025309.1743-1-yezhenyu2@huawei.com>
+Message-ID: <247ad619edf17eb266f856d937dac826@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org, aneesh.kumar@linux.ibm.com, steven.price@arm.com, broonie@kernel.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com, prime.zeng@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 11, 2020 9:19:16 AM GMT+01:00, tangbin <tangbin@cmss.chinamobile.com> wrote:
->When I doing a make about linux-next in X86 right now,it prompts a 
->warning about "‘retval’ may be used uninitialized in this function
->[-Wmaybe-uninitialized]". So I found that undefined 'retval' initially
->in alloc_pid(),so the return ERR_PTR(retval) was an uncertain value.
->Kmem_cache_alloc() is for sapce,so it will return ERR_PTR(-ENOMEM) if 
->unsuccessful.
->
->Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
->---
-> kernel/pid.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/kernel/pid.c b/kernel/pid.c
->index ff6cd67..f214094 100644
->--- a/kernel/pid.c
->+++ b/kernel/pid.c
->@@ -177,7 +177,7 @@ struct pid *alloc_pid(struct pid_namespace *ns,
->pid_t *set_tid,
-> 
-> 	pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
-> 	if (!pid)
->-		return ERR_PTR(retval);
->+		return ERR_PTR(-ENOMEM);
-> 
-> 	tmp = ns;
-> 	pid->level = ns->level;
+Zhenyu,
 
-There's already a fixed version in my tree for this.
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=10dab84caf400f2f5f8b010ebb0c7c4272ec5093
+On 2020-03-11 02:53, Zhenyu Ye wrote:
+> ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
+> the level of translation table walk holding the leaf entry for the
+> address that is being invalidated. Hardware can use this information
+> to determine if there was a risk of splintering.
+> 
+> This set of patches adds TTL field to __TLBI_ADDR, and uses
+> Architecture-specific MM context to pass the TTL value to tlb 
+> interface.
+> 
+> The default value of TTL is 0, which will not have any impact on the
+> TLB maintenance instructions. The last patch trys to use TTL field in
+> some obviously tlb-flush interface.
 
-Thanks!
-Christian
+I have already posted some support for ARMv8.4-TTL as part of my NV 
+series [1],
+patches 62, 67, 68 and 69. This only deals with Stage-2 translation so 
+far.
+If you intend to add Stage-1, please build on top of what I have already 
+posted
+(I can extract the patches on a separate branch if you want).
+
+Thanks,
+
+         M.
+
+[1] 
+https://lore.kernel.org/linux-arm-kernel/20200211174938.27809-1-maz@kernel.org/
+-- 
+Jazz is not dead. It just smells funny...
