@@ -2,411 +2,253 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7869C4CC9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A721EC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2769120759
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C7520750
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gTsQj4tP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL8dp+f8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgCKRnd (ORCPT
+        id S1730630AbgCKRni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:43:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53106 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730446AbgCKRnc (ORCPT
+        Wed, 11 Mar 2020 13:43:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46681 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730258AbgCKRnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:43:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583948611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CCUUy2vgM8I5wGiA0yY8hUokKO4zUxePsoBKPrcG2nM=;
-        b=gTsQj4tP1t24Krc8gKq42yc9AupfScpUPBbbloYjyXKQ0vsqRYups7DFl4y8adzYdynthz
-        YnSeiZ207otDIEDsDecq7yIvY58gSJHTs4z0GXB/9eUni8+IeMjzr0HrWWrXmS3EoP1T7t
-        U41+6QXGKnhPuEFhLxbroQeAtPjaq9Q=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-k1vvl87TOsqMKH1RqA9vvA-1; Wed, 11 Mar 2020 13:43:27 -0400
-X-MC-Unique: k1vvl87TOsqMKH1RqA9vvA-1
-Received: by mail-qv1-f70.google.com with SMTP id v19so1828545qvk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:43:27 -0700 (PDT)
+        Wed, 11 Mar 2020 13:43:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so3725331wrw.13;
+        Wed, 11 Mar 2020 10:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1pJAR/sckcdLGJSwTx5sy+rsfwGpz9fPR5d1aK/vSAI=;
+        b=IL8dp+f8Ls3O4ZBKg0S7q07Ne+0KPwrBNYU44a8fqCPSWcItDMq7pjC/Pr4uqGqNmK
+         DHpK2vhTYvwwq0Lrf7gqR71/s3LT/NYqhabkqVpXujHAJfueU6HTfxAimK9nAYUlLRd7
+         lt3Gv4w90ahkiZKxkl7iR1T+1EJ076xesoMRWnNEAvwJEsgQzPHtq9PRL8W8ekuVzTf7
+         ioIU13aDkkHHPljPEklJFzPk4+p11P6iLhX8yW4vTwAqf94uLiO0QhJgwA/wvIMX4R4a
+         NYuws1oJ3ECaYpHh6LOWP8PdZ8f0hxSndx8shMo16QBEBlt9zWHv5E1zISbAf9wfK8VC
+         eliA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CCUUy2vgM8I5wGiA0yY8hUokKO4zUxePsoBKPrcG2nM=;
-        b=XU5mcg2d4pvl83CBmLBW6OBlXdrlMA9iiMuEUqEmZPBL1ERqNeqYfkBr2HFXE1Te2t
-         leM1+GkmaF4NPTxB4VW7y6xvWGOyj7Zt/jdNr5nWcbQC7uvzK+9hD+IgwH38k1S6PgyQ
-         a1hua03uEOY1CUpD6wCvRXy5KTXaMHJUv5qM8KbC7r9pE6IQ2iUxKYGHWzunRpUd99fh
-         M8UgQ6sQIBgF/G8qkDfGv5cQi3Ck9sjbcjppRsy5oItJ8Uo2ewlJZ5IWEUjwjOyrAqA+
-         QFAcmqLEbAWN/YLenYAc4m65UbQceu1Zh3pMXKrJFjF+qOad+ISpZpfvLKjm0HkKm2UK
-         SmyQ==
-X-Gm-Message-State: ANhLgQ3ps8gocTmOyVQYBqYjsH+qON/NXTWrV2FjYyVOtDZ5kNqDIV46
-        GGXDnV3ajU730/3F7BK7/Zan4vl8URgNoUDgURy8sNmTdSgpTXnttwLAleiDT+oUSgYTp96sk99
-        1LMLwIi+Bnh287uMd7UMHLzzx
-X-Received: by 2002:a37:5943:: with SMTP id n64mr3695323qkb.411.1583948606718;
-        Wed, 11 Mar 2020 10:43:26 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtvfBwFqzHkHeo22g/I9H4RKiuHy/xFt5VNtWuFfZznD36SG8Ns6bcBrkPnqGIs+K4WJQaGlA==
-X-Received: by 2002:a37:5943:: with SMTP id n64mr3695294qkb.411.1583948606308;
-        Wed, 11 Mar 2020 10:43:26 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id 82sm9584972qkd.62.2020.03.11.10.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 10:43:25 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 13:43:24 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v6 10/14] KVM: selftests: Use a single binary for
- dirty/clear log test
-Message-ID: <20200311174324.GH479302@xz-x1>
-References: <20200309214424.330363-1-peterx@redhat.com>
- <20200309222519.345601-1-peterx@redhat.com>
- <20200310081002.unxq6kwlevmr6m3b@kamzik.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200310081002.unxq6kwlevmr6m3b@kamzik.brq.redhat.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1pJAR/sckcdLGJSwTx5sy+rsfwGpz9fPR5d1aK/vSAI=;
+        b=slWiPuWY4OjCvR1JF4hoQl3X86WSwW8hLBJufizXPHB4sdLnuBRCJNgnLAv7jpoghN
+         gI2WBhQwD41icBXjIuP615qUxpW2GHwgMQyoRLFR668Q3sckKu6CnfwxvOca/K/29Zfi
+         S+AR56C6dTajg1Yo4rLPuKgMAesiguH45DHPuVIN5RkQ0Knt8VSbYUetsiYx2iYF+R9U
+         2CMey7VS7Jr+YqeKxlqkbG7AnFtLf/NlKRIurQTtBOi71iZUta4VHlm9zQ4ThiCvXWxZ
+         a2nhdmEQy93mnQdnd5yTXEaQaTv/kVlPIFiSREH4GT21q5IrMqOfrPMeYz3HYeHquX0Q
+         btIg==
+X-Gm-Message-State: ANhLgQ1IXfhPBEWE9uUcWWqJZeuDwfV4JRt0LgL6WGH1PzbiFgbPn6xv
+        fQ9sFuY49Yit3ReFOoPcf/NfBAv4
+X-Google-Smtp-Source: ADFU+vvKDdOtWWEdNwVAEQZQ9mrYzweIQAoDItXSKaFgMXGnDq8K7Z+Mo7oErH9P/yJc80PGZda9wA==
+X-Received: by 2002:a5d:6544:: with SMTP id z4mr5535066wrv.298.1583948610652;
+        Wed, 11 Mar 2020 10:43:30 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id d1sm8933166wrw.52.2020.03.11.10.43.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Mar 2020 10:43:29 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] dt-bindings: sound: convert rockchip i2s bindings to yaml
+Date:   Wed, 11 Mar 2020 18:43:21 +0100
+Message-Id: <20200311174322.23813-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 09:10:02AM +0100, Andrew Jones wrote:
-> On Mon, Mar 09, 2020 at 06:25:19PM -0400, Peter Xu wrote:
-> > Remove the clear_dirty_log test, instead merge it into the existing
-> > dirty_log_test.  It should be cleaner to use this single binary to do
-> > both tests, also it's a preparation for the upcoming dirty ring test.
-> > 
-> > The default behavior will run all the modes in sequence.
-> > 
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  tools/testing/selftests/kvm/Makefile          |   2 -
-> >  .../selftests/kvm/clear_dirty_log_test.c      |   2 -
-> >  tools/testing/selftests/kvm/dirty_log_test.c  | 169 +++++++++++++++---
-> >  3 files changed, 146 insertions(+), 27 deletions(-)
-> >  delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
-> > 
-> > diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> > index d91c53b726e6..941bfcd48eaa 100644
-> > --- a/tools/testing/selftests/kvm/Makefile
-> > +++ b/tools/testing/selftests/kvm/Makefile
-> > @@ -27,11 +27,9 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
-> >  TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
-> >  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
-> >  TEST_GEN_PROGS_x86_64 += x86_64/svm_vmcall_test
-> > -TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
-> >  TEST_GEN_PROGS_x86_64 += dirty_log_test
-> >  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
-> >  
-> > -TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
-> >  TEST_GEN_PROGS_aarch64 += dirty_log_test
-> >  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
-> >  
-> > diff --git a/tools/testing/selftests/kvm/clear_dirty_log_test.c b/tools/testing/selftests/kvm/clear_dirty_log_test.c
-> > deleted file mode 100644
-> > index 749336937d37..000000000000
-> > --- a/tools/testing/selftests/kvm/clear_dirty_log_test.c
-> > +++ /dev/null
-> > @@ -1,2 +0,0 @@
-> > -#define USE_CLEAR_DIRTY_LOG
-> > -#include "dirty_log_test.c"
-> > diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> > index 3c0ffd34b3b0..642886394e34 100644
-> > --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> > +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> > @@ -128,6 +128,73 @@ static uint64_t host_dirty_count;
-> >  static uint64_t host_clear_count;
-> >  static uint64_t host_track_next_count;
-> >  
-> > +enum log_mode_t {
-> > +	/* Only use KVM_GET_DIRTY_LOG for logging */
-> > +	LOG_MODE_DIRTY_LOG = 0,
-> > +
-> > +	/* Use both KVM_[GET|CLEAR]_DIRTY_LOG for logging */
-> > +	LOG_MODE_CLEAR_LOG = 1,
-> > +
-> > +	LOG_MODE_NUM,
-> > +
-> > +	/* Run all supported modes */
-> > +	LOG_MODE_ALL = LOG_MODE_NUM,
-> > +};
-> > +
-> > +/* Mode of logging to test.  Default is to run all supported modes */
-> > +static enum log_mode_t host_log_mode_option = LOG_MODE_ALL;
-> > +/* Logging mode for current run */
-> > +static enum log_mode_t host_log_mode;
-> > +
-> > +static bool clear_log_supported(void)
-> > +{
-> > +	return kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
-> > +}
-> > +
-> > +static void clear_log_create_vm_done(struct kvm_vm *vm)
-> > +{
-> > +	struct kvm_enable_cap cap = {};
-> > +
-> > +	cap.cap = KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2;
-> > +	cap.args[0] = 1;
-> > +	vm_enable_cap(vm, &cap);
-> > +}
-> > +
-> > +static void dirty_log_collect_dirty_pages(struct kvm_vm *vm, int slot,
-> > +					  void *bitmap, uint32_t num_pages)
-> > +{
-> > +	kvm_vm_get_dirty_log(vm, slot, bitmap);
-> > +}
-> > +
-> > +static void clear_log_collect_dirty_pages(struct kvm_vm *vm, int slot,
-> > +					  void *bitmap, uint32_t num_pages)
-> > +{
-> > +	kvm_vm_get_dirty_log(vm, slot, bitmap);
-> > +	kvm_vm_clear_dirty_log(vm, slot, bitmap, 0, num_pages);
-> > +}
-> > +
-> > +struct log_mode {
-> > +	const char *name;
-> > +	/* Return true if this mode is supported, otherwise false */
-> > +	bool (*supported)(void);
-> > +	/* Hook when the vm creation is done (before vcpu creation) */
-> > +	void (*create_vm_done)(struct kvm_vm *vm);
-> > +	/* Hook to collect the dirty pages into the bitmap provided */
-> > +	void (*collect_dirty_pages) (struct kvm_vm *vm, int slot,
-> > +				     void *bitmap, uint32_t num_pages);
-> > +} log_modes[LOG_MODE_NUM] = {
-> > +	{
-> > +		.name = "dirty-log",
-> > +		.collect_dirty_pages = dirty_log_collect_dirty_pages,
-> > +	},
-> > +	{
-> > +		.name = "clear-log",
-> > +		.supported = clear_log_supported,
-> > +		.create_vm_done = clear_log_create_vm_done,
-> > +		.collect_dirty_pages = clear_log_collect_dirty_pages,
-> > +	},
-> > +};
-> > +
-> >  /*
-> >   * We use this bitmap to track some pages that should have its dirty
-> >   * bit set in the _next_ iteration.  For example, if we detected the
-> > @@ -137,6 +204,43 @@ static uint64_t host_track_next_count;
-> >   */
-> >  static unsigned long *host_bmap_track;
-> >  
-> > +static void log_modes_dump(void)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < LOG_MODE_NUM; i++)
-> > +		printf("%s, ", log_modes[i].name);
-> > +	puts("\b\b  \b\b");
-> 
-> This will be ugly when the output is redirected to a file.
-> How about just
-> 
-> printf("%s", log_modes[0].name);
-> for (i = 1; i < LOG_MODE_NUM; i++)
->   printf(", %s", log_modes[i].name);
-> printf("\n");
+Current dts files with 'i2s' nodes are manually verified.
+In order to automate this process rockchip-i2s.txt
+has to be converted to yaml.
 
-Will do.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |  49 ----------
+ .../devicetree/bindings/sound/rockchip-i2s.yaml    | 106 +++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
 
-> 
-> > +}
-> > +
-> > +static bool log_mode_supported(void)
-> > +{
-> > +	struct log_mode *mode = &log_modes[host_log_mode];
-> > +
-> > +	if (mode->supported)
-> > +		return mode->supported();
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +static void log_mode_create_vm_done(struct kvm_vm *vm)
-> > +{
-> > +	struct log_mode *mode = &log_modes[host_log_mode];
-> > +
-> > +	if (mode->create_vm_done)
-> > +		mode->create_vm_done(vm);
-> > +}
-> > +
-> > +static void log_mode_collect_dirty_pages(struct kvm_vm *vm, int slot,
-> > +					 void *bitmap, uint32_t num_pages)
-> > +{
-> > +	struct log_mode *mode = &log_modes[host_log_mode];
-> > +
-> > +	TEST_ASSERT(mode->collect_dirty_pages != NULL,
-> > +		    "collect_dirty_pages() is required for any log mode!");
-> > +	mode->collect_dirty_pages(vm, slot, bitmap, num_pages);
-> > +}
-> > +
-> >  static void generate_random_array(uint64_t *guest_array, uint64_t size)
-> >  {
-> >  	uint64_t i;
-> > @@ -257,6 +361,7 @@ static struct kvm_vm *create_vm(enum vm_guest_mode mode, uint32_t vcpuid,
-> >  #ifdef __x86_64__
-> >  	vm_create_irqchip(vm);
-> >  #endif
-> > +	log_mode_create_vm_done(vm);
-> >  	vm_vcpu_add_default(vm, vcpuid, guest_code);
-> >  	return vm;
-> >  }
-> > @@ -271,6 +376,12 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> >  	struct kvm_vm *vm;
-> >  	unsigned long *bmap;
-> >  
-> > +	if (!log_mode_supported()) {
-> > +		fprintf(stderr, "Log mode '%s' not supported, skip\n",
-> > +			log_modes[host_log_mode].name);
-> 
-> I think kvm selftests needs a skip_test() function that outputs a more
-> consistent test skip message. It seems we mostly do
-
-Yep, I can introduce one.
-
-> 
-> fprintf(stderr, "%s, skipping test\n", custom_message);
-> 
-> but here we have ', skip'. Also, I see a few places were we output
-> skipping to stderr and others to stdout. I think I like stdout better.
-
-Sure.
-
-> 
-> > +		return;
-> > +	}
-> > +
-> >  	/*
-> >  	 * We reserve page table for 2 times of extra dirty mem which
-> >  	 * will definitely cover the original (1G+) test range.  Here
-> > @@ -316,14 +427,6 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> >  	bmap = bitmap_alloc(host_num_pages);
-> >  	host_bmap_track = bitmap_alloc(host_num_pages);
-> >  
-> > -#ifdef USE_CLEAR_DIRTY_LOG
-> > -	struct kvm_enable_cap cap = {};
-> > -
-> > -	cap.cap = KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2;
-> > -	cap.args[0] = 1;
-> > -	vm_enable_cap(vm, &cap);
-> > -#endif
-> > -
-> >  	/* Add an extra memory slot for testing dirty logging */
-> >  	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-> >  				    guest_test_phys_mem,
-> > @@ -364,11 +467,8 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> >  	while (iteration < iterations) {
-> >  		/* Give the vcpu thread some time to dirty some pages */
-> >  		usleep(interval * 1000);
-> > -		kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
-> > -#ifdef USE_CLEAR_DIRTY_LOG
-> > -		kvm_vm_clear_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap, 0,
-> > -				       host_num_pages);
-> > -#endif
-> > +		log_mode_collect_dirty_pages(vm, TEST_MEM_SLOT_INDEX,
-> > +					     bmap, host_num_pages);
-> >  		vm_dirty_log_verify(bmap);
-> >  		iteration++;
-> >  		sync_global_to_guest(vm, iteration);
-> > @@ -413,6 +513,9 @@ static void help(char *name)
-> >  	       TEST_HOST_LOOP_INTERVAL);
-> >  	printf(" -p: specify guest physical test memory offset\n"
-> >  	       "     Warning: a low offset can conflict with the loaded test code.\n");
-> > +	printf(" -M: specify the host logging mode "
-> > +	       "(default: run all log modes).  Supported modes: \n\t");
-> > +	log_modes_dump();
-> >  	printf(" -m: specify the guest mode ID to test "
-> >  	       "(default: test all supported modes)\n"
-> >  	       "     This option may be used multiple times.\n"
-> > @@ -432,18 +535,11 @@ int main(int argc, char *argv[])
-> >  	bool mode_selected = false;
-> >  	uint64_t phys_offset = 0;
-> >  	unsigned int mode;
-> > -	int opt, i;
-> > +	int opt, i, j;
-> >  #ifdef __aarch64__
-> >  	unsigned int host_ipa_limit;
-> >  #endif
-> >  
-> > -#ifdef USE_CLEAR_DIRTY_LOG
-> > -	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
-> > -		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, skipping tests\n");
-> > -		exit(KSFT_SKIP);
-> > -	}
-> > -#endif
-> > -
-> >  #ifdef __x86_64__
-> >  	vm_guest_mode_params_init(VM_MODE_PXXV48_4K, true, true);
-> >  #endif
-> > @@ -463,7 +559,7 @@ int main(int argc, char *argv[])
-> >  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-> >  #endif
-> >  
-> > -	while ((opt = getopt(argc, argv, "hi:I:p:m:")) != -1) {
-> > +	while ((opt = getopt(argc, argv, "hi:I:p:m:M:")) != -1) {
-> >  		switch (opt) {
-> >  		case 'i':
-> >  			iterations = strtol(optarg, NULL, 10);
-> > @@ -485,6 +581,22 @@ int main(int argc, char *argv[])
-> >  				    "Guest mode ID %d too big", mode);
-> >  			vm_guest_mode_params[mode].enabled = true;
-> >  			break;
-> > +		case 'M':
-> 
-> Can also add
-> 
-> if (!strcmp(optarg, "all"))
->   host_log_mode_option = LOG_MODE_ALL;
-
-Sure.
-
-> 
-> > +			for (i = 0; i < LOG_MODE_NUM; i++) {
-> > +				if (!strcmp(optarg, log_modes[i].name)) {
-> > +					DEBUG("Setting log mode to: '%s'\n",
-> > +					      optarg);
-> 
-> Basing this on kvm/queue won't work as DEBUG() no longer exists. This
-> looks like a pr_info().
-
-I'll rebase to kvm/queue and see...
-
-> 
-> > +					host_log_mode_option = i;
-> > +					break;
-> > +				}
-> > +			}
-> > +			if (i == LOG_MODE_NUM) {
-> > +				printf("Log mode '%s' is invalid.  "
-> > +				       "Please choose from: ", optarg);
-> > +				log_modes_dump();
-> > +				exit(-1);
-> 
-> Exit code of 255? Probably just want exit(1);
-
-Sure.  Thanks!
-
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+deleted file mode 100644
+index 54aefab71..000000000
+--- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-* Rockchip I2S controller
+-
+-The I2S bus (Inter-IC sound bus) is a serial link for digital
+-audio data transfer between devices in the system.
+-
+-Required properties:
+-
+-- compatible: should be one of the following:
+-   - "rockchip,rk3066-i2s": for rk3066
+-   - "rockchip,px30-i2s", "rockchip,rk3066-i2s": for px30
+-   - "rockchip,rk3036-i2s", "rockchip,rk3066-i2s": for rk3036
+-   - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
+-   - "rockchip,rk3228-i2s", "rockchip,rk3066-i2s": for rk3228
+-   - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
+-   - "rockchip,rk3328-i2s", "rockchip,rk3066-i2s": for rk3328
+-   - "rockchip,rk3366-i2s", "rockchip,rk3066-i2s": for rk3366
+-   - "rockchip,rk3368-i2s", "rockchip,rk3066-i2s": for rk3368
+-   - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- interrupts: should contain the I2S interrupt.
+-- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+-	Documentation/devicetree/bindings/dma/dma.txt
+-- dma-names: should include "tx" and "rx".
+-- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
+-- clock-names: should contain the following:
+-   - "i2s_hclk": clock for I2S BUS
+-   - "i2s_clk" : clock for I2S controller
+-- rockchip,playback-channels: max playback channels, if not set, 8 channels default.
+-- rockchip,capture-channels: max capture channels, if not set, 2 channels default.
+-
+-Required properties for controller which support multi channels
+-playback/capture:
+-
+-- rockchip,grf: the phandle of the syscon node for GRF register.
+-
+-Example for rk3288 I2S controller:
+-
+-i2s@ff890000 {
+-	compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
+-	reg = <0xff890000 0x10000>;
+-	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+-	dmas = <&pdma1 0>, <&pdma1 1>;
+-	dma-names = "tx", "rx";
+-	clock-names = "i2s_hclk", "i2s_clk";
+-	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
+-	rockchip,playback-channels = <8>;
+-	rockchip,capture-channels = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
+new file mode 100644
+index 000000000..eff06b4b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/rockchip-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip I2S controller
++
++description:
++  The I2S bus (Inter-IC sound bus) is a serial link for digital
++  audio data transfer between devices in the system.
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rk3066-i2s
++      - items:
++          - enum:
++            - rockchip,px30-i2s
++            - rockchip,rk3036-i2s
++            - rockchip,rk3188-i2s
++            - rockchip,rk3228-i2s
++            - rockchip,rk3288-i2s
++            - rockchip,rk3328-i2s
++            - rockchip,rk3366-i2s
++            - rockchip,rk3368-i2s
++            - rockchip,rk3399-i2s
++          - const: rockchip,rk3066-i2s
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: clock for I2S controller
++      - description: clock for I2S BUS
++
++  clock-names:
++    items:
++      - const: i2s_clk
++      - const: i2s_hclk
++
++  dmas:
++    items:
++      - description: TX DMA Channel
++      - description: RX DMA Channel
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++
++  rockchip,capture-channels:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    default: 2
++    description:
++      Max capture channels, if not set, 2 channels default.
++
++  rockchip,playback-channels:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    default: 8
++    description:
++      Max playback channels, if not set, 8 channels default.
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      The phandle of the syscon node for the GRF register.
++      Required property for controllers which support multi channel
++      playback/capture.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3288-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2s@ff890000 {
++      compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
++      reg = <0xff890000 0x10000>;
++      interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru SCLK_I2S0>, <&cru HCLK_I2S0>;
++      clock-names = "i2s_clk", "i2s_hclk";
++      dmas = <&pdma1 0>, <&pdma1 1>;
++      dma-names = "tx", "rx";
++      rockchip,capture-channels = <2>;
++      rockchip,playback-channels = <8>;
++    };
 -- 
-Peter Xu
+2.11.0
 
