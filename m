@@ -2,96 +2,88 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3865C4CC9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F823C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D15520746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IXFxVKjO"
+	by mail.kernel.org (Postfix) with ESMTP id E108020746
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583947087;
+	bh=kSRd2vWUlnNIgg7VJGv6T4EyBaZG9+3GbIsDwtJPOLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eNPY3IckbziJ0JP/AUIX7wyI1kHR2UMvXxn9N1zOcBLEJc/KnjvBhK61TcDRUHlWl
+	 D6CjC8vZxehpXpykjK1QeiPOTZYKcRb5d9+MGjkGhVYbyEq++P8es7ruB71SsHP8cF
+	 utp4hmolOjrSgvqAkJik6/Dl5qMD0mey1KfvY074=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgCKRQu (ORCPT
+        id S1730430AbgCKRSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:16:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24700 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730408AbgCKRQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:16:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583947007;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wdADVxXhJgEXL3ktYCtYRoI/HrQwnEtYWZwwV0awFRY=;
-        b=IXFxVKjOXlUnAhcnDQLWfZ6EVsO6XGNnUkVsigEgdS4JOPNYGKXLHDRz3w93q026dvw/9A
-        xB1Xg6qEqj7XW4G5arb8TtWMMPEgLNUbDdpNkp305XvsKlts+w2Is/CJzd7JqzEovC8u/q
-        Sn3FsYaWennIy4pOSr1yYq4zoNAWnXw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-TQMyPHx5MzGwUywT1SRRIQ-1; Wed, 11 Mar 2020 13:16:44 -0400
-X-MC-Unique: TQMyPHx5MzGwUywT1SRRIQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 11 Mar 2020 13:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730059AbgCKRSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:18:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7271C800EBC;
-        Wed, 11 Mar 2020 17:16:40 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-116-132.ams2.redhat.com [10.36.116.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9444860BEE;
-        Wed, 11 Mar 2020 17:16:38 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 10/10] MAINTAINERS: Add myself as virtio-mem maintainer
-Date:   Wed, 11 Mar 2020 18:14:22 +0100
-Message-Id: <20200311171422.10484-11-david@redhat.com>
-In-Reply-To: <20200311171422.10484-1-david@redhat.com>
-References: <20200311171422.10484-1-david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AB58220736;
+        Wed, 11 Mar 2020 17:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583947085;
+        bh=kSRd2vWUlnNIgg7VJGv6T4EyBaZG9+3GbIsDwtJPOLw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XYKE+mrP7iqEs6IES9OU+6rgpsZQLgvsE9pMapPflmYEkyJlu5B/q4lmRuaHdzrSN
+         QW0bR/ChigYgeV+OEjJikRzsPQeWiozwOykBkHi2JNMAeqM55nPdb5FZpuQYtn5eJE
+         OYEEDpNCabuyYlp2uRw/fDRfmA9He3pw7ky+tx5s=
+Date:   Wed, 11 Mar 2020 18:18:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     torvalds@linux-foundation.org, aros@gmx.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] device core: fix dma_mask handling in
+ platform_device_register_full
+Message-ID: <20200311171802.GA3952198@kroah.com>
+References: <20200311160710.376090-1-hch@lst.de>
+ <20200311161423.GA3941932@kroah.com>
+ <20200311161551.GA24878@lst.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311161551.GA24878@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's make sure patches/bug reports find the right person.
+On Wed, Mar 11, 2020 at 05:15:51PM +0100, Christoph Hellwig wrote:
+> On Wed, Mar 11, 2020 at 05:14:23PM +0100, Greg KH wrote:
+> > On Wed, Mar 11, 2020 at 05:07:10PM +0100, Christoph Hellwig wrote:
+> > > Ever since the generic platform device code started allocating DMA masks
+> > > itself the code to allocate and leak a private DMA mask in
+> > > platform_device_register_full has been superflous.  More so the fact that
+> > > it unconditionally frees the DMA mask allocation in the failure path
+> > > can lead to slab corruption if the function fails later on for a device
+> > > where it didn't allocate the mask.  Just remove the offending code.
+> > > 
+> > > Fixes: cdfee5623290 ("driver core: initialize a default DMA mask for platform device")
+> > > Reported-by: Artem S. Tashkinov <aros@gmx.com>
+> > > Tested-by: Artem S. Tashkinov <aros@gmx.com>
+> > 
+> > No s-o-b from you?  :(
+> > 
+> > I can take this, or Linus, you can take this now if you want to as well:
+> 
+> Sorry, here it is:
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Is this still needed with the patch that Linus just committed to his
+tree?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f6dcd1233935..ee0e7cbca5c6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17937,6 +17937,13 @@ S:	Maintained
- F:	drivers/iommu/virtio-iommu.c
- F:	include/uapi/linux/virtio_iommu.h
-=20
-+VIRTIO MEM DRIVER
-+M:	David Hildenbrand <david@redhat.com>
-+L:	virtualization@lists.linux-foundation.org
-+S:	Maintained
-+F:	drivers/virtio/virtio_mem.c
-+F:	include/uapi/linux/virtio_mem.h
-+
- VIRTUAL BOX GUEST DEVICE DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- M:	Arnd Bergmann <arnd@arndb.de>
---=20
-2.24.1
+thanks,
 
+greg k-h
