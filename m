@@ -2,97 +2,73 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5607DC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C71CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A8A20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134452146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583919008;
+	bh=2FUHCqW2t4fYOxAPSeOyaauGmNpMQoDtDDJi5ocXgU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0RMBv5GItqHdmi0lJY/0mvqUYTArmJlX29iOZm2IHKAVIrw11zCg100v5W4sPqtUY
+	 EXWKmZPEeieF2OHUDaIWN5dVOA31WA+L0O7MxWBVLrHFCZ8v9KlGKAFdqqPkxj3vgi
+	 eukvuWGjsV7LXHV+QGaacNGLByyJpU5JJ2REDVY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgCKJ3e (ORCPT
+        id S1728886AbgCKJaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:29:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58292 "EHLO mx2.suse.de"
+        Wed, 11 Mar 2020 05:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgCKJ3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:29:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 256BEAB7F;
-        Wed, 11 Mar 2020 09:29:32 +0000 (UTC)
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: serial: pch_uart: Use scnprintf() for avoiding potential buffer overflow
-Date:   Wed, 11 Mar 2020 10:29:30 +0100
-Message-Id: <20200311092930.24433-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.16.4
+        id S1728349AbgCKJaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:30:07 -0400
+Received: from localhost (unknown [106.201.105.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB7CE20828;
+        Wed, 11 Mar 2020 09:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583919006;
+        bh=2FUHCqW2t4fYOxAPSeOyaauGmNpMQoDtDDJi5ocXgU8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S2gvekh43x5kX8cOIsE8hTMTtUNMSUEYAjd/5vEWZiw0IzTzEKz+h1zaKPU3znKo5
+         DGLJC755JpM5vSrIszko6IYhHqQ8w4CKBUAcSTYMPpvbkqGZCfyKapivgGRG2Vaoim
+         f1npNR9h9/yxdtE7FW923AhUYRDXBXi+YcK2Uc9o=
+Date:   Wed, 11 Mar 2020 15:00:02 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: rectify the INTEL IADX DRIVER entry
+Message-ID: <20200311093002.GN4885@vkoul-mobl>
+References: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since snprintf() returns the would-be-output size instead of the
-actual output size, the succeeding calls may go beyond the given
-buffer limit.  Fix it by replacing with scnprintf().
+On 07-03-20, 21:57, Lukas Bulwahn wrote:
+> Commit bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
+> accelerators") added the INTEL IADX DRIVER entry in MAINTAINERS, which
+> mentions include/linux/idxd.h as file entry. However, this header file was
+> not added in this commit, nor in any later one.
+> 
+> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
+> 
+>   warning: no file matches F: include/linux/idxd.h
+> 
+> Drop the file entry to the non-existing file in INTEL IADX DRIVER now.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/tty/serial/pch_uart.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Applied, thanks
 
-diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
-index 0a96217dba67..40fa7a27722d 100644
---- a/drivers/tty/serial/pch_uart.c
-+++ b/drivers/tty/serial/pch_uart.c
-@@ -310,32 +310,32 @@ static ssize_t port_show_regs(struct file *file, char __user *user_buf,
- 	if (!buf)
- 		return 0;
- 
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"PCH EG20T port[%d] regs:\n", priv->port.line);
- 
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"=================================\n");
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"IER: \t0x%02x\n", ioread8(priv->membase + UART_IER));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"IIR: \t0x%02x\n", ioread8(priv->membase + UART_IIR));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"LCR: \t0x%02x\n", ioread8(priv->membase + UART_LCR));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"MCR: \t0x%02x\n", ioread8(priv->membase + UART_MCR));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"LSR: \t0x%02x\n", ioread8(priv->membase + UART_LSR));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"MSR: \t0x%02x\n", ioread8(priv->membase + UART_MSR));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"BRCSR: \t0x%02x\n",
- 			ioread8(priv->membase + PCH_UART_BRCSR));
- 
- 	lcr = ioread8(priv->membase + UART_LCR);
- 	iowrite8(PCH_UART_LCR_DLAB, priv->membase + UART_LCR);
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"DLL: \t0x%02x\n", ioread8(priv->membase + UART_DLL));
--	len += snprintf(buf + len, PCH_REGS_BUFSIZE - len,
-+	len += scnprintf(buf + len, PCH_REGS_BUFSIZE - len,
- 			"DLM: \t0x%02x\n", ioread8(priv->membase + UART_DLM));
- 	iowrite8(lcr, priv->membase + UART_LCR);
- 
 -- 
-2.16.4
-
+~Vinod
