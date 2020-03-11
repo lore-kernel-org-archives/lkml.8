@@ -2,212 +2,219 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6C6C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8302C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B0320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EBA20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ay+QlVEB"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XcvwTxMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbgCKTOJ (ORCPT
+        id S1731140AbgCKTOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:14:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40766 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731096AbgCKTOF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:14:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p2so4114919wrw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:14:02 -0700 (PDT)
+        Wed, 11 Mar 2020 15:14:12 -0400
+Received: from mail-bn8nam12on2066.outbound.protection.outlook.com ([40.107.237.66]:6033
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731104AbgCKTOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:14:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cQztyBk/PlS9Y/kTtOGtpucKxZCRGomRPtjKHriDwAntAx9P49PJeEdXCtnTw+Jfx6zA9w1Mv2Gb8al6SUVarygt3pjKg00tMGM27DZdGa/AzfnGGy0DukbD8+6DOr1+NnOZy5VW6NCt4kxJklzrX1ond/c2wNsQdnKiHU8Owl+jzRxk0V37ynxTbjJLlP+D9lFm/xBkY/8t6iDjcUaU6gcNE9KZvYCXtBJtkp2Zv2eytJH1gEajah3seFU8QOzLCqHZXukn4V0/0awHnmctSbjkcRaaf1p4Tw9vQtMo3kK/sfgyB0m4U0XKeT61vxEVDEBe8D2aKI+18KtCEWW42g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JIMA6d+XfRdhBHbRXj8EcHyIEMDlbvBXLWFwk0//MxE=;
+ b=A0gCCFklUn1WNuH7lSnfYxWKfT13HTKRJbspKsfEYiIMTnCNc40F+M5g9ifDd5kVhOc8wBxIXxw+stdyAj8b2nfVNppKQeyC4jvQwtWzCKRrweRjLipCR8jNXEWlAi5QtXtG0DQfv4uPzL+foAAO3MqF74llV5TP6nsmCawFOR+IRuq6VdEvlFrOlR+in5Z3WK7EjXEiyEDocw4I9XMbvudIHxUBGhxKL3xRu6Yur8CANxTHgVj344gQfnztA9Fu8tX+faGDS4XG+bYDil9fCPMLW8PHwfM0qCjMXAdlDFnClU7WsOuhOa0SKxqghXWhWJQsinAvi8P14n6q3Ndcmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6TXvp/hgnbBEE+3PAwbtcQCr5QoU1b6s07axWH6/RUg=;
-        b=Ay+QlVEBOL/0e7o+/gvQhcRxio+sMll2rHA1eD7ibml+VDLdgYphOUtH/iQ5bNtYww
-         ClYokrdzFRv06VwEVYaigLIOSN17CKOHTB8AGg3XztYci4bEUYotC2ErvhjPbO7j3Jzx
-         EuaNL5uzTnoPrNSraPlyX/VkhY3EGSC/h6+CupI3+w9orewwJTclni2BGDwGjltQ7Mzt
-         dCBUxvU1HHjxC6cDL3odRauXpTPxc/bxSLCkflmeZA074Lv6HgmyLENMX+5maInPzKRI
-         0P7leVsOl/6ZPMYqO3pAtpLy3I4wopkX6flmHn//a/tHSs6dhAC6sEp/YAIUuavR/lBP
-         Z6dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6TXvp/hgnbBEE+3PAwbtcQCr5QoU1b6s07axWH6/RUg=;
-        b=YdCQbpn0yfrfDQgEGJWI6pjQd3GkU1hajh7XyvUgptrJhW2tlT0TQIOhkG80Kfdx6b
-         JM3jn7zMPuGJt0bZrnEbfMyW1ohvFYp67cHfdkV2e1r2JQh4w2Mo6dt8AXzNdsAXi2+a
-         nZCaX60NCiGMB0AUBJ6O/ij+TIupy6LzFdBVIk8fNL7P2ekjx1nfKPpFAidIgmfkSMGt
-         ieKoXFUUN/G7d3lxIgzzmDHtVf2l7aZ5VokGnzMNu71fxNoJAgh2vjfPoEqle6d3qZ+A
-         8vLyVjH2Bo5pbmV0l6178LTbTad4Mtub8Xv9EgwuQFp+XlpJpeC52SV1MY4ux1rmeylo
-         a4KA==
-X-Gm-Message-State: ANhLgQ1Vd7c1jVkI4yLzPmgoS5YhxK3A0d7DoMai+mfQSLU0RXyMevpP
-        0ThQq6En3CZhPqVzftsIwsscCA==
-X-Google-Smtp-Source: ADFU+vsbEv2tuX+E1jYdkMH5f0uMwjyU8P2rDau6VWAyG7B1QlgLDIYBiQajaZazh3TacboViVryFA==
-X-Received: by 2002:adf:f2ca:: with SMTP id d10mr6207510wrp.247.1583954041879;
-        Wed, 11 Mar 2020 12:14:01 -0700 (PDT)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id v8sm69443919wrw.2.2020.03.11.12.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:14:01 -0700 (PDT)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, jackp@codeaurora.org,
-        robh@kernel.org, bjorn.andersson@linaro.org,
-        p.zabel@pengutronix.de,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Anu Ramanathan <anur@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JIMA6d+XfRdhBHbRXj8EcHyIEMDlbvBXLWFwk0//MxE=;
+ b=XcvwTxMniMdT4pvMu3xSuSfny+0WUw32lSJN0g40fdNzsOnJ5ooEfe31BWvbzfEuLhzC62Nn/LdoVg/u8A8/8r1tRqSt26Rvmv9VqLD2nTpBG4OwFR5KoVZFSU9EpY/gq7rlq60xTUGia2+WOh+reO2b93BrlO6dA5+7L4zR1gg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2830.namprd12.prod.outlook.com (2603:10b6:805:e0::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Wed, 11 Mar
+ 2020 19:14:03 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
+ 19:14:02 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, kim.phillips@amd.com
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        devicetree@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH 2/5] dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
-Date:   Wed, 11 Mar 2020 19:13:55 +0000
-Message-Id: <20200311191358.8102-3-bryan.odonoghue@linaro.org>
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [PATCH 3/3 RESEND] perf/amd/uncore: Add support for Family 19h L3 PMU
+Date:   Wed, 11 Mar 2020 14:13:23 -0500
+Message-Id: <20200311191323.13124-3-kim.phillips@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200311191358.8102-1-bryan.odonoghue@linaro.org>
-References: <20200311191358.8102-1-bryan.odonoghue@linaro.org>
-MIME-Version: 1.0
+In-Reply-To: <20200311191323.13124-1-kim.phillips@amd.com>
+References: <20200311191323.13124-1-kim.phillips@amd.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR07CA0066.namprd07.prod.outlook.com
+ (2603:10b6:4:ad::31) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fritz.amd.com (165.204.77.1) by DM5PR07CA0066.namprd07.prod.outlook.com (2603:10b6:4:ad::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Wed, 11 Mar 2020 19:14:01 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 87712052-f898-4594-72d9-08d7c5f05c4b
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2830:|SN6PR12MB2830:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2830C99001C50690BD4D1F2187FC0@SN6PR12MB2830.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0339F89554
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(376002)(39860400002)(199004)(2616005)(956004)(6486002)(6666004)(7696005)(316002)(52116002)(8936002)(36756003)(110136005)(44832011)(478600001)(54906003)(26005)(16526019)(186003)(66556008)(66946007)(2906002)(1076003)(86362001)(5660300002)(8676002)(966005)(66476007)(4326008)(81166006)(81156014)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2830;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HAZC47Jdj1C5vZxS48sIAFs3U4X3Ba/oL3z5QeQXYbOqTv7OgHFtNhzLKk+3xtz12i1FVFXkjyKcc9ztwmhpQdFFR5hicnWGh+FjsrJpeCZChj1X9/r5Lci7XQkg5AUCiPftDlUvVgkWkTwcLwOwMhFSYHVPf3o6DUeh2dAGM107UY/qsOHB6ITTXJ6zlU47uNgP9Jnw0V1fFEAnRHu6Vbk1FQWtanc222UNr1OnKxQPcWgnxjDnBROGzD7OOLzWx0p+ylfXdI0ZUapm5mlIvHYoZ9UA5EsT97+IMIIKopuQzkcp9jem6S+xUIyIkDtx4JWO0n+uPw5QtH9UUN/FWWQrocVUlm5KQd6oGd9v4px1SA2foaV5Pz7mW+0h8cBWveM9uGU++jdYWRbg8eiOKqaOXxNnqrv+SEjggqNVJBHROnRcfIQkw2ox5XRrJsfYn5gc1xZL1YyJ4Xbi/ohFMjA5jvoOTjOEO+SlArZapHwh412+cNosK6L2OIViG80A1fNN8do7p4rSVqaRnh5wRg==
+X-MS-Exchange-AntiSpam-MessageData: m6A2mqtideA2nsa19MwjCD3QPkYjbmOhxU5q4iLalMMh6TMLerC9CIcysttyCLZNU0DeOqShqogDJ3q/4/hoEeSNig6J0rn4Kwj5Oi7u1WmoJ4c84SbBJpnsWfFrN2+ZMpxFvV1yrJSIcohqjFX2oA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87712052-f898-4594-72d9-08d7c5f05c4b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 19:14:02.9114
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hZKAH2daEdiknKkCn6sMCDk1T0y8y+ajuoHZX9p6P6fSMTYqSWgRDS1VnbaQuomhcoNbvqEpTyygxiO4uiYcVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2830
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriharsha Allenki <sallenki@codeaurora.org>
+Family 19h introduces a change in slice, core and thread specification
+in its L3 Performance Event Select (ChL3PmcCfg) register. We implement
+the new bitmask conversions in a new path in l3_thread_slice_mask()
+based on a family 19h-and-above check.
 
-Adds bindings for Qualcomm's 28 nm USB PHY supporting Low-Speed, Full-Speed
-and Hi-Speed USB connectivity on Qualcomm chipsets.
+We also change the uncore_init() family check to 19h-and-above, so as
+to not revert to the Family 16h-or-below L2/NB code paths in the driver.
 
-[bod: Converted to YAML. Changed name dropping snps, 28nm components]
-
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: x86@kernel.org
 ---
- .../bindings/phy/qcom,usb-hs-28nm.yaml        | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
+RESEND.  No changes since original submission:
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
-new file mode 100644
-index 000000000000..ca6a0836b53c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,usb-hs-28nm.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+https://lkml.org/lkml/2020/2/19/1193
+
+ arch/x86/events/amd/uncore.c      | 20 ++++++++++++++------
+ arch/x86/include/asm/perf_event.h | 15 +++++++++++++--
+ 2 files changed, 27 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index e635c40ca9c4..78b4fb917ad6 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -191,10 +191,18 @@ static u64 l3_thread_slice_mask(int cpu)
+ 	if (topology_smt_supported() && !topology_is_primary_thread(cpu))
+ 		thread = 1;
+ 
+-	shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
++	if (boot_cpu_data.x86 <= 0x18) {
++		shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
++		thread_mask = BIT_ULL(shift);
 +
-+title: Qualcomm Synopsys DesignWare Core 28nm High-Speed PHY
++		return AMD64_L3_SLICE_MASK | thread_mask;
++	}
 +
-+maintainers:
-+  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++	core = (core << AMD64_L3_COREID_SHIFT) & AMD64_L3_COREID_MASK;
++	shift = AMD64_L3_THREAD_SHIFT + thread;
+ 	thread_mask = BIT_ULL(shift);
+ 
+-	return AMD64_L3_SLICE_MASK | thread_mask;
++	return AMD64_L3_EN_ALL_SLICES | core | thread_mask;
+ }
+ 
+ static int amd_uncore_event_init(struct perf_event *event)
+@@ -220,8 +228,8 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 		return -EINVAL;
+ 
+ 	/*
+-	 * SliceMask and ThreadMask need to be set for certain L3 events in
+-	 * Family 17h. For other events, the two fields do not affect the count.
++	 * SliceMask and ThreadMask need to be set for certain L3 events.
++	 * For other events, the two fields do not affect the count.
+ 	 */
+ 	if (l3_mask && is_llc_event(event))
+ 		hwc->config |= l3_thread_slice_mask(event->cpu);
+@@ -530,9 +538,9 @@ static int __init amd_uncore_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
+ 		return -ENODEV;
+ 
+-	if (boot_cpu_data.x86 == 0x17 || boot_cpu_data.x86 == 0x18) {
++	if (boot_cpu_data.x86 >= 0x17) {
+ 		/*
+-		 * For F17h or F18h, the Northbridge counters are
++		 * For F17h and above, the Northbridge counters are
+ 		 * repurposed as Data Fabric counters. Also, L3
+ 		 * counters are supported too. The PMUs are exported
+ 		 * based on family as either L2 or L3 and NB or DF.
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 29964b0e1075..e855e9cf2c37 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -50,11 +50,22 @@
+ 
+ #define AMD64_L3_SLICE_SHIFT				48
+ #define AMD64_L3_SLICE_MASK				\
+-	((0xFULL) << AMD64_L3_SLICE_SHIFT)
++	(0xFULL << AMD64_L3_SLICE_SHIFT)
++#define AMD64_L3_SLICEID_MASK				\
++	(0x7ULL << AMD64_L3_SLICE_SHIFT)
+ 
+ #define AMD64_L3_THREAD_SHIFT				56
+ #define AMD64_L3_THREAD_MASK				\
+-	((0xFFULL) << AMD64_L3_THREAD_SHIFT)
++	(0xFFULL << AMD64_L3_THREAD_SHIFT)
++#define AMD64_L3_F19H_THREAD_MASK			\
++	(0x3ULL << AMD64_L3_THREAD_SHIFT)
 +
-+description: |
-+  Qualcomm Low-Speed, Full-Speed, Hi-Speed 28nm USB PHY
++#define AMD64_L3_EN_ALL_CORES				BIT_ULL(47)
++#define AMD64_L3_EN_ALL_SLICES				BIT_ULL(46)
 +
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,usb-hs-28nm-femtophy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: rpmcc ref clock
-+      - description: PHY AHB clock
-+      - description: Rentention clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: ahb
-+      - const: sleep
-+
-+  resets:
-+    items:
-+      - description: PHY core reset
-+      - description: POR reset
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+      - const: por
-+
-+  vdd-supply:
-+    description: phandle to the regulator VDD supply node.
-+
-+  vdda1p8-supply:
-+    description: phandle to the regulator 1.8V supply node.
-+
-+  vdda3p3-supply:
-+    description: phandle to the regulator 3.3V supply node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - vdd-supply
-+  - vdda1p8-supply
-+  - vdda3p3-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-+    #include <dt-bindings/clock/qcom,rpmcc.h>
-+    usb2_phy_prim: phy@7a000 {
-+        compatible = "qcom,usb-hs-28nm-femtophy";
-+        reg = <0x0007a000 0x200>;
-+        #phy-cells = <0>;
-+        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
-+                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-+                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-+        clock-names = "ref", "ahb", "sleep";
-+        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
-+                 <&gcc GCC_USB2A_PHY_BCR>;
-+        reset-names = "phy", "por";
-+        vdd-supply = <&vreg_l4_1p2>;
-+        vdda1p8-supply = <&vreg_l5_1p8>;
-+        vdda3p3-supply = <&vreg_l12_3p3>;
-+    };
-+...
++#define AMD64_L3_COREID_SHIFT				42
++#define AMD64_L3_COREID_MASK				\
++	(0x7ULL << AMD64_L3_COREID_SHIFT)
+ 
+ #define X86_RAW_EVENT_MASK		\
+ 	(ARCH_PERFMON_EVENTSEL_EVENT |	\
 -- 
 2.25.1
 
