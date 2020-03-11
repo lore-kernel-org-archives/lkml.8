@@ -2,108 +2,105 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF13C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55472C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AE720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DB620737
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Id8s4oOS"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QxSjkDa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387441AbgCKTyj (ORCPT
+        id S2387450AbgCKTzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:54:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45147 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387414AbgCKTyj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:54:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f21so3411999otp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9G8BKi87dM8ac+1i8fsYu7iUa+IfFufMeRSjgfr6A2E=;
-        b=Id8s4oOSWs5Xu5M/KFQRUlf7eQY409+ZLkiK/Jdgljhl8fu/YQkLXw/5EBFEyPHMGa
-         pqwkBkWddzxS7iDwDGW5rPcYnvi7d+33rZc5hGSKDYNUHMIR8dSdwMi3a6oh+rlYEeJc
-         Fo4W6E6CZeivx037vSOmQVyWguZzfiX9cSix3q4xutmoBDRyf4AH7j1Zq75o1KhYFNbX
-         hZW3G3CaVznikgDMo1k6me6w7bK91Hy4zU016PvxRURtTDiCg9HpslVFjZb2Rv7BQYhl
-         SOuEUjZaOwxCRnLlfcb4Of13gquA7HwqNJdGgIGsVYscr/Pv6j3k6Xv3JrP3AQ2G3vlp
-         c8xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9G8BKi87dM8ac+1i8fsYu7iUa+IfFufMeRSjgfr6A2E=;
-        b=kqy7SNyWdCTDSInMHafS9pJjvchA6whlKGKsaH/SvjbIHVhwhFy3lBf4AYItSGfrED
-         Y+GtB/vjE4Qgz06LH4yK7IuKWY5PqQkyNJsVbZW6dtVtQWBWUzXDk9AhFUst3Z9dSd1+
-         9zRC8sg6j2CzTa2QhLhRJpEyYUxApx3aPw41fGG6n9ajyGoe1RuwZGbvtMcxUYRFh6kh
-         IQ7PsqfRWHU8I4QT2lCXdqHkYgYHjxpW3/zOz4GlQ9UhkZ5q0Iqh4rVs65UXmTxwQWO8
-         GSJGWqMEt/tjaS7i81UmxNM+DLXhhTQxpxMOH7rFIo98hClMsoNCWCILn/Mjp6cu3T/k
-         6Lrg==
-X-Gm-Message-State: ANhLgQ1atpj2bNc9I6Th+u/kNpkRDhbnFKstAETFLY59zuA2qj1vWzQw
-        oWiZzxWcbuuchR5ZgxK5Lr378DzTECGmOyyzCuz22A==
-X-Google-Smtp-Source: ADFU+vujO1GuU0FxzgptyGmNumunhFLdj+J5zktXsJFnyVaoSjBzIH+jerB5Vt1h+nF6X7xTtUh1JTzBtNN8NNpemso=
-X-Received: by 2002:a9d:344:: with SMTP id 62mr3839951otv.102.1583956477185;
- Wed, 11 Mar 2020 12:54:37 -0700 (PDT)
+        Wed, 11 Mar 2020 15:55:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48822 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387418AbgCKTzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:55:02 -0400
+Received: from zn.tnic (p200300EC2F12AA006409EF873197E31D.dip0.t-ipconnect.de [IPv6:2003:ec:2f12:aa00:6409:ef87:3197:e31d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4932B1EC0CE5;
+        Wed, 11 Mar 2020 20:44:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1583955884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qhR6fZY9T1iS1MlozbrwkvsgypJ7t9l1Cqgx8z0l+kI=;
+        b=QxSjkDa88cjKLLavCeDIljf3TJTfbpfbXYijlZarldmJUMiZo8E2ovyQL0oOO0w3QRL619
+        4rZ5pA3j48Xqft54Rhc+/eNztqXUw93f+Y+SKPGkqGvHi+1vFhT1fIuqAugLvom2WqzvWf
+        4p1J9rX8TTK11yvJ3fSlQV0Cex0eCWA=
+Date:   Wed, 11 Mar 2020 20:44:46 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, Jann Horn <jannh@google.com>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] x86/elf: Add table to document READ_IMPLIES_EXEC
+Message-ID: <20200311194446.GL3470@zn.tnic>
+References: <20200225051307.6401-1-keescook@chromium.org>
+ <20200225051307.6401-2-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20200311172109.45134-1-john.stultz@linaro.org>
- <20200311172109.45134-2-john.stultz@linaro.org> <7337bea7-1449-e6e3-4c65-1bb802a2c316@linaro.org>
- <CALAqxLXEZQnH3a8z9CGf52VUbb-ZHX-R78DPM1psJhV9_bs35g@mail.gmail.com>
-In-Reply-To: <CALAqxLXEZQnH3a8z9CGf52VUbb-ZHX-R78DPM1psJhV9_bs35g@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 11 Mar 2020 12:54:26 -0700
-Message-ID: <CALAqxLU0HWYsZcOjBj3XRy6+D33aPuQ=+hF=gv0prUquyb1+pg@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v8 1/6] usb: dwc3: Registering a role switch in
- the DRD code.
-To:     "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225051307.6401-2-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:44 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Wed, Mar 11, 2020 at 12:17 PM Bryan O'Donoghue
-> <bryan.odonoghue@linaro.org> wrote:
-> >
-> > > +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> >
-> > @bjorn found an API change that explodes this one.
-> >
-> > Fixed here: https://lkml.org/lkml/2020/3/11/1034
->
-> Huh. I wonder why I don't see that causing trouble in my testing.  :/
->
-> Oddly, trying to use your patch results in build failures for me... Is
-> the api change something in -next?
+Ozenn Mon, Feb 24, 2020 at 09:13:02PM -0800, Kees Cook wrote:
+> Add a table to document the current behavior of READ_IMPLIES_EXEC in
+> preparation for changing the behavior.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> ---
+>  arch/x86/include/asm/elf.h | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+> index 69c0f892e310..733f69c2b053 100644
+> --- a/arch/x86/include/asm/elf.h
+> +++ b/arch/x86/include/asm/elf.h
+> @@ -281,6 +281,25 @@ extern u32 elf_hwcap2;
+>  /*
+>   * An executable for which elf_read_implies_exec() returns TRUE will
+>   * have the READ_IMPLIES_EXEC personality flag set automatically.
+> + *
+> + * The decision process for determining the results are:
+> + *
+> + *              CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+> + * ELF:              |            |                  |                |
+> + * -------------------------------|------------------|----------------|
+> + * missing GNU_STACK | exec-all   | exec-all         | exec-all       |
+> + * GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
+> + * GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
 
-Ah. Ok, I found it: "usb: roles: Provide the switch drivers handle to
-the switch in the API"
+In all those tables, you wanna do:
 
-I'll add that to my patch series, retest and resubmit. Thanks for the heads up!
--john
+s/GNU_STACK/PT_GNU_STACK/g
+
+so that it is clear what this define is.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
