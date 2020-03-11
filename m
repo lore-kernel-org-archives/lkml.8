@@ -2,372 +2,182 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A51C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B147EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637D2222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDF921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TwKWc504"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="m9CiBff2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgCKNzq (ORCPT
+        id S1729758AbgCKNzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:55:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58242 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729460AbgCKNzo (ORCPT
+        Wed, 11 Mar 2020 09:55:53 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37834 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729460AbgCKNzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583934943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LsB7SqOxdN9Ntj+X4ogYuc6qF9z51kmolybiq5BgoVQ=;
-        b=TwKWc504x4LP3xo6qHj8ifyHlx+NOSKl46FBTgf22kfl304C+fbOSF5uDBOh4Ao3cLqlbk
-        ebAYeUQQbHbQUYxzpR+yuF+2VAdrnqawY5axP9KUby9dtA5Gopu4zEr4nPEU/debf5oSIn
-        /KuOoUQtD4Z3V2n/TxS4kWTRt73dYoo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-vn-ErAR1Prq78oyGgIYs8g-1; Wed, 11 Mar 2020 09:55:38 -0400
-X-MC-Unique: vn-ErAR1Prq78oyGgIYs8g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97E88801E6C;
-        Wed, 11 Mar 2020 13:55:36 +0000 (UTC)
-Received: from t480s.redhat.com (unknown [10.36.118.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A417460C18;
-        Wed, 11 Mar 2020 13:55:33 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Hildenbrand <david@redhat.com>,
-        Tyler Sanderson <tysand@google.com>,
-        David Rientjes <rientjes@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4] virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-Date:   Wed, 11 Mar 2020 14:55:23 +0100
-Message-Id: <20200311135523.18512-2-david@redhat.com>
-In-Reply-To: <20200311135523.18512-1-david@redhat.com>
-References: <20200311135523.18512-1-david@redhat.com>
+        Wed, 11 Mar 2020 09:55:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a141so2242197wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 06:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=HYy1iFsw5dP0llgymR9IjcBgXqRO6QhQTbXUDxRyBJk=;
+        b=m9CiBff2BLh9SMcStjsXltKajFKQt2VixB8u/t1gwstGN5Pt3OpG6DqsKVB+QbUDyH
+         N1wI0SakZqWAHWSnU/dUk7tk1Ve6Y6QXl24KzsJLnylhdyWmsQ1UZCIjbOXh7cGCOiHU
+         ODLYh2oCDbagEPvMA/o+VXcmzqm9HZjSn4uG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=HYy1iFsw5dP0llgymR9IjcBgXqRO6QhQTbXUDxRyBJk=;
+        b=hZGrdbLDKy0gwS0/KHepV3fQniP0UU9yjmzgJhgEyyqWeSA7nQsU1ksmbr5sEQcChT
+         8oBNW1DgQGFrszz0VPaHtmE61Yo+wzssBlWuamojq2CeQM0xYDqDg2MjJ9Y10b+Fg5JY
+         MUWzZSmyTJDFp5yqnPBS6e2PM8OanLh+Dt01ffXRSe5kn8rOcEzkGZU1VXdwJVcSo4gt
+         J5cWvMcllFmPOqV5ockliSM4YRtYt5BxAR966OCFAdluRnuuCkBXeiOkRbVxl7ojtg1G
+         W0HfquRauLI13GGNh1znspM6R54+H/KgQNTJBRr698kZAL4wwOWo/AZQvPui8+aSc01m
+         rRPQ==
+X-Gm-Message-State: ANhLgQ1peaJ2oxEI4Hy+ABxFjhCOXb9gobZAPCoguhP4StHAO5LZ13Bp
+        4MSdYp5BbvQUsZYANIP7SPQoEw==
+X-Google-Smtp-Source: ADFU+vvtCO4yJX7EcoGaYZf1s6nhDdZr4yLmSwU6WJ3x1R9fSf6pkAMO1ChjkcygEpbVqNBBcpqvXA==
+X-Received: by 2002:a1c:c906:: with SMTP id f6mr4056966wmb.16.1583934949066;
+        Wed, 11 Mar 2020 06:55:49 -0700 (PDT)
+Received: from cloudflare.com ([176.221.114.230])
+        by smtp.gmail.com with ESMTPSA id x13sm8401596wmj.5.2020.03.11.06.55.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 06:55:48 -0700 (PDT)
+References: <20200310174711.7490-1-lmb@cloudflare.com> <20200310174711.7490-4-lmb@cloudflare.com>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] bpf: convert sock map and hash to map_copy_value
+In-reply-to: <20200310174711.7490-4-lmb@cloudflare.com>
+Date:   Wed, 11 Mar 2020 14:55:47 +0100
+Message-ID: <87v9nbxafw.fsf@cloudflare.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
-)
-changed the behavior when deflation happens automatically. Instead of
-deflating when called by the OOM handler, the shrinker is used.
 
-However, the balloon is not simply some other slab cache that should be
-shrunk when under memory pressure. The shrinker does not have a concept o=
-f
-priorities yet, so this behavior cannot be configured. Eventually once
-that is in place, we might want to switch back after doing proper
-testing.
+On Tue, Mar 10, 2020 at 06:47 PM CET, Lorenz Bauer wrote:
+> Migrate sockmap and sockhash to use map_copy_value instead of
+> map_lookup_elem_sys_only.
+>
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
+>  net/core/sock_map.c | 48 ++++++++++++++++++++++++++++++---------------
+>  1 file changed, 32 insertions(+), 16 deletions(-)
+>
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index a7075b3b4489..03e04426cd21 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -344,19 +344,34 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
+>  	return __sock_map_lookup_elem(map, *(u32 *)key);
+>  }
+>
+> -static void *sock_map_lookup_sys(struct bpf_map *map, void *key)
+> +static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
+> +				 void *value)
+> +{
+> +	switch (map->value_size) {
+> +	case sizeof(u64):
+> +		sock_gen_cookie(sk);
+> +		*(u64 *)value = atomic64_read(&sk->sk_cookie);
 
-There was a report that this results in undesired side effects when
-inflating the balloon to shrink the page cache. [1]
-	"When inflating the balloon against page cache (i.e. no free memory
-	 remains) vmscan.c will both shrink page cache, but also invoke the
-	 shrinkers -- including the balloon's shrinker. So the balloon
-	 driver allocates memory which requires reclaim, vmscan gets this
-	 memory by shrinking the balloon, and then the driver adds the
-	 memory back to the balloon. Basically a busy no-op."
+You could use sock_gen_cookie return value to merge the two above
+statements into one. sock_gen_cookie also reads out the value.
 
-The name "deflate on OOM" makes it pretty clear when deflation should
-happen - after other approaches to reclaim memory failed, not while
-reclaiming. This allows to minimize the footprint of a guest - memory
-will only be taken out of the balloon when really needed.
-
-Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
-this has no such side effects. Always register the shrinker with
-VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
-pages that are still to be processed by the guest. The hypervisor takes
-care of identifying and resolving possible races between processing a
-hinting request and the guest reusing a page.
-
-In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
-notifier with shrinker"), don't add a module parameter to configure the
-number of pages to deflate on OOM. Can be re-added if really needed.
-Also, pay attention that leak_balloon() returns the number of 4k pages -
-convert it properly in virtio_balloon_oom_notify().
-
-Testing done by Tyler for future reference:
-  Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
-  GB file full of random bytes that we continually cat to /dev/null.
-  This fills the page cache as the file is read. Meanwhile, we trigger
-  the balloon to inflate, with a target size of 53 GB. This setup causes
-  the balloon inflation to pressure the page cache as the page cache is
-  also trying to grow. Afterwards we shrink the balloon back to zero (so
-  total deflate =3D total inflate).
-
-  Without this patch (kernel 4.19.0-5):
-  Inflation never reaches the target until we stop the "cat file >
-  /dev/null" process. Total inflation time was 542 seconds. The longest
-  period that made no net forward progress was 315 seconds.
-    Result of "grep balloon /proc/vmstat" after the test:
-    balloon_inflate 154828377
-    balloon_deflate 154828377
-
-  With this patch (kernel 5.6.0-rc4+):
-  Total inflation duration was 63 seconds. No deflate-queue activity
-  occurs when pressuring the page-cache.
-    Result of "grep balloon /proc/vmstat" after the test:
-    balloon_inflate 12968539
-    balloon_deflate 12968539
-
-  Conclusion: This patch fixes the issue. In the test it reduced
-  inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
-  But more importantly, if we hadn't killed the "cat file > /dev/null"
-  process then, without the patch, the inflation process would never reac=
-h
-  the target.
-
-[1] https://www.spinics.net/lists/linux-virtualization/msg40863.html
-
-Reported-by: Tyler Sanderson <tysand@google.com>
-Tested-by: Tyler Sanderson <tysand@google.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
-)
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Wei Wang <wei.w.wang@intel.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Nadav Amit <namit@vmware.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/virtio/virtio_balloon.c | 103 +++++++++++++++-----------------
- 1 file changed, 47 insertions(+), 56 deletions(-)
-
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ball=
-oon.c
-index 9e0177529bad..0ef16566c3f3 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/balloon_compaction.h>
-+#include <linux/oom.h>
- #include <linux/wait.h>
- #include <linux/mm.h>
- #include <linux/mount.h>
-@@ -28,7 +29,9 @@
-  */
- #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BAL=
-LOON_PFN_SHIFT)
- #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
--#define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
-+/* Maximum number of (4k) pages to deflate on OOM notifications. */
-+#define VIRTIO_BALLOON_OOM_NR_PAGES 256
-+#define VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY 80
-=20
- #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWAR=
-N | \
- 					     __GFP_NOMEMALLOC)
-@@ -114,9 +117,12 @@ struct virtio_balloon {
- 	/* Memory statistics */
- 	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
-=20
--	/* To register a shrinker to shrink memory upon memory pressure */
-+	/* Shrinker to return free pages - VIRTIO_BALLOON_F_FREE_PAGE_HINT */
- 	struct shrinker shrinker;
-=20
-+	/* OOM notifier to deflate on OOM - VIRTIO_BALLOON_F_DEFLATE_ON_OOM */
-+	struct notifier_block oom_nb;
-+
- 	/* Free page reporting device */
- 	struct virtqueue *reporting_vq;
- 	struct page_reporting_dev_info pr_dev_info;
-@@ -830,50 +836,13 @@ static unsigned long shrink_free_pages(struct virti=
-o_balloon *vb,
- 	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
- }
-=20
--static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
--                                          unsigned long pages_to_free)
--{
--	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) =
-/
--		VIRTIO_BALLOON_PAGES_PER_PAGE;
--}
--
--static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
--					  unsigned long pages_to_free)
--{
--	unsigned long pages_freed =3D 0;
--
--	/*
--	 * One invocation of leak_balloon can deflate at most
--	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
--	 * multiple times to deflate pages till reaching pages_to_free.
--	 */
--	while (vb->num_pages && pages_freed < pages_to_free)
--		pages_freed +=3D leak_balloon_pages(vb,
--						  pages_to_free - pages_freed);
--
--	update_balloon_size(vb);
--
--	return pages_freed;
--}
--
- static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrin=
-ker,
- 						  struct shrink_control *sc)
- {
--	unsigned long pages_to_free, pages_freed =3D 0;
- 	struct virtio_balloon *vb =3D container_of(shrinker,
- 					struct virtio_balloon, shrinker);
-=20
--	pages_to_free =3D sc->nr_to_scan;
--
--	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
--		pages_freed =3D shrink_free_pages(vb, pages_to_free);
--
--	if (pages_freed >=3D pages_to_free)
--		return pages_freed;
--
--	pages_freed +=3D shrink_balloon_pages(vb, pages_to_free - pages_freed);
--
--	return pages_freed;
-+	return shrink_free_pages(vb, sc->nr_to_scan);
- }
-=20
- static unsigned long virtio_balloon_shrinker_count(struct shrinker *shri=
-nker,
-@@ -881,12 +850,22 @@ static unsigned long virtio_balloon_shrinker_count(=
-struct shrinker *shrinker,
- {
- 	struct virtio_balloon *vb =3D container_of(shrinker,
- 					struct virtio_balloon, shrinker);
--	unsigned long count;
-=20
--	count =3D vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
--	count +=3D vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
-+	return vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
-+}
-+
-+static int virtio_balloon_oom_notify(struct notifier_block *nb,
-+				     unsigned long dummy, void *parm)
-+{
-+	struct virtio_balloon *vb =3D container_of(nb,
-+						 struct virtio_balloon, oom_nb);
-+	unsigned long *freed =3D parm;
-+
-+	*freed +=3D leak_balloon(vb, VIRTIO_BALLOON_OOM_NR_PAGES) /
-+		  VIRTIO_BALLOON_PAGES_PER_PAGE;
-+	update_balloon_size(vb);
-=20
--	return count;
-+	return NOTIFY_OK;
- }
-=20
- static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb=
-)
-@@ -971,7 +950,23 @@ static int virtballoon_probe(struct virtio_device *v=
-dev)
- 						  VIRTIO_BALLOON_CMD_ID_STOP);
- 		spin_lock_init(&vb->free_page_list_lock);
- 		INIT_LIST_HEAD(&vb->free_page_list);
-+		/*
-+		 * We're allowed to reuse any free pages, even if they are
-+		 * still to be processed by the host.
-+		 */
-+		err =3D virtio_balloon_register_shrinker(vb);
-+		if (err)
-+			goto out_del_balloon_wq;
-+	}
-+
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
-+		vb->oom_nb.notifier_call =3D virtio_balloon_oom_notify;
-+		vb->oom_nb.priority =3D VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
-+		err =3D register_oom_notifier(&vb->oom_nb);
-+		if (err < 0)
-+			goto out_unregister_shrinker;
- 	}
-+
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
- 		/* Start with poison val of 0 representing general init */
- 		__u32 poison_val =3D 0;
-@@ -986,15 +981,6 @@ static int virtballoon_probe(struct virtio_device *v=
-dev)
- 		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
- 			      poison_val, &poison_val);
- 	}
--	/*
--	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
--	 * shrinker needs to be registered to relieve memory pressure.
--	 */
--	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
--		err =3D virtio_balloon_register_shrinker(vb);
--		if (err)
--			goto out_del_balloon_wq;
--	}
-=20
- 	vb->pr_dev_info.report =3D virtballoon_free_page_report;
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-@@ -1003,12 +989,12 @@ static int virtballoon_probe(struct virtio_device =
-*vdev)
- 		capacity =3D virtqueue_get_vring_size(vb->reporting_vq);
- 		if (capacity < PAGE_REPORTING_CAPACITY) {
- 			err =3D -ENOSPC;
--			goto out_unregister_shrinker;
-+			goto out_unregister_oom;
- 		}
-=20
- 		err =3D page_reporting_register(&vb->pr_dev_info);
- 		if (err)
--			goto out_unregister_shrinker;
-+			goto out_unregister_oom;
- 	}
-=20
- 	virtio_device_ready(vdev);
-@@ -1017,8 +1003,11 @@ static int virtballoon_probe(struct virtio_device =
-*vdev)
- 		virtballoon_changed(vdev);
- 	return 0;
-=20
--out_unregister_shrinker:
-+out_unregister_oom:
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		unregister_oom_notifier(&vb->oom_nb);
-+out_unregister_shrinker:
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		virtio_balloon_unregister_shrinker(vb);
- out_del_balloon_wq:
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
-@@ -1061,6 +1050,8 @@ static void virtballoon_remove(struct virtio_device=
- *vdev)
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
- 		page_reporting_unregister(&vb->pr_dev_info);
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		unregister_oom_notifier(&vb->oom_nb);
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		virtio_balloon_unregister_shrinker(vb);
- 	spin_lock_irq(&vb->stop_update_lock);
- 	vb->stop_update =3D true;
---=20
-2.24.1
-
+> +		return 0;
+> +
+> +	default:
+> +		return -ENOSPC;
+> +	}
+> +}
+> +
+> +static int sock_map_copy_value(struct bpf_map *map, void *key, void *value)
+>  {
+>  	struct sock *sk;
+> +	int ret = -ENOENT;
+>
+> -	if (map->value_size != sizeof(u64))
+> -		return ERR_PTR(-ENOSPC);
+> -
+> +	rcu_read_lock();
+>  	sk = __sock_map_lookup_elem(map, *(u32 *)key);
+>  	if (!sk)
+> -		return ERR_PTR(-ENOENT);
+> +		goto out;
+>
+> -	sock_gen_cookie(sk);
+> -	return &sk->sk_cookie;
+> +	ret = __sock_map_copy_value(map, sk, value);
+> +out:
+> +	rcu_read_unlock();
+> +	return ret;
+>  }
+>
+>  static int __sock_map_delete(struct bpf_stab *stab, struct sock *sk_test,
+> @@ -636,7 +651,7 @@ const struct bpf_map_ops sock_map_ops = {
+>  	.map_alloc		= sock_map_alloc,
+>  	.map_free		= sock_map_free,
+>  	.map_get_next_key	= sock_map_get_next_key,
+> -	.map_lookup_elem_sys_only = sock_map_lookup_sys,
+> +	.map_copy_value		= sock_map_copy_value,
+>  	.map_update_elem	= sock_map_update_elem,
+>  	.map_delete_elem	= sock_map_delete_elem,
+>  	.map_lookup_elem	= sock_map_lookup,
+> @@ -1030,19 +1045,20 @@ static void sock_hash_free(struct bpf_map *map)
+>  	kfree(htab);
+>  }
+>
+> -static void *sock_hash_lookup_sys(struct bpf_map *map, void *key)
+> +static int sock_hash_copy_value(struct bpf_map *map, void *key, void *value)
+>  {
+>  	struct sock *sk;
+> +	int ret = -ENOENT;
+>
+> -	if (map->value_size != sizeof(u64))
+> -		return ERR_PTR(-ENOSPC);
+> -
+> +	rcu_read_lock();
+>  	sk = __sock_hash_lookup_elem(map, key);
+>  	if (!sk)
+> -		return ERR_PTR(-ENOENT);
+> +		goto out;
+>
+> -	sock_gen_cookie(sk);
+> -	return &sk->sk_cookie;
+> +	ret = __sock_map_copy_value(map, sk, value);
+> +out:
+> +	rcu_read_unlock();
+> +	return ret;
+>  }
+>
+>  static void *sock_hash_lookup(struct bpf_map *map, void *key)
+> @@ -1139,7 +1155,7 @@ const struct bpf_map_ops sock_hash_ops = {
+>  	.map_update_elem	= sock_hash_update_elem,
+>  	.map_delete_elem	= sock_hash_delete_elem,
+>  	.map_lookup_elem	= sock_hash_lookup,
+> -	.map_lookup_elem_sys_only = sock_hash_lookup_sys,
+> +	.map_copy_value		= sock_hash_copy_value,
+>  	.map_release_uref	= sock_hash_release_progs,
+>  	.map_check_btf		= map_check_no_btf,
+>  };
