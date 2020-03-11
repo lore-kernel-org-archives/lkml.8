@@ -2,244 +2,108 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A3C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97625C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4601C222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61271208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hDJG0GZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgCKBr6 (ORCPT
+        id S1727949AbgCKBse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:47:58 -0400
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:52680 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgCKBr5 (ORCPT
+        Tue, 10 Mar 2020 21:48:34 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33806 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgCKBsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:47:57 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 02B1lgBx028558; Wed, 11 Mar 2020 10:47:42 +0900
-X-Iguazu-Qid: 34triqBKPQ0Rprzl68
-X-Iguazu-QSIG: v=2; s=0; t=1583891262; q=34triqBKPQ0Rprzl68; m=6QiIIKEUq7moLMud5ZWLrFBaXyxrZZkKTOtyjZfCXnM=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1513) id 02B1lfwJ026024;
-        Wed, 11 Mar 2020 10:47:41 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 02B1leQb020983;
-        Wed, 11 Mar 2020 10:47:40 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id 02B1leR9016636;
-        Wed, 11 Mar 2020 10:47:40 +0900
-From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
-To:     miquel.raynal@bootlin.com, vigneshr@ti.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v4 2/2] mtd: spinand: toshiba: Support for new Kioxia Serial NAND
-Date:   Wed, 11 Mar 2020 10:47:39 +0900
-X-TSB-HOP: ON
-Message-Id: <350cc6e5aadafdeca64d57856752568f9f0184f8.1583834323.git.ytc-mb-yfuruyama7@kioxia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1583834323.git.ytc-mb-yfuruyama7@kioxia.com>
-References: <cover.1583834323.git.ytc-mb-yfuruyama7@kioxia.com>
+        Tue, 10 Mar 2020 21:48:33 -0400
+Received: by mail-io1-f67.google.com with SMTP id h131so285953iof.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 18:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YZOvj5Z6BfnkZ7YZwPQIpuVc7cl2w2qzUU1f/5XLsYg=;
+        b=hDJG0GZzwKhaXh8NjD+uNxuhdOrChRpsq7jcVKcbTzwzMWvLKBjkNQiU+slFuoIW0M
+         bJ0G7zpiNiRoRpEMk5meg88ZC3YpbWmTTBWPdwgXCc+1NxEmJis7AJEdn1/zsA5gFMTL
+         ER4N05u3T+bRCfLzp1AMDN2rfMPA/71x2ggWeXbjCc9M2VlNd0kd6CB94gGqom4naqfi
+         0eVv1eja5gb3qITKOC1nscKyEzTuz3niRaJllv4cgkrgbjrVreD96cvqc8auUMwBll4j
+         O4d4KTpspJCMJ4eSQpLwbMIq8YzuWmw+uMxQqomgCCtONFyrA0UcPEt0Cn4J39fynwZ7
+         kUyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YZOvj5Z6BfnkZ7YZwPQIpuVc7cl2w2qzUU1f/5XLsYg=;
+        b=TvmeJ0MpzNBxdgIU32GSWUMn/hEk+iSA7jnMA6hE5imVRyPSnLqFzCuQ2gUPtayoom
+         E4RGyJfhYi+NhLhZUp3UxpVO06s9WQ4rEXkAGmwx1+jd1Q868DhKFVBVH724b2DiQpaH
+         Metlz+nFnrRrpLXEwa672NInpiD/+VdnBLjhDfCtKf1dD9GKNO1nQnx9PuhpC7tJjpWB
+         qtPMhiwdacmzKuxShzS/E4wDkjSh9RpxxsYeTvk7nHl3Z0fOEncXcWRO/SzUZ6OiyHLj
+         wFurqQsbzGxPl8qlCjZSZ3Gz+9TUxtx+TZW3kKd8ha3OIR87tbOwnBzFfoGVA6mGnMkm
+         uwhA==
+X-Gm-Message-State: ANhLgQ2FG7KO2MGqq2fUHvMlXgjrc2BoflWZMNCZpLYyOUTV3sJlnefP
+        3m/QAVHvPVXTNOOar6LVxwwqKt53JG4=
+X-Google-Smtp-Source: ADFU+vvphl4v3/+nIUg7d0ljdy63Yxh/FE0BuHduJQLQ8ckr0O76XymzgxI9dAzCMhgiGD0GTzkbZA==
+X-Received: by 2002:a5d:9b12:: with SMTP id y18mr818519ion.176.1583891313108;
+        Tue, 10 Mar 2020 18:48:33 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id y11sm17158348ilm.22.2020.03.10.18.48.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 18:48:32 -0700 (PDT)
+Subject: Re: [PATCH v2] bitfield.h: add FIELD_MAX() and field_max()
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20200306042302.17602-1-elder@linaro.org>
+ <20200310212938.GA17565@ubuntu-m2-xlarge-x86>
+ <20200310145825.6ddb3797@kicinski-fedora-PC1C0HJN>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <bc50d249-60ab-767d-ae0c-02629483df34@linaro.org>
+Date:   Tue, 10 Mar 2020 20:48:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200310145825.6ddb3797@kicinski-fedora-PC1C0HJN>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for new Kioxia products.
-The new Kioxia products support program load x4 command, and have
-HOLD_D bit which is equivalent to QE bit.
+On 3/10/20 4:58 PM, Jakub Kicinski wrote:
+> On Tue, 10 Mar 2020 14:29:38 -0700 Nathan Chancellor wrote:
+>> Without this patch, the IPA driver that was picked up a couple of days
+>> ago does not build...
+> 
+> 😳 
+> 
+> Yes please, Alex could you repost ASAP with [PATCH net-next] subject
+> and CC netdev to get it into the netdev patchwork?
+> 
+> Please also make IPA:
+> 
+> 	depends on (ARCH_QCOM || COMPILE_TEST) && 64BIT && NET
+> 
+> Otherwise it's really hard to make sure the code builds.
 
-Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
-changelog[v4]:Remake on top of the last -rc.
-changelog[v3]:No change.
-changelog[v2]:Split 2 patches.
+Sorry all.  I have been on vacation the last few days and only now
+saw this.
 
- drivers/mtd/nand/spi/toshiba.c | 119 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 103 insertions(+), 16 deletions(-)
+I will put this together shortly.
 
-diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c
-index 700d86f..505f9f5 100644
---- a/drivers/mtd/nand/spi/toshiba.c
-+++ b/drivers/mtd/nand/spi/toshiba.c
-@@ -19,6 +19,18 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
- 		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
- 		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
- 
-+static SPINAND_OP_VARIANTS(write_cache_x4_variants,
-+		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(update_cache_x4_variants,
-+		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
-+/**
-+ * Backward compatibility for 1st generation Serial NAND devices
-+ * which don't support Quad Program Load operation.
-+ */
- static SPINAND_OP_VARIANTS(write_cache_variants,
- 		SPINAND_PROG_LOAD(true, 0, NULL, 0));
- 
-@@ -94,7 +106,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- }
- 
- static const struct spinand_info toshiba_spinand_table[] = {
--	/* 3.3V 1Gb */
-+	/* 3.3V 1Gb (1st generation) */
- 	SPINAND_INFO("TC58CVG0S3HRAIG", 0xC2,
- 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -104,7 +116,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 3.3V 2Gb */
-+	/* 3.3V 2Gb (1st generation) */
- 	SPINAND_INFO("TC58CVG1S3HRAIG", 0xCB,
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -114,7 +126,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 3.3V 4Gb */
-+	/* 3.3V 4Gb (1st generation) */
- 	SPINAND_INFO("TC58CVG2S0HRAIG", 0xCD,
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -124,17 +136,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 3.3V 4Gb */
--	SPINAND_INFO("TC58CVG2S0HRAIJ", 0xED,
--		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
--		     NAND_ECCREQ(8, 512),
--		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
--					      &write_cache_variants,
--					      &update_cache_variants),
--		     0,
--		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
--				     tx58cxgxsxraix_ecc_get_status)),
--	/* 1.8V 1Gb */
-+	/* 1.8V 1Gb (1st generation) */
- 	SPINAND_INFO("TC58CYG0S3HRAIG", 0xB2,
- 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -144,7 +146,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 1.8V 2Gb */
-+	/* 1.8V 2Gb (1st generation) */
- 	SPINAND_INFO("TC58CYG1S3HRAIG", 0xBB,
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -154,7 +156,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 1.8V 4Gb */
-+	/* 1.8V 4Gb (1st generation) */
- 	SPINAND_INFO("TC58CYG2S0HRAIG", 0xBD,
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -164,6 +166,91 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
-+
-+	/*
-+	 * 2nd generation serial nand has HOLD_D which is equivalent to
-+	 * QE_BIT.
-+	 */
-+	/* 3.3V 1Gb (2nd generation) */
-+	SPINAND_INFO("TC58CVG0S3HRAIJ", 0xE2,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 3.3V 2Gb (2nd generation) */
-+	SPINAND_INFO("TC58CVG1S3HRAIJ", 0xEB,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 3.3V 4Gb (2nd generation) */
-+	SPINAND_INFO("TC58CVG2S0HRAIJ", 0xED,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 3.3V 8Gb (2nd generation) */
-+	SPINAND_INFO("TH58CVG3S0HRAIJ", 0xE4,
-+		     NAND_MEMORG(1, 4096, 256, 64, 4096, 80, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 1Gb (2nd generation) */
-+	SPINAND_INFO("TC58CYG0S3HRAIJ", 0xD2,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 2Gb (2nd generation) */
-+	SPINAND_INFO("TC58CYG1S3HRAIJ", 0xDB,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 4Gb (2nd generation) */
-+	SPINAND_INFO("TC58CYG2S0HRAIJ", 0xDD,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 8Gb (2nd generation) */
-+	SPINAND_INFO("TH58CYG3S0HRAIJ", 0xD4,
-+		     NAND_MEMORG(1, 4096, 256, 64, 4096, 80, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- };
- 
- static int toshiba_spinand_detect(struct spinand_device *spinand)
--- 
-1.9.1
+					-Alex
 
