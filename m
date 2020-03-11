@@ -2,133 +2,92 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F073C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75948C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1FB206B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38E5206B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KfPWVzHO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EICxn6Fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgCKVpL (ORCPT
+        id S1729705AbgCKVps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:45:11 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44527 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbgCKVpL (ORCPT
+        Wed, 11 Mar 2020 17:45:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44542 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729328AbgCKVpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:45:11 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d9so1708561plo.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:45:10 -0700 (PDT)
+        Wed, 11 Mar 2020 17:45:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l18so4650693wru.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uN1amOH5ZU5RT92sA61UloyUkxnxKCdtIJfyk4RzGY8=;
-        b=KfPWVzHOvplm4aMeyKxQGHaE4kkrJqpFPCJQJRlKEZ8nqcZ36dfbDASxWD+9ZYSwf3
-         G+yYqjTq7URoOiqgVXn9gbYPSo4QYw2ZjHwldmiRqFLDR8srM57PiCcn6dNx4BkIuFwv
-         28FOivlX9pYy6fzhz6+udQIv6YVqyiNncE74PdCOSelZ8PxIdweX9uN6TrAAkO86obZE
-         mVkfhtgemtAUTMp8BtV9L2huvca0Ld6ml8UQPzQLz4jsAZMjg9t0DibzEAtYY2iJ+Kf2
-         1tqgQS1rM5xq+ixnbRKvCx8IhexYPjmPBAuwZVq1WMhnr0KxsZiQbb9ZJF8NSVebUYLQ
-         5ueg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=n7HvHKiTnPOuqemknJ105xUPY/fhPykhkmE2tki5wUw=;
+        b=EICxn6Fn7AFSWWWApb9dqMF1HA9elGbNGMudsmJElLrVolmjUJKkpJAEkSDaK3gkoy
+         dgJTsiVARL15UIMk+HsgvC/dtdB9NQ9x5loTMa6PnUplCqBUc8gLUd0i0FrjzjG7a/Np
+         lHJJZYOUEEH8afSng01BNAy/u+zq5ZYjuSmrGKyHMovqwUD+B/aadjqBSbWvbOZe44ut
+         kDSaei0FjnGc1PjMfWhCPIwFbRzdcI7C7x/wbo41nWMzHlIWqGc/x4oieFEbnAQ0NN/X
+         o6ed44eOo8ngzEtNUF9miYkor1nZIGitcJqPbsS4x89oMdx1NGJlhY1nhJmfXyCS+UWG
+         LmRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uN1amOH5ZU5RT92sA61UloyUkxnxKCdtIJfyk4RzGY8=;
-        b=tblH/jMSnIdGezgUeTdSzHcQvGOTzkQfdC/Nc5F1WtDjsdSbqv65ay5QwAcAS8NWSo
-         bo1AL6lsN9w4d8Flhku7M8Po2Y+Z5nkuoGPGCD4Lmsimd7jGT/e383eqBlwP/o5EoTVC
-         oyKdHHcLKe0iYiAkGdIIMiubo7jFzQjoz80EzF0qUV5/sOyScG7bFkpDBHJbILOYN5yq
-         ACY6Y28dFD73DtdRVhhK3l4es8554uWyGOFYFKp9qfDRl9JNiQmHm6N82kshQ15ARPgA
-         9+Xbi075OhNjHKkMA2J/iVqFkN72s3qS39OILD4RT/e8xNtRZdbFqHj0k1ZnrZh82GLZ
-         XOEw==
-X-Gm-Message-State: ANhLgQ3ezkFEDhoNz81DKATnZtlhGyWLQzroVX53Aa6U/gSBt/VObVIR
-        TVwWWKB7nGZpegIVsgZCKK39eg==
-X-Google-Smtp-Source: ADFU+vt4rfokOL/oJaLw4dSeLhyEOzJbqm/GUHgNbwUXS8INzMYJiSGput+Rwtg/T3NvKl0tKxjRgg==
-X-Received: by 2002:a17:902:8c91:: with SMTP id t17mr4525944plo.98.1583963106709;
-        Wed, 11 Mar 2020 14:45:06 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id r24sm27165674pfg.61.2020.03.11.14.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 14:45:06 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:45:04 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Loic Pallardy <loic.pallardy@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arnaud.pouliquen@st.com, benjamin.gaignard@linaro.org,
-        fabien.dessenne@st.com, s-anna@ti.com
-Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
- is crashed
-Message-ID: <20200311214504.GA32471@xps15>
-References: <1583924072-20648-1-git-send-email-loic.pallardy@st.com>
- <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=n7HvHKiTnPOuqemknJ105xUPY/fhPykhkmE2tki5wUw=;
+        b=KLx9hoYhte5pRwskJkF7jXzT/Wk3Mw/Z4qATEroZ9y0IP1GrigmAd2u/5PSnVjBeqS
+         t431/junJgeJdBrw5BpDdEd+KuBgUHm5lit98ecoZ2yuvULgv2ilwOqWi8o2kE/aDhuG
+         IeRs+CdzFrrNA/AKSle+ZtLpGihudFV1lFdUeGVeSoVZbk4ErNObnV7UtNEooUshGXcx
+         wRo90EQUVdKATLc9chqZZh7bPvPRFAZdg+BYXnsQPg1vwyw43Suiz+yllig7mHS2QYcQ
+         YnMiJxUo/MDSODNNAuyvR2le65feybsCCeEWHLmukrz3JneF1gJDfgF9255OSMlCdJ/T
+         Xvbg==
+X-Gm-Message-State: ANhLgQ2wVTe42U/R7eP+V87NfyLRVfjGqY8tkWsbs5TdpgfCwEs28kRR
+        PmOAQThdM0M8HwMGZheFKpzxAw==
+X-Google-Smtp-Source: ADFU+vvaCB3U3dIhxKX4tIuvn9wPcxA11wZ/JEilVShuY982q31z6n5RZ4IMJftU0QVsHPTsWtxWpg==
+X-Received: by 2002:adf:f584:: with SMTP id f4mr6798624wro.77.1583963145223;
+        Wed, 11 Mar 2020 14:45:45 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id w9sm34772517wrn.35.2020.03.11.14.45.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 14:45:44 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Heiko Stuebner <heiko@sntech.de>, khilman@kernel.org, nm@ti.com
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH] PM / AVS: rockchip-io: fix the supply naming for the emmc supply on px30
+In-Reply-To: <20200121222859.4069263-1-heiko@sntech.de>
+References: <20200121222859.4069263-1-heiko@sntech.de>
+Date:   Wed, 11 Mar 2020 14:45:41 -0700
+Message-ID: <7hwo7qr2ey.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Loic,
+Heiko Stuebner <heiko@sntech.de> writes:
 
-On Wed, Mar 11, 2020 at 11:54:31AM +0100, Loic Pallardy wrote:
-> When remoteproc recovery is disabled and rproc crashed, user space
-> client has no way to reboot co-processor except by a complete platform
-> reboot.
-> Indeed rproc_shutdown() is called by sysfs state_store() only is rproc
-> state is RPROC_RUNNING.
-> 
-> This patch offers the possibility to shutdown the co-processor if
-> it is in RPROC_CRASHED state and so to restart properly co-processor
-> from sysfs interface.
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+>
+> The supply going to the emmc/flash is named vccio6, not vccio0 and while
+> the code does this correctly already, the comments and error output do not.
+>
+> So just change these values to the correct ones.
+>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-And it is not possible to use the debugfs interface [1] to restart the MCU?
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 
-[1]. https://elixir.bootlin.com/linux/v5.6-rc2/source/drivers/remoteproc/remoteproc_debugfs.c#L147
+Raafael, feel free to apply directly.
 
+Thanks,
 
-> 
-> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
-> ---
->  drivers/remoteproc/remoteproc_core.c  | 2 +-
->  drivers/remoteproc/remoteproc_sysfs.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..7ac87a75cd1b 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1812,7 +1812,7 @@ void rproc_shutdown(struct rproc *rproc)
->  	if (!atomic_dec_and_test(&rproc->power))
->  		goto out;
->  
-> -	ret = rproc_stop(rproc, false);
-> +	ret = rproc_stop(rproc, rproc->state == RPROC_CRASHED);
->  	if (ret) {
->  		atomic_inc(&rproc->power);
->  		goto out;
-> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> index 7f8536b73295..1029458a4678 100644
-> --- a/drivers/remoteproc/remoteproc_sysfs.c
-> +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> @@ -101,7 +101,7 @@ static ssize_t state_store(struct device *dev,
->  		if (ret)
->  			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
->  	} else if (sysfs_streq(buf, "stop")) {
-> -		if (rproc->state != RPROC_RUNNING)
-> +		if (rproc->state != RPROC_RUNNING && rproc->state != RPROC_CRASHED)
->  			return -EINVAL;
->  
->  		rproc_shutdown(rproc);
-> -- 
-> 2.7.4
-> 
+Kevin
