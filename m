@@ -2,103 +2,113 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D62BC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37048C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0AB2192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF4B21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583908279;
-	bh=8SsBRXFmmmDVGan7MrP5vKcG+kRpkshnPw09AhaCRRw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=L9gJCTGXUcMWmD5atjHV1Tx+0y+mIAoHXARYZjyAGePo4jgk3UFJSxGQoROgdbRaM
-	 0+Ah0faoO8SC19JSI7pqIREdOsw4adVpiaGWXWqQWaU0wjhw11fhzB/OACKcuBraf5
-	 XUUlvMCkgAsKW/0JC/yLdDv0rHohBMrVID1UsjfY=
+	s=default; t=1583908281;
+	bh=OkyhYf0ju0bSh7x0mfEKKh9XR6KeWh1xyCEeUg/095g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vWYdbPi5EwFUFB51xwMMnH8aia62PYKD5q0T0iqe3LNr+iJXYJnxY/AN5iqkDegRj
+	 rAEZzLxOIgzRZklLmAvGwao9Korc/kdHbGavUR1CWPpskQSwijP753FYoJr0iiWvk5
+	 i59AbGFGPerbmFKuzFJNytPe/bhyCDbHF6k+4amE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgCKGbR (ORCPT
+        id S1728275AbgCKGbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:31:17 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:49549 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgCKGbQ (ORCPT
+        Wed, 11 Mar 2020 02:31:19 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:43085 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgCKGbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:31:16 -0400
-X-Greylist: delayed 2365 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 02:31:15 EDT
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 02B6TRrY029044;
-        Wed, 11 Mar 2020 15:29:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 02B6TRrY029044
+        Wed, 11 Mar 2020 02:31:17 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 02B6VBSc001049;
+        Wed, 11 Mar 2020 15:31:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02B6VBSc001049
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583908169;
-        bh=LNe3hvgyxkqOgtMP39KHBSlFvsuDIP1M2ZSJ4/uygew=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pQ78yNELMBLF7QjXDLteBATDFgKPmsdH5/A6TLtLGZgBxh15kdpp2x5o0/Mipr7lR
-         PBAbQ59hfEN4wgZyWhPkVc9j3hIp+lP8z/XpV8IFpBmGwcfX9jUb54LUeokw5Tm31M
-         D2jn/EYj1oAT/AV/vWs8uzkq1UHPTn3ZItSOcjSod6sh2xSAGgDsOkK9AyUCFUEsU2
-         vTt50UXcXyVM9YndjEppLPkyXdx9+nZEwpMzESjz2566oitfaEWtGMHuEUloJXFmUI
-         bb4PurPwX7S7uvXM2s17YvvyHhHEnxfGo80C/v+CNRN7pzja1S9mWeX+9MoeggNbL1
-         JNg3Zy9d90lfw==
-X-Nifty-SrcIP: [153.142.97.92]
+        s=dec2015msa; t=1583908272;
+        bh=mEEjYZ+g7SPfvBGbp0usmZazwZG/pK4cfo+e69Wz/94=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0xE1L4gZVa5pQf1L/jmE+y6SYbQRHBoZlnSMVpcmhKCNdl5F9TMc5izykQAUefqUd
+         cn2tJwt/9aQKZLeJA42BwUSyKid9pAjK0yzeDOx9NvOThSCrkjTaesO2i6ql2pVcot
+         QeiQtN3CdsuS0/U09n+GieuDqOO/5krQ4jgElJ+VNAGF1L2G1lAwm2Xz3sZD0AdJyr
+         LHl21K6eHdvlzZO5qinZZCNT+Ws4jDqHu5f7M6N+WujoPy0HAdRVmnjytl24myyF3x
+         suJl3SgDKzVkZWIpxWYXdIVGvSyMMnoXiOVLhBB+ZcXR4iiqS2bqA1ZjIOlmdWl+Ab
+         658g2WQGX7fvQ==
+X-Nifty-SrcIP: [209.85.221.177]
+Received: by mail-vk1-f177.google.com with SMTP id w4so221452vkd.5;
+        Tue, 10 Mar 2020 23:31:11 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1PfxFuXUyMfPH688801o/YzSkAETofcrITB8R4LCY1q6U6IaFa
+        du4+Wmg8UaCGmagiksXlAOaCIDZNgtrUKajhqB4=
+X-Google-Smtp-Source: ADFU+vvCKPRQjwdCvZHOCpGvXimbsrP/K82eSLJbFxeu+mB/zqXzXNLtC4QloHRtdNmpy6tI6qPFP0ZLoVxoTslt+JM=
+X-Received: by 2002:a1f:cbc1:: with SMTP id b184mr1007267vkg.73.1583908270440;
+ Tue, 10 Mar 2020 23:31:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200311054953.11956-1-masahiroy@kernel.org>
+In-Reply-To: <20200311054953.11956-1-masahiroy@kernel.org>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Neil Horman <nhorman@tuxdriver.com>, netdev@vger.kernel.org,
+Date:   Wed, 11 Mar 2020 15:30:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQsitL-j0Z5mBC=QWUCxG2uhv1b2oaNh1daFSRwC38A=w@mail.gmail.com>
+Message-ID: <CAK7LNAQsitL-j0Z5mBC=QWUCxG2uhv1b2oaNh1daFSRwC38A=w@mail.gmail.com>
+Subject: Re: [PATCH] net: drop_monitor: make drop_monitor built-in
+To:     Neil Horman <nhorman@tuxdriver.com>,
+        Networking <netdev@vger.kernel.org>,
         "David S . Miller" <davem@davemloft.net>
 Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
-        Nicolas Pitre <nico@fluxnic.net>, linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: drop_monitor: use IS_REACHABLE() to guard net_dm_hw_report()
-Date:   Wed, 11 Mar 2020 15:29:25 +0900
-Message-Id: <20200311062925.5163-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Nicolas Pitre <nico@fluxnic.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
+On Wed, Mar 11, 2020 at 2:50 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
+>
+> The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
+> from being 'm' when NET_DEVLINK=y.
+>
+> With the planned Kconfig change that relaxes the 'imply', the
+> combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed,
+> causing a link error of vmlinux.
+>
+> As far as I see the mainline code, NET_DROP_MONITOR=m does not provide
+> any useful case.
+>
+> The call-site of net_dm_hw_report() only exists in net/core/devlink.c,
+> which is always built-in since NET_DEVLINK is a bool type option.
+>
+> So, NET_DROP_MONITOR=m causes a build error, or creates an unused
+> module at best.
+>
+> Make NET_DROP_MONITOR a bool option, and remove the module exit code.
+> I also unexported net_dm_hw_report because I see no other call-site
+> in upstream.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
-from being 'm' when NET_DEVLINK=y.
 
-With the planned Kconfig change that relaxes the 'imply', the
-combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
-
-Use IS_REACHABLE() to avoid the vmlinux link error for this case.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-This build error was reported in linux-next.
-https://lkml.org/lkml/2020/3/10/1936
-
-If this patch is acceptable,
-I'd like to get Ack from the maintainers,
-and insert this patch before my Kconfig change.
+Sorry, I take this back.
+This is probably not the right fix.
 
 
- include/net/drop_monitor.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/drop_monitor.h b/include/net/drop_monitor.h
-index 2ab668461463..f68bc373544a 100644
---- a/include/net/drop_monitor.h
-+++ b/include/net/drop_monitor.h
-@@ -19,7 +19,7 @@ struct net_dm_hw_metadata {
- 	struct net_device *input_dev;
- };
- 
--#if IS_ENABLED(CONFIG_NET_DROP_MONITOR)
-+#if IS_REACHABLE(CONFIG_NET_DROP_MONITOR)
- void net_dm_hw_report(struct sk_buff *skb,
- 		      const struct net_dm_hw_metadata *hw_metadata);
- #else
+I just sent an alternative patch.
+( Replace IS_ENABLE with IS_REACHABLE )
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
