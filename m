@@ -2,103 +2,118 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D937AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E8BC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39A42074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AF82074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RQnJ/B/X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JIQhcXbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbgCKXcP (ORCPT
+        id S1731561AbgCKXdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:32:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33241 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731364AbgCKXcP (ORCPT
+        Wed, 11 Mar 2020 19:33:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45223 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731412AbgCKXdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:32:15 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m5so2057715pgg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:32:13 -0700 (PDT)
+        Wed, 11 Mar 2020 19:33:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m15so2031123pgv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZAFxnU3NgpJMRLveB1Jihkaz6R/8FOdMPSF2gijKBWE=;
-        b=RQnJ/B/XeSshmnos7GbXMEoonGg2/3cDqgKr1Pp8lC9PlWN7SkhRbcX7KTF7i3dkkZ
-         ZnNwYPwTVpxTdi1m9i21YZACZzEdehahf5C8jse8o0DAIa0WHeJ2Cuodt8MExVHa7XC5
-         hvOPCnF7rT6SrSdz29jq4rBXUyc8wLhQTEYfIFfJq6cwKWIHEofYDSv5Tpcjc5f3oK5C
-         6koZQsAjIwMgnVps0Q6exeHjuc1D/DRvax8MqIe8Ll47uX3X1C/GHUPd/BlhDE6eLSlm
-         pNQ3D3PmRgVmJ01pXu8eWHSgXt4CLXsqRlUefG6iN7PZ/Erk/VlsSVC35pJxlmpY1Wyt
-         lwfA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jFtJxYlBXZPRO2RwKWg1G8l6JcMWYglI8HGTYAqmsew=;
+        b=JIQhcXbXfcHaRXV6xK9j9jFjaK04xEK2zK1aXYUk1j7g75HVKyVzZN8ZWYKEGKhE5s
+         D15NknBcABdy1udps3AWRACogBm1E8OKbegCeRR85Y3gGULyTGDZj0rLgGwoJnQf727o
+         RBjvHK+Ltv4XdwqEt3yLUZLDq0fgwJiG/wL6BYvlnvmAf2rMB3c9tjqGUPqT0Vp6B5LC
+         RrNF4tVBG115YsVipRxDRHQ6+tnmxaPuXJnX0NDq3eKhbUUOlo9wwQ2IOwhDf+9TajX7
+         PTkvxD/4PGnUj+P40BgHbI8FpimQnKZcUmEctRzkIJE7E2WDfV90prOz+CwrgTuXdCKy
+         tLRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZAFxnU3NgpJMRLveB1Jihkaz6R/8FOdMPSF2gijKBWE=;
-        b=gkr2/E124TKOuPa5GiLOgnpbb/HrjP665b9MZOiKHPgbkg4UPDkOY2aZ+T4TZz3cMC
-         mb8rLn9UXRlQFdFDEC7PMRt2MLnPYJk6kJfw/If9Fzoi8J8xMPnrq3SVKFJXXA1272qf
-         hhAgiT1/MnpeXI4/21jUJY+ziGnD2428iaruW+HWSw7sq179thTqs96NjwSax8fQgRJj
-         ms/S2WzaIdwEUIvU8wNaP57BCE13+yg5jNi1Ds4u5OFaiAbGkxhoVEkFdXCo0a9vwLbL
-         5HWNqTMd2uQQgh9cWe+eF2QadW1p0hFRF2vFK8JWwhYn+YcsUkAl3V/eo30X7dzsWd9n
-         otCQ==
-X-Gm-Message-State: ANhLgQ15gkRz6RzYApct9xx5ukIkNtUc2Gfnmg1bDa3n/U+UFntaOaTP
-        UzT4Y48KEzqFThnna2BaVRgUEg==
-X-Google-Smtp-Source: ADFU+vssJZbi4+8lRsENa/Dx4wELabrI5tBFSOR/chzDO+9tWUirfJxgeaXL9W7NYjIV1v7Tyvfs1Q==
-X-Received: by 2002:a63:441e:: with SMTP id r30mr4888212pga.51.1583969532339;
-        Wed, 11 Mar 2020 16:32:12 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d77sm40505835pfd.109.2020.03.11.16.32.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jFtJxYlBXZPRO2RwKWg1G8l6JcMWYglI8HGTYAqmsew=;
+        b=BXayaSAYB64kbFWNuY6r9Rlis6Vs6JgpU9VvQFTkdaRx6rK+J/V5Usp+Ab7LJ95Rff
+         DLFFraPqLNawwW0j4i2TWKE2Yr51/UzESi+4+1w++TvBiozslT2RpHgvdhutpGoM1fI1
+         2kFj84vl4AP1pEu/by8+toIfdhegVrhNGuauxqLDEA639SjNCrITwLSJaudEynazfSdA
+         keQeuH+lDlHuazbyXmAdMPORRwa79KCRV/q12isXM88+uKmYYxavRZKsrSLnl4FqDRbh
+         Ydnw84YqW1zDRXax91cmyi4KU8k+a2oXck1kHteZfV8uAjn/D94GvX+K78PPuS918JNn
+         yOkw==
+X-Gm-Message-State: ANhLgQ2gOEvOIOuFnkIbWsSe1nJDupTsq/WBze5t+GVtRoYYQqWUbYNz
+        Qfr0ZHGgJtGJEeJiJXSZwO+yIw==
+X-Google-Smtp-Source: ADFU+vvMr21MESHoF4Oe0h0WOAGy0rCZigPm46U7ljAkGUSqeE2xCnjBMD4fI7CoTlicLi0wluHDsw==
+X-Received: by 2002:aa7:8055:: with SMTP id y21mr5155708pfm.151.1583969579384;
+        Wed, 11 Mar 2020 16:32:59 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a143sm29450741pfd.108.2020.03.11.16.32.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 16:32:11 -0700 (PDT)
+        Wed, 11 Mar 2020 16:32:58 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 16:32:56 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Olof Johansson <olof@lixom.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable Truly NT35597 WQXGA panel
-Date:   Wed, 11 Mar 2020 16:30:39 -0700
-Message-Id: <20200311233039.928605-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v4 2/5] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200311233256.GB1214176@minitux>
+References: <20200310063338.3344582-1-bjorn.andersson@linaro.org>
+ <20200310063338.3344582-3-bjorn.andersson@linaro.org>
+ <158387214232.149997.3935472981193001512@swboyd.mtv.corp.google.com>
+ <20200310212728.GQ264362@yoga>
+ <158396914211.149997.8114928596665644267@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158396914211.149997.8114928596665644267@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Truly NT35597 WQXGA panel is found on the Qualcomm SDM845 MTP,
-enable the driver for it.
+On Wed 11 Mar 16:25 PDT 2020, Stephen Boyd wrote:
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> Quoting Bjorn Andersson (2020-03-10 14:27:28)
+> > On Tue 10 Mar 13:29 PDT 2020, Stephen Boyd wrote:
+> > 
+> > > Why can't we search in DT for the
+> > > imem node and then find the pil reloc info compatible string on the
+> > > first call to this library? Then we don't need an API to see if the
+> > > device has probed yet (qcom_pil_info_available)
+> > 
+> > I think this sounds reasonable.
+> 
+> Great!
+> 
+> > 
+> > > and we can just ioremap
+> > > some region of memory that's carved out for this reason. Forcing
+> > > everything through the regmap is mostly adding pain.
+> > > 
+> > 
+> > My concern here was simply that we'll end up ioremapping various small
+> > chunks of the imem region 10 (or so) times. But I agree that things
+> > would be cleaner here.
+> 
+> Alright. I'd like the ioremap() approach. ioremap() will "do the right
+> thing" and reuse mappings if they're already there and overlap in the
+> page. So it's OK that the syscon/simple-mfd exists and makes a device,
+> etc. etc., but we don't need to care about it. We can just ioremap() the
+> area and not worry that the regmap users may have a mapping to the same
+> place. This is a dedicated carveout inside IMEM so we're safe from other
+> meddling users.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e8be14b93b40..07b57510394b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -573,6 +573,7 @@ CONFIG_DRM_TEGRA=m
- CONFIG_DRM_PANEL_LVDS=m
- CONFIG_DRM_PANEL_SIMPLE=m
- CONFIG_DRM_DUMB_VGA_DAC=m
-+CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
- CONFIG_DRM_SII902X=m
- CONFIG_DRM_THINE_THC63LVD1024=m
- CONFIG_DRM_TI_SN65DSI86=m
--- 
-2.24.0
+Agreed, thanks for the feedback!
 
+Regards,
+Bjorn
