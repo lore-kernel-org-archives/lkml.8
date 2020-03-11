@@ -2,107 +2,95 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E69C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A8EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF82D20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2DF20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QsTr1CwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgCKCkS (ORCPT
+        id S1727980AbgCKClf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:40:18 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:52222 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbgCKCkS (ORCPT
+        Tue, 10 Mar 2020 22:41:35 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60169 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbgCKClf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:40:18 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id 02B2e4K9076230;
-        Wed, 11 Mar 2020 10:40:04 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id C5868B39AA6AF42ADD58;
-        Wed, 11 Mar 2020 10:40:04 +0800 (CST)
-In-Reply-To: <20200310202723.16b48f4b@collabora.com>
-References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw> <1583220084-10890-2-git-send-email-masonccyang@mxic.com.tw> <20200310202723.16b48f4b@collabora.com>
-To:     "Boris Brezillon" <boris.brezillon@collabora.com>
-Cc:     allison@lohutok.net, bbrezillon@kernel.org,
-        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, rfontana@redhat.com, richard@nod.at,
-        s.hauer@pengutronix.de, stefan@agner.ch, tglx@linutronix.de,
-        vigneshr@ti.com, yuehaibing@huawei.com
-Subject: Re: [PATCH v3 1/4] mtd: rawnand: Add support manufacturer specific lock/unlock
- operation
+        Tue, 10 Mar 2020 22:41:35 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B39AF8365A;
+        Wed, 11 Mar 2020 15:41:32 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1583894492;
+        bh=9uLth0Wy0j14fkveY2T4IR24UQOJ9+lVCUAP80s/zxs=;
+        h=From:To:Cc:Subject:Date;
+        b=QsTr1CwAQjraDtcGOKvcp0HvLJyo4yygweM0g9qw7mgsnc9KEqbxKOwcjFhxTC1jt
+         K4GzXZF2Tr8b2qo+V9xJ2hbHoWTH4QRaoyFCmptrW6zN7n4xnPgz4/kR3QYdxa9Yei
+         SWej/06vF6AS6TFfdJlZCjrbrWgvf/NXUdQWIiFLTAD332d0xG3pN6zE6Cz8HPV+Pv
+         NY5bhmvcqBY5ofiIaJfaET8yWVqikXFfdAirNGaC/zXLFqXr2c7zB6TCeCdrJBXOec
+         UNCeZfI+DEXv7lDOENgYD4iyE0QSKcwp2UZPrMsT0U0rExrKSIuTML8foXgZnNF6rO
+         DRqFuH800aR8w==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e684fdd0000>; Wed, 11 Mar 2020 15:41:33 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 5BB0913EED5;
+        Wed, 11 Mar 2020 15:41:31 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 6DEAE28006C; Wed, 11 Mar 2020 15:41:32 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     davem@davemloft.net, andrew@lunn.ch, josua@solid-run.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] net: mvmdio: avoid error message for optional IRQ
+Date:   Wed, 11 Mar 2020 15:41:30 +1300
+Message-Id: <20200311024131.1289-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-KeepSent: CDE22522:001A7410-48258528:000E260F;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFCDE22522.001A7410-ON48258528.000E260F-48258528.000EA7E7@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 11 Mar 2020 10:40:04 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/03/11 AM 10:40:04,
-        Serialize complete at 2020/03/11 AM 10:40:04
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com 02B2e4K9076230
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Per the dt-binding the interrupt is optional so use
+platform_get_irq_optional() instead of platform_get_irq(). Since
+commit 7723f4c5ecdb ("driver core: platform: Add an error message to
+platform_get_irq*()") platform_get_irq() produces an error message
 
-Hi Boris,
+  orion-mdio f1072004.mdio: IRQ index 0 not found
 
-> > Add nand_lock() & nand_unlock() for manufacturer specific lock & 
-unlock
-> > operation while the device supports Block Portection function.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> Reported-by on something that's not a fix doesn't make sense. I know
-> the 0day bot asked you to add this tag, but that should only be done if
-> you submit a separate patch, ideally with a Fixes tag. If the offending
-> patch has not been merged yet, you should just fix the commit and ignore
-> the Reported-by tag (you can mention who reported the problem in the
-> changelog though).
-> 
+which is perfectly normal if one hasn't specified the optional property
+in the device tree.
 
-okay, understand it.
-Thanks a lot for your explanation.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/net/ethernet/marvell/mvmdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet=
+/marvell/mvmdio.c
+index 0b9e851f3da4..d14762d93640 100644
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -347,7 +347,7 @@ static int orion_mdio_probe(struct platform_device *p=
+dev)
+ 	}
+=20
+=20
+-	dev->err_interrupt =3D platform_get_irq(pdev, 0);
++	dev->err_interrupt =3D platform_get_irq_optional(pdev, 0);
+ 	if (dev->err_interrupt > 0 &&
+ 	    resource_size(r) < MVMDIO_ERR_INT_MASK + 4) {
+ 		dev_err(&pdev->dev,
+--=20
+2.25.1
 
