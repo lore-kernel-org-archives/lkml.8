@@ -2,147 +2,188 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56017C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1886BC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493E120736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRa0WWvz"
+	by mail.kernel.org (Postfix) with ESMTP id 0A14020736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583955182;
+	bh=v6Z4aIqPyT6xA23dKPj1NQnDfyjl9/Gbddfzog69U9Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cAbMOKSjzl9QrK+tAYOsC2yY7BxNLOM0qF5IdgXipOF8NQbgPf6bEt+f3+XboWLXC
+	 30jYA3q/CA8o/IwPGW6WssoiycwxXcqYzvfzqD0FQCr2IYp0brMI6xGMKeUBimxf4d
+	 94+kViHwilnK0Zlj0NpG83tdftsoy58IR1r12u4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731225AbgCKTck (ORCPT
+        id S1731227AbgCKTdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:32:40 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:41717 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731165AbgCKTcj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:32:39 -0400
-Received: by mail-yw1-f68.google.com with SMTP id p124so3162938ywc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LKraGJ30l6Da9gHXvZPSp4wo2q6s17TXGOTZwSnizRM=;
-        b=ZRa0WWvzWQ7vbhoCUSCiE+Xpnyn0r9X4j+VOZY5z0moAgoqNi7XrIrbvdOGZLoPStZ
-         t73/+8vK2zz/7Sh+YYuj8fHZZ3FvfEkXr6S9rYt7Ocx5uwZ/jttu0ZmY6lDF4hBC0sXu
-         RTFy9i9geyhj4B0j0J1TMco4guXl0g6ScFtbUdddNz65nOwp+Tj4KuGah5rZn7yD5Rip
-         nEJhat4np3znLve8DajoGUAaFw8E/zVSfQ8ONil21IEam4PVvzEjr7iYRP+6KxiOUnLs
-         Khqge9cA25XyxZdxn421HLHv3XL3BJR/eI7EJ1GdIvQIWL5pL6/nNTdMvucoFOejfkzH
-         yvNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LKraGJ30l6Da9gHXvZPSp4wo2q6s17TXGOTZwSnizRM=;
-        b=SnNt2Nj6p4Ei+37+6+ZBtkYtqqzCSXWQbkfQ2cnaTudeIAFLd/avWQMqnvKLu5QpUi
-         yRIqa7jKzRzFWzDQCcFaxVepYyhWMmMvu5lCkqhmAEztJMB6uvoCvJu6TxeHwu7HfYXr
-         PsAk64n13CpFmaJv8dwKgZq+fwWCsjfb0DIX7cdSiOy+jXxkP1GE/4TBYwj089KB7hVH
-         7oq09lhAwSg8/Z8KGxwej2WViayKOh3FbcBQJBGtivSJVdwnw0slW8CRc2Dx6GQqQOb3
-         XHmRqWz+4BUBGc7Ml1M7cEC7MP8H8YwC4jP5/EpbXni7rvXIiOoT585VBjbo0zv3k+wk
-         tzZg==
-X-Gm-Message-State: ANhLgQ3C8zG6uUkL+zj7wvOmL2NZDhpUjWiUymY/kxv+RWBF3S+hHyEr
-        xmYEnNPH6QQjjcHjkwOKV0sywDiiG2pT9AbmCq4UMg==
-X-Google-Smtp-Source: ADFU+vuV0D3QIjqPpw7rA21p5bLAVNUkr3pTXiahSyMXLJ3IuwPm7ousgUlGjlBoJJ8eQPNDhN9e5l4QTnhzSuuZwbw=
-X-Received: by 2002:a25:c482:: with SMTP id u124mr4859412ybf.286.1583955157918;
- Wed, 11 Mar 2020 12:32:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310185003.57344-1-irogers@google.com> <20200310195915.GA1676879@tassilo.jf.intel.com>
- <CABPqkBRQo=bEOiCFGFjwcM8TZaXMFyaL7o1hcFd6Bc3w+LhJQA@mail.gmail.com> <20200311161320.GA254105@krava>
-In-Reply-To: <20200311161320.GA254105@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 11 Mar 2020 12:32:26 -0700
-Message-ID: <CAP-5=fXYMTT7-iiaacO1VF0rRSO6t9W0a5edkiEwdZMYBcrtpQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: add support for lipfm4
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Wed, 11 Mar 2020 15:33:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:54118 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731048AbgCKTc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:32:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69CF91FB;
+        Wed, 11 Mar 2020 12:32:58 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFAE63F534;
+        Wed, 11 Mar 2020 12:32:57 -0700 (PDT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH v9 00/13] arm64: Branch Target Identification support
+Date:   Wed, 11 Mar 2020 19:25:55 +0000
+Message-Id: <20200311192608.40095-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 9:13 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Tue, Mar 10, 2020 at 02:39:23PM -0700, Stephane Eranian wrote:
-> > On Tue, Mar 10, 2020 at 12:59 PM Andi Kleen <ak@linux.intel.com> wrote:
-> > >
-> > > On Tue, Mar 10, 2020 at 11:50:03AM -0700, Ian Rogers wrote:
-> > > > This patch links perf with the libpfm4 library.
-> > > > This library contains all the hardware event tables for all
-> > > > processors supported by perf_events. This is a helper library
-> > > > that help convert from a symbolic event name to the event
-> > > > encoding required by the underlying kernel interface. This
-> > > > library is open-source and available from: http://perfmon2.sf.net.
-> > >
-> > > For most CPUs the builtin perf JSON event support should make
-> > > this redundant.
-> > >
-> > We decided to post this patch to propose an alternative to the JSON
-> > file approach. It could be an option during the build.
-> > The libpfm4 library has been around for 15 years now. Therefore, it
-> > supports a lot of processors core and uncore and it  is very portable.
-> > The key value add I see is that this is a library that can be, and has
-> > been, used by tool developers directly in their apps. It can
-> > work with more than Linux perf_events interface. It is not tied to the
-> > interface. It has well defined and documented entry points.
-> > We do use libpfm4 extensively at Google in both the perf tool and
-> > applications. The PAPI toolkit also relies on this library.
-> >
-> > I don't see this as competing with the JSON approach. It is just an
-> > option I'd like to offer to users especially those familiar
-> > with it in their apps.
->
-> I dont mind having it, in fact I found really old email where I'm
-> asking Peter about that ;-) and he wasn't very keen about that:
->   https://lore.kernel.org/lkml/1312806326.10488.30.camel@twins/
->
-> not sure what was the actual reason at that time and if anything
-> changed since.. Peter?
->
-> btw I can't apply even that v2 on latest Arnaldo's branch
->
-> jirka
+This patch series implements support for ARMv8.5-A Branch Target
+Identification (BTI), which is a control flow integrity protection
+feature introduced as part of the ARMv8.5-A extensions.
 
-Thanks Jiri,
+Changes:
 
-the patches were done on tip.git/master, perhaps there is a conflict
-with the Documents Makefile due to adding better man page dates? I'll
-try to repro building on
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/ on the
-perf/core branch unless you  have a different suggestion? I also
-noticed a warning crept into the Makefile.config in the v2 patch set
-that should be removed.
+v9:
+ - Move Kconfig addition to final patch in series.
+ - Add patch from Daniel Kiss adding BTI information to smaps, this has
+   a trivial conflict with a .rst conversion in -next.
+v8:
+ - Remove a redundant IS_ENABLED(CONFIG_ARM64_BTI) check.
+v7:
+ - Rebase onto v5.6-rc3.
+ - Move comment about keeping NT_GNU_PROPERTY_TYPE_0 internal into first
+   patch.
+ - Add an explicit check for system_supports_bti() when parsing BTI ELF
+   property for improved robustness.
+v6:
+ - Rebase onto v5.6-rc1.
+ - Fix typos s/BYTPE/BTYPE/ in commit log for "arm64: BTI: Decode BYTPE
+   bits when printing PSTATE".
+v5:
+ - Changed a bunch of -EIO to -ENOEXEC in the ELF parsing code.
+ - Move PSR_BTYPE defines to UAPI.
+ - Use compat_user_mode() rather than open coding.
+ - Fix a typo s/BYTPE/BTYPE/ in syscall.c
+v4:
+ - Dropped patch fixing existing documentation as it has already been merged.
+ - Convert WARN_ON() to WARN_ON_ONCE() in "ELF: Add ELF program property
+   parsing support".
+ - Added display of guarded pages to ptdump.
+ - Updated for conversion of exception handling from assembler to C.
 
-Ian
+Notes:
+
+ * GCC 9 can compile backwards-compatible BTI-enabled code with
+   -mbranch-protection=bti or -mbranch-protection=standard.
+
+ * Binutils 2.33 and later support the new ELF note.
+
+   Creation of a BTI-enabled binary requires _everything_ linked in to
+   be BTI-enabled.  For now ld --force-bti can be used to override this,
+   but some things may break until the required C library support is in
+   place.
+
+   There is no straightforward way to mark a .s file as BTI-enabled:
+   scraping the output from gcc -S works as a quick hack for now.
+
+   readelf -n can be used to examing the program properties in an ELF
+   file.
+
+ * Runtime mmap() and mprotect() can be used to enable BTI on a
+   page-by-page basis using the new PROT_BTI, but the code in the
+   affected pages still needs to be written or compiled to contain the
+   appopriate BTI landing pads.
+
+Daniel Kiss (1):
+  mm: smaps: Report arm64 guarded pages in smaps
+
+Dave Martin (11):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+  arm64: Basic Branch Target Identification support
+  elf: Allow arch to tweak initial mmap prot flags
+  arm64: elf: Enable BTI at exec based on ELF program properties
+  arm64: BTI: Decode BYTPE bits when printing PSTATE
+  arm64: unify native/compat instruction skipping
+  arm64: traps: Shuffle code to eliminate forward declarations
+  arm64: BTI: Reset BTYPE when skipping emulated instructions
+  KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+  arm64: BTI: Add Kconfig entry for userspace BTI
+
+Mark Brown (1):
+  arm64: mm: Display guarded pages in ptdump
+
+ Documentation/arm64/cpu-feature-registers.rst |   2 +
+ Documentation/arm64/elf_hwcaps.rst            |   5 +
+ Documentation/filesystems/proc.txt            |   1 +
+ arch/arm64/Kconfig                            |  25 +++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/cpufeature.h           |   6 +
+ arch/arm64/include/asm/elf.h                  |  50 ++++++
+ arch/arm64/include/asm/esr.h                  |   2 +-
+ arch/arm64/include/asm/exception.h            |   1 +
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/kvm_emulate.h          |   6 +-
+ arch/arm64/include/asm/mman.h                 |  37 +++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   1 +
+ arch/arm64/include/asm/pgtable.h              |   2 +-
+ arch/arm64/include/asm/ptrace.h               |   1 +
+ arch/arm64/include/asm/sysreg.h               |   4 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/include/uapi/asm/mman.h            |   9 ++
+ arch/arm64/include/uapi/asm/ptrace.h          |   9 ++
+ arch/arm64/kernel/cpufeature.c                |  33 ++++
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/entry-common.c              |  11 ++
+ arch/arm64/kernel/process.c                   |  36 ++++-
+ arch/arm64/kernel/ptrace.c                    |   2 +-
+ arch/arm64/kernel/signal.c                    |  16 ++
+ arch/arm64/kernel/syscall.c                   |  18 +++
+ arch/arm64/kernel/traps.c                     | 127 +++++++--------
+ arch/arm64/mm/dump.c                          |   5 +
+ fs/Kconfig.binfmt                             |   6 +
+ fs/binfmt_elf.c                               | 145 +++++++++++++++++-
+ fs/compat_binfmt_elf.c                        |   4 +
+ fs/proc/task_mmu.c                            |   3 +
+ include/linux/elf.h                           |  43 ++++++
+ include/linux/mm.h                            |   3 +
+ include/uapi/linux/elf.h                      |  11 ++
+ 35 files changed, 555 insertions(+), 75 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mman.h
+ create mode 100644 arch/arm64/include/uapi/asm/mman.h
+
+
+base-commit: f8788d86ab28f61f7b46eb6be375f8a726783636
+-- 
+2.20.1
+
