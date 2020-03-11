@@ -2,80 +2,144 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26699C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E87C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F142051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC962082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QAlhgRn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgCKIIU (ORCPT
+        id S1728364AbgCKIL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:08:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:37377 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgCKIIU (ORCPT
+        Wed, 11 Mar 2020 04:11:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46615 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726198AbgCKIL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:08:20 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MplLZ-1jfmZj1NML-00q7kb for <linux-kernel@vger.kernel.org>; Wed, 11 Mar
- 2020 09:08:18 +0100
-Received: by mail-qt1-f178.google.com with SMTP id l13so883178qtv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:08:18 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3jUXWUdtiVrAg5b8Og/YIAmZibP+/ICMlJ2kAutIXsJXmLTJ5z
-        jcGgoN/YIVebu75/8lF18tMmT+NjG66G+SEcSHc=
-X-Google-Smtp-Source: ADFU+vs2hxeVvWF6CFcvsnapxW/+7M3Z6M+ve+CzkmMddCW8sT2Z3/y60I2QSZoEPomImODxZOnSGSEEAy3EsgD3YN8=
-X-Received: by 2002:ac8:440c:: with SMTP id j12mr1507383qtn.142.1583914097268;
- Wed, 11 Mar 2020 01:08:17 -0700 (PDT)
+        Wed, 11 Mar 2020 04:11:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583914286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mclFMWusgTyOtMcXNsfUg9sVqxkjUF7Bq9avEjcdG/I=;
+        b=QAlhgRn1m8LI6avl4qT+oMSftsWS8txCzkBiOOX9P4bxj7lOg2NvyhRyp5+CkM2POdcAbb
+        PaWTtlAuTqiYCbSRXMC7FJM/2ZtY2py59elONVcQvS/FBp+sFYQ01DvK7VRKIshBZmiid+
+        eVMNJtUTVqD/1ofeVovtPQPahQJ8o4c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-494-sWznBkZzPgyeEBOnUFWxYg-1; Wed, 11 Mar 2020 04:11:22 -0400
+X-MC-Unique: sWznBkZzPgyeEBOnUFWxYg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 980BC107ACC4;
+        Wed, 11 Mar 2020 08:11:20 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1E6610372C5;
+        Wed, 11 Mar 2020 08:11:06 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 16:10:59 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        hare@suse.de, bvanassche@acm.org, hch@infradead.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [PATCH RFC v2 12/24] hpsa: use reserved commands
+Message-ID: <20200311081059.GC31504@ming.t460p>
+References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+ <1583857550-12049-13-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-References: <cover.1583896344.git.joe@perches.com> <03073a9a269010ca439e9e658629c44602b0cc9f.1583896348.git.joe@perches.com>
-In-Reply-To: <03073a9a269010ca439e9e658629c44602b0cc9f.1583896348.git.joe@perches.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 11 Mar 2020 09:08:01 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a06imYP7smZ=nJ_X_kqMfubZR0GF-HQ38S0creGqCo9rg@mail.gmail.com>
-Message-ID: <CAK8P3a06imYP7smZ=nJ_X_kqMfubZR0GF-HQ38S0creGqCo9rg@mail.gmail.com>
-Subject: Re: [PATCH -next 017/491] CELL BROADBAND ENGINE ARCHITECTURE: Use fallthrough;
-To:     Joe Perches <joe@perches.com>
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:SWE4REaBgVE7l5sxwzUDei8DYSFOKUAa2yYwhggSCsWs5RRPats
- 3kY+rBt4a15hYxAdrN7t+4ljTh4hA5Q/75F3s5vRZbdCysGnSwxDib0QLNL7iXLDao7X3j0
- gloyq81KXxt9Q82ZBrVAl28iJiFBZAxkd2mEcqAWRjJo5ykQPYWjamUX1CBR1ppnaIbCKIO
- j73uMtq1ZtobCrdqnPBAg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OqnbNR+/dgc=:usdyb68wlh/lhGEFNQy000
- r9/y/15+2DQ4aAVmP31NCPPxhEGeE8rGbhK56f4aYqQAEd1mSbBCcvMPEG7KrEpmltilKzHub
- YoSyRahNXBatFKlbCZWoQHH8S7D6mlo1CqFBdbR4INqIcBB6i61IwLgQYkHcTep9P5lG62a57
- rnmKbUvm3o79RjBJBst26qIaJa6kh6ffNL1lCQx2AVrMNEv30KMU6JgDZK+cMJYwOAh1Kulwx
- K1y367BUJC2Iq9pAMkiyntdBjgDVbm4nCEseyA5E7+paObFFoz8lnBto4JOvyTnxUqfyKtbVl
- 0tiFI+rB9OtwgXzmfwo1VhCuzoKPXc4UkZVq2RvyTPb1cOWwqqNZVePjtYYtCrtr5WlGB84SM
- cWzg1CN9woNxORi4iRfU5gJlIgrkfYPfKpPaZHVAyHOmUFrJrmezb6zRKrVQi2LvBsSXhvamV
- Mt32VsrxqRKoNITg3xdqncGEocTVqDqM2hCIhMhv9Xn/X31+8BeL4jHyQSB2ONLW/iAXYP9gO
- E/PHYFKDSoau+8bdZAbEBpMIqpBpUgkSkP/h2frXGevqbO5R1iPQXYX6yfVS8OWpKOtt5QStW
- x5LvW/yj2bvtGu/RjK47RVv7e2duFpmo5A97s5GAvIh2eSO1A/AC+GrG5cWz75vBucf9FJVmS
- DyuOnh97l6qEdP+qXFUQFBA2fBzFi3COhK9dL69YBuqM5O9sFCQfkeGjKtpaA+GY14U7icbDT
- PofcFmFUT2dKqNeL/LiBxV8BczA8jAFG7JVsXaK/HaMvYnCoz+HKZTeZxyvw1ZipQwYydrZRr
- zB0DVzhJcpnNkAyebY/rjzTLBzkZp00ef/tLADY6gGgfFCIglI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583857550-12049-13-git-send-email-john.garry@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 6:07 AM Joe Perches <joe@perches.com> wrote:
->
-> Convert the various uses of fallthrough comments to fallthrough;
->
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
->
-> Signed-off-by: Joe Perches <joe@perches.com>
+On Wed, Mar 11, 2020 at 12:25:38AM +0800, John Garry wrote:
+> From: Hannes Reinecke <hare@suse.com>
+> 
+> Enable the use of reserved commands, and drop the hand-crafted
+> command allocation.
+> 
+> Signed-off-by: Hannes Reinecke <hare@suse.com>
+> ---
+>  drivers/scsi/hpsa.c | 147 ++++++++++++++------------------------------
+>  drivers/scsi/hpsa.h |   1 -
+>  2 files changed, 45 insertions(+), 103 deletions(-)
+> 
+> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> index 703f824584fe..c14dd4b6e598 100644
+> --- a/drivers/scsi/hpsa.c
+> +++ b/drivers/scsi/hpsa.c
+> @@ -244,10 +244,6 @@ static struct hpsa_scsi_dev_t
+>  	*hpsa_find_device_by_sas_rphy(struct ctlr_info *h,
+>  		struct sas_rphy *rphy);
+>  
+> -#define SCSI_CMD_BUSY ((struct scsi_cmnd *)&hpsa_cmd_busy)
+> -static const struct scsi_cmnd hpsa_cmd_busy;
+> -#define SCSI_CMD_IDLE ((struct scsi_cmnd *)&hpsa_cmd_idle)
+> -static const struct scsi_cmnd hpsa_cmd_idle;
+>  static int number_of_controllers;
+>  
+>  static irqreturn_t do_hpsa_intr_intx(int irq, void *dev_id);
+> @@ -342,7 +338,7 @@ static inline struct ctlr_info *shost_to_hba(struct Scsi_Host *sh)
+>  
+>  static inline bool hpsa_is_cmd_idle(struct CommandList *c)
+>  {
+> -	return c->scsi_cmd == SCSI_CMD_IDLE;
+> +	return c->scsi_cmd == NULL;
+>  }
+>  
+>  /* extract sense key, asc, and ascq from sense data.  -1 means invalid. */
+> @@ -2445,7 +2441,12 @@ static void hpsa_cmd_resolve_events(struct ctlr_info *h,
+>  	 * this command has completed.  Then, check to see if the handler is
+>  	 * waiting for this command, and, if so, wake it.
+>  	 */
+> -	c->scsi_cmd = SCSI_CMD_IDLE;
+> +	if (c->scsi_cmd && c->cmd_type == CMD_IOCTL_PEND) {
+> +		struct scsi_cmnd *scmd = c->scsi_cmd;
+> +
+> +		scsi_put_reserved_cmd(scmd);
+> +	}
+> +	c->scsi_cmd = NULL;
+>  	mb();	/* Declare command idle before checking for pending events. */
+>  	if (dev) {
+>  		atomic_dec(&dev->commands_outstanding);
+> @@ -5502,7 +5503,6 @@ static void hpsa_cmd_init(struct ctlr_info *h, int index,
+>  	c->ErrDesc.Addr = cpu_to_le64((u64) err_dma_handle);
+>  	c->ErrDesc.Len = cpu_to_le32((u32) sizeof(*c->err_info));
+>  	c->h = h;
+> -	c->scsi_cmd = SCSI_CMD_IDLE;
+>  }
+>  
+>  static void hpsa_preinitialize_commands(struct ctlr_info *h)
+> @@ -5803,6 +5803,7 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
+>  	sh->max_lun = HPSA_MAX_LUN;
+>  	sh->max_id = HPSA_MAX_LUN;
+>  	sh->can_queue = h->nr_cmds - HPSA_NRESERVED_CMDS;
+> +	sh->nr_reserved_cmds = HPSA_NRESERVED_CMDS;
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Now .nr_reserved_cmds has been passed to blk-mq, you need to increase
+sh->can_queue to h->nr_cmds, because .can_queue is the whole queue depth
+(include the part of reserved tags), otherwise, IO tags will be
+decreased.
+
+Not look into other drivers, I guess they need such change too.
+
+Thanks,
+Ming
+
