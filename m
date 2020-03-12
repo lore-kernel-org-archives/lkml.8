@@ -2,157 +2,272 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D973C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E49C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D1F206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S1j4V7j+"
+	by mail.kernel.org (Postfix) with ESMTP id A3622206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584014163;
+	bh=+GnKn6514vAqg8WcvSlSps8JLOTqenGr5L6t9cZHkRQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZKZICf4JW4KjV3GxD7eFKbwcnu8LXSWZgDEZmsY44iTtJtGCKjqJqO7BI5X+oyHwv
+	 XS6r2vadzi2i2TV55OYfQU7qCM8xhlUU2Q34kIAFaNl6sbEo/Qqwr+jKvqttjWxTdE
+	 TP6gy0M4gPuml949I2WtoCPPDzzb5rsvkU36/6r4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgCLLuC (ORCPT
+        id S1726826AbgCLL4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:50:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27447 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726310AbgCLLuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:50:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584013801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ztweBegpBjV4t/LQbkEVQbgX+4OHEnOz1D5LiPs8ggU=;
-        b=S1j4V7j+3rnJNX7gtkH8U+swL2OWa9XrKvzn/jT+2/F5lHjMzSuztS5uhMepvpLy/28RU0
-        Ip7kXlWM9wIrdUP2Z47/1iy+5JznlsxjJvxSktwBPfSrmIK6sfJnMbwOYyBU6+IxjlCCCf
-        MzZTYuBwAJpZUagqi9LCJhtATbfBT/k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-7Hv6t-59PVKcMqZDSLWCgg-1; Thu, 12 Mar 2020 07:49:57 -0400
-X-MC-Unique: 7Hv6t-59PVKcMqZDSLWCgg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 12 Mar 2020 07:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgCLL4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:56:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D717800D48;
-        Thu, 12 Mar 2020 11:49:56 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.36.118.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8AE6192D1C;
-        Thu, 12 Mar 2020 11:49:54 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] x86/purgatory: Make sure we fail the build if purgatory.ro has missing symbols
-Date:   Thu, 12 Mar 2020 12:49:51 +0100
-Message-Id: <20200312114951.56009-2-hdegoede@redhat.com>
-In-Reply-To: <20200312114951.56009-1-hdegoede@redhat.com>
-References: <20200312114951.56009-1-hdegoede@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D0FF620674;
+        Thu, 12 Mar 2020 11:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584014161;
+        bh=+GnKn6514vAqg8WcvSlSps8JLOTqenGr5L6t9cZHkRQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PG8W84ylP8DzW06aGyJpMV/AA7zsfRaPoa2TW46fJ3Bcm+p57DvEIsMmRC/k9qrlF
+         pwiD5yXZ52tnmhDk/Dfl5/K4reFhC2x8o0uf94qkewbOAgZ4wiT/TshMDLcIOfqukQ
+         uXfMi2cX1NRn84iAfa6RafyRAnbQe34QmN9TuvDY=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jCMRT-00CCir-3r; Thu, 12 Mar 2020 11:55:59 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        John Garry <john.garry@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH v2] irqchip/gic-v3-its: Balance initial LPI affinity across CPUs
+Date:   Thu, 12 Mar 2020 11:55:52 +0000
+Message-Id: <20200312115552.29185-1-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, john.garry@huawei.com, ming.lei@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we link purgatory.ro with -r aka we enable "incremental linking"
-no checks for unresolved symbols is done while linking purgatory.ro.
+When mapping a LPI, the ITS driver picks the first possible
+affinity, which is in most cases CPU0, assuming that if
+that's not suitable, someone will come and set the affinity
+to something more interesting.
 
-Changes to the sha256 code has caused the purgatory in 5.4-rc1 to have
-a missing symbol on memzero_explicit, yet things still happily build.
+It apparently isn't the case, and people complain of poor
+performance when many interrupts are glued to the same CPU.
+So let's place the interrupts by finding the "least loaded"
+CPU (that is, the one that has the fewer LPIs mapped to it).
+So called 'managed' interrupts are an interesting case where
+the affinity is actually dictated by the kernel itself, and
+we should honor this.
 
-This commit adds an extra check for unresolved symbols by calling ld
-without -r before running bin2c to generate kexec-purgatory.c.
-
-This causes a build of 5.4-rc1 with this patch added to fail as it should=
-:
-
-  CHK     arch/x86/purgatory/purgatory.ro
-ld: arch/x86/purgatory/purgatory.ro: in function `sha256_transform':
-sha256.c:(.text+0x1c0c): undefined reference to `memzero_explicit'
-make[2]: *** [arch/x86/purgatory/Makefile:72:
-    arch/x86/purgatory/kexec-purgatory.c] Error 1
-make[1]: *** [scripts/Makefile.build:509: arch/x86/purgatory] Error 2
-make: *** [Makefile:1650: arch/x86] Error 2
-
-This will help us catch missing symbols in the purgatory sooner.
-
-Note this commit also removes --no-undefined from LDFLAGS_purgatory.ro
-as that has no effect.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Link: https://lore.kernel.org/r/1575642904-58295-1-git-send-email-john.garry@huawei.com
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Ming Lei <ming.lei@redhat.com>
 ---
-Changes in v3:
-- Add a .gitignore file with purgatory.chk listed in it
+Reviving this at John's request. The major change is that the
+affinity follows the x86 model, as described by Thomas.
+I expect this to have an impact on platforms like D05, where
+the SAS driver cannot use managed affinity just yet.
 
-Changes in v2:
-- Using 2 if_changed lines under a single rule does not work, then
-  1 of the 2 will always execute each build.
-  Instead add a new (unused) purgatory.chk intermediate which gets
-  linked from purgatory.ro without -r to do the missing symbols check
-- This also fixes the check generating an a.out file (oops)
----
- arch/x86/purgatory/.gitignore |  1 +
- arch/x86/purgatory/Makefile   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
- create mode 100644 arch/x86/purgatory/.gitignore
+ drivers/irqchip/irq-gic-v3-its.c | 125 ++++++++++++++++++++++++-------
+ 1 file changed, 99 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/purgatory/.gitignore b/arch/x86/purgatory/.gitignor=
-e
-new file mode 100644
-index 000000000000..d2be1500671d
---- /dev/null
-+++ b/arch/x86/purgatory/.gitignore
-@@ -0,0 +1 @@
-+purgatory.chk
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 4a35b9b94cb5..85221cb71c72 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -14,8 +14,12 @@ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
-=20
- CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS
-=20
--LDFLAGS_purgatory.ro :=3D -e purgatory_start -r --no-undefined -nostdlib=
- -z nodefaultlib
--targets +=3D purgatory.ro
-+# Since we link purgatory.ro with -r unresolved symbols are not checked,=
- so we
-+# also link a purgatory.chk binary without -r to check for unresolved sy=
-mbols.
-+PURGATORY_LDFLAGS :=3D -e purgatory_start -nostdlib -z nodefaultlib
-+LDFLAGS_purgatory.ro :=3D -r $(PURGATORY_LDFLAGS)
-+LDFLAGS_purgatory.chk :=3D $(PURGATORY_LDFLAGS)
-+targets +=3D purgatory.ro purgatory.chk
-=20
- GCOV_PROFILE	:=3D n
- KASAN_SANITIZE	:=3D n
-@@ -60,12 +64,15 @@ CFLAGS_string.o			+=3D $(PURGATORY_CFLAGS)
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
-=20
-+$(obj)/purgatory.chk: $(obj)/purgatory.ro FORCE
-+		$(call if_changed,ld)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 70d612adf15f..ee5568c20212 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -189,6 +189,8 @@ static DEFINE_IDA(its_vpeid_ida);
+ #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
+ #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
+ 
++static DEFINE_PER_CPU(atomic_t, cpu_lpi_count);
 +
- targets +=3D kexec-purgatory.c
-=20
- quiet_cmd_bin2c =3D BIN2C   $@
-       cmd_bin2c =3D $(objtree)/scripts/bin2c kexec_purgatory < $< > $@
-=20
--$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro FORCE
-+$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro $(obj)/purgatory.chk FORCE
- 	$(call if_changed,bin2c)
-=20
- obj-$(CONFIG_KEXEC_FILE)	+=3D kexec-purgatory.o
---=20
-2.25.1
+ static u16 get_its_list(struct its_vm *vm)
+ {
+ 	struct its_node *its;
+@@ -1500,35 +1502,113 @@ static void its_unmask_irq(struct irq_data *d)
+ 	lpi_update_config(d, 0, LPI_PROP_ENABLED);
+ }
+ 
++static unsigned int cpumask_pick_least_loaded(const struct cpumask *cpu_mask)
++{
++	unsigned int cpu = nr_cpu_ids, tmp;
++	int count = S32_MAX;
++
++	for_each_cpu(tmp, cpu_mask) {
++		int this_count = atomic_read(per_cpu_ptr(&cpu_lpi_count, tmp));
++		if (this_count < count) {
++			cpu = tmp;
++		        count = this_count;
++		}
++	}
++
++	return cpu;
++}
++
++/*
++ * As suggested by Thomas Gleixner in:
++ * https://lore.kernel.org/r/87h80q2aoc.fsf@nanos.tec.linutronix.de
++ */
++static int its_select_cpu(struct irq_data *d,
++			  const struct cpumask *aff_mask)
++{
++	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
++	cpumask_var_t tmpmask;
++	int cpu, node;
++
++	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
++		return -ENOMEM;
++
++	node = its_dev->its->numa_node;
++
++	if (!irqd_affinity_is_managed(d)) {
++		/* First try the NUMA node */
++		if (node != NUMA_NO_NODE) {
++			/*
++			 * Try the intersection of the affinity mask and the
++			 * node mask (and the online mask, just to be safe).
++			 */
++			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
++			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
++
++			/* If that doesn't work, try the nodemask itself */
++			if (cpumask_empty(tmpmask))
++				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
++
++			cpu = cpumask_pick_least_loaded(tmpmask);
++			if (cpu < nr_cpu_ids)
++				goto out;
++
++			/* If we can't cross sockets, give up */
++			if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144))
++				goto out;
++
++			/* If the above failed, expand the search */
++		}
++
++		/* Try the intersection of the affinity and online masks */
++		cpumask_and(tmpmask, aff_mask, cpu_online_mask);
++
++		/* If that doesn't fly, the online mask is the last resort */
++		if (cpumask_empty(tmpmask))
++			cpumask_copy(tmpmask, cpu_online_mask);
++
++		cpu = cpumask_pick_least_loaded(tmpmask);
++	} else {
++		cpumask_and(tmpmask, irq_data_get_affinity_mask(d), cpu_online_mask);
++
++		/* If we cannot cross sockets, limit the search to that node */
++		if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) &&
++		    node != NUMA_NO_NODE)
++			cpumask_and(tmpmask, tmpmask, cpumask_of_node(node));
++
++		cpu = cpumask_pick_least_loaded(tmpmask);
++	}
++out:
++	free_cpumask_var(tmpmask);
++
++	pr_debug("IRQ%d -> %*pbl CPU%d\n", d->irq, cpumask_pr_args(aff_mask), cpu);
++	return cpu;
++}
++
+ static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+ 			    bool force)
+ {
+-	unsigned int cpu;
+-	const struct cpumask *cpu_mask = cpu_online_mask;
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	struct its_collection *target_col;
+ 	u32 id = its_get_event_id(d);
++	int cpu;
+ 
+ 	/* A forwarded interrupt should use irq_set_vcpu_affinity */
+ 	if (irqd_is_forwarded_to_vcpu(d))
+ 		return -EINVAL;
+ 
+-       /* lpi cannot be routed to a redistributor that is on a foreign node */
+-	if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
+-		if (its_dev->its->numa_node >= 0) {
+-			cpu_mask = cpumask_of_node(its_dev->its->numa_node);
+-			if (!cpumask_intersects(mask_val, cpu_mask))
+-				return -EINVAL;
+-		}
+-	}
+-
+-	cpu = cpumask_any_and(mask_val, cpu_mask);
++	if (!force)
++		cpu = its_select_cpu(d, mask_val);
++	else
++		cpu = cpumask_pick_least_loaded(mask_val);
+ 
+-	if (cpu >= nr_cpu_ids)
++	if (cpu < 0 || cpu >= nr_cpu_ids)
+ 		return -EINVAL;
+ 
+ 	/* don't set the affinity when the target cpu is same as current one */
+ 	if (cpu != its_dev->event_map.col_map[id]) {
++		atomic_inc(per_cpu_ptr(&cpu_lpi_count, cpu));
++		atomic_dec(per_cpu_ptr(&cpu_lpi_count,
++				       its_dev->event_map.col_map[id]));
+ 		target_col = &its_dev->its->collections[cpu];
+ 		its_send_movi(its_dev, target_col, id);
+ 		its_dev->event_map.col_map[id] = cpu;
+@@ -3390,22 +3470,13 @@ static int its_irq_domain_activate(struct irq_domain *domain,
+ {
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	u32 event = its_get_event_id(d);
+-	const struct cpumask *cpu_mask = cpu_online_mask;
+ 	int cpu;
+ 
+-	/* get the cpu_mask of local node */
+-	if (its_dev->its->numa_node >= 0)
+-		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
+-
+-	/* Bind the LPI to the first possible CPU */
+-	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
+-	if (cpu >= nr_cpu_ids) {
+-		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
+-			return -EINVAL;
+-
+-		cpu = cpumask_first(cpu_online_mask);
+-	}
++	cpu = its_select_cpu(d, cpu_online_mask);
++	if (cpu < 0 || cpu >= nr_cpu_ids)
++		return -EINVAL;
+ 
++	atomic_inc(per_cpu_ptr(&cpu_lpi_count, cpu));
+ 	its_dev->event_map.col_map[event] = cpu;
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+@@ -3420,6 +3491,8 @@ static void its_irq_domain_deactivate(struct irq_domain *domain,
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	u32 event = its_get_event_id(d);
+ 
++	atomic_dec(per_cpu_ptr(&cpu_lpi_count,
++			       its_dev->event_map.col_map[event]));
+ 	/* Stop the delivery of interrupts */
+ 	its_send_discard(its_dev, event);
+ }
+-- 
+2.20.1
 
