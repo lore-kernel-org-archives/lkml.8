@@ -2,162 +2,229 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D10C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A44C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D3520739
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C866520746
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JI0NdUuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387636AbgCLBpn (ORCPT
+        id S2387638AbgCLBrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 21:45:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49984 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387571AbgCLBpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 21:45:42 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9DD712E01B64EC9C1957;
-        Thu, 12 Mar 2020 09:45:36 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.230) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
- 09:45:26 +0800
-Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small
- chunks
-To:     "Zhoujian (jay)" <jianjay.zhou@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-References: <20200309085727.1106-1-zhukeqian1@huawei.com>
- <4b85699ec1d354cc73f5302560231f86@misterjones.org>
- <64925c8b-af3d-beb5-bc9b-66ef1e47f92d@huawei.com>
- <a642a79ea9190542a9098e4c9dc5a9f2@kernel.org>
- <9ddefc54-dd5b-0555-0aaa-00a3a23febcf@huawei.com>
- <B2D15215269B544CADD246097EACE7474BB64495@DGGEMM528-MBX.china.huawei.com>
-CC:     "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Huangweidong (C)" <weidong.huang@huawei.com>,
-        "wangxin (U)" <wangxinxin.wang@huawei.com>
-From:   zhukeqian <zhukeqian1@huawei.com>
-Message-ID: <3238d495-8c13-4fbb-8e3d-c34e560ec9af@huawei.com>
-Date:   Thu, 12 Mar 2020 09:45:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 11 Mar 2020 21:47:46 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:33848 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387501AbgCLBrp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 21:47:45 -0400
+Received: by mail-ua1-f65.google.com with SMTP id g21so1525772uaj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 18:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PgMVUPr9CJB662kw0Etj9PzDmEhHdAooW8/c8EV2Xs4=;
+        b=JI0NdUuOBJi8irQniAHDZus9gSxHFsPWYFnKXsiqwsOhKAbNzUqHq+VcEDM8T4TnEJ
+         OGifAyneQ4sO654BJ/tCMwd7iiHnlmHuV7b42qkExDUAC0x85FWZUcqYT2EqaWfTVQ3c
+         PY8jyoS8ygU8ctvk99m1zD0Sk/ux/dUV8qhvA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PgMVUPr9CJB662kw0Etj9PzDmEhHdAooW8/c8EV2Xs4=;
+        b=QQVEky0DjpjJYXcSqPmUOi8wegXvR8sdSO4y51/pUoS41WDjMP5IpyXjQospdlUCYX
+         C33D68SF2+t/o6v2I2gN1EMFaK2uiylC8LPmCq79AF5kxgmiaBZJOZdXAI/A+V4V8gnk
+         EyV9Tsytd4ijsqSDeqykKFEjua0x+IT2+LR3lynWwo+h9kX00TQsTXMqd5pPQn/oQ1iY
+         B8jGMUa7z5KB+hhuIcA17GtZy/RpPhVf9h08IU6SXUcWJ+kQ+2duZThkyC4plJdAeWPw
+         aHBnCOUuNM0+qqlzOyheJVNK3BaasDsMZT71xSCvplJ/WfNgNu7U/2/FQsSPhkmfijsR
+         RKSg==
+X-Gm-Message-State: ANhLgQ1xNVGO31f99fu21w2XHXwSLIe01wRFlY710eDsT4y91y+hVQ0M
+        P5yBBXursPgYzFJTpSd4eVIVqYdvit+6IdfAgnu5Lkftw4Y=
+X-Google-Smtp-Source: ADFU+vsxe8uIFuMytA3ZTH+Dvv+Qm9+AJ1NhP8oHDjWpECQUTxgXsbkqu31HUYTB81OepoijiVoqI3hoMedJGeKGa20=
+X-Received: by 2002:a9f:32da:: with SMTP id f26mr3606235uac.40.1583977664301;
+ Wed, 11 Mar 2020 18:47:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <B2D15215269B544CADD246097EACE7474BB64495@DGGEMM528-MBX.china.huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.230]
-X-CFilter-Loop: Reflected
+References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 12 Mar 2020 09:47:33 +0800
+Message-ID: <CANMq1KDZeBOzVfWF0xjWpcLFDbO9WY7xRvzpGmtfePTOxVZpzg@mail.gmail.com>
+Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jay,
-
-On 2020/3/11 15:34, Zhoujian (jay) wrote:
-> 
-> 
->> -----Original Message-----
->> From: zhukeqian
->> Sent: Wednesday, March 11, 2020 3:20 PM
->> To: Marc Zyngier <maz@kernel.org>
->> Cc: kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Zhoujian (jay)
->> <jianjay.zhou@huawei.com>; Sean Christopherson
->> <sean.j.christopherson@intel.com>; Paolo Bonzini <pbonzini@redhat.com>;
->> James Morse <james.morse@arm.com>; Julien Thierry
->> <julien.thierry.kdev@gmail.com>; Suzuki K Poulose <suzuki.poulose@arm.com>
->> Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small chunks
->>
->> Hi Marc,
->>
->> On 2020/3/10 21:16, Marc Zyngier wrote:
->>> On 2020-03-10 08:26, zhukeqian wrote:
->>>> Hi Marc,
->>>>
->>>> On 2020/3/9 19:45, Marc Zyngier wrote:
->>>>> Kegian,
->>>
->>> [...]
->>>
->>>>> Is there a userspace counterpart to it?
->>>>>
->>>> As this KVM/x86 related changes have not been merged to mainline
->>>> kernel, some little modification is needed on mainline Qemu.
->>>
->>> Could you please point me to these changes?
->> I made some changes locally listed below.
->>
->> However, Qemu can choose to enable KVM_DIRTY_LOG_INITIALLY_SET or not.
->> Here I made no judgement on dirty_log_manual_caps because I just want to
->> verify the optimization of this patch.
->>
->> diff --git a/accel/kvm/kvm-all.c b/accel/kvm/kvm-all.c index
->> 439a4efe52..1611f644a4 100644
->> --- a/accel/kvm/kvm-all.c
->> +++ b/accel/kvm/kvm-all.c
->> @@ -2007,14 +2007,16 @@ static int kvm_init(MachineState *ms)
->>      s->coalesced_pio = s->coalesced_mmio &&
->>                         kvm_check_extension(s,
->> KVM_CAP_COALESCED_PIO);
->>
->> -    s->manual_dirty_log_protect =
->> +    uint64_t dirty_log_manual_caps =
->>          kvm_check_extension(s,
->> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
->> -    if (s->manual_dirty_log_protect) {
->> -        ret = kvm_vm_enable_cap(s,
->> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0, 1);
->> +    if (dirty_log_manual_caps) {
->> +        ret = kvm_vm_enable_cap(s,
->> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0,
->> +                                dirty_log_manual_caps);
->>          if (ret) {
->>              warn_report("Trying to enable
->> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 "
->>                          "but failed.  Falling back to the legacy mode. ");
->> -            s->manual_dirty_log_protect = false;
->> +        } else {
->> +            s->manual_dirty_log_protect = true;
->>          }
->>      }
-> 
-> FYI: I had submitted a patch to the Qemu community some days ago:
-> https://patchwork.kernel.org/patch/11419191/
-This is very helpful, thanks.
-> 
->>>
->>>> As I tested this patch on a 128GB RAM Linux VM with no huge pages,
->>>> the time of enabling dirty log will decrease obviously.
->>>
->>> I'm not sure how realistic that is. Not having huge pages tends to
->>> lead to pretty bad performance in general...
->> Sure, this has no effect on guests which are all of huge pages.
->>
->> For my understanding, once a guest has normal pages (maybe are initialized at
->> beginning or dissloved from huge pages), it can benefit from this patch.
-> 
-> Yes, I agree.
-> 
-I will send PATCH v1 soon.
-> 
-> 
-> Regards,
-> Jay Zhou
-> 
-> .
+On Wed, Mar 11, 2020 at 5:17 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
 >
-Thanks,
-Keqian
+> From: Ran Bi <ran.bi@mediatek.com>
+>
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> driver which only needed by armv7 CPU without ATF.
+>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/power/reset/mt6323-poweroff.c |  2 +-
+>  drivers/rtc/rtc-mt6397.c              | 32 ++++++++++++++++++++++++--------
+>  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+>  3 files changed, 33 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
+> index 1caf43d..0532803 100644
+> --- a/drivers/power/reset/mt6323-poweroff.c
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
+>         int ret;
+>
+>         regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> -       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+>
+>         ret = regmap_read_poll_timeout(pwrc->regmap,
+>                                         pwrc->base + RTC_BBPU, val,
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index cda238d..7a5a9e2 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,18 +9,38 @@
+>  #include <linux/mfd/mt6397/core.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+>  #include <linux/mfd/mt6397/rtc.h>
+>  #include <linux/mod_devicetable.h>
+>
+> +static const struct mtk_rtc_data mt6358_rtc_data = {
+> +       .wrtgr = RTC_WRTGR_MT6358,
+> +};
+> +
+> +static const struct mtk_rtc_data mt6397_rtc_data = {
+> +       .wrtgr = RTC_WRTGR_MT6397,
+> +};
+> +
+> +static const struct of_device_id mt6397_rtc_of_match[] = {
+> +       { .compatible = "mediatek,mt6323-rtc",
+> +               .data = (void *)&mt6397_rtc_data, },
+> +       { .compatible = "mediatek,mt6358-rtc",
+> +               .data = (void *)&mt6358_rtc_data, },
+> +       { .compatible = "mediatek,mt6397-rtc",
+> +               .data = (void *)&mt6397_rtc_data, },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+> +
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+>         int ret;
+>         u32 data;
+>
+> -       ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +       ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
+>         if (ret < 0)
+>                 return ret;
+>
+> @@ -269,6 +289,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         rtc->addr_base = res->start;
+>
+> +       rtc->data = (struct mtk_rtc_data *)
+> +                       of_device_get_match_data(&pdev->dev);
 
+Sorry for not noticing earlier, the cast is not needed. (also, you
+cast a const pointer into a non-const, which doesn't matter anyway as
+rtc->data is const again, but still...).
+
+> +
+>         rtc->irq = platform_get_irq(pdev, 0);
+>         if (rtc->irq < 0)
+>                 return rtc->irq;
+> @@ -325,13 +348,6 @@ static int mt6397_rtc_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+>                         mt6397_rtc_resume);
+>
+> -static const struct of_device_id mt6397_rtc_of_match[] = {
+> -       { .compatible = "mediatek,mt6323-rtc", },
+> -       { .compatible = "mediatek,mt6397-rtc", },
+> -       { }
+> -};
+> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+> -
+
+Why are you moving the MODULE_DEVICE_TABLE to the top of the file? I
+think you can keep it here with the mt63xx_rtc_data structs?
+
+>  static struct platform_driver mtk_rtc_driver = {
+>         .driver = {
+>                 .name = "mt6397-rtc",
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+> index 7dfb63b..66534ed 100644
+> --- a/include/linux/mfd/mt6397/rtc.h
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -18,7 +18,9 @@
+>  #define RTC_BBPU_CBUSY         BIT(6)
+>  #define RTC_BBPU_KEY            (0x43 << 8)
+>
+> -#define RTC_WRTGR              0x003c
+> +#define RTC_WRTGR_MT6358       0x3a
+> +#define RTC_WRTGR_MT6397       0x3c
+> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+>
+>  #define RTC_IRQ_STA            0x0002
+>  #define RTC_IRQ_STA_AL         BIT(0)
+> @@ -65,6 +67,10 @@
+>  #define MTK_RTC_POLL_DELAY_US  10
+>  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+>
+> +struct mtk_rtc_data {
+> +       u32                     wrtgr;
+> +};
+> +
+>  struct mt6397_rtc {
+>         struct device           *dev;
+>         struct rtc_device       *rtc_dev;
+> @@ -74,6 +80,7 @@ struct mt6397_rtc {
+>         struct regmap           *regmap;
+>         int                     irq;
+>         u32                     addr_base;
+> +       const struct mtk_rtc_data *data;
+>  };
+>
+>  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> --
+> 2.6.4
