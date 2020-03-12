@@ -2,144 +2,261 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EF2C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97686C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E222071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wz9uTaIm"
+	by mail.kernel.org (Postfix) with ESMTP id 6C77C2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgCLNy1 (ORCPT
+        id S1727542AbgCLNyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:54:27 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34500 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgCLNy0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:54:26 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f3so6269996qkh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YJCbAPM757c7WtP5729q/CvzsGeEr1ydJuKt4rhqYN0=;
-        b=Wz9uTaImPoBXmMxauB2gmqMyOC7ZHJIqwDg3dkJxuEtcOEk7VlKjUF7hgOsfXtoDcf
-         j56kSjTCHlUXqEi+p4R2+8g6dT3gOl/SfmGOcvsTWoiIqnsO1gIjCd8nmxxSGGTU+gXg
-         redRm1hKIc7Hw5YBy+xDo0LJcZwVYZbd3/gGlzuiEBUPTOsTKdPvowZBsC/atoHowoQL
-         Wd6J4G7x2CQKp0qB8Q4ri+INEfgSNXrxafpiqxJXlFFMGhj7xVIBbfKyTOmvcpmFwtzH
-         rJWugm3npmE/ewF3g+mT9QpKbmwqmK6NhDhKv8RUCMsY/qAWA4H2bHNlERC3rgkJlNnM
-         +vxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YJCbAPM757c7WtP5729q/CvzsGeEr1ydJuKt4rhqYN0=;
-        b=gy81wMNaJa/1wJMos/enNu8QRoePnxiDDBAw8qi6wWCEmOfkJVfE7lV+pY7X0oQtyf
-         6b0Poh+7PoE6bUyZkPwBly+a1PjASRnbZes2rnNMRslP+PiuUBvPH6hkGGV7olxjtS9w
-         yuN5lyTpbgsgrk8peQE5mJHoeezBnI78MlAdaeA18wKTAP/mVLWG1qjOGCAxjy9BnNp4
-         eOYMFCJvKChOMLCd7zyUgzeBuVPJLvUriIT4ieIy8NfjoTo8EI9VUTlIZuclKiT2qabJ
-         PWYx4Gt9/29nOD8UUlXRgskx9TrKSFzX6i5pOBYwFOzFy57KkSYJtYpiJ4g+KdXF1QYw
-         cL8A==
-X-Gm-Message-State: ANhLgQ337vH8BXI8PJWTGwSWgl/VqiCmBZ19orHplm98P1cGeh66slW+
-        ZpKSm/tWgonNDuqKgFrlsfl6JPJXRIFgO5B25G/XBw==
-X-Google-Smtp-Source: ADFU+vsuGDmI45/A8Yf3+0B7+92jTTpshUjY3yuJofcW2KRZcB5IKMAjUaGCEWxWhVaaeduCWL8mS5oibYzFRjRxZqM=
-X-Received: by 2002:a05:620a:1362:: with SMTP id d2mr8052260qkl.120.1584021265259;
- Thu, 12 Mar 2020 06:54:25 -0700 (PDT)
+        Thu, 12 Mar 2020 09:54:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34335 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726641AbgCLNyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:54:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 06:54:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="235028953"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 12 Mar 2020 06:54:39 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 12 Mar 2020 15:54:38 +0200
+Date:   Thu, 12 Mar 2020 15:54:38 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     "Laxminarayan Bharadiya, Pankaj" 
+        <pankaj.laxminarayan.bharadiya@intel.com>
+Cc:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "tzimmermann@suse.de" <tzimmermann@suse.de>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "Souza, Jose" <jose.souza@intel.com>,
+        "De Marchi, Lucas" <lucas.demarchi@intel.com>,
+        "Roper, Matthew D" <matthew.d.roper@intel.com>,
+        "Deak, Imre" <imre.deak@intel.com>,
+        "Shankar, Uma" <uma.shankar@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>
+Subject: Re: [RFC][PATCH 5/5] drm/i915/display: Add Nearest-neighbor based
+ integer scaling support
+Message-ID: <20200312135438.GF13686@intel.com>
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200225070545.4482-6-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200310161723.GK13686@intel.com>
+ <E92BA18FDE0A5B43B7B3DA7FCA031286057B2C55@BGSMSX107.gar.corp.intel.com>
 MIME-Version: 1.0
-References: <20200312094008.1833929-1-gabravier@gmail.com>
-In-Reply-To: <20200312094008.1833929-1-gabravier@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Mar 2020 14:54:12 +0100
-Message-ID: <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
-Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
-To:     Gabriel Ravier <gabravier@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E92BA18FDE0A5B43B7B3DA7FCA031286057B2C55@BGSMSX107.gar.corp.intel.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 12 mar 2020 o 10:40 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
-(a):
->
-> If '-o' was used more than 64 times in a single invocation of gpio-hammer=
-,
-> this could lead to an overflow of the 'lines' array. This commit fixes
-> this by avoiding the overflow and giving a proper diagnostic back to the
-> user
->
-> Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
-> ---
->  tools/gpio/gpio-hammer.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-> index 0e0060a6e..273d33847 100644
-> --- a/tools/gpio/gpio-hammer.c
-> +++ b/tools/gpio/gpio-hammer.c
-> @@ -77,7 +77,7 @@ int hammer_device(const char *device_name, unsigned int=
- *lines, int nlines,
->
->                 fprintf(stdout, "[%c] ", swirr[j]);
->                 j++;
-> -               if (j =3D=3D sizeof(swirr)-1)
-> +               if (j =3D=3D sizeof(swirr) - 1)
+On Thu, Mar 12, 2020 at 09:13:24AM +0000, Laxminarayan Bharadiya, Pankaj wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > Sent: 10 March 2020 21:47
+> > To: Laxminarayan Bharadiya, Pankaj
+> > <pankaj.laxminarayan.bharadiya@intel.com>
+> > Cc: jani.nikula@linux.intel.com; daniel@ffwll.ch; intel-
+> > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; airlied@linux.ie;
+> > maarten.lankhorst@linux.intel.com; tzimmermann@suse.de;
+> > mripard@kernel.org; mihail.atanassov@arm.com; Joonas Lahtinen
+> > <joonas.lahtinen@linux.intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>;
+> > Chris Wilson <chris@chris-wilson.co.uk>; Souza, Jose
+> > <jose.souza@intel.com>; De Marchi, Lucas <lucas.demarchi@intel.com>;
+> > Roper, Matthew D <matthew.d.roper@intel.com>; Deak, Imre
+> > <imre.deak@intel.com>; Shankar, Uma <uma.shankar@intel.com>; linux-
+> > kernel@vger.kernel.org; Nautiyal, Ankit K <ankit.k.nautiyal@intel.com>
+> > Subject: Re: [RFC][PATCH 5/5] drm/i915/display: Add Nearest-neighbor
+> > based integer scaling support
+> > 
+> > On Tue, Feb 25, 2020 at 12:35:45PM +0530, Pankaj Bharadiya wrote:
+> > > Integer scaling (IS) is a nearest-neighbor upscaling technique that
+> > > simply scales up the existing pixels by an integer (i.e., whole
+> > > number) multiplier.Nearest-neighbor (NN) interpolation works by
+> > > filling in the missing color values in the upscaled image with that of
+> > > the coordinate-mapped nearest source pixel value.
+> > >
+> > > Both IS and NN preserve the clarity of the original image. Integer
+> > > scaling is particularly useful for pixel art games that rely on sharp,
+> > > blocky images to deliver their distinctive look.
+> > >
+> > > Program the scaler filter coefficients to enable the NN filter if
+> > > scaling filter property is set to DRM_SCALING_FILTER_NEAREST_NEIGHBOR
+> > > and enable integer scaling.
+> > >
+> > > Bspec: 49247
+> > >
+> > > Signed-off-by: Pankaj Bharadiya
+> > > <pankaj.laxminarayan.bharadiya@intel.com>
+> > > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
+> > > ---
+> > >  drivers/gpu/drm/i915/display/intel_display.c | 83
+> > > +++++++++++++++++++-  drivers/gpu/drm/i915/display/intel_display.h |
+> > > 2 +  drivers/gpu/drm/i915/display/intel_sprite.c  | 20 +++--
+> > >  3 files changed, 97 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/i915/display/intel_display.c
+> > > b/drivers/gpu/drm/i915/display/intel_display.c
+> > > index b5903ef3c5a0..6d5f59203258 100644
+> > > --- a/drivers/gpu/drm/i915/display/intel_display.c
+> > > +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> > > @@ -6237,6 +6237,73 @@ void skl_scaler_disable(const struct
+> > intel_crtc_state *old_crtc_state)
+> > >  		skl_detach_scaler(crtc, i);
+> > >  }
+> > >
+> > > +/**
+> > > + *  Theory behind setting nearest-neighbor integer scaling:
+> > > + *
+> > > + *  17 phase of 7 taps requires 119 coefficients in 60 dwords per set.
+> > > + *  The letter represents the filter tap (D is the center tap) and
+> > > +the number
+> > > + *  represents the coefficient set for a phase (0-16).
+> > > + *
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |Index value | Data value coeffient 1 | Data value coeffient 2 |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   00h      |          B0            |          A0            |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   01h      |          D0            |          C0            |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   02h      |          F0            |          E0            |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   03h      |          A1            |          G0            |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   04h      |          C1            |          B1            |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   ...      |          ...           |          ...           |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   38h      |          B16           |          A16           |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   39h      |          D16           |          C16           |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   3Ah      |          F16           |          C16           |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *         |   3Bh      |        Reserved        |          G16           |
+> > > + *         +------------+------------------------+------------------------+
+> > > + *
+> > > + *  To enable nearest-neighbor scaling:  program scaler coefficents
+> > > +with
+> > > + *  the center tap (Dxx) values set to 1 and all other values set to
+> > > +0 as per
+> > > + *  SCALER_COEFFICIENT_FORMAT
+> > > + *
+> > > + */
+> > > +void skl_setup_nearest_neighbor_filter(struct drm_i915_private
+> > *dev_priv,
+> > > +				  enum pipe pipe, int scaler_id)
+> > 
+> > skl_scaler_...
+> > 
+> > > +{
+> > > +
+> > > +	int coeff = 0;
+> > > +	int phase = 0;
+> > > +	int tap;
+> > > +	int val = 0;
+> > 
+> > Needlessly wide scope for most of these.
+> > 
+> > > +
+> > > +	/*enable the index auto increment.*/
+> > > +	intel_de_write_fw(dev_priv, SKL_PS_COEF_INDEX_SET0(pipe,
+> > scaler_id),
+> > > +			  _PS_COEE_INDEX_AUTO_INC);
+> > > +
+> > > +	for (phase = 0; phase < 17; phase++) {
+> > > +		for (tap = 0; tap < 7; tap++) {
+> > > +			coeff++;
+> > 
+> > Can be part of the % check.
+> 
+> OK.
+> 
+> > 
+> > > +			if (tap == 3)
+> > > +				val = (phase % 2) ? (0x800) : (0x800 << 16);
+> > 
+> > Parens overload.
+> 
+> OK. Will remove.
+> > 
+> > > +
+> > > +			if (coeff % 2 == 0) {
+> > > +				intel_de_write_fw(dev_priv,
+> > SKL_PS_COEF_DATA_SET0(pipe, scaler_id), val);
+> > > +				val = 0;
+> > 
+> > Can drop this val=0 if you move the variable into tight scope and initialize
+> > there.
+> 
+> Moving val=0 initialization to the tight scope will not work here as we need
+> to retain "val" and write only when 2 coefficients are ready (since 2 
+> coefficients are packed in 1 dword).
+> 
+> e.g. for (12th , 11th)  coefficients, coefficient reg value should be ( (0 << 16) | 0x800).
+> If we initialize val = 0 in tight loop, 0 will be written to  coefficient register.
 
-Please don't try to sneak in unrelated changes into commits. This is
-of course correct coding-style-wise but send it in a separate patch.
+Hmm, right. I guess I'd try to rearrange this to iterate the
+registers directly instead of the phases and taps. Something
+like this perhaps:
 
->                         j =3D 0;
->
->                 fprintf(stdout, "[");
-> @@ -135,7 +135,14 @@ int main(int argc, char **argv)
->                         device_name =3D optarg;
->                         break;
->                 case 'o':
-> -                       lines[i] =3D strtoul(optarg, NULL, 10);
-> +                       /*
-> +                        * Avoid overflow. Do not immediately error, we w=
-ant to
-> +                        * be able to accurately report on the amount of =
-times
-> +                        *'-o' was given to give an accurate error messag=
-e
-> +                        */
-> +                       if (i < GPIOHANDLES_MAX)
-> +                               lines[i] =3D strtoul(optarg, NULL, 10);
-> +
->                         i++;
->                         break;
->                 case '?':
-> @@ -143,6 +150,14 @@ int main(int argc, char **argv)
->                         return -1;
->                 }
->         }
-> +
-> +       if (i >=3D GPIOHANDLES_MAX) {
-> +               fprintf(stderr,
-> +                       "Only %d occurences of '-o' are allowed, %d were =
-found\n",
-> +                       GPIOHANDLES_MAX, i + 1);
-> +               return -1;
-> +       }
-> +
->         nlines =3D i;
->
->         if (!device_name || !nlines) {
-> --
-> 2.24.1
->
+static int cnl_coef_tap(int i)
+{
+	return i % 7;
+}
 
-Other than that, looks good.
+static u16 cnl_coef(int t)
+{
+	return t == 3 ? 0x0800 : 0x3000;
+}
 
-Bartosz
+static void cnl_program_nearest_filter_coefs(void)
+{
+	int i;
+
+	for (i = 0; i < 17 * 7; i += 2) {
+		uint32_t tmp;
+		int t;
+
+		t = cnl_coef_tap(i);
+		tmp = cnl_nearest_filter_coef(t);
+
+		t = cnl_coef_tap(i + 1);
+		tmp |= cnl_nearest_filter_coef(t) << 16;
+
+		intel_de_write_fw(tmp);
+	}
+}
+
+More readable I think. The downside being all those modulo operations
+but hopefully that's all in the noise when it comes to performance.
+
+-- 
+Ville Syrjälä
+Intel
