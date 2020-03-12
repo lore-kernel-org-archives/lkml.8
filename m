@@ -2,211 +2,131 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90EBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBE7C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730FA206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECFF206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="henknk4I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvju6hx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgCLXEl (ORCPT
+        id S1726825AbgCLXIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 19:04:41 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45465 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgCLXEk (ORCPT
+        Thu, 12 Mar 2020 19:08:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58099 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726752AbgCLXIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 19:04:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m15so3802354pgv.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 16:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ncunqT6Q2Vy6vrA/voMZUjSZG544U++p9lS8+YT4L9M=;
-        b=henknk4IkA91Io3No9BwOKGPjhOwM8HYAFx2yABedrp+UdqsI1XUrRgwwaNsazhAPJ
-         y5uLtTIRYEJyh37eATF39A8GXBnnPxPrgZUlQs2bIn814FzuGTTpXd/8u4shYNbBUqM/
-         G7F85Lut0yNdmzV9Cdzw1dPhZTlFocw+zLFec=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ncunqT6Q2Vy6vrA/voMZUjSZG544U++p9lS8+YT4L9M=;
-        b=ObJKnzXJMTsiat5f4Q5WcFeVl8oXk+QE7GfwhlgHZfvQKUVMl8oCMbQFUcUSzJgrUv
-         KLYhYsT1w4BYLFW8554bu851SJlj3vepWXPDCU+ecKpzyLF1AU8zKNvKGaGacFLPB+kj
-         INxoCd446Ahx+nx8wPtyWZGJEDS8eLGPRgpRP7jYRjrJ0GWiiljCjhQ+YQA7jeT9keQM
-         w+yqCu5S+vBFf24mGe4U1F/kF6MTvJnVo6q1kqyQpSDp4jNojwbWUcA46Hnsng6SMCKD
-         w3Fle8EuMqX+P/UiVqgnDMEniluSui/YKOvSvCfpX5SK/n9J8zXazbZKyQB9C1UEyLnv
-         Eh+w==
-X-Gm-Message-State: ANhLgQ2gLLFaGq50zxxSGB8iRbtVngGEeMcqcNljdsYpgiTf5dbNLok6
-        fB4bkmgtx4s01KrkyznRmhMahHDQ++Q=
-X-Google-Smtp-Source: ADFU+vtczPKm6cjTab+cjBzj+VfX/B3e4pKy6eYJSHly62SxXSB6yWa8Kgl89fhA/GjSedrbR4Lurw==
-X-Received: by 2002:a62:15d3:: with SMTP id 202mr5310549pfv.231.1584054277481;
-        Thu, 12 Mar 2020 16:04:37 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id v123sm28763161pfb.85.2020.03.12.16.04.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 16:04:36 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v4 4/4] platform/chrome: typec: Update port info from EC
-Date:   Thu, 12 Mar 2020 15:57:19 -0700
-Message-Id: <20200312225719.14753-5-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200312225719.14753-1-pmalani@chromium.org>
-References: <20200312225719.14753-1-pmalani@chromium.org>
+        Thu, 12 Mar 2020 19:08:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584054509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=h4wdU2a9XoFrutcCJNoK3uetDhXcg3rLVvbtWHaFulA=;
+        b=bvju6hx1UPnwzfQvOV/dgPNYBoUthv9xdCNTekULK/aT9amNV+f8hh+pz2NpLc/uZMOQ/g
+        pkzRB9Zxq46X/1p7q1tOaPOrRZHPsMRan0SgQtgNMzM/FHOTqRnMxximbh3nkGruTP1F2h
+        mip0UmbasBKWOZwWGiY+3Ez75vvghkg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-DfpokljDPvucxZeEsqrfkg-1; Thu, 12 Mar 2020 19:08:27 -0400
+X-MC-Unique: DfpokljDPvucxZeEsqrfkg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D02AA107ACC9;
+        Thu, 12 Mar 2020 23:08:25 +0000 (UTC)
+Received: from localhost (ovpn-121-102.rdu2.redhat.com [10.10.121.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 859551001902;
+        Thu, 12 Mar 2020 23:08:22 +0000 (UTC)
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     GLin@suse.com, davem@davemloft.net, kuba@kernel.org,
+        ast@kernel.org, Bruno Meneguele <bmeneg@redhat.com>
+Subject: [PATCH v2] net/bpfilter: fix dprintf usage for /dev/kmsg
+Date:   Thu, 12 Mar 2020 20:08:20 -0300
+Message-Id: <20200312230820.2132069-1-bmeneg@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After registering the ports at probe, get the current port information
-from EC and update the Type C connector class ports accordingly.
+The bpfilter UMH code was recently changed to log its informative message=
+s to
+/dev/kmsg, however this interface doesn't support SEEK_CUR yet, used by
+dprintf(). As result dprintf() returns -EINVAL and doesn't log anything.
 
-Co-developed-by: Jon Flatley <jflat@chromium.org>
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
+However there already had some discussions about supporting SEEK_CUR into
+/dev/kmsg interface in the past it wasn't concluded. Since the only user =
+of
+that from userspace perspective inside the kernel is the bpfilter UMH
+(userspace) module it's better to correct it here instead waiting a concl=
+usion
+on the interface.
+
+Fixes: 36c4357c63f3 ("net: bpfilter: print umh messages to /dev/kmsg")
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 ---
+ net/bpfilter/main.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Changes in v4:
-- No changes
-
-Changes in v3:
-- No changes.
-
-Changes in v2:
-- No changes
-
- drivers/platform/chrome/cros_ec_typec.c | 89 ++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 9f692eb78b322..874269c070739 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -172,6 +172,81 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
- 	return ret;
- }
- 
-+static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control *resp)
-+{
-+	struct typec_port *port = typec->ports[port_num];
-+	enum typec_orientation polarity;
-+
-+	if (!resp->enabled)
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!resp->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+
-+	typec_set_pwr_role(port, resp->role ? TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_orientation(port, polarity);
-+}
-+
-+static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control_v1 *resp)
-+{
-+	struct typec_port *port = typec->ports[port_num];
-+	enum typec_orientation polarity;
-+
-+	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!resp->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+	typec_set_orientation(port, polarity);
-+	typec_set_data_role(port, resp->role & PD_CTRL_RESP_ROLE_DATA ?
-+			TYPEC_HOST : TYPEC_DEVICE);
-+	typec_set_pwr_role(port, resp->role & PD_CTRL_RESP_ROLE_POWER ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+}
-+
-+static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
-+{
-+	struct ec_params_usb_pd_control req;
-+	struct ec_response_usb_pd_control_v1 resp;
-+	int ret;
-+
-+	if (port_num < 0 || port_num >= typec->num_ports) {
-+		dev_err(typec->dev, "cannot get status for invalid port %d\n",
-+			port_num);
-+		return -EINVAL;
-+	}
-+
-+	req.port = port_num;
-+	req.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-+	req.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-+	req.swap = USB_PD_CTRL_SWAP_NONE;
-+
-+	ret = cros_typec_ec_command(typec, typec->cmd_ver,
-+				    EC_CMD_USB_PD_CONTROL, &req, sizeof(req),
-+				    &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_dbg(typec->dev, "Enabled %d: 0x%hhx\n", port_num, resp.enabled);
-+	dev_dbg(typec->dev, "Role %d: 0x%hhx\n", port_num, resp.role);
-+	dev_dbg(typec->dev, "Polarity %d: 0x%hhx\n", port_num, resp.polarity);
-+	dev_dbg(typec->dev, "State %d: %s\n", port_num, resp.state);
-+
-+	if (typec->cmd_ver == 1)
-+		cros_typec_set_port_params_v1(typec, port_num, &resp);
-+	else
-+		cros_typec_set_port_params_v0(typec, port_num,
-+			(struct ec_response_usb_pd_control *) &resp);
-+
-+	return 0;
-+}
-+
- static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+diff --git a/net/bpfilter/main.c b/net/bpfilter/main.c
+index 77396a098fbe..efea4874743e 100644
+--- a/net/bpfilter/main.c
++++ b/net/bpfilter/main.c
+@@ -10,7 +10,7 @@
+ #include <asm/unistd.h>
+ #include "msgfmt.h"
+=20
+-int debug_fd;
++FILE *debug_f;
+=20
+ static int handle_get_cmd(struct mbox_request *cmd)
  {
- 	struct ec_params_get_cmd_versions_v1 req_v1;
-@@ -218,7 +293,7 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct cros_typec_data *typec;
- 	struct ec_response_usb_pd_ports resp;
--	int ret;
-+	int ret, i;
- 
- 	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
- 	if (!typec)
-@@ -251,7 +326,19 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	for (i = 0; i < typec->num_ports; i++) {
-+		ret = cros_typec_port_update(typec, i);
-+		if (ret < 0)
-+			goto unregister_ports;
-+	}
-+
+@@ -35,9 +35,10 @@ static void loop(void)
+ 		struct mbox_reply reply;
+ 		int n;
+=20
++		fprintf(debug_f, "testing the buffer\n");
+ 		n =3D read(0, &req, sizeof(req));
+ 		if (n !=3D sizeof(req)) {
+-			dprintf(debug_fd, "invalid request %d\n", n);
++			fprintf(debug_f, "invalid request %d\n", n);
+ 			return;
+ 		}
+=20
+@@ -47,7 +48,7 @@ static void loop(void)
+=20
+ 		n =3D write(1, &reply, sizeof(reply));
+ 		if (n !=3D sizeof(reply)) {
+-			dprintf(debug_fd, "reply failed %d\n", n);
++			fprintf(debug_f, "reply failed %d\n", n);
+ 			return;
+ 		}
+ 	}
+@@ -55,9 +56,10 @@ static void loop(void)
+=20
+ int main(void)
+ {
+-	debug_fd =3D open("/dev/kmsg", 00000002);
+-	dprintf(debug_fd, "Started bpfilter\n");
++	debug_f =3D fopen("/dev/kmsg", "w");
++	setvbuf(debug_f, 0, _IOLBF, 0);
++	fprintf(debug_f, "Started bpfilter\n");
+ 	loop();
+-	close(debug_fd);
++	fclose(debug_f);
  	return 0;
-+
-+unregister_ports:
-+	for (i = 0; i < typec->num_ports; i++)
-+		if (typec->ports[i])
-+			typec_unregister_port(typec->ports[i]);
-+	return ret;
  }
- 
- static struct platform_driver cros_typec_driver = {
--- 
-2.25.1.481.gfbce0eb801-goog
+--=20
+2.24.1
 
