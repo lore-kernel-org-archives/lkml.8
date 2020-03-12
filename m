@@ -2,178 +2,109 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71456C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824A2C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289C82072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:25:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dMld6cRI"
+	by mail.kernel.org (Postfix) with ESMTP id 5DF222072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584037586;
+	bh=ETJXv+BvUDjzQokiBeCWpKUhP8EjwUxwfcV8eN5yJW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vm7TZFh8dobhzreeJmfQ3OScKZKSqbW2GvvixHdjfhFSFne3LOXULIpTSqQwiYU6Y
+	 X7v8Zv9zyOaUSN53guLi6JQtT6LcWyHuUzTabklSQyRTJqPC1Gs/mig0sa4UYVb3qF
+	 8kid7N4cb2/lR5kDn6gpNd7xeMhudK+zDN4UoDgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgCLSZK (ORCPT
+        id S1726684AbgCLS0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:25:10 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42833 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgCLSZJ (ORCPT
+        Thu, 12 Mar 2020 14:26:25 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:39977 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCLS0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:25:09 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g16so5179525qtp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:25:08 -0700 (PDT)
+        Thu, 12 Mar 2020 14:26:24 -0400
+Received: by mail-qk1-f179.google.com with SMTP id m2so7903183qka.7;
+        Thu, 12 Mar 2020 11:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Jf7CCJlaBzBWuwy+AxN+gg+jjj5mPJjuMgQyXl2F5To=;
-        b=dMld6cRIv553ZXuXvnx1/9oXxRUJQVhYQt01RJrga16eD9ADF5ho5x7vzM4Db/aHdG
-         +DmeShswgIdAanewpRonn6j3yBEUUSoTOlfx4iMa3nFX8Prgqh15+5c/CDgKro1CFjZ3
-         Aj+Nm1GSCTqfhSJKnlpdPUBzKbhgzr+h3YbEEYjiY3y26sbAQqPxfp1Z2wjmNVyFvwsC
-         jyxDjn/wZ1pGXSVD7ByXmgAkhFdX3NdyskFUfArocC35/y+7OMb2J0O6fiamvjFnGUms
-         cQ/DJ2LHDmuuG5YNQ1Q3lRIGIBddWrY+pL7rv+drHVDkU5yfhF/CPbw66l54yhxNL2OG
-         LvZQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eViXmXzzaMR0CsZTGCPQ+TrKF+BfmVsvrf179rOhgZI=;
+        b=vaPuM3qaA0oNIgyjxBq9fo3DjzTSplT6RX2awoFL63OjPQPW+ohK7ZmosBeMwA33rp
+         gl4GllPZLcLHYZjGqrIAb/x62R4MxbseghAwoKVUWsFKml4ds2fxEWkE9HZwDll19KCn
+         +Qmm33d/9prjdKrV8qLAkUOCwW/Ea0XxuIeTMbHrR2CbhUESvN7ZOnpAX2IWxAiyHYiO
+         5K3TXt2oMTzXZSTkU86QSSKimtBUmLZGpezZ/So5SG5QdO/JbE9q+Tfj2/Hv0NoOlagI
+         01At2u7pl/YpF9OLfCOZvE2pgd/wPC2cfGrm2fjJhcbN6NhoXPI1h8i0Eut9nII5A4zE
+         v+KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Jf7CCJlaBzBWuwy+AxN+gg+jjj5mPJjuMgQyXl2F5To=;
-        b=TeaKgKLRcgrKN2dyRHFJVuvay4XOHEgmnrfis+DmOaT96dqyzKVSVX0fwgwW5mInAz
-         InB2oLA7WInXh29rPOG4/+GRisHDPwDUJsgllETS0hDTSCXtTcF9LWlwzAmK3qJIiu61
-         dekvDOhVw5n7dr7H+1H+djEYd5RpGP8q38YQkwC3y/HEfMmLOhhnu2PST4rP77Dtc5ef
-         9OwJCHZxM3KHeODkQ8tuT3JcS0OGB8FkF6BBQK/fkUg5q951Byr/T0w/aGqyAeZAGcYE
-         QmYMbicG2XsQn7Hvu/u0bZ4C8HdAEgkolIVvyp4JciG86JjEIVcIh9YczOLKuzYf1rCy
-         V3rg==
-X-Gm-Message-State: ANhLgQ06fXciTGivyA+q3JKVLESDMTQpOOhwfwIeggwBhxTcRVsz4Hyu
-        UCeJYqdpQ60Xt7XBCyTuRCsaXcx4dyNDAKlAnAF9Yw==
-X-Google-Smtp-Source: ADFU+vsD3ZKdVJ0pPILwz7IOX2CSRr5vAuzW2yjE2tDAXBhQjc9fBMy9k9lWMN+DWil/TsgvNDIRF44f7yqjpKG8/Qc=
-X-Received: by 2002:ac8:5208:: with SMTP id r8mr8806874qtn.131.1584037508177;
- Thu, 12 Mar 2020 11:25:08 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=eViXmXzzaMR0CsZTGCPQ+TrKF+BfmVsvrf179rOhgZI=;
+        b=tvVCZjofpyJSw+52CBywO0HmdV280TCyCx4zGx5Eijwt/9rbjtkkU17qK74oSp3hI2
+         zRIvOrnxqZu+a3+4bv1uLI+clYZwm/8S7O1PhJMhsdiC+Au4Z05rPiFyrv7w7BKwa2Rq
+         mda70DGCGkKizQ5v1Q4YO/9UQLRO/RT8MM6MR+H1kKZzFEvMUuVAo75TR/07SARFongp
+         2/qw/b8rkckaz5WnFdF3LenWSADu3JFDY+fwnH952/zmPgH0FM9pP7mcxnvZhOn01jf3
+         V2TD/WemqbOmR6plAMs0pYTyuPC9VljZ6qVPkqqbRQxa7z4Io/NPMXuFZHbUo5zYSGPe
+         v8jA==
+X-Gm-Message-State: ANhLgQ1rxkQxKtokQ+/cGTizzeTZWhPKoubZTVQMLzuhT93SC71iDqmM
+        ORMmLtfyAF2PfjFPp+famLA=
+X-Google-Smtp-Source: ADFU+vuSs61upK+TjtMnwkwDaFblKOn/W4AW9D1KUmOKg0mrUt9SiU0Iual9VBPRl8Yt1pbxKR6uLQ==
+X-Received: by 2002:a05:620a:136b:: with SMTP id d11mr9458989qkl.11.1584037582041;
+        Thu, 12 Mar 2020 11:26:22 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::fec8])
+        by smtp.gmail.com with ESMTPSA id i4sm28102735qkf.111.2020.03.12.11.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 11:26:21 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 14:26:19 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
+Message-ID: <20200312182618.GE79873@mtj.duckdns.org>
+References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+ <20200219151922.GB698990@mtj.thefacebook.com>
+ <1589496945.670.1582126985824.JavaMail.zimbra@efficios.com>
+ <20200219154740.GD698990@mtj.thefacebook.com>
+ <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
+ <20200219155202.GE698990@mtj.thefacebook.com>
+ <1358308409.804.1582128519523.JavaMail.zimbra@efficios.com>
+ <20200219161222.GF698990@mtj.thefacebook.com>
+ <316507033.21078.1583597207356.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CAMRc=MdbvwQ3Exa2gmY-J0p8UeB-_dKrgqHEBo=S08yU4Uth=A@mail.gmail.com> <CACRpkdbBCihyayQ=hPVLY8z4G=n5cxLnUmaPpHRuKedDQPVUyQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbBCihyayQ=hPVLY8z4G=n5cxLnUmaPpHRuKedDQPVUyQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Mar 2020 19:24:54 +0100
-Message-ID: <CAMpxmJX_Jqz97bp-nKtJp7_CgJ=72ZxWkEPN4Y-dpNpqEwa_Mg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Khouloud Touil <ktouil@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <316507033.21078.1583597207356.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 12 mar 2020 o 11:11 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Thu, Mar 5, 2020 at 5:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> > I refreshed my memory on device links and reference counting. I think
-> > that device links are not the right tool for the problem I'm trying to
-> > solve.
->
-> OK, just check the below though so we are doing reference
-> counting in the right place.
->
-> > You're right on the other hand about the need for reference
-> > counting of gpiochip devices. Right now if we remove the chip with
-> > GPIOs still requested the only thing that happens is a big splat:
-> > "REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED".
-> >
-> > We should probably have a kref on the gpiochip structure which would
-> > be set to 1 when registering the chip, increased and decreased on
-> > every operation such as requesting and releasing a GPIO respectively
-> > and decreased by gpiochip_remove() too. That way if we call
-> > gpiochip_remove() while some users are still holding GPIO descriptors
-> > then the only thing that happens is: the reference count for this
-> > gpiochip is decreased. Once the final consumer calls the appropriate
-> > release routine and the reference count goes to 0, we'd call the
-> > actual gpiochip release code. This is similar to what the clock
-> > framework does IIRC.
->
-> I don't think that is consistent with the device model: there is already
-> a struct device inside struct gpio_device which is what gets
-> created when the gpio_chip is registered.
->
-> The struct device inside struct gpio_device contains a
-> struct kobject.
->
-> The struct kobject contains a struct kref.
->
-> This kref is increased and decreased with get_device() and
-> put_device(). This is why in the gpiolib you have a bunch of
-> this:
-> get_device(&gdev->dev);
-> put_device(&gdev->dev);
->
-> This is used when creating any descriptor handle with
-> [devm_]gpiod_request(), linehandles or lineevents.
->
-> So it is already reference counted and there is no need to
-> introduce another reference counter on gpio_chips.
->
+Hello,
 
-I think there's one significant detail missing here. While it's true
-that the life-time of a device object is controlled by its reference
-count, its registration with the driver model is not ie.
-device_add/del() are called once per device as opposed to
-get/put_device().
+On Sat, Mar 07, 2020 at 11:06:47AM -0500, Mathieu Desnoyers wrote:
+> Looking into solving this, one key issue seems to get in the way: cpuset
+> appear to care about not allowing to create a cpuset which has no currently
+> active CPU where to run, e.g.:
+...
+> Clearly, there is an intent that cpusets take the active mask into
+> account to prohibit creating an empty cpuset, but nothing prevents
+> cpu hotplug from creating an empty cpuset.
+> 
+> I wonder how to solve this inconsistency ?
 
-> The reason why gpiochip_remove() right now
-> enforces removal and only prints a warning if you remove
-> a gpio_chip with requested GPIOs on it, is historical.
->
+Please try cpuset in cgroup2. It shouldn't have those issues.
 
-Given the above I think that it wouldn't be possible to add reference
-counting to gpio devices without a new kref if the task of the release
-callback would be to call device_del() once the provider called its
-unregister function and all consumers released requested resources.
+Thanks.
 
-> When I created the proper device and char device, the gpiolib
-> was really just a library (hence the name) not a driver framework.
-> Thus there was no real reference counting of anything
-> going on, and it was (as I perceived it) pretty common that misc
-> platforms just pulled out the GPIO chip underneath the drivers
-> using the GPIO lines.
->
-> If we would just block that, say refuse to perform the .remove
-> action on the module or platform (boardfile) code implementing
-> GPIO I was worried that we could cause serious regressions.
->
-> But I do not think this is a big problem?
->
-> Most drivers these days are using devm_gpiochip_add_data()
-> and that will not release the gpiochip until exactly this same
-> kref inside struct device inside gpio_device goes down to
-> zero.
->
-
-I believe this is not correct. The resources managed by devres are
-released when the device is detached from a driver, not when the
-device's reference count goes to 0. When the latter happens, the
-device's specific (or its device_type's) release callback is called -
-for gpiolib this is gpiodevice_release().
-
-The kref inside struct device will not go down to zero until you call
-device_del() (if you previously called device_add() that is which
-increases the reference count by a couple points). But what I'm
-thinking about is making the call to device_del() depend not on the
-call to gpiochip_remove() but on the kref on the gpio device going
-down to zero. As for the protection against module removal - this
-should be handled by module_get/put().
-
-I may be wrong of course but when looking at the code, this is what I
-understand. Please let me know what you think.
-
-Best regards
-Bartosz Golaszewski
+-- 
+tejun
