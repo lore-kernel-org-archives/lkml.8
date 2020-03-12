@@ -2,209 +2,89 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDB4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A0CC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91890206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61372067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584045421;
-	bh=Ufrs0NrxPRpAXMAHKSK7UC+Qag5UGe1br16eZilZ6GE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=eDiuhkGkRUQEoODq0+yE1+D6lR3tI+KZCe8aeG66q0hSY9ojHttRgFTLzj+ZStCBV
-	 E6alSM/71zS6AisLb1yykDo4K5/PHVmxECdB26ab1+hCk+zilE6DlCd2GI/erJgl2U
-	 b88eQXwSJrTj8+D+njLVkh+dC1oBYle9jVkOsaKQ=
+	s=default; t=1584045516;
+	bh=30GKTE6rjttestopawcDOyoaImV4Srd/+iHkb1Dq0Gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VSev11FGBs4ZniAFLqxrWPHFfAYmAg2HW7P+6aaetPJPzfX6VhlkphykaweL3N/lu
+	 jOHGXlrNO75c5Fi6Mkotw4bm8cKEzp/LRu7dBWlvw7ip8gcZneP9slElZHtLuDCSkJ
+	 5CjeWjpLx3/AUh75srcqVPoGX2Go0n1jKeRVbXro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgCLUhA (ORCPT
+        id S1727064AbgCLUig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLUhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:37:00 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A74082067C;
-        Thu, 12 Mar 2020 20:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584045419;
-        bh=Ufrs0NrxPRpAXMAHKSK7UC+Qag5UGe1br16eZilZ6GE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cFy0DYaTnVfy9zSCJ4tZwxeYmUh9YwFvLPx5N56vblSaDRqsG/LhI/Em2XHoqFdGz
-         gTxnKGk8O0tinDj4CC8ZB+7S/EECEULbXVwX4MiMjwOPAtzrI79hxwu2xUviuC+P3d
-         B/qyq2ztpdkTgD0qW+BvPOIrPMLn1KSyl+kLXD6w=
-Date:   Thu, 12 Mar 2020 15:36:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Qi Liu <liuqi115@huawei.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
-Message-ID: <20200312203657.GA175613@google.com>
+        Thu, 12 Mar 2020 16:38:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41800 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLUif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 16:38:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s15so7753121otq.8;
+        Thu, 12 Mar 2020 13:38:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qsyf53fDOW2kIfBB6h9PfXR888dEi0c9UB48kNqadU0=;
+        b=QPB6LM82y2odDnTq56W6yLN1rE16wNdbqX6RsAkrEd3pYcP0/bzpjowgedpPA0ncpA
+         pdM5woVUK6XLDPasFI5QP9RWbKOQZeGr/oqGLTwq+8wC26h55WNMWXf2BhtE5USf/fcv
+         zwu8D/+y1l4uAZ0IG65k2GkkgO7JDVpdSCRQ3H8fHPdkA9pP0aKhMwStxTy1PEfzHPPL
+         nC4YZhCdPkJ87i4ZB5p89lFrISv2NvVCBblC03SLHKXQAGns1QAoP5X627z+ei9xmzV5
+         jughoKTwZlnrQVHu4pxJmUM5nQcwbUoif14ruyMNQUgvtGIctTglKVN5BHisNloQEN20
+         6SBg==
+X-Gm-Message-State: ANhLgQ0TCWfjGHFKAsOFKTO8hx9G5YsaxSQSNTItuXTGQRr6dABSK6GD
+        ImP8qtz7bz7H3ZH0T4UlbQ==
+X-Google-Smtp-Source: ADFU+vtjBZJYB7cBB6cNsWPMGuK7UPYILgJCWYhGg99znHQiTnDlaIOyzFbSRtAcjckQTwHpwGhpCA==
+X-Received: by 2002:a9d:b8f:: with SMTP id 15mr7962990oth.256.1584045514482;
+        Thu, 12 Mar 2020 13:38:34 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u205sm7065396oia.37.2020.03.12.13.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 13:38:33 -0700 (PDT)
+Received: (nullmailer pid 31724 invoked by uid 1000);
+        Thu, 12 Mar 2020 20:38:31 -0000
+Date:   Thu, 12 Mar 2020 15:38:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        ley.foon.tan@intel.com, robh+dt@kernel.org, mdf@kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH 1/2] arch: nios2: rename 'altr,gpio-bank-width' ->
+ 'altr,ngpio'
+Message-ID: <20200312203831.GA31683@bogus>
+References: <20200306115450.3352-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584014816-1908-1-git-send-email-liuqi115@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306115450.3352-1-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use "git log --oneline drivers/perf" to see the convention, and update
-subject to follow suit.  At least add a space in "perf:Add".
-
-On Thu, Mar 12, 2020 at 08:06:56PM +0800, Qi Liu wrote:
-> From: Qi liu <liuqi115@huawei.com>
+On Fri, 6 Mar 2020 13:54:49 +0200, Alexandru Ardelean wrote:
+> There is no more 'altr,gpio-bank-width' in the 'altr,pio-1.0' driver.
+> There is a 'altr,ngpio' which is  what the property wants to configure.
 > 
-> PCIe PMU Root Complex Integrate End Point(IEP) device is
-> supported to sample bandwidth, latency, buffer occupation,
-> bandwidth utilization etc.
-> Each PMU IEP device monitors multiple root ports, and each
-> IEP is registered as a pmu in /sys/bus/event_source/devices,
-> so users can select the target IEP, and use filter to select
-> root port, function and event.
-> Filtering options are:
-> event:    - select the event.
-> subevent: - select the subevent.
-> port:     - select target root port.
-> func:     - select target EP device under the port.
-
-The above *looks* like it's supposed to be three separate paragraphs;
-please add blank lines between them.
-
-s/Integrate/Integrated/
-
-I assume this is a vendor-specific device; if so, please mention the
-vendor so it doesn't look like something generic.
-
-> Example: hisi_pcie_00_14_00/event=0x08,subevent=0x04,   \
-> port=0x05,func=0x00/ -I 1000
+> This change updates all occurrences of 'altr,gpio-bank-width' to
+> 'altr,ngpio'.
 > 
-> PMU IEP device is described by its bus, device and function,
-> target root port is 0x05 and target EP under it is function
-> 0x00. Subevent 0x04 of event 0x08 is sampled.
-> 
-> Note that in this RFC:
-> 1. PCIe PMU IEP hardware is still in development.
-> 2. Perf common event list is undetermined, and name of these
-> events still need to be discussed.
-> 3. port filter could only select one port each time.
-> 4. There are two possible schemes of pmu registration, one is
-> register each root port as a pmu, it is easier for users to
-> select target port. The other one is register each IEP as pmu,
-> for counters are per IEP, not per root port, the second scheme
-> describes hardware PMC much more reasonable, but need to add
-> "port" filter option to select port. We use the second one in
-> this RFC.
-> 
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > ---
->  drivers/perf/Kconfig             |  10 +
->  drivers/perf/Makefile            |   1 +
->  drivers/perf/pci/Makefile        |   2 +
->  drivers/perf/pci/hisi_pcie_pmu.c | 887 +++++++++++++++++++++++++++++++++++++++
->  include/linux/cpuhotplug.h       |   1 +
->  5 files changed, 901 insertions(+)
->  create mode 100644 drivers/perf/pci/Makefile
->  create mode 100644 drivers/perf/pci/hisi_pcie_pmu.c
+>  Documentation/devicetree/bindings/fpga/fpga-region.txt | 4 ++--
+>  arch/nios2/boot/dts/10m50_devboard.dts                 | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 09ae8a9..047022b 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -114,6 +114,16 @@ config THUNDERX2_PMU
->  	   The SoC has PMU support in its L3 cache controller (L3C) and
->  	   in the DDR4 Memory Controller (DMC).
->  
-> +config PCIE_PMU
 
-This config symbol is too generic for a vendor-specific device.
-
-> +	tristate "PCIE PERF PMU"
-> +	depends on ARM64
-> +	default m
-> +	help
-> +	   Provide support for 1630 PCIe performance monitoring unit (PMU)
-> +	   IEP devices.
-> +	   Adds the PCIe PMU into perf events system for monitoring latency,
-> +	   bandwidth etc.
-
-> +static int hisi_pcie_pmu_irq_register(struct pci_dev *pdev,
-> +				      struct hisi_pcie_pmu *pcie_pmu)
-> +{
-> +	int irq, ret;
-> +
-> +	irq = pci_irq_vector(pdev, HISI_PCIE_EVENT_IRQ_VECTOR);
-> +	ret = request_irq(irq, hisi_pcie_pmu_irq, IRQF_SHARED,
-> +			  pcie_pmu->dev_name, pcie_pmu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pcie_pmu->irq = irq;
-> +	return ret;
-
-  return 0;
-
-> +}
-
-> +static int hisi_pcie_init_pmu(struct pci_dev *pdev,
-> +			      struct hisi_pcie_pmu *pcie_pmu)
-> +{
-> +	char *name;
-> +	int ret;
-> +
-> +	hisi_get_pcie_pmu(pdev, pcie_pmu);
-> +
-> +	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
-> +				       &pcie_pmu->node);
-> +	if (ret) {
-> +		pci_err(pdev, "Error %d registering hotplug;\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * domain_id is 0x00 means continuous domain, we use bdf num to
-> +	 * select IEP. Otherwise, use domain_id + bdf.
-
-I don't see what this comment applies to.  Nothing in this function
-uses "domain_id".  In fact, pcie_pmu->domain_id is set but never used
-anywhere.
-
-> +	 */
-> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-> +			      "hisi_pcie_%x_%x_%x", pcie_pmu->bus_id,
-> +			      pcie_pmu->device_id, pcie_pmu->func_id);
-
-> +static int hisi_pcie_pmu_probe(struct pci_dev *pdev,
-> +			       const struct pci_device_id *id)
-> +{
-> +	struct hisi_pcie_pmu *pcie_pmu;
-> +	int ret;
-> +
-> +	pcie_pmu = devm_kzalloc(&pdev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
-> +	if (!pcie_pmu)
-> +		return -ENOMEM;
-> +
-> +	pci_set_drvdata(pdev, pcie_pmu);
-> +	ret = hisi_pcie_init_dev(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = hisi_pcie_init_pmu(pdev, pcie_pmu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
-
-This is the same as:
-
-  return hisi_pcie_init_pmu(pdev, pcie_pmu);
-
-> +}
+Acked-by: Rob Herring <robh@kernel.org>
