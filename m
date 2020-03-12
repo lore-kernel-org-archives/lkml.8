@@ -2,142 +2,131 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43420C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E243C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256BA206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485FF205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="T+yUk47h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iJayL43G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgCLUIw (ORCPT
+        id S1726918AbgCLUKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:08:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45692 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbgCLUIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:08:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 22AB6AEC5;
-        Thu, 12 Mar 2020 20:08:49 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id CB423E0C79; Thu, 12 Mar 2020 21:08:48 +0100 (CET)
-Message-Id: <884def7dd88186adee725d0348f5779a63763703.1584043144.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1584043144.git.mkubecek@suse.cz>
-References: <cover.1584043144.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v2 15/15] ethtool: add CHANNELS_NTF notification
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 12 Mar 2020 21:08:48 +0100 (CET)
+        Thu, 12 Mar 2020 16:10:06 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:34157 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726594AbgCLUKF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 16:10:05 -0400
+X-Greylist: delayed 385 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 16:10:05 EDT
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 1EFBF3CA;
+        Thu, 12 Mar 2020 16:10:04 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 12 Mar 2020 16:10:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:cc
+        :subject:from:to:message-id; s=fm3; bh=TkJOJLPVp9faa1mlhe8Ka531E
+        s7yGnp/Tphg5hzuUU8=; b=T+yUk47hFlOHjRn12B9u9KT0HtJPJLz1E/ckWYq5J
+        vAR+/LQBkLjcqMF3677DoeBEwqunJPTuR09mF8ENbyFV2BsF5J8Lxhp8jK3ReqRl
+        /KyQltyDjkgVBmBR1EAuqWIs769+xwjl1UPZimmTpKIQr0bAG/hiLnW6YltCp+Z/
+        Ei5h/zT3CR3M4ps3FamtB9yoXJwaY2kk7jSlFfxvP9YDUeGD2JQYq2QnWhAaDrYU
+        85e60jUSfJ0wlO5ETVgHQfFL1quOSmCI0VQ0pD5TDGvRaeXnHmmxWVPGi7XSlvCR
+        UGxPLAGksufrrus1BdmH2F3cgYHx6U5Q+hBAlleaQZcug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=TkJOJL
+        PVp9faa1mlhe8Ka531Es7yGnp/Tphg5hzuUU8=; b=iJayL43GkTly9KNOWB0gzT
+        H8IsVgSNkBk2o9ZrV8MxT3+cjAiifroKAJS0BeT+17ySgqzw8C6NR54jEzWe0Yiq
+        42InrLIcfkteTLOCPJRig44nvNlH1IAQEML1aZOf3cW4WdtzS9Oq1oI7drK7MsIa
+        ggmar1FXyV6uo48uNagvnvPZ0suA6qEAAw0eUsjLr28kCiELQ4zAts+QsZxb0g9D
+        1GDYgq2l9RKOqThE4sQrc1/vOcga61tjdVhvKQEFUyqmbNR3TJsTecyeBMczNhrV
+        hsRWKao5SPxuBauArJHGlsxiESggFEpCvXbA0TOvPjt0G2EbqpO41pkwtGfqchbA
+        ==
+X-ME-Sender: <xms:GpdqXq4T_bbV8T9j849ICt5vpSY5borsc1Z17qtD3Jb1u9rVgUb5gQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedgudefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhepgf
+    gtjgffuffhvffksehtqhertddttdejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceo
+    ugiguhesugiguhhuuhdrgiihiieqnecukfhppeejfedrleefrddvgeejrddufeegnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
+    uhhuuhdrgiihii
+X-ME-Proxy: <xmx:GpdqXnXZ_n46KxoJ19WGcW7f6HcejtmgOyy0fEsh0eESFW6i4pwgfg>
+    <xmx:GpdqXgd50IarPHpDpSCdS6hs7qf5k5cUrj8jO2xYVpTfMlI_IgOuDQ>
+    <xmx:GpdqXkb_sFRZ49lggyzgeSqcv4mWwRzcGR7qp8-ZOBnHhyp568EWkg>
+    <xmx:G5dqXhCLDy1rzu9sPcOaiGaKMZT6u2MNd0oH9ObJyQ6Y8m0NP6L5PL1UpPQ>
+Received: from localhost (c-73-93-247-134.hsd1.ca.comcast.net [73.93.247.134])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ACC633280066;
+        Thu, 12 Mar 2020 16:10:00 -0400 (EDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200312200317.31736-1-dxu@dxuuu.xyz>
+Date:   Thu, 12 Mar 2020 13:09:25 -0700
+Cc:     "Daniel Xu" <dxu@dxuuu.xyz>, <shakeelb@google.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <kernel-team@fb.com>
+Subject: Re: [PATCH v3 0/4] Support user xattrs in cgroupfs
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Daniel Xu" <dxu@dxuuu.xyz>, <cgroups@vger.kernel.org>,
+        <tj@kernel.org>, <lizefan@huawei.com>, <hannes@cmpxchg.org>,
+        <viro@zeniv.linux.org.uk>
+Message-Id: <C194NG2LLD6S.362U6UUAHUZHJ@maharaja>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Send ETHTOOL_MSG_CHANNELS_NTF notification whenever channel counts of
-a network device are modified using ETHTOOL_MSG_CHANNELS_SET netlink
-message or ETHTOOL_SCHANNELS ioctl request.
+On Thu Mar 12, 2020 at 6:03 AM PST, Daniel Xu wrote:
+> User extended attributes are useful as metadata storage for kernfs
+> consumers like cgroups. Especially in the case of cgroups, it is useful
+> to have a central metadata store that multiple processes/services can
+> use to coordinate actions.
+>
+> A concrete example is for userspace out of memory killers. We want to
+> let delegated cgroup subtree owners (running as non-root) to be able to
+> say "please avoid killing this cgroup". This is especially important for
+> desktop linux as delegated subtrees owners are less likely to run as
+> root.
+>
+> The first two commits set up some stuff for the third commit which
+> intro introduce a new flag, KERNFS_ROOT_SUPPORT_USER_XATTR,
+> that lets kernfs consumers enable user xattr support. The final commit
+> turns on user xattr support for cgroupfs.
+>
+> Changes from v2:
+> - Rephrased commit message for "kernfs: kvmalloc xattr value instead of
+> kmalloc"
+>
+> Changes from v1:
+> - use kvmalloc for xattr values
+> - modify simple_xattr_set to return removed size
+> - add accounting for total user xattr size per cgroup
+>
+> Daniel Xu (4):
+> kernfs: kvmalloc xattr value instead of kmalloc
+> kernfs: Add removed_size out param for simple_xattr_set
+> kernfs: Add option to enable user xattrs
+> cgroupfs: Support user xattrs
+>
+> Daniel Xu (4):
+> kernfs: kvmalloc xattr value instead of kmalloc
+> kernfs: Add removed_size out param for simple_xattr_set
+> kernfs: Add option to enable user xattrs
+> cgroupfs: Support user xattrs
+>
+> fs/kernfs/inode.c | 91 ++++++++++++++++++++++++++++++++++++-
+> fs/kernfs/kernfs-internal.h | 2 +
+> fs/xattr.c | 17 +++++--
+> include/linux/kernfs.h | 11 ++++-
+> include/linux/xattr.h | 3 +-
+> kernel/cgroup/cgroup.c | 3 +-
+> mm/shmem.c | 2 +-
+> 7 files changed, 119 insertions(+), 10 deletions(-)
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- Documentation/networking/ethtool-netlink.rst | 1 +
- include/uapi/linux/ethtool_netlink.h         | 1 +
- net/ethtool/channels.c                       | 3 +++
- net/ethtool/ioctl.c                          | 6 +++++-
- net/ethtool/netlink.c                        | 2 ++
- 5 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 7df7476cf310..31a601cafa3f 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -220,6 +220,7 @@ Kernel to userspace:
-   ``ETHTOOL_MSG_RINGS_GET_REPLY``       ring sizes
-   ``ETHTOOL_MSG_RINGS_NTF``             ring sizes
-   ``ETHTOOL_MSG_CHANNELS_GET_REPLY``    channel counts
-+  ``ETHTOOL_MSG_CHANNELS_NTF``          channel counts
-   ===================================== =================================
- 
- ``GET`` requests are sent by userspace applications to retrieve device
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index f1384a8f3534..c7c7a1a550af 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -59,6 +59,7 @@ enum {
- 	ETHTOOL_MSG_RINGS_GET_REPLY,
- 	ETHTOOL_MSG_RINGS_NTF,
- 	ETHTOOL_MSG_CHANNELS_GET_REPLY,
-+	ETHTOOL_MSG_CHANNELS_NTF,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_KERNEL_CNT,
-diff --git a/net/ethtool/channels.c b/net/ethtool/channels.c
-index ee232c11acae..8dc5485333a4 100644
---- a/net/ethtool/channels.c
-+++ b/net/ethtool/channels.c
-@@ -213,6 +213,9 @@ int ethnl_set_channels(struct sk_buff *skb, struct genl_info *info)
- 		}
- 
- 	ret = dev->ethtool_ops->set_channels(dev, &channels);
-+	if (ret < 0)
-+		goto out_ops;
-+	ethtool_notify(dev, ETHTOOL_MSG_CHANNELS_NTF, NULL);
- 
- out_ops:
- 	ethnl_ops_complete(dev);
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 06224a03139e..258840b19fb5 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -1649,6 +1649,7 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
- 	u16 from_channel, to_channel;
- 	u32 max_rx_in_use = 0;
- 	unsigned int i;
-+	int ret;
- 
- 	if (!dev->ethtool_ops->set_channels || !dev->ethtool_ops->get_channels)
- 		return -EOPNOTSUPP;
-@@ -1680,7 +1681,10 @@ static noinline_for_stack int ethtool_set_channels(struct net_device *dev,
- 		if (xdp_get_umem_from_qid(dev, i))
- 			return -EINVAL;
- 
--	return dev->ethtool_ops->set_channels(dev, &channels);
-+	ret = dev->ethtool_ops->set_channels(dev, &channels);
-+	if (!ret)
-+		ethtool_notify(dev, ETHTOOL_MSG_CHANNELS_NTF, NULL);
-+	return ret;
- }
- 
- static int ethtool_get_pauseparam(struct net_device *dev, void __user *useraddr)
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index f61654b8f210..55c8ce4019d9 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -534,6 +534,7 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
- 	[ETHTOOL_MSG_FEATURES_NTF]	= &ethnl_features_request_ops,
- 	[ETHTOOL_MSG_PRIVFLAGS_NTF]	= &ethnl_privflags_request_ops,
- 	[ETHTOOL_MSG_RINGS_NTF]		= &ethnl_rings_request_ops,
-+	[ETHTOOL_MSG_CHANNELS_NTF]	= &ethnl_channels_request_ops,
- };
- 
- /* default notification handler */
-@@ -622,6 +623,7 @@ static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
- 	[ETHTOOL_MSG_FEATURES_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_PRIVFLAGS_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_RINGS_NTF]		= ethnl_default_notify,
-+	[ETHTOOL_MSG_CHANNELS_NTF]	= ethnl_default_notify,
- };
- 
- void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
--- 
-2.25.1
-
+Gah, messed up the copy paste. Let me know if you want a resend.
