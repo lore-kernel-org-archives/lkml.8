@@ -3,156 +3,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51361C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1216C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F41D206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7A9206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DLRmMjNH"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ArIUjTS2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgCLKi2 (ORCPT
+        id S1726898AbgCLKjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:38:28 -0400
-Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:44622
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Thu, 12 Mar 2020 06:39:43 -0400
+Received: from mail-dm6nam11on2042.outbound.protection.outlook.com ([40.107.223.42]:65504
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726023AbgCLKi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:38:28 -0400
+        id S1726023AbgCLKjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 06:39:42 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LWtXfmhW/LeevTtEFiE8ETZhLb1sWCXqlE0KGgbu9gAlE6wHo2n3rPaTzxmZaoT+UtXvDoebk7Zh80geHwr6vYFOpMTQ78y6m/cYOW7mexisvFfUL1tXRB69yklVrtw1GKRhPkKYqpt9yjlfc+M7KzNulMOlP/5PKaCvvpWqfeQqoPCcB26uoijQp+XgAChyiZx7FrygGSspVBbPOnJLydi8bI2sC8ep7Es+V4dbxs/obNfjcUM1GZA9FoVdfP76Xs4SVWS5XvZj26b0kkEAFXFXNtVEGLvkoWnpwdAJ9xBqtAj5va5z5+bpoNe8CQbGibMQr6N7rQ9NV1zjD7rZZQ==
+ b=cJ//0OxCNsTuWhvFb4ZnQgHAjrIFoINQgzVEBF93klN4rTvAU+m2yM+JwYFZTrNNy6bfyLgFt6Tb+GvXOh9IZaZZF+Yc2tCK6TyJMbkCWhBQaBAwXH0tpPp8mMkVor0AJ5YaQZVT9LLWqkL1yjuCrslzMSszPNz6/BesWhU5CEPELgd+iQmZa8b8pch8aAp3botQD2aIGeKt1DMDHXD2t0Izt7JHBOQ/HWk1yl0cfecnG1xTFDz638xebdYeeCdD1WGHqBTp4ethgEIvfILIs4INDmUrrHkjVMNUrzkJqDz5vaZTv4b5NEBLnvLBsHtwVGR+9IVhSC+1ndJDMuJ5tA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uy/0Q9FFPaAVyvTIWabjuhpaz5X4iUeyBu4+M6IsrsY=;
- b=Xq06GDVyiJpj2agKWxtDnZei3YnGiuWVVk8kp4W718bPLR6KHDAKeFpmZBzkF8tEjuEfG3+NIUTUiHp4fpNVe3fwoZo2cxurMoKVwVCAhskv6ar4FXl/5VtaltYITAduO5dYp8k11U4VWL8RAS2AAJPdAS12uvs9gC5cLeA8PHpXsvDJY1dGyTwTkigvrxyVemyUVsSP6DS7bxv26HDKuZFggW302Z/cDiSTDjubToGwpCA+wxwFnNUr3PB7gmORHZSsHcaynVIGU8siiD2ZDRmaoQKg3K42LrrMYjAJymm9kKHHq0NW6KyectRYlf2CNb4N99hpIc81EwAYyKfDPQ==
+ bh=fWlPjNv/NennGkA26zbaVAstC6MS7BJPLzel49z3I1c=;
+ b=So1Bq24SCM9y7gTaltt8NCl7xLJD6BslokEMRk0CFhk1W1DmIdcTGLvgEuQaSvE7p5qQrvRjSiaV4JIvyzJKpyBfv+vrfmX6S1rJY4i0F60Hgy9PW6yZNxxmV58wwS+/sjxZecnM2lsox+5fYMC0auaXo9si4zS68qAcVdhCAGjwLlpdyqa6zZuRAp4B7jRMiaXHwnT/rKMKDzxTaHrUusj/8FAQyRYDptolqVLkqrAM3WPSNnVYJUOFSoa0VOn+LfvD6dwuZmBefukl+kl1HBB1QZhj/2DxLPtXa+lKtsrKq2/gqyPW4dhoFj46xETNyo6lH6X7Pwlz2hiCpTr7SA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uy/0Q9FFPaAVyvTIWabjuhpaz5X4iUeyBu4+M6IsrsY=;
- b=DLRmMjNHU0w62oak2K6EiD6SdSIYzfOZAmwFblCAV7pcndTiKqwX1KspWcRb6e+tVJj6lTRTbvMvpV2s2fwGqu2jRANaVE8LPN082JYASH8Y9fYBIV6GbLr/jMdfHJRr0jfQTMYTYJNXscpDTk3PZ7+gHgcbfiDMk63WL9uuzU4=
+ bh=fWlPjNv/NennGkA26zbaVAstC6MS7BJPLzel49z3I1c=;
+ b=ArIUjTS2LZaV9MH7grOJemnrIWTIb4zMgTY4Qjckm0ek8xUo31didVQpsuMqi0tGVqFbwwRa0TBfPkOCJxgrCijlmb/CLML046k/m+uEh5FW2Sr6Pt5o4a82BQZGTYwULOCBH/1Vpfh8rMFABZ2PJMGZ0HWoeoccZv2ISuK3QQs=
 Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB3054.eurprd04.prod.outlook.com (10.170.225.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.20; Thu, 12 Mar 2020 10:38:21 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1%7]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 10:38:20 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
-Date:   Thu, 12 Mar 2020 18:38:04 +0800
-Message-Id: <20200312103804.24174-1-peter.chen@nxp.com>
-X-Mailer: git-send-email 2.17.1
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com (2603:10b6:5:1c4::14)
+ by DM6PR12MB2812.namprd12.prod.outlook.com (2603:10b6:5:44::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Thu, 12 Mar
+ 2020 10:39:38 +0000
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::2d84:ed9d:cba4:dcfd]) by DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::2d84:ed9d:cba4:dcfd%3]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
+ 10:39:37 +0000
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     pbonzini@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [PATCH] kvm: svm: Introduce GA Log tracepoint for AVIC
+Date:   Thu, 12 Mar 2020 05:39:28 -0500
+Message-Id: <1584009568-14089-1-git-send-email-suravee.suthikulpanit@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0189.apcprd06.prod.outlook.com (2603:1096:4:1::21)
- To VI1PR04MB5327.eurprd04.prod.outlook.com (2603:10a6:803:5c::23)
+X-ClientProxiedBy: DM5PR2001CA0011.namprd20.prod.outlook.com
+ (2603:10b6:4:16::21) To DM6PR12MB3865.namprd12.prod.outlook.com
+ (2603:10b6:5:1c4::14)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from b29397-desktop.ap.freescale.net (119.31.174.66) by SG2PR06CA0189.apcprd06.prod.outlook.com (2603:1096:4:1::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Thu, 12 Mar 2020 10:38:18 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.66]
+Received: from ssuthiku-rhel7-ssp.amd.com (165.204.78.2) by DM5PR2001CA0011.namprd20.prod.outlook.com (2603:10b6:4:16::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 12 Mar 2020 10:39:37 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [165.204.78.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e047c0c5-0718-4739-0d79-08d7c6717bbe
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3054:|VI1PR04MB3054:
+X-MS-Office365-Filtering-Correlation-Id: dcb947a3-853e-4140-a1a9-08d7c671a9a2
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2812:|DM6PR12MB2812:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB3054E48078B407A1439A6D9F8BFD0@VI1PR04MB3054.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB28120BDE5B7890772626263EF3FD0@DM6PR12MB2812.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
 X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(199004)(2906002)(36756003)(2616005)(956004)(1076003)(8936002)(86362001)(186003)(316002)(478600001)(81166006)(81156014)(8676002)(26005)(44832011)(16526019)(6512007)(4326008)(66556008)(66476007)(52116002)(66946007)(6506007)(5660300002)(6666004)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3054;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(199004)(478600001)(4326008)(6666004)(86362001)(66556008)(66476007)(7696005)(316002)(81166006)(8676002)(81156014)(52116002)(2906002)(66946007)(5660300002)(6486002)(8936002)(16526019)(44832011)(956004)(2616005)(26005)(36756003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2812;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ou4jTG2rIfQHZfZGq1zJ8NPzHw1XbXl808h/O30x31SwN8qrszrveU8eAcffUm435y3M+pQWE6mXvkUonE7dl6PspX2Lj6q+BP7tiLjhYzXjimNDszcRjjKNyGJXAK+0FHl6YM10nYaGWUL9qu8xMNz18VXtvIXhOZDzfkoe4cQJzfwKVJud8Px0gu7eSgUNeR7RZJFzPgaCDQYoLD0YFCTE0oucvj63tYhJhH7j7QA08nIxfy3RYgwCUSTEoGzT3OjdAZgtQJJAZRPqMizWXRnqxwBQv0kg9fIGmPG3hoqC2AJ0dJASN4g2iiOouyfq21R4B/y9rwz57e0KHxV+QgC9/oj/5n1VVRwdUmuX3f+fBeYdQ767Mb5TdA3py+pm7hH6JSvelrkthqdB+8m7FxyeTigcM/jF4edOMSVw43v6oNWIkcnRERcMfXCXvWQR
-X-MS-Exchange-AntiSpam-MessageData: eh9GqI1+3T2wmyrKaPRhxl9IrMfCqp8v+mwNWYwtBEAMP0cShamLq+jU8inwLqcxS+qHrKadvOboowE8Xvm4p8Ro6Hg3sY3tQgfR191nghdnsP5+5L6xr4OEbr1JIA43SJJjhX4y1CQyzw3LeNqzFg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e047c0c5-0718-4739-0d79-08d7c6717bbe
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 10:38:20.8599
+X-Microsoft-Antispam-Message-Info: FTBOzwS2IHHTpztPexVQk/N6ATf/++RSt7ztOUaIl6sPxfJgWytBYaqGm7alOHLD7E5KaIltnmdwE2jfR9yT6sbNF6HlTtnARVvc+cqS8RrxUaZGYfpXzhoZM6TtSAGcLnuk4x+u7W8QNvf7u8+do3DYpqC6SR3d8IR8t7vMlVbxmdcZrYF5QvnnwYDsSQZTCh8dZMvZ5JBX6gTvuZcx/KtwfYhBgMxUZO0PhHin6COHQHtv3/JbKFbnVRcAd1ng5T2qrHx+zuLz7dAPSr2WnGJealFA7QE9IoVWhMSTeYE1qWJIuTi/hKf5HTHlCcOzc8QQphIQQSQmsF5a423xUF35V5Cv05RbIx/KM2pcksAVrv0hay3MIu6Nc0PXAu8QEk61mpudCqME8UdkzynfarWMN4iQ3aay3OI0ZsSGXybETmiGypqsp2UHEK3Y39RP
+X-MS-Exchange-AntiSpam-MessageData: R8KUGQeKjOTa73q16Alk48bpW+D3xqx7EtqMUsvyjRv6aPqgVVhJkw6oKKWY16CWKtV1ULzy2OSFszfoVtEJZCQ/onXO2OWgsYKAWBGEXp6fmrMRuVIR51o0FEbed9R5gU/Lo5Kc2Ue2VJlnDbjxXA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcb947a3-853e-4140-a1a9-08d7c671a9a2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 10:39:37.8294
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b/hG7u8vzgTZK/dMwIu/PpuOwSQ84OJsAGSCAQdOT4T+qWp/eOAl5EJtNvfBdj/fPekmc3Y0d5vayzegzos+IQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3054
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8T0Dfc4NvYJL51OpFfP7ab+zzKldgvJyD8rkl2NfAfqe7YqXud21D+COqcbQbx2+wS7nISYb8BKkSgXHqPlBtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2812
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At some systems, the pinctrl setting will be lost and needs to
-set as "sleep" state to save power consumption after system
-enters suspend. So, we need to configure pinctrl as "sleep" state
-when system enters suspend, and set it as "default" state after
-system resume. In this way, the pinctrl value can be recovered
-as "default" state after resuming.
+GA Log tracepoint is useful when debugging AVIC performance
+issue as it can be used with perf to count the number of times
+IOMMU AVIC injects interrupts through the slow-path instead of
+directly inject interrupts to the target vcpu.
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
-This patch at NXP local tree serveral years, and fixed the
-pinctrl value lost issue at some boards.
+ arch/x86/kvm/svm.c   |  1 +
+ arch/x86/kvm/trace.h | 18 ++++++++++++++++++
+ arch/x86/kvm/x86.c   |  1 +
+ 3 files changed, 20 insertions(+)
 
- drivers/regulator/fixed.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index bc0bbd99e98d..29bb93c04b03 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -27,7 +27,7 @@
- #include <linux/regulator/of_regulator.h>
- #include <linux/regulator/machine.h>
- #include <linux/clk.h>
--
-+#include <linux/pinctrl/consumer.h>
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 24c0b2b..504f2cb 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1208,6 +1208,7 @@ static int avic_ga_log_notifier(u32 ga_tag)
+ 	u32 vcpu_id = AVIC_GATAG_TO_VCPUID(ga_tag);
  
- struct fixed_voltage_data {
- 	struct regulator_desc desc;
-@@ -275,11 +275,32 @@ static const struct of_device_id fixed_of_match[] = {
- MODULE_DEVICE_TABLE(of, fixed_of_match);
- #endif
+ 	pr_debug("SVM: %s: vm_id=%#x, vcpu_id=%#x\n", __func__, vm_id, vcpu_id);
++	trace_kvm_avic_ga_log(vm_id, vcpu_id);
  
-+#ifdef CONFIG_PM_SLEEP
-+static int reg_fixed_voltage_suspend(struct device *dev)
-+{
-+	pinctrl_pm_select_sleep_state(dev);
-+
-+	return 0;
-+}
-+static int reg_fixed_voltage_resume(struct device *dev)
-+{
-+	pinctrl_pm_select_default_state(dev);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops reg_fixed_voltage_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(reg_fixed_voltage_suspend,
-+		reg_fixed_voltage_resume)
-+};
-+
- static struct platform_driver regulator_fixed_voltage_driver = {
- 	.probe		= reg_fixed_voltage_probe,
- 	.driver		= {
- 		.name		= "reg-fixed-voltage",
- 		.of_match_table = of_match_ptr(fixed_of_match),
-+		.pm = &reg_fixed_voltage_pm_ops,
- 	},
- };
+ 	spin_lock_irqsave(&svm_vm_data_hash_lock, flags);
+ 	hash_for_each_possible(svm_vm_data_hash, kvm_svm, hnode, vm_id) {
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index f194dd0..023de6c 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1367,6 +1367,24 @@
+ 		  __entry->vec)
+ );
  
++TRACE_EVENT(kvm_avic_ga_log,
++	    TP_PROTO(u32 vmid, u32 vcpuid),
++	    TP_ARGS(vmid, vcpuid),
++
++	TP_STRUCT__entry(
++		__field(u32, vmid)
++		__field(u32, vcpuid)
++	),
++
++	TP_fast_assign(
++		__entry->vmid = vmid;
++		__entry->vcpuid = vcpuid;
++	),
++
++	TP_printk("vmid=%u, vcpuid=%u",
++		  __entry->vmid, __entry->vcpuid)
++);
++
+ TRACE_EVENT(kvm_hv_timer_state,
+ 		TP_PROTO(unsigned int vcpu_id, unsigned int hv_timer_in_use),
+ 		TP_ARGS(vcpu_id, hv_timer_in_use),
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5de2006..ef38b82 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10514,4 +10514,5 @@ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pi_irte_update);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_unaccelerated_access);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_incomplete_ipi);
++EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_ga_log);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_apicv_update_request);
 -- 
-2.17.1
+1.8.3.1
 
