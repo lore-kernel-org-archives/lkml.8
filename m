@@ -2,115 +2,231 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBABC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891DCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137A9206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518C3206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYpb5ale"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ckZcdR6P";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="wZ59TBYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbgCLHzy (ORCPT
+        id S2388167AbgCLH4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:55:54 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40831 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387869AbgCLHzy (ORCPT
+        Thu, 12 Mar 2020 03:56:04 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:35696 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387869AbgCLH4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:55:54 -0400
-Received: by mail-yw1-f66.google.com with SMTP id c15so4710174ywn.7;
-        Thu, 12 Mar 2020 00:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y8PH8OwRLD6nQXDDi9y8VIf66Uz6y/cjwU3hUU4CHeQ=;
-        b=NYpb5alec01RBygunaSyIwAvzoDgMhxcnYOM5Z0iWhI6ke8QJJuGbFWLgFtCkzOhSo
-         GmBEWrvQPIhOxjn7HuZ7k5vG73LaHkos049KQPV5cc2hFNRvbijKNH9UqIw+VgasE4xn
-         3u7y7elTcNfK1JzMXRbdFDFnqbOxqmLRe+0rUE5mK/coiDm/Xdd+K3y7vJXqETfNaKUl
-         I7SRSFAGlpKQOP6enB7qLsjfHZagaBg0kGG8KnhuK9p/9Obksy8WCavX1brmWM52OIno
-         Zyuu7bat/tQDr2/OE3y96UhIQ7QPveDoq0k2IxJJU4ACBvdTqQ5KLP5bueYl/O1MeTvH
-         Bw2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y8PH8OwRLD6nQXDDi9y8VIf66Uz6y/cjwU3hUU4CHeQ=;
-        b=hBnnebFSUQ2yabngB6S6VMTJU3fvP72f3dGH2CfOhn1aV/8/AvShEURfjJ7ZKjdODE
-         AL1T0rpoGLD1PDmRhE93lKBpC4FImDjZFAagOnpshzjmzFLVwCA6KRcvlccHMrkybTC3
-         lsKurZLKNtXJWvaeoyZsQD/yZSgVJCXgU3E7M4wZ06hHAvL8vFXZm7ttEObQ4QBmzMi9
-         OKHO1g9LcYtZdfY84ZVaNwvAwyAU9Pn8IpRsdlKBigQYOrgfKKZOJ5qkKTPs+zeDKDXc
-         uAOFKVHcGfEn7oD00RQGiLf1pJbwg/5+pl1lPf+B3mKO7h5SZRlqhCPyEJzxqVRfNvUn
-         i6pw==
-X-Gm-Message-State: ANhLgQ2BXU0YTQApYn/Qmme6h/Vd33X5lxM17OFG9CFizx1GWG8yj7ju
-        xLMtmQgGvQH/2vJe8MiLxKd4wQ1TM7Jsk0tfwSY=
-X-Google-Smtp-Source: ADFU+vts+xJgjvsNggC0oJn6T/AhhA6fIzZAK7IOhIRQgnxsxYNXe7MXAD02qS1EHhqhreTigQi0w6OWbvY0Klo8cyc=
-X-Received: by 2002:a25:ace2:: with SMTP id x34mr7802951ybd.83.1583999750963;
- Thu, 12 Mar 2020 00:55:50 -0700 (PDT)
+        Thu, 12 Mar 2020 03:56:03 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4074440144;
+        Thu, 12 Mar 2020 07:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583999762; bh=cZPI7fb5A27I29cln7T2XnI6pgXqRtc0a7Rlc9ngltY=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ckZcdR6PgaiNWE5DEqYDw8Ly3Z3o13980yFkwgOfVUqt9XFnkbWZZB3q/SdjjMZnX
+         lWXDQmpK4DlJ/89euZPpS/doMAxj9D6RRzT/Lm8JcWW64cdxnVjAYfVgUYIexzlYdn
+         1rIdLSycexjbk6gMkjkgLctXJpaiQ43BvI7kovuGUgHitycpm69RmcY7I1ZP0g49+x
+         K/RcXc5bxEh6StyxOjbby4nnziY3oCXwCd8WYYEoJdUwMv+3iI6KOfviHzho/VSuFa
+         TGK4bX3crRgNUQG4AlD0u4tgehgscdQsdfXYtVpAIfWhL3tdT645DQzovmmwy7bTHa
+         fDngje9EAhoUA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 85A00A00B4;
+        Thu, 12 Mar 2020 07:56:01 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 12 Mar 2020 00:55:39 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 12 Mar 2020 00:55:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dn64XT+FvS1Hs93jnnmyPa/10nR/9adHZzumG7iII6ZLjqXWabD47QQNHeuU1WmBFfxVMk/8C8xNrpFSnLPxIS/mtNjuPhWhNMPIUUPHEZwuZyugUk07Hu8bmpR8SUkZD7nKa8tFW+TYC+kW5d7pUDhrRnW1CixzybgnkfMWkHewDfn4PmjBLIHOoQfAIMO2PIMw11u/92eNqlmwacWyXTq7F4Y/phg1yW7XdcGPKZK9el6rNQQ1M9Pq5BLH7IsOyVP2JxRfuuF4t1qWBeETfSUwX35Z6FJWwd7sLbwlJK07sFaMzMNbgk7hW6gzxsemUpMALnAXL2bowhkI8eMAEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cZPI7fb5A27I29cln7T2XnI6pgXqRtc0a7Rlc9ngltY=;
+ b=VVtup3ajGaaje1ytazNc6/PfyQGhgenM/MxbgSjaHbxcwIROWnxmklTB9B9R5Cn31YPEr1Td3kpUXOnEthRJ58qseiv0jscZ5ubT/hxj+TK986X7P/6BYv7FKsrNZ4YcmhDUfkApTZmqkDO2U3J5C4IhOP3eYJOqGnztoTiYpUiiwgXw+94c8K/HsdUF76DmAo/fw99yj5Iks4t+Mb4AMXzSicHk++4cdrAI+n46FQjFLXkC7nFWpSu6FsUEng7ONpEFqh+GogcszEgqIAt5HN9bjlyEBEZYu0aTvdqQYUu+DlT+t0OXuoCXHpZWTPod3BeLd5wE8C2yA1BXkplnHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cZPI7fb5A27I29cln7T2XnI6pgXqRtc0a7Rlc9ngltY=;
+ b=wZ59TBYSrvjSjAjyZM9nzqpM6pImMS5aDtUYJtl6c+N+GzraqdR7Mxis93SXfDYRZUUUOq4JqI/Rcewp9omAFt+k6qwfDkjYPeEJYKDyxyFrnXSwGPbGdJVVHMipVEpc9AZSIACKNyMCMLwgVjMS2rZ3oCDukjaprX+F6NuSvMQ=
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
+ (2603:10b6:910:1c::14) by CY4PR1201MB0182.namprd12.prod.outlook.com
+ (2603:10b6:910:18::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Thu, 12 Mar
+ 2020 07:55:34 +0000
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::744c:4e95:39be:9d44]) by CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::744c:4e95:39be:9d44%12]) with mapi id 15.20.2793.018; Thu, 12 Mar
+ 2020 07:55:34 +0000
+From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH v2 05/17] drm/arc: make arcgpu_debugfs_init() return 0.
+Thread-Topic: [PATCH v2 05/17] drm/arc: make arcgpu_debugfs_init() return 0.
+Thread-Index: AQHV9uBTV+yF1SOGF02GGi3fyWZd0ahEmR7g
+Date:   Thu, 12 Mar 2020 07:55:34 +0000
+Message-ID: <CY4PR1201MB0120F8E7C1AECE8E4F52BA89A1FD0@CY4PR1201MB0120.namprd12.prod.outlook.com>
+References: <20200310133121.27913-1-wambui.karugax@gmail.com>
+ <20200310133121.27913-6-wambui.karugax@gmail.com>
+In-Reply-To: <20200310133121.27913-6-wambui.karugax@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYWJyb2RraW5c?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy1kODE2NDA2Yy02NDM2LTExZWEtODAzMi04OGIx?=
+ =?us-ascii?Q?MTFjZGUyMTdcYW1lLXRlc3RcZDgxNjQwNmUtNjQzNi0xMWVhLTgwMzItODhi?=
+ =?us-ascii?Q?MTExY2RlMjE3Ym9keS50eHQiIHN6PSIxMTUxIiB0PSIxMzIyODQ3MzMzMTUx?=
+ =?us-ascii?Q?NjQ4NTMiIGg9IkoyVDdmUSt3cVhyUUtBQkVHL0V3UVR1NGRoZz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUJRSkFB?=
+ =?us-ascii?Q?QzFLbldhUS9qVkFRcUQzYTlVT29OQkNvUGRyMVE2ZzBFT0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUNrQ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBTW9OL3h3QUFBQUFBQUFBQUFBQUFBSjRBQUFCbUFHa0Fi?=
+ =?us-ascii?Q?Z0JoQUc0QVl3QmxBRjhBY0FCc0FHRUFiZ0J1QUdrQWJnQm5BRjhBZHdCaEFI?=
+ =?us-ascii?Q?UUFaUUJ5QUcwQVlRQnlBR3NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3Qm5BR1lBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQVlRQnRBSE1BZFFCdUFHY0FYd0JqQUc4QWJnQm1BQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFjd0Jo?=
+ =?us-ascii?Q?QUcwQWN3QjFBRzRBWndCZkFISUFaUUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCekFHMEFhUUJqQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFi?=
+ =?us-ascii?Q?Z0JsQUhJQWN3QmZBSE1BZEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1B?=
+ =?us-ascii?Q?RzhBZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWRB?=
+ =?us-ascii?Q?QnpBRzBBWXdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFI?=
+ =?us-ascii?Q?a0FYd0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0IxQUcwQVl3QUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFad0IwQUhNQVh3QndBSElBYndCa0FIVUFZd0IwQUY4?=
+ =?us-ascii?Q?QWRBQnlBR0VBYVFCdUFHa0FiZ0JuQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHRUFiQUJsQUhNQVh3QmhBR01BWXdCdkFIVUFiZ0IwQUY4QWNBQnNBR0VB?=
+ =?us-ascii?Q?YmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSE1BWVFCc0FHVUFjd0Jm?=
+ =?us-ascii?Q?QUhFQWRRQnZBSFFBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQWN3QnVBSEFBY3dCZkFHd0FhUUJqQUdVQWJnQnpB?=
+ =?us-ascii?Q?R1VBWHdCMEFHVUFjZ0J0QUY4QU1RQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
+ =?us-ascii?Q?QUJ6QUc0QWNBQnpBRjhBYkFCcEFHTUFaUUJ1QUhNQVpRQmZBSFFBWlFCeUFH?=
+ =?us-ascii?Q?MEFYd0J6QUhRQWRRQmtBR1VBYmdCMEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFIWUFad0JmQUdzQVpR?=
+ =?us-ascii?Q?QjVBSGNBYndCeUFHUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFB?=
+ =?us-ascii?Q?QUFBQUFDQUFBQUFBQT0iLz48L21ldGE+?=
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abrodkin@synopsys.com; 
+x-originating-ip: [183.89.24.137]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 59f02c9c-a397-4ba7-1616-08d7c65abeb7
+x-ms-traffictypediagnostic: CY4PR1201MB0182:
+x-microsoft-antispam-prvs: <CY4PR1201MB018251F8B3331EB36F23FF9DA1FD0@CY4PR1201MB0182.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:935;
+x-forefront-prvs: 0340850FCD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10019020)(39860400002)(376002)(136003)(346002)(396003)(366004)(199004)(81166006)(9686003)(55016002)(33656002)(8676002)(86362001)(26005)(4744005)(66556008)(81156014)(66946007)(66476007)(64756008)(186003)(76116006)(66446008)(4326008)(110136005)(2906002)(966005)(316002)(71200400001)(478600001)(52536014)(5660300002)(53546011)(6506007)(7696005)(54906003)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0182;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: L/JHh8cp13kKgZADqHGd2SVaA7OduHS1sWykA9D1PeEP60XhB1ouH5lfYPw+48gAvaDJRQzqfq26V6zbWbkuk9UhO0GKbDfr8DBXAK/5gD/2YqDoDNMuE0zITWqUMplMisqklh6BxQC5eT1SDa/UX5c6OC4ozUgkZXMWQrY2VhX+AFFLyqIJy7ZdBYCJW8QfYK0WOXPHqB1IPxpyAZM8i+Yc7aB+6iWfB26otjvdj90Vg6f46c+Ky7Q+dqVt/D7frtb5Qrnxr/QLYifD9tFLdv5lhSnSov9awwgkHUqNJLmK3/TAM5ctB3VhoAekcwub1sWX+vPO1GX6n6AXzRXuRnXhp5SR1z3pJUeApDgxVx/lWPIXAVII/bUIaM8mz9JXyYPuNNo8OyqVTiJuVm5NnwH9nVN4OeRrKwVW3+l1A9gbPzMt4bHkoBNFg8ee7P++GYJspkroHqAIlcgh/gac9DWTIdBl3G16rmudMRRSm61Hj/xgKHpEOJrADAqHv4fTuA+al5DoceSrppjOjcgAL712SZF7Pnawj/I3hjgOlkk=
+x-ms-exchange-antispam-messagedata: jhdR4IaNr5Ie0v4EiPaPa96dIee+h0xMKpsMvW7S7oaecKLhG0SOyy3kmRug3cl+B9LD+vw3KjXd5v+Z8BUyFm/IauODAXQ6BA6KSgf5vOSop0UdnD7hgkKP4ap+OwF3FEqT8XBLGbNHQ3BTF9zfYg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200304001339.8248-1-rcampbell@nvidia.com> <20200304001339.8248-2-rcampbell@nvidia.com>
-In-Reply-To: <20200304001339.8248-2-rcampbell@nvidia.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Thu, 12 Mar 2020 17:55:39 +1000
-Message-ID: <CACAvsv4+od30K-FAr5Fet7kOz1APRDTXmHRc3fN4eiCVDhY02w@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH v3 1/4] nouveau/hmm: fix vma range check for migration
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59f02c9c-a397-4ba7-1616-08d7c65abeb7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 07:55:34.4570
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RMenhQHnplzYvXY3ulb2IA2RSVn/fP8vpLb8nFVp6+Fpi1jCwWQrdVlpDUwiQlRx20ere5LoWf6+PGW65n1nUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0182
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've taken all 4 patches in my tree.
+Hi Wambui,
 
-Thanks Ralph,
-Ben.
+> -----Original Message-----
+> From: Wambui Karuga <wambui.karugax@gmail.com>
+> Sent: Tuesday, March 10, 2020 8:31 PM
+> To: airlied@linux.ie; daniel@ffwll.ch; Alexey Brodkin <abrodkin@synopsys.=
+com>
+> Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; gregkh=
+@linuxfoundation.org
+> Subject: [PATCH v2 05/17] drm/arc: make arcgpu_debugfs_init() return 0.
+>=20
+> Since commit 987d65d01356 (drm: debugfs: make
+> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
+> fails and should return void. Therefore, remove its use as the
+> return value of arcpgu_debugfs_init() and have the latter function return
+> 0 directly.
+>=20
+> v2: convert the function to return 0 instead of void to avoid breaking
+> the build and ensure that this individual patch compiles properly.
+>=20
+> References: https://lists.freedesktop.org/archives/dri-devel/2020-Februar=
+y/257183.html
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-On Wed, 4 Mar 2020 at 10:14, Ralph Campbell <rcampbell@nvidia.com> wrote:
->
-> find_vma_intersection(mm, start, end) only guarantees that end is greater
-> than or equal to vma->vm_start but doesn't guarantee that start is
-> greater than or equal to vma->vm_start. The calculation for the
-> intersecting range in nouveau_svmm_bind() isn't accounting for this and
-> can call migrate_vma_setup() with a starting address less than
-> vma->vm_start. This results in migrate_vma_setup() returning -EINVAL for
-> the range instead of nouveau skipping that part of the range and migrating
-> the rest.
->
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> index df9bf1fd1bc0..169320409286 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> @@ -179,6 +179,7 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
->                 if (!vma)
->                         break;
->
-> +               addr = max(addr, vma->vm_start);
->                 next = min(vma->vm_end, end);
->                 /* This is a best effort so we ignore errors */
->                 nouveau_dmem_migrate_vma(cli->drm, vma, addr, next);
-> --
-> 2.20.1
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+Thanks for the patch!
+
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+
