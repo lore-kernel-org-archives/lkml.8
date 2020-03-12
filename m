@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B216C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0738C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EE520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F56720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X4iIZhqW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q0emyiH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCLS4r (ORCPT
+        id S1726828AbgCLS4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:56:47 -0400
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:54196 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLS4p (ORCPT
+        Thu, 12 Mar 2020 14:56:52 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:50467 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCLS4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:56:45 -0400
-Received: by mail-pj1-f73.google.com with SMTP id z20so3806545pjn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:56:44 -0700 (PDT)
+        Thu, 12 Mar 2020 14:56:49 -0400
+Received: by mail-qk1-f202.google.com with SMTP id z185so5147606qkc.17
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=fffnx5Rt8GbetlYKB2cd5pIz6essNcsuoAoI5LuF7xg=;
-        b=X4iIZhqW2R1TPVFTKsFPHVJVh7FZrTnez6T3Hnb2ogVxiFULIuQswnb3uNvHTh606L
-         kWRMP1Tx6BAWqOg+Qs0JiEDXcJEU4zM4Ohfw5xl/sm4kMe1n9sPKdfJrN0z1wi5a1Q1T
-         i4qb5AJG01eyY3aVK0eoelJnGDngWShfV9cW6ngScru79A2D+5C1UgLUjsPpHEI5afaH
-         opdD/Mc/z9itjcXznh4HSOtfw6wiOR5CRgE7ukOMRwFZcf+9Kom1/g8UuoRBkRr7ToDv
-         tZfqSwiwYOHvNngd8H1dChskW0VqROywIRFITHq3e8LVkBa3/+oujC2Vj8Mih90Nc1iR
-         7PIg==
+         :cc;
+        bh=kJTSRv0ipA/LGaJ/irvxa1s6RApiBKOCTBDPilrDk+I=;
+        b=Q0emyiH4rIcLyUi7f84W7F55EBn3KSNPdY897wfO+mXCpz1ySv8ZRZRto5jAR4gIQi
+         0O+khqavkm6BnEblYbBum4WMyKGv0Z722OcGmZTMjBdxnW6Ad8F7xLtkufO7aHToMwlb
+         TOXy1fjskCEP6mi4srQjgxtN70QVTwDmvlhS/rcfTGxUgw9QucI2LzxUC1IMIASYFCK/
+         PYGu0n7IN6IBl5MnE8xdyv1KAiCmvjesk/bpjpl9WZcaEajBPnhOlQ7dNukrIPuqdfZ6
+         O2jLXcNw8z96wgrZ2dnT1j3nSH1xyvv2Zdg7/PRczenbo5D+f+4tC2PCE6FBPfOq2g1M
+         Tx6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=fffnx5Rt8GbetlYKB2cd5pIz6essNcsuoAoI5LuF7xg=;
-        b=aMJJQ7a6AkF69/c1YK1TojttIiY834LY7i2EmEz0vVIsormPtwFg0pbSYPjyK+o1Ei
-         2Ammcgss38HW9vGWdu+yH0hWdQ/vrLcSP6dem35YLT3GUg+qVLGhjPKXw1ctDWv4Z1cG
-         VSknlMUb1FR/uMi/MIpvytSrJzrqhkF0ri89vmoUpavm7EULuq7NIVyWRQIomwnT2d1z
-         lN8n6MRrwL6jqjz735KC3YD4KcQZWnwciYGhGukU+yWrkRDrU6cxbk1SBS0TdxuLzXNW
-         MsDS4LwMAfFA4gVox+LRb1ncnPftg2JZ932Lxw3KF8Alx/IU0lywbKtZEVe2j1Vane6B
-         z8Lw==
-X-Gm-Message-State: ANhLgQ3OqiirrXJJa2FhBCQ0+xDHC9bLDG+M1DjZW2nk01LR9OTsHYMs
-        fjfdmnXZe59Pt9xxkSnYp1x7JojuNgKo
-X-Google-Smtp-Source: ADFU+vuP6Yt38fE514Tivo5Xppmxjai6z5GkzOYQXVK/NgqjwwtUr734FE8xx1ebnir8TiLeqL2+ALCsxTPU
-X-Received: by 2002:a17:90b:19ca:: with SMTP id nm10mr5375115pjb.161.1584039403652;
- Thu, 12 Mar 2020 11:56:43 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 11:56:28 -0700
+         :references:subject:from:to:cc;
+        bh=kJTSRv0ipA/LGaJ/irvxa1s6RApiBKOCTBDPilrDk+I=;
+        b=Xi8a3oVXX6lxjj9Ei7uYSnMLw3qawxbXVmiF30TPPl1Z4UuZa+doorwxD+VRWcvKx7
+         p19D8ECQH7nQc/A44aQujTf8XTcuENYgJkluxNH8DelYbgR2QD6q6eL15ZWAE3DwA8fP
+         byvWz6d+5cGuwn0HMADVnStJVN7a+XmWpv7AbT/itK1HNyPXvFy2+Vowoob/Wj7p4l4b
+         DlsSGv95BxdYzvmUSTE1g6olRR1YwZGwl02Y0WSGNuvkgDQouxLKxag4sNLfiRGAsOVm
+         GpQVgEmsGd3Ksg4Nyiyc/hJccAiNBtt75TtfEIeHAF2iiTMCbTPi34wyUAXVrn+o6U4N
+         2+Jg==
+X-Gm-Message-State: ANhLgQ1T5Z+qg2JEbZi4PAhtIjFCGbl9kjcfuHJa1OkKOPyrSXM41gfO
+        UNHi1JxKenGagX86sRbhlowAz35Xnpnl
+X-Google-Smtp-Source: ADFU+vueXXRsbKUuDgz64Asxn3hRuSV3ePwURwTunWQv2Wfz8U72NIAnhYvRMF43t7S7B8JDCPzIqLkHoR33
+X-Received: by 2002:a25:e88:: with SMTP id 130mr10846597ybo.174.1584039406189;
+ Thu, 12 Mar 2020 11:56:46 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 11:56:29 -0700
 In-Reply-To: <20200312185629.141280-1-rajatja@google.com>
-Message-Id: <20200312185629.141280-5-rajatja@google.com>
+Message-Id: <20200312185629.141280-6-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200312185629.141280-1-rajatja@google.com>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v9 4/5] drm/i915: Add helper code for ACPI privacy screen
+Subject: [PATCH v9 5/5] drm/i915: Enable support for integrated privacy screen
 From:   Rajat Jain <rajatja@google.com>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -83,273 +83,148 @@ To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Tomoki Maruichi <maruichit@lenovo.com>
 Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helper functions that can allow i915 to detect and control
-an integrated privacy screen via ACPI methods. These shall be used
-in the next patch.
+Add support for an ACPI based integrated privacy screen that is
+available on some systems.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
 v9: same as v8
-v8: Initial version. formed by refactoring the previous patch 4.
-    print the connector name in the debug messages.
+v8: - separate the APCI privacy screen into a separate patch.
+    - Don't destroy the property if there is no privacy screen (because
+      drm core doesn't like destroying property in late_register()).
+    - The setting change needs to be committed in ->update_pipe() for 
+      ddi.c as well as dp.c and both of them call intel_dp_add_properties()
+v7: Look for ACPI node in ->late_register() hook.
+    Do the scan only once per drm_device (instead of 1 per drm_connector)
+v6: Addressed minor comments from Jani at
+    https://lkml.org/lkml/2020/1/24/1143
+     - local variable renamed.
+     - used drm_dbg_kms()
+     - used acpi_device_handle()
+     - Used opaque type acpi_handle instead of void*
+v5: same as v4
+v4: Same as v3
+v3: fold the code into existing acpi_device_id_update() function
+v2: formed by splitting the original patch into ACPI lookup, and privacy
+    screen property. Also move it into i915 now that I found existing code
+    in i915 that can be re-used.
 
- drivers/gpu/drm/i915/Makefile                 |   3 +-
- .../drm/i915/display/intel_privacy_screen.c   | 184 ++++++++++++++++++
- .../drm/i915/display/intel_privacy_screen.h   |  27 +++
- 3 files changed, 213 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
- create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
+ drivers/gpu/drm/i915/display/intel_atomic.c |  2 ++
+ drivers/gpu/drm/i915/display/intel_ddi.c    |  1 +
+ drivers/gpu/drm/i915/display/intel_dp.c     | 34 ++++++++++++++++++++-
+ drivers/gpu/drm/i915/display/intel_dp.h     |  5 +++
+ 4 files changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index 9f887a86e555d..da42389107f9c 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -209,7 +209,8 @@ i915-y +=3D \
- 	display/intel_vga.o
- i915-$(CONFIG_ACPI) +=3D \
- 	display/intel_acpi.o \
--	display/intel_opregion.o
-+	display/intel_opregion.o \
-+	display/intel_privacy_screen.o
- i915-$(CONFIG_DRM_FBDEV_EMULATION) +=3D \
- 	display/intel_fbdev.o
-=20
-diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.c b/drivers/=
-gpu/drm/i915/display/intel_privacy_screen.c
-new file mode 100644
-index 0000000000000..66039103c821b
---- /dev/null
-+++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
-@@ -0,0 +1,184 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Intel ACPI privacy screen code
-+ *
-+ * Copyright =C2=A9 2020 Google Inc.
-+ *
-+ * This code can help detect and control an integrated EPS (electronic
-+ * privacy screen) via ACPI functions. It expects an ACPI node for the
-+ * drm connector device with the following elements:
-+ *
-+ * UUID should be "c7033113-8720-4ceb-9090-9d52b3e52d73"
-+ *
-+ * _ADR =3D ACPI address per Spec (also see intel_acpi_device_id_update())
-+ * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-+ * Pages 1119 - 1123.
-+ *
-+ * _DSM method that will perform the following functions according to
-+ * Local1 argument passed to it:
-+ *  - Local1 =3D 0 (EPS capabilities): Report EPS presence and capabilitie=
-s.
-+ *  - Local1 =3D 1 (EPS State)  :  _DSM returns 1 if EPS is enabled, 0 oth=
-erwise.
-+ *  - Local1 =3D 2 (EPS Enable) :  _DSM enables EPS
-+ *  - Local1 =3D 3 (EPS Disable):  _DSM disables EPS
-+ *
-+ * Here is a sample ACPI node:
-+ *
-+ *  Scope (\_SB.PCI0.GFX0) // Intel graphics device (PCI device)
-+ *  {
-+ *      Method (_DOD, 0, NotSerialized)  // _DOD: Display Output Devices
-+ *      {
-+ *          Return (Package (0x01)
-+ *          {
-+ *              0x80010400
-+ *          })
-+ *      }
-+ *
-+ *      Device (LCD)
-+ *      {
-+ *          Name (_ADR, 0x80010400)  // _ADR: Address
-+ *          Name (_STA, 0x0F)  // _STA: Status
-+ *
-+ *          Method (EPSP, 0, NotSerialized) // EPS Present
-+ *          {
-+ *              Return (0x01)
-+ *          }
-+ *
-+ *          Method (EPSS, 0, NotSerialized) // EPS State
-+ *          {
-+ *              Local0 =3D \_SB.PCI0.GRXS (0xCD)
-+ *              Return (Local0)
-+ *          }
-+ *
-+ *          Method (EPSE, 0, NotSerialized) // EPS Enable
-+ *          {
-+ *              \_SB.PCI0.STXS (0xCD)
-+ *          }
-+ *
-+ *          Method (EPSD, 0, NotSerialized) // EPS Disable
-+ *          {
-+ *              \_SB.PCI0.CTXS (0xCD)
-+ *          }
-+ *
-+ *          Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-+ *          {
-+ *              ToBuffer (Arg0, Local0)
-+ *              If ((Local0 =3D=3D ToUUID ("c7033113-8720-4ceb-9090-9d52b3=
-e52d73")))
-+ *              {
-+ *                  ToInteger (Arg2, Local1)
-+ *                  If ((Local1 =3D=3D Zero))
-+ *                  {
-+ *                      Local2 =3D EPSP ()
-+ *                      If ((Local2 =3D=3D One))
-+ *                      {
-+ *                          Return (Buffer (One)
-+ *                          {
-+ *                               0x0F
-+ *                          })
-+ *                      }
-+ *                  }
-+ *
-+ *                  If ((Local1 =3D=3D One))
-+ *                  {
-+ *                      Return (EPSS ())
-+ *                  }
-+ *
-+ *                  If ((Local1 =3D=3D 0x02))
-+ *                  {
-+ *                      EPSE ()
-+ *                  }
-+ *
-+ *                  If ((Local1 =3D=3D 0x03))
-+ *                  {
-+ *                      EPSD ()
-+ *                  }
-+ *
-+ *                  Return (Buffer (One)
-+ *                  {
-+ *                       0x00
-+ *                  })
-+ *              }
-+ *
-+ *              Return (Buffer (One)
-+ *              {
-+ *                   0x00
-+ *              })
-+ *          }
-+ *      }
-+ *  }
-+ */
-+
-+#include <linux/acpi.h>
-+
+diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
+index d043057d2fa03..9898d8980e7ce 100644
+--- a/drivers/gpu/drm/i915/display/intel_atomic.c
++++ b/drivers/gpu/drm/i915/display/intel_atomic.c
+@@ -150,6 +150,8 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
+ 	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
+ 	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
+ 	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
++	    new_conn_state->base.privacy_screen_status !=
++		old_conn_state->base.privacy_screen_status ||
+ 	    !blob_equal(new_conn_state->base.hdr_output_metadata,
+ 			old_conn_state->base.hdr_output_metadata))
+ 		crtc_state->mode_changed = true;
+diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+index 73d0f4648c06a..69a5423216dc5 100644
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -3708,6 +3708,7 @@ static void intel_ddi_update_pipe(struct intel_encoder *encoder,
+ 	if (!intel_crtc_has_type(crtc_state, INTEL_OUTPUT_HDMI))
+ 		intel_ddi_update_pipe_dp(encoder, crtc_state, conn_state);
+ 
++	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
+ 	intel_hdcp_update_pipe(encoder, crtc_state, conn_state);
+ }
+ 
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 3ddc424b028c1..5f33ebb466135 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -62,6 +62,7 @@
+ #include "intel_lspcon.h"
+ #include "intel_lvds.h"
+ #include "intel_panel.h"
 +#include "intel_privacy_screen.h"
+ #include "intel_psr.h"
+ #include "intel_sideband.h"
+ #include "intel_tc.h"
+@@ -5886,6 +5887,10 @@ intel_dp_connector_register(struct drm_connector *connector)
+ 		dev_priv->acpi_scan_done = true;
+ 	}
+ 
++	/* Check for integrated Privacy screen support */
++	if (intel_privacy_screen_present(to_intel_connector(connector)))
++		drm_connector_attach_privacy_screen_property(connector);
 +
-+#define CONN_NAME(conn)						\
-+	(conn->base.kdev ? dev_name(conn->base.kdev) : "NONAME")
+ 	DRM_DEBUG_KMS("registering %s bus for %s\n",
+ 		      intel_dp->aux.name, connector->kdev->kobj.name);
+ 
+@@ -6883,6 +6888,33 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
+ 		connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
+ 
+ 	}
 +
-+#define CONNECTOR_DSM_REVID 1
-+
-+#define CONNECTOR_DSM_FN_PRIVACY_ENABLE		2
-+#define CONNECTOR_DSM_FN_PRIVACY_DISABLE	3
-+
-+static const guid_t drm_conn_dsm_guid =3D
-+	GUID_INIT(0xC7033113, 0x8720, 0x4CEB,
-+		  0x90, 0x90, 0x9D, 0x52, 0xB3, 0xE5, 0x2D, 0x73);
-+
-+/* Makes _DSM call to set privacy screen status */
-+static void acpi_privacy_screen_call_dsm(struct intel_connector *connector=
-,
-+					 u64 func)
-+{
-+	union acpi_object *obj;
-+	acpi_handle acpi_handle =3D connector->acpi_handle;
-+	struct drm_device *drm =3D connector->base.dev;
-+
-+	if (!acpi_handle)
-+		return;
-+
-+	obj =3D acpi_evaluate_dsm(acpi_handle, &drm_conn_dsm_guid,
-+				CONNECTOR_DSM_REVID, func, NULL);
-+	if (!obj) {
-+		drm_err(drm, "%s: failed to evaluate _DSM for fn %llx\n",
-+			CONN_NAME(connector), func);
-+		return;
-+	}
-+
-+	ACPI_FREE(obj);
++	/*
++	 * Created here, but depending on result of probing for privacy-screen
++	 * in intel_dp_connector_register(), gets attached in that function.
++	 * Need to create here because the drm core doesn't like creating
++	 * properties during ->late_register().
++	 */
++	drm_connector_create_privacy_screen_property(connector);
 +}
 +
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum drm_privacy_screen_status val)
++void
++intel_dp_update_privacy_screen(struct intel_encoder *encoder,
++			       const struct intel_crtc_state *crtc_state,
++			       const struct drm_connector_state *conn_state)
 +{
-+	struct drm_device *drm =3D connector->base.dev;
++	struct drm_connector *connector = conn_state->connector;
 +
-+	if (val =3D=3D PRIVACY_SCREEN_DISABLED) {
-+		drm_dbg_kms(drm, "%s: disabling privacy-screen\n",
-+			    CONN_NAME(connector));
-+		acpi_privacy_screen_call_dsm(connector,
-+					     CONNECTOR_DSM_FN_PRIVACY_DISABLE);
-+	} else {
-+		drm_dbg_kms(drm, "%s: enabling privacy-screen\n",
-+			    CONN_NAME(connector));
-+		acpi_privacy_screen_call_dsm(connector,
-+					     CONNECTOR_DSM_FN_PRIVACY_ENABLE);
-+	}
++	intel_privacy_screen_set_val(to_intel_connector(connector),
++				     conn_state->privacy_screen_status);
 +}
 +
-+bool intel_privacy_screen_present(struct intel_connector *connector)
++static void intel_dp_update_pipe(struct intel_encoder *encoder,
++				 const struct intel_crtc_state *crtc_state,
++				 const struct drm_connector_state *conn_state)
 +{
-+	acpi_handle handle =3D connector->acpi_handle;
-+	struct drm_device *drm =3D connector->base.dev;
++	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
++	intel_panel_update_backlight(encoder, crtc_state, conn_state);
+ }
+ 
+ static void intel_dp_init_panel_power_timestamps(struct intel_dp *intel_dp)
+@@ -7826,7 +7858,7 @@ bool intel_dp_init(struct drm_i915_private *dev_priv,
+ 	intel_encoder->compute_config = intel_dp_compute_config;
+ 	intel_encoder->get_hw_state = intel_dp_get_hw_state;
+ 	intel_encoder->get_config = intel_dp_get_config;
+-	intel_encoder->update_pipe = intel_panel_update_backlight;
++	intel_encoder->update_pipe = intel_dp_update_pipe;
+ 	intel_encoder->suspend = intel_dp_encoder_suspend;
+ 	if (IS_CHERRYVIEW(dev_priv)) {
+ 		intel_encoder->pre_pll_enable = chv_dp_pre_pll_enable;
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
+index 0c7be8ed1423a..e4594e27ce5a8 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.h
++++ b/drivers/gpu/drm/i915/display/intel_dp.h
+@@ -123,4 +123,9 @@ static inline unsigned int intel_dp_unused_lane_mask(int lane_count)
+ 
+ u32 intel_dp_mode_to_fec_clock(u32 mode_clock);
+ 
++void
++intel_dp_update_privacy_screen(struct intel_encoder *encoder,
++			       const struct intel_crtc_state *crtc_state,
++			       const struct drm_connector_state *conn_state);
 +
-+	if (handle &&
-+	    acpi_check_dsm(handle, &drm_conn_dsm_guid,
-+			   CONNECTOR_DSM_REVID,
-+			   1 << CONNECTOR_DSM_FN_PRIVACY_ENABLE |
-+			   1 << CONNECTOR_DSM_FN_PRIVACY_DISABLE)) {
-+		drm_info(drm, "%s: supports ACPI privacy-screen\n",
-+			 CONN_NAME(connector));
-+		return true;
-+	}
-+
-+	drm_dbg_kms(drm, "%s: doesn't support ACPI privacy-screen\n",
-+		    CONN_NAME(connector));
-+	return false;
-+}
-diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.h b/drivers/=
-gpu/drm/i915/display/intel_privacy_screen.h
-new file mode 100644
-index 0000000000000..8655745ff9085
---- /dev/null
-+++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-+/*
-+ * Copyright =C2=A9 2020 Google Inc.
-+ */
-+
-+#ifndef __DRM_PRIVACY_SCREEN_H__
-+#define __DRM_PRIVACY_SCREEN_H__
-+
-+#include "intel_display_types.h"
-+
-+#ifdef CONFIG_ACPI
-+bool intel_privacy_screen_present(struct intel_connector *connector);
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum drm_privacy_screen_status val);
-+#else
-+static bool intel_privacy_screen_present(struct intel_connector *connector=
-)
-+{
-+	return false;
-+}
-+
-+static void
-+intel_privacy_screen_set_val(struct intel_connector *connector,
-+			     enum drm_privacy_screen_status val)
-+{ }
-+#endif /* CONFIG_ACPI */
-+
-+#endif /* __DRM_PRIVACY_SCREEN_H__ */
---=20
+ #endif /* __INTEL_DP_H__ */
+-- 
 2.25.1.481.gfbce0eb801-goog
 
