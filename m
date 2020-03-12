@@ -2,116 +2,119 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6C8C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4CCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182AB206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFnHgZgL"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB26206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCLTa5 (ORCPT
+        id S1726820AbgCLTcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:30:57 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31371 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726504AbgCLTa4 (ORCPT
+        Thu, 12 Mar 2020 15:32:31 -0400
+Received: from 6.mo7.mail-out.ovh.net ([188.165.39.218]:60798 "EHLO
+        6.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgCLTca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:30:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584041455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QvUXhImPqA1Uvu5bgO3XTxZQY9biJKg8Q/V15yAEJs0=;
-        b=iFnHgZgLNOnnjhz+faLqfH40ZucBsLk10iv5qrngFNVm4+t0kY4cqNnO3bMxoX+yKZwrDA
-        Vrfcj2zgSbQzKHaDUQpn37Nw8kP2OpThRYoqOHDUcDKX5No9gy0jYSSy5rHoweuIKbl0mA
-        FyNMt0CEL6hzmd/BwjukKOuBf7vQBck=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-nHBA0sDFNZuri9ndoi6yhw-1; Thu, 12 Mar 2020 15:30:51 -0400
-X-MC-Unique: nHBA0sDFNZuri9ndoi6yhw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5E021922965;
-        Thu, 12 Mar 2020 19:30:49 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F40419C6A;
-        Thu, 12 Mar 2020 19:30:39 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 15:30:37 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-Message-ID: <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
- <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
- <3142237.YMNxv0uec1@x2>
- <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
+        Thu, 12 Mar 2020 15:32:30 -0400
+X-Greylist: delayed 2399 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 15:32:30 EDT
+Received: from player728.ha.ovh.net (unknown [10.108.57.178])
+        by mo7.mail-out.ovh.net (Postfix) with ESMTP id BD5BE158796
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 19:13:49 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player728.ha.ovh.net (Postfix) with ESMTPSA id 7C8D11047C29C;
+        Thu, 12 Mar 2020 18:13:36 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Tero Kristo <t-kristo@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] docs: driver-api/dma.../provider.rst: fix indents
+Date:   Thu, 12 Mar 2020 19:13:18 +0100
+Message-Id: <20200312181318.1368421-1-steve@sk2.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 8925290037935820104
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedgudduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejvdekrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-13 16:44, Paul Moore wrote:
-> This is a bit of a thread-hijack, and for that I apologize, but
-> another thought crossed my mind while thinking about this issue
-> further ... Once we support multiple auditd instances, including the
-> necessary record routing and duplication/multiple-sends (the host
-> always sees *everything*), we will likely need to find a way to "trim"
-> the audit container ID (ACID) lists we send in the records.  The
-> auditd instance running on the host/initns will always see everything,
-> so it will want the full container ACID list; however an auditd
-> instance running inside a container really should only see the ACIDs
-> of any child containers.
+This fixes some block indentations, formatting them as definitions
+(which seems appropriate given the content), and addressing these
+warnings:
 
-Agreed.  This should be easy to check and limit, preventing an auditd
-from seeing any contid that is a parent of its own contid.
+	Documentation/driver-api/dmaengine/provider.rst:270: WARNING: Unexpected indentation.
+	Documentation/driver-api/dmaengine/provider.rst:273: WARNING: Block quote ends without a blank line; unexpected unindent.
+	Documentation/driver-api/dmaengine/provider.rst:288: WARNING: Unexpected indentation.
+	Documentation/driver-api/dmaengine/provider.rst:290: WARNING: Block quote ends without a blank line; unexpected unindent.
 
-> For example, imagine a system where the host has containers 1 and 2,
-> each running an auditd instance.  Inside container 1 there are
-> containers A and B.  Inside container 2 there are containers Y and Z.
-> If an audit event is generated in container Z, I would expect the
-> host's auditd to see a ACID list of "1,Z" but container 1's auditd
-> should only see an ACID list of "Z".  The auditd running in container
-> 2 should not see the record at all (that will be relatively
-> straightforward).  Does that make sense?  Do we have the record
-> formats properly designed to handle this without too much problem (I'm
-> not entirely sure we do)?
+Fixes: 7d083ae98357 ("dmaengine: doc: Add sections for per descriptor metadata support")
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/driver-api/dmaengine/provider.rst | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-I completely agree and I believe we have record formats that are able to
-handle this already.
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index 790a15089f1f..6367a79de47d 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -260,34 +260,35 @@ descriptors. Depending on the architecture the DMA driver can implement either
+ or both of the methods and it is up to the client driver to choose which one
+ to use.
+ 
+-- DESC_METADATA_CLIENT
+-
++DESC_METADATA_CLIENT
+   The metadata buffer is allocated/provided by the client driver and it is
+   attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
+ 
+   From the DMA driver the following is expected for this mode:
+-  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
++
++  DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
+     The data from the provided metadata buffer should be prepared for the DMA
+     controller to be sent alongside of the payload data. Either by copying to a
+     hardware descriptor, or highly coupled packet.
+-  - DMA_DEV_TO_MEM
++  DMA_DEV_TO_MEM
+     On transfer completion the DMA driver must copy the metadata to the client
+     provided metadata buffer before notifying the client about the completion.
+     After the transfer completion, DMA drivers must not touch the metadata
+     buffer provided by the client.
+ 
+-- DESC_METADATA_ENGINE
+-
++DESC_METADATA_ENGINE
+   The metadata buffer is allocated/managed by the DMA driver. The client driver
+   can ask for the pointer, maximum size and the currently used size of the
+   metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
+   and dmaengine_desc_set_metadata_len() is provided as helper functions.
+ 
+   From the DMA driver the following is expected for this mode:
+-  - get_metadata_ptr
++
++  get_metadata_ptr
+     Should return a pointer for the metadata buffer, the maximum size of the
+     metadata buffer and the currently used / valid (if any) bytes in the buffer.
+-  - set_metadata_len
++
++  set_metadata_len
+     It is called by the clients after it have placed the metadata to the buffer
+     to let the DMA driver know the number of valid bytes provided.
+ 
 
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+base-commit: 7d3d3254adaa61cba896f71497f56901deb618e5
+-- 
+2.24.1
 
