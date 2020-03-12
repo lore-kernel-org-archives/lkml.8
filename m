@@ -2,86 +2,100 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42627C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB81C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EF02067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C48206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NlWfLO/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCLNr3 (ORCPT
+        id S1727434AbgCLNsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:47:29 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36694 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725978AbgCLNr2 (ORCPT
+        Thu, 12 Mar 2020 09:48:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41844 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLNsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:47:28 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 02CDlCBO022469
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Mar 2020 09:47:14 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id BD68C420E5E; Thu, 12 Mar 2020 09:47:12 -0400 (EDT)
-Date:   Thu, 12 Mar 2020 09:47:12 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Joe Perches <joe@perches.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next 005/491] ARM/UNIPHIER ARCHITECTURE: Use fallthrough;
-Message-ID: <20200312134712.GE7159@mit.edu>
-References: <cover.1583896344.git.joe@perches.com>
- <dae0878058223a42c77d725b8d7c5845a7ef9dc0.1583896348.git.joe@perches.com>
- <CAK7LNAS7GAk9yXkPhbS3ByU+n9Gb-rk0PeLcXLCNwpW1B22aeg@mail.gmail.com>
- <891a42ad8d8fd7beca911845108e1ded022ef3f7.camel@perches.com>
- <20200312085606.GA154268@kroah.com>
- <CAK7LNAS98yeCeFZpKgNRRKcFhXSKWQ7Ka4vP90YcY=ufScZRCw@mail.gmail.com>
- <fa07756217b3c033c7e5af495a03ff5655947450.camel@perches.com>
+        Thu, 12 Mar 2020 09:48:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id m25so5706532ioo.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:48:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JQXIGCXCcQkX5b0h95Wn70qT4Lsg/1L/D4OIHLSiNCA=;
+        b=NlWfLO/fYNg9mLVfR9yLiSb1v37zDB/6P3U6ychPiHzh5TDCvUkTE5txbHWJvt5p0o
+         cYxYiIIgF42V7QUW4zYohjpFh1DByWUcNJGrI5BLB3jo8P/c6DNUSDofvxc71QAI//lh
+         s2rmzVQrJkeA3BpNaZ5Ra+UQauJZkZE7RZR0thXR+bXuy6C29p1kuHZ5vlb/T8rEqrdu
+         fAMvuzFZ+qzz5SWgqnvQTNlRh/yyt+Gwq9ILZ3gR+jqBHmStJJHG6iFv4z8Jc57MSaRZ
+         4KuKPaEkEK0NGzF1pAC+EeVCtxAqOS8Y+K5Zo0A8B4HQ2WG6mEWH79+BEVMb/ZdXa1gE
+         Z8YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JQXIGCXCcQkX5b0h95Wn70qT4Lsg/1L/D4OIHLSiNCA=;
+        b=ZoPbSarSqiGX9N7yBTgEZLZpuVscHlzKTQKoZiMT3lWToFqMyxuKumi7ydI1D+H4kc
+         FxndA1XRXAc4jJ3LTwBYDiHryJKyaG+A74ThjmGeHy5SEikgGkNlkDXhyJOKEOx5DmJs
+         KAuB0pEhwUThLPv062LAStS2lcvbGCAqW3EnjDjaI8yUYpHan7/Lh3117GLIiZfRPkEr
+         ffeUE9UcmuMHvJrrC64OVBHn9n92LI1PGCXI1Xw2NleYC/FCwWc01vXz1ttOVkJ1vXPm
+         M6FN9vrQonGxb48V8VpbPCgwADlqkXbgLwF4zLUT+HdYRd70CSbdeMpl0tkvyZ+4/HJH
+         WMoQ==
+X-Gm-Message-State: ANhLgQ0xul49Qh29JtpYpAU9SPYf4++kJ9CRRVYxi9piXymbMgn0NhbM
+        2jOvS0tFjzpRfAulB6vPLj6caWfvUxSKIw==
+X-Google-Smtp-Source: ADFU+vsWK0+qm1KrXJJJWqWO/Zr+xTuuiQe26ah9eyr/b3281WjdadrCklpN3z38eqR/yRWhcY09BQ==
+X-Received: by 2002:a02:b894:: with SMTP id p20mr8035881jam.86.1584020879998;
+        Thu, 12 Mar 2020 06:47:59 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id y71sm4689317ilk.23.2020.03.12.06.47.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 06:47:59 -0700 (PDT)
+Subject: Re: [PATCH v2] Document genhd capability flags
+To:     Stephen Kitt <steve@sk2.org>, Matthew Wilcox <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200307145659.22657-1-steve@sk2.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ec5479a2-138b-3da3-e09a-edaca6292fb6@kernel.dk>
+Date:   Thu, 12 Mar 2020 07:47:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa07756217b3c033c7e5af495a03ff5655947450.camel@perches.com>
+In-Reply-To: <20200307145659.22657-1-steve@sk2.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 02:37:31AM -0700, Joe Perches wrote:
-> As I have suggested a few times, better still
-> would be to have a mechanism for scripted patches
-> applied possibly as single treewide patch.
+On 3/7/20 7:56 AM, Stephen Kitt wrote:
+> The kernel documentation includes a brief section about genhd
+> capabilities, but it turns out that the only documented
+> capability (GENHD_FL_MEDIA_CHANGE_NOTIFY) isn't used any more.
 > 
-> Likely applied only at an -rc1.
+> This patch removes that flag, and documents the rest, based on my
+> understanding of the current uses of these flags in the kernel. The
+> documentation is kept in the header file, alongside the declarations,
+> in the hope that it will be kept up-to-date in future; the kernel
+> documentation is changed to include the documentation generated from
+> the header file.
 > 
-> The stated negatives to a treewide mechanism
-> have been difficulty to backport to -stable.
+> Because the ultimate goal is to provide some end-user
+> documentation (or end-administrator documentation), the comments are
+> perhaps more user-oriented than might be expected. Since the values
+> are shown to users in hexadecimal, the documentation lists them in
+> hexadecimal, and the constant declarations are adjusted to match.
 
-Any time we do a massive, disruptive change to the code base, it's
-going to cause problems to -stable.  It means that bug fix patches
-won't necessarily auto-apply, and some will require manual fixups
-afterwards
+Applied, thanks.
 
-Given that this change doesn't really fix any bugs, I'd have to ask
-the question --- is it *worth* it?  We really need to apply a certain
-amount of cost/benefit analysis around this.
+-- 
+Jens Axboe
 
-If it were really important, the thing we could do is to apply a
-single treewide patch at some point after the merge window.  I'd
-suggest after -rc2, myself, but reasonable people can differ.  And
-then, if it were *really* important we could run the same script on
-the stable kernels.
-
-But for changing "/* fallthrough */" to "fallthrough;"
-
-Does this ***really*** matter?  Why are we tying ourselves up in knots
-trying to do this all at once?
-
-					- Ted
