@@ -2,165 +2,162 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1672EC0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D10C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2716520739
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D3520739
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387626AbgCLBp0 convert rfc822-to-8bit (ORCPT
+        id S2387636AbgCLBpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 21:45:26 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:49061 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387571AbgCLBp0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 21:45:26 -0400
-Received: from twhfm1p2.macronix.com (twhfmlp2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id 02C1jGWP063299;
-        Thu, 12 Mar 2020 09:45:16 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id A7DE8C6B7C8838238773;
-        Thu, 12 Mar 2020 09:45:16 +0800 (CST)
-In-Reply-To: <20200311084304.580bec79@xps13>
-References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw> <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
-        <20200310203310.5fe74c57@collabora.com> <OF5C883176.AD73134D-ON48258528.000F5185-48258528.001F3544@mxic.com.tw> <20200311084304.580bec79@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     allison@lohutok.net, bbrezillon@kernel.org,
-        "Boris Brezillon" <boris.brezillon@collabora.com>,
-        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        rfontana@redhat.com, richard@nod.at, s.hauer@pengutronix.de,
-        stefan@agner.ch, tglx@linutronix.de, vigneshr@ti.com,
-        yuehaibing@huawei.com
-Subject: Re: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific suspend/resume
- operation
+        Wed, 11 Mar 2020 21:45:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49984 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387571AbgCLBpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 21:45:42 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9DD712E01B64EC9C1957;
+        Thu, 12 Mar 2020 09:45:36 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.230) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
+ 09:45:26 +0800
+Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small
+ chunks
+To:     "Zhoujian (jay)" <jianjay.zhou@huawei.com>,
+        Marc Zyngier <maz@kernel.org>
+References: <20200309085727.1106-1-zhukeqian1@huawei.com>
+ <4b85699ec1d354cc73f5302560231f86@misterjones.org>
+ <64925c8b-af3d-beb5-bc9b-66ef1e47f92d@huawei.com>
+ <a642a79ea9190542a9098e4c9dc5a9f2@kernel.org>
+ <9ddefc54-dd5b-0555-0aaa-00a3a23febcf@huawei.com>
+ <B2D15215269B544CADD246097EACE7474BB64495@DGGEMM528-MBX.china.huawei.com>
+CC:     "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Huangweidong (C)" <weidong.huang@huawei.com>,
+        "wangxin (U)" <wangxinxin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <3238d495-8c13-4fbb-8e3d-c34e560ec9af@huawei.com>
+Date:   Thu, 12 Mar 2020 09:45:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-KeepSent: A42184FE:1BAA0BF4-48258529:000916D9;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFA42184FE.1BAA0BF4-ON48258529.000916D9-48258529.0009A361@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Thu, 12 Mar 2020 09:45:16 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/03/12 AM 09:45:16,
-        Serialize complete at 2020/03/12 AM 09:45:16
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-MAIL: TWHMLLG4.macronix.com 02C1jGWP063299
+In-Reply-To: <B2D15215269B544CADD246097EACE7474BB64495@DGGEMM528-MBX.china.huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jay,
 
-Hi Miquel,
- 
-> > > > diff --git a/include/linux/mtd/rawnand.h 
-b/include/linux/mtd/rawnand.h
-> > > > index bc2fa3c..c0055ed 100644
-> > > > --- a/include/linux/mtd/rawnand.h
-> > > > +++ b/include/linux/mtd/rawnand.h
-> > > > @@ -1064,6 +1064,8 @@ struct nand_legacy {
-> > > >   * @lock:      lock protecting the suspended field. Also used to
-> > > >   *         serialize accesses to the NAND device.
-> > > >   * @suspended:      set to 1 when the device is suspended, 0 when 
- 
-> > it's not.
-> > > > + * @_suspend:      [REPLACEABLE] specific NAND device suspend 
-> > operation
-> > > > + * @_resume:      [REPLACEABLE] specific NAND device resume 
-operation
-> > > >   * @bbt:      [INTERN] bad block table pointer
-> > > >   * @bbt_td:      [REPLACEABLE] bad block table descriptor for 
-flash
-> > > >   *         lookup.
-> > > > @@ -1119,6 +1121,8 @@ struct nand_chip {
-> > > > 
-> > > >     struct mutex lock;
-> > > >     unsigned int suspended : 1;
-> > > > +   int (*_suspend)(struct nand_chip *chip);
-> > > > +   void (*_resume)(struct nand_chip *chip); 
-> > > 
-> > > I thought we agreed on not prefixing new hooks with _ ? 
-> > 
-> > For [PATCH v2] series, you mentioned to drop the _ prefix 
-> > of _lock/_unlock only and we finally patched to lock_area/unlock_area.
-> > 
+On 2020/3/11 15:34, Zhoujian (jay) wrote:
 > 
-> I missed this _, this is not something we want to add.
 > 
-> Also, when applying your patches I had several issues because they
-> where not base on the last -rc1.
+>> -----Original Message-----
+>> From: zhukeqian
+>> Sent: Wednesday, March 11, 2020 3:20 PM
+>> To: Marc Zyngier <maz@kernel.org>
+>> Cc: kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Zhoujian (jay)
+>> <jianjay.zhou@huawei.com>; Sean Christopherson
+>> <sean.j.christopherson@intel.com>; Paolo Bonzini <pbonzini@redhat.com>;
+>> James Morse <james.morse@arm.com>; Julien Thierry
+>> <julien.thierry.kdev@gmail.com>; Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small chunks
+>>
+>> Hi Marc,
+>>
+>> On 2020/3/10 21:16, Marc Zyngier wrote:
+>>> On 2020-03-10 08:26, zhukeqian wrote:
+>>>> Hi Marc,
+>>>>
+>>>> On 2020/3/9 19:45, Marc Zyngier wrote:
+>>>>> Kegian,
+>>>
+>>> [...]
+>>>
+>>>>> Is there a userspace counterpart to it?
+>>>>>
+>>>> As this KVM/x86 related changes have not been merged to mainline
+>>>> kernel, some little modification is needed on mainline Qemu.
+>>>
+>>> Could you please point me to these changes?
+>> I made some changes locally listed below.
+>>
+>> However, Qemu can choose to enable KVM_DIRTY_LOG_INITIALLY_SET or not.
+>> Here I made no judgement on dirty_log_manual_caps because I just want to
+>> verify the optimization of this patch.
+>>
+>> diff --git a/accel/kvm/kvm-all.c b/accel/kvm/kvm-all.c index
+>> 439a4efe52..1611f644a4 100644
+>> --- a/accel/kvm/kvm-all.c
+>> +++ b/accel/kvm/kvm-all.c
+>> @@ -2007,14 +2007,16 @@ static int kvm_init(MachineState *ms)
+>>      s->coalesced_pio = s->coalesced_mmio &&
+>>                         kvm_check_extension(s,
+>> KVM_CAP_COALESCED_PIO);
+>>
+>> -    s->manual_dirty_log_protect =
+>> +    uint64_t dirty_log_manual_caps =
+>>          kvm_check_extension(s,
+>> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
+>> -    if (s->manual_dirty_log_protect) {
+>> -        ret = kvm_vm_enable_cap(s,
+>> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0, 1);
+>> +    if (dirty_log_manual_caps) {
+>> +        ret = kvm_vm_enable_cap(s,
+>> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2, 0,
+>> +                                dirty_log_manual_caps);
+>>          if (ret) {
+>>              warn_report("Trying to enable
+>> KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 "
+>>                          "but failed.  Falling back to the legacy mode. ");
+>> -            s->manual_dirty_log_protect = false;
+>> +        } else {
+>> +            s->manual_dirty_log_protect = true;
+>>          }
+>>      }
 > 
-> Finally, I think I forgot a line when patching manually so it produces
-> a warning now.
+> FYI: I had submitted a patch to the Qemu community some days ago:
+> https://patchwork.kernel.org/patch/11419191/
+This is very helpful, thanks.
 > 
-> I am dropping patch 3 and 4, I keep patch 1 and 2 which seem fine.
+>>>
+>>>> As I tested this patch on a 128GB RAM Linux VM with no huge pages,
+>>>> the time of enabling dirty log will decrease obviously.
+>>>
+>>> I'm not sure how realistic that is. Not having huge pages tends to
+>>> lead to pretty bad performance in general...
+>> Sure, this has no effect on guests which are all of huge pages.
+>>
+>> For my understanding, once a guest has normal pages (maybe are initialized at
+>> beginning or dissloved from huge pages), it can benefit from this patch.
 > 
-> Please send a rebased and edited v4 for these, don't forget to drop the
-> kbuildtest robot tag and please also follow these slightly edited
-> commit logs:
+> Yes, I agree.
 > 
-> 2/4
+I will send PATCH v1 soon.
 > 
->     mtd: rawnand: Add support for manufacturer specific suspend/resume 
-operation
 > 
->     Patch nand_suspend() & nand_resume() to let manufacturers overwrite
->     suspend/resume operations.
+> Regards,
+> Jay Zhou
 > 
-> 3/4
-> 
->     mtd: rawnand: macronix: Add support for deep power down mode
-> 
->     Macronix AD series support deep power down mode for a minimum
->     power consumption state.
-> 
->     Overlaod nand_suspend() & nand_resume() in Macronix specific code to
->     support deep power down mode.
-
-okay, will resend [PATCH v4 xx/2] for suspend/resume operation with these 
-commit logs.
-
-> 
-> Thanks,
-> Miquèl
-
-thanks for your review & comments.
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+> .
+>
+Thanks,
+Keqian
 
