@@ -2,144 +2,126 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66836C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81813C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F94206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E97B206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCLV7F (ORCPT
+        id S1726680AbgCLWAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:59:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40892 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726513AbgCLV7E (ORCPT
+        Thu, 12 Mar 2020 18:00:31 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53069 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgCLWAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:59:04 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CLrCd5018716;
-        Thu, 12 Mar 2020 17:58:41 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yquesjwfw-23
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Mar 2020 17:58:41 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02CLYri9007977;
-        Thu, 12 Mar 2020 21:36:14 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 2yqt6q9d6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Mar 2020 21:36:13 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CLaCQB41222408
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 21:36:12 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 908A86E04E;
-        Thu, 12 Mar 2020 21:36:12 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30B9F6E04C;
-        Thu, 12 Mar 2020 21:36:11 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.160.72.189])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Mar 2020 21:36:10 +0000 (GMT)
-Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
- 'value'
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Chen Zhou <chenzhou10@huawei.com>
-Cc:     paulus@samba.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200312144157.GA110750@google.com>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <f2297ff2-5ba7-da38-4630-0b8f6af4dea6@linux.ibm.com>
-Date:   Thu, 12 Mar 2020 14:36:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 18:00:30 -0400
+Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02CLxOr0088649;
+        Fri, 13 Mar 2020 06:59:24 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
+ Fri, 13 Mar 2020 06:59:24 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02CLxOUL088644
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 13 Mar 2020 06:59:24 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2] Add kernel config option for fuzz testing.
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <6f2e27de-c820-7de3-447d-cd9f7c650add@suse.com>
+ <20200308065258.GE3983392@kroah.com>
+ <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
+ <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
+ <20200311101115.53139149@gandalf.local.home>
+ <CACT4Y+Z5co4HyQBj6-uUdqT2Vk=6jgT-aQXuPtjx3qV4C_pZ7g@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <7e0d2bbf-71c2-395c-9a42-d3d6d3ee4fa4@i-love.sakura.ne.jp>
+Date:   Fri, 13 Mar 2020 06:59:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200312144157.GA110750@google.com>
+In-Reply-To: <CACT4Y+Z5co4HyQBj6-uUdqT2Vk=6jgT-aQXuPtjx3qV4C_pZ7g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-12_15:2020-03-11,2020-03-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 mlxscore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003120107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/20 7:41 AM, Bjorn Helgaas wrote:
-> On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
->> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
->>> Fixes gcc '-Wunused-but-set-variable' warning:
->>>
->>> drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
->>> drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
->>> 	variable value set but not used [-Wunused-but-set-variable]
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->>
->> Michael, if you want this:
->>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> If you don't mind, edit the subject to follow the convention, e.g.,
->>
->>   PCI: rpaphp: Remove unused variable 'value'
->>
->> Apparently simple_strtoul() is deprecated and we're supposed to use
->> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
->> little, too, e.g.,
->>
->>   if (kstrtoul(drc_type, 0, &value) == 0)
->>     return 1;
->>
->>   return 0;
+On 2020/03/13 4:23, Dmitry Vyukov wrote:
+>> Or teach the fuzz tool not to do specific bad things.
 > 
-> I guess there are several other uses of simple_strtoul() in this file.
-> Not sure if it's worth changing them all, just this one, or just the
-> patch below as-is.
+> We do some of this.
+> But generally it's impossible for anything that involves memory
+> indirections, or depends on the exact type of fd (e.g. all ioctl's),
+> etc. Boils down to halting problem and ability to predict exact
+> behavior of arbitrary programs.
 
-If we are going to change one might as well do them all at once. If the original
-submitter wants to send the follow up that is fine, or I can send a patch when I
-have a minute.
+I would like to enable changes like below only if CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING=y .
 
--Tyrel
+Since TASK_RUNNING threads are not always running on CPUs (in syzbot, the kernel is
+tested on a VM with only 2 CPUs, which means that many threads are simply waiting for
+CPU time to be assigned), dumping locks held by all threads gives us more clue when
+e.g. khungtask fired. But since lockdep_print_held_locks() is racy, I assume that
+this change won't be accepted unless CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING=y .
 
-> 
->>> ---
->>>  drivers/pci/hotplug/rpaphp_core.c | 3 +--
->>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
->>> index e408e40..5d871ef 100644
->>> --- a/drivers/pci/hotplug/rpaphp_core.c
->>> +++ b/drivers/pci/hotplug/rpaphp_core.c
->>> @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
->>>  
->>>  static int is_php_type(char *drc_type)
->>>  {
->>> -	unsigned long value;
->>>  	char *endptr;
->>>  
->>>  	/* PCI Hotplug nodes have an integer for drc_type */
->>> -	value = simple_strtoul(drc_type, &endptr, 10);
->>> +	simple_strtoul(drc_type, &endptr, 10);
->>>  	if (endptr == drc_type)
->>>  		return 0;
->>>  
->>> -- 
->>> 2.7.4
->>>
+Also, for another example, limit number of memory pages /dev/ion driver can consume only if
+CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING=y ( https://github.com/google/syzkaller/issues/1267 ),
+for limiting number of memory pages is a user-visible change while we need to avoid false
+alarms caused by consuming all memory pages.
+
+In other words, while majority of things CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING=y would
+do "disable this", there would be a few "enable this" and "change this".
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 32406ef0d6a2..1bc7878768fc 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -695,6 +695,7 @@ static void print_lock(struct held_lock *hlock)
+ static void lockdep_print_held_locks(struct task_struct *p)
+ {
+ 	int i, depth = READ_ONCE(p->lockdep_depth);
++	bool unreliable;
+ 
+ 	if (!depth)
+ 		printk("no locks held by %s/%d.\n", p->comm, task_pid_nr(p));
+@@ -705,10 +706,12 @@ static void lockdep_print_held_locks(struct task_struct *p)
+ 	 * It's not reliable to print a task's held locks if it's not sleeping
+ 	 * and it's not the current task.
+ 	 */
+-	if (p->state == TASK_RUNNING && p != current)
+-		return;
++	unreliable = p->state == TASK_RUNNING && p != current;
+ 	for (i = 0; i < depth; i++) {
+-		printk(" #%d: ", i);
++		if (unreliable)
++			printk(" #%d?: ", i);
++		else
++			printk(" #%d: ", i);
+ 		print_lock(p->held_locks + i);
+ 	}
+ }
 
