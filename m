@@ -2,128 +2,138 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D666C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD71CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9C52067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAB620663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgCLNNv (ORCPT
+        id S1727250AbgCLNPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:13:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38912 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgCLNNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:13:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 16749B210;
-        Thu, 12 Mar 2020 13:13:48 +0000 (UTC)
-Message-ID: <a51badd7ba6fc1938a120b8a3b8a423ca9a3613b.camel@suse.de>
-Subject: Re: [PATCH v2 00/11] Raspbery Pi 4 vmmc regulator support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        phil@raspberrypi.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        DTML <devicetree@vger.kernel.org>
-Date:   Thu, 12 Mar 2020 14:13:45 +0100
-In-Reply-To: <CAPDyKFp+XwGog_w+8Sv1hYA-Umi6Rt2LYR1fyMEEb9abdb9nGQ@mail.gmail.com>
-References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
-         <CAPDyKFp+XwGog_w+8Sv1hYA-Umi6Rt2LYR1fyMEEb9abdb9nGQ@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-dHp/NTMIYot5p5695p1B"
-User-Agent: Evolution 3.34.4 
+        Thu, 12 Mar 2020 09:15:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43307 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLNPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:15:01 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jCNfo-0002Yi-Tt; Thu, 12 Mar 2020 14:14:53 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6DB3C1C223E;
+        Thu, 12 Mar 2020 14:14:52 +0100 (CET)
+Date:   Thu, 12 Mar 2020 13:14:52 -0000
+From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/amd/uncore: Replace manual sampling check
+ with CAP_NO_INTERRUPT flag
+Cc:     Kim Phillips <kim.phillips@amd.com>, Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200311191323.13124-1-kim.phillips@amd.com>
+References: <20200311191323.13124-1-kim.phillips@amd.com>
 MIME-Version: 1.0
+Message-ID: <158401889210.28353.10962157777204769703.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the perf/urgent branch of tip:
 
---=-dHp/NTMIYot5p5695p1B
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     f967140dfb7442e2db0868b03b961f9c59418a1b
+Gitweb:        https://git.kernel.org/tip/f967140dfb7442e2db0868b03b961f9c59418a1b
+Author:        Kim Phillips <kim.phillips@amd.com>
+AuthorDate:    Wed, 11 Mar 2020 14:13:21 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 12 Mar 2020 14:08:50 +01:00
 
-Hi Ulf,
+perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
 
-On Thu, 2020-03-12 at 14:08 +0100, Ulf Hansson wrote:
-> On Fri, 6 Mar 2020 at 18:44, Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > The series first cleans up a common pattern, which is ultimately needed
-> > to integrate the regulator with bcm2711's sdhci-iproc. It then
-> > introduces the relevant device-tree changes.
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >  - Use helper function istead of quirk
-> >  - Add GPIO label
-> >=20
-> > Nicolas Saenz Julienne (11):
-> >   mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
-> >   mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
-> >   mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
-> >   mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
-> >   mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
-> >   mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
-> >   mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
-> >   mmc: sdhci: Unexport sdhci_set_power_noreg()
-> >   mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
-> >   ARM: dts: bcm2711: Update expgpio's GPIO labels
-> >   ARM: dts: bcm2711: Add vmmc regulator in emmc2
-> >=20
-> >  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 13 ++++++++++++-
-> >  drivers/mmc/host/sdhci-iproc.c        | 17 ++++++++++++++++-
-> >  drivers/mmc/host/sdhci-milbeaut.c     | 13 +------------
-> >  drivers/mmc/host/sdhci-of-arasan.c    | 15 ++-------------
-> >  drivers/mmc/host/sdhci-of-at91.c      | 18 +-----------------
-> >  drivers/mmc/host/sdhci-pxav3.c        | 20 +-------------------
-> >  drivers/mmc/host/sdhci-xenon.c        | 20 +-------------------
-> >  drivers/mmc/host/sdhci.c              | 24 +++++++++++++++++++++---
-> >  drivers/mmc/host/sdhci.h              |  5 +++--
-> >  drivers/mmc/host/sdhci_am654.c        | 17 +++--------------
-> >  10 files changed, 61 insertions(+), 101 deletions(-)
-> >=20
-> > --
-> > 2.25.1
-> >=20
->=20
-> Patch 1-4, 6, 9 applied for next, thanks!
+Enable the sampling check in kernel/events/core.c::perf_event_open(),
+which returns the more appropriate -EOPNOTSUPP.
 
-I think you meant to apply 1-4, 7 and 9. Patch 6 is one of the contentious
-ones.
+BEFORE:
 
-Regards,
-Nicolas
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
+  /bin/dmesg | grep -i perf may provide additional information.
 
+With nothing relevant in dmesg.
 
---=-dHp/NTMIYot5p5695p1B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+AFTER:
 
------BEGIN PGP SIGNATURE-----
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5qNYkACgkQlfZmHno8
-x/48GAgAi6d1UCzPYCwsj71N7+l4MLbwJlBgYMPOcNnLon8xik24Ay4PhalmwceJ
-BSNQoqNVBL7IK/xKzVQfLZlGs81Pi4Dmh/AwAwhliFuZmB0dPcZFxnjRL0qk+wja
-pjU1xyVgCce9tLMKOKLdvDt22ivtDd4SO1/dp+MKhJ5+MFhdYdTTFa0KiGkq5F7P
-E3lJshWnP0/8ilwO2J0yNaKZ3SsjQwgLLVYyy56t4oLL24Dt/Jt+JgQWdTvHY+1a
-B4ibgW6C7j/FbksXEUDAtETYKcXyhSGnuxJJxU2SFYXvYLzX820BisWwxxw+XdJP
-kwEo+Mk6cui89Y9Vu6W6D7UegdvPBQ==
-=k11V
------END PGP SIGNATURE-----
+Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
+---
+ arch/x86/events/amd/uncore.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
---=-dHp/NTMIYot5p5695p1B--
-
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index a6ea07f..4d867a7 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -190,15 +190,12 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 
+ 	/*
+ 	 * NB and Last level cache counters (MSRs) are shared across all cores
+-	 * that share the same NB / Last level cache. Interrupts can be directed
+-	 * to a single target core, however, event counts generated by processes
+-	 * running on other cores cannot be masked out. So we do not support
+-	 * sampling and per-thread events.
++	 * that share the same NB / Last level cache.  On family 16h and below,
++	 * Interrupts can be directed to a single target core, however, event
++	 * counts generated by processes running on other cores cannot be masked
++	 * out. So we do not support sampling and per-thread events via
++	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
+ 	 */
+-	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+-		return -EINVAL;
+-
+-	/* and we do not enable counter overflow interrupts */
+ 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+ 	hwc->idx = -1;
+ 
+@@ -306,7 +303,7 @@ static struct pmu amd_nb_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
+-	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct pmu amd_llc_pmu = {
+@@ -317,7 +314,7 @@ static struct pmu amd_llc_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
+-	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
