@@ -2,104 +2,107 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2B6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55756C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9857D206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:53:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584042803;
-	bh=poV+EblAH9g8FbaAVlYH45IwSThQzxJ75LREtJe1pjs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=d8qlf2YMjAAxBR38ctrKrmQOfOEg/3HXbFZXVJdKJcAEF7bpuvP9rXyDsgXK+dWmC
-	 1BM9O/dKN/98sctX03B1/UCsbpp7Z+f3ZTMnIqRSOeu+8UEmhMej3BDzpXPkpx1cdc
-	 36FDlwVv5icQtGDG3AZPDR57MWyNOjcMtGjkdMpU=
+	by mail.kernel.org (Postfix) with ESMTP id 3B63720637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgCLTxW (ORCPT
+        id S1726836AbgCLTyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLTxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:53:22 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1412206E9;
-        Thu, 12 Mar 2020 19:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584042801;
-        bh=poV+EblAH9g8FbaAVlYH45IwSThQzxJ75LREtJe1pjs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QgYiV9kxEXU13feQOJYWn0rdviqTF3XtmqQUQaWrLmRoAah6vHvrIbzY1dRIuOuA3
-         tts/m4bSB+SWhvt8pF+CQ/kujJx1Xxs95MnP1XT2vf8aizcqtr94BrmwhgYsRujROB
-         OfqJDJH3oaMh/kHPTIX10EYgoQXdHAGAmsQFdfVc=
-Date:   Thu, 12 Mar 2020 14:53:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Message-ID: <20200312195319.GA162308@google.com>
+        Thu, 12 Mar 2020 15:54:17 -0400
+Received: from smtprelay0009.hostedemail.com ([216.40.44.9]:42674 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725268AbgCLTyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:54:16 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id EB034182CED5B;
+        Thu, 12 Mar 2020 19:54:15 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: baby05_7c5504a7ced51
+X-Filterd-Recvd-Size: 2717
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 12 Mar 2020 19:54:14 +0000 (UTC)
+Message-ID: <62ed1e9972f5d7d8a203e9295c388a70e6e9e0c2.camel@perches.com>
+Subject: Re: [PATCH -next 001/491] MELLANOX ETHERNET INNOVA DRIVERS: Use
+ fallthrough;
+From:   Joe Perches <joe@perches.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     David Miller <davem@davemloft.net>, borisp@mellanox.com,
+        saeedm@mellanox.com, leon@kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 12 Mar 2020 12:52:30 -0700
+In-Reply-To: <20200312124504.7ee481a9@kicinski-fedora-PC1C0HJN>
+References: <cover.1583896344.git.joe@perches.com>
+         <605f5d4954fcb254fe6fc5c22dc707f29b3b7405.1583896347.git.joe@perches.com>
+         <20200311.232302.1442236068172575398.davem@davemloft.net>
+         <cf74e8fdd3ee99aec86cec4abfdb1ce84b7fd90a.camel@perches.com>
+         <20200312124504.7ee481a9@kicinski-fedora-PC1C0HJN>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a4b4b4b0-3c56-51a0-4237-dd439fca3150@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
-> > Is any synchronization needed here between the EDR path and the
-> > hotplug/enumeration path?
->
-> If we want to follow the implementation note step by step (in
-> sequence) then we need some synchronization between EDR path and
-> enumeration path. But if it's OK to achieve the same end result by
-> following steps out of sequence then we don't need to create any
-> dependency between EDR and enumeration paths. Currently we follow
-> the latter approach.
-
-What would the synchronization look like?
-
-Ideally I think it would be better to follow the order in the
-flowchart if it's not too onerous.  That will make the code easier to
-understand.  The current situation with this dependency on pciehp and
-what it will do leaves a lot of things implicit.
-
-What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
-
-IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
-unbinds the drivers and removes the devices.  If that doesn't happen,
-and Linux clears the DPC trigger to bring the link back up, will those
-drivers try to operate uninitialized devices?
-
-Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
-
-> For example, consider the case in flow chart where after sending
-> success _OST, firmware decides to stop the recovery of the device.
+On Thu, 2020-03-12 at 12:45 -0700, Jakub Kicinski wrote:
+> On Wed, 11 Mar 2020 23:26:59 -0700 Joe Perches wrote:
+> > On Wed, 2020-03-11 at 23:23 -0700, David Miller wrote:
+> > > Joe, please use Subject line subsystem prefixes consistent with what would
+> > > be used for other changes to these drivers.  
+> > 
+> > Not easy to do for scripted patches.
+> > There's no mechanism that scriptable.
 > 
-> if we follow the flow chart as is then the steps should be,
+> I have this to show me the top 3 prefixes used for files currently
+> modified in my tree:
 > 
-> 1. clear the DPC status trigger
-> 2. Send success code via _OST, and wait for return from _OST
-> 3. if successful return then enumerate the child devices and
-> reassign bus numbers.
+> tgs() {
+>     local fs
 > 
-> In current approach the steps followed are,
+>     fs=$(git status -s | sed -n 's/ M //p')
 > 
-> 1. Clear the DPC status trigger.
-> 2. Send success code via _OST
-> 2. In parallel, LINK UP event path will enumerate the child devices.
-> 3. if firmware decides not to recover the device, then LINK DOWN
-> event will eventually remove them again.
+>     git log --oneline --no-merges -- $fs | \
+> 	sed -e's/[^ ]* \(.*\):[^:]*/\1/' | \
+> 	sort | uniq -c | sort -rn | head -3
+> }
+> 
+> You could probably massage it to just give you to top one and feed 
+> that into git commit template?
+
+I had already tried that via:
+
+$ cat get_patch_subject_prefix.bash 
+#!/bin/bash
+git log --format="%s" --no-merges -200 --since=2-years-ago $@ | \
+  cut -f1 -d":" | \
+  sort  | uniq -c | sort -rn | head -1 | \
+  sed 's/^[[:space:]]*[[:digit:]]*[[:space:]]*//'
+$ 
+
+It doesn't work very well for many of the subsystems.
+
+For instance, this script produces things like:
+
+ARM/ZYNQ ARCHITECTURE: treewide
+FCOE SUBSYSTEM (libfc, libfcoe, fcoe): scsi
+WOLFSON MICROELECTRONICS DRIVERS: ASoC
+
+There isn't a great single mechanism for this.
+
+At various times, I have proposed adding a grammar for
+patch subject titles to MAINTAINERS.
+
+Like:
+https://lore.kernel.org/lkml/1289919077.28741.50.camel@Joe-Laptop/
+
+
