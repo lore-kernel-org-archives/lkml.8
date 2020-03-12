@@ -2,151 +2,100 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBE4C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1E2C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44A920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A6020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AdZtKeCP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9iOaC9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgCLNK7 (ORCPT
+        id S1727148AbgCLNMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:10:59 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42537 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCLNK7 (ORCPT
+        Thu, 12 Mar 2020 09:12:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35489 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgCLNMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:10:59 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e11so5975892qkg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:10:57 -0700 (PDT)
+        Thu, 12 Mar 2020 09:12:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 7so3076251pgr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Fw7HC8zfyv7xlZ8Y772nkRRedqdvBOfOWFl3YVWCR/U=;
-        b=AdZtKeCPQg9PgXC0gviIyq+JosFZw/cAj9pq91dp7zf89VIQDfzUxGcjz8E8TkavhT
-         RXxwgeNdTPjfEsKrFyHeXoXs7WFrhj9ob0zHAdnhajSny3M5b/maHxghCUkR8VcOIgg8
-         s7uOi1wR/QJzem+7e/rCx/FDiXmep2ZF3NmBzvwQXQZTX9kvfEW9Fl1Zpgba+BubQ0EU
-         sFyIF4FLnctOXb1QrFeHZe455H9ZlDTzReH8Cha5blAUVyxNOr4DMlDMzccRxpGsxaLg
-         4+l1Ydhy9ahwwDJucHO68yg8M6y40megUBqte2rt2btM9CIDfaqWnmrbvt3Burx5y9Lg
-         mD4Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q6Q6VQm5erA6yCp5PM0NMfLn+9SyOR16cH0hI7kuurI=;
+        b=A9iOaC9a829BBVLJRhs5ZhCKqDx4h7XhwzWfGolJmIhPVZUbocE8lGSqKlG54mYrQE
+         Mf+QMbXMWrYkKXgh6r+JiZIgxCqtRt6uzNzULANRNFlkTdDP1UiL380jfjjEkiKRW+cz
+         PpjQxVtn+E/uZdNUYgFwDRPtGPUAoITwBZ5oKT3z9KdISx7XWC5vEPk5Zo5M/MGSXYFC
+         d5lhYhKBAiOqF6dB2oX0mzSfoDbjyywi4ouCKE8P0969hP2W5xKwzuNC0+tuWS1eQtrY
+         aGn+YcUVz+gNv392enyhcRXAoSRNI9gsNx/kWQqrsVMtFbaySCgVt2I76R2Daco3JbC0
+         Mwkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Fw7HC8zfyv7xlZ8Y772nkRRedqdvBOfOWFl3YVWCR/U=;
-        b=WviQO3rMkWUsp2Ffx2MRz2RWb/JqHxoEHGV+0j79YutKzPzc/JcmQ9cTkXG00n5prb
-         vpzX8qXw5N6BxcoVVTjJQve/FSIec+wJPzgpsTDZ9WmxkeH9SfoGegreQT/T0EfokUmM
-         Kf6gaiQBI/Gx+IRDiux2WL+X1E31+V87n7NCOY8rZtrrkYUEhTEoDR2KbWPMjA92w0D7
-         YSUx3v59BT/RAnZCebhr++jbmuW81FLyuOW3CQt2TUWM98piHVdeN1VnPCIXiUF/mgTF
-         tR5Vu2ZuPdsHhOzoDfRhGGCWeWWJJDvNV2q2WSmZltAAj+gsThXTn5WMA85A+rozv0y0
-         dSwA==
-X-Gm-Message-State: ANhLgQ29uEf+0ypBI5qyG0zKmMUjadrprvMsjLatmE4cjf30ZE3np16W
-        ZH8PzGPkJmEodgi0Lc+RdtyNBZCUfOEXRjgxBp3tNg==
-X-Google-Smtp-Source: ADFU+vsmLosOjuDP68r5eZPgol6dnmqRd+ZILVuI3Tk+l4vBb9/VptFkuJxMubd5z3NSwovTdmfxm5comn6Ihs5O5vc=
-X-Received: by 2002:a05:620a:1362:: with SMTP id d2mr7822512qkl.120.1584018652254;
- Thu, 12 Mar 2020 06:10:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q6Q6VQm5erA6yCp5PM0NMfLn+9SyOR16cH0hI7kuurI=;
+        b=IL45AG/vm+1OiN8l6hl9G0xXLbQ5kHOQ5TztVSESEES9dXn8FrQ7eqG+2aLNJQ9G/i
+         l10RTOf3V9gyM/qUcXTw1zWoqP5Am765VdhSSk+YPwwxa6iv5RTIJoUbg9INe9pFtQ6Q
+         uDpeVMQKTqA5LC1PN9DTR4CSMDRg/w/Y+uB9nvelyHqrHsVNDy+kW8apY3TunBcXFPwd
+         DsK9lD8dHgkSWHId8TPAUC0I48BmmVKDhL9pS2h7t47Fn7cxTeJxi7zHWjtwNzS+OzCj
+         Jn0mN7hf1c74LjrFE02sZkggYvHqlniZ0KYT/BSg+TlUeVPKg4qhogca/VpGj0Xr6/Gr
+         0Fmg==
+X-Gm-Message-State: ANhLgQ1c3QRhv9IZ3SXpxTGhXJgCT9+4QhmpiPyX0nUkZx/jhRT7QZXs
+        3apOZ+PuJwIWSf/nHDQgUYE=
+X-Google-Smtp-Source: ADFU+vvuOO0DOpX+8j5S4B2tzl8ZCqQc4niQjBgKy3UKNtsJMqVtvxsPp1+LXgiCC7ggpJknWVjAdw==
+X-Received: by 2002:a63:a746:: with SMTP id w6mr7157862pgo.76.1584018753787;
+        Thu, 12 Mar 2020 06:12:33 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id 135sm4447265pfu.207.2020.03.12.06.12.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Mar 2020 06:12:33 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 18:42:30 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: footbridge: replace setup_irq() by request_irq()
+Message-ID: <20200312131230.GA7618@afzalpc>
+References: <20200301122131.3902-1-afzal.mohd.ma@gmail.com>
+ <20200312123432.GZ25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-6-sakari.ailus@linux.intel.com> <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
- <20200311085555.GH5379@paasikivi.fi.intel.com>
-In-Reply-To: <20200311085555.GH5379@paasikivi.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Mar 2020 14:10:32 +0100
-Message-ID: <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] at24: Support probing while off
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312123432.GZ25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 11 mar 2020 o 09:56 Sakari Ailus <sakari.ailus@linux.intel.com> n=
-apisa=C5=82(a):
->
-> Hi Bartosz,
->
-> Thanks for the reply.
->
-> On Wed, Jan 29, 2020 at 02:36:17PM +0100, Bartosz Golaszewski wrote:
-> > wt., 21 sty 2020 o 14:41 Sakari Ailus <sakari.ailus@linux.intel.com> na=
-pisa=C5=82(a):
-> > >
-> > > In certain use cases (where the chip is part of a camera module, and =
-the
-> > > camera module is wired together with a camera privacy LED), powering =
-on
-> > > the device during probe is undesirable. Add support for the at24 to
-> > > execute probe while being powered off. For this to happen, a hint in =
-form
-> > > of a device property is required from the firmware.
-> > >
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > ---
-> > >  drivers/misc/eeprom/at24.c | 31 +++++++++++++++++++++----------
+Hi Russell,
 
-[snip!]
+On Thu, Mar 12, 2020 at 12:34:32PM +0000, Russell King - ARM Linux admin wrote:
 
-> > >
-> > >  static int at24_remove(struct i2c_client *client)
-> > >  {
-> > > +       bool low_power;
-> > > +
-> > >         pm_runtime_disable(&client->dev);
-> > > -       pm_runtime_set_suspended(&client->dev);
-> > > +       low_power =3D acpi_dev_state_low_power(&client->dev);
-> >
-> > This is inconsistent. You define the low_power field in the context
-> > structure (BTW the name low_power is a bit vague here - without
-> > looking at its assignment it would make me think it's about something
-> > battery-related, how about 'off_at_probe'?) and instead of reusing
->
-> The field was called probe_powered_off in v1, but I changed it to
-> probe_low_power (and renamed related functions etc.) based on review
-> comments --- for the device may not be powered off actually.
->
+> This patch causes a build warning:
 
-But is it actually ever low-power? What are the possible logical
-states of the device? If I understood correctly: it's either off or on
-at probe - not actually low-power. Am I missing something? In your
-cover letter you're writing: "These patches enable calling (and
-finishing) a driver's probe function without powering on the
-respective device on busses where the practice is to power on the
-device for probe." To me there's no mention of a low-power state,
-which makes the name 'probe_low_power' seem completely unrelated.
+> Hence, I'm dropping this patch.
+> 
+> I think you need to look more carefully at the code you are modifying,
+> and maybe even build test it.  Cross compilers are available from
+> kernel.org.
 
-> > this field here, you call acpi_dev_state_low_power() again. Either
-> > don't store the context for the life-time of the device if not
-> > necessary or don't call acpi_dev_state_low_power() at remove, although
-> > the commit message doesn't describe whether the latter is done on
-> > purpose.
->
-> Right. probe-low-power property has the same effect on remove for
-> consistency, i.e. the device can remain in low power state during remove.
-> This is documented in probe_low_power field documentation in the first
-> patch.
->
+Sorry for the sloppy approach.
 
-Just please don't store any state if you're not using it outside of
-the probe() function.
+i build & boot tested only using ARM multi_v7_defconfig which was
+building only few of my changes, i had the cross compiler. i was trying
+to rely on kbuild test robot for the other configs earlier, from the
+begining instead i should have made sure that each modified code builds
+w/o warning.
 
-Bartosz
+i am fixing it.
+
+Regards
+afzal
