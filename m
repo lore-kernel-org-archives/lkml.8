@@ -2,163 +2,123 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D3C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129D9C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C70420753
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA9420753
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpgM4oEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387610AbgCLCDh (ORCPT
+        id S2387643AbgCLCEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:03:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44742 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbgCLCDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:03:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 19:03:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,543,1574150400"; 
-   d="scan'208";a="236488961"
-Received: from lshi-mobl1.ccr.corp.intel.com (HELO [10.255.29.252]) ([10.255.29.252])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Mar 2020 19:03:29 -0700
-Subject: Re: [kbuild-all] Re: [PATCH 3/3] proc: Remove the now unnecessary
- internal mount of proc
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-References: <87r1yeqxbp.fsf_-_@x220.int.ebiederm.org>
- <202002291137.px8YXKJI%lkp@intel.com> <8736auov5g.fsf@x220.int.ebiederm.org>
-From:   Li Zhijian <zhijianx.li@intel.com>
-Message-ID: <1a9e79f4-9dd1-19f1-2361-150a4417aa7a@intel.com>
-Date:   Thu, 12 Mar 2020 10:03:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 11 Mar 2020 22:04:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35229 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387501AbgCLCEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 22:04:11 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v8so2492961lfe.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 19:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s3hzFOv+ufMUG9fZYGvNPf1Rj5SadPChsc427Pq4MuU=;
+        b=vpgM4oEg5vQg7zF+tYEv7Vyyu3scK/a95qbpaEP7UrD/aYmlQ6SeWqFvun0hZ3k67e
+         OtBqqS+3D0XjK7YxmxKEvnYIlia/p2feYBe18wkmL347YysBay5yMKLF2zJyOsjObWG3
+         nYyq2KALh1S+6KACoAWixnLjFD8geRrFQ9cYz7SmG6RCJZ+iqI6xa6zvxpHBHgUsME0D
+         vakqiL/MWiRRrmMN7HzSSkWbBv+e326Y5hpVdwc7nGjb/kOxy6a6qCVWlUQ7JZHCV5IO
+         3eYWuWuLreDi+8F7hqmTuKnuQdGVfl+AlUIjqrrF4uhddIsSNDIokXjuJU3d3A+RNeXo
+         xbEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s3hzFOv+ufMUG9fZYGvNPf1Rj5SadPChsc427Pq4MuU=;
+        b=s9GfnvOwZkblgBZdc8nmw/p900j8T7QaJR4U2gago12lEKVvRL6muJI9iv+XQCilaz
+         rLlSJEJDf3ugI5zRHnn/RNG9uLwD6+BZ9DYnrhsAbEl/HO8lH9cRyLcCa+1NuTKbkjvL
+         8GuaqtgsjfgV1VAVAATxZpxIoUMxssh0zbzmvRMmeuaAwwNv5j12Ax4at/11F9MsCiGL
+         dzl6OoFl3lWMaUKbodbcLiH2zXnaEER9VmUV/PW/ZI12V+lqQ/98Uot05BRny54gi2th
+         n5dRGMRAqgTtz2Cinj7Mdy3ZqyOicRATfWJo9XvFcGuv6E4O5+Ft1ETzsjjfqZyhogym
+         Blmw==
+X-Gm-Message-State: ANhLgQ0iLpiJIzmUeaUH/b2WOZ/+xQ+4pDaxk7Yq/0Sm7xS6RbDUUSkm
+        8eGJ2ovOgbMfGuxyeg2Y+EVPqsmTQ7RYahnVe2ki1A==
+X-Google-Smtp-Source: ADFU+vsU/OyV5rdK4QGYblP7aUk0KmFAJfC4f7yZQUDmeMQmHszyALYMvHMr33qX8nhSOez1pD8RqJNQFihyA+tyDgQ=
+X-Received: by 2002:ac2:4c14:: with SMTP id t20mr3677256lfq.193.1583978646217;
+ Wed, 11 Mar 2020 19:04:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8736auov5g.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200310184814.GA8447@dhcp22.suse.cz> <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
+ <20200310210906.GD8447@dhcp22.suse.cz> <cf95db88-968d-fee5-1c15-10d024c09d8a@intel.com>
+ <20200311084513.GD23944@dhcp22.suse.cz> <CALvZod6b73_ay_kxph143Aj+XBq04Np0z2bK4Rfn8qppihrmTw@mail.gmail.com>
+ <20200312001849.GA96953@google.com>
+In-Reply-To: <20200312001849.GA96953@google.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 11 Mar 2020 19:03:29 -0700
+Message-ID: <CAKOZuev1XzbsCPJtOA=v9QMuVpEBKc0_5ZE4Oc4tzmKdFHy2Dg@mail.gmail.com>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/29/20 12:49 PM, Eric W. Biederman wrote:
-> kbuild test robot <lkp@intel.com> writes:
+On Wed, Mar 11, 2020 at 5:18 PM Minchan Kim <minchan@kernel.org> wrote:
 >
->> Hi "Eric,
->>
->> Thank you for the patch! Yet something to improve:
-> Dear kbuild robot,
+> On Wed, Mar 11, 2020 at 04:53:17PM -0700, Shakeel Butt wrote:
+> > On Wed, Mar 11, 2020 at 1:45 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Tue 10-03-20 15:48:31, Dave Hansen wrote:
+> > > > Maybe instead of just punting on MADV_PAGEOUT for map_count>1 we should
+> > > > only let it affect the *local* process.  We could still put the page in
+> > > > the swap cache, we just wouldn't go do the rmap walk.
+> > >
+> > > Is it really worth medling with the reclaim code and special case
+> > > MADV_PAGEOUT there? I mean it is quite reasonable to have an initial
+> > > implementation that doesn't really touch shared pages because that can
+> > > lead to all sorts of hard to debug and unexpected problems. So I would
+> > > much rather go with a simple patch to check map count first and see
+> > > whether somebody actually cares about those shared pages and go from
+> > > there.
+> > >
+> > > Minchan, do you want to take my diff and turn it into the proper patch
+> > > or should I do it.
+> > >
+> >
+> > What about the remote_madvise(MADV_PAGEOUT)? Will your patch disable
+> > the pageout from that code path as well for pages with mapcount > 1?
 >
-> Yep. You got it the wrong base.  I will see about using --base
-> if I repost, or have another patchset that so clearly needs
-> to be applied on top of a non-default base.
->
-> Thank you for writing me how to do that.
+> Maybe, not because process_madvise syscall needs more previliedge(ie,
+> PTRACE_MODE_ATTACH_FSCREDS) so I guess it would be more secure.
+> So in that case, I want to rely on the LRU chance for shared pages.
 
-Hi, Eric
+I don't want the behavior of an madvise command to change depending on
+*how* the command is invoked. MADV_PAGEOUT should do the same thing
+regardless. If you want to allow purging of shared pages as well,
+please add a new MADV_PAGEOUT_ALL or something and require a privilege
+to use it.
 
-May i know which tree/branch your patch is basing on ?  this input might 
-help 0day robot to pickup the candidate bases more intelligent.
+> With that, the manager process could give a hint to several processes
+> and finally makes them paging out.
 
-
-Thanks
-Zhijian
-
->
-> Eric
->
->
->> [auto build test ERROR on uml/linux-next]
->> [also build test ERROR on linux/master kees/for-next/pstore linus/master v5.6-rc3 next-20200228]
->> [if your patch is applied to the wrong git tree, please drop us a note to help
->> improve the system. BTW, we also suggest to use '--base' option to specify the
->> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->>
->> url:    https://github.com/0day-ci/linux/commits/Eric-W-Biederman/proc-Actually-honor-the-mount-options/20200229-100926
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git linux-next
->> config: x86_64-defconfig (attached as .config)
->> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
->> reproduce:
->>          # save the attached .config to linux build tree
->>          make ARCH=x86_64
->>
->> If you fix the issue, kindly add following tag
->> Reported-by: kbuild test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>):
->>
->>     fs/proc/base.c: In function 'proc_flush_task':
->>>> fs/proc/base.c:3217:33: error: 'struct pid_namespace' has no member named 'proc_mnt'; did you mean 'proc_self'?
->>        proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
->>                                      ^~~~~~~~
->>                                      proc_self
->>
->> vim +3217 fs/proc/base.c
->>
->> ^1da177e4c3f41 Linus Torvalds    2005-04-16  3180
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3181  /**
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3182   * proc_flush_task -  Remove dcache entries for @task from the /proc dcache.
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3183   * @task: task that should be flushed.
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3184   *
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3185   * When flushing dentries from proc, one needs to flush them from global
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3186   * proc (proc_mnt) and from all the namespaces' procs this task was seen
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3187   * in. This call is supposed to do all of this job.
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3188   *
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3189   * Looks in the dcache for
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3190   * /proc/@pid
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3191   * /proc/@tgid/task/@pid
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3192   * if either directory is present flushes it and all of it'ts children
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3193   * from the dcache.
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3194   *
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3195   * It is safe and reasonable to cache /proc entries for a task until
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3196   * that task exits.  After that they just clog up the dcache with
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3197   * useless entries, possibly causing useful dcache entries to be
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3198   * flushed instead.  This routine is proved to flush those useless
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3199   * dcache entries at process exit time.
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3200   *
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3201   * NOTE: This routine is just an optimization so it does not guarantee
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3202   *       that no dcache entries will exist at process exit time it
->> 0895e91d60ef9b Randy Dunlap      2007-10-21  3203   *       just makes it very unlikely that any will persist.
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3204   */
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3205
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3206  void proc_flush_task(struct task_struct *task)
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3207  {
->> 9fcc2d15b14894 Eric W. Biederman 2007-11-14  3208  	int i;
->> 9b4d1cbef8f41a Oleg Nesterov     2009-09-22  3209  	struct pid *pid, *tgid;
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3210  	struct upid *upid;
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3211
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3212  	pid = task_pid(task);
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3213  	tgid = task_tgid(task);
->> 9fcc2d15b14894 Eric W. Biederman 2007-11-14  3214
->> 9fcc2d15b14894 Eric W. Biederman 2007-11-14  3215  	for (i = 0; i <= pid->level; i++) {
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3216  		upid = &pid->numbers[i];
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18 @3217  		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
->> 9b4d1cbef8f41a Oleg Nesterov     2009-09-22  3218  					tgid->numbers[i].nr);
->> 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3219  	}
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3220  }
->> 60347f6716aa49 Pavel Emelyanov   2007-10-18  3221
->>
->> :::::: The code at line 3217 was first introduced by commit
->> :::::: 130f77ecb2e7d5ac3e53e620f55e374f4a406b20 pid namespaces: make proc_flush_task() actually from entries from multiple namespaces
->>
->> :::::: TO: Pavel Emelyanov <xemul@openvz.org>
->> :::::: CC: Linus Torvalds <torvalds@woody.linux-foundation.org>
->>
->> ---
->> 0-DAY CI Kernel Test Service, Intel Corporation
->> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
-
+On many different occasions over the past few years, I've found myself
+wanting to ask the kernel to do bulk memory management operations. I'd
+much rather add *one* facility to allow for multiple-target mm
+operations than add one-off special cases for specific callers cases
+as they come up. If we had such a bulk operation, the kernel could
+inspect the bulk operation payload, see whether the number of
+MADV_PAGEOUT requests for a given page were equal to the share count
+for that page, and, if so, evict that page despite it being shared.
