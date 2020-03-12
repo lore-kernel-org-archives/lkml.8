@@ -1,218 +1,132 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51957C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B43C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F6E206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115F42074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qQKGWHsU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qa/JjpNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbgCKX47 (ORCPT
+        id S1731530AbgCLAJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:56:59 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:47855 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731448AbgCKX47 (ORCPT
+        Wed, 11 Mar 2020 20:09:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39632 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCLAJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:56:59 -0400
-Received: by mail-pf1-f202.google.com with SMTP id h191so2521079pfe.14
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:56:58 -0700 (PDT)
+        Wed, 11 Mar 2020 20:09:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id j20so1873770pll.6;
+        Wed, 11 Mar 2020 17:09:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=AZPvh30KFy43kEyQxHv/V8BBQfdFAAHiyFrKXoYvQuk=;
-        b=qQKGWHsUgueSRuYYMEeO9BJHhAqNhnEDm4a4u2vIWrV7QPwxnMvqGBbrOV1hFNvnFi
-         Wv4JNNWBAZQMPQVwJQgHqNRIwVYd1TTCgkwSpP54uV3FgDlV1+mvI+NOWGkhv3nyLG0v
-         LfVITDV/O88Vbx+AiFKkLTL9x5GLbwiKpgWh0f+JDOQDjwq6fSqFbqVqpNBIbNu1+zqi
-         ujvkyMhj4Y1zwsxrql4z1biEcYbJKEFsTtRQDjtunklUG28jYob32PKKJsDeLKXxVye4
-         vGrUCKd64tFQYO13tF7S67Gze+k4+C86w4F1UhTuWs5vnGRS566m/hilIdx7gvEHK6T6
-         1//A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9ApGOF5PBkyoeBPogSoc/7/ab/yJXEM4Uq6xzW0uckE=;
+        b=qa/JjpNbOa07fUsB4jPdLDm52/jZZEQRH9wlnggCo8DYirC2AP/CxM7bIpeGf+pTsZ
+         Uv9+2rKZqzD67ItMqFhBlkKxIM3pO4GTO/b21mX73+MdeJ8hXW9aA30m/c7gsxNFkmvY
+         2l3HzKT7rZseU2snFyYgrJqHPN997zzhpWRiGk0t+jriJZeQ3BOe/fmG//AR7IdLhdFr
+         uQzd7AOSjXIYBl7IBeG3pQGBBvzaLhYsBEqU4s+4zR1iUyentr12iqjc2dKsAzemOigy
+         iZ6MrnT4onYr65Ude8HVtSsE4M05XvWBLKobbUKLxWtQ+JleX207ym20znvdc2QktO4I
+         g/WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=AZPvh30KFy43kEyQxHv/V8BBQfdFAAHiyFrKXoYvQuk=;
-        b=IJK/hjjGAydaaPjegj/ejh9jKec0rbb0y04XKaDYOPksqwwxqJOViybJg6QVjB9Rni
-         Hoi8UDFJM0pdO8GEJ2T8ImzOdV8MLKDyjcqxHqw2huXAaUx5E0/Hw5vv0T4Y2JmOk5sC
-         YTDlB9wrygfzmErbQyDWV5X57fARfe0ba4EZ5JFppl08FrOV1W8PXLG1TWnSr6AL92Ex
-         kxnAISjCDaUW9oWPLaNypi+l4DszeNgM9ytUznvBz85yB5BhSOo28wIkKYCO7yQBE/wd
-         EPVjKe9gnSQLhZWXCVeZUjQjKolRIcOB8wvRq1mgAZd26JUIHdZAjpjsBU394YUz/jW/
-         EIKA==
-X-Gm-Message-State: ANhLgQ2/I0kvDquWDHAVYsKZB/D2pJcQ2lO0bpiAa/HrIb6Bbd3sCM8n
-        G2aCp1Poj6Zk0FFmEV0I7BSlQh3t+4T39FpB
-X-Google-Smtp-Source: ADFU+vsGYMhXTgL/gZ5yx4VyViO6yE42G1cxQ//ozErPQaXqA7QqLze49WYhyRqfOIKsiOTk+DtFaoj77v0RiABu
-X-Received: by 2002:a63:6b8a:: with SMTP id g132mr4899758pgc.359.1583971017911;
- Wed, 11 Mar 2020 16:56:57 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 16:56:53 -0700
-Message-Id: <20200311235653.141701-1-rammuthiah@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH] Inline contents of BLK_MQ_VIRTIO config
-From:   Ram Muthiah <rammuthiah@google.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Ram Muthiah <rammuthiah@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9ApGOF5PBkyoeBPogSoc/7/ab/yJXEM4Uq6xzW0uckE=;
+        b=YUG1Kq1UZ+prDqZwEjuFB0cFS+/Z+xMDNN/06MwmJmi9uLavE6pEYQJMbSsl+cBWQc
+         9byuM/Pu3yNbdwayZE4Ih7fQBKQaRU0KqhOuWktZ0uT0zROjaligoNrGhoeL2WwqPAm7
+         pNGzUnxTJjmgVSOJabrPvzkDhGlM0y2SNedAyCwL3WYxOqG9iyYyCrygDQdtssdlthRJ
+         ZWeMWoMrXDqQ67GbU48FQ6/nsPtmuhCwC9p3UXzGG27CeLzvWulEGRm2upgkI1+n/9mc
+         CN5NV2JZmjAlOO/loQDTLhQakmD0R7xoOOn7SJkh8+XtXAkC2MzwJdDIZOoFpr9P/bXj
+         G27A==
+X-Gm-Message-State: ANhLgQ1J8Hj/svtUJQ+mbd5lKDpstkXGE9+JsemWRlDdz1HtYczHh2Pa
+        f0WIaI30Y16BJn7CsTK7pN0=
+X-Google-Smtp-Source: ADFU+vtML21USPDOMZ+PmnB2abZahmaHnFt3ItHVXPSoef4wnUi8Xp1UT2B8XYgt+E7etOPYpGvc6g==
+X-Received: by 2002:a17:902:d88d:: with SMTP id b13mr5144514plz.228.1583971779921;
+        Wed, 11 Mar 2020 17:09:39 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
+        by smtp.gmail.com with ESMTPSA id e11sm9957036pfj.95.2020.03.11.17.09.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 17:09:39 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 17:09:31 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Subject: Re: [PATCH v2] usb: gadget: aspeed: improve vhub port irq handling
+Message-ID: <20200312000930.GA3956@taoren-ubuntu-R90MNF91>
+References: <20200305234746.1002-1-rentao.bupt@gmail.com>
+ <481e9b7d40c51505518a34ddc2515d3200dbf158.camel@kernel.crashing.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <481e9b7d40c51505518a34ddc2515d3200dbf158.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The config contains one symbol and is a dep of only two configs.
-Inlined this symbol so that it's built in by the two configs
-which need it and deleted the config.
+Hi Ben,
 
-Signed-off-by: Ram Muthiah <rammuthiah@google.com>
----
- block/Kconfig                 |  5 ----
- block/Makefile                |  1 -
- block/blk-mq-virtio.c         | 46 -----------------------------------
- include/linux/blk-mq-virtio.h | 43 +++++++++++++++++++++++++++++---
- 4 files changed, 39 insertions(+), 56 deletions(-)
- delete mode 100644 block/blk-mq-virtio.c
+On Wed, Mar 11, 2020 at 12:31:22PM +1100, Benjamin Herrenschmidt wrote:
+> On Thu, 2020-03-05 at 15:47 -0800, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > This patch evaluates vhub ports' irq mask before going through per-port
+> > irq handling one by one, which helps to speed up irq handling in case
+> > there is no port interrupt.
+> > 
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > ---
+> >  Changes in v2:
+> >    - use "for_each_set_bit" to speed up port irq handling.
+> > 
+> >  drivers/usb/gadget/udc/aspeed-vhub/core.c | 11 ++++++++---
+> >  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  8 +++-----
+> >  2 files changed, 11 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> > index f8d35dd60c34..af2dbd405361 100644
+> > --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> > @@ -134,11 +134,14 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+> >  	}
+> >  
+> >  	/* Handle device interrupts */
+> > -	for (i = 0; i < vhub->max_ports; i++) {
+> > -		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
+> > +	if (istat & vhub->port_irq_mask) {
+> > +		int offset = VHUB_IRQ_DEV1_BIT;
+> > +		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
+> >  
+> > -		if (istat & dev_mask)
+> > +		for_each_set_bit_from(offset, (unsigned long *)&istat, size) 
+> 
+> That type cast is very bad. It will not work on big endian for example
+> (yes this driver isn't used on big endian today but still).
+> 
+> Please assign istat to an unsigned long (or make it unsigned long to
+> begin with).
 
-diff --git a/block/Kconfig b/block/Kconfig
-index 3bc76bb113a0..953744daff7c 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -203,11 +203,6 @@ config BLK_MQ_PCI
- 	depends on BLOCK && PCI
- 	default y
- 
--config BLK_MQ_VIRTIO
--	bool
--	depends on BLOCK && VIRTIO
--	default y
--
- config BLK_MQ_RDMA
- 	bool
- 	depends on BLOCK && INFINIBAND
-diff --git a/block/Makefile b/block/Makefile
-index 1a43750f4b01..709695f54150 100644
---- a/block/Makefile
-+++ b/block/Makefile
-@@ -29,7 +29,6 @@ obj-$(CONFIG_BLK_CMDLINE_PARSER)	+= cmdline-parser.o
- obj-$(CONFIG_BLK_DEV_INTEGRITY) += bio-integrity.o blk-integrity.o
- obj-$(CONFIG_BLK_DEV_INTEGRITY_T10)	+= t10-pi.o
- obj-$(CONFIG_BLK_MQ_PCI)	+= blk-mq-pci.o
--obj-$(CONFIG_BLK_MQ_VIRTIO)	+= blk-mq-virtio.o
- obj-$(CONFIG_BLK_MQ_RDMA)	+= blk-mq-rdma.o
- obj-$(CONFIG_BLK_DEV_ZONED)	+= blk-zoned.o
- obj-$(CONFIG_BLK_WBT)		+= blk-wbt.o
-diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
-deleted file mode 100644
-index 488341628256..000000000000
---- a/block/blk-mq-virtio.c
-+++ /dev/null
-@@ -1,46 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (c) 2016 Christoph Hellwig.
-- */
--#include <linux/device.h>
--#include <linux/blk-mq.h>
--#include <linux/blk-mq-virtio.h>
--#include <linux/virtio_config.h>
--#include <linux/module.h>
--#include "blk-mq.h"
--
--/**
-- * blk_mq_virtio_map_queues - provide a default queue mapping for virtio device
-- * @qmap:	CPU to hardware queue map.
-- * @vdev:	virtio device to provide a mapping for.
-- * @first_vec:	first interrupt vectors to use for queues (usually 0)
-- *
-- * This function assumes the virtio device @vdev has at least as many available
-- * interrupt vetors as @set has queues.  It will then queuery the vector
-- * corresponding to each queue for it's affinity mask and built queue mapping
-- * that maps a queue to the CPUs that have irq affinity for the corresponding
-- * vector.
-- */
--int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
--		struct virtio_device *vdev, int first_vec)
--{
--	const struct cpumask *mask;
--	unsigned int queue, cpu;
--
--	if (!vdev->config->get_vq_affinity)
--		goto fallback;
--
--	for (queue = 0; queue < qmap->nr_queues; queue++) {
--		mask = vdev->config->get_vq_affinity(vdev, first_vec + queue);
--		if (!mask)
--			goto fallback;
--
--		for_each_cpu(cpu, mask)
--			qmap->mq_map[cpu] = qmap->queue_offset + queue;
--	}
--
--	return 0;
--fallback:
--	return blk_mq_map_queues(qmap);
--}
--EXPORT_SYMBOL_GPL(blk_mq_virtio_map_queues);
-diff --git a/include/linux/blk-mq-virtio.h b/include/linux/blk-mq-virtio.h
-index 687ae287e1dc..b3ddb8b6da76 100644
---- a/include/linux/blk-mq-virtio.h
-+++ b/include/linux/blk-mq-virtio.h
-@@ -1,11 +1,46 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2016 Christoph Hellwig.
-+ */
- #ifndef _LINUX_BLK_MQ_VIRTIO_H
- #define _LINUX_BLK_MQ_VIRTIO_H
- 
--struct blk_mq_queue_map;
--struct virtio_device;
-+#include <linux/blk-mq.h>
-+#include <linux/virtio_config.h>
- 
--int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
--		struct virtio_device *vdev, int first_vec);
-+/**
-+ * blk_mq_virtio_map_queues - provide a default queue mapping for virtio device
-+ * @qmap:	CPU to hardware queue map.
-+ * @vdev:	virtio device to provide a mapping for.
-+ * @first_vec:	first interrupt vectors to use for queues (usually 0)
-+ *
-+ * This function assumes the virtio device @vdev has at least as many available
-+ * interrupt vetors as @set has queues.  It will then queuery the vector
-+ * corresponding to each queue for it's affinity mask and built queue mapping
-+ * that maps a queue to the CPUs that have irq affinity for the corresponding
-+ * vector.
-+ */
-+static inline int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
-+		struct virtio_device *vdev, int first_vec)
-+{
-+	const struct cpumask *mask;
-+	unsigned int queue, cpu;
-+
-+	if (!vdev->config->get_vq_affinity)
-+		goto fallback;
-+
-+	for (queue = 0; queue < qmap->nr_queues; queue++) {
-+		mask = vdev->config->get_vq_affinity(vdev, first_vec + queue);
-+		if (!mask)
-+			goto fallback;
-+
-+		for_each_cpu(cpu, mask)
-+			qmap->mq_map[cpu] = qmap->queue_offset + queue;
-+	}
-+
-+	return 0;
-+fallback:
-+	return blk_mq_map_queues(qmap);
-+}
- 
- #endif /* _LINUX_BLK_MQ_VIRTIO_H */
--- 
-2.25.1.481.gfbce0eb801-goog
+Thanks for pointing it out. Will fix it in v3.
 
+Cheers,
+
+Tao
