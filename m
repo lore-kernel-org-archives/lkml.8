@@ -2,157 +2,152 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7DCC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F036C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAC6206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584001966;
-	bh=flwFP223FcbPBBJsCcekioD0B1av0xCAQaqglyEFLyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iVHZVKNeSiuO/3umOqAScVWRYGx00U/KONi/2gsa00wU6aXEgKAb6FuK0266Y4y8u
-	 N/Q7zFfbn6iAn/v4tXOV12yGqLFL6KODyWB6QX0KTc1zB7HSN01OsOJkT/ObT6dPcq
-	 7cyhVa61T62e9Xs+y+LX9ObL9kE4e2IoeaMHtps4=
+	by mail.kernel.org (Postfix) with ESMTP id EE4B1206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="kDMvA2ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCLIcp (ORCPT
+        id S1726423AbgCLIel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:32:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53089 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgCLIcp (ORCPT
+        Thu, 12 Mar 2020 04:34:41 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36713 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgCLIel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:32:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 11so5066784wmo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:32:44 -0700 (PDT)
+        Thu, 12 Mar 2020 04:34:41 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g12so2383252plo.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o8tWeCypuK1QOsKNJkPWjnl6zp71Q9i3fpD2i8Bk47I=;
+        b=kDMvA2exUIdT1c6vkox/9tshpEUaxfe3peeGwW7N3j+NMe16liNfQTD5oL8HlYFePF
+         fzgSMWlcsMGtkzxAaHHGs3bT7k1uvXaS6W69RUIvuuBSeDOWfWwPckHvclvaedExsmUB
+         GWhXUjbK+qA6KG4n0sQ+S3jSTMF4Wi1KmU926yp6f0E1PzTfnjk5tSzoIuPXApsHTCWn
+         oH0JB3DMFc99MinbXtpjMken/HnHg6SN8VX3UHCKnvP8qllUGoW+BdogB4XwEgWtsCLw
+         zFKgGyuX776BjcJNU3GDxj0vwBdZ5rzwyGeB/tMtVLVEJebgGBi0tWggi8NrAWdeeR/q
+         4lKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y2vrstQh1zW/hZDali97uunaWWCj2ea+q+1b8YJaz9s=;
-        b=Uvf6763SA4gEjYNd/ShiPMGqN9BS9WFKqd/V1hTkj+rpiBBwea1z6cFQY28V/ZQNRD
-         RZU9yDQCo/Nyl8IBr0tTgwFrymFXHZRu2IJjOP4vl4gu/zp7aqocyzjiZpgKNY679r/H
-         /ozsxLdIxpQDyGdYe1jBYcPoej81ROLVrC2iK4I4HJ7cnzvu16489VyzOl1ssVkUV8WJ
-         3R2GcI2YvFiqBOiBooXdmCvCfg/DFWvuHGRF6Vot953bhoo+PMHaXXhDgZkvn+MO1kj1
-         BjwULFElR453misceL2XAvO7pOE+Ym1YBHy3hTWswVCuHaM5tdNsqKw+DIn7awq9Du4D
-         +2Dg==
-X-Gm-Message-State: ANhLgQ2ydxHM3MEs93zjTvfS8ZkwIRYmERspW4GUuewCB4h2zpjcnR+/
-        vngl5eixvF0IY25/K2fz5vKHVe5h
-X-Google-Smtp-Source: ADFU+vvva8LArSKeKAM6eHoXmnqDT18zn4MX2uQA8OEqtrJ47Vnk7MtxQAWTcPleQ/Mrz/vEpNj2vw==
-X-Received: by 2002:a1c:6745:: with SMTP id b66mr3613933wmc.30.1584001963638;
-        Thu, 12 Mar 2020 01:32:43 -0700 (PDT)
-Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
-        by smtp.gmail.com with ESMTPSA id w1sm10867129wmc.11.2020.03.12.01.32.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o8tWeCypuK1QOsKNJkPWjnl6zp71Q9i3fpD2i8Bk47I=;
+        b=sPAGdTr/AcFvrJ8uLzgF6Pr9kxoGMuw1D84VPO08k61VIiaq1Og+CTTcuyr7c+72td
+         GWHCXZkDoYxv6kNHrsH6Gt8N980sHnXmLcVebwk2T34NTvp7EbZGx+7Ksu7L+HIHnTmq
+         5cqA/ulIpBrxoLeyrpfxtTBvQ0aNV4XiG3FMZTT0xGfs7dEVdVS1q6SpxBTPeKZ1iJCI
+         zmRiB8JOe+048KC2Uy7HrZZs4FWbr45WmHf83EVl0nULA8JIL7oOetzP2l3aA3rdejD8
+         z2ezjBpUGU8i3sOQ4AYQCw9B1vYGR9oV7CfM5SM0CPmBx1gnLG8MNTCKyD7ZkROyMiR5
+         YNnw==
+X-Gm-Message-State: ANhLgQ3Y1a8EqQ197rdsv69Jij2wgJi7bu41VlE4uPAAc+7dGm/34Jpu
+        bpT79vMhKJzALdCta3XLnoslVw==
+X-Google-Smtp-Source: ADFU+vvspHbr8K5oFPO6UNLDH5awu771Qxb0TRck99UbEb+J2KJblpIGzDwr0ExCYH8hcE0po0F1lA==
+X-Received: by 2002:a17:90b:1904:: with SMTP id mp4mr3126972pjb.110.1584002080097;
+        Thu, 12 Mar 2020 01:34:40 -0700 (PDT)
+Received: from starnight.local ([150.116.255.181])
+        by smtp.googlemail.com with ESMTPSA id s13sm8163947pjp.1.2020.03.12.01.34.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 01:32:42 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 09:32:41 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
-Message-ID: <20200312083241.GT23944@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
- <20200310221019.GE8447@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
- <20200311082736.GA23944@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003111238570.171292@chino.kir.corp.google.com>
+        Thu, 12 Mar 2020 01:34:39 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux@endlessm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] Revert "x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T"
+Date:   Thu, 12 Mar 2020 16:33:42 +0800
+Message-Id: <20200312083341.9365-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2003111238570.171292@chino.kir.corp.google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-03-20 12:45:40, David Rientjes wrote:
-> On Wed, 11 Mar 2020, Michal Hocko wrote:
-> 
-> > > > > When a process is oom killed as a result of memcg limits and the victim
-> > > > > is waiting to exit, nothing ends up actually yielding the processor back
-> > > > > to the victim on UP systems with preemption disabled.  Instead, the
-> > > > > charging process simply loops in memcg reclaim and eventually soft
-> > > > > lockups.
-> > > > > 
-> > > > > Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB oom_score_adj:0
-> > > > > watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
-> > > > > CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
-> > > > > RIP: 0010:shrink_lruvec+0x4e9/0xa40
-> > > > > ...
-> > > > > Call Trace:
-> > > > >  shrink_node+0x40d/0x7d0
-> > > > >  do_try_to_free_pages+0x13f/0x470
-> > > > >  try_to_free_mem_cgroup_pages+0x16d/0x230
-> > > > >  try_charge+0x247/0xac0
-> > > > >  mem_cgroup_try_charge+0x10a/0x220
-> > > > >  mem_cgroup_try_charge_delay+0x1e/0x40
-> > > > >  handle_mm_fault+0xdf2/0x15f0
-> > > > >  do_user_addr_fault+0x21f/0x420
-> > > > >  page_fault+0x2f/0x40
-> > > > > 
-> > > > > Make sure that something ends up actually yielding the processor back to
-> > > > > the victim to allow for memory freeing.  Most appropriate place appears to
-> > > > > be shrink_node_memcgs() where the iteration of all decendant memcgs could
-> > > > > be particularly lengthy.
-> > > > 
-> > > > There is a cond_resched in shrink_lruvec and another one in
-> > > > shrink_page_list. Why doesn't any of them hit? Is it because there are
-> > > > no pages on the LRU list? Because rss data suggests there should be
-> > > > enough pages to go that path. Or maybe it is shrink_slab path that takes
-> > > > too long?
-> > > > 
-> > > 
-> > > I think it can be a number of cases, most notably mem_cgroup_protected() 
-> > > checks which is why the cond_resched() is added above it.  Rather than add 
-> > > cond_resched() only for MEMCG_PROT_MIN and for certain MEMCG_PROT_LOW, the 
-> > > cond_resched() is added above the switch clause because the iteration 
-> > > itself may be potentially very lengthy.
-> > 
-> > Was any of the above the case for your soft lockup case? How have you
-> > managed to trigger it? As I've said I am not against the patch but I
-> > would really like to see an actual explanation what happened rather than
-> > speculations of what might have happened. If for nothing else then for
-> > the future reference.
-> > 
-> 
-> Yes, this is how it was triggered in my own testing.
-> 
-> > If this is really about all the hierarchy being MEMCG_PROT_MIN protected
-> > and that results in a very expensive and pointless reclaim walk that can
-> > trigger soft lockup then it should be explicitly mentioned in the
-> > changelog.
-> 
-> I think the changelog clearly states that we need to guarantee that a 
-> reclaimer will yield the processor back to allow a victim to exit.  This 
-> is where we make the guarantee.  If it helps for the specific reason it 
-> triggered in my testing, we could add:
-> 
-> "For example, mem_cgroup_protected() can prohibit reclaim and thus any 
-> yielding in page reclaim would not address the issue."
+This reverts commit 0082517fa4bce073e7cf542633439f26538a14cc.
 
-I would suggest something like the following:
-"
-The reclaim path (including the OOM) relies on explicit scheduling
-points to hand over execution to tasks which could help with the reclaim
-process. Currently it is mostly shrink_page_list which yields CPU for
-each reclaimed page. This might be insuficient though in some
-configurations. E.g. when a memcg OOM path is triggered in a hierarchy
-which doesn't have any reclaimable memory because of memory reclaim
-protection (MEMCG_PROT_MIN) then there is possible to trigger a soft
-lockup during an out of memory situation on non preemptible kernels
-<PUT YOUR SOFT LOCKUP SPLAT HERE>
+According to Acer's information, this reboot issue is fixed since 1.08
+and newer BIOS. So, we can revert the quirk.
 
-Fix this by adding a cond_resched up in the reclaim path and make sure
-there is a yield point regardless of reclaimability of the target
-hierarchy.
-"
+Fixes: 0082517fa4bc ("x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ arch/x86/kernel/reboot.c | 21 ---------------------
+ include/linux/efi.h      |  7 +------
+ 2 files changed, 1 insertion(+), 27 deletions(-)
 
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 0cc7c0b106bb..92177ccd47f3 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -81,19 +81,6 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
+ 	return 0;
+ }
+ 
+-/*
+- * Some machines don't handle the default ACPI reboot method and
+- * require the EFI reboot method:
+- */
+-static int __init set_efi_reboot(const struct dmi_system_id *d)
+-{
+-	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
+-		reboot_type = BOOT_EFI;
+-		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
+-	}
+-	return 0;
+-}
+-
+ void __noreturn machine_real_restart(unsigned int type)
+ {
+ 	local_irq_disable();
+@@ -179,14 +166,6 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
+ 		},
+ 	},
+-	{	/* Handle reboot issue on Acer TravelMate X514-51T */
+-		.callback = set_efi_reboot,
+-		.ident = "Acer TravelMate X514-51T",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
+-		},
+-	},
+ 
+ 	/* Apple */
+ 	{	/* Handle problems with rebooting on Apple MacBook5 */
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 7efd7072cca5..8375bbc6e739 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1529,12 +1529,7 @@ efi_status_t efi_parse_options(char const *cmdline);
+ efi_status_t efi_setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 			   unsigned long size);
+ 
+-#ifdef CONFIG_EFI
+-extern bool efi_runtime_disabled(void);
+-#else
+-static inline bool efi_runtime_disabled(void) { return true; }
+-#endif
+-
++bool efi_runtime_disabled(void);
+ extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
+ extern unsigned long efi_call_virt_save_flags(void);
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
