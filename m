@@ -2,321 +2,211 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B28C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AC7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9519120716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA28E206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipOTqq4l"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qQCIngbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387932AbgCLGnK (ORCPT
+        id S2387980AbgCLGnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:43:10 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40231 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387767AbgCLGnJ (ORCPT
+        Thu, 12 Mar 2020 02:43:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60027 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387767AbgCLGnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:43:09 -0400
-Received: by mail-pj1-f67.google.com with SMTP id bo3so802879pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 23:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lUERM7Qq7L21zPRInzp+Vo7o3ub8a1SQMk5EzorQgRk=;
-        b=ipOTqq4lN7tjIvgBZU2FYKSYys/RDrOH9oKO7IRsMLReYqNl+/QpNpAVMHpbW880bF
-         7XuabCcgawOrQgBj3H/5WnUO4T7Rqdpig+9G0/hHYgLLu5o42YsPo2/a62O44ZkwyLOb
-         v1picodFYnOBi8uZyCBQOx4xF9O/EJLEmDqGniplXrd7oU0hZfUjw1I5wda4aetgDw0M
-         1Xwp8u6Hg2TJ/QCiCqoL+cmcGbjehzpjL69VhKm3WREfoYvlaEDm7UmuDHl5DBtMpMAl
-         MiOYnViPH91cBt0FLhfutsfb8ATCQAfZzhOtjOhY72P1wfh4vw98u+MFxuAGNaQgyOdF
-         e1GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=lUERM7Qq7L21zPRInzp+Vo7o3ub8a1SQMk5EzorQgRk=;
-        b=gv5msL1W58QsdnRfl/myBvVp00dmF6iJCI9zSyW/gOKDJtUkebyhnF0I/284sefKAK
-         aT6eTH7aU+nwQnvKMuCeavMQCH87mH2MxpIQPc7vfes8nR+PlPSxXwifkEGMh/ZleGPj
-         /wln0YCvmST8HMUs09PrpBfYWlsl6lnx3g1fJifoULXqUKzV3VVHkq+hSN85wtsacS2b
-         IOO9PZUasApSeyurXEviE/8XLevAvFDkBNCFB+h7PmHqQG7KwvefRTv7lm09BotPQF9D
-         WhGj/mZt3q0OrcA4aMV4XT13USPtMJqGwZwDmIu8w/hBP/arm5SaCz28/ofRdVFlOVrK
-         8Ydg==
-X-Gm-Message-State: ANhLgQ0B1pNWLDPGSWaP3rSBQjBkGLiBN2JMS45DQ5EmnL6vKFdXxZNQ
-        RfjoYOO3swu0gEM7MbNoTPE=
-X-Google-Smtp-Source: ADFU+vs0i6ulQr7NepE6JKHjykO5z8qfOoxKMZd7knwn9clMSdhePgDSve/6oRVAJa9fdQ/0MSyOEQ==
-X-Received: by 2002:a17:90a:8806:: with SMTP id s6mr2625599pjn.141.1583995385763;
-        Wed, 11 Mar 2020 23:43:05 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id j17sm8250777pfr.176.2020.03.11.23.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 23:43:04 -0700 (PDT)
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Scott Wood <oss@buserror.net>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vitaly Bordug <vitb@kernel.crashing.org>
-Subject: [PATCH v4] powerpc: Replace setup_irq() by request_irq()
-Date:   Thu, 12 Mar 2020 12:12:55 +0530
-Message-Id: <20200312064256.18735-1-afzal.mohd.ma@gmail.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200304004746.4557-1-afzal.mohd.ma@gmail.com>
-References: <20200304004746.4557-1-afzal.mohd.ma@gmail.com>
+        Thu, 12 Mar 2020 02:43:15 -0400
+X-UUID: 1c405f6699cb44d4bec8b79854d48f61-20200312
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rinSa8EsJcmludQxreBMnGxS1wahGrKb0fmkSN6e91s=;
+        b=qQCIngbEP27t/cdKWvdAfYYbGQIumJZv7qqqvK2Uba08IllSFfiq7p0w0Vg8KiIOW+5JJOwnY9CpEIKuSc6lGXnjW1eKBsIQ/FE33sqZ9hktWoYwuQCvbRnqn616XndYZrOU6LDrLFDKQrRGs9sYRpcnfyH6HkvNbJNG8DsFvE8=;
+X-UUID: 1c405f6699cb44d4bec8b79854d48f61-20200312
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <eason.yen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1117298071; Thu, 12 Mar 2020 14:43:08 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Mar 2020 14:42:09 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Mar 2020 14:43:12 +0800
+Message-ID: <1583995387.19248.93.camel@mtkswgap22>
+Subject: Re: [PATCH 2/2] ASoC: codec: mediatek: add mt6359 codec driver
+From:   Eason Yen <eason.yen@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        <jiaxin.yu@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Thu, 12 Mar 2020 14:43:07 +0800
+In-Reply-To: <20200311121232.GB5411@sirena.org.uk>
+References: <1583465622-16628-1-git-send-email-eason.yen@mediatek.com>
+         <1583465622-16628-3-git-send-email-eason.yen@mediatek.com>
+         <20200309131346.GF4101@sirena.org.uk>
+         <1583918544.19248.69.camel@mtkswgap22>
+         <20200311121232.GB5411@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-occur after memory allocators are ready.
-
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
-
-Hence replace setup_irq() by request_irq().
-
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
-
-v4:
- * pass non-NULL dev_id while requesting shared irq in mpc85xx_cds.c, as
-	request_irq() can fail due to sanity check, which is not done in
-	setup_irq()
-v3:
- * Split out from tree wide series, as Thomas suggested to get it thr'
-	respective maintainers
- * Modify pr_err displayed in case of error
- * Re-arrange code & choose pr_err args as required to improve readability
- * Remove irrelevant parts from commit message & improve
- 
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
-
- arch/powerpc/platforms/85xx/mpc85xx_cds.c | 11 ++++-----
- arch/powerpc/platforms/8xx/cpm1.c         |  9 ++-----
- arch/powerpc/platforms/8xx/m8xx_setup.c   |  9 ++-----
- arch/powerpc/platforms/chrp/setup.c       | 14 ++++-------
- arch/powerpc/platforms/powermac/pic.c     | 29 +++++++++--------------
- arch/powerpc/platforms/powermac/smp.c     | 12 ++++------
- 6 files changed, 29 insertions(+), 55 deletions(-)
-
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_cds.c b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-index 6b1436abe9b1..915ab6710b93 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-@@ -218,12 +218,6 @@ static irqreturn_t mpc85xx_8259_cascade_action(int irq, void *dev_id)
- {
- 	return IRQ_HANDLED;
- }
--
--static struct irqaction mpc85xxcds_8259_irqaction = {
--	.handler = mpc85xx_8259_cascade_action,
--	.flags = IRQF_SHARED | IRQF_NO_THREAD,
--	.name = "8259 cascade",
--};
- #endif /* PPC_I8259 */
- #endif /* CONFIG_PCI */
- 
-@@ -271,7 +265,10 @@ static int mpc85xx_cds_8259_attach(void)
- 	 *  disabled when the last user of the shared IRQ line frees their
- 	 *  interrupt.
- 	 */
--	if ((ret = setup_irq(cascade_irq, &mpc85xxcds_8259_irqaction))) {
-+	ret = request_irq(cascade_irq, mpc85xx_8259_cascade_action,
-+			  IRQF_SHARED | IRQF_NO_THREAD, "8259 cascade",
-+			  cascade_node);
-+	if (ret) {
- 		printk(KERN_ERR "Failed to setup cascade interrupt\n");
- 		return ret;
- 	}
-diff --git a/arch/powerpc/platforms/8xx/cpm1.c b/arch/powerpc/platforms/8xx/cpm1.c
-index a43ee7d1ff85..4db4ca2e1222 100644
---- a/arch/powerpc/platforms/8xx/cpm1.c
-+++ b/arch/powerpc/platforms/8xx/cpm1.c
-@@ -120,12 +120,6 @@ static irqreturn_t cpm_error_interrupt(int irq, void *dev)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction cpm_error_irqaction = {
--	.handler = cpm_error_interrupt,
--	.flags = IRQF_NO_THREAD,
--	.name = "error",
--};
--
- static const struct irq_domain_ops cpm_pic_host_ops = {
- 	.map = cpm_pic_host_map,
- };
-@@ -187,7 +181,8 @@ unsigned int __init cpm_pic_init(void)
- 	if (!eirq)
- 		goto end;
- 
--	if (setup_irq(eirq, &cpm_error_irqaction))
-+	if (request_irq(eirq, cpm_error_interrupt, IRQF_NO_THREAD, "error",
-+			NULL))
- 		printk(KERN_ERR "Could not allocate CPM error IRQ!");
- 
- 	setbits32(&cpic_reg->cpic_cicr, CICR_IEN);
-diff --git a/arch/powerpc/platforms/8xx/m8xx_setup.c b/arch/powerpc/platforms/8xx/m8xx_setup.c
-index f1c805c8adbc..df4d57d07f9a 100644
---- a/arch/powerpc/platforms/8xx/m8xx_setup.c
-+++ b/arch/powerpc/platforms/8xx/m8xx_setup.c
-@@ -39,12 +39,6 @@ static irqreturn_t timebase_interrupt(int irq, void *dev)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction tbint_irqaction = {
--	.handler = timebase_interrupt,
--	.flags = IRQF_NO_THREAD,
--	.name = "tbint",
--};
--
- /* per-board overridable init_internal_rtc() function. */
- void __init __attribute__ ((weak))
- init_internal_rtc(void)
-@@ -157,7 +151,8 @@ void __init mpc8xx_calibrate_decr(void)
- 					(TBSCR_TBF | TBSCR_TBE));
- 	immr_unmap(sys_tmr2);
- 
--	if (setup_irq(virq, &tbint_irqaction))
-+	if (request_irq(virq, timebase_interrupt, IRQF_NO_THREAD, "tbint",
-+			NULL))
- 		panic("Could not allocate timer IRQ!");
- }
- 
-diff --git a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
-index fcf6f2342ef4..8328cd5817b0 100644
---- a/arch/powerpc/platforms/chrp/setup.c
-+++ b/arch/powerpc/platforms/chrp/setup.c
-@@ -451,13 +451,6 @@ static void __init chrp_find_openpic(void)
- 	of_node_put(np);
- }
- 
--#if defined(CONFIG_VT) && defined(CONFIG_INPUT_ADBHID) && defined(CONFIG_XMON)
--static struct irqaction xmon_irqaction = {
--	.handler = xmon_irq,
--	.name = "XMON break",
--};
--#endif
--
- static void __init chrp_find_8259(void)
- {
- 	struct device_node *np, *pic = NULL;
-@@ -541,8 +534,11 @@ static void __init chrp_init_IRQ(void)
- 		if (of_node_is_type(kbd->parent, "adb"))
- 			break;
- 	of_node_put(kbd);
--	if (kbd)
--		setup_irq(HYDRA_INT_ADB_NMI, &xmon_irqaction);
-+	if (kbd) {
-+		if (request_irq(HYDRA_INT_ADB_NMI, xmon_irq, 0, "XMON break",
-+				NULL))
-+			pr_err("Failed to register XMON break interrupt\n");
-+	}
- #endif
- }
- 
-diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index 2e969073473d..4921bccf0376 100644
---- a/arch/powerpc/platforms/powermac/pic.c
-+++ b/arch/powerpc/platforms/powermac/pic.c
-@@ -250,20 +250,6 @@ static unsigned int pmac_pic_get_irq(void)
- 	return irq_linear_revmap(pmac_pic_host, irq);
- }
- 
--#ifdef CONFIG_XMON
--static struct irqaction xmon_action = {
--	.handler	= xmon_irq,
--	.flags		= IRQF_NO_THREAD,
--	.name		= "NMI - XMON"
--};
--#endif
--
--static struct irqaction gatwick_cascade_action = {
--	.handler	= gatwick_action,
--	.flags		= IRQF_NO_THREAD,
--	.name		= "cascade",
--};
--
- static int pmac_pic_host_match(struct irq_domain *h, struct device_node *node,
- 			       enum irq_domain_bus_token bus_token)
- {
-@@ -384,12 +370,17 @@ static void __init pmac_pic_probe_oldstyle(void)
- 		out_le32(&pmac_irq_hw[i]->enable, 0);
- 
- 	/* Hookup cascade irq */
--	if (slave && pmac_irq_cascade)
--		setup_irq(pmac_irq_cascade, &gatwick_cascade_action);
-+	if (slave && pmac_irq_cascade) {
-+		if (request_irq(pmac_irq_cascade, gatwick_action,
-+				IRQF_NO_THREAD, "cascade", NULL))
-+			pr_err("Failed to register cascade interrupt\n");
-+	}
- 
- 	printk(KERN_INFO "irq: System has %d possible interrupts\n", max_irqs);
- #ifdef CONFIG_XMON
--	setup_irq(irq_create_mapping(NULL, 20), &xmon_action);
-+	i = irq_create_mapping(NULL, 20);
-+	if (request_irq(i, xmon_irq, IRQF_NO_THREAD, "NMI - XMON", NULL))
-+		pr_err("Failed to register NMI-XMON interrupt\n");
- #endif
- }
- 
-@@ -441,7 +432,9 @@ static void __init pmac_pic_setup_mpic_nmi(struct mpic *mpic)
- 		nmi_irq = irq_of_parse_and_map(pswitch, 0);
- 		if (nmi_irq) {
- 			mpic_irq_set_priority(nmi_irq, 9);
--			setup_irq(nmi_irq, &xmon_action);
-+			if (request_irq(nmi_irq, xmon_irq, IRQF_NO_THREAD,
-+					"NMI - XMON", NULL))
-+				pr_err("Failed to register NMI-XMON interrupt\n");
- 		}
- 		of_node_put(pswitch);
- 	}
-diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
-index f95fbdee6efe..c55bf474ed4e 100644
---- a/arch/powerpc/platforms/powermac/smp.c
-+++ b/arch/powerpc/platforms/powermac/smp.c
-@@ -399,21 +399,19 @@ static int __init smp_psurge_kick_cpu(int nr)
- 	return 0;
- }
- 
--static struct irqaction psurge_irqaction = {
--	.handler = psurge_ipi_intr,
--	.flags = IRQF_PERCPU | IRQF_NO_THREAD,
--	.name = "primary IPI",
--};
--
- static void __init smp_psurge_setup_cpu(int cpu_nr)
- {
-+	unsigned long flags = IRQF_PERCPU | IRQF_NO_THREAD;
-+	int irq;
-+
- 	if (cpu_nr != 0 || !psurge_start)
- 		return;
- 
- 	/* reset the entry point so if we get another intr we won't
- 	 * try to startup again */
- 	out_be32(psurge_start, 0x100);
--	if (setup_irq(irq_create_mapping(NULL, 30), &psurge_irqaction))
-+	irq = irq_create_mapping(NULL, 30);
-+	if (request_irq(irq, psurge_ipi_intr, flags, "primary IPI", NULL))
- 		printk(KERN_ERR "Couldn't get primary IPI interrupt");
- }
- 
--- 
-2.18.0
+RGVhciBNYXJrLA0KDQoJVGhhbmtzIGZvciB5b3VyIHZpZXdpbmcuDQoNCk9uIFdlZCwgMjAyMC0w
+My0xMSBhdCAxMjoxMiArMDAwMCwgTWFyayBCcm93biB3cm90ZToNCj4gT24gV2VkLCBNYXIgMTEs
+IDIwMjAgYXQgMDU6MjI6MjRQTSArMDgwMCwgRWFzb24gWWVuIHdyb3RlOg0KPiA+IE9uIE1vbiwg
+MjAyMC0wMy0wOSBhdCAxMzoxMyArMDAwMCwgTWFyayBCcm93biB3cm90ZToNCj4gPiA+IE9uIEZy
+aSwgTWFyIDA2LCAyMDIwIGF0IDExOjMzOjQyQU0gKzA4MDAsIEVhc29uIFllbiB3cm90ZToNCj4g
+DQo+ID4gPiBUaGlzIGxvb2tzIGxpa2UgdGhpbmdzIHRoYXQgbWlnaHQgYmUgYmV0dGVyIGV4cG9z
+ZWQgdmlhIHBpbmN0cmwgYW5kDQo+ID4gPiBncGlvbGliIGZvciBib2FyZCBzcGVjaWZpYyBjb25m
+aWd1cmF0aW9uIC0gd2hhdCBleGFjdGx5IGFyZSB0aGVzZSBHUElPcw0KPiA+ID4gZG9pbmc/ICBB
+IGxvdCBvZiB0aGlzIGNvZGUgbG9va3MgbGlrZSBpdCBtaWdodCBiZSBib2FyZCBzcGVjaWZpYy4N
+Cj4gDQo+ID4gTVQ2MzU5IGhhcyBzb21lIGdwaW9zIChwYWRfYXVkXyopIGZvciBkb3dubGluay91
+cGxpbmsuDQo+ID4gQW5kIHRoZXNlIHBpbnMgaXMgY29ubmVjdGVkIGJldHdlZW4gQVAgcGFydCBh
+bmQgUE1JQyBwYXJ0Lg0KPiA+ICgxKSBGb3IgQVAgcGFydCwgdXNlciBuZWVkIHRvIHNldCBncGlv
+IHBpbm11eCBmb3IgdGhlc2UgZ3BpbyB1c2luZyBEVC4NCj4gPiAoMikgRm9yIHBtaWMgcGFydCwg
+Z3BpbyBhcmUgY29uZmlndXJlZCBhdCBjb2RlYyBkcml2ZXIgYnkgZGVmYXVsdC4NCj4gDQo+ID4g
+Rm9yIFBNSUMgcGFydCwgdXNlciBuZWVkIHRvIHNldCBpbiB0aGVzZSByZWdpc3RlciA6DQo+ID4g
+R1BJT19NT0RFMS9HUElPX01PREUyL0dQSU9fTU9ERTMNCj4gDQo+ID4gVGhlIGZvbGxvd2luZyBm
+dW5jdGlvbnMgYXJlIHVzZWQgdG8gc2V0Og0KPiA+IC0gcGxheWJhY2tfZ3Bpb19zZXQvcGxheWJh
+Y2tfZ3Bpb19yZXNldA0KPiA+IC0gY2FwdHVyZV9ncGlvX3NldC9jYXB0dXJlX2dwaW9fcmVzZXQN
+Cj4gPiAtIHZvd19ncGlvX3NldC92b3dfZ3Bpb19yZXNldA0KPiANCj4gVGhpcyBzb3VuZHMgbGlr
+ZSBpdCBzaG91bGQgYmUgaGFuZGxlZCBhdCB0aGUgbWFjaGluZSBkcml2ZXIgbGV2ZWwsIGl0J3MN
+Cj4gcG9zc2libGUgc29tZSBzeXN0ZW0gaW50ZWdyYXRvciB3aWxsIHdpcmUgdGhpbmdzIHVwIGRp
+ZmZlcmVudGx5Lg0KPiANCg0KbWFjaGluZSBkcml2ZXIgd2lsbCBzZXQgZGVmYXVsdCBhdCBib290
+aW5nIHN0YWdlIHRvIGV4ZWN1dGUNCm10NjM1OV9tdGthaWZfY2FsaWJyYXRpb25fZW5hYmxlIGFu
+ZCBtdDYzNTlfbXRrYWlmX2NhbGlicmF0aW9uX2Rpc2FibGUuDQoNCkFuZCBhdCBydW50aW1lIHN0
+YWdlLCBpdCBpcyB0cmlnZ2VyZWQgYnkgbXRfZGxfZ3Bpb19ldmVudCBhbmQNCm10X3VsX2dwaW9f
+ZXZlbnQgd2hpbGUgcGxheWJhY2sgb3IgY2FwdHVyZS4NCg0KDQo+ID4gPiA+ICsvKiB1c2Ugb25s
+eSB3aGVuIG5vdCBnb3Zlcm4gYnkgREFQTSAqLw0KPiA+ID4gPiArc3RhdGljIGludCBtdDYzNTlf
+c2V0X2RjeG8oc3RydWN0IG10NjM1OV9wcml2ICpwcml2LCBib29sIGVuYWJsZSkNCj4gPiA+ID4g
+K3sNCj4gDQo+ID4gPiBXaHkgbWlnaHQgdGhpcyBzb21ldGltZXMgYmUgY29udHJvbGxlZCBvdXRz
+aWRlIG9mIERBUE0/DQo+IA0KPiA+IG10NjM1OV9zZXRfZGN4byBpcyB1c2VkIGF0IG10NjM1OV9t
+dGthaWZfY2FsaWJyYXRpb25fZW5hYmxlL2Rpc2FibGUuDQo+IA0KPiA+IG10a2FpZl9jYWxpYnJh
+dGlvbiBwcm9jZXNzIG5lZWRzIGJlIGNvbXBsZXRlZCBhdCBib290aW5nIHN0YWdlIG9uY2UuDQo+
+ID4gQW5kIGl0IGhhcyBhIHNwZWNpZmljIGNvbnRyb2wgc2VxdWVuY2UgcHJvdmlkZWQgYnkgY29k
+ZWMgZGVzaWduZXIuDQo+ID4gU28gaXQgbmVlZCB0byBiZSBjb250cm9sbGVkIG91dHNpZGUgb2Yg
+REFQTS4NCj4gDQo+IE9LLCB0aGlzIHNob3VsZCBleHBsaWNpdGx5IHNheSB0aGF0IHRoaXMgaXMg
+Zm9yIHVzZSBkdXJpbmcgY2FsaWJyYXRpb24NCj4gdGhlbi4NCj4gDQo+ID4gPiA+ICtzdGF0aWMg
+Y29uc3QgY2hhciAqY29uc3QgbWljX3R5cGVfbXV4X21hcFtdID0gew0KPiA+ID4gPiArCSJJZGxl
+IiwNCj4gPiA+ID4gKwkiQUNDIiwNCj4gPiA+ID4gKwkiRE1JQyIsDQo+ID4gPiA+ICsJIkRDQyIs
+DQo+ID4gPiA+ICsJIkRDQ19FQ01fRElGRiIsDQo+ID4gPiA+ICsJIkRDQ19FQ01fU0lOR0xFIiwN
+Cj4gPiA+ID4gKwkiVk9XX0FDQyIsDQo+ID4gPiA+ICsJIlZPV19ETUlDIiwNCj4gPiA+ID4gKwki
+Vk9XX0RNSUNfTFAiLA0KPiA+ID4gPiArCSJWT1dfRENDIiwNCj4gPiA+ID4gKwkiVk9XX0RDQ19F
+Q01fRElGRiIsDQo+ID4gPiA+ICsJIlZPV19EQ0NfRUNNX1NJTkdMRSINCj4gPiA+ID4gK307DQo+
+IA0KPiA+ID4gVGhpcyBsb29rcyBsaWtlIHNvbWV0aGluZyB0aGF0IHNob3VsZCBiZSBiZWluZyBz
+ZXQgYnkgRFQgb3Igb3RoZXINCj4gPiA+IHBsYXRmb3JtIGRhdGEgcmF0aGVyIHRoYW4gYXQgcnVu
+dGltZSAtIHdlJ3JlIG5vdCBsaWtlbHkgdG8gY2hhbmdlIGZyb20gYQ0KPiA+ID4gZGlnaXRhbCB0
+byBhbmFsb2d1ZSBtaWNyb3Bob25lIGF0IHJ1bnRpbWUgZm9yIGV4YW1wbGUuDQo+IA0KPiA+IEZv
+ciBtaWMxLCBpdCdzIG1pY190eXBlIGNhbiBzZXQgb25lIG9mIG1pY190eXBlX211eF9tYXBbXSBh
+dCBkaWZmZXJlbnQNCj4gPiBzY2VuYXJpby4NCj4gPiAoMSkgV2hlbiBtaWMxIGlzIG5vdCB1c2Vk
+LCBpdCBzaG91bGQgYmUgc2V0IGFzICJJZGxlIg0KPiA+ICgyKSBXaGVuIG1pYzEgaXMgQUNDIG1v
+ZGUgYW5kIHVzZWQgYXQgbm9ybWFsIGNhcHR1cmUgc2NlbmFyaW8sIGl0IHNob3VsZA0KPiA+IGJl
+IHNldCBhcyAiQUNDIg0KPiA+ICgzKSBXaGVuIG1pYzEgaXMgQUNDIG1vZGUgYW5kIHVzZWQgYXQg
+Vm9pY2UgV2FrZXVwIHNjZW5hcmlvLCBpdCBzaG91bGQNCj4gPiBiZSBzZXQgYXMgIlZPV19BQ0Mi
+DQo+IA0KPiBUaGF0IHN0aWxsIGRvZXNuJ3QgbWVhbiB5b3Ugc2hvdWxkIGhhdmUgY29udHJvbCBv
+dmVyIHRoaW5ncyBsaWtlIGlmIHRoZQ0KPiBtaWNyb3Bob25lIGlzIHNpbmdsZSBlbmRlZCBvciBk
+aWZmZXJlbnRpYWwgYXQgcnVudGltZS4gIFRoaXMgYXQgbGVhc3QNCj4gbmVlZHMgdG8gYmUgYSBo
+aWdoZXIgbGV2ZWwgY29udHJvbCwgaXQgc2hvdWxkIGJlIGludGVncmF0ZWQgd2l0aCBib3RoDQo+
+IGJvYXJkIGRhdGEgYW5kIERBUE0uICBZb3UgY2FuIGF0IGxlYXN0IHNlbGVjdCBpZGxlIG1vZGUg
+d2l0aCBEQVBNLCBhbmQNCj4geW91IG1heSBiZSBhYmxlIHRvIHNlbGVjdCB2b2ljZSB3YWtldXAg
+dGhhdCB3YXkgdG9vIChieSBsb29raW5nIGF0IHdoZXJlDQo+IHRoaW5ncyBhcmUgcm91dGVkKS4N
+Cj4gDQoNCk9LLiBTbyBpdCBpcyBiZXR0ZXIgdG8gZml4IG1pY190eXBlIChBQ0MvRE1JQy9EQ0Mv
+RENDXyopIGF0IGluaXQgc3RhZ2UNCmJlY2F1c2UgaXQgd2lsbCBub3QgYmUgY2hhbmdlZCBhdCBy
+dW50aW1lLg0KDQpBbmQgdXNlIGFub3RoZXIgZHBhbSBtdXggb3Iga2NvbnRyb2wgdG8gZW5hYmxl
+L2Rpc2FibGUgdm93IGZvciBsb3cgcG93ZXINCnNjZW5hcmlvLg0KDQpJcyBpdCByaWdodD8NCg0K
+PiA+ID4gPiArCVNPQ19TSU5HTEVfRVhUX1RMVigiTGluZW91dFIgVm9sdW1lIiwNCj4gPiA+ID4g
+KwkJCSAgIE1UNjM1OV9aQ0RfQ09OMSwgNywgMHgxMiwgMCwNCj4gPiA+ID4gKwkJCSAgIHNuZF9z
+b2NfZ2V0X3ZvbHN3LCBtdDYzNTlfcHV0X3ZvbHN3LCBwbGF5YmFja190bHYpLA0KPiANCj4gPiA+
+IFRoZXNlIHNob3VsZCBiZSBzdGVyZW8gY29udHJvbHMgbm90IHBhaXJzIG9mIG1vbm8gY29udHJv
+bHMuDQo+IA0KPiA+IEl0IGlzIG1vcmUgZmxleGlibGUgZm9yIGN1c3RvbWl6YXRpb24uDQo+IA0K
+PiA+IEZvciBleGFtcGxlLCBjdXN0b21lciBtYXkgdXNlIGxpbmVvdXQgcGF0aCBmb3Igc3RlcmVv
+IHNwZWFrZXIgYW1wLg0KPiA+IEFuZCBmb3Igc3BlY2lmaWMgYW1wLCBpdCBuZWVkIGRpZmZlcmVu
+dCBnYWluIG9uIGNoYW5uZWwgTCBhbmQgY2hhbm5lbCBSLg0KPiANCj4gWW91IGNhbiBzZXQgdGhl
+IGdhaW5zIG9mIHN0ZXJlbyBwYWlycyBpbmRlcGVuZGVudGx5LCB0aGF0J3Mgbm90IGENCj4gcHJv
+YmxlbS4NCj4gDQo+ID4gPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGxvX2luX211eF9t
+YXBbXSA9IHsNCj4gPiA+ID4gKwkiT3BlbiIsICJQbGF5YmFja19MX0RBQyIsICJQbGF5YmFjayIs
+ICJUZXN0IE1vZGUiDQo+ID4gPiA+ICt9Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICtzdGF0aWMgaW50
+IGxvX2luX211eF9tYXBfdmFsdWVbXSA9IHsNCj4gPiA+ID4gKwkweDAsIDB4MSwgMHgyLCAweDMs
+DQo+ID4gPiA+ICt9Ow0KPiA+ID4gDQo+ID4gPiBXaHkgdXNlIGEgdmFsdWUgZW51bSBoZXJlLCBh
+IG5vcm1hbCBtdXggc2hvdWxkIGJlIGZpbmU/DQo+ID4gPiANCj4gDQo+ID4gQ291bGQgSSBtb2Rp
+ZnkgYXMgZm9sbG93Og0KPiANCj4gPiAvKiBMT0wgTVVYICovDQo+ID4gZW51bSB7DQo+ID4gCUxP
+X01VWF9PUEVOID0gMCwNCj4gPiAJTE9fTVVYX0xfREFDLA0KPiA+IAlMT19NVVhfM1JEX0RBQywN
+Cj4gPiAJTE9fTVVYX1RFU1RfTU9ERSwNCj4gPiAJTE9fTVVYX01BU0sgPSAweDMsDQo+ID4gfTsN
+Cj4gDQo+ID4gc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBsb19pbl9tdXhfbWFwW10gPSB7DQo+
+ID4gCSJPcGVuIiwgIlBsYXliYWNrX0xfREFDIiwgIlBsYXliYWNrIiwgIlRlc3QgTW9kZSINCj4g
+PiB9Ow0KPiANCj4gPiBzdGF0aWMgaW50IGxvX2luX211eF9tYXBfdmFsdWVbXSA9IHsNCj4gPiAJ
+TE9fTVVYX09QRU4sDQo+ID4gCUxPX01VWF9MX0RBQywNCj4gPiAJTE9fTVVYXzNSRF9EQUMsDQo+
+ID4gCUxPX01VWF9URVNUX01PREUsDQo+ID4gfTsNCj4gDQo+IFdoeSBib3RoZXIgd2l0aCB0aGUg
+dmFsdWUgbWFwcGluZyBhdCBhbGw/DQo+IA0KDQpvaywgSSB3aWxsIHJlZmluZSBpdCBhcyBmb2xs
+b3cuIGlzIGl0IG9rPw0KDQpBbmQgcmVtb3ZlIA0KLyogcmVtb3ZlIGl0DQpzdGF0aWMgaW50IGxv
+X2luX211eF9tYXBfdmFsdWVbXSA9IHsNCgkweDAsIDB4MSwgMHgyLCAweDMsDQp9Ow0KKi8NCg0K
+ZW51bSB7DQoJTE9fTVVYX09QRU4gPSAwLA0KCUxPX01VWF9MX0RBQywNCglMT19NVVhfM1JEX0RB
+QywNCglMT19NVVhfVEVTVF9NT0RFLA0KCUxPX01VWF9NQVNLID0gMHgzLA0KfTsNCg0Kc3RhdGlj
+IGNvbnN0IGNoYXIgKiBjb25zdCBsb19pbl9tdXhfbWFwW10gPSB7DQoJIk9wZW4iLCAiUGxheWJh
+Y2tfTF9EQUMiLCAiUGxheWJhY2siLCAiVGVzdCBNb2RlIg0KfTsNCg0Kc3RhdGljIFNPQ19FTlVN
+X1NJTkdMRV9ERUNMKGxvX2luX211eF9tYXBfZW51bSwNCgkJCSAgICBTTkRfU09DX05PUE0sIDAs
+IGxvX2luX211eF9tYXApOw0KDQpzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9rY29udHJvbF9uZXcg
+bG9faW5fbXV4X2NvbnRyb2wgPQ0KCVNPQ19EQVBNX0VOVU0oIkxPIFNlbGVjdCIsIGxvX2luX211
+eF9tYXBfZW51bSk7DQoNCg0KVGhlIHJlZmluZSB3aWxsIGFwcGx5IG9uIFJDViBNVVggYW5kIEhQ
+IE1VWCAsdG9vLg0KDQoNCj4gPiA+ID4gK3N0YXRpYyBpbnQgbXRfZGVsYXlfMjUwX2V2ZW50KHN0
+cnVjdCBzbmRfc29jX2RhcG1fd2lkZ2V0ICp3LA0KPiA+ID4gPiArCQkJICAgICAgc3RydWN0IHNu
+ZF9rY29udHJvbCAqa2NvbnRyb2wsDQo+ID4gPiA+ICsJCQkgICAgICBpbnQgZXZlbnQpDQo+ID4g
+PiA+ICt7DQo+ID4gPiA+ICsJc3dpdGNoIChldmVudCkgew0KPiA+ID4gPiArCWNhc2UgU05EX1NP
+Q19EQVBNX1BPU1RfUE1VOg0KPiA+ID4gPiArCWNhc2UgU05EX1NPQ19EQVBNX1BSRV9QTUQ6DQo+
+ID4gPiA+ICsJCXVzbGVlcF9yYW5nZSgyNTAsIDI3MCk7DQo+IA0KPiA+ID4gV2h5IHdvdWxkIGhh
+dmluZyBhIHNsZWVwIGJlZm9yZSBwb3dlciBkb3duIGJlIHVzZWZ1bD8NCj4gDQo+ID4gSXQgaXMg
+YmFzZWQgb24gZGVzaWduZXIncyBjb250cm9sIHNlcXVlbmNlIHRvIGFkZCBzb21lIGRlbGF5IHdo
+aWxlDQo+ID4gUE1VL1BNRC4NCj4gDQo+IEJ1dCBob3cgZG9lcyB0aGUgZGVzaWduZXIga25vdyB3
+aGVuIHRoZSBzZXF1ZW5jZSBzdGFydHM/ICBEb24ndCB0aGV5DQo+IG1lYW4gdG8gaGF2ZSBhIGRl
+bGF5ICphZnRlciogcG93ZXIgZG93bj8NCj4gDQoNCkZvciBQTVUsIGRlc2lnbmVyIHRoaW5rIA0K
+IkFVRF9DSyIgLS0+IHdhaXQgYXQgbGVhc3QgMjUwbXMgLS0+ICJBVURJRl9DSyIgLS0+IG5leHQg
+Li4uDQoNCkZvciBQTUQsIGRlc2lnbmVyIHRoaW5rIA0KIkFVRElGX0NLIiAtLT4gd2FpdCBhdCBs
+ZWFzdCAyNTBtcyAtLT4gIkFVRF9DSyIgLS0+IG5leHQgLi4uDQoNCglTTkRfU09DX0RBUE1fU1VQ
+UExZX1MoIlpDRDEzTV9DSyIsIFNVUFBMWV9TRVFfVE9QX0NLLA0KCQkJICAgICAgTVQ2MzU5X0FV
+RF9UT1BfQ0tQRE5fQ09OMCwNCgkJCSAgICAgIFJHX1pDRDEzTV9DS19QRE5fU0ZULCAxLCBOVUxM
+LCAwKSwNCg0KCVNORF9TT0NfREFQTV9TVVBQTFlfUygiQVVEX0NLIiwgU1VQUExZX1NFUV9UT1Bf
+Q0tfTEFTVCwNCgkJCSAgICAgIE1UNjM1OV9BVURfVE9QX0NLUEROX0NPTjAsDQoJCQkgICAgICBS
+R19BVURfQ0tfUEROX1NGVCwgMSwNCgkJCSAgICAgIG10X2RlbGF5XzI1MF9ldmVudCwNCgkJCSAg
+ICAgIFNORF9TT0NfREFQTV9QT1NUX1BNVSB8IAlTTkRfU09DX0RBUE1fUFJFX1BNRCksDQoNCglT
+TkRfU09DX0RBUE1fU1VQUExZX1MoIkFVRElGX0NLIiwgU1VQUExZX1NFUV9UT1BfQ0ssDQoJCQkg
+ICAgICBNVDYzNTlfQVVEX1RPUF9DS1BETl9DT04wLA0KCQkJICAgICAgUkdfQVVESUZfQ0tfUERO
+X1NGVCwgMSwgTlVMTCwgMCksDQoNClNvIEkgYWRkIGEgbXRfZGVsYXlfMjUwX2V2ZW50IHdoaWxl
+ICJBVURfQ0siIFBPU1RfUE1VIGFuZCBQUkVfUE1ELg0KDQoNCj4gPiA+ID4gK3N0YXRpYyBpbnQg
+bXQ2MzU5X2NvZGVjX3Byb2JlKHN0cnVjdCBzbmRfc29jX2NvbXBvbmVudCAqY21wbnQpDQo+ID4g
+PiA+ICt7DQo+ID4gPiA+ICsJc3RydWN0IG10NjM1OV9wcml2ICpwcml2ID0gc25kX3NvY19jb21w
+b25lbnRfZ2V0X2RydmRhdGEoY21wbnQpOw0KPiA+ID4gPiArCWludCByZXQ7DQo+ID4gPiA+ICsN
+Cj4gPiA+ID4gKwlzbmRfc29jX2NvbXBvbmVudF9pbml0X3JlZ21hcChjbXBudCwgcHJpdi0+cmVn
+bWFwKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCXNuZF9zb2NfYWRkX2NvbXBvbmVudF9jb250cm9s
+cyhjbXBudCwNCj4gPiA+ID4gKwkJCQkgICAgICAgbXQ2MzU5X3NuZF92b3dfY29udHJvbHMsDQo+
+ID4gPiA+ICsJCQkJICAgICAgIEFSUkFZX1NJWkUobXQ2MzU5X3NuZF92b3dfY29udHJvbHMpKTsN
+Cj4gDQo+ID4gPiBVc2UgdGhlIGNvbnRyb2xzIG1lbWJlciBvZiB0aGUgY29tcG9uZW50IGRyaXZl
+ciBzdHJ1Y3QuDQo+IA0KPiA+IERvIHlvdSBtZWFuIHRoYXQgSSBzaG91bGQgbWVyZ2UgbXQ2MzU5
+X3NuZF92b3dfY29udHJvbHMgaW50bw0KPiA+IG10NjM1OV9zbmRfY29udHJvbHM/DQo+IA0KPiBZ
+ZXMsIHlvdSdyZSB1bmNvbmRpdGlvbmFsbHkgcmVnaXN0ZXJpbmcgdGhlc2Ugc28gdGhlcmUncyBu
+byBzZW5zZSBpbg0KPiBzcGxpdHRpbmcgdGhlbS4NCj4gDQo+ID4gPiA+ICsJcHJpdi0+YXZkZF9y
+ZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXQocHJpdi0+ZGV2LCAidmF1ZDE4Iik7DQo+ID4gPiA+ICsJ
+aWYgKElTX0VSUihwcml2LT5hdmRkX3JlZykpIHsNCj4gPiA+ID4gKwkJZGV2X2Vycihwcml2LT5k
+ZXYsICIlcygpLCBoYXZlIG5vIHZhdWQxOCBzdXBwbHkiLCBfX2Z1bmNfXyk7DQo+ID4gPiA+ICsJ
+CXJldHVybiBQVFJfRVJSKHByaXYtPmF2ZGRfcmVnKTsNCj4gPiA+ID4gKwl9DQo+IA0KPiA+ID4g
+VGhlIGRyaXZlciBzaG91bGQgcmVxdWVzdCByZXNvdXJjZXMgZHVyaW5nIGRldmljZSBtb2RlbCBw
+cm9iZSByYXRoZXINCj4gPiA+IHRoYW4gY29tcG9uZW50IHByb2JlLg0KPiANCj4gPiBEbyB5b3Ug
+bWVhbiB0aGF0IGl0IG5lZWQgYmUgcmVxdWVzdGVkIGF0IG10NjM1OV9wbGF0Zm9ybV9kcml2ZXJf
+cHJvYmUoKQ0KPiA+IGluc3RlYWQgb2YgbXQ2MzU5X2NvZGVjX3Byb2JlKCkgPw0KPiANCj4gWWVz
+Lg0KPiANCj4gPiA+ID4gKwlyZXQgPSByZWd1bGF0b3JfZW5hYmxlKHByaXYtPmF2ZGRfcmVnKTsN
+Cj4gPiA+ID4gKwlpZiAocmV0KQ0KPiA+ID4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ID4gPiArDQo+
+IA0KPiA+ID4gVGhlcmUncyBub3RoaW5nIHRvIGRpc2FibGUgdGhpcyBvbiByZW1vdmUuDQo+IA0K
+PiA+IERvIHlvdSBtZWFuIHRoYXQgSSBzaG91bGQgYWRkIGEgcmVtb3ZlIGZ1bmN0aW9uIHRvIGV4
+ZWN1dGUNCj4gPiByZWd1bGF0b3JfZGlzYWJsZSgpPw0KPiANCj4gWWVzLg0KDQo=
 
