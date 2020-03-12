@@ -6,95 +6,62 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587FCC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DE3C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D5F20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F5020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387936AbgCLGQr (ORCPT
+        id S2387938AbgCLGUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:16:47 -0400
-Received: from smtprelay0065.hostedemail.com ([216.40.44.65]:51386 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387784AbgCLGQq (ORCPT
+        Thu, 12 Mar 2020 02:20:10 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56132 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387848AbgCLGUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:16:46 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id D9D6B181D341E;
-        Thu, 12 Mar 2020 06:16:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: room59_74f27b9f71a53
-X-Filterd-Recvd-Size: 2513
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 12 Mar 2020 06:16:43 +0000 (UTC)
-Message-ID: <e4443663a51ecf601e137990019075b7dae6a457.camel@perches.com>
-Subject: Re: [PATCH -next 004/491] PERFORMANCE EVENTS SUBSYSTEM: Use
- fallthrough;
-From:   Joe Perches <joe@perches.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Date:   Wed, 11 Mar 2020 23:15:00 -0700
-In-Reply-To: <20200311153000.GP12561@hirez.programming.kicks-ass.net>
-References: <cover.1583896344.git.joe@perches.com>
-         <73d22360c5c665fd7f480a209ae46807dfb07bbe.1583896348.git.joe@perches.com>
-         <20200311153000.GP12561@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
+        Thu, 12 Mar 2020 02:20:10 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 46B4014DA84A3;
+        Wed, 11 Mar 2020 23:20:09 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 23:20:08 -0700 (PDT)
+Message-Id: <20200311.232008.336536129448429278.davem@davemloft.net>
+To:     jbi.octave@gmail.com
+Cc:     boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, kuba@kernel.org
+Subject: Re: [PATCH 2/8] raw: Add missing annotations to raw_seq_start()
+ and raw_seq_stop()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200311010908.42366-3-jbi.octave@gmail.com>
+References: <0/8>
+        <20200311010908.42366-1-jbi.octave@gmail.com>
+        <20200311010908.42366-3-jbi.octave@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Mar 2020 23:20:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 16:30 +0100, Peter Zijlstra wrote:
-> On Tue, Mar 10, 2020 at 09:51:18PM -0700, Joe Perches wrote:
-> > Convert the various uses of fallthrough comments to fallthrough;
-> > 
-> > Done via script
-> > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
+From: Jules Irenge <jbi.octave@gmail.com>
+Date: Wed, 11 Mar 2020 01:09:02 +0000
+
+> Sparse reports warnings at raw_seq_start() and raw_seq_stop()
 > 
-> The subject can use a little less screaming, but the actual patch is
-> fine.
+> warning: context imbalance in raw_seq_start() - wrong count at exit
+> warning: context imbalance in raw_seq_stop() - unexpected unlock
+> 
+> The root cause is the missing annotations at raw_seq_start()
+> 	and raw_seq_stop()
+> Add the missing __acquires(&h->lock) annotation
+> Add the missing __releases(&h->lock) annotation
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-Patch subject come from the MAINTAINERS subsystem/section heading
-because I don't see a better way to script the patch subject that
-is more effective.
-
-Using something like:
-
-$ cat get_patch_subject_prefix.bash
-#!/bin/bash
-git log --format="%s" --no-merges -200 --since=2-years-ago $@ | \
-  cut -f1 -d":" | \
-  sort  | uniq -c | sort -rn | head -1 | \
-  sed 's/^[[:space:]]*[[:digit:]]*[[:space:]]*//'
-$
-
-Does well for some sets of files, less well for others.
-
-For instance:
-
-$ ./get_patch_subject_prefix.bash drivers/net/ethernet/intel/
-ice
-
-which is just one of 10 or so subsystems of intel/...
-
-And there's no way I'm going to individually edit
-~500 patches for every specific maintainer's preference.
-
-
+Applied.
