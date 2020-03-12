@@ -6,91 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82579C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E946C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C0A206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2CF206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgCLMkb (ORCPT
+        id S1727264AbgCLMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:40:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38502 "EHLO mx2.suse.de"
+        Thu, 12 Mar 2020 08:41:18 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60028 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgCLMkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:40:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A46F4B1DE;
-        Thu, 12 Mar 2020 12:40:28 +0000 (UTC)
-Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-3-minchan@kernel.org>
- <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
- <20200310222008.GB72963@google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <07109fb3-dcf3-0252-4515-7e476fadc259@suse.cz>
-Date:   Thu, 12 Mar 2020 13:40:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1725978AbgCLMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:41:17 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jCN98-00026I-Tg; Thu, 12 Mar 2020 23:41:08 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Mar 2020 23:41:06 +1100
+Date:   Thu, 12 Mar 2020 23:41:06 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] crypto: ccree - cleanups
+Message-ID: <20200312124106.GH28885@gondor.apana.org.au>
+References: <20200308155710.14546-1-gilad@benyossef.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310222008.GB72963@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308155710.14546-1-gilad@benyossef.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 11:20 PM, Minchan Kim wrote:
-> On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
->> On 3/2/20 8:36 PM, Minchan Kim wrote:
->> > There is usecase that System Management Software(SMS) want to give
->> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
->> > in the case of Android, it is the ActivityManagerService.
->> > 
->> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
->> 
->> You mean MADV_DONTNEED?
+On Sun, Mar 08, 2020 at 05:57:03PM +0200, Gilad Ben-Yossef wrote:
+> A bunch of code cleanups.
+> No fixes or new features here.
 > 
-> Mean to DONT_NEED's future version.
-
-What's that exactly?
-
->> 
->> > required to make the reclaim decision is not known to the app.
->> 
->> This seems to be mixing up the differences between MADV_DONTNEED and
->> COLD/PAGEOUT and self-imposed vs external memory hints?
+> Gilad Ben-Yossef (4):
+>   crypto: ccree - remove ancient TODO remarks
+>   crypto: ccree - only check condition if needed
+>   crypto: ccree - use crypto_ipsec_check_assoclen()
+>   crypto: ccree - refactor AEAD IV in AAD handling
 > 
-> Sorry, I don't understand what you want here.
+> Hadar Gat (2):
+>   crypto: ccree - update register handling macros
+>   crypto: ccree - remove pointless comment
+> 
+>  drivers/crypto/ccree/cc_aead.c          | 113 +++++++-----------------
+>  drivers/crypto/ccree/cc_aead.h          |   3 +-
+>  drivers/crypto/ccree/cc_buffer_mgr.c    |  91 +++----------------
+>  drivers/crypto/ccree/cc_cipher.c        |   1 -
+>  drivers/crypto/ccree/cc_driver.h        |   5 +-
+>  drivers/crypto/ccree/cc_hash.c          |   3 -
+>  drivers/crypto/ccree/cc_hw_queue_defs.h |  77 ++++++++--------
+>  drivers/crypto/ccree/cc_request_mgr.c   |   1 -
+>  8 files changed, 80 insertions(+), 214 deletions(-)
 
-You say that process_madvise(MADV_[COLD|PAGEEOUT]) is similar to
-madvise(MADV_WONTNEED) but the difference is that the information
-required to make the reclaim decision is not known to the app.
-
-I see two differences. One is madvise vs process_madvise, which is explained by
-"reclaim decision is not known to the app."
-The other is MADV_WONTNEED vs MADV_[COLD|PAGEEOUT], which is... I'm not sure
-until you say what's "DONT_NEED's future version" :D
-
-Anyway I assume this part is from the versions where the new COLD and PAGEOUT
-flags were introduced together with external memory hinting API?
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
