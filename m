@@ -2,331 +2,237 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62722C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADD3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6EE20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB95206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L5dm9i9t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWlD5nyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCLKfC (ORCPT
+        id S1726954AbgCLKfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:35:02 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34693 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLKfC (ORCPT
+        Thu, 12 Mar 2020 06:35:12 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37855 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCLKfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:35:02 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200312103500euoutp018f938afa15f4083d055cf2b331e1ac19~7iBER0w4n2423424234euoutp01V
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200312103500euoutp018f938afa15f4083d055cf2b331e1ac19~7iBER0w4n2423424234euoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584009300;
-        bh=AiOwCiA5oENJbiCHlPl0UpmDzAqEPqryxHVgvTC19wg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=L5dm9i9tomU8x3kHzl9LBdBJnThr3zNCnFB/NaH8Omzjdd+fKJDamzmoduFfR7dLz
-         gLreFCfMM1XoOJxJ03u46xPyM2zJZ7vhesxnhy4lHqelIBV2WpVatUu394ANNrErFL
-         I/Q/wqu2JFNoRBwJiZlfGCn78yhgVn5XQIAmmTsc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200312103500eucas1p12967ea27427738d5ae7909845814ebaa~7iBEAaqFV0146001460eucas1p1w;
-        Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id E9.7C.60698.4501A6E5; Thu, 12
-        Mar 2020 10:35:00 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200312103500eucas1p218e348ce77ea151b242c14ba0f537f85~7iBDuGq3U1187611876eucas1p2y;
-        Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200312103500eusmtrp13b891e36b3f717d378584d6713e99866~7iBDteKoo1916019160eusmtrp1Z;
-        Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-c7-5e6a1054625d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id BE.13.07950.4501A6E5; Thu, 12
-        Mar 2020 10:35:00 +0000 (GMT)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200312103459eusmtip2e6281c38db6d2828e4bfe0828417dd13~7iBDAKM2Q1315613156eusmtip2K;
-        Thu, 12 Mar 2020 10:34:59 +0000 (GMT)
-Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
-To:     Vinay Simha BN <simhavcs@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <a721cdd3-72e7-a1ef-6b45-d4dcc2787de6@samsung.com>
-Date:   Thu, 12 Mar 2020 11:34:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.4.1
+        Thu, 12 Mar 2020 06:35:11 -0400
+Received: by mail-il1-f196.google.com with SMTP id a6so4968846ilc.4;
+        Thu, 12 Mar 2020 03:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d11jKh4nIXxOO14qhhlowcRFY/zdekEryEZGjxCyR4U=;
+        b=dWlD5nySofCuFcC1KqOfJXf0Pm6lXznegz4dEb3SJMlcVi6TNUBD8je8acrRZWM7u6
+         4YszOga5UvfaxttN2thsNJs3wyA9EB93WgLz/EkoxOj2WIxKOLfENbGt5wG+u9Q5VQT5
+         zYNGkVJo1tGM99CWwAQ827pIAUgzvPM9tF0IGqEZI1G4dSY6VwfbaJfFLEB9p5g1wtbk
+         kQieh2ZvT6ZXAs++6I1aRURG/WlZCJ3J2/8IBVSPNwLd6Y8RWdbQd91cXc7jUv5HaRMS
+         nqpayk0UHPrXjo/+K3xd8gnASiS9z9xLZ2vOb0piFQdLeowUojeYezEGIia3++pn6Gl7
+         ij/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d11jKh4nIXxOO14qhhlowcRFY/zdekEryEZGjxCyR4U=;
+        b=lywhp+0tg2g6SPWERclpboChVM2kpEcc+i/kYCobC9QJcJ/MKJ/5jrlQijYcB0DdE+
+         CyO7GAXX8wmJx61w++KqAnWn+NeJKuUXLTT5zYiWLubikQZxaSVxVshEE9i3Pm1Lg3VI
+         PH9qePY+X7SSa0sXYPV/wtthBHUnGCBGzjNtsYGXBEGO3tQNeqQdrDLuccYOgCIwkuTV
+         5KjEIfkpc+Cs5XjE4eqRVGI5iFhOmtMydZrEgwiunHrAxAN8Xg5Pp8UlEfXD7EmjCoxw
+         dK5UnhwvWkgql8Tzp12qUl9Xm9nTieYkPnQAy6oDz9MvI2eSP99gEJXbHNrOQRuQ5InD
+         KsTA==
+X-Gm-Message-State: ANhLgQ169z8nH+AIjkCKTkkLnPgV+UHsCxWAUnV0i2/Nyvlkq0TooywP
+        IU3KUoP9pVnE29plHroAZIf/Wl/mJ1geMyVhG/I=
+X-Google-Smtp-Source: ADFU+vvSRlyq9Zdi/fl/WLdv2Po6WICy6RqRd2FY2vS+d6/LY3eKydss4wYnT9C5FUYvIXP6ufBuZlUYC9tzxOFzjhA=
+X-Received: by 2002:a92:af8c:: with SMTP id v12mr7879184ill.6.1584009309784;
+ Thu, 12 Mar 2020 03:35:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djP87ohAllxBofnylv0njvJZDH/yDlW
-        iytf37NZdE5cwm5xedccNovWvUfYLT5ffsnmwO6xc9Zddo/ZHTNZPTat6mTz2P7tAavH/e7j
-        TB6fN8kFsEVx2aSk5mSWpRbp2yVwZSxfdJOxoFG9Yuu+iSwNjO9kuhg5OSQETCRWvnjJ3MXI
-        xSEksIJRYsGE7ywQzhdGibblz1lAqoQEPjNKTFug08XIAdaxqpcfomY5o8SXP4fYIZy3jBKP
-        T31iBWkQFvCSOL1iCTuILSIQL7F3+SqwqcwC3UwS038/ACtiE9CU+Lv5JhuIzStgJ/Fkcy8T
-        iM0ioCpxes4CsLioQITEtO3/GCFqBCVOznwCdhGngJPElVcHwGxmAXmJ7W/nMEPY4hK3nsxn
-        gvhtH7vEpes6ELaLxL1uiOMkBIQlXh3fwg5hy0icntzDAmHXS9xf0QIOCwmBDkaJrRt2MkMk
-        rCXunPvFBvI+M9DR63fpQ4QdJU7272KFhAqfxI23ghAn8ElM2jadGSLMK9HRJgRRrShx/+xW
-        qIHiEksvfGWbwKg0C8ljs5A8MwvJM7MQ9i5gZFnFKJ5aWpybnlpsnJdarlecmFtcmpeul5yf
-        u4kRmIpO/zv+dQfjvj9JhxgFOBiVeHgnfM6IE2JNLCuuzD3EKMHBrCTCGy+fHifEm5JYWZVa
-        lB9fVJqTWnyIUZqDRUmc13jRy1ghgfTEktTs1NSC1CKYLBMHp1QDo3+tHFO9muLMFZw3d85j
-        enva+ZvpRt4NK+qmFNysYLzaYRuvnbHL805zHe90F6UPjYX/bvJtX5+9e0fUxYZtrY0e//ms
-        d3p7Lvp6eHL/5HOLVn21/KGspPDp02LjB7vY+qy/W6kXrdikPm/TOY3EDQLPPdTPzukwvzmt
-        +u0OoVmFAao5S8N+SSuxFGckGmoxFxUnAgC9eWvMQQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xe7ohAllxBq+PcFr0njvJZDH/yDlW
-        iytf37NZdE5cwm5xedccNovWvUfYLT5ffsnmwO6xc9Zddo/ZHTNZPTat6mTz2P7tAavH/e7j
-        TB6fN8kFsEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp
-        2yXoZSxfdJOxoFG9Yuu+iSwNjO9kuhg5OCQETCRW9fJ3MXJxCAksZZR48PoQYxcjJ1BcXGL3
-        /LfMELawxJ9rXWwgtpDAa0aJxb/zQWxhAS+J0yuWsIPYIgLxEsv2vmUEGcQs0MsksWHreiaI
-        qVMZJTp3fGMCqWIT0JT4u/km2CReATuJJ5t7weIsAqoSp+csAIuLCkRIPJ7YzghRIyhxcuYT
-        FhCbU8BJ4sqrA2A2s4C6xJ95l5ghbHmJ7W/nQNniEreezGeawCg0C0n7LCQts5C0zELSsoCR
-        ZRWjSGppcW56brGRXnFibnFpXrpecn7uJkZg/G079nPLDsaud8GHGAU4GJV4eCd8zogTYk0s
-        K67MPcQowcGsJMIbL58eJ8SbklhZlVqUH19UmpNafIjRFOi5icxSosn5wNSQVxJvaGpobmFp
-        aG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qB0c+gWb11QZ0K2+Wd5bPF/T/u5A50
-        epIh6zonV3hzvpj8f98p4o381ysP3FUMXLZ65vbaB6pPuO6+i1iw6X7AjEdC0RJnVh69dnrf
-        rcySv9wCrjNnHLgYMutI3p9n+9U3y2TYSdVnfmbXf65gNPE4V7XizzsclgoX5I2tQr6/0tg0
-        a3bJjMwNYUosxRmJhlrMRcWJAFxbiqfVAgAA
-X-CMS-MailID: 20200312103500eucas1p218e348ce77ea151b242c14ba0f537f85
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200312080849eucas1p2ebc25fb87cc917986ba0f268272ef2ed
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200312080849eucas1p2ebc25fb87cc917986ba0f268272ef2ed
-References: <CGME20200312080849eucas1p2ebc25fb87cc917986ba0f268272ef2ed@eucas1p2.samsung.com>
-        <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
+References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-6-linux.amoon@gmail.com>
+ <20200311144248.GA4455@kozik-lap>
+In-Reply-To: <20200311144248.GA4455@kozik-lap>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Thu, 12 Mar 2020 16:04:57 +0530
+Message-ID: <CANAwSgQWYdh3awuMCjUvz6EvnwMq9rDOSBn5EkNcA7OfsjoEwA@mail.gmail.com>
+Subject: Re: [PATCHv3 5/5] clk: samsung: exynos542x: Move FSYS subsystem
+ clocks to its sub-CMU
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinay,
+Hi Krzysztof,
 
-Next time add patch version to de subject of email.
+Thanks for your review comments.
 
-
-On 11.03.2020 10:48, Vinay Simha BN wrote:
-> Add yaml documentation for DSI/LVDS tc358775 bridge
+On Wed, 11 Mar 2020 at 20:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> On Tue, Mar 10, 2020 at 07:48:54PM +0000, Anand Moon wrote:
+> > FSYS power domain support usbdrd3, pdma and usb2 power gaiting,
+> > hence move FSYS clk setting to sub-CMU block to support power domain
+> > on/off sequences for device nodes.
+> >
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > New patch in the series
+> > ---
+> >  drivers/clk/samsung/clk-exynos5420.c | 45 +++++++++++++++++++++-------
+> >  1 file changed, 34 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> > index c9e5a1fb6653..6c4c47dfcdce 100644
+> > --- a/drivers/clk/samsung/clk-exynos5420.c
+> > +++ b/drivers/clk/samsung/clk-exynos5420.c
+> > @@ -859,12 +859,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
+> >       DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
+> >       DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
+> >
+> > -     /* USB3.0 */
+> > -     DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
+> > -     DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
+> > -     DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
+> > -     DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
 >
-> ---
-> v1:
->  Initial version
-> ---
->  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
->  1 file changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> According to clock diagram these are still in CMU TOP, not FSYS.
 >
-> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> new file mode 100644
-> index 0000000..e9a9544
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> @@ -0,0 +1,174 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: https://protect2.fireeye.com/url?k=cc9be7f9-9155e4b4-cc9a6cb6-000babff24ad-2a6ce73e1e41d358&u=http://devicetree.org/schemas/display/bridge/toshiba-tc358775.yaml#
-> +$schema: https://protect2.fireeye.com/url?k=293d6151-74f3621c-293cea1e-000babff24ad-793c0a803cb80d71&u=http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +
-> +title: Toshiba TC358775 DSI to LVDS bridge bindings
-> +
-> +maintainers:
-> +	- Vinay Simha BN <simhavcs@gmail.com>
-> +
-> +description: |
-> +	This binding supports DSI to LVDS bridge TC358775
-> +
-> +properties:
-> + compatible:
-> +	const: toshiba,tc358775
-> +
-> + reg:
-> +   maxItems: 1
-> +   description: i2c address of the bridge, 0x0f
-> +
-> + tc, dsi-lanes: 1
-> +   maxItems: 1
-> +   description: Number of DSI data lanes connected to the DSI host. It should
-> +  be one of 1, 2, 3 or 4.
-> +
-> + tc, dual-link: 1
-> +   maxItems: 1
-> +   description: To configure the LVDS transmitter either as single-link or dual-link.
+> > -
+> >       /* MMC */
+> >       DIV(0, "dout_mmc0", "mout_mmc0", DIV_FSYS1, 0, 10),
+> >       DIV(0, "dout_mmc1", "mout_mmc1", DIV_FSYS1, 10, 10),
+> > @@ -1031,8 +1025,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+> />
+> >       /* FSYS Block */
+> >       GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
+> > -     GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+> > -     GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+> >       GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
+> >       GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
+> >       GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
+> > @@ -1040,9 +1032,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+> >       GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
+> >       GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
+> >                       GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
+> > -     GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> > -     GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> > -     GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+> >       GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
+> >                       SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
+> >
+> > @@ -1258,6 +1247,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
+> >       { DIV2_RATIO0, 0, 0x30 },       /* DIV dout_gscl_blk_300 */
+> >  };
+> >
+> > +/* USB3.0 */
+> > +static const struct samsung_div_clock exynos5x_fsys_div_clks[] __initconst = {
+> > +     DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
+> > +     DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
+> > +     DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
+> > +     DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
+> > +};
+> > +
+> > +static const struct samsung_gate_clock exynos5x_fsys_gate_clks[] __initconst = {
+> > +     GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+> > +     GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+> > +     GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> > +     GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> > +     GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+> > +};
+> > +
+> > +static struct exynos5_subcmu_reg_dump exynos5x_fsys_suspend_regs[] = {
+> > +     { GATE_IP_FSYS, 0xffffffff, 0xffffffff }, /* FSYS gates */
+>
+> This looks wrong. GATE_IP_FSYS has fields also for FSYS2 clocks which
+> you are not suspending. They do not belong to this CMU.
+>
 
+Ok. I change the from GATE_IP_FSYS to GATE_BUS_FSYS0 in the above
+exynos5x_fsys_gate_clks to make this consistent to used GATE_BUS_FSYS0 for CMU,
+with this change it works as per previously.
 
-As Laurent commented earlier, it would be better to use two ports. See
-for example for input LVDS ports in:
+> Don't you need to save also parts of GATE_BUS_FSYS0?
 
-Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+GATE_BUS_FSYS0 and GATE_IP_FSYS are already part of list
+of control register which are saved and restored during suspend and resume
+so no point in adding this here, I should drop the GATE_IP_FSYS reg
+dump over here.
 
-Both should be defined in bindings but the 2nd can be optional in dts.
+>
+> > +     { SRC_TOP3, 0, BIT(24) },                 /* SW_MUX_PCLK_200_FSYS_SEL */
+> > +     { SRC_TOP3, 0, BIT(28) },                 /* SW_MUX_ACLK_200_FSYS_SEL */
+>
+> Name of clocks from the driver please, not from datasheet. Look at other
+> examples.
+>
 
+Ok  I will update this as per the examples.
 
-Regards
+> Best regards,
+> Krzysztof
+>
+>
 
-Andrzej
+-Anand
 
-
-> +
-> + vdd-supply:
-> +   maxItems: 1
-> +   description:  1.2V LVDS Power Supply
-> +
-> + vddio-supply:
-> +   maxItems: 1
-> +   description: 1.8V IO Power Supply
-> +
-> + stby-gpios:
-> +   maxItems: 1
-> +   description: Standby pin, Low active
-> +
-> + reset-gpios:
-> +   maxItems: 1
-> +   description: Hardware reset, Low active
-> +
-> + ports:
-> +   type: object
-> +
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: |
-> +          DSI Input. The remote endpoint phandle should be a
-> +	  reference to a valid mipi_dsi_host device node.
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for LVDS output (panel or connector).
-> +
-> +      required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - dsi-lanes
-> + - vdd-supply
-> + - vddio-supply
-> + - stby-gpios
-> + - reset-gpios
-> + - ports
-> +
-> +examples:
-> + - |
-> +   i2c@78b8000 {
-> +	/* On High speed expansion */
-> +	label = "HS-I2C2";
-> +	status = "okay";
-> +
-> +	tc_bridge: bridge@f {
-> +		status = "okay";
-> +
-> +		compatible = "toshiba,tc358775";
-> +		reg = <0x0f>;
-> +
-> +		tc,dsi-lanes = <4>;
-> +		tc,dual-link = <0>;
-> +
-> +		vdd-supply = <&pm8916_l2>;
-> +		vddio-supply = <&pm8916_l6>;
-> +
-> +		stby-gpio = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-> +		reset-gpio = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				d2l_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				d2l_out: endpoint {
-> +					remote-endpoint = <&panel_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +  };
-> +
-> +  panel: auo,b101xtn01 {
-> +		status = "okay";
-> +		compatible = "auo,b101xtn01", "panel-lvds";
-> +		power-supply = <&pm8916_l14>;
-> +
-> +		width-mm = <223>;
-> +		height-mm = <125>;
-> +
-> +		data-mapping = "jeida-24";
-> +
-> +		panel-timing {
-> +			/* 1366x768 @60Hz */
-> +			clock-frequency = <72000000>;
-> +			hactive = <1366>;
-> +			vactive = <768>;
-> +			hsync-len = <70>;
-> +			hfront-porch = <20>;
-> +			hback-porch = <0>;
-> +			vsync-len = <42>;
-> +			vfront-porch = <14>;
-> +			vback-porch = <0>;
-> +		};
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&d2l_out>;
-> +			};
-> +		};
-> + };
-> +
-> +  mdss@1a00000 {
-> +	status = "okay";
-> +
-> +	mdp@1a01000 {
-> +		status = "okay";
-> +	};
-> +
-> +	dsi@1a98000 {
-> +		status = "okay";
-> +		..
-> +		ports {
-> +			port@1 {
-> +				dsi0_out: endpoint {
-> +					remote-endpoint = <&d2l_in>;
-> +					data-lanes = <0 1 2 3>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	dsi-phy@1a98300 {
-> +		status = "okay";
-> +		..
-> +	};
-> + };
-
-
+> > +};
+> > +
+> >  static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
+> >       GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
+> >            CLK_SET_RATE_PARENT, 0),
+> > @@ -1376,12 +1387,23 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
+> >       .pd_name        = "MAU",
+> >  };
+> >
+> > +static const struct exynos5_subcmu_info exynos5x_fsys_subcmu = {
+> > +     .div_clks       = exynos5x_fsys_div_clks,
+> > +     .nr_div_clks    = ARRAY_SIZE(exynos5x_fsys_div_clks),
+> > +     .gate_clks      = exynos5x_fsys_gate_clks,
+> > +     .nr_gate_clks   = ARRAY_SIZE(exynos5x_fsys_gate_clks),
+> > +     .suspend_regs   = exynos5x_fsys_suspend_regs,
+> > +     .nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys_suspend_regs),
+> > +     .pd_name        = "FSYS",
+> > +};
+> > +
+> >  static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
+> >       &exynos5x_disp_subcmu,
+> >       &exynos5x_gsc_subcmu,
+> >       &exynos5x_g3d_subcmu,
+> >       &exynos5x_mfc_subcmu,
+> >       &exynos5x_mscl_subcmu,
+> > +     &exynos5x_fsys_subcmu,
+> >  };
+> >
+> >  static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+> > @@ -1391,6 +1413,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+> >       &exynos5x_mfc_subcmu,
+> >       &exynos5x_mscl_subcmu,
+> >       &exynos5800_mau_subcmu,
+> > +     &exynos5x_fsys_subcmu,
+> >  };
+> >
+> >  static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
+> > --
+> > 2.25.1
+> >
