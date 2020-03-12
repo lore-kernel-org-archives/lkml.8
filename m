@@ -2,279 +2,80 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B2EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7A4C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5C620674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:56:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXDxDK6K"
+	by mail.kernel.org (Postfix) with ESMTP id 503A620674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgCLL4o (ORCPT
+        id S1727050AbgCLL5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:56:44 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39118 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgCLL4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:56:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f7so5955355wml.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 04:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rJDNkkMyLt++MfdE5QeVh3NFRRpIPEAcEdxBqUZos50=;
-        b=xXDxDK6K7pQfhlQCDH3+o4d1FUuXvdvhP9UNBUpOBIRcMjDY8VAWK6tmjTCb0Ret0Y
-         ZRbRgAB8iqebfQwvLM4y6YE3TGDqrd+z1YpoYQvoXz9N4mEAYM+fK0fNJOgkzMTfFA7a
-         LdoHJfvbhta1YDdjBOfsp5vuPdrxlxZ0/MGBmlDWjN8SbBj350FFyQuaV+No0oOnBmES
-         Po32DfaW8HYX90leCS7n5s7xshLVd3GDNAgBWkcWb/M+5Z2gAbGshc+m1TD08LZUMxTn
-         OJ6uICHKITesdt2082Owu2qdzcpkW4nXfBpRuCvcAO0VlFLsRDYzR8ne/AYYVRfkYTkC
-         uhyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=rJDNkkMyLt++MfdE5QeVh3NFRRpIPEAcEdxBqUZos50=;
-        b=jhy2PpTo8YT3KIGE1fynPiD/nXuUXFiHFtUH2nkOaVKbOoS7LgX8ftBlcV0hPoMRop
-         KLwWITed74yl1YOvCoAeHk6QV4uUNGRfPHU/RPY+gwWV1cpjlWd4JwtOiaja4kxpquEP
-         9NSfzoT/yyXzgpYeq0YLyddv/tyBmgq1qJvuvR4VOFR3WuOBdxPm04uVecgTjOFRIkoX
-         AtwMfrYKrsDsDffUwRzsf2snxK5SmrKDu2pJInG6+PUtRTq/Jyv64zZ5DjoNXTgaarFM
-         Mv9IG1RjwvAqj8RIAaH8XRcwVP3bynmu2Kr7bLIjQvwi1kgMZZ1VJJTREI4iRxPNr5Y1
-         PxKQ==
-X-Gm-Message-State: ANhLgQ3zlHVmr2kyOIOndBifVZOm+YXIfEaRApCufMXz2FFdjlihWVIW
-        Jucj+zVjIHCXEJp6rACI5vMOQQ==
-X-Google-Smtp-Source: ADFU+vuzPrEVi/rhEsv9TKRmP5aW5jSY602qVUSZDPO0D9y9+9vxyIdnLl0Zh97fA10d8OVZJVB2Tg==
-X-Received: by 2002:a05:600c:2909:: with SMTP id i9mr4026270wmd.132.1584014200594;
-        Thu, 12 Mar 2020 04:56:40 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f? ([2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f])
-        by smtp.googlemail.com with ESMTPSA id s2sm11865196wmj.15.2020.03.12.04.56.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 04:56:40 -0700 (PDT)
-Subject: Re: [PATCH 1/2] thermal: qoriq: Use devm_add_action_or_reset() to
- handle all cleanups
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1583903252-2058-1-git-send-email-Anson.Huang@nxp.com>
- <c4c2d976-4fe6-bdf3-e110-90d1600566a3@linaro.org>
- <DB3PR0402MB3916BF7EF180809EC374CC7CF5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
- CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
- U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
- UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
- KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
- ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
- 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
- UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
- d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
- 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
- z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
- Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
- 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
- 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
- eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
- NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
- 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
- gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
- qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
- OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
- gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
- 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
- PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
- F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
- WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
- qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
- l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
- BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
- 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
- eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
- t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
- i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
- X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
- fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <831cd71d-04dc-834f-fa28-6091a186dce3@linaro.org>
-Date:   Thu, 12 Mar 2020 12:56:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 07:57:22 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:59748 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgCLL5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:57:21 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jCMSg-0001Go-Td; Thu, 12 Mar 2020 22:57:16 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Mar 2020 22:57:14 +1100
+Date:   Thu, 12 Mar 2020 22:57:14 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.6
+Message-ID: <20200312115714.GA21470@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200224060042.GA26184@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB3916BF7EF180809EC374CC7CF5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224060042.GA26184@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2020 12:47, Anson Huang wrote:
-> Hi, Daniel
-> 
->> Subject: Re: [PATCH 1/2] thermal: qoriq: Use devm_add_action_or_reset() to
->> handle all cleanups
->>
->> On 11/03/2020 06:07, Anson Huang wrote:
->>> Use devm_add_action_or_reset() to handle all cleanups of failure in
->>> .probe and .remove, then .remove callback can be dropped.
->>
->> Is this change compatible with the tristate?
-> 
-> I think so, any concern need me to double confirm?
+Hi Linus:
 
-TBH, I discovered the function with your patch. My concern is if the
-callback is called when unloading the module.
+This push fixes a build problem with x86/curve25519.
 
+The following changes since commit c9cc0517bba9f0213f1e55172feceb99e5512daf:
 
->>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->>> ---
->>>  drivers/thermal/qoriq_thermal.c | 35
->>> ++++++++++++++---------------------
->>>  1 file changed, 14 insertions(+), 21 deletions(-)
->>>
->>> diff --git a/drivers/thermal/qoriq_thermal.c
->>> b/drivers/thermal/qoriq_thermal.c index 874bc46..67a8d84 100644
->>> --- a/drivers/thermal/qoriq_thermal.c
->>> +++ b/drivers/thermal/qoriq_thermal.c
->>> @@ -228,6 +228,14 @@ static const struct regmap_access_table
->> qoriq_rd_table = {
->>>  	.n_yes_ranges	= ARRAY_SIZE(qoriq_yes_ranges),
->>>  };
->>>
->>> +static void qoriq_tmu_action(void *p) {
->>> +	struct qoriq_tmu_data *data = p;
->>> +
->>> +	regmap_write(data->regmap, REGS_TMR, TMR_DISABLE);
->>> +	clk_disable_unprepare(data->clk);
->>> +}
->>> +
->>>  static int qoriq_tmu_probe(struct platform_device *pdev)  {
->>>  	int ret;
->>> @@ -278,6 +286,10 @@ static int qoriq_tmu_probe(struct platform_device
->> *pdev)
->>>  		return ret;
->>>  	}
->>>
->>> +	ret = devm_add_action_or_reset(dev, qoriq_tmu_action, data);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>>  	/* version register offset at: 0xbf8 on both v1 and v2 */
->>>  	ret = regmap_read(data->regmap, REGS_IPBRR(0), &ver);
->>>  	if (ret) {
->>> @@ -290,35 +302,17 @@ static int qoriq_tmu_probe(struct
->>> platform_device *pdev)
->>>
->>>  	ret = qoriq_tmu_calibration(dev, data);	/* TMU calibration */
->>>  	if (ret < 0)
->>> -		goto err;
->>> +		return ret;
->>>
->>>  	ret = qoriq_tmu_register_tmu_zone(dev, data);
->>>  	if (ret < 0) {
->>>  		dev_err(dev, "Failed to register sensors\n");
->>> -		ret = -ENODEV;
->>> -		goto err;
->>> +		return ret;
->>>  	}
->>>
->>>  	platform_set_drvdata(pdev, data);
->>>
->>>  	return 0;
->>> -
->>> -err:
->>> -	clk_disable_unprepare(data->clk);
->>> -
->>> -	return ret;
->>> -}
->>> -
->>> -static int qoriq_tmu_remove(struct platform_device *pdev) -{
->>> -	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
->>> -
->>> -	/* Disable monitoring */
->>> -	regmap_write(data->regmap, REGS_TMR, TMR_DISABLE);
->>> -
->>> -	clk_disable_unprepare(data->clk);
->>> -
->>> -	return 0;
->>>  }
->>>
->>>  static int __maybe_unused qoriq_tmu_suspend(struct device *dev) @@
->>> -365,7 +359,6 @@ static struct platform_driver qoriq_tmu = {
->>>  		.of_match_table	= qoriq_tmu_match,
->>>  	},
->>>  	.probe	= qoriq_tmu_probe,
->>> -	.remove	= qoriq_tmu_remove,
->>>  };
->>>  module_platform_driver(qoriq_tmu);
->>>
->>>
->>
->>
->> --
->>
->> <https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
->> linaro.org%2F&amp;data=02%7C01%7CAnson.Huang%40nxp.com%7C37ea3
->> 145642b47b4df7208d7c677e57d%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
->> C0%7C0%7C637196090558448813&amp;sdata=%2FCfH8GPxd57CDlau1pMcq
->> LH7GjGIh%2Fu%2Bfq7teGsS8KM%3D&amp;reserved=0> Linaro.org │ Open
->> source software for ARM SoCs
->>
->> Follow Linaro:
->> <https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
->> facebook.com%2Fpages%2FLinaro&amp;data=02%7C01%7CAnson.Huang%4
->> 0nxp.com%7C37ea3145642b47b4df7208d7c677e57d%7C686ea1d3bc2b4c6fa
->> 92cd99c5c301635%7C0%7C0%7C637196090558448813&amp;sdata=KBUWpT
->> 4quqo08r8YhbMVk%2Fyf2jIT1CKgc5i3jI9gCwo%3D&amp;reserved=0>
->> Facebook |
->> <https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Ftwitte
->> r.com%2F%23!%2Flinaroorg&amp;data=02%7C01%7CAnson.Huang%40nxp.c
->> om%7C37ea3145642b47b4df7208d7c677e57d%7C686ea1d3bc2b4c6fa92cd9
->> 9c5c301635%7C0%7C0%7C637196090558448813&amp;sdata=%2FEgeRMWd
->> qbbaOMl2Tfb%2BtLmfttqN1WcFbl9%2B5tXtOic%3D&amp;reserved=0>
->> Twitter |
->> <https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
->> linaro.org%2Flinaro-
->> blog%2F&amp;data=02%7C01%7CAnson.Huang%40nxp.com%7C37ea314564
->> 2b47b4df7208d7c677e57d%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7
->> C0%7C637196090558448813&amp;sdata=SXZow%2F0B%2BIgpfOfAUIG1NsR
->> mcHp868ve%2Ffkejg3ZDvE%3D&amp;reserved=0> Blog
-> 
+  crypto: chacha20poly1305 - prevent integer overflow on large input (2020-02-14 14:48:37 +0800)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
+
+for you to fetch changes up to 1579f1bc3b753d17a44de3457d5c6f4a5b14c752:
+
+  crypto: x86/curve25519 - support assemblers with no adx support (2020-03-05 18:28:09 +1100)
+
+----------------------------------------------------------------
+Jason A. Donenfeld (1):
+      crypto: x86/curve25519 - support assemblers with no adx support
+
+ arch/x86/Makefile           | 5 +++--
+ arch/x86/crypto/Makefile    | 7 ++++++-
+ include/crypto/curve25519.h | 6 ++++--
+ 3 files changed, 13 insertions(+), 5 deletions(-)
+
+Thanks,
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
