@@ -2,125 +2,152 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F4DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D45C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C2D206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zssgGwlH"
+	by mail.kernel.org (Postfix) with ESMTP id 04AC520716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgCLOGQ (ORCPT
+        id S1727496AbgCLOHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:06:16 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45790 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbgCLOGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:06:15 -0400
-Received: by mail-il1-f195.google.com with SMTP id p1so5537668ils.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pji13eSFjIMldkU9BYdIbo4HI44T8oed33naqFgVd6s=;
-        b=zssgGwlH8/VmLMRtLhaCwqZbq9RREsK0T5bf6PIvtt1VGFFLfPPnQnZejqOTYcE66h
-         YC0y2su0NF5zACw1HZZsr7rjtUkogTsWqTu6Vm6/ie+LuGi85xrZGApcNLASkl90rCNH
-         N3iKNDAKYS9oq8i9IEow8BJeJKPxUsJrlebRdwIF5eJPTF0cAwRj9ggXLmAxIDhdEZuG
-         PvnpPrEInwbqPNIjvL3PzflYawxDa3mZi2TgaKLvf7ECZzHSxJx3KAoa2ry7Pf7aKJ1S
-         y7gpjNa2PHKgoNp0XyIc9HwCBIQjRNDXD+/sV+kacNjm7ivwd82D7IAXuee/0UJ8BEOm
-         eHVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Pji13eSFjIMldkU9BYdIbo4HI44T8oed33naqFgVd6s=;
-        b=rQzng+XSHj2PiJgCQRj1db1jeZsvFymCjPsAgv4Ql7COA0U6gbnwijn6F/XNb5f5yQ
-         GwwgJJpRrSXf1+PkeBseWfc0H8bhuDWozYwHCDWruBCjoBo4pKe8myjOVYlDVwZSx8am
-         0efOyeLm4Z/5RnE6RGLLt0T3e16fmpIFIXM3FEglMRxX2TLlC+9Rw1QDqpQfR7c/aJjG
-         8x8rAISoe/pZ+dThtvBOlQNnrCwFkfx/HWKFpU8Knnb7OHt274VSr5vBOYh4zn8Y+rv9
-         pIxZUdC0/yLpAAznUNyGtis4rTL/4SOxNY1am7VFpQMxb7B28dirRQTl3t0guSNEmNiF
-         76dQ==
-X-Gm-Message-State: ANhLgQ1gYU9JzFinRCbABSUhamE5IZmOKAojS2rcd+VNIC/zS2UAzvRU
-        OLoj63EESfCo9lajEX/h9gzU8w==
-X-Google-Smtp-Source: ADFU+vu/XM+0n/FArOrrpYRuqpoofr0nhTgegl8nM9GcEZ0Y35AWlXD9wYups+i8jASk7u1s54i1cw==
-X-Received: by 2002:a92:c904:: with SMTP id t4mr959353ilp.209.1584021973514;
-        Thu, 12 Mar 2020 07:06:13 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d1sm6126275ilq.9.2020.03.12.07.06.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:06:12 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Add support for block disk resize notification
-To:     "Singh, Balbir" <sblbir@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Cc:     "hch@lst.de" <hch@lst.de>,
-        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "mst@redhat.com" <mst@redhat.com>
-References: <20200225200129.6687-1-sblbir@amazon.com>
- <f2b805c1a420a07aa9449ee0ef77766a10e9ff20.camel@amazon.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <05bb1606-4cf1-dba3-22a0-5f8624b43767@kernel.dk>
-Date:   Thu, 12 Mar 2020 08:06:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 10:07:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:35392 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgCLOHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:07:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99FD830E;
+        Thu, 12 Mar 2020 07:07:01 -0700 (PDT)
+Received: from [10.37.12.166] (unknown [10.37.12.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 594A53F534;
+        Thu, 12 Mar 2020 07:07:00 -0700 (PDT)
+Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
+ and delivery
+From:   Lukasz Luba <lukasz.luba@arm.com>
+To:     Cristian Marussi <cristian.marussi@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
+        Jonathan.Cameron@Huawei.com
+References: <20200304162558.48836-1-cristian.marussi@arm.com>
+ <20200304162558.48836-8-cristian.marussi@arm.com>
+ <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
+Message-ID: <ec3cc098-da70-f101-fe5c-29741c8f2a62@arm.com>
+Date:   Thu, 12 Mar 2020 14:06:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <f2b805c1a420a07aa9449ee0ef77766a10e9ff20.camel@amazon.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 9:03 PM, Singh, Balbir wrote:
-> On Tue, 2020-02-25 at 20:01 +0000, Balbir Singh wrote:
->> Allow block/genhd to notify user space about disk size changes using a
->> new helper set_capacity_revalidate_and_notify(), which is a wrapper
->> on top of set_capacity(). set_capacity_revalidate_and_notify() will only
->> notify
->> iff the current capacity or the target capacity is not zero and the
->> capacity really changes.
->>
->> Background:
->>
->> As a part of a patch to allow sending the RESIZE event on disk capacity
->> change, Christoph (hch@lst.de) requested that the patch be made generic
->> and the hacks for virtio block and xen block devices be removed and
->> merged via a generic helper.
->>
->> This series consists of 5 changes. The first one adds the basic
->> support for changing the size and notifying. The follow up patches
->> are per block subsystem changes. Other block drivers can add their
->> changes as necessary on top of this series. Since not all devices
->> are resizable, the default was to add a new API and let users
->> slowly convert over as needed.
->>
->> Testing:
->> 1. I did some basic testing with an NVME device, by resizing it in
->> the backend and ensured that udevd received the event.
->>
->>
->> Changelog v2:
->> - Rename disk_set_capacity to set_capacity_revalidate_and_notify
->> - set_capacity_revalidate_and_notify can call revalidate disk
->>   if needed, a new bool parameter is passed (suggested by Bob Liu)
->>
+
+
+On 3/12/20 1:51 PM, Lukasz Luba wrote:
+> Hi Cristian,
 > 
-> Ping? It's not an urgent patchset, I am happy to wait if nothing else is
-> needed.
+> just one comment below...
+> 
+> On 3/4/20 4:25 PM, Cristian Marussi wrote:
+>> Add core SCMI Notifications dispatch and delivery support logic which is
+>> able, at first, to dispatch well-known received events from the RX ISR to
+>> the dedicated deferred worker, and then, from there, to final deliver the
+>> events to the registered users' callbacks.
+>>
+>> Dispatch and delivery is just added here, still not enabled.
+>>
+>> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+>> ---
+>> V3 --> V4
+>> - dispatcher now handles dequeuing of events in chunks (header+payload):
+>>    handling of these in_flight events let us remove one unneeded memcpy
+>>    on RX interrupt path (scmi_notify)
+>> - deferred dispatcher now access their own per-protocol handlers' table
+>>    reducing locking contention on the RX path
+>> V2 --> V3
+>> - exposing wq in sysfs via WQ_SYSFS
+>> V1 --> V2
+>> - splitted out of V1 patch 04
+>> - moved from IDR maps to real HashTables to store event_handlers
+>> - simplified delivery logic
+>> ---
+>>   drivers/firmware/arm_scmi/notify.c | 334 ++++++++++++++++++++++++++++-
+>>   drivers/firmware/arm_scmi/notify.h |   9 +
+>>   2 files changed, 342 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/firmware/arm_scmi/notify.c 
+>> b/drivers/firmware/arm_scmi/notify.c
+> 
+> [snip]
+> 
+>> +
+>> +/**
+>> + * scmi_notify  - Queues a notification for further deferred processing
+>> + *
+>> + * This is called in interrupt context to queue a received event for
+>> + * deferred processing.
+>> + *
+>> + * @handle: The handle identifying the platform instance from which the
+>> + *        dispatched event is generated
+>> + * @proto_id: Protocol ID
+>> + * @evt_id: Event ID (msgID)
+>> + * @buf: Event Message Payload (without the header)
+>> + * @len: Event Message Payload size
+>> + * @ts: RX Timestamp in nanoseconds (boottime)
+>> + *
+>> + * Return: 0 on Success
+>> + */
+>> +int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 
+>> evt_id,
+>> +        const void *buf, size_t len, u64 ts)
+>> +{
+>> +    struct scmi_registered_event *r_evt;
+>> +    struct scmi_event_header eh;
+>> +    struct scmi_notify_instance *ni = handle->notify_priv;
+>> +
+>> +    /* Ensure atomic value is updated */
+>> +    smp_mb__before_atomic();
+>> +    if (unlikely(!atomic_read(&ni->enabled)))
+>> +        return 0;
+>> +
+>> +    r_evt = SCMI_GET_REVT(ni, proto_id, evt_id);
+>> +    if (unlikely(!r_evt))
+>> +        return -EINVAL;
+>> +
+>> +    if (unlikely(len > r_evt->evt->max_payld_sz)) {
+>> +        pr_err("SCMI Notifications: discard badly sized message\n");
+>> +        return -EINVAL;
+>> +    }
+>> +    if (unlikely(kfifo_avail(&r_evt->proto->equeue.kfifo) <
+>> +             sizeof(eh) + len)) {
+>> +        pr_warn("SCMI Notifications: queue full dropping proto_id:%d  
+>> evt_id:%d  ts:%lld\n",
+>> +            proto_id, evt_id, ts);
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    eh.timestamp = ts;
+>> +    eh.evt_id = evt_id;
+>> +    eh.payld_sz = len;
+>> +    kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
+>> +    kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
+>> +    queue_work(r_evt->proto->equeue.wq,
+>> +           &r_evt->proto->equeue.notify_work);
+> 
+> Is it safe to ignore the return value from the queue_work here?
 
-It doesn't apply to the 5.7 branches, can you resend against for-5.7/block?
+and also from the kfifo_in
 
--- 
-Jens Axboe
-
+> 
+> Regards,
+> Lukasz
+> 
+> 
