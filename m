@@ -2,112 +2,176 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C08DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551A6C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E19C20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235C5206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="nxCn1GMr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SEyYl1P1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgCLQ7N (ORCPT
+        id S1726510AbgCLQ7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:59:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40791 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLQ7M (ORCPT
+        Thu, 12 Mar 2020 12:59:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43854 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgCLQ7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:59:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e26so7151992wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:59:10 -0700 (PDT)
+        Thu, 12 Mar 2020 12:59:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b2so2199655wrj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9u3p6ZmBDu4sIjHctN+CfxncVqg9SYaJoyC+lPFb9Ms=;
-        b=nxCn1GMrumQN8srKFBAE2N3qbzxA/NtcaO6Fn8Prh1MoClGLNmKOmVXYiBaB3s602e
-         8jRx2SsGyy1HgF2JaWmpR5tjvcP9LrHbJd04GfwPIVjBVBa84eg5mNf1qBt5Yd+fjpAY
-         pXmamcvkkdzpflQPqlsnYDRM5/EBrk1jog3wmNAAwDFx4EFjwQssetoQA8fb2yrPQ/43
-         H2CvuYYaNNlPRSq9lfQY4YOSiRar3e0klDTqxiZBAbVpWM4+eyViY5JEixsyDeAFiGVC
-         m2BAqs1ClUhW0MydXcVHqZ12NJUvuc7K/2SHNrXw9vAd0DxfLMn/8X91W0Z51c6BHhPF
-         pVHA==
+        d=linaro.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=nQC0QSzFNBjeDFgkasDXcXEkr8IK6cRuABug8n4HpyY=;
+        b=SEyYl1P17U723AAa+CbznLSA1uyOrnLUfVk1NNG23zxnCcAGG9rAtjiv3FevqOfdf/
+         u+/UQSk72yceMW65Ir5wjscdMBuxIoTu/zT1/k1q6JXUJoycBOLqqaFj/kGjqeYA7M14
+         D5/Qfq5zW/x8JkjiWQIIqxvj9mL52fZ82FKOj2Q+zR3Zq5Egw3ApSCb7JLMBp41Wwgyu
+         G8hSeY8oZBzc7qS7UECsz2QtI4oJEe/akxiNyk90adBToog6GAo/qxGNjrDp0weVWczl
+         RR4qVBmdowZm6gKlFJNNRVJXmQYAbiKF1kc2O2+WvebXV0VAXnzSS5/SyGPrLI7Dwm9J
+         nlmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9u3p6ZmBDu4sIjHctN+CfxncVqg9SYaJoyC+lPFb9Ms=;
-        b=GfpaI7XE1VSzdVlHHOXw/UzMbKqFMYEQO3Kg4toMw3U6Y4L0cJvm61Inwyo4E6vmtQ
-         NacCkZmYZvuKKtGk4YlN42k6wF7e0NGpMEEIvWqJUWidvO2AZ5FTx/xAnp//LCE5pY50
-         b6g8Gbe537OGsjMzYXNNUzsO/wPQM4c2jYjCPu3FIRfSuhYc5rUAjBrh6lcn4dMiylec
-         sbqUDcZfsFh3cFiFNI0x7142ekKow8bvOuGM1qJu+JdGNJ0Yv5OL5vywttqAB10gh0T4
-         QuxcQTzvucQRXD+yaf9inIC/KDMTnvv+gpVpZ6fEgig442XL63RHuQaGQ2H20NXFD98L
-         S9Vw==
-X-Gm-Message-State: ANhLgQ1IvBGG3YfN25D5EbI3u+sbiqWoDXW1orxE9igD+pI+pVB4a7e5
-        3ILOr56VjMZXikRtLTvaS2QZ/OJR3uKSJ7p1MnbFmG7T
-X-Google-Smtp-Source: ADFU+vvF1OEjUrxCcQCohiqEKXY+aTMPA4Ys3tQ+COKaT2An0jT2NmD917DJ1THflYn43DuAfSnhdWXjrJZwVmsS6K8=
-X-Received: by 2002:a05:600c:278a:: with SMTP id l10mr5450191wma.45.1584032350180;
- Thu, 12 Mar 2020 09:59:10 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nQC0QSzFNBjeDFgkasDXcXEkr8IK6cRuABug8n4HpyY=;
+        b=SkCJx5jD/UV5V0mN38TW7Qbqkzh+2LJxQC6ZHPHQTSp9vMcKeDqLVTJ0kwpsaC+PWi
+         wmC5QH/RC89u8DtXxmHNAaqbA72cOXcylQ+S4T1Qw/EhfGiLHG45g+OdReXTn4D1bKEQ
+         zaBnvvg4Kuu5iSv9s11DKCABLcRKgqb65TuD3UCLXF9AYfSSnirHYrkBDBItt/FrTCBI
+         PRGZLNUVcMNVSuOsly/zE2ZMCM5V69SY6HIzZpAwVEOrieTKQbp0vDrhuV+Dt4o4RW8o
+         XFkqPRwO6QxduNLCFhqA1pmc8iYxFIyQNweuOX2xha0psIk78rFopYXFFwYeO4zad4NX
+         ERCg==
+X-Gm-Message-State: ANhLgQ0B+rjlkz/9tX2kjRFzAezkPtQh4ZapznCbp+zRHt+H+vOaeBaE
+        1P8oYwHFbVZCIs24HSIkDDikbw==
+X-Google-Smtp-Source: ADFU+vtsjvk5wo4ek2GJmozMoUUD/QFXQN2Lb/I85PUHa/iiHKI/CHcnqR1KBbMsE0qJbK4lelEbSA==
+X-Received: by 2002:a5d:46cc:: with SMTP id g12mr11829040wrs.42.1584032369018;
+        Thu, 12 Mar 2020 09:59:29 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id 7sm1714719wmf.20.2020.03.12.09.59.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 09:59:28 -0700 (PDT)
+Subject: Re: mmotm 2020-03-11-21-11 uploaded (sound/soc/codecs/wcd9335.c)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        masahiroy@kernel.org
+References: <20200312041232.wBVu2sBcq%akpm@linux-foundation.org>
+ <c6c4e6fb-30f3-60a1-6bc0-25daa84d479d@infradead.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <a8343b1f-7e87-d34d-a71b-86d20a8a3aff@linaro.org>
+Date:   Thu, 12 Mar 2020 16:59:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAJ+vNU0qVnCkWpG_NKNQTdYf5LJpRrgOeWX0xH=GgavKJ1QNwg@mail.gmail.com>
- <0c3c16c770d21e5ad2276c83feb27ce4@kernel.org>
-In-Reply-To: <0c3c16c770d21e5ad2276c83feb27ce4@kernel.org>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Thu, 12 Mar 2020 09:58:57 -0700
-Message-ID: <CAJ+vNU0VEgO1gWK11Wi0RPwU95EsqkKZSH=EMVhZoQUxikLOJg@mail.gmail.com>
-Subject: Re: CN80xx (octeontx/thunderx) breakage from f2d8340
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Sunil Goutham <sgoutham@cavium.com>,
-        Jan Glauber <jglauber@cavium.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Sunil Goutham <sgoutham@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c6c4e6fb-30f3-60a1-6bc0-25daa84d479d@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 1:55 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> Hi Tim,
->
-> On 2020-03-11 20:17, Tim Harvey wrote:
-> > Marc,
-> >
-> > Im seeing a failure to boot on an octeontx CN80xx (thunderx) due to
-> > f2d8340 ("irqchip/gic-v3: Add GICv4.1 VPEID size discovery"). I'm not
-> > sure if something is hanging, I just get no console output from the
-> > kernel.
->
-> That's odd. It probably means that a SError has been taken to EL3,
-> and the firmware is not equipped to deal with it. Great stuff!
->
-> > Is there perhaps something in the dt that requires change? The
-> > board/dts I'm using is:
-> > https://github.com/Gateworks/dts-newport/blob/sdk-10.1.1.0-newport/gw6404-linux.dts
-> > https://github.com/Gateworks/dts-newport/blob/sdk-10.1.1.0-newport/gw640x-linux.dtsi
-> > https://github.com/Gateworks/dts-newport/blob/sdk-10.1.1.0-newport/cn81xx-linux.dtsi
-> >
-> > Any ideas? I've cc'd the Cavium/Marvell folk to see if they know
-> > what's up or can reproduce on some of their hardware.
->
-> This is most probably Cavium erratum 38539. Please give [1] a go and
-> let me know whether it helps by replying to the patch.
->
->
-> [1] https://lore.kernel.org/lkml/20200311115649.26060-1-maz@kernel.org/
+Adding+ Masahiro Yamada for more inputs w.r.t kconfig.
 
-Marc,
 
-Yup, this was it! We need to make sure this gets merged into 5.6. I
-didn't have the original patch but attempted to reply via mailto:
-link.
+Kconfig side we have:
 
-Best regards,
+config SND_SOC_ALL_CODECS
+         tristate "Build all ASoC CODEC drivers"
+         imply SND_SOC_WCD9335
 
-Tim
+config SND_SOC_WCD9335
+         tristate "WCD9335 Codec"
+         depends on SLIMBUS
+	...
+
+The implied symbol SND_SOC_WCD9335 should be set based on direct 
+dependency, However in this case, direct dependency SLIMBUS=m where as 
+SND_SOC_WCD9335=y. I would have expected to be SND_SOC_WCD9335=m in this 
+case.
+
+Is this a valid possible case or a bug in Kconfig?
+
+
+Thanks,
+srini
+
+On 12/03/2020 15:03, Randy Dunlap wrote:
+> On 3/11/20 9:12 PM, Andrew Morton wrote:
+>> The mm-of-the-moment snapshot 2020-03-11-21-11 has been uploaded to
+>>
+>>     http://www.ozlabs.org/~akpm/mmotm/
+>>
+>> mmotm-readme.txt says
+>>
+>> README for mm-of-the-moment:
+>>
+>> http://www.ozlabs.org/~akpm/mmotm/
+>>
+>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>> more than once a week.
+>>
+>> You will need quilt to apply these patches to the latest Linus release (5.x
+>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>> http://ozlabs.org/~akpm/mmotm/series
+>>
+>> The file broken-out.tar.gz contains two datestamp files: .DATE and
+>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+>> followed by the base kernel version against which this patch series is to
+>> be applied.
+>>
+>> This tree is partially included in linux-next.  To see which patches are
+>> included in linux-next, consult the `series' file.  Only the patches
+>> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+>> linux-next.
+>>
+>>
+>> A full copy of the full kernel tree with the linux-next and mmotm patches
+>> already applied is available through git within an hour of the mmotm
+>> release.  Individual mmotm releases are tagged.  The master branch always
+>> points to the latest release, so it's constantly rebasing.
+>>
+>> 	https://github.com/hnaz/linux-mm
+>>
+>> The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+>> contains daily snapshots of the -mm tree.  It is updated more frequently
+>> than mmotm, and is untested.
+>>
+>> A git copy of this tree is also available at
+>>
+>> 	https://github.com/hnaz/linux-mm
+> 
+> 
+> on x86_64:
+> 
+> ld: sound/soc/codecs/wcd9335.o: in function `wcd9335_trigger':
+> wcd9335.c:(.text+0x451): undefined reference to `slim_stream_prepare'
+> ld: wcd9335.c:(.text+0x465): undefined reference to `slim_stream_enable'
+> ld: wcd9335.c:(.text+0x48f): undefined reference to `slim_stream_unprepare'
+> ld: wcd9335.c:(.text+0x4a3): undefined reference to `slim_stream_disable'
+> ld: sound/soc/codecs/wcd9335.o: in function `wcd9335_slim_status':
+> wcd9335.c:(.text+0x23df): undefined reference to `of_slim_get_device'
+> ld: wcd9335.c:(.text+0x2414): undefined reference to `slim_get_logical_addr'
+> ld: wcd9335.c:(.text+0x2427): undefined reference to `__regmap_init_slimbus'
+> ld: wcd9335.c:(.text+0x245f): undefined reference to `__regmap_init_slimbus'
+> ld: sound/soc/codecs/wcd9335.o: in function `wcd9335_hw_params':
+> wcd9335.c:(.text+0x3e05): undefined reference to `slim_stream_allocate'
+> ld: sound/soc/codecs/wcd9335.o: in function `wcd9335_slim_driver_init':
+> wcd9335.c:(.init.text+0x15): undefined reference to `__slim_driver_register'
+> ld: sound/soc/codecs/wcd9335.o: in function `wcd9335_slim_driver_exit':
+> wcd9335.c:(.exit.text+0x11): undefined reference to `slim_driver_unregister'
+> 
+> 
+> Full randconfig file is attached.
+> 
