@@ -2,97 +2,165 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TRACKER_ID autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA354C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F56AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D41A206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F96B206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="bkeEHHZB"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="glCnOijC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgCLMW1 (ORCPT
+        id S1727036AbgCLMXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:22:27 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:34190 "EHLO web0081.zxcs.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgCLMW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:22:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Message-ID:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Lfs0z/+L0TSule7hHn2nDAOGMSOIAkxM0mBa2N+gqjI=; b=bkeEHHZBvkZiglRESydGIwO20
-        weVZ3patJWJi0cvR5/syyzc+uHlgg6uan/zJcW6zVRFFRPJ6Q8bDLdr7ESeNW3hTfkxtN00/EIS+g
-        l87uXsSridQ3jVJnEnD5YmkJjxlT4teuILe6lthyYHv6rnzPaeRA5nNPAXJspn7IQTlMXWYNMGj3Y
-        PCtR+EF5IFvC7wu8JqK77gTwj2q5bRId7EtMRyitcz4KmX60KHs7IkC30dLI3YLdQy8n/6AGFWRdF
-        eRLdCZk41tk0ZT/z4EdptxiDvMdlmDzUrlJ4zSP5B6DYkl3GvewdR/8fkpyNfeYa4qUHBRqyz1dQW
-        4vUIiqu6A==;
-Received: from spamrelay.zxcs.nl ([185.104.28.12]:33708 helo=mail-slave01.zxcs.nl)
-        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jCMqr-002bnY-GC; Thu, 12 Mar 2020 13:22:13 +0100
+        Thu, 12 Mar 2020 08:23:15 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:49234 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCLMXP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:23:15 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200312122310euoutp0187e38ee15bf364e5b53a575cce99dc9d~7jfgmLb3l1872918729euoutp015
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200312122310euoutp0187e38ee15bf364e5b53a575cce99dc9d~7jfgmLb3l1872918729euoutp015
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584015790;
+        bh=KzxZBLdgOdzsUcEhVdsz8kOz2UhbX/Mn/GC75XiJdQo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=glCnOijCbw/nuM6NsdMmMVIECm1MiCzZUj2sSPIEi5DKYnfaFek4Jj6IfPgllMHzg
+         g8GOID0f8wZKig1jvMfBGexf3ugTdTzqDc9LtWOZ3iLzy1GoQNKAj4E8gBEswIEAIi
+         ZqiTvYCJF2VOh1PFfUiTf8OraQvMlM6dWLcol+vU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200312122310eucas1p248d7df962a275fd68002c1b663bd5414~7jfgZ9dYs2610326103eucas1p2c;
+        Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 83.31.60679.EA92A6E5; Thu, 12
+        Mar 2020 12:23:10 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200312122310eucas1p1165dfbb441a2f266968e1e00e2844d04~7jff9o2Sa0606306063eucas1p1g;
+        Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200312122310eusmtrp15834f53c8b385a8c2fde9062d825ae9b~7jff87kn_2583225832eusmtrp1k;
+        Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-15-5e6a29aeb3b9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 6D.45.08375.EA92A6E5; Thu, 12
+        Mar 2020 12:23:10 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200312122309eusmtip1bf6446eaa137bee6ae0461c1c87828a4~7jffe4j6A2241122411eusmtip1t;
+        Thu, 12 Mar 2020 12:23:09 +0000 (GMT)
+Subject: Re: [PATCH] ARM: boot: Fix ATAGs with appended DTB
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <f30208dc-e74a-cae7-95e6-d99220d9735c@samsung.com>
+Date:   Thu, 12 Mar 2020 13:23:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAMuHMdV9VyS3kBnhFT-5ry_O-aRafq-8Yor0xxxnjGqNQiSgZw@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Mar 2020 13:22:13 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com
-Subject: pwm: sun4i: pwm-backlight not working since 5.6-rc1
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut3t3d11OrvN1sigapBjlo/rjliYGJbcosIgMY+qqy9R01m5a
+        RpK9RbSmFurUlB6YplazNKZCTnSWNrWFlkkpmWg08VXks9xulv993znfOd/54JCYtFvoTkar
+        TrNqlSJWRojx6uap9o2VXjHhvsYZT3ouq1lEF+Vk4HRZTT1GF+ZnIXqwp15A6750CWmzvoCg
+        nw+PCGjD7XpE3xkaIuiPmdkoaDlj7urEmJnpLMQMtlwnmMw3GxlDYypiqu5fYDIujxDMzTlf
+        5mdbJs5M6FaHiMPEAcfZ2OhEVu0TGCmOSjf3CE/m2J8d6J0RpaBxuzRkRwK1BT63j6M0JCal
+        1EMELV8nRTyZRPCjtBzjyQQCfY1FtDhSPVWM840SBE36XCFPLAj6HnfgVpUT5Q/G/lqBFTtT
+        Svh18bZtL0Y9wmDwZqHQ2iAoP0izpBFWLKECQdP9zjaMU+sg29hl07hQcsgvbcR5jSO8yhuw
+        YTtqP+j6hm0Yo9ZAjaUA47Eb9AwUCaxmQI2JIP31LYK/eyfMax4IeewE34zP/uZZBa3Z6Tg/
+        cBlBv6lCxJN0BOZLuYhX+UOvaXphE7lg4QWP9T58eQdUf69B1jJQDvDe4sgf4QBZ1TkYX5ZA
+        6jUpr/YArbHyn21Dx1tMg2TaJdG0S+Jol8TR/vctRngZcmMTuDgly21SsWe8OUUcl6BSeh+L
+        j9OhhXdrnTdOvkD62aMGRJFIZi/xdY0JlwoViVxSnAEBicmcJRFrlOFSyXFF0jlWHR+hTohl
+        OQNaSeIyN8nmu8NyKaVUnGZPsOxJVr3YFZB27ikomKgbPjLb9nsX2TCZ4vZbberlXJ8+7Qyt
+        UB4y4h9CkPyK9CopD11WkFzqqz3l0hhkmkmoGuxPjRkrWrnr/O4VX5yaWrU+mvJgzwN5ReNr
+        Kz69vHeC1NbdGH2iOrx3T21YS3OyZt9We7NHbvb8wf5t2zfY7w4oMOnHnSKp0WjHkjAZzkUp
+        /NZjak7xBwUhp8RqAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsVy+t/xu7rrNLPiDP60clr8nXSM3WL+9F4W
+        i1Xb9zJbzJ09idHi2a29TBabHl9jtbi8aw6bxdaX75gsDk3dy2gx78ULNovbEyczOnB7XL52
+        kdnj969JjB7PTrSzeUw8q+tx6HAHo8fmJfUevc3v2Dz6/xp4fDszkcXj8ya5AK4oPZui/NKS
+        VIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyey7dYC6bzVDy5
+        85u9gfETZxcjJ4eEgInEtp8LWLoYuTiEBJYySiz9/I8VIiEjcXJaA5QtLPHnWhcbRNFrRon9
+        z1+zgySEBawljj/czQRiiwikS7w++YUZpIhZYC2zxISpMxghOrYyS/xYep4FpIpNwFCi6y3I
+        KE4OXgE7iQnXr4DFWQRUJSYfvwa2TlQgVuLGzA4miBpBiZMzn4DVcAoESmx68BLMZhYwk5i3
+        +SEzhC0vsf3tHChbXOLWk/lMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy021CtOzC0u
+        zUvXS87P3cQIjOZtx35u3sF4aWPwIUYBDkYlHl4Dsaw4IdbEsuLK3EOMEhzMSiK88fLpcUK8
+        KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0w0eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNIT
+        S1KzU1MLUotg+pg4OKUaGBkLngpHnrNfep+b6Xrt5F39i05nTfVfWKO3+7fMlunvuPveWUt1
+        +8px31c3Mzc4sFprNaPBJo5Th1gUeH8+vHMoYmuUZ1XmgVLJ9u+foozMH3fJaqRVNcSarNCq
+        rnXZ6fH1l+/5HyZF76+wblRiLNyYZ/twZnvql9cLuG4XM++1e/1yxn/n50osxRmJhlrMRcWJ
+        AKNhF/r8AgAA
+X-CMS-MailID: 20200312122310eucas1p1165dfbb441a2f266968e1e00e2844d04
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83
+References: <CGME20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83@eucas1p1.samsung.com>
+        <20200225144749.19815-1-geert+renesas@glider.be>
+        <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
+        <20200226174905.GE25745@shell.armlinux.org.uk>
+        <CAMuHMdW1ojYyWXZpzgiy8PrZnR2PQ9n3SEDrQ7hFFUg0j-jegg@mail.gmail.com>
+        <20200226175723.GF25745@shell.armlinux.org.uk>
+        <CAMuHMdV9VyS3kBnhFT-5ry_O-aRafq-8Yor0xxxnjGqNQiSgZw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi,
 
-I am working on adding an old A10 device to mainline and noticed an 
-issue when testing on 5.5.8 vs master.
+On 26.02.2020 21:48, Geert Uytterhoeven wrote:
+> Hi Russell,
+>
+> On Wed, Feb 26, 2020 at 6:57 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+>> On Wed, Feb 26, 2020 at 06:56:06PM +0100, Geert Uytterhoeven wrote:
+>>> On Wed, Feb 26, 2020 at 6:49 PM Russell King - ARM Linux admin
+>>> <linux@armlinux.org.uk> wrote:
+>>>> On Wed, Feb 26, 2020 at 07:35:14AM +0100, Marek Szyprowski wrote:
+>>>>> On 25.02.2020 15:47, Geert Uytterhoeven wrote:
+>>>>>> At early boot, register r8 may contain an ATAGs or DTB pointer.
+>>>>>> When an appended DTB is found, its address is stored in r8, for
+>>>>>> extraction of the RAM base address later.
+>>>>>>
+>>>>>> However, if r8 contained an ATAGs pointer before, that pointer will be
+>>>>>> lost, and the provided ATAGs is no longer folded into the provided DTB.
+>>>>>>
+>>>>>> Fix this by leaving r8 untouched.
+>>>>>>
+>>>>>> Fixes: 137e522593918be2 ("ARM: 8960/1: boot: Obtain start of physical memory from DTB")
+>>>>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>> The original commit hasn't been submitted, so it can be fixed before it
+>>>> hits mainline if you want.  Let me know what you want to do.  Thanks.
+>>> Fixing the original is fine for me, of course.
+>>> Thanks!
+>> Please submit a replacement for 8960/1, thanks.
+> Done.
 
-Since 5.6-rc1, I can't control the brightness of my LCD backlight 
-anymore. The backlight stays on full brightness instead. I am 
-controlling the brightness value via sysfs for testing.
+Gentle ping. This fix is still not present in linux-next for over 2 weeks...
 
-I am not sure if this is a general pwm-sun4i issue or if it is related 
-to the backlight. However I narrowed it down to one commit for 
-pwm-sun4i:
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-
-If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on 
-master, the backlight works fine. Unfortunately, due to my lack of 
-kernel experience, I can't see how the commit above broke it.
-
-Not sure if it helps, but the binding for the backlight is as follows:
-
-backlight: backlight {
-     compatible = "pwm-backlight";
-     pwms = <&pwm 0 100000 PWM_POLARITY_INVERTED>;
-     power-supply = <&reg_vbat>;
-     enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-     brightness-levels = <0 30 40 50 60 70 80 90 100>;
-     default-brightness-level = <8>;
-};
-
-Please let me know if there is anything else which might be helpful to 
-know or anything I can test.
-
-Regards,
-Pascal
