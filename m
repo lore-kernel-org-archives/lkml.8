@@ -2,164 +2,127 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D561BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A70EC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC2A206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:40:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjKtfUCH"
+	by mail.kernel.org (Postfix) with ESMTP id 29917206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgCLPkR (ORCPT
+        id S1727685AbgCLPks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:40:17 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36522 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgCLPkR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:40:17 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m33so4702710qtb.3;
-        Thu, 12 Mar 2020 08:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qRfo0Jsmmm4U/AhlW7P8NwoHLU4zuGZhE4eLNUQ2+QI=;
-        b=bjKtfUCHe7SshAJRfRiHKJiAOfWCuYds+BUm2Ic7P4PVr5vYd9Rfa+cckPqDCC55+t
-         yD6FJBJQGxVdDsr6mWvB+jCljsNaGyJiaiUqfAcvSKwn4RTUKiRjl+2D0kUjaSZYZ/XY
-         zVZJ3Uc9oi0ZS4ATivBPNftm6zmtD5s5kjajFlUfOdy7PQrQMgGKmW6ZvrTjRCiXOinL
-         YQPjJ5mN+yo8u+2bMHHlH82i8vT5gLndH2JADfxHybOavy5KLgWCeegi49dDuXqxVpWB
-         3zovnESyVUNyTYwiZHhbez7gDkl8Yy8lFKI4QLGkPa2TFmA2VluQUaqD3AQSWwWBySja
-         OVGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qRfo0Jsmmm4U/AhlW7P8NwoHLU4zuGZhE4eLNUQ2+QI=;
-        b=JVeySvgZZ9bWW25ThEEhTktpnKX9x+tdBbuVW6xhifVAadIQlunMOfdUkgTJAetx2r
-         Gr24XRKOU+aJX7Flaff/3td0tx8iSJJMxmNI8Z59yp0VfRFM1lsE/ZRyIRMKcqH8DSGy
-         7HX0XueMe6EyPawnmPdxukThPr3ReX0STHkXMJARdtIBdvgAvfm7Ku97N1TwkEQR4pFF
-         smFQ+oT8Slbvt4lih9kT/Gvm5FxhG+83X5xWWSdnBzvHFTS2+IrnGvu5FZFurWm7QVw/
-         iRuA+6WuutXmoeWbyVbnk8ibMcdTlZg7xcppQrFb5Zu4rXsYRxUVKscK3FdC2J3BN5EP
-         vOpw==
-X-Gm-Message-State: ANhLgQ12KYteB8STBvarPonsmuU1pVcFqpT74huvRGs3H/kA2t7LWN6b
-        so2pA8idKc+N/PGvIPpH3s0=
-X-Google-Smtp-Source: ADFU+vuALdIRhw3biMmdUsl4H0a9RZFcaeD0dOk9rZJZpV9ei6j1RatB2nqDB4oeJ3UmG5ksN9LQAA==
-X-Received: by 2002:aed:23aa:: with SMTP id j39mr7813677qtc.42.1584027615696;
-        Thu, 12 Mar 2020 08:40:15 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id m92sm1254388qtd.94.2020.03.12.08.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:40:14 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 11:40:12 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] counter: 104-quad-8: Add lock guards for filter
- clock prescaler
-Message-ID: <20200312154012.GC3250@icarus>
-References: <20200312112552.GA32509@syed>
+        Thu, 12 Mar 2020 11:40:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57408 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbgCLPkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:40:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BB9FFAC5F;
+        Thu, 12 Mar 2020 15:40:45 +0000 (UTC)
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+To:     Michal Hocko <mhocko@kernel.org>, Jann Horn <jannh@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200312082248.GS23944@dhcp22.suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <86dba6eb-9c08-695a-aafd-75260bff1767@suse.cz>
+Date:   Thu, 12 Mar 2020 16:40:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
-Content-Disposition: inline
-In-Reply-To: <20200312112552.GA32509@syed>
+In-Reply-To: <20200312082248.GS23944@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/12/20 9:22 AM, Michal Hocko wrote:
+> [Cc akpm]
+> 
+> So what about this?
+> 
+> From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
+> From: Michal Hocko <mhocko@suse.com>
+> Date: Thu, 12 Mar 2020 09:04:35 +0100
+> Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
+> 
+> Jann has brought up a very interesting point [1]. While shared pages are
+> excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
+> that way. This can lead to all sorts of hard to debug problems. E.g.
+> performance problems outlined by Daniel [2]. There are runtime
+> environments where there is a substantial memory shared among security
+> domains via CoW memory and a easy to reclaim way of that memory, which
+> MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
+> in for the parent process which might be more privileged or even open
+> side channel attacks. The feasibility of the later is not really clear
+> to me TBH but there is no real reason for exposure at this stage. It
+> seems there is no real use case to depend on reclaiming CoW memory via
+> madvise at this stage so it is much easier to simply disallow it and
+> this is what this patch does. Put it simply MADV_{PAGEOUT,COLD} can
+> operate only on the exclusively owned memory which is a straightforward
+> semantic.
+> 
+> [1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
+> [2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
+> 
 
---ncSAzJYg3Aa9+CRW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reported-by: Jann Horn <jannh@google.com>
+Fixes: 9c276cc65a58 ("mm: introduce MADV_COLD")
 
-On Thu, Mar 12, 2020 at 04:55:52PM +0530, Syed Nayyar Waris wrote:
-> Add lock protection from race conditions in the 104-quad-8 counter
-> driver for filter clock prescaler related changes. There is no IRQ
-> handling so used spin_lock calls for protection.
->=20
-> Fixes: 9b74dddf79be ("counter: 104-quad-8: Support Filter Clock
-> Prescaler")
->=20
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
->=20
-> Split the patch from generic interface and differential encoder cable
-> status changes. Also, include more code statements for protection using
-> spin_lock calls and remove protection from few code statements which are
-> unnecessary.
+Maybe CC stable?
+
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
 > ---
-
-Hello Syed,
-
-Remove the review comments from the commit message and I think this
-patch is all right. You can also extend the Fixes line so that it
-doesn't wrap around. Add the following Signed-off-by line underneath
-yours and it'll remind me that I've already reviewed this patch when you
-submit v4 of your patchset:
-
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-
-Thank you,
-
-William Breathitt Gray
-
->  drivers/counter/104-quad-8.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-> index 9dab190..58615e4 100644
-> --- a/drivers/counter/104-quad-8.c
-> +++ b/drivers/counter/104-quad-8.c
-> @@ -1230,6 +1230,8 @@ static ssize_t quad8_signal_fck_prescaler_write(str=
-uct counter_device *counter,
->  	if (ret)
->  		return ret;
-> =20
-> +	spin_lock(&priv->lock);
+>  mm/madvise.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 43b47d3fae02..4bb30ed6c8d2 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  		}
+>  
+>  		page = pmd_page(orig_pmd);
 > +
->  	priv->fck_prescaler[channel_id] =3D prescaler;
-> =20
->  	/* Reset Byte Pointer */
-> @@ -1240,6 +1242,8 @@ static ssize_t quad8_signal_fck_prescaler_write(str=
-uct counter_device *counter,
->  	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
->  	     base_offset + 1);
-> =20
-> +	spin_unlock(&priv->lock);
+> +		/* Do not interfere with other mappings of this page */
+> +		if (page_mapcount(page) != 1)
+> +			goto huge_unlock;
 > +
->  	return len;
->  }
-> =20
-> --=20
-> 2.7.4
->=20
+>  		if (next - addr != HPAGE_PMD_SIZE) {
+>  			int err;
+>  
+> -			if (page_mapcount(page) != 1)
+> -				goto huge_unlock;
+> -
+>  			get_page(page);
+>  			spin_unlock(ptl);
+>  			lock_page(page);
+> @@ -426,6 +428,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  			continue;
+>  		}
+>  
+> +		/* Do not interfere with other mappings of this page */
+> +		if (page_mapcount(page) != 1)
+> +			continue;
+> +
+>  		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+>  
+>  		if (pte_young(ptent)) {
+> 
 
---ncSAzJYg3Aa9+CRW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl5qV9wACgkQhvpINdm7
-VJJBLRAA4oZHQ9p7kGoPTgepRi+sfHPlW3qm1lBDpWC5bo41G/pPHv3zy3p2/t6b
-AKKX4/+mE0M43M3APYnYD0tkzl8ZuT29lrnNyOHXink235ljEgysOYeynr+6Ju9n
-Guo7v40BLF+IamooDvrJYIZiwRkcPocV9K7CUAEHz61PDGHqkPvItnf8hzwh1TFa
-5JBkL3uufkMiH1SRvfx1eyGqphToHZH/Eu+2FalWfKyp2fueUmwohmqh6Ju6cP4p
-vAgRs3R7XNmEjRAjV2iGYF4kkcfOy5kMEhSHMzXZQVcQvJ2ENOAiU2VIyifRAhSy
-ZMCGBYxUjIl4n72+hDXoL+WyegKI/wOpYqseNV6xKfxUU8asaclaZIGclXWTWqz7
-kkbehOjVppgxRHdFjfmjBnZh5uYQVYCNt/pZFy8Hqrd2h/JMXc39DPGTxZi0p47p
-7Apl1oWC/nuRHy0Irx8jJk/juw1xhOxRTcZmlrqeMTKsQKQn1IAVC9Y1vTdEWQDS
-pbnMORAdzQFUzqs+vtlDOXOipmATgpURIL96Dh5z84qRM4pTm2uvkhQ7ypsVY7nS
-coOJIX0xMwDZVdhHqd540hClHYbJgqCt/59CiqcHS0LWCKv+OHOgJU9WP5HzioUs
-kEjK9qre3JFwlgb5NyZ9nzZfT1FuNCzvpaaD/CU5wZFE2xBl8ys=
-=cfwF
------END PGP SIGNATURE-----
-
---ncSAzJYg3Aa9+CRW--
