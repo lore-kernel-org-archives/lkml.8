@@ -2,255 +2,117 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCCDC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A51C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEBF206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:35:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gRzbZyMr"
+	by mail.kernel.org (Postfix) with ESMTP id 9CAF3206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583973516;
+	bh=M0b8KPvR/gLuc/ReK/i0DasriG+S9u1FqGtZdG2LmTE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IQbKxfJ+mhrLlWlnRfX/cuVC1D/2bEeOOvCP1hr+uL2B4/IRnYq3xersvt7WjHKqI
+	 16MvAhB+AozjgblFmy8qNnvJrZOyg7z2oyKGRs2pw/KkHoH9+yksW1Mi8FF79shu+0
+	 qG/u1JDSnsWdXeGrIqErBBayFyezCRwGFD8NSyAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgCLAfX (ORCPT
+        id S2387483AbgCLAif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:35:23 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51461 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731423AbgCLAfX (ORCPT
+        Wed, 11 Mar 2020 20:38:35 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36971 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731476AbgCLAie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:35:23 -0400
-Received: by mail-pj1-f68.google.com with SMTP id y7so1782194pjn.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:35:22 -0700 (PDT)
+        Wed, 11 Mar 2020 20:38:34 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so4433131ljd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v85VABFXT0lRuCPo0Jg98NS36unv9OUmuEZ/OabrdtM=;
-        b=gRzbZyMryWyitRhQHHwmH+kCPbzIXi1M9Ia2VSYLV9wXNy8Y5tvx/i7uBvXSbB9nGx
-         H92otermI2/q+fsTxhGE3QVnxJYdYZMrETO8/BGHc0p4c9I8ZW05ZcR4sJsodppCv2LB
-         KGmLXCP6Zt8sGo/9sF0XuHhIj+iNPtEQYzlHA=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bLKsPDUE1GSvDBpqdETPjKLJMVmpkRahrPwuhoHrW/Q=;
+        b=aWiKx0/Fl3mcmfdqhjXRNIjpIXRXQA9lXQuH4XULt8QTL2rBWyhdbifyR+qeKRaNoI
+         x0Hxy1YTXIwg5BI6xuZDajLdVT9NfgEGBc8lPciBykJqj2ZTl9wIKY+kgOBsd5Ut6QBk
+         rDMVJkdtREVZ9sdyt6WJK5wZ306w1GTPToDjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v85VABFXT0lRuCPo0Jg98NS36unv9OUmuEZ/OabrdtM=;
-        b=Aja1XOGoRnFFDk9g0arZY7baBrdnZ0T6zCnU4Q0+VyYlZPhT7RJm6ms4OhEG7Tny/l
-         EyukLE6bF+LgMFo3AH9/rUyyfr62Q2cAJYF8IyeM+K1AF2HzG+TzxeSRq60hn7aUEt8H
-         9tt0szUVZ2aimDfyTD7/pORS7R83VbUuXm9Wx5NE7ILAxd7TnuBNpamc6PrMACj9DScJ
-         Elo2Vtq4G9sqynqcfkc7TlALzR1iysHf2sDifkTJm0/2VjPaxNdAJumWa7Va7iBBJRr6
-         d2CZgQR4303MsKkK1HK71aA07mqS6Gqc/3UvUyHuAvgVlss9APBKnls7BiNEKZZO5d0E
-         mymQ==
-X-Gm-Message-State: ANhLgQ0mlb6jXgcicYOt5LACYiVK0Qik7rEwNA10a7P45yvrqunLYaEM
-        2Tfjkxk+//y/OYfMJ8aZnE/ZRw==
-X-Google-Smtp-Source: ADFU+vugjYP/SwGxBsmvy1Crxs5duhqFZFAN3QiWqCft4IhT1TkIS7XgwwEzWVYO0pUimAV1/5hu3Q==
-X-Received: by 2002:a17:902:8492:: with SMTP id c18mr5682001plo.147.1583973321626;
-        Wed, 11 Mar 2020 17:35:21 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id x16sm25756291pfq.40.2020.03.11.17.35.20
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bLKsPDUE1GSvDBpqdETPjKLJMVmpkRahrPwuhoHrW/Q=;
+        b=XGi+mXfDhO73pGfPx6CasxHzWFtY5htb4yRvplZToynWRIXJ/P2L1Sowprx7IcKYQ9
+         uNMNubhsBn2Ov74NoYLJIamV0/RcrrzyG7MpuvPEo9oj8o0gNELxAtklFj/5+RdoMQF1
+         1uWAvBKvqeIJ8GEwzJw7woXP2QTsDQ/hvlFE+4P6HoPWPPkmVOmuQQk8U5SLD4ctw2Mu
+         nbTvQhFsiGnBvH4HrBFdZCCtpH7zpQoKKBR+lsWO5B50Z8ovtBbuvnDw2alxcgrJi83y
+         kF0dbZBeQQzWPHxaiHk+Jdm7ZVlmtP+d45GoLHSSOjwgR3X90ezUgsTY8WHC2yGTiLR1
+         udaA==
+X-Gm-Message-State: ANhLgQ2zYEIEn5Kya17D5ze+Egt5kdHjQf9+8zkoKifBmHlsmtYO5hVM
+        USrbPmd9dLbWIUcv1O7IOKOKK4P0C8g=
+X-Google-Smtp-Source: ADFU+vuzWI8QgEkFYlvmtSIaR2KTO55s+B1txxMMYoteQk3VR6s5yVmVtCnJ6PyCZuj64IK1sjwDJw==
+X-Received: by 2002:a2e:b88d:: with SMTP id r13mr3331024ljp.66.1583973512002;
+        Wed, 11 Mar 2020 17:38:32 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id p133sm9992283lfa.82.2020.03.11.17.38.30
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 17:35:20 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 17:35:19 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2] thermal: devfreq_cooling: Use PM QoS to set frequency
- limits
-Message-ID: <20200312003519.GD144492@google.com>
-References: <CGME20200116231233epcas1p363ab7e3ad2966d0ae7bac11e33aa6b83@epcas1p3.samsung.com>
- <20200116151219.v2.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
- <d73e67eb-4f2d-dc4b-c718-929a964d3640@samsung.com>
+        Wed, 11 Mar 2020 17:38:30 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id w1so4433889ljh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:38:30 -0700 (PDT)
+X-Received: by 2002:a2e:6819:: with SMTP id c25mr3564744lja.16.1583973510152;
+ Wed, 11 Mar 2020 17:38:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d73e67eb-4f2d-dc4b-c718-929a964d3640@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+ <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+ <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+ <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+ <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+ <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+ <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+ <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+ <875zfbvrbm.fsf@notabene.neil.brown.name> <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com> <87v9nattul.fsf@notabene.neil.brown.name>
+In-Reply-To: <87v9nattul.fsf@notabene.neil.brown.name>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 11 Mar 2020 17:38:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+Message-ID: <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Is any further action needed from my side or can this land?
+On Wed, Mar 11, 2020 at 3:22 PM NeilBrown <neilb@suse.de> wrote:
+>
+> We can combine the two ideas - move the list_del_init() later, and still
+> protect it with the wq locks.  This avoids holding the lock across the
+> callback, but provides clear atomicity guarantees.
 
-Thanks
+Ugfh. Honestly, this is disgusting.
 
-Matthias
+Now you re-take the same lock in immediate succession for the
+non-callback case.  It's just hidden.
 
-On Fri, Jan 17, 2020 at 02:22:02PM +0900, Chanwoo Choi wrote:
-> On 1/17/20 8:12 AM, Matthias Kaehlcke wrote:
-> > Now that devfreq supports limiting the frequency range of a device
-> > through PM QoS make use of it instead of disabling OPPs that should
-> > not be used.
-> > 
-> > The switch from disabling OPPs to PM QoS introduces a subtle behavioral
-> > change in case of conflicting requests (min > max): PM QoS gives
-> > precedence to the MIN_FREQUENCY request, while higher OPPs disabled
-> > with dev_pm_opp_disable() would override MIN_FREQUENCY.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > 
-> > Changes in v2:
-> > - added documentation for 'req_max_freq'
-> > - fixed jumps in of_devfreq_cooling_register_power() unwind
-> > - added comment about behavioral change to the commit message
-> > 
-> >  drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
-> >  1 file changed, 23 insertions(+), 47 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-> > index ef59256887ff63..cbbaf5bc425d1a 100644
-> > --- a/drivers/thermal/devfreq_cooling.c
-> > +++ b/drivers/thermal/devfreq_cooling.c
-> > @@ -24,11 +24,13 @@
-> >  #include <linux/idr.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/pm_opp.h>
-> > +#include <linux/pm_qos.h>
-> >  #include <linux/thermal.h>
-> >  
-> >  #include <trace/events/thermal.h>
-> >  
-> > -#define SCALE_ERROR_MITIGATION 100
-> > +#define HZ_PER_KHZ		1000
-> > +#define SCALE_ERROR_MITIGATION	100
-> >  
-> >  static DEFINE_IDA(devfreq_ida);
-> >  
-> > @@ -53,6 +55,8 @@ static DEFINE_IDA(devfreq_ida);
-> >   *		'utilization' (which is	'busy_time / 'total_time').
-> >   *		The 'res_util' range is from 100 to (power_table[state] * 100)
-> >   *		for the corresponding 'state'.
-> > + * @req_max_freq:	PM QoS request for limiting the maximum frequency
-> > + *			of the devfreq device.
-> >   */
-> >  struct devfreq_cooling_device {
-> >  	int id;
-> > @@ -65,49 +69,9 @@ struct devfreq_cooling_device {
-> >  	struct devfreq_cooling_power *power_ops;
-> >  	u32 res_util;
-> >  	int capped_state;
-> > +	struct dev_pm_qos_request req_max_freq;
-> >  };
-> >  
-> > -/**
-> > - * partition_enable_opps() - disable all opps above a given state
-> > - * @dfc:	Pointer to devfreq we are operating on
-> > - * @cdev_state:	cooling device state we're setting
-> > - *
-> > - * Go through the OPPs of the device, enabling all OPPs until
-> > - * @cdev_state and disabling those frequencies above it.
-> > - */
-> > -static int partition_enable_opps(struct devfreq_cooling_device *dfc,
-> > -				 unsigned long cdev_state)
-> > -{
-> > -	int i;
-> > -	struct device *dev = dfc->devfreq->dev.parent;
-> > -
-> > -	for (i = 0; i < dfc->freq_table_size; i++) {
-> > -		struct dev_pm_opp *opp;
-> > -		int ret = 0;
-> > -		unsigned int freq = dfc->freq_table[i];
-> > -		bool want_enable = i >= cdev_state ? true : false;
-> > -
-> > -		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
-> > -
-> > -		if (PTR_ERR(opp) == -ERANGE)
-> > -			continue;
-> > -		else if (IS_ERR(opp))
-> > -			return PTR_ERR(opp);
-> > -
-> > -		dev_pm_opp_put(opp);
-> > -
-> > -		if (want_enable)
-> > -			ret = dev_pm_opp_enable(dev, freq);
-> > -		else
-> > -			ret = dev_pm_opp_disable(dev, freq);
-> > -
-> > -		if (ret)
-> > -			return ret;
-> > -	}
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >  static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
-> >  					 unsigned long *state)
-> >  {
-> > @@ -134,7 +98,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
-> >  	struct devfreq_cooling_device *dfc = cdev->devdata;
-> >  	struct devfreq *df = dfc->devfreq;
-> >  	struct device *dev = df->dev.parent;
-> > -	int ret;
-> > +	unsigned long freq;
-> >  
-> >  	if (state == dfc->cooling_state)
-> >  		return 0;
-> > @@ -144,9 +108,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
-> >  	if (state >= dfc->freq_table_size)
-> >  		return -EINVAL;
-> >  
-> > -	ret = partition_enable_opps(dfc, state);
-> > -	if (ret)
-> > -		return ret;
-> > +	freq = dfc->freq_table[state];
-> > +
-> > +	dev_pm_qos_update_request(&dfc->req_max_freq,
-> > +				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
-> >  
-> >  	dfc->cooling_state = state;
-> >  
-> > @@ -529,9 +494,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
-> >  	if (err)
-> >  		goto free_dfc;
-> >  
-> > -	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
-> > +	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
-> > +				     DEV_PM_QOS_MAX_FREQUENCY,
-> > +				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
-> >  	if (err < 0)
-> >  		goto free_tables;
-> > +
-> > +	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
-> > +	if (err < 0)
-> > +		goto remove_qos_req;
-> >  	dfc->id = err;
-> >  
-> >  	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
-> > @@ -552,6 +523,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
-> >  
-> >  release_ida:
-> >  	ida_simple_remove(&devfreq_ida, dfc->id);
-> > +
-> > +remove_qos_req:
-> > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
-> > +
-> >  free_tables:
-> >  	kfree(dfc->power_table);
-> >  	kfree(dfc->freq_table);
-> > @@ -600,6 +575,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
-> >  
-> >  	thermal_cooling_device_unregister(dfc->cdev);
-> >  	ida_simple_remove(&devfreq_ida, dfc->id);
-> > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
-> >  	kfree(dfc->power_table);
-> >  	kfree(dfc->freq_table);
-> >  
-> > 
-> 
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-> -- 
-> Best Regards,
-> Chanwoo Choi
-> Samsung Electronics
+And it's not like the list_del_init() _needs_ the lock (it's not
+currently called with the lock held).
+
+So that "hold the lock over list_del_init()" seems to be horrendously
+bogus. It's only done as a serialization thing for that optimistic
+case.
+
+And that optimistic case doesn't even *want* that kind of
+serialization. It really just wants a "I'm done" flag.
+
+So no. Don't do this. It's mis-using the lock in several ways.
+
+             Linus
