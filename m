@@ -2,72 +2,72 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DAFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB08C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2119C2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225D82067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgCLSfC (ORCPT
+        id S1726508AbgCLSi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:35:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:39938 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCLSfC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:35:02 -0400
-Received: by mail-io1-f69.google.com with SMTP id z207so2372100iof.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:35:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ir7UeiOgRla46VgJyqdvELP5IALvlHJBWBv4Kon2YiQ=;
-        b=UVJq4bKgNRagxL/7qzXTjlp6g5EbFHHpc9Vkg3yf2mGMLdHUD6VC5AeCmrEj9GCPed
-         YvG4evgNTjOgXwKdJR4/mP/o/0UMMj+dtv3mOiqhpM7J0zm6STmuLUTtZpv/Jvhki4PU
-         nozsG6F484OdF4Hbq59+dHg2Xw3t/N+kwibphBZhMNigws9WDR3PLwBpFcjvPnxNjQKc
-         rt6KLHcqpYIlNeSZZr3gfWupRKKrpQI55J3STTFVLCQWL2uLiP01ELWm/RHyx/v+7G2c
-         terXCmG6QDzapwMeGxWdSAt9gTQW6gkcVzqwWLl7VfrrIVK4Uq+J1g3RWfAFZiUqt6zs
-         Pwgg==
-X-Gm-Message-State: ANhLgQ3hdOoNBee9+1F3VPp3HoGjQQ/gr5VjtYDDcwi3jGriB02m/LsD
-        uPK9bCtChc/ZxCvB/mJXIX84KcZhreZugnSgmmH1PTi9sTvg
-X-Google-Smtp-Source: ADFU+vuGqMVU/sCZ2uqRsye5iy6iExo0L2KoabBfOjwzUDCql4SHBehAYnSYwmvKUogZv6oHxiMhvYUhcEbBhS3sxDoZr2KgrRRU
+        Thu, 12 Mar 2020 14:38:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:2360 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgCLSi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:38:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 11:38:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="236715869"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Mar 2020 11:38:24 -0700
+Date:   Thu, 12 Mar 2020 11:38:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-mm@kvack.org, Ismo Puustinen <ismo.puustinen@intel.com>,
+        Mark Shanahan <mark.shanahan@intel.com>,
+        Mikko Ylinen <mikko.ylinen@intel.com>,
+        Derek Bombien <derek.bombien@intel.com>
+Subject: Re: [PATCH v28 16/22] x86/sgx: Add a page reclaimer
+Message-ID: <20200312183824.GB26453@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-17-jarkko.sakkinen@linux.intel.com>
+ <20200305190354.GK11500@linux.intel.com>
+ <20200306184702.GD7472@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:5489:: with SMTP id t131mr9106656jaa.134.1584038101466;
- Thu, 12 Mar 2020 11:35:01 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 11:35:01 -0700
-In-Reply-To: <CAJfpegswE6pLBbBmbkPMjmLPjgvn5z=gDEB6cTpe7o84hOuroA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000059489f05a0ac9cae@google.com>
-Subject: Re: WARNING: lock held when returning to user space in ovl_write_iter
-From:   syzbot <syzbot+9331a354f4f624a52a55@syzkaller.appspotmail.com>
-To:     jiufei.xue@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        mszeredi@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306184702.GD7472@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Mar 06, 2020 at 08:47:02PM +0200, Jarkko Sakkinen wrote:
+> On Thu, Mar 05, 2020 at 11:03:54AM -0800, Sean Christopherson wrote:
+> > We've also discussed taking a file descriptor to hold the backing, but
+> > unless I'm misreading the pagecache code, that doesn't solve the incorrect
+> > accounting problem because the current task, i.e. evicting task, would be
+> > charged.  In other words, whether the backing is kernel or user controlled
+> > is purely an ABI question.
+> 
+> Even if the file is owned by a different process the account happens
+> to "current"?
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
-
-Reported-and-tested-by: syzbot+9331a354f4f624a52a55@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=9331a354f4f624a52a55
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=134ceef9e00000
-
-Note: testing is done by a robot and is best-effort only.
+Yes.  Which makes sense as files do not have a 1:1 association with tasks.
