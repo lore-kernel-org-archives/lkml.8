@@ -2,121 +2,107 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4065CC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED2EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177CE20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B781420650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFuW7YyP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kPO+ikxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCLOXR (ORCPT
+        id S1727683AbgCLOXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:23:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52929 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbgCLOXR (ORCPT
+        Thu, 12 Mar 2020 10:23:23 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32940 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbgCLOXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:23:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 11so6302204wmo.2;
-        Thu, 12 Mar 2020 07:23:14 -0700 (PDT)
+        Thu, 12 Mar 2020 10:23:22 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f13so6670908ljp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:23:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dA44/I1QbEkp26HsS2gxH3ezQBrq3Jv9y5bBZu912Y0=;
-        b=HFuW7YyPKrK83ubj5R7+KkP1itV8Df1zykmwz5swPLhELoHn3gdPaqfkU0zhBK2Grs
-         baRnK1c4/CWO57wcF2HFDKEXS2vKZFS3ilfvJ2ngnsB/T7CDbQk3ZxOhPVOxD8fh18tS
-         m1ZofGxh6WKrMMp4UCV8D1uuDHzL0X/181D7pRITK692vzLratBNkHkZJg99a0dobw83
-         mx3Ydg3vsvOyAekpj31LRYLMOSeM5/3GU7QQhtI+ycBhiZLdsqdqNxEscvRWBrnHkxaC
-         T31mSzwl+c7YjpyKD662mB+KfCY3SEgzMkVCE6DTIky4WGChdyESILEu+0hDBb4uKl+r
-         BRTg==
+        bh=5Dt+A0XYoM4z0Muyh4Z1oK3OQIHOd+TenS7WS4Spt8M=;
+        b=kPO+ikxEgegYspLtVJSTdDZGCrznn2iZHcCDSpipCfIKchWvbMXImnOGvH1GmkJfoD
+         KcE6fvz9RgDqdCcl4OhN7O0CjnJ+M6liGFX7kS02szV8Mo1+CU8jkrhYkKZ+cX6rh0Qw
+         H/nnJeTMB5ClokfZT4zcoYejI5wYd4XBiBYB1T5WDgosR4K8w/H85ETqh8BS+y3N6LvM
+         5Y95Pb1xYZfEjIrgLVRhecU/tTp74SEk3Ps55TNUzCeR9gXSB6amj6Kc+BpjDlZq6zaG
+         WIiIfQNErmoQIOMBgKTJD8wyx6zy8TH+bDi310hmLvyph1kUIo4otwnn+KNf7P9k3532
+         g2vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dA44/I1QbEkp26HsS2gxH3ezQBrq3Jv9y5bBZu912Y0=;
-        b=YEXCAqBXO8FLfWB8OK2EAQymyhE4w9v5JuSpd5Czqw+yyJ0Jq90BtxP+b81gZi2Bwv
-         BZALrA/5A/esWpzn9pCLHyJdDsEfQOLDHEMDQfR/RYPUC3Ntgz8/acxnhg4v65ZYvxxR
-         fnc2DpE6qBYbKCO1BJ1K2YEgtFlJffvKuKA1Ff0aLmN+gqPcuz/vW7O2wGU6+fkrwWY8
-         8EL9OyC9fb9J19KkRKg6hwKcJ2uuhsGzAmAmjeR8mgG42pWDaa+de14C8nxM+zmdOanm
-         uCZX2hs5C5lY0V12MqsVEFrH1UkCtG+3SelUjlcEqY05lsBSb+ZvLJnIl5dyyYxBZVrT
-         XRfg==
-X-Gm-Message-State: ANhLgQ2Bnkijj/FnpU3ECqWOqlbPRXEbYfcx2NDts1e9s2AHKPdfIHNF
-        YjIS+S98AztqWjuSsVvrjynWAfe0CYDboEh2jlM=
-X-Google-Smtp-Source: ADFU+vsi+U4lSevQi2U0MZAwb5EtFRnXvKFJCMWeT+WV57OOOomrWmd04fBStp0WtmBv9CGj8sCSva8PdiK3VstXdcY=
-X-Received: by 2002:a1c:f009:: with SMTP id a9mr5164075wmb.73.1584022993776;
- Thu, 12 Mar 2020 07:23:13 -0700 (PDT)
+        bh=5Dt+A0XYoM4z0Muyh4Z1oK3OQIHOd+TenS7WS4Spt8M=;
+        b=Bj5kKVObZ1DrRD1wBlTmKy/Tzqpcr+5PJdy6fjmcLM1BCvnt2nRyI7YKFRl5UgritY
+         E5s8bnmNfSBQzgwz/LJVtEmJmGK1Y7v3afPD3Cxd3FQn3F53l6A6ZQda7setwE/sr2sJ
+         l5nvv6JYxKZw80NWfkBXaezuw5CD8nDR5iup/LnYw5HkyvASLVh0035gXMudn0c3QQMP
+         H44nC62/fdsU4DmS1x07XdS+k9JhRm/5VRp5bXvBVWRmEB/UL0k3f+4wsTTQB4L1eR+q
+         yjz0o92WQ585TSs5YPT7ocux5okm/mgW48ThE2vPBf1idibQNPr/Y+inqU3RkxQIZBv4
+         KNzA==
+X-Gm-Message-State: ANhLgQ0bRFxPh4gag008VhviAU1jL9uabnFaJPCyoFfcAq0/IcKciMjv
+        2O/vwZiJ2nnMBK3A0dk3bzV1gr+f+losf5D9C1AYBA==
+X-Google-Smtp-Source: ADFU+vv7LNhuqWt6huv0FXgE1q4FBl/D6hN2gAx1rsopSHV4jlVMS8grUwQme6vafr3oWKM7JsBOgEJp0guAr/W7u10=
+X-Received: by 2002:a05:651c:2049:: with SMTP id t9mr5600275ljo.39.1584022999468;
+ Thu, 12 Mar 2020 07:23:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200224103120.zrvgqaokmoehs5y7@kili.mountain>
-In-Reply-To: <20200224103120.zrvgqaokmoehs5y7@kili.mountain>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 12 Mar 2020 10:23:02 -0400
-Message-ID: <CADnq5_Or06=BeVmnx35vSqvK1vUxx+Vvzq9h=UY7OkRU+SK+4Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu/display: clean up some indenting
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <20200218151812.7816-1-geert+renesas@glider.be> <20200218151812.7816-2-geert+renesas@glider.be>
+In-Reply-To: <20200218151812.7816-2-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Mar 2020 15:23:08 +0100
+Message-ID: <CACRpkdZGKB9opaOFT8Yz-tfE9vcCVeF9EvvBi7jWWuAAh3C_FA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] gpiolib: Add support for gpiochipN-based table lookup
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 5:31 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> These lines were accidentally indented 4 spaces more than they should
-> be.
->
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+On Tue, Feb 18, 2020 at 4:18 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Applied.  thanks!
-
-Alex
-
-> ---
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Currently GPIO controllers can only be referred to by label in GPIO
+> lookup tables.
 >
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 4cb3eb7c6745..408405d9f30c 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -2138,10 +2138,10 @@ static void handle_hpd_rx_irq(void *param)
->                 }
->         }
->  #ifdef CONFIG_DRM_AMD_DC_HDCP
-> -           if (hpd_irq_data.bytes.device_service_irq.bits.CP_IRQ) {
-> -                   if (adev->dm.hdcp_workqueue)
-> -                           hdcp_handle_cpirq(adev->dm.hdcp_workqueue,  aconnector->base.index);
-> -           }
-> +       if (hpd_irq_data.bytes.device_service_irq.bits.CP_IRQ) {
-> +               if (adev->dm.hdcp_workqueue)
-> +                       hdcp_handle_cpirq(adev->dm.hdcp_workqueue,  aconnector->base.index);
-> +       }
->  #endif
->         if ((dc_link->cur_link_settings.lane_count != LANE_COUNT_UNKNOWN) ||
->             (dc_link->type == dc_connection_mst_branch))
-> --
-> 2.11.0
+> Add support for looking them up by "gpiochipN" name, with "N" the
+> corresponding GPIO device's ID number.
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+Just like with patch 2/5 I have the same problem here that
+the commit message doesn't state the technical reason why
+we need to change this and support the device name in these
+tables and not just labels.
+
+(Possibly again I will realize it...)
+
+Yours,
+Linus Walleij
