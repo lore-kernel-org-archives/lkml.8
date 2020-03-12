@@ -2,118 +2,137 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1FAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2369C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D600C2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584026528;
-	bh=ClseKSeZkNswqOfyPP5fB9Bz024dxAKohS7j7Z+0eMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CzixcWDvMd+eW2IEMP8YVFkJE0zbpbye6hD0JJN0XrnwbnU4yNMwJqEVu1LpUoKQR
-	 1da97Xo4AIU1A95t9SelUGqAFJwbZbLypxda+pgrdYeCNQ9Yyq6qgLNrzlhuXDoBK2
-	 CXw1nq4Wn2UhFsoon546BcGw+2Ds7CRuZ2zYJMQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8859320674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:22:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1aj1zSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgCLPWH (ORCPT
+        id S1728094AbgCLPWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:22:07 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36030 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbgCLPWH (ORCPT
+        Thu, 12 Mar 2020 11:22:42 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35454 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgCLPWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:22:07 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k18so5847911oib.3;
-        Thu, 12 Mar 2020 08:22:06 -0700 (PDT)
+        Thu, 12 Mar 2020 11:22:42 -0400
+Received: by mail-ot1-f67.google.com with SMTP id k26so6678827otr.2;
+        Thu, 12 Mar 2020 08:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3CEHFjpyc9/ZGVlSOC4X/gcnKa22KLNZWM3ttUw+GaY=;
+        b=X1aj1zSaQSY8xndb9omYxHIdZwCylcFB6uD+ViZebe28st96b/Zey2TdqN3YVNGQOg
+         XlqWlmyJtDuydUWHsG0xpr+QPpJ0e8baLS1usHhOh2zTO6o7FF3iOd5/zVi3V/EvF1rc
+         yRFl//ENMNcJA1Eih0NRBK+BDyIr7kia9QUdo/Ov77e306V5jLFU6LE1azSZL9WWfum/
+         7JA/dXzoHtyFTgtNwIyZSsRmZCXPYq+iLQCfbo8ep0DXfeJYHYvU1oZZGzchFDg7ur+F
+         gWSpAyav3tYz3HUVumNQicWmIWhB60EwMjUt8KfM87pOlmNxk9lQRXamaz9Gfr54sRXY
+         zzxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a6WnhHW3Np3QbKKjKxFHHPr40yxHHv0stzGtOBzaVLc=;
-        b=Ajzy88o1z1uZ1QmCTbV542KMoeGco9C9ZSSv6fE9nqI2LVzGy6N5CMGl4g+NSw78S9
-         zpTcFXe8LmZnprcYyLd2Ab6cAMZuvP9gWTb1L5BOO6tW9dx5HnVP5fSJ7j03bl93T2Ln
-         tmhns6S13/C14644ahuAWCdmiIL8LJ5mB/gOz9AIj+NfmyLXqhbLOmJCqxZehg1bY+2c
-         gT1K867oAoR8wFhgwW2wN2w+2TCMDsLZAQt3AwabTDXwyt2QTDVgYZvR1wrznU3THEuV
-         t5gNCT/GnHFuDznuRp+3QsNMZCGmW0HiV4nuKugnvHvda2RHIVW0ppmvvLxLcQKUD5/z
-         Dr+w==
-X-Gm-Message-State: ANhLgQ1WsTo4pVhUWwaxqjDJy4A9MnZG7JPoKBQHKq9OdO3Oee37S9yQ
-        GwmyYPMIWHcACnKNUm/5yw==
-X-Google-Smtp-Source: ADFU+vsZYyNPazIaY4y6ozlG69lisQb63cqMqP+Ill41cx5dK6OIRcqAtvQNyW37X+H801eBMb1U7g==
-X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr3046470oij.2.1584026526006;
-        Thu, 12 Mar 2020 08:22:06 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a22sm10865950oto.45.2020.03.12.08.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:22:05 -0700 (PDT)
-Received: (nullmailer pid 17075 invoked by uid 1000);
-        Thu, 12 Mar 2020 15:22:03 -0000
-Date:   Thu, 12 Mar 2020 10:22:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     mark.rutland@arm.com, ck.hu@mediatek.com, p.zabel@pengutronix.de,
-        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
-        Allison Randal <allison@lohutok.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>, wens@csie.org,
-        linux-media@vger.kernel.org, sean.wang@mediatek.com,
-        hsinyi@chromium.org, rdunlap@infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        frank-w@public-files.de, devicetree@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
-        Richard Fontana <rfontana@redhat.com>
-Subject: Re: [PATCH v12 2/5] dt-bindings: mediatek: Update mmsys binding to
- reflect it is a system controller
-Message-ID: <20200312152203.GA15635@bogus>
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
- <20200311165322.1594233-3-enric.balletbo@collabora.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3CEHFjpyc9/ZGVlSOC4X/gcnKa22KLNZWM3ttUw+GaY=;
+        b=dBuDNAJiawz2LNz2QWMsoUChlPbASavE+sMy6x9Xnhyr7r8nSQU8bDqDa+y8iOJKGM
+         JftoOs4FD/gW0gqHU29HnGGnlFRf2KNx/69OiyM485gkjVhwEmXvEJnnGtS7oeabViOY
+         f8ViOV+WU75zHasspn7wFbhzgOeWxDLaOtDam/m4r2tujHFpZSOGDA/vFN7xmEI2fGCo
+         fVfRvPOkXcmjWvs3a2DXP/cXaZx5ZCfcwcAuphbwEGsKwuVXDTwpyMeM9ukVQxinDhtQ
+         QEVENwK+REDfhiTqOv4WjSBJ3fLFrgbgSeaaz3UlxFUiobDAuttWJiOqfsyzm6RdTE7X
+         kF6A==
+X-Gm-Message-State: ANhLgQ1SQSr8YW6ZaiWcgD2LAj2V8pEBbtKxnIphqvHE5LKGjwzm0Wog
+        +PH3L4aYNgC3xskJoe9knIO4lv9PNQnCfU23OysyjcAV
+X-Google-Smtp-Source: ADFU+vsjS/B8wd7MjyjSvFWCuIRNbsoBiEnwif9Xs2TVDjTHdUTqIT5q5v2JXe3xoCnprDgyo0xUfH87+FEdx5X+430=
+X-Received: by 2002:a4a:bf19:: with SMTP id r25mr4310784oop.3.1584026561419;
+ Thu, 12 Mar 2020 08:22:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311165322.1594233-3-enric.balletbo@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200304164700.11574-1-tony.fischetti@gmail.com> <6c58685f039d329615d84e2df1cd2a155db73c61.camel@archlinux.org>
+In-Reply-To: <6c58685f039d329615d84e2df1cd2a155db73c61.camel@archlinux.org>
+From:   Tony Fischetti <tony.fischetti@gmail.com>
+Date:   Thu, 12 Mar 2020 11:22:30 -0400
+Message-ID: <CAOMV6SVxL=DLP6yWa+jHzu5A+PUJTJi4bk_1ZW-kXXwnaCBT5Q@mail.gmail.com>
+Subject: Re: [PATCH] add ALWAYS_POLL quirk to lenovo pixart mouse
+To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 05:53:19PM +0100, Enric Balletbo i Serra wrote:
-> The mmsys system controller is not only a pure clock controller, so
-> update the binding documentation to reflect that apart from providing
-> clocks, it also provides routing and miscellaneous control registers.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> ---
-> 
-> Changes in v12: None
-> Changes in v10:
-> - Update the binding documentation for the mmsys system controller.
-> 
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7: None
-> 
->  .../devicetree/bindings/arm/mediatek/mediatek,mmsys.txt    | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+Thanks for the feedback, y'all.
+I will rename the device and add the signed-off field and resubmit.
+Thanks again
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Mar 10, 2020 at 9:48 AM Filipe La=C3=ADns <lains@archlinux.org> wro=
+te:
+>
+> On Wed, 2020-03-04 at 11:47 -0500, Tony Fischetti wrote:
+> > A lenovo pixart mouse (17ef:608d) is afflicted common the the malfuncti=
+on
+> > where it disconnects and reconnects every minute--each time incrementin=
+g
+> > the device number. This patch adds the device id of the device and
+> > specifies that it needs the HID_QUIRK_ALWAYS_POLL quirk in order to
+> > work properly.
+> > ---
+> >  drivers/hid/hid-ids.h    | 1 +
+> >  drivers/hid/hid-quirks.c | 1 +
+> >  2 files changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> > index 3a400ce603c4..9e1dfc714ea8 100644
+> > --- a/drivers/hid/hid-ids.h
+> > +++ b/drivers/hid/hid-ids.h
+> > @@ -726,6 +726,7 @@
+> >  #define USB_DEVICE_ID_LENOVO_X1_COVER        0x6085
+> >  #define USB_DEVICE_ID_LENOVO_X1_TAB  0x60a3
+> >  #define USB_DEVICE_ID_LENOVO_X1_TAB3 0x60b5
+> > +#define USB_DEVICE_ID_LENOVO_PIXART_USB_OPTICAL_MOUSE        0x608d
+>
+> This ID is really ambiguous. Pixart makes the sensors for the big
+> majority of devices. Isn't there any other identifier you could use? If
+> there isn't, you could do USB_DEVICE_ID_LENOVO_MOUSE_608D.
+>
+> >  #define USB_VENDOR_ID_LG             0x1fd2
+> >  #define USB_DEVICE_ID_LG_MULTITOUCH  0x0064
+> > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> > index 0e7b2d998395..247747d6d8cf 100644
+> > --- a/drivers/hid/hid-quirks.c
+> > +++ b/drivers/hid/hid-quirks.c
+> > @@ -103,6 +103,7 @@ static const struct hid_device_id hid_quirks[] =3D =
+{
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_PENSKETCH_M=
+912), HID_QUIRK_MULTI_INPUT },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M40=
+6XE), HID_QUIRK_MULTI_INPUT },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTI=
+CAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
+> > +     { HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXAR=
+T_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C=
+007), HID_QUIRK_ALWAYS_POLL },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C=
+077), HID_QUIRK_ALWAYS_POLL },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_K=
+EYBOARD_G710_PLUS), HID_QUIRK_NOGET },
+>
+> --
+> Filipe La=C3=ADns
+
+
+
+--=20
+--
+Tony Fischetti
+tony.fischetti@gmail.com
+(718) 431-4597
