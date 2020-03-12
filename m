@@ -2,116 +2,109 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B052C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED5C20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DC9gPbBZ"
+	by mail.kernel.org (Postfix) with ESMTP id C3E0D20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCLIrZ (ORCPT
+        id S1726535AbgCLIrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:47:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54511 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726000AbgCLIrZ (ORCPT
+        Thu, 12 Mar 2020 04:47:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47459 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLIro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:47:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584002841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CMGY5NDRnQ6tpPW4NbzkE3whOpE1haBikjv6YCfDFio=;
-        b=DC9gPbBZHhQan4cPx/ESxx6Sp7dSXZVxlkS0krOTzFKf7PjXPLF62JPIBBGN4aIDpcRbXe
-        TijJi5aGR7mNRc047ocndiyvuKOe85xsq6JvAFpAgGPJfXrI3ao/ZjldN2N6Zya2Vj24N7
-        vcSLxbg03vStal1EVdJnrzc0gcE7hJs=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-iotjrYj6Ow-GneWn0W_TIA-1; Thu, 12 Mar 2020 04:47:19 -0400
-X-MC-Unique: iotjrYj6Ow-GneWn0W_TIA-1
-Received: by mail-qv1-f70.google.com with SMTP id r16so3066083qvp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:47:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CMGY5NDRnQ6tpPW4NbzkE3whOpE1haBikjv6YCfDFio=;
-        b=fyakUvuXCYmqsFR3RssEl+RCK6XBZqy0DObbsezsfGDZJBSou+TajDIgvo6co+MrwV
-         0no3NXabCVV6NKDBV4DjUuQh9YIclOBnvREhsdgH2FCtT+zvv1JI0CHXhGT0rv4VVag3
-         /ohf8qtbcUZpYBQ8u3o+q5JOHdv93dXRPgxthh/kpR6N13xN3c/x4tIOaUvryzEEOm+4
-         yThcE5iLnflFufDrU1SCzABprabBRncmGhqLHTLv5YVGCFLNeWSRU6DqvAsekihPoBcq
-         +Li8ELuaHdPleIYThzgEYNzPKZM6myiypp+vKHLQmE7oOzMT8wK3a5+yM4n3Uov0CtPM
-         LHtA==
-X-Gm-Message-State: ANhLgQ3wypmJpttnOfXoPp7jhbrfEf9qwqJpXqcGWXnn5cr9HQAq2TaU
-        EGx4rNDVBDH68MScvYW0dPUWTVRoe9uaqIwS7xEq2GwHxvst5IxfCloguAqhZEjfmhHRuxH9moK
-        Mx44NPMhMYH/4rDEU2IUmsGe8
-X-Received: by 2002:ac8:70d4:: with SMTP id g20mr6375486qtp.146.1584002838845;
-        Thu, 12 Mar 2020 01:47:18 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsV2vB8jgT9lPTI6/rXChnARxotlD8arZEu0o0XGFcCreqdYk31/Dsq3r3lSxfUv0vOD7Pnvw==
-X-Received: by 2002:ac8:70d4:: with SMTP id g20mr6375478qtp.146.1584002838612;
-        Thu, 12 Mar 2020 01:47:18 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id c190sm5213470qkb.80.2020.03.12.01.47.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 01:47:17 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 04:47:11 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Hui Zhu <teawater@gmail.com>, jasowang@redhat.com,
-        akpm@linux-foundation.org, pagupta@redhat.com,
-        mojha@codeaurora.org, namit@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Hui Zhu <teawaterz@linux.alibaba.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER
- to handle THP spilt issue
-Message-ID: <20200312043859-mutt-send-email-mst@kernel.org>
-References: <1583999395-9131-1-git-send-email-teawater@gmail.com>
- <3e1373f4-6ade-c651-ddde-6f04e78382f9@redhat.com>
+        Thu, 12 Mar 2020 04:47:44 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCJVE-0005vC-HJ; Thu, 12 Mar 2020 09:47:40 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCJVD-0008Pf-Cx; Thu, 12 Mar 2020 09:47:39 +0100
+Date:   Thu, 12 Mar 2020 09:47:39 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <3e1373f4-6ade-c651-ddde-6f04e78382f9@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand wrote:
-> 2. You are essentially stealing THPs in the guest. So the fastest
-> mapping (THP in guest and host) is gone. The guest won't be able to make
-> use of THP where it previously was able to. I can imagine this implies a
-> performance degradation for some workloads. This needs a proper
-> performance evaluation.
+On Thu, Mar 12, 2020 at 01:35:32PM +0530, Lokesh Vutla wrote:
+> On 12/03/20 12:10 PM, Uwe Kleine-König wrote:
+> > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+> >> Only the Timer control register(TCLR) cannot be updated when the timer
+> >> is running. Registers like Counter register(TCRR), loader register(TLDR),
+> >> match register(TMAR) can be updated when the counter is running. Since
+> >> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+> >> timer for period/duty_cycle update.
+> > 
+> > I'm not sure what is sensible here. Stopping the PWM for a short period
+> > is bad, but maybe emitting a wrong period isn't better. You can however
+> > optimise it if only one of period or duty_cycle changes.
+> > 
+> > @Thierry, what is your position here? I tend to say a short stop is
+> > preferable.
+> 
+> Short stop has side effects especially in the case where 1PPS is generated using
+> this PWM. In this case where PWM period is continuously synced with PTP clock,
+> cannot expect any breaks in PWM. This doesn't fall in the above limitations as
+> well. as duty_cycle is not a worry and only the rising edge is all that matters.
+> 
+> Also any specific reason why you wanted to stop rather than having the mentioned
+> limitation? it is just a corner anyway and doesn't happen all the time.
 
-I think the problem is more with the alloc_pages API.
-That gives you exactly the given order, and if there's
-a larger chunk available, it will split it up.
+I'm a bit torn here. Which of the two steps out of line is worse depends
+on what is driven by the PWM in question. And also I think ignoring
+"just corner cases" is a reliable way into trouble.
 
-But for balloon - I suspect lots of other users,
-we do not want to stress the system but if a large
-chunk is available anyway, then we could handle
-that more optimally by getting it all in one go.
+The usual PWM contributer (understandably) cares mostly about their own
+problem they have to solve. If however you take a step back and care
+about the PWM framework as a whole to be capable to solve problems in
+general, such that any consumer just has to know that there is a PWM and
+start requesting specific settings for their work to get done, it gets
+obvious that you want some kind of uniform behaviour of each hardware
+driver. And then a short inactive break between two periods is more
+common and better understandable than a mixed period.
 
+Also being a corner case that only happens (say) once in 100000 cases
+isn't a clear upside. This just results in a machine leaving the development
+department, passing the production test and then behave unexpected once
+per year in the field.
 
-So if we want to address this, IMHO this calls for a new API.
-Along the lines of
-
-	struct page *alloc_page_range(gfp_t gfp, unsigned int min_order,
-					unsigned int max_order, unsigned int *order)
-
-the idea would then be to return at a number of pages in the given
-range.
-
-What do you think? Want to try implementing that?
+Best regards
+Uwe
 
 -- 
-MST
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
