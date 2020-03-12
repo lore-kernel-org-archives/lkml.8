@@ -2,80 +2,126 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72EAC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2128C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E96520755
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583982028;
-	bh=Tzw7OkLhuKwlGaNH6zUaZ92HAbrd6ZAx96ilGAda8sI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fIflU5XLLxPEbaVIWoJET6RAsItnJ4PQ4+HaH8yonOb6V3Zyjz5k4Sm39qvtyIrsh
-	 pIGmIsizpWgB4Q8k9+gZOyxpbJo06EAhOXQGDfKCUd8rl/nd/hylglGnOShepsoe1D
-	 eH+HSiUewkpK7OIgKpc2sFk6FLs+9iuE6TGg14Ac=
+	by mail.kernel.org (Postfix) with ESMTP id CB64320735
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:00:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="upJxzfwZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387723AbgCLDA0 (ORCPT
+        id S2387751AbgCLDA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387609AbgCLDA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:00:26 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C7AD20735;
-        Thu, 12 Mar 2020 03:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583982024;
-        bh=Tzw7OkLhuKwlGaNH6zUaZ92HAbrd6ZAx96ilGAda8sI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QUV+09ZDscWerAse5sMC/Bzmq/6T1Cul8RokXefoSY9muH4YSLKdP2RTr1DQYA6Un
-         oWCq5rRjXh8iHoFTbisIR8r0um5szGsHkK8yWVdlfMRV9jI4RGxt1tEGYF9CQ01w9F
-         WUozF+mo4X7aT7ET/rDxVpcWQkKMb4sNj7t/6np4=
-Date:   Wed, 11 Mar 2020 20:00:23 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] backing-dev: refactor wb_congested_put()
-Message-Id: <20200311200023.974009d9a5648b977d5168f6@linux-foundation.org>
-In-Reply-To: <20200312022948.GH22433@bombadil.infradead.org>
-References: <20200312002156.49023-1-jbi.octave@gmail.com>
-        <20200312002156.49023-2-jbi.octave@gmail.com>
-        <20200311175919.30523d55b2e5307ba22bbdc0@linux-foundation.org>
-        <20200312022948.GH22433@bombadil.infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 11 Mar 2020 23:00:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37176 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387453AbgCLDA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 23:00:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C2xLP7175694;
+        Thu, 12 Mar 2020 03:00:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : references : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Qo/MY1wia4ChrahGN998AHrVHZxgV5G79qHPQfknXEE=;
+ b=upJxzfwZ0MvxTTGNmjZzcj2xWiYLF/vQCjx9sW0pIebH103o6ghhWrKm0de2cyNMkqlj
+ qQlIbNE2HJKH+nkuRN22bYXoyOeWnNi27y3Obp1t8sTgA1gjmqo/r68aqW49SWXqsioT
+ qYxrT3o3q2HGD6gJVuW3XAM4DRuqX5OdyOKdgEjGM3MQC6iAgjkY99G2fY5WNY0urmgq
+ 0DS/CBfH81dBRFPxzj53nFzg0bzQlLSW3PTHT3JagGqvMkU+3T0qUVWM+Cf+yhzBCcSv
+ 8H3o5CBNfwHub1ILPe5qAlR5QZ1mu4Wt4AEMv4w1m8BFrNBNWK6Ya1Ms0U7fVVTzLRWf /A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yp7hmbek7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 03:00:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C2wfD3017433;
+        Thu, 12 Mar 2020 03:00:15 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2yp8q1thc4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 03:00:15 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02C30CLw018920;
+        Thu, 12 Mar 2020 03:00:12 GMT
+Received: from localhost (/10.159.134.61) by default (Oracle Beehive Gateway
+ v4.0) with ESMTP ; Wed, 11 Mar 2020 20:00:11 -0700
+USER-AGENT: Mutt/1.9.4 (2018-02-28)
+MIME-Version: 1.0
+Message-ID: <20200312030009.GJ8045@magnolia>
+Date:   Wed, 11 Mar 2020 20:00:09 -0700 (PDT)
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Ira Weiny <ira.weiny@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200305155144.GA5598@lst.de>
+ <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
+ <20200311033614.GQ1752567@magnolia>
+ <20200311063942.GE10776@dread.disaster.area> <20200311064412.GA11819@lst.de>
+ <20200312004932.GH10776@dread.disaster.area>
+In-Reply-To: <20200312004932.GH10776@dread.disaster.area>
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 19:29:48 -0700 Matthew Wilcox <willy@infradead.org> wrote:
-
-> On Wed, Mar 11, 2020 at 05:59:19PM -0700, Andrew Morton wrote:
-> > hm, it's hard to get excited over this.  Open-coding the
-> > refcount_dec_and_lock_irqsave() internals at a callsite in order to
-> > make sparse happy.
+On Thu, Mar 12, 2020 at 11:49:32AM +1100, Dave Chinner wrote:
+> On Wed, Mar 11, 2020 at 07:44:12AM +0100, Christoph Hellwig wrote:
+> > On Wed, Mar 11, 2020 at 05:39:42PM +1100, Dave Chinner wrote:
+> > > IOWs, the dax_associate_page() related functionality probably needs
+> > > to be a filesystem callout - part of the aops vector, I think, so
+> > > that device dax can still use it. That way XFS can go it's own way,
+> > > while ext4 and device dax can continue to use the existing mechanism
+> > > mechanisn that is currently implemented....
 > > 
-> > Is there some other way, using __acquires (for example)?
+> > s/XFS/XFS with rmap/, as most XFS file systems currently don't have
+> > that enabled we'll also need to keep the legacy path around.
 > 
-> sparse is really bad at conditional lock acquisition. 
+> Sure, that's trivially easy to handle in the XFS code once the
+> callouts are in place.
+> 
+> But, quite frankly, we can enforce rmap to be enabled 
+> enabled because nobody is using a reflink enabled FS w/ DAX right
+> now. Everyone will have to mkfs their filesystems anyway to enable
+> reflink+dax, so we simply don't allow reflink+dax to be enabled
+> unless rmap is also enabled. Simple, easy, trivial.
 
-I can well imagine.
+Heh, this reminds me that I need to get that rmap performance analysis
+report out to the list... it does have a fairly substantial performance
+impact (in its current not-terribly-optimized state) but otoh enables
+self-repair.
 
-> we have similar
-> problems over the vfs.  but we shouldn't be obfuscating our code to make
-> the tool happy.
+--D
 
-Perhaps sparse needs a way of being directed to suppress checking
-across a particular function.
-
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
