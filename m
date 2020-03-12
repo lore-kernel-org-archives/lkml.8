@@ -2,118 +2,108 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A4AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75DCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE7B206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899E32067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgCLPze (ORCPT
+        id S1727753AbgCLPzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:55:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44209 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgCLPzd (ORCPT
+        Thu, 12 Mar 2020 11:55:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23642 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726395AbgCLPzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:55:33 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jCQBF-0005ev-Tx; Thu, 12 Mar 2020 16:55:29 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7E8DE10161D; Thu, 12 Mar 2020 16:55:29 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>, x86 <x86@kernel.org>
-Subject: Re: [tip: irq/core] x86: Select HARDIRQS_SW_RESEND on x86
-In-Reply-To: <CACRpkdYPy93bDwPe1wHhcwpgN9uXepKXS1Ca5yFmDVks=r0RoQ@mail.gmail.com>
-References: <20200123210242.53367-1-hdegoede@redhat.com> <158396292503.28353.1070405680109587154.tip-bot2@tip-bot2> <CACRpkdYPy93bDwPe1wHhcwpgN9uXepKXS1Ca5yFmDVks=r0RoQ@mail.gmail.com>
-Date:   Thu, 12 Mar 2020 16:55:29 +0100
-Message-ID: <87mu8lin4e.fsf@nanos.tec.linutronix.de>
+        Thu, 12 Mar 2020 11:55:46 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CFqR3W096163;
+        Thu, 12 Mar 2020 11:55:39 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqpyau4ct-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 11:55:38 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02CFlDjs028676;
+        Thu, 12 Mar 2020 15:53:34 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03dal.us.ibm.com with ESMTP id 2ypjxs9fhu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 15:53:34 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CFrXMb13632070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 15:53:33 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29F01AE05F;
+        Thu, 12 Mar 2020 15:53:33 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11089AE062;
+        Thu, 12 Mar 2020 15:53:33 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Mar 2020 15:53:33 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v7 1/3] tpm: of: Handle IBM,vtpm20 case when getting log parameters
+Date:   Thu, 12 Mar 2020 11:53:30 -0400
+Message-Id: <20200312155332.671464-2-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200312155332.671464-1-stefanb@linux.vnet.ibm.com>
+References: <20200312155332.671464-1-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-12_07:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ suspectscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Walleij <linus.walleij@linaro.org> writes:
-> On Wed, Mar 11, 2020 at 10:42 PM tip-bot2 for Hans de Goede
-> Just help me understand the semantics of this thing...
->
-> According to the text in KConfig:
->
-> # Tasklet based software resend for pending interrupts on enable_irq()
-> config HARDIRQS_SW_RESEND
->        bool
->
-> According to
-> commit a4633adcdbc15ac51afcd0e1395de58cee27cf92
->
->     [PATCH] genirq: add genirq sw IRQ-retrigger
->
->     Enable platforms that do not have a hardware-assisted
-> hardirq-resend mechanism
->     to resend them via a softirq-driven IRQ emulation mechanism.
->
-> so when enable_irq() is called, if the IRQ is already asserted,
-> it will be distributed in the form of a software irq?
->
-> OK I give up I don't understand the semantics of this thing.
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-Level type interrupts are "resending" in hardware as long as the device
-interrupt is still asserted.
+A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
+the device tree. Handle it in the same way as 'IBM,vtpm'.
 
-The problem are edge interrupts.
+The vTPM 2.0's log is written in little endian format so that for this
+aspect we can rely on existing code.
 
-    When an edge interrupt is disabled via disable_irq() the core does
-    not mask the chip because if the device raises an interrupt not all
-    interrupt chips latch that and forward it to the CPU on unmask,
-    i.e. some interrupt chips simply ignore an etch when the line is
-    masked.
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
+Tested-by: Nayna Jain <nayna@linux.ibm.com>
+---
+ drivers/char/tpm/eventlog/of.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-    So when the device raises an edge while the interrupt is disabled
-    the core still handles the hardware interrupt and:
+diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
+index af347c190819..a9ce66d09a75 100644
+--- a/drivers/char/tpm/eventlog/of.c
++++ b/drivers/char/tpm/eventlog/of.c
+@@ -51,7 +51,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
+ 	 * endian format. For this reason, vtpm doesn't need conversion
+ 	 * but physical tpm needs the conversion.
+ 	 */
+-	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
++	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
++	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+ 		size = be32_to_cpup((__force __be32 *)sizep);
+ 		base = be64_to_cpup((__force __be64 *)basep);
+ 	} else {
+-- 
+2.23.0
 
-      - masks the interrupt line
-      - sets the pending bit
-      - does not invoke the device handler
-
-    On enable_irq() the pending bit is checked and if set the interrupt
-    is tried to be retriggered or resent, but only if it's edge type.
-    
-    So if the interrupt chip provides a irq_retrigger() callback the
-    core uses that and only if this fails or is not available it resorts
-    to software "resend" which means queueing it for execution in
-    tasklet context.
-
-> I see that ARM and ARM64 simply just select this. What
-> happens if you do that and why is x86 not selecting it in general?
-
-irq resending on X86 is not really problem free for interrupts
-which are directly connect to the local APIC. The only way which is
-halfways safe is the hardware retrigger. See
-
-    https://lkml.kernel.org/r/20200306130623.590923677@linutronix.de
-    https://lkml.kernel.org/r/20200306130623.684591280@linutronix.de
-
-for the gory details. The GPIO interrupts which hang off behind some
-slow bus or are multiplexed in other ways are not affected by this
-hardware design induced madness.
-
-As I don't know how many other architectures have trainwrecked interrupt
-delivery mechanisms (IA64 definitely does), I'm more than reluctant to
-inflict this on the world unconditionally.
-
-Hope that helps.
-
-Thanks,
-
-        tglx
