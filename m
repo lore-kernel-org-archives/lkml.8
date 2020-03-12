@@ -2,76 +2,123 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EC7C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD3AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC6A2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584023127;
-	bh=IJZgWyzQXOaK+PHYHTp3+TM2BySWKiwXl8P6u6C0DTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n/Ab3RgfKV0tojkXjD/M2gSj941AwbFl4MZs+G7/dCgmMeTyAbPM+OMjb7xFaQqOz
-	 clouN/OHRCtrOcLLHP8RNndlG6thy/vJ5t8nwzS5gkTQ/ZnfHFBV4fbQhPrOLmlcdj
-	 v94+Evu5oDGaW91NLQTwfiTwMoKFKvulyfA5M/v4=
+	by mail.kernel.org (Postfix) with ESMTP id E17EC20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R5SqUbWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgCLOZ0 (ORCPT
+        id S1727606AbgCLOZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgCLOZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:25:26 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3148320650;
-        Thu, 12 Mar 2020 14:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584023125;
-        bh=IJZgWyzQXOaK+PHYHTp3+TM2BySWKiwXl8P6u6C0DTc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kz3ZHSch0M2pneIcsz38LoTBcir99AOr/mi2y0EjQfznsWLEIjFIMcP8jnrDBD+3b
-         5oBM+G7S7+HRr+APwIIOYZkeYd3dqDVVbPUNXoitJ8uZfOv4yKGd/T2u0YTciVdWSF
-         vMDNSVWvAjpuVCxI7eOyqmXolp5B61QgkS+BXytM=
-Date:   Thu, 12 Mar 2020 22:25:14 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        peng.fan@nxp.com, aford173@gmail.com, ping.bai@nxp.com,
-        jun.li@nxp.com, shengjiu.wang@nxp.com, bjorn.andersson@linaro.org,
-        olof@lixom.net, vkoul@kernel.org, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 RESEND 3/4] arm64: defconfig: Enable
- CONFIG_IMX8MM_THERMAL as module
-Message-ID: <20200312142513.GB1249@dragon>
-References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
- <1582947862-11073-3-git-send-email-Anson.Huang@nxp.com>
+        Thu, 12 Mar 2020 10:25:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47786 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbgCLOZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:25:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vL6sfuk3fuzxavJdZVNm+qaxWtqP+qflLERWgWf6HbQ=; b=R5SqUbWo2imaSWG4yGbXnTLMSz
+        gluVYEw+cG6l1HN1uF9b1d2lZkrYDc15dttQvfdQM+wVxhPEXrX7G+Mwv+YWtdfA+cPlHd7gKQGdY
+        D4zhhC9whbwrHwOMEFmlvPAyWzOuxOsstsBN+vlVu04kRyNoSUnr0rqfISXkE4sIrfc9C485+SNhn
+        srDyRMt22jwT2rnvldj4eNpbu5LJiCznQmeOl5hKRydaU0biFqBImNCtFmZfwbTw7U5OHEdhkfeq7
+        4ypAR754EOSI9I3pgpH50r5dMhaxW/HBMNQx3MPwkzbSFYIvIh6srIYIjNMK69r3R2cNbWW46fz+/
+        +Mn5NdyQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCOmF-0006q1-Dz; Thu, 12 Mar 2020 14:25:35 +0000
+Date:   Thu, 12 Mar 2020 07:25:35 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@suse.com, akpm@linux-foundation.org,
+        david@redhat.com
+Subject: Re: [PATCH v2] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200312142535.GK22433@bombadil.infradead.org>
+References: <20200312130822.6589-1-bhe@redhat.com>
+ <20200312133416.GI22433@bombadil.infradead.org>
+ <20200312141826.djb7osbekhcnuexv@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582947862-11073-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200312141826.djb7osbekhcnuexv@master>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 11:44:21AM +0800, Anson Huang wrote:
-> Enable CONFIG_IMX8MM_THERMAL as module to support i.MX8MM
-> thermal driver.
+On Thu, Mar 12, 2020 at 02:18:26PM +0000, Wei Yang wrote:
+> On Thu, Mar 12, 2020 at 06:34:16AM -0700, Matthew Wilcox wrote:
+> >On Thu, Mar 12, 2020 at 09:08:22PM +0800, Baoquan He wrote:
+> >> This change makes populate_section_memmap()/depopulate_section_memmap
+> >> much simpler.
+> >> 
+> >> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> >> Signed-off-by: Baoquan He <bhe@redhat.com>
+> >> ---
+> >> v1->v2:
+> >>   The old version only used __get_free_pages() to replace alloc_pages()
+> >>   in populate_section_memmap().
+> >>   http://lkml.kernel.org/r/20200307084229.28251-8-bhe@redhat.com
+> >> 
+> >>  mm/sparse.c | 27 +++------------------------
+> >>  1 file changed, 3 insertions(+), 24 deletions(-)
+> >> 
+> >> diff --git a/mm/sparse.c b/mm/sparse.c
+> >> index bf6c00a28045..362018e82e22 100644
+> >> --- a/mm/sparse.c
+> >> +++ b/mm/sparse.c
+> >> @@ -734,35 +734,14 @@ static void free_map_bootmem(struct page *memmap)
+> >>  struct page * __meminit populate_section_memmap(unsigned long pfn,
+> >>  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+> >>  {
+> >> -	struct page *page, *ret;
+> >> -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
+> >> -
+> >> -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
+> >> -	if (page)
+> >> -		goto got_map_page;
+> >> -
+> >> -	ret = vmalloc(memmap_size);
+> >> -	if (ret)
+> >> -		goto got_map_ptr;
+> >> -
+> >> -	return NULL;
+> >> -got_map_page:
+> >> -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
+> >> -got_map_ptr:
+> >> -
+> >> -	return ret;
+> >> +	return kvmalloc_node(sizeof(struct page) * PAGES_PER_SECTION,
+> >> +			     GFP_KERNEL|__GFP_NOWARN, nid);
+> >
+> >Use of NOWARN here is inappropriate, because there's no fallback.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Hmm... this replacement is a little tricky.
+> 
+> When you look into kvmalloc_node(), it will do the fallback if the size is
+> bigger than PAGE_SIZE. This means the change here may not be equivalent as
+> before if memmap_size is less than PAGE_SIZE.
+> 
+> For example if :
+>   PAGE_SIZE = 64K 
+>   SECTION_SIZE = 128M
+> 
+> would lead to memmap_size = 2K, which is less than PAGE_SIZE.
 
-Applied, thanks.
+Yes, I thought about that.  I decided it wasn't a problem, as long as
+the struct page remains aligned, and we now have a guarantee that allocations
+above 512 bytes in size are aligned.  With a 64 byte struct page, as long
+as we're allocating at least 8 pages, we know it'll be naturally aligned.
+
+Your calculation doesn't take into account the size of struct page.
+128M / 64k is indeed 2k, but you forgot to multiply by 64, which takes
+us to 128kB.
