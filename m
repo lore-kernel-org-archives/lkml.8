@@ -2,111 +2,63 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2989C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD778C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA77320716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583996576;
-	bh=tHtY2a+bDXFzDLQpJxEq11G1LE52aQPvJ2P6CHx5RNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ODCa6n8pRk7YMg2PZvInC0Z7YdAy1iRFQWI7OvRqivqoGpkzZsCAh/TWTtdHWhXas
-	 m3NP0Qy/ewu4PUintRT+XLLyAYbHnfs+GUDhnp+DeStpbhl+74xqnUgFCkIqnEzmpR
-	 LVYwf54emNQPWUGT1sPExVBcyQEmA2HOJs19BjUg=
+	by mail.kernel.org (Postfix) with ESMTP id D2E7E206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbgCLHCz (ORCPT
+        id S2388064AbgCLHDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387845AbgCLHCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:02:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ECA9206FA;
-        Thu, 12 Mar 2020 07:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583996572;
-        bh=tHtY2a+bDXFzDLQpJxEq11G1LE52aQPvJ2P6CHx5RNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qca7UhL+3b9z0ltFZSIL0KM73MUr8cA9HyJQ5V2HO3TooOfpW0cHoRH5Nco63ghie
-         B9t6dwZj15fQygPIFmgaivyjv83kV7LaQaKJOI0i2YPSIMAt4z03rxtnK3YIalZskU
-         3yt2DC0WnbkqjEKWVNmhfm6MKMv26evO79lcq4jo=
-Date:   Thu, 12 Mar 2020 08:02:50 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/169] 5.4.25-rc4 review
-Message-ID: <20200312070250.GB4157582@kroah.com>
-References: <20200311204002.240698596@linuxfoundation.org>
- <20200311230653.GA25697@roeck-us.net>
- <fb6f1f17-456b-86ec-f7d7-e9e6e8c28ba1@mageia.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb6f1f17-456b-86ec-f7d7-e9e6e8c28ba1@mageia.org>
+        Thu, 12 Mar 2020 03:03:51 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56504 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388016AbgCLHDv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:03:51 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DE51514E25406;
+        Thu, 12 Mar 2020 00:03:50 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 00:03:50 -0700 (PDT)
+Message-Id: <20200312.000350.637350189715401251.davem@davemloft.net>
+To:     chris.packham@alliedtelesis.co.nz
+Cc:     andrew@lunn.ch, josua@solid-run.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: mvmdio: avoid error message for optional IRQ
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
+References: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Mar 2020 00:03:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:22:34AM +0200, Thomas Backlund wrote:
-> Den 12-03-2020 kl. 01:06, skrev Guenter Roeck:
-> > On Wed, Mar 11, 2020 at 09:41:16PM +0100, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 5.4.25 release.
-> > > There are 169 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Fri, 13 Mar 2020 20:39:27 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > Build results:
-> > 	total: 158 pass: 146 fail: 12
-> > Failed builds:
-> > 	alpha:allmodconfig
-> > 	arm:allmodconfig
-> > 	arm64:allmodconfig
-> > 	m68k:allmodconfig
-> > 	mips:allmodconfig
-> > 	nds32:allmodconfig
-> > 	parisc:allmodconfig
-> > 	powerpc:allmodconfig
-> > 	riscv:defconfig
-> > 	s390:allmodconfig
-> > 	sparc64:allmodconfig
-> > 	xtensa:allmodconfig
-> > Qemu test results:
-> > 	total: 422 pass: 405 fail: 17
-> > Failed tests:
-> > 	<all riscv>
-> > 
-> > As already reported, the failure is:
-> > 
-> > drivers/gpu/drm/virtio/virtgpu_object.c:31:67: error: expected ')' before 'int'
-> >     31 | module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
-> > 
-> > Guenter
-> > 
-> 
-> I guess you need:
-> commit b0138364da17617db052c4a738b58bf45e42f500
-> Author: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date:   Wed Aug 28 18:55:16 2019 +1000
-> 
->     drm/virtio: module_param_named() requires linux/moduleparam.h
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Date: Thu, 12 Mar 2020 09:05:46 +1300
 
-Now added, thanks.
+> Per the dt-binding the interrupt is optional so use
+> platform_get_irq_optional() instead of platform_get_irq(). Since
+> commit 7723f4c5ecdb ("driver core: platform: Add an error message to
+> platform_get_irq*()") platform_get_irq() produces an error message
+> 
+>   orion-mdio f1072004.mdio: IRQ index 0 not found
+> 
+> which is perfectly normal if one hasn't specified the optional property
+> in the device tree.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-greg k-h
+Applied, thanks.
