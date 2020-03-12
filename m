@@ -2,78 +2,64 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E85C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B00BC0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED6020736
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DBD20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HIShHKke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387659AbgCLC15 (ORCPT
+        id S2387664AbgCLC3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:27:57 -0400
-Received: from smtprelay0140.hostedemail.com ([216.40.44.140]:43998 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387608AbgCLC14 (ORCPT
+        Wed, 11 Mar 2020 22:29:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:32970 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387608AbgCLC3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:27:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D282A75BA;
-        Thu, 12 Mar 2020 02:27:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: jelly92_ae878a33e84c
-X-Filterd-Recvd-Size: 1807
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 12 Mar 2020 02:27:54 +0000 (UTC)
-Message-ID: <2c4b42d1fb0bdb6604a72b2a10d49f9eae4b0ff4.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: always allow C99 SPDX License Identifer
- comments
-From:   Joe Perches <joe@perches.com>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Date:   Wed, 11 Mar 2020 19:26:12 -0700
-In-Reply-To: <20200311191128.7896-1-scott.branden@broadcom.com>
-References: <20200311191128.7896-1-scott.branden@broadcom.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 11 Mar 2020 22:29:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1Jj6L8vIcZ93mZ6eanG7loVD291lPrGo+W34O45vAww=; b=HIShHKkeQH+3yNOsaYMjZBAn0o
+        LxgYzRbK8kN8tAOUHcRHX18tSVWlTb9yexsxk+5sDZic+MpENzPUMWEFl6V9UvvkEp3W+7AcVF4w+
+        /g1YlvOU/R+R594ghg5lUax6xjXiX5FsG4j0slA/7V7o2Xkyt8vrcjuG/PVZSTaQ4qWiH5qYgen2+
+        VgjPRy36KC55yPk5/d2IO89IvCf/1j7Ao9o/OPxwvZBOjS636jziQ3KRGgBjLfxCgHrV++XGKGbHP
+        uSD4Qe+ER5RmV1cKeWvM9ink9+Pj2V86+AwKqcvP7QgXK6UJhuxpyR1ej5QiSoELlwlF2JlDLPBOF
+        jkDrc7eg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCDbZ-000361-13; Thu, 12 Mar 2020 02:29:49 +0000
+Date:   Wed, 11 Mar 2020 19:29:48 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] backing-dev: refactor wb_congested_put()
+Message-ID: <20200312022948.GH22433@bombadil.infradead.org>
+References: <20200312002156.49023-1-jbi.octave@gmail.com>
+ <20200312002156.49023-2-jbi.octave@gmail.com>
+ <20200311175919.30523d55b2e5307ba22bbdc0@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311175919.30523d55b2e5307ba22bbdc0@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 12:11 -0700, Scott Branden wrote:
-> Always allow C99 comment styles if SPDK-License-Identifier is in comment
-> even if C99_COMMENT_TOLERANCE is specified in the --ignore options.
-
-Why is this useful?
-
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  scripts/checkpatch.pl | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Mar 11, 2020 at 05:59:19PM -0700, Andrew Morton wrote:
+> hm, it's hard to get excited over this.  Open-coding the
+> refcount_dec_and_lock_irqsave() internals at a callsite in order to
+> make sparse happy.
 > 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index a63380c6b0d2..c8b429dd6b51 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3852,8 +3852,8 @@ sub process {
->  			}
->  		}
->  
-> -# no C99 // comments
-> -		if ($line =~ m{//}) {
-> +# no C99 // comments except for SPDX-License-Identifier
-> +		if ($line =~ m{//} && $rawline !~ /SPDX-License-Identifier:/) {
->  			if (ERROR("C99_COMMENTS",
->  				  "do not use C99 // comments\n" . $herecurr) &&
->  			    $fix) {
+> Is there some other way, using __acquires (for example)?
 
+sparse is really bad at conditional lock acquisition.  we have similar
+problems over the vfs.  but we shouldn't be obfuscating our code to make
+the tool happy.
