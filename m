@@ -2,183 +2,242 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2627C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D71AC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EC2206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05C42067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XQXgG6Db"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCLSeG (ORCPT
+        id S1726712AbgCLSe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:34:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:39766 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLSeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:34:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7418030E;
-        Thu, 12 Mar 2020 11:34:05 -0700 (PDT)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A63313F67D;
-        Thu, 12 Mar 2020 11:34:04 -0700 (PDT)
-Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
- and delivery
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
- <20200304162558.48836-8-cristian.marussi@arm.com>
- <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <363cb1ba-76b5-cc1e-af45-454837fae788@arm.com>
-Date:   Thu, 12 Mar 2020 18:34:03 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 14:34:27 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39992 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgCLSe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:34:27 -0400
+Received: by mail-pj1-f68.google.com with SMTP id bo3so1578437pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QxXUM8X0VSorgx/wC+WOqJ59jWbP1RkpforxOuGX84w=;
+        b=XQXgG6DbUoC1O8IpMMSoxTu6r6jB8BhGoe3jqkQfSfWZK3K5ETsMpdSgAWlYTpL0bG
+         mrYx/aZDA/p92XXtQgN01NUUn4qdGKT9ChkmgChDwupu6e5FVd3EDzuZA+IARCQRc8Z+
+         l+BOmTUqMFGgOTutUHPi4nslwxK+Bc0AXh1+Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QxXUM8X0VSorgx/wC+WOqJ59jWbP1RkpforxOuGX84w=;
+        b=ikOqww6thsPQqfnyh6BVq3eiptqJRb+cKgHih4WjM1iKZMd0PxZ5mZftXv6NHw+9zs
+         wKCkRPDnYfbxU4RelNXeLErozcZLJ2nqdXY880KqDxgL22AVCrc/+kIr18j/iRhldNcE
+         73EEXPEouLQankv0yZurPgV6lD/ziVdtM6J+MDlicdGIJ3GEN64lYs9JuYgV5jCDOoeF
+         gbEvFt9Fxj0HMiilCI1Cg9GqLv8qlqTKSu7QX6MKDzPpABziz6Yzj7Q6yhzpjenfzmC5
+         wCZA6JB6+7CIdwWhebru8TaKce8ARrwWP+o4axhep6IQTK1OenHtzkg9VY23IlllnQbx
+         fCiA==
+X-Gm-Message-State: ANhLgQ1oNojnFsyVN6XcBm+oNqiAPLtmW+WM+6E0hDMPLs+DXiR39IKJ
+        H2obup09imupHYRASpcWUj2DCA==
+X-Google-Smtp-Source: ADFU+vvvrVImNd6BARHJ3d7y+g69G5nAVGkL4Yx4WCpuUzlf8cpLnGtQSdldzNTSJHYH/EBZISXBPA==
+X-Received: by 2002:a17:90a:26e3:: with SMTP id m90mr5620646pje.144.1584038064911;
+        Thu, 12 Mar 2020 11:34:24 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id e11sm13150050pfj.95.2020.03.12.11.34.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 11:34:24 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-pm@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v3] thermal: devfreq_cooling: Use PM QoS to set frequency limits
+Date:   Thu, 12 Mar 2020 11:34:20 -0700
+Message-Id: <20200312113416.v3.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-In-Reply-To: <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2020 13:51, Lukasz Luba wrote:
-> Hi Cristian,
-> 
-> just one comment below...
+Now that devfreq supports limiting the frequency range of a device
+through PM QoS make use of it instead of disabling OPPs that should
+not be used.
 
-Hi Lukasz
+The switch from disabling OPPs to PM QoS introduces a subtle behavioral
+change in case of conflicting requests (min > max): PM QoS gives
+precedence to the MIN_FREQUENCY request, while higher OPPs disabled
+with dev_pm_opp_disable() would override MIN_FREQUENCY.
 
-Thanks for the review
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+---
 
-> 
-> On 3/4/20 4:25 PM, Cristian Marussi wrote:
->> Add core SCMI Notifications dispatch and delivery support logic which is
->> able, at first, to dispatch well-known received events from the RX ISR to
->> the dedicated deferred worker, and then, from there, to final deliver the
->> events to the registered users' callbacks.
->>
->> Dispatch and delivery is just added here, still not enabled.
->>
->> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
->> ---
->> V3 --> V4
->> - dispatcher now handles dequeuing of events in chunks (header+payload):
->>    handling of these in_flight events let us remove one unneeded memcpy
->>    on RX interrupt path (scmi_notify)
->> - deferred dispatcher now access their own per-protocol handlers' table
->>    reducing locking contention on the RX path
->> V2 --> V3
->> - exposing wq in sysfs via WQ_SYSFS
->> V1 --> V2
->> - splitted out of V1 patch 04
->> - moved from IDR maps to real HashTables to store event_handlers
->> - simplified delivery logic
->> ---
->>   drivers/firmware/arm_scmi/notify.c | 334 ++++++++++++++++++++++++++++-
->>   drivers/firmware/arm_scmi/notify.h |   9 +
->>   2 files changed, 342 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-> 
-> [snip]
-> 
->> +
->> +/**
->> + * scmi_notify  - Queues a notification for further deferred processing
->> + *
->> + * This is called in interrupt context to queue a received event for
->> + * deferred processing.
->> + *
->> + * @handle: The handle identifying the platform instance from which the
->> + *	    dispatched event is generated
->> + * @proto_id: Protocol ID
->> + * @evt_id: Event ID (msgID)
->> + * @buf: Event Message Payload (without the header)
->> + * @len: Event Message Payload size
->> + * @ts: RX Timestamp in nanoseconds (boottime)
->> + *
->> + * Return: 0 on Success
->> + */
->> +int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
->> +		const void *buf, size_t len, u64 ts)
->> +{
->> +	struct scmi_registered_event *r_evt;
->> +	struct scmi_event_header eh;
->> +	struct scmi_notify_instance *ni = handle->notify_priv;
->> +
->> +	/* Ensure atomic value is updated */
->> +	smp_mb__before_atomic();
->> +	if (unlikely(!atomic_read(&ni->enabled)))
->> +		return 0;
->> +
->> +	r_evt = SCMI_GET_REVT(ni, proto_id, evt_id);
->> +	if (unlikely(!r_evt))
->> +		return -EINVAL;
->> +
->> +	if (unlikely(len > r_evt->evt->max_payld_sz)) {
->> +		pr_err("SCMI Notifications: discard badly sized message\n");
->> +		return -EINVAL;
->> +	}
->> +	if (unlikely(kfifo_avail(&r_evt->proto->equeue.kfifo) <
->> +		     sizeof(eh) + len)) {
->> +		pr_warn("SCMI Notifications: queue full dropping proto_id:%d  evt_id:%d  ts:%lld\n",
->> +			proto_id, evt_id, ts);
->> +		return -ENOMEM;
->> +	}
->> +
->> +	eh.timestamp = ts;
->> +	eh.evt_id = evt_id;
->> +	eh.payld_sz = len;
->> +	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
->> +	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
->> +	queue_work(r_evt->proto->equeue.wq,
->> +		   &r_evt->proto->equeue.notify_work);
-> 
-> Is it safe to ignore the return value from the queue_work here?
-> 
+Changes in v3:
+- rebased on bf3a650ab8df ("thermal: qoriq: Fix a compiling issue")
+- added 'Reviewed-by' tag from Lukasz
 
-In fact yes, we do not want to care: it returns true or false depending on the
-fact that the specific work was or not already queued, and we just rely on
-this behavior to keep kicking the worker only when needed but never kick
-more than one instance of it per-queue (so that there's only one reader
-wq and one writer here in the scmi_notify)...explaining better:
+Changes in v2:
+- added documentation for 'req_max_freq'
+- fixed jumps in of_devfreq_cooling_register_power() unwind
+- added comment about behavioral change to the commit message
 
-1. we push an event (hdr+payld) to the protocol queue if we found that there was
-enough space on the queue
+ drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
+ 1 file changed, 23 insertions(+), 47 deletions(-)
 
-2a. if at the time of the kfifo_in( ) the worker was already running
-(queue not empty) it will process our new event sooner or later and here
-the queue_work will return false, but we do not care in fact ... we
-tried to kick it just in case
-
-2b. if instead at the time of the kfifo_in() the queue was empty the worker would
-have probably already gone to the sleep and this queue_work() will return true and
-so this time it will effectively wake up the worker to process our items
-
-The important thing here is that we are sure to wakeup the worker when needed
-but we are equally sure we are never causing the scheduling of more than one worker
-thread consuming from the same queue (because that would break the one reader/one writer
-assumption which let us use the fifo in a lockless manner): this is possible because
-queue_work checks if the required work item is already pending and in such a case backs
-out returning false and we have one work_item (notify_work) defined per-protocol and
-so per-queue.
-
-Now probably I wrote too much of an explanation and confuse stuff more ... :D
-
-Regards
-
-Cristian
-
-> Regards,
-> Lukasz
-> 
-> 
+diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+index a87d4fa031c87..f7f32e98331b1 100644
+--- a/drivers/thermal/devfreq_cooling.c
++++ b/drivers/thermal/devfreq_cooling.c
+@@ -24,11 +24,13 @@
+ #include <linux/idr.h>
+ #include <linux/slab.h>
+ #include <linux/pm_opp.h>
++#include <linux/pm_qos.h>
+ #include <linux/thermal.h>
+ 
+ #include <trace/events/thermal.h>
+ 
+-#define SCALE_ERROR_MITIGATION 100
++#define HZ_PER_KHZ		1000
++#define SCALE_ERROR_MITIGATION	100
+ 
+ static DEFINE_IDA(devfreq_ida);
+ 
+@@ -54,6 +56,8 @@ static DEFINE_IDA(devfreq_ida);
+  *		The 'res_util' range is from 100 to (power_table[state] * 100)
+  *		for the corresponding 'state'.
+  * @capped_state:	index to cooling state with in dynamic power budget
++ * @req_max_freq:	PM QoS request for limiting the maximum frequency
++ *			of the devfreq device.
+  */
+ struct devfreq_cooling_device {
+ 	int id;
+@@ -66,49 +70,9 @@ struct devfreq_cooling_device {
+ 	struct devfreq_cooling_power *power_ops;
+ 	u32 res_util;
+ 	int capped_state;
++	struct dev_pm_qos_request req_max_freq;
+ };
+ 
+-/**
+- * partition_enable_opps() - disable all opps above a given state
+- * @dfc:	Pointer to devfreq we are operating on
+- * @cdev_state:	cooling device state we're setting
+- *
+- * Go through the OPPs of the device, enabling all OPPs until
+- * @cdev_state and disabling those frequencies above it.
+- */
+-static int partition_enable_opps(struct devfreq_cooling_device *dfc,
+-				 unsigned long cdev_state)
+-{
+-	int i;
+-	struct device *dev = dfc->devfreq->dev.parent;
+-
+-	for (i = 0; i < dfc->freq_table_size; i++) {
+-		struct dev_pm_opp *opp;
+-		int ret = 0;
+-		unsigned int freq = dfc->freq_table[i];
+-		bool want_enable = i >= cdev_state ? true : false;
+-
+-		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
+-
+-		if (PTR_ERR(opp) == -ERANGE)
+-			continue;
+-		else if (IS_ERR(opp))
+-			return PTR_ERR(opp);
+-
+-		dev_pm_opp_put(opp);
+-
+-		if (want_enable)
+-			ret = dev_pm_opp_enable(dev, freq);
+-		else
+-			ret = dev_pm_opp_disable(dev, freq);
+-
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
+ 					 unsigned long *state)
+ {
+@@ -135,7 +99,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+ 	struct devfreq_cooling_device *dfc = cdev->devdata;
+ 	struct devfreq *df = dfc->devfreq;
+ 	struct device *dev = df->dev.parent;
+-	int ret;
++	unsigned long freq;
+ 
+ 	if (state == dfc->cooling_state)
+ 		return 0;
+@@ -145,9 +109,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+ 	if (state >= dfc->freq_table_size)
+ 		return -EINVAL;
+ 
+-	ret = partition_enable_opps(dfc, state);
+-	if (ret)
+-		return ret;
++	freq = dfc->freq_table[state];
++
++	dev_pm_qos_update_request(&dfc->req_max_freq,
++				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
+ 
+ 	dfc->cooling_state = state;
+ 
+@@ -530,9 +495,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 	if (err)
+ 		goto free_dfc;
+ 
+-	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
++	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
++				     DEV_PM_QOS_MAX_FREQUENCY,
++				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
+ 	if (err < 0)
+ 		goto free_tables;
++
++	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
++	if (err < 0)
++		goto remove_qos_req;
+ 	dfc->id = err;
+ 
+ 	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
+@@ -553,6 +524,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 
+ release_ida:
+ 	ida_simple_remove(&devfreq_ida, dfc->id);
++
++remove_qos_req:
++	dev_pm_qos_remove_request(&dfc->req_max_freq);
++
+ free_tables:
+ 	kfree(dfc->power_table);
+ 	kfree(dfc->freq_table);
+@@ -601,6 +576,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
+ 
+ 	thermal_cooling_device_unregister(dfc->cdev);
+ 	ida_simple_remove(&devfreq_ida, dfc->id);
++	dev_pm_qos_remove_request(&dfc->req_max_freq);
+ 	kfree(dfc->power_table);
+ 	kfree(dfc->freq_table);
+ 
+-- 
+2.25.1.481.gfbce0eb801-goog
 
