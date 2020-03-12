@@ -2,199 +2,118 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630B0C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5F6206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dNDXdnQ1"
+	by mail.kernel.org (Postfix) with ESMTP id 4D19C20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCLKJe (ORCPT
+        id S1726705AbgCLKKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:09:34 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42344 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLKJe (ORCPT
+        Thu, 12 Mar 2020 06:10:24 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42490 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgCLKKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:09:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x2so2661552pfn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:09:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Zvlb+FvFd6kbdQoEVk7MAktkpupjBY4PDAWlePBUw3c=;
-        b=dNDXdnQ1qE/HwYnjjnnNZoYKZirtiihAIwEltN5ws+SuQJeaZ4WwWdCnwJlJXWPnZs
-         yp2xQGpOUXLrcMiXLv77Tkpd8SecEzsHPauCoo8nnuTGhOUxomINnpxpwGB4F4ZkntrH
-         4fLuvwfZMyYBjFomHT71QuGRLK1Aou0EyXviQ=
+        Thu, 12 Mar 2020 06:10:23 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w17so2629053oic.9;
+        Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Zvlb+FvFd6kbdQoEVk7MAktkpupjBY4PDAWlePBUw3c=;
-        b=ZVhz0AhXFnb9lsi4hx/xR8dacTEspy11IkGD47PNNhm37/6PSDPGojGZV1NaSxRXJj
-         tiEqUAM196/6XlEAqfwTNA5oVbKm3BPWsjDSMMJCdvu90L6uxUjGZcSKs4Ih//m9hVuz
-         546wrDAV3uAKuOVPiXKwfQH6tfFo3EO8zV2dFjAhKQZ/RYHsRFjZ1hGYVFfrtp5rcEXE
-         k6sZPoCQUMGpemI905A+xuWU6zmYlMO8nooPOFDjUbTq5hBaIg/glrrQ9w61wdSQyLEM
-         kP14X+BYo5lLSIzpWy8hS9zzdU0UAWQSWuxg9+S2iO2t9rIIRM+tcaR1inLbrj5Ocw47
-         g4eQ==
-X-Gm-Message-State: ANhLgQ2/NgpeGVNW0P4/hHvkc1QVdwlQrDqJLWvQ9IswsEzciul9nfgf
-        2T1ym+J8uffiv5gbjpOFGFoTZmlFMR0=
-X-Google-Smtp-Source: ADFU+vuGimrwiNkaxPmq90ULYN/QKiQzv6pgizkpAIcIX2eHZlxddsPV/aB43OuxX8qcPuzTz95khg==
-X-Received: by 2002:a62:17d1:: with SMTP id 200mr7151259pfx.227.1584007771016;
-        Thu, 12 Mar 2020 03:09:31 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id s19sm3678368pfh.218.2020.03.12.03.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 03:09:30 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     furquan@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 3/3] platform/chrome: notify: Pull PD_HOST_EVENT status
-Date:   Thu, 12 Mar 2020 03:08:11 -0700
-Message-Id: <20200312100809.21153-4-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-In-Reply-To: <20200312100809.21153-1-pmalani@chromium.org>
-References: <20200312100809.21153-1-pmalani@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zwwoiowfHNPz9HpeeIjPtaOJgNXOTQ/vvDnMi1D629A=;
+        b=n9l2/tq382/vlPmvwJU2vWJ9Ts81d+MELVbuk+qaQfyUs9mB+vmZjEu0OvMtR2O9hE
+         +6b1gXkWQMZt8lFS50RhT0UtPLn/Cjry7YO1tdxmIg9RC3MjW5oPUyFxNBi353XXSPdA
+         Q+d1pql2n2V86pIKLhvbJoDnQzKcSeVAM5/Ep8AM0EB52tp/gUK01asqSfzkch+YIE7/
+         kZJ5ddpSeUNZuGFleCY0LfT12fGlfWhc1hRo/eNsGIablE+ObOYJa3WTKi8USaj0qpyd
+         djCHxqAsM+3iFIY8LkWK5U2BdlEDavjLOiOSaEUGAGy6bv65Fo1oXT0TM2WnjiqtLyNO
+         Z5/A==
+X-Gm-Message-State: ANhLgQ0OmuvEacVrXlbrogc0zinv/wvMjmSWJpHhdPve2VgZNBx5S4Lj
+        I2yQaDnIY5s5Fv0w2pmXca7tneWkrkHS8sqQr24=
+X-Google-Smtp-Source: ADFU+vt2xrdAlnM+K+3Hl7KD8Ot0CPxqX+cCiLIRU6jFW7JpfLC+f9+Lgd1azWcf6NufNcnKkmCIgjYifaSTuSjCeA8=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr1923995oia.148.1584007822268;
+ Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Mar 2020 11:10:11 +0100
+Message-ID: <CAMuHMdWqMHGeENswnfk-Hra4JrfELQkLuzY_6JHFRJZWJZPJog@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] Add LVDS panel support to HiHope RZ/G2M
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read the PD host even status from the EC and send that to the notifier
-listeners, for more fine-grained event information.
+Hi Lad,
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
- drivers/platform/chrome/cros_usbpd_notify.c | 87 ++++++++++++++++++++-
- 1 file changed, 84 insertions(+), 3 deletions(-)
+On Wed, Mar 11, 2020 at 9:03 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> The HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
+> Advantech, but the panel doesn't come with the board, it has to purchased
+> separatey, therefore this series adds panel support to a new DT.
+>
+> v3->v4
+>  * Included rzg2-advantech-idk-1110wr-panel.dtsi in
+>    r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts file instead of re-inventing
+>    the wheel.
+>  * Dropped the Ack from Laurent for patch 2/2 due to above changes
+>
+> v2->v3
+>  * Included Reviewed-by from Rob and Laurent
+>  * Switched to dual license
+>  * Added myself as the maintainer
+>  * Updated copyright year
+>  * Rebased the patches
+>
+> v1->v2
+>  * fixed a space according to Geert's feedback.
+>
+> Thanks,
+> Prabhakar
+>
+> Fabrizio Castro (2):
+>   dt-bindings: display: Add idk-1110wr binding
+>   arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
+>
+>  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/renesas/Makefile               |  1 +
+>  .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 52 ++++++++++++++++
+>  3 files changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+>  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
-diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-index d2dbf7017e29c..3d9db4146217e 100644
---- a/drivers/platform/chrome/cros_usbpd_notify.c
-+++ b/drivers/platform/chrome/cros_usbpd_notify.c
-@@ -53,11 +53,91 @@ void cros_usbpd_unregister_notify(struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
- 
-+/**
-+ * cros_ec_pd_command - Send a command to the EC.
-+ *
-+ * @ec_dev: EC device
-+ * @command: EC command
-+ * @outdata: EC command output data
-+ * @outsize: Size of outdata
-+ * @indata: EC command input data
-+ * @insize: Size of indata
-+ *
-+ * Return: 0 on success, < 0 on failure.
-+ */
-+static int cros_ec_pd_command(struct cros_ec_device *ec_dev,
-+			      int command,
-+			      uint8_t *outdata,
-+			      int outsize,
-+			      uint8_t *indata,
-+			      int insize)
-+{
-+	int ret;
-+	struct cros_ec_command *msg;
-+
-+	msg = kzalloc(sizeof(*msg) + max(insize, outsize), GFP_KERNEL);
-+	if (!msg)
-+		return -EC_RES_ERROR;
-+
-+	msg->command = command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outsize)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	if (ret < 0)
-+		goto error;
-+
-+	if (insize)
-+		memcpy(indata, msg->data, insize);
-+	ret = EC_RES_SUCCESS;
-+error:
-+	kfree(msg);
-+	return ret;
-+}
-+
-+static void cros_usbpd_get_event_and_notify(struct device  *dev,
-+					    struct cros_ec_device *ec_dev)
-+{
-+	struct ec_response_host_event_status host_event_status;
-+	u32 event = 0;
-+	int ret;
-+
-+	/*
-+	 * We still send a 0 event out to older devices which don't
-+	 * have the updated device heirarchy.
-+	 */
-+	if (!ec_dev) {
-+		dev_dbg(dev,
-+			"EC device inaccessible; sending 0 event status.\n");
-+		goto send_notify;
-+	}
-+
-+	/* Check for PD host events on EC. */
-+	ret = cros_ec_pd_command(ec_dev, EC_CMD_PD_HOST_EVENT_STATUS,
-+				 NULL, 0,
-+				 (uint8_t *)&host_event_status,
-+				 sizeof(host_event_status));
-+	if (ret < 0) {
-+		dev_warn(dev, "Can't get host event status (err: %d)\n", ret);
-+		goto send_notify;
-+	}
-+
-+	event = host_event_status.status;
-+
-+send_notify:
-+	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-+}
-+
- #ifdef CONFIG_ACPI
- 
- static void cros_usbpd_notify_acpi(acpi_handle device, u32 event, void *data)
- {
--	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-+	struct cros_usbpd_notify_data *pdnotify = data;
-+
-+	cros_usbpd_get_event_and_notify(pdnotify->dev, pdnotify->ec);
- }
- 
- static int cros_usbpd_notify_probe_acpi(struct platform_device *pdev)
-@@ -144,6 +224,8 @@ static int cros_usbpd_notify_plat(struct notifier_block *nb,
- 				  unsigned long queued_during_suspend,
- 				  void *data)
- {
-+	struct cros_usbpd_notify_data *pdnotify = container_of(nb,
-+			struct cros_usbpd_notify_data, nb);
- 	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
- 	u32 host_event = cros_ec_get_host_event(ec_dev);
- 
-@@ -151,8 +233,7 @@ static int cros_usbpd_notify_plat(struct notifier_block *nb,
- 		return NOTIFY_BAD;
- 
- 	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
--		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
--					     host_event, NULL);
-+		cros_usbpd_get_event_and_notify(pdnotify->dev, ec_dev);
- 		return NOTIFY_OK;
- 	}
- 	return NOTIFY_DONE;
+Thanks for the update!
+I've queued the second patch in renesas-devel for v5.7.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.1.696.g5e7596f4ac-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
