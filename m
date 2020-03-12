@@ -2,84 +2,60 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37740C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF85C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3F820575
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FD220575
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387914AbgCLGap (ORCPT
+        id S2387948AbgCLGdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:30:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46912 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387784AbgCLGao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:30:44 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 48A521524AFDBEDCB9A7;
-        Thu, 12 Mar 2020 14:30:37 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
- 14:30:30 +0800
-Subject: Re: [PATCH v5 01/23] irqchip/gic-v3: Use SGIs without active state if
- offered
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-2-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <63f6530a-9369-31e6-88d0-5337173495b9@huawei.com>
-Date:   Thu, 12 Mar 2020 14:30:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-2-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Thu, 12 Mar 2020 02:33:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56240 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387784AbgCLGdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 02:33:17 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0F5EF14DB1AB4;
+        Wed, 11 Mar 2020 23:33:16 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 23:33:15 -0700 (PDT)
+Message-Id: <20200311.233315.1715097650969345027.davem@davemloft.net>
+To:     chenzhou10@huawei.com
+Cc:     willy@infradead.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] net: ibm: remove set but not used variables 'err'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200311065411.172692-1-chenzhou10@huawei.com>
+References: <20200311065411.172692-1-chenzhou10@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Mar 2020 23:33:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+From: Chen Zhou <chenzhou10@huawei.com>
+Date: Wed, 11 Mar 2020 14:54:11 +0800
 
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> To allow the direct injection of SGIs into a guest, the GICv4.1
-> architecture has to sacrifice the Active state so that SGIs look
-> a lot like LPIs (they are injected by the same mechanism).
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> In order not to break existing software, the architecture gives
-> offers guests OSs the choice: SGIs with or without an active
-> state. It is the hypervisors duty to honor the guest's choice.
+> drivers/net/ethernet/ibm/emac/core.c: In function __emac_mdio_write:
+> drivers/net/ethernet/ibm/emac/core.c:875:9: warning:
+> 	variable err set but not used [-Wunused-but-set-variable]
 > 
-> For this, the architecture offers a discovery bit indicating whether
-> the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
-> bit indicating whether the guest wants Active-less SGIs or not
-> (controlled by GICD_CTLR.nASSGIreq).
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
-I still can't find the description of these two bits in IHI0069F.
-Are they actually architected and will be available in the future
-version of the spec?  I want to confirm it again since this has a
-great impact on the KVM code, any pointers?
-
-
-Thanks,
-Zenghui
-
+Applied, thank you.
