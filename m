@@ -2,84 +2,147 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735A6C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D73C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9009520734
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lq9bjLEB"
+	by mail.kernel.org (Postfix) with ESMTP id 7290E20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387690AbgCLClh (ORCPT
+        id S2387695AbgCLCm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:41:37 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43120 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387501AbgCLClh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:41:37 -0400
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8167120B9C02;
-        Wed, 11 Mar 2020 19:41:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8167120B9C02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1583980896;
-        bh=FPn0J0a+i5WpPQn+wWi5l3mA8piuchfQOex4GqLMil0=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=Lq9bjLEBp7SL0Z6FdOGkbsBEfiXIiOB12effq3ESopNg/WxdNEjjthlzf7xMDmeAr
-         ksJOTlMvOTT49LGJ9z22mYxrAW2tGwOg59w69Vo8YhWOaOeJYfGmbJfkDVDbnqwmi4
-         EyWcjHr0Sf3O2tCS609q9IHQZFhVi2bv+KVqVI9E=
-Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8723bs: rtw_mlme: Remove
- unnecessary conditions
-To:     Shreeya Patel <shreeya.patel23498@gmail.com>,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
-        sbrivio@redhat.com, daniel.baluta@gmail.com, hverkuil@xs4all.nl,
-        Larry.Finger@lwfinger.net
-References: <20200311135859.5626-1-shreeya.patel23498@gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <61a6c3d7-6592-b57b-6466-995309302cc2@linux.microsoft.com>
-Date:   Wed, 11 Mar 2020 19:42:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 11 Mar 2020 22:42:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11664 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387411AbgCLCm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 22:42:56 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 964B35ED28EA7C162979;
+        Thu, 12 Mar 2020 10:42:48 +0800 (CST)
+Received: from ubuntu.huawei.com (10.175.104.215) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 12 Mar 2020 10:42:40 +0800
+From:   tongtiangen <tongtiangen@huawei.com>
+To:     <robdclark@gmail.com>, <sean@poorly.run>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <ddavenport@chromium.org>,
+        <gregkh@linuxfoundation.org>, <abhinavk@codeaurora.org>,
+        <jcrouse@codeaurora.org>, <tglx@linutronix.de>,
+        <tongtiangen@huawei.com>
+CC:     <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] drm/msm/dpu: Remove some set but not used variables
+Date:   Thu, 12 Mar 2020 08:25:59 +0800
+Message-ID: <20200312002559.20738-1-tongtiangen@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200311135859.5626-1-shreeya.patel23498@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/2020 6:58 AM, Shreeya Patel wrote:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> Remove unnecessary if and else conditions since both are leading to the
-> initialization of "phtpriv->ampdu_enable" with the same value.
-> 
-> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c: In function _dpu_debugfs_show_regset32:
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:142:26: warning: variable priv set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c: In function dpu_kms_prepare_commit:
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:271:21: warning: variable dev set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c: In function _dpu_kms_hw_destroy:
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:555:21: warning: variable dev set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c: In function dpu_kms_hw_init:
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:763:26: warning: variable priv set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c: In function dpu_runtime_suspend:
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:1021:21: warning: variable ddev set but not used [-Wunused-but-set-variable]
 
-Stating this based on the patch descriptions I have seen.
-Others, please advise\correct me if I am wrong.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: tongtiangen <tongtiangen@huawei.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-Patch description should state the problem first[1] and then describe 
-how that is fixed in the given patch.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index cb08fafb1dc1..089d1cde39da 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -138,16 +138,12 @@ static int _dpu_debugfs_show_regset32(struct seq_file *s, void *data)
+ {
+ 	struct dpu_debugfs_regset32 *regset = s->private;
+ 	struct dpu_kms *dpu_kms = regset->dpu_kms;
+-	struct drm_device *dev;
+-	struct msm_drm_private *priv;
+ 	void __iomem *base;
+ 	uint32_t i, addr;
+ 
+ 	if (!dpu_kms->mmio)
+ 		return 0;
+ 
+-	dev = dpu_kms->dev;
+-	priv = dev->dev_private;
+ 	base = dpu_kms->mmio + regset->offset;
+ 
+ 	/* insert padding spaces, if needed */
+@@ -267,8 +263,6 @@ static ktime_t dpu_kms_vsync_time(struct msm_kms *kms, struct drm_crtc *crtc)
+ static void dpu_kms_prepare_commit(struct msm_kms *kms,
+ 		struct drm_atomic_state *state)
+ {
+-	struct dpu_kms *dpu_kms;
+-	struct drm_device *dev;
+ 	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *crtc_state;
+ 	struct drm_encoder *encoder;
+@@ -276,8 +270,6 @@ static void dpu_kms_prepare_commit(struct msm_kms *kms,
+ 
+ 	if (!kms)
+ 		return;
+-	dpu_kms = to_dpu_kms(kms);
+-	dev = dpu_kms->dev;
+ 
+ 	/* Call prepare_commit for all affected encoders */
+ 	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
+@@ -552,11 +544,8 @@ static long dpu_kms_round_pixclk(struct msm_kms *kms, unsigned long rate,
+ 
+ static void _dpu_kms_hw_destroy(struct dpu_kms *dpu_kms)
+ {
+-	struct drm_device *dev;
+ 	int i;
+ 
+-	dev = dpu_kms->dev;
+-
+ 	if (dpu_kms->hw_intr)
+ 		dpu_hw_intr_destroy(dpu_kms->hw_intr);
+ 	dpu_kms->hw_intr = NULL;
+@@ -760,7 +749,6 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+ {
+ 	struct dpu_kms *dpu_kms;
+ 	struct drm_device *dev;
+-	struct msm_drm_private *priv;
+ 	int i, rc = -EINVAL;
+ 
+ 	if (!kms) {
+@@ -770,7 +758,6 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+ 
+ 	dpu_kms = to_dpu_kms(kms);
+ 	dev = dpu_kms->dev;
+-	priv = dev->dev_private;
+ 
+ 	atomic_set(&dpu_kms->bandwidth_ref, 0);
+ 
+@@ -1018,10 +1005,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ 	int rc = -1;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+-	struct drm_device *ddev;
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+ 
+-	ddev = dpu_kms->dev;
+ 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+ 	if (rc)
+ 		DPU_ERROR("clock disable failed rc:%d\n", rc);
+-- 
+2.17.1
 
-For example:
-
-In the function rtw_update_ht_cap(), phtpriv->ampdu_enable is set to the 
-same value in both if and else statements.
-
-This patch removes this unnecessary if-else statement.
-
-
-[1] Documentation\process\submitting-patches.rst
-        2) Describe your changes
-
-Thanks,
-  -lakshmi
