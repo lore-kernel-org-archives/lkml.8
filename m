@@ -2,104 +2,104 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4793C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2B6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B22A206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:48:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AiSzVoHT"
+	by mail.kernel.org (Postfix) with ESMTP id 9857D206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584042803;
+	bh=poV+EblAH9g8FbaAVlYH45IwSThQzxJ75LREtJe1pjs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=d8qlf2YMjAAxBR38ctrKrmQOfOEg/3HXbFZXVJdKJcAEF7bpuvP9rXyDsgXK+dWmC
+	 1BM9O/dKN/98sctX03B1/UCsbpp7Z+f3ZTMnIqRSOeu+8UEmhMej3BDzpXPkpx1cdc
+	 36FDlwVv5icQtGDG3AZPDR57MWyNOjcMtGjkdMpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgCLTsR (ORCPT
+        id S1726726AbgCLTxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:48:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37417 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLTsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:48:17 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a141so7757855wme.2;
-        Thu, 12 Mar 2020 12:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=My5hy+eOd+BUGnLYjJSbZOd3nYUzutH2HG2GVn4YySU=;
-        b=AiSzVoHTgqpa1qac7d9U8arGecyjIGMg3cTXGJ8wlp5G007Eidw4MQ8r10C+dZx7vU
-         waJujvvQ3bbzCUvTunqQ7YHn/yXmeCwHKzYquSTivGPIZU/5BVFq27lEdMg2Pim1oIEL
-         0v8QKp1y6Q4deCwbn9he07U2CRFUHo0ve8poxzPjPbf1ZeF3OgfahrX3tA3YGkXDHK6c
-         r6uBPe53trUhQ+DJ13jQPSNIDUR1xKpxwFdp1ZC9/KV6BYeBRzjR+NSl4WMioL2GWSRE
-         dXj/AegDov5wW/VZJVPPUanYQpO8FlPyHs1wpfKcESCue6oA+/q7NhgeDZCvtkI7VUTw
-         /E9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=My5hy+eOd+BUGnLYjJSbZOd3nYUzutH2HG2GVn4YySU=;
-        b=rwOCJh5ea123nmT6BHe57PqXc52fgA0W6EIOXFXs6uTeVwKPBjDNPHbX1X7Iz0/nSn
-         me2BGOqtXX31OxyiVHjP/iBxOJ6Msm1JzcCccNCW9uPQEPZSX5ECh4vJV/J7Nn1vfXiY
-         rM21mKknMDT5oAf9Ef28pnxEyiokSeo+B4ptUuWhTc6T0NKhnJh5+vHq7vwb4FeUPYAo
-         smv+ZuycMtSSQFc/D0b72xlMcjkcvNpi4i51b774vA26fWAk8KQksFWreVXQk+/6TC20
-         HQJn5W4OPdcr26oBxt1pG1/knJ54yJ1hXiNF3qBCY0e8lzPnNFb1JFrsYx5G99+1KCkG
-         LbKQ==
-X-Gm-Message-State: ANhLgQ2adtJOTKBi4WISSCSSknKEC1IVhDeKPgoeZwK5pSqGced6h61d
-        8i09FvPpogQnVcxrJPIfjH4=
-X-Google-Smtp-Source: ADFU+vseCaW0oo7VMWsRQmbcHcBu9RZW4zq46TUY4mhg/yDNTUBrocjwJC+h98nGd0cnHrPixEVGnA==
-X-Received: by 2002:a1c:ac8a:: with SMTP id v132mr6092078wme.64.1584042493588;
-        Thu, 12 Mar 2020 12:48:13 -0700 (PDT)
-Received: from DEFRL0001.localdomain ([2a02:810d:1b40:644:cfdf:73ac:91bd:6a1d])
-        by smtp.gmail.com with ESMTPSA id z6sm7271122wrp.95.2020.03.12.12.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 12:48:12 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 20:46:25 +0100
-From:   Markus Fuchs <mklntf@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: stmmac: platform: Fix misleading interrupt error msg
-Message-ID: <20200312194625.GA6684@DEFRL0001.localdomain>
-References: <20200306163848.5910-1-mklntf@gmail.com>
- <20200311.230402.1496009558967017193.davem@davemloft.net>
+        Thu, 12 Mar 2020 15:53:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgCLTxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:53:22 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1412206E9;
+        Thu, 12 Mar 2020 19:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584042801;
+        bh=poV+EblAH9g8FbaAVlYH45IwSThQzxJ75LREtJe1pjs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QgYiV9kxEXU13feQOJYWn0rdviqTF3XtmqQUQaWrLmRoAah6vHvrIbzY1dRIuOuA3
+         tts/m4bSB+SWhvt8pF+CQ/kujJx1Xxs95MnP1XT2vf8aizcqtr94BrmwhgYsRujROB
+         OfqJDJH3oaMh/kHPTIX10EYgoQXdHAGAmsQFdfVc=
+Date:   Thu, 12 Mar 2020 14:53:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200312195319.GA162308@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200311.230402.1496009558967017193.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a4b4b4b0-3c56-51a0-4237-dd439fca3150@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 11:04:02PM -0700, David Miller wrote:
-> From: Markus Fuchs <mklntf@gmail.com>
-> Date: Fri,  6 Mar 2020 17:38:48 +0100
-> 
-> > Not every stmmac based platform makes use of the eth_wake_irq or eth_lpi
-> > interrupts. Use the platform_get_irq_byname_optional variant for these
-> > interrupts, so no error message is displayed, if they can't be found.
-> > Rather print an information to hint something might be wrong to assist
-> > debugging on platforms which use these interrupts.
-> > 
-> > Signed-off-by: Markus Fuchs <mklntf@gmail.com>
-> 
-> What do you mean the error message is misleading right now?
-> 
-> It isn't printing anything out at the moment in this situation.
+On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
+> > Is any synchronization needed here between the EDR path and the
+> > hotplug/enumeration path?
+>
+> If we want to follow the implementation note step by step (in
+> sequence) then we need some synchronization between EDR path and
+> enumeration path. But if it's OK to achieve the same end result by
+> following steps out of sequence then we don't need to create any
+> dependency between EDR and enumeration paths. Currently we follow
+> the latter approach.
 
-Commit 7723f4c5ecdb driver core: platform: Add an error message to 
-    platform_get_irq*()
+What would the synchronization look like?
 
-The above commit added a generic dev_err() output to the platform_get_irq_byname
-function.
+Ideally I think it would be better to follow the order in the
+flowchart if it's not too onerous.  That will make the code easier to
+understand.  The current situation with this dependency on pciehp and
+what it will do leaves a lot of things implicit.
 
-My patch uses the platform_get_irq_byname_optional function, which
-doesn't print anything and adds the original dev_err output as dev_info output 
-to the driver.
-Otherwise there would be no output at all even for platforms in need of these 
-irqs.
+What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+
+IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
+unbinds the drivers and removes the devices.  If that doesn't happen,
+and Linux clears the DPC trigger to bring the link back up, will those
+drivers try to operate uninitialized devices?
+
+Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
+
+> For example, consider the case in flow chart where after sending
+> success _OST, firmware decides to stop the recovery of the device.
+> 
+> if we follow the flow chart as is then the steps should be,
+> 
+> 1. clear the DPC status trigger
+> 2. Send success code via _OST, and wait for return from _OST
+> 3. if successful return then enumerate the child devices and
+> reassign bus numbers.
+> 
+> In current approach the steps followed are,
+> 
+> 1. Clear the DPC status trigger.
+> 2. Send success code via _OST
+> 2. In parallel, LINK UP event path will enumerate the child devices.
+> 3. if firmware decides not to recover the device, then LINK DOWN
+> event will eventually remove them again.
