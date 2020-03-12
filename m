@@ -2,573 +2,240 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0185C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF14FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FDA20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AF720737
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:35:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uLiENDqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbgCLEdx (ORCPT
+        id S1731639AbgCLEff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 00:33:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28572 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725978AbgCLEdw (ORCPT
+        Thu, 12 Mar 2020 00:35:35 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:46400 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLEff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 00:33:52 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02C4XSFo083139
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 00:33:50 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqcp7k1mu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 00:33:44 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Thu, 12 Mar 2020 04:24:40 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Mar 2020 04:24:33 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02C4OWx649414340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 04:24:32 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 503905204E;
-        Thu, 12 Mar 2020 04:24:32 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A612A52050;
-        Thu, 12 Mar 2020 04:24:31 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 85BBDA021A;
-        Thu, 12 Mar 2020 15:24:26 +1100 (AEDT)
-Subject: Re: [PATCH v3 23/27] powerpc/powernv/pmem: Add debug IOCTLs
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thu, 12 Mar 2020 00:35:35 -0400
+Received: by mail-qk1-f201.google.com with SMTP id w6so3049785qki.13
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 21:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=SR8hiNoADlxPJ7CcKI/cTH5wQLtIQvLTLgazJPJGNSY=;
+        b=uLiENDqdQkSn5SrBwJEBq4oQcUDuZcSOG5zkYYqRIZZJCpxsJOQLFcGve4mlLBNzYd
+         qg2YWmhBtIQM8vcHe83uofHEraq0fon4u6+TmW8lwHTIBaRcIi8z+BbHRC8BWhiUCaX7
+         paEOla/sLyS/wDP9V9vOeniOWQLt2VbMsX8TGJ4EI9iuKCBmb90RT5IqMuJrwc7tpRxe
+         HDPPaUds1DCq8lHfLZfFqhx6bbhmm8reYKzK9IYrdUXxeZ0T4cfI3OqOxGuDqVKPAiN/
+         ouUCROrZxJ4Yqg67PfJ6mrdqCsqgZvXGBGZrEHMRFLBMsiJ51YnuQFJrwEy7loqKfIyM
+         IQRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=SR8hiNoADlxPJ7CcKI/cTH5wQLtIQvLTLgazJPJGNSY=;
+        b=Sd6NuuqR1k5P1WLVcLDsakY2h+hGNqEnqfAr5zrpLqTQQEiWjp8A2P72vLhGKyFt/n
+         De0lc3UtmU3AGsk3gH4D3Fll9EymnRy61I+IjEkq/Xu8o1EZ/UeKuK3wTzKXroiccSnn
+         Ytr/oWS8e2qSdWDYw/OcB2Dw87+6ULCcm6Aa+hSQSDOWTDshB+M4MF+ljg0uVVwrUq9h
+         C6RYuhPjDRMreiuZYy7uATDL3DIjpziVZxjqHt5yq8P/SrmoEge4Lp00DneEJ+xCK5gW
+         eZo1hzZmjLXFT4rwJ3D1/GMMVyH9wFf39gajCrXhSyZXwC5eARdeCqVkuPTnQyi9/fmh
+         CRlg==
+X-Gm-Message-State: ANhLgQ2e5gqkHAjPMXM99S3SgRM9DAbyOAuFqqMTUfvPppC/YuPlbMoK
+        Ld9aqddPCR91lnIhC52Vrw2QOnrgu0U7s7x9NA==
+X-Google-Smtp-Source: ADFU+vsHKo49UpImt1uQNDK7E8mxBRFwbW1IJ+Ss7XMWSMMfaitQ/FWD3t/FqFEJZVeoiErHdrbE9g/Eoh1nfnb85Q==
+X-Received: by 2002:a37:7d2:: with SMTP id 201mr6131242qkh.146.1583987734205;
+ Wed, 11 Mar 2020 21:35:34 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 12:35:27 +0800
+Message-Id: <20200312123453.Bluez.v2.1.I50b301a0464eb68e3d62721bf59e11ed2617c415@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [Bluez PATCH v2] Bluetooth: L2CAP: handle l2cap config request during
+ open state
+From:   Howard Chung <howardchung@google.com>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Howard Chung <howardchung@google.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Thu, 12 Mar 2020 15:24:30 +1100
-In-Reply-To: <7e0e3b71-d70c-1dee-b630-0c33596b7223@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-24-alastair@au1.ibm.com>
-         <7e0e3b71-d70c-1dee-b630-0c33596b7223@linux.ibm.com>
-Organization: IBM Australia
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031204-4275-0000-0000-000003AAE747
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031204-4276-0000-0000-000038C004D4
-Message-Id: <ac25aa3ba40d54f973e3d9705d6b75a0856eafb4.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_15:2020-03-11,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 adultscore=0 impostorscore=0 mlxscore=0 mlxlogscore=691
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003120022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 16:21 +0100, Frederic Barrat wrote:
-> 
-> Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > These IOCTLs provide low level access to the card to aid in
-> > debugging
-> > controller/FPGA firmware.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/platforms/powernv/pmem/Kconfig |   6 +
-> >   arch/powerpc/platforms/powernv/pmem/ocxl.c  | 249
-> > ++++++++++++++++++++
-> >   include/uapi/nvdimm/ocxl-pmem.h             |  32 +++
-> >   3 files changed, 287 insertions(+)
-> > 
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/Kconfig
-> > b/arch/powerpc/platforms/powernv/pmem/Kconfig
-> > index c5d927520920..3f44429d70c9 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/Kconfig
-> > +++ b/arch/powerpc/platforms/powernv/pmem/Kconfig
-> > @@ -12,4 +12,10 @@ config OCXL_PMEM
-> >   
-> >   	  Select N if unsure.
-> >   
-> > +config OCXL_PMEM_DEBUG
-> > +	bool "OpenCAPI Persistent Memory debugging"
-> > +	depends on OCXL_PMEM
-> > +	help
-> > +	  Enables low level IOCTLs for OpenCAPI Persistent Memory
-> > firmware development
-> > +
-> >   endif
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > index e01f6f9fc180..d4ce5e9e0521 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > @@ -1050,6 +1050,235 @@ int req_controller_health_perf(struct
-> > ocxlpmem *ocxlpmem)
-> >   				      GLOBAL_MMIO_HCI_REQ_HEALTH_PERF);
-> >   }
-> >   
-> > +#ifdef CONFIG_OCXL_PMEM_DEBUG
-> > +/**
-> > + * enable_fwdebug() - Enable FW debug on the controller
-> > + * @ocxlpmem: the device metadata
-> > + * Return: 0 on success, negative on failure
-> > + */
-> > +static int enable_fwdebug(const struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_HCI,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > +				      GLOBAL_MMIO_HCI_FW_DEBUG);
-> > +}
-> > +
-> > +/**
-> > + * disable_fwdebug() - Disable FW debug on the controller
-> > + * @ocxlpmem: the device metadata
-> > + * Return: 0 on success, negative on failure
-> > + */
-> > +static int disable_fwdebug(const struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
-> > GLOBAL_MMIO_HCIC,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > +				      GLOBAL_MMIO_HCI_FW_DEBUG);
-> > +}
-> > +
-> > +static int ioctl_fwdebug(struct ocxlpmem *ocxlpmem,
-> > +			     struct ioctl_ocxl_pmem_fwdebug __user
-> > *uarg)
-> > +{
-> > +	struct ioctl_ocxl_pmem_fwdebug args;
-> > +	u64 val;
-> > +	int i;
-> > +	int rc;
-> > +
-> > +	if (copy_from_user(&args, uarg, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	// Buffer size must be a multiple of 8
-> > +	if ((args.buf_size & 0x07))
-> > +		return -EINVAL;
-> > +
-> > +	if (args.buf_size > ocxlpmem->admin_command.data_size)
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&ocxlpmem->admin_command.lock);
-> > +
-> > +	rc = enable_fwdebug(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_FW_DEBUG);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	// Write DebugAction & FunctionCode
-> > +	val = ((u64)args.debug_action << 56) | ((u64)args.function_code
-> > << 40);
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > +				      ocxlpmem-
-> > >admin_command.request_offset + 0x08,
-> > +				      OCXL_LITTLE_ENDIAN, val);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > +				      ocxlpmem-
-> > >admin_command.request_offset + 0x10,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > args.debug_parameter_1);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > +				      ocxlpmem-
-> > >admin_command.request_offset + 0x18,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > args.debug_parameter_2);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	for (i = 0x20; i < 0x38; i += 0x08)
-> > +		rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > +					      ocxlpmem-
-> > >admin_command.request_offset + i,
-> > +					      OCXL_LITTLE_ENDIAN, 0);
-> > +	if (rc)
-> > +		goto out;
-> 
-> rc is the for loop body. The rc test is not.
-> 
-Whoops :)
+According to Core Spec Version 5.2 | Vol 3, Part A 6.1.5,
+the incoming L2CAP_ConfigReq should be handled during
+OPEN state.
 
-> 
-> > +
-> > +
-> > +	// Populate admin command buffer
-> > +	if (args.buf_size) {
-> > +		for (i = 0; i < args.buf_size; i += sizeof(u64)) {
-> > +			u64 val;
-> > +
-> > +			if (copy_from_user(&val, &args.buf[i],
-> > sizeof(u64)))
-> > +				return -EFAULT;
-> 
-> need to get rc and goto out because of the mutex
-> 
-Ok
+The section below shows the btmon trace when running
+L2CAP/COS/CFD/BV-12-C before and after this change.
 
-> 
-> > +
-> > +			rc = ocxl_global_mmio_write64(ocxlpmem-
-> > >ocxl_afu,
-> > +						      ocxlpmem-
-> > >admin_command.data_offset + i,
-> > +						      OCXL_HOST_ENDIAN,
-> > val);
-> > +			if (rc)
-> > +				goto out;
-> > +		}
-> > +	}
-> > +
-> > +	rc = admin_command_execute(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = admin_command_complete_timeout(ocxlpmem,
-> > +					    ocxlpmem-
-> > >timeouts[ADMIN_COMMAND_FW_DEBUG]);
-> > +	if (rc < 0)
-> > +		goto out;
-> > +
-> > +	rc = admin_response(ocxlpmem);
-> > +	if (rc < 0)
-> > +		goto out;
-> > +	if (rc != STATUS_SUCCESS) {
-> > +		warn_status(ocxlpmem, "Unexpected status from FW
-> > Debug", rc);
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (args.buf_size) {
-> > +		for (i = 0; i < args.buf_size; i += sizeof(u64)) {
-> > +			u64 val;
-> > +
-> > +			rc = ocxl_global_mmio_read64(ocxlpmem-
-> > >ocxl_afu,
-> > +						     ocxlpmem-
-> > >admin_command.data_offset + i,
-> > +						     OCXL_HOST_ENDIAN,
-> > &val);
-> > +			if (rc)
-> > +				goto out;
-> > +
-> > +			if (copy_to_user(&args.buf[i], &val,
-> > sizeof(u64))) {
-> > +				rc = -EFAULT;
-> > +				goto out;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	rc = admin_response_handled(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = disable_fwdebug(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +out:
-> > +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> > +	return rc;
-> > +}
-> > +
-> > +static int ioctl_shutdown(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	int rc;
-> > +
-> > +	mutex_lock(&ocxlpmem->admin_command.lock);
-> > +
-> > +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_SHUTDOWN);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = admin_command_execute(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = admin_command_complete_timeout(ocxlpmem,
-> > ADMIN_COMMAND_SHUTDOWN);
-> > +	if (rc < 0) {
-> > +		dev_warn(&ocxlpmem->dev, "Shutdown timed out\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	rc = 0;
-> > +	goto out;
-> 
-> We can remove that goto.
+=== Before ===
+...
+> ACL Data RX: Handle 256 flags 0x02 dlen 12                #22
+      L2CAP: Connection Request (0x02) ident 2 len 4
+        PSM: 1 (0x0001)
+        Source CID: 65
+< ACL Data TX: Handle 256 flags 0x00 dlen 16                #23
+      L2CAP: Connection Response (0x03) ident 2 len 8
+        Destination CID: 64
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+< ACL Data TX: Handle 256 flags 0x00 dlen 12                #24
+      L2CAP: Configure Request (0x04) ident 2 len 4
+        Destination CID: 65
+        Flags: 0x0000
+> HCI Event: Number of Completed Packets (0x13) plen 5      #25
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5      #26
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 16                #27
+      L2CAP: Configure Request (0x04) ident 3 len 8
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00                                            ..
+< ACL Data TX: Handle 256 flags 0x00 dlen 18                #28
+      L2CAP: Configure Response (0x05) ident 3 len 10
+        Source CID: 65
+        Flags: 0x0000
+        Result: Success (0x0000)
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 672
+> HCI Event: Number of Completed Packets (0x13) plen 5      #29
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 14                #30
+      L2CAP: Configure Response (0x05) ident 2 len 6
+        Source CID: 64
+        Flags: 0x0000
+        Result: Success (0x0000)
+> ACL Data RX: Handle 256 flags 0x02 dlen 20                #31
+      L2CAP: Configure Request (0x04) ident 3 len 12
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00 91 02 11 11                                ......
+< ACL Data TX: Handle 256 flags 0x00 dlen 14                #32
+      L2CAP: Command Reject (0x01) ident 3 len 6
+        Reason: Invalid CID in request (0x0002)
+        Destination CID: 64
+        Source CID: 65
+> HCI Event: Number of Completed Packets (0x13) plen 5      #33
+        Num handles: 1
+        Handle: 256
+        Count: 1
+...
+=== After ===
+...
+> ACL Data RX: Handle 256 flags 0x02 dlen 12               #22
+      L2CAP: Connection Request (0x02) ident 2 len 4
+        PSM: 1 (0x0001)
+        Source CID: 65
+< ACL Data TX: Handle 256 flags 0x00 dlen 16               #23
+      L2CAP: Connection Response (0x03) ident 2 len 8
+        Destination CID: 64
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+< ACL Data TX: Handle 256 flags 0x00 dlen 12               #24
+      L2CAP: Configure Request (0x04) ident 2 len 4
+        Destination CID: 65
+        Flags: 0x0000
+> HCI Event: Number of Completed Packets (0x13) plen 5     #25
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5     #26
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 16               #27
+      L2CAP: Configure Request (0x04) ident 3 len 8
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00                                            ..
+< ACL Data TX: Handle 256 flags 0x00 dlen 18               #28
+      L2CAP: Configure Response (0x05) ident 3 len 10
+        Source CID: 65
+        Flags: 0x0000
+        Result: Success (0x0000)
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 672
+> HCI Event: Number of Completed Packets (0x13) plen 5     #29
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 14               #30
+      L2CAP: Configure Response (0x05) ident 2 len 6
+        Source CID: 64
+        Flags: 0x0000
+        Result: Success (0x0000)
+> ACL Data RX: Handle 256 flags 0x02 dlen 20               #31
+      L2CAP: Configure Request (0x04) ident 3 len 12
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00 91 02 11 11                                .....
+< ACL Data TX: Handle 256 flags 0x00 dlen 18               #32
+      L2CAP: Configure Response (0x05) ident 3 len 10
+        Source CID: 65
+        Flags: 0x0000
+        Result: Success (0x0000)
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 672
+< ACL Data TX: Handle 256 flags 0x00 dlen 12               #33
+      L2CAP: Configure Request (0x04) ident 3 len 4
+        Destination CID: 65
+        Flags: 0x0000
+> HCI Event: Number of Completed Packets (0x13) plen 5     #34
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5     #35
+        Num handles: 1
+        Handle: 256
+        Count: 1
+...
 
-Ok
+Signed-off-by: Howard Chung <howardchung@google.com>
 
-> 
-> No admin_response_handled()? Is that shutting down the full adapter
-> and 
-> we have nobody to talk to? What happens next?
-> 
+---
 
-That's an oversight, we should call admin_response_handled().
+Changes in v2:
+- Updated commit messages
 
-> 
-> > +
-> > +out:
-> > +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> > +	return rc;
-> > +}
-> > +
-> > +static int ioctl_mmio_write(struct ocxlpmem *ocxlpmem,
-> > +				struct ioctl_ocxl_pmem_mmio __user
-> > *uarg)
-> > +{
-> > +	struct scm_ioctl_mmio args;
-> > +
-> > +	if (copy_from_user(&args, uarg, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	return ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> > args.address,
-> > +					OCXL_LITTLE_ENDIAN, args.val);
-> > +}
-> > +
-> > +static int ioctl_mmio_read(struct ocxlpmem *ocxlpmem,
-> > +				     struct ioctl_ocxl_pmem_mmio __user
-> > *uarg)
-> > +{
-> > +	struct ioctl_ocxl_pmem_mmio args;
-> > +	int rc;
-> > +
-> > +	if (copy_from_user(&args, uarg, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, args.address,
-> > +				     OCXL_LITTLE_ENDIAN, &args.val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	if (copy_to_user(uarg, &args, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	return 0;
-> > +}
-> > +#else /* CONFIG_OCXL_PMEM_DEBUG */
-> > +static int ioctl_fwdebug(struct ocxlpmem *ocxlpmem,
-> > +			     struct ioctl_ocxl_pmem_fwdebug __user
-> > *uarg)
-> > +{
-> > +	return -EPERM;
-> > +}
-> > +
-> > +static int ioctl_shutdown(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	return -EPERM;
-> > +}
-> > +
-> > +static int ioctl_mmio_write(struct ocxlpmem *ocxlpmem,
-> > +				struct ioctl_ocxl_pmem_mmio __user
-> > *uarg)
-> > +{
-> > +	return -EPERM;
-> > +}
-> > +
-> > +static int ioctl_mmio_read(struct ocxlpmem *ocxlpmem,
-> > +			       struct ioctl_ocxl_pmem_mmio __user
-> > *uarg)
-> > +{
-> > +	return -EPERM;
-> > +}
-> 
-> The 'else' clause could be dropped, the ioctls will return EINVAL,
-> which 
-> is fine, I think.
-> 
-> 
+ net/bluetooth/l2cap_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Ok
-
-> 
-> > +#endif /* CONFIG_OCXL_PMEM_DEBUG */
-> > +
-> >   static long file_ioctl(struct file *file, unsigned int cmd,
-> > unsigned long args)
-> >   {
-> >   	struct ocxlpmem *ocxlpmem = file->private_data;
-> > @@ -1091,6 +1320,26 @@ static long file_ioctl(struct file *file,
-> > unsigned int cmd, unsigned long args)
-> >   	case IOCTL_OCXL_PMEM_REQUEST_HEALTH:
-> >   		rc = req_controller_health_perf(ocxlpmem);
-> >   		break;
-> > +
-> > +	case IOCTL_OCXL_PMEM_FWDEBUG:
-> > +		rc = ioctl_fwdebug(ocxlpmem,
-> > +				   (struct ioctl_ocxl_pmem_fwdebug
-> > __user *)args);
-> > +		break;
-> > +
-> > +	case IOCTL_OCXL_PMEM_SHUTDOWN:
-> > +		rc = ioctl_shutdown(ocxlpmem);
-> > +		break;
-> > +
-> > +	case IOCTL_OCXL_PMEM_MMIO_WRITE:
-> > +		rc = ioctl_mmio_write(ocxlpmem,
-> > +				      (struct ioctl_ocxl_pmem_mmio
-> > __user *)args);
-> > +		break;
-> > +
-> > +	case IOCTL_OCXL_PMEM_MMIO_READ:
-> > +		rc = ioctl_mmio_read(ocxlpmem,
-> > +				     (struct ioctl_ocxl_pmem_mmio
-> > __user *)args);
-> > +		break;
-> > +
-> >   	}
-> >   
-> >   	return rc;
-> > diff --git a/include/uapi/nvdimm/ocxl-pmem.h
-> > b/include/uapi/nvdimm/ocxl-pmem.h
-> > index 0d03abb44001..e20a4f8be82a 100644
-> > --- a/include/uapi/nvdimm/ocxl-pmem.h
-> > +++ b/include/uapi/nvdimm/ocxl-pmem.h
-> > @@ -6,6 +6,28 @@
-> >   #include <linux/types.h>
-> >   #include <linux/ioctl.h>
-> >   
-> > +enum ocxlpmem_fwdebug_action {
-> > +	OCXL_PMEM_FWDEBUG_READ_CONTROLLER_MEMORY = 0x01,
-> > +	OCXL_PMEM_FWDEBUG_WRITE_CONTROLLER_MEMORY = 0x02,
-> > +	OCXL_PMEM_FWDEBUG_ENABLE_FUNCTION = 0x03,
-> > +	OCXL_PMEM_FWDEBUG_DISABLE_FUNCTION = 0x04,
-> > +	OCXL_PMEM_FWDEBUG_GET_PEL = 0x05, // Retrieve Persistent Error
-> > Log
-> > +};
-> > +
-> > +struct ioctl_ocxl_pmem_buffer_info {
-> > +	__u32	admin_command_buffer_size; // out
-> > +	__u32	near_storage_buffer_size; // out
-> > +};
-> > +
-> > +struct ioctl_ocxl_pmem_fwdebug { // All args are inputs
-> > +	enum ocxlpmem_fwdebug_action debug_action;
-> 
-> More kernel ABI problems. My interpretation of the "enumeration 
-> specifiers" section of C99 is that we can't rely on the size of the
-> enum.
-> 
-
-Ok
-
-> 
-> > +	__u16 function_code;
-> > +	__u16 buf_size; // Size of optional data buffer
-> > +	__u64 debug_parameter_1;
-> > +	__u64 debug_parameter_2;
-> > +	__u8 *buf; // Pointer to optional in/out data buffer
-> > +};
-> > +
-> >   #define OCXL_PMEM_ERROR_LOG_ACTION_RESET	(1 << (32-32))
-> >   #define OCXL_PMEM_ERROR_LOG_ACTION_CHKFW	(1 << (53-32))
-> >   #define OCXL_PMEM_ERROR_LOG_ACTION_REPLACE	(1 << (54-32))
-> > @@ -66,6 +88,11 @@ struct ioctl_ocxl_pmem_controller_stats {
-> >   	__u64 cache_write_latency; /* nanoseconds */
-> >   };
-> >   
-> > +struct ioctl_ocxl_pmem_mmio {
-> > +	__u64 address; /* Offset in global MMIO space */
-> > +	__u64 val; /* value to write/was read */
-> > +};
-> 
-> Can we group all the debug data structures together in the header
-> file, 
-> with a comment indicating that they may not be available in the
-> kernel, 
-> depending on the config?
-> 
-
-Ok
-
->    Fred
-> 
-> 
-> > +
-> >   struct ioctl_ocxl_pmem_eventfd {
-> >   	__s32 eventfd;
-> >   	__u32 reserved;
-> > @@ -92,4 +119,9 @@ struct ioctl_ocxl_pmem_eventfd {
-> >   #define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OC
-> > XL_PMEM_MAGIC, 0x07, __u64)
-> >   #define IOCTL_OCXL_PMEM_REQUEST_HEALTH			_IO(OCX
-> > L_PMEM_MAGIC, 0x08)
-> >   
-> > +#define IOCTL_OCXL_PMEM_FWDEBUG		_IOWR(OCXL_PMEM_MAGIC,
-> > 0xf0, struct ioctl_ocxl_pmem_fwdebug)
-> > +#define IOCTL_OCXL_PMEM_MMIO_WRITE	_IOW(OCXL_PMEM_MAGIC, 0xf1,
-> > struct ioctl_ocxl_pmem_mmio)
-> > +#define IOCTL_OCXL_PMEM_MMIO_READ	_IOWR(OCXL_PMEM_MAGIC, 0xf2,
-> > struct ioctl_ocxl_pmem_mmio)
-> > +#define IOCTL_OCXL_PMEM_SHUTDOWN	_IO(OCXL_PMEM_MAGIC, 0xf3)
-> > +
-> >   #endif /* _UAPI_OCXL_SCM_H */
-> > 
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 697c0f7f2c1a..5e6e35ab44dd 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -4300,7 +4300,8 @@ static inline int l2cap_config_req(struct l2cap_conn *conn,
+ 		return 0;
+ 	}
+ 
+-	if (chan->state != BT_CONFIG && chan->state != BT_CONNECT2) {
++	if (chan->state != BT_CONFIG && chan->state != BT_CONNECT2 &&
++	    chan->state != BT_CONNECTED) {
+ 		cmd_reject_invalid_cid(conn, cmd->ident, chan->scid,
+ 				       chan->dcid);
+ 		goto unlock;
 -- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+2.25.1.481.gfbce0eb801-goog
 
