@@ -2,143 +2,103 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAFBC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425B1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9C3206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584001374;
-	bh=ngCHmcftr7xM/ExvhFVSq4edhngIRKJrIeG+6QX2/Y4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jU6UAv8F/PkUK1z/6dViflTT7C22NGHSYG3UwUjh97FsEMB+J4niEDjz9786DzQP1
-	 4yOToLBZF0/obC1fBgZoA99Es1N4ZGe0HD1K1kOJS8y1lA9e8moxCxwvW7/nA//bCq
-	 qzKo0QjPKdFZFGNp7sqA4mcpxOMVZzgPU+PYneR4=
+	by mail.kernel.org (Postfix) with ESMTP id 1949C206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XdThVGVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgCLIWx (ORCPT
+        id S1726551AbgCLIXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:22:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44381 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgCLIWw (ORCPT
+        Thu, 12 Mar 2020 04:23:00 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41132 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgCLIXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:22:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l18so6170936wru.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:22:51 -0700 (PDT)
+        Thu, 12 Mar 2020 04:23:00 -0400
+Received: by mail-qv1-f68.google.com with SMTP id a10so2168929qvq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P9izz9GwKEkmwA2CN2dI9HFL+pLvd99ZgSLtApoaeDU=;
+        b=XdThVGVLJ8fCTlPp04bt767nww/R0JNiDAgMPRu09nMpRox4DHlFpxcQWyDiIzhi4l
+         zPVbbL4xp6o5xCpctS7Jp/3wRpRJ0j2+c141ucsFPPZ3W/hCO0WyUNj59CUWyKWUbpCr
+         ceV9QtJMukXVzTgsXjnC0BIyprWSiwrhx5yp6mZbqXTFDAYTZ43cmbHSTcodDP8d1Y/K
+         u1Kv5F3EC1oaAjdZLlagq368xSL7t3dTHl7DcezV1iAJSdaZ4v0Epmd4C570b1Ec2YZi
+         /Db/T+9bJl2eydi+gBR8XLQvTZ7bd020wd8IQb/8d11ruupX0FCBQYpAd3ggUotu2DJd
+         W7IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GsxxIwFSAGEf48PcrAOgcjGCiOZstCS977zPZAz+O2I=;
-        b=Y37vqHG9+7IHYu8lCqjPWWEXPpzkyJbAAUcNjcCvB/OzYjchHycS0oxiedVAlgv+nY
-         xtmWb6Qxcknlwqt3m4nGS9/RMB7Fn2Axzc82a40tdU28rcaVeby16JIftJLqf+2/o15w
-         vmthuLbi/h7TO+FM/lBpKoSjxdS9rnG3kpyA1NrxhKQx9v0pVah22R60y3H3J6Lagu46
-         4ZpYCNJBKOjyAig5CsQCRDvDKViZ7nATnmot1axmBYD0g4/FMkcazmKdeGo4YjgGKWQU
-         HfwngSVnmL/tqFO8dbnvwjRXWWfaqIslbTG0GLgR5MCQVPlUY3eWWSv0pIhTq7YsdbvE
-         Hhlw==
-X-Gm-Message-State: ANhLgQ12iCjozj7zgB4UCf9OIP1ZXeTmuj4Xs5r/rQbTZ5JN57BNJr6X
-        oY/hDz4Z9qZwgXPYhk/J3I0=
-X-Google-Smtp-Source: ADFU+vtrl/AK44eMW5i6krCVsjmsnJH8Un+S7wzGv2FklsFNv4uWwLThm5cl3vcLeda1A3Hf+xET7w==
-X-Received: by 2002:a5d:6a04:: with SMTP id m4mr9428669wru.127.1584001370668;
-        Thu, 12 Mar 2020 01:22:50 -0700 (PDT)
-Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
-        by smtp.gmail.com with ESMTPSA id q5sm27406612wrc.68.2020.03.12.01.22.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 01:22:49 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 09:22:48 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200312082248.GS23944@dhcp22.suse.cz>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P9izz9GwKEkmwA2CN2dI9HFL+pLvd99ZgSLtApoaeDU=;
+        b=RXxPFZxcbH6k5kaj0ek+W0lqI/NUNco+3D34EhLWAzppc9F6IMVkNWDG1FHTYo53AY
+         pspRHzog4SE3Wjk4epsOOEZ72RX4zSlth47IWAF9Wj842AU/5bv1RocTG9qJP3sHKmLt
+         IW8+5ZH3kut5eXkFWX6Cvxl7PzJSV4Da3xatRcEU3kPHRsQHbdYr/6TCkCTOg4pE+cRH
+         YTeXh32Pj1uQT0Z+rORll1D/DI0zwL+XofZ8c1nLa18DhhpeajU9OV23cjGKxDDd0pxO
+         MOsMqkATvaKuRlwX5pWNKj9XqXk62VpTTwRkf7yGMxP+4U8GCNyfipEFMZshi/Ll9dhf
+         EgwA==
+X-Gm-Message-State: ANhLgQ2p6AzNDd2TXICGwKd9tR2auDy3q+Rtf5baJlKEc081Y4YBb2kb
+        H6Z8x+Cgu67wAnhCQTpaKZoqwYysZHzVQh82QMe2AqRq
+X-Google-Smtp-Source: ADFU+vsJMDMQ1KzRZrYFym7/k0h4j5yi56oLBBmOZI8IRsJ++T2KNTs2w7I/VIUzjgv1K8oDQuyP8jHKibG5FlX1gps=
+X-Received: by 2002:ad4:5429:: with SMTP id g9mr6058767qvt.134.1584001379162;
+ Thu, 12 Mar 2020 01:22:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+References: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
+ <CAMpxmJXNQQTxRWZSP0RZTUuefAk3+AeDMVeVkgERy7f9X=CBsA@mail.gmail.com> <7fcc5cb2-5fdb-d1cf-e55b-c0f2d407e072@gmail.com>
+In-Reply-To: <7fcc5cb2-5fdb-d1cf-e55b-c0f2d407e072@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 12 Mar 2020 09:22:47 +0100
+Message-ID: <CAMpxmJX40tfNUqrqDwa+GEGAD9QuLym=jLi2MPuQX-FZS2Z9sQ@mail.gmail.com>
+Subject: Re: [PATCH V2] gpio: brcmstb: support gpio-line-names property
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc akpm]
+=C5=9Br., 11 mar 2020 o 20:03 Doug Berger <opendmb@gmail.com> napisa=C5=82(=
+a):
+>
+> The label names are viewed as a convenience for the user and are not
+> necessary for the proper functionality of the driver and device, so we
+> don't want to prevent the driver from succeeding at probe due to an
+> error in the gpio-line-names property. The bank->gc.names member is
+> still made non-NULL which is what we really care about to prevent the
+> misapplication of label names by devprop_gpiochip_set_names().
+>
+> In fact, it is expected that the device-tree will only include label
+> strings up to the last GPIO of interest so the ENODATA error is
+> considered a valid result to terminate any further labeling so there is
+> no need for an error message in that case.
+>
+> Other error results are unexpected so an error message indicating the
+> consequence of the error is appropriate here.
+>
+> I'm not sure which aspect is confusing to you, so it's not clear to me
+> how best to comment the code. I can hazard a guess, but if you have a
+> suggestion I'm happy to submit a v3.
+>
+> Thanks for taking the time to review this,
+>     Doug
 
-So what about this?
+No it's fine, thank you for the explanation.
 
-From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Thu, 12 Mar 2020 09:04:35 +0100
-Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
-
-Jann has brought up a very interesting point [1]. While shared pages are
-excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
-that way. This can lead to all sorts of hard to debug problems. E.g.
-performance problems outlined by Daniel [2]. There are runtime
-environments where there is a substantial memory shared among security
-domains via CoW memory and a easy to reclaim way of that memory, which
-MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
-in for the parent process which might be more privileged or even open
-side channel attacks. The feasibility of the later is not really clear
-to me TBH but there is no real reason for exposure at this stage. It
-seems there is no real use case to depend on reclaiming CoW memory via
-madvise at this stage so it is much easier to simply disallow it and
-this is what this patch does. Put it simply MADV_{PAGEOUT,COLD} can
-operate only on the exclusively owned memory which is a straightforward
-semantic.
-
-[1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
-[2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
-
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- mm/madvise.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 43b47d3fae02..4bb30ed6c8d2 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 		}
- 
- 		page = pmd_page(orig_pmd);
-+
-+		/* Do not interfere with other mappings of this page */
-+		if (page_mapcount(page) != 1)
-+			goto huge_unlock;
-+
- 		if (next - addr != HPAGE_PMD_SIZE) {
- 			int err;
- 
--			if (page_mapcount(page) != 1)
--				goto huge_unlock;
--
- 			get_page(page);
- 			spin_unlock(ptl);
- 			lock_page(page);
-@@ -426,6 +428,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 			continue;
- 		}
- 
-+		/* Do not interfere with other mappings of this page */
-+		if (page_mapcount(page) != 1)
-+			continue;
-+
- 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
- 
- 		if (pte_young(ptent)) {
--- 
-2.24.1
-
--- 
-Michal Hocko
-SUSE Labs
+Bartosz
