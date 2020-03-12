@@ -2,106 +2,165 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892B9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A72C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62185206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584026278;
-	bh=/8fTxMFbD2pIIFtiaYwed7HV9jiPfyLfEJ1Kh/0PzVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VCe2/WjlwUfRGkN3d3dXft6IaQppMb1jIGDLpwv7h6fLD9wKfyY7zY5E+cqSC1gAA
-	 uPdJOmnaSRwiVTkCmMoViNIt/jYn+jc2hfTOaLFIJL1W/nJ11g4sdH+eGhFfbZBOSt
-	 UH3Qrf0gjHS539+Y/R3hnJUGvW6n93XIbYW7OQ/8=
+	by mail.kernel.org (Postfix) with ESMTP id 9B73C206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgCLPR4 (ORCPT
+        id S1727883AbgCLPS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:17:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:47044 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727549AbgCLPR4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:17:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a22so5788327oid.13;
-        Thu, 12 Mar 2020 08:17:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rHiigiRwWdeqsTTALfFLdUeJZ+/BBDh3z6SgaZUc3ZY=;
-        b=hxmkl2UNItgX4D688vPbYm1ji3LDbawSCy3mKgzPXizuunK8zmpS/aaPLVxGSlqTy4
-         6iOifX/qczNqwM9IZN0MQr+VMjMMOZpyt2sXVppmSbRerSsicik8vrGpWSjgK5FS1ZFZ
-         nCNzsObasipj7jHHya/6v/e4QnWstukd3/7U7f4WjP/VZjDvsHSXxyI58jpyszub7Xt/
-         iey4Oa7JP324ZN/t4hu5xwkbqgKnIa0qhwzSBj/Tq6lxw0VKhX7W8rc2X7yjY2/D31y0
-         daAZNbRSXiC+CBDhb9wP05dxsDtaWOzye9KAmRJndF+xpFxWYfq15N0fxrD5nfSgfnob
-         2mFg==
-X-Gm-Message-State: ANhLgQ0pSYblDCbQ4JcfCYD/XavYzlc//QYN9fJ/L7ZHcvIzQRDhjvjM
-        JB8KfAxxpup7WfJpCrlyTg==
-X-Google-Smtp-Source: ADFU+vvYViH6zu1LQKfvsKC98PIW22YAry8cj86SwVNzzddHoLKUHC9/jtwAo4z7+fj1dyHXKjTVqw==
-X-Received: by 2002:aca:b5c3:: with SMTP id e186mr2886726oif.114.1584026274247;
-        Thu, 12 Mar 2020 08:17:54 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q22sm1368687oic.22.2020.03.12.08.17.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:17:53 -0700 (PDT)
-Received: (nullmailer pid 8236 invoked by uid 1000);
-        Thu, 12 Mar 2020 15:17:52 -0000
-Date:   Thu, 12 Mar 2020 10:17:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vinay Simha BN <simhavcs@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
-Message-ID: <20200312151752.GA7490@bogus>
-References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
+        Thu, 12 Mar 2020 11:18:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:65495 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727549AbgCLPS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:18:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 08:18:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="415968848"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 08:18:50 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jCPbl-000CKE-WF; Thu, 12 Mar 2020 23:18:49 +0800
+Date:   Thu, 12 Mar 2020 23:18:47 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     kbuild-all@lists.01.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Subject: Re: [PATCH 6/6] hantro: Refactor for V4L2 API spec compliancy
+Message-ID: <202003122343.vMh2bMyj%lkp@intel.com>
+References: <20200311174300.19407-7-ezequiel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
+In-Reply-To: <20200311174300.19407-7-ezequiel@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 15:18:24 +0530, Vinay Simha BN wrote:
-> Add yaml documentation for DSI/LVDS tc358775 bridge
-> 
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> 
-> ---
-> v1:
->  Initial version
-> ---
->  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
->  1 file changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> 
+Hi Ezequiel,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I love your patch! Perhaps something to improve:
 
-Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml:  while scanning for the next token
-found character that cannot start any token
-  in "<unicode string>", line 11, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml: ignoring, error parsing file
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+[auto build test WARNING on linuxtv-media/master]
+[also build test WARNING on v5.6-rc5 next-20200312]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-See https://patchwork.ozlabs.org/patch/1252753
-Please check and re-submit.
+url:    https://github.com/0day-ci/linux/commits/Ezequiel-Garcia/hantro-set-of-small-cleanups-and-fixes/20200312-061234
+base:   git://linuxtv.org/media_tree.git master
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-174-g094d5a94-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/staging/media/hantro/hantro_v4l2.c:282:44: sparse: sparse: incorrect type in argument 1 (different modifiers) @@    expected struct hantro_ctx *ctx @@    got structstruct hantro_ctx *ctx @@
+>> drivers/staging/media/hantro/hantro_v4l2.c:282:44: sparse:    expected struct hantro_ctx *ctx
+>> drivers/staging/media/hantro/hantro_v4l2.c:282:44: sparse:    got struct hantro_ctx const *ctx
+
+vim +282 drivers/staging/media/hantro/hantro_v4l2.c
+
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  234  
+0f07bff2f08018 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  235  static int hantro_try_fmt(const struct hantro_ctx *ctx,
+0f07bff2f08018 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  236  			  struct v4l2_pix_format_mplane *pix_mp,
+0f07bff2f08018 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  237  			  enum v4l2_buf_type type)
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  238  {
+5980d40276b36b drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2019-12-05  239  	const struct hantro_fmt *fmt, *vpu_fmt;
+0f07bff2f08018 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  240  	bool capture = !V4L2_TYPE_IS_OUTPUT(type);
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  241  	bool coded;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  242  
+a29add8c9bb29d drivers/staging/media/hantro/hantro_v4l2.c             Philipp Zabel   2019-06-12  243  	coded = capture == hantro_is_encoder_ctx(ctx);
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  244  
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  245  	vpu_debug(4, "trying format %c%c%c%c\n",
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  246  		  (pix_mp->pixelformat & 0x7f),
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  247  		  (pix_mp->pixelformat >> 8) & 0x7f,
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  248  		  (pix_mp->pixelformat >> 16) & 0x7f,
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  249  		  (pix_mp->pixelformat >> 24) & 0x7f);
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  250  
+5980d40276b36b drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2019-12-05  251  	fmt = hantro_find_format(ctx, pix_mp->pixelformat);
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  252  	if (!fmt) {
+5980d40276b36b drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2019-12-05  253  		fmt = hantro_get_default_fmt(ctx, coded);
+0f07bff2f08018 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  254  		pix_mp->pixelformat = fmt->fourcc;
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  255  	}
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  256  
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  257  	if (coded) {
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  258  		pix_mp->num_planes = 1;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  259  		vpu_fmt = fmt;
+a29add8c9bb29d drivers/staging/media/hantro/hantro_v4l2.c             Philipp Zabel   2019-06-12  260  	} else if (hantro_is_encoder_ctx(ctx)) {
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  261  		vpu_fmt = ctx->vpu_dst_fmt;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  262  	} else {
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  263  		vpu_fmt = ctx->vpu_src_fmt;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  264  		/*
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  265  		 * Width/height on the CAPTURE end of a decoder are ignored and
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  266  		 * replaced by the OUTPUT ones.
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  267  		 */
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  268  		pix_mp->width = ctx->src_fmt.width;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  269  		pix_mp->height = ctx->src_fmt.height;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  270  	}
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  271  
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  272  	pix_mp->field = V4L2_FIELD_NONE;
+0a4f091c12b3ea drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Boris Brezillon 2019-05-28  273  
+0a4f091c12b3ea drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Boris Brezillon 2019-05-28  274  	v4l2_apply_frmsize_constraints(&pix_mp->width, &pix_mp->height,
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  275  				       &vpu_fmt->frmsize);
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  276  
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  277  	if (!coded) {
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  278  		/* Fill remaining fields */
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  279  		v4l2_fill_pixfmt_mp(pix_mp, fmt->fourcc, pix_mp->width,
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  280  				    pix_mp->height);
+8c2d66b036c778 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2019-12-05  281  		if (ctx->vpu_src_fmt->fourcc == V4L2_PIX_FMT_H264_SLICE &&
+042584e9055b61 drivers/staging/media/hantro/hantro_v4l2.c             Philipp Zabel   2020-01-27 @282  		    !hantro_needs_postproc(ctx, fmt))
+a9471e25629b02 drivers/staging/media/hantro/hantro_v4l2.c             Hertz Wong      2019-08-16  283  			pix_mp->plane_fmt[0].sizeimage +=
+6574b7394c10e2 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  284  				hantro_h264_mv_size(pix_mp->width,
+6574b7394c10e2 drivers/staging/media/hantro/hantro_v4l2.c             Ezequiel Garcia 2020-03-11  285  						    pix_mp->height);
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  286  	} else if (!pix_mp->plane_fmt[0].sizeimage) {
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  287  		/*
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  288  		 * For coded formats the application can specify
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  289  		 * sizeimage. If the application passes a zero sizeimage,
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  290  		 * let's default to the maximum frame size.
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  291  		 */
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  292  		pix_mp->plane_fmt[0].sizeimage = fmt->header_size +
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  293  			pix_mp->width * pix_mp->height * fmt->max_depth;
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  294  	}
+953aaa1492c538 drivers/staging/media/rockchip/vpu/rockchip_vpu_v4l2.c Boris Brezillon 2019-05-28  295  
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  296  	return 0;
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  297  }
+775fec69008d30 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c  Ezequiel Garcia 2018-12-05  298  
+
+:::::: The code at line 282 was first introduced by commit
+:::::: 042584e9055b615ac917239884fb0d65690f56ec media: hantro: fix extra MV/MC sync space calculation
+
+:::::: TO: Philipp Zabel <p.zabel@pengutronix.de>
+:::::: CC: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
