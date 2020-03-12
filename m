@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F99C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF114206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65086206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Xc8HqMM5"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AymwMeaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgCLJYU (ORCPT
+        id S1726799AbgCLJY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:24:20 -0400
-Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:57534
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Thu, 12 Mar 2020 05:24:26 -0400
+Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:60926
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726643AbgCLJYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:24:20 -0400
+        id S1726632AbgCLJYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 05:24:25 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bbTy9YcfDgEc6FiN5xz4MEwC6AGmOayOl7CeDOuFbA+3HeFwCQsrYzoNMMYDA9+rqG8VXxXXScZidhoqoUOR5uGiCS2S68SNJjEESStfqo8ZpWSiyt9PTajBPzYBN1Ijy2wVsR/6d951ERq2DMQcD335uQMD+px+E8JX81S4UUaPXcMj8tYU9Xgak0g0sHANIONrMHZn/0t0HPhb+bqIb90St4IOTr/oLUbUZp1149g/Cnq/YgcdEvyca1Xyq8tuorX83OWh5oApPRXBNGmDjkwRJYA35BPGcjYmuE7T41LVA+7IqT0kLDrNnVltyufHP0GsVFDk1NVJM/rH68Lv5w==
+ b=ER1EAvLitKRts18IFl+MYar6ZTWi+w4gwbTm6KMdQiD+gCtZYP8lJUreTx3ZgRTQf9210PxM6TFK02t3xqzzXdLR28V9tT/J3x8A/RCYbRTcpUt8qojtAQKiuA9xC4JPxZKRgm08zpwS5P4zPmfDHRae0fKr69kYLYaMTcQmLhL8tSJWoZe3uK9ZVJbRwFOZ3NtBNE+Pu6JPcl7md5Fq2GKAMJ3GL525nSli9fPWVZqMalGsvW1XytV22N38jI4M8f43mMMoPRWiJtQNVgbzB/PwDo7ZHZqz1vmfvfZLjLd+WqLA0uFpS/dkwPG6KrcXKoETKahhL+HpGqbQ9P8Oew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxKkVhLNDncdktlbMyFcIMnEzxgzpLoSZ4lKJrsQzqA=;
- b=U9ND0W4ZD3j7vfkSNrfzHCdvfb+YRw9IaagbCV5xkWj/Y2B2Zk2MyxfT1hLF0seWGJGkYTfCqRs4J+71biExcTda+7Lfwfg+swfgKkLprhadPjKTzN3tC4FY25pA6GrWAofZ9AjLnDsNnaxMlcpZCW3Fd9cDiDSX23IU63QvsFxDrQ7f9+oISOxw/zeGsI7n+g6eIdCmfskjiytxxcI99csWm+OGZg8PE5WYimhR9kjW5eQkrMlFF07SATt9qWCoj9j50LBMHWye4G+faeYHEfuRDih/i8FhuQGliVIo56xbgYV7oEfNyVhTq4gvhvX7aVa0cMRXaNquQDHXr1v8dg==
+ bh=G0CMnX4vMzPYzS9g30+XGH16lJIrzgO4jK1RlzhTYEw=;
+ b=VbGxkuh609XNHr6heiXGTls5b+ZvikoqfTO4Qlntpw860SqGrAkCfs3ScDb0ixBtyZRBOyY0m7bu7VSqsLtbkvXx+HXKtC1i1lUKdhfvUajU+GiJmkryLWMBxVHI1Z30fg4R/cYqTirBsQVWZusJASDLDspvyWKQ1edsVisObnX+YpmSt/NO5gJ9c4jD9phs1LoLuhIyF8Lj9N7TwqhVHKC2wo3kE7dbjVkfhCsTqU7Dl8gFCqyEmIrkKskiYKPZXh5dFHv/wK10jRM7UV6IpoeYPLmvxPfeHBZU5cfda5NOGWlQy1wU3zooNaari7wU8P/bGyEhHxEI6q1xm7pmaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxKkVhLNDncdktlbMyFcIMnEzxgzpLoSZ4lKJrsQzqA=;
- b=Xc8HqMM5NDd8W97V5P5qFYzoCc5p7jVv8ePmCHPSptd0wK3ywxl5p9qnP7MfZmxgCxzVoHE7dRiUvA+qP5HFAKIv+Ze+YzUhB5/Tp/JQ3l6P3ce4ByGQcH63InTNv9ymktOp7oKTYltBRfki/F5HrJ/mWiJYvneyWrA89amP9bY=
+ bh=G0CMnX4vMzPYzS9g30+XGH16lJIrzgO4jK1RlzhTYEw=;
+ b=AymwMeaVx/frPOqJ7P3GEThhatjWNXazi6fGugBrY8TTYIsxBe2SsyFhx+NUxtqgspYTZuBjzKP68kSVKm1jG5CyqbF5UwP2mj/6qrbg5u5buifosXBjQgDocDBiCkmVt8MhTp1Bw+bvpN7RBcBQQNtRH+07w/9Sp/Gsb7k6wn4=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5042.eurprd04.prod.outlook.com (20.177.41.14) with Microsoft SMTP
+ AM0PR04MB5588.eurprd04.prod.outlook.com (20.178.119.146) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Thu, 12 Mar 2020 09:24:16 +0000
+ 15.20.2793.16; Thu, 12 Mar 2020 09:24:21 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 09:24:16 +0000
+ 09:24:21 +0000
 From:   peng.fan@nxp.com
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de
 Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
@@ -54,9 +54,9 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         leonard.crestez@nxp.com, git@andred.net, abel.vesa@nxp.com,
         ard.biesheuvel@linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V1 2/4] ARM: imx: cpu: drop dead code
-Date:   Thu, 12 Mar 2020 17:17:23 +0800
-Message-Id: <1584004645-26720-3-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH V1 3/4] ARM: imx: move cpu definitions into a header
+Date:   Thu, 12 Mar 2020 17:17:24 +0800
+Message-Id: <1584004645-26720-4-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1584004645-26720-1-git-send-email-peng.fan@nxp.com>
 References: <1584004645-26720-1-git-send-email-peng.fan@nxp.com>
@@ -66,33 +66,33 @@ X-ClientProxiedBy: SG2PR0302CA0001.apcprd03.prod.outlook.com
  (2603:10a6:208:70::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR0302CA0001.apcprd03.prod.outlook.com (2603:1096:3:2::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2835.7 via Frontend Transport; Thu, 12 Mar 2020 09:24:12 +0000
+Received: from localhost.localdomain (119.31.174.66) by SG2PR0302CA0001.apcprd03.prod.outlook.com (2603:1096:3:2::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2835.7 via Frontend Transport; Thu, 12 Mar 2020 09:24:16 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 99dd4fc0-0166-4b25-6cdd-08d7c6672297
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5042:|AM0PR04MB5042:
+X-MS-Office365-Filtering-Correlation-Id: 7d5423a9-3aff-444e-5376-08d7c6672564
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5588:|AM0PR04MB5588:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB5042F77AAFF634AFDE3D7BC288FD0@AM0PR04MB5042.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-Microsoft-Antispam-PRVS: <AM0PR04MB558866E322E59B3D684A217488FD0@AM0PR04MB5588.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
 X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(199004)(316002)(52116002)(8676002)(8936002)(6506007)(36756003)(81166006)(81156014)(186003)(6666004)(9686003)(6486002)(16526019)(4326008)(66556008)(66476007)(26005)(7416002)(6512007)(956004)(5660300002)(86362001)(478600001)(2616005)(2906002)(66946007)(69590400007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5042;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(199004)(8936002)(478600001)(66946007)(81156014)(86362001)(6486002)(6512007)(69590400007)(52116002)(9686003)(81166006)(26005)(2906002)(4326008)(8676002)(6506007)(7416002)(5660300002)(2616005)(36756003)(316002)(66556008)(6666004)(66476007)(956004)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5588;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8BBvXZj/uBzj6i1TR9Urqmx7+9EWk7USnHdqqn6RKLBH+ebHB8AGinQDSW2PNSa31Mfg20K5CIEHn/nMmjxVRbN6gNCsXSAZZNIBHw+lGsI3U17XlwbF0hFBHpvHZ1XSX5ugVtyqEuaLq9ViOJv78GY3hbREVRlPNez07VBVy4FUB0Q+UoQYJJm2ImsWyTkX3XcTaT+q3VUcf3EF3qkeuZv8AGerW+TApnrmYA7PJlVDsgpcmqqh6yKaNwiM6UNKAkzBqkU7101V6FUlRjIKdf5PLhLBkcgRu/zScVJ9osDnK0ihS5xohAqJ14ysRuQOPSTIBp835Jzx6FmHG5xlLfHFwhOzw26+tQVBlou0oMcCthco8hXHa8rim7vkxsz62D9ttUjPJCFOZYNwRynqcQMtT40MwSwfKh2yLKFiJ/ISv1pqKaDTFPlxLM8x6D7+jYD2+K8AJ3dJEZyE/vhAD60HZMgvxuzbcwDGvSMhZHYbd4BZ5n1XT/yUkz6dA813
-X-MS-Exchange-AntiSpam-MessageData: 9DXdf7J7javGG65UdJ12VCrNC0hthwa49PAbwN8tcVauZ5Ru9w2hnOw0w1UHDowr/DxGCHcga7uBhM8Y4AwNx/k96OkQJl+ZAIAW1gnmUoyp52uHrpTatXe+YzrrsWhdBLcfArdPdMwZefd1w1SQGw==
+X-Microsoft-Antispam-Message-Info: PBOGHYBxUL8FGXL4WX07nhT3dTcUOhq+LnZlVm6P1B6S+KisnV4BShZFAnNJZOzzHEyfC3HPP6LtcUQwPRxCMQB48DW71CLASy1yFweCE8edum/kW57vmHwPeyW5Rj0wnS1UYWfPtPbGXufSPCCyl5Xy7K75dQSrEKxSlz7j/FoLM73nJ+MpfIFD1ppKYzq587hu1BoaTfvqZ3wYKPPmzknLxfYMLbLJ5v8G5xTSP359EL36hXxzgRfSFShkax2PdoilOnDurIqe9gpx/JADdZjXn+pM6ta5ZPYoXs0jNaShx0Gi29XfFmXx7khh9zdbOKpoESjtGOce7MKC/AtcykoSSobjbUDbLytU3O9ZXMaPczxuEtn3dlZjaLqLSJcHUV4J720wxoa6QjOEs0CGQKq/G5dAi/uiNZwxWuJmw7VMqOLlkv5Rao14SSw6OMIBfmkB1gMnDD9ZpsocKWNmAXHo8lagMjANDeaDrJiErbycffjuzvKuHVe1U1edaET9
+X-MS-Exchange-AntiSpam-MessageData: dyNYyDdcFUHdCzl5QrCI0vQJxM7+mEus1foNhA2vkkf3df8Z3fKTULVIpsoWNkmDraT7yFZFMEICvwt1qn3dA4ilM3fpyN+e5TGxCDlLLhIl2oqCd4Am3mq1MBh6Ew21/Qit2+uJ4GE7OyhlEddJng==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99dd4fc0-0166-4b25-6cdd-08d7c6672297
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 09:24:16.3732
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d5423a9-3aff-444e-5376-08d7c6672564
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 09:24:20.9346
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0UTVTjSGR1WsQex0T47HyFY+ebDYnJE+qL92+JMmmUitFiZ+7dyiFC5waEvO/6z54vhuNJGYoGfIIxc9jOsVag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5042
+X-MS-Exchange-CrossTenant-UserPrincipalName: NLvHly9FcFqfzUeqV9hYz7/2lFvU9UzjJjqrEBPEXCXV8/HadndJq2jhb09zbsPf1ypchOzP3XYllzfy4kDveA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5588
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -100,50 +100,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-imx_soc_device_init is only called by i.MX6Q/SL/SX/UL/7D/7ULP.
-So we could drop the switch case for i.MX1/2/3/5 which are dead code
-that never be executed.
+The soc device register code will be moved to drivers/soc/imx/,
+the code needs the cpu type definitions. So let's move the cpu
+type definitions to a header.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- arch/arm/mach-imx/cpu.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ arch/arm/mach-imx/mxc.h | 22 +---------------------
+ include/soc/imx/cpu.h   | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 21 deletions(-)
+ create mode 100644 include/soc/imx/cpu.h
 
-diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
-index 2df649a84697..0302cb66134b 100644
---- a/arch/arm/mach-imx/cpu.c
-+++ b/arch/arm/mach-imx/cpu.c
-@@ -108,30 +108,6 @@ static int __init imx_soc_device_init(void)
- 		goto free_soc;
+diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
+index 2bfd2d59b4a6..fe2d0f5abfcc 100644
+--- a/arch/arm/mach-imx/mxc.h
++++ b/arch/arm/mach-imx/mxc.h
+@@ -8,35 +8,15 @@
+ #define __ASM_ARCH_MXC_H__
  
- 	switch (__mxc_cpu_type) {
--	case MXC_CPU_MX1:
--		soc_id = "i.MX1";
--		break;
--	case MXC_CPU_MX21:
--		soc_id = "i.MX21";
--		break;
--	case MXC_CPU_MX25:
--		soc_id = "i.MX25";
--		break;
--	case MXC_CPU_MX27:
--		soc_id = "i.MX27";
--		break;
--	case MXC_CPU_MX31:
--		soc_id = "i.MX31";
--		break;
--	case MXC_CPU_MX35:
--		soc_id = "i.MX35";
--		break;
--	case MXC_CPU_MX51:
--		soc_id = "i.MX51";
--		break;
--	case MXC_CPU_MX53:
--		soc_id = "i.MX53";
--		break;
- 	case MXC_CPU_IMX6SL:
- 		ocotp_compat = "fsl,imx6sl-ocotp";
- 		soc_id = "i.MX6SL";
+ #include <linux/types.h>
++#include <soc/imx/cpu.h>
+ 
+ #ifndef __ASM_ARCH_MXC_HARDWARE_H__
+ #error "Do not include directly."
+ #endif
+ 
+-#define MXC_CPU_MX1		1
+-#define MXC_CPU_MX21		21
+-#define MXC_CPU_MX25		25
+-#define MXC_CPU_MX27		27
+-#define MXC_CPU_MX31		31
+-#define MXC_CPU_MX35		35
+-#define MXC_CPU_MX51		51
+-#define MXC_CPU_MX53		53
+-#define MXC_CPU_IMX6SL		0x60
+-#define MXC_CPU_IMX6DL		0x61
+-#define MXC_CPU_IMX6SX		0x62
+-#define MXC_CPU_IMX6Q		0x63
+-#define MXC_CPU_IMX6UL		0x64
+-#define MXC_CPU_IMX6ULL		0x65
+-/* virtual cpu id for i.mx6ulz */
+-#define MXC_CPU_IMX6ULZ		0x6b
+-#define MXC_CPU_IMX6SLL		0x67
+-#define MXC_CPU_IMX7D		0x72
+-#define MXC_CPU_IMX7ULP		0xff
+-
+ #define IMX_DDR_TYPE_LPDDR2		1
+ 
+ #ifndef __ASSEMBLY__
+-extern unsigned int __mxc_cpu_type;
+ 
+ #ifdef CONFIG_SOC_IMX6SL
+ static inline bool cpu_is_imx6sl(void)
+diff --git a/include/soc/imx/cpu.h b/include/soc/imx/cpu.h
+new file mode 100644
+index 000000000000..0669fc08a501
+--- /dev/null
++++ b/include/soc/imx/cpu.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef __IMX_CPU_H__
++#define __IMX_CPU_H__
++
++#define MXC_CPU_MX1		1
++#define MXC_CPU_MX21		21
++#define MXC_CPU_MX25		25
++#define MXC_CPU_MX27		27
++#define MXC_CPU_MX31		31
++#define MXC_CPU_MX35		35
++#define MXC_CPU_MX51		51
++#define MXC_CPU_MX53		53
++#define MXC_CPU_IMX6SL		0x60
++#define MXC_CPU_IMX6DL		0x61
++#define MXC_CPU_IMX6SX		0x62
++#define MXC_CPU_IMX6Q		0x63
++#define MXC_CPU_IMX6UL		0x64
++#define MXC_CPU_IMX6ULL		0x65
++/* virtual cpu id for i.mx6ulz */
++#define MXC_CPU_IMX6ULZ		0x6b
++#define MXC_CPU_IMX6SLL		0x67
++#define MXC_CPU_IMX7D		0x72
++#define MXC_CPU_IMX7ULP		0xff
++
++#ifndef __ASSEMBLY__
++extern unsigned int __mxc_cpu_type;
++#endif
++
++#endif
 -- 
 2.16.4
 
