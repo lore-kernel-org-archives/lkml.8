@@ -2,97 +2,127 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34F8C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFD9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF4B20735
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05842074E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I0Qxefjh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MymNgzFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387724AbgCLDJC (ORCPT
+        id S2387747AbgCLDKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:09:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43510 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387657AbgCLDJC (ORCPT
+        Wed, 11 Mar 2020 23:10:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45355 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387731AbgCLDKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:09:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C2xLbA175706;
-        Thu, 12 Mar 2020 03:08:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=4/jFFmq3O/qVJV0fZ9n85WMs1u0qzrBLdxiFRQDhmLo=;
- b=I0QxefjhjLDDXSBnHWhPt9MwQkSvK+5rtKbC+f7lfy/F3Sl1ZODkXnmC/NOjR7LwAMOm
- u6KjxW9RCEgAK+jDuodE6OUUDYIYaWK3cL6GD9ZC8p952lgb9S10YvU+UjdoifNoFjoj
- L+9Cj+5t2+FqPHumydqjJ40iDbt2ozRKMqP7qRLjXAjyzETG17axpC9DGWwuqSN2ibxE
- RqXGyu+luwW/RMktPptnI32gPMjoJd6748SpZlHstxF0lCf5mlTjn5iAx4bWAO6dLKKm
- Z4fNy+vFml2O6CrJcYsiDHZu5JmnJ0/ba2XFqqH9qwLImZfJQHWqmoLIRaR9ANSv3wry jA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yp7hmbf8w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 03:08:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C38hQn097206;
-        Thu, 12 Mar 2020 03:08:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2ypv9wugmq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 03:08:42 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02C38bOC022054;
-        Thu, 12 Mar 2020 03:08:39 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Mar 2020 20:08:37 -0700
-To:     huobean@gmail.com
-Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        Wed, 11 Mar 2020 23:10:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id w9so4149175iob.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 20:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7UlCPqaifwtaHRBNM9OlkA92uhGP3P8YtjrPHhM2qXA=;
+        b=MymNgzFAjC7botrqgoNNcIOUuAsnEj/YaRhp929DK9qF9NTSCoVLgqQuyUlCuuWbmc
+         xTX8qnat5Lhd0dx2+HvITd9I3p8W2oFWYYiLmPSxLhHu9VDmI3IenMvfEFdho/S8vd2I
+         yuLM73a7S/wx1yoSfX+QL5qO2LsLHWifPuA0hRfAhHp4rftW0kW6WLVBjS4J0fyOpN3O
+         7r/1++AmSjZryTn2MxF74XgpKzfez6QsJWgBfcCvVchXvT9agRNixKTJPc0eob3a5Q1X
+         xoLsGG5eL0WYwn6be71SqmjgQeJZ5NZqTQtoyqlEcSz37jy3pIQVaP16SIN7GWzqFG9X
+         3jyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7UlCPqaifwtaHRBNM9OlkA92uhGP3P8YtjrPHhM2qXA=;
+        b=cG91q3rXz/sY3K5FubsVm0xCFtWDjJ9gf/ZGXQqZROZHsWJCwMlSKqhHRiLWttICXH
+         siJAeXUdn+ygigkgBvO/kJCWwsdYhVqrZqLG5x0X1Ys1D4VALpKiwuIKo0YREut8WMRz
+         zQ0Y5Bwqg/lOGMe0PT+MSAenlMcZzk7bg/0JMxf+cOoXL8lzF2TLHQSmtihZbnc+M7Ew
+         aXrMYCdSpkomBGQDbTuKhPhxd5XITD1CuG3Y1ohnzVe7iuzR60w2lsY7IlV7bPlp2QE+
+         WqRRwOPMPtcnVniiLJezJVhqA8onWg05zguTN+l0Y1szkDpatxYddEE+UMhVLkzl+8GG
+         tVHA==
+X-Gm-Message-State: ANhLgQ04hmwkn6gcP6HC749vChP/s+ZvvyCezjLf2Hs1/lStWkDp54Mx
+        Qj+IxNOMYp3XREjHIRfJwJtIj1U77xU=
+X-Google-Smtp-Source: ADFU+vs/imBUNrCpmlxjMLXtYVDj0Q3NbjhYgAeR0ptUEQhLsK2b4DLsRH6n4QvzTYidB9g45CZyjQ==
+X-Received: by 2002:a6b:6606:: with SMTP id a6mr5411023ioc.8.1583982602672;
+        Wed, 11 Mar 2020 20:10:02 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id y18sm12685362ilg.82.2020.03.11.20.10.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 20:10:02 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver (UPDATED)
+To:     Dave Taht <dave.taht@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dcbw@redhat.com>,
+        Evan Green <evgreen@google.com>,
+        Eric Caruso <ejcaruso@google.com>,
+        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
+        Chaitanya Pratapa <cpratapa@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] Revert "scsi: ufs: Let the SCSI core allocate per-command UFS data"
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200311112921.29031-1-beanhuo@micron.com>
-        <20200311112921.29031-2-beanhuo@micron.com>
-Date:   Wed, 11 Mar 2020 23:08:34 -0400
-In-Reply-To: <20200311112921.29031-2-beanhuo@micron.com> (huobean@gmail.com's
-        message of "Wed, 11 Mar 2020 12:29:21 +0100")
-Message-ID: <yq11rpyb77x.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+References: <20200306042831.17827-1-elder@linaro.org>
+ <CAA93jw5enz6-h1m=7tGFToK+E+8z3aD80pBef4AYkFrS2u3hHQ@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <e4f436b4-3dd7-970a-9b08-7601fc5428d2@linaro.org>
+Date:   Wed, 11 Mar 2020 22:09:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
- spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003120014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
- priorityscore=1501 clxscore=1011 mlxscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=1 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003120013
+In-Reply-To: <CAA93jw5enz6-h1m=7tGFToK+E+8z3aD80pBef4AYkFrS2u3hHQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/9/20 11:54 AM, Dave Taht wrote:
+> I am happy to see this driver upstream.
+> 
+>> Arnd's concern was that the rmnet_data0 network device does not
+>> have the benefit of information about the state of the underlying
+>> IPA hardware in order to be effective in controlling TX flow.
+>> The feared result is over-buffering of TX packets (bufferbloat).
+>> I began working on some simple experiments to see whether (or how
+>> much) his concern was warranted.  But it turned out that completing
+>> these experiments was much more work than had been hoped.
+> 
+> Members of the bufferbloat project *care*, and have tools and testbeds for
+> exploring these issues. It would be good to establish a relationship with
+> the vendor, obtain hardware, and other (technical and financial) support, if
+> possible.
+> 
+> Is there any specific hardware now available (generally or in beta) that
+> can be obtained by us to take a harder look? A contact at linaro or QCA
+> willing discuss options?
 
-Bean,
+There exists some hardware that could be used, but at the moment I have
+not ported this code to operate on it.  It is a current effort however,
+and I will be glad to keep you in the loop on progress.  There are a
+couple of target environments we'd like to support but until last week
+the primary goal was inclusion in the upstream tree.
 
-> This patch is to revert commit 2bb1156f9f1b36b1f594b89fa5412fd4178b28c6.
+I will follow up with you after the dust settles a little bit with
+this patch series, maybe in a week or so.  In the mean time I'll
+also find out whether there are any other resources (people and/or
+hardware) available.
 
-I dropped Bart's patch. Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+					-Alex
