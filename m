@@ -2,45 +2,43 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAEFC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6567C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CEE2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79995206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bmtGEnxw"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VbdaxuRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgCLRLP (ORCPT
+        id S1726691AbgCLRLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:11:15 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:57816 "EHLO
+        Thu, 12 Mar 2020 13:11:18 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:35588 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726610AbgCLRLN (ORCPT
+        by vger.kernel.org with ESMTP id S1725268AbgCLRLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:11:13 -0400
+        Thu, 12 Mar 2020 13:11:14 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6A53742811;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AA662C108A;
         Thu, 12 Mar 2020 17:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1584033073; bh=abwk2yud7QwjDJOyU50WeyPy+p3/jpJNUXfcqJc6hhM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=bmtGEnxwDMOIzhys6tmt2m0uUCdEwd+2FfyMR5D1L5ugCRaNVXKHku2UJWNjR3kcx
-         SDXZTL66lUDNt+YU/aPmB+ke2l6gT1t3cwMJg6RkUvwparmKKeREnAfSaWghks+W35
-         YpO7zylZT2IVYcv1axmGJbWvgivOSSLu+Rdkp+s4nwpMIrllWiaNkZ6DzPfgaKf1TZ
-         vCjTU9K1T22HI+0m5DPOgYPet/usj4+w5ur5MzqxhYSZfW/VuL9zE/TbzqFL1KeayA
-         mart8YftuKDC5A8nUBwqm14uiAebpzjugD4uOJhZkBOUKlZrzgBiVP9vWSGWwkicDU
-         9VYRcc1vmzthQ==
+        t=1584033073; bh=JctjT8ZZB3iGiymejL3UkVZ9bMIbCL4Z7Cm4bSq+Rac=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VbdaxuRE/sDXULz7i8tqvuBSPauwJNtx8llrBmIzXeZV+nNrAvhFQ1ctRZ7bVk6Jy
+         6OE7rwePbWh7p0WNM9QMjnzhRVmLpcfHbOZOWGD+GBcLWlpUgLS4+SBpzIXOY5Kfny
+         +tREujQg2815XcPBR9iFnTX242mudETHJ/N262xd94o+4T6QPoT5gRrX9vqGor5I+l
+         TV/8yl014BY9de+QuO8nu9ODqxXlAddLFrkNDlqX2zidta0EgIVXDVwoDoZQy28dnB
+         +FQN1GL81lB7d8oXH3j6UrxZYohVHI1s57cKMVLPrZUqyNGz1Wy+uPRh+Nm6e75Bn3
+         YI2+qy1rNrusg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id C4832A0063;
-        Thu, 12 Mar 2020 17:11:08 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id A430CA0061;
+        Thu, 12 Mar 2020 17:11:07 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,22 +48,19 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/2] net: phy: Add XLGMII interface define
-Date:   Thu, 12 Mar 2020 18:10:09 +0100
-Message-Id: <279342f40d5f26e1f9d7752f2fb376e5d4cecf2b.1584031294.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 0/2] net: phy: XLGMII define and usage in PHYLINK
+Date:   Thu, 12 Mar 2020 18:10:08 +0100
+Message-Id: <cover.1584031294.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1584031294.git.Jose.Abreu@synopsys.com>
-References: <cover.1584031294.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1584031294.git.Jose.Abreu@synopsys.com>
-References: <cover.1584031294.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a define for XLGMII interface.
+Adds XLGMII defines and usage in PHYLINK.
 
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Patch 1/2, adds the define for it, whilst 2/2 adds the usage of it in
+PHYLINK.
 
 ---
 Cc: Andrew Lunn <andrew@lunn.ch>
@@ -75,30 +70,15 @@ Cc: Russell King <linux@armlinux.org.uk>
 Cc: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- include/linux/phy.h | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index e72dbd0d2d6a..fb62f1469aa2 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -94,6 +94,7 @@ typedef enum {
- 	PHY_INTERFACE_MODE_RTBI,
- 	PHY_INTERFACE_MODE_SMII,
- 	PHY_INTERFACE_MODE_XGMII,
-+	PHY_INTERFACE_MODE_XLGMII,
- 	PHY_INTERFACE_MODE_MOCA,
- 	PHY_INTERFACE_MODE_QSGMII,
- 	PHY_INTERFACE_MODE_TRGMII,
-@@ -165,6 +166,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "smii";
- 	case PHY_INTERFACE_MODE_XGMII:
- 		return "xgmii";
-+	case PHY_INTERFACE_MODE_XLGMII:
-+		return "xlgmii";
- 	case PHY_INTERFACE_MODE_MOCA:
- 		return "moca";
- 	case PHY_INTERFACE_MODE_QSGMII:
+Jose Abreu (2):
+  net: phy: Add XLGMII interface define
+  net: phylink: Add XLGMII support
+
+ drivers/net/phy/phylink.c | 27 +++++++++++++++++++++++++++
+ include/linux/phy.h       |  3 +++
+ 2 files changed, 30 insertions(+)
+
 -- 
 2.7.4
 
