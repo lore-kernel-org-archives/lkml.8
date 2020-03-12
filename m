@@ -2,229 +2,127 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A44C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E83AC0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C866520746
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:47:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JI0NdUuO"
+	by mail.kernel.org (Postfix) with ESMTP id B192220739
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 01:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387638AbgCLBrq (ORCPT
+        id S2387622AbgCLBsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 21:47:46 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:33848 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387501AbgCLBrp (ORCPT
+        Wed, 11 Mar 2020 21:48:46 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:37120 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387588AbgCLBsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 21:47:45 -0400
-Received: by mail-ua1-f65.google.com with SMTP id g21so1525772uaj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 18:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PgMVUPr9CJB662kw0Etj9PzDmEhHdAooW8/c8EV2Xs4=;
-        b=JI0NdUuOBJi8irQniAHDZus9gSxHFsPWYFnKXsiqwsOhKAbNzUqHq+VcEDM8T4TnEJ
-         OGifAyneQ4sO654BJ/tCMwd7iiHnlmHuV7b42qkExDUAC0x85FWZUcqYT2EqaWfTVQ3c
-         PY8jyoS8ygU8ctvk99m1zD0Sk/ux/dUV8qhvA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PgMVUPr9CJB662kw0Etj9PzDmEhHdAooW8/c8EV2Xs4=;
-        b=QQVEky0DjpjJYXcSqPmUOi8wegXvR8sdSO4y51/pUoS41WDjMP5IpyXjQospdlUCYX
-         C33D68SF2+t/o6v2I2gN1EMFaK2uiylC8LPmCq79AF5kxgmiaBZJOZdXAI/A+V4V8gnk
-         EyV9Tsytd4ijsqSDeqykKFEjua0x+IT2+LR3lynWwo+h9kX00TQsTXMqd5pPQn/oQ1iY
-         B8jGMUa7z5KB+hhuIcA17GtZy/RpPhVf9h08IU6SXUcWJ+kQ+2duZThkyC4plJdAeWPw
-         aHBnCOUuNM0+qqlzOyheJVNK3BaasDsMZT71xSCvplJ/WfNgNu7U/2/FQsSPhkmfijsR
-         RKSg==
-X-Gm-Message-State: ANhLgQ1xNVGO31f99fu21w2XHXwSLIe01wRFlY710eDsT4y91y+hVQ0M
-        P5yBBXursPgYzFJTpSd4eVIVqYdvit+6IdfAgnu5Lkftw4Y=
-X-Google-Smtp-Source: ADFU+vsxe8uIFuMytA3ZTH+Dvv+Qm9+AJ1NhP8oHDjWpECQUTxgXsbkqu31HUYTB81OepoijiVoqI3hoMedJGeKGa20=
-X-Received: by 2002:a9f:32da:: with SMTP id f26mr3606235uac.40.1583977664301;
- Wed, 11 Mar 2020 18:47:44 -0700 (PDT)
+        Wed, 11 Mar 2020 21:48:46 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 02C1mcxx043812;
+        Thu, 12 Mar 2020 09:48:38 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 43F1EBB4C362905B2749;
+        Thu, 12 Mar 2020 09:48:38 +0800 (CST)
+In-Reply-To: <20200311090101.5ac66997@collabora.com>
+References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw> <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
+        <20200310203930.2b8c0cfb@collabora.com> <20200310204142.540fc7c4@collabora.com>
+        <OF4AD2D1A1.2B35FBFA-ON48258528.0021AD65-48258528.00223C9B@mxic.com.tw> <20200311090101.5ac66997@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     allison@lohutok.net, bbrezillon@kernel.org,
+        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, rfontana@redhat.com, richard@nod.at,
+        s.hauer@pengutronix.de, stefan@agner.ch, tglx@linutronix.de,
+        vigneshr@ti.com, yuehaibing@huawei.com
+Subject: Re: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific suspend/resume
+ operation
 MIME-Version: 1.0
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 12 Mar 2020 09:47:33 +0800
-Message-ID: <CANMq1KDZeBOzVfWF0xjWpcLFDbO9WY7xRvzpGmtfePTOxVZpzg@mail.gmail.com>
-Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+X-KeepSent: 618C17D0:837A4D16-48258529:0009AFE3;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF618C17D0.837A4D16-ON48258529.0009AFE3-48258529.0009F227@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 12 Mar 2020 09:48:38 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/03/12 AM 09:48:38,
+        Serialize complete at 2020/03/12 AM 09:48:38
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 02C1mcxx043812
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 5:17 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> From: Ran Bi <ran.bi@mediatek.com>
->
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
->
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 32 ++++++++++++++++++++++++--------
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 33 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->         int ret;
->
->         regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
->
->         ret = regmap_read_poll_timeout(pwrc->regmap,
->                                         pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..7a5a9e2 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,18 +9,38 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
->  #include <linux/mfd/mt6397/rtc.h>
->  #include <linux/mod_devicetable.h>
->
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +       .wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +       .wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
-> +static const struct of_device_id mt6397_rtc_of_match[] = {
-> +       { .compatible = "mediatek,mt6323-rtc",
-> +               .data = (void *)&mt6397_rtc_data, },
-> +       { .compatible = "mediatek,mt6358-rtc",
-> +               .data = (void *)&mt6358_rtc_data, },
-> +       { .compatible = "mediatek,mt6397-rtc",
-> +               .data = (void *)&mt6397_rtc_data, },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> +
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
->         int ret;
->         u32 data;
->
-> -       ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +       ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->         if (ret < 0)
->                 return ret;
->
-> @@ -269,6 +289,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         rtc->addr_base = res->start;
->
-> +       rtc->data = (struct mtk_rtc_data *)
-> +                       of_device_get_match_data(&pdev->dev);
 
-Sorry for not noticing earlier, the cast is not needed. (also, you
-cast a const pointer into a non-const, which doesn't matter anyway as
-rtc->data is const again, but still...).
+Hi Boris,
 
-> +
->         rtc->irq = platform_get_irq(pdev, 0);
->         if (rtc->irq < 0)
->                 return rtc->irq;
-> @@ -325,13 +348,6 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->                         mt6397_rtc_resume);
->
-> -static const struct of_device_id mt6397_rtc_of_match[] = {
-> -       { .compatible = "mediatek,mt6323-rtc", },
-> -       { .compatible = "mediatek,mt6397-rtc", },
-> -       { }
-> -};
-> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> -
+> > > > > ---
+> > > > >  drivers/mtd/nand/raw/nand_base.c | 11 ++++++++---
+> > > > >  include/linux/mtd/rawnand.h      |  4 ++++
+> > > > >  2 files changed, 12 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/mtd/nand/raw/nand_base.c 
+> > b/drivers/mtd/nand/raw/nand_base.c
+> > > > > index 769be81..b44e460 100644
+> > > > > --- a/drivers/mtd/nand/raw/nand_base.c
+> > > > > +++ b/drivers/mtd/nand/raw/nand_base.c
+> > > > > @@ -4327,7 +4327,9 @@ static int nand_suspend(struct mtd_info 
+*mtd)
+> > > > >     struct nand_chip *chip = mtd_to_nand(mtd);
+> > > > > 
+> > > > >     mutex_lock(&chip->lock);
+> > > > > -   chip->suspended = 1;
+> > > > > +   if (chip->_suspend)
+> > > > > +      if (!chip->_suspend(chip))
+> > > > > +         chip->suspended = 1; 
+> > > 
+> > > Shouldn't you propagate the error to the caller if chip->_suspend()
+> > > fails? 
+> > 
+> > Currently, chip->suspend() just do sending command to nand chip and
+> > I think caller could check chip->suspend = 1 or 0 to know the status
+> > of nand chip.
+> 
+> No, it can't. The caller (AKA the MTD layer) has no idea about this
+> chip->suspend field, actually it doesn't even know about the nand_chip
+> struct. The mtd->_suspend() hook is here to abstract HW details, so
+> it's the raw NAND framework responsibility to propagate the error code
+> returned by chip->suspend().
 
-Why are you moving the MODULE_DEVICE_TABLE to the top of the file? I
-think you can keep it here with the mt63xx_rtc_data structs?
+Got it, thanks!
 
->  static struct platform_driver mtk_rtc_driver = {
->         .driver = {
->                 .name = "mt6397-rtc",
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> index 7dfb63b..66534ed 100644
-> --- a/include/linux/mfd/mt6397/rtc.h
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -18,7 +18,9 @@
->  #define RTC_BBPU_CBUSY         BIT(6)
->  #define RTC_BBPU_KEY            (0x43 << 8)
->
-> -#define RTC_WRTGR              0x003c
-> +#define RTC_WRTGR_MT6358       0x3a
-> +#define RTC_WRTGR_MT6397       0x3c
-> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
->
->  #define RTC_IRQ_STA            0x0002
->  #define RTC_IRQ_STA_AL         BIT(0)
-> @@ -65,6 +67,10 @@
->  #define MTK_RTC_POLL_DELAY_US  10
->  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
->
-> +struct mtk_rtc_data {
-> +       u32                     wrtgr;
-> +};
-> +
->  struct mt6397_rtc {
->         struct device           *dev;
->         struct rtc_device       *rtc_dev;
-> @@ -74,6 +80,7 @@ struct mt6397_rtc {
->         struct regmap           *regmap;
->         int                     irq;
->         u32                     addr_base;
-> +       const struct mtk_rtc_data *data;
->  };
->
->  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
-> --
-> 2.6.4
+best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
