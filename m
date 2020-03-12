@@ -2,243 +2,270 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E85C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD98C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D09C20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:43:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJY872Vk"
+	by mail.kernel.org (Postfix) with ESMTP id 14B46206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388168AbgCLHn2 (ORCPT
+        id S2388105AbgCLHuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:43:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42139 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388081AbgCLHn1 (ORCPT
+        Thu, 12 Mar 2020 03:50:06 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:34622 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387930AbgCLHuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:43:27 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v11so6065546wrm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 00:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cBmBbvO3DHaF6ZM0Ex0exZ5k7RaaVlRVHw8bBFWLk68=;
-        b=zJY872Vk0ENk8O9d1/vF4yt70XpjK4CvqiV/jZntDVQUqS80bWe8M3JDoQzVB2mdAr
-         Qc9DIw3jkmvCLCE4pWVQlGw7esiFPP18VbCIapmO8bV1ZJyYLWeUB4/pbD7zJWNuDI6l
-         m8Dq+6Z+4xikqbyHkN0QJkXNKYQdT0ZwUYnVO7fF12DVmV3UIQATSea0lhdWYZr7Rj6V
-         +1pxYJsfUUeUpc3rdNrXcVqazEDQvQ8muPih69KFxJrwguJJy23f2cEXiVM3A2I+Kmca
-         2EoYdG3eelt6WlAUGye4Y3+/wsWgbqoIIt61Pdoju38ymhdHYPghCFAcZtG9v7zloTcN
-         II5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cBmBbvO3DHaF6ZM0Ex0exZ5k7RaaVlRVHw8bBFWLk68=;
-        b=B2koccmw9UPAyLqyknzXo4T7J+7Pj+E3b6I6ucycvHZ9Lhw7UarW5MKPbsj64yurFU
-         e2mqKR+OzdcoxkPgjDxCUOaYzYHTX/+hwQyLD1RLMVDgTrKurt9bIeDL6V+ygRdO1RHw
-         85hzBTkGLKte5xGgBuozs5oLx8e3oCwMfnFsFbaqmlIHHbr5U1UFstMC2ngTGcE4rUc9
-         jPKZ4RhsmosUlmeKEzclOjU74OPPkkkNeCYvelJci0iNQx2J/NOdO9boWF2lLU2ElLTo
-         ozIdycJNVNNjKStygq6W77G+n/Di2dYaQiH11aV9UV1JP5PgzCmjlCRaadKj5XdQYDMd
-         g5nA==
-X-Gm-Message-State: ANhLgQ0WxRp3c4gpdr+x2ivVCSQoLpqnyySqaHfAvMe8Nvb2xjnqoYp5
-        Z1qfa992aINJEAzISOmbWmyiV51EqKk=
-X-Google-Smtp-Source: ADFU+vtvxDiPA/GMHD+H5t3DWhluKuQ2jWG2EYeSH9Gtd2RzLo/KFy2SCx51K12MuuqOtu0airE3Hw==
-X-Received: by 2002:adf:e64f:: with SMTP id b15mr6233670wrn.424.1583999005153;
-        Thu, 12 Mar 2020 00:43:25 -0700 (PDT)
-Received: from dell ([2.27.167.19])
-        by smtp.gmail.com with ESMTPSA id n2sm5659471wrr.62.2020.03.12.00.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 00:43:24 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 07:44:07 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-Message-ID: <20200312074407.GA3142@dell>
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 12 Mar 2020 03:50:06 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TsNBE3D_1583999397;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TsNBE3D_1583999397)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 12 Mar 2020 15:50:03 +0800
+From:   Hui Zhu <teawater@gmail.com>
+To:     mst@redhat.com, jasowang@redhat.com, akpm@linux-foundation.org,
+        pagupta@redhat.com, mojha@codeaurora.org, david@redhat.com,
+        namit@vmware.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org
+Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER to handle THP spilt issue
+Date:   Thu, 12 Mar 2020 15:49:54 +0800
+Message-Id: <1583999395-9131-1-git-send-email-teawater@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020, Hsin-Hsiung Wang wrote:
+If the guest kernel has many fragmentation pages, use virtio_balloon
+will split THP of QEMU when it calls MADV_DONTNEED madvise to release
+the balloon pages.
+This is an example in a VM with 1G memory 1CPU:
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:         0 kB
 
-> From: Ran Bi <ran.bi@mediatek.com>
-> 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 32 ++++++++++++++++++++++++--------
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 33 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->  	int ret;
->  
->  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
->  
->  	ret = regmap_read_poll_timeout(pwrc->regmap,
->  					pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..7a5a9e2 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,18 +9,38 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
->  #include <linux/mfd/mt6397/rtc.h>
->  #include <linux/mod_devicetable.h>
->  
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
-> +static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6323-rtc",
-> +		.data = (void *)&mt6397_rtc_data, },
-> +	{ .compatible = "mediatek,mt6358-rtc",
-> +		.data = (void *)&mt6358_rtc_data, },
-> +	{ .compatible = "mediatek,mt6397-rtc",
-> +		.data = (void *)&mt6397_rtc_data, },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> +
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
->  	int ret;
->  	u32 data;
->  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -269,6 +289,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	rtc->data = (struct mtk_rtc_data *)
-> +			of_device_get_match_data(&pdev->dev);
-> +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -325,13 +348,6 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
->  
-> -static const struct of_device_id mt6397_rtc_of_match[] = {
-> -	{ .compatible = "mediatek,mt6323-rtc", },
-> -	{ .compatible = "mediatek,mt6397-rtc", },
-> -	{ }
-> -};
-> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> -
->  static struct platform_driver mtk_rtc_driver = {
->  	.driver = {
->  		.name = "mt6397-rtc",
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> index 7dfb63b..66534ed 100644
-> --- a/include/linux/mfd/mt6397/rtc.h
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -18,7 +18,9 @@
->  #define RTC_BBPU_CBUSY         BIT(6)
->  #define RTC_BBPU_KEY            (0x43 << 8)
->  
-> -#define RTC_WRTGR              0x003c
-> +#define RTC_WRTGR_MT6358       0x3a
-> +#define RTC_WRTGR_MT6397       0x3c
-> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
->  
->  #define RTC_IRQ_STA            0x0002
->  #define RTC_IRQ_STA_AL         BIT(0)
-> @@ -65,6 +67,10 @@
->  #define MTK_RTC_POLL_DELAY_US  10
->  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
->  
-> +struct mtk_rtc_data {
-> +	u32			wrtgr;
-> +};
+usemem --punch-holes -s -1 800m &
 
-Do you expect to add more properties to this struct?
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    976896 kB
 
-If not, it seems a bit overkill.
+(qemu) device_add virtio-balloon-pci,id=balloon1
+(qemu) info balloon
+balloon: actual=1024
+(qemu) balloon 624
+(qemu) info balloon
+balloon: actual=624
 
->  struct mt6397_rtc {
->  	struct device           *dev;
->  	struct rtc_device       *rtc_dev;
-> @@ -74,6 +80,7 @@ struct mt6397_rtc {
->  	struct regmap           *regmap;
->  	int                     irq;
->  	u32                     addr_base;
-> +	const struct mtk_rtc_data *data;
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    153600 kB
 
-'data' is a terrible variable name.
+THP number decreased more than 800M.
+The reason is usemem with punch-holes option will free every other page
+after allocation.  Then 400M free memory inside the guest kernel is
+fragmentation pages.
+The guest kernel will use them to inflate the balloon.  When these
+fragmentation pages are freed, THP will be split.
 
-Why do you need to store this?
+This commit tries to handle this with add a new flag
+VIRTIO_BALLOON_F_THP_ORDER.
+When this flag is set, the balloon page order will be set to the THP order.
+Then THP pages will be freed together in the host.
+This is an example in a VM with 1G memory 1CPU:
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:         0 kB
 
-It's one variable which is used once AFAICT.
+usemem --punch-holes -s -1 800m &
 
->  };
->  
->  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    976896 kB
 
+(qemu) device_add virtio-balloon-pci,id=balloon1,thp-order=on
+(qemu) info balloon
+balloon: actual=1024
+(qemu) balloon 624
+(qemu) info balloon
+balloon: actual=624
+
+cat /proc/meminfo | grep AnonHugePages:
+AnonHugePages:    583680 kB
+
+The THP number decreases 384M.  This shows that VIRTIO_BALLOON_F_THP_ORDER
+can help handle the THP split issue.
+
+Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+---
+ drivers/virtio/virtio_balloon.c     | 57 ++++++++++++++++++++++++++-----------
+ include/linux/balloon_compaction.h  | 14 ++++++---
+ include/uapi/linux/virtio_balloon.h |  4 +++
+ 3 files changed, 54 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 7bfe365..1e1dc76 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -175,18 +175,31 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
+ 	unsigned num_pfns;
+ 	struct page *page;
+ 	LIST_HEAD(pages);
++	int page_order = 0;
+ 
+ 	/* We can only do one array worth at a time. */
+ 	num = min(num, ARRAY_SIZE(vb->pfns));
+ 
++	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_THP_ORDER))
++		page_order = VIRTIO_BALLOON_THP_ORDER;
++
+ 	for (num_pfns = 0; num_pfns < num;
+ 	     num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE) {
+-		struct page *page = balloon_page_alloc();
++		struct page *page;
++
++		if (page_order)
++			page = alloc_pages(__GFP_HIGHMEM |
++					   __GFP_KSWAPD_RECLAIM |
++					   __GFP_RETRY_MAYFAIL |
++					   __GFP_NOWARN | __GFP_NOMEMALLOC,
++					   page_order);
++		else
++			page = balloon_page_alloc();
+ 
+ 		if (!page) {
+ 			dev_info_ratelimited(&vb->vdev->dev,
+-					     "Out of puff! Can't get %u pages\n",
+-					     VIRTIO_BALLOON_PAGES_PER_PAGE);
++				"Out of puff! Can't get %u pages\n",
++				VIRTIO_BALLOON_PAGES_PER_PAGE << page_order);
+ 			/* Sleep for at least 1/5 of a second before retry. */
+ 			msleep(200);
+ 			break;
+@@ -206,7 +219,7 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
+ 		vb->num_pages += VIRTIO_BALLOON_PAGES_PER_PAGE;
+ 		if (!virtio_has_feature(vb->vdev,
+ 					VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+-			adjust_managed_page_count(page, -1);
++			adjust_managed_page_count(page, -(1 << page_order));
+ 		vb->num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE;
+ 	}
+ 
+@@ -223,13 +236,20 @@ static void release_pages_balloon(struct virtio_balloon *vb,
+ 				 struct list_head *pages)
+ {
+ 	struct page *page, *next;
++	int page_order = 0;
++
++	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_THP_ORDER))
++		page_order = VIRTIO_BALLOON_THP_ORDER;
+ 
+ 	list_for_each_entry_safe(page, next, pages, lru) {
+ 		if (!virtio_has_feature(vb->vdev,
+ 					VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+-			adjust_managed_page_count(page, 1);
++			adjust_managed_page_count(page, 1 << page_order);
+ 		list_del(&page->lru);
+-		put_page(page); /* balloon reference */
++		if (page_order)
++			__free_pages(page, page_order);
++		else
++			put_page(page); /* balloon reference */
+ 	}
+ }
+ 
+@@ -893,19 +913,21 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 		goto out_free_vb;
+ 
+ #ifdef CONFIG_BALLOON_COMPACTION
+-	balloon_mnt = kern_mount(&balloon_fs);
+-	if (IS_ERR(balloon_mnt)) {
+-		err = PTR_ERR(balloon_mnt);
+-		goto out_del_vqs;
+-	}
++	if (!virtio_has_feature(vdev, VIRTIO_BALLOON_F_THP_ORDER)) {
++		balloon_mnt = kern_mount(&balloon_fs);
++		if (IS_ERR(balloon_mnt)) {
++			err = PTR_ERR(balloon_mnt);
++			goto out_del_vqs;
++		}
+ 
+-	vb->vb_dev_info.migratepage = virtballoon_migratepage;
+-	vb->vb_dev_info.inode = alloc_anon_inode(balloon_mnt->mnt_sb);
+-	if (IS_ERR(vb->vb_dev_info.inode)) {
+-		err = PTR_ERR(vb->vb_dev_info.inode);
+-		goto out_kern_unmount;
++		vb->vb_dev_info.migratepage = virtballoon_migratepage;
++		vb->vb_dev_info.inode = alloc_anon_inode(balloon_mnt->mnt_sb);
++		if (IS_ERR(vb->vb_dev_info.inode)) {
++			err = PTR_ERR(vb->vb_dev_info.inode);
++			goto out_kern_unmount;
++		}
++		vb->vb_dev_info.inode->i_mapping->a_ops = &balloon_aops;
+ 	}
+-	vb->vb_dev_info.inode->i_mapping->a_ops = &balloon_aops;
+ #endif
+ 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+ 		/*
+@@ -1058,6 +1080,7 @@ static unsigned int features[] = {
+ 	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+ 	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+ 	VIRTIO_BALLOON_F_PAGE_POISON,
++	VIRTIO_BALLOON_F_THP_ORDER,
+ };
+ 
+ static struct virtio_driver virtio_balloon_driver = {
+diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
+index 338aa27..4c9164e 100644
+--- a/include/linux/balloon_compaction.h
++++ b/include/linux/balloon_compaction.h
+@@ -100,8 +100,12 @@ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
+ 				       struct page *page)
+ {
+ 	__SetPageOffline(page);
+-	__SetPageMovable(page, balloon->inode->i_mapping);
+-	set_page_private(page, (unsigned long)balloon);
++	if (balloon->inode) {
++		__SetPageMovable(page, balloon->inode->i_mapping);
++		set_page_private(page, (unsigned long)balloon);
++	} else {
++		set_page_private(page, 0);
++	}
+ 	list_add(&page->lru, &balloon->pages);
+ }
+ 
+@@ -116,8 +120,10 @@ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
+ static inline void balloon_page_delete(struct page *page)
+ {
+ 	__ClearPageOffline(page);
+-	__ClearPageMovable(page);
+-	set_page_private(page, 0);
++	if (page_private(page)) {
++		__ClearPageMovable(page);
++		set_page_private(page, 0);
++	}
+ 	/*
+ 	 * No touch page.lru field once @page has been isolated
+ 	 * because VM is using the field.
+diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+index a1966cd7..a2998a9 100644
+--- a/include/uapi/linux/virtio_balloon.h
++++ b/include/uapi/linux/virtio_balloon.h
+@@ -36,10 +36,14 @@
+ #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+ #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+ #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
++#define VIRTIO_BALLOON_F_THP_ORDER	5 /* Balloon page order to thp order */
+ 
+ /* Size of a PFN in the balloon interface. */
+ #define VIRTIO_BALLOON_PFN_SHIFT 12
+ 
++/* The order of the balloon page */
++#define VIRTIO_BALLOON_THP_ORDER 9
++
+ #define VIRTIO_BALLOON_CMD_ID_STOP	0
+ #define VIRTIO_BALLOON_CMD_ID_DONE	1
+ struct virtio_balloon_config {
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
