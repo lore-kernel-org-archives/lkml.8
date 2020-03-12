@@ -2,263 +2,417 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F101AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD59C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3A7206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459A4206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tQBdUIHw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZbPwpUVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgCLIhL (ORCPT
+        id S1726608AbgCLIiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:37:11 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45264 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLIhL (ORCPT
+        Thu, 12 Mar 2020 04:38:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56467 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725980AbgCLIiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:37:11 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b13so4054872lfb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bJGiZhelnYqsHXoB8Wms+Qj3CRUnm4ECceVNlS0ZuqI=;
-        b=tQBdUIHw9dstRBtSa4bLxg1mvFaa8YeETqW0FKQYxa2U5RqvvmlEyS1ciyTf5dxW6S
-         FHbiWnFqRYuPi9Nl4GKz997Y+opTe6qQ3223jQirey3JWdZ6wPgN1/bm66CiyqNw1RBU
-         m5PMIbV7yUNnbplbc/IOHC/XPE9mKp/ARWNz1sd4yx47iYdzZxldgJol/ulbZ8wRLlh5
-         KgKJxZ/G0VtNXy3FXQsYiHwSm4BHD3dXkyGXdxIWBgXaY/pkzx5QxWqy+29+5Bciqswk
-         ffCTd3bMo0lFCLvQf01qoMZ94ZbR6BXm7XX7qds/6kjqTECOEHmyRl2/iwd3GMvzqEAz
-         OVdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bJGiZhelnYqsHXoB8Wms+Qj3CRUnm4ECceVNlS0ZuqI=;
-        b=q0mBqMjhDvAKJ5G2ofZXBG06sHHv0RouXFIjEuY2CNrQL+ofNsKbKXI3VDl2Ku1Cpc
-         5y0VQbVmO8NU9cShQxNun8WPWqI7mNWRS51eoddQm0UILy8fptNq6NNlp8O6jWZ2X3lg
-         M5oKi5Nf1GpoB6Bt1zxzj8gFwz+9SA1Os1FndHkQYLPz3+quc832mELK2juY+BDOMpTd
-         4NeC+qEV2oUbeMp1rpe8QMOAhA3AvEobxwOC6p39U4zYdz/avQAy1TAQ5ACJMjF2+YWP
-         eaWVjlvB6/UpRkoQZbdGZsrXRR8xoWLOiRPxDTeT4M9loZIKAE62wIoM69WIYVq3qOm5
-         KRKw==
-X-Gm-Message-State: ANhLgQ2By3JlLndPN5m3CD1J8Pb39Rj4EPY3byVHjKsku8klgU5NCeo6
-        H5DVukQ+aS2sfVIQgOkSCFxkL9Zx9ywE4ZTFOz3IGw==
-X-Google-Smtp-Source: ADFU+vuOrbxdjFN5jymltyyi2a0JZr2hn7d0ZLacwRUE5Q7mtB67OTp2ScwsjoR/RbEDhKtyQAYRo04qOp8N0r+Zu4I=
-X-Received: by 2002:a05:6512:4c9:: with SMTP id w9mr4317407lfq.25.1584002228086;
- Thu, 12 Mar 2020 01:37:08 -0700 (PDT)
+        Thu, 12 Mar 2020 04:38:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584002281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=Mx1leOjTNR8FYx8qJWBeI/9aTN1gnOw5M28KCVuuEBo=;
+        b=ZbPwpUVuGjJEqUzP7Skl0nVC3Wh+F8OntIfudtvNk9Y6g60rqs0YfV8bc4n59/ZnSW7iRN
+        RoFcrF86t1WCx3rbcVxxPrnX2ca8lorbVGD2c3EcTRBrtzVT0CBDwefPhnkZWKRv7knv0U
+        AZgR4MGcNdLhnxVbgL+PFwlDUh2UDyE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-18-RG2gu1JiNFe3x6howx2dtw-1; Thu, 12 Mar 2020 04:37:55 -0400
+X-MC-Unique: RG2gu1JiNFe3x6howx2dtw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C181913F5;
+        Thu, 12 Mar 2020 08:37:53 +0000 (UTC)
+Received: from [10.36.117.247] (ovpn-117-247.ams2.redhat.com [10.36.117.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D090D10013A1;
+        Thu, 12 Mar 2020 08:37:34 +0000 (UTC)
+Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER to
+ handle THP spilt issue
+To:     Hui Zhu <teawater@gmail.com>, mst@redhat.com, jasowang@redhat.com,
+        akpm@linux-foundation.org, pagupta@redhat.com,
+        mojha@codeaurora.org, namit@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org
+Cc:     Hui Zhu <teawaterz@linux.alibaba.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+References: <1583999395-9131-1-git-send-email-teawater@gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <3e1373f4-6ade-c651-ddde-6f04e78382f9@redhat.com>
+Date:   Thu, 12 Mar 2020 09:37:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200311202625.13629-1-daniel.lezcano@linaro.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 12 Mar 2020 09:36:56 +0100
-Message-ID: <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
-Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1583999395-9131-1-git-send-email-teawater@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On 12.03.20 08:49, Hui Zhu wrote:
+> If the guest kernel has many fragmentation pages, use virtio_balloon
+> will split THP of QEMU when it calls MADV_DONTNEED madvise to release
+> the balloon pages.
+> This is an example in a VM with 1G memory 1CPU:
+> cat /proc/meminfo | grep AnonHugePages:
+> AnonHugePages:         0 kB
+>=20
+> usemem --punch-holes -s -1 800m &
+>=20
+> cat /proc/meminfo | grep AnonHugePages:
+> AnonHugePages:    976896 kB
+>=20
+> (qemu) device_add virtio-balloon-pci,id=3Dballoon1
+> (qemu) info balloon
+> balloon: actual=3D1024
+> (qemu) balloon 624
+> (qemu) info balloon
+> balloon: actual=3D624
+>=20
+> cat /proc/meminfo | grep AnonHugePages:
+> AnonHugePages:    153600 kB
+>=20
+> THP number decreased more than 800M.
+> The reason is usemem with punch-holes option will free every other page
+> after allocation.  Then 400M free memory inside the guest kernel is
+> fragmentation pages.
+> The guest kernel will use them to inflate the balloon.  When these
+> fragmentation pages are freed, THP will be split.
+>=20
+> This commit tries to handle this with add a new flag
+> VIRTIO_BALLOON_F_THP_ORDER.
+> When this flag is set, the balloon page order will be set to the THP or=
+der.
+> Then THP pages will be freed together in the host.
+> This is an example in a VM with 1G memory 1CPU:
+> cat /proc/meminfo | grep AnonHugePages:
+> AnonHugePages:         0 kB
+>=20
+> usemem --punch-holes -s -1 800m &
+>=20
+> cat /proc/meminfo | grep AnonHugePages:
+> AnonHugePages:    976896 kB
+>=20
+> (qemu) device_add virtio-balloon-pci,id=3Dballoon1,thp-order=3Don
+> (qemu) info balloon
+> balloon: actual=3D1024
+> (qemu) balloon 624
+> (qemu) info balloon
+> balloon: actual=3D624
+>=20
+> cat /proc/meminfo | grep AnonHugePages:
+> AnonHugePages:    583680 kB
+>=20
+> The THP number decreases 384M.  This shows that VIRTIO_BALLOON_F_THP_OR=
+DER
+> can help handle the THP split issue.
 
-On Wed, 11 Mar 2020 at 21:28, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> In the idle CPU selection process occuring in the slow path via the
-> find_idlest_group_cpu() function, we pick up in priority an idle CPU
-> with the shallowest idle state otherwise we fall back to the least
-> loaded CPU.
 
-The idea makes sense but this path is only used by fork and exec so
-I'm not sure about the real impact
+Multiple things:
 
->
-> In order to be more energy efficient but without impacting the
-> performances, let's use another criteria: the break even deadline.
->
-> At idle time, when we store the idle state the CPU is entering in, we
-> compute the next deadline where the CPU could be woken up without
-> spending more energy to sleep.
->
-> At the selection process, we use the shallowest CPU but in addition we
-> choose the one with the minimal break even deadline instead of relying
-> on the idle_timestamp. When the CPU is idle, the timestamp has less
-> meaning because the CPU could have wake up and sleep again several times
-> without exiting the idle loop. In this case the break even deadline is
-> more relevant as it increases the probability of choosing a CPU which
-> reached its break even.
->
-> Tested on:
->  - a synquacer 24 cores, 6 sched domains
->  - a hikey960 HMP 8 cores, 2 sched domains, with the EAS and energy probe
->
-> sched/perf and messaging does not show a performance regression. Ran
-> 50 times schbench, adrestia and forkbench.
->
-> The tools described at https://lwn.net/Articles/724935/
->
->  --------------------------------------------------------------
-> | Synquacer             | With break even | Without break even |
->  --------------------------------------------------------------
-> | schbench *99.0th      |      14844.8    |         15017.6    |
-> | adrestia / periodic   |        57.95    |              57    |
-> | adrestia / single     |         49.3    |            55.4    |
->  --------------------------------------------------------------
+I recently had a similar discussion with Alex [1] and I think this needs
+more thought.
 
-Have you got some figures or cpuidle statistics for the syncquacer ?
+My thoughts:
+
+1. You most certainly want to fallback to allocating pages in a smaller
+granularity once you run out of bigger allocations. Sacrifice
+performance for memory inflation, which has always been the case and
+which is what people expect to happen. (e.g., to shrink the page cache
+properly)
+
+2. You are essentially stealing THPs in the guest. So the fastest
+mapping (THP in guest and host) is gone. The guest won't be able to make
+use of THP where it previously was able to. I can imagine this implies a
+performance degradation for some workloads. This needs a proper
+performance evaluation.
+
+3. The pages you allocate are not migrateable, e.g., for memory
+offlining or alloc_contig_range() users like gigantic pages or soon
+virtio-mem. I strongly dislike that. This is IMHO a step backwards. We
+want to be able to migrate or even split-up and migrate such pages.
+
+Assume the guest could make good use of a THP somewhere. Who says it
+wouldn't be better to sacrifice a huge balloon page to be able to use
+THP both in the guest and the host for that mapping? I am not convinced
+stealing possible THPs in the guest and not being able to split them up
+is really what we want performance wise.
 
 
-> | Hikey960              | With break even | Without break even |
->  --------------------------------------------------------------
-> | schbench *99.0th      |      56140.8    |           56256    |
-> | schbench energy       |      153.575    |         152.676    |
-> | adrestia / periodic   |         4.98    |             5.2    |
-> | adrestia / single     |         9.02    |            9.12    |
-> | adrestia energy       |         1.18    |           1.233    |
-> | forkbench             |        7.971    |            8.05    |
-> | forkbench energy      |         9.37    |            9.42    |
->  --------------------------------------------------------------
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+4. I think we also want a better mechanism to directly inflate/deflate
+higher/order pages and not reuse the 4k inflate/deflate queues.
+
+5. I think we don't want to hard code such THP values but let the host
+tell us the THP size instead, which can easily differ between guest and
+host.
+
+Also, I do wonder if balloon compaction in the guest will already result
+in more THP getting used again long term. Assume the guest compacts
+balloon pages into a single THP again. This will result in a bunch of
+DONTNEED/WILLNEED in the hypervisor due to inflation/deflation. I wonder
+if the WILLNEED on the sub-pages of a candidate THP in the host will
+allow to use a THP in the host again.
+
+
+[1]
+https://lore.kernel.org/linux-mm/939de9de-d82a-aed2-6a51-57a55d81cbff@red=
+hat.com/
+
+>=20
+> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 > ---
->  kernel/sched/fair.c  | 18 ++++++++++++++++--
->  kernel/sched/idle.c  |  8 +++++++-
->  kernel/sched/sched.h | 20 ++++++++++++++++++++
->  3 files changed, 43 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 4b5d5e5e701e..8bd6ea148db7 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5793,6 +5793,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>  drivers/virtio/virtio_balloon.c     | 57 ++++++++++++++++++++++++++---=
+--------
+>  include/linux/balloon_compaction.h  | 14 ++++++---
+>  include/uapi/linux/virtio_balloon.h |  4 +++
+>  3 files changed, 54 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ba=
+lloon.c
+> index 7bfe365..1e1dc76 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -175,18 +175,31 @@ static unsigned fill_balloon(struct virtio_balloo=
+n *vb, size_t num)
+>  	unsigned num_pfns;
+>  	struct page *page;
+>  	LIST_HEAD(pages);
+> +	int page_order =3D 0;
+> =20
+>  	/* We can only do one array worth at a time. */
+>  	num =3D min(num, ARRAY_SIZE(vb->pfns));
+> =20
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_THP_ORDER))
+> +		page_order =3D VIRTIO_BALLOON_THP_ORDER;
+> +
+>  	for (num_pfns =3D 0; num_pfns < num;
+>  	     num_pfns +=3D VIRTIO_BALLOON_PAGES_PER_PAGE) {
+> -		struct page *page =3D balloon_page_alloc();
+> +		struct page *page;
+> +
+> +		if (page_order)
+> +			page =3D alloc_pages(__GFP_HIGHMEM |
+> +					   __GFP_KSWAPD_RECLAIM |
+> +					   __GFP_RETRY_MAYFAIL |
+> +					   __GFP_NOWARN | __GFP_NOMEMALLOC,
+> +					   page_order);
+> +		else
+> +			page =3D balloon_page_alloc();
+> =20
+>  		if (!page) {
+>  			dev_info_ratelimited(&vb->vdev->dev,
+> -					     "Out of puff! Can't get %u pages\n",
+> -					     VIRTIO_BALLOON_PAGES_PER_PAGE);
+> +				"Out of puff! Can't get %u pages\n",
+> +				VIRTIO_BALLOON_PAGES_PER_PAGE << page_order);
+>  			/* Sleep for at least 1/5 of a second before retry. */
+>  			msleep(200);
+>  			break;
+> @@ -206,7 +219,7 @@ static unsigned fill_balloon(struct virtio_balloon =
+*vb, size_t num)
+>  		vb->num_pages +=3D VIRTIO_BALLOON_PAGES_PER_PAGE;
+>  		if (!virtio_has_feature(vb->vdev,
+>  					VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> -			adjust_managed_page_count(page, -1);
+> +			adjust_managed_page_count(page, -(1 << page_order));
+>  		vb->num_pfns +=3D VIRTIO_BALLOON_PAGES_PER_PAGE;
+>  	}
+> =20
+> @@ -223,13 +236,20 @@ static void release_pages_balloon(struct virtio_b=
+alloon *vb,
+>  				 struct list_head *pages)
 >  {
->         unsigned long load, min_load = ULONG_MAX;
->         unsigned int min_exit_latency = UINT_MAX;
-> +       s64 min_break_even = S64_MAX;
->         u64 latest_idle_timestamp = 0;
->         int least_loaded_cpu = this_cpu;
->         int shallowest_idle_cpu = -1;
-> @@ -5810,6 +5811,8 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
->                 if (available_idle_cpu(i)) {
->                         struct rq *rq = cpu_rq(i);
->                         struct cpuidle_state *idle = idle_get_state(rq);
-> +                       s64 break_even = idle_get_break_even(rq);
+>  	struct page *page, *next;
+> +	int page_order =3D 0;
 > +
->                         if (idle && idle->exit_latency < min_exit_latency) {
->                                 /*
->                                  * We give priority to a CPU whose idle state
-> @@ -5817,10 +5820,21 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
->                                  * of any idle timestamp.
->                                  */
->                                 min_exit_latency = idle->exit_latency;
-> +                               min_break_even = break_even;
->                                 latest_idle_timestamp = rq->idle_stamp;
->                                 shallowest_idle_cpu = i;
-> -                       } else if ((!idle || idle->exit_latency == min_exit_latency) &&
-> -                                  rq->idle_stamp > latest_idle_timestamp) {
-> +                       } else if ((idle && idle->exit_latency == min_exit_latency) &&
-> +                                  break_even < min_break_even) {
-> +                               /*
-> +                                * We give priority to the shallowest
-> +                                * idle states with the minimal break
-> +                                * even deadline to decrease the
-> +                                * probability to choose a CPU which
-> +                                * did not reach its break even yet
-> +                                */
-> +                               min_break_even = break_even;
-> +                               shallowest_idle_cpu = i;
-> +                       } else if (!idle && rq->idle_stamp > latest_idle_timestamp) {
->                                 /*
->                                  * If equal or no active idle state, then
->                                  * the most recently idled CPU might have
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index b743bf38f08f..3342e7bae072 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -19,7 +19,13 @@ extern char __cpuidle_text_start[], __cpuidle_text_end[];
->   */
->  void sched_idle_set_state(struct cpuidle_state *idle_state)
->  {
-> -       idle_set_state(this_rq(), idle_state);
-> +       struct rq *rq = this_rq();
-> +
-> +       idle_set_state(rq, idle_state);
-
-Shouldn't the state be set after setting break even otherwise you will
-have a time window with an idle_state != null but the break_even still
-set to the previous value
-
-> +
-> +       if (idle_state)
-> +               idle_set_break_even(rq, ktime_get_ns() +
-
-What worries me a bit is that it adds one ktime_get call each time a
-cpu enters idle
-
-> +                                   idle_state->exit_latency_ns);
+> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_THP_ORDER))
+> +		page_order =3D VIRTIO_BALLOON_THP_ORDER;
+> =20
+>  	list_for_each_entry_safe(page, next, pages, lru) {
+>  		if (!virtio_has_feature(vb->vdev,
+>  					VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> -			adjust_managed_page_count(page, 1);
+> +			adjust_managed_page_count(page, 1 << page_order);
+>  		list_del(&page->lru);
+> -		put_page(page); /* balloon reference */
+> +		if (page_order)
+> +			__free_pages(page, page_order);
+> +		else
+> +			put_page(page); /* balloon reference */
+>  	}
 >  }
->
->  static int __read_mostly cpu_idle_force_poll;
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 2a0caf394dd4..eef1e535e2c2 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1015,6 +1015,7 @@ struct rq {
->  #ifdef CONFIG_CPU_IDLE
->         /* Must be inspected within a rcu lock section */
->         struct cpuidle_state    *idle_state;
-> +       s64                     break_even;
+> =20
+> @@ -893,19 +913,21 @@ static int virtballoon_probe(struct virtio_device=
+ *vdev)
+>  		goto out_free_vb;
+> =20
+>  #ifdef CONFIG_BALLOON_COMPACTION
+> -	balloon_mnt =3D kern_mount(&balloon_fs);
+> -	if (IS_ERR(balloon_mnt)) {
+> -		err =3D PTR_ERR(balloon_mnt);
+> -		goto out_del_vqs;
+> -	}
+> +	if (!virtio_has_feature(vdev, VIRTIO_BALLOON_F_THP_ORDER)) {
+> +		balloon_mnt =3D kern_mount(&balloon_fs);
+> +		if (IS_ERR(balloon_mnt)) {
+> +			err =3D PTR_ERR(balloon_mnt);
+> +			goto out_del_vqs;
+> +		}
+> =20
+> -	vb->vb_dev_info.migratepage =3D virtballoon_migratepage;
+> -	vb->vb_dev_info.inode =3D alloc_anon_inode(balloon_mnt->mnt_sb);
+> -	if (IS_ERR(vb->vb_dev_info.inode)) {
+> -		err =3D PTR_ERR(vb->vb_dev_info.inode);
+> -		goto out_kern_unmount;
+> +		vb->vb_dev_info.migratepage =3D virtballoon_migratepage;
+> +		vb->vb_dev_info.inode =3D alloc_anon_inode(balloon_mnt->mnt_sb);
+> +		if (IS_ERR(vb->vb_dev_info.inode)) {
+> +			err =3D PTR_ERR(vb->vb_dev_info.inode);
+> +			goto out_kern_unmount;
+> +		}
+> +		vb->vb_dev_info.inode->i_mapping->a_ops =3D &balloon_aops;
+>  	}
+> -	vb->vb_dev_info.inode->i_mapping->a_ops =3D &balloon_aops;
 >  #endif
+>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+>  		/*
+> @@ -1058,6 +1080,7 @@ static unsigned int features[] =3D {
+>  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+>  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+>  	VIRTIO_BALLOON_F_PAGE_POISON,
+> +	VIRTIO_BALLOON_F_THP_ORDER,
 >  };
->
-> @@ -1850,6 +1851,16 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
->
->         return rq->idle_state;
->  }
-> +
-> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
-> +{
-> +       WRITE_ONCE(rq->break_even, break_even);
-> +}
-> +
-> +static inline s64 idle_get_break_even(struct rq *rq)
-> +{
-> +       return READ_ONCE(rq->break_even);
-> +}
->  #else
->  static inline void idle_set_state(struct rq *rq,
->                                   struct cpuidle_state *idle_state)
-> @@ -1860,6 +1871,15 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
+> =20
+>  static struct virtio_driver virtio_balloon_driver =3D {
+> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon=
+_compaction.h
+> index 338aa27..4c9164e 100644
+> --- a/include/linux/balloon_compaction.h
+> +++ b/include/linux/balloon_compaction.h
+> @@ -100,8 +100,12 @@ static inline void balloon_page_insert(struct ball=
+oon_dev_info *balloon,
+>  				       struct page *page)
 >  {
->         return NULL;
+>  	__SetPageOffline(page);
+> -	__SetPageMovable(page, balloon->inode->i_mapping);
+> -	set_page_private(page, (unsigned long)balloon);
+> +	if (balloon->inode) {
+> +		__SetPageMovable(page, balloon->inode->i_mapping);
+> +		set_page_private(page, (unsigned long)balloon);
+> +	} else {
+> +		set_page_private(page, 0);
+> +	}
+>  	list_add(&page->lru, &balloon->pages);
 >  }
+> =20
+> @@ -116,8 +120,10 @@ static inline void balloon_page_insert(struct ball=
+oon_dev_info *balloon,
+>  static inline void balloon_page_delete(struct page *page)
+>  {
+>  	__ClearPageOffline(page);
+> -	__ClearPageMovable(page);
+> -	set_page_private(page, 0);
+> +	if (page_private(page)) {
+> +		__ClearPageMovable(page);
+> +		set_page_private(page, 0);
+> +	}
+>  	/*
+>  	 * No touch page.lru field once @page has been isolated
+>  	 * because VM is using the field.
+> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/v=
+irtio_balloon.h
+> index a1966cd7..a2998a9 100644
+> --- a/include/uapi/linux/virtio_balloon.h
+> +++ b/include/uapi/linux/virtio_balloon.h
+> @@ -36,10 +36,14 @@
+>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages *=
+/
+>  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisonin=
+g */
+> +#define VIRTIO_BALLOON_F_THP_ORDER	5 /* Balloon page order to thp orde=
+r */
+> =20
+>  /* Size of a PFN in the balloon interface. */
+>  #define VIRTIO_BALLOON_PFN_SHIFT 12
+> =20
+> +/* The order of the balloon page */
+> +#define VIRTIO_BALLOON_THP_ORDER 9
 > +
-> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
-> +{
-> +}
-> +
-> +static inline s64 idle_get_break_even(struct rq *rq)
-> +{
-> +       return 0;
-> +}
->  #endif
->
->  extern void schedule_idle(void);
-> --
-> 2.17.1
->
+>  #define VIRTIO_BALLOON_CMD_ID_STOP	0
+>  #define VIRTIO_BALLOON_CMD_ID_DONE	1
+>  struct virtio_balloon_config {
+>=20
+
+
+--=20
+Thanks,
+
+David / dhildenb
+
