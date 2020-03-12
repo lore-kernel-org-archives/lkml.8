@@ -2,152 +2,69 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC06EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EF3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE5020691
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A0B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387863AbgCLFu6 (ORCPT
+        id S2387874AbgCLFzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:50:58 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34555 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387677AbgCLFu6 (ORCPT
+        Thu, 12 Mar 2020 01:55:48 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55968 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387677AbgCLFzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:50:58 -0400
-X-Originating-IP: 105.154.211.150
-Received: from localhost (unknown [105.154.211.150])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 44E1D60005;
-        Thu, 12 Mar 2020 05:50:54 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 06:50:53 +0100
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: Add an "imgdeb-pkg" target to build only linux-image
-Message-ID: <b45738b05bb396e175a36f67b02fa01de4c7472f.1583912084.git.josh@joshtriplett.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Thu, 12 Mar 2020 01:55:47 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2C17C14C7E036;
+        Wed, 11 Mar 2020 22:55:46 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 22:55:45 -0700 (PDT)
+Message-Id: <20200311.225545.780993448550563267.davem@davemloft.net>
+To:     frextrite@gmail.com
+Cc:     kuba@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        rfontana@redhat.com, allison@lohutok.net, pabeni@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com,
+        paulmck@kernel.org, lkp@intel.com
+Subject: Re: [PATCH] net: caif: Add lockdep expression to RCU traversal
+ primitive
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200312053419.12258-1-frextrite@gmail.com>
+References: <20200312053419.12258-1-frextrite@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Mar 2020 22:55:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This skips building the linux-headers and linux-libc-dev packages, which
-take much longer to build, and which aren't needed for many common test
-scenarios.
+From: Amol Grover <frextrite@gmail.com>
+Date: Thu, 12 Mar 2020 11:04:20 +0530
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
----
- scripts/Makefile.package |  5 +++++
- scripts/package/builddeb |  2 +-
- scripts/package/mkdebian | 33 +++++++++++++++++++++++----------
- 3 files changed, 29 insertions(+), 11 deletions(-)
+> caifdevs->list is traversed using list_for_each_entry_rcu()
+> outside an RCU read-side critical section but under the
+> protection of rtnl_mutex. Hence, add the corresponding lockdep
+> expression to silence the following false-positive warning:
+> 
+> [   10.868467] =============================
+> [   10.869082] WARNING: suspicious RCU usage
+> [   10.869817] 5.6.0-rc1-00177-g06ec0a154aae4 #1 Not tainted
+> [   10.870804] -----------------------------
+> [   10.871557] net/caif/caif_dev.c:115 RCU-list traversed in non-reader section!!
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 
-diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-index 02135d2671a6..efc2f2f69bc1 100644
---- a/scripts/Makefile.package
-+++ b/scripts/Makefile.package
-@@ -82,6 +82,11 @@ bindeb-pkg:
- 	$(CONFIG_SHELL) $(srctree)/scripts/package/mkdebian
- 	+dpkg-buildpackage -r$(KBUILD_PKG_ROOTCMD) -a$$(cat debian/arch) $(DPKG_FLAGS) -b -nc -uc
- 
-+PHONY += imgdeb-pkg
-+imgdeb-pkg:
-+	DEBIAN_IMAGE_ONLY=1 $(CONFIG_SHELL) $(srctree)/scripts/package/mkdebian
-+	+dpkg-buildpackage -r$(KBUILD_PKG_ROOTCMD) -a$$(cat debian/arch) $(DPKG_FLAGS) -b -nc -uc
-+
- PHONY += intdeb-pkg
- intdeb-pkg:
- 	+$(CONFIG_SHELL) $(srctree)/scripts/package/builddeb
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index 6df3c9f8b2da..c7615a35f34f 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -201,7 +201,7 @@ EOF
- 	chmod 755 "$tmpdir/DEBIAN/$script"
- done
- 
--if [ "$ARCH" != "um" ]; then
-+if [ "$ARCH" != "um" ] && [ -z "$DEBIAN_IMAGE_ONLY" ]; then
- 	deploy_kernel_headers debian/linux-headers
- 	create_package linux-headers-$version debian/linux-headers
- 
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index 357dc56bcf30..9969855d2eb8 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -169,7 +169,8 @@ License version 2 can be found in \`/usr/share/common-licenses/GPL-2'.
- EOF
- 
- # Generate a control file
--cat <<EOF > debian/control
-+{
-+	cat <<EOF
- Source: $sourcename
- Section: kernel
- Priority: optional
-@@ -183,6 +184,17 @@ Description: Linux kernel, version $version
-  This package contains the Linux kernel, modules and corresponding other
-  files, version: $version.
- 
-+Package: $dbg_packagename
-+Section: debug
-+Architecture: $debarch
-+Description: Linux kernel debugging symbols for $version
-+ This package will come in handy if you need to debug the kernel. It provides
-+ all the necessary debug symbols for the kernel and its modules.
-+EOF
-+
-+	if [ -z "$DEBIAN_IMAGE_ONLY" ]; then
-+		cat <<EOF
-+
- Package: $kernel_headers_packagename
- Architecture: $debarch
- Description: Linux kernel headers for $version on $debarch
-@@ -198,14 +210,13 @@ Description: Linux support headers for userspace development
-  This package provides userspaces headers from the Linux kernel.  These headers
-  are used by the installed headers for GNU glibc and other system libraries.
- Multi-Arch: same
--
--Package: $dbg_packagename
--Section: debug
--Architecture: $debarch
--Description: Linux kernel debugging symbols for $version
-- This package will come in handy if you need to debug the kernel. It provides
-- all the necessary debug symbols for the kernel and its modules.
- EOF
-+	fi
-+} > debian/control
-+
-+if [ -n "$DEBIAN_IMAGE_ONLY" ]; then
-+	DEBIAN_IMAGE_ONLY_ENV="DEBIAN_IMAGE_ONLY=1"
-+fi
- 
- cat <<EOF > debian/rules
- #!$(command -v $MAKE) -f
-@@ -214,11 +225,13 @@ srctree ?= .
- 
- build:
- 	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
--	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile
-+	KBUILD_BUILD_VERSION=${revision} ${DEBIAN_IMAGE_ONLY_ENV} \
-+	-f \$(srctree)/Makefile
- 
- binary-arch:
- 	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
--	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile intdeb-pkg
-+	KBUILD_BUILD_VERSION=${revision} ${DEBIAN_IMAGE_ONLY_ENV} \
-+	-f \$(srctree)/Makefile intdeb-pkg
- 
- clean:
- 	rm -rf debian/*tmp debian/files
--- 
-2.25.1
+Applied, thank you.
