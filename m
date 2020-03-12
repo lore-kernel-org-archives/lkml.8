@@ -2,199 +2,180 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9143C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E984FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3F52071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26EB206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCLVlJ (ORCPT
+        id S1726676AbgCLVls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:41:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36712 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgCLVlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:41:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 14:41:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
-   d="scan'208";a="246506748"
-Received: from saurabhd-mobl.amr.corp.intel.com (HELO [10.251.16.241]) ([10.251.16.241])
-  by orsmga006.jf.intel.com with ESMTP; 12 Mar 2020 14:41:07 -0700
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200312082248.GS23944@dhcp22.suse.cz> <20200312201602.GA68817@google.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <bd35c17d-8766-cba5-09b3-87970de4c731@intel.com>
-Date:   Thu, 12 Mar 2020 14:41:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Mar 2020 17:41:48 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37608 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgCLVls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:41:48 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w13so7176239oih.4;
+        Thu, 12 Mar 2020 14:41:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2UGW4bHfX08GEbePww+EddI/NsbhfU55Uie8iNExZVk=;
+        b=lE843qE4tcSbZpfHiIMYB+9KGDMc3l13E6OOvmGboWSkUJkxntGI2QLLLfCPn+W0th
+         lPT4TmIlYUrWXNde62hc7r1ePbmuvMPb83ExEDqRKAWID3Vt/609ONpIE3wUzCJgsdhx
+         n55csuXAq5mS7jiZEUPw4MLKaz56vTbQSbI42vGJb7IkTkEnuzGkpk55216YSaz/ZZxa
+         JJwFYkZ0xuH87jMn3lSO6gjYNWemBVXOz3ikBiF9Z/bPZE2MWNVQ/eXC/7GFANGWzWLy
+         LS4veansW+ISmA5hp7HLZxU+3VXidzOAk0AVUprmt2M+GRc9xaZ54Xoqr4vNjKIUntnb
+         Sd9w==
+X-Gm-Message-State: ANhLgQ3ZhCkwAv+LmTQuGpbjA47fB5AiqFXWh1hRU+XvouxS/lxSz5H6
+        56W2dCKLWy04HjvpQ2WyXe7jSPOieKF/NJFey20=
+X-Google-Smtp-Source: ADFU+vuDUW/4+kTvvOXt43MMd+pd/8k57mMKsg695zk0cUiXBtsY6UfW2Bd3hR2zkhh7QvO+6ko15uTV55E52TqiQyA=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr4238410oig.153.1584049307407;
+ Thu, 12 Mar 2020 14:41:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200312201602.GA68817@google.com>
-Content-Type: multipart/mixed;
- boundary="------------DB481209F85F437D7EF003D1"
-Content-Language: en-US
+References: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Mar 2020 22:41:36 +0100
+Message-ID: <CAMuHMdUgMHjU_ZANzJbxQji6K7Pdc-jD4C7JatQc-OtN=jJt_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] media: i2c: ov5645: Switch to assigned-clock-rates
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------DB481209F85F437D7EF003D1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Hi Prabhakar,
 
-One other fun thing.  I have a "victim" thread sitting in a loop doing:
+On Thu, Mar 12, 2020 at 10:13 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> This patch switches to assigned-clock-rates for specifying the clock rate.
+> The clk-conf.c internally handles setting the clock rate when
+> assigned-clock-rates is passed.
+>
+> The driver now sets the clock frequency only if the deprecated property
+> clock-frequency is defined instead assigned-clock-rates, this is to avoid
+> breakage with existing DT binaries.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-	sleep(1)
-	memcpy(&garbage, buffer, sz);
+Thanks for your patch!
 
-The "attacker" is doing
+> --- a/drivers/media/i2c/ov5645.c
+> +++ b/drivers/media/i2c/ov5645.c
+> @@ -1055,6 +1055,7 @@ static int ov5645_probe(struct i2c_client *client)
+>         struct device_node *endpoint;
+>         struct ov5645 *ov5645;
+>         u8 chip_id_high, chip_id_low;
+> +       bool set_clk = false;
+>         unsigned int i;
+>         u32 xclk_freq;
+>         int ret;
+> @@ -1094,10 +1095,17 @@ static int ov5645_probe(struct i2c_client *client)
+>                 return PTR_ERR(ov5645->xclk);
+>         }
+>
+> -       ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+> +       ret = of_property_read_u32(dev->of_node, "assigned-clock-rates",
+> +                                  &xclk_freq);
+>         if (ret) {
 
-	madvise(buffer, sz, MADV_PAGEOUT);
+I think you can just leave out the above check...
 
-in a loop.  That, oddly enough doesn't cause the victim to page fault.
-But, if I do:
+> -               dev_err(dev, "could not get xclk frequency\n");
+> -               return ret;
+> +               /* check if deprecated property clock-frequency is defined */
+> +               ret = of_property_read_u32(dev->of_node, "clock-frequency",
+> +                                          &xclk_freq);
+> +               if (ret) {
 
-	memcpy(&garbage, buffer, sz);
-	madvise(buffer, sz, MADV_PAGEOUT);
+... and ignore the absence of the deprecated property.
 
-It *does* cause the memory to get paged out.  The MADV_PAGEOUT code
-actually has a !pte_present() check.  It will punt on a PTE if it sees
-it.  In other words, if a page is in the swap cache but not mapped by a
-pte_present() PTE, MADV_PAGEOUT won't touch it.
+> +                       dev_err(dev, "could not get xclk frequency\n");
+> +                       return ret;
+> +               }
+> +               set_clk = true;
 
-Shouldn't MADV_PAGEOUT be able to find and reclaim those pages?  Patch
-attached.
+I.e. just
 
---------------DB481209F85F437D7EF003D1
-Content-Type: text/x-patch;
- name="madv-pageout-find-swap-cache.patch"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="madv-pageout-find-swap-cache.patch"
+        /* check if deprecated property clock-frequency is defined */
+        xclk_freq = 0;
+        of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+        if (xclk_freq) {
+                ret = clk_set_rate(ov5645->xclk, xclk_freq);
+                if (ret) {
+                        dev_err(dev, "could not set xclk frequency\n");
+                        return ret;
+                }
+        } else {
+                xclk_freq = clk_get_rate(ov5645->xclk, xclk_freq);
+        }
+
+>         }
+>
+>         /* external clock must be 24MHz, allow 1% tolerance */
+> @@ -1107,10 +1115,12 @@ static int ov5645_probe(struct i2c_client *client)
+>                 return -EINVAL;
+>         }
+>
+> -       ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> -       if (ret) {
+> -               dev_err(dev, "could not set xclk frequency\n");
+> -               return ret;
+> +       if (set_clk) {
+> +               ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> +               if (ret) {
+> +                       dev_err(dev, "could not set xclk frequency\n");
+> +                       return ret;
+> +               }
+
+>         }
+>
+>         for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 
 
----
+-- 
+Gr{oetje,eeting}s,
 
- b/mm/madvise.c |   38 +++++++++++++++++++++++++++++++-------
- 1 file changed, 31 insertions(+), 7 deletions(-)
+                        Geert
 
-diff -puN mm/madvise.c~madv-pageout-find-swap-cache mm/madvise.c
---- a/mm/madvise.c~madv-pageout-find-swap-cache	2020-03-12 14:24:45.17877=
-5035 -0700
-+++ b/mm/madvise.c	2020-03-12 14:35:49.706773378 -0700
-@@ -248,6 +248,36 @@ static void force_shm_swapin_readahead(s
- #endif		/* CONFIG_SWAP */
-=20
- /*
-+ * Given a PTE, find the corresponding 'struct page'.  Also handles
-+ * non-present swap PTEs.
-+ */
-+struct page *pte_to_reclaim_page(struct vm_area_struct *vma,
-+				 unsigned long addr, pte_t ptent)
-+{
-+	swp_entry_t entry;
-+
-+	/* Totally empty PTE: */
-+	if (pte_none(ptent))
-+		return NULL;
-+
-+	/* A normal, present page is mapped: */
-+	if (pte_present(ptent))
-+		return vm_normal_page(vma, addr, ptent);
-+
-+	entry =3D pte_to_swp_entry(vmf->orig_pte);
-+	/* Is it one of the "swap PTEs" that's not really swap? */
-+	if (non_swap_entry(entry))
-+		return false;
-+
-+	/*
-+	 * The PTE was a true swap entry.  The page may be in the
-+	 * swap cache.  If so, find it and return it so it may be
-+	 * reclaimed.
-+	 */
-+	return lookup_swap_cache(entry, vma, addr);
-+}
-+
-+/*
-  * Schedule all required I/O operations.  Do not wait for completion.
-  */
- static long madvise_willneed(struct vm_area_struct *vma,
-@@ -389,13 +419,7 @@ regular_page:
- 	for (; addr < end; pte++, addr +=3D PAGE_SIZE) {
- 		ptent =3D *pte;
-=20
--		if (pte_none(ptent))
--			continue;
--
--		if (!pte_present(ptent))
--			continue;
--
--		page =3D vm_normal_page(vma, addr, ptent);
-+		page =3D pte_to_reclaim_page(vma, addr, ptent);
- 		if (!page)
- 			continue;
-=20
-_
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---------------DB481209F85F437D7EF003D1--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
