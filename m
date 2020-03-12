@@ -2,209 +2,214 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35806C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C39C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B71D206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F893206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCRa/6q0"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EiaFIDoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388062AbgCLHR4 (ORCPT
+        id S2388082AbgCLHS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:17:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52327 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387958AbgCLHRz (ORCPT
+        Thu, 12 Mar 2020 03:18:59 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:35791 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387959AbgCLHS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:17:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 11so4870199wmo.2;
-        Thu, 12 Mar 2020 00:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4jiBmksMrMfFbIHa3ZewzTbMHCps2UU4whG+wAJNTBQ=;
-        b=qCRa/6q0ILq9l3DfKMhKjmfdCWyj5jDt69VIemin4LMyIWEMIFzpkX/xk15bh7a8Va
-         WCi0by+fzbYYP1L/GdgW9RifNdtxSKaVoaZZCr6XwYxPSVmfnPHy/HiQ2KqQOS5GGsMc
-         VCcGT160rohacuTPb7tz+9cIQE/RhLYy+mjeKxZnbOLptIxIYLsMRCfJ02S+srINTdAw
-         YnPTNvWnkgfg6UFyM38nMvPdxDEU2ZJvcsHW1zL4gt0YsRmBDZPALVOKkkwGHNRJL5qP
-         eB7mFiU5tq2xWkCGr+8kbsy/2vaOdCpUeCLhkc5GtoCFc00/LDHL2ClpsEVPwhUV/qJ+
-         srAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4jiBmksMrMfFbIHa3ZewzTbMHCps2UU4whG+wAJNTBQ=;
-        b=CSKRsUi5sBIsffZEr3gI1+IX6cdf7XqQWQiysRY8dbCZOG83i5TBk8dQrZebJilXkN
-         yUX0074ms7jG+fyYegZsmGQjuPaojSkh/3OB26UvHj/qtpdNZJKsILVsVevloe9mwUIV
-         hcYwEx+W9jynZJCzThDtTUYjrzdxom/zvlAR803/PyVX+XQgrA/FmRJ3i8LdxIzhHzL+
-         AqpddU5+A76+noHZL87p+PwyoSREdWUBDNfKev0928AL4fOvxJHvfq4uFUfpKHf6NSGG
-         ntttwUABcwFZrkQU+w7onvpMhXzX30igpEqNEjPAQjjfxvBwqfuvQkQiTBnUGiuezVMg
-         IXdg==
-X-Gm-Message-State: ANhLgQ07Vx8pe9+agzxGBdR8UpvuekJrW8WgHdmaaZYl3Uk/RmKOZqar
-        i1Fj/LJh18iYx2nIMcTAa2AW4Bnx6K64j/DERtgVSy/o
-X-Google-Smtp-Source: ADFU+vuna7/EkiqUm3Pt6MoBfapvFtfi/fNt7GNXfSGcalppqq7tD082k1sG+OIOruCLHe89OYG9o8CT7dwYHJJJ7f0=
-X-Received: by 2002:a05:600c:d8:: with SMTP id u24mr3264837wmm.165.1583997471183;
- Thu, 12 Mar 2020 00:17:51 -0700 (PDT)
+        Thu, 12 Mar 2020 03:18:58 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id CI7IjX0mY9Im2CI7LjicOY; Thu, 12 Mar 2020 08:18:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1583997536; bh=/KrqBcwqQoOO3I1OlZC6/TWeeXBmR+fGZij0cskbKt4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=EiaFIDoLpU60E7OwVGs78+0VGvwODGDVAPrK0KaJmI7Xukm7+1AgycCFX1xSPB0a4
+         ODXxFqvO4RTI34tA5H7kdsudoFc6GlDcX0PGgo8762wngiT4tn78QEvqkKDs3Xnn7a
+         WyvChN78d4wTrUGKk+QXlYChhu0VJdjUTOzMA6YP7w74twuZWLkQ+8RJ9hQHx/UGfA
+         MBo/P3YCEwU5qbnTpRjXoc9djjAMwg0+bncxHQcfeEwE/WUhcuziVk6OkmDjzrW38+
+         e4thAFs08y8DatE+lebjlbjP1gBZx3AxguF8Ww4d0HcXNKn/gN+684Ya4DHA74djUo
+         Ogq6j946m8hxA==
+Subject: Re: [PATCH v2 03/22] media: docs: split cpia2.rst on two files
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org
+References: <cover.1583847556.git.mchehab+huawei@kernel.org>
+ <7f013c412e20cec66bf605bfccddc7f90fe187cd.1583847556.git.mchehab+huawei@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <bffb67d7-a8d3-ce4a-011e-f6bb4564e84c@xs4all.nl>
+Date:   Thu, 12 Mar 2020 08:18:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200311170120.12641-1-jeyu@kernel.org>
-In-Reply-To: <20200311170120.12641-1-jeyu@kernel.org>
-From:   Lucas De Marchi <lucas.de.marchi@gmail.com>
-Date:   Thu, 12 Mar 2020 00:17:39 -0700
-Message-ID: <CAKi4VAKgeKDq9uiBKfXRjgMV9TTDHrRX8dT42N1zyqwCgkw35A@mail.gmail.com>
-Subject: Re: [PATCH v2] modpost: move the namespace field in Module.symvers last
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        stable@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7f013c412e20cec66bf605bfccddc7f90fe187cd.1583847556.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCnLJc1+mUDUwo5XOiKjuMOYHub20gGEvyZ1yixmkswaqc8+zpxD7EcqWczu5JRENhgQdac2bXrqdk8DrxIZyued385ppROoZpwdirql98oFZgF0F1Eu
+ NvizudMjeZ3hq0xGX4AnJraEEsyEwdjqVXViGwfAToF/LeqgVU+9kkjRylezVnp0z/2CcMI5jhbin8zYjwByr9fnMj5b+8Xuah54MNIxV6IVnDCWVqQLjDjp
+ +YB3HKN3JhHCjeJ/x4fWHXhyDCwCophaqlOQM4x42nhYb955EwhtFBmvB0sOwA/0WF9ubLXVRs5wGFqd7EFIAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:02 AM Jessica Yu <jeyu@kernel.org> wrote:
->
-> In order to preserve backwards compatability with kmod tools, we have to
-> move the namespace field in Module.symvers last, as the depmod -e -E
-> option looks at the first three fields in Module.symvers to check symbol
-> versions (and it's expected they stay in the original order of crc,
-> symbol, module).
->
-> In addition, update an ancient comment above read_dump() in modpost that
-> suggested that the export type field in Module.symvers was optional. I
-> suspect that there were historical reasons behind that comment that are
-> no longer accurate. We have been unconditionally printing the export
-> type since 2.6.18 (commit bd5cbcedf44), which is over a decade ago now.
->
-> Fix up read_dump() to treat each field as non-optional. I suspect the
-> original read_dump() code treated the export field as optional in order
-> to support pre <= 2.6.18 Module.symvers (which did not have the export
-> type field). Note that although symbol namespaces are optional, the
-> field will not be omitted from Module.symvers if a symbol does not have
-> a namespace. In this case, the field will simply be empty and the next
-> delimiter or end of line will follow.
->
-> Cc: stable@vger.kernel.org
-> Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
-> Tested-by: Matthias Maennich <maennich@google.com>
-> Reviewed-by: Matthias Maennich <maennich@google.com>
-> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+On 3/10/20 2:42 PM, Mauro Carvalho Chehab wrote:
+> In order to be able to better organize the subsystem, split the
+> cpia2 information on two files: one user-facing and another one
+> from Kernel development PoV.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
-> v2:
->
->   - Explain the changes to read_dump() and the comment (and provide
->     historical context) in the commit message. (Lucas De Marchi)
+>  Documentation/media/v4l-drivers/cpia2.rst     | 46 ---------------
+>  .../media/v4l-drivers/cpia2_devel.rst         | 56 +++++++++++++++++++
 
-Great, thanks for fixing this.
+In other patches the devel file is called foo-devel.rst, here it is cpia2_devel.rst
+Can you change this to cpia2-devel.rst as well?
 
-Lucas De Marchi
+Also, IMHO using -dev instead of -devel feels nicer, although that might be
+because I use debian where all developer packages use -dev as suffix :-)
 
->
->  Documentation/kbuild/modules.rst |  4 ++--
->  scripts/export_report.pl         |  2 +-
->  scripts/mod/modpost.c            | 24 ++++++++++++------------
->  3 files changed, 15 insertions(+), 15 deletions(-)
->
-> diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
-> index 69fa48ee93d6..e0b45a257f21 100644
-> --- a/Documentation/kbuild/modules.rst
-> +++ b/Documentation/kbuild/modules.rst
-> @@ -470,9 +470,9 @@ build.
->
->         The syntax of the Module.symvers file is::
->
-> -       <CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
-> +       <CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
->
-> -       0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
-> +       0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
->
->         The fields are separated by tabs and values may be empty (e.g.
->         if no namespace is defined for an exported symbol).
-> diff --git a/scripts/export_report.pl b/scripts/export_report.pl
-> index 548330e8c4e7..feb3d5542a62 100755
-> --- a/scripts/export_report.pl
-> +++ b/scripts/export_report.pl
-> @@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
->  #
->  while ( <$module_symvers> ) {
->         chomp;
-> -       my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
-> +       my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
->         $SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
->  }
->  close($module_symvers);
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index a3d8370f9544..e1963ef8c07c 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -2421,7 +2421,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
->  }
->
->  /* parse Module.symvers file. line format:
-> - * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
-> + * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
->   **/
->  static void read_dump(const char *fname, unsigned int kernel)
->  {
-> @@ -2434,7 +2434,7 @@ static void read_dump(const char *fname, unsigned int kernel)
->                 return;
->
->         while ((line = get_next_line(&pos, file, size))) {
-> -               char *symname, *namespace, *modname, *d, *export, *end;
-> +               char *symname, *namespace, *modname, *d, *export;
->                 unsigned int crc;
->                 struct module *mod;
->                 struct symbol *s;
-> @@ -2442,16 +2442,16 @@ static void read_dump(const char *fname, unsigned int kernel)
->                 if (!(symname = strchr(line, '\t')))
->                         goto fail;
->                 *symname++ = '\0';
-> -               if (!(namespace = strchr(symname, '\t')))
-> -                       goto fail;
-> -               *namespace++ = '\0';
-> -               if (!(modname = strchr(namespace, '\t')))
-> +               if (!(modname = strchr(symname, '\t')))
->                         goto fail;
->                 *modname++ = '\0';
-> -               if ((export = strchr(modname, '\t')) != NULL)
-> -                       *export++ = '\0';
-> -               if (export && ((end = strchr(export, '\t')) != NULL))
-> -                       *end = '\0';
-> +               if (!(export = strchr(modname, '\t')))
-> +                       goto fail;
-> +               *export++ = '\0';
-> +               if (!(namespace = strchr(export, '\t')))
-> +                       goto fail;
-> +               *namespace++ = '\0';
+Regards,
+
+	Hans
+
+>  Documentation/media/v4l-drivers/index.rst     |  2 +
+>  3 files changed, 58 insertions(+), 46 deletions(-)
+>  create mode 100644 Documentation/media/v4l-drivers/cpia2_devel.rst
+> 
+> diff --git a/Documentation/media/v4l-drivers/cpia2.rst b/Documentation/media/v4l-drivers/cpia2.rst
+> index a86baa1c83f1..6f4258aebbfe 100644
+> --- a/Documentation/media/v4l-drivers/cpia2.rst
+> +++ b/Documentation/media/v4l-drivers/cpia2.rst
+> @@ -147,49 +147,3 @@ We are providing a modified gqcam application to view the output. In
+>  order to avoid confusion, here it is called mview.  There is also the qx5view
+>  program which can also control the lights on the qx5 microscope. MJPEG Tools
+>  (http://mjpeg.sourceforge.net) can also be used to record from the camera.
+> -
+> -Notes to developers
+> -~~~~~~~~~~~~~~~~~~~
+> -
+> -   - This is a driver version stripped of the 2.4 back compatibility
+> -     and old MJPEG ioctl API. See cpia2.sf.net for 2.4 support.
+> -
+> -Programmer's overview of cpia2 driver
+> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> -
+> -Cpia2 is the second generation video coprocessor from VLSI Vision Ltd (now a
+> -division of ST Microelectronics).  There are two versions.  The first is the
+> -STV0672, which is capable of up to 30 frames per second (fps) in frame sizes
+> -up to CIF, and 15 fps for VGA frames.  The STV0676 is an improved version,
+> -which can handle up to 30 fps VGA.  Both coprocessors can be attached to two
+> -CMOS sensors - the vvl6410 CIF sensor and the vvl6500 VGA sensor.  These will
+> -be referred to as the 410 and the 500 sensors, or the CIF and VGA sensors.
+> -
+> -The two chipsets operate almost identically.  The core is an 8051 processor,
+> -running two different versions of firmware.  The 672 runs the VP4 video
+> -processor code, the 676 runs VP5.  There are a few differences in register
+> -mappings for the two chips.  In these cases, the symbols defined in the
+> -header files are marked with VP4 or VP5 as part of the symbol name.
+> -
+> -The cameras appear externally as three sets of registers. Setting register
+> -values is the only way to control the camera.  Some settings are
+> -interdependant, such as the sequence required to power up the camera. I will
+> -try to make note of all of these cases.
+> -
+> -The register sets are called blocks.  Block 0 is the system block.  This
+> -section is always powered on when the camera is plugged in.  It contains
+> -registers that control housekeeping functions such as powering up the video
+> -processor.  The video processor is the VP block.  These registers control
+> -how the video from the sensor is processed.  Examples are timing registers,
+> -user mode (vga, qvga), scaling, cropping, framerates, and so on.  The last
+> -block is the video compressor (VC).  The video stream sent from the camera is
+> -compressed as Motion JPEG (JPEGA).  The VC controls all of the compression
+> -parameters.  Looking at the file cpia2_registers.h, you can get a full view
+> -of these registers and the possible values for most of them.
+> -
+> -One or more registers can be set or read by sending a usb control message to
+> -the camera.  There are three modes for this.  Block mode requests a number
+> -of contiguous registers.  Random mode reads or writes random registers with
+> -a tuple structure containing address/value pairs.  The repeat mode is only
+> -used by VP4 to load a firmware patch.  It contains a starting address and
+> -a sequence of bytes to be written into a gpio port.
+> diff --git a/Documentation/media/v4l-drivers/cpia2_devel.rst b/Documentation/media/v4l-drivers/cpia2_devel.rst
+> new file mode 100644
+> index 000000000000..decaa4768c78
+> --- /dev/null
+> +++ b/Documentation/media/v4l-drivers/cpia2_devel.rst
+> @@ -0,0 +1,56 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
->                 crc = strtoul(line, &d, 16);
->                 if (*symname == '\0' || *modname == '\0' || *d != '\0')
->                         goto fail;
-> @@ -2502,9 +2502,9 @@ static void write_dump(const char *fname)
->                                 namespace = symbol->namespace;
->                                 buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
->                                            symbol->crc, symbol->name,
-> -                                          namespace ? namespace : "",
->                                            symbol->module->name,
-> -                                          export_str(symbol->export));
-> +                                          export_str(symbol->export),
-> +                                          namespace ? namespace : "");
->                         }
->                         symbol = symbol->next;
->                 }
-> --
-> 2.16.4
->
+> +The cpia2 driver
+> +================
+> +
+> +Authors: Peter Pregler <Peter_Pregler@email.com>,
+> +Scott J. Bertin <scottbertin@yahoo.com>, and
+> +Jarl Totland <Jarl.Totland@bdc.no> for the original cpia driver, which
+> +this one was modelled from.
+> +
+> +
+> +Notes to developers
+> +~~~~~~~~~~~~~~~~~~~
+> +
+> +   - This is a driver version stripped of the 2.4 back compatibility
+> +     and old MJPEG ioctl API. See cpia2.sf.net for 2.4 support.
+> +
+> +Programmer's overview of cpia2 driver
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +Cpia2 is the second generation video coprocessor from VLSI Vision Ltd (now a
+> +division of ST Microelectronics).  There are two versions.  The first is the
+> +STV0672, which is capable of up to 30 frames per second (fps) in frame sizes
+> +up to CIF, and 15 fps for VGA frames.  The STV0676 is an improved version,
+> +which can handle up to 30 fps VGA.  Both coprocessors can be attached to two
+> +CMOS sensors - the vvl6410 CIF sensor and the vvl6500 VGA sensor.  These will
+> +be referred to as the 410 and the 500 sensors, or the CIF and VGA sensors.
+> +
+> +The two chipsets operate almost identically.  The core is an 8051 processor,
+> +running two different versions of firmware.  The 672 runs the VP4 video
+> +processor code, the 676 runs VP5.  There are a few differences in register
+> +mappings for the two chips.  In these cases, the symbols defined in the
+> +header files are marked with VP4 or VP5 as part of the symbol name.
+> +
+> +The cameras appear externally as three sets of registers. Setting register
+> +values is the only way to control the camera.  Some settings are
+> +interdependant, such as the sequence required to power up the camera. I will
+> +try to make note of all of these cases.
+> +
+> +The register sets are called blocks.  Block 0 is the system block.  This
+> +section is always powered on when the camera is plugged in.  It contains
+> +registers that control housekeeping functions such as powering up the video
+> +processor.  The video processor is the VP block.  These registers control
+> +how the video from the sensor is processed.  Examples are timing registers,
+> +user mode (vga, qvga), scaling, cropping, framerates, and so on.  The last
+> +block is the video compressor (VC).  The video stream sent from the camera is
+> +compressed as Motion JPEG (JPEGA).  The VC controls all of the compression
+> +parameters.  Looking at the file cpia2_registers.h, you can get a full view
+> +of these registers and the possible values for most of them.
+> +
+> +One or more registers can be set or read by sending a usb control message to
+> +the camera.  There are three modes for this.  Block mode requests a number
+> +of contiguous registers.  Random mode reads or writes random registers with
+> +a tuple structure containing address/value pairs.  The repeat mode is only
+> +used by VP4 to load a firmware patch.  It contains a starting address and
+> +a sequence of bytes to be written into a gpio port.
+> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+> index eca22b82de94..72fbb394f6a2 100644
+> --- a/Documentation/media/v4l-drivers/index.rst
+> +++ b/Documentation/media/v4l-drivers/index.rst
+> @@ -65,3 +65,5 @@ For more details see the file COPYING in the source distribution of Linux.
+>  	vimc
+>  	vivid
+>  	zr364xx
+> +
+> +	cpia2_devel
+> 
 
-
--- 
-Lucas De Marchi
