@@ -2,130 +2,92 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295D4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F936C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A7D2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:01:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EPjbWq5S"
+	by mail.kernel.org (Postfix) with ESMTP id DE7C020736
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584010950;
+	bh=L1uhOGZV1AwdXioMbJ2c7aeQXGCZiGDQ7nuNTBwmuNw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=P7wJrHswwRC+DyotKkhbrvUEEA1ENkrhrXwsO4hnWJhX/dPvK2H1ukrycZ6Sh7rfr
+	 PuYGrUsdgZsj9PT8eagAA90VqLuskRMqcX5yqFUCu3WSCDvM3lq2TvfH9/zIGnTNAp
+	 qOHO2RDqyeuG/rHhxGX0Cb2vtNKavl/hSdItQZsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgCLLBb (ORCPT
+        id S1727002AbgCLLC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:01:31 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:17232 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgCLLBa (ORCPT
+        Thu, 12 Mar 2020 07:02:28 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44766 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLLC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:01:30 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 02CB0sYZ023841;
-        Thu, 12 Mar 2020 20:00:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02CB0sYZ023841
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584010854;
-        bh=FK3Dt+IairXqZAlzwKaf65fT4pceVw/ymV+lEzpyvwU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EPjbWq5S+60gnW/GYriRfzYFGC2zf6zQ5YieJb+cQ1Dq9ySFcxQEB1ryLpMJVpmKX
-         PlFchPDONqqgWYSmFqi0hQtKrSzErg+bON8yWo1z3RQpzC4rj+4+viBBWvSk3v/QIp
-         3JunNIcBKwZD4+sTnd3Ud5g91eHx6jz9mI5tzd5dnUKLBWhHN9KGByDMk0bUZ6BLLn
-         hSHn84Kiv91gk1urV9DhzdNlAmkt36BK9KXagq6P3+4P84A9++tXD7PraqTABNGemk
-         gZ4+xJeLJluiSq4XzDUavJmtAZad7s/FFJZuRMvc+RO31+PRzhY2bh9lqTnXOQGm1I
-         OuvsYkLU9a48g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thu, 12 Mar 2020 07:02:28 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a10so5857083ljp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 04:02:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xDdc7kJCwX6NG51y4/WhGpKrhuKlpllW6J0+34aBuUM=;
+        b=rDhXxWfSMor8C5yLYvVD1zmA+FGPl8dRH8+C9iAG7Myngt8sC7o7UYQYzzw69zF2m/
+         UDyP+cCVaA8hWu7MpP09bp7dUwMzs0BWFcgwdnKN5FioUnXFt+enslj6BWuebf2oBpgd
+         ksnlbFbYuKf9K7cvqIBzvz8w/A9QFjWxFEVPcbai83a0DLZAAw2pFweqB8uDfHaXjN+w
+         PbH+aOoTJ2Tfes1s4QVUWgF5keAchxPkuKyAamfG63bQB4oPJPgRn1OiEAfe/iwUubdr
+         KXUCBTWT5rdRTpevMeNJ0PiZbK2tZ9zvREtD3Eeni6vpk3zQdmqS594iUH4NJzWNOoYE
+         yDNA==
+X-Gm-Message-State: ANhLgQ32c9CKjGvTj2UDz2wNJHZb1ypmnzd+xh8b5UYHvH1H9/pnthys
+        WnXUTFL5vUYrg1wkohOW9cY=
+X-Google-Smtp-Source: ADFU+vsmOZIFeUfO5yjeQGM0J/m8azRAO/gGJ3hAhSFyU/Ra3PAxnqt6mjXyuMaP4RnH09Ungsc0gA==
+X-Received: by 2002:a2e:b55c:: with SMTP id a28mr5012329ljn.108.1584010946521;
+        Thu, 12 Mar 2020 04:02:26 -0700 (PDT)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id b3sm7342740ljj.46.2020.03.12.04.02.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 04:02:25 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1jCLbS-0005kD-C1; Thu, 12 Mar 2020 12:02:14 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Axel Haslam <ahaslam@baylibre.com>,
+        Bryan ODonoghue <pure.logic@nexus-software.ie>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: sdhci: use FIELD_GET for preset value bit masks
-Date:   Thu, 12 Mar 2020 20:00:50 +0900
-Message-Id: <20200312110050.21732-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH 0/3] staging: greybus: loopback_test: fix build breakage
+Date:   Thu, 12 Mar 2020 12:01:48 +0100
+Message-Id: <20200312110151.22028-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the FIELD_GET macro to get access to the register fields.
-Delete the shift macros.
+The loopback_test tool hasn't received much love lately. In fact, it has
+failed to build for the past two years after a scripted EPOLL*
+conversion.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Newer GCC also started warning for potential string truncation of
+generated path names; the last two patches addresses that.
 
- drivers/mmc/host/sdhci.c | 10 +++++-----
- drivers/mmc/host/sdhci.h | 10 ++++------
- 2 files changed, 9 insertions(+), 11 deletions(-)
+Johan
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 63db84481dff..aec6692615c8 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -9,6 +9,7 @@
-  *     - JMicron (hardware and technical support)
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/delay.h>
- #include <linux/dmaengine.h>
- #include <linux/ktime.h>
-@@ -1766,10 +1767,9 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
- 
- 			clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
- 			pre_val = sdhci_get_preset_value(host);
--			div = (pre_val & SDHCI_PRESET_SDCLK_FREQ_MASK)
--				>> SDHCI_PRESET_SDCLK_FREQ_SHIFT;
-+			div = FIELD_GET(SDHCI_PRESET_SDCLK_FREQ_MASK, pre_val);
- 			if (host->clk_mul &&
--				(pre_val & SDHCI_PRESET_CLKGEN_SEL_MASK)) {
-+				(pre_val & SDHCI_PRESET_CLKGEN_SEL)) {
- 				clk = SDHCI_PROG_CLOCK_MODE;
- 				real_div = div + 1;
- 				clk_mul = host->clk_mul;
-@@ -2227,8 +2227,8 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 
- 			sdhci_enable_preset_value(host, true);
- 			preset = sdhci_get_preset_value(host);
--			ios->drv_type = (preset & SDHCI_PRESET_DRV_MASK)
--				>> SDHCI_PRESET_DRV_SHIFT;
-+			ios->drv_type = FIELD_GET(SDHCI_PRESET_DRV_MASK,
-+						  preset);
- 		}
- 
- 		/* Re-enable SD Clock */
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index a6a3ddcf97e7..abdcefee24cb 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -9,6 +9,7 @@
- #ifndef __SDHCI_HW_H
- #define __SDHCI_HW_H
- 
-+#include <linux/bits.h>
- #include <linux/scatterlist.h>
- #include <linux/compiler.h>
- #include <linux/types.h>
-@@ -267,12 +268,9 @@
- #define SDHCI_PRESET_FOR_SDR104        0x6C
- #define SDHCI_PRESET_FOR_DDR50 0x6E
- #define SDHCI_PRESET_FOR_HS400 0x74 /* Non-standard */
--#define SDHCI_PRESET_DRV_MASK  0xC000
--#define SDHCI_PRESET_DRV_SHIFT  14
--#define SDHCI_PRESET_CLKGEN_SEL_MASK   0x400
--#define SDHCI_PRESET_CLKGEN_SEL_SHIFT	10
--#define SDHCI_PRESET_SDCLK_FREQ_MASK   0x3FF
--#define SDHCI_PRESET_SDCLK_FREQ_SHIFT	0
-+#define SDHCI_PRESET_DRV_MASK		GENMASK(15, 14)
-+#define SDHCI_PRESET_CLKGEN_SEL		BIT(10)
-+#define SDHCI_PRESET_SDCLK_FREQ_MASK	GENMASK(9, 0)
- 
- #define SDHCI_SLOT_INT_STATUS	0xFC
- 
+
+Johan Hovold (3):
+  staging: greybus: loopback_test: fix poll-mask build breakage
+  staging: greybus: loopback_test: fix potential path truncation
+  staging: greybus: loopback_test: fix potential path truncations
+
+ drivers/staging/greybus/tools/loopback_test.c | 21 ++++++++++---------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
 -- 
-2.17.1
+2.24.1
 
