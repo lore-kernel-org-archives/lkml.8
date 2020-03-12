@@ -2,90 +2,129 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52973C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F146EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF9F20736
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583991430;
-	bh=5Q38LdAf1p3YQXNjyyJQkIv6CfDiI7C7xbmfCU7hfY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BdbK2sPpLn2x4AYSxKLB2LH9alBCMBbbU5/hdk7D/AiYHg7485UrQksOyIeGU3Ocd
-	 heA0cEKqikIBcTs9UIobDsnM5NRpf4uR/Tuu2gh1E2xMjiYtNKUrcPSJveYT0lGcmj
-	 KyeGlBtjqT6znC3Q9MyGECnVldDWc8dw6WbLcAR4=
+	by mail.kernel.org (Postfix) with ESMTP id E009A20736
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387833AbgCLFhJ (ORCPT
+        id S2387852AbgCLFiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387758AbgCLFhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:37:08 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB88F20736;
-        Thu, 12 Mar 2020 05:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583991428;
-        bh=5Q38LdAf1p3YQXNjyyJQkIv6CfDiI7C7xbmfCU7hfY8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PReOXJ+ZHmrWz4IbwksiW/OG0lbJWJy1sN0EqSgQDiO9uVY2WINfHJlMsPaqty0Qo
-         ILiTPAgHc0GWcW7IlWU6pb4nMqotIc/Tybv2SET/fMYQba9t0qkov0FbhNOCuBCx+M
-         29obK1XyA8M2q1u/vbF+jtY//M8i9RmGPjpCbox8=
-Received: by mail-wm1-f43.google.com with SMTP id e26so4812699wme.5;
-        Wed, 11 Mar 2020 22:37:07 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3e1s95nwQhDjByJL7wK5CppYMKnn62epfZ7DoUaL0ThZBYLqXH
-        9VXvLJVX9kyzBm91rHsAPbsuM2dSE5KdRO9wir0=
-X-Google-Smtp-Source: ADFU+vsZ1y4HC+7tZe1c2sRkkarw+06JoFyGMhDVnlrN2G68WyZu7GDqpl2qpg5ARTIgqnIM8w01GHQVsJGn7g8A9F4=
-X-Received: by 2002:a1c:9816:: with SMTP id a22mr2916415wme.16.1583991426185;
- Wed, 11 Mar 2020 22:37:06 -0700 (PDT)
+        Thu, 12 Mar 2020 01:38:16 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:31661 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387758AbgCLFiQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 01:38:16 -0400
+X-IronPort-AV: E=Sophos;i="5.70,543,1574092800"; 
+   d="scan'208";a="86204183"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 12 Mar 2020 13:38:09 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id AEC43406AB15;
+        Thu, 12 Mar 2020 13:28:07 +0800 (CST)
+Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Thu, 12 Mar 2020 13:38:06 +0800
+Received: from TEST.g08.fujitsu.local (10.167.226.147) by
+ G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1395.4 via Frontend Transport; Thu, 12 Mar 2020 13:38:05 +0800
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+Subject: [RFC PATCH] x86/apic: Drop superfluous apic_phys
+Date:   Thu, 12 Mar 2020 13:38:04 +0800
+Message-ID: <20200312053804.2252-1-caoj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <20200106084240.1076-1-wens@kernel.org> <20200106084240.1076-4-wens@kernel.org>
- <20200106085159.oirhyvxov6c4lzs6@gilmour.lan>
-In-Reply-To: <20200106085159.oirhyvxov6c4lzs6@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Thu, 12 Mar 2020 13:36:54 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65ig=OjBbdZx3wRX_coV=BenZU34=f7CHEjuRYi6HpgnA@mail.gmail.com>
-Message-ID: <CAGb2v65ig=OjBbdZx3wRX_coV=BenZU34=f7CHEjuRYi6HpgnA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] dt-bindings: bus: sunxi: Add R40 MBUS compatible
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: AEC43406AB15.A9AB4
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+apic_phys seems having totally the same meaning as mp_lapic_addr, except it is
+static, replace it.
 
-On Mon, Jan 6, 2020 at 4:52 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Jan 06, 2020 at 04:42:36PM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > Allwinner R40 SoC also contains MBUS controller.
-> >
-> > Add compatible for it.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->
-> Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+Not sure if there is still any corner case, but it boots fine.
 
-Looks like this didn't get picked up. But the device tree change using
-the new compatible did make it into v5.6-rc1.
+ arch/x86/kernel/apic/apic.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-Could you pick this up as a fix for v5.6 so they make the same release?
-Or I could pick it through our tree.
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 5f973fed3c9f..5b7b59951421 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -199,8 +199,6 @@ unsigned int lapic_timer_period = 0;
+ 
+ static void apic_pm_activate(void);
+ 
+-static unsigned long apic_phys __ro_after_init;
+-
+ /*
+  * Get the LAPIC version
+  */
+@@ -1170,7 +1168,7 @@ void clear_local_APIC(void)
+ 	u32 v;
+ 
+ 	/* APIC hasn't been mapped yet */
+-	if (!x2apic_mode && !apic_phys)
++	if (!x2apic_mode && !mp_lapic_addr)
+ 		return;
+ 
+ 	maxlvt = lapic_get_maxlvt();
+@@ -1261,7 +1259,7 @@ void apic_soft_disable(void)
+ void disable_local_APIC(void)
+ {
+ 	/* APIC hasn't been mapped yet */
+-	if (!x2apic_mode && !apic_phys)
++	if (!x2apic_mode && !mp_lapic_addr)
+ 		return;
+ 
+ 	apic_soft_disable();
+@@ -2111,14 +2109,12 @@ void __init init_apic_mappings(void)
+ 		pr_info("APIC: disable apic facility\n");
+ 		apic_disable();
+ 	} else {
+-		apic_phys = mp_lapic_addr;
+-
+ 		/*
+ 		 * If the system has ACPI MADT tables or MP info, the LAPIC
+ 		 * address is already registered.
+ 		 */
+ 		if (!acpi_lapic && !smp_found_config)
+-			register_lapic_address(apic_phys);
++			register_lapic_address(mp_lapic_addr);
+ 	}
+ 
+ 	/*
+@@ -2874,11 +2870,11 @@ early_param("apic", apic_set_verbosity);
+ 
+ static int __init lapic_insert_resource(void)
+ {
+-	if (!apic_phys)
++	if (!mp_lapic_addr)
+ 		return -1;
+ 
+ 	/* Put local APIC into the resource map. */
+-	lapic_resource.start = apic_phys;
++	lapic_resource.start = mp_lapic_addr;
+ 	lapic_resource.end = lapic_resource.start + PAGE_SIZE - 1;
+ 	insert_resource(&iomem_resource, &lapic_resource);
+ 
+-- 
+2.21.1
 
-Regards
-ChenYu
+
+
