@@ -2,229 +2,207 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7539BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A07C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39ED6206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GPNOC3KZ"
+	by mail.kernel.org (Postfix) with ESMTP id 99ABD206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgCLIZW (ORCPT
+        id S1726520AbgCLI1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:25:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43209 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725980AbgCLIZV (ORCPT
+        Thu, 12 Mar 2020 04:27:11 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40035 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCLI1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:25:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584001520;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UqiBqBozQZrKbpqb6fps1Ub+53xZKmdnmK5P35tZZ6M=;
-        b=GPNOC3KZYX+dQA+xo+kQ3kVzVJRcmjBGJVvjOXTwJkwzbwbENM1uEqDQCIPlC3OYdz5D4X
-        d0QpjIrHkj2zJaRlDfKvlIk0AJXlN88e6EhbCo4VOkaJp9u81Vqxzp/9KaPDCfaJx/XCTh
-        tWKg6T3HGBPMyhWIv4RS5rkD0o1ZjBY=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-sQ-8U3lqMDe8_rckyUSW5g-1; Thu, 12 Mar 2020 04:25:15 -0400
-X-MC-Unique: sQ-8U3lqMDe8_rckyUSW5g-1
-Received: by mail-qt1-f199.google.com with SMTP id k20so2967764qtm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:25:15 -0700 (PDT)
+        Thu, 12 Mar 2020 04:27:11 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y71so4644991oia.7;
+        Thu, 12 Mar 2020 01:27:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UqiBqBozQZrKbpqb6fps1Ub+53xZKmdnmK5P35tZZ6M=;
-        b=TYzNiMCjCirMY/xgGCZmvMRNX85mr2K0hIQkuYJ1qfQeD7u9cETw0jVrriYVG1s6ua
-         uQwTGgdW0cmG4+N+6elA3rMNuJqXYT4EfFcjROsT3h1BWMm0AAqNJKdQNeJENFRmO77v
-         Gqzhon/ZgWO0PbFmpsVPJ10LAKwkUFvsE2acC/KtKIZBMyiC1y8mVHQwVd++qSSJBSKe
-         NQmjDe6OJz4/8AD1i+KPrqKTy7vstymsNZq7BNZOK2o+72qPFAYcFCcvL2HZ2Ho9ObBl
-         SbDYtfHf7/B7tBm8tdGmwatH3iLZk31Q62M23HN5iGP+f8aiV+fyNxN86oT0uBynB7FT
-         67Ng==
-X-Gm-Message-State: ANhLgQ0NVN45pPo+BMWBY8uiQdDs4mLo0jjr/OAK6yjhYgI72qMr3nr/
-        71KxDwsMnOcBiZyXYlu99ST0MLXNSuBRc13a2D0nKURMTsay0PvxNRmZ95YXFfvMQ7HwFL4JN6i
-        l5kfTuwiHK5smfm/ASJNQjFXW
-X-Received: by 2002:a37:6215:: with SMTP id w21mr6548595qkb.149.1584001514432;
-        Thu, 12 Mar 2020 01:25:14 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vunTOq0UJjwugXSegnRqEyiS9dlQvVqcZDLsJQHR9PIHKEvp8WKkpEby0VCBTZybNkeotxyBA==
-X-Received: by 2002:a37:6215:: with SMTP id w21mr6548575qkb.149.1584001514073;
-        Thu, 12 Mar 2020 01:25:14 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id 82sm10496917qkd.62.2020.03.12.01.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 01:25:13 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 04:25:07 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Hui Zhu <teawater@gmail.com>
-Cc:     jasowang@redhat.com, akpm@linux-foundation.org, pagupta@redhat.com,
-        mojha@codeaurora.org, david@redhat.com, namit@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: Re: [RFC for QEMU] virtio-balloon: Add option thp-order to set
- VIRTIO_BALLOON_F_THP_ORDER
-Message-ID: <20200312042340-mutt-send-email-mst@kernel.org>
-References: <1583999395-9131-1-git-send-email-teawater@gmail.com>
- <1583999395-9131-2-git-send-email-teawater@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HJXezJytBs2ImOuxNva4jz3WuW0zVGp2L5DblLHIFrU=;
+        b=af4Pf+ALACxYkfCz9le8xJtBgx2SU3o+mvzr+JY5yxll3IpSEwsLhxUHBe5K0VKDqg
+         Nv5srt8JO72LFyS+lVz0Do/ObXpAw9uARdVanHjWCvmAGOlYOFiE1iB8UFdhlD57o/hL
+         /CgupV6iU7DEPqjSZTZrtzOmkBOoKSPNiVDkol1oSswwg5vQQJrQpQS7TfiCqq3sFMIM
+         nZff38OEQqp17FQcbR/J0pdr31Tzp+xYL6yzhmzPDHcFbTNKwT/MLKfWSy22pzHPDYE6
+         7ihZ/6xTRUPFpPWf+kzyBsw4BAEia8QlGd97qsYXrqHzBIs7HHW0fx3Ue36czo1VLduf
+         R37w==
+X-Gm-Message-State: ANhLgQ3RniUmoiFMysQFLi6t+Z9uttGcmiPrs1OPy/pbDCxkj9lCIA72
+        wKylcDJneCEWcLO2CY6Ohc8Mcg8tgCWF7csJybI2YA==
+X-Google-Smtp-Source: ADFU+vvzhDC+t1gyY8tkY/3v9GX+ksbIGEkuBSS6l+YcV0tcpcF1N242O89tHB0irUICin1WxBvD7LN6t2vUuQEYFvU=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr1683846oia.148.1584001630171;
+ Thu, 12 Mar 2020 01:27:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583999395-9131-2-git-send-email-teawater@gmail.com>
+References: <20200220233454.31514-1-f.fainelli@gmail.com> <20200223.205911.1667092059432885700.davem@davemloft.net>
+ <CAMuHMdWuP1_3vqOpf7KEimLLTKiWpWku9fUAdP3CCR6WbHyQdg@mail.gmail.com>
+ <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com> <CAMuHMdUMM0Q6W7A0mVgSf7XmF8yROZb3uzHPU1ETbMAfvTtfow@mail.gmail.com>
+ <ca2abe1a-a9ed-23c9-ceaa-b0042be49be9@gmail.com>
+In-Reply-To: <ca2abe1a-a9ed-23c9-ceaa-b0042be49be9@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Mar 2020 09:26:59 +0100
+Message-ID: <CAMuHMdWwFFYHB_MkfiFZPg4nMG1jiDJ+9f4s3FXQOPCpzUErGQ@mail.gmail.com>
+Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 03:49:55PM +0800, Hui Zhu wrote:
-> If the guest kernel has many fragmentation pages, use virtio_balloon
-> will split THP of QEMU when it calls MADV_DONTNEED madvise to release
-> the balloon pages.
-> Set option thp-order to on will open flags VIRTIO_BALLOON_F_THP_ORDER.
-> It will set balloon size to THP size to handle the THP split issue.
-> 
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+Hi Heiner,
 
-What's wrong with just using the PartiallyBalloonedPage machinery
-instead? That would make it guest transparent.
+On Wed, Mar 11, 2020 at 10:22 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> On 11.03.2020 10:17, Geert Uytterhoeven wrote:
+> > On Tue, Mar 10, 2020 at 5:47 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >> On 3/10/20 7:16 AM, Geert Uytterhoeven wrote:
+> >>> On Mon, Feb 24, 2020 at 5:59 AM David Miller <davem@davemloft.net> wrote:
+> >>>> From: Florian Fainelli <f.fainelli@gmail.com>
+> >>>> Date: Thu, 20 Feb 2020 15:34:53 -0800
+> >>>>
+> >>>>> It is currently possible for a PHY device to be suspended as part of a
+> >>>>> network device driver's suspend call while it is still being attached to
+> >>>>> that net_device, either via phy_suspend() or implicitly via phy_stop().
+> >>>>>
+> >>>>> Later on, when the MDIO bus controller get suspended, we would attempt
+> >>>>> to suspend again the PHY because it is still attached to a network
+> >>>>> device.
+> >>>>>
+> >>>>> This is both a waste of time and creates an opportunity for improper
+> >>>>> clock/power management bugs to creep in.
+> >>>>>
+> >>>>> Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+> >>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>>
+> >>>> Applied, and queued up for -stable, thanks Florian.
+> >>>
+> >>> This patch causes a regression on r8a73a4/ape6evm and sh73a0/kzm9g.
+> >>> After resume from s2ram, Ethernet no longer works:
+> >>>
+> >>>         PM: suspend exit
+> >>>         nfs: server aaa.bbb.ccc.ddd not responding, still trying
+> >>>         ...
+> >>>
+> >>> Reverting commit 503ba7c6961034ff ("net: phy: Avoid multiple suspends")
+> >>> fixes the issue.
+> >>>
+> >>> On both boards, an SMSC LAN9220 is connected to a power-managed local
+> >>> bus.
+> >>>
+> >>> I added some debug code to check when the clock driving the local bus
+> >>> is stopped and started, but I see no difference before/after.  Hence I
+> >>> suspect the Ethernet chip is no longer reinitialized after resume.
+> >>
+> >> Can you provide a complete log?
+> >
+> > With some debug info:
+> >
+> >     SDHI0 Vcc: disabling
+> >     PM: suspend entry (deep)
+> >     Filesystems sync: 0.002 seconds
+> >     Freezing user space processes ... (elapsed 0.001 seconds) done.
+> >     OOM killer disabled.
+> >     Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+> >     PM: ==== a3sp/ee120000.sd: stop
+> >     PM: ==== a3sp/ee100000.sd: stop
+> >     smsc911x 8000000.ethernet: smsc911x_suspend:2577
+> >     smsc911x 8000000.ethernet: smsc911x_suspend:2579 running
+> >     smsc911x 8000000.ethernet: smsc911x_suspend:2584
+> >     PM: ==== a3sp/ee200000.mmc: stop
+> >     PM: ==== c4/fec10000.bus: stop
+> >     PM: ==== a3sp/e6c40000.serial: stop
+> >     PM: ==== c5/e61f0000.thermal: stop
+> >     PM: ==== c4/e61c0200.interrupt-controller: stop
+> >     PM: == a3sp: power off
+> >     rmobile_pd_power_down: a3sp
+> >     Disabling non-boot CPUs ...
+> >     PM: ==== c4/e61c0200.interrupt-controller: start
+> >     PM: ==== c5/e61f0000.thermal: start
+> >     PM: ==== a3sp/e6c40000.serial: start
+> >     PM: ==== c4/fec10000.bus: start
+> >     PM: ==== a3sp/ee200000.mmc: start
+> >     smsc911x 8000000.ethernet: smsc911x_resume:2606
+> >     smsc911x 8000000.ethernet: smsc911x_resume:2625 running
+> >     PM: ==== a3sp/ee100000.sd: start
+> >     OOM killer enabled.
+> >     Restarting tasks ... done.
+> >     PM: ==== a3sp/ee120000.sd: start
+> >     PM: suspend exit
+> >     nfs: server aaa.bbb.ccc.ddd not responding, still trying
+> >     ...
+> >
+> > But no difference between the good and the bad case, except for the nfs
+> > failures.
+> >
+> >> Do you use the Generic PHY driver or a
+> >> specialized one?
+> >
+> > CONFIG_FIXED_PHY=y
+> > CONFIG_SMSC_PHY=y
+> >
+> > Just the smsc,lan9115 node, cfr. arch/arm/boot/dts/r8a73a4-ape6evm.dts
+> >
+> >> Do you have a way to dump the registers at the time of
+> >> failure and see if BMCR.PDOWN is still set somehow?
+> >
+> > Added a hook into "nfs: server not responding", which prints:
+> >
+> >     MII_BMCR = 0x1900
+> >
+> > i.e. BMCR_PDOWN = 0x0800 is still set.
+> >
+> >> Does the following help:
+> >>
+> >> diff --git a/drivers/net/ethernet/smsc/smsc911x.c
+> >> b/drivers/net/ethernet/smsc/smsc911x.c
+> >> index 49a6a9167af4..df17190c76c0 100644
+> >> --- a/drivers/net/ethernet/smsc/smsc911x.c
+> >> +++ b/drivers/net/ethernet/smsc/smsc911x.c
+> >> @@ -2618,6 +2618,7 @@ static int smsc911x_resume(struct device *dev)
+> >>         if (netif_running(ndev)) {
+> >>                 netif_device_attach(ndev);
+> >>                 netif_start_queue(ndev);
+> >> +               phy_resume(dev->phydev);
+> >>         }
+> >>
+> >
+> > Yes i does, after s/dev->/ndev->/.
+> > Thanks!
+>
+> This seems to be a workaround. And the same issue we may have with
 
-> ---
->  hw/virtio/virtio-balloon.c                      | 67 ++++++++++++++++---------
->  include/standard-headers/linux/virtio_balloon.h |  4 ++
->  2 files changed, 47 insertions(+), 24 deletions(-)
-> 
-> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-> index a4729f7..cfe86b0 100644
-> --- a/hw/virtio/virtio-balloon.c
-> +++ b/hw/virtio/virtio-balloon.c
-> @@ -340,37 +340,49 @@ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
->          while (iov_to_buf(elem->out_sg, elem->out_num, offset, &pfn, 4) == 4) {
->              unsigned int p = virtio_ldl_p(vdev, &pfn);
->              hwaddr pa;
-> +            size_t handle_size = BALLOON_PAGE_SIZE;
->  
->              pa = (hwaddr) p << VIRTIO_BALLOON_PFN_SHIFT;
->              offset += 4;
->  
-> -            section = memory_region_find(get_system_memory(), pa,
-> -                                         BALLOON_PAGE_SIZE);
-> -            if (!section.mr) {
-> -                trace_virtio_balloon_bad_addr(pa);
-> -                continue;
-> -            }
-> -            if (!memory_region_is_ram(section.mr) ||
-> -                memory_region_is_rom(section.mr) ||
-> -                memory_region_is_romd(section.mr)) {
-> -                trace_virtio_balloon_bad_addr(pa);
-> -                memory_region_unref(section.mr);
-> -                continue;
-> -            }
-> +            if (virtio_has_feature(s->host_features,
-> +                                   VIRTIO_BALLOON_F_THP_ORDER))
-> +                handle_size = BALLOON_PAGE_SIZE << VIRTIO_BALLOON_THP_ORDER;
-> +
-> +            while (handle_size > 0) {
-> +                section = memory_region_find(get_system_memory(), pa,
-> +                                             BALLOON_PAGE_SIZE);
-> +                if (!section.mr) {
-> +                    trace_virtio_balloon_bad_addr(pa);
-> +                    continue;
-> +                }
-> +                if (!memory_region_is_ram(section.mr) ||
-> +                    memory_region_is_rom(section.mr) ||
-> +                    memory_region_is_romd(section.mr)) {
-> +                    trace_virtio_balloon_bad_addr(pa);
-> +                    memory_region_unref(section.mr);
-> +                    continue;
-> +                }
->  
-> -            trace_virtio_balloon_handle_output(memory_region_name(section.mr),
-> -                                               pa);
-> -            if (!qemu_balloon_is_inhibited()) {
-> -                if (vq == s->ivq) {
-> -                    balloon_inflate_page(s, section.mr,
-> -                                         section.offset_within_region, &pbp);
-> -                } else if (vq == s->dvq) {
-> -                    balloon_deflate_page(s, section.mr, section.offset_within_region);
-> -                } else {
-> -                    g_assert_not_reached();
-> +                trace_virtio_balloon_handle_output(memory_region_name(section.mr),
-> +                                                   pa);
-> +                if (!qemu_balloon_is_inhibited()) {
-> +                    if (vq == s->ivq) {
-> +                        balloon_inflate_page(s, section.mr,
-> +                                             section.offset_within_region,
-> +                                             &pbp);
-> +                    } else if (vq == s->dvq) {
-> +                        balloon_deflate_page(s, section.mr,
-> +                                             section.offset_within_region);
-> +                    } else {
-> +                        g_assert_not_reached();
-> +                    }
->                  }
-> +                memory_region_unref(section.mr);
-> +
-> +                pa += BALLOON_PAGE_SIZE;
-> +                handle_size -= BALLOON_PAGE_SIZE;
->              }
-> -            memory_region_unref(section.mr);
->          }
->  
->          virtqueue_push(vq, elem, offset);
-> @@ -693,6 +705,8 @@ static void virtio_balloon_set_config(VirtIODevice *vdev,
->  
->      memcpy(&config, config_data, virtio_balloon_config_size(dev));
->      dev->actual = le32_to_cpu(config.actual);
-> +    if (virtio_has_feature(vdev->host_features, VIRTIO_BALLOON_F_THP_ORDER))
-> +        dev->actual <<= VIRTIO_BALLOON_THP_ORDER;
->      if (dev->actual != oldactual) {
->          qapi_event_send_balloon_change(vm_ram_size -
->                          ((ram_addr_t) dev->actual << VIRTIO_BALLOON_PFN_SHIFT));
-> @@ -728,6 +742,9 @@ static void virtio_balloon_to_target(void *opaque, ram_addr_t target)
->      }
->      if (target) {
->          dev->num_pages = (vm_ram_size - target) >> VIRTIO_BALLOON_PFN_SHIFT;
-> +        if (virtio_has_feature(dev->host_features,
-> +                               VIRTIO_BALLOON_F_THP_ORDER))
-> +            dev->num_pages >>= VIRTIO_BALLOON_THP_ORDER;
->          virtio_notify_config(vdev);
->      }
->      trace_virtio_balloon_to_target(target, dev->num_pages);
-> @@ -916,6 +933,8 @@ static Property virtio_balloon_properties[] = {
->                      VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
->      DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
->                      VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
-> +    DEFINE_PROP_BIT("thp-order", VirtIOBalloon, host_features,
-> +                    VIRTIO_BALLOON_F_THP_ORDER, false),
->      /* QEMU 4.0 accidentally changed the config size even when free-page-hint
->       * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
->       * property retains this quirk for QEMU 4.1 machine types.
-> diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
-> index 9375ca2..f54d613 100644
-> --- a/include/standard-headers/linux/virtio_balloon.h
-> +++ b/include/standard-headers/linux/virtio_balloon.h
-> @@ -36,10 +36,14 @@
->  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
->  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
->  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-> +#define VIRTIO_BALLOON_F_THP_ORDER	5 /* Set balloon page order to thp order */
->  
->  /* Size of a PFN in the balloon interface. */
->  #define VIRTIO_BALLOON_PFN_SHIFT 12
->  
-> +/* The order of the balloon page */
-> +#define VIRTIO_BALLOON_THP_ORDER 9
-> +
->  #define VIRTIO_BALLOON_CMD_ID_STOP	0
->  #define VIRTIO_BALLOON_CMD_ID_DONE	1
->  struct virtio_balloon_config {
-> -- 
-> 2.7.4
+I agree.
 
+> other drivers too. Could you please alternatively test the following?
+> It tackles the issue that mdio_bus_phy_may_suspend() is used in
+> suspend AND resume, and both calls may return different values.
+>
+> With this patch we call mdio_bus_phy_may_suspend() only when
+> suspending, and let the phy_device store whether it was suspended
+> by MDIO bus PM.
+
+Thanks, your patch fixes the issue, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
