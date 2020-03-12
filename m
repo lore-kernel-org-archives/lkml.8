@@ -2,103 +2,107 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EABBC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F48C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFCB2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:22:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+5Z+2xK"
+	by mail.kernel.org (Postfix) with ESMTP id B74EB206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584033827;
+	bh=iqV0woTK+1QbFs1jWfR/8C8FIBB4oluJrGxTmnqVE60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pRfUhoupKE3tRgCDCA+MQi2hhUSGi2TfFryvwEeaOuY/Ef7Zvl7jkFUjaNNJPs4ZA
+	 GeIFUnNOo9qj0A4Rt5FAxU5QfMnbF+eooqopqIF0VXFJY8KyZZhXkZNI7s5MmoM/Oi
+	 oDKku6UGKnQ6Z6idA9MXmW9NQiC1xx107dn276f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgCLRWx (ORCPT
+        id S1726510AbgCLRXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:22:53 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39280 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCLRWv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:22:51 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f7so7257039wml.4;
-        Thu, 12 Mar 2020 10:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Wy+lE/1lzqrBWgr4qGqulWltQuGidDCwcinzvkx26bY=;
-        b=J+5Z+2xKMn1aIC0Uo2VC9f/lb55f3cqFfWZj5j1p0lphY5XIDra1fpkc65qmhCFKGH
-         PWYVvNENVeQHN+rQtmr87GkugtvbXMwwNydg0Qsdf6YQnMJlQRwKgC3ksC/LDYm6iVbV
-         tqs8r3NS9FDGtv1emvZBbMXBcYjJWE5q/fdFEzYgRjxbIWDvxT64WYyIVnpf+oFv9Hil
-         ibu/wC1ULKbyQWjmFxELT7Z3UuIYKv+VAdw5v5dG0YIdU9haHa2rx7MRDMlZg3oJ6Qsu
-         nW1NcF7FhtB7L+7XNshghcODee93iH5lj+FVmjHqbCEmSOr3M37pYB1rn+aFKC4zSis7
-         ddkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Wy+lE/1lzqrBWgr4qGqulWltQuGidDCwcinzvkx26bY=;
-        b=VAybQWX48TcKds+LU6WvEXgTyo1PJd6fylvNRb/XSLkr2+lXz+q4g0ij0UBrwqduhl
-         70G9g5XbJYp8z/RMUfxtUL3FjixrGeqLm2Fke6RB2yFrutmK1qm/DJosUl9cGKm0OqK6
-         guS9SANTMF9KdT6epdk2pxScpiIdt4JVcZFnq6thhD2ib4YBcpp9/rJ3YhXxUxlxkCbo
-         EYeZOmzy1mYd+IvtwZgqKdw8AsLKWzpf6F3daqeJ23DEIrK+dadTSIxuLgmr5g5TmQbd
-         Pf+dAAEBme41HrM74RCofpdxOgdbyeUz5MB9mWlwt49p4/HDuqYp6z6zeIcZEiCYUurD
-         zyrg==
-X-Gm-Message-State: ANhLgQ1ZdwJ06I1w4fz47le9b3f+XJLKd1jFifWzKZ1auCgph3IIXoQz
-        W7e43AnRA7GB2FBUyrEQ/p8=
-X-Google-Smtp-Source: ADFU+vvfIDpBkUD9w0w0y9O0EdtJTyviZVdZcBsPGD0KGGOBs+1FdKuhcvmu1jQbjlNqHpBDIAFSCA==
-X-Received: by 2002:a7b:cc6a:: with SMTP id n10mr5831317wmj.170.1584033767636;
-        Thu, 12 Mar 2020 10:22:47 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id d7sm2064492wrc.25.2020.03.12.10.22.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Mar 2020 10:22:47 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] arm64: dts: rockchip: remove properties from spdif node RK3399 Excavator
-Date:   Thu, 12 Mar 2020 18:22:39 +0100
-Message-Id: <20200312172240.21362-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 12 Mar 2020 13:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgCLRXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:23:46 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C6342067C;
+        Thu, 12 Mar 2020 17:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584033825;
+        bh=iqV0woTK+1QbFs1jWfR/8C8FIBB4oluJrGxTmnqVE60=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gswYtdvMC1EGaa0AsecLAx8y70uxeabXgKreyJqKoprJOJYs1nQk7+t7R1FdYw25q
+         Br7LSwcTwvVc7fbBtGBF35dvgBru7G5ce1cwtn5GTM94/11qSKcRsHljB0m6hqeCR2
+         T75uS+dsBc59atUIi9qGDfFSezinHb2K8xUT7WRU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jCRYd-00CHKE-NI; Thu, 12 Mar 2020 17:23:43 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 12 Mar 2020 17:23:43 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 01/23] irqchip/gic-v3: Use SGIs without active state if
+ offered
+In-Reply-To: <1fa8ab2f-6766-9dc1-53a6-9cead19a5a7b@redhat.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-2-maz@kernel.org>
+ <1fa8ab2f-6766-9dc1-53a6-9cead19a5a7b@redhat.com>
+Message-ID: <0f3c1c819a98deb77261e89eefa10e3f@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An expermental test with the command below gives this error:
+Hi Eric,
 
-arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml:
-spdif@ff870000:
-'i2c-scl-falling-time-ns', 'i2c-scl-rising-time-ns', 'power-domains'
-do not match any of the regexes: 'pinctrl-[0-9]+'
+On 2020-03-12 17:16, Auger Eric wrote:
+> Hi Marc,
 
-'i2c-scl-falling-time-ns', 'i2c-scl-rising-time-ns'
-are not valid properties for 'spdif' nodes, so remove them.
+[...]
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+>> diff --git a/include/linux/irqchip/arm-gic-v3.h 
+>> b/include/linux/irqchip/arm-gic-v3.h
+>> index 83439bfb6c5b..c29a02678a6f 100644
+>> --- a/include/linux/irqchip/arm-gic-v3.h
+>> +++ b/include/linux/irqchip/arm-gic-v3.h
+>> @@ -57,6 +57,7 @@
+>>  #define GICD_SPENDSGIR			0x0F20
+>> 
+>>  #define GICD_CTLR_RWP			(1U << 31)
+>> +#define GICD_CTLR_nASSGIreq		(1U << 8)
+> I am not able to find this bit in Arm IHI 0069F (ID022020)
+> same for the bit in GICD_TYPER. Do we still miss part of the spec?
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts | 2 --
- 1 file changed, 2 deletions(-)
+See my response to Zenghui (TL;DR: this addition to the spec missed the
+cut-off for revision F and will be added in the next round).
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-index b4d8f60b7..73e269a8a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-@@ -230,7 +230,5 @@
- };
- 
- &spdif {
--	i2c-scl-rising-time-ns = <450>;
--	i2c-scl-falling-time-ns = <15>;
- 	status = "okay";
- };
+Thanks,
+
+         M.
 -- 
-2.11.0
-
+Jazz is not dead. It just smells funny...
