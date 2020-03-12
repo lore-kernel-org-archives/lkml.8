@@ -4,433 +4,407 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2286C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E252C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0BE2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A191206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jD0yXdw5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S/gG4WoZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCLX4Q (ORCPT
+        id S1726838AbgCLX71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 19:56:16 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54858 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbgCLX4Q (ORCPT
+        Thu, 12 Mar 2020 19:59:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35257 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbgCLX70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 19:56:16 -0400
-Received: by mail-pj1-f66.google.com with SMTP id np16so3212214pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 16:56:15 -0700 (PDT)
+        Thu, 12 Mar 2020 19:59:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u68so4092067pfb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 16:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ha1DiI22JPihRP88KiCF+gUaXzZwM3GQstV41Ljt2iw=;
-        b=jD0yXdw5FV1elh15O79KsTnk6WVaqaGn1SmKIG4etyFF4SnRZieHu8bw5TLnxkYAiW
-         21gbpMqk9juZxW3qL7DXuJHt4RoJJaFKTa2PqYI1K+KUWF8jElDlK3J6PrF0/WLbmiHg
-         rOHTO3wa74qernA8JnmVWECLgPs8tzY44/xJA=
+        bh=tgJ6quu2NWo3yBMqliTZihesnP5Rn5ZlYRfPOG/UyIc=;
+        b=S/gG4WoZ6NVyjulGGOa8HaqLzUV/cYtHApY2TPW2Ape6Rcp1j0gGXQZr69Jxqz/5H8
+         XDfaIWBb+gCpPyvTGQrxqvTVqLTCRLTn2jRt8sadsEsgm1JrB6jCTSzDl1sOyE3B7wtG
+         fOBnAMFDoNyYkiZyC+y6lPaW1BiDP9Rcql84U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ha1DiI22JPihRP88KiCF+gUaXzZwM3GQstV41Ljt2iw=;
-        b=g/RRRpr5jI4+md7+ROoSbo+/1fLqXGYYMlUcL0lTeZ3QRD5txEblcMkgKGXfAqrpZg
-         zgHN5tQqyy/+PyCJ0WWU4g6+RTKT2NDsgoaNEYtjqphRI9puXeX0SiTwEZaZ41py5Fih
-         /hs0DZKohTCf0hHbtlqjVZnaAGdg+3QSUp/zCSflvJhD7fu3nCCCYXmi197Zm+Q9Nsng
-         tzRzYUgqzmWijL9RUVd1JQS4vqQHNpZoHLN3KO80TcdmTW0juGGw5t5ozDUpSh20NVF7
-         n/9bWHsISxsGKNQ+rL0AdLIP7SjjX+j4TmuVKl6FfTjhGVpcZ1iw2aJFZRYn030NXnk8
-         LmJg==
-X-Gm-Message-State: ANhLgQ1KBRx06MfdEXBoq/QMI55rDv+WJROlw2iT8bepE1i378LtAIcd
-        i8RvaYaJ0IjCpxo+ugwETK8uRw==
-X-Google-Smtp-Source: ADFU+vvOP8WMxcK8pbUL70aMh1/sbOpuwZhi12tQzOd3iv+5NF0Ycmny0OvmoMZurs05hSm+taBD/g==
-X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr10703260plx.34.1584057373664;
-        Thu, 12 Mar 2020 16:56:13 -0700 (PDT)
+        bh=tgJ6quu2NWo3yBMqliTZihesnP5Rn5ZlYRfPOG/UyIc=;
+        b=WZbtKijRw+liarQo6udJxMdm8q4b+c4fogxNb6vnqrX62VaHpTBPULQyeD7yxcxcHD
+         +rEe9vwLLv6O11EGOqnGbb4QyXgWzY+YVLjn889jCD0/j+7G6sx5LWdMJcfboSbspf8y
+         isTZONcF3EfLDVDTV2qMZXjj8nDO4CLnpTRH3yGM7GkN+8UW6SS4CHmpOxlDNVGXE1YV
+         eMLuxjXKywIR0Ox9IM4FOXY5c3RWNGoRSNinbADw6hWrD2J9xTcuPbeB1Z2L+2pIcjPb
+         zSW7Fl6jooxtsQURrzEBw8JDbR2ShpeZju5kRTYYtkqnHwMX9dTJ03+ns6TL5pKHZ0Xc
+         AaNw==
+X-Gm-Message-State: ANhLgQ2/N9FI//pfGDPO9TnwHUf940bTc1fqyXM9gF6EU3IlutnR+dkz
+        Q+U/OfrV0sEMqLVE4TB9bZHUzg==
+X-Google-Smtp-Source: ADFU+vvNTmfYf4tCUDOaar3jFFERhQPRlY4YGwDrRqnXvPIUWElQDSZsoD90BS0b7pgnhG7vfa3j8Q==
+X-Received: by 2002:a62:3808:: with SMTP id f8mr9119968pfa.38.1584057563579;
+        Thu, 12 Mar 2020 16:59:23 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i3sm7340500pfa.34.2020.03.12.16.56.12
+        by smtp.gmail.com with ESMTPSA id b25sm56476302pfo.38.2020.03.12.16.59.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 16:56:12 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 16:56:11 -0700
+        Thu, 12 Mar 2020 16:59:22 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 16:59:21 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     ard.biesheuvel@linaro.org, ardb@kernel.org, arve@android.com,
-        gregkh@linuxfoundation.org, hridya@google.com,
-        joel@joelfernandes.org, john.stultz@linaro.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, maco@android.com,
-        naresh.kamboju@linaro.org, shuah@kernel.org, tkjos@android.com,
-        Todd Kjos <tkjos@google.com>
-Subject: Re: [PATCH] binderfs: port to new mount api
-Message-ID: <202003121655.486AB8E3@keescook>
-References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
- <20200312212420.4032188-1-christian.brauner@ubuntu.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v9 02/13] ELF: Add ELF program property parsing support
+Message-ID: <202003121658.39A47CE098@keescook>
+References: <20200311192608.40095-1-broonie@kernel.org>
+ <20200311192608.40095-3-broonie@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312212420.4032188-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20200311192608.40095-3-broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:24:20PM +0100, Christian Brauner wrote:
-> It's time we port binderfs to the new mount api. We can make use of the
-> new option parser, get nicer infrastructure and it will be easiert if we
-> ever add any new mount options.
+On Wed, Mar 11, 2020 at 07:25:57PM +0000, Mark Brown wrote:
+> From: Dave Martin <Dave.Martin@arm.com>
 > 
-> This survives testing with the binderfs selftests:
+> ELF program properties will be needed for detecting whether to
+> enable optional architecture or ABI features for a new ELF process.
 > 
-> for i in `seq 1 1000`; do ./binderfs_test; done
+> For now, there are no generic properties that we care about, so do
+> nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
 > 
-> including the new stress tests I sent out for review today:
+> Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
+> phdrs entry (if any), and notify each property to the arch code.
 > 
->  [==========] Running 3 tests from 1 test cases.
->  [ RUN      ] global.binderfs_stress
->  [       OK ] global.binderfs_stress
->  [ RUN      ] global.binderfs_test_privileged
->  # Tests are not run as root. Skipping privileged tests
->  [       OK ] global.binderfs_test_privileged
+> For now, the added code is not used.
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-I would use the XFAIL harness infrastructure for these kinds of skips.
+I think my review got lost along the way. Please consider this:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Thanks!
 
 -Kees
 
->  [ RUN      ] global.binderfs_test_unprivileged
->  # Allocated new binder device with major 243, minor 4, and name my-binder
->  # Detected binder version: 8
->  [       OK ] global.binderfs_test_unprivileged
->  [==========] 3 / 3 tests passed.
->  [  PASSED  ]
-> 
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 > ---
->  drivers/android/binderfs.c | 200 +++++++++++++++++++------------------
->  1 file changed, 105 insertions(+), 95 deletions(-)
+>  fs/binfmt_elf.c          | 127 +++++++++++++++++++++++++++++++++++++++
+>  fs/compat_binfmt_elf.c   |   4 ++
+>  include/linux/elf.h      |  19 ++++++
+>  include/uapi/linux/elf.h |   4 ++
+>  4 files changed, 154 insertions(+)
 > 
-> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> index f303106b3362..2c89e0b5a82d 100644
-> --- a/drivers/android/binderfs.c
-> +++ b/drivers/android/binderfs.c
-> @@ -18,7 +18,7 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/mount.h>
-> -#include <linux/parser.h>
-> +#include <linux/fs_parser.h>
->  #include <linux/radix-tree.h>
->  #include <linux/sched.h>
->  #include <linux/seq_file.h>
-> @@ -48,26 +48,30 @@ static dev_t binderfs_dev;
->  static DEFINE_MUTEX(binderfs_minors_mutex);
->  static DEFINE_IDA(binderfs_minors);
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index f4713ea76e82..1fb67e506b68 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -39,12 +39,18 @@
+>  #include <linux/sched/coredump.h>
+>  #include <linux/sched/task_stack.h>
+>  #include <linux/sched/cputime.h>
+> +#include <linux/sizes.h>
+> +#include <linux/types.h>
+>  #include <linux/cred.h>
+>  #include <linux/dax.h>
+>  #include <linux/uaccess.h>
+>  #include <asm/param.h>
+>  #include <asm/page.h>
 >  
-> -enum {
-> +enum binderfs_param {
->  	Opt_max,
->  	Opt_stats_mode,
-> -	Opt_err
->  };
->  
->  enum binderfs_stats_mode {
-> -	STATS_NONE,
-> -	STATS_GLOBAL,
-> +	binderfs_stats_mode_unset,
-> +	binderfs_stats_mode_global,
->  };
->  
-> -static const match_table_t tokens = {
-> -	{ Opt_max, "max=%d" },
-> -	{ Opt_stats_mode, "stats=%s" },
-> -	{ Opt_err, NULL     }
-> +static const struct constant_table binderfs_param_stats[] = {
-> +	{ "global", binderfs_stats_mode_global },
-> +	{}
->  };
->  
-> -static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
-> +const struct fs_parameter_spec binderfs_fs_parameters[] = {
-> +	fsparam_u32("max",	Opt_max),
-> +	fsparam_enum("stats",	Opt_stats_mode, binderfs_param_stats),
-> +	{}
-> +};
+> +#ifndef ELF_COMPAT
+> +#define ELF_COMPAT 0
+> +#endif
 > +
-> +static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
->  {
-> -	return inode->i_sb->s_fs_info;
-> +	return sb->s_fs_info;
->  }
+>  #ifndef user_long_t
+>  #define user_long_t long
+>  #endif
+> @@ -681,6 +687,111 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+>   * libraries.  There is no binary dependent code anywhere else.
+>   */
 >  
->  bool is_binderfs_device(const struct inode *inode)
-> @@ -246,7 +250,7 @@ static long binder_ctl_ioctl(struct file *file, unsigned int cmd,
->  static void binderfs_evict_inode(struct inode *inode)
->  {
->  	struct binder_device *device = inode->i_private;
-> -	struct binderfs_info *info = BINDERFS_I(inode);
-> +	struct binderfs_info *info = BINDERFS_SB(inode->i_sb);
->  
->  	clear_inode(inode);
->  
-> @@ -264,97 +268,85 @@ static void binderfs_evict_inode(struct inode *inode)
->  	}
->  }
->  
-> -/**
-> - * binderfs_parse_mount_opts - parse binderfs mount options
-> - * @data: options to set (can be NULL in which case defaults are used)
-> - */
-> -static int binderfs_parse_mount_opts(char *data,
-> -				     struct binderfs_mount_opts *opts)
-> +static int binderfs_fs_context_parse_param(struct fs_context *fc,
-> +					   struct fs_parameter *param)
->  {
-> -	char *p, *stats;
-> -	opts->max = BINDERFS_MAX_MINOR;
-> -	opts->stats_mode = STATS_NONE;
-> -
-> -	while ((p = strsep(&data, ",")) != NULL) {
-> -		substring_t args[MAX_OPT_ARGS];
-> -		int token;
-> -		int max_devices;
-> -
-> -		if (!*p)
-> -			continue;
-> -
-> -		token = match_token(p, tokens, args);
-> -		switch (token) {
-> -		case Opt_max:
-> -			if (match_int(&args[0], &max_devices) ||
-> -			    (max_devices < 0 ||
-> -			     (max_devices > BINDERFS_MAX_MINOR)))
-> -				return -EINVAL;
-> -
-> -			opts->max = max_devices;
-> -			break;
-> -		case Opt_stats_mode:
-> -			if (!capable(CAP_SYS_ADMIN))
-> -				return -EINVAL;
-> +	int opt;
-> +	struct binderfs_mount_opts *ctx = fc->fs_private;
-> +	struct fs_parse_result result;
->  
-> -			stats = match_strdup(&args[0]);
-> -			if (!stats)
-> -				return -ENOMEM;
-> +	opt = fs_parse(fc, binderfs_fs_parameters, param, &result);
-> +	if (opt < 0)
-> +		return opt;
->  
-> -			if (strcmp(stats, "global") != 0) {
-> -				kfree(stats);
-> -				return -EINVAL;
-> -			}
-> +	switch (opt) {
-> +	case Opt_max:
-> +		if (result.uint_32 > BINDERFS_MAX_MINOR)
-> +			return invalfc(fc, "Bad value for '%s'", param->key);
->  
-> -			opts->stats_mode = STATS_GLOBAL;
-> -			kfree(stats);
-> -			break;
-> -		default:
-> -			pr_err("Invalid mount options\n");
-> -			return -EINVAL;
-> -		}
-> +		ctx->max = result.uint_32;
-> +		break;
-> +	case Opt_stats_mode:
-> +		if (!capable(CAP_SYS_ADMIN))
-> +			return -EPERM;
-> +
-> +		ctx->stats_mode = result.uint_32;
-> +		break;
-> +	default:
-> +		return invalfc(fc, "Unsupported parameter '%s'", param->key);
->  	}
->  
->  	return 0;
->  }
->  
-> -static int binderfs_remount(struct super_block *sb, int *flags, char *data)
-> +static int binderfs_fs_context_reconfigure(struct fs_context *fc)
->  {
-> -	int prev_stats_mode, ret;
-> -	struct binderfs_info *info = sb->s_fs_info;
-> +	struct binderfs_mount_opts *ctx = fc->fs_private;
-> +	struct binderfs_info *info = BINDERFS_SB(fc->root->d_sb);
->  
-> -	prev_stats_mode = info->mount_opts.stats_mode;
-> -	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
-> -	if (ret)
-> -		return ret;
-> +	if (info->mount_opts.stats_mode != ctx->stats_mode)
-> +		return invalfc(fc, "Binderfs stats mode cannot be changed during a remount");
->  
-> -	if (prev_stats_mode != info->mount_opts.stats_mode) {
-> -		pr_err("Binderfs stats mode cannot be changed during a remount\n");
-> -		info->mount_opts.stats_mode = prev_stats_mode;
-> -		return -EINVAL;
-> -	}
-> +	info->mount_opts.stats_mode = ctx->stats_mode;
-> +	info->mount_opts.max = ctx->max;
->  
->  	return 0;
->  }
->  
-> -static int binderfs_show_mount_opts(struct seq_file *seq, struct dentry *root)
-> +static int binderfs_show_options(struct seq_file *seq, struct dentry *root)
->  {
-> -	struct binderfs_info *info;
-> +	struct binderfs_info *info = BINDERFS_SB(root->d_sb);
->  
-> -	info = root->d_sb->s_fs_info;
->  	if (info->mount_opts.max <= BINDERFS_MAX_MINOR)
->  		seq_printf(seq, ",max=%d", info->mount_opts.max);
-> -	if (info->mount_opts.stats_mode == STATS_GLOBAL)
-> +
-> +	switch (info->mount_opts.stats_mode) {
-> +	case binderfs_stats_mode_unset:
-> +		break;
-> +	case binderfs_stats_mode_global:
->  		seq_printf(seq, ",stats=global");
-> +		break;
-> +	}
->  
->  	return 0;
->  }
->  
-> +static void binderfs_put_super(struct super_block *sb)
+> +static int parse_elf_property(const char *data, size_t *off, size_t datasz,
+> +			      struct arch_elf_state *arch,
+> +			      bool have_prev_type, u32 *prev_type)
 > +{
-> +	struct binderfs_info *info = sb->s_fs_info;
+> +	size_t o, step;
+> +	const struct gnu_property *pr;
+> +	int ret;
 > +
-> +	if (info && info->ipc_ns)
-> +		put_ipc_ns(info->ipc_ns);
+> +	if (*off == datasz)
+> +		return -ENOENT;
 > +
-> +	kfree(info);
-> +	sb->s_fs_info = NULL;
-> +}
+> +	if (WARN_ON_ONCE(*off > datasz || *off % ELF_GNU_PROPERTY_ALIGN))
+> +		return -EIO;
+> +	o = *off;
+> +	datasz -= *off;
 > +
->  static const struct super_operations binderfs_super_ops = {
->  	.evict_inode    = binderfs_evict_inode,
-> -	.remount_fs	= binderfs_remount,
-> -	.show_options	= binderfs_show_mount_opts,
-> +	.show_options	= binderfs_show_options,
->  	.statfs         = simple_statfs,
-> +	.put_super	= binderfs_put_super,
->  };
->  
->  static inline bool is_binderfs_control_device(const struct dentry *dentry)
-> @@ -653,10 +645,11 @@ static int init_binder_logs(struct super_block *sb)
->  	return ret;
->  }
->  
-> -static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
-> +static int binderfs_fill_super(struct super_block *sb, struct fs_context *fc)
->  {
->  	int ret;
->  	struct binderfs_info *info;
-> +	struct binderfs_mount_opts *ctx = fc->fs_private;
->  	struct inode *inode = NULL;
->  	struct binderfs_device device_info = { 0 };
->  	const char *name;
-> @@ -689,16 +682,14 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
->  
->  	info->ipc_ns = get_ipc_ns(current->nsproxy->ipc_ns);
->  
-> -	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
-> -	if (ret)
-> -		return ret;
-> -
->  	info->root_gid = make_kgid(sb->s_user_ns, 0);
->  	if (!gid_valid(info->root_gid))
->  		info->root_gid = GLOBAL_ROOT_GID;
->  	info->root_uid = make_kuid(sb->s_user_ns, 0);
->  	if (!uid_valid(info->root_uid))
->  		info->root_uid = GLOBAL_ROOT_UID;
-> +	info->mount_opts.max = ctx->max;
-> +	info->mount_opts.stats_mode = ctx->stats_mode;
->  
->  	inode = new_inode(sb);
->  	if (!inode)
-> @@ -730,36 +721,55 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
->  			name++;
->  	}
->  
-> -	if (info->mount_opts.stats_mode == STATS_GLOBAL)
-> +	if (info->mount_opts.stats_mode == binderfs_stats_mode_global)
->  		return init_binder_logs(sb);
->  
->  	return 0;
->  }
->  
-> -static struct dentry *binderfs_mount(struct file_system_type *fs_type,
-> -				     int flags, const char *dev_name,
-> -				     void *data)
-> +static int binderfs_fs_context_get_tree(struct fs_context *fc)
->  {
-> -	return mount_nodev(fs_type, flags, data, binderfs_fill_super);
-> +	return get_tree_nodev(fc, binderfs_fill_super);
->  }
->  
-> -static void binderfs_kill_super(struct super_block *sb)
-> +static void binderfs_fs_context_free(struct fs_context *fc)
->  {
-> -	struct binderfs_info *info = sb->s_fs_info;
-> +	struct binderfs_mount_opts *ctx = fc->fs_private;
+> +	if (datasz < sizeof(*pr))
+> +		return -ENOEXEC;
+> +	pr = (const struct gnu_property *)(data + o);
+> +	o += sizeof(*pr);
+> +	datasz -= sizeof(*pr);
 > +
-> +	fc->fs_private = NULL;
-> +	kfree(ctx);
-> +}
->  
-> -	kill_litter_super(sb);
-> +static const struct fs_context_operations binderfs_fs_context_ops = {
-> +	.free		= binderfs_fs_context_free,
-> +	.get_tree	= binderfs_fs_context_get_tree,
-> +	.parse_param	= binderfs_fs_context_parse_param,
-> +	.reconfigure	= binderfs_fs_context_reconfigure,
-> +};
->  
-> -	if (info && info->ipc_ns)
-> -		put_ipc_ns(info->ipc_ns);
-> +static int binderfs_init_fs_context(struct fs_context *fc)
-> +{
-> +	struct binderfs_mount_opts *ctx;
->  
-> -	kfree(info);
-> +	ctx = kzalloc(sizeof(struct binderfs_mount_opts), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
+> +	if (pr->pr_datasz > datasz)
+> +		return -ENOEXEC;
 > +
-> +	ctx->max = BINDERFS_MAX_MINOR;
-> +	ctx->stats_mode = binderfs_stats_mode_unset;
+> +	WARN_ON_ONCE(o % ELF_GNU_PROPERTY_ALIGN);
+> +	step = round_up(pr->pr_datasz, ELF_GNU_PROPERTY_ALIGN);
+> +	if (step > datasz)
+> +		return -ENOEXEC;
 > +
-> +	fc->fs_private = ctx;
-> +	fc->ops = &binderfs_fs_context_ops;
+> +	/* Properties are supposed to be unique and sorted on pr_type: */
+> +	if (have_prev_type && pr->pr_type <= *prev_type)
+> +		return -ENOEXEC;
+> +	*prev_type = pr->pr_type;
 > +
+> +	ret = arch_parse_elf_property(pr->pr_type, data + o,
+> +				      pr->pr_datasz, ELF_COMPAT, arch);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*off = o + step;
 > +	return 0;
->  }
+> +}
+> +
+> +#define NOTE_DATA_SZ SZ_1K
+> +#define GNU_PROPERTY_TYPE_0_NAME "GNU"
+> +#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
+> +
+> +static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
+> +				struct arch_elf_state *arch)
+> +{
+> +	union {
+> +		struct elf_note nhdr;
+> +		char data[NOTE_DATA_SZ];
+> +	} note;
+> +	loff_t pos;
+> +	ssize_t n;
+> +	size_t off, datasz;
+> +	int ret;
+> +	bool have_prev_type;
+> +	u32 prev_type;
+> +
+> +	if (!IS_ENABLED(CONFIG_ARCH_USE_GNU_PROPERTY) || !phdr)
+> +		return 0;
+> +
+> +	/* load_elf_binary() shouldn't call us unless this is true... */
+> +	if (WARN_ON_ONCE(phdr->p_type != PT_GNU_PROPERTY))
+> +		return -ENOEXEC;
+> +
+> +	/* If the properties are crazy large, that's too bad (for now): */
+> +	if (phdr->p_filesz > sizeof(note))
+> +		return -ENOEXEC;
+> +
+> +	pos = phdr->p_offset;
+> +	n = kernel_read(f, &note, phdr->p_filesz, &pos);
+> +
+> +	BUILD_BUG_ON(sizeof(note) < sizeof(note.nhdr) + NOTE_NAME_SZ);
+> +	if (n < 0 || n < sizeof(note.nhdr) + NOTE_NAME_SZ)
+> +		return -EIO;
+> +
+> +	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
+> +	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
+> +	    strncmp(note.data + sizeof(note.nhdr),
+> +		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
+> +		return -ENOEXEC;
+> +
+> +	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
+> +		       ELF_GNU_PROPERTY_ALIGN);
+> +	if (off > n)
+> +		return -ENOEXEC;
+> +
+> +	if (note.nhdr.n_descsz > n - off)
+> +		return -ENOEXEC;
+> +	datasz = off + note.nhdr.n_descsz;
+> +
+> +	have_prev_type = false;
+> +	do {
+> +		ret = parse_elf_property(note.data, &off, datasz, arch,
+> +					 have_prev_type, &prev_type);
+> +		have_prev_type = true;
+> +	} while (!ret);
+> +
+> +	return ret == -ENOENT ? 0 : ret;
+> +}
+> +
+>  static int load_elf_binary(struct linux_binprm *bprm)
+>  {
+>  	struct file *interpreter = NULL; /* to shut gcc up */
+> @@ -688,6 +799,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	int load_addr_set = 0;
+>  	unsigned long error;
+>  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+> +	struct elf_phdr *elf_property_phdata = NULL;
+>  	unsigned long elf_bss, elf_brk;
+>  	int bss_prot = 0;
+>  	int retval, i;
+> @@ -733,6 +845,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++) {
+>  		char *elf_interpreter;
 >  
->  static struct file_system_type binder_fs_type = {
-> -	.name		= "binder",
-> -	.mount		= binderfs_mount,
-> -	.kill_sb	= binderfs_kill_super,
-> -	.fs_flags	= FS_USERNS_MOUNT,
-> +	.name			= "binder",
-> +	.init_fs_context	= binderfs_init_fs_context,
-> +	.parameters		= binderfs_fs_parameters,
-> +	.kill_sb		= kill_litter_super,
-> +	.fs_flags		= FS_USERNS_MOUNT,
+> +		if (elf_ppnt->p_type == PT_GNU_PROPERTY) {
+> +			elf_property_phdata = elf_ppnt;
+> +			continue;
+> +		}
+> +
+>  		if (elf_ppnt->p_type != PT_INTERP)
+>  			continue;
+>  
+> @@ -820,9 +937,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			goto out_free_dentry;
+>  
+>  		/* Pass PT_LOPROC..PT_HIPROC headers to arch code */
+> +		elf_property_phdata = NULL;
+>  		elf_ppnt = interp_elf_phdata;
+>  		for (i = 0; i < loc->interp_elf_ex.e_phnum; i++, elf_ppnt++)
+>  			switch (elf_ppnt->p_type) {
+> +			case PT_GNU_PROPERTY:
+> +				elf_property_phdata = elf_ppnt;
+> +				break;
+> +
+>  			case PT_LOPROC ... PT_HIPROC:
+>  				retval = arch_elf_pt_proc(&loc->interp_elf_ex,
+>  							  elf_ppnt, interpreter,
+> @@ -833,6 +955,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			}
+>  	}
+>  
+> +	retval = parse_elf_properties(interpreter ?: bprm->file,
+> +				      elf_property_phdata, &arch_state);
+> +	if (retval)
+> +		goto out_free_dentry;
+> +
+>  	/*
+>  	 * Allow arch code to reject the ELF at this point, whilst it's
+>  	 * still possible to return an error to the code that invoked
+> diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
+> index aaad4ca1217e..13a087bc816b 100644
+> --- a/fs/compat_binfmt_elf.c
+> +++ b/fs/compat_binfmt_elf.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/elfcore-compat.h>
+>  #include <linux/time.h>
+>  
+> +#define ELF_COMPAT	1
+> +
+>  /*
+>   * Rename the basic ELF layout types to refer to the 32-bit class of files.
+>   */
+> @@ -28,11 +30,13 @@
+>  #undef	elf_shdr
+>  #undef	elf_note
+>  #undef	elf_addr_t
+> +#undef	ELF_GNU_PROPERTY_ALIGN
+>  #define elfhdr		elf32_hdr
+>  #define elf_phdr	elf32_phdr
+>  #define elf_shdr	elf32_shdr
+>  #define elf_note	elf32_note
+>  #define elf_addr_t	Elf32_Addr
+> +#define ELF_GNU_PROPERTY_ALIGN	ELF32_GNU_PROPERTY_ALIGN
+>  
+>  /*
+>   * Some data types as stored in coredump.
+> diff --git a/include/linux/elf.h b/include/linux/elf.h
+> index f7b24c5fcfb6..db5113479f5e 100644
+> --- a/include/linux/elf.h
+> +++ b/include/linux/elf.h
+> @@ -22,6 +22,9 @@
+>  	SET_PERSONALITY(ex)
+>  #endif
+>  
+> +#define ELF32_GNU_PROPERTY_ALIGN	4
+> +#define ELF64_GNU_PROPERTY_ALIGN	8
+> +
+>  #if ELF_CLASS == ELFCLASS32
+>  
+>  extern Elf32_Dyn _DYNAMIC [];
+> @@ -32,6 +35,7 @@ extern Elf32_Dyn _DYNAMIC [];
+>  #define elf_addr_t	Elf32_Off
+>  #define Elf_Half	Elf32_Half
+>  #define Elf_Word	Elf32_Word
+> +#define ELF_GNU_PROPERTY_ALIGN	ELF32_GNU_PROPERTY_ALIGN
+>  
+>  #else
+>  
+> @@ -43,6 +47,7 @@ extern Elf64_Dyn _DYNAMIC [];
+>  #define elf_addr_t	Elf64_Off
+>  #define Elf_Half	Elf64_Half
+>  #define Elf_Word	Elf64_Word
+> +#define ELF_GNU_PROPERTY_ALIGN	ELF64_GNU_PROPERTY_ALIGN
+>  
+>  #endif
+>  
+> @@ -68,4 +73,18 @@ struct gnu_property {
+>  	u32 pr_datasz;
 >  };
 >  
->  int __init init_binderfs(void)
-> 
-> base-commit: f17f06a0c7794d3a7c2425663738823354447472
+> +struct arch_elf_state;
+> +
+> +#ifndef CONFIG_ARCH_USE_GNU_PROPERTY
+> +static inline int arch_parse_elf_property(u32 type, const void *data,
+> +					  size_t datasz, bool compat,
+> +					  struct arch_elf_state *arch)
+> +{
+> +	return 0;
+> +}
+> +#else
+> +extern int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
+> +				   bool compat, struct arch_elf_state *arch);
+> +#endif
+> +
+>  #endif /* _LINUX_ELF_H */
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index c37731407074..20900f4496b7 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -368,6 +368,7 @@ typedef struct elf64_shdr {
+>   * Notes used in ET_CORE. Architectures export some of the arch register sets
+>   * using the corresponding note types via the PTRACE_GETREGSET and
+>   * PTRACE_SETREGSET requests.
+> + * The note name for all these is "LINUX".
+>   */
+>  #define NT_PRSTATUS	1
+>  #define NT_PRFPREG	2
+> @@ -430,6 +431,9 @@ typedef struct elf64_shdr {
+>  #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode */
+>  #define NT_MIPS_MSA	0x802		/* MIPS SIMD registers */
+>  
+> +/* Note types with note name "GNU" */
+> +#define NT_GNU_PROPERTY_TYPE_0	5
+> +
+>  /* Note header in a PT_NOTE section */
+>  typedef struct elf32_note {
+>    Elf32_Word	n_namesz;	/* Name size */
 > -- 
-> 2.25.1
+> 2.20.1
 > 
 
 -- 
