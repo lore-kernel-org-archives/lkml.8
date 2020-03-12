@@ -2,108 +2,194 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8E0C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD81CC0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0017F20734
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phTASrbq"
+	by mail.kernel.org (Postfix) with ESMTP id EAF1F20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbgCLCfz (ORCPT
+        id S2387671AbgCLCid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:35:55 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43821 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387501AbgCLCfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:35:55 -0400
-Received: by mail-oi1-f196.google.com with SMTP id p125so4001767oif.10;
-        Wed, 11 Mar 2020 19:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8OJZ8s4LAFvvLbr1LYlDu6AvwjLr2eKD3RcnrO+l9+M=;
-        b=phTASrbqGplbQZ0J9qq81BbAQWHnb5mliO8intSCodcYFQzfgu384fG0rprHEqkjrg
-         P9CvEQK20yLFBtazpyuwL6H2VP1MMluyxgLPAQxGsxq7YXhD85W546FMlNQgInvkJb86
-         N3vHrKk2yRhRnMdGgGfqAPsr3bpV3c0Qcw+eCUq/yfGn+XqPY0ekDeeVClETG4tpU5Qj
-         m0xsQffi7gybur9azt8O/hd18pqtzkEI4EPkXkJQ6vfn+A2HXu/cqp7AR8Nk2CjD4tlF
-         gjJsqTfmjxWBqGIj1bZpnDPZ7Fb1paa880Roh9MEtYBSbqwhQvWgvZqvhhYRyLEz5Kic
-         eFQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8OJZ8s4LAFvvLbr1LYlDu6AvwjLr2eKD3RcnrO+l9+M=;
-        b=lD/22FZ769vuP3oEmaw+YSW+AAW6vTo1dlLvYD4emxT6aGYOuqJIzKInvN0YxNljFl
-         /7blmbgSeMaM/OtpYdV9l97UiMX5VySfOnQUAYPuijq0711J1BrTERAwnAiCw5TPQFX6
-         CUvxlgwqw3zwcEQ6EqOl8DvLZKtDorkzj96YC4/g7U50UE7Onbmp/K9R4AeIk8xh8hlv
-         Rj7yKfEtDSNtO1cyjNje8xAafaj48I1LdD5MQ9PKfFBUNq8UV6yvYLTUdhc8Ge5fmgjg
-         O/n69bAffGDqotJAn9hcbpwVX02ji2TWx/mOfGI3vobEx7x6tQFDLQYYwBxMGTWTOqyq
-         7rzw==
-X-Gm-Message-State: ANhLgQ3AmskSfc+1FSgn6xkb34ibpGwkERlzMjqTPT6ZSNxALAjoZtNi
-        1kuWUMJ/pCTrgzyKn7/RUyqsxSx6ZLhOXI65L+c=
-X-Google-Smtp-Source: ADFU+vv6quOwJyLsYSdx0o07YDwd6saaCjSttFVyiNsWDmrJbcyplKpBgKJleR6+IcKHECFksg2a0LUIUWZbEHXfYkI=
-X-Received: by 2002:aca:cc81:: with SMTP id c123mr1089651oig.74.1583980554871;
- Wed, 11 Mar 2020 19:35:54 -0700 (PDT)
+        Wed, 11 Mar 2020 22:38:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11663 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387501AbgCLCid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 22:38:33 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5588834DF390C990012C;
+        Thu, 12 Mar 2020 10:38:27 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.50) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
+ 10:38:18 +0800
+Subject: Re: [PATCH] ocfs2: fix a null pointer derefrence in
+ ocfs2_block_group_clear_bits()
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>, Jan Kara <jack@suse.com>
+References: <1d38573d-61c7-be60-334e-c263caf7465c@huawei.com>
+ <c56390f0-9f01-cd71-0b8e-b83d746bab74@huawei.com>
+ <f702081e-1953-c2c1-76e4-f441302ab2f3@huawei.com>
+ <7c5c64a8-0629-b301-6cbb-91d1c9f75fa0@linux.alibaba.com>
+CC:     piao jun <piaojun@huawei.com>,
+        ocfs2-devel <ocfs2-devel@oss.oracle.com>,
+        linux ext4 <linux-ext4@vger.kernel.org>,
+        linux kernel <linux-kernel@vger.kernel.org>
+From:   lishan <lishan24@huawei.com>
+Message-ID: <8017150f-0fa1-2804-4934-5e64ad04ae6e@huawei.com>
+Date:   Thu, 12 Mar 2020 10:38:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <5e098be25c70e07c37e743f84a901f6f756090e0.1583461755.git.baolin.wang7@gmail.com>
- <20200306204712.dgomi52jzyakylky@earth.universe> <CADBw62owL-G_B7pU87sH2U+0vCNEG9rkMRpHZXL5_9YZcvQfxg@mail.gmail.com>
- <20200311221856.yh2vr3fybwm3krfc@jupiter.universe>
-In-Reply-To: <20200311221856.yh2vr3fybwm3krfc@jupiter.universe>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Thu, 12 Mar 2020 10:35:38 +0800
-Message-ID: <CADBw62pMPrNoTXsfN0Mzs2Vo=ORQLzeabn6bSW2CG_JfE7cebQ@mail.gmail.com>
-Subject: Re: [PATCH v2] power: supply: Allow charger manager can be built as a module
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7c5c64a8-0629-b301-6cbb-91d1c9f75fa0@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.50]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 6:18 AM Sebastian Reichel <sre@kernel.org> wrote:
->
-> Hi,
->
-> On Mon, Mar 09, 2020 at 11:20:41AM +0800, Baolin Wang wrote:
-> > On Sat, Mar 7, 2020 at 4:47 AM Sebastian Reichel <sre@kernel.org> wrote:
-> > > On Fri, Mar 06, 2020 at 10:34:10AM +0800, Baolin Wang wrote:
-> > > > Allow charger manager can be built as a module like other charger
-> > > > drivers.
-> > > >
-> > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > ---
-> > >
-> > > Thanks, queued. I do not like this driver, but its the best we have
-> > > at the moment.
-> >
-> > Thanks. I understood your concern, do you have any plan to re-design
-> > the charger manager driver in kernel? Or do you have some thoughts
-> > about re-designing it? Now we have some out of tree code to use the
-> > old charger manger, and we'd like to change to the new charger manger
-> > driver and upstream them.
->
-> I don't have anything ready yet and not enough time unfortunately.
-> The proper way would be to have something equivialent to charger-manager
-> in the power-supply core. The core should be able to monitor batteries
-> and handle connected chargers automatically.  Also there shouldn't be
-> any DT entry for the software managing the charger, since DT is about
-> hardware.
+Hi, Jan Kara:
 
-OK. We'll think about it according to your suggestion. Thanks.
+I have a long-standing problem,
+In the ocfs2 file system, there is a panic problem related to b_committed_data,
+details can be found in the historical mail.
 
--- 
-Baolin Wang
+Refer to the old version of the ext3 file system,
+ocfs2 file system uses the undo process to ensure that metadata
+which is not committed to disk is not reused.
+
+I understand that for transactions that have not been committed,
+b_committed_data will not be NULL, so,
+in what scenario do you think b_committed_data will be set to NULL?
+
+Thanks,
+Shan
+
+On 2020/3/11 9:15, Joseph Qi wrote:
+> 
+> 
+> On 2020/3/9 16:26, lishan wrote:
+>> A NULL pointer panic dereference in ocfs2_block_group_clear_bits() happen again.
+>> The information of NULL pointer stack as follows:
+>>
+>> PID: 81866  TASK: ffffa07c3c21ae80  CPU: 66  COMMAND: "fallocate"
+>>   #0 [ffff0000b4d6b0b0] machine_kexec at ffff0000800a2954
+>>   #1 [ffff0000b4d6b110] __crash_kexec at ffff0000801bab34
+>>   #2 [ffff0000b4d6b2a0] panic at ffff0000800f02cc
+>>   #3 [ffff0000b4d6b380] die at ffff00008008f6ac
+>>   #4 [ffff0000b4d6b3d0] bug_handler at ffff00008008f744
+>>   #5 [ffff0000b4d6b400] brk_handler at ffff000080085d1c
+>>   #6 [ffff0000b4d6b420] do_debug_exception at ffff000080081194
+>>   #7 [ffff0000b4d6b630] el1_dbg at ffff00008008332c
+>>       PC: ffff00000190e9c0  [_ocfs2_free_suballoc_bits+1608]
+>>       LR: ffff00000190e990  [_ocfs2_free_suballoc_bits+1560]
+>>       SP: ffff0000b4d6b640  PSTATE: 60400009
+>>      X29: ffff0000b4d6b650  X28: 0000000000000000  X27: 00000000000052f3
+>>      X26: ffff807c511a9570  X25: ffff807ca0054000  X24: 00000000000052f2
+>>      X23: 0000000000000001  X22: ffff807c7cde7a90  X21: ffff0000811d9000
+>>      X20: ffff807c5e7d2000  X19: ffff00000190c768  X18: 0000000000000000
+>>      X17: 0000000000000000  X16: ffff000080a032f0  X15: 0000000000000000
+>>      X14: ffffffffffffffff  X13: fffffffffffffff7  X12: ffffffffffffffff
+>>      X11: 0000000000000038  X10: 0101010101010101   X9: ffffffffffffffff
+>>       X8: 7f7f7f7f7f7f7f7f   X7: 0000000000000000   X6: 0000000000000080
+>>       X5: 0000000000000000   X4: 0000000000000002   X3: ffff00000199f390
+>>       X2: a603c08321456e00   X1: ffff807c7cde7a90   X0: 0000000000000000
+>>   #8 [ffff0000b4d6b650] _ocfs2_free_suballoc_bits at ffff00000190e9bc [ocfs2]
+>>   #9 [ffff0000b4d6b710] _ocfs2_free_clusters at ffff0000019110d4 [ocfs2]
+>>  #10 [ffff0000b4d6b790] ocfs2_free_clusters at ffff000001913e94 [ocfs2]
+>>  #11 [ffff0000b4d6b7d0] __ocfs2_flush_truncate_log at ffff0000018b5294 [ocfs2]
+>>  #12 [ffff0000b4d6b8a0] ocfs2_remove_btree_range at ffff0000018bb34c [ocfs2]
+>>  #13 [ffff0000b4d6b960] ocfs2_commit_truncate at ffff0000018bc76c [ocfs2]
+>>  #14 [ffff0000b4d6ba60] ocfs2_wipe_inode at ffff0000018e57bc [ocfs2]
+>>  #15 [ffff0000b4d6bb00] ocfs2_evict_inode at ffff0000018e5db8 [ocfs2]
+>>  #16 [ffff0000b4d6bb70] evict at ffff000080365040
+>>  #17 [ffff0000b4d6bba0] iput at ffff0000803655d8
+>>  #18 [ffff0000b4d6bbe0] ocfs2_dentry_iput at ffff0000018c60a0 [ocfs2]
+>>  #19 [ffff0000b4d6bc30] dentry_unlink_inode at ffff00008035ef58
+>>  #20 [ffff0000b4d6bc50] __dentry_kill at ffff000080360384
+>>  #21 [ffff0000b4d6bc80] dentry_kill at ffff000080360670
+>>  #22 [ffff0000b4d6bcb0] dput at ffff00008036093c
+>>  #23 [ffff0000b4d6bcf0] __fput at ffff000080343930
+>>  #24 [ffff0000b4d6bd40] ____fput at ffff000080343aac
+>>  #25 [ffff0000b4d6bd60] task_work_run at ffff0000801172fc
+>>
+>> The direct panic reason is that bh2jh (group_bh)-> b_committed_data is null.
+>> It is presumed that the network was disconnected during the write process,
+>> causing the transaction abort. as follows:
+>> jbd2_journal_abort
+>>   .......
+>>   jbd2_journal_commit_transaction
+>>     jh->b_committed_data = NULL;
+>>
+>> _ocfs2_free_suballoc_bits
+>>   ocfs2_block_group_clear_bits
+>>     // undo_bg is now set to null
+>>     BUG_ON(!undo_bg);
+>>
+>> When applying for free space, if b_committed_data is null,
+>> it will be directly occupied, as follows:
+>> ocfs2_cluster_group_search
+>>   ocfs2_block_group_find_clear_bits
+>>     ocfs2_test_bg_bit_allocatable:
+>>       bg = (struct ocfs2_group_desc *) bh2jh(bg_bh)->b_committed_data;
+>>       if (bg)
+>>         ret = !ocfs2_test_bit(nr, (unsigned long *)bg->bg_bitmap);
+>>       else
+>>         ret = 1;
+>> b_committed_data is an intermediate state backup for bitmap transaction commits,
+>> newly applied space can overwrite previous dirty data,
+>> so, I think, while free clusters, if b_committed_data is null, ignore it.
+>> Host panic directly, too violent.
+>>
+>> Signed-off-by: Shan Li <lishan24@huawei.com>
+>> Reviewed-by: Jun Piao <piaojun@huawei.com>
+>> ---
+>>  fs/ocfs2/suballoc.c | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
+>> index 939df99d2dec..aaf1b3cbd984 100644
+>> --- a/fs/ocfs2/suballoc.c
+>> +++ b/fs/ocfs2/suballoc.c
+>> @@ -2412,14 +2412,19 @@ static int ocfs2_block_group_clear_bits(handle_t *handle,
+>>  	if (undo_fn) {
+>>  		spin_lock(&jh->b_state_lock);
+>>  		undo_bg = (struct ocfs2_group_desc *) jh->b_committed_data;
+>> -		BUG_ON(!undo_bg);
+>> +		if (!undo_bg)
+>> +			mlog(ML_NOTICE, "%s: group descriptor # %llu (device %s) journal "
+>> +					"b_committed_data had been cleared.\n",
+>> +					OCFS2_SB(alloc_inode->i_sb)->uuid_str,
+>> +					(unsigned long long)le64_to_cpu(bg->bg_blkno),
+>> +					alloc_inode->i_sb->s_id);
+> 
+> Seems a kind of workaround.
+> I am worrying about other abnormal cases of NULL b_committed_data, it
+> may lead to a corrupt filesystem.
+> So how about isolating the journal abort case?
+> 
+> Thanks,
+> Joseph
+> 
+>>  	}
+>>
+>>  	tmp = num_bits;
+>>  	while(tmp--) {
+>>  		ocfs2_clear_bit((bit_off + tmp),
+>>  				(unsigned long *) bg->bg_bitmap);
+>> -		if (undo_fn)
+>> +		if (undo_fn && undo_bg)
+>>  			undo_fn(bit_off + tmp,
+>>  				(unsigned long *) undo_bg->bg_bitmap);
+>>  	}
+>>
+> 
+> .
+> 
+
