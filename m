@@ -2,87 +2,143 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3239C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAFBC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966B8206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9C3206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584001374;
+	bh=ngCHmcftr7xM/ExvhFVSq4edhngIRKJrIeG+6QX2/Y4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jU6UAv8F/PkUK1z/6dViflTT7C22NGHSYG3UwUjh97FsEMB+J4niEDjz9786DzQP1
+	 4yOToLBZF0/obC1fBgZoA99Es1N4ZGe0HD1K1kOJS8y1lA9e8moxCxwvW7/nA//bCq
+	 qzKo0QjPKdFZFGNp7sqA4mcpxOMVZzgPU+PYneR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCLIVq (ORCPT
+        id S1726523AbgCLIWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:21:46 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:52263 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCLIVq (ORCPT
+        Thu, 12 Mar 2020 04:22:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44381 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgCLIWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:21:46 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MIxmm-1it05q2ztK-00KOMq; Thu, 12 Mar 2020 09:21:44 +0100
-Received: by mail-qt1-f180.google.com with SMTP id m33so3657984qtb.3;
-        Thu, 12 Mar 2020 01:21:44 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1A/IfHUyqD3GeB85kBOFDXJP9EBXp/bjL2OVWjwCovuNgYb+gV
-        pl2Z0oXc/SWU0ZH4Yx0LD3ad5+KrEpKqyBLdVQA=
-X-Google-Smtp-Source: ADFU+vtOQNPznjYe/Sy/lYyrfux9hY5ptAw2nqB8sEyYtJ/TLiMgVZg/2vWZibfn8pDuNY2sEmExUqnpy/rOO3Z723o=
-X-Received: by 2002:aed:3b4c:: with SMTP id q12mr6098643qte.18.1584001303366;
- Thu, 12 Mar 2020 01:21:43 -0700 (PDT)
+        Thu, 12 Mar 2020 04:22:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l18so6170936wru.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:22:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GsxxIwFSAGEf48PcrAOgcjGCiOZstCS977zPZAz+O2I=;
+        b=Y37vqHG9+7IHYu8lCqjPWWEXPpzkyJbAAUcNjcCvB/OzYjchHycS0oxiedVAlgv+nY
+         xtmWb6Qxcknlwqt3m4nGS9/RMB7Fn2Axzc82a40tdU28rcaVeby16JIftJLqf+2/o15w
+         vmthuLbi/h7TO+FM/lBpKoSjxdS9rnG3kpyA1NrxhKQx9v0pVah22R60y3H3J6Lagu46
+         4ZpYCNJBKOjyAig5CsQCRDvDKViZ7nATnmot1axmBYD0g4/FMkcazmKdeGo4YjgGKWQU
+         HfwngSVnmL/tqFO8dbnvwjRXWWfaqIslbTG0GLgR5MCQVPlUY3eWWSv0pIhTq7YsdbvE
+         Hhlw==
+X-Gm-Message-State: ANhLgQ12iCjozj7zgB4UCf9OIP1ZXeTmuj4Xs5r/rQbTZ5JN57BNJr6X
+        oY/hDz4Z9qZwgXPYhk/J3I0=
+X-Google-Smtp-Source: ADFU+vtrl/AK44eMW5i6krCVsjmsnJH8Un+S7wzGv2FklsFNv4uWwLThm5cl3vcLeda1A3Hf+xET7w==
+X-Received: by 2002:a5d:6a04:: with SMTP id m4mr9428669wru.127.1584001370668;
+        Thu, 12 Mar 2020 01:22:50 -0700 (PDT)
+Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
+        by smtp.gmail.com with ESMTPSA id q5sm27406612wrc.68.2020.03.12.01.22.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 01:22:49 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 09:22:48 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+Message-ID: <20200312082248.GS23944@dhcp22.suse.cz>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200311225736.32147-1-rdunlap@infradead.org> <20200311225736.32147-4-rdunlap@infradead.org>
-In-Reply-To: <20200311225736.32147-4-rdunlap@infradead.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 12 Mar 2020 09:21:27 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3RJ=6Gdz-GGGoqB9n9TRdhpuYwwiJO1mJ8500OguYpAg@mail.gmail.com>
-Message-ID: <CAK8P3a3RJ=6Gdz-GGGoqB9n9TRdhpuYwwiJO1mJ8500OguYpAg@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v2] tty: reorganize tty & serial menus
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:krMIOC6iue83XsEuQ/nY9eWlQawjPX2hCkjC9gf+NWTIQRqwxPj
- ji5rVchQb1tloRlX90KtJBU8HhIUL6PUMv5Icb9vYEkuDICGa1YyTYZ3jRmGr3+2lv7UJ8l
- cAZ0Z9nubCNPdqNChGFIZT632CK5P8gxqmWair328X4SDi+EDM+nSXbURkOrPfoIcju2jY9
- prAuSXwOA3jpy6iKIcnew==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jTxOpbX2+ek=:+1VQYEqz2i0UmlerZRJFqE
- rBmc11qY5a+A52yJIGsdHDfw/JT2cRUlnV2TATuRrxqVYzxtb2ZV1KvntbSBvaAElU+HR64fR
- 6AVdp2YlPxXQkcHD60ZP9o5oKLMmsgZqS2VnCP2xC7s38wUUDqqg9AGhdoXrHvKISOo8jdEF4
- +VL5j5ZXGpCp6ufpFvPn6JErwCHzwz6vFe7LEIZKwavch56BgcvGWeJ9pTv/Y+ILaJoZ63Psy
- Uh+rXp7QpFR9jcdG5yP5PjE5DTAwLmerZOEDVMsgogi0FwzoeZlv8lY6eDJoK1CaI7hngRmku
- Gza6jIb4an4cdk+h8sDluHFuSH5RO42SX+2x+PMOmpKjgiJcLLa1ihOv+L7tBJSY11fX8BEZL
- pm7jw0P/RWqv/015cQ1ReTs9n2hUdXAASgzgrdYaPsFkILing1xcKdDUoWtV4d64y9sAEcOH1
- R7iBlDFvUDREqVm908pTwQZJW0siDxmCJItpXxBft64Z+01vUKk2aAq+dMtMOeCarRxTxqkM6
- pkm6PBZHxK8sj7Gsq54OFK5iNRUfODCJYq+G4UdaeqpHolrvbJnteo9ws9oveUWUuMw0st5pj
- vlNOaeFrE3/GJVWhYYoqUtfrTKRmunktcHiJxXq936W70CEjqttAyQBjpFHjrdeL6rJQ4LeNB
- iEQVf5wP0gjmAHhX/t1au8yHvZDid68BQ/wtcOK01VSybDCV6rryD+KcoAWgFFBQViUan8wn7
- MRw3bWBn1eNPpGF8mWr1CYhKi5/4QC2VRSWBkuBORt3zzEvw8CeJ3bMAyk7J6ANncDeYIOSyB
- MP+LW5HFYoE75GzZND8rqyCjyv/2kdnvh2DoSu72qH8vJQjmkY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 11:57 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Move LDISC_AUTOLOAD ahead of the Serial drivers menu.
->
-> Move the Serial drivers menu ahead of the Non-standard serial port
-> support menu.
->
-> Move NOZOMI out of the SERIAL_NONSTANDARD area since it does not
-> depend on SERIAL_NONSTANDARD and it breaks the SERIAL_NONSTANDARD
-> menu list.
->
-> Alphabetize the remaining drivers (in tty/Kconfig) by their prompt strings.
-> [The drivers in tty/hvc/Kconfig and tty/serial/Kconfig have not
-> been alphabetized.]
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
+[Cc akpm]
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+So what about this?
+
+From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
+From: Michal Hocko <mhocko@suse.com>
+Date: Thu, 12 Mar 2020 09:04:35 +0100
+Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
+
+Jann has brought up a very interesting point [1]. While shared pages are
+excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
+that way. This can lead to all sorts of hard to debug problems. E.g.
+performance problems outlined by Daniel [2]. There are runtime
+environments where there is a substantial memory shared among security
+domains via CoW memory and a easy to reclaim way of that memory, which
+MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
+in for the parent process which might be more privileged or even open
+side channel attacks. The feasibility of the later is not really clear
+to me TBH but there is no real reason for exposure at this stage. It
+seems there is no real use case to depend on reclaiming CoW memory via
+madvise at this stage so it is much easier to simply disallow it and
+this is what this patch does. Put it simply MADV_{PAGEOUT,COLD} can
+operate only on the exclusively owned memory which is a straightforward
+semantic.
+
+[1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
+[2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
+
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+---
+ mm/madvise.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 43b47d3fae02..4bb30ed6c8d2 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 		}
+ 
+ 		page = pmd_page(orig_pmd);
++
++		/* Do not interfere with other mappings of this page */
++		if (page_mapcount(page) != 1)
++			goto huge_unlock;
++
+ 		if (next - addr != HPAGE_PMD_SIZE) {
+ 			int err;
+ 
+-			if (page_mapcount(page) != 1)
+-				goto huge_unlock;
+-
+ 			get_page(page);
+ 			spin_unlock(ptl);
+ 			lock_page(page);
+@@ -426,6 +428,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 			continue;
+ 		}
+ 
++		/* Do not interfere with other mappings of this page */
++		if (page_mapcount(page) != 1)
++			continue;
++
+ 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+ 
+ 		if (pte_young(ptent)) {
+-- 
+2.24.1
+
+-- 
+Michal Hocko
+SUSE Labs
