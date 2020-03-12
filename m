@@ -2,178 +2,115 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9512EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7718FC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6768B206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B2F20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7zd2Dte"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iOzxdYpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCLI4r (ORCPT
+        id S1726553AbgCLI6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:56:47 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46359 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLI4q (ORCPT
+        Thu, 12 Mar 2020 04:58:18 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31735 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725978AbgCLI6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:56:46 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f28so4862659qkk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z8QYpsneXIoe9SovMOA/4KYyhICquWAkxvuswu2VpYA=;
-        b=K7zd2DteqUO5g7aR+aRrrm0Jbhe409/ADCbKZRgd72XlAkaruAry8JOi3BpK0iXmUZ
-         nPP+ApreG4y7od9f5fDSO3m22keq0+lZ8PtPdqIl5nKQiyQCuzg1H7ydtPbyeaK65fD+
-         RYgGsa59vfpe4V3yM6/gHuPnfdfvopWqUcCh3fnM5Q3dSuCXk8gJ+mUjlRga2Nj5Z4uO
-         BZvdDTNnesOKeqz0x8c8+TwgtwjHQopQa91nt+cWzyawlRFEw/SMTaJiayknq3uQ+WSx
-         SX2hiPxtpWfBGCVZnlXl+LDa/dqC6a3WJrN9GBOE48t2BCsYVD2lHC+fXQWlAuYg7BYx
-         Gt6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z8QYpsneXIoe9SovMOA/4KYyhICquWAkxvuswu2VpYA=;
-        b=sAPZINFElGoEgbwRcS8p7v+ZbapGZDR9NdilDVTSDMsrt8Wzf3rtINUTiuCJjnJLtg
-         G3gCnHXuNun7eZ7KUj83dr7EZUFDQvKpAoEz+h86thdIkhMgNMmm1o12Afdjqr+AGg2v
-         fJ5C2deuxUX22dzwUMQc2m+IA3EtLePk4iC3pFc8iRbwyPt/g4nEmSIQYUZdtCcH3c4C
-         HGnMCF7dxNLoe3LC4duxDxj75n8NYFRperYwc78wQCdwog16Bk6VeEePusmzN2GkOv7X
-         GXtddBQf1MC7HTYTAiA6EMQY4tRB31TigmdVLzeMhGPnLcaJF/wGX9mmE3pmvyS7iDm7
-         d0Sw==
-X-Gm-Message-State: ANhLgQ0nQluR+lv51jobiPqtE2P45kRYQMPmAo6xEezVRt9HLPRYS7FF
-        /dbqNcongiUQKJTVCw+J4bmcSu3DuhrrLmKvLBE=
-X-Google-Smtp-Source: ADFU+vuOtg68aR/K0fY5ljCf9+n8BXGTay/Svcnm+kjMq3CAhhBM8ymLsXxE/F3yxssT/VXlzGO6x/ZbUFU9o45QLsw=
-X-Received: by 2002:a37:6388:: with SMTP id x130mr6638952qkb.429.1584003405724;
- Thu, 12 Mar 2020 01:56:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306150102.3e77354b@imladris.surriel.com> <8e67d88f-3ec8-4795-35dc-47e3735e530e@suse.cz>
- <20200311173526.GH96999@carbon.dhcp.thefacebook.com> <CAAmzW4PRCGdZXGceSCfzpesUXNd8GU-zLt-m+t762=WH-BjmoA@mail.gmail.com>
- <20200312023952.GA3040@carbon.lan>
-In-Reply-To: <20200312023952.GA3040@carbon.lan>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Thu, 12 Mar 2020 17:56:34 +0900
-Message-ID: <CAAmzW4MMV8jgboSgHizUoH6wuuztCTJRY7AGN95869rrfH++=Q@mail.gmail.com>
-Subject: Re: [PATCH] mm,page_alloc,cma: conditionally prefer cma pageblocks
- for movable allocations
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Rik van Riel <riel@surriel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Qian Cai <cai@lca.pw>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+        Thu, 12 Mar 2020 04:58:17 -0400
+X-UUID: 7cbfa43d3c244faf9edc17ff0fa57006-20200312
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3TDN1j10xZCmKTt4/HmcFKsBFN2EXb3TUfii04A/U8I=;
+        b=iOzxdYppsJNm+1ewnLgQ2d8sdb7jq3GrPSchuyFSJNsLrWOi5Upv12r4SzLG8jfEhjBTop/YwNCPRaCIK1F9VSqcD9QwIoh3iYVKhpbu8rcDUEDdcmPfzRlDPc9bfqaxtUDK6u4aghGTdSU/SuM+gXV0ya1uyndzEJ/rWsR7Ric=;
+X-UUID: 7cbfa43d3c244faf9edc17ff0fa57006-20200312
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1079829579; Thu, 12 Mar 2020 16:58:11 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs01n2.mediatek.inc
+ (172.21.101.79) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 12 Mar
+ 2020 16:56:37 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Mar 2020 16:58:06 +0800
+Message-ID: <1584003477.6269.8.camel@mhfsdcap03>
+Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek
+ MT6358 RTC
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>
+Date:   Thu, 12 Mar 2020 16:57:57 +0800
+In-Reply-To: <20200312074407.GA3142@dell>
+References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <20200312074407.GA3142@dell>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 41489C93ED8253A92B734623EA5AC68DE0AA3C817D3EF1171405B84CD846F7CC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 12=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 11:40, =
-Roman Gushchin <guro@fb.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Thu, Mar 12, 2020 at 10:41:28AM +0900, Joonsoo Kim wrote:
-> > Hello, Roman.
->
-> Hello, Joonsoo!
->
-> >
-> > 2020=EB=85=84 3=EC=9B=94 12=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 2:3=
-5, Roman Gushchin <guro@fb.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> > >
-> > > On Wed, Mar 11, 2020 at 09:51:07AM +0100, Vlastimil Babka wrote:
-> > > > On 3/6/20 9:01 PM, Rik van Riel wrote:
-> > > > > Posting this one for Roman so I can deal with any upstream feedba=
-ck and
-> > > > > create a v2 if needed, while scratching my head over the next pie=
-ce of
-> > > > > this puzzle :)
-> > > > >
-> > > > > ---8<---
-> > > > >
-> > > > > From: Roman Gushchin <guro@fb.com>
-> > > > >
-> > > > > Currently a cma area is barely used by the page allocator because
-> > > > > it's used only as a fallback from movable, however kswapd tries
-> > > > > hard to make sure that the fallback path isn't used.
-> > > >
-> > > > Few years ago Joonsoo wanted to fix these kinds of weird MIGRATE_CM=
-A corner
-> > > > cases by using ZONE_MOVABLE instead [1]. Unfortunately it was rever=
-ted due to
-> > > > unresolved bugs. Perhaps the idea could be resurrected now?
-> > >
-> > > Hi Vlastimil!
-> > >
-> > > Thank you for this reminder! I actually looked at it and also asked J=
-oonsoo in private
-> > > about the state of this patch(set). As I understand, Joonsoo plans to=
- resubmit
-> > > it later this year.
-> > >
-> > > What Rik and I are suggesting seems to be much simpler, however it's =
-perfectly
-> > > possible that Joonsoo's solution is preferable long-term.
-> > >
-> > > So if the proposed patch looks ok for now, I'd suggest to go with it =
-and return
-> > > to this question once we'll have a new version of ZONE_MOVABLE soluti=
-on.
-> >
-> > Hmm... utilization is not the only matter for CMA user. The more
-> > important one is
-> > success guarantee of cma_alloc() and this patch would have a bad impact=
- on it.
-> >
-> > A few years ago, I have tested this kind of approach and found that inc=
-reasing
-> > utilization increases cma_alloc() failure. Reason is that the page
-> > allocated with
-> > __GFP_MOVABLE, especially, by sb_bread(), is sometimes pinned by someon=
-e.
-> >
-> > Until now, cma memory isn't used much so this problem doesn't occur eas=
-ily.
-> > However, with this patch, it would happen.
->
-> Sure, but the whole point of cma is to be able to use the cma area
-> effectively by movable pages. Otherwise we can just reserve it and
-> have 100% reliability.
+T24gVGh1LCAyMDIwLTAzLTEyIGF0IDA3OjQ0ICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
+IFdlZCwgMTEgTWFyIDIwMjAsIEhzaW4tSHNpdW5nIFdhbmcgd3JvdGU6DQo+IA0KPiA+IEZyb206
+IFJhbiBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NCj4gPiANCj4gPiBUaGlzIGFkZCBzdXBwb3J0
+IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQo+ID4gY29tcGF0aWJs
+ZSBkYXRhIHRvIHN0b3JlIGRpZmZlcmVudCBSVENfV1JUR1IgYWRkcmVzcyBvZmZzZXQuDQo+ID4g
+VGhpcyByZXBsYWNlIFJUQ19XUlRHUiB0byBSVENfV1JUR1JfTVQ2MzIzIGluIG10NjMyMy1wb3dl
+cm9mZg0KPiA+IGRyaXZlciB3aGljaCBvbmx5IG5lZWRlZCBieSBhcm12NyBDUFUgd2l0aG91dCBB
+VEYuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29t
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdA
+bWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3Bvd2VyL3Jlc2V0L210NjMyMy1w
+b3dlcm9mZi5jIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jICAgICAgICAg
+ICAgICB8IDMyICsrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tDQo+ID4gIGluY2x1ZGUv
+bGludXgvbWZkL210NjM5Ny9ydGMuaCAgICAgICAgfCAgOSArKysrKysrKy0NCj4gPiAgMyBmaWxl
+cyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4gPiANCg0KPC4u
+Lj4NCg0KPiA+ICANCj4gPiAgI2RlZmluZSBSVENfSVJRX1NUQSAgICAgICAgICAgIDB4MDAwMg0K
+PiA+ICAjZGVmaW5lIFJUQ19JUlFfU1RBX0FMICAgICAgICAgQklUKDApDQo+ID4gQEAgLTY1LDYg
+KzY3LDEwIEBADQo+ID4gICNkZWZpbmUgTVRLX1JUQ19QT0xMX0RFTEFZX1VTICAxMA0KPiA+ICAj
+ZGVmaW5lIE1US19SVENfUE9MTF9USU1FT1VUICAgKGppZmZpZXNfdG9fdXNlY3MoSFopKQ0KPiA+
+ICANCj4gPiArc3RydWN0IG10a19ydGNfZGF0YSB7DQo+ID4gKwl1MzIJCQl3cnRncjsNCj4gPiAr
+fTsNCj4gDQo+IERvIHlvdSBleHBlY3QgdG8gYWRkIG1vcmUgcHJvcGVydGllcyB0byB0aGlzIHN0
+cnVjdD8NCj4gDQo+IElmIG5vdCwgaXQgc2VlbXMgYSBiaXQgb3ZlcmtpbGwuDQo+IA0KDQpZZXMs
+IHdlIHdvdWxkIGFkZCBtb3JlIHByb3BlcnRpZXMgaGVyZSBpbiBmdXR1cmUgcGF0Y2hlcy4NCg0K
+PiA+ICBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7DQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICAgICAgICAgICAq
+ZGV2Ow0KPiA+ICAJc3RydWN0IHJ0Y19kZXZpY2UgICAgICAgKnJ0Y19kZXY7DQo+ID4gQEAgLTc0
+LDYgKzgwLDcgQEAgc3RydWN0IG10NjM5N19ydGMgew0KPiA+ICAJc3RydWN0IHJlZ21hcCAgICAg
+ICAgICAgKnJlZ21hcDsNCj4gPiAgCWludCAgICAgICAgICAgICAgICAgICAgIGlycTsNCj4gPiAg
+CXUzMiAgICAgICAgICAgICAgICAgICAgIGFkZHJfYmFzZTsNCj4gPiArCWNvbnN0IHN0cnVjdCBt
+dGtfcnRjX2RhdGEgKmRhdGE7DQo+IA0KPiAnZGF0YScgaXMgYSB0ZXJyaWJsZSB2YXJpYWJsZSBu
+YW1lLg0KPiANCj4gV2h5IGRvIHlvdSBuZWVkIHRvIHN0b3JlIHRoaXM/DQo+IA0KPiBJdCdzIG9u
+ZSB2YXJpYWJsZSB3aGljaCBpcyB1c2VkIG9uY2UgQUZBSUNULg0KPiANCg0KSSB3b3VsZCByZW5h
+bWUgJ2RhdGEnIHRvICdjb25maWcnLg0KDQpUaGlzIHN0cnVjdCB3aWxsIGJlIGV4dGVuZGVkIGlu
+IGZ1dHVyZSBwYXRjaGVzIHRvIGFjaGlldmUgbW9yZSBQTUlDIGNoaXANCmNvbXBhdGliaWxpdHku
+DQoNCj4gPiAgfTsNCj4gPiAgDQo+ID4gICNlbmRpZiAvKiBfTElOVVhfTUZEX01UNjM5N19SVENf
+SF8gKi8NCj4gDQoNCg==
 
-I agree with that cma area should be used effectively. However, cma_alloc()
-failure is functional failure in embedded system so we need to approach
-this problem more carefully. At least, to control the behaviour, configurab=
-le
-option (default is current behaviour) would be necessary.
-
-> So I'd focus on fixing page migration issues, rather than trying
-> to keep it empty most of the time.
-
-Great! Fixing page migration issue is always good thing!
-
-> Btw, I've fixed two issues, which dramatically increased the success
-> rate of 1 GB page allocation in my case:
->
-> https://patchwork.kernel.org/patch/11420997/
-> https://lore.kernel.org/patchwork/patch/1202868/
->
-> (They both are on the way to upstream, but not there yet)
->
-> Can you, please, pull them and try?
-
-Unfortunately, I lose my test setup for this problem so cannot try it now.
-I will try it as soon as possible.
-
-Anyway, AFAIR, I saw the problem while journal is continually working
-on ext4. Have you checked this case?
-
-Thanks.
