@@ -2,115 +2,152 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D4BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711A3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB1B20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5034E2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqgVBDNo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="fgdpxqDX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388109AbgCLHfM (ORCPT
+        id S2388143AbgCLHfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:35:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33869 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387958AbgCLHfM (ORCPT
+        Thu, 12 Mar 2020 03:35:19 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:5711 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387958AbgCLHfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:35:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z15so6061497wrl.1;
-        Thu, 12 Mar 2020 00:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X0f21W2MrGo2hnLGv+BYSYakn/7LmxxEYohimXgzgbU=;
-        b=mqgVBDNoyPwzx26l3YyvRztYlv7veET1q91Qs6uvdXK1wSOdeKTfLscfXenX06M0y7
-         7FFfCZ5mBgM5r2YnS+OKPbWwYmFdea35m73kxe5XwScoD2gU2VvYnOGs0EAGNhhfdzKS
-         fdsJIpXXzvSZSTY7XG7gMNGi9BHCO4UWFOYWuersbic+PElUPFhjelKk7GJW6ukjcw6o
-         HksCvWVZ6CgKf2C90+g07K4SVW1CFZ4cMVwWNaXhEOybjjvD0e2L66zrnBGTWFID9Iyz
-         0+uesIA30OzycOj9UE6+Wz7BiGrUGQrCL7UneHXd99WWmeGTAHD6eeib5jWXnMCZChEV
-         fjAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X0f21W2MrGo2hnLGv+BYSYakn/7LmxxEYohimXgzgbU=;
-        b=jI9NxoSr/j57IODwxifdkHiwOptf8lc5/ouoJORoPr4I5aSIUdKq/aBSAZPPdbVoz5
-         W+7Hxbf6Ff/fuS6s7yen7LYV76oQ7v7BUsKU0SAbQJtHB6Hig05d9ZOyDbTWf/dj+CB7
-         6VHEl6CxkXijw1C1OdiPbIidEHy+bxm+A7baKk2E5b87im/us8k3Gb25/YUxFifHL2A+
-         mxClpuI7hbJ0RGU6BdLpqq3sm1thGq1E9trTYobPmwrjZIsPp0TpF4ujs5Tb0SZmzPYK
-         QiJzHv44lP8fAw3HgpqIxQlBXEC82D2HFOevk2qZZz0Bv6pyqMq8j0n4EkbTQNkD2iBj
-         Fq4Q==
-X-Gm-Message-State: ANhLgQ3sdJPKZ0yJSylV3hyt1BaHWJJOEZ0HRltHkaUoMtNpn1r2X9ar
-        pU+RTbpt0wr1HFh0hVLNyZ+oAZPCSA8sj5xwB0XHoi6n
-X-Google-Smtp-Source: ADFU+vuUfBEm9U7m7o5XDIh7wvf1mmCaP8c6aaiAk4xIQ9k7165uWsz6meLkY8e9N2xr6w37az8DgpKcFA4dIE3rpwg=
-X-Received: by 2002:adf:cc85:: with SMTP id p5mr9220480wrj.196.1583998510514;
- Thu, 12 Mar 2020 00:35:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311112120.30890-1-zhang.lyra@gmail.com> <CAK8P3a12iN4HzN3HsRSBJPLpwJzdVwhrK7Mje0V6eW3Lvd77iw@mail.gmail.com>
-In-Reply-To: <CAK8P3a12iN4HzN3HsRSBJPLpwJzdVwhrK7Mje0V6eW3Lvd77iw@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Thu, 12 Mar 2020 15:34:34 +0800
-Message-ID: <CAAfSe-sKXT5K_m8f0vhCqSVsH1Sma1cSfiidiCFAGKS6eKFMkg@mail.gmail.com>
-Subject: Re: [RESEND PATCH] arm64: dts: specify console via command line
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
+        Thu, 12 Mar 2020 03:35:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1583998517; x=1615534517;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=kaKhqPmS3AUt/zYib0JPaZapl7OncUILdewH8kFaYpE=;
+  b=fgdpxqDXtWq2HbtTkeJy2QXMMpATFtYPouUkSbREwblFf5TbDITveZ9P
+   ZWzoqaxD14zaT1PaxFm0An73IfVqL8aBAFUSvzTIiqGMga3AnfsBImVeE
+   8jMnQ0q4O9WdumlzcDRPmlxFsuNbjbkHd3sP9mrJlGy4G1zvp463+DxlM
+   cS8Lglxjj3O7DvYWYqFIlS2rloChxRzHTv7+BmgG/mgvZBY+rE4PVzYoR
+   RGBD9bJg7QzfaTBcqD1hH1Ngs77EdcjFMKQMnk2QDgNo6fPHOCUexUe0/
+   d5hPuD8Ec3CShMfoXTGO7iOx0n/RqUA+XfIv7/TtjSAs381ARVfykRyQB
+   w==;
+IronPort-SDR: nSYO8Cw8uP1k1vk/+XRYlFAhVWKCmVqxKsPi4x1vTin/VDEyM281RVkdoKYJIt5zVubMlR4Kqf
+ GkuA2p3xIl4w==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "pavel@ucw.cz" <pavel@ucw.cz>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH v2] leds: pwm: add support for default-state device
+ property
+Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMD6hD2tmAgACoNgA=
+Date:   Thu, 12 Mar 2020 07:35:14 +0000
+Message-ID: <80bee197ed44ca6cd169caf7245c568ac61c6ddc.camel@diehl.com>
+References: <20200310123126.4709-1-Denis.Osterland@diehl.com>
+         <20200311213309.GB18398@amd>
+In-Reply-To: <20200311213309.GB18398@amd>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <35B434C1D45DCB4296F42B169D4BA9C4@diehl.internal>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-TrailerSkip: 1
+X-GBS-PROC: 415AWy8o668fDtCxszluz1FmQmTayKBil+65oOyKL1t+St//BRrRHC1y3u+8xIiw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
-On Wed, 11 Mar 2020 at 22:31, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Mar 11, 2020 at 12:21 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> >
->
-> > diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> > index 2047f7a74265..510f65f4d8b8 100644
-> > --- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> > +++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> > @@ -28,7 +28,7 @@
-> >
-> >         chosen {
-> >                 stdout-path = "serial1:115200n8";
-> > -               bootargs = "earlycon";
-> > +               bootargs = "earlycon console=ttyS1";
-> >         };
-> >  };
->
-> Hi Chunyan,
->
-> I would expect that you need to either specify the stdout-path, or the console=
-> kernel parameter, but not both.
->
-
-Ok, now I know how to fix the problem without adding 'console=' :)
-of_console_check() [1] can tell if a given port is the console by
-reading 'stdout-path'.
-I will address this issue in serial driver.
-
-Thanks for your reminder,
-Chunyan
-
-[1] https://elixir.bootlin.com/linux/v5.6-rc5/source/drivers/of/base.c#L2135
-
-> If earlycon was used, shouldn't the driver know which port is the console?
->
->       Arnd
+SGkgUGF2ZWwsDQoNCkFtIE1pdHR3b2NoLCBkZW4gMTEuMDMuMjAyMCwgMjI6MzMgKzAxMDAg
+c2NocmllYiBQYXZlbCBNYWNoZWs6DQo+IEhpIQ0KPiANCj4gPiBUaGlzIHBhdGNoIGFkZHMg
+c3VwcG9ydCBmb3IgImRlZmF1bHQtc3RhdGUiIGRldmljZXRyZWUgcHJvcGVydHksIHdoaWNo
+DQo+ID4gYWxsb3dzIHRvIGRlZmVyIHB3bSBpbml0IHRvIGZpcnN0IHVzZSBvZiBsZWQuDQo+
+ID4gDQo+ID4gVGhpcyBhbGxvd3MgdG8gY29uZmlndXJlIHRoZSBQV00gZWFybHkgaW4gYm9v
+dGxvYWRlciB0byBsZXQgdGhlIExFRA0KPiA+IGJsaW5rIHVudGlsIGFuIGFwcGxpY2F0aW9u
+IGluIExpbnV4IHVzZXJzcGFjZSBzZXQgc29tZXRoaW5nIGRpZmZlcmVudC4NCj4gDQo+ICJz
+ZXRzIi4NCmRvbmUNCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBEZW5pcyBPc3RlcmxhbmQt
+SGVpbSA8RGVuaXMuT3N0ZXJsYW5kQGRpZWhsLmNvbT4NCj4gDQo+IExvb2tzIGdvb2QsIEkn
+bGwgcHJvYmFibHkganVzdCBhcHBseSBpdC4NCkkgd2lsbCByZWJhc2Ugb24geW91ciBuZXh0
+IGJyYW5jaCwgc28gdGhhdCBpdCB1c2VzIGF0b21pYyBQV00gQVBJLCBzb29uLg0KDQo+IA0K
+PiA+IGluZGV4IDZjNjU4M2MzNWYyZi4uZDBmNDg5NjgwNTk0IDEwMDY0NA0KPiA+IC0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2xlZHMtcHdtLnR4dA0K
+PiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2xlZHMt
+cHdtLnR4dA0KPiA+IEBAIC0xOSw2ICsxOSw4IEBAIExFRCBzdWItbm9kZSBwcm9wZXJ0aWVz
+Og0KPiA+ICAgIHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9j
+b21tb24udHh0DQo+ID4gIC0gbGludXgsZGVmYXVsdC10cmlnZ2VyIDogIChvcHRpb25hbCkN
+Cj4gPiAgICBzZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvY29t
+bW9uLnR4dA0KPiA+ICstIGRlZmF1bHQtc3RhdGUgOiAob3B0aW9uYWwpDQo+ID4gKyAgc2Vl
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi55YW1sDQo+
+ID4gIA0KPiANCj4gU2hvdWxkIG90aGVyIHJlZmVyZW5jZXMgYmUgdXBkYXRlZCB0byBjb21t
+b24ueWFtbCAoYXMgYSBzZXBhcmF0ZSBwYXRjaCk/DQp3ZWxsLCB0aGUgd2hvbGUgdHh0IGZp
+bGUgc2hvdWxkIGJlIGNvbnZlcnRlZCB0byB5YW1sLi4uDQpjdXJyZW50bHkgY29tbW9uLnR4
+dCBleGlzdHMgYW5kIHBvaW50cyB0byBjb21tb24ueWFtbCwgc28gbm8gdXJnZW50IG5lZWQN
+Cg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oIGIvaW5j
+bHVkZS9saW51eC9sZWRzX3B3bS5oDQo+ID4gaW5kZXggOTNkMTAxZDI4OTQzLi5jOWVmOTAx
+MjkxM2QgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oDQo+ID4g
+KysrIGIvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oDQo+ID4gQEAgLTEwLDYgKzEwLDcgQEAg
+c3RydWN0IGxlZF9wd20gew0KPiA+ICAJY29uc3QgY2hhcgkqZGVmYXVsdF90cmlnZ2VyOw0K
+PiA+ICAJdW5zaWduZWQJcHdtX2lkIF9fZGVwcmVjYXRlZDsNCj4gPiAgCXU4IAkJYWN0aXZl
+X2xvdzsNCj4gPiArCXU4CQlkZWZhdWx0X3N0YXRlOw0KPiA+ICAJdW5zaWduZWQgCW1heF9i
+cmlnaHRuZXNzOw0KPiA+ICAJdW5zaWduZWQJcHdtX3BlcmlvZF9uczsNCj4gPiAgfTsNCj4g
+DQo+IGxlZHMtcHdtLmMgYnV0IGxlZHNfcHdtLmguIEhtbS4gVGhpcyByZWFsbHkgc2hvdWxk
+IGJlIGxlZHMtcHdtLmguDQo+IA0KPiBBY3R1YWxseSwgbGVkcy1wd20uYyBpcyBvbmx5IHVz
+ZXIgb2YgbGVkc19wd20uaCwgc28gdGhhdCBvbmUgc2hvdWxkDQo+IGp1c3QgZGlzYXBwZWFy
+Li4uDQpJIGNhbiBtb3ZlIGl0IGluIGEgc2Vjb25kIHBhdGNoLCBpZiB5b3Ugd2FudA0KDQpS
+ZWdhcmRzIERlbmlzDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IAkJCQkJCQkJCVBhdmVsDQo+
+IA0KPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4gPiBaMSBTZWN1cmVNYWlsIEdhdGV3YXkgUHJv
+Y2Vzc2luZyBJbmZvICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+IA0KPiAr
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLSsNCj4gPiAtIFRoZSBtZXNzYWdlIHdhcyBzaWduZWQgYnkgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICBbTm8gSW5m
+byBhdmFpbGFibGVdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfA0KPiA+ICAgU2lnbmF0dXJlIG5vdCB2ZXJpZmlhYmxlICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCj4gPiAgIC0gTWVzc2FnZSBjb250ZW50
+IG5vdCB2ZXJpZmlhYmxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+
+ID4gICAtIENlcnRpZmljYXRlIG5vdCB2ZXJpZmlhYmxlICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfA0KPiANCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rDQoNCg0KRGll
+aGwgQ29ubmVjdGl2aXR5IFNvbHV0aW9ucyBHbWJIDQpHZXNjaMOkZnRzZsO8aHJ1bmc6IEhv
+cnN0IExlb25iZXJnZXINClNpdHogZGVyIEdlc2VsbHNjaGFmdDogTsO8cm5iZXJnIC0gUmVn
+aXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodA0KTsO8cm5iZXJnOiBIUkIgMzIzMTUNCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpEZXIgSW5oYWx0
+IGRlciB2b3JzdGVoZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmluZGVuZC4g
+RGllc2UgRS1NYWlsIGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNodGxpY2gg
+Z2VzY2h1ZXR6dGUgSW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMgYml0dGUs
+IHdlbm4gU2llIGRpZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0ZW4gaGFi
+ZW4uIEJpdHRlIGxvZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJpY2h0Lg0K
+SmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdhYmUsIEFl
+bmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIgRS1NYWls
+IGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQotIEluZm9ybWF0aW9uZW4genVtIERhdGVu
+c2NodXR6LCBpbnNiZXNvbmRlcmUgenUgSWhyZW4gUmVjaHRlbiwgZXJoYWx0ZW4gU2llIHVu
+dGVyIGh0dHBzOi8vd3d3LmRpZWhsLmNvbS9ncm91cC9kZS90cmFuc3BhcmVuei11bmQtaW5m
+b3JtYXRpb25zcGZsaWNodGVuLw0KDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3ZlIG1lbnRp
+b25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwgY29udGFp
+bnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1hdGlvbi4g
+UGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBieQ0K
+bWlzdGFrZSBhbmQgZGVsZXRlIGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0aG9yaXpl
+ZCByZXByb2R1Y3Rpb24sIGRpc2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1dGlvbiBh
+bmQvb3IgcHVibGljYXRpb24gb2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJvaGliaXRl
+ZC4gDQotIEZvciBnZW5lcmFsIGluZm9ybWF0aW9uIG9uIGRhdGEgcHJvdGVjdGlvbiBhbmQg
+eW91ciByZXNwZWN0aXZlIHJpZ2h0cyBwbGVhc2UgdmlzaXQgaHR0cHM6Ly93d3cuZGllaGwu
+Y29tL2dyb3VwL2VuL3RyYW5zcGFyZW5jeS1hbmQtaW5mb3JtYXRpb24tb2JsaWdhdGlvbnMv
+DQo=
