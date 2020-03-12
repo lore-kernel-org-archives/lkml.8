@@ -2,226 +2,272 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82CAC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EFFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E51206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE2E206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lUT/relY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCLM1R (ORCPT
+        id S1727041AbgCLM2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:27:17 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:54454 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLM1R (ORCPT
+        Thu, 12 Mar 2020 08:28:07 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46081 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLM2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:27:17 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jCMvg-0008B2-FJ; Thu, 12 Mar 2020 06:27:12 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jCMvf-0006RZ-FN; Thu, 12 Mar 2020 06:27:12 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nmjulm.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-        <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
-Date:   Thu, 12 Mar 2020 07:24:50 -0500
-In-Reply-To: <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com> (Kirill
-        Tkhai's message of "Thu, 12 Mar 2020 13:27:30 +0300")
-Message-ID: <87d09hn4kt.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 12 Mar 2020 08:28:07 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d23so6137843ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 05:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nd/zdGYlA70CTuFDEU0VLMsOD4eE45IQffsNZCkZVWA=;
+        b=lUT/relYkzQ+58qXYYgVOfzy8wkuvCTRPp2JZwNPMGsEbtQ5W5y+ZfNhTfQmrVAxj2
+         Bn3ZZaEk0WWgbeckUHQqEvTyJA3Kiy+363OSX7G98P4XueeF602e8dU4dECDdPn79WcG
+         suA9hA6Ngd0sT5JQ6EXvYaRgHF/NKBddRlMuqRL2H6wiaWb7+FVqadyt2OZGwWghAdYd
+         kSY3aR2/aHRbYC8gAcotuoV+99S8cTqnycZ1zpXEsMIPhOYTEMv4+BT3kpu29pwxLNU7
+         bFbYabaVqY5eeAn8YQSI2srbg/0Opk+QE7gODCqMEJF5XR4xmHiwFQHC+kVFDEy5Zntu
+         gQpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nd/zdGYlA70CTuFDEU0VLMsOD4eE45IQffsNZCkZVWA=;
+        b=glPmNqA5sLcLbvKU4zw31r91RAFZ5aXMqco1scxYUbZ0SS1qM6yZEexEFZO4scfA9J
+         5Bvb8foak7DwsKskQMg80qX3zqNAMcrJO4H5w+woesNcdzPqvMchDXknEUfyFUHAfbN1
+         ySEg+FIZBXfpsX6reogs9UQWKPPeviiSYirHxsvn2FCPRwRERUMf+J5/gQ4UgFvLJbCa
+         3PLYC2FyhcjtFvOWDvwbUYF9KJTf/fYPanU1i9CF7usjwHAYzgZJyPN5CL4ZHNLwLHUZ
+         8wyvZ1M1geyvUEB9ez/W7pERbJDXiv1WowAesWJFiKMBGoDPQmMZqbA/SiIphef9lACG
+         MI9g==
+X-Gm-Message-State: ANhLgQ3d0aoPhHwXlpfASKdRhsCcutMPDbgVYJxFXVsMqLeM9X5I5q/h
+        qHyAcyhbfPNJtwc5f6+gUg9PO76c9z6TfwXEB7lLTw==
+X-Google-Smtp-Source: ADFU+vt2/cUUslf05snEaz3tDPF+CSffkiBZz/Oc9f/Q9RdHCUxl0njNcz67/PBM35t6Qk7ZRU6LILryC/9njyPxl4c=
+X-Received: by 2002:a2e:8112:: with SMTP id d18mr4908196ljg.137.1584016085060;
+ Thu, 12 Mar 2020 05:28:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jCMvf-0006RZ-FN;;;mid=<87d09hn4kt.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX197oHUB4P7o25mD2mW/iWh+TbBM6TNe7gs=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
+ <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com> <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
+In-Reply-To: <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 12 Mar 2020 13:27:53 +0100
+Message-ID: <CAKfTPtBU1fyxWhR04QTCbvn07KgTqAHRVOt18D3TxmZSeiHQQQ@mail.gmail.com>
+Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kirill Tkhai <ktkhai@virtuozzo.com> writes:
-
-> On 09.03.2020 00:38, Eric W. Biederman wrote:
->> 
->> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
->> over the userspace accesses as the arguments from userspace are read.
->> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
->> threads are killed.  The cred_guard_mutex is held over
->> "put_user(0, tsk->clear_child_tid)" in exit_mm().
->> 
->> Any of those can result in deadlock, as the cred_guard_mutex is held
->> over a possible indefinite userspace waits for userspace.
->> 
->> Add exec_update_mutex that is only held over exec updating process
->> with the new contents of exec, so that code that needs not to be
->> confused by exec changing the mm and the cred in ways that can not
->> happen during ordinary execution of a process.
->> 
->> The plan is to switch the users of cred_guard_mutex to
->> exec_udpate_mutex one by one.  This lets us move forward while still
->> being careful and not introducing any regressions.
->> 
->> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
->> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
->> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
->> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
->> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
->> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
->> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  fs/exec.c                    | 9 +++++++++
->>  include/linux/sched/signal.h | 9 ++++++++-
->>  init/init_task.c             | 1 +
->>  kernel/fork.c                | 1 +
->>  4 files changed, 19 insertions(+), 1 deletion(-)
->> 
->> diff --git a/fs/exec.c b/fs/exec.c
->> index d820a7272a76..ffeebb1f167b 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1014,6 +1014,7 @@ static int exec_mmap(struct mm_struct *mm)
->>  {
->>  	struct task_struct *tsk;
->>  	struct mm_struct *old_mm, *active_mm;
->> +	int ret;
->>  
->>  	/* Notify parent that we're no longer interested in the old VM */
->>  	tsk = current;
->> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
->>  			return -EINTR;
->>  		}
->>  	}
->> +
->> +	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
->> +	if (ret)
->> +		return ret;
+On Thu, 12 Mar 2020 at 11:04, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
+ote:
 >
-> You missed old_mm->mmap_sem unlock. See here:
+> On 12/03/2020 09:36, Vincent Guittot wrote:
+> > Hi Daniel,
+> >
+> > On Wed, 11 Mar 2020 at 21:28, Daniel Lezcano <daniel.lezcano@linaro.org=
+> wrote:
+> >>
+> >> In the idle CPU selection process occuring in the slow path via the
+> >> find_idlest_group_cpu() function, we pick up in priority an idle CPU
+> >> with the shallowest idle state otherwise we fall back to the least
+> >> loaded CPU.
+> >
+> > The idea makes sense but this path is only used by fork and exec so
+> > I'm not sure about the real impact
+>
+> I agree the fork / exec path is called much less often than the wake
+> path but it makes more sense for the decision.
+>
+> >> In order to be more energy efficient but without impacting the
+> >> performances, let's use another criteria: the break even deadline.
+> >>
+> >> At idle time, when we store the idle state the CPU is entering in, we
+> >> compute the next deadline where the CPU could be woken up without
+> >> spending more energy to sleep.
+> >>
+> >> At the selection process, we use the shallowest CPU but in addition we
+> >> choose the one with the minimal break even deadline instead of relying
+> >> on the idle_timestamp. When the CPU is idle, the timestamp has less
+> >> meaning because the CPU could have wake up and sleep again several tim=
+es
+> >> without exiting the idle loop. In this case the break even deadline is
+> >> more relevant as it increases the probability of choosing a CPU which
+> >> reached its break even.
+> >>
+> >> Tested on:
+> >>  - a synquacer 24 cores, 6 sched domains
+> >>  - a hikey960 HMP 8 cores, 2 sched domains, with the EAS and energy pr=
+obe
+> >>
+> >> sched/perf and messaging does not show a performance regression. Ran
+> >> 50 times schbench, adrestia and forkbench.
+> >>
+> >> The tools described at https://lwn.net/Articles/724935/
+> >>
+> >>  --------------------------------------------------------------
+> >> | Synquacer             | With break even | Without break even |
+> >>  --------------------------------------------------------------
+> >> | schbench *99.0th      |      14844.8    |         15017.6    |
+> >> | adrestia / periodic   |        57.95    |              57    |
+> >> | adrestia / single     |         49.3    |            55.4    |
+> >>  --------------------------------------------------------------
+> >
+> > Have you got some figures or cpuidle statistics for the syncquacer ?
+>
+> No, and we just noticed the syncquacer has a bug in the firmware and
+> does not actually go to the idle states.
+>
+>
+> >> | Hikey960              | With break even | Without break even |
+> >>  --------------------------------------------------------------
+> >> | schbench *99.0th      |      56140.8    |           56256    |
+> >> | schbench energy       |      153.575    |         152.676    |
+> >> | adrestia / periodic   |         4.98    |             5.2    |
+> >> | adrestia / single     |         9.02    |            9.12    |
+> >> | adrestia energy       |         1.18    |           1.233    |
+> >> | forkbench             |        7.971    |            8.05    |
+> >> | forkbench energy      |         9.37    |            9.42    |
+> >>  --------------------------------------------------------------
+> >>
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> ---
+> >>  kernel/sched/fair.c  | 18 ++++++++++++++++--
+> >>  kernel/sched/idle.c  |  8 +++++++-
+> >>  kernel/sched/sched.h | 20 ++++++++++++++++++++
+> >>  3 files changed, 43 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >> index 4b5d5e5e701e..8bd6ea148db7 100644
+> >> --- a/kernel/sched/fair.c
+> >> +++ b/kernel/sched/fair.c
+> >> @@ -5793,6 +5793,7 @@ find_idlest_group_cpu(struct sched_group *group,=
+ struct task_struct *p, int this
+> >>  {
+> >>         unsigned long load, min_load =3D ULONG_MAX;
+> >>         unsigned int min_exit_latency =3D UINT_MAX;
+> >> +       s64 min_break_even =3D S64_MAX;
+> >>         u64 latest_idle_timestamp =3D 0;
+> >>         int least_loaded_cpu =3D this_cpu;
+> >>         int shallowest_idle_cpu =3D -1;
+> >> @@ -5810,6 +5811,8 @@ find_idlest_group_cpu(struct sched_group *group,=
+ struct task_struct *p, int this
+> >>                 if (available_idle_cpu(i)) {
+> >>                         struct rq *rq =3D cpu_rq(i);
+> >>                         struct cpuidle_state *idle =3D idle_get_state(=
+rq);
+> >> +                       s64 break_even =3D idle_get_break_even(rq);
+> >> +
+> >>                         if (idle && idle->exit_latency < min_exit_late=
+ncy) {
+> >>                                 /*
+> >>                                  * We give priority to a CPU whose idl=
+e state
+> >> @@ -5817,10 +5820,21 @@ find_idlest_group_cpu(struct sched_group *grou=
+p, struct task_struct *p, int this
+> >>                                  * of any idle timestamp.
+> >>                                  */
+> >>                                 min_exit_latency =3D idle->exit_latenc=
+y;
+> >> +                               min_break_even =3D break_even;
+> >>                                 latest_idle_timestamp =3D rq->idle_sta=
+mp;
+> >>                                 shallowest_idle_cpu =3D i;
+> >> -                       } else if ((!idle || idle->exit_latency =3D=3D=
+ min_exit_latency) &&
+> >> -                                  rq->idle_stamp > latest_idle_timest=
+amp) {
+> >> +                       } else if ((idle && idle->exit_latency =3D=3D =
+min_exit_latency) &&
+> >> +                                  break_even < min_break_even) {
+> >> +                               /*
+> >> +                                * We give priority to the shallowest
+> >> +                                * idle states with the minimal break
+> >> +                                * even deadline to decrease the
+> >> +                                * probability to choose a CPU which
+> >> +                                * did not reach its break even yet
+> >> +                                */
+> >> +                               min_break_even =3D break_even;
+> >> +                               shallowest_idle_cpu =3D i;
+> >> +                       } else if (!idle && rq->idle_stamp > latest_id=
+le_timestamp) {
+> >>                                 /*
+> >>                                  * If equal or no active idle state, t=
+hen
+> >>                                  * the most recently idled CPU might h=
+ave
+> >> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> >> index b743bf38f08f..3342e7bae072 100644
+> >> --- a/kernel/sched/idle.c
+> >> +++ b/kernel/sched/idle.c
+> >> @@ -19,7 +19,13 @@ extern char __cpuidle_text_start[], __cpuidle_text_=
+end[];
+> >>   */
+> >>  void sched_idle_set_state(struct cpuidle_state *idle_state)
+> >>  {
+> >> -       idle_set_state(this_rq(), idle_state);
+> >> +       struct rq *rq =3D this_rq();
+> >> +
+> >> +       idle_set_state(rq, idle_state);
+> >
+> > Shouldn't the state be set after setting break even otherwise you will
+> > have a time window with an idle_state !=3D null but the break_even stil=
+l
+> > set to the previous value
+>
+> IIUC we are protected in this section. Otherwise the routine above would
+> be also wrong [if (idle && idle->exit_latency)], no?
 
-Duh.  Thank you.
+no there are not the same because it uses the idle pointer to read
+exit_latency so we are sure to use exit_latency related to the idle
+pointer.
 
-I actually need to switch the lock ordering here, and I haven't yet
-because my son was sick yesterday.
+In your case it checks idle is not null but then it uses rq to read
+break_even but it might not have been already updated
 
-Something like this.
+>
+> >> +
+> >> +       if (idle_state)
+> >> +               idle_set_break_even(rq, ktime_get_ns() +
+> >
+> > What worries me a bit is that it adds one ktime_get call each time a
+> > cpu enters idle
+>
+> Right, we can improve this in the future by folding the local_clock() in
+> cpuidle when entering idle with this ktime_get.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 96f89401b4d1..03d50c27ec01 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1020,9 +1020,14 @@ static int exec_mmap(struct mm_struct *mm)
-        tsk = current;
-        old_mm = current->mm;
-        exec_mm_release(tsk, old_mm);
-+       if (old_mm)
-+               sync_mm_rss(old_mm);
-+
-+       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
-+       if (ret)
-+               return ret;
- 
-        if (old_mm) {
--               sync_mm_rss(old_mm);
-                /*
-                 * Make sure that if there is a core dump in progress
-                 * for the old mm, we get out and die instead of going
-@@ -1032,14 +1037,11 @@ static int exec_mmap(struct mm_struct *mm)
-                down_read(&old_mm->mmap_sem);
-                if (unlikely(old_mm->core_state)) {
-                        up_read(&old_mm->mmap_sem);
-+                       mutex_unlock(&tsk->signal->exec_update_mutex);
-                        return -EINTR;
-                }
-        }
- 
--       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
--       if (ret)
--               return ret;
--
-        task_lock(tsk);
-        active_mm = tsk->active_mm;
-        membarrier_exec_mmap(mm);
+Using local_clock() would be more latency friendly
 
-
-
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 47582cd97f86..d557bac3e862 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1063,8 +1063,11 @@ static int exec_mmap(struct mm_struct *mm)
->  	}
->  
->  	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
-> -	if (ret)
-> +	if (ret) {
-> +		if (old_mm)
-> +			up_read(&old_mm->mmap_sem);
->  		return ret;
-> +	}
->  
->  	task_lock(tsk);
->  	active_mm = tsk->active_mm;
-
-Eric
+>
+> >> +                                   idle_state->exit_latency_ns);
+> >>  }
+>
+> [ ... ]
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
