@@ -2,131 +2,130 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E243C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15089C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485FF205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9F5205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="T+yUk47h";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iJayL43G"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PDmku7Cc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgCLUKG (ORCPT
+        id S1726921AbgCLUMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:10:06 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:34157 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726594AbgCLUKF (ORCPT
+        Thu, 12 Mar 2020 16:12:53 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36695 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726720AbgCLUMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:10:05 -0400
-X-Greylist: delayed 385 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 16:10:05 EDT
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 1EFBF3CA;
-        Thu, 12 Mar 2020 16:10:04 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 12 Mar 2020 16:10:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        content-transfer-encoding:content-type:in-reply-to:date:cc
-        :subject:from:to:message-id; s=fm3; bh=TkJOJLPVp9faa1mlhe8Ka531E
-        s7yGnp/Tphg5hzuUU8=; b=T+yUk47hFlOHjRn12B9u9KT0HtJPJLz1E/ckWYq5J
-        vAR+/LQBkLjcqMF3677DoeBEwqunJPTuR09mF8ENbyFV2BsF5J8Lxhp8jK3ReqRl
-        /KyQltyDjkgVBmBR1EAuqWIs769+xwjl1UPZimmTpKIQr0bAG/hiLnW6YltCp+Z/
-        Ei5h/zT3CR3M4ps3FamtB9yoXJwaY2kk7jSlFfxvP9YDUeGD2JQYq2QnWhAaDrYU
-        85e60jUSfJ0wlO5ETVgHQfFL1quOSmCI0VQ0pD5TDGvRaeXnHmmxWVPGi7XSlvCR
-        UGxPLAGksufrrus1BdmH2F3cgYHx6U5Q+hBAlleaQZcug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=TkJOJL
-        PVp9faa1mlhe8Ka531Es7yGnp/Tphg5hzuUU8=; b=iJayL43GkTly9KNOWB0gzT
-        H8IsVgSNkBk2o9ZrV8MxT3+cjAiifroKAJS0BeT+17ySgqzw8C6NR54jEzWe0Yiq
-        42InrLIcfkteTLOCPJRig44nvNlH1IAQEML1aZOf3cW4WdtzS9Oq1oI7drK7MsIa
-        ggmar1FXyV6uo48uNagvnvPZ0suA6qEAAw0eUsjLr28kCiELQ4zAts+QsZxb0g9D
-        1GDYgq2l9RKOqThE4sQrc1/vOcga61tjdVhvKQEFUyqmbNR3TJsTecyeBMczNhrV
-        hsRWKao5SPxuBauArJHGlsxiESggFEpCvXbA0TOvPjt0G2EbqpO41pkwtGfqchbA
-        ==
-X-ME-Sender: <xms:GpdqXq4T_bbV8T9j849ICt5vpSY5borsc1Z17qtD3Jb1u9rVgUb5gQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedgudefiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhepgf
-    gtjgffuffhvffksehtqhertddttdejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceo
-    ugiguhesugiguhhuuhdrgiihiieqnecukfhppeejfedrleefrddvgeejrddufeegnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
-    uhhuuhdrgiihii
-X-ME-Proxy: <xmx:GpdqXnXZ_n46KxoJ19WGcW7f6HcejtmgOyy0fEsh0eESFW6i4pwgfg>
-    <xmx:GpdqXgd50IarPHpDpSCdS6hs7qf5k5cUrj8jO2xYVpTfMlI_IgOuDQ>
-    <xmx:GpdqXkb_sFRZ49lggyzgeSqcv4mWwRzcGR7qp8-ZOBnHhyp568EWkg>
-    <xmx:G5dqXhCLDy1rzu9sPcOaiGaKMZT6u2MNd0oH9ObJyQ6Y8m0NP6L5PL1UpPQ>
-Received: from localhost (c-73-93-247-134.hsd1.ca.comcast.net [73.93.247.134])
-        by mail.messagingengine.com (Postfix) with ESMTPA id ACC633280066;
-        Thu, 12 Mar 2020 16:10:00 -0400 (EDT)
+        Thu, 12 Mar 2020 16:12:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584043972;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=oFtA5foZqJcNjK+k5pElAYPfBCovM+fS0F+WtgscESA=;
+        b=PDmku7CcJ/E6F8AWBdA38RTR8Gd0/VlzcLMzGjma1t8I3anp4q12qolrKrQuILt4sueN5j
+        lazacH9A748UTVOg301gtbwk6oV9377mT6sZLLZOZ7OlMufBkZGw25ErAQYqR9yYwLrr/Z
+        nxCPSBuO8tfDmJEiGL3NIYMibmzshZA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-G3yM9eTeOEa5m1elEuDA0g-1; Thu, 12 Mar 2020 16:12:50 -0400
+X-MC-Unique: G3yM9eTeOEa5m1elEuDA0g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1736801E66;
+        Thu, 12 Mar 2020 20:12:46 +0000 (UTC)
+Received: from localhost (ovpn-121-102.rdu2.redhat.com [10.10.121.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 92C8073880;
+        Thu, 12 Mar 2020 20:12:43 +0000 (UTC)
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     GLin@suse.com, davem@davemloft.net, kuba@kernel.org,
+        ast@kernel.org, Bruno Meneguele <bmeneg@redhat.com>
+Subject: [PATCH] net/bpfilter: fix dprintf usage for logging into /dev/kmsg
+Date:   Thu, 12 Mar 2020 17:12:40 -0300
+Message-Id: <20200312201240.1960367-1-bmeneg@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <20200312200317.31736-1-dxu@dxuuu.xyz>
-Date:   Thu, 12 Mar 2020 13:09:25 -0700
-Cc:     "Daniel Xu" <dxu@dxuuu.xyz>, <shakeelb@google.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <kernel-team@fb.com>
-Subject: Re: [PATCH v3 0/4] Support user xattrs in cgroupfs
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-To:     "Daniel Xu" <dxu@dxuuu.xyz>, <cgroups@vger.kernel.org>,
-        <tj@kernel.org>, <lizefan@huawei.com>, <hannes@cmpxchg.org>,
-        <viro@zeniv.linux.org.uk>
-Message-Id: <C194NG2LLD6S.362U6UUAHUZHJ@maharaja>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu Mar 12, 2020 at 6:03 AM PST, Daniel Xu wrote:
-> User extended attributes are useful as metadata storage for kernfs
-> consumers like cgroups. Especially in the case of cgroups, it is useful
-> to have a central metadata store that multiple processes/services can
-> use to coordinate actions.
->
-> A concrete example is for userspace out of memory killers. We want to
-> let delegated cgroup subtree owners (running as non-root) to be able to
-> say "please avoid killing this cgroup". This is especially important for
-> desktop linux as delegated subtrees owners are less likely to run as
-> root.
->
-> The first two commits set up some stuff for the third commit which
-> intro introduce a new flag, KERNFS_ROOT_SUPPORT_USER_XATTR,
-> that lets kernfs consumers enable user xattr support. The final commit
-> turns on user xattr support for cgroupfs.
->
-> Changes from v2:
-> - Rephrased commit message for "kernfs: kvmalloc xattr value instead of
-> kmalloc"
->
-> Changes from v1:
-> - use kvmalloc for xattr values
-> - modify simple_xattr_set to return removed size
-> - add accounting for total user xattr size per cgroup
->
-> Daniel Xu (4):
-> kernfs: kvmalloc xattr value instead of kmalloc
-> kernfs: Add removed_size out param for simple_xattr_set
-> kernfs: Add option to enable user xattrs
-> cgroupfs: Support user xattrs
->
-> Daniel Xu (4):
-> kernfs: kvmalloc xattr value instead of kmalloc
-> kernfs: Add removed_size out param for simple_xattr_set
-> kernfs: Add option to enable user xattrs
-> cgroupfs: Support user xattrs
->
-> fs/kernfs/inode.c | 91 ++++++++++++++++++++++++++++++++++++-
-> fs/kernfs/kernfs-internal.h | 2 +
-> fs/xattr.c | 17 +++++--
-> include/linux/kernfs.h | 11 ++++-
-> include/linux/xattr.h | 3 +-
-> kernel/cgroup/cgroup.c | 3 +-
-> mm/shmem.c | 2 +-
-> 7 files changed, 119 insertions(+), 10 deletions(-)
+The bpfilter UMH code was recently changed to log its informative message=
+s to
+/dev/kmsg, however this interface doesn't support SEEK_CUR yet, used by
+dprintf(). As result dprintf() returns -EINVAL and doesn't log anything.
 
-Gah, messed up the copy paste. Let me know if you want a resend.
+Although there already had some discussions about supporting SEEK_CUR int=
+o
+/dev/kmsg in the past, it wasn't concluded. Considering the only
+user of that interface from userspace perspective inside the kernel is th=
+e
+bpfilter UMH (userspace) module it's better to correct it here instead of
+waiting a conclusion on the interface changes.
+
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+---
+ net/bpfilter/main.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/net/bpfilter/main.c b/net/bpfilter/main.c
+index 77396a098fbe..efea4874743e 100644
+--- a/net/bpfilter/main.c
++++ b/net/bpfilter/main.c
+@@ -10,7 +10,7 @@
+ #include <asm/unistd.h>
+ #include "msgfmt.h"
+=20
+-int debug_fd;
++FILE *debug_f;
+=20
+ static int handle_get_cmd(struct mbox_request *cmd)
+ {
+@@ -35,9 +35,10 @@ static void loop(void)
+ 		struct mbox_reply reply;
+ 		int n;
+=20
++		fprintf(debug_f, "testing the buffer\n");
+ 		n =3D read(0, &req, sizeof(req));
+ 		if (n !=3D sizeof(req)) {
+-			dprintf(debug_fd, "invalid request %d\n", n);
++			fprintf(debug_f, "invalid request %d\n", n);
+ 			return;
+ 		}
+=20
+@@ -47,7 +48,7 @@ static void loop(void)
+=20
+ 		n =3D write(1, &reply, sizeof(reply));
+ 		if (n !=3D sizeof(reply)) {
+-			dprintf(debug_fd, "reply failed %d\n", n);
++			fprintf(debug_f, "reply failed %d\n", n);
+ 			return;
+ 		}
+ 	}
+@@ -55,9 +56,10 @@ static void loop(void)
+=20
+ int main(void)
+ {
+-	debug_fd =3D open("/dev/kmsg", 00000002);
+-	dprintf(debug_fd, "Started bpfilter\n");
++	debug_f =3D fopen("/dev/kmsg", "w");
++	setvbuf(debug_f, 0, _IOLBF, 0);
++	fprintf(debug_f, "Started bpfilter\n");
+ 	loop();
+-	close(debug_fd);
++	fclose(debug_f);
+ 	return 0;
+ }
+--=20
+2.24.1
+
