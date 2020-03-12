@@ -2,129 +2,76 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D132C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EA2C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257FD20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KtbM0CsJ"
+	by mail.kernel.org (Postfix) with ESMTP id 26317206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbgCLOuP (ORCPT
+        id S1727752AbgCLOu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:50:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37339 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgCLOuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:50:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a141so6648451wme.2;
-        Thu, 12 Mar 2020 07:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=KgwBqCxOm5fc5xla7xbmlCmYs3pKxXy84zAoeYrTSMU=;
-        b=KtbM0CsJqfnKD030oJhnT388atdN3aNDbHoLcz4WqWK8yHvZh+SzK3p7I+NzMlzm1G
-         cKCFf0LzgOPaheQPbCEjA88+BC9E049T3aPmVe7mJ16aV8xmMIE0eSMn0xDxVlprTw1x
-         7EAuTXr8+YJXZlchUU5gnThMbTWFBr8elzbij9eQzFuXhHveH3mi2S39H5BTo6hEJQ9x
-         /xWCCyKYhzxT4idQ6LKWyC6GrUVnjaCzSCUmFqE0HNQfliwYVDQlRqbrVN0F2oxrzUi/
-         nqr4H/v2C4DYAMc373ezPuOFkMF92ehlp1NvrvoEjIFER6JtAdwuYNkO7mCIEcqhcMVw
-         TSvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=KgwBqCxOm5fc5xla7xbmlCmYs3pKxXy84zAoeYrTSMU=;
-        b=p8Ge8bQ5m0NVsFywzcJxSPbr8Gi/GQQVykwUy0FAmmsZlTcpt9P2+u0rkjLcQfslcB
-         EtKfpxeUwNuyzbbmdt+CL7vWbo7RSy+pZtdzISaMber0amVWw09fGyn0LYpZsR7YsJGq
-         +wxLJ6h99Y2cCb48gDV1+VbyAHc1W7xG2dg9Tw4I50sTV4yOK09S0mSb3FthZdtAItAz
-         Vz2REtAoKi59mJl5+I9qmgHksDunmJ7czYdGixDvQxxY+VNmwvJCW0n/fJzIauoqSlau
-         f/0RDpLcDX02uHV12181isOOW3zOE9trcH71H8zD4mKlrdXTps7PxFhV6NZN8aJXqedP
-         twIw==
-X-Gm-Message-State: ANhLgQ3tdOFok33oTLdJ49nRiGlcPXFPKW+rWFaVzhyBSzp457DK+wkl
-        C9TAt+ODgPBO23NsizDfv6827C/1QC5Tlg==
-X-Google-Smtp-Source: ADFU+vueEc6glpOHQAsUEr+s9w9p1qUpl2mh6k7ue+hbfGO87gIaY3N/ZhtWyrsPrAe6gdxWlSKZfQ==
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr4995006wml.57.1584024611731;
-        Thu, 12 Mar 2020 07:50:11 -0700 (PDT)
-Received: from [10.7.1.8] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id a5sm12376623wmb.37.2020.03.12.07.50.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:50:11 -0700 (PDT)
-Subject: Re: [PATCH v2] gpio-hammer: Avoid potential overflow in main
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200312144015.1848245-1-gabravier@gmail.com>
-From:   Gabriel Ravier <gabravier@gmail.com>
-Message-ID: <0e3a171e-fd85-4832-d4af-15abf4c1f5fe@gmail.com>
-Date:   Thu, 12 Mar 2020 15:50:09 +0100
+        Thu, 12 Mar 2020 10:50:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:44127 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727072AbgCLOu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:50:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 07:50:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="235042940"
+Received: from mylly.fi.intel.com (HELO [10.237.72.151]) ([10.237.72.151])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Mar 2020 07:50:14 -0700
+Subject: Re: [PATCH 5/6] i2c: designware: Discard i2c_dw_read_comp_param()
+ function
+To:     Sergey.Semin@baikalelectronics.ru,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132326.74A92803078F@mail.baikalelectronics.ru>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <59545398-5320-5414-7e66-64cca94bf54d@linux.intel.com>
+Date:   Thu, 12 Mar 2020 16:50:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200312144015.1848245-1-gabravier@gmail.com>
+In-Reply-To: <20200306132326.74A92803078F@mail.baikalelectronics.ru>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/20 3:40 PM, Gabriel Ravier wrote:
-> If '-o' was used more than 64 times in a single invocation of gpio-hammer,
-> this could lead to an overflow of the 'lines' array. This commit fixes
-> this by avoiding the overflow and giving a proper diagnostic back to the
-> user
->
-> Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
+On 3/6/20 3:19 PM, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> There is no code left in the kernel which would be using the function.
+> So just remove it.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->   tools/gpio/gpio-hammer.c | 17 ++++++++++++++++-
->   1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-> index 0e0060a6e..d0be21af1 100644
-> --- a/tools/gpio/gpio-hammer.c
-> +++ b/tools/gpio/gpio-hammer.c
-> @@ -135,7 +135,14 @@ int main(int argc, char **argv)
->   			device_name = optarg;
->   			break;
->   		case 'o':
-> -			lines[i] = strtoul(optarg, NULL, 10);
-> +			/*
-> +			 * Avoid overflow. Do not immediately error, we want to
-> +			 * be able to accurately report on the amount of times
-> +			 *'-o' was given to give an accurate error message
-> +			 */
-> +			if (i < GPIOHANDLES_MAX)
-> +				lines[i] = strtoul(optarg, NULL, 10);
-> +
->   			i++;
->   			break;
->   		case '?':
-> @@ -143,6 +150,14 @@ int main(int argc, char **argv)
->   			return -1;
->   		}
->   	}
-> +
-> +	if (i >= GPIOHANDLES_MAX) {
-> +		fprintf(stderr,
-> +			"Only %d occurences of '-o' are allowed, %d were found\n",
-> +			GPIOHANDLES_MAX, i + 1);
-> +		return -1;
-> +	}
-> +
->   	nlines = i;
->   
->   	if (!device_name || !nlines) {
-
-Just noticed that there isn't a space before the "'-o'" in the third 
-line of the explanatory comment in the first part of the patch, will 
-send a third version of the patch with a space before the "'-o'"
-
+>   drivers/i2c/busses/i2c-designware-common.c | 6 ------
+>   drivers/i2c/busses/i2c-designware-core.h   | 1 -
+>   2 files changed, 7 deletions(-)
+> 
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
