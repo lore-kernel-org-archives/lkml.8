@@ -2,141 +2,131 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEBFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FDDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B8220737
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC3E206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RkKn03Z0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KNtjflFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387806AbgCLFNs (ORCPT
+        id S2387799AbgCLFRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:13:48 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39782 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387739AbgCLFNr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:13:47 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s2so2441157pgv.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 22:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YEKIsskQn0GOha6Hy8EBgBpGLBH3R0T+GMiZwuU+3NI=;
-        b=RkKn03Z0khNvGV49vae7g0mCMeSWxWcrTOH0vwkME15R5jHgdvGaF1fzrWixZXNhpz
-         z7vwuAvDxXAQloCjyaMKOoatk63BYedEcrEQJQYtQ9Qo0RJvlKNIT0BuY5BZGV9jWYdE
-         tbUyOmKYr9Zu0BMQouUb52PToIvH+Vqp+mDQ9+QhsF1p5jCu2yo64Q4ChO1Th/IeARhz
-         H+AZ89aT9iRKOYdENHRtp5gYS8eWXZ+RYREC9J+2K7+Y+mMKvVcwBYa+Rp70udtd7iTL
-         zRSJyuvMLmgnjZXeGC/mLWu75UQXf3rsRgfgYCpSoUCI1T6u0AKc2vmPEpI5UsJ6esnw
-         J2HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YEKIsskQn0GOha6Hy8EBgBpGLBH3R0T+GMiZwuU+3NI=;
-        b=hiHUG5J11h3kM+5jtm/dpnV0rSyHOHLQXWRmWrEXnCLHlbMJ6RhA4WkPa+TyaV3B7U
-         wGSia+Asgl9BacjHcHXiLjDROOx2NvG018l4iCAwtDM5/vz6oPloMHnTf2tOphnkNnHS
-         NrhxNL7p/Y+/Kze2bVtdRR1WC1rkBodFSeDQ8LdXJvoJL1unm5ELCiVRSUOCoDePaRyx
-         lu8nZ0w+pdGa7nY7a2k0v7nlLk9y6k43stf3Jvppnwd5jsjjB/Yf1/F51ILImhGP3/AS
-         DeOqlg40pf+g6wQYKvadJKhtSy9kMmgKTVq8hXEx2mFoeAM7PrtLOFTD9XtpAaKHcRHR
-         DYAQ==
-X-Gm-Message-State: ANhLgQ1m4iyFUveMKovHTmhbWSBZooWxK/Vc3QEvRn2m4QgQIbWg/yEW
-        Z22jI3zz0Sip6gbqnRSbmf8kUw==
-X-Google-Smtp-Source: ADFU+vtsAgyF9WS4YpdSeSG4o+74qHpCCJl/4A+wZ5CxbopnXAb1FWsKpqQjANUoZkL+SbpxxBJSGQ==
-X-Received: by 2002:a63:ae0a:: with SMTP id q10mr6013377pgf.178.1583990026329;
-        Wed, 11 Mar 2020 22:13:46 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a18sm136214pfr.109.2020.03.11.22.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 22:13:45 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 22:13:42 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
-        olof@lixom.net, Anson.Huang@nxp.com, maxime@cerno.tech,
-        leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>
-Subject: Re: [v1 4/6] arm64: dts: sdm845-db845c: Add pm_8998 gpio names
-Message-ID: <20200312051342.GW264362@yoga>
-References: <20200311123501.18202-1-robert.foss@linaro.org>
- <20200311123501.18202-5-robert.foss@linaro.org>
+        Thu, 12 Mar 2020 01:17:08 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36657 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387677AbgCLFRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 01:17:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48dHBR5sPSz9sNg;
+        Thu, 12 Mar 2020 16:17:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583990225;
+        bh=+3AwsPpHCeb/RyP/Narc475nvziZ1cURXT4Ze8f/8fE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KNtjflFEUYka1UZeUDFT/X0Dx/Vi+e/DnMbgl3m/yAS365gllMrqm+w3xM6G7vDk6
+         q1+1TAKVo7Mt0uCZUkV6oJ0Jl6QBRU6gYeJmdloDJiXZ/wpz74jvkMgo+YG196FBkK
+         DaT4QNj2oC8lsKF0JskpDWhymH0pItl9NFgZ5BgCvVv5eCyILxtVmMWQb/Dl05orve
+         zeNeCxt2+a6jarLRi8gPF5bIS4NZNvdqcP9hda7Sy/JO/H6UmzwZmxeMAYlDRCCTXE
+         ytKD0JpnEYa1eTIojB2C4rXM1g7PK3nTJszLy9gq+/vUYEJgZrgoOn2j7FfZLQfXLC
+         f3HNMHa8VayRA==
+Date:   Thu, 12 Mar 2020 16:16:57 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: linux-next: manual merge of the staging tree with the vfs tree
+Message-ID: <20200312161657.57abd6c2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311123501.18202-5-robert.foss@linaro.org>
+Content-Type: multipart/signed; boundary="Sig_/hhH77Ac4SP7uwLa4OQbKUn/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11 Mar 05:34 PDT 2020, Robert Foss wrote:
+--Sig_/hhH77Ac4SP7uwLa4OQbKUn/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Add pm_8998 GPIO trace names. These names are defined in
-> the 96boards db845c mezzanine schematic.
-> 
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> index a6b6837c3d68..e8c056d02ace 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -584,6 +584,36 @@
->  	};
->  };
->  
-> +&pm8998_gpio {
+Hi all,
 
-Please sort nodes alphabetically by label.
+Today's linux-next merge of the staging tree got conflicts in:
 
-Regards,
-Bjorn
+  drivers/staging/exfat/Kconfig
+  MAINTAINERS
 
-> +	gpio-line-names =
-> +		"NC",
-> +		"NC",
-> +		"WLAN_SW_CTRL",
-> +		"NC",
-> +		"PM_GPIO5_BLUE_BT_LED",
-> +		"VOL_UP_N",
-> +		"NC",
-> +		"ADC_IN1",
-> +		"PM_GPIO9_YEL_WIFI_LED",
-> +		"CAM0_AVDD_EN",
-> +		"NC",
-> +		"CAM0_DVDD_EN",
-> +		"PM_GPIO13_GREEN_U4_LED",
-> +		"DIV_CLK2",
-> +		"NC",
-> +		"NC",
-> +		"NC",
-> +		"SMB_STAT",
-> +		"NC",
-> +		"NC",
-> +		"ADC_IN2",
-> +		"OPTION1",
-> +		"WCSS_PWR_REQ",
-> +		"PM845_GPIO24",
-> +		"OPTION2",
-> +		"PM845_SLB";
-> +};
-> +
->  &cci {
->  	status = "ok";
->  };
-> -- 
-> 2.20.1
-> 
+between commits:
+
+  88ab55f16aae ("MAINTAINERS: add exfat filesystem")
+  1a3c0509ce83 ("staging: exfat: make staging/exfat and fs/exfat mutually e=
+xclusive")
+
+from the vfs tree and commit:
+
+  590a95e418d1 ("staging: exfat: remove staging version of exfat filesystem=
+")
+
+from the staging tree.
+
+I fixed it up (I removed the first file and see below) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
+
+diff --cc MAINTAINERS
+index 4698de48c727,836f1e262b4e..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -6361,19 -6301,6 +6356,13 @@@ F:	include/trace/events/mdio.
+  F:	include/uapi/linux/mdio.h
+  F:	include/uapi/linux/mii.h
+ =20
+ +EXFAT FILE SYSTEM
+ +M:	Namjae Jeon <namjae.jeon@samsung.com>
+ +M:	Sungjong Seo <sj1557.seo@samsung.com>
+ +L:	linux-fsdevel@vger.kernel.org
+ +S:	Maintained
+ +F:	fs/exfat/
+ +
+- EXFAT FILE SYSTEM
+- M:	Valdis Kletnieks <valdis.kletnieks@vt.edu>
+- L:	linux-fsdevel@vger.kernel.org
+- S:	Maintained
+- F:	drivers/staging/exfat/
+-=20
+  EXT2 FILE SYSTEM
+  M:	Jan Kara <jack@suse.com>
+  L:	linux-ext4@vger.kernel.org
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hhH77Ac4SP7uwLa4OQbKUn/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5pxckACgkQAVBC80lX
+0Gzl9Qf+OAHFNrC5XHHetF4YEvpkn8866fB0Sc+r9911RrglcPoYYCNi74ekZ1Ud
+5dAPJGURf0vJzF+kjSmU9qt9gu8SLzYzrU3uaXuDNAUXywwreLkgSVxDgdhvcNBx
+SuFdO5rU5g7lm3/ZCM8aIYUrlVSlm2E++ZcMTHEEmw2fDroouVahhEVqgS1dLo2I
+QeZA0FvGiXUFYNIR+cCVcf2BW5Nedrvs7LT8VJNmLCYX8YlnCgpLOKqQBpuGyXP/
+jifp3G0YuHzqqvxWN7Plym2Wyba+3pVXUWHHP4/bNEO+vV28kOTrz/auOlbMJscD
+uSlnT/UB61FzGoEcM8bhClhwN3KZDw==
+=CB5t
+-----END PGP SIGNATURE-----
+
+--Sig_/hhH77Ac4SP7uwLa4OQbKUn/--
