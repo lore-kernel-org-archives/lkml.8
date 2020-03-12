@@ -2,88 +2,122 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DD4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FB3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4E2206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239FD206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:11:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpPEQIvp"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Bf1DO3jq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCLRJs (ORCPT
+        id S1726616AbgCLRLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:09:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44343 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgCLRJs (ORCPT
+        Thu, 12 Mar 2020 13:11:13 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:35580 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725268AbgCLRLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:09:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l18so8435307wru.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QEESwEEJWVk/Eaie2wY+AKo8HU4RSekgrz+DHvxmm5E=;
-        b=dpPEQIvpVfuOgU6AmC+A57NwArmXTZaDNTHjN8QoeqJuHN8YX4WC4af9BgX2fC2YHo
-         waxiAFjkmisGXMJrpZ2Lp0WwhGWQluI9ZqrVlsoimGCJ0cOkjl/7V69uZU/IjmS3z4zP
-         F0okTfOQ0LxnKIaVSKhA5WEHd1va+aUSR0a5sfPQ7MBEUbTJgmzkRwV7TJrXZ9DyT7uZ
-         6Yh+RvsFaX41Nl0Ze/H6x3mQWBquZcDQWCBe5LLw5P3ScIaT8lvLMlV0BQc2oTV8nZOR
-         1k1rPUtZwHnZPlmV9fS38zIDKg87G+5Q6pK8b/KtTqLgIR/ucwK0e5Ozene0MDaHRo2G
-         r/pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QEESwEEJWVk/Eaie2wY+AKo8HU4RSekgrz+DHvxmm5E=;
-        b=MsUkDLL01EU+6C4ZO5pEFgqJn9PEBqA+YP6LwHYThQAlnK2gvmKRt1X0AL2HCMEZsb
-         1rQhsWdmzQ0toL1i+RMz9dSLVFggZCzFSoKu5gpbh/qmFPy6y+FkWYyAp5HhtdTCe3qa
-         YhAG3YO/RcUNyyuVApwhtcMNV8Gsdr4MZk5ADuUFjjCWIRojRCtuYY0Y6x1KbGuoeG+Z
-         c3FPsp4ll2lp2qKt3vbsu0v1EplZU1rg32UXBmTS7njMZUkrF2ZZHta0ITY5rXUTOVck
-         S6N4d0+WihDlnmS1VWLtqCmf7pbhLqfBEH+AzeNxM70dzTjQ8Cc0zZI3yUaYsg5cCBq3
-         JTdw==
-X-Gm-Message-State: ANhLgQ2myMHHkitnLEOoRis4MCfZy8ufDmM2E4TbBhxgMeybpeIVfwIN
-        fPwM36Es6VHafCeB84TlEA==
-X-Google-Smtp-Source: ADFU+vsscIblCfkyjI7U5u1LcYlZrU/edQsOnnaoqZAKPyti+cuA4nnArYjtbW9q9ubdiiVC7GJ/pg==
-X-Received: by 2002:adf:ec45:: with SMTP id w5mr11889324wrn.230.1584032984978;
-        Thu, 12 Mar 2020 10:09:44 -0700 (PDT)
-Received: from avx2 ([46.53.253.3])
-        by smtp.gmail.com with ESMTPSA id d1sm13661714wrw.52.2020.03.12.10.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 10:09:44 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 20:09:42 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched: make nr_running() return "unsigned int"
-Message-ID: <20200312170942.GA7151@avx2>
-References: <20200311210608.GA4517@avx2>
- <20200312104427.GR12561@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200312104427.GR12561@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Mar 2020 13:11:12 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BC89DC108F;
+        Thu, 12 Mar 2020 17:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1584033071; bh=RUZ06YpRLzyaBlmEnxJDWqWGZVaL9x59tY1GJl9HBbI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=Bf1DO3jqgYszy2mwbkeiMoop+bCOYdFIKwc3AXAcHTa8KBhjXvcg7DtsKx+W8iZOU
+         BI/w3ICCKGU1+8UpMJc/ZVUa61NeF08R84Ed4TNB6jTfU9Dwewej744jiSWpbbUtsf
+         UM+O1m2em4Ni9UgoQZMu23aZaeET6JVequxiHbXhzZeqaQQcc6Q0JAPVhCSwreC/4O
+         Wa8hc9p0onbEU8ojusC7a1OH9uoFFDyUO5WUNGSLEtEOfSFLehLF5QgQ0e6Fm22cbk
+         fqN1v6Soi654A50WdFayJ25Fcw/GJrxyJJahJLQDOwwregKs1YKwhZgaaDKrmDxGx+
+         XE0MmUKxIHhDg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id D7265A0066;
+        Thu, 12 Mar 2020 17:11:08 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 2/2] net: phylink: Add XLGMII support
+Date:   Thu, 12 Mar 2020 18:10:10 +0100
+Message-Id: <93845427e483f2f0a31b48f2de00ce3208f5f50b.1584031294.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1584031294.git.Jose.Abreu@synopsys.com>
+References: <cover.1584031294.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1584031294.git.Jose.Abreu@synopsys.com>
+References: <cover.1584031294.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:44:27AM +0100, Peter Zijlstra wrote:
-> On Thu, Mar 12, 2020 at 12:06:08AM +0300, Alexey Dobriyan wrote:
-> > I don't anyone have been crazy enough to spawn 2^32 threads.
-> > It'd require absurd amounts of physical memory.
-> 
-> And we're going to 5 level page-tables because 48 bits physical isn't
-> enough. 57 bits of physical is plenty space to spawn that many tasks and
-> still have some left over.
-> 
-> Now 32 bit tasks is indeed insane, but memory isn't the problem. The
-> actual limit is the pid-space, which is 30 bits.
+Add XLGMII interface and the list of XLGMII speeds to PHYLINK.
 
-Indeed, pid space limit is even better!
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+
+---
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/phy/phylink.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 19db68d74cb4..2f592aa1a225 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -326,6 +326,33 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
+ 			phylink_set(pl->supported, 10000baseER_Full);
+ 			break;
+ 
++		case PHY_INTERFACE_MODE_XLGMII:
++			phylink_set(pl->supported, 25000baseCR_Full);
++			phylink_set(pl->supported, 25000baseKR_Full);
++			phylink_set(pl->supported, 25000baseSR_Full);
++			phylink_set(pl->supported, 40000baseKR4_Full);
++			phylink_set(pl->supported, 40000baseCR4_Full);
++			phylink_set(pl->supported, 40000baseSR4_Full);
++			phylink_set(pl->supported, 40000baseLR4_Full);
++			phylink_set(pl->supported, 50000baseCR2_Full);
++			phylink_set(pl->supported, 50000baseKR2_Full);
++			phylink_set(pl->supported, 50000baseSR2_Full);
++			phylink_set(pl->supported, 50000baseKR_Full);
++			phylink_set(pl->supported, 50000baseSR_Full);
++			phylink_set(pl->supported, 50000baseCR_Full);
++			phylink_set(pl->supported, 50000baseLR_ER_FR_Full);
++			phylink_set(pl->supported, 50000baseDR_Full);
++			phylink_set(pl->supported, 100000baseKR4_Full);
++			phylink_set(pl->supported, 100000baseSR4_Full);
++			phylink_set(pl->supported, 100000baseCR4_Full);
++			phylink_set(pl->supported, 100000baseLR4_ER4_Full);
++			phylink_set(pl->supported, 100000baseKR2_Full);
++			phylink_set(pl->supported, 100000baseSR2_Full);
++			phylink_set(pl->supported, 100000baseCR2_Full);
++			phylink_set(pl->supported, 100000baseLR2_ER2_FR2_Full);
++			phylink_set(pl->supported, 100000baseDR2_Full);
++			break;
++
+ 		default:
+ 			phylink_err(pl,
+ 				    "incorrect link mode %s for in-band status\n",
+-- 
+2.7.4
+
