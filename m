@@ -2,134 +2,69 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9711C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B86C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82037206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598B520716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nNTIzEET"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nINd6GUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgCLKn2 (ORCPT
+        id S1726858AbgCLKoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:43:28 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:50275 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLKn2 (ORCPT
+        Thu, 12 Mar 2020 06:44:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56910 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLKob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:43:28 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 02CAh4cj016228;
-        Thu, 12 Mar 2020 19:43:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 02CAh4cj016228
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584009786;
-        bh=cUZIHu3WpQthGwKHqTfTR6+eqUmRT0xXwV9Ie8yoyFU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nNTIzEETvbJTWfCjfCJ09nCj2Z/kFOqzqEWTxJskoSFJn6XJkaJPq0crXYAxhHJ3N
-         p/uuqKfASY3y7q0pgFDHnaaw7YAlWFNtE1i0K0HSsCbNnyMHYqIB+27lVFQtc+CLGg
-         rTDwR7gKjLfaQW37M8Cx7Vqfp/Zfxamg/54NcFTP68R63aTRP2JhmpDy1GyKb+NW74
-         n51XS/ednndCiU33z39zNB6N3Kc4q6BlBvOoPeSmhGAhGvHNdxzdhS+YmOWWLXMiWm
-         qS8z2+9WGjKjFvLIQs8PHR8VpO0xKPDrEeNHR8JA33w7dhJVOHsLFfmQSck3Pn12Hl
-         yYwK70uMdPlKw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-cadence: set SDHCI_QUIRK2_PRESET_VALUE_BROKEN for UniPhier
-Date:   Thu, 12 Mar 2020 19:42:57 +0900
-Message-Id: <20200312104257.21017-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Mar 2020 06:44:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WqyumJrZ9gCw2EaxZyjuUmJeqSdvSfd5gO1r+0CDsHs=; b=nINd6GUIl977AwD1uxa3bR0VpV
+        Cgr4ologxSnNFISHq6+cq0RxheACedmpn0oAnY0o+BZPX2jZcrFABos9O9xxR/cH1T2LwWk7gbJ3r
+        UlSxMNPw13dO2ATIOKRXr1qvCSpYoEO4pJthzOevSop8xddKQpm5R0F9Xk9W5CPdhzvHw1OlCmBtH
+        y362EuEx9HF7braVeT0YiSaKEgUHJJdOyxAR7C6qC7fx09g9dflwruisHeXxuGIiwl8Fm09/1gB8j
+        dV1lBKcoG1UYOMMoIZ44wWU9113ers9gm2c/ZPIJskGx7f0qdwJmZjMTSBdOB7GUryh5ase1+JEW3
+        Sf4oOMhA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCLKI-00076U-SE; Thu, 12 Mar 2020 10:44:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAE25300328;
+        Thu, 12 Mar 2020 11:44:27 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D09922B7403B0; Thu, 12 Mar 2020 11:44:27 +0100 (CET)
+Date:   Thu, 12 Mar 2020 11:44:27 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched: make nr_running() return "unsigned int"
+Message-ID: <20200312104427.GR12561@hirez.programming.kicks-ass.net>
+References: <20200311210608.GA4517@avx2>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311210608.GA4517@avx2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDHCI_PRESET_FOR_* registers are not set for the UniPhier platform
-integration. (They are all read as zeros).
+On Thu, Mar 12, 2020 at 12:06:08AM +0300, Alexey Dobriyan wrote:
+> I don't anyone have been crazy enough to spawn 2^32 threads.
+> It'd require absurd amounts of physical memory.
 
-Set the SDHCI_QUIRK2_PRESET_VALUE_BROKEN quirk flag. Otherwise, the
-High Speed DDR mode on the eMMC controller (MMC_TIMING_MMC_DDR52)
-would not work.
+And we're going to 5 level page-tables because 48 bits physical isn't
+enough. 57 bits of physical is plenty space to spawn that many tasks and
+still have some left over.
 
-I split the platform data to give no impact to other platforms,
-although the UniPhier platform is currently only the upstream user
-of this IP.
-
-The SDHCI_QUIRK2_PRESET_VALUE_BROKEN flag is set if the compatible
-string matches to "socionext,uniphier-sd4hc".
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- drivers/mmc/host/sdhci-cadence.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index 5827d3751b81..e573495f8726 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -11,6 +11,7 @@
- #include <linux/mmc/host.h>
- #include <linux/mmc/mmc.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include "sdhci-pltfm.h"
- 
-@@ -235,6 +236,11 @@ static const struct sdhci_ops sdhci_cdns_ops = {
- 	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
- };
- 
-+static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
-+	.ops = &sdhci_cdns_ops,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+};
-+
- static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
- 	.ops = &sdhci_cdns_ops,
- };
-@@ -334,6 +340,7 @@ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
- static int sdhci_cdns_probe(struct platform_device *pdev)
- {
- 	struct sdhci_host *host;
-+	const struct sdhci_pltfm_data *data;
- 	struct sdhci_pltfm_host *pltfm_host;
- 	struct sdhci_cdns_priv *priv;
- 	struct clk *clk;
-@@ -350,8 +357,12 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	data = of_device_get_match_data(dev);
-+	if (!data)
-+		data = &sdhci_cdns_pltfm_data;
-+
- 	nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
--	host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data,
-+	host = sdhci_pltfm_init(pdev, data,
- 				struct_size(priv, phy_params, nr_phy_params));
- 	if (IS_ERR(host)) {
- 		ret = PTR_ERR(host);
-@@ -431,7 +442,10 @@ static const struct dev_pm_ops sdhci_cdns_pm_ops = {
- };
- 
- static const struct of_device_id sdhci_cdns_match[] = {
--	{ .compatible = "socionext,uniphier-sd4hc" },
-+	{
-+		.compatible = "socionext,uniphier-sd4hc",
-+		.data = &sdhci_cdns_uniphier_pltfm_data,
-+	},
- 	{ .compatible = "cdns,sd4hc" },
- 	{ /* sentinel */ }
- };
--- 
-2.17.1
-
+Now 32 bit tasks is indeed insane, but memory isn't the problem. The
+actual limit is the pid-space, which is 30 bits.
