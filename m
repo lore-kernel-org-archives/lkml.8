@@ -6,54 +6,116 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C54CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72292C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070832067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F05B2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgCLSj7 (ORCPT
+        id S1726548AbgCLSmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:39:59 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33678 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgCLSj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:39:58 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 06339157526A7;
-        Thu, 12 Mar 2020 11:39:57 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 11:39:57 -0700 (PDT)
-Message-Id: <20200312.113957.925508715253795165.davem@davemloft.net>
-To:     tanhuazhong@huawei.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com, kuba@kernel.org
-Subject: Re: [PATCH net 0/4] net: hns3: fixes for -net
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1583997066-24773-1-git-send-email-tanhuazhong@huawei.com>
-References: <1583997066-24773-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Mar 2020 11:39:58 -0700 (PDT)
+        Thu, 12 Mar 2020 14:42:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:39884 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCLSmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:42:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75A7430E;
+        Thu, 12 Mar 2020 11:42:16 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 776B33F67D;
+        Thu, 12 Mar 2020 11:42:13 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 18:42:11 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v8 00/11] arm64: Branch Target Identification support
+Message-ID: <20200312184211.GA3849205@arrakis.emea.arm.com>
+References: <20200227174417.23722-1-broonie@kernel.org>
+ <20200306102729.GC2503422@arrakis.emea.arm.com>
+ <20200309210505.GM4101@sirena.org.uk>
+ <20200310124226.GC4106@sirena.org.uk>
+ <20200311162858.GK3216816@arrakis.emea.arm.com>
+ <20200311172556.GJ5411@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311172556.GJ5411@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
-Date: Thu, 12 Mar 2020 15:11:02 +0800
-
-> This series includes several bugfixes for the HNS3 ethernet driver.
+On Wed, Mar 11, 2020 at 05:25:56PM +0000, Mark Brown wrote:
+> On Wed, Mar 11, 2020 at 04:28:58PM +0000, Catalin Marinas wrote:
+> > On Tue, Mar 10, 2020 at 12:42:26PM +0000, Mark Brown wrote:
+> > > Sorry, I realized thanks to Amit's off-list prompting that I was testing
+> > > that I was verifying with the wrong kernel binary here (user error since
+> > > it took me a while to sort out uprobes) so this isn't quite right - you
+> > > can probe the landing pads with or without this series.
 > 
-> [patch 1] fixes an "tc qdisc del" failure.
-> [patch 2] fixes SW & HW VLAN table not consistent issue.
-> [patch 3] fixes a RMW issue related to VLAN filter switch.
-> [patch 4] clears port based VLAN when uploading PF.
+> > Can we not change aarch64_insn_is_nop() to actually return true only for
+> > NOP and ignore everything else in the hint space? We tend to re-use the
+> > hint instructions for new things in the architecture, so I'd rather
+> > white-list what we know we can safely probe than black-listing only some
+> > of the hint instructions.
+[...]
+> > I haven't assessed the effort of doing the above (probably not a lot)
+> > but as a short-term workaround we could add the BTI and PAC hint
+> > instructions to the aarch64_insn_is_nop() (though my preferred option is
+> > the white-list one).
+> 
+> The only thing I've seen in testing with just NOPs whitelisted is an
+> inability to probe the PAC instructions which isn't the best user
+> experience, especially since the effect is that the probes get silently
+> ignored. This isn't extensive userspace testing though.  Adding
+> whitelisting of the BTI and PAC hints would definitely be a safer as a
+> first step though.  I can post either version?
 
-Series applied and queued up for -stable.
+I thought BTI and PAC are already whitelisted in mainline as they fall
+into the hint space (by whitelisting I mean you can probe them).
+
+I'm trying to understand how the BTI patches affect the current uprobes
+support and what is needed. Executing BTI or PCI?SP out of line should
+be fine as they don't generate a BTI exception (the BRK doesn't either,
+just the normal debug exception).
+
+I think (it needs checking) that BRK preserves the PSTATE.BTYPE in SPSR.
+If we probe an instruction in a guarded page and then we single-step it
+in a non-guarded page, we'll miss a potential BTI fault. Is this an
+issue?
+
+If we are to keep the BTI faulting behaviour, we'd need an additional
+xol page, guarded, and to find a way to report the original probed
+address of the fault rather than the xol page.
+
+So, IIUC, we don't have an issue with the actual BTI or PACI?SP
+instructions but rather the other instructions that would not fault with
+the BTI support. While we should try to address this, I think the
+important bit now is not to break the existing uprobes support when
+running a binary with BTI enabled.
+
+Have I missed anything?
+
+-- 
+Catalin
