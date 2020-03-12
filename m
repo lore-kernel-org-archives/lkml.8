@@ -2,127 +2,68 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C041C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BCCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2122067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:25:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhZ1FUP/"
+	by mail.kernel.org (Postfix) with ESMTP id DACBA206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgCLJZd (ORCPT
+        id S1726885AbgCLJZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:25:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36776 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLJZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:25:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g62so5402136wme.1;
-        Thu, 12 Mar 2020 02:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=tZo5ZZ4tIC41ljTxXlaCIM/Fz/u40m/fyXeMfkYNLyw=;
-        b=YhZ1FUP/rMwvBvnBw7Izh4PEz309HMRj4HUaKJAaQJNqzBUUnWueYQAbcBOGuvTGj9
-         CIADtmBrZ/bMAUR+zgAVRIKZWZZofPH2M3ndSRGQKnKj4BWD5KJD/lHrYhnUGH2gIqMd
-         hxoX9o4W5PeSCzXqMh2LZGcjj41UgVIXOvE2yB1SfNgtb4NAO3YaMKT5nxRl/rm+gg2m
-         Xu8DYlMPSCehGN7WxWrIIcNpuzX91j4CsjDPOS91xuYfYVHoAMeg8WgXwMpND7VCmrc+
-         PtLPC/xF4cV7Xrda/NbQS3nbUQmitKHjN+UdEggfajHLV8VNKWiSnUZ8ps0EpG14KmQn
-         kJng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=tZo5ZZ4tIC41ljTxXlaCIM/Fz/u40m/fyXeMfkYNLyw=;
-        b=XJAIEaK9HbJagzpzB3KnH3BBdbdyYWsub0qS1VNtvwsVghg0VwRqeSHrDrV0KmGN4b
-         wI16F6PmRmBA+nvdmE2Wi9q/wPX1IFwQBu4DBSjAeMbFMeO63csLzE8+OBG46vq5Igye
-         RBhU28UYfAzgh8F3mpBG76Yzv6fDIsdv/oiG9og+tx3w1udOvsWwjHmkHc+0SxXtQRBu
-         wFl/7M/RAdWTUKfMQX2m4VvkQmjByqe2exDvBT1xNSdKcfYTl+7iz+cQ+Yavh9AynXPF
-         MCD3bBo5nAztMHHBaZfXmm404WGBJ79b7FlLgivC9egqiB4MqFsMXx/uYOETvj6aGoFU
-         VUrg==
-X-Gm-Message-State: ANhLgQ3P7mXbP8uSOMELuuZ+/Fsrmixh9NpkiQx+5Ysy/iuwdTh8hvyo
-        W+3VKHVBbdrjzACZNp9waRU=
-X-Google-Smtp-Source: ADFU+vsdOlYqq4H+9zCS3gDmdlLhT3AWt61eJ62oAqQOXttc+gmok2ZjHu1svwnWTs7TkHdvI8Tc/A==
-X-Received: by 2002:a1c:9d41:: with SMTP id g62mr3995118wme.131.1584005130211;
-        Thu, 12 Mar 2020 02:25:30 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:598e:6e04:3a30:76a6])
-        by smtp.gmail.com with ESMTPSA id c23sm12093081wme.39.2020.03.12.02.25.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Mar 2020 02:25:29 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     <agross@kernel.org>, "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200311130918.753-1-ansuelsmth@gmail.com> <20200312054649.GG1098305@builder>
-In-Reply-To: <20200312054649.GG1098305@builder>
-Subject: R: [PATCH 1/2] firmware: qcom_scm: add ipq806x with no clock
-Date:   Thu, 12 Mar 2020 10:25:26 +0100
-Message-ID: <00aa01d5f850$2b6ddcb0$82499610$@gmail.com>
+        Thu, 12 Mar 2020 05:25:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52852 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCLJZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 05:25:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DE82FAC6E;
+        Thu, 12 Mar 2020 09:25:33 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 3D203E0C79; Thu, 12 Mar 2020 10:25:33 +0100 (CET)
+Date:   Thu, 12 Mar 2020 10:25:33 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
+        jiri@resnulli.us, andrew@lunn.ch, f.fainelli@gmail.com,
+        linville@tuxdriver.com, johannes@sipsolutions.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 04/15] ethtool: add ethnl_parse_bitset() helper
+Message-ID: <20200312092533.GL8012@unicorn.suse.cz>
+References: <cover.1583962006.git.mkubecek@suse.cz>
+ <70fe704ddd961de7250e2cb7800369509ed6e1d8.1583962006.git.mkubecek@suse.cz>
+ <20200311.224821.1526910923298377538.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQLDpUr6d+Ge4N83XEGEcKjyX1zZ/AG5FpfzpluLgMA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311.224821.1526910923298377538.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed 11 Mar 06:09 PDT 2020, Ansuel Smith wrote:
+On Wed, Mar 11, 2020 at 10:48:21PM -0700, David Miller wrote:
+> From: Michal Kubecek <mkubecek@suse.cz>
+> Date: Wed, 11 Mar 2020 22:40:23 +0100 (CET)
 > 
-> > ipq806x rpm definition was missing for a long time.
-> > Add this to make this soc support rpm.
-> >
+> > +int ethnl_parse_bitset(unsigned long *val, unsigned long *mask,
+> > +		       unsigned int nbits, const struct nlattr *attr,
+> > +		       ethnl_string_array_t names,
+> > +		       struct netlink_ext_ack *extack)
+> > +{
+>  ...
+> > +		if (bit_val)
+> > +			set_bit(idx, val);
+> > +		if (!no_mask)
+> > +			set_bit(idx, mask);
 > 
-> I merged the dt-binding patch, but please update dts to use:
-> 	compatible = "qcom,scm-ipq806x", "qcom,scm";
-> 
-> instead of adding the platform specific compatible in the driver.
-> 
-> Regards,
-> Bjorn
-> 
+> You can certainly use non-atomic __set_bit() in this context.
 
-Should I drop the added compatible in qcom_scm.c or just
-keep it and add the definition in the ipq806x dts?
+Right, thanks.
 
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/firmware/qcom_scm.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/firmware/qcom_scm.c
-> b/drivers/firmware/qcom_scm.c
-> > index 059bb0fbae9e..d13ef3cd8cf5 100644
-> > --- a/drivers/firmware/qcom_scm.c
-> > +++ b/drivers/firmware/qcom_scm.c
-> > @@ -1144,6 +1144,7 @@ static const struct of_device_id
-> qcom_scm_dt_match[] = {
-> >
-> SCM_HAS_BUS_CLK)
-> >  	},
-> >  	{ .compatible = "qcom,scm-ipq4019" },
-> > +	{ .compatible = "qcom,scm-ipq806x" },
-> >  	{ .compatible = "qcom,scm-msm8660", .data = (void *)
-> SCM_HAS_CORE_CLK },
-> >  	{ .compatible = "qcom,scm-msm8960", .data = (void *)
-> SCM_HAS_CORE_CLK },
-> >  	{ .compatible = "qcom,scm-msm8916", .data = (void
-> *)(SCM_HAS_CORE_CLK |
-> > --
-> > 2.25.0
-> >
-
+Michal
