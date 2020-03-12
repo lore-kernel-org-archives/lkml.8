@@ -2,117 +2,223 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B824C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BE0C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA1620578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583996203;
-	bh=R4dR6LiyS8F96lk8sKdXqYr8PH/GVFePMCViEn36wzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jTfFdkrF537HJlmeT9ADDDrUfgKm3BcInJ8B/cyuBsHM/oXxpiv0Ga9ZINm9EFwlp
-	 /ts7I/eCVp5H4KRjFcSinwWxHlK2YWpySwCQz456s9le7Fl9q/nvCNqfYIKA6+7Rb+
-	 Fah8CauHtc77WVLfAb0fxfFEBNhn24OBXf+RESjg=
+	by mail.kernel.org (Postfix) with ESMTP id 5DAD120578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388013AbgCLG4m (ORCPT
+        id S2388024AbgCLG51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:56:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387831AbgCLG4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:56:41 -0400
-Received: from localhost (unknown [122.167.115.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B6B9206FA;
-        Thu, 12 Mar 2020 06:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583996201;
-        bh=R4dR6LiyS8F96lk8sKdXqYr8PH/GVFePMCViEn36wzE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zbFCWKmd1Yhvc6uLbNXFl+MlQ0raM/B+n5i5qqfNjZTr/t7zkyeksoG1eMFlkNp8v
-         Vw93YZwKOumS+uOEaWUtHxvCWuNv9syeD9mYRGQXA9GhUrBoiq6RKIydwzsFwz8z+C
-         z1f+2MBCrF6IZFx5Ih9oRVZLjgvvunMeHjarGa/4=
-Date:   Thu, 12 Mar 2020 12:26:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
-Message-ID: <20200312065636.GX4885@vkoul-mobl>
-References: <20200113084005.849071-1-vkoul@kernel.org>
- <20200121064608.GA2841@vkoul-mobl>
- <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
- <5878067.luYmtVZgP3@debian64>
- <20200125053237.GG2841@vkoul-mobl>
- <64340358-6682-4ae0-9c06-d72d5a4ff259@linux.intel.com>
- <20200131084041.GI2841@vkoul-mobl>
- <1ce257f5-df10-73ac-53ea-1c771abe70f2@linux.intel.com>
+        Thu, 12 Mar 2020 02:57:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11667 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387831AbgCLG50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 02:57:26 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0A42B9EC5D086AEAD8DE;
+        Thu, 12 Mar 2020 14:57:08 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
+ 14:56:58 +0800
+Subject: Re: [PATCH v5 03/23] irqchip/gic-v4.1: Ensure mutual exclusion
+ between vPE affinity change and RD access
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-4-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <b2c9b596-29b9-d785-3a60-9814d1c35655@huawei.com>
+Date:   Thu, 12 Mar 2020 14:56:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ce257f5-df10-73ac-53ea-1c771abe70f2@linux.intel.com>
+In-Reply-To: <20200304203330.4967-4-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-02-20, 18:33, Mathias Nyman wrote:
-
-> > > 
-> > > There are a few other opens regarding this series. Mostly because I'm not (yet)
-> > > familiar with all the details, so I'll just just list them here.
-> > > 
-> > > - Is it really enough to add the Renesas driver to Makefile before xhci-pci
-> > >    driver to make sure it gets matched and probed based on vendor/device id
-> > >    before xhci-pci driver is matched and probed based on pci class?
-> > >    What if the Renesas driver is a module and xhci-pci compiled in?
-> > 
-> > The driver loading rules are based on level and makefile order. So
-> > renesas will always be loaded before xhci driver. This is required since
-> > xhci claims all devices, so we need to make sure it loads before.
-> > 
-> > I think we should make it inbuilt driver rather than a module. xhci
-> > driver is only inbuilt.
-> > 
-> > If there is a better way to handle this, am all for it.
-> > 
-> > > - Previously probe didn't return before hcd's were added and everything set up.
-> > >    Now with request_firmware_nowait() probe returns early successfully, and the
-> > >    old xhci_pci_probe() which sets up everything is called later by the request
-> > >    firmware callback. So there could be whole new set of races possible.
-> > >    For example pci remove can be called mid firmware loading, or when the old
-> > >    xhci_pci_probe is still setting up things.
-> > 
-> > I think this is a valid concern. Let me think about how to solve this..
-> > maybe add a flag in remove which ensure remove doesnt run untill the
-> > probe/firmware callback is completed.
+On 2020/3/5 4:33, Marc Zyngier wrote:
+> Before GICv4.1, all operations would be serialized with the affinity
+> changes by virtue of using the same ITS command queue. With v4.1, things
+> change, as invalidations (and a number of other operations) are issued
+> using the redistributor MMIO frame.
 > 
-> How about initiating async firmware loading before probe is called by using
-> DECLARE_PCI_FIXUP_*() hooks?
+> We must thus make sure that these redistributor accesses cannot race
+> against aginst the affinity change, or we may end-up talking to the
+          ^^^^^^
+> wrong redistributor.
+> 
+> To ensure this, we expand the irq_to_cpuid() helper to take a spinlock
+> when the LPI is mapped to a vLPI (a new per-VPE lock) on each operation
+> that requires mutual exclusion.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Well somehow that does not work :(
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
-I tried using DECLARE_PCI_FIXUP_FINAL hook to request the firmware.
-Doing so from probe works but from fixup fails always!
-
-So expect this one, I have done the rest of the changes requested, will
-send them over soon
 
 Thanks
--- 
-~Vinod
+
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c   | 56 +++++++++++++++++++++++++-----
+>   include/linux/irqchip/arm-gic-v4.h |  5 +++
+>   2 files changed, 53 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index da883a691028..1af713990123 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -239,15 +239,41 @@ static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
+>   	return NULL;
+>   }
+>   
+> -static int irq_to_cpuid(struct irq_data *d)
+> +static int vpe_to_cpuid_lock(struct its_vpe *vpe, unsigned long *flags)
+> +{
+> +	raw_spin_lock_irqsave(&vpe->vpe_lock, *flags);
+> +	return vpe->col_idx;
+> +}
+> +
+> +static void vpe_to_cpuid_unlock(struct its_vpe *vpe, unsigned long flags)
+> +{
+> +	raw_spin_unlock_irqrestore(&vpe->vpe_lock, flags);
+> +}
+> +
+> +static int irq_to_cpuid_lock(struct irq_data *d, unsigned long *flags)
+>   {
+> -	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+>   	struct its_vlpi_map *map = get_vlpi_map(d);
+> +	int cpu;
+>   
+> -	if (map)
+> -		return map->vpe->col_idx;
+> +	if (map) {
+> +		cpu = vpe_to_cpuid_lock(map->vpe, flags);
+> +	} else {
+> +		/* Physical LPIs are already locked via the irq_desc lock */
+> +		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> +		cpu = its_dev->event_map.col_map[its_get_event_id(d)];
+> +		/* Keep GCC quiet... */
+> +		*flags = 0;
+> +	}
+>   
+> -	return its_dev->event_map.col_map[its_get_event_id(d)];
+> +	return cpu;
+> +}
+> +
+> +static void irq_to_cpuid_unlock(struct irq_data *d, unsigned long flags)
+> +{
+> +	struct its_vlpi_map *map = get_vlpi_map(d);
+> +
+> +	if (map)
+> +		vpe_to_cpuid_unlock(map->vpe, flags);
+>   }
+>   
+>   static struct its_collection *valid_col(struct its_collection *col)
+> @@ -1329,7 +1355,9 @@ static void direct_lpi_inv(struct irq_data *d)
+>   {
+>   	struct its_vlpi_map *map = get_vlpi_map(d);
+>   	void __iomem *rdbase;
+> +	unsigned long flags;
+>   	u64 val;
+> +	int cpu;
+>   
+>   	if (map) {
+>   		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> @@ -1344,10 +1372,12 @@ static void direct_lpi_inv(struct irq_data *d)
+>   	}
+>   
+>   	/* Target the redistributor this LPI is currently routed to */
+> -	rdbase = per_cpu_ptr(gic_rdists->rdist, irq_to_cpuid(d))->rd_base;
+> +	cpu = irq_to_cpuid_lock(d, &flags);
+> +	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
+>   	gic_write_lpir(val, rdbase + GICR_INVLPIR);
+>   
+>   	wait_for_syncr(rdbase);
+> +	irq_to_cpuid_unlock(d, flags);
+>   }
+>   
+>   static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
+> @@ -3486,17 +3516,25 @@ static int its_vpe_set_affinity(struct irq_data *d,
+>   {
+>   	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>   	int from, cpu = cpumask_first(mask_val);
+> +	unsigned long flags;
+>   
+>   	/*
+>   	 * Changing affinity is mega expensive, so let's be as lazy as
+>   	 * we can and only do it if we really have to. Also, if mapped
+>   	 * into the proxy device, we need to move the doorbell
+>   	 * interrupt to its new location.
+> +	 *
+> +	 * Another thing is that changing the affinity of a vPE affects
+> +	 * *other interrupts* such as all the vLPIs that are routed to
+> +	 * this vPE. This means that the irq_desc lock is not enough to
+> +	 * protect us, and that we must ensure nobody samples vpe->col_idx
+> +	 * during the update, hence the lock below which must also be
+> +	 * taken on any vLPI handling path that evaluates vpe->col_idx.
+>   	 */
+> -	if (vpe->col_idx == cpu)
+> +	from = vpe_to_cpuid_lock(vpe, &flags);
+> +	if (from == cpu)
+>   		goto out;
+>   
+> -	from = vpe->col_idx;
+>   	vpe->col_idx = cpu;
+>   
+>   	/*
+> @@ -3512,6 +3550,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
+>   
+>   out:
+>   	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+> +	vpe_to_cpuid_unlock(vpe, flags);
+>   
+>   	return IRQ_SET_MASK_OK_DONE;
+>   }
+> @@ -3855,6 +3894,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+>   		return -ENOMEM;
+>   	}
+>   
+> +	raw_spin_lock_init(&vpe->vpe_lock);
+>   	vpe->vpe_id = vpe_id;
+>   	vpe->vpt_page = vpt_page;
+>   	if (gic_rdists->has_rvpeid)
+> diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+> index d9c34968467a..439963f4c66a 100644
+> --- a/include/linux/irqchip/arm-gic-v4.h
+> +++ b/include/linux/irqchip/arm-gic-v4.h
+> @@ -53,6 +53,11 @@ struct its_vpe {
+>   		};
+>   	};
+>   
+> +	/*
+> +	 * Ensures mutual exclusion between affinity setting of the
+> +	 * vPE and vLPI operations using vpe->col_idx.
+> +	 */
+> +	raw_spinlock_t		vpe_lock;
+>   	/*
+>   	 * This collection ID is used to indirect the target
+>   	 * redistributor for this VPE. The ID itself isn't involved in
+> 
+
