@@ -2,142 +2,148 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26472C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157382071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71D72072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:52:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C1/I6q/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgCLNv4 (ORCPT
+        id S1727513AbgCLNvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:51:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:35130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727270AbgCLNv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:51:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A810D30E;
-        Thu, 12 Mar 2020 06:51:55 -0700 (PDT)
-Received: from [10.37.12.166] (unknown [10.37.12.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A2B83F534;
-        Thu, 12 Mar 2020 06:51:54 -0700 (PDT)
-Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
- and delivery
-To:     Cristian Marussi <cristian.marussi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
- <20200304162558.48836-8-cristian.marussi@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
-Date:   Thu, 12 Mar 2020 13:51:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Mar 2020 09:51:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46822 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727435AbgCLNvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:51:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=piGWWulTk/Ov0pTiMRYfA+U7bMQU7zVTS0znoAEkY9M=; b=C1/I6q/ODL3KWeoyiZrHLkX910
+        7A+NHYoWvcKw9S/CPZE/6oIs/HdMoTraUzZIx7ZT+zgrnSHzQ/abV+zajN1QegBH1XDtBAHf/td25
+        83a7I7nQqKT9FSIyEDDqDMd7MEhtg3X2+4Ax+ja3g8QIMDUw489do8TKLaJ03YRv8BIvNiLvSlxl2
+        2rL+GTcxz99KpbYtYWw6JQfFuaW87Cz7pX2+LZxd2F0yrh8++bXo8/TzeEeWGHTLC7a+r1TDMBLbE
+        AoUsY+V6faDIqErhJ21aMkxg/siDaxXpVL+gj5kYV9SuLFCYScOPqVr0WswafM/bQP30byIcQv6Y+
+        NhAErP+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCOFM-0003AP-O1; Thu, 12 Mar 2020 13:51:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3182F305C92;
+        Thu, 12 Mar 2020 14:51:34 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 08EB72B7403A7; Thu, 12 Mar 2020 14:51:34 +0100 (CET)
+Message-Id: <20200312135041.465550716@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 12 Mar 2020 14:41:08 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de, jpoimboe@redhat.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org
+Subject: [RFC][PATCH 01/16] objtool: Introduce validate_return()
+References: <20200312134107.700205216@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200304162558.48836-8-cristian.marussi@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cristian,
+Trivial 'cleanup' to save one indentation level and match
+validate_call().
 
-just one comment below...
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ tools/objtool/check.c |   64 ++++++++++++++++++++++++++++----------------------
+ 1 file changed, 36 insertions(+), 28 deletions(-)
 
-On 3/4/20 4:25 PM, Cristian Marussi wrote:
-> Add core SCMI Notifications dispatch and delivery support logic which is
-> able, at first, to dispatch well-known received events from the RX ISR to
-> the dedicated deferred worker, and then, from there, to final deliver the
-> events to the registered users' callbacks.
-> 
-> Dispatch and delivery is just added here, still not enabled.
-> 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> ---
-> V3 --> V4
-> - dispatcher now handles dequeuing of events in chunks (header+payload):
->    handling of these in_flight events let us remove one unneeded memcpy
->    on RX interrupt path (scmi_notify)
-> - deferred dispatcher now access their own per-protocol handlers' table
->    reducing locking contention on the RX path
-> V2 --> V3
-> - exposing wq in sysfs via WQ_SYSFS
-> V1 --> V2
-> - splitted out of V1 patch 04
-> - moved from IDR maps to real HashTables to store event_handlers
-> - simplified delivery logic
-> ---
->   drivers/firmware/arm_scmi/notify.c | 334 ++++++++++++++++++++++++++++-
->   drivers/firmware/arm_scmi/notify.h |   9 +
->   2 files changed, 342 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-
-[snip]
-
-> +
-> +/**
-> + * scmi_notify  - Queues a notification for further deferred processing
-> + *
-> + * This is called in interrupt context to queue a received event for
-> + * deferred processing.
-> + *
-> + * @handle: The handle identifying the platform instance from which the
-> + *	    dispatched event is generated
-> + * @proto_id: Protocol ID
-> + * @evt_id: Event ID (msgID)
-> + * @buf: Event Message Payload (without the header)
-> + * @len: Event Message Payload size
-> + * @ts: RX Timestamp in nanoseconds (boottime)
-> + *
-> + * Return: 0 on Success
-> + */
-> +int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
-> +		const void *buf, size_t len, u64 ts)
-> +{
-> +	struct scmi_registered_event *r_evt;
-> +	struct scmi_event_header eh;
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	/* Ensure atomic value is updated */
-> +	smp_mb__before_atomic();
-> +	if (unlikely(!atomic_read(&ni->enabled)))
-> +		return 0;
-> +
-> +	r_evt = SCMI_GET_REVT(ni, proto_id, evt_id);
-> +	if (unlikely(!r_evt))
-> +		return -EINVAL;
-> +
-> +	if (unlikely(len > r_evt->evt->max_payld_sz)) {
-> +		pr_err("SCMI Notifications: discard badly sized message\n");
-> +		return -EINVAL;
-> +	}
-> +	if (unlikely(kfifo_avail(&r_evt->proto->equeue.kfifo) <
-> +		     sizeof(eh) + len)) {
-> +		pr_warn("SCMI Notifications: queue full dropping proto_id:%d  evt_id:%d  ts:%lld\n",
-> +			proto_id, evt_id, ts);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	eh.timestamp = ts;
-> +	eh.evt_id = evt_id;
-> +	eh.payld_sz = len;
-> +	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
-> +	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
-> +	queue_work(r_evt->proto->equeue.wq,
-> +		   &r_evt->proto->equeue.notify_work);
-
-Is it safe to ignore the return value from the queue_work here?
-
-Regards,
-Lukasz
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1935,6 +1935,41 @@ static int validate_sibling_call(struct
+ 	return validate_call(insn, state);
+ }
+ 
++static int validate_return(struct symbol *func, struct instruction *insn, struct insn_state *state)
++{
++	if (state->uaccess && !func_uaccess_safe(func)) {
++		WARN_FUNC("return with UACCESS enabled",
++			  insn->sec, insn->offset);
++		return 1;
++	}
++
++	if (!state->uaccess && func_uaccess_safe(func)) {
++		WARN_FUNC("return with UACCESS disabled from a UACCESS-safe function",
++			  insn->sec, insn->offset);
++		return 1;
++	}
++
++	if (state->df) {
++		WARN_FUNC("return with DF set",
++			  insn->sec, insn->offset);
++		return 1;
++	}
++
++	if (func && has_modified_stack_frame(state)) {
++		WARN_FUNC("return with modified stack frame",
++			  insn->sec, insn->offset);
++		return 1;
++	}
++
++	if (state->bp_scratch) {
++		WARN("%s uses BP as a scratch register",
++		     func->name);
++		return 1;
++	}
++
++	return 0;
++}
++
+ /*
+  * Follow the branch starting at the given instruction, and recursively follow
+  * any other branches (jumps).  Meanwhile, track the frame pointer state at
+@@ -2050,34 +2085,7 @@ static int validate_branch(struct objtoo
+ 		switch (insn->type) {
+ 
+ 		case INSN_RETURN:
+-			if (state.uaccess && !func_uaccess_safe(func)) {
+-				WARN_FUNC("return with UACCESS enabled", sec, insn->offset);
+-				return 1;
+-			}
+-
+-			if (!state.uaccess && func_uaccess_safe(func)) {
+-				WARN_FUNC("return with UACCESS disabled from a UACCESS-safe function", sec, insn->offset);
+-				return 1;
+-			}
+-
+-			if (state.df) {
+-				WARN_FUNC("return with DF set", sec, insn->offset);
+-				return 1;
+-			}
+-
+-			if (func && has_modified_stack_frame(&state)) {
+-				WARN_FUNC("return with modified stack frame",
+-					  sec, insn->offset);
+-				return 1;
+-			}
+-
+-			if (state.bp_scratch) {
+-				WARN("%s uses BP as a scratch register",
+-				     func->name);
+-				return 1;
+-			}
+-
+-			return 0;
++			return validate_return(func, insn, &state);
+ 
+ 		case INSN_CALL:
+ 		case INSN_CALL_DYNAMIC:
 
 
