@@ -2,333 +2,149 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95A4C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D5BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75F020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DE120736
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QoAb6gFK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QI9Zf5tf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCLSLG (ORCPT
+        id S1726559AbgCLSM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:11:06 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:55525 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCLSLE (ORCPT
+        Thu, 12 Mar 2020 14:12:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37617 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgCLSMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:11:04 -0400
-Received: by mail-pj1-f67.google.com with SMTP id mj6so2730267pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:11:03 -0700 (PDT)
+        Thu, 12 Mar 2020 14:12:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 6so8725264wre.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1jkZ7AJWeJX31pPItMtQ3M7DJKtphTFHpNhNX7Qly0U=;
-        b=QoAb6gFKX7EfE1bIK+nwkeGcKII1LO23g2lG+2k9ljWhdBxBLx+6Krl+oiCa7RY6o0
-         R3Bbn1pcxNUThhpZQb/I32tuTg7DwkutwXkw3C4aEAeYT1JyEpULlM0IvYXniJNOt0SM
-         BiaSTyTiDsmdVoKDEZXNdp9xJMQn9nre+Smuo=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oCvhkhOGWzkyUs08OhjcBSXyOyBWPp197hqDSnmZuwM=;
+        b=QI9Zf5tfXQEWgOHfPqx9WHh07liBJT9PMNIQTBvz9gXW60I/2f1HLVVYKKQoBM4Jtw
+         ZeZQhXx8mqZpgSldm7PEsF/05CL8RYrcQI/U2ttVbj0BW7teExmc2Yn0NDoCjU4UJrF7
+         20kJ+v+JlbtaSdj2EmlkuolFdO3Q85uZGhOQoMgeGmcSL1gMrg6fJ4lJNO0VfsOMCr7x
+         lV+oJk4ToiFBTEr00YCGLHTnOhC6eN9GFgdqV88FgB/etfzutzhUINA/NQPAtVlC1c7f
+         Sdf9QnvIeLv4WL/8EzHqUupwXMJRovBpA5g7w6lp6ZfCpqkfPgljWRaddfEzHa6njbzi
+         FT0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1jkZ7AJWeJX31pPItMtQ3M7DJKtphTFHpNhNX7Qly0U=;
-        b=aNINvkqyikFBfScWUZ28peTLjT+usH/6SpsJffkdH/34j/0A6NZPpNSMNzeDusUUf/
-         dNJE+S+N/2O3Eb5ALW2rYGRHs8hLWLcvW24qpufFAboqPUXj5ZE+bRk50eXAs1zvOL+b
-         8LLp432e7VFe0JGELl/IVUiOuLGXKBR9YttbZ3ZNrItC2OuNKI1yRkKR5QU2fo032oF6
-         /7FAce/0rZx1Ws+gm1ROfN/mZaSO62OT5/3nTTqu3iE1BWMQsjJMvR1hNRhrZVpWe3oI
-         fZ51uPTrURwZLmP1SpxbhKO9D8PdZS1vTUJTETlJ8B59WMGo2e0TVgwS/20zJMi8+bVx
-         k2YA==
-X-Gm-Message-State: ANhLgQ3s3DSEtoeuuSyK7A1bv7KV7C3//ENhRQv6wN3meEtHd7bOcqoL
-        hy3g6M1T6NRYdaslT6ebHfHF5g==
-X-Google-Smtp-Source: ADFU+vsw3NahFCEBMGteIDtAocT6JndFQtFXaZTMSfXyJ7YszBfVl6Cp8D1TwzxJuXr/PNcj+vWU4g==
-X-Received: by 2002:a17:902:ba83:: with SMTP id k3mr8898506pls.26.1584036662845;
-        Thu, 12 Mar 2020 11:11:02 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id b18sm56787876pfd.63.2020.03.12.11.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 11:11:02 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 1/1] Bluetooth: Prioritize SCO traffic on slow interfaces
-Date:   Thu, 12 Mar 2020 11:10:55 -0700
-Message-Id: <20200312111036.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200312181055.94038-1-abhishekpandit@chromium.org>
-References: <20200312181055.94038-1-abhishekpandit@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oCvhkhOGWzkyUs08OhjcBSXyOyBWPp197hqDSnmZuwM=;
+        b=RcWcREfRBRiBQtVaxzrPv83BmxNhG2ObA4QOqlYLxiA15FMtd5EmmpQnyXJgknPhpp
+         47TgMhB6zq5Hd4+NIGic6chvbLRue8Z0UTq8LQtkhTGNNBUf+Oa0/nAf1/GjuPdJ6kmM
+         1n1WkHb5mu81MZVPNh//Z1CVMZuRhD5xUa32lCSeM11vBDnFWmQxpv9NfP0YbZTECcIE
+         Ww1vPb1VRn+gUlXHr1eRrdedBv2jplznGoDi1+ytG9W/gW9mViceiR7wogKARrj6N4F0
+         8hKrfgtemp7trkJfosm4yVkOjZZ8MP5+qTsh4t+9ThXvuuQphv8ZMK2Gp0cQEdBo8lnh
+         WB7Q==
+X-Gm-Message-State: ANhLgQ3pldXHPQ0px/Lbhp/02J0+eGCi/GZgPBNC4qpIYDeY7B8CRJto
+        G8AaF3XIP338ksqX2aMS5JzgJA==
+X-Google-Smtp-Source: ADFU+vsqvnPit2pHqQUGix7Z2T/F8hy4egh1j8+PdFVkEKCid3VFPG+pmRAPJG7Ou13WpRL2CjMFTg==
+X-Received: by 2002:a5d:5586:: with SMTP id i6mr12426084wrv.338.1584036772355;
+        Thu, 12 Mar 2020 11:12:52 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:40fb:3990:3519:cc26? ([2a01:e34:ed2f:f020:40fb:3990:3519:cc26])
+        by smtp.googlemail.com with ESMTPSA id k12sm16472910wrv.88.2020.03.12.11.12.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 11:12:51 -0700 (PDT)
+Subject: Re: [PATCH v7 0/8] thermal: tsens: Handle critical interrupts
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, swboyd@chromium.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+References: <cover.1584015867.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <16ce9d9e-0c20-9b71-d956-5b11acdb20f5@linaro.org>
+Date:   Thu, 12 Mar 2020 19:12:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <cover.1584015867.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When scheduling TX packets, send all SCO/eSCO packets first and then
-send only 1 ACL/LE packet in a loop while checking that there are no SCO
-packets pending. This is done to make sure that we can meet SCO
-deadlines on slow interfaces like UART. If we were to queue up multiple
-ACL packets without checking for a SCO packet, we might miss the SCO
-timing. For example:
+On 12/03/2020 13:36, Amit Kucheria wrote:
+> TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+> in case the FSM is stuck. Enable support in the driver.
+> 
+> This series was generated on top of v5.6-rc2.
 
-The time it takes to send a maximum size ACL packet (1024 bytes):
-t = 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
-        where 10/8 is uart overhead due to start/stop bits per byte
+Applied, thanks
 
-Replace t = 3.75ms (SCO deadline), which gives us a baudrate of 2730666
-and is pretty close to a common baudrate of 3000000 used for BT. At this
-baudrate, if we sent two 1024 byte ACL packets, we would miss the 3.75ms
-timing window.
-
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_core.c         | 91 +++++++++++++++++++++++++-------
- 2 files changed, 73 insertions(+), 19 deletions(-)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index d4e28773d378..f636c89f1fe1 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -315,6 +315,7 @@ struct hci_dev {
- 	__u8		ssp_debug_mode;
- 	__u8		hw_error_code;
- 	__u32		clock;
-+	__u8		sched_limit;
- 
- 	__u16		devid_source;
- 	__u16		devid_vendor;
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index dbd2ad3a26ed..00a72265cd96 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4239,18 +4239,32 @@ static void __check_timeout(struct hci_dev *hdev, unsigned int cnt)
- 	}
- }
- 
--static void hci_sched_acl_pkt(struct hci_dev *hdev)
-+/* Limit packets in flight when SCO/eSCO links are active. */
-+static bool hci_sched_limit(struct hci_dev *hdev)
-+{
-+	return hdev->sched_limit && hci_conn_num(hdev, SCO_LINK);
-+}
-+
-+static bool hci_sched_acl_pkt(struct hci_dev *hdev)
- {
- 	unsigned int cnt = hdev->acl_cnt;
- 	struct hci_chan *chan;
- 	struct sk_buff *skb;
- 	int quote;
-+	bool sched_limit = hci_sched_limit(hdev);
-+	bool resched = false;
- 
- 	__check_timeout(hdev, cnt);
- 
- 	while (hdev->acl_cnt &&
- 	       (chan = hci_chan_sent(hdev, ACL_LINK, &quote))) {
- 		u32 priority = (skb_peek(&chan->data_q))->priority;
-+
-+		if (sched_limit && quote > 0) {
-+			resched = true;
-+			quote = 1;
-+		}
-+
- 		while (quote-- && (skb = skb_peek(&chan->data_q))) {
- 			BT_DBG("chan %p skb %p len %d priority %u", chan, skb,
- 			       skb->len, skb->priority);
-@@ -4271,19 +4285,26 @@ static void hci_sched_acl_pkt(struct hci_dev *hdev)
- 			chan->sent++;
- 			chan->conn->sent++;
- 		}
-+
-+		if (resched && cnt != hdev->acl_cnt)
-+			break;
- 	}
- 
--	if (cnt != hdev->acl_cnt)
-+	if (hdev->acl_cnt == 0 && cnt != hdev->acl_cnt)
- 		hci_prio_recalculate(hdev, ACL_LINK);
-+
-+	return resched;
- }
- 
--static void hci_sched_acl_blk(struct hci_dev *hdev)
-+static bool hci_sched_acl_blk(struct hci_dev *hdev)
- {
- 	unsigned int cnt = hdev->block_cnt;
- 	struct hci_chan *chan;
- 	struct sk_buff *skb;
- 	int quote;
- 	u8 type;
-+	bool sched_limit = hci_sched_limit(hdev);
-+	bool resched = false;
- 
- 	__check_timeout(hdev, cnt);
- 
-@@ -4297,6 +4318,12 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
- 	while (hdev->block_cnt > 0 &&
- 	       (chan = hci_chan_sent(hdev, type, &quote))) {
- 		u32 priority = (skb_peek(&chan->data_q))->priority;
-+
-+		if (sched_limit && quote > 0) {
-+			resched = true;
-+			quote = 1;
-+		}
-+
- 		while (quote > 0 && (skb = skb_peek(&chan->data_q))) {
- 			int blocks;
- 
-@@ -4311,7 +4338,7 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
- 
- 			blocks = __get_blocks(hdev, skb);
- 			if (blocks > hdev->block_cnt)
--				return;
-+				return false;
- 
- 			hci_conn_enter_active_mode(chan->conn,
- 						   bt_cb(skb)->force_active);
-@@ -4325,33 +4352,39 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
- 			chan->sent += blocks;
- 			chan->conn->sent += blocks;
- 		}
-+
-+		if (resched && cnt != hdev->block_cnt)
-+			break;
- 	}
- 
--	if (cnt != hdev->block_cnt)
-+	if (hdev->block_cnt == 0 && cnt != hdev->block_cnt)
- 		hci_prio_recalculate(hdev, type);
-+
-+	return resched;
- }
- 
--static void hci_sched_acl(struct hci_dev *hdev)
-+static bool hci_sched_acl(struct hci_dev *hdev)
- {
- 	BT_DBG("%s", hdev->name);
- 
- 	/* No ACL link over BR/EDR controller */
- 	if (!hci_conn_num(hdev, ACL_LINK) && hdev->dev_type == HCI_PRIMARY)
--		return;
-+		goto done;
- 
- 	/* No AMP link over AMP controller */
- 	if (!hci_conn_num(hdev, AMP_LINK) && hdev->dev_type == HCI_AMP)
--		return;
-+		goto done;
- 
- 	switch (hdev->flow_ctl_mode) {
- 	case HCI_FLOW_CTL_MODE_PACKET_BASED:
--		hci_sched_acl_pkt(hdev);
--		break;
-+		return hci_sched_acl_pkt(hdev);
- 
- 	case HCI_FLOW_CTL_MODE_BLOCK_BASED:
--		hci_sched_acl_blk(hdev);
--		break;
-+		return hci_sched_acl_blk(hdev);
- 	}
-+
-+done:
-+	return false;
- }
- 
- /* Schedule SCO */
-@@ -4402,16 +4435,18 @@ static void hci_sched_esco(struct hci_dev *hdev)
- 	}
- }
- 
--static void hci_sched_le(struct hci_dev *hdev)
-+static bool hci_sched_le(struct hci_dev *hdev)
- {
- 	struct hci_chan *chan;
- 	struct sk_buff *skb;
- 	int quote, cnt, tmp;
-+	bool sched_limit = hci_sched_limit(hdev);
-+	bool resched = false;
- 
- 	BT_DBG("%s", hdev->name);
- 
- 	if (!hci_conn_num(hdev, LE_LINK))
--		return;
-+		return resched;
- 
- 	cnt = hdev->le_pkts ? hdev->le_cnt : hdev->acl_cnt;
- 
-@@ -4420,6 +4455,12 @@ static void hci_sched_le(struct hci_dev *hdev)
- 	tmp = cnt;
- 	while (cnt && (chan = hci_chan_sent(hdev, LE_LINK, &quote))) {
- 		u32 priority = (skb_peek(&chan->data_q))->priority;
-+
-+		if (sched_limit && quote > 0) {
-+			resched = true;
-+			quote = 1;
-+		}
-+
- 		while (quote-- && (skb = skb_peek(&chan->data_q))) {
- 			BT_DBG("chan %p skb %p len %d priority %u", chan, skb,
- 			       skb->len, skb->priority);
-@@ -4437,6 +4478,9 @@ static void hci_sched_le(struct hci_dev *hdev)
- 			chan->sent++;
- 			chan->conn->sent++;
- 		}
-+
-+		if (resched && cnt != tmp)
-+			break;
- 	}
- 
- 	if (hdev->le_pkts)
-@@ -4444,24 +4488,33 @@ static void hci_sched_le(struct hci_dev *hdev)
- 	else
- 		hdev->acl_cnt = cnt;
- 
--	if (cnt != tmp)
-+	if (cnt == 0 && cnt != tmp)
- 		hci_prio_recalculate(hdev, LE_LINK);
-+
-+	return resched;
- }
- 
- static void hci_tx_work(struct work_struct *work)
- {
- 	struct hci_dev *hdev = container_of(work, struct hci_dev, tx_work);
- 	struct sk_buff *skb;
-+	bool resched;
- 
- 	BT_DBG("%s acl %d sco %d le %d", hdev->name, hdev->acl_cnt,
- 	       hdev->sco_cnt, hdev->le_cnt);
- 
- 	if (!hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
- 		/* Schedule queues and send stuff to HCI driver */
--		hci_sched_acl(hdev);
--		hci_sched_sco(hdev);
--		hci_sched_esco(hdev);
--		hci_sched_le(hdev);
-+		do {
-+			/* SCO and eSCO send all packets until emptied */
-+			hci_sched_sco(hdev);
-+			hci_sched_esco(hdev);
-+
-+			/* Acl and Le send based on quota (priority on ACL per
-+			 * loop)
-+			 */
-+			resched = hci_sched_acl(hdev) || hci_sched_le(hdev);
-+		} while (resched);
- 	}
- 
- 	/* Send next queued raw (unknown type) packet */
 -- 
-2.25.1.481.gfbce0eb801-goog
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
