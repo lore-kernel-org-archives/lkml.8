@@ -2,138 +2,118 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD71CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4372DC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAB620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2434D20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCLNPB (ORCPT
+        id S1727327AbgCLNPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:15:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43307 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLNPB (ORCPT
+        Thu, 12 Mar 2020 09:15:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38461 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgCLNPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:15:01 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jCNfo-0002Yi-Tt; Thu, 12 Mar 2020 14:14:53 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6DB3C1C223E;
-        Thu, 12 Mar 2020 14:14:52 +0100 (CET)
-Date:   Thu, 12 Mar 2020 13:14:52 -0000
-From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/amd/uncore: Replace manual sampling check
- with CAP_NO_INTERRUPT flag
-Cc:     Kim Phillips <kim.phillips@amd.com>, Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200311191323.13124-1-kim.phillips@amd.com>
-References: <20200311191323.13124-1-kim.phillips@amd.com>
+        Thu, 12 Mar 2020 09:15:46 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jCNgb-0007TJ-Hf; Thu, 12 Mar 2020 13:15:41 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Todd Kjos <tkjos@android.com>
+Cc:     ard.biesheuvel@linaro.org, ardb@kernel.org, john.stultz@linaro.org,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, naresh.kamboju@linaro.org,
+        shuah@kernel.org,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>, hridya@google.com,
+        kernel-team@android.com,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 1/3] binderfs: port tests to test harness infrastructure
+Date:   Thu, 12 Mar 2020 14:15:29 +0100
+Message-Id: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200311105309.1742827-1-christian.brauner@ubuntu.com>
+References: <20200311105309.1742827-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Message-ID: <158401889210.28353.10962157777204769703.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+Makes for nicer output and prepares for additional tests.
 
-Commit-ID:     f967140dfb7442e2db0868b03b961f9c59418a1b
-Gitweb:        https://git.kernel.org/tip/f967140dfb7442e2db0868b03b961f9c59418a1b
-Author:        Kim Phillips <kim.phillips@amd.com>
-AuthorDate:    Wed, 11 Mar 2020 14:13:21 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 12 Mar 2020 14:08:50 +01:00
-
-perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
-
-Enable the sampling check in kernel/events/core.c::perf_event_open(),
-which returns the more appropriate -EOPNOTSUPP.
-
-BEFORE:
-
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
-  /bin/dmesg | grep -i perf may provide additional information.
-
-With nothing relevant in dmesg.
-
-AFTER:
-
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
-
-Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- arch/x86/events/amd/uncore.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ .../selftests/filesystems/binderfs/Makefile      |  2 ++
+ .../filesystems/binderfs/binderfs_test.c         | 16 ++++++----------
+ 2 files changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index a6ea07f..4d867a7 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -190,15 +190,12 @@ static int amd_uncore_event_init(struct perf_event *event)
+diff --git a/tools/testing/selftests/filesystems/binderfs/Makefile b/tools/testing/selftests/filesystems/binderfs/Makefile
+index 58cb659b56b4..75315d9ba7a9 100644
+--- a/tools/testing/selftests/filesystems/binderfs/Makefile
++++ b/tools/testing/selftests/filesystems/binderfs/Makefile
+@@ -3,4 +3,6 @@
+ CFLAGS += -I../../../../../usr/include/
+ TEST_GEN_PROGS := binderfs_test
  
- 	/*
- 	 * NB and Last level cache counters (MSRs) are shared across all cores
--	 * that share the same NB / Last level cache. Interrupts can be directed
--	 * to a single target core, however, event counts generated by processes
--	 * running on other cores cannot be masked out. So we do not support
--	 * sampling and per-thread events.
-+	 * that share the same NB / Last level cache.  On family 16h and below,
-+	 * Interrupts can be directed to a single target core, however, event
-+	 * counts generated by processes running on other cores cannot be masked
-+	 * out. So we do not support sampling and per-thread events via
-+	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
- 	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	/* and we do not enable counter overflow interrupts */
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
++binderfs_test: binderfs_test.c ../../kselftest.h ../../kselftest_harness.h
++
+ include ../../lib.mk
+diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+index 8c2ed962e1c7..d03ed8eed5eb 100644
+--- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
++++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+@@ -15,7 +15,9 @@
+ #include <unistd.h>
+ #include <linux/android/binder.h>
+ #include <linux/android/binderfs.h>
++
+ #include "../../kselftest.h"
++#include "../../kselftest_harness.h"
  
-@@ -306,7 +303,7 @@ static struct pmu amd_nb_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
--	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
- };
+ static ssize_t write_nointr(int fd, const void *buf, size_t count)
+ {
+@@ -252,24 +254,18 @@ static void __do_binderfs_test(void)
+ 	ksft_inc_pass_cnt();
+ }
  
- static struct pmu amd_llc_pmu = {
-@@ -317,7 +314,7 @@ static struct pmu amd_llc_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
--	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
- };
+-static void binderfs_test_privileged()
++TEST(binderfs_test_privileged)
+ {
+ 	if (geteuid() != 0)
+-		ksft_print_msg(
+-			"Tests are not run as root. Skipping privileged tests\n");
++		ksft_print_msg("Tests are not run as root. Skipping privileged tests\n");
+ 	else
+ 		__do_binderfs_test();
+ }
  
- static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
+-static void binderfs_test_unprivileged()
++TEST(binderfs_test_unprivileged)
+ {
+ 	change_to_userns();
+ 	__do_binderfs_test();
+ }
+ 
+-int main(int argc, char *argv[])
+-{
+-	binderfs_test_privileged();
+-	binderfs_test_unprivileged();
+-	ksft_exit_pass();
+-}
++TEST_HARNESS_MAIN
+
+base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
+-- 
+2.25.1
+
