@@ -2,71 +2,85 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBAEC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C65C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541CE20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E3B206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgCLIPw (ORCPT
+        id S1726331AbgCLISY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:15:52 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11638 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbgCLIPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:15:51 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 07E345A29FD3FC0B2DFB;
-        Thu, 12 Mar 2020 16:15:45 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
- 16:15:37 +0800
-Subject: Re: [PATCH v5 17/23] KVM: arm64: GICv4.1: Let doorbells be
- auto-enabled
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-18-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <acfb2bc5-adc5-59f9-87d0-483864ab200f@huawei.com>
-Date:   Thu, 12 Mar 2020 16:15:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 12 Mar 2020 04:18:24 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:53575 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLISX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 04:18:23 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MPGiR-1ixeyW1XrB-00PfGV; Thu, 12 Mar 2020 09:18:21 +0100
+Received: by mail-qk1-f174.google.com with SMTP id f198so4800468qke.11;
+        Thu, 12 Mar 2020 01:18:21 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1r8eylYx5ZZgyOYeaWDUr2YY6K/7mHqhZigjsuOFYPBL+rGaPb
+        18RFSsZ1o8s758nUVCgeVpU+Por0NG+K10uQ6/8=
+X-Google-Smtp-Source: ADFU+vsNBs5U8MSP0AIhbOTyNZM5zKZbj9kd12yMxihKBGNpLlSYTCDKKw9EkzMHsXQTWNCKK3QEcXCPnNyHrsJ3iYg=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr6736993qke.352.1584001100024;
+ Thu, 12 Mar 2020 01:18:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-18-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+References: <20200311225736.32147-1-rdunlap@infradead.org> <20200311225736.32147-2-rdunlap@infradead.org>
+In-Reply-To: <20200311225736.32147-2-rdunlap@infradead.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Mar 2020 09:18:04 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1ah3hJOJugJmYGcr48fN1SR6crSgAgGocZxqAgL5r0ew@mail.gmail.com>
+Message-ID: <CAK8P3a1ah3hJOJugJmYGcr48fN1SR6crSgAgGocZxqAgL5r0ew@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v2] char: group dev configs togther
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:sPAakDjeihxQelG+jj4ZoHRdrd6ZRt0zJa1JTqtWPNmrThhOUmQ
+ xlZ+f1nOTUOX0o8JF+rW/IlEflQltQT//UV8V3tq/0i7xWt/nFi7/IgCLwuWPggDFc/UpQa
+ ScY7sRmOPoenjx2DCZmJFqejkcJSq0GXH6L01Y3Bu/E+CAdG3pGi/IWIljaY4pvZs6uWj6v
+ S/3xdcjbIH5lXXAx8FgVQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2WA180O+chk=:kNlHsfIKuGyMDvxPtcylCJ
+ 23YGUee/0URwHDkLBQL2s4ckQVM1MWY2MB45pTXzbsMO1GGDfoSPVnkgW2RaQ12wohTesWQki
+ 2E70qCWXiwZL1js8K8WqliE6RyorNy7F19Tv0Uj9jAlwYyzTigGbv5gynS1my7XO9gapUVj5h
+ zxvobFzP6iQCSm16uTRpgPx2rDUPSuuDRiFpuhPabJhO6LLI2ktyi9MJztXbgqQuejf+1n1JM
+ bNVDbbV5iIsc3i0KcJ9EG27Lqp7b0O6Dm41C5KlSs0KdppAlT9qkYIFuM5v+FVWEKjeVql7x5
+ uiZi9ESqh62Ras2zRqJS1gAkhfQmljCo3W+dPGI5rFJLhXP+6Aq95l/h6YffV3CJ8EwoR+aeo
+ YnoPPxhKTubjjK/2WeSD0hArDU6/OFL2gDkM+2lSRsoM8P/FNp8qZiG1zECSove1llC4Cl3Mb
+ jheQkatWnTNgUeu/Br9chLmpQL+m2oaWGiIeKlDCwGRLkaWPgcl6mHIwf53OkZcArJzb+hNOI
+ j4hPsiV7rIlP+O9URXh/Bogcaz2OYCNO8VacncFFcdQJhqb6mCJ4GMJagpUpI9bJtYfiJp1T6
+ jOIX50RVhmxVRppZ8UvmD70bLbg0NVJXlZuu7odkwOUwnxIHooS13grn6X7f6k1eBAivDZe3S
+ bzaVGEvf0zcBXyMDRqZD7JpEf9i+oBoL0/H2guwstpUOCmphu+VJNP4z/t/cUveh21piQpIlS
+ K6jcvgnuzhmpT/oagt6U+hmr0Nu8mqF/lA+TbLxRmYzUZxsPXV3pzBR4C9K1cFGCrusSjXm4X
+ 657SpbMqORTQw3thky3B7tc7OBye00AaX4ZglfkCmiTwOhUc9Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> As GICv4.1 understands the life cycle of doorbells (instead of
-> just randomly firing them at the most inconvenient time), just
-> enable them at irq_request time, and be done with it.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+On Wed, Mar 11, 2020 at 11:57 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Group /dev/{mem,kmem,nvram,raw,port} driver configs together.
+> This also means that tty configs are now grouped together instead
+> of being split up.
+>
+> This just moves Kconfig lines around. There are no other changes.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: linux-serial@vger.kernel.org
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Looks good to me. /dev/raw might not fit into this list, but it's hard
+to come up with a clear definition anyway, and this is definitely
+better than before.
 
-
-Thanks
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
