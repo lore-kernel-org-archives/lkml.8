@@ -2,97 +2,81 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A28DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108A9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD95920739
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA99120691
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgCLJxJ (ORCPT
+        id S1726736AbgCLJy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:53:09 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:45676 "EHLO ns.iliad.fr"
+        Thu, 12 Mar 2020 05:54:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39628 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgCLJxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:53:09 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 33704204CB;
-        Thu, 12 Mar 2020 10:53:07 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 045E820046;
-        Thu, 12 Mar 2020 10:53:07 +0100 (CET)
-Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
- correctly
-To:     Aman Sharma <amanharitsh123@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <cover.1583952275.git.amanharitsh123@gmail.com>
- <b773b3b1ed25a0e6d5d826b6c43293473cbd24e7.1583952276.git.amanharitsh123@gmail.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <6e413f63-06e3-9613-97dc-ff5968a4f759@free.fr>
-Date:   Thu, 12 Mar 2020 10:53:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <b773b3b1ed25a0e6d5d826b6c43293473cbd24e7.1583952276.git.amanharitsh123@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Mar 12 10:53:07 2020 +0100 (CET)
+        id S1726385AbgCLJy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 05:54:28 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A445F200DC5;
+        Thu, 12 Mar 2020 10:54:26 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3ED7D200DF3;
+        Thu, 12 Mar 2020 10:54:18 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0EB6F402A5;
+        Thu, 12 Mar 2020 17:54:07 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        alifer.wsdm@gmail.com, shengjiu.wang@nxp.com, ping.bai@nxp.com,
+        jun.li@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mm-evk: Add secondary cpus supply
+Date:   Thu, 12 Mar 2020 17:47:44 +0800
+Message-Id: <1584006465-28494-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/03/2020 20:19, Aman Sharma wrote:
+Each cpu-core is supposed to list its supply separately, add
+supply for secondary cpus.
 
-> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-> index 21a208da3f59..18c2c4313eb5 100644
-> --- a/drivers/pci/controller/pcie-tango.c
-> +++ b/drivers/pci/controller/pcie-tango.c
-> @@ -273,9 +273,9 @@ static int tango_pcie_probe(struct platform_device *pdev)
->  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
->  
->  	virq = platform_get_irq(pdev, 1);
-> -	if (virq <= 0) {
-> +	if (virq < 0) {
->  		dev_err(dev, "Failed to map IRQ\n");
-> -		return -ENXIO;
-> +		return virq;
->  	}
->  
->  	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index 951e14a..e5ec832 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -82,6 +82,18 @@
+ 	cpu-supply = <&buck2_reg>;
+ };
+ 
++&A53_1 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_2 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_3 {
++	cpu-supply = <&buck2_reg>;
++};
++
+ &ddrc {
+ 	operating-points-v2 = <&ddrc_opp_table>;
+ 
+-- 
+2.7.4
 
-Weee, here we go again :-)
-
-https://patchwork.kernel.org/patch/11066455/
-https://patchwork.kernel.org/patch/10006651/
-
-Last time around, my understanding was that, going forward,
-the best solution was:
-
-	virq = platform_get_irq(...)
-	if (virq <= 0)
-		return virq ? : -ENODEV;
-
-i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
-
-@Bjorn/Lorenzo did you have a change of heart?
-
-Regards.
