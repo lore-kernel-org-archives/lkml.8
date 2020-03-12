@@ -2,71 +2,97 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ADDC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23C02073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A858206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584025550;
+	bh=FbmUiVOA14nTP0Xhx1vi8oiKbCQV1kWtBDPOyRnEwCw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=irip1wiradQcFLHKJtcEvuD9MKwfrbqR0y67Y/rfh6lvX95yPRtzjvg9/Mrox6wGt
+	 NNrvyy5VQ0bR7Y8hnvu//jJuFBOwglkHDGZ1JcoFgt/H+EKUGk8kwQOXePxleCJA7v
+	 EOSyvQ1NifteCRNyfkJq/55g0DLlhZt2L4CKvGtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCLPEd (ORCPT
+        id S1727787AbgCLPFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:04:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42642 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgCLPEd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:04:33 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jCPNv-0001KW-1H; Thu, 12 Mar 2020 15:04:31 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: systemport: fix index check to avoid an array out of bounds access
-Date:   Thu, 12 Mar 2020 15:04:30 +0000
-Message-Id: <20200312150430.1136618-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 12 Mar 2020 11:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgCLPFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:05:49 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FEE92067C;
+        Thu, 12 Mar 2020 15:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584025548;
+        bh=FbmUiVOA14nTP0Xhx1vi8oiKbCQV1kWtBDPOyRnEwCw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hooWW8c2eciNTDjHVxxKZfWyBN1INv++BQ+GWOeowSMvpkJh8+IzpAKfdS8SEV58z
+         wFTKR1dXTcpvxC6qRv91KI309ZZ84J3Z7i52g/tslhRT6wMzTZnHqyF51V4Xul5FuO
+         /hE/buEsOB64GvYZqEgvnKjnOYqAJjUYKydNz3Pw=
+Subject: Re: [PATCH] selftests/ftrace: Fix typo in trigger-multihist.tc
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masanari Iida <standby24x7@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200312040337.7631-1-standby24x7@gmail.com>
+ <20200312092355.73d8c019@gandalf.local.home>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4aee9c92-b83a-97ac-a9d7-242eb785cf2b@kernel.org>
+Date:   Thu, 12 Mar 2020 09:05:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312092355.73d8c019@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 3/12/20 7:23 AM, Steven Rostedt wrote:
+> On Thu, 12 Mar 2020 13:03:37 +0900
+> Masanari Iida <standby24x7@gmail.com> wrote:
+> 
+>> This patch fix a spelling typo in trigger-multihist.tc
+>>
+>> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+>> ---
+>>   .../selftests/ftrace/test.d/trigger/trigger-multihist.tc        | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc
+>> index 18fdaab9f570..68ff3f45c720 100644
+>> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc
+>> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc
+>> @@ -23,7 +23,7 @@ if [ ! -f events/sched/sched_process_fork/hist ]; then
+>>       exit_unsupported
+>>   fi
+>>   
+>> -echo "Test histogram multiple tiggers"
+>> +echo "Test histogram multiple triggers"
+> 
+> Winnie the Pooh will be upset.
 
-Currently the bounds check on index is off by one and can lead to
-an out of bounds access on array priv->filters_loc when index is
-RXCHK_BRCM_TAG_MAX.
+I recall one like this one a while back. :)
+> 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> Shuah, want to take this?
+> 
 
-Fixes: bb9051a2b230 ("net: systemport: Add support for WAKE_FILTER")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes. I will pull this in.
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index bea2dbc0e469..af7ce5c5488c 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2133,7 +2133,7 @@ static int bcm_sysport_rule_set(struct bcm_sysport_priv *priv,
- 		return -ENOSPC;
- 
- 	index = find_first_zero_bit(priv->filters, RXCHK_BRCM_TAG_MAX);
--	if (index > RXCHK_BRCM_TAG_MAX)
-+	if (index >= RXCHK_BRCM_TAG_MAX)
- 		return -ENOSPC;
- 
- 	/* Location is the classification ID, and index is the position
--- 
-2.25.1
-
+thanks,
+-- Shuah
