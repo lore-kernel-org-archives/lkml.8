@@ -2,141 +2,199 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9143C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67353205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3F52071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgCLVhN (ORCPT
+        id S1726591AbgCLVlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:37:13 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:36087 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgCLVhM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:37:12 -0400
-Received: by mail-il1-f199.google.com with SMTP id v14so5000311ilq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 14:37:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=otDTyif1JxNxdhkmFkrhZBBAigUQx1pxkqJwd5II138=;
-        b=aNXf/jSj8684IUgWCXniO/vG1XAL+7sfCLvfMMQdpxiG5pyXwsAZdycU3+4KarWl9s
-         m5S03zJVcPggt24qskkk/4eBW5B6P6+c5aOTwCN07kO1YnP5Elh7YBQv8odniRZ8PSHW
-         BJISV7BXTP4NOk4FP+Tr/Uv6HAOE8RvY+usTRE3CMZ0EBpXcgJpGpDV1Ru7vwB3sWQPC
-         pvpdIogZXNA2pe1KEMe6j5kfmMYFY0fJYNY3BssiNy52r1MzY1hRtI52Cb66Kt1ZGXMh
-         Z2TIK6/biXhRBVqtQMeMjr383diAqQS7zRIphsXIVfcJlWWENY/os2DF87zmHcYlEvy2
-         uY8A==
-X-Gm-Message-State: ANhLgQ35Ev7PGLM/SsE41tck/kRx1FZrsYb/8GU9ZZw4XUYhVoso3GQ+
-        VJvQvR/x7MzB5wObAL6jBfPQfvgemygn1wrrsZwLT2p+hvYJ
-X-Google-Smtp-Source: ADFU+vvqMDGrrjUv2iUkYwJaB5U6vfSQvaKwU93+Tw2aJqefc794DfGTD3jwIErkI2rFXjwv1VXusTuBATT4bD+0PhjI6HGU4hCI
+        Thu, 12 Mar 2020 17:41:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36712 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbgCLVlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:41:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 14:41:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
+   d="scan'208";a="246506748"
+Received: from saurabhd-mobl.amr.corp.intel.com (HELO [10.251.16.241]) ([10.251.16.241])
+  by orsmga006.jf.intel.com with ESMTP; 12 Mar 2020 14:41:07 -0700
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+To:     Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200312082248.GS23944@dhcp22.suse.cz> <20200312201602.GA68817@google.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <bd35c17d-8766-cba5-09b3-87970de4c731@intel.com>
+Date:   Thu, 12 Mar 2020 14:41:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:5b56:: with SMTP id p83mr10329254ilb.70.1584049032035;
- Thu, 12 Mar 2020 14:37:12 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 14:37:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dc81b705a0af279c@google.com>
-Subject: WARNING in bpf_check (3)
-From:   syzbot <syzbot+245129539c27fecf099a@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
-        kafai@fb.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200312201602.GA68817@google.com>
+Content-Type: multipart/mixed;
+ boundary="------------DB481209F85F437D7EF003D1"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is a multi-part message in MIME format.
+--------------DB481209F85F437D7EF003D1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-syzbot found the following crash on:
+One other fun thing.  I have a "victim" thread sitting in a loop doing:
 
-HEAD commit:    13fac1d8 bpf: Fix trampoline generation for fmod_ret progr..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=167ba061e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=888f81f5410adfa2
-dashboard link: https://syzkaller.appspot.com/bug?extid=245129539c27fecf099a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ba39c3e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12bbb981e00000
+	sleep(1)
+	memcpy(&garbage, buffer, sz);
 
-The bug was bisected to:
+The "attacker" is doing
 
-commit 94dacdbd5d2dfa2cffd308f128d78c99f855f5be
-Author: Thomas Gleixner <tglx@linutronix.de>
-Date:   Mon Feb 24 14:01:32 2020 +0000
+	madvise(buffer, sz, MADV_PAGEOUT);
 
-    bpf: Tighten the requirements for preallocated hash maps
+in a loop.  That, oddly enough doesn't cause the victim to page fault.
+But, if I do:
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1300a2b1e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1080a2b1e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1700a2b1e00000
+	memcpy(&garbage, buffer, sz);
+	madvise(buffer, sz, MADV_PAGEOUT);
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+245129539c27fecf099a@syzkaller.appspotmail.com
-Fixes: 94dacdbd5d2d ("bpf: Tighten the requirements for preallocated hash maps")
+It *does* cause the memory to get paged out.  The MADV_PAGEOUT code
+actually has a !pte_present() check.  It will punt on a PTE if it sees
+it.  In other words, if a page is in the swap cache but not mapped by a
+pte_present() PTE, MADV_PAGEOUT won't touch it.
 
-------------[ cut here ]------------
-trace type BPF program uses run-time allocation
-WARNING: CPU: 1 PID: 9523 at kernel/bpf/verifier.c:8187 check_map_prog_compatibility kernel/bpf/verifier.c:8187 [inline]
-WARNING: CPU: 1 PID: 9523 at kernel/bpf/verifier.c:8187 replace_map_fd_with_map_ptr kernel/bpf/verifier.c:8282 [inline]
-WARNING: CPU: 1 PID: 9523 at kernel/bpf/verifier.c:8187 bpf_check+0x6dcb/0xa49b kernel/bpf/verifier.c:10112
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9523 Comm: syz-executor700 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:check_map_prog_compatibility kernel/bpf/verifier.c:8187 [inline]
-RIP: 0010:replace_map_fd_with_map_ptr kernel/bpf/verifier.c:8282 [inline]
-RIP: 0010:bpf_check+0x6dcb/0xa49b kernel/bpf/verifier.c:10112
-Code: ff 48 8b bd 20 fe ff ff e8 02 56 2c 00 e9 bc cf ff ff e8 88 a0 ef ff 48 c7 c7 c0 8c 11 88 c6 05 c0 c7 de 08 01 e8 bd b3 c1 ff <0f> 0b e9 f3 ae ff ff c7 85 c0 fe ff ff f4 ff ff ff e9 d3 c6 ff ff
-RSP: 0018:ffffc90001ec7990 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815bfd81 RDI: fffff520003d8f24
-RBP: ffffc90001ec7b90 R08: ffff88809ae22380 R09: ffffed1015ce45c9
-R10: ffffed1015ce45c8 R11: ffff8880ae722e43 R12: 0000000000000002
-R13: ffffc90000d36048 R14: ffff88809a7d4800 R15: dffffc0000000000
- bpf_prog_load+0xd92/0x15f0 kernel/bpf/syscall.c:2105
- __do_sys_bpf+0x16f2/0x4020 kernel/bpf/syscall.c:3594
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440539
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdd65517e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440539
-RDX: 0000000000000014 RSI: 0000000020fed000 RDI: 0000000000000005
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401dc0
-R13: 0000000000401e50 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Shouldn't MADV_PAGEOUT be able to find and reclaim those pages?  Patch
+attached.
+
+--------------DB481209F85F437D7EF003D1
+Content-Type: text/x-patch;
+ name="madv-pageout-find-swap-cache.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="madv-pageout-find-swap-cache.patch"
+
 
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+ b/mm/madvise.c |   38 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 7 deletions(-)
+
+diff -puN mm/madvise.c~madv-pageout-find-swap-cache mm/madvise.c
+--- a/mm/madvise.c~madv-pageout-find-swap-cache	2020-03-12 14:24:45.17877=
+5035 -0700
++++ b/mm/madvise.c	2020-03-12 14:35:49.706773378 -0700
+@@ -248,6 +248,36 @@ static void force_shm_swapin_readahead(s
+ #endif		/* CONFIG_SWAP */
+=20
+ /*
++ * Given a PTE, find the corresponding 'struct page'.  Also handles
++ * non-present swap PTEs.
++ */
++struct page *pte_to_reclaim_page(struct vm_area_struct *vma,
++				 unsigned long addr, pte_t ptent)
++{
++	swp_entry_t entry;
++
++	/* Totally empty PTE: */
++	if (pte_none(ptent))
++		return NULL;
++
++	/* A normal, present page is mapped: */
++	if (pte_present(ptent))
++		return vm_normal_page(vma, addr, ptent);
++
++	entry =3D pte_to_swp_entry(vmf->orig_pte);
++	/* Is it one of the "swap PTEs" that's not really swap? */
++	if (non_swap_entry(entry))
++		return false;
++
++	/*
++	 * The PTE was a true swap entry.  The page may be in the
++	 * swap cache.  If so, find it and return it so it may be
++	 * reclaimed.
++	 */
++	return lookup_swap_cache(entry, vma, addr);
++}
++
++/*
+  * Schedule all required I/O operations.  Do not wait for completion.
+  */
+ static long madvise_willneed(struct vm_area_struct *vma,
+@@ -389,13 +419,7 @@ regular_page:
+ 	for (; addr < end; pte++, addr +=3D PAGE_SIZE) {
+ 		ptent =3D *pte;
+=20
+-		if (pte_none(ptent))
+-			continue;
+-
+-		if (!pte_present(ptent))
+-			continue;
+-
+-		page =3D vm_normal_page(vma, addr, ptent);
++		page =3D pte_to_reclaim_page(vma, addr, ptent);
+ 		if (!page)
+ 			continue;
+=20
+_
+
+--------------DB481209F85F437D7EF003D1--
