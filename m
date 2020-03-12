@@ -2,126 +2,117 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B128C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B824C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22ADA20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA1620578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583996203;
+	bh=R4dR6LiyS8F96lk8sKdXqYr8PH/GVFePMCViEn36wzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jTfFdkrF537HJlmeT9ADDDrUfgKm3BcInJ8B/cyuBsHM/oXxpiv0Ga9ZINm9EFwlp
+	 /ts7I/eCVp5H4KRjFcSinwWxHlK2YWpySwCQz456s9le7Fl9q/nvCNqfYIKA6+7Rb+
+	 Fah8CauHtc77WVLfAb0fxfFEBNhn24OBXf+RESjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388002AbgCLG4H (ORCPT
+        id S2388013AbgCLG4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:56:07 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35913 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387831AbgCLG4G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:56:06 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b18so1492321edu.3;
-        Wed, 11 Mar 2020 23:56:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kR8J01aQjT+3rTPOnycwD+iqf21URVOWBRJAxtlJ7vg=;
-        b=pMn/KjyT+TKASGi00Yy7WmKNfImNsGmSps2oAfqBpNMWFvECtt2fYxHs4FHVdjdjNo
-         IkcxKAeB8ETaOKU+MxaT3J85pCrYohcvJLMJGJHf9ja3fnQUj9KhS+x8cQmIxBFxtMWv
-         67sPR60Srb33CoK1lf5j+EsF27PiUATpxpQ5dE71PQSvT181xo7/aGPCmegZLfW2vRn8
-         w/j98U3vAf7wXGF/bbelCD3VM2agPbaknSwxUHKHIEq1gE4a7XKxof9mnkzgNBT0WAui
-         FXf3G1rnSyHUjxJTBhEg3Ch6QwU63DWfI93Nx60Z92JlipPiK/UZ0WJGTCo6OKLRdEYe
-         k6QA==
-X-Gm-Message-State: ANhLgQ2+ZsuCjmjg9JRCLtjq99I43KuaV37xzS70C9ccmxV+csov+P7V
-        gT3FDdqLIFs52Ua2kE6l1kpqe6n5pYM=
-X-Google-Smtp-Source: ADFU+vvrhJ5Af/ByjsZZZZIaDYBcvSN1odRTRpRnwBPrbseao+hcpClI5U7f9rMHVaGncGZOqeQrdA==
-X-Received: by 2002:aa7:dd4f:: with SMTP id o15mr6453985edw.359.1583996164291;
-        Wed, 11 Mar 2020 23:56:04 -0700 (PDT)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
-        by smtp.gmail.com with ESMTPSA id p34sm123384edb.63.2020.03.11.23.56.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 23:56:04 -0700 (PDT)
-Received: by mail-wr1-f44.google.com with SMTP id s5so5968772wrg.3;
-        Wed, 11 Mar 2020 23:56:03 -0700 (PDT)
-X-Received: by 2002:adf:97c1:: with SMTP id t1mr4859136wrb.365.1583996163412;
- Wed, 11 Mar 2020 23:56:03 -0700 (PDT)
+        Thu, 12 Mar 2020 02:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387831AbgCLG4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 02:56:41 -0400
+Received: from localhost (unknown [122.167.115.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B6B9206FA;
+        Thu, 12 Mar 2020 06:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583996201;
+        bh=R4dR6LiyS8F96lk8sKdXqYr8PH/GVFePMCViEn36wzE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zbFCWKmd1Yhvc6uLbNXFl+MlQ0raM/B+n5i5qqfNjZTr/t7zkyeksoG1eMFlkNp8v
+         Vw93YZwKOumS+uOEaWUtHxvCWuNv9syeD9mYRGQXA9GhUrBoiq6RKIydwzsFwz8z+C
+         z1f+2MBCrF6IZFx5Ih9oRVZLjgvvunMeHjarGa/4=
+Date:   Thu, 12 Mar 2020 12:26:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
+Message-ID: <20200312065636.GX4885@vkoul-mobl>
+References: <20200113084005.849071-1-vkoul@kernel.org>
+ <20200121064608.GA2841@vkoul-mobl>
+ <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
+ <5878067.luYmtVZgP3@debian64>
+ <20200125053237.GG2841@vkoul-mobl>
+ <64340358-6682-4ae0-9c06-d72d5a4ff259@linux.intel.com>
+ <20200131084041.GI2841@vkoul-mobl>
+ <1ce257f5-df10-73ac-53ea-1c771abe70f2@linux.intel.com>
 MIME-Version: 1.0
-References: <20200309204326.27403-1-thirtythreeforty@gmail.com> <20200309204326.27403-4-thirtythreeforty@gmail.com>
-In-Reply-To: <20200309204326.27403-4-thirtythreeforty@gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 12 Mar 2020 14:55:52 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65LJUT1teBna7deKP7AfboUBcQDmiDgu3hrQY_+UzU0DA@mail.gmail.com>
-Message-ID: <CAGb2v65LJUT1teBna7deKP7AfboUBcQDmiDgu3hrQY_+UzU0DA@mail.gmail.com>
-Subject: Re: [RESEND PATCH 3/5] musb: sunxi: add support for the suniv MUSB controller
-To:     George Hilliard <thirtythreeforty@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ce257f5-df10-73ac-53ea-1c771abe70f2@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 4:44 AM George Hilliard
-<thirtythreeforty@gmail.com> wrote:
->
-> The suniv SoC has a MUSB controller like the one in A33, but with a SRAM
-> region to be claimed.
->
-> Add support for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+On 04-02-20, 18:33, Mathias Nyman wrote:
 
-Same thing about the SoB and author.
+> > > 
+> > > There are a few other opens regarding this series. Mostly because I'm not (yet)
+> > > familiar with all the details, so I'll just just list them here.
+> > > 
+> > > - Is it really enough to add the Renesas driver to Makefile before xhci-pci
+> > >    driver to make sure it gets matched and probed based on vendor/device id
+> > >    before xhci-pci driver is matched and probed based on pci class?
+> > >    What if the Renesas driver is a module and xhci-pci compiled in?
+> > 
+> > The driver loading rules are based on level and makefile order. So
+> > renesas will always be loaded before xhci driver. This is required since
+> > xhci claims all devices, so we need to make sure it loads before.
+> > 
+> > I think we should make it inbuilt driver rather than a module. xhci
+> > driver is only inbuilt.
+> > 
+> > If there is a better way to handle this, am all for it.
+> > 
+> > > - Previously probe didn't return before hcd's were added and everything set up.
+> > >    Now with request_firmware_nowait() probe returns early successfully, and the
+> > >    old xhci_pci_probe() which sets up everything is called later by the request
+> > >    firmware callback. So there could be whole new set of races possible.
+> > >    For example pci remove can be called mid firmware loading, or when the old
+> > >    xhci_pci_probe is still setting up things.
+> > 
+> > I think this is a valid concern. Let me think about how to solve this..
+> > maybe add a flag in remove which ensure remove doesnt run untill the
+> > probe/firmware callback is completed.
+> 
+> How about initiating async firmware loading before probe is called by using
+> DECLARE_PCI_FIXUP_*() hooks?
 
-> Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
-> ---
->  drivers/usb/musb/sunxi.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
-> index f3f76f2ac63f..76806b781844 100644
-> --- a/drivers/usb/musb/sunxi.c
-> +++ b/drivers/usb/musb/sunxi.c
-> @@ -714,14 +714,17 @@ static int sunxi_musb_probe(struct platform_device *pdev)
->         INIT_WORK(&glue->work, sunxi_musb_work);
->         glue->host_nb.notifier_call = sunxi_musb_host_notifier;
->
-> -       if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb"))
-> +       if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb") ||
-> +           of_device_is_compatible(np, "allwinner,suniv-f1c100s-musb")) {
->                 set_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags);
-> +       }
->
->         if (of_device_is_compatible(np, "allwinner,sun6i-a31-musb"))
->                 set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
->
->         if (of_device_is_compatible(np, "allwinner,sun8i-a33-musb") ||
-> -           of_device_is_compatible(np, "allwinner,sun8i-h3-musb")) {
-> +           of_device_is_compatible(np, "allwinner,sun8i-h3-musb") ||
-> +           of_device_is_compatible(np, "allwinner,suniv-f1c100s-musb")) {
->                 set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
->                 set_bit(SUNXI_MUSB_FL_NO_CONFIGDATA, &glue->flags);
->         }
-> @@ -814,6 +817,7 @@ static int sunxi_musb_remove(struct platform_device *pdev)
->  }
->
->  static const struct of_device_id sunxi_musb_match[] = {
-> +       { .compatible = "allwinner,suniv-f1c100s-musb", },
+Well somehow that does not work :(
 
-And same thing about the ordering.
+I tried using DECLARE_PCI_FIXUP_FINAL hook to request the firmware.
+Doing so from probe works but from fixup fails always!
 
-Once resolved,
+So expect this one, I have done the rest of the changes requested, will
+send them over soon
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-
->         { .compatible = "allwinner,sun4i-a10-musb", },
->         { .compatible = "allwinner,sun6i-a31-musb", },
->         { .compatible = "allwinner,sun8i-a33-musb", },
-> --
-> 2.25.0
->
+Thanks
+-- 
+~Vinod
