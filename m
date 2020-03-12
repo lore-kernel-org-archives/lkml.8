@@ -2,89 +2,110 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BFDC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABC3C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902C820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D80206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584023847;
-	bh=MmOOMjqsvLam7G/akGVSSkqB1DkUt/z82nMZQLu7stw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l1NMqx9OmU+ZOKi8V2nk8loaLpRL4lq0pXD7cmoU2pQZz2xYOCLUybtlxkQwLhOts
-	 /5hHbHn3pJF/whE0hNL3QBGKu1VT22Pxc7pAE29dFH7udQurY/YuXhz/YloscmuyTc
-	 39bVUhA71W9vYCOATUfgYuCeV13BNemtUNv/Bigo=
+	s=default; t=1584023884;
+	bh=0DcC20iLj0N577EVNaLkN4jq6nKFZkDXbAjkEH4vZRc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wNdD+JghjIAFHAQtkjf+fi/luZebrj9BDp5rsqWfKrJDHxgWXf02UuelmWZyzbEVe
+	 S+jeztjxGghSCdlbZmQ3n7yJknih5BrHtZVgmwQO9jiPmpWUA+0nYWq7EusB01Ckj5
+	 kOk/Zr9pXjv1HZOLwmWnffTdQ9XHCeyZy6B+YV3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgCLOh0 (ORCPT
+        id S1727690AbgCLOiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:37:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:36008 "EHLO foss.arm.com"
+        Thu, 12 Mar 2020 10:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgCLOh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:37:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9B3D30E;
-        Thu, 12 Mar 2020 07:37:25 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E8553F534;
-        Thu, 12 Mar 2020 07:37:25 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 14:37:23 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
-Message-ID: <20200312143723.GF4038@sirena.org.uk>
-References: <20200312103804.24174-1-peter.chen@nxp.com>
- <20200312114712.GA4038@sirena.org.uk>
- <20200312130037.GG14625@b29397-desktop>
+        id S1727340AbgCLOiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:38:02 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF38C20663;
+        Thu, 12 Mar 2020 14:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584023882;
+        bh=0DcC20iLj0N577EVNaLkN4jq6nKFZkDXbAjkEH4vZRc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YAPR5J0jUgfmVL6WDpJtfYJxBmKXznWHm3NbsyZSAuvkfue0yv0PscM7ujCYwKXcX
+         COBhDT5Mbeo4cigwDSZ0RT8WkiH6PHpN3mob9wzhKFXTFRLoHGcmrKU/N9gFIMGL3Y
+         /1bNyL2KZQrR8i+PwXBtZhw2er5y9xMTljoRZ35c=
+Date:   Thu, 12 Mar 2020 09:38:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     paulus@samba.org, mpe@ellerman.id.au, tyreld@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
+ 'value'
+Message-ID: <20200312143800.GA109542@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i3lJ51RuaGWuFYNw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312130037.GG14625@b29397-desktop>
-X-Cookie: Security check:  =?ISO-8859-1?Q?=20=07=07=07INTRUDER?= ALERT!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200312140412.32373-1-chenzhou10@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
+> drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
+> 	variable value set but not used [-Wunused-but-set-variable]
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
---i3lJ51RuaGWuFYNw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Michael, if you want this:
 
-On Thu, Mar 12, 2020 at 01:00:33PM +0000, Peter Chen wrote:
-> On 20-03-12 11:47:12, Mark Brown wrote:
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> > Which pins exactly is this controlling?  I would not expect a fixed
-> > voltage regulator to have pinctrl support, this feels like it's papering
-> > over some other issue.
+If you don't mind, edit the subject to follow the convention, e.g.,
 
-> Sorry, I forget sending dts patch. We use fixed gpio regulator to control
-> USB VBus.
+  PCI: rpaphp: Remove unused variable 'value'
 
-Surely it's the GPIO controller that needs pinctrl support then?
+Apparently simple_strtoul() is deprecated and we're supposed to use
+kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
+little, too, e.g.,
 
---i3lJ51RuaGWuFYNw
-Content-Type: application/pgp-signature; name="signature.asc"
+  if (kstrtoul(drc_type, 0, &value) == 0)
+    return 1;
 
------BEGIN PGP SIGNATURE-----
+  return 0;
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5qSSIACgkQJNaLcl1U
-h9CbXwf5ARB0Y8aFHjOrTN1l2RTW1H0LLNID3S3ytrszCstjm9doLeGbGO66rVw8
-TbK4AvkNzjOKMj96PddwIBcR+Qg74nNeWm/3+oetgAkhhcATT/jbdFfoYgDNQ7ej
-m9nVTIID6L50xYqv4uIxKamyn1+q3k/NiR/zN2oZUxKwbNm/vg8CmK613BLskMUK
-P2B56gDMPFNCzKewrRyQaEc4NaMFBXoE6ZPYPWwvz0vDSJiOcZm7yKazPKxVpobt
-AOU67LR16JYRfi1amY2geV4ZsY5d8fgu0+iN5hrNXxG2KGe9Klq7ANfVKZ5zgQfn
-V8xxJUmd+Iv1EspBy2cEMCZ5ffF1DQ==
-=ekt7
------END PGP SIGNATURE-----
-
---i3lJ51RuaGWuFYNw--
+> ---
+>  drivers/pci/hotplug/rpaphp_core.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> index e408e40..5d871ef 100644
+> --- a/drivers/pci/hotplug/rpaphp_core.c
+> +++ b/drivers/pci/hotplug/rpaphp_core.c
+> @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
+>  
+>  static int is_php_type(char *drc_type)
+>  {
+> -	unsigned long value;
+>  	char *endptr;
+>  
+>  	/* PCI Hotplug nodes have an integer for drc_type */
+> -	value = simple_strtoul(drc_type, &endptr, 10);
+> +	simple_strtoul(drc_type, &endptr, 10);
+>  	if (endptr == drc_type)
+>  		return 0;
+>  
+> -- 
+> 2.7.4
+> 
