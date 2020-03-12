@@ -2,175 +2,127 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7078C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CD52067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C1B206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584041142;
+	bh=M8aP1mhEOoXf43lEWfn7LMCIZsP0x+wR0CIQ+PSIgtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V07ZcwSTh/JTK9IFqekvFH0So55xsV6uMJHDZSst85ReiiAd0O2S5ZK6ICRJhnvAs
+	 Tnca1ENFEX/FGFPTY4usCilbYWNdDpjhMWoNEezdEEkdJ6EoQmy+s4TSfZ3LzZZIn9
+	 Cn+v+jVr98yULTjSyDB5oqEnR6zY5qlPqptNYqEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgCLTYo (ORCPT
+        id S1726871AbgCLTZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:24:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:40440 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbgCLTYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:24:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 930EF31B;
-        Thu, 12 Mar 2020 12:24:43 -0700 (PDT)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C81523F67D;
-        Thu, 12 Mar 2020 12:24:42 -0700 (PDT)
-Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
- and delivery
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
- <20200304162558.48836-8-cristian.marussi@arm.com>
- <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
- <ec3cc098-da70-f101-fe5c-29741c8f2a62@arm.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <c9d64cad-3bde-602f-ab83-21c997fa472f@arm.com>
-Date:   Thu, 12 Mar 2020 19:24:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 15:25:40 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45491 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgCLTZk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:25:40 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c145so8230743qke.12;
+        Thu, 12 Mar 2020 12:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kSRZhT64+sxW9xDyUZ3l/rkvlLGuZc8V6ZIjw4qfv1c=;
+        b=c8JNPsVOXsaM4NWGf5pmxx6t2jZJ9I/3H+dCm28qDP91leSkivH4V1ku7Ah5fTzuIr
+         mDDxhTl0Z+3F/VqMr32cZhGDAVLTkEfnUpc4To6HefgYByEn9GROeiJp9SWAP5U2KjIi
+         CgELBvkumf8LAQpOk8GAtfQaKbCH5SfoCD4YVX05pYHi9SyL8qi5Sne/gvQh3mZNZ1e3
+         V6UH2z3SAj3jKoS9kgVFWJKTYWcdHeXVYMBOlkdd2PNfDpqkYnBLFKZiZhOJp4y63QOy
+         IASsb0FnjvJnnpl47Dr6siPjMTSjxO7SWShEsI7guYWLZSwqRuwQg61K7PiPPhbEeYrQ
+         JhQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=kSRZhT64+sxW9xDyUZ3l/rkvlLGuZc8V6ZIjw4qfv1c=;
+        b=FeiDaT562XjHc8BEfWJT6tv8kqP16g0f4hIyxIHQgwyN4xqhiJd/Zbu0jbJ05ejo10
+         Gra9YZuVAo/ExEZlpUGdEXckV3b5/9pLDWHE+Tkv5rIGqcF6bSh/CW7qT3UI3qS3nQIC
+         u1uTjqHjg2HolD6oPVKXHLmbcT3i0O8n02gRPRhr9s7MSj+lMAdJZAXELgZ4KtMWgdF6
+         agYo4U4/kCduVsO/LOkSNw5NkaAwxmDyBARtkJOt3u+mtKMhmFzH7ADQDq1yPH7PGMPt
+         qGwRWwJ+VmnGHhfpCWEE9Hphphk3HT2bXLzty+hhjxg/18LyGnyXGfu3otk55U/QSXvc
+         FVAA==
+X-Gm-Message-State: ANhLgQ3wwHUHliLo9SpK3s2lrQ6FRvGMiFXSYHcmUVjSB6fNW7elR1IP
+        BPiXpMuI5Lh9F74kYyFhVL0=
+X-Google-Smtp-Source: ADFU+vsS5KiJCU3u790VoKYOUkboPasr6G6il/55PNJnytScZCIzv4iI8x7Dyh/tFk12qggdPkw9hw==
+X-Received: by 2002:a37:b903:: with SMTP id j3mr9406595qkf.62.1584041138942;
+        Thu, 12 Mar 2020 12:25:38 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::fec8])
+        by smtp.gmail.com with ESMTPSA id f16sm1124454qtk.61.2020.03.12.12.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 12:25:38 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 15:25:34 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [GIT PULL] cgroup fixes for v5.6-rc5
+Message-ID: <20200312192534.GI79873@mtj.duckdns.org>
+References: <20200310144107.GC79873@mtj.duckdns.org>
+ <CAHk-=wi=5p6s_BmPAg5EF8Joe5d-6iAjQq6-Le7+xf5Gq-ZTfw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ec3cc098-da70-f101-fe5c-29741c8f2a62@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi=5p6s_BmPAg5EF8Joe5d-6iAjQq6-Le7+xf5Gq-ZTfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2020 14:06, Lukasz Luba wrote:
+Hello, Linus.
+
+On Tue, Mar 10, 2020 at 03:14:13PM -0700, Linus Torvalds wrote:
+> On Tue, Mar 10, 2020 at 7:41 AM Tejun Heo <tj@kernel.org> wrote:
+> >
+> > * Empty release_agent handling fix.
 > 
+> Pulled. However, I gagged a bit when I saw the code:
 > 
-> On 3/12/20 1:51 PM, Lukasz Luba wrote:
->> Hi Cristian,
->>
+>         if (!pathbuf || !agentbuf || !strlen(agentbuf))
 
-Hi Lukasz
+Hahaha, yeah, I can see that. I think it might have been copied from
+the commit it refers to - 64e90a8acb85 which contains the following
+snippet.
 
->> just one comment below...
->>
->> On 3/4/20 4:25 PM, Cristian Marussi wrote:
->>> Add core SCMI Notifications dispatch and delivery support logic which is
->>> able, at first, to dispatch well-known received events from the RX ISR to
->>> the dedicated deferred worker, and then, from there, to final deliver the
->>> events to the registered users' callbacks.
->>>
->>> Dispatch and delivery is just added here, still not enabled.
->>>
->>> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
->>> ---
->>> V3 --> V4
->>> - dispatcher now handles dequeuing of events in chunks (header+payload):
->>>    handling of these in_flight events let us remove one unneeded memcpy
->>>    on RX interrupt path (scmi_notify)
->>> - deferred dispatcher now access their own per-protocol handlers' table
->>>    reducing locking contention on the RX path
->>> V2 --> V3
->>> - exposing wq in sysfs via WQ_SYSFS
->>> V1 --> V2
->>> - splitted out of V1 patch 04
->>> - moved from IDR maps to real HashTables to store event_handlers
->>> - simplified delivery logic
->>> ---
->>>   drivers/firmware/arm_scmi/notify.c | 334 ++++++++++++++++++++++++++++-
->>>   drivers/firmware/arm_scmi/notify.h |   9 +
->>>   2 files changed, 342 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/firmware/arm_scmi/notify.c 
->>> b/drivers/firmware/arm_scmi/notify.c
->>
->> [snip]
->>
->>> +
->>> +/**
->>> + * scmi_notify  - Queues a notification for further deferred processing
->>> + *
->>> + * This is called in interrupt context to queue a received event for
->>> + * deferred processing.
->>> + *
->>> + * @handle: The handle identifying the platform instance from which the
->>> + *        dispatched event is generated
->>> + * @proto_id: Protocol ID
->>> + * @evt_id: Event ID (msgID)
->>> + * @buf: Event Message Payload (without the header)
->>> + * @len: Event Message Payload size
->>> + * @ts: RX Timestamp in nanoseconds (boottime)
->>> + *
->>> + * Return: 0 on Success
->>> + */
->>> +int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 
->>> evt_id,
->>> +        const void *buf, size_t len, u64 ts)
->>> +{
->>> +    struct scmi_registered_event *r_evt;
->>> +    struct scmi_event_header eh;
->>> +    struct scmi_notify_instance *ni = handle->notify_priv;
->>> +
->>> +    /* Ensure atomic value is updated */
->>> +    smp_mb__before_atomic();
->>> +    if (unlikely(!atomic_read(&ni->enabled)))
->>> +        return 0;
->>> +
->>> +    r_evt = SCMI_GET_REVT(ni, proto_id, evt_id);
->>> +    if (unlikely(!r_evt))
->>> +        return -EINVAL;
->>> +
->>> +    if (unlikely(len > r_evt->evt->max_payld_sz)) {
->>> +        pr_err("SCMI Notifications: discard badly sized message\n");
->>> +        return -EINVAL;
->>> +    }
->>> +    if (unlikely(kfifo_avail(&r_evt->proto->equeue.kfifo) <
->>> +             sizeof(eh) + len)) {
->>> +        pr_warn("SCMI Notifications: queue full dropping proto_id:%d  
->>> evt_id:%d  ts:%lld\n",
->>> +            proto_id, evt_id, ts);
->>> +        return -ENOMEM;
->>> +    }
->>> +
->>> +    eh.timestamp = ts;
->>> +    eh.evt_id = evt_id;
->>> +    eh.payld_sz = len;
->>> +    kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
->>> +    kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
->>> +    queue_work(r_evt->proto->equeue.wq,
->>> +           &r_evt->proto->equeue.notify_work);
->>
->> Is it safe to ignore the return value from the queue_work here?
-> 
-> and also from the kfifo_in
-> 
+       /*
+        * If there is no binary for us to call, then just return and get out of
+        * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
+        * disable all call_usermodehelper() calls.
+        */
+       if (strlen(sub_info->path) == 0)
+               goto out;
 
-kfifo_in returns the number of effectively written bytes (using __kfifo_in),
-possibly capped to the effectively maximum available space in the fifo, BUT since I
-absolutely cannot afford to write an incomplete/truncated event into the queue, I check
-that in advance and backout on queue full:
+> Also, wouldn't it be nice to test for the empty string before you even
+> bother to kstrdup() it? Even before you
 
-if (unlikely(kfifo_avail(&r_evt->proto->equeue.kfifo) < sizeof(eh) + len)) {
-	return -ENOMEM;
+Let me restructure the code a bit.
 
-and given that the ISR scmi_notify() is the only possible writer on this queue
-I can be sure that the kfifo_in() will succeed in writing the required number of
-bytes after the above check...so I don't need to check the return value.
+> Finally, shouldn't we technically hold the release_agent_path_lock
+> while looking at it?
 
-Regards
+The release_agent_path is protected by both locks - cgroup_mutex and
+release_agent_path_lock, so readers can hold either cgroup_mutex or
+the path_lock. Here, it's holding the mutex, so it should be fine.
+IIRC, it used to be protected by cgroup_mutex (or whatever was
+equivalent) and the extra lock was added to break some cyclic
+dependency. Hmm... might as well drop the cgroup_mutex protection and
+always use the spinlock.
 
-Cristian
+> Small details, and I've taken the pull, but the lack of locking does
+> seem to be an actual (if perhaps fairly theoretical) bug, no?
 
->>
->> Regards,
->> Lukasz
->>
->>
+Will queue cleanup patches for the next window.
 
+Thanks.
+
+-- 
+tejun
