@@ -2,218 +2,144 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EF2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66836C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22B1206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FTXc51ao"
+	by mail.kernel.org (Postfix) with ESMTP id 48F94206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgCLV6a (ORCPT
+        id S1726738AbgCLV7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:58:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23647 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726528AbgCLV63 (ORCPT
+        Thu, 12 Mar 2020 17:59:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40892 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726513AbgCLV7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:58:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584050307;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bydTNMJNgIMQ2vZ+TFrMdvYY1Bx3pTEvBd4lxqyQhlg=;
-        b=FTXc51aoJthExlpqhKf65I4WmwEV5NDcNBX33oajIrCB3IC39t+k1+pJJLeLEidLzzDYDO
-        WSG/ahFkA0+K46A45WnUqne0ik1Wm3Gw7ArAlgzxEdVwzArPw28tNXDqLnvA5I9bxtaXLX
-        AI1pODYv725ilTgskUZfJopf+LeB/yw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-uopu1BQaMEyDh_EmRcZsbg-1; Thu, 12 Mar 2020 17:58:25 -0400
-X-MC-Unique: uopu1BQaMEyDh_EmRcZsbg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1D9F18CA240;
-        Thu, 12 Mar 2020 21:58:22 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26F0A73874;
-        Thu, 12 Mar 2020 21:58:10 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 17:58:08 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20200312215808.bkezqotlhewconiy@madcap2.tricolour.ca>
-References: <cover.1577736799.git.rgb@redhat.com>
- <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
- <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com>
- <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca>
- <CAHC9VhSsfBbfYmqLoR=QBgF5_VwbA8Dqqz97MjqwwJ6Jq6fHwA@mail.gmail.com>
- <20200206125135.u4dmybkmvxfgui2b@madcap2.tricolour.ca>
- <CAHC9VhT8RsFtmqD22p_NxJaqoAg+do9mX45Luw9fEkr+nQjvxg@mail.gmail.com>
+        Thu, 12 Mar 2020 17:59:04 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CLrCd5018716;
+        Thu, 12 Mar 2020 17:58:41 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yquesjwfw-23
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 17:58:41 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02CLYri9007977;
+        Thu, 12 Mar 2020 21:36:14 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02dal.us.ibm.com with ESMTP id 2yqt6q9d6m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 21:36:13 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CLaCQB41222408
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 21:36:12 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 908A86E04E;
+        Thu, 12 Mar 2020 21:36:12 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30B9F6E04C;
+        Thu, 12 Mar 2020 21:36:11 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.160.72.189])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Mar 2020 21:36:10 +0000 (GMT)
+Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
+ 'value'
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Chen Zhou <chenzhou10@huawei.com>
+Cc:     paulus@samba.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200312144157.GA110750@google.com>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <f2297ff2-5ba7-da38-4630-0b8f6af4dea6@linux.ibm.com>
+Date:   Thu, 12 Mar 2020 14:36:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhT8RsFtmqD22p_NxJaqoAg+do9mX45Luw9fEkr+nQjvxg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200312144157.GA110750@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-12_15:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 mlxscore=0 adultscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003120107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-13 16:58, Paul Moore wrote:
-> On Thu, Feb 6, 2020 at 7:52 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-02-05 17:56, Paul Moore wrote:
-> > > On Tue, Feb 4, 2020 at 7:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > On 2020-01-22 16:29, Paul Moore wrote:
-> > > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > >
-> > > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> > > > > > process in a non-init user namespace the capability to set audit
-> > > > > > container identifiers.
-> > > > > >
-> > > > > > Provide /proc/$PID/audit_capcontid interface to capcontid.
-> > > > > > Valid values are: 1==enabled, 0==disabled
-> > > > >
-> > > > > It would be good to be more explicit about "enabled" and "disabled" in
-> > > > > the commit description.  For example, which setting allows the target
-> > > > > task to set audit container IDs of it's children processes?
-> > > >
-> > > > Ok...
-> > > >
-> > > > > > Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
-> > > > > > opid= capcontid= old-capcontid=
-> > > > > >
-> > > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > > ---
-> > > > > >  fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > > > >  include/linux/audit.h      | 14 ++++++++++++
-> > > > > >  include/uapi/linux/audit.h |  1 +
-> > > > > >  kernel/audit.c             | 35 +++++++++++++++++++++++++++++
-> > > > > >  4 files changed, 105 insertions(+)
-> > >
-> > > ...
-> > >
-> > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > > index 1287f0b63757..1c22dd084ae8 100644
-> > > > > > --- a/kernel/audit.c
-> > > > > > +++ b/kernel/audit.c
-> > > > > > @@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
-> > > > > >         return false;
-> > > > > >  }
-> > > > > >
-> > > > > > +int audit_set_capcontid(struct task_struct *task, u32 enable)
-> > > > > > +{
-> > > > > > +       u32 oldcapcontid;
-> > > > > > +       int rc = 0;
-> > > > > > +       struct audit_buffer *ab;
-> > > > > > +
-> > > > > > +       if (!task->audit)
-> > > > > > +               return -ENOPROTOOPT;
-> > > > > > +       oldcapcontid = audit_get_capcontid(task);
-> > > > > > +       /* if task is not descendant, block */
-> > > > > > +       if (task == current)
-> > > > > > +               rc = -EBADSLT;
-> > > > > > +       else if (!task_is_descendant(current, task))
-> > > > > > +               rc = -EXDEV;
-> > > > >
-> > > > > See my previous comments about error code sanity.
-> > > >
-> > > > I'll go with EXDEV.
-> > > >
-> > > > > > +       else if (current_user_ns() == &init_user_ns) {
-> > > > > > +               if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-> > > > > > +                       rc = -EPERM;
-> > > > >
-> > > > > I think we just want to use ns_capable() in the context of the current
-> > > > > userns to check CAP_AUDIT_CONTROL, yes?  Something like this ...
-> > > >
-> > > > I thought we had firmly established in previous discussion that
-> > > > CAP_AUDIT_CONTROL in anything other than init_user_ns was completely irrelevant
-> > > > and untrustable.
-> > >
-> > > In the case of a container with multiple users, and multiple
-> > > applications, one being a nested orchestrator, it seems relevant to
-> > > allow that container to control which of it's processes are able to
-> > > exercise CAP_AUDIT_CONTROL.  Granted, we still want to control it
-> > > within the overall host, e.g. the container in question must be
-> > > allowed to run a nested orchestrator, but allowing the container
-> > > itself to provide it's own granularity seems like the right thing to
-> > > do.
-> >
-> > Looking back to discussion on the v6 patch 2/10 (2019-05-30 15:29 Paul
-> > Moore[1], 2019-07-08 14:05 RGB[2]) , it occurs to me that the
-> > ns_capable(CAP_AUDIT_CONTROL) application was dangerous since there was
-> > no parental accountability in storage or reporting.  Now that is in
-> > place, it does seem a bit more reasonable to allow it, but I'm still not
-> > clear on why we would want both mechanisms now.  I don't understand what
-> > the last line in that email meant: "We would probably still want a
-> > ns_capable(CAP_AUDIT_CONTROL) restriction in this case."  Allow
-> > ns_capable(CAP_AUDIT_CONTROL) to govern these actions, or restrict
-> > ns_capable(CAP_AUDIT_CONTROL) from being used to govern these actions?
-> >
-> > If an unprivileged user has been given capcontid to be able run their
-> > own container orchestrator/engine and spawns a user namespace with
-> > CAP_AUDIT_CONTROL, what matters is capcontid, and not CAP_AUDIT_CONTROL.
-> > I could see needing CAP_AUDIT_CONTROL *in addition* to capcontid to give
-> > it finer grained control, but since capcontid would have to be given to
-> > each process explicitly anways, I don't see the point.
-> >
-> > If that unprivileged user had not been given capcontid,
-> > giving itself or one of its descendants CAP_AUDIT_CONTROL should not let
-> > it jump into the game all of a sudden unless the now chained audit
-> > container identifiers are deemed accountable enough.  And then now we
-> > need those hard limits on container depth and network namespace
-> > container membership.
+On 3/12/20 7:41 AM, Bjorn Helgaas wrote:
+> On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
+>> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
+>>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>>
+>>> drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
+>>> drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
+>>> 	variable value set but not used [-Wunused-but-set-variable]
+>>>
+>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>
+>> Michael, if you want this:
+>>
+>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>
+>> If you don't mind, edit the subject to follow the convention, e.g.,
+>>
+>>   PCI: rpaphp: Remove unused variable 'value'
+>>
+>> Apparently simple_strtoul() is deprecated and we're supposed to use
+>> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
+>> little, too, e.g.,
+>>
+>>   if (kstrtoul(drc_type, 0, &value) == 0)
+>>     return 1;
+>>
+>>   return 0;
 > 
-> Perhaps I'm not correctly understanding what you are trying to do with
-> this patchset, but my current understanding is that you are trying to
-> use capcontid to control which child audit container IDs (ACIDs) are
-> allowed to manage their own ACIDs.  Further, I believe that the
-> capcontid setting operates at a per-ACID level, meaning there is no
-> provision for the associated container to further restrict that
-> ability, i.e. no access control granularity below the ACID level.  My
-> thinking is that ns_capable(CAP_AUDIT_CONTROL) could be used within an
-> ACID to increase the granularity of the access controls so that only
-> privileged processes running inside the ACID would be able to manage
-> the ACIDs.  Does that make sense?
+> I guess there are several other uses of simple_strtoul() in this file.
+> Not sure if it's worth changing them all, just this one, or just the
+> patch below as-is.
 
-The capcontid is not inherited like the contid (or contobj) in
-audit_alloc(), so it stops at that process that was granted capcontid.
-That process that was granted capcontid can then explicitly further
-grant capcontid to any of its children should it deem necessary.
+If we are going to change one might as well do them all at once. If the original
+submitter wants to send the follow up that is fine, or I can send a patch when I
+have a minute.
 
-Since it is a boolean, it defaults to unset in init_struct_audit which
-isn't relevant anyways since that is in the initial user namespace.
-It isn't set in audit_alloc() and would default to false.
-I can set them explicitly both to false to be certain if that makes
-things clearer and more certain.
+-Tyrel
 
-I still believe ns_capable() is irrelevant here.
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+> 
+>>> ---
+>>>  drivers/pci/hotplug/rpaphp_core.c | 3 +--
+>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+>>> index e408e40..5d871ef 100644
+>>> --- a/drivers/pci/hotplug/rpaphp_core.c
+>>> +++ b/drivers/pci/hotplug/rpaphp_core.c
+>>> @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
+>>>  
+>>>  static int is_php_type(char *drc_type)
+>>>  {
+>>> -	unsigned long value;
+>>>  	char *endptr;
+>>>  
+>>>  	/* PCI Hotplug nodes have an integer for drc_type */
+>>> -	value = simple_strtoul(drc_type, &endptr, 10);
+>>> +	simple_strtoul(drc_type, &endptr, 10);
+>>>  	if (endptr == drc_type)
+>>>  		return 0;
+>>>  
+>>> -- 
+>>> 2.7.4
+>>>
 
