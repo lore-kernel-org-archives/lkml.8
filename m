@@ -2,250 +2,142 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB5BC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E30C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B8B20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E87820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m2lcmjUG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eeMbBp12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgCLO5k (ORCPT
+        id S1727720AbgCLO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:57:40 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34526 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgCLO5k (ORCPT
+        Thu, 12 Mar 2020 10:57:48 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56384 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727241AbgCLO5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:57:40 -0400
-Received: by mail-ua1-f67.google.com with SMTP id g21so2225663uaj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bxw33SxWFZjkWPj88ZuXOvwLRBj2S+g2ZJwa2FkjrJE=;
-        b=m2lcmjUGkYWP7vkV0Vjot/cSZwZUNCcrXd/WLLuloMRr0AWoQY+jqcc/1wuUSM7DDw
-         PqWzpdtoqX/gAP4yv2cKjurTp3cckazG7srtdvXHK8g76Tki8cdQXX8xelU3OB3zySg9
-         0KsHSFbk9uRX8+aRa4wmtwMYAvXbuXLOv70swGxt1sVRBXSVStkyGrRkeW0hlNtS8bAC
-         H/DBHSdfGZmPGLqt093ppxRWjhZFdTFTZEnGt5kqd8UjsiZIQAZuxC20LSQMDmhmwdCA
-         N6uxbr+q2W5htsfi5uFGNaAIdqYa9P6ZEEPBx1gbDz0x5QKr21FtszKn/uXbNtDP0Kgm
-         zboA==
+        Thu, 12 Mar 2020 10:57:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584025066;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y9BiE/HHtrwYLPDrEYfMy85B46eYpg1Qlp9PySkGqkw=;
+        b=eeMbBp12T7pIGQBtRO+AQlKzJehT6KOjtYHBTTQa3ePG5YKwMMfZpnEMTcjgMFeZxNE6no
+        hgpY6KSn6VRsf7ACuCKmAK24jw/idlOs8Hzki3dyD7KlVCsD6kNco/3VQBK+joJJqBVBF8
+        /25eBpcd4Z1yHZ7/3lKG3w6Jjz8yH8w=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-zmg3j9h2PHyF1X7J4fnFmw-1; Thu, 12 Mar 2020 10:57:44 -0400
+X-MC-Unique: zmg3j9h2PHyF1X7J4fnFmw-1
+Received: by mail-wr1-f71.google.com with SMTP id z13so2741887wrv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:57:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bxw33SxWFZjkWPj88ZuXOvwLRBj2S+g2ZJwa2FkjrJE=;
-        b=X/ynw6NeE/aNRNI4LfpxDh0bjpqQ/c3GUD3WD64fHjEAkbuosm4AzMZW23aDnBo4d9
-         wlmG4o+TBT6IstPPQwMZ0Q6+FtvtwjcWbkwsNbKpPF44nP8HUJCeRxFHeixCqV/B2ko8
-         uiW3UQy/tlojdRp6+TBPISQqScREBv2hmdmoFML+hPJdReeBkcnX0J37kohB/E6IjkZJ
-         g2EElwPKd81DesQRALkAqljxDczUpPQp+371w/drU7clDA0o8sJF5xwUBbeKj2Vw4wdi
-         28rFnuI7r0R5g3U6ql0Bb3XZKufPEm0Q6k/1wlAnbUSSrouIqL/Dy2iUbPHoYPQCrzSv
-         NrFA==
-X-Gm-Message-State: ANhLgQ0D4ejmfw34zVmdy91ioUe2YjB/GxaInmDy0ucPK/Uei4W9PVIS
-        CO4c0y6LN/eXbsFKLkRAqUJ2+1PPQvvu0z28Pbw6Zg==
-X-Google-Smtp-Source: ADFU+vt8Y3FRACC456zlqNPr2bqDTb34pZ4BOiYmKDy6ILZJ5KXw0GLwuYQXTML4HDWtsFJfrbuTd6Mahqifpd8BpCo=
-X-Received: by 2002:ab0:2a55:: with SMTP id p21mr3753572uar.54.1584025057464;
- Thu, 12 Mar 2020 07:57:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y9BiE/HHtrwYLPDrEYfMy85B46eYpg1Qlp9PySkGqkw=;
+        b=KCip+uDmGtQMuMsoCHSpfneDPpFVOhDGVIMuWl5LAJXgayuG5CAENvb3AcEqXMXC1N
+         CMw6kqjbaI0WMq/04sW2DrRTf/IRFRdfIUrTrEJ0GrlG4glx9UBNqTZXV/Ek2VfZ383s
+         +7eqGt1/P49KT7/OwnY2pzIvuRDJOZw4NOugIHDH5fALkcn0DcU05tRKfoGS1ZaNJ/3e
+         0ULitDt0lncER9+8aLcarqtxIlqqH5z7dd3x9RrMqAD0RzqCAdoplfDzCL/7EvBJ1FO+
+         fBnK0EQ+cFs5JjX+YvFteHXPMW3d7pkXsNL45nuo+SIbghXZkGDR8Pj3DOa8UnF2qOo+
+         2Tgw==
+X-Gm-Message-State: ANhLgQ3g3F0JimUhCd05PvEN+GiJQJaad6i7i5HzyefhQw+VoH/ndCvR
+        ZHUXd8el/sn26M2CjOtmME0CuEzN5Cd0GVU1cZO+4R2Xh7BMIjCbVI+kL5663brA/QsbSqiLS9G
+        5tMd36SAx2B3voj6K5qokfzSK
+X-Received: by 2002:adf:e5d2:: with SMTP id a18mr3697470wrn.334.1584025063153;
+        Thu, 12 Mar 2020 07:57:43 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vutKOKjAYrJX87oG5W63GUQb+emBV4G27C2zp5/6DHbAwJ9kGIiD1GDP0LQWNnKHvjJ4ObyCg==
+X-Received: by 2002:adf:e5d2:: with SMTP id a18mr3697448wrn.334.1584025062935;
+        Thu, 12 Mar 2020 07:57:42 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id d1sm13161470wrw.52.2020.03.12.07.57.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 07:57:42 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
+ purgatory.ro has missing symbols
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200311214601.18141-1-hdegoede@redhat.com>
+ <20200311214601.18141-3-hdegoede@redhat.com>
+ <20200312001006.GA170175@rani.riverdale.lan>
+ <3d58e77d-41e5-7927-fe84-4c058015e469@redhat.com>
+ <20200312114225.GB15619@zn.tnic>
+ <899f366e-385d-bafa-9051-4e93dc9ba321@redhat.com>
+ <20200312125032.GC15619@zn.tnic>
+ <8af51d90-27fa-6d2a-2159-ef0a9089453a@redhat.com>
+ <20200312142553.GF15619@zn.tnic>
+ <94c6f903-7dca-503e-aca7-1ee4641bcdac@redhat.com>
+ <20200312144922.GG15619@zn.tnic>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <69daa857-4dd0-730d-cebd-45c37cc5f66a@redhat.com>
+Date:   Thu, 12 Mar 2020 15:57:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200218151812.7816-1-geert+renesas@glider.be> <20200218151812.7816-4-geert+renesas@glider.be>
-In-Reply-To: <20200218151812.7816-4-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Mar 2020 15:57:26 +0100
-Message-ID: <CACRpkdacAaw4PJp3Oa569JJTHTB4HjP-hPqZLmdFcuxvdvwBHg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] gpio: Add GPIO Aggregator
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200312144922.GG15619@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi,
 
-thanks for your patience and again sorry for procrastination on my part :(
+On 3/12/20 3:49 PM, Borislav Petkov wrote:
+> On Thu, Mar 12, 2020 at 03:38:22PM +0100, Hans de Goede wrote:
+>> So I've send out 2 versions, not 5 not 10, but only 2 versions in
+>> the past 2 days and you start complaining about me rushing this and
+>> not fixing it properly, to me that does not come across positive.
+> 
+> Maybe there's a misunderstanding: when you send a patchset which is not
+> marked RFC, I read this, as, this patchset is ready for application. But
+> then the 0day bot catches build errors which means, not ready yet.
+> 
+> And I believe you expected for the 0day bot to test the patches first
+> and they should then to be considered for application. Yes, no?
 
-Overall I start to like this driver a lot. It has come a long way.
+I guess this is the root cause of our misunderstanding. I certainly
+did not expect the 0day bot to catch any issues, because I did not
+expect there to be any pre-existing issues.
 
-Some comments below are nitpicky, bear with me if they seem stupid.
+As said I wrote the patch because my sha256 changes from a while ago
+broke the purgatory because of introducing a missing symbol. My intend
+was to avoid a repeat of that regression by catching issues like this
+during build time.  I did not expect there to already be (more)
+such issues in the existing code; and I certainly did not expect
+there to be more then 1 such issue.
 
-On Tue, Feb 18, 2020 at 4:18 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+So having to do v4 to fix one pre-existing issue was a surprise.
+Having to then do a v5 because there was more then one pre-existing
+issue was an even bigger surprise.
 
-> +#define DRV_NAME       "gpio-aggregator"
-> +#define pr_fmt(fmt)    DRV_NAME ": " fmt
+I understand that you are pushing-back against people using 0day bot
+to find bugs for them and that was never my goal.
 
-I would just use dev_[info|err] for all messages to get rid of this.
+OTOH I don't appreciate getting push-back because if my change
+exposing *pre*-existing bugs. I am not responsible for those
+pre-existing bugs and as such I also do not feel responsible for
+0day bot triggering on them. Are the 0day bot reports and the need
+to rev the patch-set and post a new version annoying? Yes they are;
+however they are not my fault.
 
-> +#include <linux/bitmap.h>
-> +#include <linux/bitops.h>
-> +#include <linux/ctype.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/machine.h>
-> +#include <linux/idr.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/overflow.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/string.h>
-> +
-> +#include "gpiolib.h"
+Regards,
 
-When this file is includes I prefer if there is a comment next to
-this include saying why we have to touch internals and which
-ones.
+Hans
 
-> +struct gpio_aggregator {
-> +       struct gpiod_lookup_table *lookups;
-> +       struct platform_device *pdev;
-
-What about just storing struct device *dev?
-
-Then callbacks can just
-
-dev_err(aggregator->dev, "myerror\n");
-
-> +static char *get_arg(char **args)
-> +{
-> +       char *start = *args, *end;
-> +
-> +       start = skip_spaces(start);
-> +       if (!*start)
-> +               return NULL;
-> +
-> +       if (*start == '"') {
-> +               /* Quoted arg */
-> +               end = strchr(++start, '"');
-> +               if (!end)
-> +                       return ERR_PTR(-EINVAL);
-> +       } else {
-> +               /* Unquoted arg */
-> +               for (end = start; *end && !isspace(*end); end++) ;
-> +       }
-> +
-> +       if (*end)
-> +               *end++ = '\0';
-> +
-> +       *args = end;
-> +       return start;
-> +}
-
-Isn't this function reimplementing strsep()?
-while ((s = strsep(&p, " \""))) {
-or something.
-
-I'm not the best with strings, just asking so I know you tried it
-already.
-
-> +static int aggr_parse(struct gpio_aggregator *aggr)
-> +{
-> +       unsigned int first_index, last_index, i, n = 0;
-> +       char *name, *offsets, *first, *last, *next;
-> +       char *args = aggr->args;
-> +       int error;
-> +
-> +       for (name = get_arg(&args), offsets = get_arg(&args); name;
-> +            offsets = get_arg(&args)) {
-> +               if (IS_ERR(name)) {
-> +                       pr_err("Cannot get GPIO specifier: %pe\n", name);
-
-If gpio_aggregrator contained struct device *dev this would be
-dev_err(aggr->dev, "...\n");
-
-> +static void gpio_aggregator_free(struct gpio_aggregator *aggr)
-> +{
-> +       platform_device_unregister(aggr->pdev);
-
-Aha maybe store both the pdev and the dev in the struct then?
-
-Or print using &aggr->pdev.dev.
-
-> +       /*
-> +        * If any of the GPIO lines are sleeping, then the entire forwarder
-> +        * will be sleeping.
-> +        * If any of the chips support .set_config(), then the forwarder will
-> +        * support setting configs.
-> +        */
-> +       for (i = 0; i < ngpios; i++) {
-> +               dev_dbg(dev, "gpio %u => gpio-%d (%s)\n", i,
-> +                       desc_to_gpio(descs[i]), descs[i]->label ? : "?");
-
-If this desc->label business is why you need to include
-"gpiolib.h" then I'd prefer if you just add a
-
-const char *gpiod_get_producer_name(struct gpio_desc *desc);
-
-to gpiolib (add in <linux/gpio/consumer.h> so that gpiolib can
-try to give you something reasonable to print for the label here.
-I ran into that problem before (wanting to print something like this)
-and usually just printed the offset.
-
-But if it is a serious debug issue, let's fix a helper for this.
-
-gpiod_get_producer_name() could return the thing in
-desc->label if that is set or else something along
-"chipname-offset" or "unknown", I'm not very picky
-with that.
-
-> error = aggr_add_gpio(aggr, name, U16_MAX, &n);
-
-Is the reason why you use e.g. "gpiochip0" as name here that this
-is a simple ABI for userspace?
-
-Such like obtained from /sys/bus/gpio/devices/<chipname>?
-
-I would actually prefer to just add a sysfs attribute
-such as "name" and set it to the value of gpiochip->label.
-
-These labels are compulsory and supposed to be unique.
-
-Then whatever creates an aggregator can just use
-cat /sys/bus/gpio/devices/gpiochipN/name to send in
-through the sysfs interface to this kernel driver.
-
-This will protect you in the following way:
-
-When a system is booted and populated the N in
-gpiochipN is not stable and this aggregator will be used
-by scripts that assume it is. We already had this dilemma
-with things like network interfaces like eth0/1.
-
-This can be because of things like probe order which
-can be random, or because someone compiled a
-kernel with a new driver for a gpiochip that wasn't
-detected before. This recently happened to Raspberry Pi,
-that added gpio driver for "firmware GPIOs" (IIRC).
-
-The label on the chip is going to be more stable
-I think, so it is better to use that.
-
-This should also rid the need to include "gpiolib.h"
-which makes me nervous.
-
-Yours,
-Linus Walleij
