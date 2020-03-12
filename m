@@ -2,62 +2,80 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20C5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5BEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86F3206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77D6206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584003782;
+	bh=W3VhYB0+37wDg2ve0xW9G4K2A31AP6lXnjoIl/W109Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rEjBusIi2+C/CpnFKnjPjtsRmyGZyEXWVq1MWXi9zjo9ApA2UWwgmYHOTY5xU71Cy
+	 SPtDYpxnsMOD9+YvMQ+kpg25PFarYps1vcVq+uCFUVsKqtYO2MJIYP1K18tPbdMm+V
+	 IPUiEsmcy9PcV8AA3Ix1L8IznAmNeNpthEHngqkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCLJBc (ORCPT
+        id S1726557AbgCLJDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:01:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:35571 "EHLO verein.lst.de"
+        Thu, 12 Mar 2020 05:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgCLJBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:01:31 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9884F68C4E; Thu, 12 Mar 2020 10:01:28 +0100 (CET)
-Date:   Thu, 12 Mar 2020 10:01:28 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tommi Rantala <tommi.t.rantala@nokia.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix regression in "cleanup
- xfs_dir2_block_getdents"
-Message-ID: <20200312090128.GA11127@lst.de>
-References: <20200312085728.22187-1-tommi.t.rantala@nokia.com>
+        id S1725980AbgCLJDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 05:03:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6761320691;
+        Thu, 12 Mar 2020 09:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584003780;
+        bh=W3VhYB0+37wDg2ve0xW9G4K2A31AP6lXnjoIl/W109Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jYdPB8TeqL3Mva1QSnRLzmsTKUKX0Dlo5A0028hiWu7RUnhp1FsMqH/aayraJ6vAx
+         Xhtkk2r2ntLubZKny8JvmH7VVCM1rays1My8CENWodPLv/Y7HAew69NvHeNuCq9wII
+         EpQjXnUYDmeqjPCtMSv3g41/LlZ3GNOPJuKMOYWs=
+Date:   Thu, 12 Mar 2020 10:02:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Martin Devera <devik@eaxlabs.cz>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] tty/serial: Add st,swap OF option to stm32-usart
+Message-ID: <20200312090258.GA180600@kroah.com>
+References: <20200229160507.31309-1-devik@eaxlabs.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312085728.22187-1-tommi.t.rantala@nokia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200229160507.31309-1-devik@eaxlabs.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:57:28AM +0200, Tommi Rantala wrote:
-> Commit 263dde869bd09 ("xfs: cleanup xfs_dir2_block_getdents") introduced
-> a getdents regression, when it converted the pointer arithmetics to
-> offset calculations: offset is updated in the loop already for the next
-> iteration, but the updated offset value is used incorrectly in two
-> places, where we should have used the not-yet-updated value.
+On Sat, Feb 29, 2020 at 05:05:06PM +0100, Martin Devera wrote:
+> STM32 F7/H7 usarts supports RX & TX pin swapping.
+> Add option to turn it on.
+> Tested on STM32MP157.
 > 
-> This caused for example "git clean -ffdx" failures to cleanup certain
-> directory structures when running in a container.
-> 
-> Fix the regression by making sure we use proper offset in the loop body.
-> Thanks to Christoph Hellwig for suggestion how to best fix the code.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Fixes: 263dde869bd09 ("xfs: cleanup xfs_dir2_block_getdents")
-> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+> Signed-off-by: Martin Devera <devik@eaxlabs.cz>
+> ---
+>  drivers/tty/serial/stm32-usart.c | 3 ++-
+>  drivers/tty/serial/stm32-usart.h | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 
-Looks good,
+This, and patch 2/2, do not apply to my tty-next branch at all.  What
+did you make them against?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Please rebase and resend the series.
+
+thanks,
+
+greg k-h
