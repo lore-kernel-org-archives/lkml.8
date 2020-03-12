@@ -7,63 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CADDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB10AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAA220736
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D2820736
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BJ0XuBYV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YulRMKVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCLNbk (ORCPT
+        id S1727460AbgCLNbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:31:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45036 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCLNbi (ORCPT
+        Thu, 12 Mar 2020 09:31:44 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56103 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgCLNbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:31:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l18so7444944wru.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:31:36 -0700 (PDT)
+        Thu, 12 Mar 2020 09:31:41 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 6so6100659wmi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MQB/nJ2X838Fvt+sBkmGr/0pMCoouvYo1EdeUXM4YMQ=;
-        b=BJ0XuBYV3ToSPW3UIl6Isc2lumsrYzXzC9pIKP6HzoLx2m5H8VgaPnkaYEyU3nSSyY
-         1tLzCAypjVjCczuqqKDKV1kSM0jlkColhbhQeyFQVhbrpWHVd+cqIdpfBucm5Cs8CUNT
-         g2JsfKMI1p2KNINJQGW/uTtMsJczcoyPXXZnlpjb8lmdv/EKBNzm0oLEWDR+wc3cC7Qf
-         DMCctXTjXci5kB54gBeQKBFgYHiFdJuJ8DwI2USTDOz+pcXtLVEBQNuo9vJANXAlIU0c
-         /cnYnC4QN9G/AkoiOE6XME3Ja/GQJj1cvbdw9h8QOh351jbLfIus+wLy4M2iFBemZPwy
-         BIKQ==
+        bh=WSxwbrvkTLQhCnvQXX1HjNSZff7G2HPoi6i2nBxHFtc=;
+        b=YulRMKVUILMBNhdYGtTrxVJ+7BW7AY4paeNn1T/pfY9D9nSoD8fqGuY045sjsbxU5h
+         hQ0pixA54oUGhTR0jYQB9S5danxRYtlzUqJyDZYZsoYUx0X+efvsf0OdsCg/D1aImZRN
+         8axNItGQjFv2xvXC8Z2fQbZQOC4Feqijr7BfKcZpHm6nbZIhiZ8Xuhyg4zw3/6UbsuAo
+         KLt30d5dY5soGBfrQOsshd8nQwIvKOsYdwNkij/OGVux17s15SGHzo8bB+irZX4Mbg79
+         8GW8UhcUsBjWj1fWPAgTmfugsrl2NLfjlNX69Zxf2MqaT58r5tU81vWCQ+QNFl5x36Uj
+         1tiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MQB/nJ2X838Fvt+sBkmGr/0pMCoouvYo1EdeUXM4YMQ=;
-        b=MgGMTMLsr8T1AHYDW5/Ttiu2Vu0HNT0B9NAPwo0KI0sWDMFyduU57gjPzch3tc2RtG
-         Z43n2thxSMQ4OCTMPsCH0VJyaptZWdwNS87I7SNaYt6dJLNn/B1AUcINS1NLIMwZ/P65
-         trykx+IC/CRRqDBUmLN2RVjWsxdseT/8d0qxuGHaCyVRN0YFVbalykJVB8O+7QCzbd6j
-         lnZYE+qjggTHAbN3+xRxu6A7S8uTMBbq6JlIoVnhr2JE6Y8SjIiJI4svf1MB814W/OFP
-         gdAYkKX2mkSsCFk3hSkqfCLm8YGU2mmPlt0qIg552LhAV746BBAdhxaSOxfcePE76v62
-         xJFA==
-X-Gm-Message-State: ANhLgQ2E3aKz2KNSBSZ9SQVFA7Eiaa4id1yJxGBuVqguVViuML39rsFM
-        td6Kwqha0MpYSvoj+SJRyou2XgWMhmM7oQ==
-X-Google-Smtp-Source: ADFU+vttYTaI+DCiNmB1UvQy1EL7nMlpTXWyEiRnY5WHDphDcEObnDSPJFvd3uSrVxGbrKBpFiiYCQ==
-X-Received: by 2002:a5d:6703:: with SMTP id o3mr101991wru.137.1584019895265;
-        Thu, 12 Mar 2020 06:31:35 -0700 (PDT)
+        bh=WSxwbrvkTLQhCnvQXX1HjNSZff7G2HPoi6i2nBxHFtc=;
+        b=tNcsdCjWYiuF1nxGdyBaqQy1R05knDIWsnzKdJWU0is8m1B4dYWnZ25dLssTmxPqgx
+         T0gw9l+flWBqY/yqNeqB203sTN5D8efuHUoMUHFzh0GYJqGx1koppNe4UcujpU337C5b
+         lTadOwaSRjXi17uOjD6RWti1YMwhgu/ydkUkWsXoRgOUlotXAJxecVRr80nx0UUgiIrz
+         nPXlAoakvi/NnkRiRO7zfGbEWGF74KrXh7zhR1vurGGEYopFjDsGl4gV9XsrMNeK/JfJ
+         F6xpxLb+KEJ4T4XTX/oT+62BVm/m6nk85xgs4Dh0cdtpWhBBtdIhEokpI6yaOnSW8m/c
+         rD8Q==
+X-Gm-Message-State: ANhLgQ0xDEM0d34ERufRAsfoKE98Bbf2iuXerCmG4qECFhciCpj/CoE3
+        5UNxAWQDd2QkoVhyUN8SMDcnSw==
+X-Google-Smtp-Source: ADFU+vuiXvA7ItIqTn6tHh9dRy8ISscfNKEPxJAkBuAl1GcZMGcUCuRRIWBWKC/j6F3R7b2fLXVfSA==
+X-Received: by 2002:a1c:1d15:: with SMTP id d21mr4854913wmd.101.1584019898516;
+        Thu, 12 Mar 2020 06:31:38 -0700 (PDT)
 Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m21sm12242885wmi.27.2020.03.12.06.31.34
+        by smtp.gmail.com with ESMTPSA id m21sm12242885wmi.27.2020.03.12.06.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 06:31:34 -0700 (PDT)
+        Thu, 12 Mar 2020 06:31:37 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     broonie@kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] spi: meson-spicc: remove unused variables
-Date:   Thu, 12 Mar 2020 14:31:23 +0100
-Message-Id: <20200312133131.26430-2-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sunny Luo <sunny.luo@amlogic.com>,
+        Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 4/9] spi: meson-spicc: support max 80MHz clock
+Date:   Thu, 12 Mar 2020 14:31:26 +0100
+Message-Id: <20200312133131.26430-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200312133131.26430-1-narmstrong@baylibre.com>
 References: <20200312133131.26430-1-narmstrong@baylibre.com>
@@ -74,27 +76,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused variables from spicc data struct.
+The SPICC controller in Meson-AXG is capable of running at 80M clock.
+The ASIC IP is improved and the clock is actually running higher than
+previous old SoCs.
 
+Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/spi/spi-meson-spicc.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/spi/spi-meson-spicc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-index 7f5680fe2568..8425e5ae1273 100644
+index bd434d9055d9..710b4e780daa 100644
 --- a/drivers/spi/spi-meson-spicc.c
 +++ b/drivers/spi/spi-meson-spicc.c
-@@ -130,9 +130,7 @@ struct meson_spicc_device {
- 	u8				*rx_buf;
- 	unsigned int			bytes_per_word;
- 	unsigned long			tx_remain;
--	unsigned long			txb_remain;
- 	unsigned long			rx_remain;
--	unsigned long			rxb_remain;
- 	unsigned long			xfer_remain;
- 	bool				is_burst_end;
- 	bool				is_last_burst;
+@@ -35,7 +35,6 @@
+  *   to have a CS go down over the full transfer
+  */
+ 
+-#define SPICC_MAX_FREQ	30000000
+ #define SPICC_MAX_BURST	128
+ 
+ /* Register Map */
+@@ -132,6 +131,7 @@
+ #define SPICC_FIFO_HALF 10
+ 
+ struct meson_spicc_data {
++	unsigned int			max_speed_hz;
+ 	bool				has_oen;
+ 	bool				has_enhance_clk_div;
+ };
+@@ -693,11 +693,9 @@ static int meson_spicc_probe(struct platform_device *pdev)
+ 	master->transfer_one = meson_spicc_transfer_one;
+ 	master->use_gpio_descriptors = true;
+ 
+-	/* Setup max rate according to the Meson GX datasheet */
+-	if ((rate >> 2) > SPICC_MAX_FREQ)
+-		master->max_speed_hz = SPICC_MAX_FREQ;
+-	else
+-		master->max_speed_hz = rate >> 2;
++	/* Setup max rate according to the Meson datasheet */
++	master->max_speed_hz = min_t(unsigned int, rate >> 1,
++				     spicc->data->max_speed_hz);
+ 
+ 	meson_spicc_oen_enable(spicc);
+ 
+@@ -737,9 +735,11 @@ static int meson_spicc_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct meson_spicc_data meson_spicc_gx_data = {
++	.max_speed_hz		= 30000000,
+ };
+ 
+ static const struct meson_spicc_data meson_spicc_axg_data = {
++	.max_speed_hz		= 80000000,
+ 	.has_oen		= true,
+ 	.has_enhance_clk_div	= true,
+ };
 -- 
 2.22.0
 
