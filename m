@@ -2,144 +2,78 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC6FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7B7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E0C206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584044624;
-	bh=xufKSBPjxMyvZ6KyLNsfr9Xl0cpVH6u1ETVpc+qL+xY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l8Bz/GEBY8e91dJzbE0khZ/UGvHXzJ++qH9QJOE77av3pbzg7ZxOeJqMwmGBm76ID
-	 /xD3AcN1dqWbuvh61aissiBTPnuDn33K+6Jslx+X1IOetKtv2UXCYzt3Ong8p3KzSS
-	 CBvT06r/YhU1p06f1WigJso0tMCz7qbwUjN0ORg4=
+	by mail.kernel.org (Postfix) with ESMTP id 2E1BD206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCLUXn (ORCPT
+        id S1726909AbgCLUZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:23:43 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36402 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLUXm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:23:42 -0400
-Received: by mail-pj1-f65.google.com with SMTP id l41so3121197pjb.1;
-        Thu, 12 Mar 2020 13:23:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E48tDkZx/8j+Ju5P8a7Hgys5ARHNcg71wMnlvvHjODQ=;
-        b=uHQkP5ZYmW2TWq+I/J0FK+bJgD+cfoL9CWjoXUTPJWUbEFmEn0h6lO4cHmDaf1qhOo
-         2PI0epZ4LwmiF2rffZXulhUT4LkIHxSSYzhhNWUc+hpluTp/nZ7hXMV3+hRv0clx24+Q
-         QplHZeHr/unYjngauEgMJ5xqSoSCudiNDBcOsacdYIptVpwaww7rXA6jXldbWLKnfEJh
-         weR/DI+v7Rq9dJ9ESGWe0vjLLCZhsjXS4eq2odTI4NB+1PFBClj/5JOOIlyx37WuZHWD
-         WdZG6jUmlH6j1GW5PdaeoElUo1oZEL15dkV6psfnXPjCGCHGFY+sQJ8fVwacyem2dzMY
-         zLig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E48tDkZx/8j+Ju5P8a7Hgys5ARHNcg71wMnlvvHjODQ=;
-        b=hwkPtYwDh0nEcPM0RjuSY8K564O8JhwK9+Udarxb7RuIhcrwrAn9UU/1eynQXKq7wH
-         740W6KGwZDxakTByYeVTnKM/vsZWArtZQPBjqnbgiE3e//391EfMkHWVieeWsjGP7AEL
-         /nh1qlgjlBcxU7/SEg2B9x3EsNx81rAxa1NnabDJREnSthwisvkRZ8gSrJwHVID3jxzm
-         55PG1cijpI7uKF7amkW44xDAy74wWMdukcCvaSUCitVOieYMjOHlz24Q48dPC1I4YeHt
-         Da7dg7QYqlrudBFBGKPLdvFdN2m/l6kXx4z7oieKCyKVkTAf33IL5YH6OV/LtqkbnQuT
-         Bacg==
-X-Gm-Message-State: ANhLgQ0KVg53CrIKXVyHkeqOn36pRFtdIMK9arToHPV/hsGFkoTezFbO
-        qqQqWKLsGc4NI9f7p9dz+WSB1WNm
-X-Google-Smtp-Source: ADFU+vtfHouS/icEFZlgwFly1nG+Y9MAhxq009zIbS2uW0Cb2Uz9i1mtCzAK4DHsvIMnFvMmjPeKhg==
-X-Received: by 2002:a17:902:bc4c:: with SMTP id t12mr9032471plz.54.1584044621809;
-        Thu, 12 Mar 2020 13:23:41 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id z17sm7602271pff.12.2020.03.12.13.23.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 13:23:40 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 13:23:39 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
-Message-ID: <20200312202339.GB68817@google.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-3-minchan@kernel.org>
- <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
- <20200310222008.GB72963@google.com>
- <07109fb3-dcf3-0252-4515-7e476fadc259@suse.cz>
+        Thu, 12 Mar 2020 16:25:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59968 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgCLUZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 16:25:27 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 194F4200F30;
+        Thu, 12 Mar 2020 21:25:26 +0100 (CET)
+Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D5BD1200F1F;
+        Thu, 12 Mar 2020 21:25:25 +0100 (CET)
+Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
+        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id 574D540AB2;
+        Thu, 12 Mar 2020 13:25:25 -0700 (MST)
+From:   Li Yang <leoyang.li@nxp.com>
+List-Id: <soc.lore.kernel.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org
+Subject: [GIT PULL] fixes to soc/fsl drivers for v5.6
+Date:   Thu, 12 Mar 2020 15:25:25 -0500
+Message-Id: <20200312202525.16708-1-leoyang.li@nxp.com>
+X-Mailer: git-send-email 2.25.1.377.g2d2118b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07109fb3-dcf3-0252-4515-7e476fadc259@suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:40:26PM +0100, Vlastimil Babka wrote:
-> On 3/10/20 11:20 PM, Minchan Kim wrote:
-> > On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
-> >> On 3/2/20 8:36 PM, Minchan Kim wrote:
-> >> > There is usecase that System Management Software(SMS) want to give
-> >> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
-> >> > in the case of Android, it is the ActivityManagerService.
-> >> > 
-> >> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> >> 
-> >> You mean MADV_DONTNEED?
-> > 
-> > Mean to DONT_NEED's future version.
-> 
-> What's that exactly?
+Hi arm-soc maintainers,
 
-For zapping timing point of view, dontneed acts immediately so it's very
-strong hint. However, MADV_COLD and MADV_PAGEOUT does lazily depending
-on the future. For example, the page never discarded if it's touched
-before the tail of LRU. If other process which shared the page has
-touched the page, never paging out.
+Please help to merge the following fix for soc/fsl drivers.
 
-> 
-> >> 
-> >> > required to make the reclaim decision is not known to the app.
-> >> 
-> >> This seems to be mixing up the differences between MADV_DONTNEED and
-> >> COLD/PAGEOUT and self-imposed vs external memory hints?
-> > 
-> > Sorry, I don't understand what you want here.
-> 
-> You say that process_madvise(MADV_[COLD|PAGEEOUT]) is similar to
-> madvise(MADV_WONTNEED) but the difference is that the information
-> required to make the reclaim decision is not known to the app.
-> 
-> I see two differences. One is madvise vs process_madvise, which is explained by
-> "reclaim decision is not known to the app."
-> The other is MADV_WONTNEED vs MADV_[COLD|PAGEEOUT], which is... I'm not sure
-> until you say what's "DONT_NEED's future version" :D
-> 
-> Anyway I assume this part is from the versions where the new COLD and PAGEOUT
-> flags were introduced together with external memory hinting API?
+Thanks,
+Leo
 
-Exactly. Maybe it would be better to remove the part once we merged the
-COLD and PAGEOUT now.
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-Thanks for the review, Vlastimil!
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-fix-v5.6
+
+for you to fetch changes up to fe8fe7723a3a824790bda681b40efd767e2251a7:
+
+  soc: fsl: dpio: register dpio irq handlers after dpio create (2020-03-10 15:28:47 -0500)
+
+----------------------------------------------------------------
+NXP/FSL soc driver fixes for v5.6
+
+DPAA2 DPIO
+- Fix a kernel hang caused by irq requested before creating dpio
+
+----------------------------------------------------------------
+Grigore Popescu (1):
+      soc: fsl: dpio: register dpio irq handlers after dpio create
+
+ drivers/soc/fsl/dpio/dpio-driver.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
