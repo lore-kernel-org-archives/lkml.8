@@ -2,157 +2,137 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE42C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2592C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D014206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:08:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEjO029K"
+	by mail.kernel.org (Postfix) with ESMTP id D742E20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgCLKIy (ORCPT
+        id S1726861AbgCLKIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:08:54 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40795 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbgCLKIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 06:08:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:27100 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgCLKIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 06:08:52 -0400
-Received: by mail-pj1-f68.google.com with SMTP id bo3so1029342pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T8E8mxYa+FriY8pXwclk7Z4PHwuu7BcZPDLi6RwEnzM=;
-        b=NEjO029KDoNC0Djn9JLlduUyHNI/KlEErqnveh/nw3UnVMY2joEsYy9TsjkDmbbuXB
-         LhyPtddDN8ulwoA0xDDfiQKA/aF/edCsyWsQuc7oW1ZYVaz/yXc4T+WZzeDXgvVLbPtC
-         JrUqvD2+bR5LUVrhCz7HNvhpmh3QnBcCHmSHs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T8E8mxYa+FriY8pXwclk7Z4PHwuu7BcZPDLi6RwEnzM=;
-        b=D4oUrX/QZfc9ulqyisg3URk5tMRMY4cVR0jQMvBvxBcb8elbjQZ8V3HENSCbBKxrfc
-         59sAF14NsglqLq2APg9zAhPZ6Sqg1Lg/BNKuJmGwzapG8wNCPUyGi8rbb66JgfevVCbK
-         L4+P0DflXEtlEty7xY3IZKbCDd2J7C4Ed0jnQp8KYdcAccJm25AnGoNMBk73QuCg7NH/
-         /uDR/xuV9hsq0+TWeE0LBDsd9awje4SUGQR49mLFmPiKU73wnCZs/CpsdjI3ARBo1/xV
-         X6FGfmCWdTcerQwsNa/9d9/hvwBkLuunS2dmPkbOIXUt0HC2be4z4RF/U/OwmcpG6qG8
-         Rsag==
-X-Gm-Message-State: ANhLgQ0Ma9GktEnZJ3r1K0A7EBVVdu9+ePgYZTxtTCQtr2gGrlacarQR
-        aIrIvMNQvu97sguENEgYb6Oy7H9L8e0=
-X-Google-Smtp-Source: ADFU+vtsFOQ0iIj+KGjDkVLFGiq3xD+0WjGUnzAMh3TLkGB8X12XkyV8b7Xm5A7Kt26bcEqWQo3L/Q==
-X-Received: by 2002:a17:90a:208:: with SMTP id c8mr3286851pjc.153.1584007731070;
-        Thu, 12 Mar 2020 03:08:51 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id s19sm3678368pfh.218.2020.03.12.03.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 03:08:50 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     furquan@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 1/3] platform/chrome: notify: Add driver data struct
-Date:   Thu, 12 Mar 2020 03:08:07 -0700
-Message-Id: <20200312100809.21153-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-In-Reply-To: <20200312100809.21153-1-pmalani@chromium.org>
-References: <20200312100809.21153-1-pmalani@chromium.org>
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 03:08:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
+   d="scan'208";a="354095719"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 12 Mar 2020 03:08:45 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 12 Mar 2020 12:08:44 +0200
+Date:   Thu, 12 Mar 2020 12:08:44 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Skip link training delay for S3 resume
+Message-ID: <20200312100844.GR2540@lahna.fi.intel.com>
+References: <20200311045249.5200-1-kai.heng.feng@canonical.com>
+ <20200311102811.GA2540@lahna.fi.intel.com>
+ <2C20385C-4BA4-4D6D-935A-AFDB97FAB5ED@canonical.com>
+ <20200312080424.GH2540@lahna.fi.intel.com>
+ <ABD5242B-E118-4811-AA8A-DF7C2A3B2E8B@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ABD5242B-E118-4811-AA8A-DF7C2A3B2E8B@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a device driver data structure, cros_usbpd_notify_data, in
-which we can store the notifier block object and pointers to the struct
-cros_ec_device and struct device objects.
+On Thu, Mar 12, 2020 at 05:45:32PM +0800, Kai-Heng Feng wrote:
+> 
+> 
+> > On Mar 12, 2020, at 16:04, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> > 
+> > On Thu, Mar 12, 2020 at 12:23:46PM +0800, Kai-Heng Feng wrote:
+> >> Hi,
+> >> 
+> >>> On Mar 11, 2020, at 18:28, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> >>> 
+> >>> Hi,
+> >>> 
+> >>> On Wed, Mar 11, 2020 at 12:52:49PM +0800, Kai-Heng Feng wrote:
+> >>>> Commit ad9001f2f411 ("PCI/PM: Add missing link delays required by the
+> >>>> PCIe spec") added a 1100ms delay on resume for bridges that don't
+> >>>> support Link Active Reporting.
+> >>>> 
+> >>>> The commit also states that the delay can be skipped for S3, as the
+> >>>> firmware should already handled the case for us.
+> >>> 
+> >>> Delay can be skipped if the firmware provides _DSM with function 8
+> >>> implemented according to PCI firmwre spec 3.2 sec 4.6.8.
+> >> 
+> >> As someone who doesn't have access to the PCI spec...
+> >> Questions below.
+> >> 
+> >>> 
+> >>>> So let's skip the link training delay for S3, to save 1100ms resume
+> >>>> time.
+> >>>> 
+> >>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >>>> ---
+> >>>> drivers/pci/pci-driver.c | 3 ++-
+> >>>> 1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>> 
+> >>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> >>>> index 0454ca0e4e3f..3050375bad04 100644
+> >>>> --- a/drivers/pci/pci-driver.c
+> >>>> +++ b/drivers/pci/pci-driver.c
+> >>>> @@ -916,7 +916,8 @@ static int pci_pm_resume_noirq(struct device *dev)
+> >>>> 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+> >>>> 	pcie_pme_root_status_cleanup(pci_dev);
+> >>>> 
+> >>>> -	if (!skip_bus_pm && prev_state == PCI_D3cold)
+> >>>> +	if (!skip_bus_pm && prev_state == PCI_D3cold
+> >>>> +	    && !pm_resume_via_firmware())
+> >>> 
+> >>> So this would need to check for the _DSM result as well. We do evaluate
+> >>> it in pci_acpi_optimize_delay() (drivers/pci/pci-acpi.c) and that ends
+> >>> up lowering ->d3cold_delay so maybe check that here.
+> >> 
+> >> Do we need to wait for d3cold_delay here?
+> >> Or we can also skip that as long as pci_acpi_dsm_guid and FUNCTION_DELAY_DSM present?
+> > 
+> > Actually I think pci_bridge_wait_for_secondary_bus() already takes it
+> > into account. Have you checked if the BIOS has this _DSM implemented in
+> > the first place?
+> 
+> -[0000:00]-+-00.0  Intel Corporation Device 9b44
+>            +-1c.0-[03-3b]----00.0-[04-3b]--+-00.0-[05]----00.0  Intel Corporation JHL7540 Thunderbolt 3 NHI [Titan Ridge 2C 2018]
+>            |                               +-01.0-[06-3a]--
+>            |                               \-02.0-[3b]----00.0  Intel Corporation JHL7540 Thunderbolt 3 USB Controller [Titan Ridge 2C 2018]
+> 
+> 00:1c.0 has _DSM implemented.
+> How do I check for the Thunderbolt device?
 
-This will make it more convenient to access these pointers when
-executing both platform and ACPI callbacks.
+Most likely you see it only under the root port (1c.0) so check
+/sys/bus/pci/devices/0000:00:1c.0/firmware_node/path and match that one
+to the ACPI tables.
 
-While we are here, also add a dev_info print declaring successful device
-registration at the end of the platform probe function.
+> It doesn't seem to have a fixed _ADR so I don't know how to locate it in DSDT/SSDT table.
+> 
+> Log with additional debug message:
+> [  948.813025] ACPI: EC: interrupt unblocked
+> [  948.925017] pcieport 0000:00:01.0: pcie_wait_for_link_delay sleep 1100ms
+> [  949.065466] pcieport 0000:04:00.0: pcie_wait_for_link_delay sleep 1100ms
+> [  949.065468] pcieport 0000:04:02.0: pcie_wait_for_link_delay sleep 1100ms
+> 
+> 00:01.0 is the port for discrete graphics.
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
- drivers/platform/chrome/cros_usbpd_notify.c | 30 ++++++++++++++-------
- 1 file changed, 21 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-index 3851bbd6e9a39..edcb346024b07 100644
---- a/drivers/platform/chrome/cros_usbpd_notify.c
-+++ b/drivers/platform/chrome/cros_usbpd_notify.c
-@@ -16,6 +16,12 @@
- 
- static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
- 
-+struct cros_usbpd_notify_data {
-+	struct device *dev;
-+	struct cros_ec_device *ec;
-+	struct notifier_block nb;
-+};
-+
- /**
-  * cros_usbpd_register_notify - Register a notifier callback for PD events.
-  * @nb: Notifier block pointer to register
-@@ -98,23 +104,28 @@ static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
--	struct notifier_block *nb;
-+	struct cros_usbpd_notify_data *pdnotify;
- 	int ret;
- 
--	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
--	if (!nb)
-+	pdnotify = devm_kzalloc(dev, sizeof(*pdnotify), GFP_KERNEL);
-+	if (!pdnotify)
- 		return -ENOMEM;
- 
--	nb->notifier_call = cros_usbpd_notify_plat;
--	dev_set_drvdata(dev, nb);
-+	pdnotify->dev = dev;
-+	pdnotify->ec = ecdev->ec_dev;
-+	pdnotify->nb.notifier_call = cros_usbpd_notify_plat;
-+
-+	dev_set_drvdata(dev, pdnotify);
- 
- 	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
--					       nb);
-+					       &pdnotify->nb);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to register notifier\n");
- 		return ret;
- 	}
- 
-+	dev_info(dev, "Chrome EC PD notify device registered.\n");
-+
- 	return 0;
- }
- 
-@@ -122,10 +133,11 @@ static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
--	struct notifier_block *nb =
--		(struct notifier_block *)dev_get_drvdata(dev);
-+	struct cros_usbpd_notify_data *pdnotify =
-+		(struct cros_usbpd_notify_data *)dev_get_drvdata(dev);
- 
--	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier, nb);
-+	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-+					   &pdnotify->nb);
- 
- 	return 0;
- }
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+There is something wrong somewhere because the 1100ms sleep is totally
+not expected to happen, but I think this is the same issue that we
+discuss on another thread so let's use that thread instead to avoid
+confusion :)
