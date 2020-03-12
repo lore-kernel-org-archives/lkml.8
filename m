@@ -2,102 +2,100 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10680C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A37DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D720C206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584047730;
-	bh=ccRwF32HhslBrkGGDOXUK8qvOUyLzLxr8tzfObRY5mc=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=GN+P4by33ydTAmKpihhJkKF0raOauw2jE4qkCiOGC7bScsOxED8CoZ0SqsfL3JAiC
-	 iX8pZTvlTRkjYB8npWgqGCjcBfPPIIHrulwAY/nFVoCJXh8QrJ1ZnsYC8B2TqZcB7L
-	 SCtK/B2TBij2UIe+947CbBNctnyhFCKO6P1hNS04=
+	by mail.kernel.org (Postfix) with ESMTP id 501BE206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0enO67a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCLVP3 (ORCPT
+        id S1726633AbgCLVQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgCLVP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:15:29 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4F1206B7;
-        Thu, 12 Mar 2020 21:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584047728;
-        bh=ccRwF32HhslBrkGGDOXUK8qvOUyLzLxr8tzfObRY5mc=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=pVZohXdY8ZM//YXY0/tKkWezoBiKOpsXJWqkU6Jm7b+hHfquUcMVyG1FIadSzhVxO
-         lAGiLX7orcIq/1o9OyW8AVrtsm+/kY4VEr3RuGLMCz9pcW7opFaTCbCIlLk6y7Z/NO
-         gIr42rHmixMkKKg7Ie7gaxn2VL/7RtP95b1U+vLQ=
-Received: by pali.im (Postfix)
-        id 7DC70896; Thu, 12 Mar 2020 22:15:26 +0100 (CET)
-Date:   Thu, 12 Mar 2020 22:15:26 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Change email address for Pali =?utf-8?B?Um9ow6Fy?=
-Message-ID: <20200312211526.oahg6mdbvkxlkezi@pali>
-References: <20200307104237.8199-1-pali@kernel.org>
+        Thu, 12 Mar 2020 17:16:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46899 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCLVQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:16:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n15so9368903wrw.13;
+        Thu, 12 Mar 2020 14:16:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OoRMJHL0lSK4lVACsrhjsoeS3m+0TZ7d70msLMcwZXM=;
+        b=f0enO67akTjopRTWqxr9OXsYNFl1y1vda7MC0cyMvXeSTXMulMQzzWpxOQmZjXWkw/
+         SvQ/PejNSH6KWtM48vIFSosY4KrvgVui3/hs1MtMZK/HlyubRuWEjmiZJzQ9X5Veo63V
+         zk9SANcBaya12IWkiMc0LXsLdHDe7O4M5/AeuKBfxJSZVQapD6ICkpOOyJTTloE5yeb2
+         7EY/J+nz6/VvDma5jFofVyrjRXvvMB5E65OmQAz6O4Ff/t3skTaLu8WDDUFn7q/1hE4V
+         8EabQ+PC6HPcBCbEmZTwnH9kN1XdgejpEkOhFgZ7Qi9IoE1vxx1W44F5M0HvoHH6xxe4
+         yBPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OoRMJHL0lSK4lVACsrhjsoeS3m+0TZ7d70msLMcwZXM=;
+        b=AS/kmQ4HoeUSOgwAbIXuRmxKr+WtY0T1Dw5MYzYj613FHx6kcOIpUP7HBGi+6UlK95
+         7KBl9o+9mbz0TLcSaiOrzdrJmmBHGrCo0lJ1w9PJ23c2r+1JxuVWgAcO7M54x+JtLmDa
+         NM29kI3lUeAF7niMnA1P4ZquCWwR1IhmGk7HuaiHvJyqZkUH+fYpSOADdKmcKKnk8oTc
+         1PDA14CylzaaNmZq38C+mxMbDCDHNStIOyu0QC35PaBXSCjSw0qLPGjQaNcFOwvr+5V8
+         5dpuZikx+j5hPir4TgXYWT4EGdsQtDlzJM+psk+zbUEHriWDMk2eACRYOJO89WaoP0+N
+         BnwA==
+X-Gm-Message-State: ANhLgQ045GjZTzx4WNdX9c9ET6yl+NN+tcHM1/CbbwboDgBSWYdJ37Fa
+        BlBwV0/tbomougoHpk3zwGsOHexuzSUZe9vAsxA=
+X-Google-Smtp-Source: ADFU+vsEHGHrexnu9ajEOuztTkNdb4fV9udOvVmtFGq+NVjQuWlQ8XfZ3prQYZRqoV0QXCYAc0BynI/yrz09GLW65GA=
+X-Received: by 2002:a5d:61c9:: with SMTP id q9mr13587880wrv.164.1584047781214;
+ Thu, 12 Mar 2020 14:16:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200307104237.8199-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
+ <20200210095817.13226-5-daniel.baluta@oss.nxp.com> <20200219221422.GA32379@bogus>
+In-Reply-To: <20200219221422.GA32379@bogus>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 12 Mar 2020 23:16:09 +0200
+Message-ID: <CAEnQRZA6PEhfO0y5xWvAJZcK784n_2FXgDgYAfdDFUa2Osj7XQ@mail.gmail.com>
+Subject: Re: [RESEND 4/4] dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday 07 March 2020 11:42:37 Pali Rohár wrote:
-> For security reasons I stopped using gmail account and kernel address is
-> now up-to-date alias to my personal address.
-> 
-> People periodically send me emails to address which they found in source
-> code of drivers, so this change reflects state where people can contact me.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
+On Thu, Feb 20, 2020 at 12:15 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, 10 Feb 2020 11:58:17 +0200, Daniel Baluta wrote:
+> > From: Paul Olaru <paul.olaru@nxp.com>
+> >
+> > This is the same DSP from the hardware point of view, but it gets a
+> > different compatible string due to usage in a separate platform.
+> >
+> > Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > ---
+> >  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Greg, could you or someone else help me where to (re)send this patch?
-MAINTAINERS file does not specify who is maintainer of MAINTAINERS file
-itself and scripts/get_maintainer.pl did not help me too. Main entry is
-LKML list.
+Hi Rob,
 
-As this change is across more subsystems I do not know who can take such
-patch and I do not thing it make sense to split such change into more
-patches (one for each subsystem).
-
->  .../ABI/testing/sysfs-platform-dell-laptop       |  8 ++++----
->  MAINTAINERS                                      | 16 ++++++++--------
->  arch/arm/mach-omap2/omap-secure.c                |  2 +-
->  arch/arm/mach-omap2/omap-secure.h                |  2 +-
->  arch/arm/mach-omap2/omap-smc.S                   |  2 +-
->  drivers/char/hw_random/omap3-rom-rng.c           |  4 ++--
->  drivers/hwmon/dell-smm-hwmon.c                   |  4 ++--
->  drivers/platform/x86/dell-laptop.c               |  4 ++--
->  drivers/platform/x86/dell-rbtn.c                 |  4 ++--
->  drivers/platform/x86/dell-rbtn.h                 |  2 +-
->  drivers/platform/x86/dell-smbios-base.c          |  4 ++--
->  drivers/platform/x86/dell-smbios-smm.c           |  2 +-
->  drivers/platform/x86/dell-smbios.h               |  2 +-
->  drivers/platform/x86/dell-smo8800.c              |  2 +-
->  drivers/platform/x86/dell-wmi.c                  |  4 ++--
->  drivers/power/supply/bq2415x_charger.c           |  4 ++--
->  drivers/power/supply/bq27xxx_battery.c           |  2 +-
->  drivers/power/supply/isp1704_charger.c           |  2 +-
->  drivers/power/supply/rx51_battery.c              |  4 ++--
->  fs/udf/ecma_167.h                                |  2 +-
->  fs/udf/osta_udf.h                                |  2 +-
->  include/linux/power/bq2415x_charger.h            |  2 +-
->  tools/laptop/freefall/freefall.c                 |  2 +-
->  23 files changed, 41 insertions(+), 41 deletions(-)
+Who should take this patch? Mark applied first 3 patches in the series.
