@@ -2,228 +2,200 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F7C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE29C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18354206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mmGkCmqF"
+	by mail.kernel.org (Postfix) with ESMTP id 88F1F206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387633AbgCLA5p (ORCPT
+        id S2387586AbgCLA6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:57:45 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:41913 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387596AbgCLA5l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:57:41 -0400
-Received: by mail-pl1-f202.google.com with SMTP id u3so2323655plm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=hrX565yTBVUaBRHBANP/oUW6tx77j7n+/fB0WrNdRuo=;
-        b=mmGkCmqF1t4vIGKl1vxRmYa4Iw9gw+m0F2Rl36GDX5iFly8hLcreI4jW1JM0aj9fke
-         mEhYDzVhpOaAmixqSzg4Zm5LcbvnOrul+h7AKhTqr9vwmuCxeJ2hQ6GiB7gc7kWUHvWH
-         B1bfDHrvt/E9HTfMP0pIbWBLiFG9MjkavH0Otsac92H+MB+4jaFXYn7fzfii6HNUyEP9
-         LoaEAooybbbw4wOPB1wo2ldXZ2cMJX2PtI9ACfh7AzN+OehezA9MI68uW7Y5jVc6czVo
-         mle4uCa7o5PzON+Fe+JJ9FApEx33Sw+Z31PPH7UTQaaVSJQoZXojHjMc4kixdB5/w0cq
-         T5/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=hrX565yTBVUaBRHBANP/oUW6tx77j7n+/fB0WrNdRuo=;
-        b=I3A4xkR9RwUHSMwEkDzvQ3qtRG1veiyoZczAvRUMlpKKlD/z6MyArEFWkAFpWewPMT
-         Qxv8ZyvR+pMRLGuJOuUebgI2huXd3S0W3lHV2Hw0tvGHU9C8LMkfkEXtCj4vrM9o30/i
-         SSGccgwimM2uMW5QQEiDG1fynLD+Wf4crhOFULRsMEa7d6VdXSePGvxEsdLtY3aGmwzD
-         AKqZ0OIxitRnLl+wCAxPpprtIXLcKhcwdvWe17kIff9tFfva0m4BywoudpAe5kWGQ9Uu
-         pb3uVUU3PNc1h2bOh8WV3gmz35DKXU1EeW7W8mpsqenyC7RBr35nKG4EkcKE7uRNnq/y
-         Hcjw==
-X-Gm-Message-State: ANhLgQ0MCPGPu7nIJJapOEFbfxCpJZ6cp00pipkql0X8Zel0c6SVXBEu
-        OKfcH7qufAYLxaTzENSGfkuTMj9e+nIJ
-X-Google-Smtp-Source: ADFU+vvwh7TxtyhUhqTq0JD2HSw6HCRI/lZYTYLR36CPZC7RY1ZRfZmp0+bpIdsz6npDN4qgr1AMMVBexP3l
-X-Received: by 2002:a17:90a:2103:: with SMTP id a3mr1404774pje.181.1583974660505;
- Wed, 11 Mar 2020 17:57:40 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 17:57:22 -0700
-In-Reply-To: <20200312005722.48803-1-rajatja@google.com>
-Message-Id: <20200312005722.48803-6-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200312005722.48803-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v8 5/5] drm/i915: Enable support for integrated privacy screen
-From:   Rajat Jain <rajatja@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
-        <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
-        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Mar 2020 20:58:54 -0400
+Received: from muru.com ([72.249.23.125]:59826 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387411AbgCLA6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 20:58:53 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4E4C780CD;
+        Thu, 12 Mar 2020 00:59:38 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 17:58:49 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+Message-ID: <20200312005849.GY37466@atomide.com>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
+ <20200309180123.GP37466@atomide.com>
+ <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
+ <20200310155242.GT37466@atomide.com>
+ <296e28b7-7925-5dfa-ce5a-c0b2a2f1c2e0@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <296e28b7-7925-5dfa-ce5a-c0b2a2f1c2e0@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for an ACPI based integrated privacy screen that is
-available on some systems.
+* Lokesh Vutla <lokeshvutla@ti.com> [200311 04:14]:
+> 
+> 
+> On 10/03/20 9:22 PM, Tony Lindgren wrote:
+> > * Lokesh Vutla <lokeshvutla@ti.com> [200310 07:06]:
+> >> Hi Tony,
+> >>
+> >> [...snip...]
+> >>
+> >>>>>>  
+> >>>>>> +	/*
+> >>>>>> +	 * Disable auto reload so that the current cycle gets completed and
+> >>>>>> +	 * then the counter stops.
+> >>>>>> +	 */
+> >>>>>>  	mutex_lock(&omap->mutex);
+> >>>>>> -	omap->pdata->stop(omap->dm_timer);
+> >>>>>> +	omap->pdata->set_pwm(omap->dm_timer,
+> >>>>>> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+> >>>>>> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
+> >>>>>> +			     false);
+> >>>>>> +
+> >>>>>>  	mutex_unlock(&omap->mutex);
+> >>>>>>  }
+> >>>>>
+> >>>>> I'm seeing an issue with this patch where after use something is
+> >>>>> left on and power consumption stays higher by about 30 mW after
+> >>>>> use.
+> >>>>
+> >>>> Interesting...What is the PWM period and duty cycle in the test case?
+> >>>> Can you dump the following registers before and after disabling:
+> >>>> - TLDR
+> >>>> - TMAR
+> >>>> - TCLR
+> >>>
+> >>> Here's the state dumped before and after in omap_dm_timer_set_pwm():
+> >>>
+> >>> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+> >>> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+> >>> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+> >>> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+> >>> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+> >>> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+> >>> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+> >>> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+> >>>
+> >>
+> >> Looking at the registers:
+> >> period = 327 *(1000/clk_freq in MHz) ns
+> >> duty_cycle =  perioid.
+> >>
+> >> I did simulate this behavior on BeagleBoneBlack on timer7. PWM is going down
+> >> after disabling.
+> >>
+> >>> So looks like the start bit is still enabled after use?
+> >>
+> >> Right, that is expected. The start bit gets disabled automatically once the pwm
+> >> period completes. This is because auto reload bit is off. That's the main idea
+> >> of this patch so that PWM period is completed after disabling, else PWM is
+> >> stopped abruptly.
+> > 
+> > OK
+> > 
+> >> Not sure why it is not happening in your case. If you think it is not needed, I
+> >> can drop this patch and add a limitation saying that PWM gets disabled
+> >> immediately without completing the current cycle.
+> > 
+> > Could it be that we now have the cpu_pm notifier restore something
+> > invalid after exiting idle that restarts the counter?
+> 
+> If that's the case, mis behavior should have happened without this patch as well.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v8: - separate the APCI privacy screen into a separate patch.
-    - Don't destroy the property if there is no privacy screen (because
-      drm core doesn't like destroying property in late_register()).
-    - The setting change needs to be committed in ->update_pipe() for 
-      ddi.c as well as dp.c and both of them call intel_dp_add_properties()
-v7: Look for ACPI node in ->late_register() hook.
-    Do the scan only once per drm_device (instead of 1 per drm_connector)
-v6: Addressed minor comments from Jani at
-    https://lkml.org/lkml/2020/1/24/1143
-     - local variable renamed.
-     - used drm_dbg_kms()
-     - used acpi_device_handle()
-     - Used opaque type acpi_handle instead of void*
-v5: same as v4
-v4: Same as v3
-v3: fold the code into existing acpi_device_id_update() function
-v2: formed by splitting the original patch into ACPI lookup, and privacy
-    screen property. Also move it into i915 now that I found existing code
-    in i915 that can be re-used.
+Hmm but without this patch we stop the timer so enable bit is
+cleared before we ever save context. I think now we can have
+enable bit still on, save the context, and keep restoring the
+enable bit that never has a chance to clear if we do this at
+a fast enough rate.
 
- drivers/gpu/drm/i915/display/intel_atomic.c |  2 ++
- drivers/gpu/drm/i915/display/intel_ddi.c    |  1 +
- drivers/gpu/drm/i915/display/intel_dp.c     | 34 ++++++++++++++++++++-
- drivers/gpu/drm/i915/display/intel_dp.h     |  5 +++
- 4 files changed, 41 insertions(+), 1 deletion(-)
+> Is it possible for you to dump the registers when you are observing higher power
+> consumption after the use?
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-index d043057d2fa03..9898d8980e7ce 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-@@ -150,6 +150,8 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
- 	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
- 	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
- 	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
-+	    new_conn_state->base.privacy_screen_status !=
-+		old_conn_state->base.privacy_screen_status ||
- 	    !blob_equal(new_conn_state->base.hdr_output_metadata,
- 			old_conn_state->base.hdr_output_metadata))
- 		crtc_state->mode_changed = true;
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 73d0f4648c06a..69a5423216dc5 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -3708,6 +3708,7 @@ static void intel_ddi_update_pipe(struct intel_encoder *encoder,
- 	if (!intel_crtc_has_type(crtc_state, INTEL_OUTPUT_HDMI))
- 		intel_ddi_update_pipe_dp(encoder, crtc_state, conn_state);
- 
-+	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
- 	intel_hdcp_update_pipe(encoder, crtc_state, conn_state);
- }
- 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 3ddc424b028c1..5f33ebb466135 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -62,6 +62,7 @@
- #include "intel_lspcon.h"
- #include "intel_lvds.h"
- #include "intel_panel.h"
-+#include "intel_privacy_screen.h"
- #include "intel_psr.h"
- #include "intel_sideband.h"
- #include "intel_tc.h"
-@@ -5886,6 +5887,10 @@ intel_dp_connector_register(struct drm_connector *connector)
- 		dev_priv->acpi_scan_done = true;
- 	}
- 
-+	/* Check for integrated Privacy screen support */
-+	if (intel_privacy_screen_present(to_intel_connector(connector)))
-+		drm_connector_attach_privacy_screen_property(connector);
-+
- 	DRM_DEBUG_KMS("registering %s bus for %s\n",
- 		      intel_dp->aux.name, connector->kdev->kobj.name);
- 
-@@ -6883,6 +6888,33 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
- 		connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
- 
- 	}
-+
-+	/*
-+	 * Created here, but depending on result of probing for privacy-screen
-+	 * in intel_dp_connector_register(), gets attached in that function.
-+	 * Need to create here because the drm core doesn't like creating
-+	 * properties during ->late_register().
-+	 */
-+	drm_connector_create_privacy_screen_property(connector);
-+}
-+
-+void
-+intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-+			       const struct intel_crtc_state *crtc_state,
-+			       const struct drm_connector_state *conn_state)
-+{
-+	struct drm_connector *connector = conn_state->connector;
-+
-+	intel_privacy_screen_set_val(to_intel_connector(connector),
-+				     conn_state->privacy_screen_status);
-+}
-+
-+static void intel_dp_update_pipe(struct intel_encoder *encoder,
-+				 const struct intel_crtc_state *crtc_state,
-+				 const struct drm_connector_state *conn_state)
-+{
-+	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
-+	intel_panel_update_backlight(encoder, crtc_state, conn_state);
- }
- 
- static void intel_dp_init_panel_power_timestamps(struct intel_dp *intel_dp)
-@@ -7826,7 +7858,7 @@ bool intel_dp_init(struct drm_i915_private *dev_priv,
- 	intel_encoder->compute_config = intel_dp_compute_config;
- 	intel_encoder->get_hw_state = intel_dp_get_hw_state;
- 	intel_encoder->get_config = intel_dp_get_config;
--	intel_encoder->update_pipe = intel_panel_update_backlight;
-+	intel_encoder->update_pipe = intel_dp_update_pipe;
- 	intel_encoder->suspend = intel_dp_encoder_suspend;
- 	if (IS_CHERRYVIEW(dev_priv)) {
- 		intel_encoder->pre_pll_enable = chv_dp_pre_pll_enable;
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
-index 0c7be8ed1423a..e4594e27ce5a8 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.h
-+++ b/drivers/gpu/drm/i915/display/intel_dp.h
-@@ -123,4 +123,9 @@ static inline unsigned int intel_dp_unused_lane_mask(int lane_count)
- 
- u32 intel_dp_mode_to_fec_clock(u32 mode_clock);
- 
-+void
-+intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-+			       const struct intel_crtc_state *crtc_state,
-+			       const struct drm_connector_state *conn_state);
-+
- #endif /* __INTEL_DP_H__ */
--- 
-2.25.1.481.gfbce0eb801-goog
+Well they seem to be the same as in the dump above, here are the regs
+dumped after use with chirping happening:
+
+$ sudo rwmem 0x4803e000+0x60
+0x4803e000 = 0x4fff1301
+0x4803e004 = 0000000000
+0x4803e008 = 0000000000
+0x4803e00c = 0000000000
+0x4803e010 = 0x0000000c
+0x4803e014 = 0000000000
+0x4803e018 = 0000000000
+0x4803e01c = 0000000000
+0x4803e020 = 0000000000
+0x4803e024 = 0x00000003
+0x4803e028 = 0000000000
+0x4803e02c = 0000000000
+0x4803e030 = 0000000000
+0x4803e034 = 0000000000
+0x4803e038 = 0x00001841
+0x4803e03c = 0x00000402
+0x4803e040 = 0xfffffeb8
+0x4803e044 = 0xffffffff
+0x4803e048 = 0000000000
+0x4803e04c = 0xfffffffe
+0x4803e050 = 0000000000
+0x4803e054 = 0000000000
+0x4803e058 = 0000000000
+0x4803e05c = 0000000000
+
+$ sudo rwmem 0x4013e000+0x60
+0x4013e000 = 0x4fff0301
+0x4013e004 = 0000000000
+0x4013e008 = 0000000000
+0x4013e00c = 0000000000
+0x4013e010 = 0000000000
+0x4013e014 = 0000000000
+0x4013e018 = 0000000000
+0x4013e01c = 0000000000
+0x4013e020 = 0000000000
+0x4013e024 = 0x00000003
+0x4013e028 = 0000000000
+0x4013e02c = 0000000000
+0x4013e030 = 0000000000
+0x4013e034 = 0000000000
+0x4013e038 = 0x00001841
+0x4013e03c = 0x00000407
+0x4013e040 = 0xfffffeb8
+0x4013e044 = 0xffffffff
+0x4013e048 = 0000000000
+0x4013e04c = 0xfffffffe
+0x4013e050 = 0000000000
+0x4013e054 = 0000000000
+0x4013e058 = 0000000000
+0x4013e05c = 0000000000
+
+So looks like the enable bit is never cleared now.
+
+> However, I see an issue with the patch itself as pm_runtime is not disabled
+> after the pwm is stopped. Not sure how that could be nullified with this approach.
+
+Hmm yeah not sure what could be used to clear things
+when the current cycle is completed unless there's
+some interrupt for it.
+
+Regards,
+
+Tony
 
