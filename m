@@ -2,264 +2,226 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC1CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82CAC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65155206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E51206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgCLM1J (ORCPT
+        id S1726894AbgCLM1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:27:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:22515 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgCLM1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:27:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 05:27:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
-   d="scan'208";a="235010884"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga007.fm.intel.com with SMTP; 12 Mar 2020 05:27:00 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 12 Mar 2020 14:27:00 +0200
-Date:   Thu, 12 Mar 2020 14:27:00 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     "Laxminarayan Bharadiya, Pankaj" 
-        <pankaj.laxminarayan.bharadiya@intel.com>
-Cc:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "Souza, Jose" <jose.souza@intel.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>
-Subject: Re: [RFC][PATCH 3/5] drm/i915: Enable scaling filter for plane and
- pipe
-Message-ID: <20200312122700.GE13686@intel.com>
-References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
- <20200225070545.4482-4-pankaj.laxminarayan.bharadiya@intel.com>
- <20200310160545.GI13686@intel.com>
- <E92BA18FDE0A5B43B7B3DA7FCA031286057B2BE5@BGSMSX107.gar.corp.intel.com>
+        Thu, 12 Mar 2020 08:27:17 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:54454 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLM1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:27:17 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jCMvg-0008B2-FJ; Thu, 12 Mar 2020 06:27:12 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jCMvf-0006RZ-FN; Thu, 12 Mar 2020 06:27:12 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nmjulm.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
+Date:   Thu, 12 Mar 2020 07:24:50 -0500
+In-Reply-To: <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com> (Kirill
+        Tkhai's message of "Thu, 12 Mar 2020 13:27:30 +0300")
+Message-ID: <87d09hn4kt.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <E92BA18FDE0A5B43B7B3DA7FCA031286057B2BE5@BGSMSX107.gar.corp.intel.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jCMvf-0006RZ-FN;;;mid=<87d09hn4kt.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX197oHUB4P7o25mD2mW/iWh+TbBM6TNe7gs=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 08:58:42AM +0000, Laxminarayan Bharadiya, Pankaj wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > Sent: 10 March 2020 21:36
-> > To: Laxminarayan Bharadiya, Pankaj
-> > <pankaj.laxminarayan.bharadiya@intel.com>
-> > Cc: jani.nikula@linux.intel.com; daniel@ffwll.ch; intel-
-> > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; airlied@linux.ie;
-> > maarten.lankhorst@linux.intel.com; tzimmermann@suse.de;
-> > mripard@kernel.org; mihail.atanassov@arm.com; Joonas Lahtinen
-> > <joonas.lahtinen@linux.intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>;
-> > Chris Wilson <chris@chris-wilson.co.uk>; Souza, Jose
-> > <jose.souza@intel.com>; Juha-Pekka Heikkila
-> > <juhapekka.heikkila@gmail.com>; linux-kernel@vger.kernel.org; Nautiyal,
-> > Ankit K <ankit.k.nautiyal@intel.com>
-> > Subject: Re: [RFC][PATCH 3/5] drm/i915: Enable scaling filter for plane and
-> > pipe
-> > 
-> > On Tue, Feb 25, 2020 at 12:35:43PM +0530, Pankaj Bharadiya wrote:
-> > > Attach scaling filter property for crtc and plane and program the
-> > > scaler control register for the selected filter type.
-> > >
-> > > This is preparatory patch to enable Nearest-neighbor integer scaling.
-> > >
-> > > Signed-off-by: Pankaj Bharadiya
-> > > <pankaj.laxminarayan.bharadiya@intel.com>
-> > > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
-> > > ---
-> > >  drivers/gpu/drm/i915/display/intel_display.c | 17 +++++++++++++++--
-> > > drivers/gpu/drm/i915/display/intel_sprite.c  | 12 +++++++++++-
-> > >  drivers/gpu/drm/i915/i915_reg.h              |  1 +
-> > >  3 files changed, 27 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/i915/display/intel_display.c
-> > > b/drivers/gpu/drm/i915/display/intel_display.c
-> > > index 3031e64ee518..b5903ef3c5a0 100644
-> > > --- a/drivers/gpu/drm/i915/display/intel_display.c
-> > > +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> > > @@ -6242,6 +6242,8 @@ static void skl_pfit_enable(const struct
-> > intel_crtc_state *crtc_state)
-> > >  	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-> > >  	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
-> > >  	enum pipe pipe = crtc->pipe;
-> > > +	const struct drm_crtc_state *state = &crtc_state->uapi;
-> > > +	u32 scaling_filter = PS_FILTER_MEDIUM;
-> > >  	const struct intel_crtc_scaler_state *scaler_state =
-> > >  		&crtc_state->scaler_state;
-> > >
-> > > @@ -6258,6 +6260,11 @@ static void skl_pfit_enable(const struct
-> > intel_crtc_state *crtc_state)
-> > >  		pfit_w = (crtc_state->pch_pfit.size >> 16) & 0xFFFF;
-> > >  		pfit_h = crtc_state->pch_pfit.size & 0xFFFF;
-> > >
-> > > +		if (state->scaling_filter ==
-> > > +		    DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
-> > > +			scaling_filter = PS_FILTER_PROGRAMMED;
-> > > +		}
-> > 
-> > Just make that a function that can be used all over.
-> > skl_scaler_filter(scaling_filter) or something.
-> > 
-> > > +
-> > >  		hscale = (crtc_state->pipe_src_w << 16) / pfit_w;
-> > >  		vscale = (crtc_state->pipe_src_h << 16) / pfit_h;
-> > >
-> > > @@ -6268,8 +6275,10 @@ static void skl_pfit_enable(const struct
-> > > intel_crtc_state *crtc_state)
-> > >
-> > >  		spin_lock_irqsave(&dev_priv->uncore.lock, irqflags);
-> > >
-> > > -		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
-> > PS_SCALER_EN |
-> > > -				  PS_FILTER_MEDIUM | scaler_state-
-> > >scalers[id].mode);
-> > > +		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
-> > > +				  PS_SCALER_EN |
-> > > +				  scaling_filter |
-> > > +				  scaler_state->scalers[id].mode);
-> > >  		intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, id),
-> > >  				  PS_Y_PHASE(0) |
-> > PS_UV_RGB_PHASE(uv_rgb_vphase));
-> > >  		intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, id), @@
-> > -16695,6
-> > > +16704,10 @@ static int intel_crtc_init(struct drm_i915_private *dev_priv,
-> > enum pipe pipe)
-> > >  		dev_priv->plane_to_crtc_mapping[i9xx_plane] = crtc;
-> > >  	}
-> > >
-> > > +
-> > > +	if (INTEL_GEN(dev_priv) >= 11)
-> > 
-> > gen >= 10 actually. Even glk seems to have it but bspec says not to use it on
-> > glk. Supposedly not validated.
-> > 
-> > ilk/snb/ivb pfits also has programmable coefficients actually. So IMO we
-> > should enable this on those as well.
-> 
-> OK. I need to explore bspec more for these platforms.
-> To begin with I would like to stick to gen >=10.
+Kirill Tkhai <ktkhai@virtuozzo.com> writes:
 
-Sure. You can also have a look at the intel_scaling_coef hacks I posted
-to igt-dev for details on how to drive them all. I already reverse
-engineered them sufficiently so that I was able to program them ;)
+> On 09.03.2020 00:38, Eric W. Biederman wrote:
+>> 
+>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>> over the userspace accesses as the arguments from userspace are read.
+>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>> threads are killed.  The cred_guard_mutex is held over
+>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>> 
+>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>> over a possible indefinite userspace waits for userspace.
+>> 
+>> Add exec_update_mutex that is only held over exec updating process
+>> with the new contents of exec, so that code that needs not to be
+>> confused by exec changing the mm and the cred in ways that can not
+>> happen during ordinary execution of a process.
+>> 
+>> The plan is to switch the users of cred_guard_mutex to
+>> exec_udpate_mutex one by one.  This lets us move forward while still
+>> being careful and not introducing any regressions.
+>> 
+>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/exec.c                    | 9 +++++++++
+>>  include/linux/sched/signal.h | 9 ++++++++-
+>>  init/init_task.c             | 1 +
+>>  kernel/fork.c                | 1 +
+>>  4 files changed, 19 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index d820a7272a76..ffeebb1f167b 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1014,6 +1014,7 @@ static int exec_mmap(struct mm_struct *mm)
+>>  {
+>>  	struct task_struct *tsk;
+>>  	struct mm_struct *old_mm, *active_mm;
+>> +	int ret;
+>>  
+>>  	/* Notify parent that we're no longer interested in the old VM */
+>>  	tsk = current;
+>> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
+>>  			return -EINTR;
+>>  		}
+>>  	}
+>> +
+>> +	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+>> +	if (ret)
+>> +		return ret;
+>
+> You missed old_mm->mmap_sem unlock. See here:
 
-> 
-> > 
-> > The bigger problem will be how is userspace supposed to use this if it's a crtc
-> > property? Those will not get automagically exposed via xrandr.
-> > 
-> > > +		drm_crtc_enable_scaling_filter(&crtc->base);
-> > > +
-> > >  	intel_color_init(crtc);
-> > >
-> > >  	drm_WARN_ON(&dev_priv->drm, drm_crtc_index(&crtc->base) !=
-> > > crtc->pipe); diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c
-> > > b/drivers/gpu/drm/i915/display/intel_sprite.c
-> > > index 7abeefe8dce5..fd7b31a21723 100644
-> > > --- a/drivers/gpu/drm/i915/display/intel_sprite.c
-> > > +++ b/drivers/gpu/drm/i915/display/intel_sprite.c
-> > > @@ -414,6 +414,12 @@ skl_program_scaler(struct intel_plane *plane,
-> > >  	u16 y_hphase, uv_rgb_hphase;
-> > >  	u16 y_vphase, uv_rgb_vphase;
-> > >  	int hscale, vscale;
-> > > +	const struct drm_plane_state *state = &plane_state->uapi;
-> > > +	u32 scaling_filter = PS_FILTER_MEDIUM;
-> > > +
-> > > +	if (state->scaling_filter ==
-> > DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
-> > > +		scaling_filter = PS_FILTER_PROGRAMMED;
-> > > +	}
-> > >
-> > >  	hscale = drm_rect_calc_hscale(&plane_state->uapi.src,
-> > >  				      &plane_state->uapi.dst,
-> > > @@ -441,7 +447,8 @@ skl_program_scaler(struct intel_plane *plane,
-> > >  	}
-> > >
-> > >  	intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, scaler_id),
-> > > -			  PS_SCALER_EN | PS_PLANE_SEL(plane->id) | scaler-
-> > >mode);
-> > > +			  scaling_filter | PS_SCALER_EN |
-> > > +			  PS_PLANE_SEL(plane->id) | scaler->mode);
-> > >  	intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, scaler_id),
-> > >  			  PS_Y_PHASE(y_vphase) |
-> > PS_UV_RGB_PHASE(uv_rgb_vphase));
-> > >  	intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, scaler_id), @@
-> > > -3104,6 +3111,9 @@ skl_universal_plane_create(struct drm_i915_private
-> > > *dev_priv,
-> > >
-> > >  	drm_plane_create_zpos_immutable_property(&plane->base,
-> > plane_id);
-> > >
-> > > +	if (INTEL_GEN(dev_priv) >= 11)
-> > 
-> > also gen>=10
-> > 
-> > Also this patch breaks things as we don't yet have the code to program the
-> > coefficients. So the series needs to be reordered.
-> 
-> Will reorder the series.
-> 
-> Thanks,
-> Pankaj
-> > 
-> > > +		drm_plane_enable_scaling_filter(&plane->base);
-> > > +
-> > >  	drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
-> > >
-> > >  	return plane;
-> > > diff --git a/drivers/gpu/drm/i915/i915_reg.h
-> > > b/drivers/gpu/drm/i915/i915_reg.h index f45b5e86ec63..34923b1c284c
-> > > 100644
-> > > --- a/drivers/gpu/drm/i915/i915_reg.h
-> > > +++ b/drivers/gpu/drm/i915/i915_reg.h
-> > > @@ -7212,6 +7212,7 @@ enum {
-> > >  #define PS_PLANE_SEL(plane) (((plane) + 1) << 25)
-> > >  #define PS_FILTER_MASK         (3 << 23)
-> > >  #define PS_FILTER_MEDIUM       (0 << 23)
-> > > +#define PS_FILTER_PROGRAMMED   (1 << 23)
-> > >  #define PS_FILTER_EDGE_ENHANCE (2 << 23)
-> > >  #define PS_FILTER_BILINEAR     (3 << 23)
-> > >  #define PS_VERT3TAP            (1 << 21)
-> > > --
-> > > 2.23.0
-> > 
-> > --
-> > Ville Syrjälä
-> > Intel
+Duh.  Thank you.
 
--- 
-Ville Syrjälä
-Intel
+I actually need to switch the lock ordering here, and I haven't yet
+because my son was sick yesterday.
+
+Something like this.
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 96f89401b4d1..03d50c27ec01 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1020,9 +1020,14 @@ static int exec_mmap(struct mm_struct *mm)
+        tsk = current;
+        old_mm = current->mm;
+        exec_mm_release(tsk, old_mm);
++       if (old_mm)
++               sync_mm_rss(old_mm);
++
++       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
++       if (ret)
++               return ret;
+ 
+        if (old_mm) {
+-               sync_mm_rss(old_mm);
+                /*
+                 * Make sure that if there is a core dump in progress
+                 * for the old mm, we get out and die instead of going
+@@ -1032,14 +1037,11 @@ static int exec_mmap(struct mm_struct *mm)
+                down_read(&old_mm->mmap_sem);
+                if (unlikely(old_mm->core_state)) {
+                        up_read(&old_mm->mmap_sem);
++                       mutex_unlock(&tsk->signal->exec_update_mutex);
+                        return -EINTR;
+                }
+        }
+ 
+-       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+-       if (ret)
+-               return ret;
+-
+        task_lock(tsk);
+        active_mm = tsk->active_mm;
+        membarrier_exec_mmap(mm);
+
+
+
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 47582cd97f86..d557bac3e862 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1063,8 +1063,11 @@ static int exec_mmap(struct mm_struct *mm)
+>  	}
+>  
+>  	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+> -	if (ret)
+> +	if (ret) {
+> +		if (old_mm)
+> +			up_read(&old_mm->mmap_sem);
+>  		return ret;
+> +	}
+>  
+>  	task_lock(tsk);
+>  	active_mm = tsk->active_mm;
+
+Eric
