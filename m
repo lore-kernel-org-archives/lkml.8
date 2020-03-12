@@ -2,95 +2,278 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D253C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3E8C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAD8206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61F420578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OzGXpN/7"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="XE0WGkCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388126AbgCLH1n (ORCPT
+        id S2388071AbgCLHbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:27:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36763 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387898AbgCLH1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:27:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48dL582Qy8z9sP7;
-        Thu, 12 Mar 2020 18:27:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583998060;
-        bh=c+rAYHbp+CWwrpwAgZbZp1cZ0QKLCcf5lW53irVv3PI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OzGXpN/7wXBQU6t1aFaQaVvZO+aL1CGyxX0Uui0vFCpb7+8QLws07oX+UgD1SBIfI
-         VKxJ4huhnbN/rZAy1UhMyA8uJvgjkjC8EUzz6ps+v+4VWWCRurrsRTsbeFDJkinHcz
-         uxukrM8bx21Ciicge6j2Gl89GfbEJYmIxZ2/GNClVa2CmrGFwaszk7Qz1weyrYTHcR
-         j6Q4FKdDxMGmTBIWvEiWWfks5ivC1jfEm7rI53U4gYrtNLFrQzW/stEoCiicMthUC+
-         A1Cl/4x3T8yMgu3ObF0K+gacLPof8r5pPLIk/Q9md0MNOkeCzdXofpwf09BltQyqxL
-         NMQ+pu4J8gwOQ==
-Date:   Thu, 12 Mar 2020 18:27:25 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200312182725.618ca518@canb.auug.org.au>
+        Thu, 12 Mar 2020 03:31:16 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:54443 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387930AbgCLHbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:31:16 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id CIJBjX5Kt9Im2CIJFjigM2; Thu, 12 Mar 2020 08:31:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1583998273; bh=ckO9wc/0YsnvmvvoxJ4Iuhz855VOuIfWEB/AEfwSExM=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=XE0WGkCN8kCZzEgryF1ANA9vfFSoHWNAWFFcKdjGo+XSEeCM5HkTkp2/xXNL9j/l/
+         RALQOOJJe0sE+aPDiY8aXZ879cE3SSt69lSv6tUB3uhA1WS78x7skMEs4g+A68n5fR
+         2Od80X96zj7zODJJQ5ByknTf1jmRWqUSkhyxA1vk8LXNtFUw06DWqs8+KkZsjLXIQh
+         ue6cZCF/J15WpxQnNpfnMiXvkgFo1J3CsSmCMephbijiCLf3KQLny9nZYmkJkAdvaS
+         mo6/w/TDHsDcgyM4Zx1Hnk0j8GGrDwu+9NbSyw//PbntZAfxxDiAt0TgBCG+/v+vdc
+         wFIg8VDGYYlrQ==
+Subject: Re: [PATCH v2 21/22] media: docs: add an uAPI chapter for
+ driver-specific stuff
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ramesh Shanmugasundaram <rashanmu@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1583847556.git.mchehab+huawei@kernel.org>
+ <eb09422f4292b1462978abc02acf41e7630c698c.1583847557.git.mchehab+huawei@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <7a6dc292-8051-3141-6fef-ca7b86984a10@xs4all.nl>
+Date:   Thu, 12 Mar 2020 08:31:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6AnB0cUAvhJeWDf2gBGAu8J";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <eb09422f4292b1462978abc02acf41e7630c698c.1583847557.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPsT7R25rji2KSvoTUFDgjK2likkS8HQkuW9Q6huTlQdskhYF+A1hF1Mir7rt7lWB82zwyPkQcJlIdi5UFrrnYkLSO4Uf/YK4HQChkaPmXVsVUGCu2GQ
+ jOLL1Rgx/a3hvlc4l7525YrkR2k/IifKmY7XLR0/oAy8L82k4C0XauHZQsnjfOzdfi1SrnklG7MTy9OpJRgiNL4qRbL1axwyz1E2QupnNvaBo6xmQBSZaCNh
+ E2UYz3ZrETcFW3LGTJDPo/mjRQX0OLBdY1PpTEz3fN7lvF/2/BooMliYQxhBs87i0p1WJLL/ujZTAlFtp2rbgRQtrvVylWkCgaBFhx944kGtQwpwO1JSaYOR
+ o9PE8D9rJ3LJOT3/iyCjCDX7XiTYkt6yz18tcoIQqzwh4/0LuK9vyyrwgOpVzUMwRjbjMQ4OlO2HGm5a6s2TgXFHFUFpZV96weXChLkEhfaKwqx/57MvNYpR
+ mAhoaaXc9X2MRHtl70gACjIdHOE4Em3U81dF8Xi+YhURMmRZazPUQoiDH3nsmHBYDsWU5dYXE/QmTiHqWWhEVOSIe8bUMN8WW4DQDw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6AnB0cUAvhJeWDf2gBGAu8J
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 3/10/20 2:43 PM, Mauro Carvalho Chehab wrote:
+> There are some uAPI stuff that are driver-specific. Add them
+> to the main media uAPI body.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/media/index.rst                              | 2 --
+>  .../media/drivers}/cx2341x-uapi.rst                        | 0
+>  .../media/drivers}/imx-uapi.rst                            | 0
+>  .../v4l-drivers => userspace-api/media/drivers}/index.rst  | 7 +++----
+>  .../media/drivers}/max2175.rst                             | 0
+>  .../media/drivers}/meye-uapi.rst                           | 0
+>  .../media/drivers}/omap3isp-uapi.rst                       | 0
+>  .../media/drivers}/uvcvideo.rst                            | 0
+>  Documentation/userspace-api/media/index.rst                | 2 ++
+>  Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst   | 2 +-
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst  | 2 +-
+>  Documentation/userspace-api/media/v4l/pixfmt-reserved.rst  | 2 +-
+>  MAINTAINERS                                                | 4 ++--
+>  drivers/media/i2c/max2175.c                                | 6 +++---
+>  14 files changed, 13 insertions(+), 14 deletions(-)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/cx2341x-uapi.rst (100%)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/imx-uapi.rst (100%)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/index.rst (97%)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/max2175.rst (100%)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/meye-uapi.rst (100%)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/omap3isp-uapi.rst (100%)
+>  rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/uvcvideo.rst (100%)
+> 
+> diff --git a/Documentation/media/index.rst b/Documentation/media/index.rst
+> index a5cd600e0b04..e93fd88881af 100644
+> --- a/Documentation/media/index.rst
+> +++ b/Documentation/media/index.rst
+> @@ -15,8 +15,6 @@ Linux Media Subsystem Documentation
+>     ../userspace-api/media/index
+>     ../driver-api/media/index
+>  
+> -   v4l-drivers/index
+> -
+>  .. only:: html and subproject
+>  
+>     Indices
+> diff --git a/Documentation/media/v4l-drivers/cx2341x-uapi.rst b/Documentation/userspace-api/media/drivers/cx2341x-uapi.rst
+> similarity index 100%
+> rename from Documentation/media/v4l-drivers/cx2341x-uapi.rst
+> rename to Documentation/userspace-api/media/drivers/cx2341x-uapi.rst
+> diff --git a/Documentation/media/v4l-drivers/imx-uapi.rst b/Documentation/userspace-api/media/drivers/imx-uapi.rst
+> similarity index 100%
+> rename from Documentation/media/v4l-drivers/imx-uapi.rst
+> rename to Documentation/userspace-api/media/drivers/imx-uapi.rst
+> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/userspace-api/media/drivers/index.rst
+> similarity index 97%
+> rename from Documentation/media/v4l-drivers/index.rst
+> rename to Documentation/userspace-api/media/drivers/index.rst
+> index ee7faff88a33..05a82f8c0c99 100644
+> --- a/Documentation/media/v4l-drivers/index.rst
+> +++ b/Documentation/userspace-api/media/drivers/index.rst
+> @@ -2,7 +2,7 @@
+>  
+>  .. include:: <isonum.txt>
+>  
+> -.. _v4l-drivers:
+> +.. _v4l-drivers_uapi:
+>  
+>  ################################################
+>  Video4Linux (V4L)  driver-specific documentation
+> @@ -31,10 +31,9 @@ For more details see the file COPYING in the source distribution of Linux.
+>  	:maxdepth: 5
+>  	:numbered:
+>  
+> -	max2175
+> -	uvcvideo
+> -
+>  	cx2341x-uapi
+>  	imx-uapi
+> +	max2175
+>  	meye-uapi
+>  	omap3isp-uapi
+> +	uvcvideo
+> diff --git a/Documentation/media/v4l-drivers/max2175.rst b/Documentation/userspace-api/media/drivers/max2175.rst
+> similarity index 100%
+> rename from Documentation/media/v4l-drivers/max2175.rst
+> rename to Documentation/userspace-api/media/drivers/max2175.rst
+> diff --git a/Documentation/media/v4l-drivers/meye-uapi.rst b/Documentation/userspace-api/media/drivers/meye-uapi.rst
+> similarity index 100%
+> rename from Documentation/media/v4l-drivers/meye-uapi.rst
+> rename to Documentation/userspace-api/media/drivers/meye-uapi.rst
+> diff --git a/Documentation/media/v4l-drivers/omap3isp-uapi.rst b/Documentation/userspace-api/media/drivers/omap3isp-uapi.rst
+> similarity index 100%
+> rename from Documentation/media/v4l-drivers/omap3isp-uapi.rst
+> rename to Documentation/userspace-api/media/drivers/omap3isp-uapi.rst
+> diff --git a/Documentation/media/v4l-drivers/uvcvideo.rst b/Documentation/userspace-api/media/drivers/uvcvideo.rst
+> similarity index 100%
+> rename from Documentation/media/v4l-drivers/uvcvideo.rst
+> rename to Documentation/userspace-api/media/drivers/uvcvideo.rst
+> diff --git a/Documentation/userspace-api/media/index.rst b/Documentation/userspace-api/media/index.rst
+> index 614310f82395..bcfdd1a5caa0 100644
+> --- a/Documentation/userspace-api/media/index.rst
+> +++ b/Documentation/userspace-api/media/index.rst
+> @@ -31,3 +31,5 @@ entitled "GNU Free Documentation License".
+>      cec/cec-api
+>      gen-errors
+>      fdl-appendix
+> +
+> +    drivers/index
+> diff --git a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+> index 751c6590e774..dd0b6646beb5 100644
+> --- a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+> +++ b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+> @@ -438,7 +438,7 @@ MPEG stream.
+>  *Historical context*: This format specification originates from a
+>  custom, embedded, sliced VBI data format used by the ``ivtv`` driver.
+>  This format has already been informally specified in the kernel sources
+> -in the file ``Documentation/media/v4l-drivers/cx2341x-uapi.rst`` . The
+> +in the file ``Documentation/userspace-api/media/drivers/cx2341x-uapi.rst`` . The
+>  maximum size of the payload and other aspects of this format are driven
+>  by the CX23415 MPEG decoder's capabilities and limitations with respect
+>  to extracting, decoding, and displaying sliced VBI data embedded within
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index f81016c97a0d..9b48338fb783 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -116,7 +116,7 @@ enum v4l2_mpeg_stream_vbi_fmt -
+>      * - ``V4L2_MPEG_STREAM_VBI_FMT_IVTV``
+>        - VBI in private packets, IVTV format (documented in the kernel
+>  	sources in the file
+> -	``Documentation/media/v4l-drivers/cx2341x-uapi.rst``)
+> +	``Documentation/userspace-api/media/drivers/cx2341x-uapi.rst``)
 
-Hi all,
+This chunk (and several others like this one) does not appear to belong to
+this patch. It looks like they really should be merged with patch 19 instead.
 
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+Regards,
 
-mm/gup.c:119:13: warning: 'put_compound_head' defined but not used [-Wunuse=
-d-function]
-  119 | static void put_compound_head(struct page *page, int refs, unsigned=
- int flags)
-      |             ^~~~~~~~~~~~~~~~~
+	Hans
 
-Introduced by commit
+>  
+>  
+>  
+> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst b/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
+> index dbdcf6c9f072..59b9e7238f90 100644
+> --- a/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
+> +++ b/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
+> @@ -58,7 +58,7 @@ please make a proposal on the linux-media mailing list.
+>        - YUV 4:2:0 format used by the IVTV driver.
+>  
+>  	The format is documented in the kernel sources in the file
+> -	``Documentation/media/v4l-drivers/cx2341x-uapi.rst``
+> +	``Documentation/userspace-api/media/drivers/cx2341x-uapi.rst``
+>      * .. _V4L2-PIX-FMT-CPIA1:
+>  
+>        - ``V4L2_PIX_FMT_CPIA1``
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cf4fd454e053..a883c2e53b86 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10135,7 +10135,7 @@ L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/i2c/max2175.txt
+> -F:	Documentation/media/v4l-drivers/max2175.rst
+> +F:	Documentation/userspace-api/media/drivers/max2175.rst
+>  F:	drivers/media/i2c/max2175*
+>  F:	include/uapi/linux/max2175.h
+>  
+> @@ -11251,7 +11251,7 @@ F:	kernel/module.c
+>  MOTION EYE VAIO PICTUREBOOK CAMERA DRIVER
+>  W:	http://popies.net/meye/
+>  S:	Orphan
+> -F:	Documentation/media/v4l-drivers/meye*
+> +F:	Documentation/userspace-api/media/drivers/meye*
+>  F:	drivers/media/pci/meye/
+>  F:	include/uapi/linux/meye.h
+>  
+> diff --git a/drivers/media/i2c/max2175.c b/drivers/media/i2c/max2175.c
+> index 506a30e69ced..03b4ed3a61b8 100644
+> --- a/drivers/media/i2c/max2175.c
+> +++ b/drivers/media/i2c/max2175.c
+> @@ -1194,7 +1194,7 @@ static const struct v4l2_ctrl_ops max2175_ctrl_ops = {
+>  
+>  /*
+>   * I2S output enable/disable configuration. This is a private control.
+> - * Refer to Documentation/media/v4l-drivers/max2175.rst for more details.
+> + * Refer to Documentation/userspace-api/media/drivers/max2175.rst for more details.
+>   */
+>  static const struct v4l2_ctrl_config max2175_i2s_en = {
+>  	.ops = &max2175_ctrl_ops,
+> @@ -1210,7 +1210,7 @@ static const struct v4l2_ctrl_config max2175_i2s_en = {
+>  
+>  /*
+>   * HSLS value control LO freq adjacent location configuration.
+> - * Refer to Documentation/media/v4l-drivers/max2175.rst for more details.
+> + * Refer to Documentation/userspace-api/media/drivers/max2175.rst for more details.
+>   */
+>  static const struct v4l2_ctrl_config max2175_hsls = {
+>  	.ops = &max2175_ctrl_ops,
+> @@ -1226,7 +1226,7 @@ static const struct v4l2_ctrl_config max2175_hsls = {
+>  /*
+>   * Rx modes below are a set of preset configurations that decides the tuner's
+>   * sck and sample rate of transmission. They are separate for EU & NA regions.
+> - * Refer to Documentation/media/v4l-drivers/max2175.rst for more details.
+> + * Refer to Documentation/userspace-api/media/drivers/max2175.rst for more details.
+>   */
+>  static const char * const max2175_ctrl_eu_rx_modes[] = {
+>  	[MAX2175_EU_FM_1_2]	= "EU FM 1.2",
+> 
 
-  6379e529ebe4 ("mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN=
- pages"")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6AnB0cUAvhJeWDf2gBGAu8J
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5p5F0ACgkQAVBC80lX
-0GwjOAf/cdZH8I0YAlg+3Fy/ktiK28PhLGJWZjcUtuSZKv50dP9+cxAvTFjwBUtw
-d13vEwqe5JugAadgw5coPwam6SczTs6QPtG+Pya9REV81Pau93UKzNpGk/sPbi5d
-AMTOOAf+PYaQAETGRO0+VD85xi4Dk7Eh6X6rFV1FiLnem0y7WEA5ejpvLIJJZ3mv
-h/660GsYR8dO05THCqp7EftGIUjaDHLsXrx3Tt+ZQSVHsoPh/e5iSnrRqIkQMQCA
-+9RjbZwe76AeyP41UXfEML21JCo2LKARnjIH67ecuhMW+mEmWMDFdYkrPaB+PGz2
-KulttTHAVjcvuuMtWrc83IDi7jpQWQ==
-=IB4z
------END PGP SIGNATURE-----
-
---Sig_/6AnB0cUAvhJeWDf2gBGAu8J--
