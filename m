@@ -3,218 +3,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ADDC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A81C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC59A2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34AE2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584039700;
-	bh=XH+7+H4b5e/aZT8dqro7RSjMfRJxb4gqiPehAzrxmLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0gwTJVxZb6St8d9XC4W8GOAR3Yz4wJpCS8gQZRkcUa2k0+tG8ArJWi1HvUZ4RqZMO
-	 Tg4K3PPk0zAqJ0DuL5NN5L6/uzVqzs9dHDKnutNbXlTxzZsHN2oEmp3BIaG8/UQemq
-	 Sn8Sr7yX1hDzV1i3cR9GUbbj9LjTZi/fh+DTRHjI=
+	s=default; t=1584039726;
+	bh=SlkhTmsxIrlEojuXYKZBatDWX41BUd/qNHIhRRSgdNI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=b/c1mPaPhBHF5duEs4zaOiZoOLe5NYvwLR5VgVkd2E1/Hl3VUPwKeJm68rTAadtSC
+	 0mFcymXR/bLupHGB0OTVqaW81Y4FonCExd7ot8F0uH7JJvzzsi9GILby/Tvx3wwzU5
+	 /kn/1qRqHHp7yN7i8rDXbkPbc5gn/PTkxl6edS4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCLTBj (ORCPT
+        id S1726733AbgCLTCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:01:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46781 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLTBj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:01:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 111so7412515oth.13;
-        Thu, 12 Mar 2020 12:01:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=af3K31gbmEa2HSipqb/CVegw26DVeeUMqwIKy4x1Vpc=;
-        b=j8Nzoqh46yNFazPSZPOBKkIDviqcSYIufx7a4UEQt6WF7/AZIBhu4nUaANPh02ktT4
-         LziQr7V8Y08WJXkhQklC3MvYQvh7zp/hO+LW+c4xtuCrxB6JMb0sLn9mnvWmvqq2j/p2
-         y/6oavn+2qr2L935jU0aKFv5wxUqhXIbfzIjTpXmAyIzPjSFkDmVhS1dS9J2nKkjMcXU
-         TlwCXBWnlMGrDZccrvuWkMcC0y8h30oHbN069Ed5tiPNMPJS6cXNcBhXCVVG6FPLdLu9
-         caUDD1raR0/uKfKGXYwd3RBV18l/mKdrL/kHVbtFYOF5fYMR4ACQg5Q4xS5grdNojELq
-         fKaA==
-X-Gm-Message-State: ANhLgQ0gP5RqyDFY49cjJoF9OuEMppu2DhSnQsBYGWuod97utvcJRB7i
-        CfaJ0DJKpb7+4qsPOYHQvQ==
-X-Google-Smtp-Source: ADFU+vv3ZuHu4x1L1sfY2PAUzJV8g1Jh+MrCLTT7IlFPBsGUChTOAm8/09BwXfsWt4P0yLJN/VLj7A==
-X-Received: by 2002:a9d:6752:: with SMTP id w18mr7374480otm.123.1584039698352;
-        Thu, 12 Mar 2020 12:01:38 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j132sm4176497oih.1.2020.03.12.12.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 12:01:36 -0700 (PDT)
-Received: (nullmailer pid 25434 invoked by uid 1000);
-        Thu, 12 Mar 2020 19:01:35 -0000
-Date:   Thu, 12 Mar 2020 14:01:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: thermal: Add yaml bindings for
- thermal cooling-devices
-Message-ID: <20200312190135.GA14131@bogus>
-References: <cover.1583412540.git.amit.kucheria@linaro.org>
- <9a2052ee2afa43048bd4e2594d015fca6bbf5116.1583412540.git.amit.kucheria@linaro.org>
+        Thu, 12 Mar 2020 15:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726680AbgCLTCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:02:05 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FA9206EB;
+        Thu, 12 Mar 2020 19:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584039724;
+        bh=SlkhTmsxIrlEojuXYKZBatDWX41BUd/qNHIhRRSgdNI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HduS9YsRfFqHiD9D0BPFGNc9LGRdKIq7LV4bMwx9D9gKIHDZxIv/oUpKkgvfT0MgW
+         2uLGu6gw8Wb7hWtlyDfCCyO6K8lu2T2oRjF49qzR2Nu9THEDcZBV03OO8o9hb2jBdo
+         OB5TeC/AUJleYP6rcDcjWO1p43gbpGkMcyytIQB8=
+Date:   Thu, 12 Mar 2020 14:02:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Aman Sharma <amanharitsh123@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/5] pci: handled return value of platform_get_irq
+ correctly
+Message-ID: <20200312190202.GA110276@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9a2052ee2afa43048bd4e2594d015fca6bbf5116.1583412540.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdYv0U0RmT7snp+UejEXecq4wLkhc11DUniUfGYAgyXC=A@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 06:26:42PM +0530, Amit Kucheria wrote:
-> As part of moving the thermal bindings to YAML, split it up into 3
-> bindings: thermal sensors, cooling devices and thermal zones.
-> 
-> The property #cooling-cells is required in each device that acts as a
-> cooling device - whether active or passive. So any device that can
-> throttle its performance to passively reduce heat dissipation (e.g.
-> cpus, gpus) and any device that can actively dissipate heat at different
-> levels (e.g. fans) will contain this property.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  .../thermal/thermal-cooling-devices.yaml      | 114 ++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> new file mode 100644
-> index 0000000000000..4745ea4b41ae7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> @@ -0,0 +1,114 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +# Copyright 2020 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Thermal cooling device binding
-> +
-> +maintainers:
-> +  - Amit Kucheria <amitk@kernel.org>
-> +
-> +description: |
-> +  Thermal management is achieved in devicetree by describing the sensor hardware
-> +  and the software abstraction of cooling devices and thermal zones required to
-> +  take appropriate action to mitigate thermal overload.
-> +
-> +  The following node types are used to completely describe a thermal management
-> +  system in devicetree:
-> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-> +   - cooling-device: device used to dissipate heat either passively or artively
-> +   - thermal-zones: a container of the following node types used to describe all
-> +     thermal data for the platform
-> +
-> +  This binding describes the cooling devices.
-> +
-> +  There are essentially two ways to provide control on power dissipation:
-> +    - Passive cooling: by means of regulating device performance. A typical
-> +      passive cooling mechanism is a CPU that has dynamic voltage and frequency
-> +      scaling (DVFS), and uses lower frequencies as cooling states.
-> +    - Active cooling: by means of activating devices in order to remove the
-> +      dissipated heat, e.g. regulating fan speeds.
-> +
-> +  Any cooling device has a range of cooling states (i.e. different levels of
-> +  heat dissipation). They also have a way to determine the state of cooling in
-> +  which the device is. For example, a fan's cooling states correspond to the
-> +  different fan speeds possible. Cooling states are referred to by single
-> +  unsigned integers, where larger numbers mean greater heat dissipation. The
-> +  precise set of cooling states associated with a device should be defined in
-> +  a particular device's binding.
-> +
+[+cc Marc, Thomas]
 
-This and patch 1 should have a 'select: true' so that this schema is 
-applied to all nodes (it does nothing if #cooling-cells is not present).
+Hi Linus,
 
-> +properties:
-> +  "#cooling-cells":
-> +    description:
-> +        Must be 2, in order to specify minimum and maximum cooling state used in
-> +        the cooling-maps reference. The first cell is the minimum cooling state
-> +        and the second cell is the maximum cooling state requested.
-> +    const: 2
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/thermal/thermal.h>
-> +
-> +    // Example 1: Cpufreq cooling device on CPU0
-> +    cpus {
-> +            #address-cells = <2>;
-> +            #size-cells = <0>;
-> +
-> +            CPU0: cpu@0 {
-> +                    device_type = "cpu";
-> +                    compatible = "qcom,kryo385";
-> +                    reg = <0x0 0x0>;
-> +                    enable-method = "psci";
-> +                    cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-> +                                       &LITTLE_CPU_SLEEP_1
-> +                                       &CLUSTER_SLEEP_0>;
-> +                    capacity-dmips-mhz = <607>;
-> +                    dynamic-power-coefficient = <100>;
-> +                    qcom,freq-domain = <&cpufreq_hw 0>;
-> +                    #cooling-cells = <2>;
-> +                    next-level-cache = <&L2_0>;
-> +                    L2_0: l2-cache {
-> +                            compatible = "cache";
-> +                            next-level-cache = <&L3_0>;
-> +                            L3_0: l3-cache {
-> +                                    compatible = "cache";
-> +                            };
-> +                    };
-> +          };
-> +
-> +          /* ... */
-> +
-> +    };
-> +
-> +    /* ... */
-> +
-> +    thermal-zones {
-> +            cpu0-thermal {
-> +                    polling-delay-passive = <250>;
-> +                    polling-delay = <1000>;
-> +
-> +                    thermal-sensors = <&tsens0 1>;
-> +
-> +                    trips {
-> +                            cpu0_alert0: trip-point0 {
-> +                                    temperature = <90000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                            };
-> +                    };
-> +
-> +                    cooling-maps {
-> +                            map0 {
-> +                                    trip = <&cpu0_alert0>;
-> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>;
-> +                            };
-> +                    };
-> +            };
-> +
-> +            /* ... */
-> +    };
-> +...
-> -- 
-> 2.20.1
+On Thu, Mar 12, 2020 at 03:07:58PM +0100, Linus Walleij wrote:
+> On Wed, Mar 11, 2020 at 8:19 PM Aman Sharma <amanharitsh123@gmail.com> wrote:
+> > Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
+> > ---
+> >  drivers/pci/controller/pci-v3-semi.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+> > index bd05221f5a22..a5bf945d2eda 100644
+> > --- a/drivers/pci/controller/pci-v3-semi.c
+> > +++ b/drivers/pci/controller/pci-v3-semi.c
+> > @@ -777,9 +777,9 @@ static int v3_pci_probe(struct platform_device *pdev)
+> >
+> >         /* Get and request error IRQ resource */
+> >         irq = platform_get_irq(pdev, 0);
+> > -       if (irq <= 0) {
+> > +       if (irq < 0) {
 > 
+> Have you considered:
+> https://lwn.net/Articles/470820/
+> 
+> TL;DR Linus (both of them) are not with you on this.
+> 
+> And that is why the code is written like this.
+
+I'm not sure I understand you here, so please correct me when I go in
+the weeds.  I guess you're saying that platform_get_irq() can return
+0 here and we should treat that as an error?
+
+This particular driver seems to be ARM-specific -- does that mean we
+need to check for 0 on some arches but not others?  That would
+definitely be suboptimal, and that's what I'd like to fix here.
+
+IIUC, in the link you mentioned, Linus T says that "dev->irq == 0"
+means we don't have a valid IRQ.  I think that makes sense, but I'm
+not sure it follows that 0 must be a sensical return value for
+platform_get_irq().  It seems to me that platform_get_irq() ought to
+return either a valid IRQ or an error, and the convention for errors
+is a negative errno.
+
+In fact, the platform_get_irq() function comment says it returns "IRQ
+number on success, negative error number on failure."  If we need to
+interpret 0 as an error on some arches, it sounds like something is
+wrong in the arch-specific bowels of platform_get_irq().
+
+If platform_get_irq() returns an error, a driver might want to
+continue in polled mode without IRQs, in which case it could set its
+"dev->irq = 0" to indicate that it has no valid IRQ.  But I think we
+might be able to separate that "stored IRQ" situation from the
+platform_get_irq() interface.
+
+Bjorn
