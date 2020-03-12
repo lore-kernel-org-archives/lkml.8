@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40722C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AA1C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280F5206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1B8206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCLSpn (ORCPT
+        id S1726946AbgCLSpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:45:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23446 "EHLO mga02.intel.com"
+        Thu, 12 Mar 2020 14:45:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:23441 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgCLSp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:45:27 -0400
+        id S1726729AbgCLSpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:45:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 11:45:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="416041250"
+   d="scan'208";a="416041240"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 11:45:23 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 09/10] KVM: VMX: Cache vmx->exit_reason in local u16 in vmx_handle_exit_irqoff()
-Date:   Thu, 12 Mar 2020 11:45:20 -0700
-Message-Id: <20200312184521.24579-10-sean.j.christopherson@intel.com>
+Subject: [PATCH 06/10] KVM: nVMX: Convert local exit_reason to u16 in ...enter_non_root_mode()
+Date:   Thu, 12 Mar 2020 11:45:17 -0700
+Message-Id: <20200312184521.24579-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200312184521.24579-1-sean.j.christopherson@intel.com>
 References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
@@ -49,41 +49,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a u16 to hold the exit reason in vmx_handle_exit_irqoff(), as the
-checks for INTR/NMI/WRMSR expect to encounter only the basic exit reason
-in vmx->exit_reason.
+Use a u16 for nested_vmx_enter_non_root_mode()'s local "exit_reason" to
+make it clear the intermediate code is only responsible for setting the
+basic exit reason, e.g. FAILED_VMENTRY is unconditionally OR'd in when
+emulating a failed VM-Entry.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d43e1d28bb58..910a7cadeaf7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6287,16 +6287,16 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
- STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
- 
- static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
--	enum exit_fastpath_completion *exit_fastpath)
-+				   enum exit_fastpath_completion *exit_fastpath)
- {
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 1848ca0116c0..8fbbe2152ab7 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3182,7 +3182,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	u16 exit_reason = vmx->exit_reason;
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 	bool evaluate_pending_interrupts;
+-	u32 exit_reason = EXIT_REASON_INVALID_STATE;
++	u16 exit_reason = EXIT_REASON_INVALID_STATE;
+ 	u32 exit_qual;
  
--	if (vmx->exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
-+	if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
- 		handle_external_interrupt_irqoff(vcpu);
--	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
-+	else if (exit_reason == EXIT_REASON_EXCEPTION_NMI)
- 		handle_exception_nmi_irqoff(vmx);
--	else if (!is_guest_mode(vcpu) &&
--		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
-+	else if (!is_guest_mode(vcpu) && exit_reason == EXIT_REASON_MSR_WRITE)
- 		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
- }
+ 	evaluate_pending_interrupts = exec_controls_get(vmx) &
+@@ -3308,7 +3308,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+ 		return NVMX_VMENTRY_VMEXIT;
  
+ 	load_vmcs12_host_state(vcpu, vmcs12);
+-	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
++	vmcs12->vm_exit_reason = VMX_EXIT_REASONS_FAILED_VMENTRY | exit_reason;
+ 	vmcs12->exit_qualification = exit_qual;
+ 	if (enable_shadow_vmcs || vmx->nested.hv_evmcs)
+ 		vmx->nested.need_vmcs12_to_shadow_sync = true;
 -- 
 2.24.1
 
