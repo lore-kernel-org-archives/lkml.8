@@ -2,118 +2,139 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686E3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48002C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF9120735
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320AF20735
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+2LTb9+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QI2yaeJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387843AbgCLFfU (ORCPT
+        id S2387856AbgCLFfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:35:20 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40247 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387776AbgCLFfU (ORCPT
+        Thu, 12 Mar 2020 01:35:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38499 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387776AbgCLFfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:35:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t24so2463889pgj.7;
-        Wed, 11 Mar 2020 22:35:18 -0700 (PDT)
+        Thu, 12 Mar 2020 01:35:50 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w3so2191104plz.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 22:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=stwA2atqbUCSZq4KpX2D3kb+kLw99koUYCFDWaQWTYY=;
-        b=c+2LTb9+TDoWjVsOSzRYQ/GyJ1SnMYpWlrLYXSWHaxOmgsyMloLr1rt+u9HTJLx696
-         QSofxKcuxrOK9U7YS2yroW3NSx+k6NnfHfC+4L16s9iIwm1cXNpyBPDBv1qSEzY9rs+1
-         6FzxzrSUg8gnMZMB/N0U3Z90XGfA0aAEXeaZJnIV7vQdZfTxiFqVdPuJeVzHN1Zfd3z3
-         b4FGqqzXT9PXwsrwSautOzff+x30/DveyJMOXNCkUCbbgv94Gs0A8TjoOfUKdt5tX+AW
-         /zATJfg6b6ZPl0Cl7NnlwiLnvIMvIU8nGtjsWuw7uq8V7HOc/cnk3DhgprJrH09Dxfo8
-         KY1g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SheGGD9VvRORuB+YjWtmYV6UdkIZ+YDt0GYXTwxkFwY=;
+        b=QI2yaeJTxbAKLPQH0pkjzKp+KCo2eDQet9Ig6cqJPhHEquRvxiac45P3qf/0UGZniP
+         5hWk1YbfNsLqCRoWrqE2NKrXHQGNuxEEWOoTauvZKasxXU2WfwtkPyBkOLtIIWroL3Cv
+         1sYSyzYW1Igxtzlz9TTHPGTKHr883vKw+zscEwVMe/f52ixMYl53ao5yfjNtGeK1PmGs
+         5lKsz1EQf/4MQRAwaasfI8033m6xGEplswXgiDo6pgvioQV274C+CPAvXK1+RiE2vNSR
+         WqP1mRMJEjFr9OG96PPxJcfO7DHsJWoP2YhpPdlC2AgSk94Mlp92EhKGYZB5SZqo7Y2z
+         c/Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=stwA2atqbUCSZq4KpX2D3kb+kLw99koUYCFDWaQWTYY=;
-        b=Gaa/IikZNhezViODfy0Fn0Hk98bpe+sgT0f6SHFMESyIVhFx/79CLD+4FnZzrRljvr
-         lfmSMCgfCIKVkNIceECQDqI17ZBvjCtqF9SH9CGP6NRtNRmWV3kC7rwM/bbpo4EupGf0
-         iz7a4l6JlWYAbR64Ch9W8H1wKOsEDDB8Bg1gtT6fyktE30NxHKRfbkPWxCzEN4V2hXnI
-         SiFBluMu7TUek24FIdGcYJ+PeGEnUC7JyxXp8Lx3cQoLhjewqShVFYkV5+wiE4oeyvxG
-         ie6K/DNXFarolcFGqbm0wq5OF8la+k3Ia6FoV9f8TA4VBbKj97ALRriGThc+RZS2VRXG
-         nsXw==
-X-Gm-Message-State: ANhLgQ1LHUpaI1ym8951XDzH28I30FK5TTtzaH8C5b4VGnUoJ//R0Ax3
-        LqdRa9eMebP/GSxC2MRtpmU=
-X-Google-Smtp-Source: ADFU+vtGhEmB7fIfL1kzxqIYJIrliTlHfxflxUGtKE7RGVusYuXarENOJ/ZHyPaZy07TXdfhvk0RcA==
-X-Received: by 2002:a62:1909:: with SMTP id 9mr6362078pfz.196.1583991318416;
-        Wed, 11 Mar 2020 22:35:18 -0700 (PDT)
-Received: from localhost.localdomain ([103.87.57.89])
-        by smtp.gmail.com with ESMTPSA id mp5sm7095820pjb.48.2020.03.11.22.35.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SheGGD9VvRORuB+YjWtmYV6UdkIZ+YDt0GYXTwxkFwY=;
+        b=KXk8HHKbyy0RCofWuuxVYSiaZvfwaeG5OZ3ar0ABHODRjfBiyD61MIq2bpnpR2MMsp
+         njVdKaSt64ctAWsu1BmW0h9QRYtH/T6jW2wVvJ6TQEj861ibvGJScrZb7u9sG8we+0vc
+         Ru4RLVmo5V8QxBGSt2++QyC/Xex4RCifskPV5jNX28rJY/+tGYlNj+/Ydr6aWl/0kVw0
+         KT80Unzcp2OwSmhSXV1HssiPpD071I31JNVwfsXgEFrpiM8kXxSDMbIS7ve9IkaXscMk
+         PZlj0pfflEysDQIN9PwlTyXjVkGeCmki8pOVmGetXuWtDoaop73v/Ndq8hJQr9KUCtMu
+         wWOw==
+X-Gm-Message-State: ANhLgQ3F3oWS30t8FY3fm3HFuqAkVZFxxJp3XU+rMKk19kRnuls4hDzb
+        TB5PVhMlemah/pJ+Pf2ncJm/jA==
+X-Google-Smtp-Source: ADFU+vs9fJDSMy2lBvj+aQy82yNPIdBrCy8YZQTsCPzP8m1hXpLVEkqnvIUqt9mGo7rUFkpJ+nWE9A==
+X-Received: by 2002:a17:90a:9f93:: with SMTP id o19mr2359492pjp.76.1583991347467;
+        Wed, 11 Mar 2020 22:35:47 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g9sm44204468pfi.37.2020.03.11.22.35.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 22:35:17 -0700 (PDT)
-From:   Amol Grover <frextrite@gmail.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . Mckenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] net: caif: Add lockdep expression to RCU traversal primitive
-Date:   Thu, 12 Mar 2020 11:04:20 +0530
-Message-Id: <20200312053419.12258-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 11 Mar 2020 22:35:46 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 22:35:44 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        olof@lixom.net, Anson.Huang@nxp.com, maxime@cerno.tech,
+        leonard.crestez@nxp.com, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Loic Poulain <loic.poulain@linaro.org>
+Subject: Re: [v1 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI
+ drivers
+Message-ID: <20200312053544.GY264362@yoga>
+References: <20200311123501.18202-1-robert.foss@linaro.org>
+ <20200311123501.18202-7-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123501.18202-7-robert.foss@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-caifdevs->list is traversed using list_for_each_entry_rcu()
-outside an RCU read-side critical section but under the
-protection of rtnl_mutex. Hence, add the corresponding lockdep
-expression to silence the following false-positive warning:
+On Wed 11 Mar 05:35 PDT 2020, Robert Foss wrote:
 
-[   10.868467] =============================
-[   10.869082] WARNING: suspicious RCU usage
-[   10.869817] 5.6.0-rc1-00177-g06ec0a154aae4 #1 Not tainted
-[   10.870804] -----------------------------
-[   10.871557] net/caif/caif_dev.c:115 RCU-list traversed in non-reader section!!
+> Build camera clock, isp and controller drivers as modules.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/caif/caif_dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/net/caif/caif_dev.c b/net/caif/caif_dev.c
-index 03c7cdd8e4cb..195d2d67be8a 100644
---- a/net/caif/caif_dev.c
-+++ b/net/caif/caif_dev.c
-@@ -112,7 +112,8 @@ static struct caif_device_entry *caif_get(struct net_device *dev)
- 	    caif_device_list(dev_net(dev));
- 	struct caif_device_entry *caifd;
- 
--	list_for_each_entry_rcu(caifd, &caifdevs->list, list) {
-+	list_for_each_entry_rcu(caifd, &caifdevs->list, list,
-+				lockdep_rtnl_is_held()) {
- 		if (caifd->netdev == dev)
- 			return caifd;
- 	}
--- 
-2.25.1
 
+Thanks for the series Robert!
+
+Regards,
+Bjorn
+
+> ---
+>  arch/arm64/configs/defconfig | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4db223dbc549..7cb6989249ab 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=y
+>  CONFIG_I2C_MV64XXX=y
+>  CONFIG_I2C_OWL=y
+>  CONFIG_I2C_PXA=y
+> +CONFIG_I2C_QCOM_CCI=m
+>  CONFIG_I2C_QCOM_GENI=m
+>  CONFIG_I2C_QUP=y
+>  CONFIG_I2C_RK3X=y
+> @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
+>  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
+>  CONFIG_VIDEO_RENESAS_FCP=m
+>  CONFIG_VIDEO_RENESAS_VSP1=m
+> +CONFIG_VIDEO_QCOM_CAMSS=m
+>  CONFIG_DRM=m
+>  CONFIG_DRM_I2C_NXP_TDA998X=m
+>  CONFIG_DRM_NOUVEAU=m
+> @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=y
+>  CONFIG_MSM_MMCC_8996=y
+>  CONFIG_MSM_GCC_8998=y
+>  CONFIG_QCS_GCC_404=y
+> +CONFIG_SDM_CAMCC_845=m
+>  CONFIG_SDM_GCC_845=y
+>  CONFIG_SM_GCC_8150=y
+>  CONFIG_QCOM_HFPLL=y
+> @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=y
+>  CONFIG_QCOM_GENI_SE=y
+>  CONFIG_QCOM_GLINK_SSR=m
+>  CONFIG_QCOM_RMTFS_MEM=m
+> +CONFIG_SDM_CAMCC_845=m
+>  CONFIG_QCOM_RPMH=y
+>  CONFIG_QCOM_RPMHPD=y
+>  CONFIG_QCOM_SMEM=y
+> -- 
+> 2.20.1
+> 
