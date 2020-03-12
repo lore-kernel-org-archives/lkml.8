@@ -2,127 +2,100 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B33BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C1B206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584041142;
-	bh=M8aP1mhEOoXf43lEWfn7LMCIZsP0x+wR0CIQ+PSIgtA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V07ZcwSTh/JTK9IFqekvFH0So55xsV6uMJHDZSst85ReiiAd0O2S5ZK6ICRJhnvAs
-	 Tnca1ENFEX/FGFPTY4usCilbYWNdDpjhMWoNEezdEEkdJ6EoQmy+s4TSfZ3LzZZIn9
-	 Cn+v+jVr98yULTjSyDB5oqEnR6zY5qlPqptNYqEA=
+	by mail.kernel.org (Postfix) with ESMTP id 5EE8F2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCLTZk (ORCPT
+        id S1726842AbgCLT02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:25:40 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45491 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgCLTZk (ORCPT
+        Thu, 12 Mar 2020 15:26:28 -0400
+Received: from 10.mo177.mail-out.ovh.net ([46.105.73.133]:37883 "EHLO
+        10.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgCLT02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:25:40 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c145so8230743qke.12;
-        Thu, 12 Mar 2020 12:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kSRZhT64+sxW9xDyUZ3l/rkvlLGuZc8V6ZIjw4qfv1c=;
-        b=c8JNPsVOXsaM4NWGf5pmxx6t2jZJ9I/3H+dCm28qDP91leSkivH4V1ku7Ah5fTzuIr
-         mDDxhTl0Z+3F/VqMr32cZhGDAVLTkEfnUpc4To6HefgYByEn9GROeiJp9SWAP5U2KjIi
-         CgELBvkumf8LAQpOk8GAtfQaKbCH5SfoCD4YVX05pYHi9SyL8qi5Sne/gvQh3mZNZ1e3
-         V6UH2z3SAj3jKoS9kgVFWJKTYWcdHeXVYMBOlkdd2PNfDpqkYnBLFKZiZhOJp4y63QOy
-         IASsb0FnjvJnnpl47Dr6siPjMTSjxO7SWShEsI7guYWLZSwqRuwQg61K7PiPPhbEeYrQ
-         JhQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=kSRZhT64+sxW9xDyUZ3l/rkvlLGuZc8V6ZIjw4qfv1c=;
-        b=FeiDaT562XjHc8BEfWJT6tv8kqP16g0f4hIyxIHQgwyN4xqhiJd/Zbu0jbJ05ejo10
-         Gra9YZuVAo/ExEZlpUGdEXckV3b5/9pLDWHE+Tkv5rIGqcF6bSh/CW7qT3UI3qS3nQIC
-         u1uTjqHjg2HolD6oPVKXHLmbcT3i0O8n02gRPRhr9s7MSj+lMAdJZAXELgZ4KtMWgdF6
-         agYo4U4/kCduVsO/LOkSNw5NkaAwxmDyBARtkJOt3u+mtKMhmFzH7ADQDq1yPH7PGMPt
-         qGwRWwJ+VmnGHhfpCWEE9Hphphk3HT2bXLzty+hhjxg/18LyGnyXGfu3otk55U/QSXvc
-         FVAA==
-X-Gm-Message-State: ANhLgQ3wwHUHliLo9SpK3s2lrQ6FRvGMiFXSYHcmUVjSB6fNW7elR1IP
-        BPiXpMuI5Lh9F74kYyFhVL0=
-X-Google-Smtp-Source: ADFU+vsS5KiJCU3u790VoKYOUkboPasr6G6il/55PNJnytScZCIzv4iI8x7Dyh/tFk12qggdPkw9hw==
-X-Received: by 2002:a37:b903:: with SMTP id j3mr9406595qkf.62.1584041138942;
-        Thu, 12 Mar 2020 12:25:38 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::fec8])
-        by smtp.gmail.com with ESMTPSA id f16sm1124454qtk.61.2020.03.12.12.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 12:25:38 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 15:25:34 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Subject: Re: [GIT PULL] cgroup fixes for v5.6-rc5
-Message-ID: <20200312192534.GI79873@mtj.duckdns.org>
-References: <20200310144107.GC79873@mtj.duckdns.org>
- <CAHk-=wi=5p6s_BmPAg5EF8Joe5d-6iAjQq6-Le7+xf5Gq-ZTfw@mail.gmail.com>
+        Thu, 12 Mar 2020 15:26:28 -0400
+X-Greylist: delayed 596 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 15:26:27 EDT
+Received: from player687.ha.ovh.net (unknown [10.110.171.96])
+        by mo177.mail-out.ovh.net (Postfix) with ESMTP id DF667127C62
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 20:10:17 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player687.ha.ovh.net (Postfix) with ESMTPSA id D21501053114D;
+        Thu, 12 Mar 2020 19:10:04 +0000 (UTC)
+Date:   Thu, 12 Mar 2020 20:10:01 +0100
+From:   Stephen Kitt <steve@sk2.org>
+To:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Tero Kristo <t-kristo@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: driver-api/dma.../provider.rst: fix indents
+Message-ID: <20200312201001.17756b09@heffalump.sk2.org>
+In-Reply-To: <20200312181318.1368421-1-steve@sk2.org>
+References: <20200312181318.1368421-1-steve@sk2.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi=5p6s_BmPAg5EF8Joe5d-6iAjQq6-Le7+xf5Gq-ZTfw@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/D1hSsBmuZS=0yQzzXmBo_nm"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 9878927258995543368
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedguddvgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgesghdtreerredtvdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheikeejrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
+--Sig_/D1hSsBmuZS=0yQzzXmBo_nm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 10, 2020 at 03:14:13PM -0700, Linus Torvalds wrote:
-> On Tue, Mar 10, 2020 at 7:41 AM Tejun Heo <tj@kernel.org> wrote:
-> >
-> > * Empty release_agent handling fix.
-> 
-> Pulled. However, I gagged a bit when I saw the code:
-> 
->         if (!pathbuf || !agentbuf || !strlen(agentbuf))
+On Thu, 12 Mar 2020 19:13:18 +0100, Stephen Kitt <steve@sk2.org> wrote:
+> This fixes some block indentations, formatting them as definitions
+> (which seems appropriate given the content), and addressing these
+> warnings:
+>=20
+> 	Documentation/driver-api/dmaengine/provider.rst:270: WARNING:
+> Unexpected indentation.
+> 	Documentation/driver-api/dmaengine/provider.rst:273: WARNING: Block
+> quote ends without a blank line; unexpected unindent.
+> 	Documentation/driver-api/dmaengine/provider.rst:288: WARNING:
+> Unexpected indentation.
+> 	Documentation/driver-api/dmaengine/provider.rst:290: WARNING: Block
+> quote ends without a blank line; unexpected unindent.
 
-Hahaha, yeah, I can see that. I think it might have been copied from
-the commit it refers to - 64e90a8acb85 which contains the following
-snippet.
+... which are already fixed in linux-next, so please ignore this.
 
-       /*
-        * If there is no binary for us to call, then just return and get out of
-        * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
-        * disable all call_usermodehelper() calls.
-        */
-       if (strlen(sub_info->path) == 0)
-               goto out;
+Regards,
 
-> Also, wouldn't it be nice to test for the empty string before you even
-> bother to kstrdup() it? Even before you
+Stephen
 
-Let me restructure the code a bit.
+--Sig_/D1hSsBmuZS=0yQzzXmBo_nm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> Finally, shouldn't we technically hold the release_agent_path_lock
-> while looking at it?
+-----BEGIN PGP SIGNATURE-----
 
-The release_agent_path is protected by both locks - cgroup_mutex and
-release_agent_path_lock, so readers can hold either cgroup_mutex or
-the path_lock. Here, it's holding the mutex, so it should be fine.
-IIRC, it used to be protected by cgroup_mutex (or whatever was
-equivalent) and the extra lock was added to break some cyclic
-dependency. Hmm... might as well drop the cgroup_mutex protection and
-always use the spinlock.
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5qiQkACgkQgNMC9Yht
+g5yjPQ/+IIi6Nyd2DgTkmWshlC+0gijXtvuEY2mvIpUm4MUnJ0QNTmC4ICVJBjHo
++JlNfadJLaxXBqomZ1tEyBh8/9C5sFGkfyar8ofz88lX4ee1A6h8PQL1z39HtXvY
+YlSf1xSdWcjFO6BmLDAMpMBnl40dsGLFYtnSYrCerzj1It4JQUPDTSv5vSdm/Rnq
+IIE4ccNoy1LnkqqqgpsyOtih20U5MJvtZVSl3Pcnbb5SkxpQlE0kHaqZGj6EpDF2
+OIM7sIZj+ADJ+fnMEp1M/IkSCxVu/YBox7m1sOsuTAgMfjbEC6v5FDYHTMtkT/Hh
+Rdpo6HWWTIFPaWFOQC/tKQQfYR63YVHZ8npMrmYwPAzqGFJ4Ql/lWKfFvDOz6XAB
+SbrDt/FgpjN0E7p52ePT7HkPI04xojnzvPMzt+mD3hPOVFIAFQDzwPngI47WFGnK
+ZuUVylhfMVIPmzxzHNuuwjUPDwqiqhPPhfHpHF3mvb8v+urpv20Id5V9YJP1BI2Q
+InwPGeoj27I6jcIJcHijq9GSWRmzpzxyU3janNAAFsQaLZamMwAEOsOt8AaUVA7J
+zT4jSw6gD79MXP5BGMKuN772PIg+7dlf8yY/kW3+jIuuBLVTXX8WRKpazuklS3UZ
+byPY5jWhPt4dnKSzwhXVAL/aGN9wPPgSea5PE6SxSbfVF3xZjAQ=
+=WVyT
+-----END PGP SIGNATURE-----
 
-> Small details, and I've taken the pull, but the lack of locking does
-> seem to be an actual (if perhaps fairly theoretical) bug, no?
-
-Will queue cleanup patches for the next window.
-
-Thanks.
-
--- 
-tejun
+--Sig_/D1hSsBmuZS=0yQzzXmBo_nm--
