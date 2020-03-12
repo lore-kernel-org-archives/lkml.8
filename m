@@ -2,96 +2,98 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553BCC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD836C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7856120754
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583981893;
-	bh=wJdKQS6Gj9xiXn1BGxhMdcyOYuYKUt5sQjTbx3jinXE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FlH0m0AfoiBkKokhbsEAm+amPaoprLJXpPdYBHutgV0pBcI9UhQkhbL2Tepz649Nv
-	 Re1f/3rd/GbOW0KUcIsJq+c4Jf6Lqv7a1L2HIU0bGX7MEYBJgvVtlOjNn00F46iCzV
-	 uG/FAGjmCT3Yt1ini6BFYWd3seyogbGr6anANuBg=
+	by mail.kernel.org (Postfix) with ESMTP id 007AD20735
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="c1mMG2I+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387689AbgCLC6L (ORCPT
+        id S2387709AbgCLC6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387396AbgCLC6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:58:11 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB4920755;
-        Thu, 12 Mar 2020 02:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583981891;
-        bh=wJdKQS6Gj9xiXn1BGxhMdcyOYuYKUt5sQjTbx3jinXE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=K8pZg/PKbre08qAnpKHYtRQEa3Y8eHQgSJ3fgLwtnqltex4FaiU8ZEIREHiNxjpb9
-         qxfNUXGPXjA4gqUzprHjQcLRywJGzvrNEi9TTFQuebfkJWWooV/O8sPMetTVryirIh
-         b+RYwrkYLKzVIQ3DjUV5cnyC5qOPAdbW/iiKlw60=
-Date:   Wed, 11 Mar 2020 19:58:10 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     paulmck@kernel.org
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        "'Marco Elver'" <elver@google.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] list: Prevent compiler reloads inside 'safe' list
- iteration
-Message-Id: <20200311195810.959d4f40d6013ee59a238cf3@linux-foundation.org>
-In-Reply-To: <20200310154749.GZ2935@paulmck-ThinkPad-P72>
-References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
-        <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
-        <158384100886.16414.15741589015363013386@build.alporthouse.com>
-        <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
-        <20200310125031.GY2935@paulmck-ThinkPad-P72>
-        <CANpmjNNT3HY7i9TywX0cAFqBtx2J3qOGOUG5nHzxAZ4bk_qgtg@mail.gmail.com>
-        <77ff4da6b0a7448c947af6de4fb43cdb@AcuMS.aculab.com>
-        <20200310154749.GZ2935@paulmck-ThinkPad-P72>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 11 Mar 2020 22:58:42 -0400
+Received: from mail-pf1-f170.google.com ([209.85.210.170]:44538 "EHLO
+        mail-pf1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387396AbgCLC6m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 22:58:42 -0400
+Received: by mail-pf1-f170.google.com with SMTP id b72so2468918pfb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 19:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xjmkUAJV0P0YoZQeq03wBLs4ipixrmI828N0sC8YCYY=;
+        b=c1mMG2I+a4RImGoQCDTKsYcKG/bwp8PYVHJrAvIK8DRDiZ+lwBG/C2Ky1Q+cSPObRD
+         JGBKmFCmIbAtoEGyFtpRKO8lopfd3fkGBa6Yl75i5sF6D3xIXsNQmZoHGlvS22w+9xEP
+         2dLJnVqhouZRMMou/QxjzCe7a61hIdZggh9fBni49Vf2WYJ50VvvMkUxZJzg+x4DSna2
+         /3wrt775hBm1Oyw/WZQPQUo74Eyw/evPVg6+2W+H/6Z7Fl3hQVjH491gbkv/ZRiy2MxZ
+         5DlyzJU83/zAkozQJBSMeEZC7MrluYWKJ+rrbTxnQnGOWzXm1XD1Nnx9QMYNxjjJGmzS
+         YE7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xjmkUAJV0P0YoZQeq03wBLs4ipixrmI828N0sC8YCYY=;
+        b=qsBPB1x4Hety6EdNAS/gLmPGizx7MY9Dc6ApSK1otqQPcbSTpejXCoP7BXDZ78PP90
+         1CQtf0B5U8bw0yeq40ZFQBEkDHKJ5/ow5Gypg34hYv0WHtKFYq/AKlJzLW7sPfELQnGW
+         GpCTdoM7Ehl/CqysHfyUH/STUNE6i1003MTO1WgvfOWpWlJiiKli6rkdgduBk9CQmOfn
+         gInySnj7rQU5q+3xQ9wR2LwHFXth1+L0/l4hElgBwdsAmZ5Hltk2FFkJCaI9fb60/Jba
+         FYMFiyUEwNmsZWxQqSo7/5sgSxevTcTPRTHCqoCh7HFCT/rDbkiSvFFj8Kjijy4T1ytM
+         CBAg==
+X-Gm-Message-State: ANhLgQ1Ia7bWkPHz4F+63aygEhhvFgprCJgCPvsj02dDs+ZsRzg0xVPS
+        sm46h/ZAdVEZYxuzfrrRwZew2te7J94=
+X-Google-Smtp-Source: ADFU+vsxz2V6zzv4+5/CZTt5AhT5BOQ0j3WoZWiA9Z7bC4BtMeX4jcXf5VBJ3paF3L0GYn0/pQHx1A==
+X-Received: by 2002:a63:c54b:: with SMTP id g11mr5665118pgd.164.1583981921025;
+        Wed, 11 Mar 2020 19:58:41 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id i11sm1910322pfd.202.2020.03.11.19.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 19:58:40 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH v3 0/2] RISC-V page table dumper
+Date:   Thu, 12 Mar 2020 10:58:34 +0800
+Message-Id: <20200312025836.68977-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 08:47:49 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+This patch supports dumping page tables, and it's implemented on top of
+the generic page table dumper patch set.
 
-> On Tue, Mar 10, 2020 at 03:05:57PM +0000, David Laight wrote:
-> > From: Marco Elver
-> > > Sent: 10 March 2020 14:10
-> > ...
-> > > FWIW, for writes we're already being quite generous, in that plain
-> > > aligned writes up to word-size are assumed to be "atomic" with the
-> > > default (conservative) config, i.e. marking such writes is optional.
-> > > Although, that's a generous assumption that is not always guaranteed
-> > > to hold (https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/).
-> > 
-> > Remind me to start writing everything in assembler.
-> 
-> Been there, done that.  :-/
-> 
-> > That and to mark all structure members 'volatile'.
-> 
-> Indeed.  READ_ONCE() and WRITE_ONCE() get this same effect, but without
-> pessimizing non-concurrent accesses to those same members.  Plus KCSAN
-> knows about READ_ONCE(), WRITE_ONCE(), and also volatile members.
-> 
+Changed in v3:
+ - Modify warning message.
 
-So I take it from all the above that we should do this.
+Changed in v2:
+ - Remove unnecessary #ifdef directive.
 
-Did anyone actually review the code? :)
+Zong Li (2):
+  riscv: Add support to dump the kernel page tables
+  riscv: Use macro definition instead of magic number
+
+ arch/riscv/Kconfig               |   1 +
+ arch/riscv/include/asm/kasan.h   |   2 +-
+ arch/riscv/include/asm/pgtable.h |  10 +
+ arch/riscv/include/asm/ptdump.h  |  11 ++
+ arch/riscv/mm/Makefile           |   1 +
+ arch/riscv/mm/ptdump.c           | 317 +++++++++++++++++++++++++++++++
+ 6 files changed, 341 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/include/asm/ptdump.h
+ create mode 100644 arch/riscv/mm/ptdump.c
+
+-- 
+2.25.1
+
