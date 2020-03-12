@@ -2,516 +2,455 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF80C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6E8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B658F20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F3720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:58:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHtZVBxE"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CIc/RH60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387890AbgCLFzu (ORCPT
+        id S2387871AbgCLF6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:55:50 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46623 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387677AbgCLFzu (ORCPT
+        Thu, 12 Mar 2020 01:58:06 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33501 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387810AbgCLF6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:55:50 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d23so4934437ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 22:55:48 -0700 (PDT)
+        Thu, 12 Mar 2020 01:58:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r7so4390358oij.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 22:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Vey0NJDMWkVJggBKgfn93tFvxXozImLrUv8qopKu7xw=;
-        b=gHtZVBxEj/Vg2VNbUOL7g1OKPVf7VdR/JWrzeblmx8WVQVhstHDbc6BwA2uAmB4cdZ
-         gZN41fNEsORjXhgBrxX2qK58NbIVgzvVFrwVZ+M7hDLgh53I0sqVosVc84vNHaMab75a
-         CNlh4ASNKCV5cWU8fJ8qPuAwFzNmoPGnSkWMyz09k8Wi+8Lffmeqb3DK2eGlRGK5udcG
-         zQXKB+9xd3E5zY0m49VcHlx4ST3n9UjCweb1z9TC6NXurReBuC2NKoeAtlDyXCY2vXod
-         GE8ahfVcvrJl3Lyv3SyLT8l1Gjq1NGtvWxB/ZBShgfrDsGZIyvvgsczm3y6GNsgkT7Zi
-         p9lQ==
+         :cc;
+        bh=Bn1hg/+PtzTsKNpb+Ce5m6JSgVn+95BJXkA8A4DMiPc=;
+        b=CIc/RH60Iz3c1UBDBhEfsp4G27ouwBp+0Cl2CZ6BOGGts7w71kjT3VN6Z3TrI6+nAs
+         sS211Q6PMK+X2V6hTiWFSxHxCUbIs9+W/Wz24mbDm+lHzxwDB09LzBzMeGVnT83OLr1U
+         aoCavsEXtMLKRL/LcM1XZ4rkpPCtB5Szuejz08zeY/QRRc8bcxn2SbdWZqJUJZEhcnq7
+         3St2nNDnEqBTs8+01QfsxmSEFd8Vgmb49D+p8pROKCy3xAA7z8tKEQEuQ6g9tB3tU0Z0
+         lLaMqNMIbJM3bsbBbcy+13iWkq7BQH7sd34wkbtXAuX/0ONvOBGKKz64hpnuPnO3O+uw
+         RgQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Vey0NJDMWkVJggBKgfn93tFvxXozImLrUv8qopKu7xw=;
-        b=RWz6G0FsHfj5V6k7Lt2ZwV6MnmsACheegyJgL/rkWDf4ublDnmVRxunUdQ+ARMtXBE
-         Aq2pt6o2A+2OF6+Y2vFYCXJEt1xnSxeHREl+ParLB3la252g72+sOXVyGkb7pi4TFugW
-         BC5iIZDjKc1e6SH6qRpqQeRBcGRbynKtrzQSAh+pKoAQqvgjxY99ur60IaRbPnjuGmOe
-         JQ5hVRylfVyUt5Ne0MdtMgH3xjJpdNLDRXid5UsM2JartsXHCxB62nKzDUseq5xEXmg+
-         GG9vpnt9fh9U7G4gcGOCIt354QdJaMa9Q4gTNmRXlu5iwil6vcRZuCJwMSzAh/gnb/0r
-         QdVA==
-X-Gm-Message-State: ANhLgQ2FW8VdS5DfnVKfYfoyxAxE8aJ6DuR7e86LyGxu86vnXnQ84twC
-        81/rZUPO8GpC9ueiQWC6hWGFbF0/TwoZdYwBmN93fw==
-X-Google-Smtp-Source: ADFU+vtUnYLd3jdavhdvPiqNG5Nrkvvn5GOuvlRBTSVkOolMeWQzluk2mxPpxO0fhbX5i/maIRECPDSGKqEFAfal2Ok=
-X-Received: by 2002:a2e:a58c:: with SMTP id m12mr3724540ljp.141.1583992547100;
- Wed, 11 Mar 2020 22:55:47 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Bn1hg/+PtzTsKNpb+Ce5m6JSgVn+95BJXkA8A4DMiPc=;
+        b=HWlLIR4DeKl2qYTdFssvrA6n0/zVzajoPZ9RJo0maAd2PQYWxDsLEp3Vs7luNJ9Bh9
+         lNXjY7V2wlPkriXFZA0dqXFxlMUWimL0KzbbwHAJWtrRSYUhZm6tKOGD29xhF6f+ecMR
+         ujX6bHz24T0cqoGr4IEEDU5qfeBEnvcDRCB7X0KsXvGcOQflbPXJpAF/sV/gAgBzjgrb
+         oqOl+iihlOL0TaP+qj2WP6/ZWbnDIuSwQF2eowKG4q6xYgcn+p93ZGiKmEoKTl3lwdRg
+         uUXPL9+1LiMeZJsTY9YBWuqHcCk/EBpFU+WLnkESGNot3kAopCRX3FbB6WzlnoROgdyf
+         swfA==
+X-Gm-Message-State: ANhLgQ15Op+Ax9KaMacCd7z+2TPVQWxpbGzU0IxoT+Dsi9N1nEv3OCze
+        Zk7YF003p/PN2xfuD+HPvPgdOx5vHymYABft2xWrHA==
+X-Google-Smtp-Source: ADFU+vsMvyofqBnJoHR6vy8xgHA39d+khqv33FK27ksvDLfAygtUQztZFg7E6bYyG+UOaF0XTGt8780bAIQyv4vwvIc=
+X-Received: by 2002:a05:6808:56:: with SMTP id v22mr1415109oic.116.1583992683910;
+ Wed, 11 Mar 2020 22:58:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310000617.20662-1-rajatja@google.com> <20200310000617.20662-5-rajatja@google.com>
- <CACK8Z6FsN2WNF8z0OrKv-1sPPwJFeJVYf8taHMZn0QpwLj+t=Q@mail.gmail.com>
-In-Reply-To: <CACK8Z6FsN2WNF8z0OrKv-1sPPwJFeJVYf8taHMZn0QpwLj+t=Q@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Wed, 11 Mar 2020 22:55:10 -0700
-Message-ID: <CACK8Z6F7CZckWP_98h=WERmnDgQL3e65VSiLpaks+biWQ1nk7A@mail.gmail.com>
-Subject: Re: [PATCH v7 4/4] drm/i915: Add support for integrated privacy screen
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>
-Cc:     Rajat Jain <rajatxjain@gmail.com>
+References: <20200303054437.650-1-alex@ghiti.fr> <mhng-346cdebc-e24d-49db-bb2e-0d4fa8d57030@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-346cdebc-e24d-49db-bb2e-0d4fa8d57030@palmerdabbelt-glaptop1>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Thu, 12 Mar 2020 13:57:53 +0800
+Message-ID: <CANXhq0rvnuzgSxF9b8emkYKLnTwuK90XG3=5-pPFW9a9_5BS3w@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2] riscv: Introduce CONFIG_RELOCATABLE
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Alexandre Ghiti <alex@ghiti.fr>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jani,
-
-On Mon, Mar 9, 2020 at 5:18 PM Rajat Jain <rajatja@google.com> wrote:
+On Sat, Mar 7, 2020 at 1:58 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
-> Hi Jani,
->
-> I have 1 question / need 1 help about this patch:
-
-Kind ignore, I found the answer, and posted my new patchset here:
-https://patchwork.freedesktop.org/series/74607/
-
-I got a "failed to apply" email from the patchwork. Can you please let
-me know on which branch is it trying to apply it? I have currently
-rebased my patchset to drm-intel-next-queued.
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> On Mon, Mar 9, 2020 at 5:06 PM Rajat Jain <rajatja@google.com> wrote:
+> On Mon, 02 Mar 2020 21:44:37 PST (-0800), alex@ghiti.fr wrote:
+> > This config allows to compile the kernel as PIE and to relocate it at any
+> > virtual address at runtime: this paves the way to KASLR and to 4-level
+> > page table folding at runtime. Runtime relocation is possible since
+> > relocation metadata are embedded into the kernel.
 > >
-> > Add support for an ACPI based integrated privacy screen that is
-> > available on some systems.
+> > Note that relocating at runtime introduces an overhead even if the kernel
+> > is loaded at the same address it was linked at and that the compiler
+> > options are those used in arm64 which uses the same RELA relocation format.
 > >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> > Reviewed-by: Zong Li <zong.li@sifive.com>
+> > Reviewed-by: Anup Patel <anup@brainfault.org>
+> > Tested-by: Zong Li <zong.li@sifive.com>
 > > ---
-> > v7: * Move the privacy-screen property back into drm core.
-> >     * Do the actual HW EPS toggling at commit time.
-> >     * Provide a sample ACPI node for reference in comments.
-> > v6: Always initialize prop in intel_attach_privacy_screen_property()
-> > v5: fix a cosmetic checkpatch warning
-> > v4: Fix a typo in intel_privacy_screen.h
-> > v3: * Change license to GPL-2.0 OR MIT
-> >     * Move privacy screen enum from UAPI to intel_display_types.h
-> >     * Rename parameter name and some other minor changes.
-> > v2: Formed by splitting the original patch into multiple patches.
-> >     - All code has been moved into i915 now.
-> >     - Privacy screen is a i915 property
-> >     - Have a local state variable to store the prvacy screen. Don't rea=
-d
-> >       it from hardware.
+> > Changes in v2:
+> > - Make RELOCATABLE depend on MMU as suggested by Anup
+> > - Rename kernel_load_addr into kernel_virt_addr as suggested by Anup
+> > - Use __pa_symbol instead of __pa, as suggested by Zong
+> > - Rebased on top of v5.6-rc3
+> > - Tested with sv48 patchset
+> > - Add Reviewed/Tested-by from Zong and Anup
 > >
-> >  drivers/gpu/drm/i915/Makefile                 |   3 +-
-> >  drivers/gpu/drm/i915/display/intel_atomic.c   |   1 +
-> >  drivers/gpu/drm/i915/display/intel_dp.c       |  30 ++-
-> >  .../drm/i915/display/intel_privacy_screen.c   | 175 ++++++++++++++++++
-> >  .../drm/i915/display/intel_privacy_screen.h   |  27 +++
-> >  5 files changed, 234 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
-> >  create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
+> >  arch/riscv/Kconfig              | 12 +++++
+> >  arch/riscv/Makefile             |  5 +-
+> >  arch/riscv/boot/loader.lds.S    |  2 +-
+> >  arch/riscv/include/asm/page.h   |  5 +-
+> >  arch/riscv/kernel/head.S        |  3 +-
+> >  arch/riscv/kernel/vmlinux.lds.S | 10 ++--
+> >  arch/riscv/mm/Makefile          |  4 ++
+> >  arch/riscv/mm/init.c            | 92 ++++++++++++++++++++++++++++-----
+> >  8 files changed, 111 insertions(+), 22 deletions(-)
 > >
-> > diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makef=
-ile
-> > index 9f887a86e555d..da42389107f9c 100644
-> > --- a/drivers/gpu/drm/i915/Makefile
-> > +++ b/drivers/gpu/drm/i915/Makefile
-> > @@ -209,7 +209,8 @@ i915-y +=3D \
-> >         display/intel_vga.o
-> >  i915-$(CONFIG_ACPI) +=3D \
-> >         display/intel_acpi.o \
-> > -       display/intel_opregion.o
-> > +       display/intel_opregion.o \
-> > +       display/intel_privacy_screen.o
-> >  i915-$(CONFIG_DRM_FBDEV_EMULATION) +=3D \
-> >         display/intel_fbdev.o
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index 73f029eae0cc..f5f3d474504d 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -163,6 +163,18 @@ config PGTABLE_LEVELS
+> >       default 3 if 64BIT
+> >       default 2
 > >
-> > diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/=
-drm/i915/display/intel_atomic.c
-> > index d043057d2fa03..fc6264b4a7f73 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_atomic.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-> > @@ -150,6 +150,7 @@ int intel_digital_connector_atomic_check(struct drm=
-_connector *conn,
-> >             new_conn_state->base.picture_aspect_ratio !=3D old_conn_sta=
-te->base.picture_aspect_ratio ||
-> >             new_conn_state->base.content_type !=3D old_conn_state->base=
-.content_type ||
-> >             new_conn_state->base.scaling_mode !=3D old_conn_state->base=
-.scaling_mode ||
-> > +           new_conn_state->base.privacy_screen_status !=3D old_conn_st=
-ate->base.privacy_screen_status ||
-> >             !blob_equal(new_conn_state->base.hdr_output_metadata,
-> >                         old_conn_state->base.hdr_output_metadata))
-> >                 crtc_state->mode_changed =3D true;
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/=
-i915/display/intel_dp.c
-> > index 41c623b029464..a39b0c420b50a 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> > @@ -62,6 +62,7 @@
-> >  #include "intel_lspcon.h"
-> >  #include "intel_lvds.h"
-> >  #include "intel_panel.h"
-> > +#include "intel_privacy_screen.h"
-> >  #include "intel_psr.h"
-> >  #include "intel_sideband.h"
-> >  #include "intel_tc.h"
-> > @@ -5886,6 +5887,12 @@ intel_dp_connector_register(struct drm_connector=
- *connector)
-> >                 dev_priv->acpi_scan_done =3D true;
-> >         }
-> >
-> > +       /* Check for integrated Privacy screen support */
-> > +       if (intel_privacy_screen_present(to_intel_connector(connector))=
-)
-> > +               drm_connector_attach_privacy_screen_property(connector)=
-;
-> > +       else
-> > +               drm_connector_destroy_privacy_screen_property(connector=
-);
+> > +config RELOCATABLE
+> > +     bool
+> > +     depends on MMU
+> > +     help
+> > +          This builds a kernel as a Position Independent Executable (PIE),
+> > +          which retains all relocation metadata required to relocate the
+> > +          kernel binary at runtime to a different virtual address than the
+> > +          address it was linked at.
+> > +          Since RISCV uses the RELA relocation format, this requires a
+> > +          relocation pass at runtime even if the kernel is loaded at the
+> > +          same address it was linked at.
 > > +
-> >         DRM_DEBUG_KMS("registering %s bus for %s\n",
-> >                       intel_dp->aux.name, connector->kdev->kobj.name);
+> >  source "arch/riscv/Kconfig.socs"
 > >
-> > @@ -6881,9 +6888,30 @@ intel_dp_add_properties(struct intel_dp *intel_d=
-p, struct drm_connector *connect
-> >                 drm_connector_attach_scaling_mode_property(connector, a=
-llowed_scalers);
+> >  menu "Platform type"
+> > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> > index b9009a2fbaf5..5a115cf6a9c1 100644
+> > --- a/arch/riscv/Makefile
+> > +++ b/arch/riscv/Makefile
+> > @@ -9,7 +9,10 @@
+> >  #
 > >
-> >                 connector->state->scaling_mode =3D DRM_MODE_SCALE_ASPEC=
-T;
-> > +
-> > +               drm_connector_create_privacy_screen_property(connector)=
-;
-> >         }
-> >  }
+> >  OBJCOPYFLAGS    := -O binary
+> > -LDFLAGS_vmlinux :=
+> > +ifeq ($(CONFIG_RELOCATABLE),y)
+> > +LDFLAGS_vmlinux := -shared -Bsymbolic -z notext -z norelro
+> > +KBUILD_CFLAGS += -fPIE
+> > +endif
+> >  ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
+> >       LDFLAGS_vmlinux := --no-relax
+> >  endif
+> > diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+> > index 47a5003c2e28..a9ed218171aa 100644
+> > --- a/arch/riscv/boot/loader.lds.S
+> > +++ b/arch/riscv/boot/loader.lds.S
+> > @@ -7,7 +7,7 @@ ENTRY(_start)
 > >
-> > +static void intel_dp_update_privacy_screen(struct intel_encoder *encod=
-er,
-> > +                               const struct intel_crtc_state *crtc_sta=
-te,
-> > +                               const struct drm_connector_state *conn_=
-state)
-> > +{
-> > +       struct drm_connector *connector =3D conn_state->connector;
-> > +
-> > +       if (connector->privacy_screen_property)
-> > +               intel_privacy_screen_set_val(to_intel_connector(connect=
-or),
-> > +                                            conn_state->privacy_screen=
-_status);
-> > +}
-> > +
-> > +static void intel_dp_update_pipe(struct intel_encoder *encoder,
-> > +                                const struct intel_crtc_state *crtc_st=
-ate,
-> > +                                const struct drm_connector_state *conn=
-_state)
-> > +{
-> > +       intel_dp_update_privacy_screen(encoder, crtc_state, conn_state)=
-;
-> > +       intel_panel_update_backlight(encoder, crtc_state, conn_state);
-> > +}
-> > +
-> >  static void intel_dp_init_panel_power_timestamps(struct intel_dp *inte=
-l_dp)
+> >  SECTIONS
 > >  {
-> >         intel_dp->panel_power_off_time =3D ktime_get_boottime();
-> > @@ -7825,7 +7853,7 @@ bool intel_dp_init(struct drm_i915_private *dev_p=
-riv,
-> >         intel_encoder->compute_config =3D intel_dp_compute_config;
-> >         intel_encoder->get_hw_state =3D intel_dp_get_hw_state;
-> >         intel_encoder->get_config =3D intel_dp_get_config;
-> > -       intel_encoder->update_pipe =3D intel_panel_update_backlight;
-> > +       intel_encoder->update_pipe =3D intel_dp_update_pipe;
->
-> For my testing purposes, I'm testing this using the proptest userspace ut=
-ility
-> in our distribution (I think from
-> https://github.com/CPFL/drm/blob/master/tests/proptest/proptest.c). I
-> notice that when I change the value of the property from userspace,
-> even though the drm_connector_state->privacy_screen_status gets
-> updated and reflects the change, the encoder->update_pipe() is not
-> getting called. Just wanted to ask if this is expected since you seem
-> to have implied that this update_pipe() might *not* get called if there *=
-is* a
-> full modeset? (What is the hook that gets called for a full modeset
-> where i915 driver should commit this property change to the hardware?)
->
-> Thanks a lot for all your help,
->
-> Best Regards,
->
-> Rajat
->
-> >         intel_encoder->suspend =3D intel_dp_encoder_suspend;
-> >         if (IS_CHERRYVIEW(dev_priv)) {
-> >                 intel_encoder->pre_pll_enable =3D chv_dp_pre_pll_enable=
-;
-> > diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.c b/driv=
-ers/gpu/drm/i915/display/intel_privacy_screen.c
-> > new file mode 100644
-> > index 0000000000000..6ff61ddf4c0a4
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
-> > @@ -0,0 +1,175 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> > +/*
-> > + * Intel ACPI privacy screen code
-> > + *
-> > + * Copyright =C2=A9 2020 Google Inc.
-> > + *
-> > + * This code can help detect and control an integrated EPS (electronic
-> > + * privacy screen) via ACPI functions. It expects an ACPI node for the
-> > + * drm connector device with the following elements:
-> > + *
-> > + * UUID should be "c7033113-8720-4ceb-9090-9d52b3e52d73"
-> > + *
-> > + * _ADR =3D ACPI address per Spec (also see intel_acpi_device_id_updat=
-e())
-> > + * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30=
-.pdf
-> > + * Pages 1119 - 1123.
-> > + *
-> > + * _DSM method that will perform the following functions according to
-> > + * Local1 argument passed to it:
-> > + *  - Local1 =3D 0 (EPS capabilities): Report EPS presence and capabil=
-ities.
-> > + *  - Local1 =3D 1 (EPS State)  :  _DSM returns 1 if EPS is enabled, 0=
- otherwise.
-> > + *  - Local1 =3D 2 (EPS Enable) :  _DSM enables EPS
-> > + *  - Local1 =3D 3 (EPS Disable):  _DSM disables EPS
-> > + *
-> > + * Here is a sample ACPI node:
-> > + *
-> > + *  Scope (\_SB.PCI0.GFX0) // Intel graphics device (PCI device)
-> > + *  {
-> > + *      Method (_DOD, 0, NotSerialized)  // _DOD: Display Output Devic=
-es
-> > + *      {
-> > + *          Return (Package (0x01)
-> > + *          {
-> > + *              0x80010400
-> > + *          })
-> > + *      }
-> > + *
-> > + *      Device (LCD)
-> > + *      {
-> > + *          Name (_ADR, 0x80010400)  // _ADR: Address
-> > + *          Name (_STA, 0x0F)  // _STA: Status
-> > + *
-> > + *          Method (EPSP, 0, NotSerialized) // EPS Present
-> > + *          {
-> > + *              Return (0x01)
-> > + *          }
-> > + *
-> > + *          Method (EPSS, 0, NotSerialized) // EPS State
-> > + *          {
-> > + *              Local0 =3D \_SB.PCI0.GRXS (0xCD)
-> > + *              Return (Local0)
-> > + *          }
-> > + *
-> > + *          Method (EPSE, 0, NotSerialized) // EPS Enable
-> > + *          {
-> > + *              \_SB.PCI0.STXS (0xCD)
-> > + *          }
-> > + *
-> > + *          Method (EPSD, 0, NotSerialized) // EPS Disable
-> > + *          {
-> > + *              \_SB.PCI0.CTXS (0xCD)
-> > + *          }
-> > + *
-> > + *          Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Met=
-hod
-> > + *          {
-> > + *              ToBuffer (Arg0, Local0)
-> > + *              If ((Local0 =3D=3D ToUUID ("c7033113-8720-4ceb-9090-9d=
-52b3e52d73")))
-> > + *              {
-> > + *                  ToInteger (Arg2, Local1)
-> > + *                  If ((Local1 =3D=3D Zero))
-> > + *                  {
-> > + *                      Local2 =3D EPSP ()
-> > + *                      If ((Local2 =3D=3D One))
-> > + *                      {
-> > + *                          Return (Buffer (One)
-> > + *                          {
-> > + *                               0x0F
-> > + *                          })
-> > + *                      }
-> > + *                  }
-> > + *
-> > + *                  If ((Local1 =3D=3D One))
-> > + *                  {
-> > + *                      Return (EPSS ())
-> > + *                  }
-> > + *
-> > + *                  If ((Local1 =3D=3D 0x02))
-> > + *                  {
-> > + *                      EPSE ()
-> > + *                  }
-> > + *
-> > + *                  If ((Local1 =3D=3D 0x03))
-> > + *                  {
-> > + *                      EPSD ()
-> > + *                  }
-> > + *
-> > + *                  Return (Buffer (One)
-> > + *                  {
-> > + *                       0x00
-> > + *                  })
-> > + *              }
-> > + *
-> > + *              Return (Buffer (One)
-> > + *              {
-> > + *                   0x00
-> > + *              })
-> > + *          }
-> > + *      }
-> > + *  }
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +
-> > +#include "intel_privacy_screen.h"
-> > +
-> > +#define CONNECTOR_DSM_REVID 1
-> > +
-> > +#define CONNECTOR_DSM_FN_PRIVACY_ENABLE                2
-> > +#define CONNECTOR_DSM_FN_PRIVACY_DISABLE       3
-> > +
-> > +static const guid_t drm_conn_dsm_guid =3D
-> > +       GUID_INIT(0xC7033113, 0x8720, 0x4CEB,
-> > +                 0x90, 0x90, 0x9D, 0x52, 0xB3, 0xE5, 0x2D, 0x73);
-> > +
-> > +/* Makes _DSM call to set privacy screen status */
-> > +static void acpi_privacy_screen_call_dsm(struct intel_connector *conne=
-ctor,
-> > +                                        u64 func)
-> > +{
-> > +       union acpi_object *obj;
-> > +       acpi_handle acpi_handle =3D connector->acpi_handle;
-> > +
-> > +       if (!acpi_handle)
-> > +               return;
-> > +
-> > +       obj =3D acpi_evaluate_dsm(acpi_handle, &drm_conn_dsm_guid,
-> > +                               CONNECTOR_DSM_REVID, func, NULL);
-> > +       if (!obj) {
-> > +               drm_err(connector->base.dev,
-> > +                       "failed to evaluate _DSM for fn %llx\n", func);
-> > +               return;
-> > +       }
-> > +
-> > +       ACPI_FREE(obj);
-> > +}
-> > +
-> > +void intel_privacy_screen_set_val(struct intel_connector *connector,
-> > +                                 enum drm_privacy_screen_status val)
-> > +{
-> > +       if (val =3D=3D PRIVACY_SCREEN_DISABLED)
-> > +               acpi_privacy_screen_call_dsm(connector,
-> > +                                            CONNECTOR_DSM_FN_PRIVACY_D=
-ISABLE);
-> > +       else if (val =3D=3D PRIVACY_SCREEN_ENABLED)
-> > +               acpi_privacy_screen_call_dsm(connector,
-> > +                                            CONNECTOR_DSM_FN_PRIVACY_E=
-NABLE);
-> > +       else
-> > +               drm_err(connector->base.dev,
-> > +                       "Cannot set privacy screen to invalid val %u\n"=
-, val);
-> > +}
-> > +
-> > +bool intel_privacy_screen_present(struct intel_connector *connector)
-> > +{
-> > +       acpi_handle handle =3D connector->acpi_handle;
-> > +
-> > +       if (!handle)
-> > +               return false;
-> > +
-> > +       if (!acpi_check_dsm(handle, &drm_conn_dsm_guid,
-> > +                           CONNECTOR_DSM_REVID,
-> > +                           1 << CONNECTOR_DSM_FN_PRIVACY_ENABLE |
-> > +                           1 << CONNECTOR_DSM_FN_PRIVACY_DISABLE)) {
-> > +               drm_dbg_kms(connector->base.dev,
-> > +                           "ACPI node but no privacy scrn\n");
-> > +               return false;
-> > +       }
-> > +       drm_info(connector->base.dev, "supports privacy screen\n");
-> > +       return true;
-> > +}
-> > diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.h b/driv=
-ers/gpu/drm/i915/display/intel_privacy_screen.h
-> > new file mode 100644
-> > index 0000000000000..f8d2e246ea0bd
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
-> > @@ -0,0 +1,27 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-> > +/*
-> > + * Copyright =C2=A9 2019 Google Inc.
-> > + */
-> > +
-> > +#ifndef __DRM_PRIVACY_SCREEN_H__
-> > +#define __DRM_PRIVACY_SCREEN_H__
-> > +
-> > +#include "intel_display_types.h"
-> > +
-> > +#ifdef CONFIG_ACPI
-> > +bool intel_privacy_screen_present(struct intel_connector *connector);
-> > +void intel_privacy_screen_set_val(struct intel_connector *connector,
-> > +                                 enum drm_privacy_screen_status val);
-> > +#else
-> > +static bool intel_privacy_screen_present(struct intel_connector *conne=
-ctor)
-> > +{
-> > +       return false;
-> > +}
-> > +
-> > +static void
-> > +intel_privacy_screen_set_val(struct intel_connector *connector,
-> > +                            enum drm_privacy_screen_status val)
-> > +{ }
-> > +#endif /* CONFIG_ACPI */
-> > +
-> > +#endif /* __DRM_PRIVACY_SCREEN_H__ */
-> > --
-> > 2.25.1.481.gfbce0eb801-goog
+> > -     . = PAGE_OFFSET;
+> > +     . = CONFIG_PAGE_OFFSET;
 > >
+> >       .payload : {
+> >               *(.payload)
+> > diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+> > index 8ca1930caa44..af5810f9aebd 100644
+> > --- a/arch/riscv/include/asm/page.h
+> > +++ b/arch/riscv/include/asm/page.h
+> > @@ -31,9 +31,9 @@
+> >   * When not using MMU this corresponds to the first free page in
+> >   * physical memory (aligned on a page boundary).
+> >   */
+> > -#define PAGE_OFFSET          _AC(CONFIG_PAGE_OFFSET, UL)
+> > +#define PAGE_OFFSET          kernel_virt_addr
+>
+> I assume we want to keep PAGE_OFFSET a constant for the non-relocatable
+> systems.  As it currently stands this is imposing a performance hit even when
+>
+
+I had almost done the KASLR implementation on top of this patch.
+Actually, PAGE_OFFSET change is unnecessary in KASLR , because we
+would move kernel image to a random physical address as well, so the
+$pc will go to the relevant random virtual address. We need
+kernel_virt_addr to record the new destination, but keep PAGE_OFFSET
+to be CONFIG_PAGE_OFFSET is enough.
+
+> > -#define KERN_VIRT_SIZE (-PAGE_OFFSET)
+> > +#define KERN_VIRT_SIZE               (-_AC(CONFIG_PAGE_OFFSET, UL))
+>
+> This seems like it would cause issues if the kernel is relocated to high enough
+> addresses that "kernel_virt_addr+KERN_VIRT_SIZE" overflows.
+>
+
+Based on the same reason, keep KERN_VIRT_SIZE to be -PAGE_OFFSET is good.
+
+> >  #ifndef __ASSEMBLY__
+> >
+> > @@ -97,6 +97,7 @@ extern unsigned long pfn_base;
+> >  #define ARCH_PFN_OFFSET              (PAGE_OFFSET >> PAGE_SHIFT)
+> >  #endif /* CONFIG_MMU */
+> >
+> > +extern unsigned long kernel_virt_addr;
+> >  extern unsigned long max_low_pfn;
+> >  extern unsigned long min_low_pfn;
+> >
+> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> > index 271860fc2c3f..d792912c2da3 100644
+> > --- a/arch/riscv/kernel/head.S
+> > +++ b/arch/riscv/kernel/head.S
+> > @@ -131,7 +131,8 @@ clear_bss_done:
+> >  #ifdef CONFIG_MMU
+> >  relocate:
+> >       /* Relocate return address */
+> > -     li a1, PAGE_OFFSET
+> > +     la a1, kernel_virt_addr
+> > +     REG_L a1, 0(a1)
+> >       la a2, _start
+> >       sub a1, a1, a2
+> >       add ra, ra, a1
+> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> > index 1e0193ded420..5bf69e9b91e6 100644
+> > --- a/arch/riscv/kernel/vmlinux.lds.S
+> > +++ b/arch/riscv/kernel/vmlinux.lds.S
+> > @@ -4,7 +4,7 @@
+> >   * Copyright (C) 2017 SiFive
+> >   */
+> >
+> > -#define LOAD_OFFSET PAGE_OFFSET
+> > +#define LOAD_OFFSET CONFIG_PAGE_OFFSET
+> >  #include <asm/vmlinux.lds.h>
+> >  #include <asm/page.h>
+> >  #include <asm/cache.h>
+> > @@ -71,9 +71,11 @@ SECTIONS
+> >
+> >       EXCEPTION_TABLE(0x10)
+> >
+> > -     .rel.dyn : {
+> > -             *(.rel.dyn*)
+> > -     }
+> > +        .rela.dyn : ALIGN(8) {
+> > +             __rela_dyn_start = .;
+> > +                *(.rela .rela*)
+> > +             __rela_dyn_end = .;
+> > +        }
+>
+> It looks like the indentation is screwed up here: I see a mix of tabs/spaces
+> that doesn't match the rest of the file.
+>
+> >
+> >       _end = .;
+> >
+> > diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> > index 50b7af58c566..27593d362248 100644
+> > --- a/arch/riscv/mm/Makefile
+> > +++ b/arch/riscv/mm/Makefile
+> > @@ -1,6 +1,10 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >
+> >  CFLAGS_init.o := -mcmodel=medany
+> > +ifdef CONFIG_RELOCATABLE
+> > +CFLAGS_init.o += -fno-pie
+> > +endif
+> > +
+> >  ifdef CONFIG_FTRACE
+> >  CFLAGS_REMOVE_init.o = -pg
+> >  endif
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index 965a8cf4829c..428aee2669aa 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -12,6 +12,9 @@
+> >  #include <linux/sizes.h>
+> >  #include <linux/of_fdt.h>
+> >  #include <linux/libfdt.h>
+> > +#ifdef CONFIG_RELOCATABLE
+> > +#include <linux/elf.h>
+> > +#endif
+> >
+> >  #include <asm/fixmap.h>
+> >  #include <asm/tlbflush.h>
+> > @@ -28,6 +31,9 @@ EXPORT_SYMBOL(empty_zero_page);
+> >  extern char _start[];
+> >  void *dtb_early_va;
+> >
+> > +unsigned long kernel_virt_addr = _AC(CONFIG_PAGE_OFFSET, UL);
+> > +EXPORT_SYMBOL(kernel_virt_addr);
+> > +
+> >  static void __init zone_sizes_init(void)
+> >  {
+> >       unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+> > @@ -132,7 +138,8 @@ void __init setup_bootmem(void)
+> >               phys_addr_t end = reg->base + reg->size;
+> >
+> >               if (reg->base <= vmlinux_end && vmlinux_end <= end) {
+> > -                     mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+> > +                     mem_size = min(reg->size,
+> > +                                    (phys_addr_t)-kernel_virt_addr);
+>
+> PAGE_OFFSET is kernel_virt_addr, so I don't see any reason to change these --
+> they account for a significant fraction of the diff.
+>
+
+kernel_virt_addr would be assigned to a random destination by KASLR,
+but here still should be PAGE_OFFSET rather than kernel_virt_addr as
+mentioned above.
+
+> >                       /*
+> >                        * Remove memblock from the end of usable area to the
+> > @@ -269,7 +276,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
+> >       if (mmu_enabled)
+> >               return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> >
+> > -     pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> > +     pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
+
+Here is the same, please use PAGE_OFFSET instead of kernel_virt_addr.
+
+> >       BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+> >       return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+> >  }
+> > @@ -370,6 +377,54 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
+> >  #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
+> >  #endif
+> >
+> > +#ifdef CONFIG_RELOCATABLE
+> > +extern unsigned long __rela_dyn_start, __rela_dyn_end;
+> > +
+> > +#ifdef CONFIG_64BIT
+> > +#define Elf_Rela Elf64_Rela
+> > +#define Elf_Addr Elf64_Addr
+> > +#else
+> > +#define Elf_Rela Elf32_Rela
+> > +#define Elf_Addr Elf32_Addr
+> > +#endif
+> > +
+> > +void __init relocate_kernel(uintptr_t load_pa)
+> > +{
+> > +     Elf_Rela *rela = (Elf_Rela *)&__rela_dyn_start;
+> > +     uintptr_t link_addr = _AC(CONFIG_PAGE_OFFSET, UL);
+> > +     /*
+> > +      * This holds the offset between the linked virtual address and the
+> > +      * relocated virtual address.
+> > +      */
+> > +     uintptr_t reloc_offset = kernel_virt_addr - link_addr;
+> > +     /*
+> > +      * This holds the offset between linked virtual address and physical
+> > +      * address whereas va_pa_offset holds the offset between relocated
+> > +      * virtual address and physical address.
+> > +      */
+> > +     uintptr_t va_link_pa_offset = link_addr - load_pa;
+> > +
+> > +     for ( ; rela < (Elf_Rela *)&__rela_dyn_end; rela++) {
+> > +             Elf_Addr addr = (rela->r_offset - va_link_pa_offset);
+> > +             Elf_Addr relocated_addr = rela->r_addend;
+> > +
+> > +             if (rela->r_info != R_RISCV_RELATIVE)
+> > +                     continue;
+>
+> This should at least provide a warning when it encounters an unresolvable
+> relocation.  Is it currently stands this just ignores all other runtime
+> relocations, and while I can buy the argument there shouldn't be any (though
+> I'd expect R_RISCV_{32,64} to show up?) we certainly shouldn't just silently
+> skip them.
+>
+> > +
+> > +             /*
+> > +              * Make sure to not relocate vdso symbols like rt_sigreturn
+> > +              * which are linked from the address 0 in vmlinux since
+> > +              * vdso symbol addresses are actually used as an offset from
+> > +              * mm->context.vdso in VDSO_OFFSET macro.
+> > +              */
+> > +             if (relocated_addr >= link_addr)
+> > +                     relocated_addr += reloc_offset;
+> > +
+> > +             *(Elf_Addr *)addr = relocated_addr;
+> > +     }
+> > +}
+> > +#endif
+> > +
+> >  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >  {
+> >       uintptr_t va, end_va;
+> > @@ -377,9 +432,20 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >       uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+> >       uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+> >
+> > -     va_pa_offset = PAGE_OFFSET - load_pa;
+> > +     va_pa_offset = kernel_virt_addr - load_pa;
+> >       pfn_base = PFN_DOWN(load_pa);
+> >
+> > +#ifdef CONFIG_RELOCATABLE
+> > +     /*
+> > +      * Early page table uses only one PGDIR, which makes it possible
+> > +      * to map 1GB aligned on 1GB: if the relocation offset makes the kernel
+> > +      * cross over a 1G boundary, raise a bug since a part of the kernel
+> > +      * would not get mapped.
+> > +      */
+> > +     BUG_ON(SZ_1G - (kernel_virt_addr & (SZ_1G - 1)) < load_sz);
+> > +     relocate_kernel(load_pa);
+> > +#endif
+> > +
+> >       /*
+> >        * Enforce boot alignment requirements of RV32 and
+> >        * RV64 by only allowing PMD or PGD mappings.
+> > @@ -387,7 +453,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >       BUG_ON(map_size == PAGE_SIZE);
+> >
+> >       /* Sanity check alignment and size */
+> > -     BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
+> > +     BUILD_BUG_ON((_AC(CONFIG_PAGE_OFFSET, UL) % PGDIR_SIZE) != 0);
+> >       BUG_ON((load_pa % map_size) != 0);
+> >       BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
+> >
+> > @@ -400,13 +466,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >       create_pmd_mapping(fixmap_pmd, FIXADDR_START,
+> >                          (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
+> >       /* Setup trampoline PGD and PMD */
+> > -     create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> > +     create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+> >                          (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
+> > -     create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
+> > +     create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
+> >                          load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
+> >  #else
+> >       /* Setup trampoline PGD */
+> > -     create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> > +     create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+> >                          load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
+> >  #endif
+> >
+> > @@ -415,10 +481,10 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >        * us to reach paging_init(). We map all memory banks later
+> >        * in setup_vm_final() below.
+> >        */
+> > -     end_va = PAGE_OFFSET + load_sz;
+> > -     for (va = PAGE_OFFSET; va < end_va; va += map_size)
+> > +     end_va = kernel_virt_addr + load_sz;
+> > +     for (va = kernel_virt_addr; va < end_va; va += map_size)
+> >               create_pgd_mapping(early_pg_dir, va,
+> > -                                load_pa + (va - PAGE_OFFSET),
+> > +                                load_pa + (va - kernel_virt_addr),
+> >                                  map_size, PAGE_KERNEL_EXEC);
+> >
+> >       /* Create fixed mapping for early FDT parsing */
+> > @@ -457,9 +523,9 @@ static void __init setup_vm_final(void)
+> >                       break;
+> >               if (memblock_is_nomap(reg))
+> >                       continue;
+> > -             if (start <= __pa(PAGE_OFFSET) &&
+> > -                 __pa(PAGE_OFFSET) < end)
+> > -                     start = __pa(PAGE_OFFSET);
+> > +             if (start <= __pa_symbol(kernel_virt_addr) &&
+> > +                 __pa(kernel_virt_addr) < end)
+> > +                     start = __pa_symbol(kernel_virt_addr);
+
+Here is the same, please use PAGE_OFFSET instead of kernel_virt_addr.
+
+> >
+> >               map_size = best_map_size(start, end - start);
+> >               for (pa = start; pa < end; pa += map_size) {
