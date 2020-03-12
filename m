@@ -2,97 +2,123 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2E7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A858206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584025550;
-	bh=FbmUiVOA14nTP0Xhx1vi8oiKbCQV1kWtBDPOyRnEwCw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=irip1wiradQcFLHKJtcEvuD9MKwfrbqR0y67Y/rfh6lvX95yPRtzjvg9/Mrox6wGt
-	 NNrvyy5VQ0bR7Y8hnvu//jJuFBOwglkHDGZ1JcoFgt/H+EKUGk8kwQOXePxleCJA7v
-	 EOSyvQ1NifteCRNyfkJq/55g0DLlhZt2L4CKvGtk=
+	by mail.kernel.org (Postfix) with ESMTP id E15222067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="hG2lKuGO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgCLPFt (ORCPT
+        id S1727796AbgCLPGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 11:06:20 -0400
+Received: from web0081.zxcs.nl ([185.104.29.10]:56548 "EHLO web0081.zxcs.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgCLPFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:05:49 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FEE92067C;
-        Thu, 12 Mar 2020 15:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584025548;
-        bh=FbmUiVOA14nTP0Xhx1vi8oiKbCQV1kWtBDPOyRnEwCw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hooWW8c2eciNTDjHVxxKZfWyBN1INv++BQ+GWOeowSMvpkJh8+IzpAKfdS8SEV58z
-         wFTKR1dXTcpvxC6qRv91KI309ZZ84J3Z7i52g/tslhRT6wMzTZnHqyF51V4Xul5FuO
-         /hE/buEsOB64GvYZqEgvnKjnOYqAJjUYKydNz3Pw=
-Subject: Re: [PATCH] selftests/ftrace: Fix typo in trigger-multihist.tc
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masanari Iida <standby24x7@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200312040337.7631-1-standby24x7@gmail.com>
- <20200312092355.73d8c019@gandalf.local.home>
-From:   shuah <shuah@kernel.org>
-Message-ID: <4aee9c92-b83a-97ac-a9d7-242eb785cf2b@kernel.org>
-Date:   Thu, 12 Mar 2020 09:05:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727133AbgCLPGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:06:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
+        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=J6aDQGjkdfrS52YkEz3ek5dt906Ty2Nt38vKTDhn80w=; b=hG2lKuGOULLVa42qYNnOMiU+E+
+        1fF6zxRYgwLngJMFHPGArXhjerUxJQ3plKRZCO5TSTnVi+2Q8tQ6C+C6aNn40pyjspW7YwCzKMQpp
+        syAzO2hUtLaflC0V1kUwjCmFDeZWQlAgJ7edx0xUiyAyRK6Ve3MXMeFoqm/8SuhsGbjvvflanRDwi
+        uJZM+RCzqt5AIQOpws1Wm09byjKK1YZDLkylSTk29ub38ToQxSkCbjKk9IDDgGd0OfMXuFUP4xsVe
+        79E3bHRr3rpcvkxTdxEe+saXneBo447d07pKSoi/9Akj0hMmJk75kVHMFuA+GZIae8997/r68Trkv
+        7nt7VLxQ==;
+Received: from spamrelay.zxcs.nl ([185.104.28.12]:47086 helo=mail-slave02.zxcs.nl)
+        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jCPPT-002SyE-RZ; Thu, 12 Mar 2020 16:06:07 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200312092355.73d8c019@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 12 Mar 2020 16:06:07 +0100
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
+In-Reply-To: <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+ <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.2
+Message-ID: <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
+X-Sender: dev@pascalroeleven.nl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/20 7:23 AM, Steven Rostedt wrote:
-> On Thu, 12 Mar 2020 13:03:37 +0900
-> Masanari Iida <standby24x7@gmail.com> wrote:
+On 2020-03-12 14:29, Uwe Kleine-König wrote:
+> On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
+>> Hi all,
+>> 
+>> I am working on adding an old A10 device to mainline and noticed an 
+>> issue
+>> when testing on 5.5.8 vs master.
+>> 
+>> Since 5.6-rc1, I can't control the brightness of my LCD backlight 
+>> anymore.
+>> The backlight stays on full brightness instead. I am controlling the
+>> brightness value via sysfs for testing.
+>> 
+>> I am not sure if this is a general pwm-sun4i issue or if it is related 
+>> to
+>> the backlight. However I narrowed it down to one commit for pwm-sun4i:
+>> 
+>> fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+>> 
+>> If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
+>> master, the backlight works fine. Unfortunately, due to my lack of 
+>> kernel
+>> experience, I can't see how the commit above broke it.
 > 
->> This patch fix a spelling typo in trigger-multihist.tc
->>
->> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
->> ---
->>   .../selftests/ftrace/test.d/trigger/trigger-multihist.tc        | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc
->> index 18fdaab9f570..68ff3f45c720 100644
->> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc
->> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-multihist.tc
->> @@ -23,7 +23,7 @@ if [ ! -f events/sched/sched_process_fork/hist ]; then
->>       exit_unsupported
->>   fi
->>   
->> -echo "Test histogram multiple tiggers"
->> +echo "Test histogram multiple triggers"
+> Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
+> this. Looking at the output of
 > 
-> Winnie the Pooh will be upset.
+> 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> 
+> (i.e. ignoring whitespace changes) I don't see how the behaviour you're
+> reporting can be explained.
+> 
+> Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
+> commit?
+> 
+> Can you install a tool to inspect register values and check how the
+> affected registers change if you switch kernel versions and/or pwm
+> settings?
+> 
+> (e.g.
+> 	memtool md 0x1c20e00+0xc
+> )
+> 
+> Best regards
+> Uwe
 
-I recall one like this one a while back. :)
-> 
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> Shuah, want to take this?
-> 
+Thanks for your response.
 
-Yes. I will pull this in.
+Yes I am sure that is the commit. If I am on master, and replace 
+pwm-sun4i.c with the one from 5b090b43, everything works. If I then 
+apply fa4d8178, it stops working.
 
-thanks,
--- Shuah
+And strangely the output of the registers is exactly the same before and 
+after fa4d8178:
+
+01c20e00: 00000050 00130014 00000000 (full brightness)
+01c20e00: 00000050 00130006 00000000 (min brightness)
+
+Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the 
+issue.
