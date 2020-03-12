@@ -2,162 +2,120 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1216C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123AEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7A9206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F7A206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ArIUjTS2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aMq35+Ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgCLKjn (ORCPT
+        id S1726871AbgCLKkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:39:43 -0400
-Received: from mail-dm6nam11on2042.outbound.protection.outlook.com ([40.107.223.42]:65504
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726023AbgCLKjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:39:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cJ//0OxCNsTuWhvFb4ZnQgHAjrIFoINQgzVEBF93klN4rTvAU+m2yM+JwYFZTrNNy6bfyLgFt6Tb+GvXOh9IZaZZF+Yc2tCK6TyJMbkCWhBQaBAwXH0tpPp8mMkVor0AJ5YaQZVT9LLWqkL1yjuCrslzMSszPNz6/BesWhU5CEPELgd+iQmZa8b8pch8aAp3botQD2aIGeKt1DMDHXD2t0Izt7JHBOQ/HWk1yl0cfecnG1xTFDz638xebdYeeCdD1WGHqBTp4ethgEIvfILIs4INDmUrrHkjVMNUrzkJqDz5vaZTv4b5NEBLnvLBsHtwVGR+9IVhSC+1ndJDMuJ5tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fWlPjNv/NennGkA26zbaVAstC6MS7BJPLzel49z3I1c=;
- b=So1Bq24SCM9y7gTaltt8NCl7xLJD6BslokEMRk0CFhk1W1DmIdcTGLvgEuQaSvE7p5qQrvRjSiaV4JIvyzJKpyBfv+vrfmX6S1rJY4i0F60Hgy9PW6yZNxxmV58wwS+/sjxZecnM2lsox+5fYMC0auaXo9si4zS68qAcVdhCAGjwLlpdyqa6zZuRAp4B7jRMiaXHwnT/rKMKDzxTaHrUusj/8FAQyRYDptolqVLkqrAM3WPSNnVYJUOFSoa0VOn+LfvD6dwuZmBefukl+kl1HBB1QZhj/2DxLPtXa+lKtsrKq2/gqyPW4dhoFj46xETNyo6lH6X7Pwlz2hiCpTr7SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fWlPjNv/NennGkA26zbaVAstC6MS7BJPLzel49z3I1c=;
- b=ArIUjTS2LZaV9MH7grOJemnrIWTIb4zMgTY4Qjckm0ek8xUo31didVQpsuMqi0tGVqFbwwRa0TBfPkOCJxgrCijlmb/CLML046k/m+uEh5FW2Sr6Pt5o4a82BQZGTYwULOCBH/1Vpfh8rMFABZ2PJMGZ0HWoeoccZv2ISuK3QQs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (2603:10b6:5:1c4::14)
- by DM6PR12MB2812.namprd12.prod.outlook.com (2603:10b6:5:44::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Thu, 12 Mar
- 2020 10:39:38 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::2d84:ed9d:cba4:dcfd]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::2d84:ed9d:cba4:dcfd%3]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 10:39:37 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: [PATCH] kvm: svm: Introduce GA Log tracepoint for AVIC
-Date:   Thu, 12 Mar 2020 05:39:28 -0500
-Message-Id: <1584009568-14089-1-git-send-email-suravee.suthikulpanit@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: DM5PR2001CA0011.namprd20.prod.outlook.com
- (2603:10b6:4:16::21) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c4::14)
+        Thu, 12 Mar 2020 06:40:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30418 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725978AbgCLKko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 06:40:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584009643;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tq0ulOygpiuzF7J6PhCS00wRKj0wnRcrsFL7zpzSoFk=;
+        b=aMq35+EjHODEHuXXxrVIiRi23cvwhqnVfpojLYLZZwcxEuu5Pj5xgiGWj1TGK4U1U5e9F2
+        Ege44mgk2wN9SVtpNZ+OXSJHsve0uzorIEGonBDEJ43wBOQI26FeZ+f/3V8od5JfZFN/bj
+        i8bz+pu6vU07kHMA+v9ARdjXkuQfiB8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-Viv-ozaEMl2zNiQ8Mfl8ww-1; Thu, 12 Mar 2020 06:40:42 -0400
+X-MC-Unique: Viv-ozaEMl2zNiQ8Mfl8ww-1
+Received: by mail-wr1-f69.google.com with SMTP id i7so2414838wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:40:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tq0ulOygpiuzF7J6PhCS00wRKj0wnRcrsFL7zpzSoFk=;
+        b=qc5rgCHrusyOQfQ15F3DFTSUV+3A1FIkSmvbQ2y/n1rnhr+hsSNPN869eQcse8YHAk
+         IxG0YjYGOAzqyznRJ5zVh71RdQu3CpgiH/U/bYBKwiy3+AQofE1WMJJeLM2/QP4ya6P3
+         R9eN2dtShoT4qoINfh38Vg7l25kj2OnDvPFdM/IhO5ztqIKP1iarD7/OoxRRIYZVDf7p
+         EnCdpdGO4hzmCy38Mzo+JHf6GBjPLHv9FhAJnChEH8EW6I0LWrmR/Eeat3nBkoFoi0Gh
+         DWAyRKq0OdAKuZ1I79cD43Edc0/SusJUyeE4jI/tDF/8l0zQcG0gDaTSppPsHnFYl7vv
+         BNiw==
+X-Gm-Message-State: ANhLgQ1KhJBPufyRrUQ+TqZEE1b1zYCOk0ufNbEoXEjfZ9D837+i+jPy
+        bblQP90IfNJhBI6YxnAjxIwH9zcdDjZHqCoLAupIVhGHlb6MBcdITM0XuqEf9t1RxkE7PrHAd9U
+        edD920eDU97aNTJAjI/zXItbO
+X-Received: by 2002:a1c:7e08:: with SMTP id z8mr4041247wmc.166.1584009640758;
+        Thu, 12 Mar 2020 03:40:40 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vu6ccLDIECUJ4QzcC0ZWPgWFXvbh19qItJSE4oK0axsizvLpMS3bxMwAA/uv2s0UwqJY6ijRw==
+X-Received: by 2002:a1c:7e08:: with SMTP id z8mr4041227wmc.166.1584009640532;
+        Thu, 12 Mar 2020 03:40:40 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id o26sm11337897wmc.33.2020.03.12.03.40.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 03:40:39 -0700 (PDT)
+Subject: Re: [PATCH] fs: Fix missing 'bit' in comment
+To:     Chucheng Luo <luochucheng@vivo.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     wenhu.wang@vivo.com, trivial@kernel.org
+References: <20200312074037.25829-1-luochucheng@vivo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ed0f14ce-25f8-7ef7-54a6-6b3f9fa4bdfc@redhat.com>
+Date:   Thu, 12 Mar 2020 11:40:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ssuthiku-rhel7-ssp.amd.com (165.204.78.2) by DM5PR2001CA0011.namprd20.prod.outlook.com (2603:10b6:4:16::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 12 Mar 2020 10:39:37 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dcb947a3-853e-4140-a1a9-08d7c671a9a2
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2812:|DM6PR12MB2812:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB28120BDE5B7890772626263EF3FD0@DM6PR12MB2812.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(199004)(478600001)(4326008)(6666004)(86362001)(66556008)(66476007)(7696005)(316002)(81166006)(8676002)(81156014)(52116002)(2906002)(66946007)(5660300002)(6486002)(8936002)(16526019)(44832011)(956004)(2616005)(26005)(36756003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2812;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FTBOzwS2IHHTpztPexVQk/N6ATf/++RSt7ztOUaIl6sPxfJgWytBYaqGm7alOHLD7E5KaIltnmdwE2jfR9yT6sbNF6HlTtnARVvc+cqS8RrxUaZGYfpXzhoZM6TtSAGcLnuk4x+u7W8QNvf7u8+do3DYpqC6SR3d8IR8t7vMlVbxmdcZrYF5QvnnwYDsSQZTCh8dZMvZ5JBX6gTvuZcx/KtwfYhBgMxUZO0PhHin6COHQHtv3/JbKFbnVRcAd1ng5T2qrHx+zuLz7dAPSr2WnGJealFA7QE9IoVWhMSTeYE1qWJIuTi/hKf5HTHlCcOzc8QQphIQQSQmsF5a423xUF35V5Cv05RbIx/KM2pcksAVrv0hay3MIu6Nc0PXAu8QEk61mpudCqME8UdkzynfarWMN4iQ3aay3OI0ZsSGXybETmiGypqsp2UHEK3Y39RP
-X-MS-Exchange-AntiSpam-MessageData: R8KUGQeKjOTa73q16Alk48bpW+D3xqx7EtqMUsvyjRv6aPqgVVhJkw6oKKWY16CWKtV1ULzy2OSFszfoVtEJZCQ/onXO2OWgsYKAWBGEXp6fmrMRuVIR51o0FEbed9R5gU/Lo5Kc2Ue2VJlnDbjxXA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcb947a3-853e-4140-a1a9-08d7c671a9a2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 10:39:37.8294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8T0Dfc4NvYJL51OpFfP7ab+zzKldgvJyD8rkl2NfAfqe7YqXud21D+COqcbQbx2+wS7nISYb8BKkSgXHqPlBtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2812
+In-Reply-To: <20200312074037.25829-1-luochucheng@vivo.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GA Log tracepoint is useful when debugging AVIC performance
-issue as it can be used with perf to count the number of times
-IOMMU AVIC injects interrupts through the slow-path instead of
-directly inject interrupts to the target vcpu.
+Hi,
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
- arch/x86/kvm/svm.c   |  1 +
- arch/x86/kvm/trace.h | 18 ++++++++++++++++++
- arch/x86/kvm/x86.c   |  1 +
- 3 files changed, 20 insertions(+)
+On 3/12/20 8:40 AM, Chucheng Luo wrote:
+> The missing word may make it hard for other developers to
+> understand it.
+> 
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 24c0b2b..504f2cb 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1208,6 +1208,7 @@ static int avic_ga_log_notifier(u32 ga_tag)
- 	u32 vcpu_id = AVIC_GATAG_TO_VCPUID(ga_tag);
- 
- 	pr_debug("SVM: %s: vm_id=%#x, vcpu_id=%#x\n", __func__, vm_id, vcpu_id);
-+	trace_kvm_avic_ga_log(vm_id, vcpu_id);
- 
- 	spin_lock_irqsave(&svm_vm_data_hash_lock, flags);
- 	hash_for_each_possible(svm_vm_data_hash, kvm_svm, hnode, vm_id) {
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index f194dd0..023de6c 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -1367,6 +1367,24 @@
- 		  __entry->vec)
- );
- 
-+TRACE_EVENT(kvm_avic_ga_log,
-+	    TP_PROTO(u32 vmid, u32 vcpuid),
-+	    TP_ARGS(vmid, vcpuid),
-+
-+	TP_STRUCT__entry(
-+		__field(u32, vmid)
-+		__field(u32, vcpuid)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vmid = vmid;
-+		__entry->vcpuid = vcpuid;
-+	),
-+
-+	TP_printk("vmid=%u, vcpuid=%u",
-+		  __entry->vmid, __entry->vcpuid)
-+);
-+
- TRACE_EVENT(kvm_hv_timer_state,
- 		TP_PROTO(unsigned int vcpu_id, unsigned int hv_timer_in_use),
- 		TP_ARGS(vcpu_id, hv_timer_in_use),
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5de2006..ef38b82 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10514,4 +10514,5 @@ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pi_irte_update);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_unaccelerated_access);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_incomplete_ipi);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_ga_log);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_apicv_update_request);
--- 
-1.8.3.1
+Thanks for catching this:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> ---
+>   fs/vboxsf/dir.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/vboxsf/dir.c b/fs/vboxsf/dir.c
+> index dd147b490982..be4f72625d36 100644
+> --- a/fs/vboxsf/dir.c
+> +++ b/fs/vboxsf/dir.c
+> @@ -134,7 +134,7 @@ static bool vboxsf_dir_emit(struct file *dir, struct dir_context *ctx)
+>   		d_type = vboxsf_get_d_type(info->info.attr.mode);
+>   
+>   		/*
+> -		 * On 32 bit systems pos is 64 signed, while ino is 32 bit
+> +		 * On 32 bit systems pos is 64 bit signed, while ino is 32 bit
+>   		 * unsigned so fake_ino may overflow, check for this.
+>   		 */
+>   		if ((ino_t)(ctx->pos + 1) != (u64)(ctx->pos + 1)) {
+> 
 
