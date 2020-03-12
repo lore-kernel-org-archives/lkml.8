@@ -2,95 +2,101 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A76C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0160C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B88B206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584047969;
-	bh=1HD/Om0mHjMpCNjlBRUpRXFwLr7BbhtgLlAQe1RftCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A0gUrzDC14EVn/mxCf+nAM1UXPGAbfkj9yP7jrIC5L2F6MkZEopJsGo9vH+FqcDbT
-	 FrLUIKYtkRPPiBqeMGldZD798ni3CdAbl8M3NR1TJABl5o2bJE0tvqZ2Fwd1fKt5NZ
-	 SlbRq1BmR6sELiGdbuWM/FZFjoOjkoUbyhJk1sOo=
+	by mail.kernel.org (Postfix) with ESMTP id A39D8206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgCLVT2 (ORCPT
+        id S1726557AbgCLVVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:19:28 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41719 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCLVT2 (ORCPT
+        Thu, 12 Mar 2020 17:21:15 -0400
+Received: from smtprelay0104.hostedemail.com ([216.40.44.104]:42886 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726442AbgCLVVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:19:28 -0400
-Received: by mail-qk1-f193.google.com with SMTP id b5so8852818qkh.8;
-        Thu, 12 Mar 2020 14:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JTXt1OEkKePago7QylMBAyiYQ7S4tVDId/6muJlv8kg=;
-        b=WDSCCAorJeZ6KuiLgpb2NOSuo5qVP6GWOxv/Q3FR28T2zL7W+mcqNlfnGGZhnDWjJc
-         FbZic2wgZZBaJR4YRNQSIU1F7PdbMnH7lg5OIEUOQuGEYXKc3nFeMbkcZyc/3GBYpteA
-         8I1D7Ld0Ly3b1oXygzubVBMi69vuzBm+ilXd+LUMJx279TKgeV/XMGmyZGfatd8/qv+c
-         dVGuv+qOx23jt+V0u+FdAv69c0ytBhKqK8LKxHlGISNGM/YYv8fdSgL7VRpOvFiGsK87
-         4VUhQ8APCO0bRvlsbyb6gdOpwfnTHjJ2nuAaWaRjR4Olio4yjE4sifW/bgIOjL0SCgwv
-         IXkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=JTXt1OEkKePago7QylMBAyiYQ7S4tVDId/6muJlv8kg=;
-        b=blQ5FdEn9sWcCGasb5yQvUb+/930u7q67SPMcIEjUWTEOVefx47ErJyOXbIWuopN6n
-         mJ9u9eQMK+RkXcEVCSR8djcm0OiWCa2SeEU+U2qZcy7PuKDbl4xzgKBkOdxggbw3HstJ
-         1bLki5qsiCcMxU4E1IWqhxkI5gPmkLm3fLuViXEsU0lHTqrcYl/jvlUHgQT44KCuRuta
-         5BQhZPq4kynUiVnv3KHHTHhApgYSJuWwDJaU2mzogcVbwU2TaqTWIKYHiKYb7Kf5ZAmo
-         eGq+b53bT0kp2PEUa9WJmFy+Ws96lJNE8ULtXjlctpQyhipTF+Fet/DOv41CNxDhLP4o
-         FeNg==
-X-Gm-Message-State: ANhLgQ0NwxWkE5bJ4ruNZ1cdWxyhlc8fX8FyykOV6+3pYGGBpWb4kXlM
-        I81kA70Y2Sny65X0hiEKWhc=
-X-Google-Smtp-Source: ADFU+vtLQ4Uz70cBIlKU4EfvGH0QxhB+QttLTVZQ6WocnigSOkUapTHzj1v5eXA4FAacFoogpLM6vw==
-X-Received: by 2002:a37:8b45:: with SMTP id n66mr9701127qkd.380.1584047966472;
-        Thu, 12 Mar 2020 14:19:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::25ed])
-        by smtp.gmail.com with ESMTPSA id b8sm21267063qte.52.2020.03.12.14.19.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 14:19:25 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:19:24 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     gregkh@linuxfoundation.org, Daniel Xu <dxu@dxuuu.xyz>
-Cc:     cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
-        viro@zeniv.linux.org.uk, shakeelb@google.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v3 0/4] Support user xattrs in cgroupfs
-Message-ID: <20200312211924.GB1967398@mtj.thefacebook.com>
-References: <20200312200317.31736-1-dxu@dxuuu.xyz>
- <20200312211735.GA1967398@mtj.thefacebook.com>
+        Thu, 12 Mar 2020 17:21:15 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 2207A1816BE33;
+        Thu, 12 Mar 2020 21:21:14 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: stew28_aaaec86c541a
+X-Filterd-Recvd-Size: 3490
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 12 Mar 2020 21:21:13 +0000 (UTC)
+Message-ID: <dbfc7f174e4c75b74ca105e565cd3cba57b9ae73.camel@perches.com>
+Subject: Re: [PATCH] Change email address for Pali =?ISO-8859-1?Q?Roh=E1r?=
+From:   Joe Perches <joe@perches.com>
+To:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 12 Mar 2020 14:19:29 -0700
+In-Reply-To: <20200312211526.oahg6mdbvkxlkezi@pali>
+References: <20200307104237.8199-1-pali@kernel.org>
+         <20200312211526.oahg6mdbvkxlkezi@pali>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312211735.GA1967398@mtj.thefacebook.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 05:17:35PM -0400, Tejun Heo wrote:
-> Greg, provided that there aren't further objections, how do you wanna
-> route the patches? I'd be happy to take them through cgroup tree but
-> any tree is fine by me.
+On Thu, 2020-03-12 at 22:15 +0100, Pali Rohár wrote:
+> On Saturday 07 March 2020 11:42:37 Pali Rohár wrote:
+> > For security reasons I stopped using gmail account and kernel address is
+> > now up-to-date alias to my personal address.
+> > 
+> > People periodically send me emails to address which they found in source
+> > code of drivers, so this change reflects state where people can contact me.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> 
+> Greg, could you or someone else help me where to (re)send this patch?
+> MAINTAINERS file does not specify who is maintainer of MAINTAINERS file
+> itself and scripts/get_maintainer.pl did not help me too. Main entry is
+> LKML list.
 
-Ooh, in case they get routed thorugh another tree, for the whole
-series:
+MAINTAINERS has no maintainer.  It's updated by many.
+Andrew Morton sometimes picks up patches like this.
+As a last resort, you could sent the patch to Linus Torvalds.
 
-  Acked-by: Tejun Heo <tj@kernel.org>
+> As this change is across more subsystems I do not know who can take such
+> patch and I do not thing it make sense to split such change into more
+> patches (one for each subsystem).
 
-Thanks.
+You should add a .mailmap entry too.
 
--- 
-tejun
+> >  .../ABI/testing/sysfs-platform-dell-laptop       |  8 ++++----
+> >  MAINTAINERS                                      | 16 ++++++++--------
+> >  arch/arm/mach-omap2/omap-secure.c                |  2 +-
+> >  arch/arm/mach-omap2/omap-secure.h                |  2 +-
+> >  arch/arm/mach-omap2/omap-smc.S                   |  2 +-
+> >  drivers/char/hw_random/omap3-rom-rng.c           |  4 ++--
+> >  drivers/hwmon/dell-smm-hwmon.c                   |  4 ++--
+> >  drivers/platform/x86/dell-laptop.c               |  4 ++--
+> >  drivers/platform/x86/dell-rbtn.c                 |  4 ++--
+> >  drivers/platform/x86/dell-rbtn.h                 |  2 +-
+> >  drivers/platform/x86/dell-smbios-base.c          |  4 ++--
+> >  drivers/platform/x86/dell-smbios-smm.c           |  2 +-
+> >  drivers/platform/x86/dell-smbios.h               |  2 +-
+> >  drivers/platform/x86/dell-smo8800.c              |  2 +-
+> >  drivers/platform/x86/dell-wmi.c                  |  4 ++--
+> >  drivers/power/supply/bq2415x_charger.c           |  4 ++--
+> >  drivers/power/supply/bq27xxx_battery.c           |  2 +-
+> >  drivers/power/supply/isp1704_charger.c           |  2 +-
+> >  drivers/power/supply/rx51_battery.c              |  4 ++--
+> >  fs/udf/ecma_167.h                                |  2 +-
+> >  fs/udf/osta_udf.h                                |  2 +-
+> >  include/linux/power/bq2415x_charger.h            |  2 +-
+> >  tools/laptop/freefall/freefall.c                 |  2 +-
+> >  23 files changed, 41 insertions(+), 41 deletions(-)
+
