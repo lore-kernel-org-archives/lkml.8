@@ -2,143 +2,138 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E62C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0921CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A16A2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584030780;
-	bh=XLGjcGJfXkG7wsiKKKJrzQ3EFH/yCmYimdREZIuU5R4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RFYyrgL/777bd0zxcCZ6eIC3uHuLWxs7rPurSPko51m1SGiItlHjRlQ9vTvJerY/L
-	 3w6RMgTJNFKBfUXsX2yEtLu22yU/SZB3P79/OsXl/DyuA28x9kuRSdEgV+B4t3zbda
-	 GmOhhWimAC2Egnn0sLOJdEKzG7pNBq3t8F82FBNc=
+	by mail.kernel.org (Postfix) with ESMTP id CBCE22067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:36:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UErATaGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCLQc7 (ORCPT
+        id S1726426AbgCLQgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgCLQc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:32:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 12 Mar 2020 12:36:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24223 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726099AbgCLQgJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 12:36:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584030968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y+zp8ckYFu/JE3Ap00+bCw6jAqD/T1e+8NMqLw5Uqes=;
+        b=UErATaGzAcf/lGH3fWkC1GNLZPTFnN9qkFNSuXvyEQQemLULSV7JUKtv8X3WL/7jv4cKQ8
+        osM5ecNVPNV1xs8P9l48Yb2BUDTFoa9/t+snklxa8jV4nMch6SQf5cpXV1wGpAlBy+456H
+        MTMqqitMhaJEZa79I0/+IbzN0eVxAxI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-UwYhNdmiPAqUzi-XPWcEPg-1; Thu, 12 Mar 2020 12:36:06 -0400
+X-MC-Unique: UwYhNdmiPAqUzi-XPWcEPg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4013A206FA;
-        Thu, 12 Mar 2020 16:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584030776;
-        bh=XLGjcGJfXkG7wsiKKKJrzQ3EFH/yCmYimdREZIuU5R4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rSkqIGqWdh5Up9ovvgEtHEBobVk1tIXLJXKMrKeaDLNar8pUG9/IMQ9uL9Tqoj3pk
-         l0ykdSXvxzZN7vBXuqrzDJFDUGiIQwc0kwESpxLD/qFmGHTz/i8phn/unQ+UtVqPZE
-         YBlKe91+DyoQoNVyjKM8oBY1+nREOZJhde3GYGA8=
-Date:   Thu, 12 Mar 2020 17:32:53 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        mausb-host-devel <mausb-host-devel@displaylink.com>
-Subject: Re: [PATCH v3 1/8] usb: Add MA-USB Host kernel module
-Message-ID: <20200312163253.GA435313@kroah.com>
-References: <efe5dbe1-4bd7-43cb-1eea-b6b999dd15e6@displaylink.com>
- <20200312152037.GA383349@kroah.com>
- <a950d4e0-b9e6-ef44-9c83-35958154b36f@displaylink.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90D63DBA3;
+        Thu, 12 Mar 2020 16:36:04 +0000 (UTC)
+Received: from fuller.cnet (ovpn-116-59.gru2.redhat.com [10.97.116.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38D6D19C6A;
+        Thu, 12 Mar 2020 16:36:04 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id CEDAF418CC02; Thu, 12 Mar 2020 13:17:51 -0300 (-03)
+Date:   Thu, 12 Mar 2020 13:17:51 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] cpuidle-haltpoll: allow force loading on hosts
+ without the REALTIME hint
+Message-ID: <20200312161751.GA5245@fuller.cnet>
+References: <20200304113248.1143057-1-mail@maciej.szmigiero.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a950d4e0-b9e6-ef44-9c83-35958154b36f@displaylink.com>
+In-Reply-To: <20200304113248.1143057-1-mail@maciej.szmigiero.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 05:23:53PM +0100, Vladimir Stankovic wrote:
-> On 12.3.20. 16:20, Greg KH wrote:
-> > On Thu, Mar 12, 2020 at 03:42:30PM +0100, Vladimir Stankovic wrote:
-> >  > Added utility macros, kernel device creation and cleanup, functions for
-> >  > handling log formatting and a placeholder module for MA-USB Host device
-> >  > driver.
-> >  >
-> >  > Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-> >  > ---
-> >  > MAINTAINERS | 7 +++
-> >  > drivers/usb/Kconfig | 2 +
-> >  > drivers/usb/Makefile | 2 +
-> >  > drivers/usb/mausb_host/Kconfig | 14 +++++
-> >  > drivers/usb/mausb_host/Makefile | 12 ++++
-> >  > drivers/usb/mausb_host/mausb_core.c | 90 +++++++++++++++++++++++++++++
-> >  > drivers/usb/mausb_host/utils.c | 85 +++++++++++++++++++++++++++
-> >  > drivers/usb/mausb_host/utils.h | 40 +++++++++++++
-> >  > 8 files changed, 252 insertions(+)
-> >  > create mode 100644 drivers/usb/mausb_host/Kconfig
-> >  > create mode 100644 drivers/usb/mausb_host/Makefile
-> >  > create mode 100644 drivers/usb/mausb_host/mausb_core.c
-> >  > create mode 100644 drivers/usb/mausb_host/utils.c
-> >  > create mode 100644 drivers/usb/mausb_host/utils.h
-> >  >
-> >  > diff --git a/MAINTAINERS b/MAINTAINERS
-> >  > index 235ab38ed478..12aac44196d7 100644
-> >  > --- a/MAINTAINERS
-> >  > +++ b/MAINTAINERS
-> >  > @@ -10226,6 +10226,13 @@ W: https://linuxtv.org <https://linuxtv.org>
-> >  > S: Maintained
-> >  > F: drivers/media/radio/radio-maxiradio*
-> >  > +MA USB HOST DRIVER
-> >  > +M: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-> >  > +L: mausb-host-devel@displaylink.com
-> >  > +W: https://www.displaylink.com <https://www.displaylink.com>
-> >  > +S: Maintained
-> >  > +F: drivers/usb/mausb_host/*
-> >  > +
-> >  > MCAN MMIO DEVICE DRIVER
-> >  > M: Dan Murphy <dmurphy@ti.com>
-> >  > M: Sriram Dash <sriram.dash@samsung.com>
-> > 
-> > Does that patch look correct?
-> > 
-> > Does this apply?
-> > 
-> > Something is odd here :(
-> > 
-> > 
-> >  > diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-> >  > index 275568abc670..4e92f1fa0fa5 100644
-> >  > --- a/drivers/usb/Kconfig
-> >  > +++ b/drivers/usb/Kconfig
-> >  > @@ -164,6 +164,8 @@ source "drivers/usb/misc/Kconfig"
-> >  > source "drivers/usb/atm/Kconfig"
-> >  > +source "drivers/usb/mausb_host/Kconfig"
-> >  > +
-> >  > endif # USB
-> >  > source "drivers/usb/phy/Kconfig"
-> > 
-> > Yeah, something is really wrong with your email client :(
-> > 
-> > Can you use 'git send-email' to send all of these out so they do not get
-> > corrupted?
-> > 
-> > That will also fix the lack of email threading which this series still
-> > has as well.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> I'd say it's the issue with mail server used by company, since patches and
-> mails were generated via git (i.e. used git imap-send to create mail
-> drafts). One of the reasons we've sent attachments in the first version of
-> the patch was to avoid weird mail client/server issues.
+On Wed, Mar 04, 2020 at 12:32:48PM +0100, Maciej S. Szmigiero wrote:
+> From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+> 
+> Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
+> when dedicated physical CPUs are available") the cpuidle-haltpoll driver
+> could also be used in scenarios when the host does not advertise the
+> KVM_HINTS_REALTIME hint.
+> 
+> While the behavior introduced by the aforementioned commit makes sense as
+> the default there are cases where the old behavior is desired, for example,
+> when other kernel changes triggered by presence by this hint are unwanted,
+> for some workloads where the latency benefit from polling overweights the
+> loss from idle CPU capacity that otherwise would be available, or just when
+> running under older Qemu versions that lack this hint.
+> 
+> Let's provide a typical "force" module parameter that allows restoring the
+> old behavior.
+> 
+> Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+> ---
+>  drivers/cpuidle/cpuidle-haltpoll.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> Changes from v1:
+> Make the module parameter description more general, don't unnecessarily
+> break a line in haltpoll_init().
+> 
+> diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+> index b0ce9bc78113..db124bc1ca2c 100644
+> --- a/drivers/cpuidle/cpuidle-haltpoll.c
+> +++ b/drivers/cpuidle/cpuidle-haltpoll.c
+> @@ -18,6 +18,10 @@
+>  #include <linux/kvm_para.h>
+>  #include <linux/cpuidle_haltpoll.h>
+>  
+> +static bool force __read_mostly;
+> +module_param(force, bool, 0444);
+> +MODULE_PARM_DESC(force, "Load unconditionally");
+> +
+>  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+>  static enum cpuhp_state haltpoll_hp_state;
+>  
+> @@ -90,6 +94,11 @@ static void haltpoll_uninit(void)
+>  	haltpoll_cpuidle_devices = NULL;
+>  }
+>  
+> +static bool haltpool_want(void)
+> +{
+> +	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
+> +}
+> +
+>  static int __init haltpoll_init(void)
+>  {
+>  	int ret;
+> @@ -101,8 +110,7 @@ static int __init haltpoll_init(void)
+>  
+>  	cpuidle_poll_state_init(drv);
+>  
+> -	if (!kvm_para_available() ||
+> -		!kvm_para_has_hint(KVM_HINTS_REALTIME))
+> +	if (!kvm_para_available() || !haltpool_want())
+>  		return -ENODEV;
+>  
+>  	ret = cpuidle_register_driver(drv);
 
-If this is an Exchange server, you can give up now, they are known to
-corrupt patches.  There is some "magic" settings you can do to the
-server, but personally I do not know what they are.
+Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
-good luck!
-
-greg k-h
