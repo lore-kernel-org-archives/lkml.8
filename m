@@ -2,103 +2,135 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95469C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB21C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E62520578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584003356;
-	bh=6SJ9ezsUkboLt87ukZwiXOGJD9tIGO3OCl7CiC9dJZc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=B8XXTDnAtWkDsUgcnKEAgKbw8WnleTtiAKbevdFTpsISt7aClg4McBktXduuNSLiK
-	 hqROQm40uzEWS/FI/LoB51N2WG3/mrco2TUimjSCFMAwexbAQCqPyYiG6sWNPYTmHd
-	 eWcaWIWDfkGn8lga7E5avLhBFGyohTVHWWaBOvO4=
+	by mail.kernel.org (Postfix) with ESMTP id 2E4D920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCLIzz (ORCPT
+        id S1726582AbgCLIz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgCLIzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:55:54 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1230320578;
-        Thu, 12 Mar 2020 08:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584003354;
-        bh=6SJ9ezsUkboLt87ukZwiXOGJD9tIGO3OCl7CiC9dJZc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oKP6ts5JB9e+zG8fRtj5hLtEWt+4qXnFkcCdGKxhF2OXJup1kiv/BFSa/KqWB5gJt
-         P7aaB/sDNWfbHIhGSMQICdVNwkZqbMXxDaUBgFXcjJgJhXVnONJH+/cjyVqts9TRIZ
-         tgHbHaVwqCffhO+xMJR/L8CYAzTNm2uYEbcYA6RE=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jCJdA-00CADA-Bd; Thu, 12 Mar 2020 08:55:52 +0000
+        Thu, 12 Mar 2020 04:55:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39716 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgCLIz7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 04:55:59 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 47F8C29642E
+Subject: Re: [PATCH] ASoC: dt-bindings: google,cros-ec-codec: Fix dtc warnings
+ in example
+To:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Benson Leung <bleung@chromium.org>, alsa-devel@alsa-project.org
+References: <20200311205841.2710-1-robh@kernel.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d6c612db-d4fd-e0e5-aff0-c3963322830c@collabora.com>
+Date:   Thu, 12 Mar 2020 09:55:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200311205841.2710-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Mar 2020 08:55:52 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Sunil Goutham <sgoutham@cavium.com>,
-        Jan Glauber <jglauber@cavium.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: Re: CN80xx (octeontx/thunderx) breakage from f2d8340
-In-Reply-To: <CAJ+vNU0qVnCkWpG_NKNQTdYf5LJpRrgOeWX0xH=GgavKJ1QNwg@mail.gmail.com>
-References: <CAJ+vNU0qVnCkWpG_NKNQTdYf5LJpRrgOeWX0xH=GgavKJ1QNwg@mail.gmail.com>
-Message-ID: <0c3c16c770d21e5ad2276c83feb27ce4@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tharvey@gateworks.com, linux-kernel@vger.kernel.org, david.daney@cavium.com, sgoutham@cavium.com, jglauber@cavium.com, rrichter@marvell.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
+Hi Rob,
 
-On 2020-03-11 20:17, Tim Harvey wrote:
-> Marc,
+On 11/3/20 21:58, Rob Herring wrote:
+> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
+> when building the binding examples. These were fixed treewide in
+> 5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
+> warnings:
 > 
-> Im seeing a failure to boot on an octeontx CN80xx (thunderx) due to
-> f2d8340 ("irqchip/gic-v3: Add GICv4.1 VPEID size discovery"). I'm not
-> sure if something is hanging, I just get no console output from the
-> kernel.
-
-That's odd. It probably means that a SError has been taken to EL3,
-and the firmware is not equipped to deal with it. Great stuff!
-
-> Is there perhaps something in the dt that requires change? The
-> board/dts I'm using is:
-> https://github.com/Gateworks/dts-newport/blob/sdk-10.1.1.0-newport/gw6404-linux.dts
-> https://github.com/Gateworks/dts-newport/blob/sdk-10.1.1.0-newport/gw640x-linux.dtsi
-> https://github.com/Gateworks/dts-newport/blob/sdk-10.1.1.0-newport/cn81xx-linux.dtsi
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:17.28-21.11:
+> Warning (unit_address_vs_reg): /example-0/reserved_mem: node has a reg or ranges property, but no unit name
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:22.19-32.11:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg property
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.37-31.15:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
 > 
-> Any ideas? I've cc'd the Cavium/Marvell folk to see if they know
-> what's up or can reproduce on some of their hardware.
+> Fixing the above, then results in:
+> 
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.13-23:
+> Warning (reg_format): /example-0/cros-ec@0:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:27.37-32.15:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
+> 
+> Fixes: eadd54c75f1e ("dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.")
+> Cc: Cheng-Yi Chiang <cychiang@chromium.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-This is most probably Cavium erratum 38539. Please give [1] a go and
-let me know whether it helps by replying to the patch.
+Just a minor nit, but the patch looks good to me, so:
 
-Thanks,
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-         M.
 
-[1] https://lore.kernel.org/lkml/20200311115649.26060-1-maz@kernel.org/
--- 
-Jazz is not dead. It just smells funny...
+> ---
+>  .../bindings/sound/google,cros-ec-codec.yaml  | 27 +++++++++++--------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> index 94a85d0cbf43..c84e656afb0a 100644
+> --- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> +++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> @@ -44,19 +44,24 @@ additionalProperties: false
+>  
+>  examples:
+>    - |
+> -    reserved_mem: reserved_mem {
+> +    reserved_mem: reserved-mem@52800000 {
+>          compatible = "shared-dma-pool";
+> -        reg = <0 0x52800000 0 0x100000>;
+> +        reg = <0x52800000 0x100000>;
+>          no-map;
+>      };
+> -    cros-ec@0 {
+> -        compatible = "google,cros-ec-spi";
+> -        #address-cells = <2>;
+> -        #size-cells = <1>;
+> -        cros_ec_codec: ec-codec {
+> -            compatible = "google,cros-ec-codec";
+> -            #sound-dai-cells = <1>;
+> -            reg = <0x0 0x10500000 0x80000>;
+> -            memory-region = <&reserved_mem>;
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            reg = <0>;
+> +            cros_ec_codec: ec-codec@10500000 {
+
+nit: shouldn't this be just codec@105500000 to match the class? However I am not
+sure codec is a class itself.
+
+> +                compatible = "google,cros-ec-codec";
+> +                #sound-dai-cells = <1>;
+> +                reg = <0x0 0x10500000 0x80000>;
+> +                memory-region = <&reserved_mem>;
+> +            };
+>          };
+>      };
+> 
