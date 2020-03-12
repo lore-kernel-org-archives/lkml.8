@@ -6,85 +6,115 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2E0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A9C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0C420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFF820746
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W5qnSI/R"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="TfmuNTiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCLODC (ORCPT
+        id S1727447AbgCLODa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:03:02 -0400
-Received: from mail-vs1-f42.google.com ([209.85.217.42]:46533 "EHLO
-        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727208AbgCLODB (ORCPT
+        Thu, 12 Mar 2020 10:03:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35229 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbgCLODa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:03:01 -0400
-Received: by mail-vs1-f42.google.com with SMTP id z125so3712999vsb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:03:01 -0700 (PDT)
+        Thu, 12 Mar 2020 10:03:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d5so7284857wrc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zysX7qFYbDmKJo1IBHQgRnNsdUs6tucfRVl/03d4EcI=;
-        b=W5qnSI/Rg0ZpnMoMIiQQtG0u9dC1a/NQIbHDTXYIkkmXZZcZs1lK35lotXl9zI5pWJ
-         ZZwXZQBDjrM1oXrZUVmcKtxELuB/ObXSHOf9yWdc8/XKWubpMLJT7oRw+/8hzeFoXXCj
-         4yoeFjDy/nUvwESGvlU5Flp0B+WlbF5K38vJSbihp1dvbW5Dtagu41V3FckxTySnhCT8
-         3wu0ApE+Dd/SCAXVa3gRog6dttNgafLHj1kT8g4/qxsiqeSaa2dETBg0ctXC0Kctu33B
-         zvk7aHYJA1ScC6ORBhWua4g+l334oiY4UCA/anZJABiDZpT+2vEGPiLV2Ab5hfBILRsM
-         0dbg==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gZ8EzvWOoYPssGlE3Bc08q7j/BuTfnqODyWmkhQlWkA=;
+        b=TfmuNTiDZFVaKt1FsbjC8KD47kKTzeJiW0a5jYgMkGEHRDgSlpXWqwgP9A7Gf33Eld
+         aml8lOwBZNhMGI52wgky/dJ3sd2Cvhad5IH02L91tKg6lIeYC0MhdZ2sdzNY2oSomsNY
+         /ZHFB9z2P8NlaXCugSOWKuHmS2oJd8Dx2iKz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zysX7qFYbDmKJo1IBHQgRnNsdUs6tucfRVl/03d4EcI=;
-        b=X9iTStjNayjGRsrBbpJa7K+rs+5FWZ8PtvtapCaOwCWUU1fYls4Gpc2E+xE0bR3Gq9
-         XqbxD67IVlGeuESY/o9r7EWMiDCiFpLIi61k8xil+IDZEFBIVboSGyVO32Jj2rVbYnqh
-         P0WlG+OMMolOt5gV2Lfo/d/kIffVI+i3V364In2EqpVJIv0uOJ8GbxmjMPY5CbYEEHad
-         odLa5BEaRnG8ufyzKyFoVanlb1INn383AFsL0EQitmUj7HHP5xDYK+RXDmxuvmbVrdGW
-         WmHJaBtiRLCALowJYXG891c/bJiQ0utQojDCWkWleJeUIeOOiDaEcWpR/PjNaAHg5K4d
-         6aiQ==
-X-Gm-Message-State: ANhLgQ3b6Gs4y6eqR65j/m30B7gWaV072DoAv68/faLghLPHRijsmnTF
-        jVJwBcdf6HJ0dLWGp54o0KbgUh8ohdChTBVr0N92Ng==
-X-Google-Smtp-Source: ADFU+vt7EeOnJ+ZBCw5gB9SsNeP/gX+fSmg9aGBxAPxWxdByZ4i/8Gty9RCQLLokH1QngmeCcUeS/Onx+U3JOvHW0kw=
-X-Received: by 2002:a67:7c8f:: with SMTP id x137mr4767187vsc.99.1584021780188;
- Thu, 12 Mar 2020 07:03:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gZ8EzvWOoYPssGlE3Bc08q7j/BuTfnqODyWmkhQlWkA=;
+        b=RBKTVZX+oH9D1ASyF1L6jbHhKJjixBSuk5pcmjXPOXrYIkqsUOCDAvHCWN3UC9SnDR
+         zqRpxwTcGsfV4xMbtjRlAH9QNkPPMvnTKI+yKJVArNZYyPLypQAjOK756qxmn0xiAHce
+         Znb3D9Oyu/kjzshjr7Ia8MCvIU+JBI9Rjoq6ynAqa1ExNZBOVLdfdvdX04kOzNIBiX7O
+         okMNWkBDyPgWpHh05IJddpchfAgnwehjN6VHXcgvHJYiJmK13JNpLn9GG67xTso+RHqD
+         aXH5ZiLM95XHA/p9TWyFDOxO1yreQrU53WtPbu1n66rfpWy+hO+eysDiX9Ym4poKO4Hp
+         eILw==
+X-Gm-Message-State: ANhLgQ2UN8rWVBNmPyTRW5RKf4BZzyAcYro1GE2MS9VhlTn3yCAxthSo
+        pyEvSpOzmGGUDDAFURjsmXY+rg==
+X-Google-Smtp-Source: ADFU+vv1/ATpkRSO8dO42Isg6QmWT0wIt5OWthWLFxdkk6d8XZ/NFK6+zJf5AKfIuiiU1XmqFp5T9A==
+X-Received: by 2002:adf:b3d6:: with SMTP id x22mr10936079wrd.242.1584021808040;
+        Thu, 12 Mar 2020 07:03:28 -0700 (PDT)
+Received: from localhost ([89.32.122.5])
+        by smtp.gmail.com with ESMTPSA id d63sm12680261wmd.44.2020.03.12.07.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 07:03:27 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 14:03:26 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        David Rientjes <rientjes@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "oneukum@suse.com" <oneukum@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm/vmscan: add vm_swappiness configuration knobs
+Message-ID: <20200312140326.GA1701917@chrisdown.name>
+References: <BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com>
+ <alpine.DEB.2.21.2003111227230.171292@chino.kir.corp.google.com>
+ <BL0PR02MB5601808F36BE202813E9D562E9FD0@BL0PR02MB5601.namprd02.prod.outlook.com>
+ <20200312133636.GJ22433@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <20200123210242.53367-1-hdegoede@redhat.com> <158396292503.28353.1070405680109587154.tip-bot2@tip-bot2>
- <CACRpkdYPy93bDwPe1wHhcwpgN9uXepKXS1Ca5yFmDVks=r0RoQ@mail.gmail.com> <1cb0397f-e583-3d7e-dff3-2cc916219846@redhat.com>
-In-Reply-To: <1cb0397f-e583-3d7e-dff3-2cc916219846@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Mar 2020 15:02:49 +0100
-Message-ID: <CACRpkdb7vxSaK1Df6gNX_Kq-LF=S1qx2iKdmBy1Ku0vEpDVPbA@mail.gmail.com>
-Subject: Re: [tip: irq/core] x86: Select HARDIRQS_SW_RESEND on x86
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200312133636.GJ22433@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 2:49 PM Hans de Goede <hdegoede@redhat.com> wrote:
-
-[Me]
-> > I see that ARM and ARM64 simply just select this. What
-> > happens if you do that and why is x86 not selecting it in general?
+Matthew Wilcox writes:
+>On Thu, Mar 12, 2020 at 12:48:22PM +0000, Ivan Teterevkov wrote:
+>> This is exactly what I'm trying to avoid: in some distros there is no way
+>> to tackle the configuration early enough, e.g. in systemd-based systems
+>> the systemd is the process that starts first and arranges memcg in a way
+>> it's configured, but unfortunately, it doesn't offer the swappiness knob.
 >
-> Erm, "selecting it in general" (well at least on x86) is what
-> this patch is doing.
+>This sounds like a systemd problem.  Have you talked to the systemd
+>people about fixing it in systemd?
 
-Sorry that I was unclear, what I meant to say is why wasn't
-this done ages ago since so many important architectures seem
-to have it enabled by default.
+Hi there ;-)
 
-I suppose the reason would be something like "firmware/BIOS
-should handle that for us" and recently that has started to
-break apart and x86 platforms started to be more like ARM?
+In general most of us maintaining cgroups in systemd run with cgroup v2, so 
+this isn't a problem we run into in production. The swappiness controls in 
+general don't make a whole lot of sense being distributed hierarchically, so 
+they've been phased out entirely in cgroup v2.
 
-Yours,
-Linus Walleij
+If there had been a patch years ago implementing this in systemd we'd probably 
+have accepted it, but cgroup v1 is dying and I am really not in favour of 
+adding more code to massage its rough edges. We already have enough problems 
+generated by it already.
+
+However, the following kludge in tmpfiles.d should work to solve your immediate 
+problem:
+
+	w /sys/fs/cgroup/memory/system.slice/memory.swappiness - - - - value
+
+Taking my systemd hat off and putting my -mm hat on: let's not add more hacky 
+APIs at cgroup v1's behest, or we'll be here until we're pushing up the 
+daisies.
+
+Thanks,
+
+Chris
