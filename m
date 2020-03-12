@@ -2,64 +2,91 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770ECC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C076C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715AF20691
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F25920691
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583994099;
+	bh=OJrCHrdfLh0u9qAZeXo2exlLcdkkmSp/mJ+tXwxrGhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z1H1wGZK4BEi3SFXWxq/LQ/tHr4TUeFsCHX96mUzxUdhmpfN7swU2X5BV7WwYYV6h
+	 5D9G6Acjfc34fIFaEcK6EVUqOG90r/VG9pKGso/QJ75QoNCp7DjRT7IHUSC8vOMBI+
+	 43QWpt7cc4YSJQXnJt+SqioZ2T0KhqlIu1yIW97I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387968AbgCLGUX (ORCPT
+        id S2387945AbgCLGVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:20:23 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56164 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387908AbgCLGUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:20:21 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B354D14DA84AA;
-        Wed, 11 Mar 2020 23:20:20 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 23:20:20 -0700 (PDT)
-Message-Id: <20200311.232020.386617617756186776.davem@davemloft.net>
-To:     jbi.octave@gmail.com
-Cc:     boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
-        allison@lohutok.net, pankaj.laxminarayan.bharadiya@intel.com,
-        ptalbert@redhat.com, ap420073@gmail.com, lirongqing@baidu.com,
-        tglx@linutronix.de, penguin-kernel@I-love.SAKURA.ne.jp
-Subject: Re: [PATCH 6/8] net: Add missing annotation for
- *netlink_seq_start()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200311010908.42366-7-jbi.octave@gmail.com>
-References: <0/8>
-        <20200311010908.42366-1-jbi.octave@gmail.com>
-        <20200311010908.42366-7-jbi.octave@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Mar 2020 23:20:21 -0700 (PDT)
+        Thu, 12 Mar 2020 02:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387848AbgCLGVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 02:21:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CF9C20663;
+        Thu, 12 Mar 2020 06:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583994097;
+        bh=OJrCHrdfLh0u9qAZeXo2exlLcdkkmSp/mJ+tXwxrGhU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QrX7Wyd8G/9rr5b5vvcFaACZT6DGPMcN9Ma9E/F1nWUF8daPCG5dq/QMfKq+RKA88
+         hJlikjJFTms+1V5HiU2xE74uRg14K6HlojEF9WAzVd/Js4rB1ILE6IUpI+ew10BkyX
+         crENqy4jESZMCjiwLpl03FAX6yqvfVcO0/O6rYis=
+Date:   Thu, 12 Mar 2020 07:21:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/126] 4.14.173-stable review
+Message-ID: <20200312062135.GA4128239@kroah.com>
+References: <20200310124203.704193207@linuxfoundation.org>
+ <20200311131135.GA3856613@kroah.com>
+ <b9917046-393a-0314-0836-61003fd3d8e8@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9917046-393a-0314-0836-61003fd3d8e8@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jules Irenge <jbi.octave@gmail.com>
-Date: Wed, 11 Mar 2020 01:09:06 +0000
-
-> Sparse reports a warning at netlink_seq_start()
+On Wed, Mar 11, 2020 at 01:39:44PM -0600, shuah wrote:
+> On 3/11/20 7:11 AM, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 10, 2020 at 01:40:21PM +0100, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 4.14.173 release.
+> > > There are 126 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Thu, 12 Mar 2020 12:41:42 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > > The whole patch series can be found in one patch at:
+> > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.173-rc1.gz
+> > > or in the git tree and branch at:
+> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> > > and the diffstat can be found below.
+> > 
+> > I have pushed out a -rc2 release to resolve a reported KVM problem now.
+> >   	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.173-rc2.gz
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> warning: context imbalance in netlink_seq_start() - wrong count at exit
-> The root cause is the missing annotation at netlink_seq_start()
-> Add the missing  __acquires(RCU) annotation
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> All clear now on rc2. The kvm problem is gone.
 
-Applied.
+Wonderful, thanks for testing and letting me know.
+
+greg k-h
