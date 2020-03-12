@@ -2,197 +2,134 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1FBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9711C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D7B206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82037206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:43:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nNTIzEET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCLKmD (ORCPT
+        id S1726930AbgCLKn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:42:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48226 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLKmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:42:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 03:42:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
-   d="scan'208";a="354101503"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 12 Mar 2020 03:41:58 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 12 Mar 2020 12:41:58 +0200
-Date:   Thu, 12 Mar 2020 12:41:58 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        "Shih-Yuan Lee (FourDollars)" <sylee@canonical.com>,
-        Tiffany <tiffany.wang@canonical.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: Thunderbolt, direct-complete and long suspend/resume time of
- Suspend-to-idle
-Message-ID: <20200312104158.GS2540@lahna.fi.intel.com>
-References: <02700895-048F-4EA1-9E18-4883E83AE210@canonical.com>
- <20200311103840.GB2540@lahna.fi.intel.com>
- <E3DA71C8-96A7-482E-B41F-8145979F88F4@canonical.com>
- <20200312081509.GI2540@lahna.fi.intel.com>
- <C687BE86-1CCB-417B-8546-77F76127B266@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C687BE86-1CCB-417B-8546-77F76127B266@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Thu, 12 Mar 2020 06:43:28 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:50275 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLKn2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 06:43:28 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 02CAh4cj016228;
+        Thu, 12 Mar 2020 19:43:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 02CAh4cj016228
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584009786;
+        bh=cUZIHu3WpQthGwKHqTfTR6+eqUmRT0xXwV9Ie8yoyFU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nNTIzEETvbJTWfCjfCJ09nCj2Z/kFOqzqEWTxJskoSFJn6XJkaJPq0crXYAxhHJ3N
+         p/uuqKfASY3y7q0pgFDHnaaw7YAlWFNtE1i0K0HSsCbNnyMHYqIB+27lVFQtc+CLGg
+         rTDwR7gKjLfaQW37M8Cx7Vqfp/Zfxamg/54NcFTP68R63aTRP2JhmpDy1GyKb+NW74
+         n51XS/ednndCiU33z39zNB6N3Kc4q6BlBvOoPeSmhGAhGvHNdxzdhS+YmOWWLXMiWm
+         qS8z2+9WGjKjFvLIQs8PHR8VpO0xKPDrEeNHR8JA33w7dhJVOHsLFfmQSck3Pn12Hl
+         yYwK70uMdPlKw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: sdhci-cadence: set SDHCI_QUIRK2_PRESET_VALUE_BROKEN for UniPhier
+Date:   Thu, 12 Mar 2020 19:42:57 +0900
+Message-Id: <20200312104257.21017-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:10:45PM +0800, Kai-Heng Feng wrote:
-> 
-> 
-> > On Mar 12, 2020, at 16:15, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> > 
-> > On Thu, Mar 12, 2020 at 12:41:08PM +0800, Kai-Heng Feng wrote:
-> >> 
-> >> 
-> >>> On Mar 11, 2020, at 18:38, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> >>> 
-> >>> On Wed, Mar 11, 2020 at 01:39:51PM +0800, Kai-Heng Feng wrote:
-> >>>> Hi,
-> >>>> 
-> >>>> I am currently investigating long suspend and resume time of suspend-to-idle.
-> >>>> It's because Thunderbolt bridges need to wait for 1100ms [1] for runtime-resume on system suspend, and also for system resume.
-> >>>> 
-> >>>> I made a quick hack to the USB driver and xHCI driver to support direct-complete, but I failed to do so for the parent PCIe bridge as it always disables the direct-complete [2], since device_may_wakeup() returns true for the device:
-> >>>> 
-> >>>> 	/* Avoid direct_complete to let wakeup_path propagate. */
-> >>>> 		if (device_may_wakeup(dev) || dev->power.wakeup_path)
-> >>>> 			dev->power.direct_complete = false;
-> >>> 
-> >>> You need to be careful here because otherwise you end up situation where
-> >>> the link is not properly trained and we tear down the whole tree of
-> >>> devices which is worse than waiting bit more for resume.
-> >> 
-> >> My idea is to direct-complete when there's no PCI or USB device
-> >> plugged into the TBT, and use pm_reuqest_resume() in complete() so it
-> >> won't block resume() or resume_noirq().
-> > 
-> > Before doing that..
-> > 
-> >>>> Once the direct-complete is disabled, system suspend/resume is used hence the delay in [1] is making the resume really slow. 
-> >>>> So how do we make suspend-to-idle faster? I have some ideas but I am not sure if they are feasible:
-> >>>> - Make PM core know the runtime_suspend() already use the same wakeup as suspend(), so it doesn't need to use device_may_wakeup() check to determine direct-complete.
-> >>>> - Remove the DPM_FLAG_NEVER_SKIP flag in pcieport driver, and use pm_request_resume() in its complete() callback to prevent blocking the resume process.
-> >>>> - Reduce the 1100ms delay. Maybe someone knows the values used in macOS and Windows...
-> >>> 
-> >>> Which system this is? ICL?
-> >> 
-> >> CML-H + Titan Ridge.
-> > 
-> > .. we should really understand this better because CML-H PCH root ports
-> > and Titan/Alpine Ridge downstream ports all support active link
-> > reporting so instead of the 1000+100ms you should see something like
-> > this:
-> 
-> Root port for discrete graphics:
-> # lspci -vvnn -s 00:01.0                    
-> 00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 02) (prog-if 00 [Normal decode])
->         Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
->                 LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <256ns, L1 <8us
->                         ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
->                 LnkCtl: ASPM L0s L1 Enabled; RCB 64 bytes Disabled- CommClk+
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+The SDHCI_PRESET_FOR_* registers are not set for the UniPhier platform
+integration. (They are all read as zeros).
 
-Interesting, Titan Ridge is connected to the graphics slot, no? What
-system this is?
+Set the SDHCI_QUIRK2_PRESET_VALUE_BROKEN quirk flag. Otherwise, the
+High Speed DDR mode on the eMMC controller (MMC_TIMING_MMC_DDR52)
+would not work.
 
-> Thunderbolt ports:
-> # lspci -vvvv -s 04:00
-> 04:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
->         Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
->                 LnkCap: Port #0, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
->                         ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
->                 LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+I split the platform data to give no impact to other platforms,
+although the UniPhier platform is currently only the upstream user
+of this IP.
 
-This one leads to the TBT NHI.
+The SDHCI_QUIRK2_PRESET_VALUE_BROKEN flag is set if the compatible
+string matches to "socionext,uniphier-sd4hc".
 
-> # lspci -vvnn -s 04:01
-> 04:01.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
->         Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
->                 LnkCap: Port #1, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
->                         ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
->                 LnkCtl: ASPM L1 Enabled; Disabled- CommClk-
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-This one is one of the extension downstream ports and it supports active
-link reporting.
+ drivers/mmc/host/sdhci-cadence.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-> # lspci -vvnn -s 04:02 
-> 04:02.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
->         Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
->                 LnkCap: Port #2, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
->                         ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
->                 LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 5827d3751b81..e573495f8726 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -11,6 +11,7 @@
+ #include <linux/mmc/host.h>
+ #include <linux/mmc/mmc.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include "sdhci-pltfm.h"
+ 
+@@ -235,6 +236,11 @@ static const struct sdhci_ops sdhci_cdns_ops = {
+ 	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+ };
+ 
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
+ static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+ 	.ops = &sdhci_cdns_ops,
+ };
+@@ -334,6 +340,7 @@ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+ static int sdhci_cdns_probe(struct platform_device *pdev)
+ {
+ 	struct sdhci_host *host;
++	const struct sdhci_pltfm_data *data;
+ 	struct sdhci_pltfm_host *pltfm_host;
+ 	struct sdhci_cdns_priv *priv;
+ 	struct clk *clk;
+@@ -350,8 +357,12 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	data = of_device_get_match_data(dev);
++	if (!data)
++		data = &sdhci_cdns_pltfm_data;
++
+ 	nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
+-	host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data,
++	host = sdhci_pltfm_init(pdev, data,
+ 				struct_size(priv, phy_params, nr_phy_params));
+ 	if (IS_ERR(host)) {
+ 		ret = PTR_ERR(host);
+@@ -431,7 +442,10 @@ static const struct dev_pm_ops sdhci_cdns_pm_ops = {
+ };
+ 
+ static const struct of_device_id sdhci_cdns_match[] = {
+-	{ .compatible = "socionext,uniphier-sd4hc" },
++	{
++		.compatible = "socionext,uniphier-sd4hc",
++		.data = &sdhci_cdns_uniphier_pltfm_data,
++	},
+ 	{ .compatible = "cdns,sd4hc" },
+ 	{ /* sentinel */ }
+ };
+-- 
+2.17.1
 
-This one leads to the xHCI.
-
-> So both CML-H PCH and TBT ports report "LLActRep-".
-
-So in pci_bridge_wait_for_secondary_bus() we only call
-pcie_wait_for_link_delay() if the port supports speeds higher than 5
-GT/s (gen2). Now if I read the above correct all the ports except the
-root port support 2.5 GT/s (gen1) speeds so we should go to the
-msleep(delay) branch and not call pcie_wait_for_link_delay() at all:
-
-        if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-                pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-                msleep(delay);
-        } else {
-                pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-                        delay);
-                if (!pcie_wait_for_link_delay(dev, true, delay)) {
-                        /* Did not train, no need to wait any further */
-                        return;
-                }
-        }
-
-Only explanation I have is that delay itself is set to 1000ms for some
-reason. Can you check if that's the case and then maybe check where that
-delay is coming from?
-
-> >  1. Wait for the link + 100ms for the root port
-> >  2. Wait for the link + 100ms for the Titan Ridge downstream ports
-> >    (these are run paraller wrt all Titan Ridge downstream ports that have
-> >     something connected)
-> > 
-> > If there is a TBT device connected then 2. is repeated for it and so on.
-> > 
-> > So the 1000ms+ is really unexpected. Are you running mainline kernel and
-> > if so, can you share dmesg with CONFIG_PCI_DEBUG=y so we can see the
-> > delays there? Maybe also add some debugging to
-> > pcie_wait_for_link_delay() where it checks for the
-> > !pdev->link_active_reporting and waits for 1100ms.
-> 
-> I added the debug log in another thread and it does reach !pdev->link_active_reporting.
-
-Hmm, based on the above that should not happen :-(
-
-> Let me see if patch link active reporting for the ports in PCI quirks can help.
-
-Let's first investigate bit more to understand what is going on.
-
-I suggest to create kernel.org bugzilla about this. Please include full
-dmesg and 'sudo lspci -vv' output at least and of course the steps you
-use to reproduce this.
