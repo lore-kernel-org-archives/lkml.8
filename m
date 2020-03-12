@@ -2,217 +2,166 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F346C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55450C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAAE206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="eY27Js1A"
+	by mail.kernel.org (Postfix) with ESMTP id 3D769206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbgCLF1H (ORCPT
+        id S2387838AbgCLF1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:27:07 -0400
-Received: from rcdn-iport-6.cisco.com ([173.37.86.77]:47479 "EHLO
-        rcdn-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387758AbgCLF1H (ORCPT
+        Thu, 12 Mar 2020 01:27:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58062 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387829AbgCLF1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:27:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=4796; q=dns/txt; s=iport;
-  t=1583990826; x=1585200426;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gWPmi/A6NTE/04xSmZ4GUabsv9Q6xWhRvS9G9c95CO4=;
-  b=eY27Js1AD+DSuxVpvG6XdkqGGhPqdWqtBnG73/qVQ/mIoLetEPG6OHBj
-   LZdET3HSNjEErsoLrSKPI+I9NRBmaraTJCOM+EVCt6twr0YRn0OLMSu2A
-   sT4wd7IhcwXkDyjRfSS0RgJTr+zT4tY9+MuxB8dXQnK+0HRp5GOcJotR2
-   o=;
-X-IronPort-AV: E=Sophos;i="5.70,543,1574121600"; 
-   d="scan'208";a="740563919"
-Received: from rcdn-core-6.cisco.com ([173.37.93.157])
-  by rcdn-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 12 Mar 2020 05:19:59 +0000
-Received: from sjc-ads-7741.cisco.com (sjc-ads-7741.cisco.com [10.30.222.28])
-        by rcdn-core-6.cisco.com (8.15.2/8.15.2) with ESMTP id 02C5JxCm030956;
-        Thu, 12 Mar 2020 05:19:59 GMT
-Received: by sjc-ads-7741.cisco.com (Postfix, from userid 381789)
-        id 6B41B1229; Wed, 11 Mar 2020 22:19:59 -0700 (PDT)
-From:   Manali K Shukla <manashuk@cisco.com>
-To:     bp@alien8.de, linux-edac@vger.kernel.org, mchehab@kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Cc:     xe-linux-external@cisco.com, Borislav Petkov <bp@suse.de>,
-        Aristeu Rozanski Filho <arozansk@redhat.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>,
-        Manali K Shukla <manashuk@cisco.com>
-Subject: [ PATCH stable v4.14] EDAC: Drop per-memory controller buses
-Date:   Wed, 11 Mar 2020 22:19:29 -0700
-Message-Id: <20200312051929.49195-1-manashuk@cisco.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 12 Mar 2020 01:27:18 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02C5Mpg2065956
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:27:17 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqekhryyu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 01:27:17 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Thu, 12 Mar 2020 05:27:15 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Mar 2020 05:27:11 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02C5RASI58917104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 05:27:10 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90E2B42049;
+        Thu, 12 Mar 2020 05:27:10 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 880EE4203F;
+        Thu, 12 Mar 2020 05:27:08 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu, 12 Mar 2020 05:27:08 +0000 (GMT)
+Date:   Thu, 12 Mar 2020 10:57:07 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
+ <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
+ <20200311115735.GM23944@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.30.222.28, sjc-ads-7741.cisco.com
-X-Outbound-Node: rcdn-core-6.cisco.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200311115735.GM23944@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 20031205-4275-0000-0000-000003AAF1EF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031205-4276-0000-0000-000038C00F90
+Message-Id: <20200312052707.GA3277@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_15:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 spamscore=0 clxscore=1015 impostorscore=0
+ mlxscore=0 suspectscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+* Michal Hocko <mhocko@kernel.org> [2020-03-11 12:57:35]:
 
-upstream 861e6ed667c83d64a42b0db41a22d6b4de4e913f commit
+> On Wed 11-03-20 16:32:35, Srikar Dronamraju wrote:
+> > A Powerpc system with multiple possible nodes and with CONFIG_NUMA
+> > enabled always used to have a node 0, even if node 0 does not any cpus
+> > or memory attached to it. As per PAPR, node affinity of a cpu is only
+> > available once its present / online. For all cpus that are possible but
+> > not present, cpu_to_node() would point to node 0.
+> > 
+> > To ensure a cpuless, memoryless dummy node is not online, powerpc need
+> > to make sure all possible but not present cpu_to_node are set to a
+> > proper node.
+> 
+> Just curious, is this somehow related to
+> http://lkml.kernel.org/r/20200227182650.GG3771@dhcp22.suse.cz?
+> 
 
-... and use the single edac_subsys object returned from
-subsys_system_register(). The idea is to have a single bus
-and multiple devices on it.
+The issue I am trying to fix is a known issue in Powerpc since many years.
+So this surely not a problem after a75056fc1e7c (mm/memcontrol.c: allocate
+shrinker_map on appropriate NUMA node"). 
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-CC: Aristeu Rozanski Filho <arozansk@redhat.com>
-CC: Greg KH <gregkh@linuxfoundation.org>
-CC: Justin Ernst <justin.ernst@hpe.com>
-CC: linux-edac <linux-edac@vger.kernel.org>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: Russ Anderson <rja@hpe.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20180926152752.GG5584@zn.tnic
-[Manali: backport to v4.14 -stable :
-- removing per-MC bus, this enables to get rid of memory controllers
-  maximum number notion
-- value of max number of memory controllers is 2 * MAX_NUMNODES. On two nodes system MAX_NUMNODES value is ‘1’ and
-  so value of max number of memory controller becomes ‘2’, this patch fixes this issue when there are only 2 nodes on the system
-  and number of memory controllers are more than ‘2’]
-(cherry picked from commit 861e6ed667c83d64a42b0db41a22d6b4de4e913f)
-Signed-off-by: Manali K Shukla <manashuk@cisco.com>
----
- drivers/edac/edac_mc.c       |  9 +--------
- drivers/edac/edac_mc_sysfs.c | 30 ++----------------------------
- include/linux/edac.h         |  6 ------
- 3 files changed, 3 insertions(+), 42 deletions(-)
+I tried v5.6-rc4 + a75056fc1e7c but didnt face any issues booting the
+kernel. Will work with Sachin/Abdul (reporters of the issue).
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 329021189c38..2c740edb440f 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -55,8 +55,6 @@ static LIST_HEAD(mc_devices);
-  */
- static void const *edac_mc_owner;
- 
--static struct bus_type mc_bus[EDAC_MAX_MCS];
--
- int edac_get_report_status(void)
- {
- 	return edac_report;
-@@ -706,11 +704,6 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
- 	int ret = -EINVAL;
- 	edac_dbg(0, "\n");
- 
--	if (mci->mc_idx >= EDAC_MAX_MCS) {
--		pr_warn_once("Too many memory controllers: %d\n", mci->mc_idx);
--		return -ENODEV;
--	}
--
- #ifdef CONFIG_EDAC_DEBUG
- 	if (edac_debug_level >= 3)
- 		edac_mc_dump_mci(mci);
-@@ -750,7 +743,7 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
- 	/* set load time so that error rate can be tracked */
- 	mci->start_time = jiffies;
- 
--	mci->bus = &mc_bus[mci->mc_idx];
-+	mci->bus = edac_get_sysfs_subsys();
- 
- 	if (edac_create_sysfs_mci_device(mci, groups)) {
- 		edac_mc_printk(mci, KERN_WARNING,
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index a4acfa81dfe0..f519189ab342 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -942,27 +942,8 @@ static const struct device_type mci_attr_type = {
- int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
- 				 const struct attribute_group **groups)
- {
--	char *name;
- 	int i, err;
- 
--	/*
--	 * The memory controller needs its own bus, in order to avoid
--	 * namespace conflicts at /sys/bus/edac.
--	 */
--	name = kasprintf(GFP_KERNEL, "mc%d", mci->mc_idx);
--	if (!name)
--		return -ENOMEM;
--
--	mci->bus->name = name;
--
--	edac_dbg(0, "creating bus %s\n", mci->bus->name);
--
--	err = bus_register(mci->bus);
--	if (err < 0) {
--		kfree(name);
--		return err;
--	}
--
- 	/* get the /sys/devices/system/edac subsys reference */
- 	mci->dev.type = &mci_attr_type;
- 	device_initialize(&mci->dev);
-@@ -978,7 +959,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
- 	err = device_add(&mci->dev);
- 	if (err < 0) {
- 		edac_dbg(1, "failure: create device %s\n", dev_name(&mci->dev));
--		goto fail_unregister_bus;
-+		goto out;
- 	}
- 
- 	/*
-@@ -1026,10 +1007,8 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
- 		device_unregister(&dimm->dev);
- 	}
- 	device_unregister(&mci->dev);
--fail_unregister_bus:
--	bus_unregister(mci->bus);
--	kfree(name);
- 
-+out:
- 	return err;
- }
- 
-@@ -1060,13 +1039,8 @@ void edac_remove_sysfs_mci_device(struct mem_ctl_info *mci)
- 
- void edac_unregister_sysfs(struct mem_ctl_info *mci)
- {
--	struct bus_type *bus = mci->bus;
--	const char *name = mci->bus->name;
--
- 	edac_dbg(1, "Unregistering device %s\n", dev_name(&mci->dev));
- 	device_unregister(&mci->dev);
--	bus_unregister(bus);
--	kfree(name);
- }
- 
- static void mc_attr_release(struct device *dev)
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index 90f72336aea6..1f5c3f6fd3e5 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -664,10 +664,4 @@ struct mem_ctl_info {
- 	bool fake_inject_ue;
- 	u16 fake_inject_count;
- };
--
--/*
-- * Maximum number of memory controllers in the coherent fabric.
-- */
--#define EDAC_MAX_MCS	2 * MAX_NUMNODES
--
- #endif
+
+> > Cc: linuxppc-dev@lists.ozlabs.org
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: Mel Gorman <mgorman@suse.de>
+> > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
+> > Cc: Christopher Lameter <cl@linux.com>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> > ---
+> >  arch/powerpc/mm/numa.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> > index 8a399db..54dcd49 100644
+> > --- a/arch/powerpc/mm/numa.c
+> > +++ b/arch/powerpc/mm/numa.c
+> > @@ -931,8 +931,20 @@ void __init mem_topology_setup(void)
+> >  
+> >  	reset_numa_cpu_lookup_table();
+> >  
+> > -	for_each_present_cpu(cpu)
+> > -		numa_setup_cpu(cpu);
+> > +	for_each_possible_cpu(cpu) {
+> > +		/*
+> > +		 * Powerpc with CONFIG_NUMA always used to have a node 0,
+> > +		 * even if it was memoryless or cpuless. For all cpus that
+> > +		 * are possible but not present, cpu_to_node() would point
+> > +		 * to node 0. To remove a cpuless, memoryless dummy node,
+> > +		 * powerpc need to make sure all possible but not present
+> > +		 * cpu_to_node are set to a proper node.
+> > +		 */
+> > +		if (cpu_present(cpu))
+> > +			numa_setup_cpu(cpu);
+> > +		else
+> > +			set_cpu_numa_node(cpu, first_online_node);
+> > +	}
+> >  }
+> >  
+> >  void __init initmem_init(void)
+> > -- 
+> > 1.8.3.1
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+
 -- 
-2.19.1
+Thanks and Regards
+Srikar Dronamraju
 
