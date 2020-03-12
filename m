@@ -2,176 +2,163 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368F1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF02C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0096020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1236720674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1pbzwoK"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="t5lMlVn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgCLU6i (ORCPT
+        id S1727061AbgCLVCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:58:38 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43217 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726246AbgCLU6i (ORCPT
+        Thu, 12 Mar 2020 17:02:37 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:6938 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726571AbgCLVCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:58:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584046717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wfhe70Eqer/RgJloM0XEy4jtTX1fBYySVnbavNEL060=;
-        b=f1pbzwoKzWAgOth4kvaOBVbHt7nhxuyRyok+fi/XmBYn7m38T+zScraCdFXCJACH74vwH9
-        v4ypMrNh/veM/qBDoCyeu1+yXf99XbzhKu2wY84JgI6GkbcD6aYmbacgTpgC5lwEpzRZ7c
-        MBGk0aU6aCAcR2yRZCSnhEeD5GkztuY=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-WgkXyavJNImgQB5qG15vFQ-1; Thu, 12 Mar 2020 16:58:33 -0400
-X-MC-Unique: WgkXyavJNImgQB5qG15vFQ-1
-Received: by mail-qk1-f200.google.com with SMTP id t186so5601217qkf.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 13:58:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wfhe70Eqer/RgJloM0XEy4jtTX1fBYySVnbavNEL060=;
-        b=MHsAhnKEsfjhQkRn9+0RZ9TAtfE28eRWy0rqKlyRpZtcJVq+zubYzoiuzzf5Hpas3j
-         OtXC+LkaoTsZD0X6S6r+d1Pi/Qq+NSNwM/oGdCCLrBgc2YrUBea+ZzqbVVd/G+hVKQ2l
-         ufBwAl4ZceDFVLZH4KgxXXNVL/OBi3lrb/66Cc62vgxKrMX/t8G5ABxJMIq6JCAUd1pG
-         hN992dx7DCOPXgnTMmU9FmUNaYPr7Asa+ly0UqP4hzqA6aNKi59unmDFsGAUmHK4OLBK
-         7IkbaX8zsaONQoTYNJ5sDKMOST9E8sOvs5IzO/jGa4pVHBmhXALCtcKxbnF/Vnv+aQS6
-         KsYA==
-X-Gm-Message-State: ANhLgQ2Grkf93goDro97nT+A92lZoDi5X3AN1/w+HH7oQL7yGYNE4dzu
-        1ulkzqVAIVKLUaXBMXRx7zOS31u6S4Pk79l49vM4yc7XfBaO53DU2xTlePLtNgqwytqk1Hu2a/O
-        EmOYqz1o/pNXQOm+ZawB/bGyD
-X-Received: by 2002:a05:6214:11f4:: with SMTP id e20mr3578382qvu.66.1584046712739;
-        Thu, 12 Mar 2020 13:58:32 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs1lOZ+1AtDVJxq6hYpiNTclbL+L0igJwgobdRB+pShyPV1NoCA+uV265zwcVLI54KhyqE3kw==
-X-Received: by 2002:a05:6214:11f4:: with SMTP id e20mr3578357qvu.66.1584046712382;
-        Thu, 12 Mar 2020 13:58:32 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id k11sm27869324qti.68.2020.03.12.13.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 13:58:31 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterx@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ming Lei <minlei@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH] x86/vector: Allow to free vector for managed IRQ
-Date:   Thu, 12 Mar 2020 16:58:30 -0400
-Message-Id: <20200312205830.81796-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 12 Mar 2020 17:02:37 -0400
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CL0g9K020498;
+        Thu, 12 Mar 2020 17:02:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=OGjHjSkDalsOGQQ2r+7Ay0XVMN1U1hH8z+CvFp/s7jA=;
+ b=t5lMlVn6rrp/9fDX6uFTBndH0/BpbER1hGjuwFWGXqxhtUSd8VCmwJwwak8NAy/f36nV
+ HuGYCXNFFV1PrGcTKZj0hJJzSgIHGyvTWoKK9cAks6kvCX5vW6aWl4ckcaTNTbCAzU9F
+ M9qtjf69Y0zS3TjaIkCyyPBaEMKEKXBFr0GcWgYOxTd0MU+hA5IqzabwBo894yw1JBgv
+ 95no9iyv8XWfVu0NzMkUUY9etE+kSYrw7gb2J5yK08D8nU0FRhEnY6M7ev0MoBL+jt4r
+ 984I4Gnnxhb4p2nLK/6CluOVerlUufCYZ4f+4CZHuD2Hw19c146unGQ6zw/D0vv8iGea uA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2yqt9srn2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 17:02:35 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CKlRmj130622;
+        Thu, 12 Mar 2020 17:02:35 -0400
+Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
+        by mx0a-00154901.pphosted.com with ESMTP id 2yqtb220ym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 17:02:34 -0400
+X-LoopCount0: from 10.166.132.134
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="465671033"
+From:   <Austin.Bolen@dell.com>
+To:     <helgaas@kernel.org>, <sathyanarayanan.kuppuswamy@linux.intel.com>
+CC:     <Austin.Bolen@dell.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Topic: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Index: AQHV9oVCCTYsDGOZY0iqPe3akO+s+A==
+Date:   Thu, 12 Mar 2020 21:02:28 +0000
+Message-ID: <161a5d15809b47b09200f1806484b907@AUSX13MPC107.AMER.DELL.COM>
+References: <20200312195319.GA162308@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-12_14:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501
+ suspectscore=0 impostorscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003120104
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ spamscore=0 suspectscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003120105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After we introduced the "managed_irq" sub-parameter for isolcpus, it's
-possible to free a kernel managed irq vector now.
-
-It can be triggered easily by booting a VM with a few vcpus, with one
-virtio-blk device and then mark some cores as HK_FLAG_MANAGED_IRQ (in
-below case, there're 4 vcpus, with vcpu 3 isolated with managed_irq):
-
-[    2.889911] ------------[ cut here ]------------
-[    2.889964] WARNING: CPU: 3 PID: 0 at arch/x86/kernel/apic/vector.c:853 free_moved_vector+0x126/0x160
-[    2.889964] Modules linked in: crc32c_intel serio_raw virtio_blk(+) qemu_fw_cfg
-[    2.889968] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-rc1 #18
-[    2.889969] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-[    2.889970] RIP: 0010:free_moved_vector+0x126/0x160
-[    2.889972] Code: 45 00 48 85 c0 75 df e9 2b ff ff ff 48 8b 05 f9 51 71 01 e8 3c 5a 11 00 85 c0 74 09 80 3d 8d 39 71 01 00 5
-[    2.889972] RSP: 0000:ffffb5ac00110fa0 EFLAGS: 00010002
-[    2.889973] RAX: 0000000000000001 RBX: ffffa00fad2d60c0 RCX: 0000000000000821
-[    2.889974] RDX: 0000000000000000 RSI: 00000000fd2bd4ba RDI: ffffa00fad2d60c0
-[    2.889974] RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-[    2.889975] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000023
-[    2.889975] R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
-[    2.889976] FS:  0000000000000000(0000) GS:ffffa00fbbd80000(0000) knlGS:0000000000000000
-[    2.889977] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.889978] CR2: 00000000ffffffff CR3: 0000000123610001 CR4: 0000000000360ee0
-[    2.889980] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    2.889980] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    2.889981] Call Trace:
-[    2.889982]  <IRQ>
-[    2.889987]  smp_irq_move_cleanup_interrupt+0xac/0xc6
-[    2.889989]  irq_move_cleanup_interrupt+0xc/0x20
-[    2.889990]  </IRQ>
-[    2.889991] RIP: 0010:native_safe_halt+0xe/0x10
-[    2.889992] Code: cc cc cc cc cc cc cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 56 82 4f 00 f4 c3 66 90 e9 07 00 00 00 0f 00 0
-[    2.889993] RSP: 0000:ffffb5ac00083eb0 EFLAGS: 00000206 ORIG_RAX: ffffffffffffffdf
-[    2.889994] RAX: ffffa00fbb260000 RBX: 0000000000000003 RCX: 0000000000000000
-[    2.889994] RDX: ffffa00fbb260000 RSI: 0000000000000006 RDI: ffffa00fbb260000
-[    2.889995] RBP: 0000000000000003 R08: 000000cd42e4dffb R09: 0000000000000000
-[    2.889995] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa00fbb260000
-[    2.889996] R13: 0000000000000000 R14: 0000000000000000 R15: ffffa00fbb260000
-[    2.890003]  default_idle+0x1f/0x140
-[    2.890006]  do_idle+0x1fa/0x270
-[    2.890010]  cpu_startup_entry+0x19/0x20
-[    2.890012]  start_secondary+0x164/0x1b0
-[    2.890014]  secondary_startup_64+0xa4/0xb0
-[    2.890021] irq event stamp: 8758
-[    2.890022] hardirqs last  enabled at (8755): [<ffffffffbbb105ca>] default_idle+0x1a/0x140
-[    2.890023] hardirqs last disabled at (8756): [<ffffffffbb0039f7>] trace_hardirqs_off_thunk+0x1a/0x1c
-[    2.890025] softirqs last  enabled at (8758): [<ffffffffbb0ecce8>] irq_enter+0x68/0x70
-[    2.890026] softirqs last disabled at (8757): [<ffffffffbb0ecccd>] irq_enter+0x4d/0x70
-[    2.890027] ---[ end trace deb5d563d2acb13f ]---
-
-I believe the same thing will happen to bare metals.
-
-When allocating the IRQ for the device, activate_managed() will try to
-allocate a vector based on what we've calculated for kernel managed
-IRQs (which does not take HK_FLAG_MANAGED_IRQ into account).  However
-when we bind the IRQ to the IRQ handler, we'll do irq_startup() and
-irq_do_set_affinity(), in which we will start to consider the whole
-HK_FLAG_MANAGED_IRQ logic.  This means the chosen core can be
-different from when we do the allocation.  When that happens, we'll
-need to be able to properly free the old vector on the old core.
-
-Remove the WARN_ON_ONCE() to allow this to happen.
-
-Fixes: 11ea68f553e2 ("genirq, sched/isolation: Isolate from handling managed interrupts")
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Ming Lei <minlei@redhat.com>
-CC: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/x86/kernel/apic/vector.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 2c5676b0a6e7..a1142260b123 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -837,14 +837,6 @@ static void free_moved_vector(struct apic_chip_data *apicd)
- 	unsigned int cpu = apicd->prev_cpu;
- 	bool managed = apicd->is_managed;
- 
--	/*
--	 * This should never happen. Managed interrupts are not
--	 * migrated except on CPU down, which does not involve the
--	 * cleanup vector. But try to keep the accounting correct
--	 * nevertheless.
--	 */
--	WARN_ON_ONCE(managed);
--
- 	trace_vector_free_moved(apicd->irq, cpu, vector, managed);
- 	irq_matrix_free(vector_matrix, cpu, vector, managed);
- 	per_cpu(vector_irq, cpu)[vector] = VECTOR_UNUSED;
--- 
-2.24.1
-
+On 3/12/2020 2:53 PM, Bjorn Helgaas wrote:=0A=
+> =0A=
+> [EXTERNAL EMAIL]=0A=
+> =0A=
+> On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrot=
+e:=0A=
+>> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:=0A=
+>>> Is any synchronization needed here between the EDR path and the=0A=
+>>> hotplug/enumeration path?=0A=
+>>=0A=
+>> If we want to follow the implementation note step by step (in=0A=
+>> sequence) then we need some synchronization between EDR path and=0A=
+>> enumeration path. But if it's OK to achieve the same end result by=0A=
+>> following steps out of sequence then we don't need to create any=0A=
+>> dependency between EDR and enumeration paths. Currently we follow=0A=
+>> the latter approach.=0A=
+> =0A=
+> What would the synchronization look like?=0A=
+> =0A=
+> Ideally I think it would be better to follow the order in the=0A=
+> flowchart if it's not too onerous.  That will make the code easier to=0A=
+> understand.  The current situation with this dependency on pciehp and=0A=
+> what it will do leaves a lot of things implicit.=0A=
+> =0A=
+> What happens if CONFIG_PCIE_EDR=3Dy but CONFIG_HOTPLUG_PCI_PCIE=3Dn?=0A=
+> =0A=
+> IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and=0A=
+> unbinds the drivers and removes the devices.  If that doesn't happen,=0A=
+> and Linux clears the DPC trigger to bring the link back up, will those=0A=
+> drivers try to operate uninitialized devices?=0A=
+> =0A=
+> Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?=0A=
+=0A=
+ From one of Sathya's other responses:=0A=
+=0A=
+"If hotplug is not supported then there is support to enumerate=0A=
+devices via polling  or ACPI events. But a point to note=0A=
+here is, enumeration path is independent of error handler path, and=0A=
+hence there is no explicit trigger or event from error handler path=0A=
+to enumeration path to kick start the enumeration."=0A=
+=0A=
+The EDR standard doesn't have any dependency on hot-plug. It sounds like =
+=0A=
+in the current implementation there's some manual intervention needed if =
+=0A=
+hot-plug is not supported? Ideally recovery would kick in automatically =0A=
+but requiring manual intervention is a good first step.=0A=
+=0A=
+> =0A=
+>> For example, consider the case in flow chart where after sending=0A=
+>> success _OST, firmware decides to stop the recovery of the device.=0A=
+>>=0A=
+>> if we follow the flow chart as is then the steps should be,=0A=
+>>=0A=
+>> 1. clear the DPC status trigger=0A=
+>> 2. Send success code via _OST, and wait for return from _OST=0A=
+>> 3. if successful return then enumerate the child devices and=0A=
+>> reassign bus numbers.=0A=
+>>=0A=
+>> In current approach the steps followed are,=0A=
+>>=0A=
+>> 1. Clear the DPC status trigger.=0A=
+>> 2. Send success code via _OST=0A=
+=0A=
+Success in step 2 is assuming device trained and config space is =0A=
+accessible correct?  If device was removed or device config space is not =
+=0A=
+accessible then failure status should be sent via _OST.=0A=
+=0A=
+>> 2. In parallel, LINK UP event path will enumerate the child devices.=0A=
+>> 3. if firmware decides not to recover the device,=A0then LINK DOWN=0A=
+>> event will eventually remove them again.=0A=
+> =0A=
+=0A=
+=0A=
