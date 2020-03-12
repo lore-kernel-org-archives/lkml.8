@@ -2,112 +2,141 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70151C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3874A205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZX+ugbj"
+	by mail.kernel.org (Postfix) with ESMTP id 67353205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCLVhB (ORCPT
+        id S1726684AbgCLVhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:37:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27921 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726481AbgCLVhA (ORCPT
+        Thu, 12 Mar 2020 17:37:13 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:36087 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgCLVhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:37:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584049019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=o0KJvs5Tn9ZRXYpDxYyGbc0Z0po25d7YTKzjpj8ERqU=;
-        b=FZX+ugbjJawiEhRRXzI2Li4o6JzBGoME2HFLs44/JLQDvT/7ej89HWq/cOzcuLV0EGJ9Id
-        ee4upRcBxbiUQZukVYfhI8TCjrK9iat/yzepEujtocnTNrW4UvPIfzrxZ23kyqMvoPNqJK
-        50oda6hkUu/B4IwO8mZ/Umy10Kgam2A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-jGvZjzwnPsqBl7sVisqPlA-1; Thu, 12 Mar 2020 17:36:57 -0400
-X-MC-Unique: jGvZjzwnPsqBl7sVisqPlA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03599107ACC9;
-        Thu, 12 Mar 2020 21:36:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE89292D1C;
-        Thu, 12 Mar 2020 21:36:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Use kfree_rcu() instead of casting kfree() to
- rcu_callback_t
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     Jann Horn <jannh@google.com>, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Thu, 12 Mar 2020 21:36:53 +0000
-Message-ID: <158404901390.1220563.13542240512778767032.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Thu, 12 Mar 2020 17:37:12 -0400
+Received: by mail-il1-f199.google.com with SMTP id v14so5000311ilq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 14:37:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=otDTyif1JxNxdhkmFkrhZBBAigUQx1pxkqJwd5II138=;
+        b=aNXf/jSj8684IUgWCXniO/vG1XAL+7sfCLvfMMQdpxiG5pyXwsAZdycU3+4KarWl9s
+         m5S03zJVcPggt24qskkk/4eBW5B6P6+c5aOTwCN07kO1YnP5Elh7YBQv8odniRZ8PSHW
+         BJISV7BXTP4NOk4FP+Tr/Uv6HAOE8RvY+usTRE3CMZ0EBpXcgJpGpDV1Ru7vwB3sWQPC
+         pvpdIogZXNA2pe1KEMe6j5kfmMYFY0fJYNY3BssiNy52r1MzY1hRtI52Cb66Kt1ZGXMh
+         Z2TIK6/biXhRBVqtQMeMjr383diAqQS7zRIphsXIVfcJlWWENY/os2DF87zmHcYlEvy2
+         uY8A==
+X-Gm-Message-State: ANhLgQ35Ev7PGLM/SsE41tck/kRx1FZrsYb/8GU9ZZw4XUYhVoso3GQ+
+        VJvQvR/x7MzB5wObAL6jBfPQfvgemygn1wrrsZwLT2p+hvYJ
+X-Google-Smtp-Source: ADFU+vvqMDGrrjUv2iUkYwJaB5U6vfSQvaKwU93+Tw2aJqefc794DfGTD3jwIErkI2rFXjwv1VXusTuBATT4bD+0PhjI6HGU4hCI
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Received: by 2002:a92:5b56:: with SMTP id p83mr10329254ilb.70.1584049032035;
+ Thu, 12 Mar 2020 14:37:12 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 14:37:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dc81b705a0af279c@google.com>
+Subject: WARNING in bpf_check (3)
+From:   syzbot <syzbot+245129539c27fecf099a@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
+        kafai@fb.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+Hello,
 
-afs_put_addrlist() casts kfree() to rcu_callback_t. Apart from being wrong
-in theory, this might also blow up when people start enforcing function
-types via compiler instrumentation, and it means the rcu_head has to be
-first in struct afs_addr_list.
+syzbot found the following crash on:
 
-Use kfree_rcu() instead, it's simpler and more correct.
+HEAD commit:    13fac1d8 bpf: Fix trampoline generation for fmod_ret progr..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=167ba061e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=888f81f5410adfa2
+dashboard link: https://syzkaller.appspot.com/bug?extid=245129539c27fecf099a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ba39c3e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12bbb981e00000
 
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+The bug was bisected to:
+
+commit 94dacdbd5d2dfa2cffd308f128d78c99f855f5be
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Mon Feb 24 14:01:32 2020 +0000
+
+    bpf: Tighten the requirements for preallocated hash maps
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1300a2b1e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1080a2b1e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1700a2b1e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+245129539c27fecf099a@syzkaller.appspotmail.com
+Fixes: 94dacdbd5d2d ("bpf: Tighten the requirements for preallocated hash maps")
+
+------------[ cut here ]------------
+trace type BPF program uses run-time allocation
+WARNING: CPU: 1 PID: 9523 at kernel/bpf/verifier.c:8187 check_map_prog_compatibility kernel/bpf/verifier.c:8187 [inline]
+WARNING: CPU: 1 PID: 9523 at kernel/bpf/verifier.c:8187 replace_map_fd_with_map_ptr kernel/bpf/verifier.c:8282 [inline]
+WARNING: CPU: 1 PID: 9523 at kernel/bpf/verifier.c:8187 bpf_check+0x6dcb/0xa49b kernel/bpf/verifier.c:10112
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9523 Comm: syz-executor700 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:check_map_prog_compatibility kernel/bpf/verifier.c:8187 [inline]
+RIP: 0010:replace_map_fd_with_map_ptr kernel/bpf/verifier.c:8282 [inline]
+RIP: 0010:bpf_check+0x6dcb/0xa49b kernel/bpf/verifier.c:10112
+Code: ff 48 8b bd 20 fe ff ff e8 02 56 2c 00 e9 bc cf ff ff e8 88 a0 ef ff 48 c7 c7 c0 8c 11 88 c6 05 c0 c7 de 08 01 e8 bd b3 c1 ff <0f> 0b e9 f3 ae ff ff c7 85 c0 fe ff ff f4 ff ff ff e9 d3 c6 ff ff
+RSP: 0018:ffffc90001ec7990 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815bfd81 RDI: fffff520003d8f24
+RBP: ffffc90001ec7b90 R08: ffff88809ae22380 R09: ffffed1015ce45c9
+R10: ffffed1015ce45c8 R11: ffff8880ae722e43 R12: 0000000000000002
+R13: ffffc90000d36048 R14: ffff88809a7d4800 R15: dffffc0000000000
+ bpf_prog_load+0xd92/0x15f0 kernel/bpf/syscall.c:2105
+ __do_sys_bpf+0x16f2/0x4020 kernel/bpf/syscall.c:3594
+ do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440539
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffdd65517e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440539
+RDX: 0000000000000014 RSI: 0000000020fed000 RDI: 0000000000000005
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401dc0
+R13: 0000000000401e50 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- fs/afs/addr_list.c |    2 +-
- fs/afs/internal.h  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/afs/addr_list.c b/fs/afs/addr_list.c
-index df415c05939e..de1ae0bead3b 100644
---- a/fs/afs/addr_list.c
-+++ b/fs/afs/addr_list.c
-@@ -19,7 +19,7 @@
- void afs_put_addrlist(struct afs_addr_list *alist)
- {
- 	if (alist && refcount_dec_and_test(&alist->usage))
--		call_rcu(&alist->rcu, (rcu_callback_t)kfree);
-+		kfree_rcu(alist, rcu);
- }
- 
- /*
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 1d81fc4c3058..35f951ac296f 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -81,7 +81,7 @@ enum afs_call_state {
-  * List of server addresses.
-  */
- struct afs_addr_list {
--	struct rcu_head		rcu;		/* Must be first */
-+	struct rcu_head		rcu;
- 	refcount_t		usage;
- 	u32			version;	/* Version */
- 	unsigned char		max_addrs;
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
