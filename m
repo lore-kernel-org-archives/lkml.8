@@ -2,110 +2,172 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945F8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24195C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C72C20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E495520674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+l+gXIK"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="lG44gMEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgCLVG7 (ORCPT
+        id S1727141AbgCLVJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:06:59 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34837 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgCLVG7 (ORCPT
+        Thu, 12 Mar 2020 17:09:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44330 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgCLVJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:06:59 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k26so7890315otr.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 14:06:58 -0700 (PDT)
+        Thu, 12 Mar 2020 17:09:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b72so3864328pfb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 14:09:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gjIF8laC9ymQN6dGPb1ZYido+iVLQSJ80e27qnd6uTA=;
-        b=f+l+gXIKYD8ZqIsbSKM4dLqAUjD21JGnao8P6oy+6Zmm9Rb8AXN6l/tS4s9RT9ecgP
-         8OTh+Gt18uKCXrL2agzWwd/jaz4kTY1PcHwRp8AM/PzPPozlKad5X4ZfeHipH/tIBjxa
-         99BbLEDknWH+7czLa5Ds6pxh1qQr+8L/YyNq5vH159Q93v9ftJQBMYn9MTLI0ylozz0g
-         SxF6JBvVR6aRYy+G/pWJCbP5kvTgAoAwODj4DnUgeTdzCZUniI5BUzeE45A4/CVcJor4
-         PJTNqoA2uuZZ4WpMILVN15YTIvUc7nqvO81ayj7Ez+wssmSZmgvM6o862uS0AIZwCaSh
-         XIig==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=Jm0QuoVYWLIkEIZ1aBkYIS2YTC2nnJykHw8y19YRbks=;
+        b=lG44gMEia2yLgM2EF2gUy3A+yfFoluTTTEHv1h8h40hRfZL7AlPyQlA7WYGXAVAHzi
+         7QKR+Dvo0BqrSXJK1rkIhgiH4sRxoCYokpaBqrhIHYw1MotZQI3g+0Y3H6dYy+Sldh6b
+         5x/arYiXXXIvikCJgNqNAY90rwJMaiA2hFzydsMa8m8K3p4RyNc9kQdgEgUWgNaE71Jr
+         nA9iPZbBBYdfKcsxwknObDM5kENiyvEAG9YTEKLtbDbWdb/Ijt0Z0cMnbUETGeX6SJYE
+         vpsHe0GKamqSYBlw5o1rTslT4QSxie1OOVRfAneDZt94IqcPgM8OBWZhK7nHfxnm2V/2
+         sraQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gjIF8laC9ymQN6dGPb1ZYido+iVLQSJ80e27qnd6uTA=;
-        b=tvNhx8JKOVv0S0dkB9KkNYHGp2hjeTeheu4tCJ4UIEAqNCvVB/ITDTyJYT1YzlWZhx
-         sVgOY0Iy30vjo6crAT39dd9ywTa6PdFZz2ajW4WYVBDYRgfoQU50yF8UO9aaBxY7Q/hU
-         NwQWS89hMpPTJpVDLHaecMy3FzU9vMLmx2/zQylpb1LOgcuKmtmmLbS8WB0iqQSFZ/T1
-         wHUSOu2IYu0IiS5cPkFjHXyPrNB5Hjed7W9IeCJDlCZNLoU7E3trqldqC/vg3axwPutb
-         IFsKRQ1MFcZchh2uYeD6ZjZNyIIS7Q8v9kXcurloPpL/h2IYEyavHtIJ54XmysVuQ8lI
-         tJaw==
-X-Gm-Message-State: ANhLgQ0EIT8iqIOUj+XWNnhhzmGfg1Nb/t+aXCd/0C7+6P70Dn65U1UB
-        aUs5e3bv3JfiChbb++4XvCzwNlBI5hskNH2FAufCAA==
-X-Google-Smtp-Source: ADFU+vuorKp4Am1Eft4fdcP1G8Nf7OvlWyXXPJjJAuw2HysSDIhCcZVTlSzqZ6RrA6JxKhMxZ3B+h9vZHTYAu4IJG2I=
-X-Received: by 2002:a9d:c24:: with SMTP id 33mr8191344otr.355.1584047218074;
- Thu, 12 Mar 2020 14:06:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000041c6c205a08225dc@google.com> <20200312182826.GG79873@mtj.duckdns.org>
-In-Reply-To: <20200312182826.GG79873@mtj.duckdns.org>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 12 Mar 2020 14:06:47 -0700
-Message-ID: <CAHS8izPySSO07dHi3OZ_1uXjmMCGnNMWey+o-qwFM7GnD7oSHw@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in cgroup_file_notify
-To:     Tejun Heo <tj@kernel.org>
-Cc:     syzbot <syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, andriin@fb.com,
-        ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
-        christian@brauner.io, daniel@iogearbox.net,
-        Johannes Weiner <hannes@cmpxchg.org>, kafai@fb.com,
-        open list <linux-kernel@vger.kernel.org>,
-        Li Zefan <lizefan@huawei.com>, netdev@vger.kernel.org,
-        sfr@canb.auug.org.au, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=Jm0QuoVYWLIkEIZ1aBkYIS2YTC2nnJykHw8y19YRbks=;
+        b=RiP3vQJF73W+Oc9aLPFTlES1pJT4j8vCSsJWd554cLZK+xrlR1ErOOFLB45YfLjL4/
+         tjzAfvIDawa/vc6vrnBvaENzcxnUXRrjCkZgV9F5tp8wB/PwwtT4USFHElDKWBcuZE+0
+         8tWhx/QpHpazlTxyfjzx6yCYjUG4wF7o92UicpjhmCAXuRa6JsJ31pY3UxJ84+Pnse5H
+         7BKaoMeXSy3AftX9/4w34sO/BdTJZ+G+zAcpl2losSJVKdxNlpfea67hc1SLCNU4xFpD
+         k+XzwIgm87xrX5G7revy3dBXoux6avD3ZEnIv5Ce38tCXFT0NBiugkHvh+lg8FdrstPn
+         xdBw==
+X-Gm-Message-State: ANhLgQ3k8P+Ic0rDE7JJ76NeNyR8c6rkF+pkAyqk6WKvfIXlFGLb0lA9
+        I7+QrMUmgh2RXtkierxOvO4OIQ==
+X-Google-Smtp-Source: ADFU+vvnMvf++5SeThoOT0hxto5shVB5W2x6CVGUKEKslSAuK/RCOMiFoVgRPFsV+DKEtEtzaqf+Pw==
+X-Received: by 2002:a63:f455:: with SMTP id p21mr9480367pgk.430.1584047362999;
+        Thu, 12 Mar 2020 14:09:22 -0700 (PDT)
+Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id t8sm9081309pjy.11.2020.03.12.14.09.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 14:09:21 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <23C0E698-9507-40FE-9F37-9F1C4CD55192@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_0A2AC55E-C672-4E48-973E-0DE56BB09E8C";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v3 1/4] kernfs: kvmalloc xattr value instead of kmalloc
+Date:   Thu, 12 Mar 2020 15:09:09 -0600
+In-Reply-To: <20200312200317.31736-2-dxu@dxuuu.xyz>
+Cc:     cgroups@vger.kernel.org, tj@kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, viro@zeniv.linux.org.uk, shakeelb@google.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kernel-team@fb.com
+To:     Daniel Xu <dxu@dxuuu.xyz>
+References: <20200312200317.31736-1-dxu@dxuuu.xyz>
+ <20200312200317.31736-2-dxu@dxuuu.xyz>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:28 AM Tejun Heo <tj@kernel.org> wrote:
->
-> On Tue, Mar 10, 2020 at 08:55:14AM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    c99b17ac Add linux-next specific files for 20200225
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1610d70de00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6b7ebe4bd0931c45
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cac0c4e204952cf449b1
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1242e1fde00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1110d70de00000
-> >
-> > The bug was bisected to:
-> >
-> > commit 6863de00e5400b534cd4e3869ffbc8f94da41dfc
-> > Author: Mina Almasry <almasrymina@google.com>
-> > Date:   Thu Feb 20 03:55:30 2020 +0000
-> >
-> >     hugetlb_cgroup: add accounting for shared mappings
->
-> Mina, can you please take a look at this?
->
 
-Gah, I missed the original syzbot email but I just saw this. I'll take a look.
+--Apple-Mail=_0A2AC55E-C672-4E48-973E-0DE56BB09E8C
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> Thanks.
+On Mar 12, 2020, at 2:03 PM, Daniel Xu <dxu@dxuuu.xyz> wrote:
+>=20
+> xattr values have a 64k maximum size. This can result in an order 4
+> kmalloc request which can be difficult to fulfill. Since xattrs do not
+> need physically contiguous memory, we can switch to kvmalloc and not
+> have to worry about higher order allocations failing.
+>=20
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 
->
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+
+> ---
+> fs/xattr.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 90dd78f0eb27..0d3c9b4d1914 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -817,7 +817,7 @@ struct simple_xattr *simple_xattr_alloc(const void =
+*value, size_t size)
+> 	if (len < sizeof(*new_xattr))
+> 		return NULL;
+>=20
+> -	new_xattr =3D kmalloc(len, GFP_KERNEL);
+> +	new_xattr =3D kvmalloc(len, GFP_KERNEL);
+> 	if (!new_xattr)
+> 		return NULL;
+>=20
+> @@ -882,7 +882,7 @@ int simple_xattr_set(struct simple_xattrs *xattrs, =
+const char *name,
+>=20
+> 		new_xattr->name =3D kstrdup(name, GFP_KERNEL);
+> 		if (!new_xattr->name) {
+> -			kfree(new_xattr);
+> +			kvfree(new_xattr);
+> 			return -ENOMEM;
+> 		}
+> 	}
+> @@ -912,7 +912,7 @@ int simple_xattr_set(struct simple_xattrs *xattrs, =
+const char *name,
+> 	spin_unlock(&xattrs->lock);
+> 	if (xattr) {
+> 		kfree(xattr->name);
+> -		kfree(xattr);
+> +		kvfree(xattr);
+> 	}
+> 	return err;
+>=20
 > --
-> tejun
+> 2.21.1
+>=20
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_0A2AC55E-C672-4E48-973E-0DE56BB09E8C
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5qpPwACgkQcqXauRfM
+H+C6PRAApl5bisDXFp/jGULE8gpDy3JaNCc1YAKuK3qMiZB5UjjbzcMkMR9k31ka
+BEfal9TrS7iPffpjhYEXcjStZ/cOQYzp8X7BhN/e+cVP+C+KRxD8E7LniFjfO6ib
+84FMjaCTwFcQzIymBQ8TFjk6QUAOBnOX+eILuWKtRcJegg/sSPq/lLwW1YwGxiOY
+3884UCNusbn7R60JPNY/69+0z93a4zVj5qXLw7Ufzclsozvag8IVO/2S1XI8BWh5
+CZlLGZXDoU1a3W2DqUC7Plajctgd/XuEjER1UrRiIsYKJnkK8gytcegPUedb/efR
+zy58TVNiEHW76yDk0ZVyeIkcXb0p3yeBZVa6HNZ4b1pAd16JNkvdPxQkns5zITvL
+fCJqSpHzRXoKCsh4Tb8xYv0mDyVx5V4VqIZHcn9sXSijak4E29vN+PebpbPomC4j
+BypStjLh7f3bJ9toRIr3yiReVi4TxxytaewJ2ATRfevquO/dsdToec8j7ewhXhEC
+WPpALISGRkrG5xRbDgaGl9Zm9A9a5UeMokR+wMmWIjMicmxLjFdH99afhC+LWEF/
+DYSTvBiFu0e2m5RJNUe9iSPCt/moM43e6GwFZSUDJhRFIxgn3s15rUwWGlM36Pi9
+HWwG7W9CsQcq2juUqt1g/Ui/7C1F+Frz9y0ofmy3pOGkG0irKUE=
+=Kd+G
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_0A2AC55E-C672-4E48-973E-0DE56BB09E8C--
