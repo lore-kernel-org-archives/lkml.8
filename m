@@ -2,137 +2,349 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CD8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A459EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26BB22067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBC02067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:57:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="WLT7lfY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgCLP4q (ORCPT
+        id S1727572AbgCLP5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:56:46 -0400
-Received: from outbound-smtp40.blacknight.com ([46.22.139.223]:40299 "EHLO
-        outbound-smtp40.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726971AbgCLP4p (ORCPT
+        Thu, 12 Mar 2020 11:57:53 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38859 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgCLP5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:56:45 -0400
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp40.blacknight.com (Postfix) with ESMTPS id 32A3A1C3568
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 15:56:43 +0000 (GMT)
-Received: (qmail 6294 invoked from network); 12 Mar 2020 15:56:42 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Mar 2020 15:56:42 -0000
-Date:   Thu, 12 Mar 2020 15:56:40 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jirka Hladky <jhladky@redhat.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200312155640.GX3818@techsingularity.net>
-References: <20200224095223.13361-1-mgorman@techsingularity.net>
- <20200309191233.GG10065@pauld.bos.csb>
- <20200309203625.GU3818@techsingularity.net>
- <20200312095432.GW3818@techsingularity.net>
- <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
+        Thu, 12 Mar 2020 11:57:52 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h5so8090638edn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KFoqHlKe9Gz1nlNRRZBNdmBmwauPKFbN5aYg7hDMwdo=;
+        b=WLT7lfY1Zqf5BYzaQ3nByDF7r8CnBHJmE8k2xiyOm5ryCtZVvF3kqw9VEgPERQ3doW
+         jl7Zbji/5as/viceoo72pqyg9iLh0ho5veyGgzrYbGSJO0lnMBIIrg01a7TcN1aCzZu9
+         oHn0i+nC7jlLU/VstInQEF3vfZfmEClUdqxjySThnoXB3dANG2jVLqiKWLY9QEr6A34u
+         7KZehc4ThmcKDtfbR/oCwHgiC+NBBryX9pDxL262/x6dHtJOU6ZrgNOmxsUccM+F3zkE
+         idCpGSxw+0v0vYwIC+IarVC5vhHEcniYv9Hos0h/Z0H8O90meja4D03QH47TzZqw0xrI
+         MOyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KFoqHlKe9Gz1nlNRRZBNdmBmwauPKFbN5aYg7hDMwdo=;
+        b=By71dDnEZDiXQhKUeIsHcIVzVGszQn152XlxNLx7qIfmUR8OubYFJUzkaBPaDjlWvr
+         DirbV5F8Bmf7TDnPS/Zr3mEoDPOiAUQoaL41nHNKpDDtx1dTLMyVzgwlyTbn0xkuqB1q
+         9+Xh5NJn0VDRkSJsClQm5CKm3BGXIEapSVnVz+i1k1RjMmRBQvqQpEVaG/GYTXfrxAWK
+         HGRYIPbx2l0EtvDrxqJeCsoJRfl/49yE4iNY9CJIqeBARU5+0AmLvkwccQQ+Z10Oz4kR
+         8l8t/jmRfshrBxWywMN1JPIJkJcgJJWhpIHVibMHCzqz8/+OaQhkGm/FARbChDzX9+Pz
+         Zq7A==
+X-Gm-Message-State: ANhLgQ2EJGP7L25ARIo9nD+J94wdMRgRo9JCsZSsAPfhFt3b130+xhiq
+        QpSZxA5RiCuEOFvMRkkEZUGFI5Fuas8S40Ur+w22uA==
+X-Google-Smtp-Source: ADFU+vtrhhYk6GUgRImv9L/MfX6bT3C6fKT+3UCMlb5umWq+7s3Q85gXhMXy72HAwJfbPATR6JHEwoaAgknMk5a0RPc=
+X-Received: by 2002:a50:9998:: with SMTP id m24mr8165526edb.98.1584028669210;
+ Thu, 12 Mar 2020 08:57:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200303190318.522103-1-jason@jlekstrand.net> <20200311034351.1275197-1-jason@jlekstrand.net>
+ <20200311034351.1275197-3-jason@jlekstrand.net> <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
+In-Reply-To: <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
+From:   Jason Ekstrand <jason@jlekstrand.net>
+Date:   Thu, 12 Mar 2020 10:57:37 -0500
+Message-ID: <CAOFGe96gbU03odF2OoLMnA7t7UgM6XrscogOD75dk62=hVFRmA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting
+ sync files (v4)
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Dave Airlie <airlied@redhat.com>,
+        Jesse Hall <jessehall@google.com>,
+        James Jones <jajones@nvidia.com>,
+        Daniel Stone <daniels@collabora.com>,
+        =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Greg Hackmann <ghackmann@google.com>,
+        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:10:36PM +0100, Jirka Hladky wrote:
-> Hi Mel,
-> 
-> thanks a lot for analyzing it!
-> 
-> My big concern is that the performance drop for low threads counts (roughly
-> up to 2x number of NUMA nodes) is not just a rare corner case, but it might
-> be more common.
+On Wed, Mar 11, 2020 at 8:18 AM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 11.03.20 um 04:43 schrieb Jason Ekstrand:
+> > Explicit synchronization is the future.  At least, that seems to be wha=
+t
+> > most userspace APIs are agreeing on at this point.  However, most of ou=
+r
+> > Linux APIs (both userspace and kernel UAPI) are currently built around
+> > implicit synchronization with dma-buf.  While work is ongoing to change
+> > many of the userspace APIs and protocols to an explicit synchronization
+> > model, switching over piecemeal is difficult due to the number of
+> > potential components involved.  On the kernel side, many drivers use
+> > dma-buf including GPU (3D/compute), display, v4l, and others.  In
+> > userspace, we have X11, several Wayland compositors, 3D drivers, comput=
+e
+> > drivers (OpenCL etc.), media encode/decode, and the list goes on.
+> >
+> > This patch provides a path forward by allowing userspace to manually
+> > manage the fences attached to a dma-buf.  Alternatively, one can think
+> > of this as making dma-buf's implicit synchronization simply a carrier
+> > for an explicit fence.  This is accomplished by adding two IOCTLs to
+> > dma-buf for importing and exporting a sync file to/from the dma-buf.
+> > This way a userspace component which is uses explicit synchronization,
+> > such as a Vulkan driver, can manually set the write fence on a buffer
+> > before handing it off to an implicitly synchronized component such as a
+> > Wayland compositor or video encoder.  In this way, each of the differen=
+t
+> > components can be upgraded to an explicit synchronization model one at =
+a
+> > time as long as the userspace pieces connecting them are aware of it an=
+d
+> > import/export fences at the right times.
+> >
+> > There is a potential race condition with this API if userspace is not
+> > careful.  A typical use case for implicit synchronization is to wait fo=
+r
+> > the dma-buf to be ready, use it, and then signal it for some other
+> > component.  Because a sync_file cannot be created until it is guarantee=
+d
+> > to complete in finite time, userspace can only signal the dma-buf after
+> > it has already submitted the work which uses it to the kernel and has
+> > received a sync_file back.  There is no way to atomically submit a
+> > wait-use-signal operation.  This is not, however, really a problem with
+> > this API so much as it is a problem with explicit synchronization
+> > itself.  The way this is typically handled is to have very explicit
+> > ownership transfer points in the API or protocol which ensure that only
+> > one component is using it at any given time.  Both X11 (via the PRESENT
+> > extension) and Wayland provide such ownership transfer points via
+> > explicit present and idle messages.
+> >
+> > The decision was intentionally made in this patch to make the import an=
+d
+> > export operations IOCTLs on the dma-buf itself rather than as a DRM
+> > IOCTL.  This makes it the import/export operation universal across all
+> > components which use dma-buf including GPU, display, v4l, and others.
+> > It also means that a userspace component can do the import/export
+> > without access to the DRM fd which may be tricky to get in cases where
+> > the client communicates with DRM via a userspace API such as OpenGL or
+> > Vulkan.  At a future date we may choose to add direct import/export API=
+s
+> > to components such as drm_syncobj to avoid allocating a file descriptor
+> > and going through two ioctls.  However, that seems to be something of a
+> > micro-optimization as import/export operations are likely to happen at =
+a
+> > rate of a few per frame of rendered or decoded video.
+> >
+> > v2 (Jason Ekstrand):
+> >   - Use a wrapper dma_fence_array of all fences including the new one
+> >     when importing an exclusive fence.
+> >
+> > v3 (Jason Ekstrand):
+> >   - Lock around setting shared fences as well as exclusive
+> >   - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
+> >   - Initialize ret to 0 in dma_buf_wait_sync_file
+> >
+> > v4 (Jason Ekstrand):
+> >   - Use the new dma_resv_get_singleton helper
+> >
+> > Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+> > ---
+> >   drivers/dma-buf/dma-buf.c    | 96 +++++++++++++++++++++++++++++++++++=
++
+> >   include/uapi/linux/dma-buf.h | 13 ++++-
+> >   2 files changed, 107 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > index d4097856c86b..09973c689866 100644
+> > --- a/drivers/dma-buf/dma-buf.c
+> > +++ b/drivers/dma-buf/dma-buf.c
+> > @@ -20,6 +20,7 @@
+> >   #include <linux/debugfs.h>
+> >   #include <linux/module.h>
+> >   #include <linux/seq_file.h>
+> > +#include <linux/sync_file.h>
+> >   #include <linux/poll.h>
+> >   #include <linux/dma-resv.h>
+> >   #include <linux/mm.h>
+> > @@ -348,6 +349,95 @@ static long dma_buf_set_name(struct dma_buf *dmabu=
+f, const char __user *buf)
+> >       return ret;
+> >   }
+> >
+> > +static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
+> > +                                const void __user *user_data)
+> > +{
+> > +     struct dma_buf_sync_file arg;
+> > +     struct dma_fence *fence;
+> > +     int ret =3D 0;
+> > +
+> > +     if (copy_from_user(&arg, user_data, sizeof(arg)))
+> > +             return -EFAULT;
+> > +
+> > +     if (arg.flags !=3D 0 && arg.flags !=3D DMA_BUF_SYNC_FILE_SYNC_WRI=
+TE)
+> > +             return -EINVAL;
+> > +
+> > +     fence =3D sync_file_get_fence(arg.fd);
+> > +     if (!fence)
+> > +             return -EINVAL;
+> > +
+> > +     dma_resv_lock(dmabuf->resv, NULL);
+> > +
+> > +     if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
+> > +             struct dma_fence *singleton =3D NULL;
+> > +             ret =3D dma_resv_get_singleton(dmabuf->resv, fence, &sing=
+leton);
+> > +             if (!ret && singleton)
+> > +                     dma_resv_add_excl_fence(dmabuf->resv, singleton);
+> > +     } else {
+> > +             dma_resv_add_shared_fence(dmabuf->resv, fence);
+> > +     }
+>
+> You also need to create a singleton when adding a shared fences.
+>
+> The problem is that shared fences must always signal after exclusive
+> ones and you can't guarantee that for the fence you add here.
 
-That is hard to tell. In my case I was seeing the problem running a HPC
-workload, dedicated to that machine and using only 6% of available CPUs. I
-find it unlikely that is common because who acquires such a large machine
-and then uses a tiny percentage of it. Rember also the other points I made
-such as 1M migrations happening in the first few seconds just trying to
-deal with the load balancer and NUMA balancer fighting each other. While
-that might happen to be good for SP, it's not universally good behaviour
-and I've dealt with issues in the past whereby the NUMA balancer would
-get confused and just ramp up the frequency it samples and migrates trying
-to override the load balancer.
+I'm beginning to think that I should just drop the flags and always
+wait on all fences and always take what's currently the "write" path.
+Otherwise, something's going to get it wrong somewhere.  Thoughts?
 
-> We see the drop for the following benchmarks/tests,
-> especially on 8 NUMA nodes servers. However, four and even 2 NUMA node
-> servers are affected as well.
-> 
-> Numbers show average performance drop (median of runtime collected from 5
-> subsequential runs) compared to vanilla kernel.
-> 
-> 2x AMD 7351 (EPYC Naples), 8 NUMA nodes
-> ===================================
-> NAS: sp_C test: -50%, peak perf. drop with 8 threads
+Also, Michelle (added to CC) commented on IRC today that amdgpu does
+something with implicit sync fences where it sorts out the fences
+which affect one queue vs. others.  He thought that stuffing fences in
+the dma-buf in this way might cause that to not work.  Thoughts?
 
-I hadn't tested 8 threads specifically I think that works out as
-using 12.5% of the available machine. The allowed imbalance between
-nodes means that some SP instances will stack on the same node but not
-the same CPU.
+--Jason
 
-> NAS: mg_D: -10% with 16 threads
 
-While I do not have the most up to date figures available, I found the
-opposite trend at 21 threads (the test case I used were 1/3rd available
-CPUs and as close to maximum CPUs as possible). There I found it was 10%
-faster for an 8 node machine.
-
-For 4 nodes, using a single JVM was performance neutral *on average* but
-much less variable. With one JVM per node, there was a mix of small <2%
-regressions for some thread counts and up to 9% faster on others.
-
-> SPECjvm2008: co_sunflow test: -20% (peak drop with 8 threads)
-> SPECjvm2008: compress and cr_signverify tests: -10%(peak drop with 8
-> threads)
-
-I didn't run SPECjvm for multiple thread sizes so I don't have data yet
-and may not have for another day at least.
-
-> SPECjbb2005: -10% for 16 threads
-> 
-
-I found this to depend in the number of JVMs used and the thread count.
-Slower at low thread counts, faster at higher thread counts but with
-more stable results with the series applied and less NUMA balancer
-activity.
-
-This is somewhat of a dilemma. Without the series, the load balancer and
-NUMA balancer use very different criteria on what should happen and
-results are not stable. In some cases acting randomly happens to work
-out and in others it does not and overall it depends on the workload and
-machine. It's very highly dependent on both the workload and the machine
-and it's a question if we want to continue dealing with two parts of the
-scheduler disagreeing on what criteria to use or try to improve the
-reconciled load and memory balancer sharing similar logic.
-
-In *general*, I found that the series won a lot more than it lost across
-a spread of workloads and machines but unfortunately it's also an area
-where counter-examples can be found.
-
--- 
-Mel Gorman
-SUSE Labs
+> Regards,
+> Christian.
+>
+> > +
+> > +     dma_resv_unlock(dmabuf->resv);
+> > +
+> > +     dma_fence_put(fence);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
+> > +                                  void __user *user_data)
+> > +{
+> > +     struct dma_buf_sync_file arg;
+> > +     struct dma_fence *fence =3D NULL;
+> > +     struct sync_file *sync_file;
+> > +     int fd, ret;
+> > +
+> > +     if (copy_from_user(&arg, user_data, sizeof(arg)))
+> > +             return -EFAULT;
+> > +
+> > +     if (arg.flags !=3D 0 && arg.flags !=3D DMA_BUF_SYNC_FILE_SYNC_WRI=
+TE)
+> > +             return -EINVAL;
+> > +
+> > +     fd =3D get_unused_fd_flags(O_CLOEXEC);
+> > +     if (fd < 0)
+> > +             return fd;
+> > +
+> > +     if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
+> > +             /* We need to include both the exclusive fence and all of
+> > +              * the shared fences in our fence.
+> > +              */
+> > +             ret =3D dma_resv_get_singleton(dmabuf->resv, NULL, &fence=
+);
+> > +             if (ret)
+> > +                     goto err_put_fd;
+> > +     } else {
+> > +             fence =3D dma_resv_get_excl_rcu(dmabuf->resv);
+> > +     }
+> > +
+> > +     if (!fence)
+> > +             fence =3D dma_fence_get_stub();
+> > +
+> > +     sync_file =3D sync_file_create(fence);
+> > +
+> > +     dma_fence_put(fence);
+> > +
+> > +     if (!sync_file) {
+> > +             ret =3D -EINVAL;
+> > +             goto err_put_fd;
+> > +     }
+> > +
+> > +     fd_install(fd, sync_file->file);
+> > +
+> > +     arg.fd =3D fd;
+> > +     if (copy_to_user(user_data, &arg, sizeof(arg)))
+> > +             return -EFAULT;
+> > +
+> > +     return 0;
+> > +
+> > +err_put_fd:
+> > +     put_unused_fd(fd);
+> > +     return ret;
+> > +}
+> > +
+> >   static long dma_buf_ioctl(struct file *file,
+> >                         unsigned int cmd, unsigned long arg)
+> >   {
+> > @@ -390,6 +480,12 @@ static long dma_buf_ioctl(struct file *file,
+> >       case DMA_BUF_SET_NAME:
+> >               return dma_buf_set_name(dmabuf, (const char __user *)arg)=
+;
+> >
+> > +     case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
+> > +             return dma_buf_wait_sync_file(dmabuf, (const void __user =
+*)arg);
+> > +
+> > +     case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
+> > +             return dma_buf_signal_sync_file(dmabuf, (void __user *)ar=
+g);
+> > +
+> >       default:
+> >               return -ENOTTY;
+> >       }
+> > diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.=
+h
+> > index dbc7092e04b5..86e07acca90c 100644
+> > --- a/include/uapi/linux/dma-buf.h
+> > +++ b/include/uapi/linux/dma-buf.h
+> > @@ -37,8 +37,17 @@ struct dma_buf_sync {
+> >
+> >   #define DMA_BUF_NAME_LEN    32
+> >
+> > +struct dma_buf_sync_file {
+> > +     __u32 flags;
+> > +     __s32 fd;
+> > +};
+> > +
+> > +#define DMA_BUF_SYNC_FILE_SYNC_WRITE (1 << 0)
+> > +
+> >   #define DMA_BUF_BASE                'b'
+> > -#define DMA_BUF_IOCTL_SYNC   _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync=
+)
+> > -#define DMA_BUF_SET_NAME     _IOW(DMA_BUF_BASE, 1, const char *)
+> > +#define DMA_BUF_IOCTL_SYNC       _IOW(DMA_BUF_BASE, 0, struct dma_buf_=
+sync)
+> > +#define DMA_BUF_SET_NAME         _IOW(DMA_BUF_BASE, 1, const char *)
+> > +#define DMA_BUF_IOCTL_WAIT_SYNC_FILE _IOW(DMA_BUF_BASE, 2, struct dma_=
+buf_sync)
+> > +#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE       _IOWR(DMA_BUF_BASE, 3, st=
+ruct dma_buf_sync)
+> >
+> >   #endif
+>
