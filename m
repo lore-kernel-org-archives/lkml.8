@@ -2,107 +2,80 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA14C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD01CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950622067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584034775;
-	bh=gKj38tRb9B5zPwCq4wR8UcmIt9MWnnLod41/lGRxzmc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=i1vI4SJKgSNSql39IUSN3qnwvplAvmX6QQrIqpxr/weAHS5GqGNn63zgBhkimlAEL
-	 ydyIw5yNb/g9LS9nLqLHeR/XPdlJgXjpjZkIcWXiivcUs3/0XT44/96WAyL/6VT02j
-	 0aZabzTys6nEIod0G4dMJIGmC9Z/VokCYp8VUaDE=
+	by mail.kernel.org (Postfix) with ESMTP id 90ED9206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXx85Cl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgCLRje (ORCPT
+        id S1726442AbgCLRo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:39:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:38960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgCLRjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:39:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 298F530E;
-        Thu, 12 Mar 2020 10:39:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A35763F6CF;
-        Thu, 12 Mar 2020 10:39:32 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:39:31 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     broonie@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: meson-spicc: remove unused variables" to the spi tree
-In-Reply-To:  <20200312133131.26430-2-narmstrong@baylibre.com>
-Message-Id:  <applied-20200312133131.26430-2-narmstrong@baylibre.com>
-X-Patchwork-Hint: ignore
+        Thu, 12 Mar 2020 13:44:27 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54128 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725268AbgCLRo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:44:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584035066;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tQyo3JSbB/DH2hR9HstC49m+F50qiRJ2W5RaCusW0vA=;
+        b=UXx85Cl6W6zBLs/Lrn1f4Qnss9kAcbLrkaCoTnns/pb+bfH8z2ursZiLci6RTt1PgAmRkL
+        cVmB6OizRzCRdF3Z98hxiWbNuXYtDi8PQwwQqydJMP27OoMqmuQu9qVDlmZ5nY6PSOA2Xx
+        iJUKF17A1yhJCDdkk+vCGeWTFh5RT30=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-CX8YOnQQPY2OJu_zssqBPA-1; Thu, 12 Mar 2020 13:44:24 -0400
+X-MC-Unique: CX8YOnQQPY2OJu_zssqBPA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2008E13E2;
+        Thu, 12 Mar 2020 17:44:23 +0000 (UTC)
+Received: from treble (ovpn-122-137.rdu2.redhat.com [10.10.122.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6647E90CD0;
+        Thu, 12 Mar 2020 17:44:22 +0000 (UTC)
+Date:   Thu, 12 Mar 2020 12:44:20 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [RFC][PATCH 00/16] objtool: vmlinux.o and noinstr validation
+Message-ID: <20200312174420.gsc35hklw3p7bnhl@treble>
+References: <20200312134107.700205216@infradead.org>
+ <20200312162337.GU12561@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200312162337.GU12561@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Thu, Mar 12, 2020 at 05:23:37PM +0100, Peter Zijlstra wrote:
+> So one of the problem i've ran into while playing with this and Thomas'
+> patches is that it is 'difficult' to deal with indirect function calls.
+> 
+> objtool basically gives up instantly.
+> 
+> I know smatch has passes were it looks for function pointer assignments
+> and carries that forward into it's callchain generation. Doing something
+> like that for objtool is going to be 'fun'...
 
-   spi: meson-spicc: remove unused variables
+Yeah, it would have to keep track of register and memory values, even
+across function calls.  Which is basically crossing over into emulation
+territory.  Which objtool wasn't really built for.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From b9dfb20eed5c7dab37d6267a985dbe16df9e4293 Mon Sep 17 00:00:00 2001
-From: Neil Armstrong <narmstrong@baylibre.com>
-Date: Thu, 12 Mar 2020 14:31:23 +0100
-Subject: [PATCH] spi: meson-spicc: remove unused variables
-
-Remove unused variables from spicc data struct.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lore.kernel.org/r/20200312133131.26430-2-narmstrong@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-meson-spicc.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-index 7f5680fe2568..8425e5ae1273 100644
---- a/drivers/spi/spi-meson-spicc.c
-+++ b/drivers/spi/spi-meson-spicc.c
-@@ -130,9 +130,7 @@ struct meson_spicc_device {
- 	u8				*rx_buf;
- 	unsigned int			bytes_per_word;
- 	unsigned long			tx_remain;
--	unsigned long			txb_remain;
- 	unsigned long			rx_remain;
--	unsigned long			rxb_remain;
- 	unsigned long			xfer_remain;
- 	bool				is_burst_end;
- 	bool				is_last_burst;
 -- 
-2.20.1
+Josh
 
