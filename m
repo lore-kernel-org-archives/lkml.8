@@ -2,117 +2,137 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA49FC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5FEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBE220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EF0206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgCLM3X (ORCPT
+        id S1727126AbgCLM3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:29:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39417 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgCLM3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:29:23 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a9so5960560otl.6;
-        Thu, 12 Mar 2020 05:29:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zjFcVOAemnoKsr2cIZIjqhkKv+6KDzTh2mCpNYwVHFw=;
-        b=mSKPMazigamgms/JZDxDRl9wOnOf8Kk/jZ3N+hK8E2zgzKinTzLzGJaUz4UdqqYWhp
-         Vpdr2G9qNXK4oiM15kuqP5kXDN8ve7hhg1GvULquditB0spNtP+rD6d6pYp7uhPF6wbj
-         IYPN9dAaPP1ROyyp4u6WxbB3DbHVhcvO9JoeYVRvNUb6vVxaaroimX+G+6quc/0m1ryT
-         8OUsbA7FjsAeBJ/QYcTgIlve62W62wc0tp3LMfCq+4ASpxWrwqP69vgMYhLdnNr0ZEmm
-         q485NQ16YxbIeIhXHW40vJVQ4397wAb2+i5mhRbyAGtesWkMIdjmmhaMfY0/drHkJct6
-         VB+A==
-X-Gm-Message-State: ANhLgQ3rPAd83SXfBLdX6PNX/oUNMqo9YAYWJloG97ynAcNGazz4fRyn
-        dZE7gy8Ht2kkqp6h7RGbcENV7Xbwh4/n2zcxPGdhzCUb
-X-Google-Smtp-Source: ADFU+vucH2ks+fpvX4BNhVKQ3S6LjZbVYW6W1MizjhNyTjKcraAwX6o5NYlfrTlM4Dx4g8mOMmj4P3VTBGu0rNdkPKs=
-X-Received: by 2002:a4a:e211:: with SMTP id b17mr3815296oot.79.1584016162158;
- Thu, 12 Mar 2020 05:29:22 -0700 (PDT)
+        Thu, 12 Mar 2020 08:29:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58204 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbgCLM3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:29:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7C355AFE3;
+        Thu, 12 Mar 2020 12:29:26 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id ACE64E0C79; Thu, 12 Mar 2020 13:29:22 +0100 (CET)
+Date:   Thu, 12 Mar 2020 13:29:22 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 10/15] ethtool: provide ring sizes with
+ RINGS_GET request
+Message-ID: <20200312122922.GN8012@unicorn.suse.cz>
+References: <cover.1583962006.git.mkubecek@suse.cz>
+ <55a76ca4eecc92c7209775340ff36ba5dd32f713.1583962006.git.mkubecek@suse.cz>
+ <20200311161625.7292f745@kicinski-fedora-PC1C0HJN>
 MIME-Version: 1.0
-References: <CGME20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83@eucas1p1.samsung.com>
- <20200225144749.19815-1-geert+renesas@glider.be> <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
- <20200226174905.GE25745@shell.armlinux.org.uk> <CAMuHMdW1ojYyWXZpzgiy8PrZnR2PQ9n3SEDrQ7hFFUg0j-jegg@mail.gmail.com>
- <20200226175723.GF25745@shell.armlinux.org.uk> <CAMuHMdV9VyS3kBnhFT-5ry_O-aRafq-8Yor0xxxnjGqNQiSgZw@mail.gmail.com>
- <f30208dc-e74a-cae7-95e6-d99220d9735c@samsung.com>
-In-Reply-To: <f30208dc-e74a-cae7-95e6-d99220d9735c@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Mar 2020 13:29:11 +0100
-Message-ID: <CAMuHMdV=A-ObmHCsSQgbGCm=QxZ==3vSpFg3OMp-o0Aq=N3w6Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: boot: Fix ATAGs with appended DTB
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311161625.7292f745@kicinski-fedora-PC1C0HJN>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+On Wed, Mar 11, 2020 at 04:16:25PM -0700, Jakub Kicinski wrote:
+> On Wed, 11 Mar 2020 22:40:53 +0100 (CET) Michal Kubecek wrote:
+> > +static int rings_prepare_data(const struct ethnl_req_info *req_base,
+> > +			      struct ethnl_reply_data *reply_base,
+> > +			      struct genl_info *info)
+> > +{
+> > +	struct rings_reply_data *data = RINGS_REPDATA(reply_base);
+> > +	struct net_device *dev = reply_base->dev;
+> > +	int ret;
+> > +
+> > +	if (!dev->ethtool_ops->get_ringparam)
+> > +		return -EOPNOTSUPP;
+> > +	ret = ethnl_ops_begin(dev);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +	dev->ethtool_ops->get_ringparam(dev, &data->ringparam);
+> > +	ret = 0;
+> > +	ethnl_ops_complete(dev);
+> > +
+> > +	return ret;
+> 
+> nit: just return 0 and drop ret = 0 above, there is no goto here
 
-On Thu, Mar 12, 2020 at 1:23 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> On 26.02.2020 21:48, Geert Uytterhoeven wrote:
-> > On Wed, Feb 26, 2020 at 6:57 PM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> >> On Wed, Feb 26, 2020 at 06:56:06PM +0100, Geert Uytterhoeven wrote:
-> >>> On Wed, Feb 26, 2020 at 6:49 PM Russell King - ARM Linux admin
-> >>> <linux@armlinux.org.uk> wrote:
-> >>>> On Wed, Feb 26, 2020 at 07:35:14AM +0100, Marek Szyprowski wrote:
-> >>>>> On 25.02.2020 15:47, Geert Uytterhoeven wrote:
-> >>>>>> At early boot, register r8 may contain an ATAGs or DTB pointer.
-> >>>>>> When an appended DTB is found, its address is stored in r8, for
-> >>>>>> extraction of the RAM base address later.
-> >>>>>>
-> >>>>>> However, if r8 contained an ATAGs pointer before, that pointer will be
-> >>>>>> lost, and the provided ATAGs is no longer folded into the provided DTB.
-> >>>>>>
-> >>>>>> Fix this by leaving r8 untouched.
-> >>>>>>
-> >>>>>> Fixes: 137e522593918be2 ("ARM: 8960/1: boot: Obtain start of physical memory from DTB")
-> >>>>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>>> The original commit hasn't been submitted, so it can be fixed before it
-> >>>> hits mainline if you want.  Let me know what you want to do.  Thanks.
-> >>> Fixing the original is fine for me, of course.
-> >>> Thanks!
-> >> Please submit a replacement for 8960/1, thanks.
-> > Done.
->
-> Gentle ping. This fix is still not present in linux-next for over 2 weeks...
+OK
 
-According to
-https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8963
-the fixed version was applied less than one hour ago.
+> > +}
+> > +
+> > +static int rings_reply_size(const struct ethnl_req_info *req_base,
+> > +			    const struct ethnl_reply_data *reply_base)
+> > +{
+> > +	return 8 * nla_total_size(sizeof(u32))
+> 
+> nit: 8 is a little bit of a magic constant
 
-It's now part of arm/for-next.
+I'll rewrite this as a sum of 8 entries with comment referring to
+attribute types. It's still a compile time computed constant so that
+there should be no impact on resulting code.
 
-Gr{oetje,eeting}s,
+> > +		+ 0;
+> 
+> nit: personally not a huge fan
 
-                        Geert
+I don't like it either, to be honest. I just thought, based on reading
+some earlier discussions, that it's the preferred way as it enforces
+a compiler error when someone adds a new attribute and forgets to
+replace the semicolon with plus (which IIRC happened in the past).
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+But as I checked now, reasonably new gcc (at least from version 7)
+issues a warning in such case so that it wouldn't go unnoticed with
+various kbuild bots around. So I agree to get rid of this trick.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > +static int rings_fill_reply(struct sk_buff *skb,
+> > +			    const struct ethnl_req_info *req_base,
+> > +			    const struct ethnl_reply_data *reply_base)
+> > +{
+> > +	const struct rings_reply_data *data = RINGS_REPDATA(reply_base);
+> > +	const struct ethtool_ringparam *ringparam = &data->ringparam;
+> > +
+> > +	if (nla_put_u32(skb, ETHTOOL_A_RINGS_RX_MAX,
+> > +			ringparam->rx_max_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_MINI_MAX,
+> > +			ringparam->rx_mini_max_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_JUMBO_MAX,
+> > +			ringparam->rx_jumbo_max_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_TX_MAX,
+> > +			ringparam->tx_max_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX,
+> > +			ringparam->rx_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_MINI,
+> > +			ringparam->rx_mini_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_RX_JUMBO,
+> > +			ringparam->rx_jumbo_pending) ||
+> > +	    nla_put_u32(skb, ETHTOOL_A_RINGS_TX,
+> > +			ringparam->tx_pending))
+> > +		return -EMSGSIZE;
+> 
+> nit: I wonder if it's necessary to report the zero values..
+
+Good point. I would say that it makes perfect sense to omit the
+attributes if the max value is zero (i.e. this type of ring is not
+supported) but I would still report zero current size if corresponding
+limit is not zero as it means the zero size is meaningful. (Many drivers
+do not allow zero size but I found one which does.)
+
+Michal
