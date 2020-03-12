@@ -2,127 +2,94 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFD9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30F3C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05842074E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74D82074E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MymNgzFA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n2xdJFi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbgCLDKF (ORCPT
+        id S2387692AbgCLDMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:10:05 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45355 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387731AbgCLDKF (ORCPT
+        Wed, 11 Mar 2020 23:12:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39320 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387453AbgCLDMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:10:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id w9so4149175iob.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 20:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7UlCPqaifwtaHRBNM9OlkA92uhGP3P8YtjrPHhM2qXA=;
-        b=MymNgzFAjC7botrqgoNNcIOUuAsnEj/YaRhp929DK9qF9NTSCoVLgqQuyUlCuuWbmc
-         xTX8qnat5Lhd0dx2+HvITd9I3p8W2oFWYYiLmPSxLhHu9VDmI3IenMvfEFdho/S8vd2I
-         yuLM73a7S/wx1yoSfX+QL5qO2LsLHWifPuA0hRfAhHp4rftW0kW6WLVBjS4J0fyOpN3O
-         7r/1++AmSjZryTn2MxF74XgpKzfez6QsJWgBfcCvVchXvT9agRNixKTJPc0eob3a5Q1X
-         xoLsGG5eL0WYwn6be71SqmjgQeJZ5NZqTQtoyqlEcSz37jy3pIQVaP16SIN7GWzqFG9X
-         3jyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7UlCPqaifwtaHRBNM9OlkA92uhGP3P8YtjrPHhM2qXA=;
-        b=cG91q3rXz/sY3K5FubsVm0xCFtWDjJ9gf/ZGXQqZROZHsWJCwMlSKqhHRiLWttICXH
-         siJAeXUdn+ygigkgBvO/kJCWwsdYhVqrZqLG5x0X1Ys1D4VALpKiwuIKo0YREut8WMRz
-         zQ0Y5Bwqg/lOGMe0PT+MSAenlMcZzk7bg/0JMxf+cOoXL8lzF2TLHQSmtihZbnc+M7Ew
-         aXrMYCdSpkomBGQDbTuKhPhxd5XITD1CuG3Y1ohnzVe7iuzR60w2lsY7IlV7bPlp2QE+
-         WqRRwOPMPtcnVniiLJezJVhqA8onWg05zguTN+l0Y1szkDpatxYddEE+UMhVLkzl+8GG
-         tVHA==
-X-Gm-Message-State: ANhLgQ04hmwkn6gcP6HC749vChP/s+ZvvyCezjLf2Hs1/lStWkDp54Mx
-        Qj+IxNOMYp3XREjHIRfJwJtIj1U77xU=
-X-Google-Smtp-Source: ADFU+vs/imBUNrCpmlxjMLXtYVDj0Q3NbjhYgAeR0ptUEQhLsK2b4DLsRH6n4QvzTYidB9g45CZyjQ==
-X-Received: by 2002:a6b:6606:: with SMTP id a6mr5411023ioc.8.1583982602672;
-        Wed, 11 Mar 2020 20:10:02 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id y18sm12685362ilg.82.2020.03.11.20.10.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 20:10:02 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver (UPDATED)
-To:     Dave Taht <dave.taht@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dcbw@redhat.com>,
-        Evan Green <evgreen@google.com>,
-        Eric Caruso <ejcaruso@google.com>,
-        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
-        Chaitanya Pratapa <cpratapa@codeaurora.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200306042831.17827-1-elder@linaro.org>
- <CAA93jw5enz6-h1m=7tGFToK+E+8z3aD80pBef4AYkFrS2u3hHQ@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <e4f436b4-3dd7-970a-9b08-7601fc5428d2@linaro.org>
-Date:   Wed, 11 Mar 2020 22:09:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 23:12:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C3Bp2g146961;
+        Thu, 12 Mar 2020 03:11:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=OYSuTOTjcPPFisULBlKET82iKgFLW3T6hyi+6amkn/g=;
+ b=n2xdJFi95ly0jcbHuXT/wIozg0BWQraJIdgxNCOi1DY8qhoBp7LWFq9R8GXAk4Yyf1yd
+ 3KiBbk3yBCPyakxAFz81RKKyYLwQk5cFjsHqjqYrsKseiSXbLWBWEudZ43sULoVsJElW
+ WZIDYBy1hrQd1Z/3bty2nbS33LqbzG7ZtT8tIQOGBUt2TDHZ0Uy0irJ2T4vaBt+hwB3o
+ j/xwavaqG3bDyQxmP3iV+CSY2rTJlTPACIZY3G4oq9dZFJ/vMI5eygkf9HznEKbY7hOa
+ 0GYCkn/eKCHAqE/wRfsWzy/PKXmR9nVVLvSK7c9Xs1ggx9lJlUN7hTGBm6h7MxjWd3yY pA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ym31uq4j3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 03:11:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C38Wg8114916;
+        Thu, 12 Mar 2020 03:11:51 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2yp8qy921m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 03:11:51 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02C3BoOg023419;
+        Thu, 12 Mar 2020 03:11:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Mar 2020 20:11:49 -0700
+To:     John Garry <john.garry@huawei.com>
+Cc:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Luo Jiaxing <luojiaxing@huawei.com>
+Subject: Re: [PATCH] scsi: hisi_sas: Use dev_err() in read_iost_itct_cache_v3_hw()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1583940144-230800-1-git-send-email-john.garry@huawei.com>
+Date:   Wed, 11 Mar 2020 23:11:47 -0400
+In-Reply-To: <1583940144-230800-1-git-send-email-john.garry@huawei.com> (John
+        Garry's message of "Wed, 11 Mar 2020 23:22:24 +0800")
+Message-ID: <yq1sgie9si4.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAA93jw5enz6-h1m=7tGFToK+E+8z3aD80pBef4AYkFrS2u3hHQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=798
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=875 mlxscore=0 malwarescore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 11:54 AM, Dave Taht wrote:
-> I am happy to see this driver upstream.
-> 
->> Arnd's concern was that the rmnet_data0 network device does not
->> have the benefit of information about the state of the underlying
->> IPA hardware in order to be effective in controlling TX flow.
->> The feared result is over-buffering of TX packets (bufferbloat).
->> I began working on some simple experiments to see whether (or how
->> much) his concern was warranted.  But it turned out that completing
->> these experiments was much more work than had been hoped.
-> 
-> Members of the bufferbloat project *care*, and have tools and testbeds for
-> exploring these issues. It would be good to establish a relationship with
-> the vendor, obtain hardware, and other (technical and financial) support, if
-> possible.
-> 
-> Is there any specific hardware now available (generally or in beta) that
-> can be obtained by us to take a harder look? A contact at linaro or QCA
-> willing discuss options?
 
-There exists some hardware that could be used, but at the moment I have
-not ported this code to operate on it.  It is a current effort however,
-and I will be glad to keep you in the loop on progress.  There are a
-couple of target environments we'd like to support but until last week
-the primary goal was inclusion in the upstream tree.
+John,
 
-I will follow up with you after the dust settles a little bit with
-this patch series, maybe in a week or so.  In the mean time I'll
-also find out whether there are any other resources (people and/or
-hardware) available.
+> The print of pr_err() does not come with device information, so
+> replace it with dev_err(). Also improve the grammar in the message.
 
-					-Alex
+Applied to 5.7/scsi-queue, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
