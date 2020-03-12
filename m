@@ -2,85 +2,143 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6C4C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBB6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9AA720663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD53720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GDBssRqB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o8Alk+mr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbgCLOaO (ORCPT
+        id S1727631AbgCLOaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:30:14 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:44766 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbgCLOaN (ORCPT
+        Thu, 12 Mar 2020 10:30:35 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39002 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgCLOaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:30:13 -0400
-Received: by mail-qv1-f68.google.com with SMTP id w5so2674997qvp.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vM6oc6fo5COIOjScDqQkExf4k5Kw0lPjKerDiWDWlLs=;
-        b=GDBssRqB5HoCEcSFAl4veBaM3ULCEz87+H9W6shCKz64VI7iHbHXaLRH86hKhzvEAO
-         58U9az8YW2VX9xEZYQp7XKEFT9IWX9XPPupTTDtiE7hEclU/O4UdhKpffh9pTWyoBReN
-         FYibIJc5xTWXHNfpH66CYQZ2J55UiZBNv5thKuW4lkbwQlIneziO+dxsXT6vqTqk+OtT
-         fljVAqZVwnVn1yQkaiyFqVE1+anbH9REtujwJh20Z8o56OsxetVSycWbuDPL9eIBaomZ
-         7B8PERVfeQ2ipNQnx0y5xoWFpJjQyEdkBLdMiUtEspgf/nUw1WJzgCA//C8J6rRlQJLJ
-         WjTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vM6oc6fo5COIOjScDqQkExf4k5Kw0lPjKerDiWDWlLs=;
-        b=RHg3vyn500eVJX1dayXWxMsPXJYCzOYGWH5rMQrAcp0bAq/wf8FG1adZYrc9OHYJ2Y
-         j121u/K3wPcvpkTE5EdfXapjxd/h6xgNoQEs6G7C7JFPHe0Z+W0QOxc6L0aOyyNtuyLX
-         bZn0yreeT1DlRc1pSfBrM1oTqGN0JFjYcSTgaO+ROjvpQkQPvxsNe+spj89scPf5V/5o
-         PvRKzplsbJ1WUOZrzfvd5uHLlhT4xF4wALWSonDXzLsACXWYDLScg2JYRgY93zjHFUf9
-         vZV4lUJ1t/R1LzOnbSmxd282W2Md/3WU/wV70vSTwJy+ZOYR6WD4T/BZVc/3JOSfz+C3
-         GOYA==
-X-Gm-Message-State: ANhLgQ1CTrly5noPModI3jvHIfJHL21T2FmRd8XHyhNCqVU8EP4O7KkL
-        k+NXH/XXT9Rt6MA5Ja9CVmVwDi3yyWVl1xHe5gpWFw==
-X-Google-Smtp-Source: ADFU+vskodzAfAY2XYiDJ7aqoyeN9fXBPZhIj/VC7r42Db/fA6y3KJYApo5/zk+3zEyUUZ20T56TyvRlxLq9E51aDII=
-X-Received: by 2002:ad4:4a6c:: with SMTP id cn12mr5105765qvb.148.1584023412109;
- Thu, 12 Mar 2020 07:30:12 -0700 (PDT)
+        Thu, 12 Mar 2020 10:30:35 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CEOXTS128041;
+        Thu, 12 Mar 2020 14:30:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=e+tMMkMgf3MCOE4jrlZHK/XcEXUQhd/9T6GE0jTowew=;
+ b=o8Alk+mrQWZE8S7fatgSRg4N395IURruMp/rnqUbD7lN7gw14Tp2R/fiFPyhlFtpa2dB
+ 6v4Tgi3LzhY9ChxapZjjrBvOaWcf25Qlx0pN3gO4+M8NgMzBARbLPU+vqX7PA5VdEC7m
+ 6nylhNiI1dNn2kbYNekgTqhHw7Ve5nooMcPt9q2Wz91nsgm3l1/3WvQjHytIDDxewpiQ
+ 5mdJfypHevWQfS+uiUA8fsB0xHoSo6rB/R2dzcl2HBGca8u1v0SjmUDos6zjDMJ9cs1n
+ c5iHKGShTRppZY4fyo6AexU32EIPKPqGBRkew/EazuI4yta+ou30cZ6bw/uUVcr1Elwg BA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ym31uswt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 14:30:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CEM679063104;
+        Thu, 12 Mar 2020 14:30:27 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yqgvd1pgp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 14:30:26 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02CEUPjE018237;
+        Thu, 12 Mar 2020 14:30:25 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Mar 2020 07:30:24 -0700
+Date:   Thu, 12 Mar 2020 17:30:19 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 3/5] staging: wfx: make warning about pending frame less
+ scary
+Message-ID: <20200312143019.GN11561@kadam>
+References: <20200310101356.182818-1-Jerome.Pouiller@silabs.com>
+ <20200310101356.182818-4-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-References: <20200312094008.1833929-1-gabravier@gmail.com> <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
- <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
-In-Reply-To: <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Mar 2020 15:29:57 +0100
-Message-ID: <CAMpxmJVSPA9CQBGULyk69KaP42oMdKGg883z0FeFC_mSA5w2xA@mail.gmail.com>
-Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
-To:     Gabriel Ravier <gabravier@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310101356.182818-4-Jerome.Pouiller@silabs.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 12 mar 2020 o 15:21 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
-(a):
->
-> Ah, that was accidental. I was applying scripts/Lindent to my code and
-> ended up also having it applied to part of the old code. Didn't think it
-> would hurt, but I guess it makes sense to be this stringent on
-> separating logical changes. Will send a (complete) corrected patch
-> in-reply-to this message.
->
+On Tue, Mar 10, 2020 at 11:13:54AM +0100, Jerome Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> 
+> Removing station while some traffic is in progress may happen.
+> 
 
-Please don't send patches in response to other threads. Always start a
-new thread and increment the version in [PATCH vX] tag.
+You're doing this in every commit where you start the commit message in
+the subject and then just keep writing.  Take a look at your patch in
+this URL.  Try to find the subject.
 
-Bart
+https://marc.info/?l=linux-driver-devel&m=158383526527951&w=2
+
+The subject is far separated from the body of the commit message.  I
+normally read the patch first, then I read the commit message and I
+don't read the subject at all.  Or sometimes I only read the subject.
+
+https://www.designershumor.com/2019/09/30/you-will-read-this-first-meme/
+
+So it really helps me if the commit message restates the subject.  The
+truth is that I don't really even like the advice that Josh wrote in
+the howto about patch descriptions.  I normally start by explaining the
+problem then how I solved it.  But I try not to be a pedant, so long as
+I can understand the problem and the patch that's fine.  So how I would
+write this commit message is:
+
+    The warning message about releasing a station while Tx is in
+    progress will trigger a stack trace, possibly a reboot depending
+    on the configuration, and a syzbot email.  It's not necessarily
+    a big deal that transmission is still in process so let's make the
+    warning less scary.
+
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> ---
+>  drivers/staging/wfx/sta.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
+> index 03d0f224ffdb..010e13bcd33e 100644
+> --- a/drivers/staging/wfx/sta.c
+> +++ b/drivers/staging/wfx/sta.c
+> @@ -605,7 +605,9 @@ int wfx_sta_remove(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+>  	int i;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(sta_priv->buffered); i++)
+> -		WARN(sta_priv->buffered[i], "release station while Tx is in progress");
+> +		if (sta_priv->buffered[i])
+> +			dev_warn(wvif->wdev->dev, "release station while %d pending frame on queue %d",
+> +				 sta_priv->buffered[i], i);
+
+Why print a warning message at all if this is a normal situation?  Just
+delete the whole thing.
+
+regards,
+dan carpenter
+
