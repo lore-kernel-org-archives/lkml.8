@@ -2,180 +2,164 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D561BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C13A20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC2A206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjKtfUCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbgCLPh0 convert rfc822-to-8bit (ORCPT
+        id S1727612AbgCLPkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:37:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12758 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727240AbgCLPhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:37:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 08:37:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="415974688"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 08:37:24 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 12 Mar 2020 08:37:24 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 12 Mar 2020 08:37:07 -0700
-Received: from bgsmsx105.gar.corp.intel.com (10.223.43.197) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 12 Mar 2020 08:37:06 -0700
-Received: from BGSMSX107.gar.corp.intel.com ([169.254.9.15]) by
- BGSMSX105.gar.corp.intel.com ([169.254.3.70]) with mapi id 14.03.0439.000;
- Thu, 12 Mar 2020 21:07:04 +0530
-From:   "Laxminarayan Bharadiya, Pankaj" 
-        <pankaj.laxminarayan.bharadiya@intel.com>
-To:     =?iso-8859-1?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        "Lattannavar, Sameer" <sameer.lattannavar@intel.com>
-CC:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>,
-        "Kunche, Kishore" <kishore.kunche@intel.com>
-Subject: RE: [RFC][PATCH 0/5] Introduce drm scaling filter property
-Thread-Topic: [RFC][PATCH 0/5] Introduce drm scaling filter property
-Thread-Index: AQHV+HctBjfB2kqX90uGdf9/VtAqI6hFFo+g
-Date:   Thu, 12 Mar 2020 15:37:03 +0000
-Message-ID: <E92BA18FDE0A5B43B7B3DA7FCA031286057B3798@BGSMSX107.gar.corp.intel.com>
-References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
- <20200312140434.GG13686@intel.com>
-In-Reply-To: <20200312140434.GG13686@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.223.10.10]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 12 Mar 2020 11:40:17 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36522 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbgCLPkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:40:17 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m33so4702710qtb.3;
+        Thu, 12 Mar 2020 08:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qRfo0Jsmmm4U/AhlW7P8NwoHLU4zuGZhE4eLNUQ2+QI=;
+        b=bjKtfUCHe7SshAJRfRiHKJiAOfWCuYds+BUm2Ic7P4PVr5vYd9Rfa+cckPqDCC55+t
+         yD6FJBJQGxVdDsr6mWvB+jCljsNaGyJiaiUqfAcvSKwn4RTUKiRjl+2D0kUjaSZYZ/XY
+         zVZJ3Uc9oi0ZS4ATivBPNftm6zmtD5s5kjajFlUfOdy7PQrQMgGKmW6ZvrTjRCiXOinL
+         YQPjJ5mN+yo8u+2bMHHlH82i8vT5gLndH2JADfxHybOavy5KLgWCeegi49dDuXqxVpWB
+         3zovnESyVUNyTYwiZHhbez7gDkl8Yy8lFKI4QLGkPa2TFmA2VluQUaqD3AQSWwWBySja
+         OVGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qRfo0Jsmmm4U/AhlW7P8NwoHLU4zuGZhE4eLNUQ2+QI=;
+        b=JVeySvgZZ9bWW25ThEEhTktpnKX9x+tdBbuVW6xhifVAadIQlunMOfdUkgTJAetx2r
+         Gr24XRKOU+aJX7Flaff/3td0tx8iSJJMxmNI8Z59yp0VfRFM1lsE/ZRyIRMKcqH8DSGy
+         7HX0XueMe6EyPawnmPdxukThPr3ReX0STHkXMJARdtIBdvgAvfm7Ku97N1TwkEQR4pFF
+         smFQ+oT8Slbvt4lih9kT/Gvm5FxhG+83X5xWWSdnBzvHFTS2+IrnGvu5FZFurWm7QVw/
+         iRuA+6WuutXmoeWbyVbnk8ibMcdTlZg7xcppQrFb5Zu4rXsYRxUVKscK3FdC2J3BN5EP
+         vOpw==
+X-Gm-Message-State: ANhLgQ12KYteB8STBvarPonsmuU1pVcFqpT74huvRGs3H/kA2t7LWN6b
+        so2pA8idKc+N/PGvIPpH3s0=
+X-Google-Smtp-Source: ADFU+vuALdIRhw3biMmdUsl4H0a9RZFcaeD0dOk9rZJZpV9ei6j1RatB2nqDB4oeJ3UmG5ksN9LQAA==
+X-Received: by 2002:aed:23aa:: with SMTP id j39mr7813677qtc.42.1584027615696;
+        Thu, 12 Mar 2020 08:40:15 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id m92sm1254388qtd.94.2020.03.12.08.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 08:40:14 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 11:40:12 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] counter: 104-quad-8: Add lock guards for filter
+ clock prescaler
+Message-ID: <20200312154012.GC3250@icarus>
+References: <20200312112552.GA32509@syed>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
+Content-Disposition: inline
+In-Reply-To: <20200312112552.GA32509@syed>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--ncSAzJYg3Aa9+CRW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Sent: 12 March 2020 19:35
-> To: Laxminarayan Bharadiya, Pankaj
-> <pankaj.laxminarayan.bharadiya@intel.com>
-> Cc: jani.nikula@linux.intel.com; daniel@ffwll.ch; intel-
-> gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; airlied@linux.ie;
-> maarten.lankhorst@linux.intel.com; tzimmermann@suse.de;
-> mripard@kernel.org; mihail.atanassov@arm.com; linux-
-> kernel@vger.kernel.org; Nautiyal, Ankit K <ankit.k.nautiyal@intel.com>
-> Subject: Re: [RFC][PATCH 0/5] Introduce drm scaling filter property
-> 
-> On Tue, Feb 25, 2020 at 12:35:40PM +0530, Pankaj Bharadiya wrote:
-> > Integer scaling (IS) is a nearest-neighbor upscaling technique that
-> > simply scales up the existing pixels by an integer (i.e., whole
-> > number) multiplier. Nearest-neighbor (NN) interpolation works by
-> > filling in the missing color values in the upscaled image with that of
-> > the coordinate-mapped nearest source pixel value.
-> >
-> > Both IS and NN preserve the clarity of the original image. In
-> > contrast, traditional upscaling algorithms, such as bilinear or
-> > bicubic interpolation, result in blurry upscaled images because they
-> > employ interpolation techniques that smooth out the transition from
-> > one pixel to another.  Therefore, integer scaling is particularly
-> > useful for pixel art games that rely on sharp, blocky images to
-> > deliver their distinctive look.
-> >
-> > Many gaming communities have been asking for integer-mode scaling
-> > support, some links and background:
-> >
-> > https://software.intel.com/en-us/articles/integer-scaling-support-on-i
-> > ntel-graphics http://tanalin.com/en/articles/lossless-scaling/
-> > https://community.amd.com/thread/209107
-> > https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1002
-> > /feature-request-nonblurry-upscaling-at-integer-rat/
-> >
-> > This patch series -
-> >   - Introduces new scaling filter property to allow userspace to
-> >     select  the driver's default scaling filter or Nearest-neighbor(NN)
-> >     filter for scaling operations on crtc/plane.
-> >   - Implements and enable integer scaling for i915
-> >
-> > Userspace patch series link: TBD.
-> 
-> That needs to be done or this will go nowhere.
+On Thu, Mar 12, 2020 at 04:55:52PM +0530, Syed Nayyar Waris wrote:
+> Add lock protection from race conditions in the 104-quad-8 counter
+> driver for filter clock prescaler related changes. There is no IRQ
+> handling so used spin_lock calls for protection.
+>=20
+> Fixes: 9b74dddf79be ("counter: 104-quad-8: Support Filter Clock
+> Prescaler")
+>=20
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+>=20
+> Split the patch from generic interface and differential encoder cable
+> status changes. Also, include more code statements for protection using
+> spin_lock calls and remove protection from few code statements which are
+> unnecessary.
+> ---
 
-Yes, Sameer is working on enabling this feature in Kodi. 
-Sameer, please share link here once you post patches.
- 
-Thanks,
-Pankaj
+Hello Syed,
 
-> 
-> >
-> > Thanks to Shashank for initiating this work. His initial RFC can be
-> > found here [1]
-> >
-> > [1] https://patchwork.freedesktop.org/patch/337082/
-> >
-> > Modifications done in this series -
-> >    - refactored code and incorporated initial review comments and
-> >      added 2 scaling filter types (default and NN) to begin with.
-> >    - added scaling filter property support for planes and new API
-> >      helpers for drivers to setup this property.
-> >    - rewrote code to enable integer scaling and NN filter for i915
-> >
-> >
-> > Pankaj Bharadiya (5):
-> >   drm: Introduce scaling filter property
-> >   drm/drm-kms.rst: Add Scaling filter property documentation
-> >   drm/i915: Enable scaling filter for plane and pipe
-> >   drm/i915: Introduce scaling filter related registers and bit fields.
-> >   drm/i915/display: Add Nearest-neighbor based integer scaling support
-> >
-> >  Documentation/gpu/drm-kms.rst                |   6 ++
-> >  drivers/gpu/drm/drm_atomic_uapi.c            |   8 ++
-> >  drivers/gpu/drm/drm_crtc.c                   |  16 +++
-> >  drivers/gpu/drm/drm_mode_config.c            |  13 +++
-> >  drivers/gpu/drm/drm_plane.c                  |  35 +++++++
-> >  drivers/gpu/drm/i915/display/intel_display.c | 100 ++++++++++++++++++-
-> >  drivers/gpu/drm/i915/display/intel_display.h |   2 +
-> >  drivers/gpu/drm/i915/display/intel_sprite.c  |  32 ++++--
-> >  drivers/gpu/drm/i915/i915_reg.h              |  21 ++++
-> >  include/drm/drm_crtc.h                       |  10 ++
-> >  include/drm/drm_mode_config.h                |   6 ++
-> >  include/drm/drm_plane.h                      |  14 +++
-> >  12 files changed, 252 insertions(+), 11 deletions(-)
-> >
-> > --
-> > 2.23.0
-> 
-> --
-> Ville Syrjälä
-> Intel
+Remove the review comments from the commit message and I think this
+patch is all right. You can also extend the Fixes line so that it
+doesn't wrap around. Add the following Signed-off-by line underneath
+yours and it'll remind me that I've already reviewed this patch when you
+submit v4 of your patchset:
+
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+
+Thank you,
+
+William Breathitt Gray
+
+>  drivers/counter/104-quad-8.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+> index 9dab190..58615e4 100644
+> --- a/drivers/counter/104-quad-8.c
+> +++ b/drivers/counter/104-quad-8.c
+> @@ -1230,6 +1230,8 @@ static ssize_t quad8_signal_fck_prescaler_write(str=
+uct counter_device *counter,
+>  	if (ret)
+>  		return ret;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->fck_prescaler[channel_id] =3D prescaler;
+> =20
+>  	/* Reset Byte Pointer */
+> @@ -1240,6 +1242,8 @@ static ssize_t quad8_signal_fck_prescaler_write(str=
+uct counter_device *counter,
+>  	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
+>  	     base_offset + 1);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> --=20
+> 2.7.4
+>=20
+
+--ncSAzJYg3Aa9+CRW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl5qV9wACgkQhvpINdm7
+VJJBLRAA4oZHQ9p7kGoPTgepRi+sfHPlW3qm1lBDpWC5bo41G/pPHv3zy3p2/t6b
+AKKX4/+mE0M43M3APYnYD0tkzl8ZuT29lrnNyOHXink235ljEgysOYeynr+6Ju9n
+Guo7v40BLF+IamooDvrJYIZiwRkcPocV9K7CUAEHz61PDGHqkPvItnf8hzwh1TFa
+5JBkL3uufkMiH1SRvfx1eyGqphToHZH/Eu+2FalWfKyp2fueUmwohmqh6Ju6cP4p
+vAgRs3R7XNmEjRAjV2iGYF4kkcfOy5kMEhSHMzXZQVcQvJ2ENOAiU2VIyifRAhSy
+ZMCGBYxUjIl4n72+hDXoL+WyegKI/wOpYqseNV6xKfxUU8asaclaZIGclXWTWqz7
+kkbehOjVppgxRHdFjfmjBnZh5uYQVYCNt/pZFy8Hqrd2h/JMXc39DPGTxZi0p47p
+7Apl1oWC/nuRHy0Irx8jJk/juw1xhOxRTcZmlrqeMTKsQKQn1IAVC9Y1vTdEWQDS
+pbnMORAdzQFUzqs+vtlDOXOipmATgpURIL96Dh5z84qRM4pTm2uvkhQ7ypsVY7nS
+coOJIX0xMwDZVdhHqd540hClHYbJgqCt/59CiqcHS0LWCKv+OHOgJU9WP5HzioUs
+kEjK9qre3JFwlgb5NyZ9nzZfT1FuNCzvpaaD/CU5wZFE2xBl8ys=
+=cfwF
+-----END PGP SIGNATURE-----
+
+--ncSAzJYg3Aa9+CRW--
