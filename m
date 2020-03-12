@@ -2,221 +2,341 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E84C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB622C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F36F2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42F2206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCLTeT (ORCPT
+        id S1726956AbgCLTed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:34:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62293 "EHLO mga07.intel.com"
+        Thu, 12 Mar 2020 15:34:33 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27314 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgCLTeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:34:17 -0400
+        id S1726569AbgCLTed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:34:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 12:34:16 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 12:34:32 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="261629956"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 12 Mar 2020 12:34:15 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jCTaw-0005kF-MK; Fri, 13 Mar 2020 03:34:14 +0800
-Date:   Fri, 13 Mar 2020 03:33:54 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cpu] BUILD SUCCESS
- 753039ef8b2f1078e5bff8cd42f80578bf6385b0
-Message-ID: <5e6a8ea2.3vMOoXpDr0MgnaW3%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="243142517"
+Received: from unknown (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.241.169])
+  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 12:34:30 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Rander Wang <rander.wang@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Fred Oh <fred.oh@linux.intel.com>
+Subject: [PATCH 02/10] ASoC: SOF: Intel: add SoundWire configuration interface
+Date:   Thu, 12 Mar 2020 14:33:38 -0500
+Message-Id: <20200312193346.3264-3-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200312193346.3264-1-pierre-louis.bossart@linux.intel.com>
+References: <20200312193346.3264-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
-branch HEAD: 753039ef8b2f1078e5bff8cd42f80578bf6385b0  x86/cpu/amd: Call init_amd_zn() om Family 19h processors too
+Now that the SoundWire core supports the multi-step initialization,
+call the relevant APIs.
 
-elapsed time: 485m
+The actual hardware enablement can be done in two places, ideally we'd
+want to startup the SoundWire IP as soon as possible (while still
+taking power rail dependencies into account)
 
-configs tested: 158
-configs skipped: 106
+However when suspend/resume is implemented, the DSP device will be
+resumed first, and only when the DSP firmware is downloaded/booted
+would the SoundWire child devices be resumed, so there are only
+marginal benefits in starting the IP earlier for the first probe.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-mips                      fuloong2e_defconfig
-sparc64                           allnoconfig
-c6x                              allyesconfig
-mips                      malta_kvm_defconfig
-s390                          debug_defconfig
-s390                       zfcpdump_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200312
-x86_64               randconfig-a002-20200312
-x86_64               randconfig-a003-20200312
-i386                 randconfig-a001-20200312
-i386                 randconfig-a002-20200312
-i386                 randconfig-a003-20200312
-alpha                randconfig-a001-20200312
-m68k                 randconfig-a001-20200312
-mips                 randconfig-a001-20200312
-nds32                randconfig-a001-20200312
-parisc               randconfig-a001-20200312
-c6x                  randconfig-a001-20200312
-h8300                randconfig-a001-20200312
-microblaze           randconfig-a001-20200312
-nios2                randconfig-a001-20200312
-sparc64              randconfig-a001-20200312
-csky                 randconfig-a001-20200312
-openrisc             randconfig-a001-20200312
-s390                 randconfig-a001-20200312
-sh                   randconfig-a001-20200312
-xtensa               randconfig-a001-20200312
-x86_64               randconfig-b001-20200311
-x86_64               randconfig-b002-20200311
-x86_64               randconfig-b003-20200311
-i386                 randconfig-b001-20200311
-i386                 randconfig-b002-20200311
-i386                 randconfig-b003-20200311
-x86_64               randconfig-c001-20200311
-x86_64               randconfig-c002-20200311
-x86_64               randconfig-c003-20200311
-i386                 randconfig-c001-20200311
-i386                 randconfig-c002-20200311
-i386                 randconfig-c003-20200311
-x86_64               randconfig-c001-20200312
-x86_64               randconfig-c002-20200312
-x86_64               randconfig-c003-20200312
-i386                 randconfig-c001-20200312
-i386                 randconfig-c002-20200312
-i386                 randconfig-c003-20200312
-x86_64               randconfig-e003-20200312
-i386                 randconfig-e003-20200312
-i386                 randconfig-e002-20200312
-x86_64               randconfig-e002-20200312
-x86_64               randconfig-e001-20200312
-i386                 randconfig-e001-20200312
-x86_64               randconfig-f001-20200312
-x86_64               randconfig-f002-20200312
-x86_64               randconfig-f003-20200312
-i386                 randconfig-f001-20200312
-i386                 randconfig-f002-20200312
-i386                 randconfig-f003-20200312
-i386                 randconfig-g003-20200312
-i386                 randconfig-g001-20200312
-x86_64               randconfig-g003-20200312
-x86_64               randconfig-g002-20200312
-x86_64               randconfig-g001-20200312
-i386                 randconfig-g002-20200312
-x86_64               randconfig-h001-20200312
-x86_64               randconfig-h002-20200312
-x86_64               randconfig-h003-20200312
-i386                 randconfig-h001-20200312
-i386                 randconfig-h002-20200312
-i386                 randconfig-h003-20200312
-arm                  randconfig-a001-20200312
-arm64                randconfig-a001-20200312
-ia64                 randconfig-a001-20200312
-powerpc              randconfig-a001-20200312
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ sound/soc/sof/intel/hda-loader.c |  13 ++++
+ sound/soc/sof/intel/hda.c        | 120 +++++++++++++++++++++++++++++++
+ sound/soc/sof/intel/hda.h        |  44 ++++++++++++
+ 3 files changed, 177 insertions(+)
+
+diff --git a/sound/soc/sof/intel/hda-loader.c b/sound/soc/sof/intel/hda-loader.c
+index 03b05d7f66da..8a37a473f8aa 100644
+--- a/sound/soc/sof/intel/hda-loader.c
++++ b/sound/soc/sof/intel/hda-loader.c
+@@ -402,6 +402,19 @@ int hda_dsp_pre_fw_run(struct snd_sof_dev *sdev)
+ /* post fw run operations */
+ int hda_dsp_post_fw_run(struct snd_sof_dev *sdev)
+ {
++	int ret;
++
++	if (sdev->first_boot) {
++		ret = hda_sdw_startup(sdev);
++		if (ret < 0) {
++			dev_err(sdev->dev,
++				"error: could not startup SoundWire links\n");
++			return ret;
++		}
++	}
++
++	hda_sdw_int_enable(sdev, true);
++
+ 	/* re-enable clock gating and power gating */
+ 	return hda_dsp_ctrl_clock_power_gating(sdev, true);
+ }
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index 7ca887041a34..36015dd6c31a 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -18,7 +18,9 @@
+ #include <sound/hdaudio_ext.h>
+ #include <sound/hda_register.h>
+ 
++#include <linux/acpi.h>
+ #include <linux/module.h>
++#include <linux/soundwire/sdw_intel.h>
+ #include <sound/intel-nhlt.h>
+ #include <sound/sof.h>
+ #include <sound/sof/xtensa.h>
+@@ -34,6 +36,98 @@
+ 
+ #define EXCEPT_MAX_HDR_SIZE	0x400
+ 
++#if IS_ENABLED(CONFIG_SND_SOC_SOF_INTEL_SOUNDWIRE)
++
++void hda_sdw_int_enable(struct snd_sof_dev *sdev, bool enable)
++{
++	sdw_intel_enable_irq(sdev->bar[HDA_DSP_BAR], enable);
++}
++
++static int hda_sdw_acpi_scan(struct snd_sof_dev *sdev)
++{
++	struct sof_intel_hda_dev *hdev;
++	acpi_handle handle;
++	int ret;
++
++	handle = ACPI_HANDLE(sdev->dev);
++
++	/* save ACPI info for the probe step */
++	hdev = sdev->pdata->hw_pdata;
++
++	ret = sdw_intel_acpi_scan(handle, &hdev->info);
++	if (ret < 0) {
++		dev_err(sdev->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int hda_sdw_probe(struct snd_sof_dev *sdev)
++{
++	struct sof_intel_hda_dev *hdev;
++	struct sdw_intel_res res;
++	acpi_handle handle;
++	void *sdw;
++
++	handle = ACPI_HANDLE(sdev->dev);
++
++	hdev = sdev->pdata->hw_pdata;
++
++	memset(&res, 0, sizeof(res));
++
++	res.mmio_base = sdev->bar[HDA_DSP_BAR];
++	res.irq = sdev->ipc_irq;
++	res.handle = hdev->info.handle;
++	res.parent = sdev->dev;
++
++	/*
++	 * ops and arg fields are not populated for now,
++	 * they will be needed when the DAI callbacks are
++	 * provided
++	 */
++
++	/* we could filter links here if needed, e.g for quirks */
++	res.count = hdev->info.count;
++	res.link_mask = hdev->info.link_mask;
++
++	sdw = sdw_intel_probe(&res);
++	if (!sdw) {
++		dev_err(sdev->dev, "error: SoundWire probe failed\n");
++		return -EINVAL;
++	}
++
++	/* save context */
++	hdev->sdw = sdw;
++
++	return 0;
++}
++
++int hda_sdw_startup(struct snd_sof_dev *sdev)
++{
++	struct sof_intel_hda_dev *hdev;
++
++	hdev = sdev->pdata->hw_pdata;
++
++	return sdw_intel_startup(hdev->sdw);
++}
++
++static int hda_sdw_exit(struct snd_sof_dev *sdev)
++{
++	struct sof_intel_hda_dev *hdev;
++
++	hdev = sdev->pdata->hw_pdata;
++
++	hda_sdw_int_enable(sdev, false);
++
++	if (hdev->sdw)
++		sdw_intel_exit(hdev->sdw);
++	hdev->sdw = NULL;
++
++	return 0;
++}
++#endif
++
+ /*
+  * Debug
+  */
+@@ -347,9 +441,12 @@ static const char *fixup_tplg_name(struct snd_sof_dev *sdev,
+ static int hda_init_caps(struct snd_sof_dev *sdev)
+ {
+ 	struct hdac_bus *bus = sof_to_bus(sdev);
++	struct snd_sof_pdata *pdata = sdev->pdata;
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+ 	struct hdac_ext_link *hlink;
+ #endif
++	struct sof_intel_hda_dev *hdev = pdata->hw_pdata;
++	u32 link_mask;
+ 	int ret = 0;
+ 
+ 	device_disable_async_suspend(bus->dev);
+@@ -366,6 +463,27 @@ static int hda_init_caps(struct snd_sof_dev *sdev)
+ 		return ret;
+ 	}
+ 
++	/* scan SoundWire capabilities exposed by DSDT */
++	ret = hda_sdw_acpi_scan(sdev);
++	if (ret < 0) {
++		dev_err(sdev->dev, "error: SoundWire ACPI scan error\n");
++		return ret;
++	}
++
++	link_mask = hdev->info.link_mask;
++	if (!link_mask) {
++		/*
++		 * probe/allocated SoundWire resources.
++		 * The hardware configuration takes place in hda_sdw_startup
++		 * after power rails are enabled.
++		 */
++		ret = hda_sdw_probe(sdev);
++		if (ret < 0) {
++			dev_err(sdev->dev, "error: SoundWire probe error\n");
++			return ret;
++		}
++	}
++
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+ 	if (bus->mlcap)
+ 		snd_hdac_ext_bus_get_ml_capabilities(bus);
+@@ -626,6 +744,8 @@ int hda_dsp_remove(struct snd_sof_dev *sdev)
+ 	snd_hdac_ext_bus_device_remove(bus);
+ #endif
+ 
++	hda_sdw_exit(sdev);
++
+ 	if (!IS_ERR_OR_NULL(hda->dmic_dev))
+ 		platform_device_unregister(hda->dmic_dev);
+ 
+diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+index 537c0a930a15..3cf2fb5985b9 100644
+--- a/sound/soc/sof/intel/hda.h
++++ b/sound/soc/sof/intel/hda.h
+@@ -11,6 +11,8 @@
+ #ifndef __SOF_INTEL_HDA_H
+ #define __SOF_INTEL_HDA_H
+ 
++#include <linux/soundwire/sdw.h>
++#include <linux/soundwire/sdw_intel.h>
+ #include <sound/compress_driver.h>
+ #include <sound/hda_codec.h>
+ #include <sound/hdaudio_ext.h>
+@@ -437,6 +439,12 @@ struct sof_intel_hda_dev {
+ 
+ 	/* delayed work to enter D0I3 opportunistically */
+ 	struct delayed_work d0i3_work;
++
++	/* ACPI information stored between scan and probe steps */
++	struct sdw_intel_acpi_info info;
++
++	/* sdw context allocated by SoundWire driver */
++	struct sdw_intel_ctx *sdw;
+ };
+ 
+ static inline struct hdac_bus *sof_to_bus(struct snd_sof_dev *s)
+@@ -655,6 +663,42 @@ int hda_dsp_trace_init(struct snd_sof_dev *sdev, u32 *stream_tag);
+ int hda_dsp_trace_release(struct snd_sof_dev *sdev);
+ int hda_dsp_trace_trigger(struct snd_sof_dev *sdev, int cmd);
+ 
++/*
++ * SoundWire support
++ */
++#if IS_ENABLED(CONFIG_SND_SOC_SOF_INTEL_SOUNDWIRE)
++
++int hda_sdw_startup(struct snd_sof_dev *sdev);
++void hda_sdw_int_enable(struct snd_sof_dev *sdev, bool enable);
++
++#else
++
++static inline int hda_sdw_acpi_scan(struct snd_sof_dev *sdev)
++{
++	return 0;
++}
++
++static inline int hda_sdw_probe(struct snd_sof_dev *sdev)
++{
++	return 0;
++}
++
++static inline int hda_sdw_startup(struct snd_sof_dev *sdev)
++{
++	return 0;
++}
++
++static inline int hda_sdw_exit(struct snd_sof_dev *sdev)
++{
++	return 0;
++}
++
++static inline void hda_sdw_int_enable(struct snd_sof_dev *sdev, bool enable)
++{
++}
++
++#endif
++
+ /* common dai driver */
+ extern struct snd_soc_dai_driver skl_dai[];
+ 
+-- 
+2.20.1
+
