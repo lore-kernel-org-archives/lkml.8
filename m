@@ -2,115 +2,71 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87FC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C989C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1542072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453162071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584024121;
-	bh=rwALx85sL9uxz9h24BYrbFnTq6oyh/cOVDhdniakHzk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Yeg6WlSWoDF3nNOHLmPwduMdaGS8fOIITosZfOcDVScsJv/xFdRV1sQJJUu6aciTS
-	 Wmj1wDT4zAlBkrrBjR3VRoCsOsDZH2XWWewH/hrTKofkUU+4gydxL+3tgw6CBflJVx
-	 /8yUMtJHOhn50W8cE1G1D30MzyYdLJJ//EDXy8Rc=
+	s=default; t=1584024125;
+	bh=3V+qE2bmVHwG3+3FnGVMnNeT4gbtWXLMegY28bMW1zg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gJLEFb8EWFzU91m67U8SgdEZge8rQO78T64PrRiOko2DG2h3H4ZB9g5EaurNcWI8J
+	 0TwHEg+72Rltnk9eECGMmqyJ+yrzaXPTTgoNBLp9afiAivLxXYlFCAMmZCS22IgXO5
+	 RwrytHBJpFehooXanmQ1gTQwBDI5iPWyQpDOLw40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgCLOmA (ORCPT
+        id S1727710AbgCLOmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 10:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgCLOl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:41:59 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        id S1727083AbgCLOmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:42:02 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DFC5206E7;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E51C2071B;
         Thu, 12 Mar 2020 14:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584024119;
-        bh=rwALx85sL9uxz9h24BYrbFnTq6oyh/cOVDhdniakHzk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1XtiEyLN/mnOQ3bewdx1k97d0rs0nBAo4iMJlADMpY54tvJoyAfqZRVkn+pY3Mear
-         H3fiV7NixjRk6sHXRrkbfsjJ8wm/5LNnZN+pQJKFaS+gH1B2Iw/0gy43OnwJKu+JXo
-         g4f5WXrBhK/85gaNhjO46JDvgsgtlva/prm2iMWw=
-Date:   Thu, 12 Mar 2020 09:41:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     paulus@samba.org, mpe@ellerman.id.au, tyreld@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
- 'value'
-Message-ID: <20200312144157.GA110750@google.com>
+        s=default; t=1584024122;
+        bh=3V+qE2bmVHwG3+3FnGVMnNeT4gbtWXLMegY28bMW1zg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jgC1NrhTkMGsvXTSlMZr4SUqqkR6Z2K7ruSHOPy+HXUOJpWt47qnwyRWvVuPQ8VR8
+         voHPgnOT9JH+uq7t4y3CR/eUpupi5T3LtWlyG/N84+ctoA4S61UVedJxYOUQ6Z3ziZ
+         Ry/CeiriWisbaO9wvsJoQQug289ZhMjFzdvAnwvk=
+Date:   Thu, 12 Mar 2020 22:41:53 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
+        Han Xu <han.xu@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] arm64: dts: enable fspi in imx8mm dts
+Message-ID: <20200312144152.GE1249@dragon>
+References: <20200306101957.1229406-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312143800.GA109542@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306101957.1229406-1-aford173@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> > 
-> > drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
-> > drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
-> > 	variable value set but not used [-Wunused-but-set-variable]
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+On Fri, Mar 06, 2020 at 04:19:57AM -0600, Adam Ford wrote:
+> Pull in upstream patch from NXP repo to:
+> enable fspi in imx8mm DT file
 > 
-> Michael, if you want this:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> If you don't mind, edit the subject to follow the convention, e.g.,
-> 
->   PCI: rpaphp: Remove unused variable 'value'
-> 
-> Apparently simple_strtoul() is deprecated and we're supposed to use
-> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
-> little, too, e.g.,
-> 
->   if (kstrtoul(drc_type, 0, &value) == 0)
->     return 1;
-> 
->   return 0;
+> Signed-off-by: Han Xu <han.xu@nxp.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-I guess there are several other uses of simple_strtoul() in this file.
-Not sure if it's worth changing them all, just this one, or just the
-patch below as-is.
-
-> > ---
-> >  drivers/pci/hotplug/rpaphp_core.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> > index e408e40..5d871ef 100644
-> > --- a/drivers/pci/hotplug/rpaphp_core.c
-> > +++ b/drivers/pci/hotplug/rpaphp_core.c
-> > @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
-> >  
-> >  static int is_php_type(char *drc_type)
-> >  {
-> > -	unsigned long value;
-> >  	char *endptr;
-> >  
-> >  	/* PCI Hotplug nodes have an integer for drc_type */
-> > -	value = simple_strtoul(drc_type, &endptr, 10);
-> > +	simple_strtoul(drc_type, &endptr, 10);
-> >  	if (endptr == drc_type)
-> >  		return 0;
-> >  
-> > -- 
-> > 2.7.4
-> > 
+Applied, thanks.
