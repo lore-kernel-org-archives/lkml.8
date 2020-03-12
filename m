@@ -2,137 +2,98 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A383C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946DAC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDDD206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C830206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCLTfm (ORCPT
+        id S1726797AbgCLTiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:35:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45962 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgCLTfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:35:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 12:35:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="243142775"
-Received: from unknown (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.241.169])
-  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 12:35:39 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Rander Wang <rander.wang@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Fred Oh <fred.oh@linux.intel.com>
-Subject: [PATCH 10/10] Asoc: SOF: Intel: hda: check SoundWire wakeen interrupt in irq thread
-Date:   Thu, 12 Mar 2020 14:33:46 -0500
-Message-Id: <20200312193346.3264-11-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200312193346.3264-1-pierre-louis.bossart@linux.intel.com>
-References: <20200312193346.3264-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 12 Mar 2020 15:38:23 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56666 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgCLTiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:38:23 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCTeV-00AJDj-Tq; Thu, 12 Mar 2020 19:37:55 +0000
+Date:   Thu, 12 Mar 2020 19:37:55 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Stefan Metzmacher <metze@samba.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Ian Kent <raven@themaw.net>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, jlayton@redhat.com,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeremy Allison <jra@samba.org>,
+        Ralph =?iso-8859-1?Q?B=F6hme?= <slow@samba.org>,
+        Volker Lendecke <vl@sernet.de>
+Subject: Re: [PATCH 01/14] VFS: Add additional RESOLVE_* flags [ver #18]
+Message-ID: <20200312193755.GL23230@ZenIV.linux.org.uk>
+References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
+ <158376245699.344135.7522994074747336376.stgit@warthog.procyon.org.uk>
+ <20200310005549.adrn3yf4mbljc5f6@yavin>
+ <CAHk-=wiEBNFJ0_riJnpuUXTO7+_HByVo-R3pGoB_84qv3LzHxA@mail.gmail.com>
+ <580352.1583825105@warthog.procyon.org.uk>
+ <CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com>
+ <3d209e29-e73d-23a6-5c6f-0267b1e669b6@samba.org>
+ <CAHk-=wgu3Wo_xcjXnwski7JZTwQFaMmKD0hoTZ=hqQv3-YojSg@mail.gmail.com>
+ <8d24e9f6-8e90-96bb-6e98-035127af0327@samba.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d24e9f6-8e90-96bb-6e98-035127af0327@samba.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@intel.com>
+On Thu, Mar 12, 2020 at 06:11:09PM +0100, Stefan Metzmacher wrote:
 
-If pci device is in D0, wakeen interrupt will be
-aggregated at cAVS level as interrupt. This commit
-check the wakeen status and process it in irq thread
+> If that works safely for hardlinks and having another process doing a
+> rename between openat2() and unlinkat(), we could try that.
+> 
+> My initial naive idea was to have one syscall instead of
+> linkat2/renameat3/unlinkat2.
+> 
+> int xlinkat(int src_dfd, const char *src_path,
+>             int dst_dfd, const char *dst_path,
+>             const struct xlinkat_how *how, size_t how_size);
+> 
+> struct xlinkat_how {
+>        __u64 src_at_flags;
+>        __u64 src_resolve_flags;
+>        __u64 dst_at_flags;
+>        __u64 dst_resolve_flags;
+>        __u64 rename_flags;
+>        __s32 src_fd;
+> };
+> 
+> With src_dfd=-1, src_path=NULL, how.src_fd = -1, this would be like
+> linkat().
+> With dst_dfd=-1, dst_path=NULL, it would be like unlinkat().
+> Otherwise a renameat2().
+>
+> If how.src_fd is not -1, it would be checked to be the same path as
+> specified by src_dfd and src_path.
 
-Signed-off-by: Rander Wang <rander.wang@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- sound/soc/sof/intel/hda.c | 16 ++++++++++++++++
- sound/soc/sof/intel/hda.h |  6 ++++++
- 2 files changed, 22 insertions(+)
+"Checked" as in...?  And is that the same path or another link to the
+same object, or...?
 
-diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-index 9c7a816183b6..b5206dc4607a 100644
---- a/sound/soc/sof/intel/hda.c
-+++ b/sound/soc/sof/intel/hda.c
-@@ -241,6 +241,19 @@ static irqreturn_t hda_dsp_sdw_thread(int irq, void *context)
- 	return sdw_intel_thread(irq, context);
- }
- 
-+static bool hda_sdw_check_wakeen_irq(struct snd_sof_dev *sdev)
-+{
-+	struct sof_intel_hda_dev *hdev;
-+
-+	hdev = sdev->pdata->hw_pdata;
-+	if (hdev->sdw &&
-+	    snd_sof_dsp_read(sdev, HDA_DSP_BAR,
-+			     HDA_DSP_REG_SNDW_WAKE_STS))
-+		return true;
-+
-+	return false;
-+}
-+
- void hda_sdw_process_wakeen(struct snd_sof_dev *sdev)
- {
- 	struct sof_intel_hda_dev *hdev;
-@@ -685,6 +698,9 @@ static irqreturn_t hda_dsp_interrupt_thread(int irq, void *context)
- 	if (hda_dsp_check_sdw_irq(sdev))
- 		hda_dsp_sdw_thread(irq, hdev->sdw);
- 
-+	if (hda_sdw_check_wakeen_irq(sdev))
-+		hda_sdw_process_wakeen(sdev);
-+
- 	/* enable GIE interrupt */
- 	snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
- 				SOF_HDA_INTCTL,
-diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
-index 69717a38913c..53f563aa782d 100644
---- a/sound/soc/sof/intel/hda.h
-+++ b/sound/soc/sof/intel/hda.h
-@@ -234,6 +234,7 @@
- #define HDA_DSP_REG_ADSPIS2		(HDA_DSP_GEN_BASE + 0x14)
- 
- #define HDA_DSP_REG_ADSPIS2_SNDW	BIT(5)
-+#define HDA_DSP_REG_SNDW_WAKE_STS      0x2C192
- 
- /* Intel HD Audio Inter-Processor Communication Registers */
- #define HDA_DSP_IPC_BASE		0x40
-@@ -710,6 +711,11 @@ static inline irqreturn_t hda_dsp_sdw_thread(int irq, void *context)
- 	return IRQ_HANDLED;
- }
- 
-+static inline bool hda_sdw_check_wakeen_irq(struct snd_sof_dev *sdev)
-+{
-+	return false;
-+}
-+
- static inline void hda_sdw_process_wakeen(struct snd_sof_dev *sdev)
- {
- }
--- 
-2.20.1
-
+The idea of dumping all 3 into the same syscall looks wrong - compare
+the effects of link() and rename() on the opened files, for starters,
+and try to come up with documentation for all of that.  Multiplexors
+tend to be very bad, in large part because they have so bloody
+convoluted semantics...
