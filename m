@@ -2,109 +2,100 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1ACC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41D3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0503F206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QayA64qN"
+	by mail.kernel.org (Postfix) with ESMTP id B59C9206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCLTd1 (ORCPT
+        id S1726875AbgCLTeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:33:27 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38611 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgCLTd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:33:26 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w1so7890504ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 12:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=CzwX3JhIDPjn8Zf/b6fbGBesCy+eZsCppQlTq8HkhYg=;
-        b=QayA64qNRNU0xH2o43FSdFi17MC1VTw0kY/pBfJsjBmYlPISlqtpekl7jTiNx8x3hE
-         55R1wq+qpLpzNqeLXWdpY4gPPcyBEye7AGwxG4Zcve0CY2L+DGtVnKF2YybmxaNT8duv
-         nD+1885Owz9j04pPDu+yUhYEBwyunOV0Gi5q9OTwgv85DHsGANsNhsxHwrfMr8eNx51w
-         dVnp3JT2f0h0SZ3YoyMKSFItFngKk7Kuw+LW0E99wFWjzdBkZANK7SRPC9H55F7CwCoa
-         plU3fXfEhKh/AKwk8wn9KIFAWEEg4ICZxnRlYQC7RlNxzpNjjE+R0SHcq0ODuhPunjkP
-         FKnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=CzwX3JhIDPjn8Zf/b6fbGBesCy+eZsCppQlTq8HkhYg=;
-        b=RnBpFUpNAwIrFGAbB0IKZVLyiCZM/a3dXsWblhaSqVeh/AAGM+zIW+jew+i7oi2QMb
-         jdeBZZanN7WEuTou3SXRdaBmy7qHa3VOZkShTlEWEcVgzh0QHs7nEKgdS6y6S8ZWmcoQ
-         LfZ6rB0u9Wl0Amu5dR/JfoLgJjKhhAXD6fxzksd83fSaLBhGsgcBysbEqKm9ItQKoQtd
-         k1FW5jZtWr1x4ocNy1SsgdQQxhMuOehHorxrY7o4oO9jvZ05F2psJjGnFrPZApZ7X9z/
-         sId50jrDV3xbyC0gu0ALinjhWTA4fhMOv9byuultpb5hTsKht7Kdjo+tmtZebTLZqpmf
-         pvSQ==
-X-Gm-Message-State: ANhLgQ0nOLRsmkD3MrmZ0f/29bvs235FQQkbTgTbepiGTpfZA7GWMVaT
-        a3Kqf4cM20uywtGJ666Nm0Xvj0cIUJobCQLw8g+rDQ==
-X-Google-Smtp-Source: ADFU+vsyPcIWcQDYaioXlz7FWZjzsE68UJXRIDHTYfF+ewOuSZoHHX7h5fQh44mivCxhpzdWLwkm0r/7qTrNw5LJPsM=
-X-Received: by 2002:a2e:b88d:: with SMTP id r13mr5766672ljp.66.1584041602698;
- Thu, 12 Mar 2020 12:33:22 -0700 (PDT)
+        Thu, 12 Mar 2020 15:34:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23805 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbgCLTeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 15:34:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 12:33:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="243142313"
+Received: from unknown (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.241.169])
+  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 12:33:58 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 00/10] ASoC: SOF: Intel: add SoundWire support
+Date:   Thu, 12 Mar 2020 14:33:36 -0500
+Message-Id: <20200312193346.3264-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200304002137.83630-1-rajatja@google.com>
-In-Reply-To: <20200304002137.83630-1-rajatja@google.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 12 Mar 2020 12:32:46 -0700
-Message-ID: <CACK8Z6FNmZFW9c=1tY4Q4rn4ZyUu--CUTuLk0SHZsuYb1-H7Og@mail.gmail.com>
-Subject: Re: [PATCH v2] Input: Allocate keycode for SNIP key
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+This patchset provides the support for SoundWire support on Intel
+CometLake, IcelLake and TigerLake RVP platforms and form-factor
+devices to be released 'soon'.
+
+The bulk of the code is about detecting a valid SoundWire
+configuration from ACPI, and implementing the interfaces suggested in
+'[PATCH 0/8] soundwire: remove platform devices, add SOF interfaces'
+for interrupts, PCI wakes and clock-stop configurations.
+
+Since that SoundWire series is stuck with no resolution, the build
+support for SOF w/ SoundWire is not provided for now, and fall-back
+functions will be used. This code is tested on a daily basis in the
+SOF tree and is not expected to change. If audio maintainers will only
+accept functional code, which isn't unreasonable, I would kindly ask
+that they reach out to Vinod Koul.
+
+Bard Liao (1):
+  ASoC: SOF: Intel: hda: merge IPC, stream and SoundWire interrupt
+    handlers
+
+Pierre-Louis Bossart (7):
+  ASoC: soc-acpi: expand description of _ADR-based devices
+  ASoC: SOF: Intel: add SoundWire configuration interface
+  ASoC: SOF: IPC: dai-intel: move ALH declarations in header file
+  ASoC: SOF: Intel: hda: add SoundWire stream config/free callbacks
+  ASoC: SOF: Intel: hda: initial SoundWire machine driver autodetect
+  ASoC: SOF: Intel: hda: disable SoundWire interrupts on suspend
+  ASoC: SOF: Intel: hda: add parameter to control SoundWire clock stop
+    quirks
+
+Rander Wang (2):
+  ASoC: SOF: Intel: hda: add WAKEEN interrupt support for SoundWire
+  Asoc: SOF: Intel: hda: check SoundWire wakeen interrupt in irq thread
+
+ include/sound/soc-acpi.h                      |  39 +-
+ include/sound/sof/dai-intel.h                 |  18 +-
+ .../intel/common/soc-acpi-intel-cml-match.c   |  87 +++-
+ .../intel/common/soc-acpi-intel-icl-match.c   |  97 ++++-
+ .../intel/common/soc-acpi-intel-tgl-match.c   |  49 ++-
+ sound/soc/sof/intel/hda-dsp.c                 |   2 +
+ sound/soc/sof/intel/hda-loader.c              |  31 ++
+ sound/soc/sof/intel/hda.c                     | 399 ++++++++++++++++++
+ sound/soc/sof/intel/hda.h                     |  66 +++
+ 9 files changed, 728 insertions(+), 60 deletions(-)
 
 
-On Tue, Mar 3, 2020 at 4:21 PM Rajat Jain <rajatja@google.com> wrote:
->
-> New chromeos keyboards have a "snip" key that is basically a selective
-> screenshot (allows a user to select an area of screen to be copied).
-> Allocate a keyvode for it.
+base-commit: 101247a3b86e1cc0e382b7e887a56176290fc957
+-- 
+2.20.1
 
-Any comments on this patch?
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> V2: Drop patch [1/2] and instead rebase this on top of Linus' tree.
->
->  include/uapi/linux/input-event-codes.h | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index 0f1db1cccc3fd..08c8572891efb 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -652,6 +652,9 @@
->  /* Electronic privacy screen control */
->  #define KEY_PRIVACY_SCREEN_TOGGLE      0x279
->
-> +/* Selective Screenshot */
-> +#define KEY_SNIP                        0x280
-> +
->  /*
->   * Some keyboards have keys which do not have a defined meaning, these keys
->   * are intended to be programmed / bound to macros by the user. For most
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
