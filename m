@@ -2,118 +2,167 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF75C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E88C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918E1206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEE120650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mAd2WlsG"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Lne50YTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388190AbgCLH4j (ORCPT
+        id S2388146AbgCLIAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:56:39 -0400
-Received: from mail-am6eur05on2073.outbound.protection.outlook.com ([40.107.22.73]:25217
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387869AbgCLH4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:56:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gMGwHhZ3ktePwuGbgRRh0TH4OovZOR9qirtg7HGG3VlU9FlosMurlJJnS4MIi/Fq6QaB93OLACFJeFxSGFPOGnDuVLOeUFLqfJTMW3ROc3RarvgbbNxwmxntpJtZ4LyHD5b6YgGkvRgI/tyw9V/LQXynTwqfJQ8KmFMNcZPZUSBW8kXtehA2uAk+Q3NWZ88KV62/ugWq+4WsWqlAvI2tQmTrusT51fMb1xFNp+Mj+O4qUoQCnMJNnv31W4YY+SEQ1GqBP8HMw9IACTfvtTo0qbMxxdW5DOedAln9nJpmRYS+/UfhUzpnTnzGsZYy68jQwH4MABrEti1+ZvKpQ2+w0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vWaFaPA568nRE6L1/jGBRG3nOf2JlpUxFEPe/eR/aak=;
- b=TsEO//vLqN7l1h1q73PBKxc03jhc/ey+06zP2EnuqnXPc1wQ1t+wPClCzEJU04Lfni+963TaCB20hBUMszmCIp5wo1fUin7Xt74qdiH+WYdEqrZW2fgTwcuIw5EJ+ELkTc2Z0j0sXTLGH65sDBxHkYLRHkPGqxrILW5KvhpT4NQErPFhpsPiMsr49jFaHM0no1zaJrs4N6BSncjOjv/dCAWUdKEccMZ6Ibo5RgL1THLFtKWH2X5Eb4sxuOBjoCHo2A0B6Frw91FzhIunz7E+6xobvcHle0V04Idu70dwYZ795+SbAUs98AnXTxv5CRVe9+hAsLZGjdFRupDov3Orpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vWaFaPA568nRE6L1/jGBRG3nOf2JlpUxFEPe/eR/aak=;
- b=mAd2WlsGW7fsb5a+1nNgSIPLr6OZpcz0pq9GfI9YuZQsQ6rVyJS9/gyeAa7B2CHB1tNL1mGimwtW+xnQyyo0UhYOjaY1BPbVE0ftKaRwr4f9v+WgNny8HuSyTOFRUyqsAR7xzAsbR0HRjPoUlgHQlfKOaUUGtMdxxq8oZJ//xmE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3696.eurprd04.prod.outlook.com (52.134.15.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.14; Thu, 12 Mar 2020 07:56:35 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2793.013; Thu, 12 Mar 2020
- 07:56:35 +0000
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mp: Add snvs clock to powerkey
-To:     Anson Huang <Anson.Huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1583998450-19292-1-git-send-email-Anson.Huang@nxp.com>
- <1583998450-19292-2-git-send-email-Anson.Huang@nxp.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <6d28f6b5-8736-1c99-b3fb-ba253c9873d4@nxp.com>
-Date:   Thu, 12 Mar 2020 09:56:32 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <1583998450-19292-2-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 12 Mar 2020 04:00:09 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:50828 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387869AbgCLIAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 04:00:09 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02C7qxMI028487;
+        Thu, 12 Mar 2020 09:00:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=yfAjiskuApnI7ltsE6KidUCesqH67sfSRCasBTHc9pE=;
+ b=Lne50YTzS6lz8OYhd9F/XWSrt2snNGYTq7agdjSLizjH5doLKDoh2MS9HjDUQ6emwRRB
+ 4U9FylMaG0pi5wpgKCAuzXpu7uYaTQyJW7w+sjmWH9b0O2ilHYxAYNnG0/pMhdJh9rRm
+ yHb7qePTII1cSZWWTPmA8Qxgb785a82jQE19N30kWvG/F+USh/8qHMKJpdSR47aPK2w5
+ 5qqnZGkUL4MoQVNBKaUDV4cbOuO7XzJK/HkuGvWDEk2LQqo84dovoOu9Qr42gg1W8VMd
+ aC6Tpa1jxB6PInAHySMoCwN4GvCafsWpcN89AxbhO0CKpKJy4jT/1LK1hFMMwaJgxYe7 lQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ynecdpw2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 09:00:02 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1FBEA100034;
+        Thu, 12 Mar 2020 09:00:02 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 11844210453;
+        Thu, 12 Mar 2020 09:00:02 +0100 (CET)
+Received: from SFHDAG7NODE2.st.com (10.75.127.20) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Mar
+ 2020 09:00:01 +0100
+Received: from SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090]) by
+ SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090%20]) with mapi id
+ 15.00.1473.003; Thu, 12 Mar 2020 09:00:01 +0100
+From:   Loic PALLARDY <loic.pallardy@st.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "ohad@wizery.com" <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>,
+        "Fabien DESSENNE" <fabien.dessenne@st.com>,
+        "s-anna@ti.com" <s-anna@ti.com>
+Subject: RE: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
+ is crashed
+Thread-Topic: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
+ is crashed
+Thread-Index: AQHV95N1/mW6m1ZqkUyhqMT4RCAmr6hD3LsAgAC7ffA=
+Date:   Thu, 12 Mar 2020 08:00:01 +0000
+Message-ID: <991a1e4bce844103a7e93960750944c1@SFHDAG7NODE2.st.com>
+References: <1583924072-20648-1-git-send-email-loic.pallardy@st.com>
+ <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
+ <20200311214504.GA32471@xps15>
+In-Reply-To: <20200311214504.GA32471@xps15>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM4PR05CA0021.eurprd05.prod.outlook.com (2603:10a6:205::34)
- To VI1PR0402MB3485.eurprd04.prod.outlook.com (2603:10a6:803:7::25)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM4PR05CA0021.eurprd05.prod.outlook.com (2603:10a6:205::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 12 Mar 2020 07:56:34 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 307f4581-8746-4cf7-91a4-08d7c65ae2e9
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3696:|VI1PR0402MB3696:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB36961C95BD53B5E158991FDF98FD0@VI1PR0402MB3696.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1107;
-X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(376002)(396003)(199004)(66476007)(66946007)(4326008)(66556008)(36756003)(2616005)(956004)(558084003)(16526019)(186003)(8936002)(26005)(316002)(5660300002)(8676002)(81156014)(31686004)(16576012)(110136005)(53546011)(2906002)(81166006)(478600001)(52116002)(6486002)(86362001)(31696002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3696;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: H3HNDDT24cugO0dAXo0epA59TsmiPWIZjrfUTQ300SuGbj7U3xPqDLzUo6Roqn5V9Xl/+P53HwhepqD5TMXcYt0lWOm1A2D/ogYrjMlgsJZ6ikvyZOMfvU9DdJCpw2xFhDTuOJ4PiP7OC3RHauo0ybDzwphoEjaBEfPJ11dW1nmA543/H/QSkKkVl8ET+TRvzwR5fPlarxqz4nARybII6a41GLWgQElHPp5uctImOZdZeHO4jKA5scQHbyqxEZJw30Idu8gOdMPg4PhPzfBihq8ROtYW7/SFEGsUSNUOlLndoyQ6zvTA9DivWfgpDn3lVBd8S2Zwg3zBsF+k1e7n+rsbKFhH7jWcKYWztcxQJh12Tb7RLdIqHfr+wkJs21KIsposyrXX14/LNoyDJxukQ609+SOS6Hf+o0PJKOviZbsP+sXYcQXPf2ogJbRTF6gaCYvT6GrwPMdxFkI5Fei++p/qeRDKW2nv3bNEpqLc+230p9dSzSf3MgZ/UYI1r/tzI9YURLQG0cP39WyFgwxKjA==
-X-MS-Exchange-AntiSpam-MessageData: FBhdA4USMzIkRgAhguEWHUk2ASjoR5JI2XGdWvOXF2wd0ZDZQfmYCHtv4R7ftIVFtxQI24hRP3MerB67wpsPh1AUT/3sHwr+wPwJI3Xao3zi2+euN/m47+slpcpOYWVs4zQP3FPdeDyN7DuJWdv0kQ==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 307f4581-8746-4cf7-91a4-08d7c65ae2e9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 07:56:35.6666
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5wCrJE3NebuylffAwLKehMKTLc8uNdA8qwIM5PKnpbN2nST0jT626wve2/a6fsnLhIX/zRynR1+2uwJeL2dOtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3696
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_15:2020-03-11,2020-03-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/2020 9:40 AM, Anson Huang wrote:
-> SNVS powerkey driver needs snvs clock for proper clock management,
-> add support for it.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Hi Mathieu,
 
-Thanks,
-Horia
+> -----Original Message-----
+> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Sent: mercredi 11 mars 2020 22:45
+> To: Loic PALLARDY <loic.pallardy@st.com>
+> Cc: bjorn.andersson@linaro.org; ohad@wizery.com; linux-
+> remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; Arnaud
+> POULIQUEN <arnaud.pouliquen@st.com>; benjamin.gaignard@linaro.org;
+> Fabien DESSENNE <fabien.dessenne@st.com>; s-anna@ti.com
+> Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when
+> rproc is crashed
+>=20
+> Hi Loic,
+>=20
+> On Wed, Mar 11, 2020 at 11:54:31AM +0100, Loic Pallardy wrote:
+> > When remoteproc recovery is disabled and rproc crashed, user space
+> > client has no way to reboot co-processor except by a complete platform
+> > reboot.
+> > Indeed rproc_shutdown() is called by sysfs state_store() only is rproc
+> > state is RPROC_RUNNING.
+> >
+> > This patch offers the possibility to shutdown the co-processor if
+> > it is in RPROC_CRASHED state and so to restart properly co-processor
+> > from sysfs interface.
+>=20
+> And it is not possible to use the debugfs interface [1] to restart the MC=
+U?
+>=20
+> [1]. https://elixir.bootlin.com/linux/v5.6-
+> rc2/source/drivers/remoteproc/remoteproc_debugfs.c#L147
+
+Debugfs interface is optional and on final product it is often disabled.
+The used control interfaces are in kernel API and sysfs one.
+
+Regards,
+Loic
+>=20
+>=20
+> >
+> > Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> > ---
+> >  drivers/remoteproc/remoteproc_core.c  | 2 +-
+> >  drivers/remoteproc/remoteproc_sysfs.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/remoteproc_core.c
+> b/drivers/remoteproc/remoteproc_core.c
+> > index 097f33e4f1f3..7ac87a75cd1b 100644
+> > --- a/drivers/remoteproc/remoteproc_core.c
+> > +++ b/drivers/remoteproc/remoteproc_core.c
+> > @@ -1812,7 +1812,7 @@ void rproc_shutdown(struct rproc *rproc)
+> >  	if (!atomic_dec_and_test(&rproc->power))
+> >  		goto out;
+> >
+> > -	ret =3D rproc_stop(rproc, false);
+> > +	ret =3D rproc_stop(rproc, rproc->state =3D=3D RPROC_CRASHED);
+> >  	if (ret) {
+> >  		atomic_inc(&rproc->power);
+> >  		goto out;
+> > diff --git a/drivers/remoteproc/remoteproc_sysfs.c
+> b/drivers/remoteproc/remoteproc_sysfs.c
+> > index 7f8536b73295..1029458a4678 100644
+> > --- a/drivers/remoteproc/remoteproc_sysfs.c
+> > +++ b/drivers/remoteproc/remoteproc_sysfs.c
+> > @@ -101,7 +101,7 @@ static ssize_t state_store(struct device *dev,
+> >  		if (ret)
+> >  			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
+> >  	} else if (sysfs_streq(buf, "stop")) {
+> > -		if (rproc->state !=3D RPROC_RUNNING)
+> > +		if (rproc->state !=3D RPROC_RUNNING && rproc->state !=3D
+> RPROC_CRASHED)
+> >  			return -EINVAL;
+> >
+> >  		rproc_shutdown(rproc);
+> > --
+> > 2.7.4
+> >
