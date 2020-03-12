@@ -2,195 +2,117 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF06C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE9BC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8474820724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F008820736
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584044168;
-	bh=lkVIDnCi5ToPZPE8kzlmMp17saMTeWKr1pVh6bD5vwQ=;
+	s=default; t=1584044190;
+	bh=69TQm2Yza8V2TKbJE8TX3UGaXrfSg4iCK1riz4AAUcc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KUawY4g6UwOovtzSr9r6CnziRX0gzSx5T2AAGNhajnTZAeN/o55DiN0XYTG1kx0qi
-	 4nqXvbs0m9AbQUptp76WE8N/nUO+bhZZpxGeLUQ2z4wbwmJQLy+nhN4ALLjMmP78jw
-	 KNsw0XrTZUhniSQkE5TFVtBPoLVXzrInT9vNEz24=
+	b=sIaswILjTZIMJNdWfsGZZ+WvZuHuBptQmLqDBZ6Twsp7pK3jlrQ8i3M/KiL6mhhnL
+	 XlC7V6UL4WS85VxblTLwX/6nt8ZOV8pwfiBiqRE67JrfLnSEMb372FAZvUEQ/ySmU4
+	 r3c1zvdtvgE0UUVd66S7eZu0e4AJm1snOUgxZkhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgCLUQH (ORCPT
+        id S1726908AbgCLUQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:16:07 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39105 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLUQG (ORCPT
+        Thu, 12 Mar 2020 16:16:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50631 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgCLUQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:16:06 -0400
-Received: by mail-pj1-f67.google.com with SMTP id d8so3107768pje.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 13:16:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5ODS1TFq9M93gWOQaGQ9WOy3EnmI/QAeYw+Gw8Sae8Y=;
-        b=X/r/XGA7oK6/08aLFZb7cozSoP5Ox1n14lQ/b7pmAbgOSH2AocxqP3VTQCE0IZIiEd
-         7Zhj7R74pgBIrG0Pzay4Gkz6RDMMjmTiLZcvnzN2QPzxKKxO66lDtOrSjWHseef3d0pW
-         ko9LF2Cs3ROzOveWcMSMwJHX2in4UoFIdhsLMreC837s5gRVUvllRNCA4ZrLFrBxGeIY
-         CDMqpHqo4KrY+cEQ1gxsRqPg84TWv1Ivf1loHceNVXenOgD+P9rXKfQZsfS5270ulRIH
-         VwlwZkGDfbH0TRQcqiZ2Nm4xTaxFFLWi70hGeLwQVHhbOmk6puQP1n0/RPatfLZ4wQ7T
-         iNpA==
+        Thu, 12 Mar 2020 16:16:28 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a5so7550619wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 13:16:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5ODS1TFq9M93gWOQaGQ9WOy3EnmI/QAeYw+Gw8Sae8Y=;
-        b=fVzN55WYeZ3+bzQvOMtbRh9tTqePiO75Nt0JLRe3sk7JjVRih9jYK2GUbP11Q2NSY5
-         U+8HloI/j1MAt+r0jtSj/lHVhSMF84aBfs6bQctPIvVwA3VfGJJbOZGwNcdDOeVBVn8h
-         BMbcZDOZtsWZ1pD9HaPyUra+l1EeUDKBbLvztRyVkdSLVAKr7XrCBunolSQuxAGayW5J
-         h+BP4g7+629yrFywrZp7Hlohw9xqRMZ1xfR89Mx3OJIg2PJ08FItmh0nmGzQldpoKKeK
-         MmmkNWGjGNseOWKVQ1LmKOwVdVT/cNFib+Qnl7B+gzcCQhJ0wANkOpF4jNn4Z6428YtB
-         JVEQ==
-X-Gm-Message-State: ANhLgQ30k8wbKl3DSihSZXUFlCI4d1KH/UyMTTu1S1jDw3eebIKjFtF3
-        0oRmZRDhnuyFPkGZvsGV/iM=
-X-Google-Smtp-Source: ADFU+vvSu5zD+w3Hi1A+OEefWgIKYLlwm40V2B013hdA5Huw5+NpY8qb95G53euZlUZM/kZuEzZlVQ==
-X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr5864534pjb.192.1584044165162;
-        Thu, 12 Mar 2020 13:16:05 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id b10sm5078236pfo.215.2020.03.12.13.16.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yLZW/qZRAwj/qZJYLmvntwJ6WgyWrrnV7NOpGpMsiCs=;
+        b=jbV8E88NLQfbdkS5DY1hzLENcONNrR0k9Pwhzs7tkxp9eZ6d2bsxc1adv190rwQWtL
+         XNfi9B7ftJW8lfcB1nIDV+clmE73IhaEOsFt1IwGvOy3xGpsb4CPSpoa8wRl9EC7c7pS
+         TLFRPEyILOXy75AgkcWaqEPDQ7tGlwRd0lo4Jz+fr/tw+4X38k8gCgG3sJcxrVP7EcR6
+         SBzvPmSk1YwGBkxH5YjBi3+9i4jSwPzSxJODV1B8iOKV1swggOAkTj+EOEGpbhdQmj+E
+         tG4iBZG6y04VpKJ5r8bfQniryKnj/aD6sGuISv6KCKjPBOVEhsGP/Gt/7ww8Hcwc+Q9n
+         2ETQ==
+X-Gm-Message-State: ANhLgQ0+LhEg5CUvGQ5Nw15/DHRcgHwQCosG5xDJ0vZVxnz9y7PBYXFZ
+        Hmhskg1Ixv4wUt0pk+ENthtlZmNT
+X-Google-Smtp-Source: ADFU+vtu0EFJe8mhzRbybBzoeEImlTuTlN0krmWnh7UWi4FFLFI3RkTCF8/xnt5kVpC7WefZTxBQQg==
+X-Received: by 2002:a1c:9602:: with SMTP id y2mr6345011wmd.23.1584044186750;
+        Thu, 12 Mar 2020 13:16:26 -0700 (PDT)
+Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
+        by smtp.gmail.com with ESMTPSA id i10sm70877339wrn.53.2020.03.12.13.16.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 13:16:03 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 13:16:02 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200312201602.GA68817@google.com>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200312082248.GS23944@dhcp22.suse.cz>
+        Thu, 12 Mar 2020 13:16:25 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 21:16:24 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <20200312201624.GD23944@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
+ <20200310221019.GE8447@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
+ <20200311082736.GA23944@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003111238570.171292@chino.kir.corp.google.com>
+ <20200312083241.GT23944@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003121115480.158939@chino.kir.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312082248.GS23944@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <alpine.DEB.2.21.2003121115480.158939@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:22:48AM +0100, Michal Hocko wrote:
-> [Cc akpm]
+On Thu 12-03-20 11:20:33, David Rientjes wrote:
+> On Thu, 12 Mar 2020, Michal Hocko wrote:
 > 
-> So what about this?
-
-Thanks, Michal.
-
-I't likde to wait Jann's reply since Dave gave his opinion about the vulnerability.
-https://lore.kernel.org/linux-mm/cf95db88-968d-fee5-1c15-10d024c09d8a@intel.com/
-Jann, could you give your insigh about that practically it's possible?
-
-A real dumb question to understand vulnerability:
-
-The attacker would be able to trigger heavy memory consumption so that he
-could make paging them out without MADV_PAGEOUT. I know MADV_PAGEOUT makes
-it easier but he still could do without MADV_PAGEOUT.
-What makes difference here?
-
-To clarify how MADV_PAGEWORK works:
-If other process has accessed the page so that his page table has access
-bit marked, MADV_PAGEOUT couldn't page it out.
-
+> > > I think the changelog clearly states that we need to guarantee that a 
+> > > reclaimer will yield the processor back to allow a victim to exit.  This 
+> > > is where we make the guarantee.  If it helps for the specific reason it 
+> > > triggered in my testing, we could add:
+> > > 
+> > > "For example, mem_cgroup_protected() can prohibit reclaim and thus any 
+> > > yielding in page reclaim would not address the issue."
+> > 
+> > I would suggest something like the following:
+> > "
+> > The reclaim path (including the OOM) relies on explicit scheduling
+> > points to hand over execution to tasks which could help with the reclaim
+> > process.
 > 
-> From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Thu, 12 Mar 2020 09:04:35 +0100
-> Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
-> 
-> Jann has brought up a very interesting point [1]. While shared pages are
-> excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
-> that way. This can lead to all sorts of hard to debug problems. E.g.
-> performance problems outlined by Daniel [2]. There are runtime
-> environments where there is a substantial memory shared among security
-> domains via CoW memory and a easy to reclaim way of that memory, which
-> MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
-> in for the parent process which might be more privileged or even open
-> side channel attacks. The feasibility of the later is not really clear
+> Are there other examples where yielding in the reclaim path would "help 
+> with the reclaim process" other than oom victims?  This sentence seems 
+> vague.
 
-I am not sure it's a good idea to mention performance stuff because
-it's rather arguble. You and Johannes already pointed it out when I sbumit
-early draft which had shared page filtering out logic due to performance
-reason. You guys suggested the shared pages has higher chance to be touched
-so that if it's really hot pages, that whould keep in the memory. I agree.
+In the context of UP and !PREEMPT this also includes IO flushers,
+filesystems rely on workers and there are things I am very likely not
+aware of. If you think this is vaague then feel free to reformulate.
+All I really do care about is what the next paragraph is explaining.
 
-I think the only reason at this moment is just vulnerability.
+> > Currently it is mostly shrink_page_list which yields CPU for
+> > each reclaimed page. This might be insuficient though in some
+> > configurations. E.g. when a memcg OOM path is triggered in a hierarchy
+> > which doesn't have any reclaimable memory because of memory reclaim
+> > protection (MEMCG_PROT_MIN) then there is possible to trigger a soft
+> > lockup during an out of memory situation on non preemptible kernels
+> > <PUT YOUR SOFT LOCKUP SPLAT HERE>
+> > 
+> > Fix this by adding a cond_resched up in the reclaim path and make sure
+> > there is a yield point regardless of reclaimability of the target
+> > hierarchy.
+> > "
+> > 
 
-> to me TBH but there is no real reason for exposure at this stage. It
-> seems there is no real use case to depend on reclaiming CoW memory via
-> madvise at this stage so it is much easier to simply disallow it and
-> this is what this patch does. Put it simply MADV_{PAGEOUT,COLD} can
-> operate only on the exclusively owned memory which is a straightforward
-> semantic.
-> 
-> [1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
-> [2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
-> 
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/madvise.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 43b47d3fae02..4bb30ed6c8d2 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
->  		}
->  
->  		page = pmd_page(orig_pmd);
-> +
-> +		/* Do not interfere with other mappings of this page */
-
-
-How about this?
-/*
- * paging out only single mapped private pages for anonymous mapping,
- * otherwise, it opens a side channel.
- */
-
-Otherwise, looks good to me.
-
-> +		if (page_mapcount(page) != 1)
-> +			goto huge_unlock;
-> +
->  		if (next - addr != HPAGE_PMD_SIZE) {
->  			int err;
->  
-> -			if (page_mapcount(page) != 1)
-> -				goto huge_unlock;
-> -
->  			get_page(page);
->  			spin_unlock(ptl);
->  			lock_page(page);
-> @@ -426,6 +428,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
->  			continue;
->  		}
->  
-> +		/* Do not interfere with other mappings of this page */
-> +		if (page_mapcount(page) != 1)
-> +			continue;
-> +
->  		VM_BUG_ON_PAGE(PageTransCompound(page), page);
->  
->  		if (pte_young(ptent)) {
-> -- 
-> 2.24.1
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+-- 
+Michal Hocko
+SUSE Labs
