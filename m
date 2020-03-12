@@ -2,131 +2,99 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1A8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA78C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF5C20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282292067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584028485;
+	bh=0UZegBixcyJR2eQTPQLl5os/jIw6DlEF0GVOiCD3z9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TMt6cZnWP1lPVCDNhl0hEaqHZmg4GRfuRn8qzW7UCqgk1gdXcAJwyHTFVaE06TIsl
+	 g6wL65ePdi9zkkX9JfMnL2nGWv66jRtlLAIv9rIA5jjPezuEdY0B+VctKyZpGI9wia
+	 Ajq72rAd9EU4FaYqtCRrrtKJGOUZJn57bKrBj4ZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbgCLPxR (ORCPT
+        id S1727647AbgCLPyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:53:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44194 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgCLPxQ (ORCPT
+        Thu, 12 Mar 2020 11:54:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39518 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727210AbgCLPyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:53:16 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jCQ93-0005cI-3A; Thu, 12 Mar 2020 16:53:13 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 93E6C1C224A;
-        Thu, 12 Mar 2020 16:53:12 +0100 (CET)
-Date:   Thu, 12 Mar 2020 15:53:12 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm/kmmio: Use this_cpu_ptr() instead get_cpu_var()
- for kmmio_ctx
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200205143426.2592512-1-bigeasy@linutronix.de>
-References: <20200205143426.2592512-1-bigeasy@linutronix.de>
+        Thu, 12 Mar 2020 11:54:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id a9so6780555otl.6;
+        Thu, 12 Mar 2020 08:54:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VQckKS4bw2Pbga6pTDzSkr9i3TfwNTVPnuQDLWOAQ2o=;
+        b=GTyJrd5J18rANcdI5AGiJwgRnhjS1OToaSDJ+BJEjbfQJl/UxQgrZi1CBpmwT+Nqy6
+         XYm6iMRAvd7srjSv0CoIPThYdSj3mzMY7Vvmh8cDwfXLevYWF+cq2vlegKsouPwOHK8p
+         t4e4STpInmSyUzT0Ra9MTyDCUYKaubgq58Rq8SyWs3pUrLWXiss6CY7I6hYqO9PHHTot
+         /Uusp/j7YVpUAsfmqvDou+Y3udi2fON1v1J7kfucCwGSNFy83yxG2GDsxPj7hRMhxpCg
+         69Dh1x8HKej01Tpu02ZbjGAI1OG5GAvF0BDHbqpLo5RWmxqnSc3l3cEvS/JmyUFv6zEh
+         UVpA==
+X-Gm-Message-State: ANhLgQ1dVyFwqjeUKQu5Kq7Hr3IcbOktGiN/hnJ0ZKll1TaTjLEv3Gqj
+        NMFQQnnS0FO6zD+60ajo+Q==
+X-Google-Smtp-Source: ADFU+vsGpjXso/ZYnCWUaOJlyDF4Nk3XtOo/HVgAz+QgUT8q9zV+Axq0QTIkMiZ673RL/MJBnJmIiQ==
+X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr6580348oth.88.1584028482902;
+        Thu, 12 Mar 2020 08:54:42 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t15sm4318535otl.62.2020.03.12.08.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 08:54:41 -0700 (PDT)
+Received: (nullmailer pid 31196 invoked by uid 1000);
+        Thu, 12 Mar 2020 15:54:40 -0000
+Date:   Thu, 12 Mar 2020 10:54:40 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] dt-bindings: i2c: convert rockchip i2c bindings
+ to yaml
+Message-ID: <20200312155440.GA29613@bogus>
+References: <20200305143611.10733-1-jbx6244@gmail.com>
+ <20200312155044.GA25292@bogus>
 MIME-Version: 1.0
-Message-ID: <158402839227.28353.593101974747491831.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312155044.GA25292@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
+On Thu, Mar 12, 2020 at 10:50:44AM -0500, Rob Herring wrote:
+> On Thu,  5 Mar 2020 15:36:07 +0100, Johan Jonker wrote:
+> > Current dts files with 'i2c' nodes are manually verified.
+> > In order to automate this process i2c-rk3x.txt
+> > has to be converted to yaml. In the new setup
+> > i2c-rk3x.yaml will inherit properties from
+> > i2c-controller.yaml.
+> > 
+> > Also change document name in MAINTAINERS.
+> > 
+> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  68 -----------
+> >  .../devicetree/bindings/i2c/i2c-rk3x.yaml          | 129 +++++++++++++++++++++
+> >  MAINTAINERS                                        |   2 +-
+> >  3 files changed, 130 insertions(+), 69 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Commit-ID:     6a9feaa8774f3b8210dfe40626a75ca047e4ecae
-Gitweb:        https://git.kernel.org/tip/6a9feaa8774f3b8210dfe40626a75ca047e4ecae
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2020 15:34:26 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 12 Mar 2020 16:41:40 +01:00
+As this series is all binding changes, I'll take it via the DT tree.
 
-x86/mm/kmmio: Use this_cpu_ptr() instead get_cpu_var() for kmmio_ctx
-
-Both call sites that access kmmio_ctx, access kmmio_ctx with interrupts
-disabled. There is no need to use get_cpu_var() which additionally
-disables preemption.
-
-Use this_cpu_ptr() to access the kmmio_ctx variable of the current CPU.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200205143426.2592512-1-bigeasy@linutronix.de
----
- arch/x86/mm/kmmio.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
-index 49d7814..9994353 100644
---- a/arch/x86/mm/kmmio.c
-+++ b/arch/x86/mm/kmmio.c
-@@ -260,7 +260,7 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
- 		goto no_kmmio;
- 	}
- 
--	ctx = &get_cpu_var(kmmio_ctx);
-+	ctx = this_cpu_ptr(&kmmio_ctx);
- 	if (ctx->active) {
- 		if (page_base == ctx->addr) {
- 			/*
-@@ -285,7 +285,7 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
- 			pr_emerg("previous hit was at 0x%08lx.\n", ctx->addr);
- 			disarm_kmmio_fault_page(faultpage);
- 		}
--		goto no_kmmio_ctx;
-+		goto no_kmmio;
- 	}
- 	ctx->active++;
- 
-@@ -314,11 +314,8 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
- 	 * the user should drop to single cpu before tracing.
- 	 */
- 
--	put_cpu_var(kmmio_ctx);
- 	return 1; /* fault handled */
- 
--no_kmmio_ctx:
--	put_cpu_var(kmmio_ctx);
- no_kmmio:
- 	rcu_read_unlock();
- 	preempt_enable_no_resched();
-@@ -333,7 +330,7 @@ no_kmmio:
- static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
- {
- 	int ret = 0;
--	struct kmmio_context *ctx = &get_cpu_var(kmmio_ctx);
-+	struct kmmio_context *ctx = this_cpu_ptr(&kmmio_ctx);
- 
- 	if (!ctx->active) {
- 		/*
-@@ -371,7 +368,6 @@ static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
- 	if (!(regs->flags & X86_EFLAGS_TF))
- 		ret = 1;
- out:
--	put_cpu_var(kmmio_ctx);
- 	return ret;
- }
- 
+Rob
