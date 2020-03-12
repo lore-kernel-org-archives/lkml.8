@@ -2,164 +2,211 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99AAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEF9C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C1B206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584020777;
-	bh=Dk8AP9wY4G68Z9k9to4FPQWu7QcG915G3p0ljqIqq4k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ByF+ppBCmu0AynT/qjsLDG0G6yoybao/wmWblqCVLYLYyZhjxfrAYVaOboXQLxgbV
-	 2nb6KhI027Nz7V6VmU6NXSxnEzirSVpbDGiGoLxkZAKx0pn+tPE8jQb9xHSi/cJoXz
-	 s1CTo5lE4d3PITC+W+/HydmbogAX1rk9PJmbPzpE=
+	by mail.kernel.org (Postfix) with ESMTP id 225A320716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCLNqQ (ORCPT
+        id S1727476AbgCLNqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:46:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:35018 "EHLO foss.arm.com"
+        Thu, 12 Mar 2020 09:46:20 -0400
+Received: from relay.sw.ru ([185.231.240.75]:48762 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgCLNqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:46:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6917D30E;
-        Thu, 12 Mar 2020 06:46:15 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0BC73F534;
-        Thu, 12 Mar 2020 06:46:14 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 13:46:13 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     alsa-devel@alsa-project.org, Benson Leung <bleung@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        devicetree@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: google, cros-ec-codec: Fix dtc warnings in example" to the asoc tree
-In-Reply-To:  <20200311205841.2710-1-robh@kernel.org>
-Message-Id:  <applied-20200311205841.2710-1-robh@kernel.org>
-X-Patchwork-Hint: ignore
+        id S1725978AbgCLNqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:46:19 -0400
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jCO9a-0007ZC-He; Thu, 12 Mar 2020 16:45:38 +0300
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
+ <87d09hn4kt.fsf@x220.int.ebiederm.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <dbce35c7-c060-cfd8-bde1-98fd9a0747a9@virtuozzo.com>
+Date:   Thu, 12 Mar 2020 16:45:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <87d09hn4kt.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 12.03.2020 15:24, Eric W. Biederman wrote:
+> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> 
+>> On 09.03.2020 00:38, Eric W. Biederman wrote:
+>>>
+>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>> over the userspace accesses as the arguments from userspace are read.
+>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>> threads are killed.  The cred_guard_mutex is held over
+>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>
+>>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>>> over a possible indefinite userspace waits for userspace.
+>>>
+>>> Add exec_update_mutex that is only held over exec updating process
+>>> with the new contents of exec, so that code that needs not to be
+>>> confused by exec changing the mm and the cred in ways that can not
+>>> happen during ordinary execution of a process.
+>>>
+>>> The plan is to switch the users of cred_guard_mutex to
+>>> exec_udpate_mutex one by one.  This lets us move forward while still
+>>> being careful and not introducing any regressions.
+>>>
+>>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>> ---
+>>>  fs/exec.c                    | 9 +++++++++
+>>>  include/linux/sched/signal.h | 9 ++++++++-
+>>>  init/init_task.c             | 1 +
+>>>  kernel/fork.c                | 1 +
+>>>  4 files changed, 19 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/exec.c b/fs/exec.c
+>>> index d820a7272a76..ffeebb1f167b 100644
+>>> --- a/fs/exec.c
+>>> +++ b/fs/exec.c
+>>> @@ -1014,6 +1014,7 @@ static int exec_mmap(struct mm_struct *mm)
+>>>  {
+>>>  	struct task_struct *tsk;
+>>>  	struct mm_struct *old_mm, *active_mm;
+>>> +	int ret;
+>>>  
+>>>  	/* Notify parent that we're no longer interested in the old VM */
+>>>  	tsk = current;
+>>> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
+>>>  			return -EINTR;
+>>>  		}
+>>>  	}
+>>> +
+>>> +	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+>>> +	if (ret)
+>>> +		return ret;
+>>
+>> You missed old_mm->mmap_sem unlock. See here:
+> 
+> Duh.  Thank you.
+> 
+> I actually need to switch the lock ordering here, and I haven't yet
+> because my son was sick yesterday.
 
-   ASoC: dt-bindings: google, cros-ec-codec: Fix dtc warnings in example
+There is some fundamental problem with your patch, since the below fires in 100% cases
+on current linux-next:
 
-has been applied to the asoc tree at
+[   22.838717] kernel BUG at fs/exec.c:1474!
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+diff --git a/fs/exec.c b/fs/exec.c
+index 47582cd97f86..0f77f8c94905 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1470,8 +1470,10 @@ static void free_bprm(struct linux_binprm *bprm)
+ {
+ 	free_arg_pages(bprm);
+ 	if (bprm->cred) {
+-		if (!bprm->mm)
++		if (!bprm->mm) {
++			BUG_ON(!mutex_is_locked(&current->signal->exec_update_mutex));
+ 			mutex_unlock(&current->signal->exec_update_mutex);
++		}
+ 		mutex_unlock(&current->signal->cred_guard_mutex);
+ 		abort_creds(bprm->cred);
+ 	}
+@@ -1521,6 +1523,7 @@ void install_exec_creds(struct linux_binprm *bprm)
+ 	 * credentials; any time after this it may be unlocked.
+ 	 */
+ 	security_bprm_committed_creds(bprm);
++	BUG_ON(!mutex_is_locked(&current->signal->exec_update_mutex));
+ 	mutex_unlock(&current->signal->exec_update_mutex);
+ 	mutex_unlock(&current->signal->cred_guard_mutex);
+ }
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+---------------------------------------------------------------------------------------------
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+First time the mutex is unlocked in:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+exec_binprm()->search_binary_handler()->.load_binary->install_exec_creds()
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Then exec_binprm()->search_binary_handler()->.load_binary->flush_old_exec() clears mm:
 
-Thanks,
-Mark
+        bprm->mm = NULL;        
 
-From b239d0c238126f478d2fcd26ad8ffc346547ce67 Mon Sep 17 00:00:00 2001
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 11 Mar 2020 15:58:41 -0500
-Subject: [PATCH] ASoC: dt-bindings: google, cros-ec-codec: Fix dtc warnings in
- example
+Second time the mutex is unlocked in free_bprm():
 
-Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-when building the binding examples. These were fixed treewide in
-5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
-warnings:
+	if (bprm->cred) {
+                if (!bprm->mm)
+                        mutex_unlock(&current->signal->exec_update_mutex);
 
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:17.28-21.11:
-Warning (unit_address_vs_reg): /example-0/reserved_mem: node has a reg or ranges property, but no unit name
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:22.19-32.11:
-Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg property
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.37-31.15:
-Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
+My opinion is we should not relay on side indicators like bprm->mm. Better you may
+introduce struct linux_binprm::exec_update_mutex_is_locked. So the next person dealing
+with this after you won't waste much time on diving into this. Also, if someone decides
+to change the place, where bprm->mm is set into NULL, this person will bump into hell
+of dependences between unrelated components like your newly introduced mutex.
 
-Fixing the above, then results in:
-
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.13-23:
-Warning (reg_format): /example-0/cros-ec@0:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:27.37-32.15:
-Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
-
-Fixes: eadd54c75f1e ("dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.")
-Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: alsa-devel@alsa-project.org
-Cc: Benson Leung <bleung@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Cheng-Yi Chiang <cychiang@chromium.org>
-Link: https://lore.kernel.org/r/20200311205841.2710-1-robh@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/sound/google,cros-ec-codec.yaml  | 27 +++++++++++--------
- 1 file changed, 16 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-index 94a85d0cbf43..c84e656afb0a 100644
---- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-+++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-@@ -44,19 +44,24 @@ additionalProperties: false
- 
- examples:
-   - |
--    reserved_mem: reserved_mem {
-+    reserved_mem: reserved-mem@52800000 {
-         compatible = "shared-dma-pool";
--        reg = <0 0x52800000 0 0x100000>;
-+        reg = <0x52800000 0x100000>;
-         no-map;
-     };
--    cros-ec@0 {
--        compatible = "google,cros-ec-spi";
--        #address-cells = <2>;
--        #size-cells = <1>;
--        cros_ec_codec: ec-codec {
--            compatible = "google,cros-ec-codec";
--            #sound-dai-cells = <1>;
--            reg = <0x0 0x10500000 0x80000>;
--            memory-region = <&reserved_mem>;
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            #address-cells = <2>;
-+            #size-cells = <1>;
-+            reg = <0>;
-+            cros_ec_codec: ec-codec@10500000 {
-+                compatible = "google,cros-ec-codec";
-+                #sound-dai-cells = <1>;
-+                reg = <0x0 0x10500000 0x80000>;
-+                memory-region = <&reserved_mem>;
-+            };
-         };
-     };
--- 
-2.20.1
-
+So, I'm strongly for *struct linux_binprm::exec_update_mutex_is_locked*, since this improves
+modularity.
