@@ -5,58 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ED5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E6DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EC720716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7992067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZWu4/WVC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a0UXAzmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgCLJ1w (ORCPT
+        id S1726760AbgCLJ1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:27:52 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54912 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLJ1v (ORCPT
+        Thu, 12 Mar 2020 05:27:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33298 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLJ1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:27:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C9RmOs129981;
-        Thu, 12 Mar 2020 04:27:48 -0500
+        Thu, 12 Mar 2020 05:27:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C9RoYx050647;
+        Thu, 12 Mar 2020 04:27:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584005268;
-        bh=GqVcNEGCSqO43d8JjVZhJGIosXmnS9GliY5ZdDU3wF4=;
-        h=From:To:CC:Subject:Date;
-        b=ZWu4/WVCtugPrmgV1hR9v9eOvWZ41Fv98z1j7rM4L6OSulrB1ccu4sbYynb8gWi0V
-         3sqvta4Gyh0781QQ5oziCZKDV3B/8mlcSPAC7rdF6BQP3FhF+r6cfElMDSx6tJ6Eeu
-         R0SDJGr8rtJw6AIwrOzeaStrkdH/RXk/rd7Dqiig=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9Rm5x097588;
-        Thu, 12 Mar 2020 04:27:48 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1584005270;
+        bh=93Ozw0w3LdMCurx6cSWHKlJdaVIKSKUirOz+tIwd5Us=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=a0UXAzmTDP0go4sAocD8McRdDKrtf2BGKWAjmMa2GxRhGTOz/nLKWZdZiFs+p//Sr
+         PdcnNQAI/xtfy6ia944ma6Y37ecyFcwnmYwK4RroXpWfwXFH7ukvvJlnNVYk47LNyn
+         DTsg8X9JtzXAp5f/TdnNDGdhCCs045zIzKIWww4s=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02C9RoEV096529
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Mar 2020 04:27:50 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Mar 2020 04:27:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 04:27:50 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Mar 2020 04:27:47 -0500
+ Frontend Transport; Thu, 12 Mar 2020 04:27:50 -0500
 Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9Rjpb036158;
-        Thu, 12 Mar 2020 04:27:45 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9Rjpc036158;
+        Thu, 12 Mar 2020 04:27:48 -0500
 From:   Vignesh Raghavendra <vigneshr@ti.com>
 To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
 CC:     Rob Herring <robh+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 1/2] arm64: dts: ti: k3-am65-main: Add DMA entries for main_spi0
-Date:   Thu, 12 Mar 2020 14:58:22 +0530
-Message-ID: <20200312092823.21587-1-vigneshr@ti.com>
+Subject: [PATCH 2/2] arm64: dts: ti: k3-am65-mcu: Add DMA entries for ADC
+Date:   Thu, 12 Mar 2020 14:58:23 +0530
+Message-ID: <20200312092823.21587-2-vigneshr@ti.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200312092823.21587-1-vigneshr@ti.com>
+References: <20200312092823.21587-1-vigneshr@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,27 +69,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DMA entry for main_spi0, that has SPI flash connected, for better
-throughput and reduced CPU load.
+Add DMA entries for ADC nodes
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index e5df20a2d2f9..0ff291ef2950 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -189,6 +189,8 @@ main_spi0: spi@2100000 {
- 		power-domains = <&k3_pds 137 TI_SCI_PD_EXCLUSIVE>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		dmas = <&main_udmap 0xc500>, <&main_udmap 0x4500>;
-+		dma-names = "tx0", "rx0";
- 	};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+index 92629cbdc184..e85498f0dd05 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+@@ -82,6 +82,9 @@ tscadc0: tscadc@40200000 {
+ 		assigned-clocks = <&k3_clks 0 2>;
+ 		assigned-clock-rates = <60000000>;
+ 		clock-names = "adc_tsc_fck";
++		dmas = <&mcu_udmap 0x7100>,
++			<&mcu_udmap 0x7101 >;
++		dma-names = "fifo0", "fifo1";
  
- 	main_spi1: spi@2110000 {
+ 		adc {
+ 			#io-channel-cells = <1>;
+@@ -97,6 +100,9 @@ tscadc1: tscadc@40210000 {
+ 		assigned-clocks = <&k3_clks 1 2>;
+ 		assigned-clock-rates = <60000000>;
+ 		clock-names = "adc_tsc_fck";
++		dmas = <&mcu_udmap 0x7102>,
++			<&mcu_udmap 0x7103>;
++		dma-names = "fifo0", "fifo1";
+ 
+ 		adc {
+ 			#io-channel-cells = <1>;
 -- 
 2.25.1
 
