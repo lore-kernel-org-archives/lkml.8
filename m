@@ -2,64 +2,108 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B00BC0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8E0C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DBD20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0017F20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HIShHKke"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phTASrbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387664AbgCLC3v (ORCPT
+        id S2387661AbgCLCfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:29:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:32970 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387608AbgCLC3u (ORCPT
+        Wed, 11 Mar 2020 22:35:55 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43821 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387501AbgCLCfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:29:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1Jj6L8vIcZ93mZ6eanG7loVD291lPrGo+W34O45vAww=; b=HIShHKkeQH+3yNOsaYMjZBAn0o
-        LxgYzRbK8kN8tAOUHcRHX18tSVWlTb9yexsxk+5sDZic+MpENzPUMWEFl6V9UvvkEp3W+7AcVF4w+
-        /g1YlvOU/R+R594ghg5lUax6xjXiX5FsG4j0slA/7V7o2Xkyt8vrcjuG/PVZSTaQ4qWiH5qYgen2+
-        VgjPRy36KC55yPk5/d2IO89IvCf/1j7Ao9o/OPxwvZBOjS636jziQ3KRGgBjLfxCgHrV++XGKGbHP
-        uSD4Qe+ER5RmV1cKeWvM9ink9+Pj2V86+AwKqcvP7QgXK6UJhuxpyR1ej5QiSoELlwlF2JlDLPBOF
-        jkDrc7eg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCDbZ-000361-13; Thu, 12 Mar 2020 02:29:49 +0000
-Date:   Wed, 11 Mar 2020 19:29:48 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] backing-dev: refactor wb_congested_put()
-Message-ID: <20200312022948.GH22433@bombadil.infradead.org>
-References: <20200312002156.49023-1-jbi.octave@gmail.com>
- <20200312002156.49023-2-jbi.octave@gmail.com>
- <20200311175919.30523d55b2e5307ba22bbdc0@linux-foundation.org>
+        Wed, 11 Mar 2020 22:35:55 -0400
+Received: by mail-oi1-f196.google.com with SMTP id p125so4001767oif.10;
+        Wed, 11 Mar 2020 19:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8OJZ8s4LAFvvLbr1LYlDu6AvwjLr2eKD3RcnrO+l9+M=;
+        b=phTASrbqGplbQZ0J9qq81BbAQWHnb5mliO8intSCodcYFQzfgu384fG0rprHEqkjrg
+         P9CvEQK20yLFBtazpyuwL6H2VP1MMluyxgLPAQxGsxq7YXhD85W546FMlNQgInvkJb86
+         N3vHrKk2yRhRnMdGgGfqAPsr3bpV3c0Qcw+eCUq/yfGn+XqPY0ekDeeVClETG4tpU5Qj
+         m0xsQffi7gybur9azt8O/hd18pqtzkEI4EPkXkJQ6vfn+A2HXu/cqp7AR8Nk2CjD4tlF
+         gjJsqTfmjxWBqGIj1bZpnDPZ7Fb1paa880Roh9MEtYBSbqwhQvWgvZqvhhYRyLEz5Kic
+         eFQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8OJZ8s4LAFvvLbr1LYlDu6AvwjLr2eKD3RcnrO+l9+M=;
+        b=lD/22FZ769vuP3oEmaw+YSW+AAW6vTo1dlLvYD4emxT6aGYOuqJIzKInvN0YxNljFl
+         /7blmbgSeMaM/OtpYdV9l97UiMX5VySfOnQUAYPuijq0711J1BrTERAwnAiCw5TPQFX6
+         CUvxlgwqw3zwcEQ6EqOl8DvLZKtDorkzj96YC4/g7U50UE7Onbmp/K9R4AeIk8xh8hlv
+         Rj7yKfEtDSNtO1cyjNje8xAafaj48I1LdD5MQ9PKfFBUNq8UV6yvYLTUdhc8Ge5fmgjg
+         O/n69bAffGDqotJAn9hcbpwVX02ji2TWx/mOfGI3vobEx7x6tQFDLQYYwBxMGTWTOqyq
+         7rzw==
+X-Gm-Message-State: ANhLgQ3AmskSfc+1FSgn6xkb34ibpGwkERlzMjqTPT6ZSNxALAjoZtNi
+        1kuWUMJ/pCTrgzyKn7/RUyqsxSx6ZLhOXI65L+c=
+X-Google-Smtp-Source: ADFU+vv6quOwJyLsYSdx0o07YDwd6saaCjSttFVyiNsWDmrJbcyplKpBgKJleR6+IcKHECFksg2a0LUIUWZbEHXfYkI=
+X-Received: by 2002:aca:cc81:: with SMTP id c123mr1089651oig.74.1583980554871;
+ Wed, 11 Mar 2020 19:35:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311175919.30523d55b2e5307ba22bbdc0@linux-foundation.org>
+References: <5e098be25c70e07c37e743f84a901f6f756090e0.1583461755.git.baolin.wang7@gmail.com>
+ <20200306204712.dgomi52jzyakylky@earth.universe> <CADBw62owL-G_B7pU87sH2U+0vCNEG9rkMRpHZXL5_9YZcvQfxg@mail.gmail.com>
+ <20200311221856.yh2vr3fybwm3krfc@jupiter.universe>
+In-Reply-To: <20200311221856.yh2vr3fybwm3krfc@jupiter.universe>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 12 Mar 2020 10:35:38 +0800
+Message-ID: <CADBw62pMPrNoTXsfN0Mzs2Vo=ORQLzeabn6bSW2CG_JfE7cebQ@mail.gmail.com>
+Subject: Re: [PATCH v2] power: supply: Allow charger manager can be built as a module
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 05:59:19PM -0700, Andrew Morton wrote:
-> hm, it's hard to get excited over this.  Open-coding the
-> refcount_dec_and_lock_irqsave() internals at a callsite in order to
-> make sparse happy.
-> 
-> Is there some other way, using __acquires (for example)?
+On Thu, Mar 12, 2020 at 6:18 AM Sebastian Reichel <sre@kernel.org> wrote:
+>
+> Hi,
+>
+> On Mon, Mar 09, 2020 at 11:20:41AM +0800, Baolin Wang wrote:
+> > On Sat, Mar 7, 2020 at 4:47 AM Sebastian Reichel <sre@kernel.org> wrote:
+> > > On Fri, Mar 06, 2020 at 10:34:10AM +0800, Baolin Wang wrote:
+> > > > Allow charger manager can be built as a module like other charger
+> > > > drivers.
+> > > >
+> > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > ---
+> > >
+> > > Thanks, queued. I do not like this driver, but its the best we have
+> > > at the moment.
+> >
+> > Thanks. I understood your concern, do you have any plan to re-design
+> > the charger manager driver in kernel? Or do you have some thoughts
+> > about re-designing it? Now we have some out of tree code to use the
+> > old charger manger, and we'd like to change to the new charger manger
+> > driver and upstream them.
+>
+> I don't have anything ready yet and not enough time unfortunately.
+> The proper way would be to have something equivialent to charger-manager
+> in the power-supply core. The core should be able to monitor batteries
+> and handle connected chargers automatically.  Also there shouldn't be
+> any DT entry for the software managing the charger, since DT is about
+> hardware.
 
-sparse is really bad at conditional lock acquisition.  we have similar
-problems over the vfs.  but we shouldn't be obfuscating our code to make
-the tool happy.
+OK. We'll think about it according to your suggestion. Thanks.
+
+-- 
+Baolin Wang
