@@ -2,87 +2,117 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB0BC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A06C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86EE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Cm60S2dW"
+	by mail.kernel.org (Postfix) with ESMTP id 4774B206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584023795;
+	bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=anIEQyxNJCHLxoUItaXSFSInI0pb6rBAOZrelFYdUo6uo/07x18lh99EoBx9LaInr
+	 OEqOAWlpvcxxwO49Cn32fR2lIaIj5UyQbpFnxisoRUTuj4byy5FZHkNiRdUlaZ00yT
+	 SYcwSe5DdhzWH4bwnEMNmro94GPcJ3Pp0mi7j9lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgCLOfd (ORCPT
+        id S1727610AbgCLOge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:35:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40764 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727430AbgCLOfd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:35:33 -0400
-Received: by mail-io1-f65.google.com with SMTP id d8so5878137ion.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Q4FiQLXhjwStZmOYzHQGfmnzPhLI0zvMi+wXTYLHpTk=;
-        b=Cm60S2dWe8JeJkat+EMyGodxi2i2wiUkKIZy7EHVeo9mTS15Tpb57ERxbwzulv7UDu
-         Ft2N6+TI5UPC344muYxQk4MCjyfeRLvhY7oSpL0I6dgCiHG5zRM8bVVBUXbRzr6a7XpL
-         uXzPEzJLYoiwFQETYmhPHWPWdAJbrwsKlc50PlIjqWHbQObsC8M4HZaIisDGUkgvWqHi
-         0eQKYdl7KiTGNbUXzcvSDzm8lCwDxFsDzgaSbKVxxvbmY05thnX9YAHQ7iuHq+kb7z5e
-         uRDW67gmW9J18Y8PsE6Gc942nGaRbX7XiS6x5T3er7G3cQ3DbWGQ0el3pOSC0JEUNKAJ
-         KGCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q4FiQLXhjwStZmOYzHQGfmnzPhLI0zvMi+wXTYLHpTk=;
-        b=NUdvGXH0y7xnQHSCTR3hq5E5ph9guPDv1N7iSPOK2NcLP3LMhXsNc+oxWhlVM+kvfT
-         GBr1vYymfIPyGQ5L2/nO8dyz2FxOSHW/OYMjaXJibbzR0dodxh7dZD2gmQHv6gu5AVNQ
-         cQRIv5w+LgngsWCPyARbOIgGjpKsLhum8LJx3YMhRMT/IEWyWs3rMywixC0wlqXk/IEk
-         2ByHd4f6a6HXRzcMiUW7ZR6oX3inSbIOghbgjI4A8rq1eigUORX2uJDobAO/5QsNLSjS
-         duzuSZE45nL602W6e6t66kvgNU8Udk7l7ef0mczRsFXu7BChvhJig9KFvRP281l56Al6
-         9yFw==
-X-Gm-Message-State: ANhLgQ3lZHS1kyUH/Ld2RHzLjWh1NLOJzieBTNan5avqj2gxedizWIZv
-        1Q88gETNAuTcO2/cvOYErzZv0HRJgw/vfQ==
-X-Google-Smtp-Source: ADFU+vslzlUjaqbM05REXlsAewd1RXt/CcCOlTCgp8fwLTiBQ3Vzrnpkj9AMeaqpMuXQBxwXlhuJkQ==
-X-Received: by 2002:a6b:7407:: with SMTP id s7mr7988540iog.11.1584023730700;
-        Thu, 12 Mar 2020 07:35:30 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id x7sm8719674ill.19.2020.03.12.07.35.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:35:30 -0700 (PDT)
-Subject: Re: [PATCH 1/1] io-wq: remove duplicated cancel code
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <883f200570ee22c8081469bd571bec5fb27da4c5.1583531319.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <277bb693-d5ad-b021-7ea9-d935f878215f@kernel.dk>
-Date:   Thu, 12 Mar 2020 08:35:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 10:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727450AbgCLOge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:36:34 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CBBD20663;
+        Thu, 12 Mar 2020 14:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584023793;
+        bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lUGEe582YRpKTnG8i9OWpZeKCS0w2sKbrZrH+wNKDMwTbcv40YsTGVN7EDD9WAB+c
+         WcnXpZKVBz1VdLv8TKiuRGPLpXFSTRSI8dDGMW/rOgcvdbghZ9dS1s5snK+RHSSuGV
+         KW1ASOZmiwp/vVcu4bnb5sE34/Uflsq6JaJ9APSQ=
+Date:   Thu, 12 Mar 2020 22:36:22 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1] ARM: dts: imx6q-marsboard: properly define rgmii PHY
+Message-ID: <20200312143621.GD1249@dragon>
+References: <20200306080353.9284-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <883f200570ee22c8081469bd571bec5fb27da4c5.1583531319.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306080353.9284-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 3:15 PM, Pavel Begunkov wrote:
-> Deduplicate cancellation parts, as many of them looks the same, as do
-> e.g.
-> - io_wqe_cancel_cb_work() and io_wqe_cancel_work()
-> - io_wq_worker_cancel() and io_work_cancel()
+On Fri, Mar 06, 2020 at 09:03:53AM +0100, Oleksij Rempel wrote:
+> The Atheros AR8035 PHY can be autodetected but can't use interrupt
+> support provided on this board. Define MDIO bus and the PHY node to make
+> it work properly.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx6q-marsboard.dts | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+> index 84b30bd6908f..019488aaa30b 100644
+> --- a/arch/arm/boot/dts/imx6q-marsboard.dts
+> +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+> @@ -111,8 +111,23 @@ &fec {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+>  	phy-mode = "rgmii-id";
+> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* Atheros AR8035 PHY */
+> +		rgmii_phy: ethernet-phy@4 {
+> +			reg = <4>;
+> +
+> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
+> +
 
-Looks good to me, and passes my initial testing. Applied!
+Drop these newlines.
 
--- 
-Jens Axboe
+Shawn
 
+> +			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+> +			reset-assert-us = <10000>;
+> +			reset-deassert-us = <1000>;
+> +		};
+> +	};
+>  };
+>  
+>  &hdmi {
+> -- 
+> 2.25.1
+> 
