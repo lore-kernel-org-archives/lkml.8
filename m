@@ -2,172 +2,69 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF95CC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB838C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4352206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="WfwI7a8a"
+	by mail.kernel.org (Postfix) with ESMTP id A925F206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388131AbgCLH0J (ORCPT
+        id S2388063AbgCLH1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:26:09 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:40639 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387930AbgCLH0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:26:08 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id CIEEjX3RN9Im2CIEHjieaT; Thu, 12 Mar 2020 08:26:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583997966; bh=cpKBziwmXVZm4TJr31kqddsze26dRQVt0z6dUA4yVow=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=WfwI7a8aIRBgaETVwTmZyntAx2Q5uC5R/cCiXQMubf9L5i6hwTfzyH0wpmsUmVnAn
-         8Ts7Clbswhf6NW2YgXWu+695XJWdNNEj0wjNDgmBBBbCfxugW3k1cv5YFBLo/Jjrip
-         Tp9G8iSmtS4s3qibfJzov3jP1wN4hru6/hYqATWvs4mdc3+WclIwSnMaeRxHyZvE7C
-         5k+0DK6n7vxokKQ7fFN4vxd0tu1Mk2LMRCKynIgyElrQUPbp0/RkYRNN2pFrQ4KeZd
-         IdUtd9r1FOCJ3rRzozk2sDkFN3VC2qy4JmOen2x1Ia2NJOluMmk6N2BykXYoBt5rTS
-         HnUeFVDflz16g==
-Subject: Re: [PATCH v2 20/22] media: docs: move driver-specific info to
- driver-api
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org, Mike Isely <isely@pobox.com>,
-        Andy Walls <awalls@md.metrocast.net>,
-        Antti Palosaari <crope@iki.fi>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Michael Krufky <mkrufky@linuxtv.org>
-References: <cover.1583847556.git.mchehab+huawei@kernel.org>
- <5dc2f7a4f15397d5e811d5bb8d110ee53135cf07.1583847557.git.mchehab+huawei@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f321b1c7-4163-10b6-8fe5-fea66aac69cd@xs4all.nl>
-Date:   Thu, 12 Mar 2020 08:26:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 12 Mar 2020 03:27:33 -0400
+Received: from verein.lst.de ([213.95.11.211]:35189 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387898AbgCLH1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:27:33 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A1F4D68B05; Thu, 12 Mar 2020 08:27:29 +0100 (CET)
+Date:   Thu, 12 Mar 2020 08:27:29 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations
+ V5
+Message-ID: <20200312072729.GA9345@lst.de>
+References: <20200227052442.22524-1-ira.weiny@intel.com> <20200305155144.GA5598@lst.de> <20200309170437.GA271052@iweiny-DESK2.sc.intel.com> <20200311033614.GQ1752567@magnolia> <20200311063942.GE10776@dread.disaster.area> <20200311064412.GA11819@lst.de> <20200312004932.GH10776@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <5dc2f7a4f15397d5e811d5bb8d110ee53135cf07.1583847557.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAWcyoNLtx3vjilk1UNvlXj/XMt0S1hpEFqOzWuqxQ50S9q+Zc+yn0SvmPcZwVjQBYAAzw3/SuGvOPqF7ZtFmltM4oE91/cudx07IZV6sOJ778T55Tz6
- cBt+pSVCsz0nQFU1rtHkpXhK0USNiZ2FlyQQw1tvc/XTKU4xTtEw9DFxKh1IXQRq9yu2UiFsdqoRNHIoiFNQPCYAik5Dc5NU1uc7xPKgXbnJrs5V7mNZdCS2
- RloIDB8Jy+E1l97YRtvM6jhfLoIMy251CKM1ab56qabnRWzRrYIgpqKpGmNq97gCCOL0VnA103NO3j7YRk00uouOgcAyiMH2q8VMDb/rf1FFMdbL1enqWAKk
- bVJXxhBOLVkd6vPUREtsMmwJUOyVbk3EJz0wlSxjEuwLtfrfdfJRszrR3vGpt57p5M/og5hrxe+LZTVZ4g0erw5w4OC3KUWjZg4YNQlj5sBDBNpq/jY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312004932.GH10776@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 2:43 PM, Mauro Carvalho Chehab wrote:
-> Those documents don't really describe the driver API.
+On Thu, Mar 12, 2020 at 11:49:32AM +1100, Dave Chinner wrote:
+> > > IOWs, the dax_associate_page() related functionality probably needs
+> > > to be a filesystem callout - part of the aops vector, I think, so
+> > > that device dax can still use it. That way XFS can go it's own way,
+> > > while ext4 and device dax can continue to use the existing mechanism
+> > > mechanisn that is currently implemented....
+> > 
+> > s/XFS/XFS with rmap/, as most XFS file systems currently don't have
+> > that enabled we'll also need to keep the legacy path around.
 > 
-> Instead, they contain development-specific information.
+> Sure, that's trivially easy to handle in the XFS code once the
+> callouts are in place.
 > 
-> Yet, as the main index file describes the content of it as:
-> 
-> 	"how specific kernel subsystems work
-> 	 from the point of view of a kernel developer"
-> 
-> It seems to be the better fit.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../media/drivers}/bttv-devel.rst             |  0
->  .../media/drivers}/contributors.rst           |  0
->  .../media/drivers}/cpia2_devel.rst            |  0
->  .../media/drivers}/cx2341x-devel.rst          |  0
->  .../media/drivers}/cx88-devel.rst             |  0
->  .../media/drivers}/davinci-vpbe-devel.rst     |  0
->  .../media/drivers}/dvb-usb.rst                |  0
->  .../media/drivers}/fimc-devel.rst             |  0
->  .../media/drivers}/frontends.rst              |  0
->  .../media/drivers}/index.rst                  | 29 ++++++++++++++++++-
->  .../media/drivers}/pvrusb2.rst                |  0
->  .../media/drivers}/pxa_camera.rst             |  0
->  .../media/drivers}/radiotrack.rst             |  0
->  .../media/drivers}/saa7134-devel.rst          |  0
->  .../media/drivers}/sh_mobile_ceu_camera.rst   |  0
->  .../media/drivers}/tuners.rst                 |  0
->  .../media/drivers}/vimc-devel.rst             |  0
->  Documentation/driver-api/media/index.rst      |  2 ++
->  Documentation/media/index.rst                 |  1 -
->  Documentation/media/v4l-drivers/index.rst     | 14 ---------
->  MAINTAINERS                                   |  8 ++---
->  drivers/media/dvb-frontends/dib3000.h         |  2 +-
->  drivers/media/dvb-frontends/dib3000mb.c       |  2 +-
->  drivers/media/dvb-frontends/eds1547.h         |  2 +-
->  drivers/media/dvb-frontends/z0194a.h          |  2 +-
->  drivers/media/pci/cx18/cx18-streams.c         |  4 +--
->  drivers/media/platform/pxa_camera.c           |  4 +--
->  drivers/media/radio/Kconfig                   |  2 +-
->  drivers/media/usb/dvb-usb-v2/Kconfig          |  2 +-
->  drivers/media/usb/dvb-usb-v2/gl861.c          |  2 +-
->  drivers/media/usb/dvb-usb-v2/lmedm04.c        |  2 +-
->  drivers/media/usb/dvb-usb-v2/lmedm04.h        |  2 +-
->  drivers/media/usb/dvb-usb-v2/mxl111sf.c       |  2 +-
->  drivers/media/usb/dvb-usb-v2/mxl111sf.h       |  2 +-
->  drivers/media/usb/dvb-usb/Kconfig             |  2 +-
->  drivers/media/usb/dvb-usb/a800.c              |  2 +-
->  drivers/media/usb/dvb-usb/af9005-fe.c         |  2 +-
->  drivers/media/usb/dvb-usb/af9005-remote.c     |  2 +-
->  drivers/media/usb/dvb-usb/af9005.c            |  2 +-
->  drivers/media/usb/dvb-usb/af9005.h            |  2 +-
->  drivers/media/usb/dvb-usb/az6027.c            |  2 +-
->  drivers/media/usb/dvb-usb/cxusb.c             |  2 +-
->  drivers/media/usb/dvb-usb/dibusb-common.c     |  2 +-
->  drivers/media/usb/dvb-usb/dibusb-mb.c         |  2 +-
->  drivers/media/usb/dvb-usb/dibusb-mc-common.c  |  2 +-
->  drivers/media/usb/dvb-usb/dibusb-mc.c         |  2 +-
->  drivers/media/usb/dvb-usb/dibusb.h            |  2 +-
->  drivers/media/usb/dvb-usb/digitv.c            |  2 +-
->  drivers/media/usb/dvb-usb/dtt200u-fe.c        |  2 +-
->  drivers/media/usb/dvb-usb/dtt200u.c           |  2 +-
->  drivers/media/usb/dvb-usb/dtt200u.h           |  2 +-
->  drivers/media/usb/dvb-usb/dvb-usb-init.c      |  2 +-
->  drivers/media/usb/dvb-usb/dw2102.c            |  2 +-
->  drivers/media/usb/dvb-usb/gp8psk.c            |  2 +-
->  drivers/media/usb/dvb-usb/gp8psk.h            |  2 +-
->  drivers/media/usb/dvb-usb/m920x.c             |  2 +-
->  drivers/media/usb/dvb-usb/nova-t-usb2.c       |  2 +-
->  drivers/media/usb/dvb-usb/opera1.c            |  2 +-
->  drivers/media/usb/dvb-usb/ttusb2.c            |  2 +-
->  drivers/media/usb/dvb-usb/ttusb2.h            |  2 +-
->  drivers/media/usb/dvb-usb/umt-010.c           |  2 +-
->  drivers/media/usb/dvb-usb/vp702x-fe.c         |  2 +-
->  drivers/media/usb/dvb-usb/vp702x.c            |  2 +-
->  drivers/media/usb/dvb-usb/vp7045-fe.c         |  2 +-
->  drivers/media/usb/dvb-usb/vp7045.c            |  2 +-
->  drivers/media/usb/dvb-usb/vp7045.h            |  2 +-
->  66 files changed, 81 insertions(+), 67 deletions(-)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/bttv-devel.rst (100%)
->  rename Documentation/{media/dvb-drivers => driver-api/media/drivers}/contributors.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/cpia2_devel.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/cx2341x-devel.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/cx88-devel.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/davinci-vpbe-devel.rst (100%)
->  rename Documentation/{media/dvb-drivers => driver-api/media/drivers}/dvb-usb.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/fimc-devel.rst (100%)
->  rename Documentation/{media/dvb-drivers => driver-api/media/drivers}/frontends.rst (100%)
->  rename Documentation/{media/dvb-drivers => driver-api/media/drivers}/index.rst (67%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/pvrusb2.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/pxa_camera.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/radiotrack.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/saa7134-devel.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/sh_mobile_ceu_camera.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/tuners.rst (100%)
->  rename Documentation/{media/v4l-drivers => driver-api/media/drivers}/vimc-devel.rst (100%)
+> But, quite frankly, we can enforce rmap to be enabled 
+> enabled because nobody is using a reflink enabled FS w/ DAX right
+> now. Everyone will have to mkfs their filesystems anyway to enable
+> reflink+dax, so we simply don't allow reflink+dax to be enabled
+> unless rmap is also enabled. Simple, easy, trivial.
 
-Same question here: can we keep the v4l/dvb split?
-
-Regards,
-
-	Hans
+True, I think rmap will be required for DAX+reflink.  But we still
+need the legacy infrastructure for error reporting.
