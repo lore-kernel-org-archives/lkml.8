@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4A5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59634C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC052067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D37206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uzPeiPds"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYXn3PTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCLRPD (ORCPT
+        id S1726520AbgCLRPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:15:03 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43178 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLRO7 (ORCPT
+        Thu, 12 Mar 2020 13:15:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54739 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgCLRO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 13:14:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b2so2267460wrj.10;
+Received: by mail-wm1-f68.google.com with SMTP id n8so6952975wmc.4;
         Thu, 12 Mar 2020 10:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4SuRBJARNQVs5dyf0eB48d3tfDeB3eEZR49uCWJ2tP8=;
-        b=uzPeiPdsp74lWp9Qj5xiaV3WA3py5k+YwaJ9xw/Ik0gg+Qg9JReCtwkJdtBRI63UQm
-         Km5K/BOBZfAfyLom73b5wD82OqkEDCffMUGFyF/Lzro2SomkgOZFS/ltRjP4iOxrj15u
-         ZS4o0giDu4Agko6eM9XCcnPFac9C33t1dwWlOKPo8wUhhdPeJJ/w7Qeo57BHTKi/Bqwo
-         gjDMqGYx7KBnkxq5EQfD8U6MrmKKscXGMZ2YgGtFC66ovpsoAIvqA+px4JIwLa5iiMej
-         y6PYERJgbbm8kh6iU1893TTGSXwjsS8gYuWmvBRoakV+iguLgW7TXKl4eL5QBTGXU3M9
-         0aQQ==
+        bh=gvIHQy0x0uikDeWAsY+tRBfCVP/6W4keDh1IPsYRgIk=;
+        b=tYXn3PTZuAQXxTt+iA/09QAahXBf7be8mV1OiH1bsJ/2iHNzElyZl1d8X0ap2ALfG7
+         SwUy2N+XS4R7gyNbXNmB5Pv0Q0DXmW77m4UyjfhyLC4XV4ASWtZ8WtdVfszTz4VLcS5u
+         /0LZYB0l/EfhEfvv8bIQwvTDDVa/i2P2OSKQ01qrUQold/cAlJP574BjFAfVFP2XWH/G
+         tfaNHumgsb8O6ijLF93tWM/5TmN3cn7IwxQq3oTH6GmOTgSceFBdoQq3RuQ3Pf5KEH+p
+         jIXJzAkEriGq24vosjrAgkmHJ/wmrk6KNLWydwtqiWfFZAZFyH5j/guQ/3/1Q3Sttdss
+         dU5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4SuRBJARNQVs5dyf0eB48d3tfDeB3eEZR49uCWJ2tP8=;
-        b=V9czw8oVuXrTpWy1B35Rg0XvpHpEUOIgFkV/plLYsnB0Bl+bUBPiScjoAiyCcWAokf
-         pmPQ2utNuusD7twM5vHfBDquN/yi1nveuuQnq4sqdtzAyMueWr+upyLTQ/1kP4CosTHB
-         XMhg2QBAkLNw+wUM2b0GEmvwb1t+ikhd+LIsRA6cwj5sXrpEhyA9d9/lEybxWYEM48V/
-         RxRpUrtP4sDjri+nWlIULxJSW3h69M13sqews/1RoYfmkP945id1XIqGd7mw99EMXwEH
-         3gRxsgxF6URH/fsTXwsA7rw/Q6MK/nDVI9AHqU3L/v5bqp8eFgbXbeZKprxH5R+P56+P
-         9iSQ==
-X-Gm-Message-State: ANhLgQ2hEGbunlNpkxC7Zl4/1fsHxl66gIOOfppAinNTvf6N+ezOpjM3
-        dEuebgA0q65wC/zEJUzQqNQ=
-X-Google-Smtp-Source: ADFU+vsZcBv981uxb63P0Pkt+xHhdWoNcU8cUuoWL3IDP3tTTIFt+ojHaQbBjZJnjoZGgpraBs9A4g==
-X-Received: by 2002:adf:ab4d:: with SMTP id r13mr12395984wrc.188.1584033297481;
-        Thu, 12 Mar 2020 10:14:57 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id v10sm3398832wmh.17.2020.03.12.10.14.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=gvIHQy0x0uikDeWAsY+tRBfCVP/6W4keDh1IPsYRgIk=;
+        b=LVUWWtKgr3oGb62t0KCbz0hpjRvIqeng7DPSsEwgP/tyJO8beBnx0lu5O2luN0E3i1
+         +GQre6iHSzLcYKWcnMnI3eH2yHveNmoS+A04VC09DmveVxv+/uPlbydHJtCehxu7ZDZw
+         4ZmDA6MDGYfmQxsrmBZSAZE0MJjOqcMNV+e3nbLKBaB02n1VJKh9zieHwciqaO21VAtO
+         yenXkmy6B2dSU0aauSu+9/PYI20BHqWcUWPTB7GC+CqMuE+kJGJkQLYp+uslL8bVgCl9
+         HaneCzhMylMOmVnmbS/66H1YR5U//wjaHdoqsF1PlU+hdosEHICRkb0qI89COV+O/8fp
+         BZkQ==
+X-Gm-Message-State: ANhLgQ3/zz0wIVgJQY/GpZwQl6xPwOEczdVmySFSvNuO7jdroAG6bWQG
+        G8BBDIiETu4a2+NiwT4SmmmYsM0R
+X-Google-Smtp-Source: ADFU+vsQ2aPblQLNxCLnKbPMpQn0WV9BgJU3/TShBh84qWgATHucWB5d9a1Rl0/uzCrCVKP230JVBQ==
+X-Received: by 2002:a7b:c082:: with SMTP id r2mr6113172wmh.177.1584033296112;
         Thu, 12 Mar 2020 10:14:56 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v10sm3398832wmh.17.2020.03.12.10.14.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 10:14:54 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] arm64: dts: rockchip: remove clock-names property from 'generic-ohci' nodes
-Date:   Thu, 12 Mar 2020 18:14:41 +0100
-Message-Id: <20200312171441.21144-4-jbx6244@gmail.com>
+Subject: [PATCH 3/4] arm64: dts: rockchip: remove clock-names property from 'generic-ehci' nodes
+Date:   Thu, 12 Mar 2020 18:14:40 +0100
+Message-Id: <20200312171441.21144-3-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200312171441.21144-1-jbx6244@gmail.com>
 References: <20200312171441.21144-1-jbx6244@gmail.com>
@@ -74,52 +74,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 A test with the command below gives for example this error:
 
-arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: usb@ff5d0000:
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: usb@ff5c0000:
 'clock-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 
 'clock-names' is not a valid property name for usb_host nodes with
-compatible string 'generic-ohci', so remove them.
+compatible string 'generic-ehci', so remove them.
 
 make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/generic-ohci.yaml
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/generic-ehci.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
  arch/arm64/boot/dts/rockchip/px30.dtsi   | 1 -
  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 1 -
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 1 -
  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ----
- 3 files changed, 6 deletions(-)
+ 4 files changed, 7 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index be5569b74..bd5f51d23 100644
+index 1bbed660f..be5569b74 100644
 --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -892,7 +892,6 @@
- 		reg = <0x0 0xff350000 0x0 0x10000>;
- 		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+@@ -881,7 +881,6 @@
+ 		reg = <0x0 0xff340000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
  		clocks = <&cru HCLK_HOST>;
 -		clock-names = "usbhost";
  		phys = <&u2phy_host>;
  		phy-names = "usb";
  		power-domains = <&power PX30_PD_USB>;
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index ac08d2b70..54b3f4616 100644
+index d9490f417..ac08d2b70 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -977,7 +977,6 @@
- 		reg = <0x0 0xff5d0000 0x0 0x10000>;
- 		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+@@ -967,7 +967,6 @@
+ 		reg = <0x0 0xff5c0000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
  		clocks = <&cru HCLK_HOST0>, <&u2phy>;
 -		clock-names = "usbhost", "utmi";
  		phys = <&u2phy_host>;
  		phy-names = "usb";
  		status = "disabled";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 2079e877a..1ebb0eef4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -513,7 +513,6 @@
+ 		reg = <0x0 0xff500000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST0>;
+-		clock-names = "usbhost";
+ 		status = "disabled";
+ 	};
+ 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index bbae92ef3..8aac201f0 100644
+index 63355ba7c..bbae92ef3 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -360,8 +360,6 @@
- 		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>;
+@@ -349,8 +349,6 @@
+ 		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>;
  		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
  			 <&u2phy0>;
 -		clock-names = "usbhost", "arbiter",
@@ -127,8 +140,8 @@ index bbae92ef3..8aac201f0 100644
  		phys = <&u2phy0_host>;
  		phy-names = "usb";
  		status = "disabled";
-@@ -384,8 +382,6 @@
- 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH 0>;
+@@ -375,8 +373,6 @@
+ 		interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>;
  		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>,
  			 <&u2phy1>;
 -		clock-names = "usbhost", "arbiter",
