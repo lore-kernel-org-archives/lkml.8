@@ -2,127 +2,339 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C74C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4F8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1425620737
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D4C2074E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Gk1n+kLD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s3tdjk4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgCLAnI (ORCPT
+        id S1731585AbgCLAsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:43:08 -0400
-Received: from mail-eopbgr690042.outbound.protection.outlook.com ([40.107.69.42]:16355
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731555AbgCLAnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:43:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mn/f0mXA3ToYW+hI75KlPqEfx9Y6WA9HdIA0DU0HZG37acUbDObNzHeFZoYrLdJyJ63dpxbHtCJxfSuHV+TA6nvfnPcE+Ilau3BpyfShmBEYzb2zUNOIldd4K7lajPk7DJeVKsOl6aoFk7w59D2WK0zI61mZXWRE9sKODbOzWqhyXbn1PDYoY8/b+DbgmQV9sqaG2Vp26VMpg14/AuAFTKyz6tJq5B0imZxCcWbT9Gk/gv0u0WoSzEQrM6WtrCQ1/nZbaYKORUMikngzPvAX2qjMUdyiacWsorqihw7+CZ39qWsM0nyuQe9ApdegLM2gNNxaezTzK0ufhru0NfW9gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JVGWqKJ66qeV2vsQMPQAqYByNNY7zCdGHcvYpNtbHhE=;
- b=HFaPNcJ0rhFX7GK90V3oRaEeNd8Iv40Td8soSbJ8lN2JvmsOM+TgDCltd2piug81U7tmB+E8QZ+IL1cKWJsYWxGOOIS+ZprpxE7UnvPeZ5zBoJ3+BjR8iJgzAB9BsxXCVVcIEc/tv/kUQC+l7oqTthxACbxyyz/Ju7ObgiopHShBuoKRlmZlaQbTJzTW/fleCTWC2sZ/zfry2+NSFHQp0vncZRcmDKbhTgfYMu1fi02K2hQImMDAtJz6IM8cWf/PWMCirFEKgzMdxROMNZ3Wqxwyatu4UULbavJla5OqpQWyGcgDAxkoeHbDYRedKnTp13YHdoPAY/t1p1Nl2Qi/kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 11 Mar 2020 20:48:35 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42661 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731423AbgCLAse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 20:48:34 -0400
+Received: by mail-qt1-f194.google.com with SMTP id g16so3071118qtp.9;
+        Wed, 11 Mar 2020 17:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JVGWqKJ66qeV2vsQMPQAqYByNNY7zCdGHcvYpNtbHhE=;
- b=Gk1n+kLDy+LaP24uIpfms3eFyElPkueoJM7W6jsWIGftD8BotnB4z64msp9Ma/ixOd8SBxyrLhvKPWue0nRzWaxhRs8QwUD+3mFm5hx21Hw/jkHIXHOCXWakdY6zCOvfJjwTZoKiKI1DM+q9P9YrffGiEZyuNphWqXwZX+khW7Q=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ashish.Kalra@amd.com; 
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1148.namprd12.prod.outlook.com (2603:10b6:3:74::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Thu, 12 Mar 2020 00:43:05 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 00:43:05 +0000
-Date:   Thu, 12 Mar 2020 00:43:02 +0000
-From:   Ashish Kalra <ashish.kalra@amd.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
-        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
-        Thomas.Lendacky@amd.com
-Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
- guests.
-Message-ID: <20200312004302.GB26448@ashkalra_ubuntu_server>
-References: <20191209231346.5602-1-Ashish.Kalra@amd.com>
- <20191220015245.GA7010@localhost.localdomain>
- <20200121200947.GA24884@ashkalra_ubuntu_server>
- <20200121205403.GC75374@Konrads-MacBook-Pro.local>
- <20200124230008.GA1565@ashkalra_ubuntu_server>
- <20200204193500.GA15564@ashkalra_ubuntu_server>
- <20200303170353.GC31627@char.us.oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303170353.GC31627@char.us.oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: SN4PR0501CA0034.namprd05.prod.outlook.com
- (2603:10b6:803:40::47) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dPFjQPIRWd8bqC5jxZn9xCQTkgnWZJ7e7BAT/JnGT8E=;
+        b=s3tdjk4e/1QE32HKyLWhbMQP2YqXsd+UNvTTtHvPtFLaCRDCbbA9hHOThItbbaG2TN
+         sbBWYkJjjzvzxXKWdzpk+Zq+CZEcPepj9GnWNu1lcCOmI/yAJakRcRBz1iYzjmmWfjqw
+         e5Xq+DilIjZFQU+H2eO0nYs1JVtPKwO7+/JN7zYcTGCuR0T/erc3VtL0ygIwcQNjKTPR
+         M8bjG9qkDIFbA6yyyk62HaC7SzHJ2T8Gtg7EMNHp3ZNyA4a0N5S4v+kXfAF4+q4xf3Wv
+         mMUXOA2kKQSWfb54sA++XATcRIHWMiah9tgwVpd3S07S3NQN6wBU6JnaxpV7C4Ed2Wjt
+         r/gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dPFjQPIRWd8bqC5jxZn9xCQTkgnWZJ7e7BAT/JnGT8E=;
+        b=tOpA6Kh9LRWNgqIHRUWKaCoIO/LnnNaeFXKIebF6nbbIfvdGk24Jgs+VhNWxqzKWby
+         jwE3oVYrGtpbfKssIwQ/zYWEZOAkTxDNdok8OK3S+c4rnf0yNQxgJ5kkVW/BaUQpWRVQ
+         cPK3/umtKpOM4H6kH1djh4I2TuJueEzLIgnRA7dsZWAABWy6MT/dfx+ZY1RRqdPenqer
+         gF9WaMD9+LtWMkm9JOd/cxthMTxAnB17iq/SX6MMjhFonl8IK6d/U0eQaKrK8FKB0hmD
+         SfmMQRL6xRbKQANeuEDuGU/kGN9SNMwN9Y2DbsB9cBjTxJmbeoj8xMUHDcIZEgP50WCO
+         Pz0Q==
+X-Gm-Message-State: ANhLgQ2Wr2/SDTTMz+yA6YggglKcx2wMQuzxmWWZXQqrs+5OSjUNis3Q
+        t+jfTxr5jkN++Up+XKbC9GMHZ9V1
+X-Google-Smtp-Source: ADFU+vvHHV61r9RzBwiCDsu6rznaL1iEnQZY7A8RYCU4M4vruqtSRw8Gfb3o2M8ePiJq5FI0Yc2yBA==
+X-Received: by 2002:aed:2022:: with SMTP id 31mr4851668qta.321.1583974113014;
+        Wed, 11 Mar 2020 17:48:33 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id k4sm1233126qkc.18.2020.03.11.17.48.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Mar 2020 17:48:32 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 486172211C;
+        Wed, 11 Mar 2020 20:48:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 11 Mar 2020 20:48:31 -0400
+X-ME-Sender: <xms:3oZpXkUw0lqNXFn9_TgGkJqYZErue8prf_RrRpQnUzJDNmXOPaNdMw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvgedgfeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrg
+    hinhepghhithhhuhgsuhhsvghrtghonhhtvghnthdrtghomhenucfkphephedvrdduheeh
+    rdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledv
+    geehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtoh
+    hmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:3oZpXpBBGupaLy5UDm8mxKqXbklstfeKbrD_B5FmCgL66JcaGKBkSw>
+    <xmx:3oZpXpFG3F1a2HBZDBbTxQhIIIXXIradzqjIrkti9pNjClRJ8biAew>
+    <xmx:3oZpXq44qCHcRCKDNB530rokP_6c-NrFyRLnpnCFjYEuNVwzLEQlbg>
+    <xmx:34ZpXnpkeaBwnl0mfPNXV6V95pwrWjfFpfAzEATbv3w2-a6SSDHWxg>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 01EBD30612AF;
+        Wed, 11 Mar 2020 20:48:29 -0400 (EDT)
+Date:   Thu, 12 Mar 2020 08:48:28 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>
+Subject: Re: PROVE_RCU_LIST + /proc/lockdep warning
+Message-ID: <20200312004828.GA105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
+ <20200307171618.GC231616@google.com>
+ <20200309014017.GH110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <1583865744.7365.167.camel@lca.pw>
+ <20200311033038.GA64051@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <1583933090.7365.173.camel@lca.pw>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server (165.204.77.1) by SN4PR0501CA0034.namprd05.prod.outlook.com (2603:10b6:803:40::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.7 via Frontend Transport; Thu, 12 Mar 2020 00:43:04 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5ccaf83d-a576-4961-2224-08d7c61e53aa
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1148:|DM5PR12MB1148:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB114838F297317EE23B207B698EFD0@DM5PR12MB1148.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(199004)(7416002)(86362001)(6496006)(4744005)(52116002)(6916009)(33656002)(2906002)(33716001)(8676002)(5660300002)(66476007)(9686003)(55016002)(8936002)(81166006)(81156014)(1076003)(44832011)(478600001)(186003)(316002)(16526019)(26005)(66556008)(956004)(66946007)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1148;H:DM5PR12MB1386.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NpUcXVDk47dPORfJhlUDkzjEXA4SmdJ3+uLJ/p2fUryyZqWUOBKYf18QQEn3sJhLx0hqTzECtnBlc5byyGoDBm6Xux5lUvOQ24NXL9xccEYODukEAfgP8+xpdt6cMMppCM1J28lrZu9he56h2W8UFEA1x9jgl9jiGed0aSHcGvGkn7HkFWlcvAuOXQO+SZ4ps6Q9UoCdzg04wl5np7wOz3GAoQnInMFtvpTQ05VPNGoro2Qcs7yDX7UKDKCgmx2wBYoEb5si7QgWviJ3AW1Nkc+gPT71ZvjHyLjuC7HwETfuej0Tba0b1jtzDwZTgvt4UUEXdaKKwZ5xuVxjBLrIJ4udWPdaD7q8j5i2ItBP1+/YSS+zLsa2Z82tKsQzVtmU1Z+v0fRFKh8PdyWIs6f+Z9Dc84Nyt5zO4Teh55Uq9bezqfUbIJWvgxSuOacGNJ/F
-X-MS-Exchange-AntiSpam-MessageData: lRc87YfrBsBnRp5Re+HF9k377vRiBLYhQ7883TlPZfQ3qBzgVzOcsq00k+rfCmaiHmX42hR+GAgIFUc7bPYG3QD7BBHBWP+n4mrzAfwrY2RM7IQrxw+rdws7IrMg81YTUn3jLbGLhzUbmgxTf/xXOg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ccaf83d-a576-4961-2224-08d7c61e53aa
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 00:43:05.7239
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5NW5+Umcn75l9nkD8fsGnRzNwKNsPzheEf7KVSmgolBPbFDq/sqhssLEuFWQZLQHe2QPPte91Z7ENTvc9k1Www==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1148
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583933090.7365.173.camel@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:03:53PM -0500, Konrad Rzeszutek Wilk wrote:
+On Wed, Mar 11, 2020 at 09:24:50AM -0400, Qian Cai wrote:
+> On Wed, 2020-03-11 at 11:30 +0800, Boqun Feng wrote:
+> > On Tue, Mar 10, 2020 at 02:42:24PM -0400, Qian Cai wrote:
+> > > On Mon, 2020-03-09 at 09:40 +0800, Boqun Feng wrote:
+> > > > On Sat, Mar 07, 2020 at 12:16:18PM -0500, Joel Fernandes wrote:
+> > > > > On Thu, Mar 05, 2020 at 11:06:10PM -0500, Qian Cai wrote:
+> > > > > > Since the linux-next commit c9af03c14bfd (“Default enable RCU list lockdep debugging with PROVE_RCU”),
+> > > > > > read /proc/lockdep will trigger a warning with this config below. Reverted the commit fixed the issue
+> > > > > > right away.
+> > > > > > 
+> > > > > > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+> > > > > 
+> > > > > Hmm, since Peter hates the list-RCU checking patches and rejected a patch by
+> > > > > Amol to fix this (;-)), the easiest way to resolve it would be to just bypass
+> > > > > the check in lockdep code:
+> > > > > 
+> > > > > Peter, this should be the last of the list-RCU changes and thank you for the
+> > > > > patience.
+> > > > > 
+> > > > > Should I or Amol send a patch for this?
+> > > > > 
+> > > > 
+> > > > Hmm.. IIUC, the warning got triggered here is because
+> > > > lockdep_count_forward_deps() didn't set up the ->lockdep_recursion, as a
+> > > > result, __bfs() was called without ->lockdep_recursion being 1, which
+> > > > introduced the inconsistency of lockdep status. So how about the
+> > > > following (untested) fix?:
+> > > > 
+> > > > Thoughts?
+> > > > 
+> > > > Regards,
+> > > > Boqun
+> > > > 
+> > > > -------------------------
+> > > > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> > > > index 32406ef0d6a2..a258640edace 100644
+> > > > --- a/kernel/locking/lockdep.c
+> > > > +++ b/kernel/locking/lockdep.c
+> > > > @@ -1720,7 +1720,9 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+> > > >  
+> > > >  	raw_local_irq_save(flags);
+> > > >  	arch_spin_lock(&lockdep_lock);
+> > > > +	current->lockdep_recursion = 1;
+> > > >  	ret = __lockdep_count_forward_deps(&this);
+> > > > +	current->lockdep_recursion = 0;
+> > > >  	arch_spin_unlock(&lockdep_lock);
+> > > >  	raw_local_irq_restore(flags);
 > > > 
-> > > >> 
-> > > >>    Actually you seem to be piggybacking on pci_swiotlb_detect_4gb - so
-> > > >>    perhaps add in this code ? Albeit it really should be in it's own
-> > > >>    file, not in arch/x86/kernel/pci-swiotlb.c
+> > > This does not work. Still the same splat.
 > > > 
-> > > Actually, we piggyback on pci_swiotlb_detect_override which sets
-> > > swiotlb=1 as x86_64_start_kernel() and invocation of sme_early_init()
-> > > forces swiotlb on, but again this is all x86 architecture specific.
+> > 
+> > Hmm.. interesting, I tried this myself. I could trigger the 
+> > "DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)" warning after a "cat
+> > /proc/lockdep" with the linux-next tree, and after I applied the changes
+> > I proposed above, "cat /proc/lockdep" did not trigger the same warning.
+> > 
+> > Is this the typical "works on my machine" situation? ;-)
+> > 
+> > Just to be clear, you mean after you added the ->lockdep_recursion pair
+> > for both lockdep_count_forward_deps() and lockdep_count_backward_deps(),
+> > the same splat ("DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)" still
+> > got trigger, after you did a read on /proc/lockdep? Thanks!
 > 
-> Then it looks like the best bet is to do it from within swiotlb_init?
-> We really can't do it from swiotlb_size_or_default - that function
-> should just return a value and nothing else.
+> Ah, my fault. I missed the part for lockdep_count_backward_deps(). Anyway, it
+> works fine here. Care to post the patch?
+> 
 
-Ok, i will fix this patch accordingly and resubmit it.
+OK, I will post a patch shortly.
 
-Thanks,
-Ashish
+Regards,
+Boqun
+
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > > > 
+> > > > > ---8<-----------------------
+> > > > > 
+> > > > > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> > > > > index 32406ef0d6a2d..d47643d8081b2 100644
+> > > > > --- a/kernel/locking/lockdep.c
+> > > > > +++ b/kernel/locking/lockdep.c
+> > > > > @@ -1493,7 +1493,7 @@ static int __bfs(struct lock_list *source_entry,
+> > > > >  
+> > > > >  		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
+> > > > >  
+> > > > > -		list_for_each_entry_rcu(entry, head, entry) {
+> > > > > +		list_for_each_entry_rcu(entry, head, entry, true) {
+> > > > >  			if (!lock_accessed(entry)) {
+> > > > >  				unsigned int cq_depth;
+> > > > >  				mark_lock_accessed(entry, lock);
+> > > > > 
+> > > > > thanks,
+> > > > > 
+> > > > >  - Joel
+> > > > > 
+> > > > > > 
+> > > > > > [26405.676199][ T3548] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+> > > > > > [26405.676239][ T3548] WARNING: CPU: 11 PID: 3548 at kernel/locking/lockdep.c:4637 check_flags.part.28+0x218/0x220
+> > > > > > [26405.756287][ T3548] Modules linked in: kvm_intel nls_iso8859_1 nls_cp437 kvm vfat fat irqbypass intel_cstate intel_uncore intel_rapl_perf dax_pmem dax_pmem_core efivars ip_tables x_tables xfs sd_mod bnx2x hpsa mdio scsi_transport_sas firmware_class dm_mirror dm_region_hash dm_log dm_mod efivarfs
+> > > > > > [26405.881899][ T3548] CPU: 11 PID: 3548 Comm: cat Not tainted 5.6.0-rc4-next-20200305+ #8
+> > > > > > [26405.920091][ T3548] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
+> > > > > > [26405.955370][ T3548] RIP: 0010:check_flags.part.28+0x218/0x220
+> > > > > > [26405.983016][ T3548] Code: 13 8a e8 2b 3f 29 00 44 8b 15 84 df ba 01 45 85 d2 0f 85 c7 94 00 00 48 c7 c6 40 2b 47 89 48 c7 c7 40 04 47 89 e8 49 e3 f3 ff <0f> 0b e9 ad 94 00 00 90 55 48 89 e5 41 57 4d 89 cf 41 56 45 89 c6
+> > > > > > [26406.076147][ T3548] RSP: 0018:ffffc9000695f848 EFLAGS: 00010086
+> > > > > > [26406.104215][ T3548] RAX: 0000000000000000 RBX: ffff888fe6184040 RCX: ffffffff8858cecf
+> > > > > > [26406.140856][ T3548] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: 0000000000000000
+> > > > > > [26406.178465][ T3548] RBP: ffffc9000695f850 R08: fffffbfff1377355 R09: fffffbfff1377355
+> > > > > > [26406.217995][ T3548] R10: ffffffff89bb9aa3 R11: fffffbfff1377354 R12: 0000000000000000
+> > > > > > [26406.256760][ T3548] R13: ffffffff8aa55ee0 R14: 0000000000000046 R15: ffffffff8aa55ec0
+> > > > > > [26406.293708][ T3548] FS:  00007f58cf3a3540(0000) GS:ffff88905fa80000(0000) knlGS:0000000000000000
+> > > > > > [26406.335252][ T3548] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > > [26406.366331][ T3548] CR2: 00007f58cf326000 CR3: 0000000f1ba38006 CR4: 00000000001606e0
+> > > > > > [26406.402408][ T3548] Call Trace:
+> > > > > > [26406.416739][ T3548]  lock_is_held_type+0x5d/0x150
+> > > > > > [26406.438262][ T3548]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+> > > > > > [26406.466463][ T3548]  rcu_read_lock_any_held+0xac/0x100
+> > > > > > [26406.490105][ T3548]  ? rcu_read_lock_held+0xc0/0xc0
+> > > > > > [26406.513258][ T3548]  ? __slab_free+0x421/0x540
+> > > > > > [26406.535012][ T3548]  ? kasan_kmalloc+0x9/0x10
+> > > > > > [26406.555901][ T3548]  ? __kmalloc_node+0x1d7/0x320
+> > > > > > [26406.578668][ T3548]  ? kvmalloc_node+0x6f/0x80
+> > > > > > [26406.599872][ T3548]  __bfs+0x28a/0x3c0
+> > > > > > [26406.617075][ T3548]  ? class_equal+0x30/0x30
+> > > > > > [26406.637524][ T3548]  lockdep_count_forward_deps+0x11a/0x1a0
+> > > > > > [26406.664134][ T3548]  ? check_noncircular+0x2e0/0x2e0
+> > > > > > [26406.688191][ T3548]  ? __kasan_check_read+0x11/0x20
+> > > > > > [26406.713581][ T3548]  ? check_chain_key+0x1df/0x2e0
+> > > > > > [26406.738044][ T3548]  ? seq_vprintf+0x4e/0xb0
+> > > > > > [26406.758241][ T3548]  ? seq_printf+0x9b/0xd0
+> > > > > > [26406.778169][ T3548]  ? seq_vprintf+0xb0/0xb0
+> > > > > > [26406.798172][ T3548]  l_show+0x1c4/0x380
+> > > > > > [26406.816474][ T3548]  ? print_name+0xb0/0xb0
+> > > > > > [26406.836393][ T3548]  seq_read+0x56b/0x750
+> > > > > > [26406.855346][ T3548]  proc_reg_read+0x1b4/0x200
+> > > > > > [26406.876737][ T3548]  ? proc_reg_unlocked_ioctl+0x1e0/0x1e0
+> > > > > > [26406.903030][ T3548]  ? check_chain_key+0x1df/0x2e0
+> > > > > > [26406.926531][ T3548]  ? find_held_lock+0xca/0xf0
+> > > > > > [26406.948291][ T3548]  __vfs_read+0x50/0xa0
+> > > > > > [26406.967391][ T3548]  vfs_read+0xcb/0x1e0
+> > > > > > [26406.986102][ T3548]  ksys_read+0xc6/0x160
+> > > > > > [26407.005405][ T3548]  ? kernel_write+0xc0/0xc0
+> > > > > > [26407.026076][ T3548]  ? do_syscall_64+0x79/0xaec
+> > > > > > [26407.047448][ T3548]  ? do_syscall_64+0x79/0xaec
+> > > > > > [26407.068650][ T3548]  __x64_sys_read+0x43/0x50
+> > > > > > [26407.089132][ T3548]  do_syscall_64+0xcc/0xaec
+> > > > > > [26407.109939][ T3548]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+> > > > > > [26407.134924][ T3548]  ? syscall_return_slowpath+0x580/0x580
+> > > > > > [26407.160854][ T3548]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+> > > > > > [26407.188943][ T3548]  ? trace_hardirqs_off_caller+0x3a/0x150
+> > > > > > [26407.216692][ T3548]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> > > > > > [26407.243534][ T3548]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > > > [26407.272720][ T3548] RIP: 0033:0x7f58ceeafd75
+> > > > > > [26407.293162][ T3548] Code: fe ff ff 50 48 8d 3d 4a dc 09 00 e8 25 0e 02 00 0f 1f 44 00 00 f3 0f 1e fa 48 8d 05 a5 59 2d 00 8b 00 85 c0 75 0f 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 53 c3 66 90 41 54 49 89 d4 55 48 89 f5 53 89
+> > > > > > [26407.386043][ T3548] RSP: 002b:00007ffc115111a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> > > > > > [26407.425283][ T3548] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f58ceeafd75
+> > > > > > [26407.462717][ T3548] RDX: 0000000000020000 RSI: 00007f58cf327000 RDI: 0000000000000003
+> > > > > > [26407.500428][ T3548] RBP: 00007f58cf327000 R08: 00000000ffffffff R09: 0000000000000000
+> > > > > > [26407.538473][ T3548] R10: 0000000000000022 R11: 0000000000000246 R12: 00007f58cf327000
+> > > > > > [26407.575743][ T3548] R13: 0000000000000003 R14: 0000000000000fff R15: 0000000000020000
+> > > > > > [26407.613112][ T3548] irq event stamp: 7161
+> > > > > > [26407.632089][ T3548] hardirqs last  enabled at (7161): [<ffffffff88ea2684>] _raw_spin_unlock_irqrestore+0x44/0x50
+> > > > > > [26407.680094][ T3548] hardirqs last disabled at (7160): [<ffffffff88ea2418>] _raw_spin_lock_irqsave+0x18/0x50
+> > > > > > [26407.727273][ T3548] softirqs last  enabled at (5898): [<ffffffff89200447>] __do_softirq+0x447/0x766
+> > > > > > [26407.774000][ T3548] softirqs last disabled at (5889): [<ffffffff884d20e6>] irq_exit+0xd6/0xf0
+> > > > > > [26407.814407][ T3548] ---[ end trace 1026d00df66af83e ]---
+> > > > > > [26407.839742][ T3548] possible reason: unannotated irqs-off.
+> > > > > > [26407.866243][ T3548] irq event stamp: 7161
+> > > > > > [26407.885407][ T3548] hardirqs last  enabled at (7161): [<ffffffff88ea2684>] _raw_spin_unlock_irqrestore+0x44/0x50
+> > > > > > [26407.933602][ T3548] hardirqs last disabled at (7160): [<ffffffff88ea2418>] _raw_spin_lock_irqsave+0x18/0x50
+> > > > > > [26407.980432][ T3548] softirqs last  enabled at (5898): [<ffffffff89200447>] __do_softirq+0x447/0x766
+> > > > > > [26408.022826][ T3548] softirqs last disabled at (5889): [<ffffffff884d20e6>] irq_exit+0xd6/0xf0
+> > > > > > 
+> > > > > > On a side note, it likely to hit another bug in next-20200305 (not such problem on 0304) where it
+> > > > > > will stuck during boot, but the reverting does not help there. Rebooting a few times could pass.
+> > > > > > 
+> > > > > > [    0.013514][    C0] NMI watchdog: Watchdog detected hard LOCKUP on cpu 0 
+> > > > > > [    0.013514][    C0] Modules linked in: 
+> > > > > > [    0.013514][    C0] irq event stamp: 64186318 
+> > > > > > [    0.013514][    C0] hardirqs last  enabled at (64186317): [<ffffffff84c9b107>] _raw_spin_unlock_irq+0x27/0x40 
+> > > > > > [    0.013514][    C0] hardirqs last disabled at (64186318): [<ffffffff84c8f384>] __schedule+0x214/0x1070 
+> > > > > > [    0.013514][    C0] softirqs last  enabled at (267904): [<ffffffff85000447>] __do_softirq+0x447/0x766 
+> > > > > > [    0.013514][    C0] softirqs last disabled at (267897): [<ffffffff842d1f16>] irq_exit+0xd6/0xf0 
+> > > > > > [    0.013514][    C0] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200305+ #6 
+> > > > > > [    0.013514][    C0] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018 
+> > > > > > [    0.013514][    C0] RIP: 0010:lock_is_held_type+0x12a/0x150 
+> > > > > > [    0.013514][    C0] Code: 41 0f 94 c4 65 48 8b 1c 25 40 0f 02 00 48 8d bb 74 08 00 00 e8 77 c0 28 00 c7 83 74 08 00 00 00 00 00 00 41 56 9d 48 83 c4 18 <44> 89 e0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 45 31 e4 eb c7 41 bc 01 
+> > > > > > [    0.013514][    C0] RSP: 0000:ffffc9000628f9f8 EFLAGS: 00000082 
+> > > > > > [    0.013514][    C0] RAX: 0000000000000000 RBX: ffff889880efc040 RCX: ffffffff8438b449 
+> > > > > > [    0.013514][    C0] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: ffff889880efc8b4 
+> > > > > > [    0.013514][    C0] RBP: ffffc9000628fa20 R08: ffffed1108588a24 R09: ffffed1108588a24 
+> > > > > > [    0.013514][    C0] R10: ffff888842c4511b R11: 0000000000000000 R12: 0000000000000000 
+> > > > > > [    0.013514][    C0] R13: ffff889880efc908 R14: 0000000000000046 R15: 0000000000000003 
+> > > > > > [    0.013514][    C0] FS:  0000000000000000(0000) GS:ffff888842c00000(0000) knlGS:0000000000000000 
+> > > > > > [    0.013514][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+> > > > > > [    0.013514][    C0] CR2: ffff88a0707ff000 CR3: 0000000b72012001 CR4: 00000000001606f0 
+> > > > > > [    0.013514][    C0] Call Trace: 
+> > > > > > [    0.013514][    C0]  rcu_read_lock_sched_held+0xac/0xe0 
+> > > > > > lock_is_held at include/linux/lockdep.h:361
+> > > > > > (inlined by) rcu_read_lock_sched_held at kernel/rcu/update.c:121
+> > > > > > [    0.013514][    C0]  ? rcu_read_lock_bh_held+0xc0/0xc0 
+> > > > > > [    0.013514][    C0]  rcu_note_context_switcx186/0x3b0 
+> > > > > > [    0.013514][    C0]  __schedule+0x21f/0x1070 
+> > > > > > [    0.013514][    C0]  ? __sched_text_start+0x8/0x8 
+> > > > > > [    0.013514][    C0]  schedule+0x95/0x160 
+> > > > > > [    0.013514][    C0]  do_boot_cpu+0x58c/0xaf0 
+> > > > > > [    0.013514][    C0]  native_cpu_up+0x298/0x430 
+> > > > > > [    0.013514][    C0]  ? common_cpu_up+0x150/0x150 
+> > > > > > [    0.013514][    C0]  bringup_cpu+0x44/0x310 
+> > > > > > [    0.013514][    C0]  ? timers_prepare_cpu+0x114/0x190 
+> > > > > > [    0.013514][    C0]  ? takedown_cpu+0x2e0/0x2e0 
+> > > > > > [    0.013514][    C0]  cpuhp_invoke_callback+0x197/0x1120 
+> > > > > > [    0.013514][    C0]  ? ring_buffer_record_is_set_on+0x40/0x40 
+> > > > > > [    0.013514][    C0]  _cpu_up+0x171/0x280 
+> > > > > > [    0.013514][    C0]  do_cpu_up+0xb1/0x120 
+> > > > > > [    0.013514][    C0]  cpu_up+0x13/0x20 
+> > > > > > [    0.013514][    C0]  smp_init+0x91/0x118 
+> > > > > > [    0.013514][    C0]  kernel_init_freeable+0x221/0x4f8 
+> > > > > > [    0.013514][    C0]  ? mark_held_locks+0x34/0xb0 
+> > > > > > [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40 
+> > > > > > [    0.013514][    C0]  ? start_kernel+0x876/0x876 
+> > > > > > [    0.013514][    C0]  ? lockdep_hardirqs_on+0x1b0/0x2a0 
+> > > > > > [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40 
+> > > > > > [    0.013514][    C0]  ? rest_init+0x307/0x307 
+> > > > > > [    0.013514][    C0]  kernel_init+0x  0.013514][    C0]  ? rest_init+0x307/0x307 
+> > > > > > [    0.013514][    C0]  ret_from_fork+0x3a/0x50 
+> > > > > > 
+> > > > > >  
+> > > > > 
+> > > > > 
