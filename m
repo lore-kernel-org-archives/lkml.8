@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F198C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013EDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508C3206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FBD206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hUCDqIj0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fDpw7L+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCLNbr (ORCPT
+        id S1727501AbgCLNbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:31:47 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35388 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbgCLNbl (ORCPT
+        Thu, 12 Mar 2020 09:31:52 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54423 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbgCLNbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:31:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d5so7135581wrc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:31:40 -0700 (PDT)
+        Thu, 12 Mar 2020 09:31:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n8so6102634wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:31:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qPH/Dy/CjLCenRWLG2Luxl8lE2WdXQS9qh3kQnsN4TQ=;
-        b=hUCDqIj0/ip1fGR0w8g9JiTgR3VggFXz6uXZBIuxQFF8RI6pPBFb0oKUQZqohHTRzJ
-         EHaOdl7mpyqXAh2wOch+xrBgXcNlimpN9pUcYfJPjcxIWvdkyqbSg9NQI7L5ScEkAZB4
-         rMQWh59snVY+t+sBELnc4M5c4DmKQy+T/hQ5cw5ip7/2BS8wARxIRgItz7sfFyakw9vk
-         mlBrjYp4ALqFRuMLjLg7MJ0VyZcGPi4hjaD+7P3BdyiA5CPOMY/d5Ix0Gesh38EQ24E6
-         X5/Ga0uTigrBvfoDF9cVkNYXejKr5vaVSAdDmf2Fc1HVBFXkq/IRQFrjALiYCP+VQjwE
-         a/qA==
+        bh=tdUB5s+Mgt8nPOXH1fk62M6gPs/HBhr92WS0vOvoB1Y=;
+        b=fDpw7L+gW+Pj56qUlrLoOupqymKfPWSYbHcqXeYo8PK0Q12Q7VmFHJkS7UauyOeKGd
+         nT5vfpMk5dlesnPeCwZSkDZ9H/ORR7AToqivIwtAXa+KdpSfH2HiXzS36+47BPVCMF58
+         +fFY5aMsmeyRMTHN++OW+He5L+/UYDfEbIR4FG8nGT+uWQ0uV9y6/aJyF1hO46rnxqqK
+         31oeFdQ8Of844HYuiIuGda7zr5DjjRn/YdKcn8Fyx4hBnixE+3Uzsw9U1R6u3fxyygsY
+         wMEA3qkA78Z3IRRWfY42RYTiQys+fiScAXWCK0vVjlkcXua3i3rtj78hKw9FZtq3dGfZ
+         L7eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qPH/Dy/CjLCenRWLG2Luxl8lE2WdXQS9qh3kQnsN4TQ=;
-        b=QnD2vPL31DFUDyoizQQ5q/3tCLSqgjGrqKnC7Q7R8Mqdm4opw/9zwJZECh9DNrg/ax
-         ZnRe/yx+3HIcfPvkHvnU/MkZXJyfei6QcFPVz/irQ70WtK0iT5RS3KRTDABw/vG0fiOl
-         GSVQ6tukEFo+1GdvAmTleyUEN33SakLWYkZ0yioCpmKVaC45/vo3J6fOUKm1IZJhLOrz
-         8nMq2rwItvYNJLdfEj5W0nm/WjAMJkTRWZ1hhsfTSsTp++vFI41oQt5dSR4Ndz+LWANQ
-         0x6ubra7HFVhO8A12jDA6c1r8Pj7NI8J7y/CZwI7CapTb9BSWsTmy4oNH5kNT7dXNuzw
-         keMg==
-X-Gm-Message-State: ANhLgQ3kkaymbyXNjV/ZyqpFGBAve6lTw2tnDsKLkBqgHn5HovGvToUT
-        GIDKizlEQkS4/f43L89KtBxNag==
-X-Google-Smtp-Source: ADFU+vvDGHCmjJAEW09IY2pn/rC0cuKnx5wPrdhmLydsBiF7dyxe06aMf+3l/75LbVxspehBFH2Fng==
-X-Received: by 2002:adf:e911:: with SMTP id f17mr10602906wrm.87.1584019899241;
-        Thu, 12 Mar 2020 06:31:39 -0700 (PDT)
+        bh=tdUB5s+Mgt8nPOXH1fk62M6gPs/HBhr92WS0vOvoB1Y=;
+        b=JjQjSSpwHfffhyNnsJRo0cHabFP1Z7/CZdOryiQPNnjKKwv57etbtPHcFX9OhxXGfW
+         eelsB2iIp6ksypdAnI/gGQvD2oLolpemBbionIZLx3oy9TXfsC0HWaMzkueINNdfc3xK
+         mvZPU3gJG44wZ8xbKWGf+H+1QQeMN3YRff4VR9J3Kq41IvYnDIrBM3x7j3tcSSA/z9hU
+         lMrof0YokaAZAMeEVLfdgQ7Cwx5qNeRFqZhrv+92C0Hc89DpVxjvPm5u5OfYyhKCxGXm
+         ghHP1YbT2W2rfb0eLZQZTO2lIgbpU8VeTrpLm4JmP9IbG9+HtoM+Z9yNSYOMehLduyMN
+         0F/A==
+X-Gm-Message-State: ANhLgQ1v0Y0IYgaL4Tg8bGWYmQaT3Sd6Ob+Y2As9LZbHnC1Wav0+vQQW
+        KQBaZlnUtZh7oESxf9Jl4IyXPg==
+X-Google-Smtp-Source: ADFU+vv/ptKYufG50eCMBenezZRiuwhxHUdOT4gS3Eid//FvxWcjmAm/EFdpPj9NJL4rydwgYyOYQg==
+X-Received: by 2002:a1c:e257:: with SMTP id z84mr5153684wmg.91.1584019901376;
+        Thu, 12 Mar 2020 06:31:41 -0700 (PDT)
 Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m21sm12242885wmi.27.2020.03.12.06.31.38
+        by smtp.gmail.com with ESMTPSA id m21sm12242885wmi.27.2020.03.12.06.31.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 06:31:38 -0700 (PDT)
+        Thu, 12 Mar 2020 06:31:40 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     broonie@kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] spi: meson-spicc: add min sclk for each compatible
-Date:   Thu, 12 Mar 2020 14:31:27 +0100
-Message-Id: <20200312133131.26430-6-narmstrong@baylibre.com>
+Subject: [PATCH 7/9] spi: meson-spicc: adapt burst handling for G12A support
+Date:   Thu, 12 Mar 2020 14:31:29 +0100
+Message-Id: <20200312133131.26430-8-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200312133131.26430-1-narmstrong@baylibre.com>
 References: <20200312133131.26430-1-narmstrong@baylibre.com>
@@ -74,47 +74,254 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The G12A SPICC controller variant takes the source clock from a specific
-clock instead of the bus clock.
-The minimal clock calculus won't work with the G12A support, thus add the
-minimal supported clock for each variant and pass this to the SPI core.
+The G12A SPICC controller variant has a different FIFO size and doesn't
+handle the RX Half interrupt the same way as GXL & AXG variants.
+
+Thus simplify the burst management and take in account a variable FIFO
+size.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/spi/spi-meson-spicc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/spi/spi-meson-spicc.c | 129 +++++++++++++---------------------
+ 1 file changed, 50 insertions(+), 79 deletions(-)
 
 diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-index 710b4e780daa..b5bd3a897e8f 100644
+index 4494a791f4a7..351ccd8dd2c2 100644
 --- a/drivers/spi/spi-meson-spicc.c
 +++ b/drivers/spi/spi-meson-spicc.c
-@@ -132,6 +132,7 @@
+@@ -141,12 +141,10 @@
+ #define writel_bits_relaxed(mask, val, addr) \
+ 	writel_relaxed((readl_relaxed(addr) & ~(mask)) | (val), addr)
  
+-#define SPICC_BURST_MAX	16
+-#define SPICC_FIFO_HALF 10
+-
  struct meson_spicc_data {
  	unsigned int			max_speed_hz;
-+	unsigned int			min_speed_hz;
+ 	unsigned int			min_speed_hz;
++	unsigned int			fifo_size;
  	bool				has_oen;
  	bool				has_enhance_clk_div;
  };
-@@ -685,7 +686,7 @@ static int meson_spicc_probe(struct platform_device *pdev)
- 				     SPI_BPW_MASK(16) |
- 				     SPI_BPW_MASK(8);
- 	master->flags = (SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX);
--	master->min_speed_hz = rate >> 9;
-+	master->min_speed_hz = spicc->data->min_speed_hz;
- 	master->setup = meson_spicc_setup;
- 	master->cleanup = meson_spicc_cleanup;
- 	master->prepare_message = meson_spicc_prepare_message;
-@@ -736,10 +737,12 @@ static int meson_spicc_remove(struct platform_device *pdev)
+@@ -166,8 +164,6 @@ struct meson_spicc_device {
+ 	unsigned long			tx_remain;
+ 	unsigned long			rx_remain;
+ 	unsigned long			xfer_remain;
+-	bool				is_burst_end;
+-	bool				is_last_burst;
+ };
  
+ static void meson_spicc_oen_enable(struct meson_spicc_device *spicc)
+@@ -191,7 +187,7 @@ static inline bool meson_spicc_txfull(struct meson_spicc_device *spicc)
+ 
+ static inline bool meson_spicc_rxready(struct meson_spicc_device *spicc)
+ {
+-	return FIELD_GET(SPICC_RH | SPICC_RR | SPICC_RF_EN,
++	return FIELD_GET(SPICC_RH | SPICC_RR | SPICC_RF,
+ 			 readl_relaxed(spicc->base + SPICC_STATREG));
+ }
+ 
+@@ -246,34 +242,22 @@ static inline void meson_spicc_tx(struct meson_spicc_device *spicc)
+ 			       spicc->base + SPICC_TXDATA);
+ }
+ 
+-static inline u32 meson_spicc_setup_rx_irq(struct meson_spicc_device *spicc,
+-					   u32 irq_ctrl)
++static inline void meson_spicc_setup_burst(struct meson_spicc_device *spicc)
+ {
+-	if (spicc->rx_remain > SPICC_FIFO_HALF)
+-		irq_ctrl |= SPICC_RH_EN;
+-	else
+-		irq_ctrl |= SPICC_RR_EN;
+-
+-	return irq_ctrl;
+-}
+ 
+-static inline void meson_spicc_setup_burst(struct meson_spicc_device *spicc,
+-					   unsigned int burst_len)
+-{
++	unsigned int burst_len = min_t(unsigned int,
++				       spicc->xfer_remain /
++				       spicc->bytes_per_word,
++				       spicc->data->fifo_size);
+ 	/* Setup Xfer variables */
+ 	spicc->tx_remain = burst_len;
+ 	spicc->rx_remain = burst_len;
+ 	spicc->xfer_remain -= burst_len * spicc->bytes_per_word;
+-	spicc->is_burst_end = false;
+-	if (burst_len < SPICC_BURST_MAX || !spicc->xfer_remain)
+-		spicc->is_last_burst = true;
+-	else
+-		spicc->is_last_burst = false;
+ 
+ 	/* Setup burst length */
+ 	writel_bits_relaxed(SPICC_BURSTLENGTH_MASK,
+ 			FIELD_PREP(SPICC_BURSTLENGTH_MASK,
+-				burst_len),
++				burst_len - 1),
+ 			spicc->base + SPICC_CONREG);
+ 
+ 	/* Fill TX FIFO */
+@@ -283,61 +267,26 @@ static inline void meson_spicc_setup_burst(struct meson_spicc_device *spicc,
+ static irqreturn_t meson_spicc_irq(int irq, void *data)
+ {
+ 	struct meson_spicc_device *spicc = (void *) data;
+-	u32 ctrl = readl_relaxed(spicc->base + SPICC_INTREG);
+-	u32 stat = readl_relaxed(spicc->base + SPICC_STATREG) & ctrl;
+ 
+-	ctrl &= ~(SPICC_RH_EN | SPICC_RR_EN);
++	writel_bits_relaxed(SPICC_TC, SPICC_TC, spicc->base + SPICC_STATREG);
+ 
+ 	/* Empty RX FIFO */
+ 	meson_spicc_rx(spicc);
+ 
+-	/* Enable TC interrupt since we transferred everything */
+-	if (!spicc->tx_remain && !spicc->rx_remain) {
+-		spicc->is_burst_end = true;
+-
+-		/* Enable TC interrupt */
+-		ctrl |= SPICC_TC_EN;
+-
+-		/* Reload IRQ status */
+-		stat = readl_relaxed(spicc->base + SPICC_STATREG) & ctrl;
+-	}
+-
+-	/* Check transfer complete */
+-	if ((stat & SPICC_TC) && spicc->is_burst_end) {
+-		unsigned int burst_len;
+-
+-		/* Clear TC bit */
+-		writel_relaxed(SPICC_TC, spicc->base + SPICC_STATREG);
+-
+-		/* Disable TC interrupt */
+-		ctrl &= ~SPICC_TC_EN;
+-
+-		if (spicc->is_last_burst) {
+-			/* Disable all IRQs */
+-			writel(0, spicc->base + SPICC_INTREG);
+-
+-			spi_finalize_current_transfer(spicc->master);
++	if (!spicc->xfer_remain) {
++		/* Disable all IRQs */
++		writel(0, spicc->base + SPICC_INTREG);
+ 
+-			return IRQ_HANDLED;
+-		}
++		spi_finalize_current_transfer(spicc->master);
+ 
+-		burst_len = min_t(unsigned int,
+-				  spicc->xfer_remain / spicc->bytes_per_word,
+-				  SPICC_BURST_MAX);
+-
+-		/* Setup burst */
+-		meson_spicc_setup_burst(spicc, burst_len);
+-
+-		/* Restart burst */
+-		writel_bits_relaxed(SPICC_XCH, SPICC_XCH,
+-				    spicc->base + SPICC_CONREG);
++		return IRQ_HANDLED;
+ 	}
+ 
+-	/* Setup RX interrupt trigger */
+-	ctrl = meson_spicc_setup_rx_irq(spicc, ctrl);
++	/* Setup burst */
++	meson_spicc_setup_burst(spicc);
+ 
+-	/* Reconfigure interrupts */
+-	writel(ctrl, spicc->base + SPICC_INTREG);
++	/* Start burst */
++	writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -405,6 +354,28 @@ static void meson_spicc_setup_xfer(struct meson_spicc_device *spicc,
+ 	clk_set_rate(spicc->clk, xfer->speed_hz);
+ 
+ 	meson_spicc_auto_io_delay(spicc);
++
++	writel_relaxed(0, spicc->base + SPICC_DMAREG);
++}
++
++static void meson_spicc_reset_fifo(struct meson_spicc_device *spicc)
++{
++	u32 data;
++
++	if (spicc->data->has_oen)
++		writel_bits_relaxed(SPICC_ENH_MAIN_CLK_AO,
++				    SPICC_ENH_MAIN_CLK_AO,
++				    spicc->base + SPICC_ENH_CTL0);
++
++	writel_bits_relaxed(SPICC_FIFORST_W1_MASK, SPICC_FIFORST_W1_MASK,
++			    spicc->base + SPICC_TESTREG);
++
++	while (meson_spicc_rxready(spicc))
++		data = readl_relaxed(spicc->base + SPICC_RXDATA);
++
++	if (spicc->data->has_oen)
++		writel_bits_relaxed(SPICC_ENH_MAIN_CLK_AO, 0,
++				    spicc->base + SPICC_ENH_CTL0);
+ }
+ 
+ static int meson_spicc_transfer_one(struct spi_master *master,
+@@ -412,8 +383,6 @@ static int meson_spicc_transfer_one(struct spi_master *master,
+ 				    struct spi_transfer *xfer)
+ {
+ 	struct meson_spicc_device *spicc = spi_master_get_devdata(master);
+-	unsigned int burst_len;
+-	u32 irq = 0;
+ 
+ 	/* Store current transfer */
+ 	spicc->xfer = xfer;
+@@ -427,22 +396,22 @@ static int meson_spicc_transfer_one(struct spi_master *master,
+ 	spicc->bytes_per_word =
+ 	   DIV_ROUND_UP(spicc->xfer->bits_per_word, 8);
+ 
++	if (xfer->len % spicc->bytes_per_word)
++		return -EINVAL;
++
+ 	/* Setup transfer parameters */
+ 	meson_spicc_setup_xfer(spicc, xfer);
+ 
+-	burst_len = min_t(unsigned int,
+-			  spicc->xfer_remain / spicc->bytes_per_word,
+-			  SPICC_BURST_MAX);
+-
+-	meson_spicc_setup_burst(spicc, burst_len);
++	meson_spicc_reset_fifo(spicc);
+ 
+-	irq = meson_spicc_setup_rx_irq(spicc, irq);
++	/* Setup burst */
++	meson_spicc_setup_burst(spicc);
+ 
+ 	/* Start burst */
+ 	writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
+ 
+ 	/* Enable interrupts */
+-	writel_relaxed(irq, spicc->base + SPICC_INTREG);
++	writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
+ 
+ 	return 1;
+ }
+@@ -499,7 +468,7 @@ static int meson_spicc_prepare_message(struct spi_master *master,
+ 	/* Setup no wait cycles by default */
+ 	writel_relaxed(0, spicc->base + SPICC_PERIODREG);
+ 
+-	writel_bits_relaxed(BIT(24), BIT(24), spicc->base + SPICC_TESTREG);
++	writel_bits_relaxed(SPICC_LBC_W1, 0, spicc->base + SPICC_TESTREG);
+ 
+ 	return 0;
+ }
+@@ -797,11 +766,13 @@ static int meson_spicc_remove(struct platform_device *pdev)
  static const struct meson_spicc_data meson_spicc_gx_data = {
  	.max_speed_hz		= 30000000,
-+	.min_speed_hz		= 325000,
+ 	.min_speed_hz		= 325000,
++	.fifo_size		= 16,
  };
  
  static const struct meson_spicc_data meson_spicc_axg_data = {
  	.max_speed_hz		= 80000000,
-+	.min_speed_hz		= 325000,
+ 	.min_speed_hz		= 325000,
++	.fifo_size		= 16,
  	.has_oen		= true,
  	.has_enhance_clk_div	= true,
  };
