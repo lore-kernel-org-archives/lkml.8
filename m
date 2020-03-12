@@ -6,59 +6,60 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD778C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD72C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E7E206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB919206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388064AbgCLHDv (ORCPT
+        id S2388037AbgCLHGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:03:51 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56504 "EHLO
+        Thu, 12 Mar 2020 03:06:01 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56520 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388016AbgCLHDv (ORCPT
+        with ESMTP id S2387959AbgCLHGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:03:51 -0400
+        Thu, 12 Mar 2020 03:06:00 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DE51514E25406;
-        Thu, 12 Mar 2020 00:03:50 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 00:03:50 -0700 (PDT)
-Message-Id: <20200312.000350.637350189715401251.davem@davemloft.net>
-To:     chris.packham@alliedtelesis.co.nz
-Cc:     andrew@lunn.ch, josua@solid-run.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: mvmdio: avoid error message for optional IRQ
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C6E2314E2AFDC;
+        Thu, 12 Mar 2020 00:05:59 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 00:05:59 -0700 (PDT)
+Message-Id: <20200312.000559.707225825210372525.davem@davemloft.net>
+To:     elder@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: soc: qcom: fix IPA binding
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
-References: <20200311200546.9936-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200311214700.700-1-elder@linaro.org>
+References: <20200311214700.700-1-elder@linaro.org>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Mar 2020 00:03:51 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Mar 2020 00:06:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date: Thu, 12 Mar 2020 09:05:46 +1300
+From: Alex Elder <elder@linaro.org>
+Date: Wed, 11 Mar 2020 16:47:00 -0500
 
-> Per the dt-binding the interrupt is optional so use
-> platform_get_irq_optional() instead of platform_get_irq(). Since
-> commit 7723f4c5ecdb ("driver core: platform: Add an error message to
-> platform_get_irq*()") platform_get_irq() produces an error message
+> The definitions for the "qcom,smem-states" and "qcom,smem-state-names"
+> properties need to list their "$ref" under an "allOf" keyword.
 > 
->   orion-mdio f1072004.mdio: IRQ index 0 not found
+> In addition, fix two problems in the example at the end:
+>   - Use #include for header files that define needed symbolic values
+>   - Terminate the line that includes the "ipa-shared" register space
+>     name with a comma rather than a semicolon
 > 
-> which is perfectly normal if one hasn't specified the optional property
-> in the device tree.
+> Finally, update some white space in the example for better alignment.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alex Elder <elder@linaro.org>
 
-Applied, thanks.
+Applied to net-next, thanks Alex.
