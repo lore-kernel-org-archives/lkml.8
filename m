@@ -2,137 +2,110 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D5BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84080C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21281206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:19:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wa4glBan"
+	by mail.kernel.org (Postfix) with ESMTP id 429C3206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCLMTq (ORCPT
+        id S1726716AbgCLMVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:19:46 -0400
-Received: from mail-eopbgr60088.outbound.protection.outlook.com ([40.107.6.88]:4932
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbgCLMTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:19:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cKEs0bm/j7wicjl8lZ1gldvEzkHsyPBbU79Q1n0FC7VaU9jZcWFqERv0cSEQUoRxyM0k57tZrYIISDbbmz3KfjYfNWWC0yk0Vaz5VvnwA7ScK9L4l5yVu7XPfyK7PL6NN00katZtyIeagNyUuV1HMlgdWdqukLR7R8qUozGo+gFV7xTef2MomZuMSOGM3Dy8wMB0/4FCDrt7BRPRISzC716Z/MNmPqgxmUQaybXP3I1gvATYVEzY8ZaL7O+hAMTge3qytCW2qAs/x2R+Xr765UNV9BvvgOyED8WPFBmasHQBa09wx4CSvzzkPdlkYG/wOIoyJBY2c53vTjUgWsytYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oo2n9rNyfMGHsafYjJZDtPNGv94PXpgCu4GEZtNBJOQ=;
- b=FxMcJI8wESM+DkOX5tvfcj3xExd51iRkImYoraInMyV8ww9M5PAGqjCKCM/L5QSwa2njk+JMmnDxCkSwXNb5MjQ5FSaYR46VgnOqBfQAT9T7qQSDJShg3Tl/omTXNwUhau5azymA9MXOWlGkg/8wDQTSYpVugVNB9WZgshcZ+G0iWEyvck/H14K6gPBeNi0TIcxoAgzANtuinsOY4EpgbJraDjHOKZzEUKN2+mFgQE8y7/8SGJh30+Or29lMEypSopwpxq6/xxUoQaxhHEcxIYmMpG8ds4XrSqnsbEqlaqUOeulVbuH00dYVOWlynDtRfTbGY5qcCvuD17zLM6S0xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oo2n9rNyfMGHsafYjJZDtPNGv94PXpgCu4GEZtNBJOQ=;
- b=Wa4glBanEUeYvHhm5BQFyV8GrNZvmjmPSvmwT9VkSNIAVAQVetuSEaONMIJF8NEcdDeOYAeX78ijS6aY48qHSmV1k1mzzr1RkteayZxCbBufnre70v5AC3WcrrJCmMWGp0EUymALviIVyllpF8pa7KhelLf1OGNnTdF7djhlpZU=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3867.eurprd04.prod.outlook.com (52.134.65.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Thu, 12 Mar 2020 12:19:38 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2814.007; Thu, 12 Mar 2020
- 12:19:38 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] thermal: qoriq: Use devm_add_action_or_reset() to
- handle all cleanups
-Thread-Topic: [PATCH 1/2] thermal: qoriq: Use devm_add_action_or_reset() to
- handle all cleanups
-Thread-Index: AQHV92PgUEO+4yjn2k6lxrr+i2btw6hE0roAgAAGWwCAAAK2gIAABPxQ
-Date:   Thu, 12 Mar 2020 12:19:37 +0000
-Message-ID: <DB3PR0402MB39169041ED7CDA2C4DBD4833F5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1583903252-2058-1-git-send-email-Anson.Huang@nxp.com>
- <c4c2d976-4fe6-bdf3-e110-90d1600566a3@linaro.org>
- <DB3PR0402MB3916BF7EF180809EC374CC7CF5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <831cd71d-04dc-834f-fa28-6091a186dce3@linaro.org>
-In-Reply-To: <831cd71d-04dc-834f-fa28-6091a186dce3@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 13c5a1e5-943b-4c30-3371-08d7c67fa22c
-x-ms-traffictypediagnostic: DB3PR0402MB3867:|DB3PR0402MB3867:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB386777D90BE18D06AF6BE345F5FD0@DB3PR0402MB3867.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1303;
-x-forefront-prvs: 0340850FCD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(376002)(39860400002)(396003)(199004)(81156014)(76116006)(66946007)(186003)(110136005)(26005)(8936002)(5660300002)(55016002)(316002)(81166006)(33656002)(52536014)(478600001)(66556008)(64756008)(86362001)(66476007)(4326008)(2906002)(9686003)(8676002)(71200400001)(44832011)(66446008)(6506007)(53546011)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3867;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hZUMzrecnmq90GsQjcJSCB5RmsDv3YVe2RHZUDBPv62yIegisVu/OzmV0LQw3gS/qGJm6qqTcqf/1BKWKCM1H0iHRAL/gEtWrezGyMgq315e6WmdZRlIzEhY2pvp1KWW/DmDzTirO8z+mdNbavZyfkEvogireLizKRI47OjB4+dqDMKHHrb+HslVsE+xvOJBUI+gz8hnz9uySeQxv9IWkvCoi29rzi2Wg+xbDofd2Cl56mVYKq6vax3uesNebgdwoW3guallvI7lTPNNiUKJX4ChafNPzJAZOAxx6NfZNUjZzrCyTPijEY0KIkS03ldRixmDoUur/VhNwbX+OgbK5DrP9ZbDbyS9TW6Wrw++LGpHWQuq5wmSthYOQ7Qacu3yjxrftNtMfEdVQXRhh4EF16kH5KekZWFMBLnNCjZyq8EVZfmyX3L+d0uIZEdeag0S
-x-ms-exchange-antispam-messagedata: K1NharrjCW3DBD0nmd5gr5O6lMY0y3SgRrj8bN4EY9wSNnzyXPhFDJDd0OvSvDpafm1HQNq7+94xOmT/VoXp1PFeZ42ApqS8Imdl5aw6GWValmLb0hHgA9+IgN58j3nHkkxFutKVAcj8KYUE39IE+A==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 12 Mar 2020 08:21:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22186 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgCLMVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:21:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 05:21:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
+   d="scan'208";a="235010057"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Mar 2020 05:21:49 -0700
+Received: from [10.125.252.216] (abudanko-mobl.ccr.corp.intel.com [10.125.252.216])
+        by linux.intel.com (Postfix) with ESMTP id 1866058010D;
+        Thu, 12 Mar 2020 05:21:46 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v1] perf record: fix binding of AIO user space buffers to
+ nodes
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Organization: Intel Corp.
+Message-ID: <c7ea8ffe-1357-bf9e-3a89-1da1d8e9b75b@linux.intel.com>
+Date:   Thu, 12 Mar 2020 15:21:45 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13c5a1e5-943b-4c30-3371-08d7c67fa22c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 12:19:37.8217
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R8RPBytrx7CvnfcGzBd0dICfn5W7JTHjSS/tows7zVEWucx75M0nnDHtBxy2flqYcKgrJYBMRl9j0F+94urCyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3867
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSB0aGVybWFsOiBxb3JpcTog
-VXNlIGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldCgpIHRvDQo+IGhhbmRsZSBhbGwgY2xlYW51cHMN
-Cj4gDQo+IE9uIDEyLzAzLzIwMjAgMTI6NDcsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IEhpLCBE
-YW5pZWwNCj4gPg0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gdGhlcm1hbDogcW9yaXE6
-IFVzZQ0KPiA+PiBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQoKSB0byBoYW5kbGUgYWxsIGNsZWFu
-dXBzDQo+ID4+DQo+ID4+IE9uIDExLzAzLzIwMjAgMDY6MDcsIEFuc29uIEh1YW5nIHdyb3RlOg0K
-PiA+Pj4gVXNlIGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldCgpIHRvIGhhbmRsZSBhbGwgY2xlYW51
-cHMgb2YgZmFpbHVyZSBpbg0KPiA+Pj4gLnByb2JlIGFuZCAucmVtb3ZlLCB0aGVuIC5yZW1vdmUg
-Y2FsbGJhY2sgY2FuIGJlIGRyb3BwZWQuDQo+ID4+DQo+ID4+IElzIHRoaXMgY2hhbmdlIGNvbXBh
-dGlibGUgd2l0aCB0aGUgdHJpc3RhdGU/DQo+ID4NCj4gPiBJIHRoaW5rIHNvLCBhbnkgY29uY2Vy
-biBuZWVkIG1lIHRvIGRvdWJsZSBjb25maXJtPw0KPiANCj4gVEJILCBJIGRpc2NvdmVyZWQgdGhl
-IGZ1bmN0aW9uIHdpdGggeW91ciBwYXRjaC4gTXkgY29uY2VybiBpcyBpZiB0aGUgY2FsbGJhY2sN
-Cj4gaXMgY2FsbGVkIHdoZW4gdW5sb2FkaW5nIHRoZSBtb2R1bGUuDQoNCkkgdGhpbmsgc28gYXMg
-cGVyIG15IG1lbW9yeSwgc2VlIHNpbWlsYXIgcGF0Y2hlcyBhcyBiZWxvdzoNCg0KDQpjb21taXQg
-MTllYzExYTIyMzNkMjRhNzgxMTgzNmZhNzM1MjAzYWFjY2Y5NWEyMw0KQXV0aG9yOiBCYXJ0b3N6
-IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPg0KRGF0ZTogICBUaHUgSnVs
-IDExIDEwOjI5OjM1IDIwMTkgKzAyMDANCg0KICAgIGdwaW86IGVtOiByZW1vdmUgdGhlIGdwaW9j
-aGlwIGJlZm9yZSByZW1vdmluZyB0aGUgaXJxIGRvbWFpbg0KDQogICAgSW4gY29tbWl0IDg3NjRj
-NGNhNTA0OSAoImdwaW86IGVtOiB1c2UgdGhlIG1hbmFnZWQgdmVyc2lvbiBvZg0KICAgIGdwaW9j
-aGlwX2FkZF9kYXRhKCkiKSB3ZSBpbXBsaWNpdGx5IGFsdGVyZWQgdGhlIG9yZGVyaW5nIG9mIHJl
-c291cmNlDQogICAgZnJlZWluZzogc2luY2UgZ3Bpb2NoaXBfcmVtb3ZlKCkgY2FsbHMgZ3Bpb2No
-aXBfaXJxY2hpcF9yZW1vdmUoKQ0KICAgIGludGVybmFsbHksIHdlIG5vdyBjYW4gcG90ZW50aWFs
-bHkgdXNlIHRoZSBpcnFfZG9tYWluIGFmdGVyIGl0IHdhcw0KICAgIGRlc3Ryb3llZCBpbiB0aGUg
-cmVtb3ZlKCkgY2FsbGJhY2sgKGFzIGRldm0gcmVzb3VyY2VzIGFyZSBmcmVlZCBhZnRlcg0KICAg
-IHJlbW92ZSgpIGhhcyByZXR1cm5lZCkuDQoNCiAgICBVc2UgZGV2bV9hZGRfYWN0aW9uX29yX3Jl
-c2V0KCkgdG8ga2VlcCB0aGUgb3JkZXJpbmcgcmlnaHQgYW5kIGVudGlyZWx5DQogICAga2lsbCB0
-aGUgcmVtb3ZlKCkgY2FsbGJhY2sgaW4gdGhlIGRyaXZlci4NCg0KDQpjb21taXQgZDlhYTVjYTQy
-OWFkMzBkZGU5NmU1OTY2MTczZDE4MDA0ZjE2ZjMxMg0KQXV0aG9yOiBBbGV4YW5kcmUgQmVsbG9u
-aSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQpEYXRlOiAgIEZyaSBBcHIgMTkgMTA6
-MjU6MDEgMjAxOSArMDIwMA0KDQogICAgcnRjOiBkczI0MDQ6IHNpbXBsaWZ5IC5wcm9iZSBhbmQg
-cmVtb3ZlIC5yZW1vdmUNCg0KICAgIFVzZSBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQgdG8gc2lt
-cGxpZnkgLnByb2JlIGFuZCByZW1vdmUgLnJlbW92ZQ0KDQogICAgU2lnbmVkLW9mZi1ieTogQWxl
-eGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0KDQpkcml2ZXJz
-L3J0Yy9ydGMtZHMyNDA0LmMNCg0KDQpUaGFua3MsDQpBbnNvbg0K
+
+Correct maxnode parameter value passed to mbind() syscall to be
+the amount of node mask bits to analyze plus 1. Dynamically allocate
+node mask memory depending on the index of node of cpu being profiled.
+
+Fixes: c44a8b44ca9f ("perf record: Bind the AIO user space buffers to nodes")
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/util/mmap.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 3b664fa673a6..6d604cd67a95 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -98,20 +98,29 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
+ {
+ 	void *data;
+ 	size_t mmap_len;
+-	unsigned long node_mask;
++	unsigned long *node_mask;
++	unsigned long node_index;
++	int err = 0;
+ 
+ 	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
+ 		data = map->aio.data[idx];
+ 		mmap_len = mmap__mmap_len(map);
+-		node_mask = 1UL << cpu__get_node(cpu);
+-		if (mbind(data, mmap_len, MPOL_BIND, &node_mask, 1, 0)) {
+-			pr_err("Failed to bind [%p-%p] AIO buffer to node %d: error %m\n",
+-				data, data + mmap_len, cpu__get_node(cpu));
++		node_index = cpu__get_node(cpu);
++		node_mask = bitmap_alloc(node_index + 1);
++		if (!node_mask) {
++			pr_err("Failed to allocate node mask for mbind: error %m\n");
+ 			return -1;
+ 		}
++		set_bit(node_index, node_mask);
++		if (mbind(data, mmap_len, MPOL_BIND, node_mask, node_index + 1 + 1/*nr_bits + 1*/, 0)) {
++			pr_err("Failed to bind [%p-%p] AIO buffer to node %lu: error %m\n",
++				data, data + mmap_len, node_index);
++			err = -1;
++		}
++		bitmap_free(node_mask);
+ 	}
+ 
+-	return 0;
++	return err;
+ }
+ #else /* !HAVE_LIBNUMA_SUPPORT */
+ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
+-- 
+2.24.1
+
