@@ -2,97 +2,122 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643C2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFACC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FED206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B570206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584029032;
-	bh=8013QSNjwl3hVjqclDefXb05VNEWtFHh+9iu+zc6Ugo=;
+	s=default; t=1584029293;
+	bh=ihv6hg/tKn1K/Ay/TkjzJkw+/FlX30ltPT/FPEEZvVA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wBlAv/m49GAj2kDBCGJky/kCoj9KOwfapjPqY+UUZxKdlSf19Dq0y+pLz32evX7a0
-	 9aI0K6P35E5JvtFnCfJRoGQjR/Kw9TyqRjltVe4Mj5lh8C7g3sr64wRcc2Z5qtN3L8
-	 BF99B/6nad+SW31DILb0LVFJkc0pF2wMIo7MpV2E=
+	b=oDMinbNg4XKmRAKFVgUFJ5bAE2zd7NJOgOEjcnPJ9I5etkpZpg0BablP+IqDRh81C
+	 5ihWFgENBPdc2x2AS4Of0oEEL7oc4BhdssHhxZ36v90vrKFKY+8pGm5qyXlFcYi9lz
+	 GZt6v4UNpc8e6ZcqMX4Gs1CeolkY7Y/Tcbt5uj64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgCLQDv (ORCPT
+        id S1727493AbgCLQIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgCLQDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:03:50 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1E5206FA;
-        Thu, 12 Mar 2020 16:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584029030;
-        bh=8013QSNjwl3hVjqclDefXb05VNEWtFHh+9iu+zc6Ugo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r1FbKQMBSjx+u0m/DW4h3Pl+dtRquD3/XyVqRDGIg8vvMoU9Z5E79l4H5v70Qu77i
-         qrmaRR2f6kVk3o6FLsq/rljo8kZas1fNZADsxIHzsIhT8jBkrzVvGW/V7bSzu0YL+D
-         L2xN3GiwpuAn+Qeo77aa90Et45se/H8aJwJ1AJYk=
-Received: by mail-lf1-f41.google.com with SMTP id b13so5277712lfb.12;
-        Thu, 12 Mar 2020 09:03:49 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ34x+CkQmo7dN3X92wLxQohQszOfOUdZKIOO/TegldnoMEBorf6
-        HgMZO+p5lx9uLQeKOulrUJ/X2rYMS3iA6J3CzqA=
-X-Google-Smtp-Source: ADFU+vuoqiRPpALaPb3vAH2E88rNtmGTNcB/OqxahlgrnaZFB5AhQlWmriyJa0LvZSP3nMz82H3GA8VVRfVyYeyWYZ4=
-X-Received: by 2002:a05:6512:1116:: with SMTP id l22mr5770907lfg.70.1584029028030;
- Thu, 12 Mar 2020 09:03:48 -0700 (PDT)
+        Thu, 12 Mar 2020 12:08:12 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34925 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbgCLQIL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 12:08:11 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u12so7104944ljo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k2DKQlgbyOC9/p2tyJFfgudLvzI9KBST86uO21FB/HE=;
+        b=gxaOeubgWCfcszroEzizTLF7jfTrElVOLETtRnOv7nnrl5pq44iR+1BpgLFx8gW0Xv
+         ojpHVDgI5DzYKuBO4SuFbfiMaNHO8D2gcN75Yc1b6BHtKJsg+GSUTgv18HCqyhGAWYGL
+         p0tUzHPHALi4izP3Bzi09sccOCHHZV8F1gpG0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k2DKQlgbyOC9/p2tyJFfgudLvzI9KBST86uO21FB/HE=;
+        b=sc0tA4dsTclNQvlA7Bukl9SCtoCDKNhAv80g5zRJzJo+JfRgY6o8s5gUfIizDt9IrB
+         y2kk8sPCDDVbSUrWFto4nae18zy2UKpXF+urainLh7q3CWgJZbBaFkLbRytRkMzlGUly
+         6rwee7+v9ICH3aTe6jTxdI6qmnGbqR0RKwOW+FEhW7DftsMg42rwX/xdWc0/PpY8dWHY
+         UQo7DmasHEI2kCiIxxTCxjS6FBZ+Jy1nJeYvCv+4TfUD3DjtnRUsyPqzYqGQipdL+k3V
+         Ip0X1i09cstB/rd5yEH3Bfx5mjwn3k4Sbdcnt3PYLKOtF29nCxOanHrx4bY4fXW6AILi
+         k+Hg==
+X-Gm-Message-State: ANhLgQ2BD3DBqW1n2W0pQs5kiIlnqXzOhLPlKGFo8FFVCxp3bS6qAic5
+        4uE8UvB2jCdDa9hrCL1ZCtUYVeT0pC4=
+X-Google-Smtp-Source: ADFU+vs51/mqu45EN2NuBauKK+r0cz7c4aG+3aataWy6FG+tJvRTl/7Cl/7e/q3dvD755kWSxcUPvQ==
+X-Received: by 2002:a2e:b801:: with SMTP id u1mr5646304ljo.188.1584029287677;
+        Thu, 12 Mar 2020 09:08:07 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id e9sm17850738ljp.24.2020.03.12.09.08.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 09:08:06 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id r7so7063177ljp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:08:06 -0700 (PDT)
+X-Received: by 2002:a05:651c:555:: with SMTP id q21mr5548601ljp.241.1584029285717;
+ Thu, 12 Mar 2020 09:08:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583854376-15598-1-git-send-email-majun258@linux.alibaba.com>
-In-Reply-To: <1583854376-15598-1-git-send-email-majun258@linux.alibaba.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Fri, 13 Mar 2020 00:03:36 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRFj=aQYHgM6KV7GYM22Nti8D2q_QNi+5WhOHS9-86Wew@mail.gmail.com>
-Message-ID: <CAJF2gTRFj=aQYHgM6KV7GYM22Nti8D2q_QNi+5WhOHS9-86Wew@mail.gmail.com>
-Subject: Re: [PATCH]arch/csky:Enable the gcov function in csky achitecture
-To:     Ma Jun <majun258@linux.alibaba.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-csky@vger.kernel.org
+References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+ <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+ <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+ <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+ <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+ <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+ <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+ <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+ <875zfbvrbm.fsf@notabene.neil.brown.name> <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+ <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+ <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
+ <87v9nattul.fsf@notabene.neil.brown.name> <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
+ <87o8t2tc9s.fsf@notabene.neil.brown.name>
+In-Reply-To: <87o8t2tc9s.fsf@notabene.neil.brown.name>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 12 Mar 2020 09:07:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+Message-ID: <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Guo Ren <guoren@kernel.org>
+On Wed, Mar 11, 2020 at 9:42 PM NeilBrown <neilb@suse.de> wrote:
+>
+> It seems that test_and_set_bit_lock() is the preferred way to handle
+> flags when memory ordering is important
 
-On Thu, Mar 12, 2020 at 4:59 PM Ma Jun <majun258@linux.alibaba.com> wrote:
->
-> Support the gcov function in csky architecture
->
-> Signed-off-by: Ma Jun <majun258@linux.alibaba.com>
-> ---
->  arch/csky/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> index 047427f..9c4749d 100644
-> --- a/arch/csky/Kconfig
-> +++ b/arch/csky/Kconfig
-> @@ -64,6 +64,7 @@ config CSKY
->         select PCI_DOMAINS_GENERIC if PCI
->         select PCI_SYSCALL if PCI
->         select PCI_MSI if PCI
-> +       select ARCH_HAS_GCOV_PROFILE_ALL
->
->  config CPU_HAS_CACHEV2
->         bool
-> --
-> 1.8.3.1
->
+That looks better.
 
+The _preferred_ way is actually the one I already posted: do a
+"smp_store_release()" to store the flag (like a NULL pointer), and a
+smp_load_acquire() to load it.
 
--- 
-Best Regards
- Guo Ren
+That's basically optimal on most architectures (all modern ones -
+there are bad architectures from before people figured out that
+release/acquire is better than separate memory barriers), not needing
+any atomics and only minimal memory ordering.
 
-ML: https://lore.kernel.org/linux-csky/
+I wonder if a special flags value (keeping it "unsigned int" to avoid
+the issue Jeff pointed out) might be acceptable?
+
+IOW, could we do just
+
+        smp_store_release(&waiter->fl_flags, FL_RELEASED);
+
+to say that we're done with the lock? Or do people still look at and
+depend on the flag values at that point?
+
+                Linus
