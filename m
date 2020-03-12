@@ -2,99 +2,119 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114BAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995BFC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA7C20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BCE206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="INV4LL9J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rx+1EGWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgCLKPs (ORCPT
+        id S1726785AbgCLKRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:15:48 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43423 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLKPs (ORCPT
+        Thu, 12 Mar 2020 06:17:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54430 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCLKRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:15:48 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so2837784pgb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:15:46 -0700 (PDT)
+        Thu, 12 Mar 2020 06:17:36 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n8so5416486wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NrWeVKFKm3KJNrhGkRSBOYO/xSPIyOJst+AQW6M9RlY=;
-        b=INV4LL9JXfbpzVD8X22Gzz4sGDVyD0phYXZQyeiJmO9hr7b6vrOq4zFT5582gefjGs
-         b5tydoyHozZ0f3bpca+Kd/p2S9/V6Y6aiTWPnr0ZDOPGH6Ezrlph57M+fAJXh3XLihFN
-         CGwlKXzSHIlrwTz/0VZPEMV9a1IX4SOV+4fnViqwf9TDKAai7+ANbFEv1kDJZ4OzC/B7
-         3D7JvUo009N7SdgRmuTRgvewAOOllNZ/H7xymAeE9sbdzcUs+IW8JLmvr5H/Sof7zHgy
-         c37veR7aR/9LU0Mksf/C564ikV2HJlrWyJZa5YeeY12sAamI3BoW3s4XnPsxEK6MvN2B
-         uFmw==
+         :content-disposition:in-reply-to;
+        bh=JSh5SwgggaNNIP1rhJKmLIM4vESq/2xFcSyTZp+7Nus=;
+        b=Rx+1EGWt2dGF/rxSvLT7XGg2rRWc3yl5MrGHM3fODfxN+My4zCiGC9aeKEjXVaY/C/
+         +LHCPygIqp9eoxc+JZrBWd7bE5FY7+BnkvLH11AHW/mdG41YmsLhn15hx0GwjkuK1X/F
+         ewTFglT3n/TGbE1lgqU0mwv3vp++G2D3agpGYFaUIaiCmkzvLOJ1Ohco+rUjxj5WO/8d
+         SytvKXLoXZb7b1MkmlzgHZ4b6ixTjOpbOkiacoaqMAlyG6heH8taLU8p2f7qFn5Khhr6
+         E7im34jcZgsPPAc4GqZdIJrpbekoOOBrxw8QTkhyx32epfHsyD4B2w6iVmJgKc36a6Ns
+         ejHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NrWeVKFKm3KJNrhGkRSBOYO/xSPIyOJst+AQW6M9RlY=;
-        b=WKLtvlrMNjT5xIVzgRv8pRlDvH9kjf8pnk+MJ01+ZFP3uiJrQOOI4x7shWlld7vKYw
-         D1HjYsf7IvEgZ9eihq19TCGirrs819pMMzb2N0eMOQxvCdLUtomL5M3CA957gqnxU0As
-         4Fuks6BH1w0cOxbwIma1NEWtJ7RJ4yYGWed9l8djBZ9SUW9Ju86tiKmmoO1M6v68RXJW
-         IIfChqiXwxP4sOcQRh+XfSt7N2ICEuaHTQ4l0gACODGuXioUZ9mTy3JQ0/6pAaDe6BJR
-         QdBACrqu+Mh0fcBPmJTH0aS7XYIMP+bkzeLAQpJJdvabzfZlImNBBL87PM5m//WW0ziC
-         4DHQ==
-X-Gm-Message-State: ANhLgQ0bBGGKkqsLx1CyMVPMLg6k6vp+JCJex/iyzBQbMfE33x0ZhcDu
-        wQH1QBcrGM8IPX2DsjzA/zzftQ==
-X-Google-Smtp-Source: ADFU+vuI3QrWm3vKU3oXZdjQWeApNK1gMeLeM9Hp1wmXvFbbfWlWeXr+uPrSgioZqMfq5JoeGYvaNA==
-X-Received: by 2002:a63:da45:: with SMTP id l5mr6719291pgj.273.1584008145505;
-        Thu, 12 Mar 2020 03:15:45 -0700 (PDT)
-Received: from localhost ([122.171.122.128])
-        by smtp.gmail.com with ESMTPSA id p21sm53946207pfn.103.2020.03.12.03.15.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Mar 2020 03:15:44 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 15:45:43 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     peng.fan@nxp.com
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, Anson.Huang@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        abel.vesa@nxp.com
-Subject: Re: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
- intermediate callbacks
-Message-ID: <20200312101543.ktvmfedt2o4ovsms@vireshk-i7>
-References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
- <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=JSh5SwgggaNNIP1rhJKmLIM4vESq/2xFcSyTZp+7Nus=;
+        b=OUMV/UukcPam+PInj5HSB7YkET4Ab647EEjzU+M39/Vaa8rloWFH9s7vurfTwloNTp
+         tPLy3mY41NN8DRm1aiN+ojtfR8iZU6XImx5Eamyae1Q9bKUVBbi6PbgFbLCRl2BunRtD
+         gfJFyES9i+wkL+UWsfYUzQj8FLhVkKybJpVujTkwoDVHbzGoJe90hS7v+1/91SxEGsWv
+         TLxEYqdv+NN5aVmZOxH6e1Wp/31fpcYvsl0K8qyZP350/C6OUfSzLc/px3pEveJl+Rt8
+         E55QDp9/e414mOHb762XgrgxpPytrQDDNG7naeDnCTLXYR0RMVbXnpf1gktWM+kt17XG
+         dHTw==
+X-Gm-Message-State: ANhLgQ3ryzcPVIpOUOOrOnHrK1t0/jTtDExliBqkgWLZfjT8op8q/ntn
+        NtglGzBnD8g7VDCG9j0x0cQ6sg==
+X-Google-Smtp-Source: ADFU+vtd22zCvQBt96HNv1FNfip491J3yg6bOcH1BHTeiIr8TJOxKRCIuR11VfvzANE3XDLrYVJOCw==
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr4167566wmb.73.1584008252629;
+        Thu, 12 Mar 2020 03:17:32 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f4sm18901766wrt.24.2020.03.12.03.17.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 03:17:31 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 10:17:29 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: power: supply: add cw2015_battery
+ bindings
+Message-ID: <20200312101729.ppqhco2j3p66dnqz@holly.lan>
+References: <20200311093043.3636807-1-t.schramm@manjaro.org>
+ <20200311093043.3636807-3-t.schramm@manjaro.org>
+ <20200311172056.wjn3574zrfqxipw6@holly.lan>
+ <bd1bea1c-e42b-8ccc-7fbb-2ed268f1b1a5@manjaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <bd1bea1c-e42b-8ccc-7fbb-2ed268f1b1a5@manjaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-02-20, 15:59, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Thu, Mar 12, 2020 at 12:17:55AM +0100, Tobias Schramm wrote:
+> Hi Daniel,
 > 
-> Platforms may need to implement platform specific get_intermediate and
-> target_intermediate hooks.
+> thanks for reviewing. The typo will be fixed for v4.
 > 
-> Update cpufreq-dt driver's platform data to contain those for such
-> platforms.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/cpufreq/cpufreq-dt.c | 4 ++++
->  drivers/cpufreq/cpufreq-dt.h | 4 ++++
->  2 files changed, 8 insertions(+)
+> >> +  power-supplies:
+> >> +    description:
+> >> +      Specifies supplies used for charging the battery connected to this gauge
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> >> +      - minItems: 1
+> >> +        maxItems: 8 # Should be enough
+> > 
+> > Is it necessary to set a maximum? power_supply.txt is still a text file
+> > but there is no mention of a maximum there.
+> > 
+> I think so? Removing maxItems and running dtbs_check on a dts with more
+> than one supply phandle in the power-supplies property results in an error:
+> linux/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dt.yaml:
+> cw2015@62: power-supplies: [[142], [50]] is too long
 
-Applied. Thanks.
+Interesting. I saw the "Should be enough" comment replicated in several
+YAML bindings (with varying degress of paranoia about how much "enough" is).
+There are also several that simply set minItems without setting
+maxItems, perhaps they have just never been any DTs that test those
+bindings with more than one item.
 
--- 
-viresh
+
+Daniel.
