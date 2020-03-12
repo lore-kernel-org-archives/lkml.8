@@ -2,183 +2,89 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E797C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25146C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09FF205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1654205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:08:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pshp6KqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgCLUH6 (ORCPT
+        id S1727180AbgCLUIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 12 Mar 2020 16:08:01 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54858 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgCLUH6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 16:07:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45172 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbgCLUHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:07:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D1383ADFF;
-        Thu, 12 Mar 2020 20:07:53 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 8275BE0C79; Thu, 12 Mar 2020 21:07:53 +0100 (CET)
-Message-Id: <2fb9d667997ea5628ebc0d601639e0b7dd59cb35.1584043144.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1584043144.git.mkubecek@suse.cz>
-References: <cover.1584043144.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v2 04/15] ethtool: add ethnl_parse_bitset() helper
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 12 Mar 2020 21:07:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=2PpORpJTPrNcGriWZwtPff3V9dem0kgKDLcFiL16NcQ=; b=Pshp6KqLv/j9DBZvV6G2uN3dq+
+        S5NflfEkjwmGOSuodljk/490Yns3N1V9aUc1hO+fPyRPBmHZLmFq7iqID15Zw25Q05hiuhHd4Gzmy
+        u+T5ECoQ3zvS7Hy/ek3uXsOpNv11ZYqvkRYmrAj1rd6v+6RQ/sfrtfQ34cs2V8bQLvBIhtU08uZ/J
+        6hSsbgKCqthU1l99/QW7lnY6YW+28lYe495cUf6WyJkqpMgV7DpvKs1nfZ85Ho4I07Fe5+oTsoLDp
+        kO8F0UFDiYZL3hkGeSAC0WH7bINyPSCZ5qci9BTG3iQ8lsGp6VQMutFY1XnOYBOFpgGpBcLulKRbH
+        8VRL6c2A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCU7J-0002Ww-P5; Thu, 12 Mar 2020 20:07:42 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CDA4998114E; Thu, 12 Mar 2020 21:07:38 +0100 (CET)
+Date:   Thu, 12 Mar 2020 21:07:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Jann Horn <jannh@google.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 03/14] x86/entry/64: Fix unwind hints in register
+ clearing code
+Message-ID: <20200312200738.GB5086@worktop.programming.kicks-ass.net>
+References: <cb9b03b2a391b064573c152696d99017f76e8603.1584033751.git.jpoimboe@redhat.com>
+ <DECA668C-B7EA-4663-8ABB-5B9E0495F498@amacapital.net>
+ <20200312195714.gc5jalix2dp57dyb@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312195714.gc5jalix2dp57dyb@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike other SET type commands, modifying netdev features is required to
-provide a reply telling userspace what was actually changed, compared to
-what was requested. For that purpose, the "modified" flag provided by
-ethnl_update_bitset() is not sufficient, we need full information which
-bits were requested to change.
+On Thu, Mar 12, 2020 at 02:57:14PM -0500, Josh Poimboeuf wrote:
+> On Thu, Mar 12, 2020 at 12:29:29PM -0700, Andy Lutomirski wrote:
+> > > On Mar 12, 2020, at 10:31 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > 
+> > > ﻿The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
+> > > pushing it.  If an NMI or exception hits after a register is cleared,
+> > > but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
+> > > wrongly think the previous value of the register was zero.  This can
+> > > confuse the unwinding process and cause it to exit early.
+> > > 
+> > > Because ORC is simpler than DWARF, there are a limited number of unwind
+> > > annotation states, so it's not possible to add an individual unwind hint
+> > > after each push/clear combination.  Instead, the register clearing
+> > > instructions need to be consolidated and moved to after the
+> > > UNWIND_HINT_REGS annotation.
+> > 
+> > I don’t suppose you know how bad t he performance hit is on a non-PTI machine?
+> 
+> Hm, what does it have to do with PTI?  Should I run a syscall
+> microbenchmark?
 
-Therefore provide ethnl_parse_bitset() returning effective value and mask
-bitmaps equivalent to the contents of a bitset nested attribute.
-
-v2: use non-atomic __set_bit() (suggested by David Miller)
-
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- net/ethtool/bitset.c | 94 ++++++++++++++++++++++++++++++++++++++++++++
- net/ethtool/bitset.h |  4 ++
- 2 files changed, 98 insertions(+)
-
-diff --git a/net/ethtool/bitset.c b/net/ethtool/bitset.c
-index ef9197541cb3..dae7402eaca3 100644
---- a/net/ethtool/bitset.c
-+++ b/net/ethtool/bitset.c
-@@ -588,6 +588,100 @@ int ethnl_update_bitset32(u32 *bitmap, unsigned int nbits,
- 	return 0;
- }
- 
-+/**
-+ * ethnl_parse_bitset() - Compute effective value and mask from bitset nest
-+ * @val:     unsigned long based bitmap to put value into
-+ * @mask:    unsigned long based bitmap to put mask into
-+ * @nbits:   size of @val and @mask bitmaps
-+ * @attr:    nest attribute to parse and apply
-+ * @names:   array of bit names; may be null for compact format
-+ * @extack:  extack for error reporting
-+ *
-+ * Provide @nbits size long bitmaps for value and mask so that
-+ * x = (val & mask) | (x & ~mask) would modify any @nbits sized bitmap x
-+ * the same way ethnl_update_bitset() with the same bitset attribute would.
-+ *
-+ * Return:   negative error code on failure, 0 on success
-+ */
-+int ethnl_parse_bitset(unsigned long *val, unsigned long *mask,
-+		       unsigned int nbits, const struct nlattr *attr,
-+		       ethnl_string_array_t names,
-+		       struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[ETHTOOL_A_BITSET_MAX + 1];
-+	const struct nlattr *bit_attr;
-+	bool no_mask;
-+	int rem;
-+	int ret;
-+
-+	if (!attr)
-+		return 0;
-+	ret = nla_parse_nested(tb, ETHTOOL_A_BITSET_MAX, attr, bitset_policy,
-+			       extack);
-+	if (ret < 0)
-+		return ret;
-+	no_mask = tb[ETHTOOL_A_BITSET_NOMASK];
-+
-+	if (!tb[ETHTOOL_A_BITSET_BITS]) {
-+		unsigned int change_bits;
-+
-+		ret = ethnl_compact_sanity_checks(nbits, attr, tb, extack);
-+		if (ret < 0)
-+			return ret;
-+
-+		change_bits = nla_get_u32(tb[ETHTOOL_A_BITSET_SIZE]);
-+		bitmap_from_arr32(val, nla_data(tb[ETHTOOL_A_BITSET_VALUE]),
-+				  change_bits);
-+		if (change_bits < nbits)
-+			bitmap_clear(val, change_bits, nbits - change_bits);
-+		if (no_mask) {
-+			bitmap_fill(mask, nbits);
-+		} else {
-+			bitmap_from_arr32(mask,
-+					  nla_data(tb[ETHTOOL_A_BITSET_MASK]),
-+					  change_bits);
-+			if (change_bits < nbits)
-+				bitmap_clear(mask, change_bits,
-+					     nbits - change_bits);
-+		}
-+
-+		return 0;
-+	}
-+
-+	if (tb[ETHTOOL_A_BITSET_VALUE]) {
-+		NL_SET_ERR_MSG_ATTR(extack, tb[ETHTOOL_A_BITSET_VALUE],
-+				    "value only allowed in compact bitset");
-+		return -EINVAL;
-+	}
-+	if (tb[ETHTOOL_A_BITSET_MASK]) {
-+		NL_SET_ERR_MSG_ATTR(extack, tb[ETHTOOL_A_BITSET_MASK],
-+				    "mask only allowed in compact bitset");
-+		return -EINVAL;
-+	}
-+
-+	bitmap_zero(val, nbits);
-+	if (no_mask)
-+		bitmap_fill(mask, nbits);
-+	else
-+		bitmap_zero(mask, nbits);
-+
-+	nla_for_each_nested(bit_attr, tb[ETHTOOL_A_BITSET_BITS], rem) {
-+		unsigned int idx;
-+		bool bit_val;
-+
-+		ret = ethnl_parse_bit(&idx, &bit_val, nbits, bit_attr, no_mask,
-+				      names, extack);
-+		if (ret < 0)
-+			return ret;
-+		if (bit_val)
-+			__set_bit(idx, val);
-+		if (!no_mask)
-+			__set_bit(idx, mask);
-+	}
-+
-+	return 0;
-+}
-+
- #if BITS_PER_LONG == 64 && defined(__BIG_ENDIAN)
- 
- /* 64-bit big endian architectures are the only case when u32 based bitmaps
-diff --git a/net/ethtool/bitset.h b/net/ethtool/bitset.h
-index b849f9d19676..c2c2e0051d00 100644
---- a/net/ethtool/bitset.h
-+++ b/net/ethtool/bitset.h
-@@ -26,5 +26,9 @@ int ethnl_update_bitset(unsigned long *bitmap, unsigned int nbits,
- int ethnl_update_bitset32(u32 *bitmap, unsigned int nbits,
- 			  const struct nlattr *attr, ethnl_string_array_t names,
- 			  struct netlink_ext_ack *extack, bool *mod);
-+int ethnl_parse_bitset(unsigned long *val, unsigned long *mask,
-+		       unsigned int nbits, const struct nlattr *attr,
-+		       ethnl_string_array_t names,
-+		       struct netlink_ext_ack *extack);
- 
- #endif /* _NET_ETHTOOL_BITSET_H */
--- 
-2.25.1
-
+Mostly that performance with PTI on is abysmal so we don't care about a
+few cycles.
