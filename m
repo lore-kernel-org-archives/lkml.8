@@ -2,151 +2,81 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BBAC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0892EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F00F206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAF2206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbgCLHMC (ORCPT
+        id S2388075AbgCLHME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:12:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11668 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387767AbgCLHMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:12:01 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8B7B1AEEF5DC05480B47;
-        Thu, 12 Mar 2020 15:11:45 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
- 15:11:38 +0800
-Subject: Re: [PATCH v5 05/23] irqchip/gic-v4.1: Ensure mutual exclusion betwen
- invalidations on the same RD
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-6-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <477e0d45-3ad2-1aee-dd8e-0a771d9cc313@huawei.com>
-Date:   Thu, 12 Mar 2020 15:11:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 12 Mar 2020 03:12:04 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:40072 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387767AbgCLHMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:12:03 -0400
+Received: by mail-io1-f70.google.com with SMTP id z207so1081129iof.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 00:12:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=NkGoJSV/Bp/D1AVTh2vJ5bc0esVeByDEUU8v4C2fFZI=;
+        b=f8/KlnMJOpLp3U7lanxoQvxZZEb2e0PRhadb2yKLiTEkMSXxLwFEw2HPznUfwlPBra
+         0Lu2vcu4SDiPZvgrLGz3qJ8z8aSAzZG7caHKkzrdTYkJHswflx2qiGYk7eIInGunCVOz
+         2T1k7cgCyd2pgyGQ8pPf9Khg9f4PcIpU3UMcQfU2Eu1/+pZXAs7DArHfYL+RnbowWNlM
+         wIA8BMvGU4WGn9rYaVEVSuIKO0mMZIOFjEuXIQOaCUOlLPA2I4OLNtMP5TQhR8i1weIx
+         Sk+NvyWNBicIHFDR2mAJU15AOIxifpuw8prlPbbmtSZrW9xR7Q9bLb5lFB4N7yWZIlPI
+         FgpQ==
+X-Gm-Message-State: ANhLgQ1xneqIgQ2JRHe3SWcTA9YGTmsOU2FQscC9nY42gyJYxNG2d8fI
+        AJCrj4jzWaDZHVJl421eR/MYYyYx+8GYWKR7s4bmo3ktBp0S
+X-Google-Smtp-Source: ADFU+vu0tdPEZAEJ4MkiMJN9x0Wbxty5U2bPaFvIoXsT+C6ccTSohSa61FoSXLPgeHbcrwZMk4ztdS8AxE6Gq/FdTX412XuVHtKt
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-6-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a02:30c8:: with SMTP id q191mr6475552jaq.34.1583997121957;
+ Thu, 12 Mar 2020 00:12:01 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 00:12:01 -0700
+In-Reply-To: <0000000000000ea4b4059fb33201@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c7979105a0a311f6@google.com>
+Subject: Re: WARNING in geneve_exit_batch_net (2)
+From:   syzbot <syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        hdanton@sina.com, jbenc@redhat.com, kadlec@blackhole.kfki.hu,
+        linux-kernel@vger.kernel.org, moshe@mellanox.com,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, sd@queasysnail.net,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> The GICv4.1 spec says that it is CONTRAINED UNPREDICTABLE to write to
+syzbot has bisected this bug to:
 
-s/CONTRAINED/CONSTRAINED/
+commit 4e645b47c4f000a503b9c90163ad905786b9bc1d
+Author: Florian Westphal <fw@strlen.de>
+Date:   Thu Nov 30 23:21:02 2017 +0000
 
-> any of the GICR_INV{LPI,ALL}R registers if GICR_SYNCR.Busy == 1.
-> 
-> To deal with it, we must ensure that only a single invalidation can
-> happen at a time for a given redistributor. Add a per-RD lock to that
-> effect and take it around the invalidation/syncr-read to deal with this.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+    netfilter: core: make nf_unregister_net_hooks simple wrapper again
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1594fbfde00000
+start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1794fbfde00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1394fbfde00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=68a8ed58e3d17c700de5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f08165e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17902329e00000
 
+Reported-by: syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com
+Fixes: 4e645b47c4f0 ("netfilter: core: make nf_unregister_net_hooks simple wrapper again")
 
-Thanks
-
-> ---
->   drivers/irqchip/irq-gic-v3-its.c   | 6 ++++++
->   drivers/irqchip/irq-gic-v3.c       | 1 +
->   include/linux/irqchip/arm-gic-v3.h | 1 +
->   3 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index c84370245bea..fc5788584df7 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -1373,10 +1373,12 @@ static void direct_lpi_inv(struct irq_data *d)
->   
->   	/* Target the redistributor this LPI is currently routed to */
->   	cpu = irq_to_cpuid_lock(d, &flags);
-> +	raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
->   	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
->   	gic_write_lpir(val, rdbase + GICR_INVLPIR);
->   
->   	wait_for_syncr(rdbase);
-> +	raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
->   	irq_to_cpuid_unlock(d, flags);
->   }
->   
-> @@ -3662,9 +3664,11 @@ static void its_vpe_send_inv(struct irq_data *d)
->   		void __iomem *rdbase;
->   
->   		/* Target the redistributor this VPE is currently known on */
-> +		raw_spin_lock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
->   		rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
->   		gic_write_lpir(d->parent_data->hwirq, rdbase + GICR_INVLPIR);
->   		wait_for_syncr(rdbase);
-> +		raw_spin_unlock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
->   	} else {
->   		its_vpe_send_cmd(vpe, its_send_inv);
->   	}
-> @@ -3825,10 +3829,12 @@ static void its_vpe_4_1_invall(struct its_vpe *vpe)
->   	val |= FIELD_PREP(GICR_INVALLR_VPEID, vpe->vpe_id);
->   
->   	/* Target the redistributor this vPE is currently known on */
-> +	raw_spin_lock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
->   	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
->   	gic_write_lpir(val, rdbase + GICR_INVALLR);
->   
->   	wait_for_syncr(rdbase);
-> +	raw_spin_unlock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
->   }
->   
->   static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 73e87e176d76..ba405becab53 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -835,6 +835,7 @@ static int __gic_populate_rdist(struct redist_region *region, void __iomem *ptr)
->   	typer = gic_read_typer(ptr + GICR_TYPER);
->   	if ((typer >> 32) == aff) {
->   		u64 offset = ptr - region->redist_base;
-> +		raw_spin_lock_init(&gic_data_rdist()->rd_lock);
->   		gic_data_rdist_rd_base() = ptr;
->   		gic_data_rdist()->phys_base = region->phys_base + offset;
->   
-> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-> index c29a02678a6f..b28acfa71f82 100644
-> --- a/include/linux/irqchip/arm-gic-v3.h
-> +++ b/include/linux/irqchip/arm-gic-v3.h
-> @@ -652,6 +652,7 @@
->   
->   struct rdists {
->   	struct {
-> +		raw_spinlock_t	rd_lock;
->   		void __iomem	*rd_base;
->   		struct page	*pend_page;
->   		phys_addr_t	phys_base;
-> 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
