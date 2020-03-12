@@ -2,80 +2,101 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE89CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F89C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28C6206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6D420637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584051651;
-	bh=AO36XPdzn8T0byP4kCHnxpBmX1FVVp3X2e6l2JfIBzQ=;
+	s=default; t=1584051726;
+	bh=ug/sSOWyyTVyAWvCH2fhBBqrr5Uv0KCqQN3bnOwmj5k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wW/R+AhAVdkOZglcWwoTHTHCBDhRtQRZ4o8bAlUwqMEPaMOHa6JqVSp9LZ35cC4xj
-	 R+RxtwVIMTq0z/KAoW2n7aOgiSs5Z8U8LdjX3UHrhM5KwJwCchUD/RTPHCgHwSmXK3
-	 qwUlqVWihmAnLGan+O4pCd4CUUy1nhUfwdM16rD0=
+	b=oDDbv+vDw5eFUtpmgygYH2rTqXAHi+dbF/O8HBz73be2UftKCzMYsW2S0Q9EJmPPy
+	 OHvkvHsHwv2kWGxA7StO6L2fY50oH4zdziG1Do/lvl8gDd4YlInGnXi+rdfw2FgT02
+	 k1riCT6Wu2c7eUnUIHLX4HfXNTkDe718iDawMbSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgCLWUu (ORCPT
+        id S1726797AbgCLWWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 18:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgCLWUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 18:20:50 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E90D20637;
-        Thu, 12 Mar 2020 22:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584051649;
-        bh=AO36XPdzn8T0byP4kCHnxpBmX1FVVp3X2e6l2JfIBzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dHkYDUfdELnxjoFUBM64ZraMawOd1uC1bD/o1kAQ8yN2zjBTE5PlW+Vz8CskI+FTf
-         j3puzuM4kZt9fhbIbdjbKXtb5vFOBsWNHolMctmFvnuTCLoZWzS3Tmss1NJETSDdSt
-         WSheqxk4nT5HiGvmENJp3tRZbt2lWiF3fsJaHDOY=
-Date:   Thu, 12 Mar 2020 15:20:42 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Message-ID: <20200312222042.GA816@sol.localdomain>
-References: <20200309010410.GA371527@sol.localdomain>
- <20200309043430.143206-1-ebiggers@kernel.org>
- <20200309162439.GB8045@magnolia>
+        Thu, 12 Mar 2020 18:22:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36726 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgCLWWF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 18:22:05 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k18so7282984oib.3;
+        Thu, 12 Mar 2020 15:22:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OsTug+wFPYvu1dsEP+HjJTVY8zFYC98KWDkMm6y/bAM=;
+        b=Q/34E52L5C2ETz37DXsW+OokQGk6gUzXI4rferXXtbhguw3iL/oGUTC/OHmxFhGg4v
+         2rKLKcopkbKD0AmcBHU2fR9stX3WV7jjY07kBpIZn/EqTKSancu9okcZiEFiFFgszjZx
+         6MP7K83fw22aLFUvxCDiRHoJvSv6hQ2qBR3KyamLyqP8LhPyyf3OQlwykDqA+zYTQdIW
+         +D9Gwv0Jca/O+QTnNdyow03ctkKCgUGqX+sODAYl2Ht9Xjztksikuco2zG7Omqvsww7V
+         BXUjxDX+JH67zHxL5nemWpfSbZiXIDY7iWs0DyVd02Cg4Dj5EXifZO/C/mD3uoh2Ajs8
+         mIoA==
+X-Gm-Message-State: ANhLgQ34MTr9zdN4OknHjVhmW8OrqJerDZPdetbn7C0fmkKlPzAUtscf
+        MReApFmOo/2btsbsMp79xg==
+X-Google-Smtp-Source: ADFU+vt7wLxkZF+SNDSBgEsIFB/+M2Ofk3SegkM60wYe0M9i2VazpAmQDww4IoWy/Oa5AfmBoQ1EQQ==
+X-Received: by 2002:aca:cdcd:: with SMTP id d196mr4574031oig.16.1584051724248;
+        Thu, 12 Mar 2020 15:22:04 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k101sm9796724otk.6.2020.03.12.15.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 15:22:03 -0700 (PDT)
+Received: (nullmailer pid 19309 invoked by uid 1000);
+        Thu, 12 Mar 2020 22:22:02 -0000
+Date:   Thu, 12 Mar 2020 17:22:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] dt-bindings: watchdog: dw-wdt: Add watchdog TOPs
+ array property
+Message-ID: <20200312222202.GA19251@bogus>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132818.98D7F80307C2@mail.baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309162439.GB8045@magnolia>
+In-Reply-To: <20200306132818.98D7F80307C2@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 09:24:39AM -0700, Darrick J. Wong wrote:
-> > 
-> > 	mkfs.ext2 -F /dev/vdb
-> > 	mount /vdb -t ext4
-> > 	touch /vdb/file
-> > 	chattr +S /vdb/file
+On Fri, 6 Mar 2020 16:27:42 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Does this trip if the process accounting file is also on an xfs
-> filesystem?
+> In case if DW Watchdog IP core is built with WDT_USE_FIX_TOP == false,
+> a custom timeout periods are used to preset the timer counter. In
+> this case that periods should be specified in a new "snps,watchdog-tops"
+> property of the DW watchdog dts node.
 > 
-> > 	accton /vdb/file
-> > 	mkfs.xfs -f /dev/vdc
-> > 	mount /vdc
-> > 	umount /vdc
-> 
-> ...and if so, can this be turned into an fstests case, please?
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> ---
+>  .../bindings/watchdog/snps,dw-wdt.yaml        | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
 
-Test sent out at
-https://lkml.kernel.org/fstests/20200312221437.141484-1-ebiggers@kernel.org/
-
-- Eric
+Reviewed-by: Rob Herring <robh@kernel.org>
