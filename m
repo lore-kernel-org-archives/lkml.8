@@ -2,153 +2,133 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5320CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B041C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F72206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C466206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCLWEP (ORCPT
+        id S1726702AbgCLWEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 18:04:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51134 "EHLO mx2.suse.de"
+        Thu, 12 Mar 2020 18:04:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40625 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgCLWEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 18:04:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4CFC0AD10;
-        Thu, 12 Mar 2020 22:04:12 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
-Date:   Fri, 13 Mar 2020 09:04:01 +1100
-Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: Re: [PATCH v2 3/4] docs: admin-guide: document the kernel.modprobe sysctl
-In-Reply-To: <20200312202552.241885-4-ebiggers@kernel.org>
-References: <20200312202552.241885-1-ebiggers@kernel.org> <20200312202552.241885-4-ebiggers@kernel.org>
-Message-ID: <87lfo5telq.fsf@notabene.neil.brown.name>
+        id S1726514AbgCLWEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 18:04:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 15:04:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
+   d="scan'208";a="277987570"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Mar 2020 15:04:32 -0700
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id 0C64C58010D;
+        Thu, 12 Mar 2020 15:04:32 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+References: <20200312215230.GA195113@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <e710fd4c-4c0e-448a-6791-beed334536ce@linux.intel.com>
+Date:   Thu, 12 Mar 2020 15:02:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20200312215230.GA195113@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Thu, Mar 12 2020, Eric Biggers wrote:
-
-> From: Eric Biggers <ebiggers@google.com>
+On 3/12/20 2:52 PM, Bjorn Helgaas wrote:
+> On Thu, Mar 12, 2020 at 02:29:58PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> Hi,
+>>
+>> On 3/12/20 2:02 PM, Austin.Bolen@dell.com wrote:
+>>> On 3/12/2020 2:53 PM, Bjorn Helgaas wrote:
+>>>> On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>>>>> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
+>>>>>> Is any synchronization needed here between the EDR path and the
+>>>>>> hotplug/enumeration path?
+>>>>> If we want to follow the implementation note step by step (in
+>>>>> sequence) then we need some synchronization between EDR path and
+>>>>> enumeration path. But if it's OK to achieve the same end result by
+>>>>> following steps out of sequence then we don't need to create any
+>>>>> dependency between EDR and enumeration paths. Currently we follow
+>>>>> the latter approach.
+>>>> What would the synchronization look like?
+>>>>
+>>>> Ideally I think it would be better to follow the order in the
+>>>> flowchart if it's not too onerous.  That will make the code easier to
+>>>> understand.  The current situation with this dependency on pciehp and
+>>>> what it will do leaves a lot of things implicit.
+>>>>
+>>>> What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+>>>>
+>>>> IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
+>>>> unbinds the drivers and removes the devices.  If that doesn't happen,
+>>>> and Linux clears the DPC trigger to bring the link back up, will those
+>>>> drivers try to operate uninitialized devices?
+>>>>
+>>>> Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
+>>>    From one of Sathya's other responses:
+>>>
+>>> "If hotplug is not supported then there is support to enumerate
+>>> devices via polling  or ACPI events. But a point to note
+>>> here is, enumeration path is independent of error handler path, and
+>>> hence there is no explicit trigger or event from error handler path
+>>> to enumeration path to kick start the enumeration."
+>>>
+>>> The EDR standard doesn't have any dependency on hot-plug. It sounds like
+>>> in the current implementation there's some manual intervention needed if
+>>> hot-plug is not supported?
+>> No, there is no need for manual intervention even in non hotplug
+>> cases.
+>>
+>> For ACPI events case, we would rely on ACPI event to kick start the
+>> enumeration.  And for polling model, there is an independent polling
+>> thread which will kick start the enumeration.
+> I'm guessing the ACPI case works via hotplug_is_native(): if
+> CONFIG_HOTPLUG_PCI_PCIE=n, pciehp_is_native() returns false, and
+> acpiphp manages hotplug.
 >
-> Document the kernel.modprobe sysctl in the same place that all the other
-> kernel.* sysctls are documented.  Make sure to mention how to use this
-> sysctl to completely disable module autoloading, and how this sysctl
-> relates to CONFIG_STATIC_USERMODEHELPER.
+> What if CONFIG_HOTPLUG_PCI_ACPI=n also?
+If none of the auto scans are enabled then we might need some
+manual trigger ( rescan). But this would be needed in native
+DPC case as well.
 >
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jeff Vander Stoep <jeffv@google.com>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: NeilBrown <neilb@suse.com>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 25 ++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
+> Where is the polling thread?
+drivers/pci/hotplug/pciehp_hpc.c
 >
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/=
-admin-guide/sysctl/kernel.rst
-> index def074807cee9..454f3402ed321 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -49,7 +49,7 @@ show up in /proc/sys/kernel:
->  - kexec_load_disabled
->  - kptr_restrict
->  - l2cr                        [ PPC only ]
-> -- modprobe                    =3D=3D> Documentation/debugging-modules.txt
-> +- modprobe
->  - modules_disabled
->  - msg_next_id		      [ sysv ipc ]
->  - msgmax
-> @@ -444,6 +444,29 @@ l2cr: (PPC only)
->  This flag controls the L2 cache of G3 processor boards. If
->  0, the cache is disabled. Enabled if nonzero.
->=20=20
-> +modprobe:
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +The path to the usermode helper for autoloading kernel modules, by
-> +default "/sbin/modprobe".  This binary is executed when the kernel
-> +requests a module.  For example, if userspace passes an unknown
-> +filesystem type "foo" to mount(), then the kernel will automatically
-> +request the module "fs-foo.ko" by executing this usermode helper.
+>> Above both enumeration models are totally independent and has
+>> no dependency on error handler thread.
+> I see they're currently independent from the EDR thread, but it's not
+> clear to me that there's no dependency.  After all, both EDR and the
+> hotplug paths are operating on the same devices at roughly the same
+> time, so we should have some story about what keeps them from getting
+> in each other's way.
+>
+>> We will decide which model to use based on hardware capability and
+>> _OSC negotiation or kernel command line option.
 
-I don't think it is right to add the ".ko" there.  The string "fs-foo"
-is what is passed to the named executable, and it make well end up
-loading "bar.ko", depending what aliases are set up.
-I would probably write  '... request the module named 'fs-foo" by executing=
-..'
-(The "name" for a module can come from the file that stores it, and
-alias inside it, or configuration in modprobe.d).
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
-Thanks,
-NeilBrown
-
-
-> +This usermode helper should insert the needed module into the kernel.
-> +
-> +This sysctl only affects module autoloading.  It has no effect on the
-> +ability to explicitly insert modules.
-> +
-> +If this sysctl is set to the empty string, then module autoloading is
-> +completely disabled.  The kernel will not try to execute a usermode
-> +helper at all, nor will it call the kernel_module_request LSM hook.
-> +
-> +If CONFIG_STATIC_USERMODEHELPER=3Dy is set in the kernel configuration,
-> +then the configured static usermode helper overrides this sysctl,
-> +except that the empty string is still accepted to completely disable
-> +module autoloading as described above.
-> +
-> +Also see Documentation/debugging-modules.txt.
->=20=20
->  modules_disabled:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --=20
-> 2.25.1
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5qsdIACgkQOeye3VZi
-gbn66xAAoMNNHX1PULvhsHSbkF3UGaE7PJY1e+MKP/fPDfQivfsYuhR4s89O4Cw7
-/DFNbtCBNmGLnb6I1CDP9LDTFT18HxuSojFxnr1DvEImeDL/YNcvPk2EtkPbd6f/
-Mcm9zW4yvv1QvKmHnw+ukncp4M1J/KBVMMXJzFXAhWmOi9oFqYLMzKgNlroNqe2P
-bn4Q1mJ4fRWnkModSNQJcqGXy46rmsc/ef2J6IYTsZGMNI0xig1zgT3FJNjQMCt6
-Nga0sI9wPWlT9rsKRNBdmb6TJ6vUMqEpOZ3SHKgqnZPF6k5K7sayWbTnKnnbbblI
-flRf8QC302BfEkMumI3n3JZrXvU24kE7O+o7cSGFUBiQX759/KETGVJOKqQ0ZOc2
-IheqvM4U1+1XOfnLVRX2+hbMN6b3IxPX1+U0kV5KCZxU3526MNIxDqbi8XnjK/QS
-s2OM60IUR0mAwZRFoKt0ca54eRuFhsG+fA9EWw7FuQy5tOMPJ0c9KY+PRY9P8OmU
-CfrmU7NzTzXZgkcieVn9oBy27U7n3yttCfrzoIM2jTfNWJHlX3Eg0yzZR1+lDLeU
-QiR36E8E/UT+S8ELBITSj5kMJ3+hWubsCzWRNwP6ZXqkjMnaPFyx7Sl3H/tehDiq
-qjhSV7vh9sT5XAuOQgngCh6s2/C5m28g3Mm6YKC1D/zRXnSvl7E=
-=4QNp
------END PGP SIGNATURE-----
---=-=-=--
