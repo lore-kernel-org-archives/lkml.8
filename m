@@ -2,223 +2,243 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3830EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E85C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAD220716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D09C20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:43:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJY872Vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388162AbgCLHmD (ORCPT
+        id S2388168AbgCLHn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:42:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11669 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388086AbgCLHmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:42:03 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 832CF39499E54775AFE3;
-        Thu, 12 Mar 2020 15:41:58 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
- 15:41:52 +0800
-Subject: Re: [PATCH v5 11/23] irqchip/gic-v4.1: Plumb get/set_irqchip_state
- SGI callbacks
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-12-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <da2fd5bc-0fe3-df3a-090f-0b5ce378a34a@huawei.com>
-Date:   Thu, 12 Mar 2020 15:41:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 12 Mar 2020 03:43:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42139 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388081AbgCLHn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:43:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v11so6065546wrm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 00:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cBmBbvO3DHaF6ZM0Ex0exZ5k7RaaVlRVHw8bBFWLk68=;
+        b=zJY872Vk0ENk8O9d1/vF4yt70XpjK4CvqiV/jZntDVQUqS80bWe8M3JDoQzVB2mdAr
+         Qc9DIw3jkmvCLCE4pWVQlGw7esiFPP18VbCIapmO8bV1ZJyYLWeUB4/pbD7zJWNuDI6l
+         m8Dq+6Z+4xikqbyHkN0QJkXNKYQdT0ZwUYnVO7fF12DVmV3UIQATSea0lhdWYZr7Rj6V
+         +1pxYJsfUUeUpc3rdNrXcVqazEDQvQ8muPih69KFxJrwguJJy23f2cEXiVM3A2I+Kmca
+         2EoYdG3eelt6WlAUGye4Y3+/wsWgbqoIIt61Pdoju38ymhdHYPghCFAcZtG9v7zloTcN
+         II5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cBmBbvO3DHaF6ZM0Ex0exZ5k7RaaVlRVHw8bBFWLk68=;
+        b=B2koccmw9UPAyLqyknzXo4T7J+7Pj+E3b6I6ucycvHZ9Lhw7UarW5MKPbsj64yurFU
+         e2mqKR+OzdcoxkPgjDxCUOaYzYHTX/+hwQyLD1RLMVDgTrKurt9bIeDL6V+ygRdO1RHw
+         85hzBTkGLKte5xGgBuozs5oLx8e3oCwMfnFsFbaqmlIHHbr5U1UFstMC2ngTGcE4rUc9
+         jPKZ4RhsmosUlmeKEzclOjU74OPPkkkNeCYvelJci0iNQx2J/NOdO9boWF2lLU2ElLTo
+         ozIdycJNVNNjKStygq6W77G+n/Di2dYaQiH11aV9UV1JP5PgzCmjlCRaadKj5XdQYDMd
+         g5nA==
+X-Gm-Message-State: ANhLgQ0WxRp3c4gpdr+x2ivVCSQoLpqnyySqaHfAvMe8Nvb2xjnqoYp5
+        Z1qfa992aINJEAzISOmbWmyiV51EqKk=
+X-Google-Smtp-Source: ADFU+vtvxDiPA/GMHD+H5t3DWhluKuQ2jWG2EYeSH9Gtd2RzLo/KFy2SCx51K12MuuqOtu0airE3Hw==
+X-Received: by 2002:adf:e64f:: with SMTP id b15mr6233670wrn.424.1583999005153;
+        Thu, 12 Mar 2020 00:43:25 -0700 (PDT)
+Received: from dell ([2.27.167.19])
+        by smtp.gmail.com with ESMTPSA id n2sm5659471wrr.62.2020.03.12.00.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 00:43:24 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 07:44:07 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200312074407.GA3142@dell>
+References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-12-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Wed, 11 Mar 2020, Hsin-Hsiung Wang wrote:
 
-Some checkpatch errors below:
-
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> To implement the get/set_irqchip_state callbacks (limited to the
-> PENDING state), we have to use a particular set of hacks:
+> From: Ran Bi <ran.bi@mediatek.com>
 > 
-> - Reading the pending state is done by using a pair of new redistributor
->    registers (GICR_VSGIR, GICR_VSGIPENDR), which allow the 16 interrupts
->    state to be retrieved.
-> - Setting the pending state is done by generating it as we'd otherwise do
->    for a guest (writing to GITS_SGIR).
-> - Clearing the pending state is done by emiting a VSGI command with the
->    "clear" bit set.
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> driver which only needed by armv7 CPU without ATF.
 > 
-> This requires some interesting locking though:
-> - When talking to the redistributor, we must make sure that the VPE
->    affinity doesn't change, hence taking the VPE lock.
-> - At the same time, we must ensure that nobody accesses the same
->    redistributor's GICR_VSGI*R registers for a different VPE, which
->    would corrupt the reading of the pending bits. We thus take the
->    per-RD spinlock. Much fun.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 > ---
->   drivers/irqchip/irq-gic-v3-its.c   | 73 ++++++++++++++++++++++++++++++
->   include/linux/irqchip/arm-gic-v3.h | 14 ++++++
->   2 files changed, 87 insertions(+)
+>  drivers/power/reset/mt6323-poweroff.c |  2 +-
+>  drivers/rtc/rtc-mt6397.c              | 32 ++++++++++++++++++++++++--------
+>  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+>  3 files changed, 33 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index c93f178914ee..fb2b836c31ff 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3962,11 +3962,84 @@ static int its_sgi_set_affinity(struct irq_data *d,
->   	return -EINVAL;
->   }
->   
-> +static int its_sgi_set_irqchip_state(struct irq_data *d,
-> +				     enum irqchip_irq_state which,
-> +				     bool state)
-> +{
-> +	if (which != IRQCHIP_STATE_PENDING)
-> +		return -EINVAL;
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
+> index 1caf43d..0532803 100644
+> --- a/drivers/power/reset/mt6323-poweroff.c
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
+>  	int ret;
+>  
+>  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+>  
+>  	ret = regmap_read_poll_timeout(pwrc->regmap,
+>  					pwrc->base + RTC_BBPU, val,
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index cda238d..7a5a9e2 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,18 +9,38 @@
+>  #include <linux/mfd/mt6397/core.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+>  #include <linux/mfd/mt6397/rtc.h>
+>  #include <linux/mod_devicetable.h>
+>  
+> +static const struct mtk_rtc_data mt6358_rtc_data = {
+> +	.wrtgr = RTC_WRTGR_MT6358,
+> +};
 > +
-> +	if (state) {
-> +		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-> +		struct its_node *its = find_4_1_its();
-> +		u64 val;
+> +static const struct mtk_rtc_data mt6397_rtc_data = {
+> +	.wrtgr = RTC_WRTGR_MT6397,
+> +};
 > +
-> +		val  = FIELD_PREP(GITS_SGIR_VPEID, vpe->vpe_id);
-> +		val |= FIELD_PREP(GITS_SGIR_VINTID, d->hwirq);
-> +		writeq_relaxed(val, its->sgir_base + GITS_SGIR - SZ_128K);
-> +	} else {
-> +		its_configure_sgi(d, true);
-> +	}
+> +static const struct of_device_id mt6397_rtc_of_match[] = {
+> +	{ .compatible = "mediatek,mt6323-rtc",
+> +		.data = (void *)&mt6397_rtc_data, },
+> +	{ .compatible = "mediatek,mt6358-rtc",
+> +		.data = (void *)&mt6358_rtc_data, },
+> +	{ .compatible = "mediatek,mt6397-rtc",
+> +		.data = (void *)&mt6397_rtc_data, },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
 > +
-> +	return 0;
-> +}
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+>  	int ret;
+>  	u32 data;
+>  
+> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -269,6 +289,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base = res->start;
+>  
+> +	rtc->data = (struct mtk_rtc_data *)
+> +			of_device_get_match_data(&pdev->dev);
 > +
-> +static int its_sgi_get_irqchip_state(struct irq_data *d,
-> +				     enum irqchip_irq_state which, bool *val)
-> +{
-> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-> +	void __iomem *base;
-> +	unsigned long flags;
-> +	u32 count = 1000000;	/* 1s! */
-> +	u32 status;
-> +	int cpu;
-> +
-> +	if (which != IRQCHIP_STATE_PENDING)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Locking galore! We can race against two different events:
-> +	 *
-> +	 * - Concurent vPE affinity change: we must make sure it cannot
-> +         *   happen, or we'll talk to the wrong redistributor. This is
-> +         *   identical to what happens with vLPIs.
+>  	rtc->irq = platform_get_irq(pdev, 0);
+>  	if (rtc->irq < 0)
+>  		return rtc->irq;
+> @@ -325,13 +348,6 @@ static int mt6397_rtc_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+>  			mt6397_rtc_resume);
+>  
+> -static const struct of_device_id mt6397_rtc_of_match[] = {
+> -	{ .compatible = "mediatek,mt6323-rtc", },
+> -	{ .compatible = "mediatek,mt6397-rtc", },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+> -
+>  static struct platform_driver mtk_rtc_driver = {
+>  	.driver = {
+>  		.name = "mt6397-rtc",
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+> index 7dfb63b..66534ed 100644
+> --- a/include/linux/mfd/mt6397/rtc.h
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -18,7 +18,9 @@
+>  #define RTC_BBPU_CBUSY         BIT(6)
+>  #define RTC_BBPU_KEY            (0x43 << 8)
+>  
+> -#define RTC_WRTGR              0x003c
+> +#define RTC_WRTGR_MT6358       0x3a
+> +#define RTC_WRTGR_MT6397       0x3c
+> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+>  
+>  #define RTC_IRQ_STA            0x0002
+>  #define RTC_IRQ_STA_AL         BIT(0)
+> @@ -65,6 +67,10 @@
+>  #define MTK_RTC_POLL_DELAY_US  10
+>  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+>  
+> +struct mtk_rtc_data {
+> +	u32			wrtgr;
+> +};
 
-code indent should use tabs where possible
+Do you expect to add more properties to this struct?
 
-> +	 *
-> +	 * - Concurrent VSGIPENDR access: As it involves accessing two
-> +         *   MMIO registers, this must be made atomic one way or another.
+If not, it seems a bit overkill.
 
-The same here.
+>  struct mt6397_rtc {
+>  	struct device           *dev;
+>  	struct rtc_device       *rtc_dev;
+> @@ -74,6 +80,7 @@ struct mt6397_rtc {
+>  	struct regmap           *regmap;
+>  	int                     irq;
+>  	u32                     addr_base;
+> +	const struct mtk_rtc_data *data;
 
-> +	 */
-> +	cpu = vpe_to_cpuid_lock(vpe, &flags);
-> +	raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
-> +	base = gic_data_rdist_cpu(cpu)->rd_base + SZ_128K;
-> +	writel_relaxed(vpe->vpe_id, base + GICR_VSGIR);
-> +	do {
-> +		status = readl_relaxed(base + GICR_VSGIPENDR);
-> +		if (!(status & GICR_VSGIPENDR_BUSY))
-> +			goto out;
-> +
-> +		count--;
-> +		if (!count) {
-> +			pr_err_ratelimited("Unable to get SGI status\n");
-> +			goto out;
-> +		}
-> +		cpu_relax();
-> +		udelay(1);
-> +	} while(count);
+'data' is a terrible variable name.
 
-space required before the open parenthesis '('
+Why do you need to store this?
 
-> +
-> +out:
-> +	raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
-> +	vpe_to_cpuid_unlock(vpe, flags);
-> +	*val = !!(status & (1 << d->hwirq));
-> +
-> +	return 0;
-> +}
-> +
->   static struct irq_chip its_sgi_irq_chip = {
->   	.name			= "GICv4.1-sgi",
->   	.irq_mask		= its_sgi_mask_irq,
->   	.irq_unmask		= its_sgi_unmask_irq,
->   	.irq_set_affinity	= its_sgi_set_affinity,
-> +	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
-> +	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
->   };
->   
->   static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
-> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-> index fd3be49ac9a5..830d2abf14b3 100644
-> --- a/include/linux/irqchip/arm-gic-v3.h
-> +++ b/include/linux/irqchip/arm-gic-v3.h
-> @@ -345,6 +345,15 @@
->   #define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
->   #define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
->   
-> +#define GICR_VSGIR			0x0080
-> +
-> +#define GICR_VSGIR_VPEID		GENMASK(15, 0)
-> +
-> +#define GICR_VSGIPENDR			0x0088
-> +
-> +#define GICR_VSGIPENDR_BUSY		(1U << 31)
-> +#define GICR_VSGIPENDR_PENDING		GENMASK(15, 0)
-> +
->   /*
->    * ITS registers, offsets from ITS_base
->    */
-> @@ -368,6 +377,11 @@
->   
->   #define GITS_TRANSLATER			0x10040
->   
-> +#define GITS_SGIR			0x20020
-> +
-> +#define GITS_SGIR_VPEID			GENMASK_ULL(47, 32)
-> +#define GITS_SGIR_VINTID		GENMASK_ULL(7, 0)
+It's one variable which is used once AFAICT.
 
-GENMASK_ULL(3, 0), though not a problem.  Besides,
+>  };
+>  
+>  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-
-Thanks
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
