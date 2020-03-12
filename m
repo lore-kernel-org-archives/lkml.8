@@ -2,110 +2,166 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FE8C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63890C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9341920716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD87206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="qaWsULht"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WUREMuLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgCLRdT (ORCPT
+        id S1726795AbgCLRd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:33:19 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37103 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgCLRdS (ORCPT
+        Thu, 12 Mar 2020 13:33:59 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40020 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726443AbgCLRd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:33:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 6so8569901wre.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NoiaqPMaLbyoL7WcV9VE9eKkmobOKnQ4L0s3bngIbSs=;
-        b=qaWsULht3bWoY5iXQLEcDGdBTFV6hjN7lpV33RTCtB3xWc1PLX/WRxZQohX8Xrl/9w
-         UmohlrmtFgTmdaoEpFrPYYLSu55234z8uvo9TnjcyiBJbYmm2fJpmw10ZPHUC3T9G4Z3
-         CvKX3yFDACoE48iNQsDgNcSOYv8fqeVuxR4Rk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NoiaqPMaLbyoL7WcV9VE9eKkmobOKnQ4L0s3bngIbSs=;
-        b=ibI9CdG6yv3Q0RXmYAewOoaejTfVNoN1evjlZL8tMFC4JHyLWtL9xP1+odwNZT1bzf
-         9CBahXpXC9uV9ENeazj91BgRB/mYmZqbKLXhoaA3hJBEQ+rqE9A/ZN24GBZ2p+e8jV9F
-         gHz7rtsKOSG2ACE7bil62Y8R3y6g9aCbGgCFeSRdwM12Me6UBtiIRmM1fnxCDf9sRGb9
-         TV3t2y6FG+5fX/H1GRyWYcGjlhqzsbOc9uXSt6BC9TkmKUnA4u9YJ1rTmH+0D8DsP7WO
-         pQUH1lpSKc0kByKBFToh6SbviNRUC7FfU5Y0SbXuQh60yJe9K5lsvJvOnXmFZEzjO4Tk
-         enxw==
-X-Gm-Message-State: ANhLgQ3qJ44MqJ4RKXINhFmp7XDwtwfud/65UBz2Aphj8OjlkDiVSmyY
-        en2AVKIB5By8WJ2BAaiD6KR4cg==
-X-Google-Smtp-Source: ADFU+vvYbyeKzXBtFBZm5+Qqw3wXcJUdTLliut8wUu0quaYaNk9IXP08ecLQIM8cttCro0Cmn5Mn+Q==
-X-Received: by 2002:a5d:63c7:: with SMTP id c7mr11956491wrw.384.1584034396977;
-        Thu, 12 Mar 2020 10:33:16 -0700 (PDT)
-Received: from localhost ([89.32.122.5])
-        by smtp.gmail.com with ESMTPSA id o3sm14396506wme.36.2020.03.12.10.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 10:33:16 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:33:16 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 6/6] mm, memcg: Prevent mem_cgroup_protected store tearing
-Message-ID: <d1e9fbc0379fe8db475d82c8b6fbe048876e12ae.1584034301.git.chris@chrisdown.name>
-References: <cover.1584034301.git.chris@chrisdown.name>
+        Thu, 12 Mar 2020 13:33:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584034438; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Yv5Z2WSkUNGiz0RnTA13WsE0rkZ/Ii3R3mKkEmh3yWY=; b=WUREMuLGpS3KjFYF7QNty6web4VvPyoEiPWDqMcpc7Gt2ybGAIYBCKpiJbuWLogxB6n/0Fn8
+ XLrcd32WIGCvC56JP3sDRylGIJxhgjgdIq0E44UOf8kTdEOrFBJaBBDXAn+mZ/aYC4oOcu52
+ bg0XNCGPnB2bsm8/oCqEwM46MbU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6a727c.7fde6dfef8b8-smtp-out-n02;
+ Thu, 12 Mar 2020 17:33:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6CB7BC43637; Thu, 12 Mar 2020 17:33:48 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68064C433D2;
+        Thu, 12 Mar 2020 17:33:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68064C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v2 2/8] scsi: ufs: remove init_prefetch_data in struct
+ ufs_hba
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200312110908.14895-1-stanley.chu@mediatek.com>
+ <20200312110908.14895-3-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <2e958801-81f0-d650-cad3-ada0b04ac972@codeaurora.org>
+Date:   Thu, 12 Mar 2020 10:33:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1584034301.git.chris@chrisdown.name>
+In-Reply-To: <20200312110908.14895-3-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The read side of this is all protected, but we can still tear if
-multiple iterations of mem_cgroup_protected are going at the same time.
+On 3/12/2020 4:09 AM, Stanley Chu wrote:
+> Struct init_prefetch_data currently is used privately in
+> ufshcd_init_icc_levels(), thus it can be removed from struct ufs_hba.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
 
-There's some intentional racing in mem_cgroup_protected which is ok, but
-load/store tearing should be avoided.
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+>   drivers/scsi/ufs/ufshcd.c | 15 ++++++---------
+>   drivers/scsi/ufs/ufshcd.h | 11 -----------
+>   2 files changed, 6 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 314e808b0d4e..b4988b9ee36c 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -6501,6 +6501,7 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
+>   {
+>   	int ret;
+>   	int buff_len = hba->desc_size.pwr_desc;
+> +	u32 icc_level;
+>   	u8 *desc_buf;
+>   
+>   	desc_buf = kmalloc(buff_len, GFP_KERNEL);
+> @@ -6516,21 +6517,17 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
+>   		goto out;
+>   	}
+>   
+> -	hba->init_prefetch_data.icc_level =
+> -			ufshcd_find_max_sup_active_icc_level(hba,
+> -			desc_buf, buff_len);
+> -	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",
+> -			__func__, hba->init_prefetch_data.icc_level);
+> +	icc_level =
+> +		ufshcd_find_max_sup_active_icc_level(hba, desc_buf, buff_len);
+> +	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",	__func__, icc_level);
+>   
+>   	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
+> -		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0,
+> -		&hba->init_prefetch_data.icc_level);
+> +		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0, &icc_level);
+>   
+>   	if (ret)
+>   		dev_err(hba->dev,
+>   			"%s: Failed configuring bActiveICCLevel = %d ret = %d",
+> -			__func__, hba->init_prefetch_data.icc_level , ret);
+> -
+> +			__func__, icc_level, ret);
+>   out:
+>   	kfree(desc_buf);
+>   }
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 5c10777154fc..5cf79d2319a6 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -402,15 +402,6 @@ struct ufs_clk_scaling {
+>   	bool is_suspended;
+>   };
+>   
+> -/**
+> - * struct ufs_init_prefetch - contains data that is pre-fetched once during
+> - * initialization
+> - * @icc_level: icc level which was read during initialization
+> - */
+> -struct ufs_init_prefetch {
+> -	u32 icc_level;
+> -};
+> -
+>   #define UFS_ERR_REG_HIST_LENGTH 8
+>   /**
+>    * struct ufs_err_reg_hist - keeps history of errors
+> @@ -541,7 +532,6 @@ enum ufshcd_quirks {
+>    * @intr_mask: Interrupt Mask Bits
+>    * @ee_ctrl_mask: Exception event control mask
+>    * @is_powered: flag to check if HBA is powered
+> - * @init_prefetch_data: data pre-fetched during initialization
+>    * @eh_work: Worker to handle UFS errors that require s/w attention
+>    * @eeh_work: Worker to handle exception events
+>    * @errors: HBA errors
+> @@ -627,7 +617,6 @@ struct ufs_hba {
+>   	u32 intr_mask;
+>   	u16 ee_ctrl_mask;
+>   	bool is_powered;
+> -	struct ufs_init_prefetch init_prefetch_data;
+>   
+>   	/* Work Queues */
+>   	struct work_struct eh_work;
+> 
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@fb.com
----
- mm/memcontrol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 57048a38c75d..e9af606238ab 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6301,8 +6301,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 	}
- 
- exit:
--	memcg->memory.emin = emin;
--	memcg->memory.elow = elow;
-+	WRITE_ONCE(memcg->memory.emin, emin);
-+	WRITE_ONCE(memcg->memory.elow, elow);
- 
- 	if (usage <= emin)
- 		return MEMCG_PROT_MIN;
 -- 
-2.25.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
