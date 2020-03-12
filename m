@@ -2,136 +2,121 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD19C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556C6C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAEBF206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584028578;
-	bh=oGArRq0tEnTFcgyoMZa37IAaS/3wFGT2DjTjAcSByts=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SR0YhbQ70qX3JWvj0tbc9sc+ofRhZxk7HdQJRCejXowdoVLlYJImZfmM51A0IXL+g
-	 vApE2qM8+OR+FKDCDutC4Y6ZxPLEkhSBPAsOgwXrgQiK+e9m9FbAa9DQ4SB1VCsOjE
-	 etzGpN0AuSlyvCQm8Ujbn9tyH7wYuhGzEmcT38Co=
+	by mail.kernel.org (Postfix) with ESMTP id 310F6206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgCLP4R (ORCPT
+        id S1727921AbgCLP4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:56:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgCLP4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:56:17 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 939EA2067C;
-        Thu, 12 Mar 2020 15:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584028576;
-        bh=oGArRq0tEnTFcgyoMZa37IAaS/3wFGT2DjTjAcSByts=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0v5Gtpi6PGscvk86Ol+1eanIx4sNKYpwoYHBt5ybPAFdYm8Rh9U4azp+iEWMGtW8g
-         Ppgl3SMsLAAwa9x/Uy9i8VqVqhgj6s785tv2kcnNrEM9EXW9o0sBFv4iCPMlnNAy4I
-         nahjkW7VAd1CSjXorfRqqZBvPEXIR3yCQTKR5UUU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jCQBy-00CGGM-Sp; Thu, 12 Mar 2020 15:56:15 +0000
+        Thu, 12 Mar 2020 11:56:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56332 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726571AbgCLP4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:56:44 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CFqMTq095906;
+        Thu, 12 Mar 2020 11:55:36 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqpyau4a1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 11:55:35 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02CFlGWq019512;
+        Thu, 12 Mar 2020 15:53:33 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 2ypjxr5yvr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Mar 2020 15:53:33 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CFrXqQ13632068
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 15:53:33 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D1DEAE05C;
+        Thu, 12 Mar 2020 15:53:33 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8337AE05F;
+        Thu, 12 Mar 2020 15:53:32 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Mar 2020 15:53:32 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v7 0/3] Enable vTPM 2.0 for the IBM vTPM driver
+Date:   Thu, 12 Mar 2020 11:53:29 -0400
+Message-Id: <20200312155332.671464-1-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Mar 2020 15:56:14 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Ming Lei <ming.lei@redhat.com>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v2] irqchip/gic-v3-its: Balance initial LPI affinity
- across CPUs
-In-Reply-To: <d23436b5-a207-91e9-be11-f5d0e44b6e12@huawei.com>
-References: <20200312115552.29185-1-maz@kernel.org>
- <d23436b5-a207-91e9-be11-f5d0e44b6e12@huawei.com>
-Message-ID: <33bc00d1ba25d5fd53de2413c831d723@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: john.garry@huawei.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, ming.lei@redhat.com, chenxiang66@hisilicon.com, wangzhou1@hisilicon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-12_07:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ suspectscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-On 2020-03-12 15:41, John Garry wrote:
-> On 12/03/2020 11:55, Marc Zyngier wrote:
-> 
-> Hi Marc,
-> 
->> When mapping a LPI, the ITS driver picks the first possible
->> affinity, which is in most cases CPU0, assuming that if
->> that's not suitable, someone will come and set the affinity
->> to something more interesting.
->> 
->> It apparently isn't the case, and people complain of poor
->> performance when many interrupts are glued to the same CPU.
->> So let's place the interrupts by finding the "least loaded"
->> CPU (that is, the one that has the fewer LPIs mapped to it).
->> So called 'managed' interrupts are an interesting case where
->> the affinity is actually dictated by the kernel itself, and
->> we should honor this.
->> 
->> Reported-by: John Garry <john.garry@huawei.com>
->> Link: 
->> https://lore.kernel.org/r/1575642904-58295-1-git-send-email-john.garry@huawei.com
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> Cc: John Garry <john.garry@huawei.com>
->> Cc: Ming Lei <ming.lei@redhat.com>
->> ---
->> Reviving this at John's request.
-> 
-> Thanks very much. I may request a colleague test this due to possible
-> precautionary office closure.
+QEMU 5.0 will support the PAPR vTPM device model for TPM 1.2 and TPM 2.0.
+This series of patches enables vTPM 2.0 support for the IBM vTPM driver.
 
-Huh. Not great... :-(
+Regards,
+   Stefan
 
-> 
->  The major change is that the
->> affinity follows the x86 model, as described by Thomas.
-> 
-> There seems to be a subtle difference between this implementation and
-> what Thomas described for managed interrupts handling on x86. That
-> being, managed interrupt loading is counted separately to total
-> interrupts per CPU for x86. That seems quite important so that we
-> spread managed interrupts evenly.
+- v6->v7:
+  - reverted changes in 1/3 due to xtensa not supporting API call;
+    removed Jarrko's Acked-by
+  - Added Nayna's Acked-by adn Tested-by to all patches
 
-Hmmm. Yes. That'd require a separate per-CPU counter. Nothing too 
-invasive
-though. I'll roll that in soon. I still wonder about interaction of 
-collocated
-managed and non-managed interrupts, but we can cross that bridge later.
+- v5->v6:
+  - Nits in commit texts
 
->> I expect this to have an impact on platforms like D05, where
->> the SAS driver cannot use managed affinity just yet.
-> 
-> I need some blk-mq and SCSI changes to go in first to improve the
-> interrupt handling there, hopefully we can make progress on that soon.
+- v4->v5:
+  - Added error path in case tpm2_get_cc_attrs_tbl() fails
 
-That'd be good.
+- v3->v4:
+  - Dropped patch 3; getting command code attributes table in IBM driver
 
-Thanks,
+- v2->v3:
+  - Added fixes tag to patch 2/4; the race seems to have existed
+    since the driver was first added
+  - Renamed tpm2_init to tpm2_init_commands in 3/4
 
-         M.
+- v1->v2:
+  - Addressed comments to v1; added patch 3 to handle case when
+    TPM_OPS_AUTO_STARTUP is not set
+
+
+
+Stefan Berger (3):
+  tpm: of: Handle IBM,vtpm20 case when getting log parameters
+  tpm: ibmvtpm: Wait for buffer to be set before proceeding
+  tpm: ibmvtpm: Add support for TPM2
+
+ drivers/char/tpm/eventlog/of.c |  3 ++-
+ drivers/char/tpm/tpm.h         |  1 +
+ drivers/char/tpm/tpm2-cmd.c    |  2 +-
+ drivers/char/tpm/tpm_ibmvtpm.c | 17 +++++++++++++++++
+ drivers/char/tpm/tpm_ibmvtpm.h |  1 +
+ 5 files changed, 22 insertions(+), 2 deletions(-)
+
 -- 
-Jazz is not dead. It just smells funny...
+2.23.0
+
