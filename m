@@ -2,167 +2,116 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C65C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3410C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C61B206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55D5206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="XZbNSmnY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCTFDwlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgCLPO1 (ORCPT
+        id S1727791AbgCLPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:14:27 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46568 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgCLPO1 (ORCPT
+        Thu, 12 Mar 2020 11:15:55 -0400
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:45405 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbgCLPPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:14:27 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f28so6720183qkk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:14:26 -0700 (PDT)
+        Thu, 12 Mar 2020 11:15:55 -0400
+Received: by mail-oi1-f180.google.com with SMTP id v19so5794664oic.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:15:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2UkcErBA53F3BNjpYaCxrTKEMvELmNBoZLVc53UTNuI=;
-        b=XZbNSmnYbFATBaIbpTUipLV83lZIYT3fG6Lz8aAQdvdznkQDhdjG+RaQZWCjN3owOo
-         hO1fMsqQrMw5i7+h6CpTEUzGA3Z4+DExyBSGEy194RLf6DIxLyBMNkTvAzMxkVV04sRq
-         eoqa6wP3Iwq1urq33qErLwSuawBElpP/xXauoUTAksGcIE+FXUYIEKCPf8Xbn+nGyaK8
-         CU8EDjc+ZuXcxLMyZn4d9mYORoq3H3S0z0HAjZayMJCdknd0QOj38zL6fp4/uykf5V6q
-         m8mlHJH41SKwZGMBxBmViR49ndlQ8YKiwFlDqMdWYFIsfBzjo7UsRAn8YSi1Ulh6cP8Q
-         AcCA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NSTFM8/WdvLF0ae3U5Pe/dfIhwqQ/fRGMD5U9ltFSU0=;
+        b=qCTFDwluq+BMNWVlMj7j9pxcr8xJNHb/X3tPT6I/w+ZcHawky11wfNujEo51HzirkP
+         AldXdYOGclnzlpfbSaL4BxbMgyWnOFy/Z+2TAzFteCz2//DJyDZhzBCjmRji13aIzRHi
+         PW9IXXtafsjLnpwGdtnsxrA7UfSqvyKX/uwrgxh85dRh/yhj7iVwXWTe7SliAsjrRuhk
+         8iUH0KPD/+MWIJ/42dn8jWer/B0rcVgDSp/N5gLydkrUpXX+SMahFDj53hCiy4AXYdt/
+         2LMrJ5nDI5B3G1WS9taS27TPOtna6Bjbe6RAS9dLKrygImRFFdt4l7GQ8dfuiFTmlgCv
+         4hOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2UkcErBA53F3BNjpYaCxrTKEMvELmNBoZLVc53UTNuI=;
-        b=axGle/Dw3+hYDiZOLA3JCL6XWXuvQUH21+RsQ8cxEmnDh6MhhWmHm7cb8O6hB3QrHm
-         3BXrKSz5q/px/ZWsKGqDEOmY7M84OSg+nEWLGwkcJbeac3cZ8CQBz2PELio3nXwmrnkQ
-         Uxlm8lg8kUMxlHbuakbxUULTTvCzzU3mSpgd/PMQc27LR+SxuXfVQU405TecekPG02vK
-         LqRD/m9qtXw2Y1bp81oB4+6EWsIo3NDxqVwdbVaTIfZasR+K2koCcU7nD2rAm0GZQOo6
-         l0ye1wpjXUdGm9AYlapRGrdiIFKRkQH7+WIqz6jSp5lPZcdokD9MfwMWLXxpEtItZxcN
-         ageg==
-X-Gm-Message-State: ANhLgQ0rS8iKvio2x64n04udb6L/zOgEe5jOMFZwVu0BffJE+7+g2vOe
-        8vdg/F2oQVSRi/E4Y8CvzcGNWQ==
-X-Google-Smtp-Source: ADFU+vtLoe18dnuHtbiTmsGIJmCiYFC7FTXBUsqpOvPlnhGUpTSjH4ukDMQ8Cj7sng4y+MmYN3cyxQ==
-X-Received: by 2002:a37:2fc3:: with SMTP id v186mr8250896qkh.311.1584026065613;
-        Thu, 12 Mar 2020 08:14:25 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::ef6a])
-        by smtp.gmail.com with ESMTPSA id y5sm10401364qkb.123.2020.03.12.08.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:14:24 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 11:14:23 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 2/9] mm/vmscan: protect the workingset on anonymous LRU
-Message-ID: <20200312151423.GH29835@cmpxchg.org>
-References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1582175513-22601-3-git-send-email-iamjoonsoo.kim@lge.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NSTFM8/WdvLF0ae3U5Pe/dfIhwqQ/fRGMD5U9ltFSU0=;
+        b=FuNId3ubnMux3Rk8pXRcZ9d3LBEiQjnaE1L/d7ReZghKKiJLkvIVxtvIJHNe/F1ch6
+         rl8iQ1RyK3A+RDfKF4cnDKxokaBAIQoXBni4TWBVBpRfmCppp60Kz4AjF2pfVSJg6eQ8
+         81Wnmi7fllc+P7UYPGxsfECFCM+WX5qElTZlOWN0+uJT8VP/FkFd+S0Lan7MNtldpGNc
+         FeevKURiGDAJkuJDvN6GN2ZKijT2VbUEMmvukE+qB3id//i+WYyBetPflsXcOAIvaJff
+         P5WYtiCmzWVn4x5Zf8y40YiKegKFR3+J+rwBB6ad1Gjviq4jcQn9Ugm7CL2okY/iq6wO
+         BjLg==
+X-Gm-Message-State: ANhLgQ1pQ2tMVsaSF/3JDyGGB/uiqzt2yiYS3nM7a2rQubR6OcU7lbkF
+        BEXOJmnbTtZMi094ByNAZ4k5pseDGhxga1WGlEJfIw==
+X-Google-Smtp-Source: ADFU+vs+ysDXPcJo7dLHwfyBtgXL38eh6PqTY+/HIUA4DU/FG8I4c7ikrHwIMLCoYVOWfG1TnP8Zk7M3cn13Ju51Bz8=
+X-Received: by 2002:aca:af93:: with SMTP id y141mr2863661oie.144.1584026154099;
+ Thu, 12 Mar 2020 08:15:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582175513-22601-3-git-send-email-iamjoonsoo.kim@lge.com>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200310184814.GA8447@dhcp22.suse.cz> <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
+ <20200310210906.GD8447@dhcp22.suse.cz> <cf95db88-968d-fee5-1c15-10d024c09d8a@intel.com>
+ <20200311084513.GD23944@dhcp22.suse.cz> <CALvZod6b73_ay_kxph143Aj+XBq04Np0z2bK4Rfn8qppihrmTw@mail.gmail.com>
+ <20200312001849.GA96953@google.com> <CAKOZuev1XzbsCPJtOA=v9QMuVpEBKc0_5ZE4Oc4tzmKdFHy2Dg@mail.gmail.com>
+In-Reply-To: <CAKOZuev1XzbsCPJtOA=v9QMuVpEBKc0_5ZE4Oc4tzmKdFHy2Dg@mail.gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 12 Mar 2020 08:15:42 -0700
+Message-ID: <CALvZod6y87aJxq90p=99orPajxN30jOf_RohSw7OSRdrXg6-Ag@mail.gmail.com>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 02:11:46PM +0900, js1304@gmail.com wrote:
-> @@ -1010,8 +1010,15 @@ static enum page_references page_check_references(struct page *page,
->  		return PAGEREF_RECLAIM;
->  
->  	if (referenced_ptes) {
-> -		if (PageSwapBacked(page))
-> -			return PAGEREF_ACTIVATE;
-> +		if (PageSwapBacked(page)) {
-> +			if (referenced_page) {
-> +				ClearPageReferenced(page);
-> +				return PAGEREF_ACTIVATE;
-> +			}
+On Wed, Mar 11, 2020 at 7:04 PM Daniel Colascione <dancol@google.com> wrote:
+>
+> On Wed, Mar 11, 2020 at 5:18 PM Minchan Kim <minchan@kernel.org> wrote:
+> >
+> > On Wed, Mar 11, 2020 at 04:53:17PM -0700, Shakeel Butt wrote:
+> > > On Wed, Mar 11, 2020 at 1:45 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Tue 10-03-20 15:48:31, Dave Hansen wrote:
+> > > > > Maybe instead of just punting on MADV_PAGEOUT for map_count>1 we should
+> > > > > only let it affect the *local* process.  We could still put the page in
+> > > > > the swap cache, we just wouldn't go do the rmap walk.
+> > > >
+> > > > Is it really worth medling with the reclaim code and special case
+> > > > MADV_PAGEOUT there? I mean it is quite reasonable to have an initial
+> > > > implementation that doesn't really touch shared pages because that can
+> > > > lead to all sorts of hard to debug and unexpected problems. So I would
+> > > > much rather go with a simple patch to check map count first and see
+> > > > whether somebody actually cares about those shared pages and go from
+> > > > there.
+> > > >
+> > > > Minchan, do you want to take my diff and turn it into the proper patch
+> > > > or should I do it.
+> > > >
+> > >
+> > > What about the remote_madvise(MADV_PAGEOUT)? Will your patch disable
+> > > the pageout from that code path as well for pages with mapcount > 1?
+> >
+> > Maybe, not because process_madvise syscall needs more previliedge(ie,
+> > PTRACE_MODE_ATTACH_FSCREDS) so I guess it would be more secure.
+> > So in that case, I want to rely on the LRU chance for shared pages.
+>
+> I don't want the behavior of an madvise command to change depending on
+> *how* the command is invoked. MADV_PAGEOUT should do the same thing
+> regardless. If you want to allow purging of shared pages as well,
+> please add a new MADV_PAGEOUT_ALL or something and require a privilege
+> to use it.
+>
 
-This looks odd to me. referenced_page = TestClearPageReferenced()
-above, so it's already be clear. Why clear it again?
-
-> +
-> +			SetPageReferenced(page);
-> +			return PAGEREF_KEEP;
-> +		}
-
-The existing file code already does:
-
-		SetPageReferenced(page);
-		if (referenced_page || referenced_ptes > 1)
-			return PAGEREF_ACTIVATE;
-		if (vm_flags & VM_EXEC)
-			return PAGEREF_ACTIVATE;
-		return PAGEREF_KEEP;
-
-The differences are:
-
-1) referenced_ptes > 1. We did this so that heavily shared file
-mappings are protected a bit better than others. Arguably the same
-could apply for anon pages when we put them on the inactive list.
-
-2) vm_flags & VM_EXEC. This mostly doesn't apply to anon pages. The
-exception would be jit code pages, but if we put anon pages on the
-inactive list we should protect jit code the same way we protect file
-executables.
-
-Seems to me you don't need to add anything. Just remove the
-PageSwapBacked branch and apply equal treatment to both types.
-
-> @@ -2056,6 +2063,15 @@ static void shrink_active_list(unsigned long nr_to_scan,
->  			}
->  		}
->  
-> +		/*
-> +		 * Now, newly created anonymous page isn't appened to the
-> +		 * active list. We don't need to clear the reference bit here.
-> +		 */
-> +		if (PageSwapBacked(page)) {
-> +			ClearPageReferenced(page);
-> +			goto deactivate;
-> +		}
-
-I don't understand this.
-
-If you don't clear the pte references, you're leaving behind stale
-data. You already decide here that we consider the page referenced
-when it reaches the end of the inactive list, regardless of what
-happens in between. That makes the deactivation kind of useless.
-
-And it blurs the lines between the inactive and active list.
-
-shrink_page_list() (and page_check_references()) are written with the
-notion that any references they look at are from the inactive list. If
-you carry over stale data, this can cause more subtle bugs later on.
-
-And again, I don't quite understand why anon would need different
-treatment here than file.
-
-> +
->  		if (page_referenced(page, 0, sc->target_mem_cgroup,
->  				    &vm_flags)) {
->  			nr_rotated += hpage_nr_pages(page);
-> @@ -2074,6 +2090,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
->  			}
->  		}
->  
-> +deactivate:
->  		ClearPageActive(page);	/* we are de-activating */
->  		SetPageWorkingset(page);
->  		list_add(&page->lru, &l_inactive);
-> -- 
-> 2.7.4
-> 
+I would like to have a way to pageout the shared pages and
+MADV_PAGEOUT_ALL approach looks fine to me.
