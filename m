@@ -2,133 +2,132 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53D5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A5420754
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="bKW0JsLc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p8Aa5YdW"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2DE20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbgCLDOd (ORCPT
+        id S2387744AbgCLDPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:14:33 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:39593 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387453AbgCLDOc (ORCPT
+        Wed, 11 Mar 2020 23:15:03 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:59838 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387453AbgCLDPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:14:32 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 30DA28BB;
-        Wed, 11 Mar 2020 23:14:31 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Wed, 11 Mar 2020 23:14:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=xGzQ7xg6V2hzCeYDub4RmkUI42g
-        VfxcqitmM4leDLF0=; b=bKW0JsLci/UuxZ8NG9T7lPpuouSF/34YF7Yfd5ilSsV
-        gci44yDu+Npb6ka+qY88kNSDzEFDUpGveWwjd9SpK6lwhgtCSMUL85Zt0dgrUtTa
-        CjvJbsOvQBq8DlppW+C/iHTMtssKsbEwzWvFl5wR/0aZDONjlXI7MuH15Vp1mFaL
-        P6UJNv+O8Gxtku3aDXU8lIE5XCMMDbkOczNvGJUQBaBsirqfnnOiRtS+8w7gG541
-        HXjg6ZIERlo4b0EMZ0wfXdhiwMWMWXoPUMN+X6i622oNkU+YfUFzMxGnsd/ysZWK
-        q4EVFA+pkDjgLXSXUVuX9Srl0GPTgT56WzR7TZC+fKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=xGzQ7x
-        g6V2hzCeYDub4RmkUI42gVfxcqitmM4leDLF0=; b=p8Aa5YdWGRhi+9UBpt1Hmn
-        VzH5XIxjvcBdXEXDvNjWF1veIXqW6TwyVqvBQNAJZ9+9J5EKlZHup6TVB/G4xLFx
-        1xYaIW8z4GtDv415xvLhGuVsAAgH9aATGHzhGQD10B2jA0j5rzY/KhtAjyzXnaco
-        a0e6xk/pX7a2bDbFXcgG1jw5eji+CbvxsWy/nCgMJJbGlIMMWGmwf491zyoge/U6
-        ioF8oYx1h2Merc+/wK9PYiRx79INf2RYdc3B8gfZ3LIMLb+o3r0gMtiuUUu7iItN
-        5C1zhglmDcUypQ6dK/PxUKuMOoCu2Rt5ie0wWTuOMaqWbGiHfDYC48rlYjHvBZ3w
-        ==
-X-ME-Sender: <xms:FalpXliC84yMbBozwweHQ5DU_tGI5CgiWjwIei9ybMQFCXFlN9ML8Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvgedgieelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghr
-    ucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvth
-    eqnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgnecukfhppeduudejrddv
-    tddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
-X-ME-Proxy: <xmx:FalpXvKDSF5Vq22QhiYb8IKRsaMUJ_l7NM08kJbrEJEJ0E-oFQ2zVw>
-    <xmx:FalpXoBxVUcpkMgb15CExhXefQ8flS_eh0ne-kkLmnMy_77MynyucA>
-    <xmx:FalpXgScpvjGWkQ2llPBEfoDnC9tjikMD5Y96ClFg_O8CHriVynKLQ>
-    <xmx:FqlpXqiSD1BuajlLZNQNNWO0imwLEVK_1wFHkyDHfgr29QnZZCoBDQ>
-Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 24ACE30611FB;
-        Wed, 11 Mar 2020 23:14:26 -0400 (EDT)
-Date:   Thu, 12 Mar 2020 13:14:22 +1000
-From:   Peter Hutterer <peter.hutterer@who-t.net>
-To:     Andrew Duggan <aduggan@synaptics.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Hollinsky <phollinsky@holtechnik.com>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-Subject: Re: [PATCH] Input: synaptics-rmi4 - Do not set reduced reporting
- mode thresholds are not set by the driver
-Message-ID: <20200312031422.GA1823643@jelly>
-References: <20200312005549.29922-1-aduggan@synaptics.com>
+        Wed, 11 Mar 2020 23:15:03 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07444842|-1;CH=green;DM=||false|;DS=CONTINUE|ham_regular_dialog|0.00684787-0.000191967-0.99296;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhiwei_liu@c-sky.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.H-3cCKL_1583982869;
+Received: from 172.16.31.150(mailfrom:zhiwei_liu@c-sky.com fp:SMTPD_---.H-3cCKL_1583982869)
+          by smtp.aliyun-inc.com(10.147.42.197);
+          Thu, 12 Mar 2020 11:14:30 +0800
+Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     guoren@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Anup.Patel@wdc.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org, arnd@arndb.de,
+        linux-csky@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Dave Martin <Dave.Martin@arm.com>, Alistair.Francis@wdc.com,
+        wenmeng_zhang <wenmeng_zhang@c-sky.com>
+References: <20200308094954.13258-1-guoren@kernel.org>
+ <CAHCEeh+XYD3uVmaQRGpY=VGxpO9hzMeKasNmAojhkZe9PJ9Lug@mail.gmail.com>
+ <95e3bba4-65c0-8991-9523-c16977f6350f@c-sky.com>
+ <CAHCEehK0rgBpEzrWar1UTWJoOz=OQi18iw4Y+v3z5Hi=7JCEWw@mail.gmail.com>
+ <CAHCEehLq5f+DGusL0T4ZUuJ2hTRhSyLSGRpKHhq5b4J3nXfBHg@mail.gmail.com>
+From:   LIU Zhiwei <zhiwei_liu@c-sky.com>
+Message-ID: <1da6bf25-431b-7b69-0b09-66dae4ad18ca@c-sky.com>
+Date:   Thu, 12 Mar 2020 11:14:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312005549.29922-1-aduggan@synaptics.com>
+In-Reply-To: <CAHCEehLq5f+DGusL0T4ZUuJ2hTRhSyLSGRpKHhq5b4J3nXfBHg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
 
-On Wed, Mar 11, 2020 at 05:55:49PM -0700, Andrew Duggan wrote:
-> The previous patch "c5ccf2ad3d33 (Input: synaptics-rmi4 - switch to
-> reduced reporting mode)" enabled reduced reporting mode unintentionally
-> on some devices, if the firmware was configured with default Delta X/Y
-> threshold values. The result unintentionally degrade the performance of
-> some touchpads.
 
-could this be the cause of a stuttering cursor on a P50 as well?
-A recording in the issue below shows the cursor moving by ~25 units per
-event, regardless of the time between those events.
-https://gitlab.freedesktop.org/libinput/libinput/issues/448
+On 2020/3/10 17:19, Greentime Hu wrote:
+> On Tue, Mar 10, 2020 at 4:54 PM Greentime Hu <greentime.hu@sifive.com> wrote:
+>> On Mon, Mar 9, 2020 at 6:27 PM LIU Zhiwei <zhiwei_liu@c-sky.com> wrote:
+>>> On 2020/3/9 11:41, Greentime Hu wrote:
+>>>> On Sun, Mar 8, 2020 at 5:50 PM <guoren@kernel.org> wrote:
+>>>>> From: Guo Ren <guoren@linux.alibaba.com>
+>>>>>
+>>>>> The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
+>>>>> 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
+>>>>>
+>>>>> The patch implement basic context switch, sigcontext save/restore and
+>>>>> ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
+>>>>> is implemented. We need to discuss about vlen-size for libc sigcontext and
+>>>>> ptrace (the maximum size of vlen is unlimited in spec).
+>>>>>
+>>>>> Puzzle:
+>>>>> Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
+>>>>> before, and riscv also met vlen size problem. Let's discuss the common issue
+>>>>> for all architectures and we need a better solution for unlimited vlen.
+>>>>>
+>>>>> Any help are welcomed :)
+>>>>>
+>>>>>    1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
+>>>> Hi Guo,
+>>>>
+>>>> Thanks for your patch.
+>>>> It seems the qemu repo doesn't have this branch?
+>>> Hi Greentime,
+>>>
+>>> It's a promise from me. Now it's ready.  You can turn on vector by
+>>> "qemu-system-riscv64 -cpu rv64,v=true,vext_spec=v0.7.1".
+>>>
+>>> Zhiwei
+>>>
+>>>
+>> Hi Zhiwei,
+>>
+>> Thank you, I see the branch in the repo now. I will give it a try and
+>> let you know if I have any problem. :)
+> Hi Zhiwei & Guo,
+>
+> It seems current version only support v0.7.1 in qemu but this patchset
+> is verified in qemu too and it is based on 0.8.
+> Would you please provide the qemu with 0.8 vector spec supported?
+Hi Greentime,
+vector-upstream-v3 only supports v0.7.1. It  is under reviewed in QEMU 
+community.
+Maybe I will also support v0.8 after it is merged.
 
-thanks!
+As Guo Ren said, the kernel patch set works both  for v0.7.1 and v0.8,
+which only uses the common instructions and CSRs.
+> or
+> Did I miss something?
+>
+> 489             if (cpu->cfg.vext_spec) {
+> 490                 if (!g_strcmp0(cpu->cfg.vext_spec, "v0.7.1")) {
+> 491                     vext_version = VEXT_VERSION_0_07_1;
+> 492                 } else {
+> 493                     error_setg(errp,
+> 494                            "Unsupported vector spec version '%s'",
+> 495                            cpu->cfg.vext_spec);
+> 496                     return;
+> 497                 }
+> 498             }
+>
+> By the way, can I specify vlen in Qemu?
+Yes, you can specify vlen through QEMU command line like
+“-cpu rv64,v=true,vext_spec=v0.7.1,vlen=256”
 
-Cheers,
-   Peter
+Currently , vlen supports up to 512 bits, with a default value 128 bits.
 
-> This patch checks to see that the driver is modifying the delta X/Y
-> thresholds before modifying the reporting mode.
-> 
-> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
-> ---
->  drivers/input/rmi4/rmi_f11.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
-> index 6adea8a3e8fb..ffa39ab153f2 100644
-> --- a/drivers/input/rmi4/rmi_f11.c
-> +++ b/drivers/input/rmi4/rmi_f11.c
-> @@ -1203,8 +1203,8 @@ static int rmi_f11_initialize(struct rmi_function *fn)
->  	 * If distance threshold values are set, switch to reduced reporting
->  	 * mode so they actually get used by the controller.
->  	 */
-> -	if (ctrl->ctrl0_11[RMI_F11_DELTA_X_THRESHOLD] ||
-> -	    ctrl->ctrl0_11[RMI_F11_DELTA_Y_THRESHOLD]) {
-> +	if (sensor->axis_align.delta_x_threshold ||
-> +	    sensor->axis_align.delta_y_threshold) {
->  		ctrl->ctrl0_11[0] &= ~RMI_F11_REPORT_MODE_MASK;
->  		ctrl->ctrl0_11[0] |= RMI_F11_REPORT_MODE_REDUCED;
->  	}
-> -- 
-> 2.20.1
-> 
+> Thank you. :)
+
