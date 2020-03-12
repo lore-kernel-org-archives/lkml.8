@@ -2,154 +2,181 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C02CC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1624EC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8147C206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACC0206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="SzeoIq58"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="J1ti6MHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388077AbgCLHZO (ORCPT
+        id S2388106AbgCLHZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:25:14 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:5068 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387869AbgCLHZO (ORCPT
+        Thu, 12 Mar 2020 03:25:24 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:46155 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388079AbgCLHZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:25:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1583997912; x=1615533912;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=J4B2ajPGzNPBzhJPoWpe3dg4EPRxooVyV7W7B1Paxso=;
-  b=SzeoIq58qEB1SNEgXqeYpYQpC9oSrvdM9AKhtcY653//AD537Zd+audH
-   t3vuaAHg2YLhLImp4IZ5JHnZTI9lpdQQuw6s2DOdbdgYJeHPXZWtrKIhe
-   wAR6nPtsKsanaLxt7M8FXH8mBS7n7FiqnU0UbWm4Tt7OTTK1nVMvPAGTp
-   UUkcbpqGpjXeTRoXL90bK55036ziNtujVt6ZHLpHMWU7X+cjzyR02AO2G
-   3U1oRQLolu4hulZFgNu1J8hC/toF3UgCUcT2aOLtIvWJ8LZWzCZoj9UXP
-   lgxB0yc1n09PPjKJZWYZgvgsCiLiET3JRTSFNBfSPORZKTJrT9adn0Dt2
-   w==;
-IronPort-SDR: WKUCkgsNy2vrW7l5Xdu0w7vORGPy3zJzGlI7j1N+5BWVgYQKa2kYWvuqLvHo1pR4JbCs87Kjso
- EhJpMj33JQvw==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMD6hB4AuAgABjeACAAJ9TgIABCOIAgACUhoA=
-Date:   Thu, 12 Mar 2020 07:25:08 +0000
-Message-ID: <7f267c4298a0108a562846bcef7012188c743118.camel@diehl.com>
-References: <20200310123126.4709-1-Denis.Osterland@diehl.com>
-         <4c16da22994de29c2fbb23c877d55685bcbf8993.camel@diehl.com>
-         <ccb718b2-d0e5-20d8-f30a-95f8f31a10ef@gmail.com>
-         <9e4bd43d14d00266bab4695dd37019bb1a103dd2.camel@diehl.com>
-         <c8c23a9b-b468-b88b-17b2-4726de1f6ae3@gmail.com>
-In-Reply-To: <c8c23a9b-b468-b88b-17b2-4726de1f6ae3@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <143CA685B8FA4646B453A806106960CB@diehl.internal>
-Content-Transfer-Encoding: base64
+        Thu, 12 Mar 2020 03:25:23 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id CIDNjX37o9Im2CIDQjieLY; Thu, 12 Mar 2020 08:25:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1583997921; bh=mQr4GeLcmudw1gcKjKPAz1IuVLY4RaQ2nqWH7wqy+jw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=J1ti6MHRpdDak2qI1ISVFWbNX/Eqk8v5HE0MuKtdT/18vdtgVe8KxFi6lCp6EdztZ
+         7xL6+6t2eupX1X9SZgNXtHPz6UAXzMVxtdq35evePdisQZ0+Y6iPdgdTiTHqheMeiQ
+         MniCy3+cYl0PytP94YPxVEqMCjgbKXQV9tqiij/a/TkxOxrjFeLYQSFLj/EEGUr0Nn
+         r25LlAdnendD0rs3I7qnrPXfKoe9oSTm/Pb5OTMVCPAqmJ3mjB7DQouQpyRcovcdyK
+         Zin/io82gE0kW1IQnH4/Uuc4V2nYsqcsrmILIQQz4dUA869j+iUndTXI4JsQyg52cH
+         3cQHKyoh9Xk+Q==
+Subject: Re: [PATCH v2 19/22] media: docs: move user-facing docs to the admin
+ guide
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Walls <awalls@md.metrocast.net>,
+        Todor Tomov <todor.too@gmail.com>,
+        Antoine Jacquet <royale@zerezo.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+References: <cover.1583847556.git.mchehab+huawei@kernel.org>
+ <05c08367b2c6a5b3f8f29499093d34b1f0d864fe.1583847557.git.mchehab+huawei@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <ec753b2f-955d-fb8c-2cf6-9a26c30a57d0@xs4all.nl>
+Date:   Thu, 12 Mar 2020 08:25:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: PkB65aL1SqtESF35r/jQn8LdMDxe30TMLLBAS2IcrfJ3rMSy7PrM4+QgE2BSLTng
+In-Reply-To: <05c08367b2c6a5b3f8f29499093d34b1f0d864fe.1583847557.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPeQb6Gl82DsP63bTAkbA0dckPqu5XZD0bRXQh7WyweZShLnApqbc6Kmta6Dz/FXo0jepjepVtp54e9tV17baAmZH8XNNx0AC9x9y0H5xPeS8TWdweK1
+ vOg1rjf7ek0WywQzmv5/gMJupK32K7deLroJmkkkkeYUKclOO22+VaLj+1C0J9S6iwPBSRcItauCYIEA86W9//RGOxfQHnglxP6CbKiODlmmEai4wnU7pCoW
+ 9joPOuP2nMzieB0ZaVtdRHysTwbmJ0PWQI3P7IqoeenjJ2aG2RrBPpSSSMC1R95k7wpNmRIWNRuPM3MJoIgmMbl4dQoJrOnhc73wOOMG4CDjJ5OvNsrLHr+g
+ skgB/VK/I1CJU0Zj0CWvnm/wLjVyBZa5ipOkt/3Uov+6hOTMMuft+v8Hibo71AFp3a431I9Ljb7rF193nY31Sv/yDT5mFjVOTBEL6EUZ9rwl+as6iCIztNRY
+ rTuTN5ualcPabXhFkgbq62Zz5wqFqfbb/g+e1WnIKhGtx08xjIxmyDWrVMSO6BI4U59tyCyMJ45WJaO0Xkveow4rOCH6WPCXMXi7VGe3+XH8YzFxlLEaDIOh
+ YDMdbjutw8KGEte1hWst83KMCwzfHGTTUhg0/jMblQvTWgq9n0RL9KVciAIk0VRr1kK47CFROFkmpIXuk4R+j4izQ8wMnhcWou6WT3YDCBFKEcGaUjz9Dzir
+ Eu2XIZ8v+VzfkNCwmlsKMS6D2xwI+xLAXgBS8Oyhtfl6h9GZ8bWkKkYXmu/mIJbd0e/9RJdd0VMNvIJB3hSUzV02/xFBy3BcJ41ReZxkvODmI2fZDJvFkWfn
+ VFZz7JC5MeddpJzXQAyA7367IslgEYTl66DP8KDgqDBoAK5bk8dIS/iw7nnqZzkMon9KMMoiJEfhG4kk/tY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFjZWssDQoNCnRoYW5rcyBmb3IgdGhlIGhpbnQuDQpQZXJmZWt0ISBPbmUgdGhpbmcg
-bGVzcyB0byBkbyA6RA0KDQpSZWdhcmRzIERlbmlzDQoNCkFtIE1pdHR3b2NoLCBkZW4gMTEu
-MDMuMjAyMCwgMjM6MzMgKzAxMDAgc2NocmllYiBKYWNlayBBbmFzemV3c2tpOg0KPiBEZW5p
-cywNCj4gDQo+IE9uIDMvMTEvMjAgNzo0NSBBTSwgRGVuaXMgT3N0ZXJsYW5kLUhlaW0gd3Jv
-dGU6DQo+ID4gSGkgSmFjZWssDQo+ID4gDQo+ID4gQW0gRGllbnN0YWcsIGRlbiAxMC4wMy4y
-MDIwLCAyMjoxNSArMDEwMCBzY2hyaWViIEphY2VrIEFuYXN6ZXdza2k6DQo+ID4gPiBIaSBE
-ZW5pcywNCj4gPiA+IA0KPiA+ID4gVGhhbmsgeW91IGZvciB0aGUgdXBkYXRlLiBQbGVhc2Ug
-ZmluZCBteSByZW1hcmtzIGJlbG93Lg0KPiA+ID4gDQo+ID4gPiBPbiAzLzEwLzIwIDQ6MTkg
-UE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdyb3RlOg0KPiA+ID4gPiBIaSwNCj4gPiA+ID4g
-DQo+ID4gDQo+ID4gLi4uDQo+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9sZWRzL2xlZHMtcHdt
-LmMNCj4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2xlZHMvbGVkcy1wd20uYw0KPiA+ID4gPiA+
-IEBAIC03NSw3ICs3NSw4IEBAIHN0YXRpYyBpbnQgbGVkX3B3bV9hZGQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgbGVkX3B3bV9wcml2ICpwcml2LA0KPiA+ID4gPiA+ICAJbGVkX2Rh
-dGEtPmFjdGl2ZV9sb3cgPSBsZWQtPmFjdGl2ZV9sb3c7DQo+ID4gPiA+ID4gIAlsZWRfZGF0
-YS0+Y2Rldi5uYW1lID0gbGVkLT5uYW1lOw0KPiA+ID4gPiA+ICAJbGVkX2RhdGEtPmNkZXYu
-ZGVmYXVsdF90cmlnZ2VyID0gbGVkLT5kZWZhdWx0X3RyaWdnZXI7DQo+ID4gPiA+ID4gLQls
-ZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gTEVEX09GRjsNCj4gPiA+ID4gPiArCXJldCA9
-IGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX0dQSU9fREVGU1RBVEVfT047DQo+ID4gPiAN
-Cj4gPiA+IHJldCBpcyBmb3IgcmV0dXJuIHZhbHVlIGFuZCBpdCBzaG91bGQgbm90IGJlIHVz
-ZWQgZm9yIGFueXRoaW5nDQo+ID4gPiBlbHNlIGp1c3QgYmVjYXVzZSBpdCBpcyBhdCBoYW5k
-LiBBbHNvIExFRFNfR1BJTyogZGVmaW5pdGlvbnMgaGF2ZQ0KPiA+ID4gbm90aGluZyB0byBk
-byB3aXRoIHB3bSBsZWRzLiBUaGlzIGlzIGxlZ2FjeSBiZWNhdXNlIGRlZmF1bHQtc3RhdGUN
-Cj4gPiA+IHByb3BlcnR5IHdhcyBwcmltYXJpbHkgc3BlY2lmaWMgdG8gbGVkcy1ncGlvIGJp
-bmRpbmdzIGFuZCBvbmx5DQo+ID4gPiBsYXRlciB3YXMgbWFkZSBjb21tb24uDQo+ID4gPiAN
-Cj4gPiA+IFBsZWFzZSBpbnRyb2R1Y2UgY29ycmVzcG9uZGluZyBMRURTX1BXTSBkZWZpbml0
-aW9ucywgYnV0IGluIGxlZHMtcHdtLmMuDQo+ID4gDQo+ID4gd2lsbCBjaGFuZ2UNCj4gPiAN
-Cj4gPiA+IA0KPiA+ID4gPiA+ICsJbGVkX2RhdGEtPmNkZXYuYnJpZ2h0bmVzcyA9IHJldCA/
-IGxlZC0+bWF4X2JyaWdodG5lc3MgOiBMRURfT0ZGOw0KPiA+ID4gDQo+ID4gPiBJbnN0ZWFk
-IG9mIGFib3ZlIHR3byBjaGFuZ2VzIEknZCBhZGQgYmVsb3c6DQo+ID4gPiANCj4gPiA+IGlm
-IChsZWQtPmRlZmF1bHRfc3RhdGUgPT0gTEVEU19QV01fREVGU1RBVEVfT04pIHsNCj4gPiA+
-IAlsZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gbGVkLT5tYXhfYnJpZ2h0bmVzczsNCj4g
-PiA+IH0gZWxzZSBpZiAobGVkLT5kZWZhdWx0X3N0YXRlID09IExFRFNfUFdNX0RFRlNUQVRF
-X0tFRVApKSB7DQo+ID4gPiAJLy8gaGVyZSBwdXQgd2hhdCB5b3UncmUgYWRkaW5nIGJlbG93
-LCBidXQgcGxlYXNlIHVzZQ0KPiA+ID4gCS8vIHB3bV9nZXRfc3RhdGUoKSBpbnN0ZWFkIG9m
-IGFjY2Vzc2luZyBvcHMgZGlyZWN0bHkNCj4gPiA+IH0NCj4gPiA+IA0KPiA+ID4gTEVEX09G
-RiBjYXNlIGlzIGNvdmVyZWQgYnkga3phbGxvYygpIGluIGxlZF9wd21fcHJvYmUoKS4NCj4g
-PiANCj4gPiBMb29rcyB2ZXJ5IGVsZWdhbnQsIEkgd2lsbCBhcHBseSB0aGlzLg0KPiA+IHB3
-bV9nZXRfc3RhdGUoKSBpcyBub3Qgc3VmZmljaWVudCBoZXJlIGJlY2F1c2UgaXQgb25seSBy
-ZXR1cm5zIHRoZSB2YWx1ZXMgZnJvbSBzdHJ1Y3R1cmUsDQo+ID4gd2hpY2ggd2VyZSBub3Qg
-cmVhZCByZWFkIGZyb20gcmVnaXN0ZXJzIGF0IHB3bV9kZXZpY2VfcmVxdWVzdCgpLg0KPiA+
-IFNvbWV0aGluZyBsaWtlIHB3bV9nZXRfc3RhdGVfdW5jYWNoZWQoKSB3b3VsZCBiZSByZXF1
-aXJlZCwgd2hpY2ggSSBoYXZlIG5vdCBmb3VuZCB5ZXQuDQo+ID4gDQo+ID4gSSBsb29rZWQg
-YXQgdGhlIGF0b21pYyBQV00gQVBJICg1ZWM4MDNlZGNiNzAzZmUzNzk4MzZmMTM1NjBiNzlk
-ZmFjNzliMDFkKSwNCj4gPiB3aGljaCBjbGFpbXMgdG8gcHJvdmlkZSBhIHNtb290aCBoYW5k
-b3ZlciBmcm9tIGJvb3Rsb2FkZXIgdG8ga2VybmVsLg0KPiA+IFNvIGl0IHNlZW1zIGl0IHdv
-dWxkIGJlIGJldHRlciB0byBmaXggdGhlIEZJWE1FIGZpcnN0LCBpbiBhIGZpcnN0IHBhdGNo
-Lg0KPiANCj4gSSBtaXNzZWQgdGhhdCBpdCdzIGJlZW4gcmVjZW50bHkgZG9uZS4gWW91J3Zl
-IGdvdCB0byByZWJhc2Ugb250byBQYXZlbCdzDQo+IGZvci1uZXh0IGJyYW5jaCBbMF0uDQo+
-IA0KPiBbMF0NCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
-bC9naXQvcGF2ZWwvbGludXgtbGVkcy5naXQvbG9nLz9oPWZvci1uZXh0DQo+IA0KDQoNCkRp
-ZWhsIENvbm5lY3Rpdml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0c2bDvGhydW5nOiBI
-b3JzdCBMZW9uYmVyZ2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7DvHJuYmVyZyAtIFJl
-Z2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJCIDMyMzE1DQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KRGVyIEluaGFs
-dCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQu
-IERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNo
-IGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRl
-LCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhh
-YmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4N
-CkplZGUgdW5lcmxhdWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJla2FubnRnYWJlLCBB
-ZW5kZXJ1bmcsIFZlcnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24gZGllc2VyIEUtTWFp
-bCBpc3Qgc3RyZW5nc3RlbnMgdW50ZXJzYWd0Lg0KLSBJbmZvcm1hdGlvbmVuIHp1bSBEYXRl
-bnNjaHV0eiwgaW5zYmVzb25kZXJlIHp1IElocmVuIFJlY2h0ZW4sIGVyaGFsdGVuIFNpZSB1
-bnRlciBodHRwczovL3d3dy5kaWVobC5jb20vZ3JvdXAvZGUvdHJhbnNwYXJlbnotdW5kLWlu
-Zm9ybWF0aW9uc3BmbGljaHRlbi8NCg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92ZSBtZW50
-aW9uZWQgZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWlsIGNvbnRh
-aW5zIGNvbmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3JtYXRpb24u
-IFBsZWFzZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkN
-Cm1pc3Rha2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1dGhvcml6
-ZWQgcmVwcm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmlidXRpb24g
-YW5kL29yIHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0
-ZWQuIA0KLSBGb3IgZ2VuZXJhbCBpbmZvcm1hdGlvbiBvbiBkYXRhIHByb3RlY3Rpb24gYW5k
-IHlvdXIgcmVzcGVjdGl2ZSByaWdodHMgcGxlYXNlIHZpc2l0IGh0dHBzOi8vd3d3LmRpZWhs
-LmNvbS9ncm91cC9lbi90cmFuc3BhcmVuY3ktYW5kLWluZm9ybWF0aW9uLW9ibGlnYXRpb25z
-Lw0K
+On 3/10/20 2:43 PM, Mauro Carvalho Chehab wrote:
+> Most of the driver-specific documentation is meant to help
+> users of the media subsystem.
+> 
+> Move them to the admin-guide.
+> 
+> It should be noticed, however, that several of those files
+> are outdated and will require further work in order to make
+> them useful again.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/admin-guide/index.rst           |   1 +
+>  .../admin-guide/kernel-parameters.txt         |   4 +-
+>  .../media}/au0828-cardlist.rst                |   0
+>  .../media}/avermedia.rst                      |   0
+>  .../media}/bt8xx.rst                          |   8 +-
+>  .../media}/bttv-cardlist.rst                  |   0
+>  .../media}/bttv.rst                           |   0
+>  .../media}/cafe_ccic.rst                      |   0
+>  .../media}/cardlist.rst                       |   0
+>  .../media}/cards.rst                          |   0
+>  .../dvb-drivers => admin-guide/media}/ci.rst  |   0
+>  .../media}/cpia2.rst                          |   0
+>  .../media}/cx23885-cardlist.rst               |   0
+>  .../media}/cx88-cardlist.rst                  |   0
+>  .../media}/cx88.rst                           |   0
+>  .../media}/davinci-vpbe.rst                   |   0
+>  .../media}/em28xx-cardlist.rst                |   0
+>  .../dvb-drivers => admin-guide/media}/faq.rst |   0
+>  .../media}/fimc.rst                           |   0
+>  .../media}/gspca-cardlist.rst                 |   0
+>  .../v4l-drivers => admin-guide/media}/imx.rst |   0
+>  .../media}/imx7.rst                           |   0
+>  Documentation/admin-guide/media/index.rst     | 104 ++++++++++++++++++
+>  .../media}/intro.rst                          |   0
+>  .../media}/ipu3.rst                           |   0
+>  .../media}/ipu3_rcb.svg                       |   0
+>  .../media}/ivtv-cardlist.rst                  |   0
+>  .../media}/ivtv.rst                           |   0
+>  .../media}/lmedm04.rst                        |   0
+>  .../media}/meye.rst                           |   0
+>  .../media}/omap3isp.rst                       |   0
+>  .../media}/omap4_camera.rst                   |   0
+>  .../media}/opera-firmware.rst                 |   0
+>  .../media}/philips.rst                        |   0
+>  .../media}/pulse8-cec.rst                     |   0
+>  .../media}/qcom_camss.rst                     |   0
+>  .../media}/qcom_camss_8x96_graph.dot          |   0
+>  .../media}/qcom_camss_graph.dot               |   0
+>  .../media}/rcar-fdp1.rst                      |   0
+>  .../media}/saa7134-cardlist.rst               |   0
+>  .../media}/saa7134.rst                        |   0
+>  .../media}/saa7164-cardlist.rst               |   0
+>  .../media}/si470x.rst                         |   0
+>  .../media}/si4713.rst                         |   0
+>  .../media}/si476x.rst                         |   0
+>  .../media}/technisat.rst                      |   0
+>  .../media}/tm6000-cardlist.rst                |   0
+>  .../media}/ttusb-dec.rst                      |   0
+>  .../media}/tuner-cardlist.rst                 |   0
+>  .../media}/udev.rst                           |   0
+>  .../media}/usbvision-cardlist.rst             |   0
+>  .../media}/v4l-with-ir.rst                    |   0
+>  .../media}/vimc.dot                           |   0
+>  .../media}/vimc.rst                           |   0
+>  .../media}/vivid.rst                          |   0
+>  .../media}/zr364xx.rst                        |   0
+>  Documentation/media/cec-drivers/index.rst     |  34 ------
+>  Documentation/media/dvb-drivers/index.rst     |  11 --
+>  Documentation/media/index.rst                 |   4 +-
+>  Documentation/media/v4l-drivers/index.rst     |  25 -----
+>  .../zh_CN/video4linux/omap3isp.txt            |   4 +-
+>  .../media/v4l/dev-sliced-vbi.rst              |   2 +-
+>  .../media/v4l/ext-ctrls-codec.rst             |   2 +-
+>  .../media/v4l/ext-ctrls-image-process.rst     |   2 +-
+>  .../media/v4l/pixfmt-reserved.rst             |   2 +-
+>  MAINTAINERS                                   |  22 ++--
+>  drivers/media/pci/bt8xx/Kconfig               |   2 +-
+>  drivers/media/pci/meye/Kconfig                |   2 +-
+>  drivers/media/radio/si470x/Kconfig            |   2 +-
+>  drivers/media/usb/dvb-usb-v2/lmedm04.c        |   2 +-
+>  drivers/media/usb/gspca/Kconfig               |   2 +-
+>  drivers/media/usb/zr364xx/Kconfig             |   2 +-
+>  72 files changed, 136 insertions(+), 101 deletions(-)
+>  rename Documentation/{media/v4l-drivers => admin-guide/media}/au0828-cardlist.rst (100%)
+>  rename Documentation/{media/dvb-drivers => admin-guide/media}/avermedia.rst (100%)
+>  rename Documentation/{media/dvb-drivers => admin-guide/media}/bt8xx.rst (93%)
+
+I would personally prefer to keep the split between v4l and dvb drivers, rather
+then putting them all in the same directory.
+
+What was the reason behind this choice?
+
+Regards,
+
+	Hans
