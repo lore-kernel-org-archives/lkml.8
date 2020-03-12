@@ -2,112 +2,88 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6701FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAA4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32ABE20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D2520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nk/8iiRy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hNW4qRq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgCLKGB (ORCPT
+        id S1726766AbgCLKI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:06:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33329 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLKGB (ORCPT
+        Thu, 12 Mar 2020 06:08:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36042 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLKI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:06:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m5so2845715pgg.0;
-        Thu, 12 Mar 2020 03:06:01 -0700 (PDT)
+        Thu, 12 Mar 2020 06:08:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i13so3037566pfe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:08:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=m7J0hu742fhuCj58D6loBGDul106B3xhX45qJX3dumI=;
-        b=Nk/8iiRytuUjG0q9uprwJcaBhevtJfnkqyMusWXWllzk9B3U15QqaAOCVgtSUF5AT0
-         nasrar5TZvGnNo60DZgYe9E8TuRT13ugqNuZ2o/dvsAQsfkW7tImySNBo4Q1dLJ/H6vu
-         xOkaQO7xO+Rzpj+gMpTdtNrNG06jIUlYorXv5/7GJhG9Bz9sQyjL/FEFvuCfkNFJ/4Ts
-         NRcwFQ9PKX+zMhozWIoQWGCazfQksDlzVW5OJZvwQqj45Tkz4WX2tumu3Ve/iiFfb4CQ
-         XRP1rfPnohtrFoEe7zwxHN6iwF1TsJ7ksNYJz8Qmqkl9KkjjSDRjNvKD31vXT+mFWctf
-         /UAQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rgvqXXtuVCXza7WjWjw6+XX4FgR73HjTkow7gBP8Ln4=;
+        b=hNW4qRq7M5dkGWjJBppSPGNZCqy5yZeMbnaC207QXuY1mCaJUgs8n0ihw1K5Wctm+L
+         VklHg9Ogbkx114ZJenGrSri4k9tM6p+7hHe78gnJCyTbwJkveZ5YEhoJo05KZBmJrQkT
+         +LH/buQ0oGttIKQX60Fj+rq1Y/A73DzkLPiRA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=m7J0hu742fhuCj58D6loBGDul106B3xhX45qJX3dumI=;
-        b=QhtM8swv/wqEfCLF3zL5fnYIlUi8i0slmlTBlnwPdTbwfDAkYfGPioxTOK48jz6+nO
-         396Wo8J7EXA2/kJpp+zNz8/LxqaYZoD5lsRbV78kZH9G/VGriPhdleW5NK6PR+zAz+xp
-         i9Qf6hXrj7dAHYJwLpL0QavCOuiSH/lavdtF6GgDW85R2d3LkwhmcZVjxGVkE7mtbdLd
-         mq2wRGDHsHL89ULCLr8YstoRm8ytM7UQA3hgqXdzTjEgPyHVIx8h1TvWyonYMZUM64zL
-         OEsAW8BiqPGCsN34PbJP6jo+7vvnBupgKpunWknTwP9WWDFNkvtqTUlUe3IrwB6yInGn
-         4qNw==
-X-Gm-Message-State: ANhLgQ2BvY+078gVk8WiDgfSR4kOmsfKE5scRfwzdhejNTr3a25nvZVb
-        zHgEIQ5NuHLz0AUP795s1+e1wVLL
-X-Google-Smtp-Source: ADFU+vs2sY6uZfcGRvB4mw5lbE4o/npk0iLwC+R5UumZdHwq3N7seEjGFaYl+X0PfD6VX6QEHtIDmQ==
-X-Received: by 2002:aa7:8552:: with SMTP id y18mr7503815pfn.0.1584007560431;
-        Thu, 12 Mar 2020 03:06:00 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id dw19sm8234226pjb.16.2020.03.12.03.05.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 12 Mar 2020 03:05:59 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] KVM: VMX: Micro-optimize vmexit time when not exposing PMU
-Date:   Thu, 12 Mar 2020 18:05:47 +0800
-Message-Id: <1584007547-4802-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rgvqXXtuVCXza7WjWjw6+XX4FgR73HjTkow7gBP8Ln4=;
+        b=aIyefGAD67jHxqsSuQYSft+Sq+JX6ljDKC3pFayXzOGNLETjzM6G0kLYl4lArIlACA
+         bdQQXLebhPPvv7BSLmewkoc1Jf+7+o7PFXJXHdkFyTSyzYS8hca9emT9HP/45JB8gR4t
+         WiBszFIYwLQ2NLehYr5GfzMi/aNVWQfN2/k7DJaO451XV+r+hhm0ijHIRk9L63Fft34k
+         LoYScl/wb08N/id2imNdE61c27X4ZzMTIzv3gJmQz7GKlKWDfl6IGGqEgfCA7HDvF24N
+         qZFb7qEh+v5JcHkMjTwtJ1H3h7OyXL4qWt4FHqL5TsyN+p4f+OrJfEQow/B6NqXxhrwi
+         S9TQ==
+X-Gm-Message-State: ANhLgQ2KLvySUqi5LRkfOyg3+1Cp2Piqq5dtq/QPV4b3FOmVRQpR6k85
+        LlGP0YXUhF73EKJyKk1ZU2ZNWXP/vOc=
+X-Google-Smtp-Source: ADFU+vscPdzmHpcIYSPMS+Oz0RXIgrc4naI2a2eOxoeWR4s5/pBhAXM3hxViX6P0NS9NALuj/ouUwg==
+X-Received: by 2002:a62:e30f:: with SMTP id g15mr7495632pfh.124.1584007705996;
+        Thu, 12 Mar 2020 03:08:25 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id s19sm3678368pfh.218.2020.03.12.03.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 03:08:22 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     furquan@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 0/3] platform/chrome: notify: Use PD_HOST_EVENT_STATUS
+Date:   Thu, 12 Mar 2020 03:08:05 -0700
+Message-Id: <20200312100809.21153-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+This series improves the PD notifier driver to get the
+EC_CMD_PD_HOST_EVENT_STATUS bits from the Chrome EC, and send those to
+the notifier listeners. Earlier, the "event" param of the notifier was
+always being hard-coded to a single value (corresponding to PD_MCU
+events on ACPI and DT platforms) which wasn't of much use to the
+listeners.
 
-PMU is not exposed to guest by most of cloud providers since the bad performance 
-of PMU emulation and security concern. However, it calls perf_guest_switch_get_msrs()
-and clear_atomic_switch_msr() unconditionally even if PMU is not exposed to the 
-guest before each vmentry. 
+Prashant Malani (3):
+  platform/chrome: notify: Add driver data struct
+  platform/chrome: notify: Amend ACPI driver to plat
+  platform/chrome: notify: Pull PD_HOST_EVENT status
 
-~1.28% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my 
-SKX server.
+ drivers/platform/chrome/cros_usbpd_notify.c | 197 +++++++++++++++++---
+ 1 file changed, 174 insertions(+), 23 deletions(-)
 
-Before patch:
-vmcall 1559
-
-After patch:
-vmcall 1539
-
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/vmx/vmx.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 40b1e61..fd526c8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6441,6 +6441,9 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 	int i, nr_msrs;
- 	struct perf_guest_switch_msr *msrs;
- 
-+	if (!vcpu_to_pmu(&vmx->vcpu)->version)
-+		return;
-+
- 	msrs = perf_guest_get_msrs(&nr_msrs);
- 
- 	if (!msrs)
 -- 
-2.7.4
+2.25.1.696.g5e7596f4ac-goog
 
