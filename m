@@ -2,296 +2,153 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3189BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182F7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F4C20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C5120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ak7W0hxm"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="E+os28dR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgCLNAl (ORCPT
+        id S1727193AbgCLNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:00:41 -0400
-Received: from mail-vi1eur05on2085.outbound.protection.outlook.com ([40.107.21.85]:36046
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726194AbgCLNAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:00:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L+PVLJ47pWD9A6TgpeYr8sr3LdVxGzNe/HOkT5rSrzzNnNMqpzrjgJDDARbBItbs7BsmLm7SlBXAsZlvHGzs8YO8frfwrUoolQxKLnIs+AMeTMgTPHZgbJ6eBcbLcrXHqPQISlPTm8LLFP0fbFGHED/3vR6X5BYeFqDLzXSwhQEvVSXqVDKOH1wDXSIADBBMd1pjvXtXQYFh1RcDqULC5Acvg3QlWN9boy2B7gbg+lT2sUeN5LcOi1S7WsMEuRaQW3rGvcDm7OovLX8shN5mCFnZPc5OsduuI30WobS+Vdaz9itWmzXcx1astGMaoTMXyZLQXiII0CrITsTTrCNPww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EzJC0FjLHLmbysK/PlopxS6z2Y5+VWe4mc4RSXrAzaE=;
- b=NtfESWqcdLq4TRymZdajHvuUQiA2IGl9PRqJpjy8oBl/WQXVJ7SPaUV07h1yZt/8f/BVMlKaB+23GSabh7VMRC7MGdEJ2j1hRJIYZiYUY0gJpjNymRWGARRP1neTe39H6g5lowVtpPuiwV545TCYgte+WpldkdOeja4BJfP3incXe9yPDqA4NSxDjn8RH0N6iNmdlQZV/fRPpINTgr5LTklGpLOi/bqrJBvc67v6vnpIOQgNwTw605JzXJqai+WoljOHcY6F6lM5hdQv/FYKoA9ufC6P7u/RV4q1lT25Ff0l/Qn5zmDGacW8bmM+Pdcf5bYDVyV9XOXoemwtCCc0Fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EzJC0FjLHLmbysK/PlopxS6z2Y5+VWe4mc4RSXrAzaE=;
- b=ak7W0hxmqjNjqbmmk64inFMjHd72oYiTl0G3HDWyS8JFwV25Y00+OisahzeW7K0Rp78AZpc6mOlUBsfXTJKn8IycFJrtiYY4aApdknmc2hhZIhewqiWk3zfTwWSwZkPEYCFkhuMFiNpLhnNPtVFYtJq3LI2oz39JJPhIOgPaH18=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB5661.eurprd04.prod.outlook.com (20.178.127.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Thu, 12 Mar 2020 13:00:34 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::9547:9dfa:76b8:71b1%7]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 13:00:33 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
-Thread-Topic: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
-Thread-Index: AQHV+FpZgufkrsn3KkuJmHgdNm1nAKhE1zoAgAAUhIA=
-Date:   Thu, 12 Mar 2020 13:00:33 +0000
-Message-ID: <20200312130037.GG14625@b29397-desktop>
-References: <20200312103804.24174-1-peter.chen@nxp.com>
- <20200312114712.GA4038@sirena.org.uk>
-In-Reply-To: <20200312114712.GA4038@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1b6977d5-5121-4a2d-fca7-08d7c6855a09
-x-ms-traffictypediagnostic: VI1PR04MB5661:|VI1PR04MB5661:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB566101EB27FC173B9F7D303F8BFD0@VI1PR04MB5661.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0340850FCD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(366004)(136003)(39860400002)(346002)(396003)(376002)(199004)(1076003)(5660300002)(478600001)(44832011)(86362001)(186003)(26005)(33716001)(53546011)(8936002)(2906002)(6506007)(33656002)(71200400001)(4326008)(9686003)(76116006)(54906003)(81156014)(66446008)(6512007)(81166006)(6916009)(66946007)(91956017)(6486002)(64756008)(66556008)(8676002)(66476007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5661;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ApBuzj3Pqk/Nm5v8U/syYsYWu7J+oyfH8PpU0+o+4fDU+rpeQ81ZbN6+KnghLWv4zp1ip6Ea6B1Sx2Kg9Dc2vocQAUK4HmtcO0nzA2FCJnIo5N2AKIakBD2hZ5bOT26TuauwsyIkB6toB8Jg8lcG9W4wl5hINFc9o0IWS4WZgtjYEZsnd+RxVL8+R7/vG9qBD7dpjFDJSfVNhyeWunTx1KENdvNmnIgEaQu09mEZl7IWjlKlF4nKEi+opkSduOpEBBrN2hCQ7KXIkQkhD8SzIgIDvHR6nW7zD+smyxS496s8GU+H71DRrs5LlpUooxuvDsN1FRQZ9fJKZfR8W9EmvCT/G5tmrLyZ0oTpKGRsB3kCc3DA3qWkgoZpDIusddiSFr7FUVIBotMt+UH+M/Nf7trmWHeXbfLsU72GL1vyw02e78ShDUfpM0TEDoecUWdD
-x-ms-exchange-antispam-messagedata: TIL7fvzOeQwptzdaiJwT/q7LXlG7RcVDGQALhC3a+n7xlwP3nQMj/Hq4umBJHDx6CwX1gJ5dcUKlf3NaFtBgClKLa/EGJORq06blmTaHNSE1p7IU/lf8f7gLbdhvKIjdp4uhe16AK22BYgO3QH36iQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <169200CA697D2346902491140D9A956D@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Mar 2020 09:07:21 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:47022 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCLNHV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:07:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id v3so5544721iom.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mUPVwLwbl+qGOG5kVPBNHG9adxeUh8JOP6RdVyzLB/I=;
+        b=E+os28dRCW2/v1ohMkOsikz/8hYa7mpints86TuEemrPaYqU6XFgB2aiT2cRuJY/fb
+         nWSpMZV5DwN1EbY83N0wRV2dr4MAFwDe3mDlmZpLuL3F1aEClDztKuAC8FExEsIW2QB2
+         bTWsm3Zev9Fi9+yVqLGy6MqlDPxW8PksROSMyEp7FAj6gDltIaD9ndaQE+X805buhieW
+         n57qicJpBwPBLvI8tHA7wVnhwRY8RfTWtsSIZgRa28eYts4CKOHUhgesF0EyDskOIXls
+         benlZXj9g43xMpir3r2H0EHiCmH7U+NlkRhcYsmy8/hNWwdkY/z2/yp6k+ORpIkBiuVo
+         eQJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mUPVwLwbl+qGOG5kVPBNHG9adxeUh8JOP6RdVyzLB/I=;
+        b=W8mMrxrwuMO9NNNmh21h7094vd5pAx2VF4PrVllm7HHCHQSzYAE6o8wBtOShuAptad
+         2qJ2t09YxmCuzFINp9BQjCVq0COooLKlBD/ZS82ekx0d4W2xZx9CdmIe7DeqdZBYFqT6
+         w7v3/b5O5PjjvxlGszM51ubcCd6raHGUrPanmcVx5YxibLi5tpXK0bjDfqNzfgY8Kne7
+         dNgPDMdscpEwzG1x2s3z31Jqa+j9focD0De8gebofCprvPd329/IB++3MDZBAkxz0Hh/
+         Y1ZfBzsv8lWEVmBC0z6r5OnakUobVvP/RErbu6C8fnVVPw+33ay5YZABblzEXQLvd+LN
+         W05Q==
+X-Gm-Message-State: ANhLgQ3gJCfjH69LdRuGY609oUUxvgc0IEgQN2F6gVNZppUR0nMGOZqv
+        2xIXJV/MVGM4Fadg5qtnurr1uQ==
+X-Google-Smtp-Source: ADFU+vt+fR4+B0ZCsiefMYIUrjnUtYF3XYvh9X83QTCCEfHOKk7fQk2p9JzHbDUoxsiC7hW/VvgQLA==
+X-Received: by 2002:a5d:984e:: with SMTP id p14mr7593477ios.115.1584018439543;
+        Thu, 12 Mar 2020 06:07:19 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id n18sm5383585ilq.38.2020.03.12.06.07.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 06:07:19 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Matteo Croce <mcroce@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Coly Li <colyli@suse.de>
+References: <20200312135457.6891749e@canb.auug.org.au>
+ <CAGnkfhztbmpP0=KT-iNbkUGKerhX04ENFsexA4_2cP_RUs0Png@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <baefdc44-d7cb-4e9e-c46c-b37012cfc40d@kernel.dk>
+Date:   Thu, 12 Mar 2020 07:07:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b6977d5-5121-4a2d-fca7-08d7c6855a09
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 13:00:33.8729
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D8YS6w42JaUlwP/yDm/rsfBFVAp/D/dnUSIvNW4OE08zFnbSX6D/q4pPNyjTJ44fzIs9WevUajtRuVU2C8clHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5661
+In-Reply-To: <CAGnkfhztbmpP0=KT-iNbkUGKerhX04ENFsexA4_2cP_RUs0Png@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-12 11:47:12, Mark Brown wrote:
-> On Thu, Mar 12, 2020 at 06:38:04PM +0800, Peter Chen wrote:
-> > At some systems, the pinctrl setting will be lost and needs to
-> > set as "sleep" state to save power consumption after system
-> > enters suspend. So, we need to configure pinctrl as "sleep" state
-> > when system enters suspend, and set it as "default" state after
-> > system resume. In this way, the pinctrl value can be recovered
-> > as "default" state after resuming.
->=20
-> Which pins exactly is this controlling?  I would not expect a fixed
-> voltage regulator to have pinctrl support, this feels like it's papering
-> over some other issue.
+On 3/12/20 4:12 AM, Matteo Croce wrote:
+> On Thu, Mar 12, 2020 at 3:55 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> Hi all,
+>>
+>> After merging the block tree, today's linux-next build (x86_64
+>> allmodconfig) failed like this:
+>>
+>> In file included from fs/erofs/xattr.h:10,
+>>                  from fs/erofs/inode.c:7:
+>> fs/erofs/inode.c: In function 'erofs_read_inode':
+>> fs/erofs/internal.h:197:31: error: 'PAGE_SECTORS_SHIFT' undeclared (first use in this function); did you mean 'PA_SECTION_SHIFT'?
+>>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>>       |                               ^~~~~~~~~~~~~~~~~~
+>> fs/erofs/inode.c:122:30: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>>   122 |   inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+>>       |                              ^~~~~~~~~~~~~~~~~~~~~
+>> fs/erofs/internal.h:197:31: note: each undeclared identifier is reported only once for each function it appears in
+>>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>>       |                               ^~~~~~~~~~~~~~~~~~
+>> fs/erofs/inode.c:122:30: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>>   122 |   inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+>>       |                              ^~~~~~~~~~~~~~~~~~~~~
+>> In file included from fs/erofs/data.c:7:
+>> fs/erofs/data.c: In function 'erofs_read_raw_page':
+>> fs/erofs/internal.h:197:31: error: 'PAGE_SECTORS_SHIFT' undeclared (first use in this function); did you mean 'PA_SECTION_SHIFT'?
+>>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>>       |                               ^~~~~~~~~~~~~~~~~~
+>> fs/erofs/data.c:226:4: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>>   226 |    LOG_SECTORS_PER_BLOCK;
+>>       |    ^~~~~~~~~~~~~~~~~~~~~
+>> fs/erofs/internal.h:197:31: note: each undeclared identifier is reported only once for each function it appears in
+>>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>>       |                               ^~~~~~~~~~~~~~~~~~
+>> fs/erofs/data.c:226:4: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>>   226 |    LOG_SECTORS_PER_BLOCK;
+>>       |    ^~~~~~~~~~~~~~~~~~~~~
+>> fs/erofs/data.c: In function 'erofs_bmap':
+>> fs/erofs/internal.h:197:31: error: 'PAGE_SECTORS_SHIFT' undeclared (first use in this function); did you mean 'PA_SECTION_SHIFT'?
+>>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>>       |                               ^~~~~~~~~~~~~~~~~~
+>> fs/erofs/data.c:351:16: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>>   351 |   if (block >> LOG_SECTORS_PER_BLOCK >= blks)
+>>       |                ^~~~~~~~~~~~~~~~~~~~~
+>>
+>> Caused by commit
+>>
+>>   61c7d3d5e015 ("block: refactor duplicated macros")
+>>
+>> I have used the block tree from next-20200311 for today.
+>>
+>> --
+>> Cheers,
+>> Stephen Rothwell
+> 
+> Hi,
+> 
+> I was building a kernel without erofs. Just including
+> include/linux/blkdev.h will fix it, should I amend the
+> patch or send a fix?
 
-Sorry, I forget sending dts patch. We use fixed gpio regulator to control
-USB VBus.
+I'll drop the patch. I was worried about the patch to begin with,
+something like this really should be done through cocinelle so there's
+less concern of a stupid mistake.
 
-grep -rn reg_usb_otg_vbus arch/arm/boot/dts/*
+On top of that, somewhat miffed that you'd have a v3 of a patch, yet
+haven't bothered to even _compile_ the parts you touch. That's
+inexcusable.
 
-arch/arm/boot/dts/imx53-m53evk.dts:82:		reg_usb_otg_vbus: regulator@4 {
-arch/arm/boot/dts/imx53-m53evk.dts:367:	vbus-supply =3D <&reg_usb_otg_vbus>=
-;
-arch/arm/boot/dts/imx53-ppd.dts:95:	reg_usb_otg_vbus: regulator-usb-otg-vbu=
-s {
-arch/arm/boot/dts/imx53-ppd.dts:650:	vbus-supply =3D <&reg_usb_otg_vbus>;
-arch/arm/boot/dts/imx6dl-riotboard.dts:69:	reg_usb_otg_vbus: regulator-usbo=
-tgvbus {
-arch/arm/boot/dts/imx6dl-riotboard.dts:339:	vbus-supply =3D <&reg_usb_otg_v=
-bus>;
-arch/arm/boot/dts/imx6dl-yapp4-common.dtsi:83:	reg_usb_otg_vbus: regulator-=
-usb-otg-vbus {
-arch/arm/boot/dts/imx6dl-yapp4-common.dtsi:571:	vbus-supply =3D <&reg_usb_o=
-tg_vbus>;
-arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi:72:	reg_usb_otg_vbus: regulat=
-or-otg-vbus {
-arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi:351:	vbus-supply =3D <&reg_us=
-b_otg_vbus>;
-arch/arm/boot/dts/imx6q-apalis-eval.dts:237:&reg_usb_otg_vbus {
-arch/arm/boot/dts/imx6q-apalis-eval.dts:279:	vbus-supply =3D <&reg_usb_otg_=
-vbus>;
-arch/arm/boot/dts/imx6q-apalis-ixora.dts:240:&reg_usb_otg_vbus {
-arch/arm/boot/dts/imx6q-apalis-ixora.dts:282:	vbus-supply =3D <&reg_usb_otg=
-_vbus>;
-arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts:236:&reg_usb_otg_vbus {
-arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts:278:	vbus-supply =3D <&reg_us=
-b_otg_vbus>;
-arch/arm/boot/dts/imx6q-arm2.dts:34:		reg_usb_otg_vbus: regulator@1 {
-arch/arm/boot/dts/imx6q-arm2.dts:188:	vbus-supply =3D <&reg_usb_otg_vbus>;
-arch/arm/boot/dts/imx6q-ba16.dtsi:122:	reg_usb_otg_vbus: regulator-usbotgvb=
-us {
-arch/arm/boot/dts/imx6q-ba16.dtsi:378:	vbus-supply =3D <&reg_usb_otg_vbus>;
-arch/arm/boot/dts/imx6q-cm-fx6.dts:93:	reg_usb_otg_vbus: usb_otg_vbus {
-arch/arm/boot/dts/imx6q-cm-fx6.dts:471:	vbus-supply =3D <&reg_usb_otg_vbus>=
-;
-arch/arm/boot/dts/imx6q-dhcom-som.dtsi:26:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6q-dhcom-som.dtsi:442:	vbus-supply =3D <&reg_usb_otg_v=
-bus>;
-arch/arm/boot/dts/imx6qdl-apalis.dtsi:81:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-apf6dev.dtsi:102:	reg_usb_otg_vbus: regulator-usb=
--otg-vbus {
-arch/arm/boot/dts/imx6qdl-apf6dev.dtsi:250:	vbus-supply =3D <&reg_usb_otg_v=
-bus>;
-arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi:16:		reg_usb_otg_vbus: regulat=
-or@1 {
-arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi:175:	vbus-supply =3D <&reg_usb=
-_otg_vbus>;
-arch/arm/boot/dts/imx6qdl-gw51xx.dtsi:70:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-gw51xx.dtsi:312:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw52xx.dtsi:93:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-gw52xx.dtsi:392:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:93:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:383:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:102:		reg_usb_otg_vbus: regulator@3 {
-arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:451:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw551x.dtsi:98:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-gw551x.dtsi:402:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw553x.dtsi:104:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6qdl-gw553x.dtsi:352:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw560x.dtsi:177:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6qdl-gw560x.dtsi:485:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw5903.dtsi:124:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6qdl-gw5903.dtsi:390:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw5904.dtsi:132:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6qdl-gw5904.dtsi:423:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-gw5907.dtsi:70:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-gw5907.dtsi:238:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-icore.dtsi:64:	reg_usb_otg_vbus: regulator-usb-ot=
-g-vbus {
-arch/arm/boot/dts/imx6qdl-icore.dtsi:271:	vbus-supply =3D <&reg_usb_otg_vbu=
-s>;
-arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi:71:	reg_usb_otg_vbus: regulator-us=
-b-otg-vbus {
-arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi:246:	vbus-supply =3D <&reg_usb_otg=
-_vbus>;
-arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi:41:		reg_usb_otg_vbus: regulator@2=
- {
-arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi:545:	vbus-supply =3D <&reg_usb_otg=
-_vbus>;
-arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi:50:		reg_usb_otg_vbus: regulat=
-or@3 {
-arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi:790:	vbus-supply =3D <&reg_usb=
-_otg_vbus>;
-arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi:193:	reg_usb_otg_vbus: regula=
-tor-usb-otg-vbus {
-arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi:688:	vbus-supply =3D <&reg_us=
-b_otg_vbus>;
-arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi:43:		reg_usb_otg_vbus: regulator@=
-2 {
-arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi:638:	vbus-supply =3D <&reg_usb_ot=
-g_vbus>;
-arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi:22:		reg_usb_otg_vbus: regulat=
-or@0 {
-arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi:423:	vbus-supply =3D <&reg_usb=
-_otg_vbus>;
-arch/arm/boot/dts/imx6qdl-rex.dtsi:41:		reg_usb_otg_vbus: regulator@2 {
-arch/arm/boot/dts/imx6qdl-rex.dtsi:345:	vbus-supply =3D <&reg_usb_otg_vbus>=
-;
-arch/arm/boot/dts/imx6qdl-sabreauto.dtsi:96:	reg_usb_otg_vbus: regulator-us=
-b-otg-vbus {
-arch/arm/boot/dts/imx6qdl-sabreauto.dtsi:830:	vbus-supply =3D <&reg_usb_otg=
-_vbus>;
-arch/arm/boot/dts/imx6qdl-sabrelite.dtsi:80:		reg_usb_otg_vbus: regulator@2=
- {
-arch/arm/boot/dts/imx6qdl-sabrelite.dtsi:729:	vbus-supply =3D <&reg_usb_otg=
-_vbus>;
-arch/arm/boot/dts/imx6qdl-sabresd.dtsi:20:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6qdl-sabresd.dtsi:780:	vbus-supply =3D <&reg_usb_otg_v=
-bus>;
-arch/arm/boot/dts/imx6qdl-ts4900.dtsi:75:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6qdl-ts4900.dtsi:454:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-ts7970.dtsi:116:	reg_usb_otg_vbus: regulator-usb-=
-otg-vbus {
-arch/arm/boot/dts/imx6qdl-ts7970.dtsi:549:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6qdl-var-dart.dtsi:457:	vbus-supply =3D <&reg_usb_otg_=
-vbus>;
-arch/arm/boot/dts/imx6qdl-wandboard.dtsi:76:	reg_usb_otg_vbus: regulator-us=
-botgvbus {
-arch/arm/boot/dts/imx6qdl-wandboard.dtsi:338:	vbus-supply =3D <&reg_usb_otg=
-_vbus>;
-arch/arm/boot/dts/imx6q-dms-ba16.dts:12:	reg_usb_otg_vbus: regulator-usbotg=
-vbus {
-arch/arm/boot/dts/imx6q-dms-ba16.dts:122:	vbus-supply =3D <&reg_usb_otg_vbu=
-s>;
-arch/arm/boot/dts/imx6q-evi.dts:70:	reg_usb_otg_vbus: regulator-usbotgvbus =
-{
-arch/arm/boot/dts/imx6q-evi.dts:226:	vbus-supply =3D <&reg_usb_otg_vbus>;
-arch/arm/boot/dts/imx6q-gw5400-a.dts:102:		reg_usb_otg_vbus: regulator@3 {
-arch/arm/boot/dts/imx6q-gw5400-a.dts:369:	vbus-supply =3D <&reg_usb_otg_vbu=
-s>;
-arch/arm/boot/dts/imx6q-marsboard.dts:62:	reg_usb_otg_vbus: regulator-usb-o=
-tg-vbus {
-arch/arm/boot/dts/imx6q-marsboard.dts:205:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6q-novena.dts:180:	reg_usb_otg_vbus: regulator-usb-otg=
--vbus {
-arch/arm/boot/dts/imx6q-novena.dts:492:	vbus-supply =3D <&reg_usb_otg_vbus>=
-;
-arch/arm/boot/dts/imx6q-pistachio.dts:88:	reg_usb_otg_vbus: regulator-usb_v=
-bus {
-arch/arm/boot/dts/imx6q-pistachio.dts:623:	vbus-supply =3D <&reg_usb_otg_vb=
-us>;
-arch/arm/boot/dts/imx6q-var-dt6customboard.dts:109:	reg_usb_otg_vbus: regul=
-ator-usbotgvbus {
-arch/arm/boot/dts/imx6q-var-dt6customboard.dts:223:	vbus-supply =3D <&reg_u=
-sb_otg_vbus>;
-arch/arm/boot/dts/imx6ul-pico.dtsi:54:	reg_usb_otg_vbus: regulator-usb-otg-=
-vbus {
-arch/arm/boot/dts/imx6ul-pico.dtsi:224:	vbus-supply =3D <&reg_usb_otg_vbus>=
-;
+-- 
+Jens Axboe
 
---=20
-
-Thanks,
-Peter Chen=
