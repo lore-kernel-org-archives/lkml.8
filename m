@@ -2,206 +2,102 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D639C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02254C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F99420737
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB65D20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J08u2w/Z"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WXCgrUwv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387780AbgCLFDO (ORCPT
+        id S2387792AbgCLFD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:03:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45107 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387761AbgCLFDO (ORCPT
+        Thu, 12 Mar 2020 01:03:58 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:37829 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387676AbgCLFD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:03:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 2so2609942pfg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 22:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cTgoCb839w9OT0HV/GelOC2bBejqZHZyMGPiFKWTS/E=;
-        b=J08u2w/Zf7UGNyiE282O3vgUMkztg53mwZdynLXMMKVUqMuiK2YqTiVvoQDsJgGpv4
-         0otKKtN/SiVW3dyVhymAEtPrXh2MyM2WvOZgvkZx/YveoBLedK3g/xxYgIOO2OYrvhck
-         rnj/wqIf37KO131R1ABcBYvng6GCMJ2MJTbjfF/n6aX3HwEYOnJRzufsneI6FT0GyzmU
-         Uw3u8GvwHjHeoa+cxn9jmbz1veUatAaqfYKpPSbgN2txE7K7CWRB/5h6C4/N76bf8kML
-         5682MY5ss5c+KqDKdIX/G1rdkV1HwMBEj3hr1gie1T1MuLRm9pkCVmRHKPShzgKD4gJJ
-         uBjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cTgoCb839w9OT0HV/GelOC2bBejqZHZyMGPiFKWTS/E=;
-        b=s7U1c7/obmIxYqi+HhuCbHJZJHviYjlWA34Kh8/MjEIE8aGanhyClrZ0rHblFRElY1
-         m2IJFn5DPmpKJROD2+4ehThNBUC1rTGofWVSpBeaqc/NedDRo9kmkxzQqngRhgnhQTD4
-         F+0V6Fjbpqlnk3tFaFo3o8SgwXS9pdIxwjpPDQq6aufMPdLyo9T2TmNVubZZ02FXg3JH
-         lIq4yiAD9wAnMXJrFTlum82/Q9DwxUq0QPxzSwX1HIeRMO/aRLL4e5u/Bz93uD7s5BmD
-         myICdNy9oKbrB2WaisxqSDgzeRclU1o6HGKaHomlpWE2nbHctQzmFj4FN6Qi750pAhaW
-         HspQ==
-X-Gm-Message-State: ANhLgQ2ZPjtHRXa+QibsTh7FcblSAJVBVSDsfc8KszK3Pq81u3MA8S8N
-        a56ehQHKau8KYXH7/yE3yG0YQw==
-X-Google-Smtp-Source: ADFU+vs21f/l4jH6Bg1k/SVgcLp8lig2v5uQGw4OkgWvTJTRpScTVWOWhPCZokHdhiZSRONggGreOg==
-X-Received: by 2002:a62:e909:: with SMTP id j9mr6407295pfh.134.1583989392797;
-        Wed, 11 Mar 2020 22:03:12 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s12sm24253061pgi.38.2020.03.11.22.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 22:03:12 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 22:03:09 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
-        olof@lixom.net, Anson.Huang@nxp.com, maxime@cerno.tech,
-        leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>
-Subject: Re: [v1 2/6] arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
-Message-ID: <20200312050309.GU264362@yoga>
-References: <20200311123501.18202-1-robert.foss@linaro.org>
- <20200311123501.18202-3-robert.foss@linaro.org>
+        Thu, 12 Mar 2020 01:03:58 -0400
+X-UUID: 478dd462c20f46619b06cde0ca3267d9-20200312
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=EiH9wliZJ7SlCOgjGr1o9krpwAx0Yhk57Jmk6JMcvtA=;
+        b=WXCgrUwvwPckPJtrgli7CI1U5PziZL60rSUU1If/uRKOocJn2Bf7DiMVvg1bW13c5lC7uTkCP6KBN8KunoFOwNYhV1Mnb0qSB42mvG7PgydgKaDLk6l7YrlSI6ZMLBgFkx1DDTSfkPPFRz16ibhCCTruDcXwWLcaJdzXQN2W9pU=;
+X-UUID: 478dd462c20f46619b06cde0ca3267d9-20200312
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1488432028; Thu, 12 Mar 2020 13:03:47 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Mar 2020 13:02:47 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Mar 2020 13:02:55 +0800
+Message-ID: <1583989425.17522.29.camel@mtksdccf07>
+Subject: Re: [PATCH -next] kasan: fix -Wstringop-overflow warning
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Thu, 12 Mar 2020 13:03:45 +0800
+In-Reply-To: <20200311163800.a264d4ec8f26cca7bb5046fb@linux-foundation.org>
+References: <20200311134244.13016-1-walter-zh.wu@mediatek.com>
+         <20200311163800.a264d4ec8f26cca7bb5046fb@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311123501.18202-3-robert.foss@linaro.org>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11 Mar 05:34 PDT 2020, Robert Foss wrote:
+T24gV2VkLCAyMDIwLTAzLTExIGF0IDE2OjM4IC0wNzAwLCBBbmRyZXcgTW9ydG9uIHdyb3RlOg0K
+PiBPbiBXZWQsIDExIE1hciAyMDIwIDIxOjQyOjQ0ICswODAwIFdhbHRlciBXdSA8d2FsdGVyLXpo
+Lnd1QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IENvbXBpbGluZyB3aXRoIGdjYy05LjIu
+MSBwb2ludHMgb3V0IGJlbG93IHdhcm5pbmdzLg0KPiA+IA0KPiA+IEluIGZ1bmN0aW9uICdtZW1t
+b3ZlJywNCj4gPiAgICAgaW5saW5lZCBmcm9tICdrbWFsbG9jX21lbW1vdmVfaW52YWxpZF9zaXpl
+JyBhdCBsaWIvdGVzdF9rYXNhbi5jOjMwMToyOg0KPiA+IGluY2x1ZGUvbGludXgvc3RyaW5nLmg6
+NDQxOjk6IHdhcm5pbmc6ICdfX2J1aWx0aW5fbWVtbW92ZScgc3BlY2lmaWVkDQo+ID4gYm91bmQg
+MTg0NDY3NDQwNzM3MDk1NTE2MTQgZXhjZWVkcyBtYXhpbXVtIG9iamVjdCBzaXplDQo+ID4gOTIy
+MzM3MjAzNjg1NDc3NTgwNyBbLVdzdHJpbmdvcC1vdmVyZmxvdz1dDQo+ID4gDQo+ID4gV2h5IGdl
+bmVyYXRlIHRoaXMgd2FybmluZ3M/DQo+ID4gQmVjYXVzZSBvdXIgdGVzdCBmdW5jdGlvbiBkZWxp
+YmVyYXRlbHkgcGFzcyBhIG5lZ2F0aXZlIG51bWJlciBpbiBtZW1tb3ZlKCksDQo+ID4gc28gd2Ug
+bmVlZCB0byBtYWtlIGl0ICJ2b2xhdGlsZSIgc28gdGhhdCBjb21waWxlciBkb2Vzbid0IHNlZSBp
+dC4NCj4gPiANCj4gPiAuLi4NCj4gPg0KPiA+IC0tLSBhL2xpYi90ZXN0X2thc2FuLmMNCj4gPiAr
+KysgYi9saWIvdGVzdF9rYXNhbi5jDQo+ID4gQEAgLTI4OSw2ICsyODksNyBAQCBzdGF0aWMgbm9p
+bmxpbmUgdm9pZCBfX2luaXQga21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6ZSh2b2lkKQ0KPiA+
+ICB7DQo+ID4gIAljaGFyICpwdHI7DQo+ID4gIAlzaXplX3Qgc2l6ZSA9IDY0Ow0KPiA+ICsJdm9s
+YXRpbGUgc2l6ZV90IGludmFsaWRfc2l6ZSA9IC0yOw0KPiA+ICANCj4gPiAgCXByX2luZm8oImlu
+dmFsaWQgc2l6ZSBpbiBtZW1tb3ZlXG4iKTsNCj4gPiAgCXB0ciA9IGttYWxsb2Moc2l6ZSwgR0ZQ
+X0tFUk5FTCk7DQo+ID4gQEAgLTI5OCw3ICsyOTksNyBAQCBzdGF0aWMgbm9pbmxpbmUgdm9pZCBf
+X2luaXQga21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6ZSh2b2lkKQ0KPiA+ICAJfQ0KPiA+ICAN
+Cj4gPiAgCW1lbXNldCgoY2hhciAqKXB0ciwgMCwgNjQpOw0KPiA+IC0JbWVtbW92ZSgoY2hhciAq
+KXB0ciwgKGNoYXIgKilwdHIgKyA0LCAtMik7DQo+ID4gKwltZW1tb3ZlKChjaGFyICopcHRyLCAo
+Y2hhciAqKXB0ciArIDQsIGludmFsaWRfc2l6ZSk7DQo+ID4gIAlrZnJlZShwdHIpOw0KPiA+ICB9
+DQo+IA0KPiBIdWguICBXaHkgZG9lcyB0aGlzIHRyaWNrIHN1cHByZXNzIHRoZSB3YXJuaW5nPw0K
+PiANCldlIHJlYWQgYmVsb3cgdGhlIGRvY3VtZW50LCBzbyB3ZSB0cnkgdG8gdmVyaWZ5IHdoZXRo
+ZXIgaXQgaXMgd29yayBmb3INCmFub3RoZXIgY2hlY2tpbmcuIEFmdGVyIHdlIGNoYW5nZWQgdGhl
+IGNvZGUsIEl0IGlzIG9rLg0KDQpodHRwczovL2djYy5nbnUub3JnL29ubGluZWRvY3MvZ2NjLTku
+Mi4wL2djYy9XYXJuaW5nLU9wdGlvbnMuaHRtbCNXYXJuaW5nLU9wdGlvbnMNCiJUaGV5IGRvIG5v
+dCBvY2N1ciBmb3IgdmFyaWFibGVzIG9yIGVsZW1lbnRzIGRlY2xhcmVkIHZvbGF0aWxlLiBCZWNh
+dXNlDQp0aGVzZSB3YXJuaW5ncyBkZXBlbmQgb24gb3B0aW1pemF0aW9uLCB0aGUgZXhhY3QgdmFy
+aWFibGVzIG9yIGVsZW1lbnRzDQpmb3Igd2hpY2ggdGhlcmUgYXJlIHdhcm5pbmdzIGRlcGVuZHMg
+b24gdGhlIHByZWNpc2Ugb3B0aW1pemF0aW9uIG9wdGlvbnMNCmFuZCB2ZXJzaW9uIG9mIEdDQyB1
+c2VkLiINCg0KPiBEbyB3ZSBoYXZlIGFueSBndWFyYW50ZWUgdGhhdCB0aGlzIGl0IHdpbGwgY29u
+dGl1ZSB0byB3b3JrIGluIGZ1dHVyZQ0KPiBnY2Mncz8NCj4gDQpTb3JyeSwgSSBhbSBub3QgY29t
+cGlsZXIgZXhwZXJ0LCBzbyBJIGNhbid0IGd1YXJhbnRlZSBnY2Mgd2lsbCBub3QNCm1vZGlmeSB0
+aGUgcnVsZSwgYnV0IGF0IGxlYXN0IGl0IGlzIHdvcmsgYmVmb3JlIGdjYy05Lg0KPiANCg0K
 
-> From: Loic Poulain <loic.poulain@linaro.org>
-> 
-> Add cci device to msm8916.dtsi.
-> Add default 96boards camera node for db410c (apq8016-sbc).
-> 
-> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 75 +++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> index 037e26b3f8d5..a3e6982f4f93 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> @@ -495,6 +495,81 @@
->  		wcnss@a21b000 {
->  			status = "okay";
->  		};
-> +
-> +		camera_vdddo_1v8: fixedregulator@0 {
-
-While "fixedregulator" is a seemingly good name, you're not allows to
-use a unit address on the node if there's no address information in the
-node. So you need to give these nodes a non-generic name.
-
-
-And please move nodes without a reg (i.e. not on an mmio bus) out of
-/soc, i.e. place it near /chosen.
-
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "camera_vdddo";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		camera_vdda_2v8: fixedregulator@1 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "camera_vdda";
-> +			regulator-min-microvolt = <2800000>;
-> +			regulator-max-microvolt = <2800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		camera_vddd_1v5: fixedregulator@2 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "camera_vddd";
-> +			regulator-min-microvolt = <1500000>;
-> +			regulator-max-microvolt = <1500000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		cci@1b0c000 {
-
-Please ensure that cci and camss have labels and reference them by &cci
-and &camss below the / {}, sorted by label name.
-
-> +			status = "ok";
-> +			i2c-bus@0 {
-
-Please reference this by its label as well.
-
-> +				camera_rear@3b {
-> +					compatible = "ovti,ov5640";
-> +					reg = <0x3b>;
-> +
-> +					enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-> +					reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&camera_rear_default>;
-> +
-> +					clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> +					clock-names = "xclk";
-> +					clock-frequency = <23880000>;
-> +
-> +					vdddo-supply = <&camera_vdddo_1v8>;
-> +					vdda-supply = <&camera_vdda_2v8>;
-> +					vddd-supply = <&camera_vddd_1v5>;
-> +
-> +					/* No camera mezzanine by default */
-
-This comment gives me the feeling that this node should have been status
-disabled, please confirm.
-
-Regards,
-Bjorn
-
-> +					status = "okay";
-> +
-> +					port {
-> +						ov5640_ep: endpoint {
-> +							clock-lanes = <1>;
-> +							data-lanes = <0 2>;
-> +							remote-endpoint = <&csiphy0_ep>;
-> +						};
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		camss@1b00000 {
-> +			status = "ok";
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				port@0 {
-> +					reg = <0>;
-> +					csiphy0_ep: endpoint {
-> +						clock-lanes = <1>;
-> +						data-lanes = <0 2>;
-> +						remote-endpoint = <&ov5640_ep>;
-> +						status = "okay";
-> +					};
-> +				};
-> +			};
-> +		};
->  	};
->  
->  	usb2513 {
-> -- 
-> 2.20.1
-> 
