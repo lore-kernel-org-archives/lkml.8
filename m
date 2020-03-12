@@ -2,91 +2,133 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09906C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AF52074E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A5420754
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:14:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="bKW0JsLc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p8Aa5YdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387718AbgCLDMO (ORCPT
+        id S2387715AbgCLDOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:12:14 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:56808 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387453AbgCLDMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:12:14 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jCEG9-0001ok-N0; Thu, 12 Mar 2020 14:11:46 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Mar 2020 14:11:45 +1100
-Date:   Thu, 12 Mar 2020 14:11:45 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, jdike@addtoit.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, miguel.ojeda.sandonis@gmail.com,
-        willy@haproxy.com, ksenija.stanojevic@gmail.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, mpm@selenic.com,
-        jonathan@buzzard.org.uk, benh@kernel.crashing.org,
-        davem@davemloft.net, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        pavel@ucw.cz, len.brown@intel.com
-Subject: Re: [PATCH v2 1/2] misc: cleanup minor number definitions in c file
- into miscdevice.h
-Message-ID: <20200312031145.GA19920@gondor.apana.org.au>
-References: <20200311071654.335-1-zhenzhong.duan@gmail.com>
- <20200311071654.335-2-zhenzhong.duan@gmail.com>
+        Wed, 11 Mar 2020 23:14:33 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:39593 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387453AbgCLDOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 23:14:32 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 30DA28BB;
+        Wed, 11 Mar 2020 23:14:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Wed, 11 Mar 2020 23:14:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=xGzQ7xg6V2hzCeYDub4RmkUI42g
+        VfxcqitmM4leDLF0=; b=bKW0JsLci/UuxZ8NG9T7lPpuouSF/34YF7Yfd5ilSsV
+        gci44yDu+Npb6ka+qY88kNSDzEFDUpGveWwjd9SpK6lwhgtCSMUL85Zt0dgrUtTa
+        CjvJbsOvQBq8DlppW+C/iHTMtssKsbEwzWvFl5wR/0aZDONjlXI7MuH15Vp1mFaL
+        P6UJNv+O8Gxtku3aDXU8lIE5XCMMDbkOczNvGJUQBaBsirqfnnOiRtS+8w7gG541
+        HXjg6ZIERlo4b0EMZ0wfXdhiwMWMWXoPUMN+X6i622oNkU+YfUFzMxGnsd/ysZWK
+        q4EVFA+pkDjgLXSXUVuX9Srl0GPTgT56WzR7TZC+fKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=xGzQ7x
+        g6V2hzCeYDub4RmkUI42gVfxcqitmM4leDLF0=; b=p8Aa5YdWGRhi+9UBpt1Hmn
+        VzH5XIxjvcBdXEXDvNjWF1veIXqW6TwyVqvBQNAJZ9+9J5EKlZHup6TVB/G4xLFx
+        1xYaIW8z4GtDv415xvLhGuVsAAgH9aATGHzhGQD10B2jA0j5rzY/KhtAjyzXnaco
+        a0e6xk/pX7a2bDbFXcgG1jw5eji+CbvxsWy/nCgMJJbGlIMMWGmwf491zyoge/U6
+        ioF8oYx1h2Merc+/wK9PYiRx79INf2RYdc3B8gfZ3LIMLb+o3r0gMtiuUUu7iItN
+        5C1zhglmDcUypQ6dK/PxUKuMOoCu2Rt5ie0wWTuOMaqWbGiHfDYC48rlYjHvBZ3w
+        ==
+X-ME-Sender: <xms:FalpXliC84yMbBozwweHQ5DU_tGI5CgiWjwIei9ybMQFCXFlN9ML8Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvgedgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghr
+    ucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvth
+    eqnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgnecukfhppeduudejrddv
+    tddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
+X-ME-Proxy: <xmx:FalpXvKDSF5Vq22QhiYb8IKRsaMUJ_l7NM08kJbrEJEJ0E-oFQ2zVw>
+    <xmx:FalpXoBxVUcpkMgb15CExhXefQ8flS_eh0ne-kkLmnMy_77MynyucA>
+    <xmx:FalpXgScpvjGWkQ2llPBEfoDnC9tjikMD5Y96ClFg_O8CHriVynKLQ>
+    <xmx:FqlpXqiSD1BuajlLZNQNNWO0imwLEVK_1wFHkyDHfgr29QnZZCoBDQ>
+Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 24ACE30611FB;
+        Wed, 11 Mar 2020 23:14:26 -0400 (EDT)
+Date:   Thu, 12 Mar 2020 13:14:22 +1000
+From:   Peter Hutterer <peter.hutterer@who-t.net>
+To:     Andrew Duggan <aduggan@synaptics.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Hollinsky <phollinsky@holtechnik.com>,
+        Christopher Heiny <Cheiny@synaptics.com>,
+        Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de,
+        patchwork-lst@pengutronix.de
+Subject: Re: [PATCH] Input: synaptics-rmi4 - Do not set reduced reporting
+ mode thresholds are not set by the driver
+Message-ID: <20200312031422.GA1823643@jelly>
+References: <20200312005549.29922-1-aduggan@synaptics.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311071654.335-2-zhenzhong.duan@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200312005549.29922-1-aduggan@synaptics.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 03:16:53PM +0800, Zhenzhong Duan wrote:
-> HWRNG_MINOR and RNG_MISCDEV_MINOR are duplicate definitions, use
-> unified HWRNG_MINOR instead and moved into miscdevice.h
-> 
-> ANSLCD_MINOR and LCD_MINOR are duplicate definitions, use unified
-> LCD_MINOR instead and moved into miscdevice.h
-> 
-> MISCDEV_MINOR is renamed to PXA3XX_GCU_MINOR and moved into
-> miscdevice.h
-> 
-> Other definitions are just moved without any change.
-> 
-> Link: https://lore.kernel.org/lkml/20200120221323.GJ15860@mit.edu/t/
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Build-tested-by: Willy TARREAU <wtarreau@haproxy.com>
-> Build-tested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  arch/um/drivers/random.c         |  4 +---
->  drivers/auxdisplay/charlcd.c     |  2 --
->  drivers/auxdisplay/panel.c       |  2 --
->  drivers/char/applicom.c          |  1 -
->  drivers/char/nwbutton.h          |  1 -
->  drivers/char/toshiba.c           |  2 --
->  drivers/macintosh/ans-lcd.c      |  2 +-
->  drivers/macintosh/ans-lcd.h      |  2 --
->  drivers/macintosh/via-pmu.c      |  3 ---
->  drivers/sbus/char/envctrl.c      |  2 --
->  drivers/sbus/char/uctrl.c        |  2 --
->  drivers/video/fbdev/pxa3xx-gcu.c |  7 +++----
->  include/linux/miscdevice.h       | 10 ++++++++++
->  kernel/power/user.c              |  2 --
->  14 files changed, 15 insertions(+), 27 deletions(-)
+Hi Andrew,
 
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On Wed, Mar 11, 2020 at 05:55:49PM -0700, Andrew Duggan wrote:
+> The previous patch "c5ccf2ad3d33 (Input: synaptics-rmi4 - switch to
+> reduced reporting mode)" enabled reduced reporting mode unintentionally
+> on some devices, if the firmware was configured with default Delta X/Y
+> threshold values. The result unintentionally degrade the performance of
+> some touchpads.
+
+could this be the cause of a stuttering cursor on a P50 as well?
+A recording in the issue below shows the cursor moving by ~25 units per
+event, regardless of the time between those events.
+https://gitlab.freedesktop.org/libinput/libinput/issues/448
+
+thanks!
+
+Cheers,
+   Peter
+
+> This patch checks to see that the driver is modifying the delta X/Y
+> thresholds before modifying the reporting mode.
+> 
+> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+> ---
+>  drivers/input/rmi4/rmi_f11.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
+> index 6adea8a3e8fb..ffa39ab153f2 100644
+> --- a/drivers/input/rmi4/rmi_f11.c
+> +++ b/drivers/input/rmi4/rmi_f11.c
+> @@ -1203,8 +1203,8 @@ static int rmi_f11_initialize(struct rmi_function *fn)
+>  	 * If distance threshold values are set, switch to reduced reporting
+>  	 * mode so they actually get used by the controller.
+>  	 */
+> -	if (ctrl->ctrl0_11[RMI_F11_DELTA_X_THRESHOLD] ||
+> -	    ctrl->ctrl0_11[RMI_F11_DELTA_Y_THRESHOLD]) {
+> +	if (sensor->axis_align.delta_x_threshold ||
+> +	    sensor->axis_align.delta_y_threshold) {
+>  		ctrl->ctrl0_11[0] &= ~RMI_F11_REPORT_MODE_MASK;
+>  		ctrl->ctrl0_11[0] |= RMI_F11_REPORT_MODE_REDUCED;
+>  	}
+> -- 
+> 2.20.1
+> 
