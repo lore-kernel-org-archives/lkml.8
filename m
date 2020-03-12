@@ -2,167 +2,117 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3761C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9265C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D09206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDB0206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ps6uYL78"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SdKeG9d8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgCLQon (ORCPT
+        id S1726461AbgCLQsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:44:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36219 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgCLQoi (ORCPT
+        Thu, 12 Mar 2020 12:48:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37538 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCLQsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:44:38 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m33so4897747qtb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=M8I0tibm0x9o216WA6J8pQVPILtFuntNhRaRSj7eG4A=;
-        b=Ps6uYL78L8tiiefDveevpxYZYKo1t9+cCCagwNnkPLBaPSV2pPdfXTIXk604ph2xpw
-         faAVSCi08gDu/GHSdCihjkCKqIZSC2IleEQoObaiVDFlTPmjYm52pvdzdaISQ9hf//Pv
-         FodTrRUDCzthOuurF7NFtvTYK4oPZVJw9M/IozV4SMQzttu16TI5wTezqHL46bbcltwQ
-         /kSxZi3YBmPrNogjVuKfjbEAmaL6NE7CmpTD/CO+q3VYSldYo70H8zjtDyhMYExHBeHf
-         iV3HE8sYXetkWPcjjwtfAJNRiW034zFfHwuVUuIIQo35aeFKxDYrLLidYWAh9MJ0tHKD
-         WFXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M8I0tibm0x9o216WA6J8pQVPILtFuntNhRaRSj7eG4A=;
-        b=Pcu/oRMo+7a0e5wCifhWAPKeDcTZ6uaDdQ5AA/hnXVeCwcKCm4fcBTm+XwV0hVq61C
-         BH8YrBFVzFJ2QnzA+zTosUDpkeuOqF1bEO0r+HJVijy53MCnRwfhCEXEK8cMg265agJ8
-         MjwCGFBTb4zDt8l2Jb+Q4qXnubUYaUihIT5MOP8T8qG3gq27EXqW0gyvBqS2dsJ9LsR5
-         u4Uiov3HGqpF1SB4eqGXzI2+RNq3Svv51NaDgmCx+OfUhc9v5qWBHJaqvoP9HrJxQKwl
-         kr6IksuxITNBa3UgIzenvFyYyDln5UFMJAt+oE19n+L5kkWhgBJHutuHzr4iT/RvGVvp
-         DK+g==
-X-Gm-Message-State: ANhLgQ1OUEg79DzQKeQw5ai+FwpjZBcDieYioQtFFyRBPt6MV86/yDUy
-        g1zkQ+zz1gFC00RqUT7cz9nI9g==
-X-Google-Smtp-Source: ADFU+vtn1v3TaOzby5HYYtlyHy9Ftixfhi2XKzOU4sP3mHDxuJyhG7MDqq56wClzWXEfwdgTOCMy0w==
-X-Received: by 2002:ac8:1e90:: with SMTP id c16mr8251707qtm.265.1584031477341;
-        Thu, 12 Mar 2020 09:44:37 -0700 (PDT)
-Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id j4sm7244743qtn.78.2020.03.12.09.44.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 09:44:36 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] Revert "arm64: dts: sdm845: add IPA information"
-Date:   Thu, 12 Mar 2020 11:44:28 -0500
-Message-Id: <20200312164428.18132-3-elder@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200312164428.18132-1-elder@linaro.org>
-References: <20200312164428.18132-1-elder@linaro.org>
+        Thu, 12 Mar 2020 12:48:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CGi5iM183139;
+        Thu, 12 Mar 2020 16:48:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=WrMmx2DDsTqMo/jYyhxelBCY3lDUc+W1B/z+/bIn6zc=;
+ b=SdKeG9d8850Zg/StyrlJHSQH/HWmkR1zRpT/1J8fOcltDvJULts1C2eMurOhvFUnqp5M
+ 6h5qX1P7ZpTt5xi+CaZTEnNDMMEDZ9d/wK6V1OgU8nolAieaxT5w7V4JwVjAWMWcnM0U
+ RdGZmA/FacQ+lqIH4H9ritW1Wv8oSWVXA9tzB1yKe5xT5Kl8NYZF6m2USIqPC3i7m8AH
+ n2XGIWOdpArOVg+I7dSmT68Q0rRXIIENhj2jsX19seO0Vj+uCRip16qfpxsijP31S0fI
+ 3suhf7P8ZkxDBYeDJ7G7IJ2VzjqeBbn0w39AGgd8IknawHW3qKz+LV4UR83A40deXTkv ng== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yqkg89ybk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 16:48:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CGm6gW048560;
+        Thu, 12 Mar 2020 16:48:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yqgvdat68-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 16:48:06 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02CGm1sL006874;
+        Thu, 12 Mar 2020 16:48:01 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Mar 2020 09:48:01 -0700
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200312183142.108df9ac@canb.auug.org.au>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <4e163fd8-4d76-4bdf-daea-4d0ae7eb78f7@oracle.com>
+Date:   Thu, 12 Mar 2020 09:48:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312183142.108df9ac@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 9cc5ae125f0eaee471bc87fb5cbf29385fd9272a.
+On 3/12/20 12:31 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
+> 
+> fs/hugetlbfs/inode.c: In function 'remove_inode_hugepages':
+> fs/hugetlbfs/inode.c:460:44: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   460 |     mutex_unlock(&hugetlb_fault_mutex_table[hash]);
+>       |                                            ^
+> fs/hugetlbfs/inode.c:463:5: warning: 'index' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   463 |     hugetlb_vmdelete_list(&mapping->i_mmap,
+>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   464 |      index * pages_per_huge_page(h),
+>       |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   465 |      (index + 1) * pages_per_huge_page(h));
+>       |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Introduced by commit
+> 
+>   6fdc8f8d1781 ("hugetlbfs: use i_mmap_rwsem to address page fault/truncate race")
+> 
 
-This commit:
-  b303f9f0050b arm64: dts: sdm845: Redefine interconnect provider DT nodes
-found in the Qualcomm for-next tree removes/redefines the interconnect
-provider node(s) used for IPA.  I'm not sure whether it technically
-conflicts with the IPA change to "sdm845.dtsi" in for-next, but it renders
-it broken.
+This is a false positive.  However, there are more serious issues with this
+patch series as reported here:
+https://lore.kernel.org/linux-mm/1584028670.7365.182.camel@lca.pw/
 
-Revert this commit in the for-next tree, with the plan to incorporate
-it into the Qualcomm tree instead.
-
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ----------------------------
- 1 file changed, 51 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 58fd1c611849..d42302b8889b 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -675,17 +675,6 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 		};
--
--		ipa_smp2p_out: ipa-ap-to-modem {
--			qcom,entry-name = "ipa";
--			#qcom,smem-state-cells = <1>;
--		};
--
--		ipa_smp2p_in: ipa-modem-to-ap {
--			qcom,entry-name = "ipa";
--			interrupt-controller;
--			#interrupt-cells = <2>;
--		};
- 	};
- 
- 	smp2p-slpi {
-@@ -1446,46 +1435,6 @@
- 			};
- 		};
- 
--		ipa@1e40000 {
--			compatible = "qcom,sdm845-ipa";
--
--			modem-init;
--			modem-remoteproc = <&mss_pil>;
--
--			reg = <0 0x1e40000 0 0x7000>,
--			      <0 0x1e47000 0 0x2000>,
--			      <0 0x1e04000 0 0x2c000>;
--			reg-names = "ipa-reg",
--				    "ipa-shared",
--				    "gsi";
--
--			interrupts-extended =
--					<&intc 0 311 IRQ_TYPE_EDGE_RISING>,
--					<&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
--					<&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
--					<&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
--			interrupt-names = "ipa",
--					  "gsi",
--					  "ipa-clock-query",
--					  "ipa-setup-ready";
--
--			clocks = <&rpmhcc RPMH_IPA_CLK>;
--			clock-names = "core";
--
--			interconnects =
--				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
--				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
--				<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
--			interconnect-names = "memory",
--					     "imem",
--					     "config";
--
--			qcom,smem-states = <&ipa_smp2p_out 0>,
--					   <&ipa_smp2p_out 1>;
--			qcom,smem-state-names = "ipa-clock-enabled-valid",
--						"ipa-clock-enabled";
--		};
--
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
- 			reg = <0 0x01f40000 0 0x40000>;
+I'm working on the issue, but these may need to be reverted if I can not come
+up with a solution quickly.  So, I am ignoring the false positive warning
+until the more serious issue is resolved.
 -- 
-2.20.1
-
+Mike Kravetz
