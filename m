@@ -2,135 +2,152 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D4BC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62733C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE85B2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584019613;
-	bh=6lb7enukKBTao9FoGQva6o4SkqbcC+IWZjrKG0LdVfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0x4osnz0wDYv72BgRrczNI9/2F8rBJ4YuAwb1QvCzqEWsoAaUd0YifZLgezhnZwul
-	 fJphUMwGpMgxV3WvIvZe3xZzhXOYnGyrmZ4NryxLoFxbAfOBIcCHiG5Jjbm2oO01hu
-	 9/d+E9z2TdvQeQaY9y2lhQOG4W+pPzqNKGWOM35M=
+	by mail.kernel.org (Postfix) with ESMTP id 21EA12071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbWC0d19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgCLN0x (ORCPT
+        id S1727312AbgCLN1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:26:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33046 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgCLN0w (ORCPT
+        Thu, 12 Mar 2020 09:27:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36946 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCLN1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:26:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a25so7485328wrd.0;
-        Thu, 12 Mar 2020 06:26:51 -0700 (PDT)
+        Thu, 12 Mar 2020 09:27:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a141so6297787wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MDu/td9l51L58IGhpqk8JA+3+xbgl2VVWeVr93Vibw8=;
+        b=JbWC0d19KHusoB+PKOWaMpQL9e26jb6G/q2lHZ83MDYEomL6fpShH6+XMfxG+R/Fvd
+         qXeRHlxqhm3OMMYjqndri42kEXBjzEYvNZBq/1ciiXT8G8BV8Nx+SEiQXqb9v9k+6wsJ
+         CVoclpb6MeEKb2GjaOCc5zFiTp0e+H+B7e1GoyYSpi5CoWwDsC00Rg/pGGPWBHJ2Ud1A
+         9Dfi4RIYis2gNYkZ4rpja8TgY9dxbFgs+4339BnsXXDs868HJjhxRKITqr9U0cG3bm7W
+         ftXIJr4TGC7Y4WC+4ZWmwL4PhNh9Sf67RdRypOSTYBZ8b/dJeztrkVucpXpj2dr4CMPv
+         yyyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4BJbL1v35eEIhi8zAOoH4R9OkyA1Pa/qt0AezIWPz+Y=;
-        b=bdh5KUbHizwaomUcweOIOrIOA4O3vKD/UclEHlOQhloPhK3YwpoGg3yLKKzoqHpnrL
-         dXcGOi/7kz0+Z/6rgG0LApfgGtwDj1xvUUB6wCDedtveLhJ4coswJWoonQcwxhPUwWHF
-         XuPtG2eNYB3G9jYCccbAxDNAiiZkbR5+KCLdqKroShMZc1zBtO7g7n4xUMHietRUkHe7
-         YewlYh3ASjxzmHiKoPBWK32d1v0r+I7/OhTWNXRoQ3tmB8kS5IoU22tVZKzHwbsGLTS/
-         KQyS125AjEj6hACYUNh6H/q0888Z9MbufTZDZVie/p/PjUt7pvSvrgylk4VuhLQ8T07c
-         xgDw==
-X-Gm-Message-State: ANhLgQ1AITxYk8G/ZN3rS/YeeamCfNt77hTVM0jnJhsA3o706EEMIgG9
-        hW0K/Ls43C7Xsi7PybrP3U8=
-X-Google-Smtp-Source: ADFU+vtxeZw7NuCizsLMi/GIiZ/4aK7twtop/K8Ui/bChFfTyUDUr1T43Y8s8B6AZTPRaQRkHyaXGg==
-X-Received: by 2002:a5d:66cc:: with SMTP id k12mr11905427wrw.157.1584019610763;
-        Thu, 12 Mar 2020 06:26:50 -0700 (PDT)
-Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
-        by smtp.gmail.com with ESMTPSA id w8sm12933799wmm.0.2020.03.12.06.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 06:26:49 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 14:26:42 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Ivan Teterevkov <ivan.teterevkov@nutanix.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "oneukum@suse.com" <oneukum@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH] mm/vmscan: add vm_swappiness configuration knobs
-Message-ID: <20200312132642.GW23944@dhcp22.suse.cz>
-References: <BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com>
- <20200312092531.GU23944@dhcp22.suse.cz>
- <BL0PR02MB5601B50A2D9AEE6318D51893E9FD0@BL0PR02MB5601.namprd02.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MDu/td9l51L58IGhpqk8JA+3+xbgl2VVWeVr93Vibw8=;
+        b=BkQcJtVBYWugJdesL7S2hJjm1SYkKogqvI55XFUOaGNQ9GP2Tsew+/W8tJqk8M3rPH
+         qiVupOJZsmoqNCjOWkFV05Bzhi8PebPBFqfJFRjus9RrOGDUZryArBmbgHkkwyNpW52z
+         PUe4FYOvQjIidHIdF1LrywRZjEl8McbT5Qzgmn2WSTnKitfsbDLbpyxF/KHL2Pfc3QWb
+         azq4ak6IyJID39IaN721oJroaA6DICI9dOKqT7HUqGKd2xKvCG9HSh2xfarXUwxwleQD
+         ZzEDocMlpkEh7H+2nHa4KBZl+/gzVRlG019tRPqGVTKx1/MmCGYFVxRS7SvjPsJmFfAB
+         FO/A==
+X-Gm-Message-State: ANhLgQ3uouXQz/EgaaV4JCgvD0RqsxowqRmIhn4RzWJW3IfDWI42ZIy1
+        o+nyjmfNuJtmxpG2Wq2s42tvhTbN3i+ddVZKFL0KOL3+DNs=
+X-Google-Smtp-Source: ADFU+vsmU7hPEB1aHJzbqZPInMm0BSzqnQ2wKDzgBi+VNLsokYfZHWxYA6/FcHbANa3SdWIlyLi5SNmjj889oisdvUY=
+X-Received: by 2002:a1c:9c52:: with SMTP id f79mr4925462wme.30.1584019620201;
+ Thu, 12 Mar 2020 06:27:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR02MB5601B50A2D9AEE6318D51893E9FD0@BL0PR02MB5601.namprd02.prod.outlook.com>
+References: <20200312124414.439-1-bhe@redhat.com> <20200312124414.439-3-bhe@redhat.com>
+In-Reply-To: <20200312124414.439-3-bhe@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 12 Mar 2020 14:26:49 +0100
+Message-ID: <CAM9Jb+ifBUiPxKAmvm_c-0MUCfNu_MndGWZe-bhaHNLKeSMtjQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] mm/sparse.c: introduce a new function clear_subsection_map()
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
+        David Hildenbrand <david@redhat.com>,
+        richard.weiyang@gmail.com, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12-03-20 12:54:19, Ivan Teterevkov wrote:
-> On Thurs, 12 Mar 2020, Michal Hocko wrote:
-> 
-> > On Wed 11-03-20 17:45:58, Ivan Teterevkov wrote:
-> > > This patch adds a couple of knobs:
-> > >
-> > > - The configuration option (CONFIG_VM_SWAPPINESS).
-> > > - The command line parameter (vm_swappiness).
-> > >
-> > > The default value is preserved, but now defined by CONFIG_VM_SWAPPINESS.
-> > >
-> > > Historically, the default swappiness is set to the well-known value
-> > > 60, and this works well for the majority of cases. The vm_swappiness
-> > > is also exposed as the kernel parameter that can be changed at runtime too,
-> > e.g.
-> > > with sysctl.
-> > >
-> > > This approach might not suit well some configurations, e.g.
-> > > systemd-based distros, where systemd is put in charge of the cgroup
-> > > controllers, including the memory one. In such cases, the default
-> > > swappiness 60 is copied across the cgroup subtrees early at startup,
-> > > when systemd is arranging the slices for its services, before the
-> > > sysctl.conf or tmpfiles.d/*.conf changes are applied.
-> > >
-> > > One could run a script to traverse the cgroup trees later and set the
-> > > desired memory.swappiness individually in each occurrence when the
-> > > runtime is set up, but this would require some amount of work to
-> > > implement properly. Instead, why not set the default swappiness as early as
-> > possible?
-> > 
-> > I have to say I am not a great fan of more tunning for swappiness as this is quite
-> > a poor tunning for many years already. It essentially does nothing in many cases
-> > because the reclaim process ignores to value in many cases (have a look a
-> > get_scan_count. I have seen quite some reports that setting a specific value for
-> > vmswappiness didn't make any change. The knob itself has a terrible semantic to
-> > begin with because there is no way to express I really prefer to swap rather than
-> > page cache reclaim.
-> > 
-> > This all makes me think that swappiness is a historical mistake that we should
-> > rather make obsolete than promote even further.
-> 
-> Absolutely agree, the semantics of the vm_swappiness is perplexing.
-> Moreover, the same get_scan_count treats vm_swappiness and cgroups
-> memory.swappiness differently, in particular, 0 disables the memcg swap.
-> 
-> Certainly, the patch adds some additional exposure to a parameter that
-> is not trivial to tackle but it's already getting created with a magic
-> number which is also confusing. Is there any harm to be done by the patch
-> considering the already existing sysctl interface to that knob?
+>
+> Factor out the code which clear subsection map of one memory region from
+> section_deactivate() into clear_subsection_map().
+>
+> And also add helper function is_subsection_map_empty() to check if
+> the current subsection map is empty or not.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/sparse.c | 31 +++++++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 8 deletions(-)
+>
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 5919bc5b1547..0be4d4ed96de 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -726,15 +726,11 @@ static void free_map_bootmem(struct page *memmap)
+>  }
+>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>
+> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> -               struct vmem_altmap *altmap)
+> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  {
+>         DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>         DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+>         struct mem_section *ms = __pfn_to_section(pfn);
+> -       bool section_is_early = early_section(ms);
+> -       struct page *memmap = NULL;
+> -       bool empty;
+>         unsigned long *subsection_map = ms->usage
+>                 ? &ms->usage->subsection_map[0] : NULL;
+>
+> @@ -745,8 +741,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>         if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+>                                 "section already deactivated (%#lx + %ld)\n",
+>                                 pfn, nr_pages))
+> -               return;
+> +               return -EINVAL;
+>
+> +       bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> +       return 0;
+> +}
+> +
+> +static bool is_subsection_map_empty(struct mem_section *ms)
+> +{
+> +       return bitmap_empty(&ms->usage->subsection_map[0],
+> +                           SUBSECTIONS_PER_SECTION);
+> +}
+> +
+> +static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> +               struct vmem_altmap *altmap)
+> +{
+> +       struct mem_section *ms = __pfn_to_section(pfn);
+> +       bool section_is_early = early_section(ms);
+> +       struct page *memmap = NULL;
+> +       bool empty;
+> +
+> +       if (clear_subsection_map(pfn, nr_pages))
+> +               return;
+>         /*
+>          * There are 3 cases to handle across two configurations
+>          * (SPARSEMEM_VMEMMAP={y,n}):
+> @@ -764,8 +780,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>          *
+>          * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+>          */
+> -       bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> -       empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
+> +       empty = is_subsection_map_empty(ms);
+>         if (empty) {
+>                 unsigned long section_nr = pfn_to_section_nr(pfn);
+>
+> --
 
-Like any other config option/kernel parameter. It is adding the the
-overall config space size problem and unless this is really needed I
-would rather not make it worse.
--- 
-Michal Hocko
-SUSE Labs
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+
+> 2.17.2
+>
+>
