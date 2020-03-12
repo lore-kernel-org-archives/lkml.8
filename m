@@ -6,114 +6,177 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630B0C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7BBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D19C20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B82C206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgCLKKY (ORCPT
+        id S1726809AbgCLKKy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:10:24 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42490 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgCLKKX (ORCPT
+        Thu, 12 Mar 2020 06:10:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33423 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgCLKKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:10:23 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w17so2629053oic.9;
-        Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
+        Thu, 12 Mar 2020 06:10:54 -0400
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jCKnj-00087x-3k
+        for linux-kernel@vger.kernel.org; Thu, 12 Mar 2020 10:10:51 +0000
+Received: by mail-pj1-f72.google.com with SMTP id d9so2836739pjs.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:10:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zwwoiowfHNPz9HpeeIjPtaOJgNXOTQ/vvDnMi1D629A=;
-        b=n9l2/tq382/vlPmvwJU2vWJ9Ts81d+MELVbuk+qaQfyUs9mB+vmZjEu0OvMtR2O9hE
-         +6b1gXkWQMZt8lFS50RhT0UtPLn/Cjry7YO1tdxmIg9RC3MjW5oPUyFxNBi353XXSPdA
-         Q+d1pql2n2V86pIKLhvbJoDnQzKcSeVAM5/Ep8AM0EB52tp/gUK01asqSfzkch+YIE7/
-         kZJ5ddpSeUNZuGFleCY0LfT12fGlfWhc1hRo/eNsGIablE+ObOYJa3WTKi8USaj0qpyd
-         djCHxqAsM+3iFIY8LkWK5U2BdlEDavjLOiOSaEUGAGy6bv65Fo1oXT0TM2WnjiqtLyNO
-         Z5/A==
-X-Gm-Message-State: ANhLgQ0OmuvEacVrXlbrogc0zinv/wvMjmSWJpHhdPve2VgZNBx5S4Lj
-        I2yQaDnIY5s5Fv0w2pmXca7tneWkrkHS8sqQr24=
-X-Google-Smtp-Source: ADFU+vt2xrdAlnM+K+3Hl7KD8Ot0CPxqX+cCiLIRU6jFW7JpfLC+f9+Lgd1azWcf6NufNcnKkmCIgjYifaSTuSjCeA8=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1923995oia.148.1584007822268;
- Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Mar 2020 11:10:11 +0100
-Message-ID: <CAMuHMdWqMHGeENswnfk-Hra4JrfELQkLuzY_6JHFRJZWJZPJog@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] Add LVDS panel support to HiHope RZ/G2M
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZRJ3aPtX/tUgwNDGTcOJc8iWQLaiq+vRP5xXyXiSCXA=;
+        b=WgsWg1Xg24efsH3EJopI4JtulikPUHBARcBLiwrJzzI5pYUijenG0Z7ZYxhB5E0v7y
+         sZKzQEQF1IFxbqp8ax+1d5GwdtL2SCefRDMwQm1xmBWSLG7mL0xnit3oMfgsJ/E/rNnw
+         W/mO2FhyAGQei+fNvNrvS0c6f6airuwaUIxNi45iGHI++ibhlSmhqXx1e19c7+Alcumw
+         juKFko0FHPtTHS3z7iRFYFIr1vXHeevhEw/zDUi5r6t7RZYICj41sF+GILBlFoYVe2wQ
+         FZEfBaDGCPhIFViXhV23ViCZIpjXDZLDFfJ0syghuKYzfZ6GrppTrEClanudSJMPlw1p
+         Uq9A==
+X-Gm-Message-State: ANhLgQ0D7AuEfNJB8clHaUGNtSVK+2KhVxV/ty8b7Wr56x5yXU2S/iFF
+        4VhPc+PRTYzBhgyxvzDt2LNAwa/cBlvINld8GtpAxk1mafFF7MgHNkhKjOuw6qYSBWgl+AmvXPS
+        Na758ZlvjTw/6qGfkPLiTaEyheCcGmRAdg+xm2L2eEw==
+X-Received: by 2002:a62:1dd0:: with SMTP id d199mr7657899pfd.9.1584007849542;
+        Thu, 12 Mar 2020 03:10:49 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtjWarGsemdejoZoz63lHwe1W7gnmL1NQxuf/kVvqF5q1wRoQDGkCL58Pvo/UkfDFa9jyfRJg==
+X-Received: by 2002:a62:1dd0:: with SMTP id d199mr7657857pfd.9.1584007849079;
+        Thu, 12 Mar 2020 03:10:49 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id i6sm8090133pjt.3.2020.03.12.03.10.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 03:10:48 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: Thunderbolt, direct-complete and long suspend/resume time of
+ Suspend-to-idle
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200312081509.GI2540@lahna.fi.intel.com>
+Date:   Thu, 12 Mar 2020 18:10:45 +0800
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Shih-Yuan Lee (FourDollars)" <sylee@canonical.com>,
+        Tiffany <tiffany.wang@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C687BE86-1CCB-417B-8546-77F76127B266@canonical.com>
+References: <02700895-048F-4EA1-9E18-4883E83AE210@canonical.com>
+ <20200311103840.GB2540@lahna.fi.intel.com>
+ <E3DA71C8-96A7-482E-B41F-8145979F88F4@canonical.com>
+ <20200312081509.GI2540@lahna.fi.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
 
-On Wed, Mar 11, 2020 at 9:03 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
-> Advantech, but the panel doesn't come with the board, it has to purchased
-> separatey, therefore this series adds panel support to a new DT.
->
-> v3->v4
->  * Included rzg2-advantech-idk-1110wr-panel.dtsi in
->    r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts file instead of re-inventing
->    the wheel.
->  * Dropped the Ack from Laurent for patch 2/2 due to above changes
->
-> v2->v3
->  * Included Reviewed-by from Rob and Laurent
->  * Switched to dual license
->  * Added myself as the maintainer
->  * Updated copyright year
->  * Rebased the patches
->
-> v1->v2
->  * fixed a space according to Geert's feedback.
->
-> Thanks,
-> Prabhakar
->
-> Fabrizio Castro (2):
->   dt-bindings: display: Add idk-1110wr binding
->   arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
->
->  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
->  arch/arm64/boot/dts/renesas/Makefile               |  1 +
->  .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 52 ++++++++++++++++
->  3 files changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
-Thanks for the update!
-I've queued the second patch in renesas-devel for v5.7.
+> On Mar 12, 2020, at 16:15, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> 
+> On Thu, Mar 12, 2020 at 12:41:08PM +0800, Kai-Heng Feng wrote:
+>> 
+>> 
+>>> On Mar 11, 2020, at 18:38, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+>>> 
+>>> On Wed, Mar 11, 2020 at 01:39:51PM +0800, Kai-Heng Feng wrote:
+>>>> Hi,
+>>>> 
+>>>> I am currently investigating long suspend and resume time of suspend-to-idle.
+>>>> It's because Thunderbolt bridges need to wait for 1100ms [1] for runtime-resume on system suspend, and also for system resume.
+>>>> 
+>>>> I made a quick hack to the USB driver and xHCI driver to support direct-complete, but I failed to do so for the parent PCIe bridge as it always disables the direct-complete [2], since device_may_wakeup() returns true for the device:
+>>>> 
+>>>> 	/* Avoid direct_complete to let wakeup_path propagate. */
+>>>> 		if (device_may_wakeup(dev) || dev->power.wakeup_path)
+>>>> 			dev->power.direct_complete = false;
+>>> 
+>>> You need to be careful here because otherwise you end up situation where
+>>> the link is not properly trained and we tear down the whole tree of
+>>> devices which is worse than waiting bit more for resume.
+>> 
+>> My idea is to direct-complete when there's no PCI or USB device
+>> plugged into the TBT, and use pm_reuqest_resume() in complete() so it
+>> won't block resume() or resume_noirq().
+> 
+> Before doing that..
+> 
+>>>> Once the direct-complete is disabled, system suspend/resume is used hence the delay in [1] is making the resume really slow. 
+>>>> So how do we make suspend-to-idle faster? I have some ideas but I am not sure if they are feasible:
+>>>> - Make PM core know the runtime_suspend() already use the same wakeup as suspend(), so it doesn't need to use device_may_wakeup() check to determine direct-complete.
+>>>> - Remove the DPM_FLAG_NEVER_SKIP flag in pcieport driver, and use pm_request_resume() in its complete() callback to prevent blocking the resume process.
+>>>> - Reduce the 1100ms delay. Maybe someone knows the values used in macOS and Windows...
+>>> 
+>>> Which system this is? ICL?
+>> 
+>> CML-H + Titan Ridge.
+> 
+> .. we should really understand this better because CML-H PCH root ports
+> and Titan/Alpine Ridge downstream ports all support active link
+> reporting so instead of the 1000+100ms you should see something like
+> this:
 
-Gr{oetje,eeting}s,
+Root port for discrete graphics:
+# lspci -vvnn -s 00:01.0                    
+00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 02) (prog-if 00 [Normal decode])
+        Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
+                LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <256ns, L1 <8us
+                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+                LnkCtl: ASPM L0s L1 Enabled; RCB 64 bytes Disabled- CommClk+
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+   
+Thunderbolt ports:
+# lspci -vvvv -s 04:00
+04:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
+        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
+                LnkCap: Port #0, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
+                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+                LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
 
-                        Geert
+# lspci -vvnn -s 04:01
+04:01.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
+        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
+                LnkCap: Port #1, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
+                        ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
+                LnkCtl: ASPM L1 Enabled; Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+# lspci -vvnn -s 04:02 
+04:02.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
+        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
+                LnkCap: Port #2, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
+                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+                LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+So both CML-H PCH and TBT ports report "LLActRep-".
+
+> 
+>  1. Wait for the link + 100ms for the root port
+>  2. Wait for the link + 100ms for the Titan Ridge downstream ports
+>    (these are run paraller wrt all Titan Ridge downstream ports that have
+>     something connected)
+> 
+> If there is a TBT device connected then 2. is repeated for it and so on.
+> 
+> So the 1000ms+ is really unexpected. Are you running mainline kernel and
+> if so, can you share dmesg with CONFIG_PCI_DEBUG=y so we can see the
+> delays there? Maybe also add some debugging to
+> pcie_wait_for_link_delay() where it checks for the
+> !pdev->link_active_reporting and waits for 1100ms.
+
+I added the debug log in another thread and it does reach !pdev->link_active_reporting.
+
+Let me see if patch link active reporting for the ports in PCI quirks can help.
+
+Kai-Heng
+
