@@ -2,328 +2,122 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D50EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD965C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF602071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895A120637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584054890;
+	bh=9wDFf+oPT1U99O9sM6O9KnkAPcMBEuhgp2SaIbrm4eE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=VXilqOY/pHjyW9Pq0G7mzTGSlLFpq55+J4QwSyN2rx1d6WyVdisaKrRUfQjVQeN0i
+	 nY/B0M3ibwWaSgZI61KomWTyuJjYfQhoCdGEu97BV7vWWrUyeDtp4Ug5uJbsfeuZd/
+	 BsWnUyKw8i5DOkMhEdEbxO6XIsyrFUtpO0FifD+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCLXOn (ORCPT
+        id S1726932AbgCLXOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 19:14:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58976 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726608AbgCLXOn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 19:14:43 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CMxDvH023633
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 19:14:42 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yqwbna5km-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 19:14:42 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Thu, 12 Mar 2020 23:14:40 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Mar 2020 23:14:32 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CNEVfL61603914
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 23:14:32 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E02F2A4040;
-        Thu, 12 Mar 2020 23:14:31 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36C0DA4053;
-        Thu, 12 Mar 2020 23:14:31 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Mar 2020 23:14:31 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        Thu, 12 Mar 2020 19:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbgCLXOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 19:14:49 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 01057A0218;
-        Fri, 13 Mar 2020 10:14:26 +1100 (AEDT)
-Subject: Re: [PATCH v3 24/27] powerpc/powernv/pmem: Expose SMART data via
- ndctl
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Fri, 13 Mar 2020 10:14:29 +1100
-In-Reply-To: <e68c9064-cb7f-2b5e-9a7b-70fd5367270a@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-25-alastair@au1.ibm.com>
-         <e68c9064-cb7f-2b5e-9a7b-70fd5367270a@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 6984B20637;
+        Thu, 12 Mar 2020 23:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584054888;
+        bh=9wDFf+oPT1U99O9sM6O9KnkAPcMBEuhgp2SaIbrm4eE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=eBjMpPYNRMtMMOO+Je+Uv9X+IIIE/u9hx+i+qeMpUqYR0USWNjiHUCPdOnXJmifhY
+         8CEgsN6jvV0Xl1MU+3wXgqt6Nh6+OKLhkwAiSoR9Zx7XJ6fycaasZgA5tueX31XFWb
+         kPu34sZ/q/rBoiU42hawDEleNmQOjM4HUqz/sdWU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031223-0008-0000-0000-0000035C4F74
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031223-0009-0000-0000-00004A7D9A8A
-Message-Id: <d70936f77cbbf712cee505e7ec009ba1ddaf74e6.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-12_16:2020-03-11,2020-03-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- clxscore=1015 spamscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
- mlxlogscore=999 mlxscore=0 impostorscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003120113
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200225181654.GA694@bogus>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech> <9166f3acdc2a64e3f3ca1cd2e283005ee2df37c9.1582533919.git-series.maxime@cerno.tech> <20200225181654.GA694@bogus>
+Subject: Re: [PATCH 06/89] dt-bindings: clock: Add a binding for the RPi Firmware clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+To:     Maxime Ripard <maxime@cerno.tech>, Rob Herring <robh@kernel.org>
+Date:   Thu, 12 Mar 2020 16:14:47 -0700
+Message-ID: <158405488765.149997.7323586314054590516@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-05 at 14:36 +1100, Andrew Donnellan wrote:
-> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> > +static int ndctl_smart(struct ocxlpmem *ocxlpmem, struct
-> > nd_cmd_pkg *pkg)
-> > +{
-> > +	u32 length, i;
-> > +	struct nd_ocxl_smart *out;
-> > +	int rc;
+Quoting Rob Herring (2020-02-25 10:16:54)
+> On Mon, Feb 24, 2020 at 10:06:08AM +0100, Maxime Ripard wrote:
+> > The firmare running on the RPi VideoCore can be used to discover and
+> > change the various clocks running in the BCM2711. Since devices will
+> > need to use them through the DT, let's add a pretty simple binding.
+> >=20
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-clk@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > ---
+> >  Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.ya=
+ml | 39 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi=
+,firmware-clocks.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,firmwa=
+re-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,firmwa=
+re-clocks.yaml
+> > new file mode 100644
+> > index 000000000000..d37bc311321d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/raspberrypi,firmware-cloc=
+ks.yaml
+> > @@ -0,0 +1,39 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/raspberrypi,firmware-clocks.y=
+aml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +	mutex_lock(&ocxlpmem->admin_command.lock);
+> > +title: RaspberryPi Firmware Clocks Device Tree Bindings
 > > +
-> > +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_SMART);
-> > +	if (rc)
-> > +		goto out;
+> > +maintainers:
+> > +  - Maxime Ripard <mripard@kernel.org>
 > > +
-> > +	rc = admin_command_execute(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
+> > +properties:
+> > +  "#clock-cells":
+> > +    const: 1
 > > +
-> > +	rc = admin_command_complete_timeout(ocxlpmem,
-> > ADMIN_COMMAND_SMART);
-> > +	if (rc < 0) {
-> > +		dev_err(&ocxlpmem->dev, "SMART timeout\n");
-> > +		goto out;
-> > +	}
+> > +  compatible:
+> > +    const: raspberrypi,firmware-clocks
 > > +
-> > +	rc = admin_response(ocxlpmem);
-> > +	if (rc < 0)
-> > +		goto out;
-> > +	if (rc != STATUS_SUCCESS) {
-> > +		warn_status(ocxlpmem, "Unexpected status from SMART",
-> > rc);
-> > +		goto out;
-> > +	}
-> > +
-> > +	rc = smart_header_parse(ocxlpmem, &length);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	pkg->nd_fw_size = length;
-> > +
-> > +	length = min(length, pkg->nd_size_out); // bytes
-> > +	out = (struct nd_ocxl_smart *)pkg->nd_payload;
-> > +	// Each SMART attribute is 2 * 64 bits
-> > +	out->count = length / (2 * sizeof(u64)); // attributes
-> 
->  From what I can tell - 8 bytes of nd_ocxl_smart are taken up for
-> the 
-> count + reserved bytes, so this is going to potentially overrun the
-> user 
-> buffer.
+> > +  raspberrypi,firmware:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: >
+> > +      Phandle to the mailbox node to communicate with the firmware.
+>=20
+> Can't this be a child node of the phandle instead? Or just add=20
+> '#clock-cells' to the firmware node.
 
-Ok
-
-> 
-> > +
-> > +	for (i = 0; i < length; i += sizeof(u64)) {
-> 
-> It might be neater to make i count up by 1 and then multiply by 
-> sizeof(u64) later.
-> 
-I tried, it doesn't make much difference to the complexity, and makes
-it less clear that we are stepping in 64bit chunks.
-
-> > +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +					     ocxlpmem-
-> > >admin_command.data_offset + sizeof(u64) + i,
-> 
-> + 0x08 rather than + sizeof(u64) for consistency.
-> 
-We use sizeof(u64) in the rest of this function.
-
-> > +					     OCXL_LITTLE_ENDIAN,
-> > +					     &out-
-> > >attribs[i/sizeof(u64)]);
-> > +		if (rc)
-> > +			goto out;
-> > +	}
-> > +
-> > +	rc = admin_response_handled(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = 0;
-> > +	goto out;
-> > +
-> > +out:
-> > +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> > +	return rc;
-> > +}
-> > +
-> > +static int ndctl_call(struct ocxlpmem *ocxlpmem, void *buf,
-> > unsigned int buf_len)
-> > +{
-> > +	struct nd_cmd_pkg *pkg = buf;
-> > +
-> > +	if (buf_len < sizeof(struct nd_cmd_pkg)) {
-> > +		dev_err(&ocxlpmem->dev, "Invalid ND_CALL size=%u\n",
-> > buf_len);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (pkg->nd_family != NVDIMM_FAMILY_OCXL) {
-> > +		dev_err(&ocxlpmem->dev, "Invalid ND_CALL
-> > family=0x%llx\n", pkg->nd_family);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	switch (pkg->nd_command) {
-> > +	case ND_CMD_OCXL_SMART:
-> > +		ndctl_smart(ocxlpmem, pkg);
-> 
-> Did you intend to dispose of the return code here?
-
-Whoops.
-
-> 
-> > +		break;
-> > +
-> > +	default:
-> > +		dev_err(&ocxlpmem->dev, "Invalid ND_CALL
-> > command=0x%llx\n", pkg->nd_command);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >   static int ndctl(struct nvdimm_bus_descriptor *nd_desc,
-> >   		 struct nvdimm *nvdimm,
-> >   		 unsigned int cmd, void *buf, unsigned int buf_len, int
-> > *cmd_rc)
-> > @@ -88,6 +211,10 @@ static int ndctl(struct nvdimm_bus_descriptor
-> > *nd_desc,
-> >   	struct ocxlpmem *ocxlpmem = container_of(nd_desc, struct
-> > ocxlpmem, bus_desc);
-> >   
-> >   	switch (cmd) {
-> > +	case ND_CMD_CALL:
-> > +		*cmd_rc = ndctl_call(ocxlpmem, buf, buf_len);
-> > +		return 0;
-> > +
-> >   	case ND_CMD_GET_CONFIG_SIZE:
-> >   		*cmd_rc = ndctl_config_size(buf);
-> >   		return 0;
-> > @@ -171,6 +298,7 @@ static int register_lpc_mem(struct ocxlpmem
-> > *ocxlpmem)
-> >   	set_bit(ND_CMD_GET_CONFIG_SIZE, &nvdimm_cmd_mask);
-> >   	set_bit(ND_CMD_GET_CONFIG_DATA, &nvdimm_cmd_mask);
-> >   	set_bit(ND_CMD_SET_CONFIG_DATA, &nvdimm_cmd_mask);
-> > +	set_bit(ND_CMD_CALL, &nvdimm_cmd_mask);
-> >   
-> >   	set_bit(NDD_ALIASING, &nvdimm_flags);
-> >   
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > index 927690f4888f..0eb7a35d24ae 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > @@ -7,6 +7,7 @@
-> >   #include <linux/libnvdimm.h>
-> >   #include <uapi/nvdimm/ocxl-pmem.h>
-> >   #include <linux/mm.h>
-> > +#include <linux/ndctl.h>
-> >   
-> >   #define LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
-> >   #define DEFAULT_TIMEOUT 100
-> > @@ -98,6 +99,23 @@ struct ocxlpmem_function0 {
-> >   	struct ocxl_fn *ocxl_fn;
-> >   };
-> >   
-> > +struct nd_ocxl_smart {
-> > +	__u8 count;
-> > +	__u8 reserved[7];
-> > +	__u64 attribs[0];
-> > +} __packed;
-> > +
-> > +struct nd_pkg_ocxl {
-> > +	struct nd_cmd_pkg gen;
-> > +	union {
-> > +		struct nd_ocxl_smart smart;
-> > +	};
-> > +};
-> > +
-> > +enum nd_cmd_ocxl {
-> > +	ND_CMD_OCXL_SMART = 1,
-> > +};
-> > +
-> >   struct ocxlpmem {
-> >   	struct device dev;
-> >   	struct pci_dev *pdev;
-> > diff --git a/include/uapi/linux/ndctl.h
-> > b/include/uapi/linux/ndctl.h
-> > index de5d90212409..2885052e7f40 100644
-> > --- a/include/uapi/linux/ndctl.h
-> > +++ b/include/uapi/linux/ndctl.h
-> > @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
-> >   #define NVDIMM_FAMILY_HPE2 2
-> >   #define NVDIMM_FAMILY_MSFT 3
-> >   #define NVDIMM_FAMILY_HYPERV 4
-> > +#define NVDIMM_FAMILY_OCXL 6
-> >   
-> >   #define ND_IOCTL_CALL			_IOWR(ND_IOCTL,
-> > ND_CMD_CALL,\
-> >   					struct nd_cmd_pkg)
-> > 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+Yeah, just add the clock-cells to the firmware node unless that doesn't
+work for some reason?
