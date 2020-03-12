@@ -2,77 +2,153 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D28DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0EFC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DED20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBE3206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:12:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HnapPjR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgCLOMJ (ORCPT
+        id S1727566AbgCLOMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:12:09 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60262 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbgCLOMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:12:08 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 08370A387A1824FBB9C2;
-        Thu, 12 Mar 2020 22:11:53 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 12 Mar 2020 22:11:44 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <paulus@samba.org>, <mpe@ellerman.id.au>, <tyreld@linux.ibm.com>,
-        <bhelgaas@google.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] PCI: rpaphp: remove set but not used variable 'value'
-Date:   Thu, 12 Mar 2020 22:04:12 +0800
-Message-ID: <20200312140412.32373-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 12 Mar 2020 10:12:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:59444 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgCLOMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:12:14 -0400
+Received: from zn.tnic (p200300EC2F0DBF00E89CA278D0B3F041.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:bf00:e89c:a278:d0b3:f041])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BC5941EC0273;
+        Thu, 12 Mar 2020 15:12:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584022331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wfNb1Zw6/hi8ZTNeWL/A3GZdW3BHt0aPqiRf/ZhGNY0=;
+        b=HnapPjR7Zh6KpfEptHxpz/UIoauZn4rZFFMPtfZziiozlpqnOsyK5gn4BTBT/9pTvpsVfN
+        SsRApaM4W/gH9KTsLnRCy8fBToHLiN4w3t+2ehE7XbW+QCQFlOWKuauEyXmjQV4DlkvrPr
+        kl9cm8eF5m+4k4/qUdr/oBNlkkoLSAA=
+Date:   Thu, 12 Mar 2020 15:12:16 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/3 RESEND] perf/amd/uncore: Prepare L3 thread mask code
+ for Family 19h support
+Message-ID: <20200312141216.GD15619@zn.tnic>
+References: <20200311191323.13124-1-kim.phillips@amd.com>
+ <20200311191323.13124-2-kim.phillips@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200311191323.13124-2-kim.phillips@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Wed, Mar 11, 2020 at 02:13:22PM -0500, Kim Phillips wrote:
+> In order to better accommodate the upcoming Family 19h support,
+> given the 80-char line limit, we move the existing code into a new
+> l3_thread_slice_mask function, and convert it to use the more
+> readable topology_* helper functions.
+> 
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Michael Petlan <mpetlan@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: x86@kernel.org
+> ---
+> RESEND.  No changes since original submission 19 Feb 2020:
+> 
+> https://lkml.org/lkml/2020/2/19/1192
+> 
+>  arch/x86/events/amd/uncore.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 4d867a752f0e..e635c40ca9c4 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -180,6 +180,23 @@ static void amd_uncore_del(struct perf_event *event, int flags)
+>  	hwc->idx = -1;
+>  }
+>  
+> +/*
+> + * Convert logical cpu number to L3 PMC Config ThreadMask format
+> + */
+> +static u64 l3_thread_slice_mask(int cpu)
+> +{
+> +	unsigned int shift, thread = 0;
+> +	u64 thread_mask, core = topology_core_id(cpu);
+> +
+> +	if (topology_smt_supported() && !topology_is_primary_thread(cpu))
+> +		thread = 1;
+> +
+> +	shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
+> +	thread_mask = BIT_ULL(shift);
+> +
+> +	return AMD64_L3_SLICE_MASK | thread_mask;
+> +}
+> +
+>  static int amd_uncore_event_init(struct perf_event *event)
+>  {
+>  	struct amd_uncore *uncore;
+> @@ -206,15 +223,8 @@ static int amd_uncore_event_init(struct perf_event *event)
+>  	 * SliceMask and ThreadMask need to be set for certain L3 events in
+>  	 * Family 17h. For other events, the two fields do not affect the count.
+>  	 */
+> -	if (l3_mask && is_llc_event(event)) {
+> -		int thread = 2 * (cpu_data(event->cpu).cpu_core_id % 4);
+> -
+> -		if (smp_num_siblings > 1)
+> -			thread += cpu_data(event->cpu).apicid & 1;
+> -
+> -		hwc->config |= (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
+> -				AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
+> -	}
+> +	if (l3_mask && is_llc_event(event))
+> +		hwc->config |= l3_thread_slice_mask(event->cpu);
+>  
+>  	uncore = event_to_amd_uncore(event);
+>  	if (!uncore)
+> -- 
 
-drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
-drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
-	variable value set but not used [-Wunused-but-set-variable]
+If you carve out functionality into a separate function and then do
+changes to that functionality, you do two patches: the first one is
+doing only the mechanical move only and the second one does the changes.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/pci/hotplug/rpaphp_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Please do that with that one too.
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index e408e40..5d871ef 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
- 
- static int is_php_type(char *drc_type)
- {
--	unsigned long value;
- 	char *endptr;
- 
- 	/* PCI Hotplug nodes have an integer for drc_type */
--	value = simple_strtoul(drc_type, &endptr, 10);
-+	simple_strtoul(drc_type, &endptr, 10);
- 	if (endptr == drc_type)
- 		return 0;
- 
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
