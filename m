@@ -2,91 +2,192 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF93DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838F6C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAE52067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584025634;
-	bh=uPjFqZx/6I5Qs44mY7asg2IZtVGs/xJSbZwp2GMuxw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B+aZ/s5iexqsKIIgVZW1wAw02uRReN/hKHajNoyTLuQfzpaQdVWSlxmxAzWtK1Y4Z
-	 XxJOmltFh+3LugllrAHUKQ8Ht42Wdbfxwpwjh3lTd/X+nVlA/Q3nhoeaa4JNTqIKYG
-	 8Y9bmKuxuMmwa9GPo83WZF4Kc7O4JsPpSpRi8bv8=
+	by mail.kernel.org (Postfix) with ESMTP id 5B9F4206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jY+CxiAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgCLPHN (ORCPT
+        id S1727823AbgCLPHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:07:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:36456 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbgCLPHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:07:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D273B30E;
+        Thu, 12 Mar 2020 11:07:17 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45166 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbgCLPHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:07:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id w9so5988320iob.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HeDZ4xpsH4ojKjdPYAFKFs4XK1v01d56EDF8j+URbwo=;
+        b=jY+CxiAle1JRHNXQn4k1tScC/ncCuBvrrKGC/Va6IKPBck9zsLzWhw6l7vll7k1mTT
+         mOsYqTR2Yx+5LcjpAxbk8ixA1OOyLO8dgl7eF1ZM7e/rNpBkyZYRlAK2hiSvTLzXWJnA
+         diskQ5bDvo0ApZI4VJmq0lKHEsn/Jr4/LhUDS7PaLtlVQMwUi1IBvGIGFLZb9UZu2b7T
+         HwlCLpT+HpO5Qzgdtk7BhVjKqWFoOZ106PNv3X/69HqnuzQzVq/tc80m/r2eTi/VU4wT
+         f0mnQ1VgoOdCWkMQNzBZAVzon9Rk2aqE6qmW7jV/LyTdxfun8LZZtHf1whQi36CVqCMZ
+         qs9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HeDZ4xpsH4ojKjdPYAFKFs4XK1v01d56EDF8j+URbwo=;
+        b=c9a27oifBf3ARpi2/v00+S64heuYpRnHfQy+WEaSZmwuOjSSsuQwrPhf3sZaruKXnH
+         Ku/tIUEVRPMNTDOl+gj7MPEuci47bWSjkxQsaqM2u4hnxhBYgXMqxLcQhbT2Gp7pD1v1
+         xT2LLwAPlzi1hWsAIcX3LGxtjee7EnxGCJDDmG3GVqRom412t6ArUsGZCJuvFTtszJxH
+         Yn5avPiLPjXgTsFZX07EpgPWKAaZujfu47nCGKhUieJTZd4WX1I/SrDplmM2nhjjYoBo
+         34NIA7Pa7iZBhbd+NmoENkbVuImHj+Yy7JqDHrwazf1/3f4Wka2owXX1j8qOknH5i3U7
+         MOlQ==
+X-Gm-Message-State: ANhLgQ08rhA/hInOR7+mOZFoJ+cJkFC6LyucZ1gGV10tmnawAP8zeEj0
+        JDZepjm3NZ+dNsZn7kVGK/4TtQ==
+X-Google-Smtp-Source: ADFU+vsXRIWqmC8cnz2kYKXojWZrQWFl/y2mDPLPWUsH+6cG1+ak18R22jCgen/thm94qeSCZH1+uQ==
+X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr7992946jad.124.1584025633431;
+        Thu, 12 Mar 2020 08:07:13 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p14sm7346596ios.38.2020.03.12.08.07.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Thu, 12 Mar 2020 08:07:12 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5667F3F534;
-        Thu, 12 Mar 2020 08:07:12 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 15:07:10 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
-Message-ID: <20200312150710.GG4038@sirena.org.uk>
-References: <20200312103804.24174-1-peter.chen@nxp.com>
- <20200312114712.GA4038@sirena.org.uk>
- <20200312130037.GG14625@b29397-desktop>
- <20200312143723.GF4038@sirena.org.uk>
- <20200312150330.GH14625@b29397-desktop>
+Subject: Re: [PATCH] libata: Remove extra scsi_host_put() in
+ ata_scsi_add_hosts()
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, takondra@cisco.com, tj@kernel.org
+References: <1582889615-146214-1-git-send-email-john.garry@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <240d477b-f3f2-5461-fcd3-b7b239462a24@kernel.dk>
+Date:   Thu, 12 Mar 2020 09:07:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iAL9S67WQOXgEPD9"
-Content-Disposition: inline
-In-Reply-To: <20200312150330.GH14625@b29397-desktop>
-X-Cookie: Security check:  =?ISO-8859-1?Q?=20=07=07=07INTRUDER?= ALERT!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1582889615-146214-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/28/20 4:33 AM, John Garry wrote:
+> If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
+> then we may get use-after-free KASAN warns:
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in kobject_put+0x24/0x180
+> Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
+> CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
+> Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
+> Call trace:
+> dump_backtrace+0x0/0x298
+> show_stack+0x14/0x20
+> dump_stack+0x118/0x190
+> print_address_description.isra.9+0x6c/0x3b8
+> __kasan_report+0x134/0x23c
+> kasan_report+0xc/0x18
+> __asan_load1+0x5c/0x68
+> kobject_put+0x24/0x180
+> put_device+0x10/0x20
+> scsi_host_put+0x10/0x18
+> ata_devres_release+0x74/0xb0
+> release_nodes+0x2d0/0x470
+> devres_release_all+0x50/0x78
+> really_probe+0x2d4/0x560
+> driver_probe_device+0x7c/0x148
+> device_driver_attach+0x94/0xa0
+> __driver_attach+0xa8/0x110
+> bus_for_each_dev+0xe8/0x158
+> driver_attach+0x30/0x40
+> bus_add_driver+0x220/0x2e0
+> driver_register+0xbc/0x1d0
+> __pci_register_driver+0xbc/0xd0
+> ahci_pci_driver_init+0x20/0x28
+> do_one_initcall+0xf0/0x608
+> kernel_init_freeable+0x31c/0x384
+> kernel_init+0x10/0x118
+> ret_from_fork+0x10/0x18
+> 
+> Allocated by task 5:
+> save_stack+0x28/0xc8
+> __kasan_kmalloc.isra.8+0xbc/0xd8
+> kasan_kmalloc+0xc/0x18
+> __kmalloc+0x1a8/0x280
+> scsi_host_alloc+0x44/0x678
+> ata_scsi_add_hosts+0x74/0x268
+> ata_host_register+0x228/0x488
+> ahci_host_activate+0x1c4/0x2a8
+> ahci_init_one+0xd18/0x1298
+> local_pci_probe+0x74/0xf0
+> work_for_cpu_fn+0x2c/0x48
+> process_one_work+0x488/0xc08
+> worker_thread+0x330/0x5d0
+> kthread+0x1c8/0x1d0
+> ret_from_fork+0x10/0x18
+> 
+> Freed by task 5:
+> save_stack+0x28/0xc8
+> __kasan_slab_free+0x118/0x180
+> kasan_slab_free+0x10/0x18
+> slab_free_freelist_hook+0xa4/0x1a0
+> kfree+0xd4/0x3a0
+> scsi_host_dev_release+0x100/0x148
+> device_release+0x7c/0xe0
+> kobject_put+0xb0/0x180
+> put_device+0x10/0x20
+> scsi_host_put+0x10/0x18
+> ata_scsi_add_hosts+0x210/0x268
+> ata_host_register+0x228/0x488
+> ahci_host_activate+0x1c4/0x2a8
+> ahci_init_one+0xd18/0x1298
+> local_pci_probe+0x74/0xf0
+> work_for_cpu_fn+0x2c/0x48
+> process_one_work+0x488/0xc08
+> worker_thread+0x330/0x5d0
+> kthread+0x1c8/0x1d0
+> ret_from_fork+0x10/0x18
+> 
+> There is also refcount issue, as well:
+> WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
+> 
+> The issue is that we make an erroneous extra call to scsi_host_put()
+> for that host:
+> 
+> So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
+> a device release method - ata_devres_release() - which intends to release
+> the SCSI hosts:
+> 
+> static void ata_devres_release(struct device *gendev, void *res)
+> {
+> 	...
+> 	for (i = 0; i < host->n_ports; i++) {
+> 		struct ata_port *ap = host->ports[i];
+> 
+> 		if (!ap)
+> 			continue;
+> 
+> 		if (ap->scsi_host)
+> 			scsi_host_put(ap->scsi_host);
+> 
+> 	}
+> 	...
+> }
+> 
+> However in the ata_scsi_add_hosts() error path, we also call
+> scsi_host_put() for the SCSI hosts.
+> 
+> Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
+> leave this to ata_devres_release().
 
---iAL9S67WQOXgEPD9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied for 5.7, thanks.
 
-On Thu, Mar 12, 2020 at 03:03:26PM +0000, Peter Chen wrote:
-> On 20-03-12 14:37:23, Mark Brown wrote:
+-- 
+Jens Axboe
 
-> > Surely it's the GPIO controller that needs pinctrl support then?
-
-> But the pinctrl register value for this gpio will be cleared after
-> suspend, we need to restore it, otherwise, the function will be not
-> gpio. See below patch:
-
-I'd expect that this would be handled by the GPIO driver, the user
-shouldn't need to care.
-
---iAL9S67WQOXgEPD9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5qUB4ACgkQJNaLcl1U
-h9A2lwf+KwAx2wKqIxrmgCUh4bwdLI99EGL396CbJ3ww5s7DbJ3LQ8xCoIWyeUj1
-3QDZPb1D+ssHLm8NHd38ENdymLKODxBec7oCgPCb+V95fCY9K9VEVuMEutldZK3C
-UUn5NjE7VU7lI0ccfW1xWR/36bPOJVVizpNymH3HqffLnJT0yU0OQJnmyoGEi2Xo
-QQg0s4ewdf6Tq6VddR457VMUk2B9uCmKBtOeMB2RarLj+KlamJQHwht7W4R1d1qI
-NQTntqip/UGSt/SSHci3T+XgNG6Ic1ko+/mHnyrQcKohA4UzsaSz8BK/batfhEqL
-HxELrI/BPZLg15ZQ7rSO31bh1Nedwg==
-=4ZCB
------END PGP SIGNATURE-----
-
---iAL9S67WQOXgEPD9--
