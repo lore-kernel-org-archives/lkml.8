@@ -2,242 +2,116 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF1FC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B538C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6F820739
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D924F206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584047450;
-	bh=8/NVrAZcEgS19+54nRy9Op6UYRLTyni/t71ZvOcCbEQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=X+s1zD0LcsQoWvObdmuFP4wNDbAH/nugU7LG77SKZC9dZd8T7ZmPj1hFtetDsThCG
-	 r9z7phvWYxTRkOCqD5ER26/ufIKXPn1CQbKwfZVLttHZj1evEQZQwuE9R3ORwK7Wv3
-	 /ghUJ8P9/KZSp8QS3DLkc/1w4zPZcN4r7ElgpRs4=
+	s=default; t=1584047467;
+	bh=IAMG84HZpyw2tpXzi5VZejrQM+Rn7EB22igvc2R8fME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RNrWOiMYUKOXaw5XHz+J1PCEsU4Z3LBH73gIseKjRREA8ApDtHuqakPKX6vmNtgc4
+	 E3S4toFduPPDjpaeaQUSWojd29uqF5oW4NDEOH0ZXiWqgsb1OqMDLzY5IMYRXM+sqA
+	 7fURwvmeSquMMjxpDm3NB+ITlsAowcuMCpv4FgGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgCLVKt (ORCPT
+        id S1726702AbgCLVLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgCLVKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:10:48 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E0920674;
-        Thu, 12 Mar 2020 21:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584047447;
-        bh=8/NVrAZcEgS19+54nRy9Op6UYRLTyni/t71ZvOcCbEQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=ByPS8Puiscc71MpCt9AC9QvaYwoQoWRJrsFXFIBWcd+67qpK9P4JmIQI7aVD2G9c/
-         6jgwG2XqJYMpRJ1doT5sDIc28SoscyPhfaeGPHAhM1ygG1B0CU+dbKVSnTma6114xO
-         XkicT7DIgNfm2LR7DiMVaANnXJVLhYfEYoyS3a3s=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1842535226D3; Thu, 12 Mar 2020 14:10:47 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 14:10:47 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        colin.king@canonical.com, edumazet@google.com, frextrite@gmail.com,
-        jbi.octave@gmail.com, joel@joelfernandes.org,
-        madhuparnabhowmik04@gmail.com, sjpark@amazon.de, urezki@gmail.com
-Subject: [GIT PULL rcu/next] RCU commits for v5.7
-Message-ID: <20200312211047.GA6096@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Thu, 12 Mar 2020 17:11:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33709 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgCLVLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:11:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r7so7093192oij.0;
+        Thu, 12 Mar 2020 14:11:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z1C/O9m/TAKtgL9ZhokPb6QEAILTEFVK153CVUT28Ak=;
+        b=scFdU+vHD1nyD2T+vMUD1p4+s6WIIwwleK8Bam7aZaqiGS8rVn6BLFNMo8YggiwFNZ
+         dpR5/itVmnGNqFTULZfWuRvvG5K19VxhS8bQStChI6tLFGSl2CUYP/e2QKsGFzBgVu57
+         yx6jOzlKS/wF173IyzhcnEkQYQaU4F2JuifHN0C0nmA7dkswCVkLvTR5kYDpUIlHVonj
+         +oByM5AWkj4nWZ5gXR8sv54+Erj84S4aDJlomNgSZY8uWa4aW+RQFDK0watN4n4qF7Cd
+         SxLxmO1dcwTgYV464h9bFZ+jsKPUf3FtSO1/rOazO8PQMJQM4T+jqu/7fyfI0bstnXMS
+         kYrg==
+X-Gm-Message-State: ANhLgQ0FWg8g/RQb9i33r+DBkTlkNT9IKm5/Y9Gik9AY+u8khRl64EMC
+        DD7+P/w9JJrMvtnEecDmbw==
+X-Google-Smtp-Source: ADFU+vsM8qWHegcdLt3Q2m7Gc6UyEn9KtddfGoHdlC/IxDspcPSBdxYiHo+WS7LgOCr6oVsfgRE3/w==
+X-Received: by 2002:aca:5317:: with SMTP id h23mr3092365oib.33.1584047465378;
+        Thu, 12 Mar 2020 14:11:05 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e1sm6848806oth.66.2020.03.12.14.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 14:11:03 -0700 (PDT)
+Received: (nullmailer pid 15344 invoked by uid 1000);
+        Thu, 12 Mar 2020 21:11:02 -0000
+Date:   Thu, 12 Mar 2020 16:11:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: syscon: Add syscon endian properties
+ support
+Message-ID: <20200312211102.GA21647@bogus>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Ingo!
+On Fri, Mar 06, 2020 at 04:03:38PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> In accordance with the syscon-driver (drivers/mfd/syscon.c) the syscon
+> dts-nodes may accept endian properties of the boolean type: little-endian,
+> big-endian, native-endian. Lets make sure that syscon bindings json-schema
+> also supports them.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.yaml | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> index 39375e4313d2..9ee404991533 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> @@ -61,6 +61,11 @@ properties:
+>      description:
+>        Reference to a phandle of a hardware spinlock provider node.
+>  
+> +patternProperties:
+> +  "^(big|little|native)-endian$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: Bytes order of the system controller memory space.
 
-This pull request contains the following changes:
+Common properties should have a type definition in a common schema. For 
+this one, I'd like it in the core schema in dtschema. 
 
-1.	Documentation updates.
+I'd expect for any specific 'syscon', either none or only a subset of 
+these are valid, so I don't think this should be added here.
 
-	https://lore.kernel.org/lkml/20200214233848.GA12744@paulmck-ThinkPad-P72
-
-2.	Miscellaneous fixes.
-
-	https://lore.kernel.org/lkml/20200214235536.GA13364@paulmck-ThinkPad-P72
-
-3.	Make kfree_rcu() use kfree_bulk() for added performance.
-
-	https://lore.kernel.org/lkml/20200215000031.GA14315@paulmck-ThinkPad-P72
-
-4.	Locking torture-test updates.
-
-	https://lore.kernel.org/lkml/20200215000312.GA14585@paulmck-ThinkPad-P72
-
-5.	Callback-overload handling updates.
-
-	https://lore.kernel.org/lkml/20200215001816.GA15284@paulmck-ThinkPad-P72
-
-6.	Tasks-RCU KCSAN and sparse updates.
-
-	https://lore.kernel.org/lkml/20200215002446.GA15663@paulmck-ThinkPad-P72
-
-7.	SRCU updates.
-
-	https://lore.kernel.org/lkml/20200215002907.GA15895@paulmck-ThinkPad-P72
-
-8.	Torture-test updates.
-
-	https://lore.kernel.org/lkml/20200215003634.GA16227@paulmck-ThinkPad-P72
-
-All of these have been subjected to the kbuild test robot and -next
-testing, and are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
-
-for you to fetch changes up to b5e91fead597a4eca629e0d2dcf767d49b79acb3:
-
-  Merge branches 'doc.2020.02.27a', 'fixes.2020.02.27a', 'kfree_rcu.2020.02.20a', 'locktorture.2020.02.20a', 'ovld.2020.02.20a', 'rcu-tasks.2020.02.20a', 'srcu.2020.02.20a' and 'torture.2020.02.20a' into HEAD (2020-02-27 07:37:01 -0800)
-
-There is a modest increase in code size of about 700 lines.  About 300
-of these added lines were documentation, almost 200 more from adding
-kfree_bulk() support to kfree_rcu(), about 150 from torture-test
-improvements, and about 80 lines from improved callback-overload handling.
-All in all, good value from this expansion.
-
-----------------------------------------------------------------
-Amol Grover (1):
-      rculist: Add brackets around cond argument in __list_check_rcu macro
-
-Colin Ian King (1):
-      rcu: Fix spelling mistake "leval" -> "level"
-
-Eric Dumazet (1):
-      timer: Use hlist_unhashed_lockless() in timer_pending()
-
-Joel Fernandes (Google) (2):
-      rcuperf: Measure memory footprint during kfree_rcu() test
-      doc: Add some more RCU list patterns in the kernel
-
-Jules Irenge (4):
-      rcu: Add missing annotation for rcu_nocb_bypass_lock()
-      rcu/nocb: Add missing annotation for rcu_nocb_bypass_unlock()
-      rcu: Add missing annotation for exit_tasks_rcu_start()
-      rcu: Add missing annotation for exit_tasks_rcu_finish()
-
-Madhuparna Bhowmik (1):
-      nfs: Fix nfs_access_get_cached_rcu() sparse error
-
-Paul E. McKenney (55):
-      rcu: Warn on for_each_leaf_node_cpu_mask() from non-leaf
-      rcu: Fix exp_funnel_lock()/rcu_exp_wait_wake() datarace
-      rcu: Provide debug symbols and line numbers in KCSAN runs
-      rcu: Add WRITE_ONCE() to rcu_node ->qsmask update
-      rcu: Add WRITE_ONCE to rcu_node ->exp_seq_rq store
-      rcu: Add READ_ONCE() to rcu_node ->gp_seq
-      rcu: Add WRITE_ONCE() to rcu_state ->gp_req_activity
-      rcu: Add WRITE_ONCE() to rcu_node ->qsmaskinitnext
-      locking/rtmutex: rcu: Add WRITE_ONCE() to rt_mutex ->owner
-      rcu: Add READ_ONCE() to rcu_segcblist ->tails[]
-      rcu: Add *_ONCE() for grace-period progress indicators
-      rcu: Add READ_ONCE() to rcu_data ->gpwrap
-      rcu: Add *_ONCE() to rcu_data ->rcu_forced_tick
-      rcu: Add *_ONCE() to rcu_node ->boost_kthread_status
-      rcu: Remove dead code from rcu_segcblist_insert_pend_cbs()
-      rcu: Add WRITE_ONCE() to rcu_state ->gp_start
-      rcu: Fix rcu_barrier_callback() race condition
-      rcu: Don't flag non-starting GPs before GP kthread is running
-      rcu: Optimize and protect atomic_cmpxchg() loop
-      rcu: Tighten rcu_lockdep_assert_cblist_protected() check
-      rcu: Make nocb_gp_wait() double-check unexpected-callback warning
-      locktorture: Print ratio of acquisitions, not failures
-      locktorture: Allow CPU-hotplug to be disabled via --bootargs
-      locktorture: Use private random-number generators
-      locktorture: Forgive apparent unfairness if CPU hotplug
-      rcu: Clear ->core_needs_qs at GP end or self-reported QS
-      rcu: React to callback overload by aggressively seeking quiescent states
-      rcu: React to callback overload by boosting RCU readers
-      rcu: Update __call_rcu() comments
-      rcu-tasks: *_ONCE() for rcu_tasks_cbs_head
-      srcu: Fix __call_srcu()/process_srcu() datarace
-      srcu: Fix __call_srcu()/srcu_get_delay() datarace
-      srcu: Fix process_srcu()/srcu_batches_completed() datarace
-      srcu: Hold srcu_struct ->lock when updating ->srcu_gp_seq
-      rcutorture: Suppress forward-progress complaints during early boot
-      torture: Make results-directory date format completion-friendly
-      rcutorture: Refrain from callback flooding during boot
-      torture: Forgive -EBUSY from boottime CPU-hotplug operations
-      rcutorture: Allow boottime stall warnings to be suppressed
-      rcutorture: Suppress boottime bad-sequence warnings
-      torture: Allow disabling of boottime CPU-hotplug torture operations
-      rcutorture: Add 100-CPU configuration
-      rcutorture: Summarize summary of build and run results
-      rcutorture: Make kvm-find-errors.sh abort on bad directory
-      rcutorture: Fix rcu_torture_one_read()/rcu_torture_writer() data race
-      rcutorture: Fix stray access to rcu_fwd_cb_nodelay
-      rcutorture: Add READ_ONCE() to rcu_torture_count and rcu_torture_batch
-      rcutorture: Annotation lockless accesses to rcu_torture_current
-      rcutorture: Make rcu_torture_barrier_cbs() post from corresponding CPU
-      rcutorture: Manually clean up after rcu_barrier() failure
-      rcutorture: Set KCSAN Kconfig options to detect more data races
-      doc: Add rcutorture scripting to torture.txt
-      rcu: Mark rcu_state.gp_seq to detect concurrent writes
-      rcu: Make rcu_barrier() account for offline no-CBs CPUs
-      Merge branches 'doc.2020.02.27a', 'fixes.2020.02.27a', 'kfree_rcu.2020.02.20a', 'locktorture.2020.02.20a', 'ovld.2020.02.20a', 'rcu-tasks.2020.02.20a', 'srcu.2020.02.20a' and 'torture.2020.02.20a' into HEAD
-
-SeongJae Park (8):
-      rcu: Fix typos in file-header comments
-      doc/RCU/Design: Remove remaining HTML tags in ReST files
-      doc/RCU/listRCU: Fix typos in a example code snippets
-      doc/RCU/listRCU: Update example function name
-      doc/RCU/rcu: Use ':ref:' for links to other docs
-      doc/RCU/rcu: Use absolute paths for non-rst files
-      doc/RCU/rcu: Use https instead of http if possible
-      Documentation/memory-barriers: Fix typos
-
-Uladzislau Rezki (Sony) (2):
-      rcu: Support kfree_bulk() interface in kfree_rcu()
-      rcu: Add a trace event for kfree_rcu() use of kfree_bulk()
-
- .../Memory-Ordering/Tree-RCU-Memory-Ordering.rst   |   8 +-
- Documentation/RCU/listRCU.rst                      | 281 ++++++++++---
- Documentation/RCU/rcu.rst                          |  18 +-
- Documentation/RCU/torture.txt                      | 147 ++++++-
- Documentation/admin-guide/kernel-parameters.txt    |  19 +
- Documentation/memory-barriers.txt                  |   8 +-
- fs/nfs/dir.c                                       |   2 +-
- include/linux/rculist.h                            |   4 +-
- include/linux/rcutiny.h                            |   1 +
- include/linux/rcutree.h                            |   1 +
- include/linux/timer.h                              |   2 +-
- include/trace/events/rcu.h                         |  29 ++
- kernel/locking/locktorture.c                       |  15 +-
- kernel/locking/rtmutex.c                           |   2 +-
- kernel/rcu/Makefile                                |   4 +
- kernel/rcu/rcu.h                                   |  23 +-
- kernel/rcu/rcu_segcblist.c                         |   4 +-
- kernel/rcu/rcuperf.c                               |  14 +-
- kernel/rcu/rcutorture.c                            |  67 ++-
- kernel/rcu/srcutree.c                              |  18 +-
- kernel/rcu/tree.c                                  | 454 ++++++++++++++++-----
- kernel/rcu/tree.h                                  |   4 +
- kernel/rcu/tree_exp.h                              |  13 +-
- kernel/rcu/tree_plugin.h                           |  25 +-
- kernel/rcu/tree_stall.h                            |  41 +-
- kernel/rcu/update.c                                |  28 +-
- kernel/time/timer.c                                |   7 +-
- kernel/torture.c                                   |  29 +-
- .../testing/selftests/rcutorture/bin/functions.sh  |   2 +-
- .../selftests/rcutorture/bin/kvm-find-errors.sh    |   2 +
- .../selftests/rcutorture/bin/kvm-recheck.sh        |  17 +-
- tools/testing/selftests/rcutorture/bin/kvm.sh      |   2 +-
- .../selftests/rcutorture/configs/rcu/CFcommon      |   2 +
- .../selftests/rcutorture/configs/rcu/TREE10        |  18 +
- 34 files changed, 1017 insertions(+), 294 deletions(-)
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE10
+Rob
