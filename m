@@ -2,118 +2,158 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D489FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647DDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7966206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA042067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yuwAX0WV"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="kSfaI3Ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgCLRPK (ORCPT
+        id S1726512AbgCLRQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:15:10 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49094 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgCLRPI (ORCPT
+        Thu, 12 Mar 2020 13:16:39 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.2]:54713 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726387AbgCLRQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:15:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02CHEvi2118683;
-        Thu, 12 Mar 2020 12:14:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584033297;
-        bh=F1Bl5KRdM8p1lw3n/IaD14JUKZw+gIocUSbFL8V0++U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yuwAX0WVPIo2mKAaXZuNoh0A2oc3iOPOXloIX3p1ONeV9BMBZyFVdh50Oda7HAz9r
-         43iycFz2a381YE90mGwTuVq6Ffr6hwa/rFFh1yzxC3KHOo+nd/6pzjeiRJLipdGs70
-         iO6nlfes39FPFm16fF/XXOSp8CAxZAUaxWy/RAlk=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02CHEvwm123158
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Mar 2020 12:14:57 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Mar 2020 12:14:57 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Mar 2020 12:14:57 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02CHErSN096128;
-        Thu, 12 Mar 2020 12:14:54 -0500
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-To:     Richard Cochran <richardcochran@gmail.com>
-CC:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        <kernel@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
- <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
- <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
- <20200312142126.GB2466@localhost>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <b8750b79-8703-5d8f-eacf-b3a67cedd252@ti.com>
-Date:   Thu, 12 Mar 2020 22:44:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200312142126.GB2466@localhost>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Mar 2020 13:16:38 -0400
+Received: from [100.113.0.63] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.eu-central-1.aws.symcld.net id 5C/C8-54465-27E6A6E5; Thu, 12 Mar 2020 17:16:34 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSfUwTdxjH+fWu7eF6249Sw2NX3OiExJeWls6
+  khsyxTCfia0yWJeDbYW9tTXvUtmCrmSuLRR0yceIMWoHOAnOdZiDZJrglsKwDMjVDcUzHBpFM
+  yyYYZPi2kN1x1W3/fb4v9/yeXB6KUJ6XqSnW52XdHOPQymaRtmxFjs7Nbd9sePBLhjnyY7/cv
+  G+sSW6+0h6SmWPRq7I8Mr/us935x+oeSvLvtc5dTxRK7VxxiW+r1HZiKiR13Zf5wjFPAP0tfR
+  /NohBuJKDn8B2ZKGIkhAZb5KI4h+Bx1cOZhMTdBPx1qUIiCCX+UAKPT58jRDGIoHl4ghfJlAy
+  b4Uj30MwnKlyD4GhNpUwICLwbpsYq5AKn4mzoaTnN+xRfMsA3wwWCrcI58GDqhlRgEmfCya+j
+  cqFC403Q8bNVsJV4F5S3HZ2xk/HrcOGgWrARTofJ8ighPpQG10fqJQIDxhC5cJkQeTbEb05Lx
+  T4LPe8NINFfBBd/GkmwFpoGjktFToe++sqEvwYuxfcm/AVw69dWuchmiFQGSWEdwPNgussv2g
+  74fSCUqGdC4Ldooq6B0ca7pPBzAH9EQu9EOapGhuP/WVvkRdDQMSETeSE0hf8gBKZxCvTUjpA
+  NiPwULSl22602r5OxO3RGg0FnNJp0Obock0nP7NIxerZUt43lvG6GT/XMTo/e43duc1j0HOtt
+  RfwVWXZI4l+hL86M67vQHEqinU1Xr96+WflscYnFb2M8ti3uUgfr6UIaitICXeXgsxQ3a2V9b
+  9sd/C0+iYFSaFX0q04+pj0uxumxW8WoF+mo6vjJjwklyZVwrDqNviHMwELJVso9HfHkovtQuj
+  qVRklJSUqFi3U77d7/56MojULaVLpAmKKwc96nL43yS0j4JQ7GrMISXubfSB2Q9GYcnr+CuPj
+  Bd1md8WtZFbfN6Ucozf47K1cuLaTqvg0O7OwPvxAMLF/3ZUdtaKC77f6m3JuTE+Nv0G7OOLh+
+  4caRE2VDbaa6q8ph7eiZqu8PZNU2Bk/NgbWPfO2Rl4Y+eVNTsuHsskMvd2+scFmxvWa8LHtxZ
+  mDfqgOOeubYXAdd1rKnbau5sEuz158RfMXRNF2g6vEvuza5/M/whtf6QT8vb0eR3/XMZZviiu
+  X5UN67uHnLRGDtD/PvSVT55ZnNydmxcFFp/fUx2/5ky4u1LW8t0Y7cqjKZH533Nq6eKlqcoqb
+  HosTtPYZDa6LPhRv63jHntueu+rxO1tl6t/Ns7VIUGdKSHhtjXEC4Pcw/GpYWLEwEAAA=
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-28.tower-229.messagelabs.com!1584033394!1033248!1
+X-Originating-IP: [104.47.12.50]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 6184 invoked from network); 12 Mar 2020 17:16:34 -0000
+Received: from mail-db3eur04lp2050.outbound.protection.outlook.com (HELO EUR04-DB3-obe.outbound.protection.outlook.com) (104.47.12.50)
+  by server-28.tower-229.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Mar 2020 17:16:34 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hf0pc8XQznPS/y26Mo60ZzlTzaHSRInUzUNUsMPln/4yU64hS+yiu4Rgu3CLub3flYU+MX+TBzdpA1Qz4XKPt1vVp77/mItGUVcfGENdzK+H+bKHq43cAWCOPGwZv1jm2uJfqhSj9MJKKr1HJphQVvviPoD12i2rurTAQuML8FWQhZxHge/9ZRrNRdsRvPoNcga84o00nr3SQdQn4RKkJHNqaY5zZrjygRtLRwaKZo55L6R3JgO4V7X5VkiI9HjDUWTJQezXLSdOTxvm3IRgtYTk/Nl4FHGeQ3Wnlt7V6sn6t5OCV+i+Go/k6c0eLyyrp7J3yVj8Q6zPvfvn7gIrBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zpSRDRPplo0IorpW/sSk5nMwEsvCMfiTQR6UMl3g1WE=;
+ b=CD4U1ko0DmAkzKQ7kszpv1ILJPVbDnKVICWwbgYvivoITSK3uHnAXTGmfHjDlYYrn7WeupccDC68Kx2K6YS+OMniI13DaDpgLe1NJbUD9uyVZmR6KBoGMZbNRnB4hweViyR88fDsN1NzviA0HYeIXnFifqpYEMwVYXZHMOtQNMYYZ1V2yP22ty37NCyF9CiNRC3kIX3maxOt+klmHoxpug5pI3CVQ6XZdgN0BkTkPIXv0t9l0MiqvhGCwesEcjSoYSTy7A6sVPdsV7+z+lX8I4A0FP+k8YzXD0pv3zBeEOVoLMSkEuqGc3EXz9Bntn91mcC3cE4EzLyVCcpu2oF/Yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zpSRDRPplo0IorpW/sSk5nMwEsvCMfiTQR6UMl3g1WE=;
+ b=kSfaI3EdtvRWLrkDeSirChqFle3pq7NZVF+Q1KkH5u6j15Jg57AckzUXIlfN+y4w35Fyh/6YvSzUn6OXL1cf4lG/teIJfU/SpBl1mYlUlm78NREMFxXDDEnVs1dnWUfq/P4T55rETBsj58bEARwZv9m5CTArzfidTUDLWTlsjhs=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
+ AM6PR10MB3079.EURPRD10.PROD.OUTLOOK.COM (10.255.120.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Thu, 12 Mar 2020 17:16:31 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
+ 17:16:31 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Alessandro Zummo <a.zummo@towertech.it>
+CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/3] rtc: da9052: set range
+Thread-Topic: [PATCH 2/3] rtc: da9052: set range
+Thread-Index: AQHV84ngedRHmzibKkeTdGwcOQdj0ahFPKBA
+Date:   Thu, 12 Mar 2020 17:16:31 +0000
+Message-ID: <AM6PR10MB22631EAF221358A54BE96A5780FD0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200306073548.57579-1-alexandre.belloni@bootlin.com>
+ <20200306073548.57579-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200306073548.57579-2-alexandre.belloni@bootlin.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47c525a3-48b3-4178-cae7-08d7c6a91bf6
+x-ms-traffictypediagnostic: AM6PR10MB3079:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR10MB307961ADB0F5AEE39C7967FBA7FD0@AM6PR10MB3079.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:534;
+x-forefront-prvs: 0340850FCD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(199004)(8676002)(186003)(8936002)(316002)(71200400001)(4744005)(53546011)(6506007)(9686003)(26005)(33656002)(2906002)(478600001)(4326008)(5660300002)(54906003)(64756008)(76116006)(66476007)(66556008)(55016002)(7696005)(66946007)(86362001)(81156014)(81166006)(110136005)(52536014)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB3079;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q79i/cp+RnwtbPkYahwzzn5qZVHTg38QNt3TN6GdGPzkHE8wiAFyJXHOaclx77BU1M1C2+pjmRpXTzf/QANdjlFmX8bx1Be4yBDFgAHuby3FIqNckRVskjs4cFa8S5Opv8caOpEa5Ouv117zQWdUkwtefp+nQYMmUS2+kM1e/8ku6fE0IPsjtNQ/SJC1Hq0JbUTG/oPqQ1d7X6DKs/qnM5kHg4eVMYzIuT7+hhqW/0ksC5YeRWnNx0f43vhyt8oop+2LjGIHwls09njVKLS7Bmn6uUm3GsSDrTCIvg/eXIUqJvyRi+XDFLvR5PaflITcO7DURi4il0QCkATuqWeGpD6Zve4BOnRKzs9tivSTCsbB4cfzZ6WJJ9BdWWY8OkJq6Pacocsxiat2gbgQnQpgWL21LCEPQcJSCC0zOMW3nWMbmSqF1ZqgEtsvpm/sWGGj
+x-ms-exchange-antispam-messagedata: iVwNTplmC8d3sTQPfPGsTc3dVUICe1u5sLnT1X/ASDMlpPQ7TRUnlDOedFN/pE9Ftu0fc/y9X+KvqBIMNUZ1ElpGfCU0yyPVBcFekL/t7s15E5zm6yQHGD8tdDAkg4Vy7zmK8Xra85AAfofNnXZ1dQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47c525a3-48b3-4178-cae7-08d7c6a91bf6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 17:16:31.4737
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OI8gJ/LTF0sS1edLFwIQ+ELrDHjoO3a+rCZbSU2YhnaPk0f8ZlRUnbim/BbQ8Vv4l3CsufmFyO3lGzlhreFPLYRYJVHix8e+eGEZ0+/srU8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB3079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+On 06 March 2020 07:36, Alexandre Belloni wrote:
 
-On 12/03/20 7:51 PM, Richard Cochran wrote:
-> On Thu, Mar 12, 2020 at 04:14:34PM +0530, Lokesh Vutla wrote:
->> But the problem here is that inactive breaks between two periods is not desired.
->> Because the pwm is used to generate a 1PPS signal and is continuously
->> synchronized with PTP clock.
-> 
-> The 1-PPS case is the "easy" one.  If the PWM is adjustable on the
-> fly, then people will use it with higher frequency signals.
+> The da9052 is an rtc valid from 2000 to 2063 (max year is 63).
+>=20
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Yes, PWM can be adjusted on the fly. TRM does specify that corresponding
-registers(TLDR, TMAR, TCRR) registers can be updated when timer is active.
+Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 
->  
->> I am up if this can be solved generically. But updating period is very specific
->> to hardware implementation. Not sure what generic solution can be brought out of
->> this. Please correct me if I am wrong.
-> 
-> What happens today when the PWM frequency or duty cycle are changed
-> while the signal is enabled?
+> ---
+>  drivers/rtc/rtc-da9052.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/rtc/rtc-da9052.c b/drivers/rtc/rtc-da9052.c
+> index e159c5911122..27cde834a1b8 100644
+> --- a/drivers/rtc/rtc-da9052.c
+> +++ b/drivers/rtc/rtc-da9052.c
+> @@ -303,6 +303,8 @@ static int da9052_rtc_probe(struct platform_device
+> *pdev)
+>  		return PTR_ERR(rtc->rtc);
+>=20
+>  	rtc->rtc->ops =3D &da9052_rtc_ops;
+> +	rtc->rtc->range_min =3D RTC_TIMESTAMP_BEGIN_2000;
+> +	rtc->rtc->range_max =3D RTC_TIMESTAMP_END_2063;
+>=20
+>  	ret =3D da9052_request_irq(rtc->da9052, DA9052_IRQ_ALARM, "ALM",
+>  				da9052_rtc_irq, rtc);
+> --
+> 2.24.1
 
-Today, PWM is stopped and then period/duty_cycle are updated.
-
-> 
-> Do different PWM devices/drivers behave the same way?
-> 
-> Does this series change the behavior of the am335x and friends?
-
-Yes, this series  is applicable on all TI OMAP2+ devices with DMTIMER.
-
-[0] http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf Section 20.1.1.1 DMTIMER
-overview Page 4436.
-
-Thanks and regards,
-Lokesh
