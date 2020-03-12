@@ -2,95 +2,109 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095CDC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB27A2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518462072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584037641;
-	bh=LQdfO10Srv2HjxNEEjAd8rd2rM0p91Oi3fz+bEvZqos=;
+	s=default; t=1584037713;
+	bh=OtLIxDI4nz/+LFfovnVLdTwnMBZbSC5JmD1+bjepytU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FIvAL6qmird+m1iUDTiQsv9j8zvHy7LMeLtQOpWhfJW8SEnouWaMVW6C5sHd4gvJz
-	 SNMw2q8a1YcRgNJKMxLYcLa2m+ar5N5jIcrRlIcbhzlDQuesm12O/eTwaLCjaFQSSV
-	 iteKMMQVi+8iVgtrSEqVddTt5ezSaLRqb1pq4lZk=
+	b=LHfU38+MaPE+CO4aKA1daqBRJ+JfaKNQjNWQ34S9MiF+cvwtU/bUeISZJ1uoqk7AE
+	 YCT/ev+ZqfmiaoBUYyWr+1Jyvy2Lfmn7FZ6k19vlgsWmyTxzTGeqNn9vRKPEwzGep2
+	 HiXv4CSWHunmRceGUaMazGv5QH0aVbaOyNUsyr+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgCLS1U (ORCPT
+        id S1726757AbgCLS2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:27:20 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43721 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgCLS1U (ORCPT
+        Thu, 12 Mar 2020 14:28:32 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46198 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCLS2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:27:20 -0400
-Received: by mail-qk1-f193.google.com with SMTP id x1so3065872qkx.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:27:19 -0700 (PDT)
+        Thu, 12 Mar 2020 14:28:32 -0400
+Received: by mail-qk1-f196.google.com with SMTP id f28so7891523qkk.13;
+        Thu, 12 Mar 2020 11:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=JuxJ7Z8xDChrzzCB7zGTi4ix30Z2gSprxe8mqlOflC4=;
-        b=qEixyka206vrRdeAV/u+7hfIPOtZxqQvwSbHupJXY9nmsBSrzOl45ME2lgszt1VrSc
-         fFT/JSNGoJB45Qwc5TVok8llXqbHzLRD8gczEsxdEQ9x1pQ9bWTpg5KFdSR8XLjJkDsT
-         pZy6ftB92RX8A2DG3h7cKtAaElNxcx0WdZotTjWeitv/rNS9vkj0v6sgJx8GlIkMqVLX
-         v94A8xVhZ1RcnCSbZDhT0hIrGKrK4/xSMvajPNmRWjuaf+YKarlrWzhdWptSqcROK47g
-         Mon4ELYq+q7X4TmVftIAFL1+1n9sdTXZGIIXunmlVd198rU09cPgFEzYuLE10+eabWw8
-         A9Cw==
+        bh=Z1+jrFk0l780LY82KtgQMlOjuOPnOSNUeBpKHT6Qy6g=;
+        b=Im3J3CT7QT/G7DEOXBPU5qa5NpzXZfgFk285tuuYBMicpySswnkSvESZnO6jErqFRd
+         UPjDpp+0r/vIODgW1k2ShKCiqBy9MmTZB95AFcHg6b7GeSpKBLUrNugoVoATGkaO79DP
+         mcRtqwQ/zX3X63/A+7p6exSokHYdR7eIJBUgv5B5sY+P2DtU9pohuGZNPHsQfo0VFSI2
+         VxQkQ/6aIBCgeOjZES4EHfdnoV985yMvsQIIreKQVnp8LIh6qsdqDWBCyvkBNnEKbegw
+         eLunF7LsF0q/MWSdI3ei6mjKA8959FeSB1VKEpCNXBnaDb99LSD6iiIueYU9p8geMzQv
+         814Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=JuxJ7Z8xDChrzzCB7zGTi4ix30Z2gSprxe8mqlOflC4=;
-        b=pVnvHqJZfRkA2i3e0kbqOv1AAdm2NGvJKmUV6t3PPlq31wnYD6Yf0s/qPK44mDmfd1
-         0kYI4rP37+lgOpPogNEDTg9wOEjJE2ZEbDiy3qJ+OTq3BisdD+vwZtU2nx70gb50hHro
-         agMVoywxBa7XuhybH25VqiyB5yVQhhuOx4ZnDF6ZvmpvKoJlb06t2+HmgKCSEbufgwHa
-         rG5oKAIt6LkP01etSQ32aj/F+Ks4HKTOJVdFSva7s+q5TYKB0WDT1jjNSUZ21l3k2YLt
-         KhNv37v2gsIEqsbmoFEtk7sK7GFFlv2tMw4FIVF8jm+l6chELRuzlshgB8Q2BMJJ3Oop
-         eMqQ==
-X-Gm-Message-State: ANhLgQ3guZyn1lhTGaueClzgmBz/n4yuvmdGWux9wUpbEsNvm3KjAEao
-        neFfDgVktTOeHl9OlDMYSYM9UqoCu1A=
-X-Google-Smtp-Source: ADFU+vvrjFjR/+N/Dt77AaCC43mx5oawY6Xl9Tx9TPCavfi7WQa97pDbwsLnjm1F/qG/Yv+YHfkQEQ==
-X-Received: by 2002:a05:620a:228f:: with SMTP id o15mr9199167qkh.197.1584037639272;
-        Thu, 12 Mar 2020 11:27:19 -0700 (PDT)
+        bh=Z1+jrFk0l780LY82KtgQMlOjuOPnOSNUeBpKHT6Qy6g=;
+        b=I8ZDFnRMX4pvkgU2j0u0yY/djLRsHaPgEUY9wJNY4owkPY555l7HuYl3/q2Y9egQVO
+         k8YiEj4CC0vC55Vji9SY1XbZc7J/OL9Iv+QT6BxMbHVXNFqc2ce9U0ViWHLOXFlzaxPP
+         M+6r2cR457B/quC8+6wqWCxjBjkK43ZP1872rJuvehmqy+urzd2oIRDz3LU0cmTVDIXH
+         TeSJRV7x2vj1IjPKDAKNjb5SgY4TlcuVwqtqwmlGaRqAeBTkxqAFV44L9zTK3sjWGkMq
+         gCy4xpnOqjlYJYOCWP23JPNOoaA/X7mayP5ca0X0j7IPXg7bz8au34RN1w8iPClQnojl
+         794w==
+X-Gm-Message-State: ANhLgQ3Xp8s1GHOhRqkUNmUwrspEKU0pHJQqMLwkI20oP+2ydtW5vSb/
+        a8LgbCy0AlzPugVi/mbIbW4=
+X-Google-Smtp-Source: ADFU+vt9JCwr3OZM0QDXDy3zEeWocBIU5GDRQ52/xx5BmZffX9syssLvIR6XyxNZEWqjxRiPw4/j+w==
+X-Received: by 2002:a37:b146:: with SMTP id a67mr1341985qkf.473.1584037710282;
+        Thu, 12 Mar 2020 11:28:30 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::fec8])
-        by smtp.gmail.com with ESMTPSA id x9sm13920350qtk.7.2020.03.12.11.27.18
+        by smtp.gmail.com with ESMTPSA id h5sm11049665qkc.118.2020.03.12.11.28.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 11:27:18 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 14:27:17 -0400
+        Thu, 12 Mar 2020 11:28:29 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 14:28:26 -0400
 From:   Tejun Heo <tj@kernel.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH] workqueue: Mark up unlocked access to wq->first_flusher
-Message-ID: <20200312182717.GF79873@mtj.duckdns.org>
-References: <20200310162319.10138-1-chris@chris-wilson.co.uk>
+To:     almasrymina@google.com,
+        syzbot <syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, andriin@fb.com, ast@kernel.org,
+        bpf@vger.kernel.org, cgroups@vger.kernel.org, christian@brauner.io,
+        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        netdev@vger.kernel.org, sfr@canb.auug.org.au,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: KASAN: slab-out-of-bounds Read in cgroup_file_notify
+Message-ID: <20200312182826.GG79873@mtj.duckdns.org>
+References: <00000000000041c6c205a08225dc@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310162319.10138-1-chris@chris-wilson.co.uk>
+In-Reply-To: <00000000000041c6c205a08225dc@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 04:23:19PM +0000, Chris Wilson wrote:
-> [ 7329.671518] BUG: KCSAN: data-race in flush_workqueue / flush_workqueue
-> [ 7329.671549]
-> [ 7329.671572] write to 0xffff8881f65fb250 of 8 bytes by task 37173 on cpu 2:
-> [ 7329.671607]  flush_workqueue+0x3bc/0x9b0 (kernel/workqueue.c:2844)
-> [ 7329.672527]
-> [ 7329.672540] read to 0xffff8881f65fb250 of 8 bytes by task 37175 on cpu 0:
-> [ 7329.672571]  flush_workqueue+0x28d/0x9b0 (kernel/workqueue.c:2835)
+On Tue, Mar 10, 2020 at 08:55:14AM -0700, syzbot wrote:
+> Hello,
 > 
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> syzbot found the following crash on:
+> 
+> HEAD commit:    c99b17ac Add linux-next specific files for 20200225
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1610d70de00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6b7ebe4bd0931c45
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cac0c4e204952cf449b1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1242e1fde00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1110d70de00000
+> 
+> The bug was bisected to:
+> 
+> commit 6863de00e5400b534cd4e3869ffbc8f94da41dfc
+> Author: Mina Almasry <almasrymina@google.com>
+> Date:   Thu Feb 20 03:55:30 2020 +0000
+> 
+>     hugetlb_cgroup: add accounting for shared mappings
 
-Applied to wq/for-5.7.
+Mina, can you please take a look at this?
 
 Thanks.
 
