@@ -2,411 +2,252 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB6BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78384C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DE020650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5C920650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387916AbgCLGDW (ORCPT
+        id S2387927AbgCLGDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:03:22 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:15073 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387767AbgCLGDU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:03:20 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 12 Mar 2020 11:32:29 +0530
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 12 Mar 2020 11:32:00 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 668C24D31; Thu, 12 Mar 2020 11:31:59 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: [RFC v5 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
-Date:   Thu, 12 Mar 2020 11:31:50 +0530
-Message-Id: <1583992911-12001-2-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1583992911-12001-1-git-send-email-ppvk@codeaurora.org>
-References: <1583992911-12001-1-git-send-email-ppvk@codeaurora.org>
+        Thu, 12 Mar 2020 02:03:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:28234 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387767AbgCLGDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 02:03:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 23:03:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,543,1574150400"; 
+   d="scan'208";a="415813354"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 11 Mar 2020 23:03:40 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jCGwV-000H7y-En; Thu, 12 Mar 2020 14:03:39 +0800
+Date:   Thu, 12 Mar 2020 14:02:52 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/timers] BUILD SUCCESS
+ fac01d11722c92a186b27ee26cd429a8066adfb5
+Message-ID: <5e69d08c.nF5fjp3DN0q63C3J%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect bandwidths for SDHC driver using OPP framework that
-is required by SDHC driver based on the clock frequency and bus width
-of the card. Otherwise, the system clocks may run at minimum clock
-speed and thus affecting the performance.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/timers
+branch HEAD: fac01d11722c92a186b27ee26cd429a8066adfb5  x86/tsc_msr: Make MSR derived TSC frequency more accurate
 
-This change is based on
-[RFC] mmc: host: sdhci-msm: Use the interconnect API
-(https://lkml.org/lkml/2018/10/11/499) and
+elapsed time: 482m
 
-[PATCH v6] Introduce Bandwidth OPPs for interconnects
-(https://lkml.org/lkml/2019/12/6/740)
+configs tested: 189
+configs skipped: 48
 
-Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+mips                      fuloong2e_defconfig
+c6x                        evmc6678_defconfig
+powerpc                       ppc64_defconfig
+riscv                            allmodconfig
+sh                            titan_defconfig
+m68k                          multi_defconfig
+openrisc                 simple_smp_defconfig
+m68k                       m5475evb_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200311
+x86_64               randconfig-a002-20200311
+x86_64               randconfig-a003-20200311
+i386                 randconfig-a001-20200311
+i386                 randconfig-a002-20200311
+i386                 randconfig-a003-20200311
+alpha                randconfig-a001-20200311
+m68k                 randconfig-a001-20200311
+mips                 randconfig-a001-20200311
+nds32                randconfig-a001-20200311
+parisc               randconfig-a001-20200311
+alpha                randconfig-a001-20200312
+m68k                 randconfig-a001-20200312
+mips                 randconfig-a001-20200312
+nds32                randconfig-a001-20200312
+parisc               randconfig-a001-20200312
+c6x                  randconfig-a001-20200312
+h8300                randconfig-a001-20200312
+microblaze           randconfig-a001-20200312
+nios2                randconfig-a001-20200312
+sparc64              randconfig-a001-20200312
+c6x                  randconfig-a001-20200311
+h8300                randconfig-a001-20200311
+microblaze           randconfig-a001-20200311
+nios2                randconfig-a001-20200311
+sparc64              randconfig-a001-20200311
+csky                 randconfig-a001-20200311
+openrisc             randconfig-a001-20200311
+s390                 randconfig-a001-20200311
+sh                   randconfig-a001-20200311
+xtensa               randconfig-a001-20200311
+x86_64               randconfig-b001-20200311
+x86_64               randconfig-b002-20200311
+x86_64               randconfig-b003-20200311
+i386                 randconfig-b001-20200311
+i386                 randconfig-b002-20200311
+i386                 randconfig-b003-20200311
+x86_64               randconfig-c001-20200311
+x86_64               randconfig-c002-20200311
+x86_64               randconfig-c003-20200311
+i386                 randconfig-c001-20200311
+i386                 randconfig-c002-20200311
+i386                 randconfig-c003-20200311
+x86_64               randconfig-d001-20200311
+x86_64               randconfig-d002-20200311
+x86_64               randconfig-d003-20200311
+i386                 randconfig-d001-20200311
+i386                 randconfig-d002-20200311
+i386                 randconfig-d003-20200311
+x86_64               randconfig-e001-20200312
+x86_64               randconfig-e002-20200312
+x86_64               randconfig-e003-20200312
+i386                 randconfig-e001-20200312
+i386                 randconfig-e002-20200312
+i386                 randconfig-e003-20200312
+x86_64               randconfig-f001-20200311
+x86_64               randconfig-f002-20200311
+x86_64               randconfig-f003-20200311
+i386                 randconfig-f001-20200311
+i386                 randconfig-f002-20200311
+i386                 randconfig-f003-20200311
+x86_64               randconfig-f001-20200312
+x86_64               randconfig-f002-20200312
+x86_64               randconfig-f003-20200312
+i386                 randconfig-f001-20200312
+i386                 randconfig-f002-20200312
+i386                 randconfig-f003-20200312
+x86_64               randconfig-g001-20200311
+x86_64               randconfig-g002-20200311
+x86_64               randconfig-g003-20200311
+i386                 randconfig-g001-20200311
+i386                 randconfig-g002-20200311
+i386                 randconfig-g003-20200311
+x86_64               randconfig-g001-20200312
+x86_64               randconfig-g002-20200312
+x86_64               randconfig-g003-20200312
+i386                 randconfig-g001-20200312
+i386                 randconfig-g002-20200312
+i386                 randconfig-g003-20200312
+x86_64               randconfig-h001-20200311
+x86_64               randconfig-h002-20200311
+x86_64               randconfig-h003-20200311
+i386                 randconfig-h001-20200311
+i386                 randconfig-h002-20200311
+i386                 randconfig-h003-20200311
+arc                  randconfig-a001-20200311
+arm                  randconfig-a001-20200311
+arm64                randconfig-a001-20200311
+ia64                 randconfig-a001-20200311
+powerpc              randconfig-a001-20200311
+sparc                randconfig-a001-20200311
+arm                  randconfig-a001-20200312
+arm64                randconfig-a001-20200312
+ia64                 randconfig-a001-20200312
+powerpc              randconfig-a001-20200312
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
-
-RFC v4 -> v5:
-- Rewrote the icc interconnect get handlers and its error handling
-  and allocated vote data after handling all icc get handler errors.
-- Removed explicit error check on ICC handlers.
-- Addressed minor code style comments.
-
- drivers/mmc/host/sdhci-msm.c | 231 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 227 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 09ff731..5fe8fad 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -11,8 +11,10 @@
- #include <linux/mmc/mmc.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include <linux/interconnect.h>
- #include <linux/iopoll.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/pm_opp.h>
- 
- #include "sdhci-pltfm.h"
- #include "cqhci.h"
-@@ -234,6 +236,12 @@ struct sdhci_msm_variant_info {
- 	const struct sdhci_msm_offset *offset;
- };
- 
-+struct sdhci_msm_bus_vote_data {
-+	struct icc_path *sdhc_to_ddr;
-+	struct icc_path *cpu_to_sdhc;
-+	u32 curr_freq;
-+};
-+
- struct sdhci_msm_host {
- 	struct platform_device *pdev;
- 	void __iomem *core_mem;	/* MSM SDCC mapped address */
-@@ -260,8 +268,11 @@ struct sdhci_msm_host {
- 	bool use_cdr;
- 	u32 transfer_mode;
- 	bool updated_ddr_cfg;
-+	struct sdhci_msm_bus_vote_data *bus_vote_data;
- };
- 
-+static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable);
-+
- static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -1581,6 +1592,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
- 
- 	msm_set_clock_rate_for_bus_mode(host, clock);
- out:
-+	sdhci_msm_bus_voting(host, !!clock);
- 	__sdhci_msm_set_clock(host, clock);
- }
- 
-@@ -1823,6 +1835,201 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
- 	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
- }
- 
-+/*
-+ * Returns required bandwidth in Bytes per Sec
-+ */
-+static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
-+					struct mmc_ios *ios)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+
-+	switch (ios->bus_width) {
-+	case MMC_BUS_WIDTH_1:
-+		return msm_host->clk_rate / 8;
-+	case MMC_BUS_WIDTH_4:
-+		return msm_host->clk_rate / 2;
-+	case MMC_BUS_WIDTH_8:
-+		break;
-+	}
-+	return msm_host->clk_rate;
-+}
-+
-+/*
-+ * Helper function to parse the exact OPP node
-+ * Returns OPP pointer on success else NULL on error
-+ */
-+static struct dev_pm_opp
-+		*sdhci_msm_find_opp_for_freq(struct sdhci_msm_host *msm_host,
-+							unsigned long bw)
-+{
-+	struct dev_pm_opp *opp;
-+	struct sdhci_host *host = mmc_priv(msm_host->mmc);
-+	unsigned int freq = bw;
-+	struct device *dev = &msm_host->pdev->dev;
-+
-+
-+	if (!freq)
-+		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
-+	else
-+		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
-+
-+	/* Max bandwidth vote */
-+	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
-+		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
-+
-+	if (IS_ERR(opp)) {
-+		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
-+				freq, PTR_ERR(opp));
-+		return NULL;
-+	}
-+	return opp;
-+}
-+
-+/*
-+ * This function sets the interconnect bus bandwidth
-+ * vote based on bw (bandwidth) argument.
-+ */
-+#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
-+static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
-+						unsigned int bw)
-+{
-+	int i, err;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
-+	struct device *dev = &msm_host->pdev->dev;
-+	struct dev_pm_opp *opp;
-+	unsigned long freq = bw;
-+	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
-+	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
-+
-+	if (bw == vote_data->curr_freq)
-+		return;
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-+		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
-+		if (opp) {
-+			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
-+			freq += 1; /* Next bandwidth vote */
-+			dev_pm_opp_put(opp);
-+		}
-+	}
-+	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc avg_bw:%lu peak_bw:%lu\n",
-+			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
-+				avg_bw[1], peak_bw[1]);
-+	err = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
-+	if (err) {
-+		dev_err(dev, "icc_set() failed for 'sdhc-ddr' path err:%d\n",
-+							err);
-+		return;
-+	}
-+	err = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
-+	if (err) {
-+		dev_err(dev, "icc_set() failed for 'cpu-sdhc' path err:%d\n",
-+							err);
-+		return;
-+	}
-+	vote_data->curr_freq = bw;
-+}
-+
-+/*
-+ * Helper function to register for OPP and interconnect
-+ * frameworks.
-+ */
-+static struct sdhci_msm_bus_vote_data
-+		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
-+				struct platform_device *pdev)
-+{
-+	struct sdhci_msm_bus_vote_data *vote_data;
-+	struct device *dev = &pdev->dev;
-+	int ret, i, err;
-+	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
-+	const char *path_names[] = {
-+		"sdhc-ddr",
-+		"cpu-sdhc",
-+	};
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
-+		icc_paths[i] = of_icc_get(&pdev->dev, path_names[i]);
-+
-+	if (!icc_paths[0] && !icc_paths[1]) {
-+		dev_info(&pdev->dev, "ICC DT property is missing.Skip vote!!\n");
-+		return NULL;
-+	}
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-+		if (!icc_paths[i]) {
-+			dev_err(&pdev->dev, "interconnect path '%s' is not configured\n",
-+					path_names[i]);
-+			err = -EINVAL;
-+			goto handle_err;
-+		}
-+		if (IS_ERR(icc_paths[i])) {
-+			err = PTR_ERR(icc_paths[i]);
-+
-+			if (err != -EPROBE_DEFER)
-+				dev_err(&pdev->dev, "interconnect path '%s' is invalid:%d\n",
-+					path_names[i], err);
-+			goto handle_err;
-+		}
-+	}
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret) {
-+		if (ret == -ENODEV || ret == -ENODATA)
-+			dev_err(dev, "OPP dt properties missing:%d\n", ret);
-+		else
-+			dev_err(dev, "OPP registration failed:%d\n", ret);
-+		return ERR_PTR(ret);
-+	}
-+
-+	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
-+	if (!vote_data)
-+		return ERR_PTR(-ENOMEM);
-+
-+	vote_data->sdhc_to_ddr = icc_paths[0];
-+	vote_data->cpu_to_sdhc = icc_paths[1];
-+	return vote_data;
-+handle_err:
-+	if (err) {
-+		int other = (i == 0) ? 1 : 0;
-+
-+		if (!IS_ERR_OR_NULL(icc_paths[other]))
-+			icc_put(icc_paths[other]);
-+	}
-+	return ERR_PTR(err);
-+}
-+
-+static void sdhci_msm_bus_unregister(struct device *dev,
-+				struct sdhci_msm_host *host)
-+{
-+	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
-+
-+	if (IS_ERR_OR_NULL(vote_data))
-+		return;
-+
-+	icc_put(vote_data->sdhc_to_ddr);
-+	icc_put(vote_data->cpu_to_sdhc);
-+}
-+
-+static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable)
-+{
-+	struct mmc_ios *ios = &host->mmc->ios;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	unsigned int bw;
-+
-+	if (IS_ERR_OR_NULL(msm_host->bus_vote_data))
-+		return;
-+
-+	if (enable) {
-+		bw = sdhci_get_bw_required(host, ios);
-+		sdhci_msm_bus_set_vote(host, bw);
-+	} else
-+		sdhci_msm_bus_set_vote(host, 0);
-+}
-+
- static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
- {
- 	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
-@@ -1992,11 +2199,20 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
- 	}
- 
-+	msm_host->bus_vote_data = sdhci_msm_bus_register(msm_host, pdev);
-+	if (IS_ERR(msm_host->bus_vote_data)) {
-+		ret = PTR_ERR(msm_host->bus_vote_data);
-+		dev_err(&pdev->dev, "Bus registration failed (%d)\n", ret);
-+		goto clk_disable;
-+	}
-+
-+	sdhci_msm_bus_voting(host, true);
-+
- 	if (!msm_host->mci_removed) {
- 		msm_host->core_mem = devm_platform_ioremap_resource(pdev, 1);
- 		if (IS_ERR(msm_host->core_mem)) {
- 			ret = PTR_ERR(msm_host->core_mem);
--			goto clk_disable;
-+			goto bus_unregister;
- 		}
- 	}
- 
-@@ -2071,7 +2287,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
- 	if (msm_host->pwr_irq < 0) {
- 		ret = msm_host->pwr_irq;
--		goto clk_disable;
-+		goto bus_unregister;
- 	}
- 
- 	sdhci_msm_init_pwr_irq_wait(msm_host);
-@@ -2084,7 +2300,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 					dev_name(&pdev->dev), host);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
--		goto clk_disable;
-+		goto bus_unregister;
- 	}
- 
- 	pm_runtime_get_noresume(&pdev->dev);
-@@ -2112,6 +2328,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_set_suspended(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
-+bus_unregister:
-+	sdhci_msm_bus_voting(host, false);
-+	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
- clk_disable:
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
- 				   msm_host->bulk_clks);
-@@ -2141,6 +2360,9 @@ static int sdhci_msm_remove(struct platform_device *pdev)
- 				   msm_host->bulk_clks);
- 	if (!IS_ERR(msm_host->bus_clk))
- 		clk_disable_unprepare(msm_host->bus_clk);
-+
-+	sdhci_msm_bus_voting(host, false);
-+	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
- 	sdhci_pltfm_free(pdev);
- 	return 0;
- }
-@@ -2153,7 +2375,7 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
- 
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
- 				   msm_host->bulk_clks);
--
-+	sdhci_msm_bus_voting(host, false);
- 	return 0;
- }
- 
-@@ -2175,6 +2397,7 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
- 	if (msm_host->restore_dll_config && msm_host->clk_rate)
- 		return sdhci_msm_restore_sdr_dll_config(host);
- 
-+	sdhci_msm_bus_voting(host, true);
- 	return 0;
- }
- 
--- 
-1.9.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
