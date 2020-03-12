@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5458C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF068C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B522206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A79B206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584037071;
-	bh=TObxuJYFMqX9ZaEN3SNWpO2IXr2osomYu5snmBs9Zfg=;
+	s=default; t=1584037076;
+	bh=8csvVhRW3l5KCsMDr6QYUn3YY8DNKrig/Br59Zsgyso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hoQAoHexms1l7PAMzt3HFvoIjlbiG4/VBDvy25/00rbmgN3jXeMIi4EdFB/tCtii3
-	 8Vnvy6+pzA6THlhnGT8xgZJG8DQUPRAWVWXLdUHJxyYzBwrdkVzLKNueOEXYgvnCSg
-	 ir7LkhhFYiUEFSQIv4S06ziKH/kq7gDgCyZe7Sa4=
+	b=xYccds3EvlE51cc50ZfAtcHXUaqUAaLbU957w09H8uHjhsmsDeNWPNJoty1eFnb+U
+	 fFGuz4a5WRebFhubih6EjXu0IT1M+EH4NORZAUxfDJv8Rq0SkE7gibU94tq052jwcg
+	 vBoYxaeKQ4EHXghWdd9OIAkHuWQdJAJAKS15HwWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgCLSRk (ORCPT
+        id S1726988AbgCLSRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52236 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 14:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbgCLSRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:17:09 -0400
+        id S1726599AbgCLSRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:17:06 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D199420754;
-        Thu, 12 Mar 2020 18:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09AF92073B;
+        Thu, 12 Mar 2020 18:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584037028;
-        bh=TObxuJYFMqX9ZaEN3SNWpO2IXr2osomYu5snmBs9Zfg=;
+        s=default; t=1584037025;
+        bh=8csvVhRW3l5KCsMDr6QYUn3YY8DNKrig/Br59Zsgyso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0C1garsoB+qzt51BrdgTNrOpU7I2t7R+DFAgIHK3vwkS9s2V6tM7Y9rGjq6yiCN7L
-         1l9YOOT5GgHqwjg0T4unf9d1nxJJdE/wcr5ANm6EsMFPV7GdvEROCmCwcxMn892dAi
-         wnBet1mFrT5Mqz1jtkdOgEqQn8VebQF1DW+xgKrg=
+        b=zUOWK6m2oCPce5Zcj5hEAhQGIF/dz9Zo7wrRTl1/JXfyQS90EQoAs+oqFFW5L9SZC
+         RT+sD7HaVJDt3YhIWuIBa74IM0uh24/BeWSYLXIfT8b4hZo6MjRF9rssLA2Ib8CEOC
+         AVxL7KmXQ34FEQYjwcx3sLFhVLPs5y8WQ7YfttDY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC tip/core/rcu 10/16] rcutorture: Add torture tests for RCU Tasks Rude
-Date:   Thu, 12 Mar 2020 11:16:56 -0700
-Message-Id: <20200312181702.8443-10-paulmck@kernel.org>
+Subject: [PATCH RFC tip/core/rcu 03/16] rcutorture: Add flag to produce non-busy-wait task stalls
+Date:   Thu, 12 Mar 2020 11:16:49 -0700
+Message-Id: <20200312181702.8443-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200312181618.GA21271@paulmck-ThinkPad-P72>
 References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
@@ -61,141 +61,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds the definitions required to torture the rude flavor of
-RCU tasks.
+This commit aids testing of RCU task stall warning messages by adding
+an rcutorture.stall_cpu_block module parameter that results in the
+induced stall sleeping within the RCU read-side critical section.
+Spinning with interrupts disabled is still available via the
+rcutorture.stall_cpu_irqsoff module parameter, and specifying neither
+of these two module parameters will spin with preemption disabled.
+
+Note that sleeping (as opposed to preemption) results in additional
+complaints from RCU at context-switch time, so yet more testing.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/Kconfig.debug                           |  2 ++
- kernel/rcu/rcu.h                                   |  1 +
- kernel/rcu/rcutorture.c                            | 31 ++++++++++++++++++++--
- .../selftests/rcutorture/configs/rcu/CFLIST        |  1 +
- .../selftests/rcutorture/configs/rcu/RUDE01        | 10 +++++++
- .../selftests/rcutorture/configs/rcu/RUDE01.boot   |  1 +
- 6 files changed, 44 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/RUDE01
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/RUDE01.boot
+ Documentation/admin-guide/kernel-parameters.txt |  5 +++++
+ kernel/rcu/rcutorture.c                         | 13 ++++++++-----
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-index ec4bb6c..b15a3bd 100644
---- a/kernel/rcu/Kconfig.debug
-+++ b/kernel/rcu/Kconfig.debug
-@@ -24,6 +24,7 @@ config RCU_PERF_TEST
- 	select TORTURE_TEST
- 	select SRCU
- 	select TASKS_RCU
-+	select TASKS_RUDE_RCU
- 	default n
- 	help
- 	  This option provides a kernel module that runs performance
-@@ -41,6 +42,7 @@ config RCU_TORTURE_TEST
- 	select TORTURE_TEST
- 	select SRCU
- 	select TASKS_RCU
-+	select TASKS_RUDE_RCU
- 	default n
- 	help
- 	  This option provides a kernel module that runs torture tests
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index 00ddc92..c574620 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -441,6 +441,7 @@ void rcu_request_urgent_qs_task(struct task_struct *t);
- enum rcutorture_type {
- 	RCU_FLAVOR,
- 	RCU_TASKS_FLAVOR,
-+	RCU_TASKS_RUDE_FLAVOR,
- 	RCU_TRIVIAL_FLAVOR,
- 	SRCU_FLAVOR,
- 	INVALID_RCU_FLAVOR
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 6d16b78..17eff15 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4161,6 +4161,11 @@
+ 			Duration of CPU stall (s) to test RCU CPU stall
+ 			warnings, zero to disable.
+ 
++	rcutorture.stall_cpu_block= [KNL]
++			Sleep while stalling if set.  This will result
++			in warnings from preemptible RCU in addition
++			to any other stall-related activity.
++
+ 	rcutorture.stall_cpu_holdoff= [KNL]
+ 			Time to wait (s) after boot before inducing stall.
+ 
 diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 1880c5f..1acafc5 100644
+index b3301f3..f75d466 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
-@@ -731,6 +731,33 @@ static struct rcu_torture_ops trivial_ops = {
- 	.name		= "trivial"
- };
- 
-+/*
-+ * Definitions for rude RCU-tasks torture testing.
-+ */
-+
-+static void rcu_tasks_rude_torture_deferred_free(struct rcu_torture *p)
-+{
-+	call_rcu_tasks_rude(&p->rtort_rcu, rcu_torture_cb);
-+}
-+
-+static struct rcu_torture_ops tasks_rude_ops = {
-+	.ttype		= RCU_TASKS_RUDE_FLAVOR,
-+	.init		= rcu_sync_torture_init,
-+	.readlock	= rcu_torture_read_lock_trivial,
-+	.read_delay	= rcu_read_delay,  /* just reuse rcu's version. */
-+	.readunlock	= rcu_torture_read_unlock_trivial,
-+	.get_gp_seq	= rcu_no_completed,
-+	.deferred_free	= rcu_tasks_rude_torture_deferred_free,
-+	.sync		= synchronize_rcu_tasks_rude,
-+	.exp_sync	= synchronize_rcu_tasks_rude,
-+	.call		= call_rcu_tasks_rude,
-+	.cb_barrier	= rcu_barrier_tasks_rude,
-+	.fqs		= NULL,
-+	.stats		= NULL,
-+	.irq_capable	= 1,
-+	.name		= "tasks-rude"
-+};
-+
- static unsigned long rcutorture_seq_diff(unsigned long new, unsigned long old)
+@@ -102,6 +102,7 @@ torture_param(int, stall_cpu, 0, "Stall duration (s), zero to disable.");
+ torture_param(int, stall_cpu_holdoff, 10,
+ 	     "Time to wait before starting stall (s).");
+ torture_param(int, stall_cpu_irqsoff, 0, "Disable interrupts while stalling.");
++torture_param(int, stall_cpu_block, 0, "Sleep while stalling.");
+ torture_param(int, stat_interval, 60,
+ 	     "Number of seconds between stats printk()s");
+ torture_param(int, stutter, 5, "Number of seconds to run/halt test");
+@@ -1599,6 +1600,7 @@ static int rcutorture_booster_init(unsigned int cpu)
+  */
+ static int rcu_torture_stall(void *args)
  {
- 	if (!cur_ops->gp_diff)
-@@ -740,7 +767,7 @@ static unsigned long rcutorture_seq_diff(unsigned long new, unsigned long old)
++	int idx;
+ 	unsigned long stop_at;
  
- static bool __maybe_unused torturing_tasks(void)
- {
--	return cur_ops == &tasks_ops;
-+	return cur_ops == &tasks_ops || cur_ops == &tasks_rude_ops;
- }
- 
- /*
-@@ -2408,7 +2435,7 @@ rcu_torture_init(void)
- 	int firsterr = 0;
- 	static struct rcu_torture_ops *torture_ops[] = {
- 		&rcu_ops, &rcu_busted_ops, &srcu_ops, &srcud_ops,
--		&busted_srcud_ops, &tasks_ops, &trivial_ops,
-+		&busted_srcud_ops, &tasks_ops, &tasks_rude_ops, &trivial_ops,
- 	};
- 
- 	if (!torture_init_begin(torture_type, verbose))
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFLIST b/tools/testing/selftests/rcutorture/configs/rcu/CFLIST
-index c3c1fb5..ec0c72f 100644
---- a/tools/testing/selftests/rcutorture/configs/rcu/CFLIST
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/CFLIST
-@@ -14,3 +14,4 @@ TINY02
- TASKS01
- TASKS02
- TASKS03
-+RUDE01
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/RUDE01 b/tools/testing/selftests/rcutorture/configs/rcu/RUDE01
-new file mode 100644
-index 0000000..bafe94c
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/RUDE01
-@@ -0,0 +1,10 @@
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=2
-+CONFIG_HOTPLUG_CPU=y
-+CONFIG_PREEMPT_NONE=n
-+CONFIG_PREEMPT_VOLUNTARY=n
-+CONFIG_PREEMPT=y
-+CONFIG_DEBUG_LOCK_ALLOC=y
-+CONFIG_PROVE_LOCKING=y
-+#CHECK#CONFIG_PROVE_RCU=y
-+CONFIG_RCU_EXPERT=y
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/RUDE01.boot b/tools/testing/selftests/rcutorture/configs/rcu/RUDE01.boot
-new file mode 100644
-index 0000000..9363708
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/RUDE01.boot
-@@ -0,0 +1 @@
-+rcutorture.torture_type=tasks-rude
+ 	VERBOSE_TOROUT_STRING("rcu_torture_stall task started");
+@@ -1610,21 +1612,22 @@ static int rcu_torture_stall(void *args)
+ 	if (!kthread_should_stop()) {
+ 		stop_at = ktime_get_seconds() + stall_cpu;
+ 		/* RCU CPU stall is expected behavior in following code. */
+-		rcu_read_lock();
++		idx = cur_ops->readlock();
+ 		if (stall_cpu_irqsoff)
+ 			local_irq_disable();
+-		else
++		else if (!stall_cpu_block)
+ 			preempt_disable();
+ 		pr_alert("rcu_torture_stall start on CPU %d.\n",
+ 			 smp_processor_id());
+ 		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
+ 				    stop_at))
+-			continue;  /* Induce RCU CPU stall warning. */
++			if (stall_cpu_block)
++				schedule_timeout_uninterruptible(HZ);
+ 		if (stall_cpu_irqsoff)
+ 			local_irq_enable();
+-		else
++		else if (!stall_cpu_block)
+ 			preempt_enable();
+-		rcu_read_unlock();
++		cur_ops->readunlock(idx);
+ 		pr_alert("rcu_torture_stall end.\n");
+ 	}
+ 	torture_shutdown_absorb("rcu_torture_stall");
 -- 
 2.9.5
 
