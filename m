@@ -2,116 +2,191 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEC8C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE4CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D6920724
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA142071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TPFkUlGE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6J5IOX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgCLK5M (ORCPT
+        id S1726860AbgCLLBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:57:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50366 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCLK5L (ORCPT
+        Thu, 12 Mar 2020 07:01:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37467 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgCLLBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:57:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CAqmUY193383;
-        Thu, 12 Mar 2020 10:56:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=bkTFwY/qkC759TzSl4/piySpqybsugf2XPINCYC//uQ=;
- b=TPFkUlGE55eqlOfEjmgMk6Y5fEgFjP3XiS0HxMLRgvhemaZGv69xf48ebj6Vs4EYTqxn
- XtNOgN9w9NUbOTFDz8SMhn0MynqGz3wuoU0tEhuLs1iitTpWNVg0SRkf16ZTmRn1AdUq
- Hs0AXoipTxPVcrtM9u1pA4wiNdJMM5Lfdc22yump9vGmJbI9qu26PcVPOQxVsMr2OQRA
- tUg5nUrb62GEBUoi/NKZNdXzg2J19tuFAUNQ8PpvzGqFCn1jIkLwVSJrlKg47a59M8up
- kjxrZwr1AP8NENWtjyR21aJkQCNl1JPzOLXtFnRELHQh+l5f5u3mYgjPevCFgQQHvdoQ hg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ym31urwb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 10:56:47 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CAq7Sj143760;
-        Thu, 12 Mar 2020 10:56:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2yqgvcnj54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 10:56:47 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02CAujKB029016;
-        Thu, 12 Mar 2020 10:56:45 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Mar 2020 03:56:44 -0700
-Date:   Thu, 12 Mar 2020 13:56:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] perf/core: Fix reversed NULL check in
- perf_event_groups_less()
-Message-ID: <20200312105637.GA8960@mwanda>
+        Thu, 12 Mar 2020 07:01:01 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 6so6842419wre.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 04:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=znqUGmDCxVbX3i83yv1LPKkL5/RdRLvb+vGnWoYei2g=;
+        b=F6J5IOX10gQ+LPEoHCY9P8JthL7j1cvqIVpBooDuLjaqpX8C3kxx754ao3qX3ckd26
+         +OpPRuNGvdMs2pKjk8jMYekoycMrIq+Ae/aDI9Q+Gub4CM8nRMSPDx1arLJdlnhOrcoL
+         paibkbgcKDkh6DpALj/Tjq1qN+E7O9LfK1TQ01edE+KazSZCa/uorSg8PaIGgIB/HnDH
+         Fac4r/pz9KjnhejmbS1pgQ1MU3A21N93VQEQ6EA8ub44/wxtkyW68a9LBCXIR9cpk2FV
+         RZf2sOWvJuzE0xtURCMiWrfugXTAobFdNqmhfIfh/FiiaPq4aal9K8fcdxfxNl5F4ntN
+         rWeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=znqUGmDCxVbX3i83yv1LPKkL5/RdRLvb+vGnWoYei2g=;
+        b=lxjc+1zZuhnMMWBgwVQJDR6N+w/0aWxATR43GvkDevBq/9YKvpi3maPGWN7fkTOOJR
+         vqVmc2yah60vLKB1SmSAkr1VadTtmjMT/P+lk9hqbR5xh3wFlU1gpOe/EtMfOD8NuOlI
+         3NOjXqO9ub26MjdWhrChJ8h2lB3Ncu7/K/BLfn6gkMxDnSLGR8CApa8oA68/yCRZy5Ae
+         Moo87NrqQuqSLvPDeWxwJ1o+d60V7PcImM6A7s7T/jfFP+92TXCVMhIXpqC+VOC+gMhr
+         +GokSB41+BBj5R81T3Wz5bccEvJa+XFQuq5niaghaOP9lZQDAbN/Osmt5bbazM8M7BdQ
+         tqoA==
+X-Gm-Message-State: ANhLgQ1BQY0rvKZzQ2/4hvGUmjz+7byn9t8s06/5IpV1+lAKMNVinRQT
+        QOmmPcY1lpIi82igWtjsBCFabg==
+X-Google-Smtp-Source: ADFU+vteDdHWgx1gUzWThJKQSOprIOkNr41TK5/nvNI/6Ct+u/DwM4AX322iNtcez073YJYPm3Xt7g==
+X-Received: by 2002:adf:b641:: with SMTP id i1mr10431365wre.18.1584010859471;
+        Thu, 12 Mar 2020 04:00:59 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f? ([2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f])
+        by smtp.googlemail.com with ESMTPSA id i67sm53009872wri.50.2020.03.12.04.00.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 04:00:58 -0700 (PDT)
+Subject: Re: [PATCH V2 RESEND 1/4] dt-bindings: thermal: imx8mm-thermal: Add
+ binding doc for i.MX8MM
+To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        peng.fan@nxp.com, aford173@gmail.com, ping.bai@nxp.com,
+        jun.li@nxp.com, shengjiu.wang@nxp.com, bjorn.andersson@linaro.org,
+        olof@lixom.net, vkoul@kernel.org, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cac20a14-a8ec-e7af-9c6e-be62fb29db89@linaro.org>
+Date:   Thu, 12 Mar 2020 12:00:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003120059
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003120059
+In-Reply-To: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This NULL check is reversed so it leads to a Smatch warning and
-presumably a NULL dereference.
+On 29/02/2020 04:44, Anson Huang wrote:
+> Add thermal binding doc for Freescale's i.MX8MM Thermal Monitoring Unit.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-    kernel/events/core.c:1598 perf_event_groups_less()
-    error: we previously assumed 'right->cgrp->css.cgroup' could be null
-	(see line 1590)
+Applied 1/4 and 2/4.
 
-Fixes: 95ed6c707f26 ("perf/cgroup: Order events in RB tree by cgroup id")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6a47c3e54fe9..607c04ec7cfa 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1587,7 +1587,7 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
- 			 */
- 			return true;
- 		}
--		if (!right->cgrp || right->cgrp->css.cgroup) {
-+		if (!right->cgrp || !right->cgrp->css.cgroup) {
- 			/*
- 			 * Right has no cgroup but left does, no cgroups come
- 			 * first.
+
+ ---
+> No change.
+> ---
+>  .../devicetree/bindings/thermal/imx8mm-thermal.txt        | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> new file mode 100644
+> index 0000000..d09ae82
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> @@ -0,0 +1,15 @@
+> +* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
+> +
+> +Required properties:
+> +- compatible : Must be "fsl,imx8mm-tmu".
+> +- reg : Address range of TMU registers.
+> +- clocks : TMU's clock source.
+> +- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
+> +
+> +Example:
+> +tmu: tmu@30260000 {
+> +	compatible = "fsl,imx8mm-tmu";
+> +	reg = <0x30260000 0x10000>;
+> +	clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
+> +	#thermal-sensor-cells = <0>;
+> +};
+> 
+
+
 -- 
-2.20.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
