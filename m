@@ -2,192 +2,248 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838F6C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966D9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9F4206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7752067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jY+CxiAl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IoE/2Iw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgCLPHR (ORCPT
+        id S1727737AbgCLPLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:07:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45166 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbgCLPHP (ORCPT
+        Thu, 12 Mar 2020 11:11:33 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39939 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbgCLPLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:07:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id w9so5988320iob.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:07:13 -0700 (PDT)
+        Thu, 12 Mar 2020 11:11:32 -0400
+Received: by mail-vs1-f67.google.com with SMTP id c18so3889781vsq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:11:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HeDZ4xpsH4ojKjdPYAFKFs4XK1v01d56EDF8j+URbwo=;
-        b=jY+CxiAle1JRHNXQn4k1tScC/ncCuBvrrKGC/Va6IKPBck9zsLzWhw6l7vll7k1mTT
-         mOsYqTR2Yx+5LcjpAxbk8ixA1OOyLO8dgl7eF1ZM7e/rNpBkyZYRlAK2hiSvTLzXWJnA
-         diskQ5bDvo0ApZI4VJmq0lKHEsn/Jr4/LhUDS7PaLtlVQMwUi1IBvGIGFLZb9UZu2b7T
-         HwlCLpT+HpO5Qzgdtk7BhVjKqWFoOZ106PNv3X/69HqnuzQzVq/tc80m/r2eTi/VU4wT
-         f0mnQ1VgoOdCWkMQNzBZAVzon9Rk2aqE6qmW7jV/LyTdxfun8LZZtHf1whQi36CVqCMZ
-         qs9Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aytfa47Jnv1baE6T4xAivgCSNWzsN1btynmuDugX0MI=;
+        b=IoE/2Iw6hLwgGmhKMJNG/4UhJ0wVGKCW9T4pRR2Qa4fZHzQ3TXTOHQP+bUNL69zbkZ
+         VKBY78IScTYuBXmtWmj/HqgUx5Ktg09oS5tuDD6QWBxwqF6Qs30ZMAFElIWWT0S/icvw
+         VGu1s+rAK0mYSwcuoFry4F+5XVWxY/aT3jbJs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HeDZ4xpsH4ojKjdPYAFKFs4XK1v01d56EDF8j+URbwo=;
-        b=c9a27oifBf3ARpi2/v00+S64heuYpRnHfQy+WEaSZmwuOjSSsuQwrPhf3sZaruKXnH
-         Ku/tIUEVRPMNTDOl+gj7MPEuci47bWSjkxQsaqM2u4hnxhBYgXMqxLcQhbT2Gp7pD1v1
-         xT2LLwAPlzi1hWsAIcX3LGxtjee7EnxGCJDDmG3GVqRom412t6ArUsGZCJuvFTtszJxH
-         Yn5avPiLPjXgTsFZX07EpgPWKAaZujfu47nCGKhUieJTZd4WX1I/SrDplmM2nhjjYoBo
-         34NIA7Pa7iZBhbd+NmoENkbVuImHj+Yy7JqDHrwazf1/3f4Wka2owXX1j8qOknH5i3U7
-         MOlQ==
-X-Gm-Message-State: ANhLgQ08rhA/hInOR7+mOZFoJ+cJkFC6LyucZ1gGV10tmnawAP8zeEj0
-        JDZepjm3NZ+dNsZn7kVGK/4TtQ==
-X-Google-Smtp-Source: ADFU+vsXRIWqmC8cnz2kYKXojWZrQWFl/y2mDPLPWUsH+6cG1+ak18R22jCgen/thm94qeSCZH1+uQ==
-X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr7992946jad.124.1584025633431;
-        Thu, 12 Mar 2020 08:07:13 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p14sm7346596ios.38.2020.03.12.08.07.11
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aytfa47Jnv1baE6T4xAivgCSNWzsN1btynmuDugX0MI=;
+        b=E5yuhDnySMt/WzFYj3x4Kxf0BOmVtUcSkkg1tor4/XPmUm7Rab/ozwaB/C3VyDO3ly
+         dV8CYoIOYXpuLjcEYoxPhMKFCYUELdkd9sApg7JyjI4dkfZNW9qYuPUwlzVexMIA+4iY
+         0fSopdD7L1NwZkCOx8tWirY0yISp4fNuutVlDhyTumiX7sNQF5kej6cVwsGmhmAAUwWM
+         Js2bxo9gH4AHA+tq6v+bKK3+EeMkKLt2AJ08ku3VcUmqJZ6yxJdvyocoSGBh1TZf4fy3
+         AYFmfOHV6NrUnm/TNilX72loT3mWWl7oivlZ8dbTeTUxA0gK3M858uGVObRrL4YtCsHl
+         GroA==
+X-Gm-Message-State: ANhLgQ1jAaca7JPNULbfh6ka3pkCYJgaNuxeoe1jallA0XxlNajnS0z2
+        +eHQAu0zIXARrwFuYQ7/rZjOb+hPoeo=
+X-Google-Smtp-Source: ADFU+vvSo/btCTmEkDpJKC3mKqj50XiFBi96yZ2rI/xaTDQbwcgfwuOEAITR7J+JwDmw/MBOmzTtyA==
+X-Received: by 2002:a67:69d8:: with SMTP id e207mr5987215vsc.141.1584025889300;
+        Thu, 12 Mar 2020 08:11:29 -0700 (PDT)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id w70sm11150168vke.26.2020.03.12.08.11.23
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 08:07:12 -0700 (PDT)
-Subject: Re: [PATCH] libata: Remove extra scsi_host_put() in
- ata_scsi_add_hosts()
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, takondra@cisco.com, tj@kernel.org
-References: <1582889615-146214-1-git-send-email-john.garry@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <240d477b-f3f2-5461-fcd3-b7b239462a24@kernel.dk>
-Date:   Thu, 12 Mar 2020 09:07:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 08:11:24 -0700 (PDT)
+Received: by mail-vs1-f46.google.com with SMTP id 7so3870958vsr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:11:23 -0700 (PDT)
+X-Received: by 2002:a67:694f:: with SMTP id e76mr5417277vsc.73.1584025882577;
+ Thu, 12 Mar 2020 08:11:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1582889615-146214-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
+ <1583746236-13325-5-git-send-email-mkshah@codeaurora.org> <CAD=FV=VknUHs8R6pu3pBCR-D50ibeuSVVp9=_t7NLa4U+06XKQ@mail.gmail.com>
+ <8810b558-f552-19dc-a5dc-4e64b37f35d8@codeaurora.org> <CAD=FV=XajZ5V_uZryghaBkH=4jv4T-ifuQE2NKbU4RgNVho_9A@mail.gmail.com>
+ <e7723b03-ce7e-ff4b-e2b4-3d93f970748c@codeaurora.org> <CAD=FV=XFL9UZ44Q0xjMVsuok+CK9iWs4X3fkWXFHZrkw-ptfXw@mail.gmail.com>
+ <5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org>
+In-Reply-To: <5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 12 Mar 2020 08:11:10 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com>
+Message-ID: <CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com>
+Subject: Re: [PATCH v13 4/5] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/20 4:33 AM, John Garry wrote:
-> If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
-> then we may get use-after-free KASAN warns:
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in kobject_put+0x24/0x180
-> Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
-> CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
-> Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
-> Call trace:
-> dump_backtrace+0x0/0x298
-> show_stack+0x14/0x20
-> dump_stack+0x118/0x190
-> print_address_description.isra.9+0x6c/0x3b8
-> __kasan_report+0x134/0x23c
-> kasan_report+0xc/0x18
-> __asan_load1+0x5c/0x68
-> kobject_put+0x24/0x180
-> put_device+0x10/0x20
-> scsi_host_put+0x10/0x18
-> ata_devres_release+0x74/0xb0
-> release_nodes+0x2d0/0x470
-> devres_release_all+0x50/0x78
-> really_probe+0x2d4/0x560
-> driver_probe_device+0x7c/0x148
-> device_driver_attach+0x94/0xa0
-> __driver_attach+0xa8/0x110
-> bus_for_each_dev+0xe8/0x158
-> driver_attach+0x30/0x40
-> bus_add_driver+0x220/0x2e0
-> driver_register+0xbc/0x1d0
-> __pci_register_driver+0xbc/0xd0
-> ahci_pci_driver_init+0x20/0x28
-> do_one_initcall+0xf0/0x608
-> kernel_init_freeable+0x31c/0x384
-> kernel_init+0x10/0x118
-> ret_from_fork+0x10/0x18
-> 
-> Allocated by task 5:
-> save_stack+0x28/0xc8
-> __kasan_kmalloc.isra.8+0xbc/0xd8
-> kasan_kmalloc+0xc/0x18
-> __kmalloc+0x1a8/0x280
-> scsi_host_alloc+0x44/0x678
-> ata_scsi_add_hosts+0x74/0x268
-> ata_host_register+0x228/0x488
-> ahci_host_activate+0x1c4/0x2a8
-> ahci_init_one+0xd18/0x1298
-> local_pci_probe+0x74/0xf0
-> work_for_cpu_fn+0x2c/0x48
-> process_one_work+0x488/0xc08
-> worker_thread+0x330/0x5d0
-> kthread+0x1c8/0x1d0
-> ret_from_fork+0x10/0x18
-> 
-> Freed by task 5:
-> save_stack+0x28/0xc8
-> __kasan_slab_free+0x118/0x180
-> kasan_slab_free+0x10/0x18
-> slab_free_freelist_hook+0xa4/0x1a0
-> kfree+0xd4/0x3a0
-> scsi_host_dev_release+0x100/0x148
-> device_release+0x7c/0xe0
-> kobject_put+0xb0/0x180
-> put_device+0x10/0x20
-> scsi_host_put+0x10/0x18
-> ata_scsi_add_hosts+0x210/0x268
-> ata_host_register+0x228/0x488
-> ahci_host_activate+0x1c4/0x2a8
-> ahci_init_one+0xd18/0x1298
-> local_pci_probe+0x74/0xf0
-> work_for_cpu_fn+0x2c/0x48
-> process_one_work+0x488/0xc08
-> worker_thread+0x330/0x5d0
-> kthread+0x1c8/0x1d0
-> ret_from_fork+0x10/0x18
-> 
-> There is also refcount issue, as well:
-> WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
-> 
-> The issue is that we make an erroneous extra call to scsi_host_put()
-> for that host:
-> 
-> So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
-> a device release method - ata_devres_release() - which intends to release
-> the SCSI hosts:
-> 
-> static void ata_devres_release(struct device *gendev, void *res)
-> {
-> 	...
-> 	for (i = 0; i < host->n_ports; i++) {
-> 		struct ata_port *ap = host->ports[i];
-> 
-> 		if (!ap)
-> 			continue;
-> 
-> 		if (ap->scsi_host)
-> 			scsi_host_put(ap->scsi_host);
-> 
-> 	}
-> 	...
-> }
-> 
-> However in the ata_scsi_add_hosts() error path, we also call
-> scsi_host_put() for the SCSI hosts.
-> 
-> Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
-> leave this to ata_devres_release().
+Hi,
 
-Applied for 5.7, thanks.
+Quoting below may look funny since you replied with HTML mail and all
+old quoting was lost.  :(  I tried my best.
 
--- 
-Jens Axboe
+On Thu, Mar 12, 2020 at 3:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> > Specifically I wouldn't trust all callers of rpmh_write() /
+> > rpmh_write_async() to never send the same data.  If it was just an
+> > speed/power optimization then sure you could trust them, but this is
+> > for correctness.
+>
+> yes we should trust callers not to send duplicate data.
 
+I guess we'll see how this works out.  Since this only affects the
+"zero active-only" case and I'm pretty sure that case has more
+important issues, I'm OK w/ ignoring for now.
+
+
+> > Hrmm, thinking about this again, though, I'm still not convinced I
+> > understand what prevents the firmware from triggering "sleep mode"
+> > while the sleep/wake TCS is being borrowed for an active-only
+> > transaction.  If we're sitting in rpmh_write() and sleeping in
+> > wait_for_completion_timeout() couldn't the system go idle and trigger
+> > sleep mode?  In OSI-mode (with last man down) you'll always have a
+> > rpmh_flush() called by the last man down so you know you can make sure
+> > you're in a consistent state (one final flush and no more active-only
+> transactions will happen).  Without last man down you have to assume
+> > it can happen at any time don't you?
+>>
+> > ...so I guess I'll go back to asserting that zero-active-TCS is
+> > incompatible with non-OSI unless you have some way to prevent the
+> > sleep mode from being triggered while you've borrowed the wake TCS.
+>
+> i had change for this in v4 to handle same.
+>
+> Link: https://patchwork.kernel.org/patch/11366205/
+>
+> + /*
+> + * RPMh domain can not be powered off when there is pending ACK for
+> + * ACTIVE_TCS request. Exit when controller is busy.
+> + */
+>
+> before calling rpmh_flush() we check ctrlr is idle (ensuring
+>
+> tcs_is_free() check passes)  this will ensure that
+>
+> previous active transaction is completed before going ahead.
+>
+> i will add this check in v14.
+>
+> since this curretntly check for ACTIVE TCS only, i will update it to check the repurposed "WAKE TCS" is also free.
+
+The difficulty isn't in adding a simple check, it's in adding a check
+that is race free and handles locking properly.  Specifically looking
+at your the v4 you pointed to, I see things like this:
+
+  if (!rpmh_rsc_ctrlr_is_idle(drv))
+    return -EBUSY;
+  return rpmh_flush(&drv->client);
+
+The rpmh_rsc_ctrlr_is_idle() grabs a spin lock implying that there
+could be other people acting on RPMh at the same time (otherwise, why
+do you even need locks?).  ...but when it returns the lock is
+released.  Once the lock is dropped then other clients are free to
+start using RPMH because nothing prevents them.  ...then you go ahead
+and start flushing.
+
+Said another way: due to the way you've structured locking in that
+patch rpmh_rsc_ctrlr_is_idle() is inherently dangerous because it
+returns an instantaneous state that may well have changed between the
+spin_unlock_irqrestore() at the end of the function and when the
+function returns.
+
+You could, of course, fix this by requiring that the caller hold the
+'drv->lock' for both the calls to rpmh_rsc_ctrlr_is_idle() and
+rpmh_flush() (ignoring the fact the drv->lock is nominally part of
+rpmh-rsc.c and not rpmh.c).  Now it would be safe from the problem I
+described.  ...but now you get into a new problem.  If you ever hold
+two locks you always need to make sure you grab them in the same order
+any time you grab them both.  ...but tcs_write() we first grab a
+tcs_lock and _then_ drv->lock.  That means the "fix" of holding
+drv->lock for both the calls to rpmh_rsc_ctrlr_is_idle() and
+rpmh_flush() won't work because rpmh_flush() will need to grab a
+tcs_lock.  Possibly we could make this work by eliminating the "tcs
+lock" and just having the one big "drv->lock" protect everything (or
+introducing a new "super lock" making the other two meaningless).  It
+would certainly be easier to reason about...
+
+NOTE: the only way I'm able to reason about all the above things is
+because I spent all the time to document what rpmh-rsc is doing and
+what assumptions the various functions had [1].  It'd be great if that
+could get a review.
+
+
+> > This whole "no active TCS" is really quite a mess.  Given how broken
+> > it seems to me it almost feels like we should remove "no active TCS"
+> > from the driver for now and then re-add it in a later patch when we
+> > can really validate everything.  I tried addressing this in my
+> > rpmh-rsc cleanup series and every time I thought I had a good solution
+> > I could find another way to break it.
+> >
+> > Do you actually have the "no active TCS" case working on the current
+> > code, or does it only work on some downstream variant of the driver?
+> >
+> > It works fine on downstream variant. Some checks are still needed like above from v4
+> >
+> > since we do rpmh_flush() immediatly for dirty caches now.
+
+OK.  So I take it you haven't tested the "zero active" case with the
+upstream code?  In theory it should be easy to test, right?  Just hack
+the driver to pretend there are zero active TCSs?
+
+Which SoCs in specific need the zero active TCSs?  We are spending a
+lot of time talking about this and reviewing the code with this in
+mind.  It adds a lot of complexity to the driver.  If nothing under
+active development needs it I think we should do ourselves a favor and
+remove it for now, then add it back later.  Otherwise this whole
+process is just going to take a lot more time.
+
+
+> > I'm not saying we should limit the total number of requests to 1000.
+> > I'm saying that if there are 1000 active clients then that's a
+> > problem.  Right now there are something like 4 clients.  It doesn't
+> > matter how fast those clients are sending, active_clients will only be
+> > at most 4 and that would only be if they were all running their code
+> > at the exact same time.
+> >
+> > I want to be able to quickly detect this type of bug:
+> >
+> > start_transaction()
+> > ret = rpmh_write()
+> > if (ret)
+> >   return ret;
+> > ret = rpmh_write()
+> > end_transaction()
+> > return ret;
+> >
+> > ...in other words: someone has a code path where start_transaction()
+> > is called but never end_transaction().  I'm proposing that if we ever
+> > see the ridiculous value of 1000 active clients the only way it could
+> > happen is if one of the clients started more times than they ended.
+> >
+> >
+> > I guess maybe by the time there were 1000 it would be too late,
+> > though, because we'd have skipped A LOT of flushes by then?  Maybe
+> > instead we should add something where if RPMH is "ditry" for more than
+> > a certain amount of time we put a warning?
+>
+> IMO, we should not add any such warning with any number.
+> There are only 4 clients and unlikely to have any new ones. those 4 we should be able to ensure
+> that they invoke end_transaction(), if they have already done start_transaction().beside,
+> Function description also says that "this must be ended by invoking rpmh_end_transaction()"
+> i am ok to also add  saying that "rpmh do not check this, so its caller's responsibility to
+> end it"
+
+I don't agree but I won't argue further.  If you want to leave out the
+WARN() then so be it.
+
+-Doug
+
+[1] https://lore.kernel.org/r/20200311161104.RFT.v2.5.I52653eb85d7dc8981ee0dafcd0b6cc0f273e9425@changeid
