@@ -2,98 +2,262 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDB8C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3725EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CA620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0540C20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/iPDTjB"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ujwItTFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgCLOdN (ORCPT
+        id S1727642AbgCLOdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:33:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44059 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbgCLOdM (ORCPT
+        Thu, 12 Mar 2020 10:33:12 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53012 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbgCLOdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 10:33:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l18so7733110wru.11;
-        Thu, 12 Mar 2020 07:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=qn1Ivt4FE9cI5lryv7kNLlbCeK0IrUxfBddznm4H0x0=;
-        b=C/iPDTjB2XK2iO8VIbsLFfqtYTfvPTZcm/3jt3PeH7lgRY5Vmyod5MoF86xDxp/mWD
-         fd+IB55s9LvMm08mwG1V+0h19xLADhih1dExyDiW88jsagiAXfk+7EgITa2I9FyWbVS8
-         AXxJ6uvdfc+cGLIAuTkM+cMwtgH5EWIjnXb1jb0IKmqtBPMdnadA1kvQKVSfVr1veif9
-         6SSoxLLGX/bCDEkxt8UpojeGJ5o9a8XNG9Q5g4OrPEQb21UsIyVZ7q/I3vq25+KzJ/tJ
-         OviSdCeb8raJ7MS+9g423zwuu9YnTJVPv4jGvDGy9sSNg+n6lsp0lDPr+aAKJcTuJiJS
-         7PNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=qn1Ivt4FE9cI5lryv7kNLlbCeK0IrUxfBddznm4H0x0=;
-        b=U3Y3WPoAHb3WKdNtciiyP8QVQn6gJBVaMkKkdeKa2iHQmbaGogP/GFlAueCxM5fD8H
-         lVB8lwIJ457l9gsJhU8ncMaSm7QnT2epXcn5QtN6XJPAO0FvQdGb7OXEU47vv9eCLbKM
-         YJ4BmeSxMocOldjpJr+e3tPiR6c8ZxZFDbybyxPK+A87T52kVFkR4GPNK1EbyMIgp8GD
-         p4bxqdKTxKL5vgMhW+RU+tSipthjIWvu1er3F2nBOhfYukhrSaDkXEvrTgiRcd8vq/ql
-         ad3PxMcr6dHzSfbAh1O7cOFz/t/Q6txaQkhswv/3hbeFisWPc+Eo2wEJP/DFam9E+Ite
-         G+9w==
-X-Gm-Message-State: ANhLgQ1p3S3xscHiDkIT6Ji4X6Xcu1QIXOYxQBXBiSE5HNRL4oiX+4Py
-        oQIFB5sNZR2Zn4l6+b9sNsjYUkd4IZdAAw==
-X-Google-Smtp-Source: ADFU+vuPNFJHv/FWzrs14gQfks3kmHXa8SrOMf5fZKCV0vN77Cfiy15dVMTmn0/k9iiRxRAGeNOEAw==
-X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr11190628wrs.272.1584023590336;
-        Thu, 12 Mar 2020 07:33:10 -0700 (PDT)
-Received: from [10.7.1.8] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id 12sm12782101wmo.30.2020.03.12.07.33.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:33:09 -0700 (PDT)
-Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200312094008.1833929-1-gabravier@gmail.com>
- <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
- <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
- <CAMpxmJVSPA9CQBGULyk69KaP42oMdKGg883z0FeFC_mSA5w2xA@mail.gmail.com>
-From:   Gabriel Ravier <gabravier@gmail.com>
-Message-ID: <55db9307-9a20-239e-127c-ea043600248d@gmail.com>
-Date:   Thu, 12 Mar 2020 15:33:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B9FC65F;
+        Thu, 12 Mar 2020 15:33:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584023590;
+        bh=HcQB9Xy2uexkm38VBtX52etqOWXe+C3DlyJo4F6NXB4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ujwItTFWan1VCw9gjNez+hwU1uYE5Q8fFPGn+HqVz7GGlwFMCNWOrM82L2bmzrDaJ
+         yjHrilVwq8Xhi5XfevmbaYUeFl/mYXjdEiuUGJKSZN8LhwyVSeU9dDQTuoxShVda8q
+         M0GjH+zB5oAfoFeMhmdlaBMhiqgg8CT+Vmtsxwm4=
+Date:   Thu, 12 Mar 2020 16:33:07 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
+Message-ID: <20200312143307.GC4876@pendragon.ideasonboard.com>
+References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJVSPA9CQBGULyk69KaP42oMdKGg883z0FeFC_mSA5w2xA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah, seems like I didn't read the guide to getting code into the kernel 
-thoroughly enough. Should I send the patch yet again just with a v2 in 
-the subject header or is there no need to bother with that ?
+Hello Vinay,
 
-On 3/12/20 3:29 PM, Bartosz Golaszewski wrote:
-> czw., 12 mar 2020 o 15:21 Gabriel Ravier <gabravier@gmail.com> napisał(a):
->> Ah, that was accidental. I was applying scripts/Lindent to my code and
->> ended up also having it applied to part of the old code. Didn't think it
->> would hurt, but I guess it makes sense to be this stringent on
->> separating logical changes. Will send a (complete) corrected patch
->> in-reply-to this message.
->>
-> Please don't send patches in response to other threads. Always start a
-> new thread and increment the version in [PATCH vX] tag.
->
-> Bart
+Please take into account the review comments from v1. We can discuss
+them in replies to v1 if you have any question. I'll skip reviewing this
+version.
+
+On Wed, Mar 11, 2020 at 03:18:24PM +0530, Vinay Simha BN wrote:
+> Add yaml documentation for DSI/LVDS tc358775 bridge
+> 
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> 
+> ---
+> v1:
+>  Initial version
+> ---
+>  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
+>  1 file changed, 174 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> new file mode 100644
+> index 0000000..e9a9544
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> @@ -0,0 +1,174 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/toshiba-tc358775.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +
+> +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> +
+> +maintainers:
+> +	- Vinay Simha BN <simhavcs@gmail.com>
+> +
+> +description: |
+> +	This binding supports DSI to LVDS bridge TC358775
+> +
+> +properties:
+> + compatible:
+> +	const: toshiba,tc358775
+> +
+> + reg:
+> +   maxItems: 1
+> +   description: i2c address of the bridge, 0x0f
+> +
+> + tc, dsi-lanes: 1
+> +   maxItems: 1
+> +   description: Number of DSI data lanes connected to the DSI host. It should
+> +  be one of 1, 2, 3 or 4.
+> +
+> + tc, dual-link: 1
+> +   maxItems: 1
+> +   description: To configure the LVDS transmitter either as single-link or dual-link.
+> +
+> + vdd-supply:
+> +   maxItems: 1
+> +   description:  1.2V LVDS Power Supply
+> +
+> + vddio-supply:
+> +   maxItems: 1
+> +   description: 1.8V IO Power Supply
+> +
+> + stby-gpios:
+> +   maxItems: 1
+> +   description: Standby pin, Low active
+> +
+> + reset-gpios:
+> +   maxItems: 1
+> +   description: Hardware reset, Low active
+> +
+> + ports:
+> +   type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          DSI Input. The remote endpoint phandle should be a
+> +	  reference to a valid mipi_dsi_host device node.
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS output (panel or connector).
+> +
+> +      required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - dsi-lanes
+> + - vdd-supply
+> + - vddio-supply
+> + - stby-gpios
+> + - reset-gpios
+> + - ports
+> +
+> +examples:
+> + - |
+> +   i2c@78b8000 {
+> +	/* On High speed expansion */
+> +	label = "HS-I2C2";
+> +	status = "okay";
+> +
+> +	tc_bridge: bridge@f {
+> +		status = "okay";
+> +
+> +		compatible = "toshiba,tc358775";
+> +		reg = <0x0f>;
+> +
+> +		tc,dsi-lanes = <4>;
+> +		tc,dual-link = <0>;
+> +
+> +		vdd-supply = <&pm8916_l2>;
+> +		vddio-supply = <&pm8916_l6>;
+> +
+> +		stby-gpio = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +		reset-gpio = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				d2l_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				d2l_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +  };
+> +
+> +  panel: auo,b101xtn01 {
+> +		status = "okay";
+> +		compatible = "auo,b101xtn01", "panel-lvds";
+> +		power-supply = <&pm8916_l14>;
+> +
+> +		width-mm = <223>;
+> +		height-mm = <125>;
+> +
+> +		data-mapping = "jeida-24";
+> +
+> +		panel-timing {
+> +			/* 1366x768 @60Hz */
+> +			clock-frequency = <72000000>;
+> +			hactive = <1366>;
+> +			vactive = <768>;
+> +			hsync-len = <70>;
+> +			hfront-porch = <20>;
+> +			hback-porch = <0>;
+> +			vsync-len = <42>;
+> +			vfront-porch = <14>;
+> +			vback-porch = <0>;
+> +		};
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&d2l_out>;
+> +			};
+> +		};
+> + };
+> +
+> +  mdss@1a00000 {
+> +	status = "okay";
+> +
+> +	mdp@1a01000 {
+> +		status = "okay";
+> +	};
+> +
+> +	dsi@1a98000 {
+> +		status = "okay";
+> +		..
+> +		ports {
+> +			port@1 {
+> +				dsi0_out: endpoint {
+> +					remote-endpoint = <&d2l_in>;
+> +					data-lanes = <0 1 2 3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	dsi-phy@1a98300 {
+> +		status = "okay";
+> +		..
+> +	};
+> + };
+
+-- 
+Regards,
+
+Laurent Pinchart
