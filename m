@@ -7,81 +7,103 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D49C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA77AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C17B20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C2420650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TepIO2vT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elAvbo1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgCLOVI (ORCPT
+        id S1727621AbgCLOVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:21:08 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32817 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbgCLOVI (ORCPT
+        Thu, 12 Mar 2020 10:21:30 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39706 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbgCLOVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:21:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so7738007wrd.0;
-        Thu, 12 Mar 2020 07:21:06 -0700 (PDT)
+        Thu, 12 Mar 2020 10:21:30 -0400
+Received: by mail-pj1-f67.google.com with SMTP id d8so2721711pje.4;
+        Thu, 12 Mar 2020 07:21:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=E7GG/qxk2/Ufsah3byIBSjxf9JKNhaAWtEG1t3CGtCE=;
-        b=TepIO2vTA1MMEkJNBeuhNJiRhMJ/lQwuoc1g4aB6YPiIWEoSMpY02d/Qx0MZzfr3UK
-         8MFEel+uvi8vjyvyttEhiBv/B7OxKnGLSafT4A5DYvP4xM7BAaETX4yEGfuQHjV18zwK
-         7xTo2NrnEwx5zERAvFRP3BR9tBRqb9dF1KxgeKCf9VyzPHpP9Y7GP1b0w+YQGEDyNcor
-         KxXTToWva61Cy/7fXXC7GaZyy14OSUNnor7uCY2GG/Nb+KicdE19QZuRs9TFAmIf8+nk
-         u7u8ZZi5F8J9e9mhFr3wYEnuJX6FDA8OLq4w2nt54o1n0+DDn9X2WwM66f2/cB5rEWnN
-         7PyA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xA6hYZYQHhZOK5w4gl5vlgvd5UjngUj1HWav2zK4YIE=;
+        b=elAvbo1K35UXfjiU7s7C6Fr9ny3r+zuq45aGb0obKM6MUmebz83Om5sR5EldQ2SDgz
+         Og0VcNpXOI9i+t4VR3d7CMdNkJus2nXmDWCBFyVCIl4V8DrooAAFnWMis1sxuv53Y0B+
+         ku1ZKLsP0J8dg8z3MBUH+p1Q1SxXHFZXQ6PdsRVVhAAMSF0Uf9EnvNeh0bYSu4Rrom8i
+         UhZMG8hOG8pEczd9Ogd+3+Q8DE0JK3rn8ERKhEgv03HyVQ7oaawEy0Afd2Chbmdhb53W
+         QeJQh4lX+sN6H2dX6bUnRWq8OJmv+OV+m3ZmAdSqDwq0awnF2/tMa9LC60qbWSBqG+EG
+         5kwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=E7GG/qxk2/Ufsah3byIBSjxf9JKNhaAWtEG1t3CGtCE=;
-        b=TsmXSD9DdWxiQcEJx3qlSXvfGXEE5HHqw93T1/GFtVIhIzFFm1zHik9UHXGFWcOdda
-         y6Ztm2oiqymfU+n45F768JvJhLcJGsiOKxSFVgcorhh+u0KaS1Y9mNVu47+7VQKzYYdy
-         ZNRTGwZpmQTMFBEP8YB9dO6Kv7MpfHGdCyBfGgu644mx8xxwJRmpY4HVfNR51qSHWvRi
-         3ewOQz/DMvHRkkTc4KK15J6H229Nk88a3V0I8GSzZbGFFkOuVFvOkHw4iqwdy6OloQrZ
-         yjLDJZym7zGig9JhQYTf+5hQA6nYWdTf0oHfumRpdbedzkRqlLGSCBLuQkNGiz5OgP20
-         WWaQ==
-X-Gm-Message-State: ANhLgQ3adFAbuojaMIFWbpzrK3hBBCbvSmcPdZlsvUdwMFeU2pDvSDXZ
-        q7kORIRfeWXLdluL1pg9mt8FicDtIoHzEg==
-X-Google-Smtp-Source: ADFU+vuuIQvD7fW6QOLPfSwe+z+Kn26GrxvRyKEi5YHeCnhQyewj6ePbmlkAwdtpHosI/VZfClp3CA==
-X-Received: by 2002:adf:f845:: with SMTP id d5mr10748480wrq.94.1584022865678;
-        Thu, 12 Mar 2020 07:21:05 -0700 (PDT)
-Received: from [10.7.1.8] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id b5sm3901243wrw.86.2020.03.12.07.21.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:21:05 -0700 (PDT)
-Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200312094008.1833929-1-gabravier@gmail.com>
- <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
-From:   Gabriel Ravier <gabravier@gmail.com>
-Message-ID: <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
-Date:   Thu, 12 Mar 2020 15:21:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xA6hYZYQHhZOK5w4gl5vlgvd5UjngUj1HWav2zK4YIE=;
+        b=Co1KgQkYuoQZkghdr6t2Wc0ivrIWtxAM3QaxC527cfPov27oj1/jjsFyQjP2EbIDLj
+         94Or81YhHE62q57LJhdsj5TqRQcQK2td+JaFpew6DIjfXDHtsZQ0ZxLkEazU52ZBFLi6
+         b5ZEWHNsdUgsrUDHNR5Dr0gtPGa+NLUMnjDZZxczq9dWjw1+F4OY6aSrGssznQgWNEYJ
+         +Gb0NirMg6LnFVKu+8rJDm6HpQsly31qlleG+Dr0GKWxWk+ggLncyslKGONWtsE1X14n
+         Wn+37tnrr85W3nIgMANc0QPW6HGEguO7e58ZfYx6WAta4/BoYfkEmvufPdtAu6Nfg4Mf
+         qzVw==
+X-Gm-Message-State: ANhLgQ0uhAZX19MuB85vJNyEqt4GWRAm6XQumrAz8k7NbxRRNY75bvhc
+        SbBsQkFkIGAqd6Q0erMF0HoNQ5wI
+X-Google-Smtp-Source: ADFU+vsTQyN4Pfu6NQPzwD6SbwLEp4VXwcjudj3agC6kETt85Aq0K0JBWrXCGhcDemgNyIORo3UffQ==
+X-Received: by 2002:a17:902:bcc5:: with SMTP id o5mr8187811pls.174.1584022889113;
+        Thu, 12 Mar 2020 07:21:29 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id 15sm49441428pfp.125.2020.03.12.07.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 07:21:28 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 07:21:26 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200312142126.GB2466@localhost>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
+ <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
+ <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah, that was accidental. I was applying scripts/Lindent to my code and 
-ended up also having it applied to part of the old code. Didn't think it 
-would hurt, but I guess it makes sense to be this stringent on 
-separating logical changes. Will send a (complete) corrected patch 
-in-reply-to this message.
+On Thu, Mar 12, 2020 at 04:14:34PM +0530, Lokesh Vutla wrote:
+> But the problem here is that inactive breaks between two periods is not desired.
+> Because the pwm is used to generate a 1PPS signal and is continuously
+> synchronized with PTP clock.
 
+The 1-PPS case is the "easy" one.  If the PWM is adjustable on the
+fly, then people will use it with higher frequency signals.
+ 
+> I am up if this can be solved generically. But updating period is very specific
+> to hardware implementation. Not sure what generic solution can be brought out of
+> this. Please correct me if I am wrong.
+
+What happens today when the PWM frequency or duty cycle are changed
+while the signal is enabled?
+
+Do different PWM devices/drivers behave the same way?
+
+Does this series change the behavior of the am335x and friends?
+
+Thanks,
+Richard
