@@ -2,349 +2,174 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A459EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBB5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBC02067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F169B206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:57:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="WLT7lfY1"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="N3YBjdf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgCLP5x (ORCPT
+        id S1727738AbgCLP5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:57:53 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38859 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgCLP5w (ORCPT
+        Thu, 12 Mar 2020 11:57:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40007 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbgCLP5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:57:52 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h5so8090638edn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:57:50 -0700 (PDT)
+        Thu, 12 Mar 2020 11:57:53 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n5so4753045qtv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KFoqHlKe9Gz1nlNRRZBNdmBmwauPKFbN5aYg7hDMwdo=;
-        b=WLT7lfY1Zqf5BYzaQ3nByDF7r8CnBHJmE8k2xiyOm5ryCtZVvF3kqw9VEgPERQ3doW
-         jl7Zbji/5as/viceoo72pqyg9iLh0ho5veyGgzrYbGSJO0lnMBIIrg01a7TcN1aCzZu9
-         oHn0i+nC7jlLU/VstInQEF3vfZfmEClUdqxjySThnoXB3dANG2jVLqiKWLY9QEr6A34u
-         7KZehc4ThmcKDtfbR/oCwHgiC+NBBryX9pDxL262/x6dHtJOU6ZrgNOmxsUccM+F3zkE
-         idCpGSxw+0v0vYwIC+IarVC5vhHEcniYv9Hos0h/Z0H8O90meja4D03QH47TzZqw0xrI
-         MOyQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K9rmranj04CV+/bM0tC2lSxig8Zqz06WK1k9QT8UzDQ=;
+        b=N3YBjdf76Z8gKJ6vMp2o+QuB4HHTTg+q3Sl74raGR1run59phAIAAD8tHj0FybK+nZ
+         NqFCb5OK8lzy6SEruJjkh7PYL1YRbdmSVzEnDvWjOqWhFoHkcQMoi6uEpIWe8LhBT5Lr
+         8WxXpNKl3LE05tgkoqcG4udhxfvVYtBZzVDibenCnfA0qdnNN5r/o3hIfNghWKCiufX0
+         VdAH2r3TSHfDFtcSeeFQjPlawa3smxKEzuq6PPE/CRpJssz0xo+Qx0JYf1UO09LHXiXY
+         Aw2tQ/K5+DVfFUqrR3PdLV7nFaHvxTFbpQRGoHIrEPQz+ist+1sZuYIsWX6n3t46oGxg
+         //9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KFoqHlKe9Gz1nlNRRZBNdmBmwauPKFbN5aYg7hDMwdo=;
-        b=By71dDnEZDiXQhKUeIsHcIVzVGszQn152XlxNLx7qIfmUR8OubYFJUzkaBPaDjlWvr
-         DirbV5F8Bmf7TDnPS/Zr3mEoDPOiAUQoaL41nHNKpDDtx1dTLMyVzgwlyTbn0xkuqB1q
-         9+Xh5NJn0VDRkSJsClQm5CKm3BGXIEapSVnVz+i1k1RjMmRBQvqQpEVaG/GYTXfrxAWK
-         HGRYIPbx2l0EtvDrxqJeCsoJRfl/49yE4iNY9CJIqeBARU5+0AmLvkwccQQ+Z10Oz4kR
-         8l8t/jmRfshrBxWywMN1JPIJkJcgJJWhpIHVibMHCzqz8/+OaQhkGm/FARbChDzX9+Pz
-         Zq7A==
-X-Gm-Message-State: ANhLgQ2EJGP7L25ARIo9nD+J94wdMRgRo9JCsZSsAPfhFt3b130+xhiq
-        QpSZxA5RiCuEOFvMRkkEZUGFI5Fuas8S40Ur+w22uA==
-X-Google-Smtp-Source: ADFU+vtrhhYk6GUgRImv9L/MfX6bT3C6fKT+3UCMlb5umWq+7s3Q85gXhMXy72HAwJfbPATR6JHEwoaAgknMk5a0RPc=
-X-Received: by 2002:a50:9998:: with SMTP id m24mr8165526edb.98.1584028669210;
- Thu, 12 Mar 2020 08:57:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200303190318.522103-1-jason@jlekstrand.net> <20200311034351.1275197-1-jason@jlekstrand.net>
- <20200311034351.1275197-3-jason@jlekstrand.net> <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
-In-Reply-To: <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
-From:   Jason Ekstrand <jason@jlekstrand.net>
-Date:   Thu, 12 Mar 2020 10:57:37 -0500
-Message-ID: <CAOFGe96gbU03odF2OoLMnA7t7UgM6XrscogOD75dk62=hVFRmA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting
- sync files (v4)
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Dave Airlie <airlied@redhat.com>,
-        Jesse Hall <jessehall@google.com>,
-        James Jones <jajones@nvidia.com>,
-        Daniel Stone <daniels@collabora.com>,
-        =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@google.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Greg Hackmann <ghackmann@google.com>,
-        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K9rmranj04CV+/bM0tC2lSxig8Zqz06WK1k9QT8UzDQ=;
+        b=hvlP5eFa8+BEQ6pi3g8pnrBzow87updnKUMeEzVR8Fn5SG84EW7UfRuo0lVjV0szpP
+         bjGNerkojiHHtyIqrjiDlt6ew7uTjZCByHd/svTnbIh+TNi0gYI9D/5AJguiHecTvJ7z
+         qwPy9HlI802LMz5JfK6i4E16h6tAgHAy75/kDE2fBGxdLHQrm196Jt0ZyOXhZmpr+/S6
+         Je/dUUx60kM9htEEIBk4NiHaINVSXn4rXw0FhHX250VJke6qCRcxb5GIqcZcb8Lb1YA0
+         3ffhdglnnsQLaDaDoxxymXruqaFbkZ6RLq7J2MH7UC3RBZavhXo8UDQqXGEpWeIWpc10
+         2/WQ==
+X-Gm-Message-State: ANhLgQ0g7BbHgYcNQlC6v+rN8LpIALZVYYBTlu8nqv+oXdalYGpLIYIy
+        uNWu31voGvc7PpdSOgbA30wUZd7wJU4=
+X-Google-Smtp-Source: ADFU+vujBVyWiAmEaWmhrBEVbqSV/mb2taPoq4RQ3EEx1AJNbKumneHVS+1gnQ98n3s9IaiFtAAKvA==
+X-Received: by 2002:ac8:4404:: with SMTP id j4mr7531686qtn.95.1584028672307;
+        Thu, 12 Mar 2020 08:57:52 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 4sm22960559qky.106.2020.03.12.08.57.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 08:57:51 -0700 (PDT)
+Message-ID: <1584028670.7365.182.camel@lca.pw>
+Subject: Re: [PATCH 0/2] hugetlbfs: use i_mmap_rwsem for more synchronization
+From:   Qian Cai <cai@lca.pw>
+To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Prakash Sangappa <prakash.sangappa@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Thu, 12 Mar 2020 11:57:50 -0400
+In-Reply-To: <20200305002650.160855-1-mike.kravetz@oracle.com>
+References: <20200305002650.160855-1-mike.kravetz@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 8:18 AM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> Am 11.03.20 um 04:43 schrieb Jason Ekstrand:
-> > Explicit synchronization is the future.  At least, that seems to be wha=
-t
-> > most userspace APIs are agreeing on at this point.  However, most of ou=
-r
-> > Linux APIs (both userspace and kernel UAPI) are currently built around
-> > implicit synchronization with dma-buf.  While work is ongoing to change
-> > many of the userspace APIs and protocols to an explicit synchronization
-> > model, switching over piecemeal is difficult due to the number of
-> > potential components involved.  On the kernel side, many drivers use
-> > dma-buf including GPU (3D/compute), display, v4l, and others.  In
-> > userspace, we have X11, several Wayland compositors, 3D drivers, comput=
-e
-> > drivers (OpenCL etc.), media encode/decode, and the list goes on.
-> >
-> > This patch provides a path forward by allowing userspace to manually
-> > manage the fences attached to a dma-buf.  Alternatively, one can think
-> > of this as making dma-buf's implicit synchronization simply a carrier
-> > for an explicit fence.  This is accomplished by adding two IOCTLs to
-> > dma-buf for importing and exporting a sync file to/from the dma-buf.
-> > This way a userspace component which is uses explicit synchronization,
-> > such as a Vulkan driver, can manually set the write fence on a buffer
-> > before handing it off to an implicitly synchronized component such as a
-> > Wayland compositor or video encoder.  In this way, each of the differen=
-t
-> > components can be upgraded to an explicit synchronization model one at =
-a
-> > time as long as the userspace pieces connecting them are aware of it an=
-d
-> > import/export fences at the right times.
-> >
-> > There is a potential race condition with this API if userspace is not
-> > careful.  A typical use case for implicit synchronization is to wait fo=
-r
-> > the dma-buf to be ready, use it, and then signal it for some other
-> > component.  Because a sync_file cannot be created until it is guarantee=
-d
-> > to complete in finite time, userspace can only signal the dma-buf after
-> > it has already submitted the work which uses it to the kernel and has
-> > received a sync_file back.  There is no way to atomically submit a
-> > wait-use-signal operation.  This is not, however, really a problem with
-> > this API so much as it is a problem with explicit synchronization
-> > itself.  The way this is typically handled is to have very explicit
-> > ownership transfer points in the API or protocol which ensure that only
-> > one component is using it at any given time.  Both X11 (via the PRESENT
-> > extension) and Wayland provide such ownership transfer points via
-> > explicit present and idle messages.
-> >
-> > The decision was intentionally made in this patch to make the import an=
-d
-> > export operations IOCTLs on the dma-buf itself rather than as a DRM
-> > IOCTL.  This makes it the import/export operation universal across all
-> > components which use dma-buf including GPU, display, v4l, and others.
-> > It also means that a userspace component can do the import/export
-> > without access to the DRM fd which may be tricky to get in cases where
-> > the client communicates with DRM via a userspace API such as OpenGL or
-> > Vulkan.  At a future date we may choose to add direct import/export API=
-s
-> > to components such as drm_syncobj to avoid allocating a file descriptor
-> > and going through two ioctls.  However, that seems to be something of a
-> > micro-optimization as import/export operations are likely to happen at =
-a
-> > rate of a few per frame of rendered or decoded video.
-> >
-> > v2 (Jason Ekstrand):
-> >   - Use a wrapper dma_fence_array of all fences including the new one
-> >     when importing an exclusive fence.
-> >
-> > v3 (Jason Ekstrand):
-> >   - Lock around setting shared fences as well as exclusive
-> >   - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
-> >   - Initialize ret to 0 in dma_buf_wait_sync_file
-> >
-> > v4 (Jason Ekstrand):
-> >   - Use the new dma_resv_get_singleton helper
-> >
-> > Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
-> > ---
-> >   drivers/dma-buf/dma-buf.c    | 96 +++++++++++++++++++++++++++++++++++=
-+
-> >   include/uapi/linux/dma-buf.h | 13 ++++-
-> >   2 files changed, 107 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > index d4097856c86b..09973c689866 100644
-> > --- a/drivers/dma-buf/dma-buf.c
-> > +++ b/drivers/dma-buf/dma-buf.c
-> > @@ -20,6 +20,7 @@
-> >   #include <linux/debugfs.h>
-> >   #include <linux/module.h>
-> >   #include <linux/seq_file.h>
-> > +#include <linux/sync_file.h>
-> >   #include <linux/poll.h>
-> >   #include <linux/dma-resv.h>
-> >   #include <linux/mm.h>
-> > @@ -348,6 +349,95 @@ static long dma_buf_set_name(struct dma_buf *dmabu=
-f, const char __user *buf)
-> >       return ret;
-> >   }
-> >
-> > +static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
-> > +                                const void __user *user_data)
-> > +{
-> > +     struct dma_buf_sync_file arg;
-> > +     struct dma_fence *fence;
-> > +     int ret =3D 0;
-> > +
-> > +     if (copy_from_user(&arg, user_data, sizeof(arg)))
-> > +             return -EFAULT;
-> > +
-> > +     if (arg.flags !=3D 0 && arg.flags !=3D DMA_BUF_SYNC_FILE_SYNC_WRI=
-TE)
-> > +             return -EINVAL;
-> > +
-> > +     fence =3D sync_file_get_fence(arg.fd);
-> > +     if (!fence)
-> > +             return -EINVAL;
-> > +
-> > +     dma_resv_lock(dmabuf->resv, NULL);
-> > +
-> > +     if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
-> > +             struct dma_fence *singleton =3D NULL;
-> > +             ret =3D dma_resv_get_singleton(dmabuf->resv, fence, &sing=
-leton);
-> > +             if (!ret && singleton)
-> > +                     dma_resv_add_excl_fence(dmabuf->resv, singleton);
-> > +     } else {
-> > +             dma_resv_add_shared_fence(dmabuf->resv, fence);
-> > +     }
->
-> You also need to create a singleton when adding a shared fences.
->
-> The problem is that shared fences must always signal after exclusive
-> ones and you can't guarantee that for the fence you add here.
+On Wed, 2020-03-04 at 16:26 -0800, Mike Kravetz wrote:
+> While discussing the issue with huge_pte_offset [1], I remembered that
+> there were more outstanding hugetlb races.  These issues are:
+> 
+> 1) For shared pmds, huge PTE pointers returned by huge_pte_alloc can become
+>    invalid via a call to huge_pmd_unshare by another thread.
+> 2) hugetlbfs page faults can race with truncation causing invalid global
+>    reserve counts and state.
+> 
+> A previous attempt was made to use i_mmap_rwsem in this manner as described
+> at [2].  However, those patches were reverted starting with [3] due to
+> locking issues.
+> 
+> To effectively use i_mmap_rwsem to address the above issues it needs to
+> be held (in read mode) during page fault processing.  However, during
+> fault processing we need to lock the page we will be adding.  Lock
+> ordering requires we take page lock before i_mmap_rwsem.  Waiting until
+> after taking the page lock is too late in the fault process for the
+> synchronization we want to do.
+> 
+> To address this lock ordering issue, the following patches change the
+> lock ordering for hugetlb pages.  This is not too invasive as hugetlbfs
+> processing is done separate from core mm in many places.  However, I
+> don't really like this idea.  Much ugliness is contained in the new
+> routine hugetlb_page_mapping_lock_write() of patch 1.
+> 
+> The only other way I can think of to address these issues is by catching
+> all the races.  After catching a race, cleanup, backout, retry ... etc,
+> as needed.  This can get really ugly, especially for huge page reservations.
+> At one time, I started writing some of the reservation backout code for
+> page faults and it got so ugly and complicated I went down the path of
+> adding synchronization to avoid the races.  Any other suggestions would
+> be welcome.
 
-I'm beginning to think that I should just drop the flags and always
-wait on all fences and always take what's currently the "write" path.
-Otherwise, something's going to get it wrong somewhere.  Thoughts?
+Reverted this series on the top of today's linux-next fixed the hang with LTP
+move_pages12 on both powerpc and arm64,
 
-Also, Michelle (added to CC) commented on IRC today that amdgpu does
-something with implicit sync fences where it sorts out the fences
-which affect one queue vs. others.  He thought that stuffing fences in
-the dma-buf in this way might cause that to not work.  Thoughts?
+# /opt/ltp/testcases/bin/move_pages12
+tst_test.c:1217: INFO: Timeout per run is 0h 05m 00s
+move_pages12.c:263: INFO: Free RAM 260577280 kB
+move_pages12.c:281: INFO: Increasing 2048kB hugepages pool on node 0 to 4
+move_pages12.c:291: INFO: Increasing 2048kB hugepages pool on node 8 to 4
+move_pages12.c:207: INFO: Allocating and freeing 4 hugepages on node 0
+move_pages12.c:207: INFO: Allocating and freeing 4 hugepages on node 8
+<hang>
 
---Jason
+[ 3948.791155][  T688] INFO: task move_pages12:32930 can't die for more than
+3072 seconds.
+[ 3948.791181][  T688] move_pages12    D26224 32930      1 0x00040002
+[ 3948.791199][  T688] Call Trace:
+[ 3948.791210][  T688] [c000200816b4f680] [c0000000010b7a68]
+cpufreq_update_util_data+0x0/0x8 (unreliable)
+[ 3948.791234][  T688] [c000200816b4f860] [c00000000002615c]
+__switch_to+0x38c/0x520
+[ 3948.791247][  T688] [c000200816b4f8d0] [c0000000009a1c94]
+__schedule+0x4b4/0xba0
+[ 3948.791268][  T688] [c000200816b4f9a0] [c0000000009a2428] schedule+0xa8/0x170
+[ 3948.791288][  T688] [c000200816b4f9d0] [c0000000009a2d0c]
+io_schedule+0x2c/0x50
+[ 3948.791300][  T688] [c000200816b4fa00] [c000000000331020]
+__lock_page+0x150/0x3c0
+[ 3948.791322][  T688] [c000200816b4fac0] [c000000000420164]
+hugetlb_no_page+0xb04/0xd40
+lock_page at include/linux/pagemap.h:480
+(inlined by) hugetlb_no_page at mm/hugetlb.c:4286
+[ 3948.791342][  T688] [c000200816b4fc10] [c000000000420bd8]
+hugetlb_fault+0x738/0xc00
+[ 3948.791363][  T688] [c000200816b4fcd0] [c0000000003b9c44]
+handle_mm_fault+0x444/0x450
+[ 3948.791384][  T688] [c000200816b4fd20] [c000000000070b98]
+__do_page_fault+0x2b8/0xf90
+[ 3948.791406][  T688] [c000200816b4fe20] [c00000000000aa88]
+handle_page_fault+0x10/0x30
 
-
-> Regards,
-> Christian.
->
-> > +
-> > +     dma_resv_unlock(dmabuf->resv);
-> > +
-> > +     dma_fence_put(fence);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
-> > +                                  void __user *user_data)
-> > +{
-> > +     struct dma_buf_sync_file arg;
-> > +     struct dma_fence *fence =3D NULL;
-> > +     struct sync_file *sync_file;
-> > +     int fd, ret;
-> > +
-> > +     if (copy_from_user(&arg, user_data, sizeof(arg)))
-> > +             return -EFAULT;
-> > +
-> > +     if (arg.flags !=3D 0 && arg.flags !=3D DMA_BUF_SYNC_FILE_SYNC_WRI=
-TE)
-> > +             return -EINVAL;
-> > +
-> > +     fd =3D get_unused_fd_flags(O_CLOEXEC);
-> > +     if (fd < 0)
-> > +             return fd;
-> > +
-> > +     if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
-> > +             /* We need to include both the exclusive fence and all of
-> > +              * the shared fences in our fence.
-> > +              */
-> > +             ret =3D dma_resv_get_singleton(dmabuf->resv, NULL, &fence=
-);
-> > +             if (ret)
-> > +                     goto err_put_fd;
-> > +     } else {
-> > +             fence =3D dma_resv_get_excl_rcu(dmabuf->resv);
-> > +     }
-> > +
-> > +     if (!fence)
-> > +             fence =3D dma_fence_get_stub();
-> > +
-> > +     sync_file =3D sync_file_create(fence);
-> > +
-> > +     dma_fence_put(fence);
-> > +
-> > +     if (!sync_file) {
-> > +             ret =3D -EINVAL;
-> > +             goto err_put_fd;
-> > +     }
-> > +
-> > +     fd_install(fd, sync_file->file);
-> > +
-> > +     arg.fd =3D fd;
-> > +     if (copy_to_user(user_data, &arg, sizeof(arg)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +
-> > +err_put_fd:
-> > +     put_unused_fd(fd);
-> > +     return ret;
-> > +}
-> > +
-> >   static long dma_buf_ioctl(struct file *file,
-> >                         unsigned int cmd, unsigned long arg)
-> >   {
-> > @@ -390,6 +480,12 @@ static long dma_buf_ioctl(struct file *file,
-> >       case DMA_BUF_SET_NAME:
-> >               return dma_buf_set_name(dmabuf, (const char __user *)arg)=
-;
-> >
-> > +     case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
-> > +             return dma_buf_wait_sync_file(dmabuf, (const void __user =
-*)arg);
-> > +
-> > +     case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
-> > +             return dma_buf_signal_sync_file(dmabuf, (void __user *)ar=
-g);
-> > +
-> >       default:
-> >               return -ENOTTY;
-> >       }
-> > diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.=
-h
-> > index dbc7092e04b5..86e07acca90c 100644
-> > --- a/include/uapi/linux/dma-buf.h
-> > +++ b/include/uapi/linux/dma-buf.h
-> > @@ -37,8 +37,17 @@ struct dma_buf_sync {
-> >
-> >   #define DMA_BUF_NAME_LEN    32
-> >
-> > +struct dma_buf_sync_file {
-> > +     __u32 flags;
-> > +     __s32 fd;
-> > +};
-> > +
-> > +#define DMA_BUF_SYNC_FILE_SYNC_WRITE (1 << 0)
-> > +
-> >   #define DMA_BUF_BASE                'b'
-> > -#define DMA_BUF_IOCTL_SYNC   _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync=
-)
-> > -#define DMA_BUF_SET_NAME     _IOW(DMA_BUF_BASE, 1, const char *)
-> > +#define DMA_BUF_IOCTL_SYNC       _IOW(DMA_BUF_BASE, 0, struct dma_buf_=
-sync)
-> > +#define DMA_BUF_SET_NAME         _IOW(DMA_BUF_BASE, 1, const char *)
-> > +#define DMA_BUF_IOCTL_WAIT_SYNC_FILE _IOW(DMA_BUF_BASE, 2, struct dma_=
-buf_sync)
-> > +#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE       _IOWR(DMA_BUF_BASE, 3, st=
-ruct dma_buf_sync)
-> >
-> >   #endif
->
+> 
+> [1] https://lore.kernel.org/linux-mm/1582342427-230392-1-git-send-email-longpeng2@huawei.com/
+> [2] https://lore.kernel.org/linux-mm/20181222223013.22193-1-mike.kravetz@oracle.com/
+> [3] https://lore.kernel.org/linux-mm/20190103235452.29335-1-mike.kravetz@oracle.com
+> 
+> Mike Kravetz (2):
+>   hugetlbfs: use i_mmap_rwsem for more pmd sharing synchronization
+>   hugetlbfs: Use i_mmap_rwsem to address page fault/truncate race
+> 
+>  fs/hugetlbfs/inode.c    |  34 +++++---
+>  include/linux/fs.h      |   5 ++
+>  include/linux/hugetlb.h |   8 ++
+>  mm/hugetlb.c            | 175 +++++++++++++++++++++++++++++++++++-----
+>  mm/memory-failure.c     |  29 ++++++-
+>  mm/migrate.c            |  24 +++++-
+>  mm/rmap.c               |  17 +++-
+>  mm/userfaultfd.c        |  11 ++-
+>  8 files changed, 264 insertions(+), 39 deletions(-)
+> 
