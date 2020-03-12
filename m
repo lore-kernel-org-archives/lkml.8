@@ -2,80 +2,127 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C106AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D824C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B37220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB411206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584047682;
+	bh=kH7OpHtL5gqk6iZqiPRVZccVHyVSdTfxcqLyi8aRIww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oulP58zEnUdfY3QDXGMF11+H3VjvMwHyGvxKX8RPlCQjN/OvyHwqLlH9f/5dxTWZa
+	 QaHlMoAS6JBdIGzz554mU4xP9ytIt/NuhS8EeXPyxMxdymUlgnRi/WOy4lp/9SulWT
+	 05tL8QXUtajB0EczDlCTqNSdknVL/kWwPWwFxosI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgCLVNM (ORCPT
+        id S1726610AbgCLVOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:13:12 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:33019 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726312AbgCLVNL (ORCPT
+        Thu, 12 Mar 2020 17:14:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34340 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbgCLVOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:13:11 -0400
-X-IronPort-AV: E=Sophos;i="5.70,546,1574089200"; 
-   d="scan'208";a="41514828"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 13 Mar 2020 06:13:10 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 58718400C095;
-        Fri, 13 Mar 2020 06:13:06 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 12 Mar 2020 17:14:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j16so7876996otl.1;
+        Thu, 12 Mar 2020 14:14:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hb+jggLgxrgsVbgn5UC+wajZRLswbi9I3/cHFEMhG5A=;
+        b=I0hcORIboNsydVKFvFAMTfb5QsiIeJ7AD9yPDv/N/8rOEpXFiNdtdy7YGGIWvbbTiI
+         5eHd85Uzo7iXn0mLlEZ+9CdN4FJieilTXU7jGW79nktR5j2u0uJcYr++J7SMMTqiVC/q
+         pzDuZwuIeYIpmTH0KNtx19JsLc61wKJIcw+J9wRAmBhOrPQKvyv3QApMHJutYeuJ+6Lo
+         eRjyCru7rEelSwfCt3CGvgsA0rV+iFkuyj3KhyDweT7kJJabOWkWqGkjYQl2/idAe/J7
+         r2IIWOnXxrYhs1F90q4oLDOFovT7mI7KS3T4cmG/iJbzGq6zGLuNxQ/sNii8EKiKDkp9
+         cdNw==
+X-Gm-Message-State: ANhLgQ3E8J4dOKaWISXbRZujgN4cleF9CEkZDKoGUN+cyiuJEl8B/snm
+        zadyFtit0znC7JYIbRe11g==
+X-Google-Smtp-Source: ADFU+vuljXtmuwnM4UV2KeJttRiC0WN1lGhphK05ESUgIzEivH+NonbDuzc8edu6d6mjGc5QIpJOag==
+X-Received: by 2002:a9d:c61:: with SMTP id 88mr7164473otr.144.1584047679639;
+        Thu, 12 Mar 2020 14:14:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v12sm1633771otp.75.2020.03.12.14.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 14:14:39 -0700 (PDT)
+Received: (nullmailer pid 27028 invoked by uid 1000);
+        Thu, 12 Mar 2020 21:14:38 -0000
+Date:   Thu, 12 Mar 2020 16:14:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Sebastian Reichel <sre@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/3] ARM: dts: imx6qdl-wandboard: Switch to assigned-clock-rates for ov5645 node
-Date:   Thu, 12 Mar 2020 21:12:32 +0000
-Message-Id: <1584047552-20166-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
+ SYSCON reboot-mode bindings
+Message-ID: <20200312211438.GA21883@bogus>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clock-frequency property is now marked as deprecated in ov5645 binding,
-so switch to assigned-clock-rates for specifying xclk clock frequency.
+On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Optional regmap property will be used to refer to a syscon-controller
+> having a reboot tolerant register mapped.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+NAK. It should simply be a child node of the 'syscon-controller'.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-index c070893..71f5f75 100644
---- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-@@ -126,7 +126,8 @@
- 		reg = <0x3c>;
- 		clocks = <&clks IMX6QDL_CLK_CKO2>;
- 		clock-names = "xclk";
--		clock-frequency = <24000000>;
-+		assigned-clocks = <&clks IMX6QDL_CLK_CKO2>;
-+		assigned-clock-rates = <24000000>;
- 		vdddo-supply = <&reg_1p8v>;
- 		vdda-supply = <&reg_2p8v>;
- 		vddd-supply = <&reg_1p5v>;
--- 
-2.7.4
-
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> ---
+>  .../bindings/power/reset/syscon-reboot-mode.yaml         | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+> index e09bb07b1abb..f47bf52ad983 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+> @@ -13,9 +13,8 @@ description: |
+>    This driver gets reboot mode magic value from reboot-mode driver
+>    and stores it in a SYSCON mapped register. Then the bootloader
+>    can read it and take different action according to the magic
+> -  value stored. The SYSCON mapped register is retrieved from the
+> -  parental dt-node plus the offset. So the SYSCON reboot-mode node
+> -  should be represented as a sub-node of a "syscon", "simple-mfd" node.
+> +  value stored. The SYSCON mapped register is retrieved either from
+> +  the parental dt-node or from a regmap phandle plus the offset.
+>  
+>  properties:
+>    compatible:
+> @@ -29,6 +28,10 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      description: Offset in the register map for the mode register (in bytes).
+>  
+> +  regmap:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to the register map node.
+> +
+>  patternProperties:
+>    "^mode-.+":
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> -- 
+> 2.25.1
+> 
