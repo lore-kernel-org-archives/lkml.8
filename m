@@ -2,190 +2,125 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF63C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABA3C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248A620637
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+/ITpjc"
+	by mail.kernel.org (Postfix) with ESMTP id 7D37020637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgCLWYq (ORCPT
+        id S1726833AbgCLWZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 18:24:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35126 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726621AbgCLWYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 18:24:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584051883;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bpupobxRF3hx7fAwy8nqRUHW9GglCl8DazgzCAB+Nfs=;
-        b=Z+/ITpjc/92/qrn8sz6BiVYrcWIycmrwZ01UnY76Qun8fl5sTwtoAIyPtOvuSxvAasIcwI
-        Nb6bLzDIoOi/p065JPO6Z+ldDxInbZoBeZsEQRGhLcmLo+Kx7ZpN8nwTJ3i66q3DAPYeNg
-        g35qGRjMJKtn87iMt2zvrC13Yin6JuM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-y3n5Gr3pN5aAQVsjHnzDGw-1; Thu, 12 Mar 2020 18:24:42 -0400
-X-MC-Unique: y3n5Gr3pN5aAQVsjHnzDGw-1
-Received: by mail-wr1-f71.google.com with SMTP id j17so3279776wru.19
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 15:24:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bpupobxRF3hx7fAwy8nqRUHW9GglCl8DazgzCAB+Nfs=;
-        b=hLazGkRA91V3R0yUOLCqsBPfTtKvkuvZKnAzM70RACjsXXBVedScKUIFz7ttqvXm7q
-         bTSyNP9Ry8uER+cu2BVPDsZkULbALXOgLht8gNMfe2YKkCHs8YwD4f4MbmT1hqYmgMB1
-         5JzzCTtXRuwNzjKzpIklvcxzgfOBACu/jL7H6lNhnUDX3R4P3I0x5YMhwtQeJX5SSpjo
-         qJE4JhSMcmO+rjcwplG9fr8Q+j+EIY/P2qZzekgK0Ma5cRUjFF0Se4m1OhQlO4M/7pfb
-         h60YK3cTKxpsbE04jACy38nsNTjOyZH2xoKnzhFXxWG97vo/yEgy/uHqz4vBwaal7hV3
-         Bd4Q==
-X-Gm-Message-State: ANhLgQ3a30EkuREjV43d9/vwpTX3FwEOTt/gbPk/oWxChOESe8Rolt6S
-        jn3KUfWCCM7bS8h8U8q0a3hQYg03oc8FnXoUQcAFqOvkmt+36SPA0zBZHu3Sc5AJF8n47pvpMXH
-        5HLkk7H5krqszFpw9TPYwRrrahHM+whn8m/K8cweI
-X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr13039805wrs.272.1584051881158;
-        Thu, 12 Mar 2020 15:24:41 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vstn9gf/+BK/otI89IhYPwm2ycD7a/U4sJ+WG+RIIK9soeSGbPrem6/VaOE0m7/54auwNNCRCBnZOY00Qa0khM=
-X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr13039774wrs.272.1584051880862;
- Thu, 12 Mar 2020 15:24:40 -0700 (PDT)
+        Thu, 12 Mar 2020 18:25:03 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:58826 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726715AbgCLWZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 18:25:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 212C037025E5;
+        Thu, 12 Mar 2020 23:25:01 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZTCbUDLXMtRJ; Thu, 12 Mar 2020 23:24:58 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v4 0/3] Add support for CellWise cw2015 fuel gauge
+Date:   Thu, 12 Mar 2020 23:24:45 +0100
+Message-Id: <20200312222448.25097-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-References: <20200224095223.13361-1-mgorman@techsingularity.net>
- <20200309191233.GG10065@pauld.bos.csb> <20200309203625.GU3818@techsingularity.net>
- <20200312095432.GW3818@techsingularity.net> <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
- <20200312155640.GX3818@techsingularity.net> <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
- <20200312214736.GA3818@techsingularity.net>
-In-Reply-To: <20200312214736.GA3818@techsingularity.net>
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Thu, 12 Mar 2020 23:24:29 +0100
-Message-ID: <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I'll continue thinking about it but whatever chance there is of
-> improving it while keeping CPU balancing, NUMA balancing and wake affine
-> consistent with each other, I think there is no chance with the
-> inconsistent logic used in the vanilla code :(
+This patchset adds support for the CellWise cw2015 fuel gauge.
 
-Thank you, Mel!
+The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
+gauge. It is used in the pine64 Pinebook Pro laptop.
+
+This is v4 of the patchset. This version incorporates an additional review
+by Andy and a small spelling fix.
+
+I've kept the cellwise,battery-profile property in the device tree. Its
+content describes characteristics of the battery built into a device. The
+exact format is unknown and not publicly documented. It is likely
+comprised of some key parameters of the battery (chemistry, voltages,
+design capacity) and parameters for tuning the internal state of charge
+approximation function.
+Since v2 CellWise has confirmed to me that the only way to obtain the
+profile blob is to mail them batteries for testing. Thus we will need to
+keep that property.
+
+In general I'm not 100 % sure about my json-schema binding for the gauge.
+It is my first time ever writing a json-schema binding and I'm not sure
+whether properties like power-supplies or monitored-battery need to be
+added to a separate, common schema for power supplies or not.
 
 
-On Thu, Mar 12, 2020 at 10:47 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Thu, Mar 12, 2020 at 05:54:29PM +0100, Jirka Hladky wrote:
-> > >
-> > > find it unlikely that is common because who acquires such a large machine
-> > > and then uses a tiny percentage of it.
-> >
-> >
-> > I generally agree, but I also want to make a point that AMD made these
-> > large systems much more affordable with their EPYC CPUs. The 8 NUMA node
-> > server we are using costs under $8k.
-> >
-> >
-> >
-> > > This is somewhat of a dilemma. Without the series, the load balancer and
-> > > NUMA balancer use very different criteria on what should happen and
-> > > results are not stable.
-> >
-> >
-> > Unfortunately, I see instabilities also for the series. This is again for
-> > the sp_C test with 8 threads executed on dual-socket AMD 7351 (EPYC Naples)
-> > server with 8 NUMA nodes. With the series applied, the runtime varies from
-> > 86 to 165 seconds! Could we do something about it? The runtime of 86
-> > seconds would be acceptable. If we could stabilize this case and get
-> > consistent runtime around 80 seconds, the problem would be gone.
-> >
-> > Do you experience the similar instability of results on your HW for sp_C
-> > with low thread counts?
-> >
->
-> I saw something similar but observed that it depended on whether the
-> worker tasks got spread wide or not which partially came down to luck.
-> The question is if it's possible to pick a point where we spread wide
-> and can recover quickly enough when tasks need to remain close without
-> knowledge of the future. Putting a balancing limit on tasks that
-> recently woke would be one option but that could also cause persistent
-> improper balancing for tasks that wake frequently.
->
-> > Runtime with this series applied:
-> >  $ grep "Time in seconds" *log
-> > sp.C.x.defaultRun.008threads.loop01.log: Time in seconds =
-> >   125.73
-> > sp.C.x.defaultRun.008threads.loop02.log: Time in seconds =
-> >    87.54
-> > sp.C.x.defaultRun.008threads.loop03.log: Time in seconds =
-> >    86.93
-> > sp.C.x.defaultRun.008threads.loop04.log: Time in seconds =
-> >   165.98
-> > sp.C.x.defaultRun.008threads.loop05.log: Time in seconds =
-> >   114.78
-> >
-> > For comparison, here are vanilla kernel results:
-> > $ grep "Time in seconds" *log
-> > sp.C.x.defaultRun.008threads.loop01.log: Time in seconds =
-> >    59.83
-> > sp.C.x.defaultRun.008threads.loop02.log: Time in seconds =
-> >    67.72
-> > sp.C.x.defaultRun.008threads.loop03.log: Time in seconds =
-> >    63.62
-> > sp.C.x.defaultRun.008threads.loop04.log: Time in seconds =
-> >    55.01
-> > sp.C.x.defaultRun.008threads.loop05.log: Time in seconds =
-> >    65.20
-> >
-> >
-> >
-> > > In *general*, I found that the series won a lot more than it lost across
-> > > a spread of workloads and machines but unfortunately it's also an area
-> > > where counter-examples can be found.
-> >
-> >
-> > OK, fair enough. I understand that there will always be trade-offs when
-> > making changes to scheduler like this. And I agree that cases with higher
-> > system load (where is series is helpful) outweigh the performance drops for
-> > low threads counts. I was hoping that it would be possible to improve the
-> > small threads results while keeping the gains for other scenarios:-)  But
-> > let's be realistic - I would be happy to fix the extreme case mentioned
-> > above. The other issues where performance drop is about 20% are OK with me
-> > and are outweighed by the gains for different scenarios.
-> >
->
-> I'll continue thinking about it but whatever chance there is of
-> improving it while keeping CPU balancing, NUMA balancing and wake affine
-> consistent with each other, I think there is no chance with the
-> inconsistent logic used in the vanilla code :(
->
-> --
-> Mel Gorman
-> SUSE Labs
->
+Best Regards,
 
+Tobias Schramm
+
+Changelog:
+ v2:
+  * Change subject to "Add support for CellWise cw2015 fuel gauge"
+  * Rewrite bindings as json-schema
+  * Use default power-supplies handling
+  * Use regmap for register access
+  * Use standard simple-battery node
+  * Replace printk/pr_* by dev_{dbg,info,warn,err}
+  * Use cancel_delayed_work_sync in remove
+  * General code cleanup
+ v3:
+  * Incorporate review by Andy
+  * Add cellwise vendor prefix
+  * Rename cellwise,bat-config-info property to cellwise,battery-profile
+  * Remove most state of charge post-processing
+  * Use fwnode interface
+  * General code cleanup
+  * Lots of code style fixes
+ v4:
+  * Implement additional changes requested by Andy
+  * Use fwnode inline wrappers
+  * Clean up waiting for gauge
+  * Minor code style fixes
+
+Tobias Schramm (3):
+  dt-bindings: Document cellwise vendor-prefix
+  dt-bindings: power: supply: add cw2015_battery bindings
+  power: supply: add CellWise cw2015 fuel gauge driver
+
+ .../bindings/power/supply/cw2015_battery.yaml |  83 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/power/supply/Kconfig                  |   8 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/cw2015_battery.c         | 759 ++++++++++++++++++
+ 6 files changed, 859 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+ create mode 100644 drivers/power/supply/cw2015_battery.c
 
 -- 
--Jirka
+2.24.1
 
