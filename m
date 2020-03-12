@@ -2,133 +2,62 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B218DC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A488C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5372072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584052615;
-	bh=Mw6mvQtiU1SMRyM0DpwBs+f6ymAnPty4GMG0fmVIDyU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=uuElYAurx+OQ7w9twrQX41ussecTnQk7AHb4N2BPqhmL01rseHN6eN3f4jrQCDGGP
-	 KIfGnyRlF7Rs6p2psvldU8XYUPr/jLoi1a00hoCiFTfDoY85OD/KuGX3PlRFCZqReb
-	 RUIgEvtOfXXhE2P47SyTxjlHNyyT0S1nk4x3DHDg=
+	by mail.kernel.org (Postfix) with ESMTP id 0D22D20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgCLWgy (ORCPT
+        id S1726834AbgCLWhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 18:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgCLWgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 18:36:54 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D20720716;
-        Thu, 12 Mar 2020 22:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584052613;
-        bh=Mw6mvQtiU1SMRyM0DpwBs+f6ymAnPty4GMG0fmVIDyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AJ4GOOAPB5NDv/dF15aRAnGIPDNGoatoF5uCg0OCidh3mlZDA9IiD8p04viY8CcXl
-         bVCIviAu6z7DAyWKsNTLjBD2/lmLeGXaJHOyu4J2jlgbCjBSZwT+Bf+ECFetUC2LVr
-         N/mnPmp+9+JDvPtTKXcV8qRFSgmY9j2UiJ5gEnIw=
-Date:   Thu, 12 Mar 2020 17:36:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Message-ID: <20200312223651.GA202733@google.com>
+        Thu, 12 Mar 2020 18:37:14 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:59038 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCLWhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 18:37:13 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCWRx-00APHt-9B; Thu, 12 Mar 2020 22:37:09 +0000
+Date:   Thu, 12 Mar 2020 22:37:09 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [git pull] vfs.git fixes
+Message-ID: <20200312223709.GM23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e710fd4c-4c0e-448a-6791-beed334536ce@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 03:02:07PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On 3/12/20 2:52 PM, Bjorn Helgaas wrote:
-> > On Thu, Mar 12, 2020 at 02:29:58PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > On 3/12/20 2:02 PM, Austin.Bolen@dell.com wrote:
-> > > > On 3/12/2020 2:53 PM, Bjorn Helgaas wrote:
-> > > > > On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > > > > On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
-> > > > > > > Is any synchronization needed here between the EDR path and the
-> > > > > > > hotplug/enumeration path?
-> > > > > > If we want to follow the implementation note step by step (in
-> > > > > > sequence) then we need some synchronization between EDR path and
-> > > > > > enumeration path. But if it's OK to achieve the same end result by
-> > > > > > following steps out of sequence then we don't need to create any
-> > > > > > dependency between EDR and enumeration paths. Currently we follow
-> > > > > > the latter approach.
-> > > > > What would the synchronization look like?
-> > > > > 
-> > > > > Ideally I think it would be better to follow the order in the
-> > > > > flowchart if it's not too onerous.  That will make the code easier to
-> > > > > understand.  The current situation with this dependency on pciehp and
-> > > > > what it will do leaves a lot of things implicit.
-> > > > > 
-> > > > > What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
-> > > > > 
-> > > > > IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
-> > > > > unbinds the drivers and removes the devices.  If that doesn't happen,
-> > > > > and Linux clears the DPC trigger to bring the link back up, will those
-> > > > > drivers try to operate uninitialized devices?
-> > > > > 
-> > > > > Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
-> > > >    From one of Sathya's other responses:
-> > > > 
-> > > > "If hotplug is not supported then there is support to enumerate
-> > > > devices via polling  or ACPI events. But a point to note
-> > > > here is, enumeration path is independent of error handler path, and
-> > > > hence there is no explicit trigger or event from error handler path
-> > > > to enumeration path to kick start the enumeration."
-> > > > 
-> > > > The EDR standard doesn't have any dependency on hot-plug. It sounds like
-> > > > in the current implementation there's some manual intervention needed if
-> > > > hot-plug is not supported?
-> > >
-> > > No, there is no need for manual intervention even in non hotplug
-> > > cases.
-> > > 
-> > > For ACPI events case, we would rely on ACPI event to kick start the
-> > > enumeration.  And for polling model, there is an independent polling
-> > > thread which will kick start the enumeration.
->
-> > I'm guessing the ACPI case works via hotplug_is_native(): if
-> > CONFIG_HOTPLUG_PCI_PCIE=n, pciehp_is_native() returns false, and
-> > acpiphp manages hotplug.
-> > 
-> > What if CONFIG_HOTPLUG_PCI_ACPI=n also?
->
-> If none of the auto scans are enabled then we might need some
-> manual trigger (rescan). But this would be needed in native
-> DPC case as well.
-> > 
-> > Where is the polling thread?
->
-> drivers/pci/hotplug/pciehp_hpc.c
+	A couple of fixes for old crap in ->atomic_open() instances.
 
-Only if CONFIG_HOTPLUG_PCI_PCIE=y, obviously.  My question is about
-what happens when CONFIG_HOTPLUG_PCI_PCIE=n.
+The following changes since commit bf4498ad3f9a0f7202cf90e52b5ce9bb31700b91:
 
-I'm not as concerned about requiring a manual rescan.  That's
-inconvenient, but doesn't seem like a big deal because that's what you
-expect with no hotplug driver.
+  tmpfs: deny and force are not huge mount options (2020-02-18 15:07:30 -0500)
 
-What I *am* worried about is calling driver callbacks on a device that
-has been reset but not initialized.  That could cause all sorts of
-havoc because the driver thinks it can trust BARs and other
-configuration.
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+
+for you to fetch changes up to d9a9f4849fe0c9d560851ab22a85a666cddfdd24:
+
+  cifs_atomic_open(): fix double-put on late allocation failure (2020-03-12 18:25:20 -0400)
+
+----------------------------------------------------------------
+Al Viro (2):
+      gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
+      cifs_atomic_open(): fix double-put on late allocation failure
+
+ Documentation/filesystems/porting.rst | 8 ++++++++
+ fs/cifs/dir.c                         | 1 -
+ fs/gfs2/inode.c                       | 2 +-
+ fs/open.c                             | 3 ---
+ 4 files changed, 9 insertions(+), 5 deletions(-)
