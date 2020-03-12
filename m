@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C3EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5890720716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395CF206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="LB2Rpnhy"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="RsW/vK4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCLRc4 (ORCPT
+        id S1726633AbgCLRdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:32:56 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36512 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCLRcz (ORCPT
+        Thu, 12 Mar 2020 13:33:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51489 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgCLRc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:32:55 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s5so8601767wrg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:32:53 -0700 (PDT)
+        Thu, 12 Mar 2020 13:32:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a132so7025768wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chrisdown.name; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=CcUuUlC43ZZSpfh7MoEkxpHRz/YQaDQ0sa4yKp/08VA=;
-        b=LB2RpnhyFSTH3hVgjWSNFLifh6wVwkygWTfWLNDnxQPIIBKr4BpapuRzF1lJYa0M15
-         UbSB1s+QSe7P8Bx+GLZMQ+cV7gO4cfbRWGjeLOLvLCaijAjS6Lpr8ZOYSHWG8HOqN/hu
-         kT1oLw9Sjvc/qjL4Kh04/aFvpCsvKUXlmqg/Y=
+        bh=rC6DPhMt4Bc6PZBfsWnH9m+te2MxYFVp1w0OPHy/TMg=;
+        b=RsW/vK4ZQdfMF082vtv3xGDq0tnOXulVLSIzxMkgnp71K/k5wE9FsaYAqfwBT7Mi8T
+         1JGkpiXJS/cZde2IHQWUKO2lYZzaiwID5eItcGzhgvtHijHI/MSk4nmoIOz9KNm30+Yg
+         FUB3Lg42z8vn9pQn08JwbZJE+I0nAu8whv3GM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=CcUuUlC43ZZSpfh7MoEkxpHRz/YQaDQ0sa4yKp/08VA=;
-        b=G1RXE6MZnFaw16q51wDcZWJTC7tepKJgZW9mqtvxuAi+8/LRguer4UraURgotWRz+8
-         Cq0fIMmasJM/+OAKZSt7voYagWToqEpwn1v8fAaaOwQHoWAJJ2+0vXgcz/8WpqT1szkN
-         FdP+MGXLwka3bADSzKLeS2xt/jMJpMkbh3xw39h7Cuiu35S59PUXulxWoaCx1JJuJ6M6
-         Lhp5jQRbgXHnRe8NxXH3dbLYOE/Uc/IuB4x1lRfrdWj3hgn4uZ2mg35oS9Lza6yCDqyB
-         QE6suW6L5KW5bI9PQ+2htuFz3fi7SBU+67xIdaEDtvQbenmo7DJfYS12yc9G1KJHWQKZ
-         pjdg==
-X-Gm-Message-State: ANhLgQ2wknOs/9wuvwzV7mLy01pWySBCDp6iIPF2T+p+5jpa8wIZTeMG
-        JP4SDGA+9sglgirG4ujkDminjA==
-X-Google-Smtp-Source: ADFU+vtgf9rQPYcJ7fNM8yiJe0orpohUFakZwlPq0AegakMNuqTr8+u5nhAj4dJIgtmv3wka95/7/g==
-X-Received: by 2002:a05:6000:1008:: with SMTP id a8mr6809577wrx.8.1584034372767;
-        Thu, 12 Mar 2020 10:32:52 -0700 (PDT)
+        bh=rC6DPhMt4Bc6PZBfsWnH9m+te2MxYFVp1w0OPHy/TMg=;
+        b=ZfXOfT7I+NC5pYWb03R5xY9xpJWClDQwI5dtLKfXqhLaP0fg+mx2LqYMVvEFrcxg7Y
+         hYt31GVMoSoRuBlCQQz9KQI7LZejj5r5iDxQNQVBVRTVOhT9aCGgr6l32r7wDirVadiV
+         xmihjZtRX0Wi23z02dN+aM/WpjnFHfY4HWQ1k69dulFwnHLzl8qzNKTJlJkskiNFCjGe
+         bmpTAF2qLpHalvNse45xRtBsiElwHGuFzoRFxq/PF9K+XPeySI9HCDsEEIXCPr6yAWzq
+         aBEPY0Pefva4QAxSw9Ljq5xfj69pyuwmtzXc5iElhKxtFifLIuA/BZA0xsCFBLKouW3s
+         kdCw==
+X-Gm-Message-State: ANhLgQ1LnE2lzRlR9w1Xpn3UKQNnkLubHrMabLbveFkTGZMPhNdxd2De
+        ro8N+pzLog1kS2WzCiT+3aoRSg==
+X-Google-Smtp-Source: ADFU+vuUWIJm8HtSoJx05RRAuGsJ1TYnW585UUfshNPcO1zgDpwRCCY5Y8dEGgjUnxBmIS6TJK1gTw==
+X-Received: by 2002:a7b:cfc9:: with SMTP id f9mr5541876wmm.127.1584034377704;
+        Thu, 12 Mar 2020 10:32:57 -0700 (PDT)
 Received: from localhost ([89.32.122.5])
-        by smtp.gmail.com with ESMTPSA id z6sm20259371wru.15.2020.03.12.10.32.52
+        by smtp.gmail.com with ESMTPSA id y16sm19541988wrn.63.2020.03.12.10.32.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 10:32:52 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:32:51 +0000
+        Thu, 12 Mar 2020 10:32:57 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 17:32:56 +0000
 From:   Chris Down <chris@chrisdown.name>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
         Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH 1/6] mm, memcg: Prevent memory.high load/store tearing
-Message-ID: <2f66f7038ed1d4688e59de72b627ae0ea52efa83.1584034301.git.chris@chrisdown.name>
+Subject: [PATCH 2/6] mm, memcg: Prevent memory.max load tearing
+Message-ID: <50a31e5f39f8ae6c8fb73966ba1455f0924e8f44.1584034301.git.chris@chrisdown.name>
 References: <cover.1584034301.git.chris@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -72,9 +72,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A mem_cgroup's high attribute can be concurrently set at the same time
-as we are trying to read it -- for example, if we are in
-memory_high_write at the same time as we are trying to do high reclaim.
+This one is a bit more nuanced because we have memcg_max_mutex, which is
+mostly just used for enforcing invariants, but we still need to
+READ_ONCE since (despite its name) it doesn't really protect memory.max
+access.
+
+On write (page_counter_set_max() and memory_max_write()) we use xchg(),
+which uses smp_mb(), so that's already fine.
 
 Signed-off-by: Chris Down <chris@chrisdown.name>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -86,68 +90,60 @@ Cc: cgroups@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: kernel-team@fb.com
 ---
- mm/memcontrol.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ mm/memcontrol.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 63bb6a2aab81..d32d3c0a16d4 100644
+index d32d3c0a16d4..aca2964ea494 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2228,7 +2228,7 @@ static void reclaim_high(struct mem_cgroup *memcg,
- 			 gfp_t gfp_mask)
+@@ -1507,7 +1507,7 @@ void mem_cgroup_print_oom_meminfo(struct mem_cgroup *memcg)
+ 
+ 	pr_info("memory: usage %llukB, limit %llukB, failcnt %lu\n",
+ 		K((u64)page_counter_read(&memcg->memory)),
+-		K((u64)memcg->memory.max), memcg->memory.failcnt);
++		K((u64)READ_ONCE(memcg->memory.max)), memcg->memory.failcnt);
+ 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+ 		pr_info("swap: usage %llukB, limit %llukB, failcnt %lu\n",
+ 			K((u64)page_counter_read(&memcg->swap)),
+@@ -1538,7 +1538,7 @@ unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg)
  {
- 	do {
--		if (page_counter_read(&memcg->memory) <= memcg->high)
-+		if (page_counter_read(&memcg->memory) <= READ_ONCE(memcg->high))
- 			continue;
- 		memcg_memory_event(memcg, MEMCG_HIGH);
- 		try_to_free_mem_cgroup_pages(memcg, nr_pages, gfp_mask, true);
-@@ -2545,7 +2545,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	 * reclaim, the cost of mismatch is negligible.
- 	 */
- 	do {
--		if (page_counter_read(&memcg->memory) > memcg->high) {
-+		if (page_counter_read(&memcg->memory) > READ_ONCE(memcg->high)) {
- 			/* Don't bother a random interrupted task */
- 			if (in_interrupt()) {
- 				schedule_work(&memcg->high_work);
-@@ -4257,7 +4257,8 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
+ 	unsigned long max;
+ 
+-	max = memcg->memory.max;
++	max = READ_ONCE(memcg->memory.max);
+ 	if (mem_cgroup_swappiness(memcg)) {
+ 		unsigned long memsw_max;
+ 		unsigned long swap_max;
+@@ -3006,7 +3006,7 @@ static int mem_cgroup_resize_max(struct mem_cgroup *memcg,
+ 		 * Make sure that the new limit (memsw or memory limit) doesn't
+ 		 * break our basic invariant rule memory.max <= memsw.max.
+ 		 */
+-		limits_invariant = memsw ? max >= memcg->memory.max :
++		limits_invariant = memsw ? max >= READ_ONCE(memcg->memory.max) :
+ 					   max <= memcg->memsw.max;
+ 		if (!limits_invariant) {
+ 			mutex_unlock(&memcg_max_mutex);
+@@ -3753,8 +3753,8 @@ static int memcg_stat_show(struct seq_file *m, void *v)
+ 	/* Hierarchical information */
+ 	memory = memsw = PAGE_COUNTER_MAX;
+ 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi)) {
+-		memory = min(memory, mi->memory.max);
+-		memsw = min(memsw, mi->memsw.max);
++		memory = min(memory, READ_ONCE(mi->memory.max));
++		memsw = min(memsw, READ_ONCE(mi->memsw.max));
+ 	}
+ 	seq_printf(m, "hierarchical_memory_limit %llu\n",
+ 		   (u64)memory * PAGE_SIZE);
+@@ -4257,7 +4257,7 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
  	*pheadroom = PAGE_COUNTER_MAX;
  
  	while ((parent = parent_mem_cgroup(memcg))) {
--		unsigned long ceiling = min(memcg->memory.max, memcg->high);
-+		unsigned long ceiling = min(memcg->memory.max,
-+					    READ_ONCE(memcg->high));
+-		unsigned long ceiling = min(memcg->memory.max,
++		unsigned long ceiling = min(READ_ONCE(memcg->memory.max),
+ 					    READ_ONCE(memcg->high));
  		unsigned long used = page_counter_read(&memcg->memory);
  
- 		*pheadroom = min(*pheadroom, ceiling - min(ceiling, used));
-@@ -4978,7 +4979,7 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
- 	if (!memcg)
- 		return ERR_PTR(error);
- 
--	memcg->high = PAGE_COUNTER_MAX;
-+	WRITE_ONCE(memcg->high, PAGE_COUNTER_MAX);
- 	memcg->soft_limit = PAGE_COUNTER_MAX;
- 	if (parent) {
- 		memcg->swappiness = mem_cgroup_swappiness(parent);
-@@ -5131,7 +5132,7 @@ static void mem_cgroup_css_reset(struct cgroup_subsys_state *css)
- 	page_counter_set_max(&memcg->tcpmem, PAGE_COUNTER_MAX);
- 	page_counter_set_min(&memcg->memory, 0);
- 	page_counter_set_low(&memcg->memory, 0);
--	memcg->high = PAGE_COUNTER_MAX;
-+	WRITE_ONCE(memcg->high, PAGE_COUNTER_MAX);
- 	memcg->soft_limit = PAGE_COUNTER_MAX;
- 	memcg_wb_domain_size_changed(memcg);
- }
-@@ -5947,7 +5948,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
- 	if (err)
- 		return err;
- 
--	memcg->high = high;
-+	WRITE_ONCE(memcg->high, high);
- 
- 	for (;;) {
- 		unsigned long nr_pages = page_counter_read(&memcg->memory);
 -- 
 2.25.1
 
