@@ -2,155 +2,133 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FB7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08076C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C538206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBEB9206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q17v1xD7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8Hey0ZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgCLRMT (ORCPT
+        id S1726464AbgCLROz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:12:19 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40029 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgCLRMT (ORCPT
+        Thu, 12 Mar 2020 13:14:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36382 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLROz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:12:19 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n5so4977065qtv.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:12:18 -0700 (PDT)
+        Thu, 12 Mar 2020 13:14:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g62so7243924wme.1;
+        Thu, 12 Mar 2020 10:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dMVelJrz8fF3lspFFmR9UFxMP7yEL5SRbojWYJwpleE=;
-        b=q17v1xD7+lA8wXe7vp0z0myc3y32AN/wsOmHR05q+5Z46xQJ2Zg7PkozNiXWt+Y9Zi
-         bS3nVvMKIxhlhK1Go1qCj5Y8G4UJrS676cdjbPnc8TnKWbf9C0IH4EycUr3TPrJQtR9G
-         ymiKbuctcMhwaXAqWXsBxEZsjVQT+aCIUK7rEmZ6F4M9XE4mF8xvk2pLeODoEFmNPE38
-         aK5r3HQ2WIcHHVbdydQGDA9UIbnajywgrcgE6QMXMNBQnz+H0aHpJB+n0BcHV63/Xbsc
-         rBoLePORPfIFLp7KPQxvmLWTdIUEwPQApQyLDruUnrFnSdD3D933COtX+mub5XvtjCaf
-         eZuw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=EYdjJi1eg7gwDE8+qiJsI5fjOAKRoOIZdPVPZzHXbKM=;
+        b=M8Hey0ZIup/VKHiqLIq6b3cKb1xTOXZWyT6gZ3p9k0zIiwpnZqOMK/NXvJy6vrxPW0
+         irrMKZk9dIXmf7GvYxSwMBq2s4GuK64k6lzUS+lX9gSflctbgWaPA07GhFj4c1KNHfBf
+         FdE/xvA0ZSd/VSqUaOynJermbkYE5fUHZaaM/ku9/o9z5+1vhkY3QJrAv3N3WBblUQ4B
+         2lQvlu8sQJ+VdF0Jwu5xAYoscqTEAX8SQmIp5tOPVifLuPbaGqCJlgwp7EHj6bsL9+8X
+         ZfBggl6QGE1xt77F0pH7bfdO4/6GU9YDSF/5Sg65sfW4UZj6KL6tauTT2xewUhFqGWVi
+         qZnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dMVelJrz8fF3lspFFmR9UFxMP7yEL5SRbojWYJwpleE=;
-        b=AFWdT5stSBtVnv8Pj2PaHO2HuH8i+pb2fqDPj2fiS0Ix22/K7/wUdaFatrSnKhIF6c
-         BWpUxf4ceDtMODNAouunVxC+/V8SepnLl/48Gc9UsWKCSHwnYRSe+JbSUU95nWcgOMwu
-         MWo3p6u/Vury+vXzyo2gWfY2vCXguC9IbeCPT6QLEOWseLGC2Tasat/+ICOb/XR+ZION
-         mJiw+iNzz21WIUDnFgwavIPSqCyuXJ4/yHyzE26GQ7Ml1to2xjDq9nTHNL6GTQujuIYe
-         SUS2ijJIWQPK4pTvmZRA1KVl+4eL7jW8X6vWEcSrutv4iphyziDIaNyrXSTWI2aZ8PY7
-         Ck7w==
-X-Gm-Message-State: ANhLgQ0eyTC2LrXOejlv4q2KH3unBePiN9B+xs0Yk4GJ8oYOKcBRtLNZ
-        5UDQd8kW9lhvQ3trt/W91xU=
-X-Google-Smtp-Source: ADFU+vtXpKcQPnH10nXjPcSeZkbkwE8Fn6TN9er5R901MoXFbwsd+Zi4gu+EcVfOcjjbM8T8Qsebrw==
-X-Received: by 2002:ac8:b42:: with SMTP id m2mr8390030qti.67.1584033138091;
-        Thu, 12 Mar 2020 10:12:18 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.214.213])
-        by smtp.gmail.com with ESMTPSA id j193sm9475302qke.22.2020.03.12.10.12.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 10:12:17 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3023740009; Thu, 12 Mar 2020 14:12:14 -0300 (-03)
-Date:   Thu, 12 Mar 2020 14:12:14 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf record: fix binding of AIO user space buffers to
- nodes
-Message-ID: <20200312171214.GD12036@kernel.org>
-References: <c7ea8ffe-1357-bf9e-3a89-1da1d8e9b75b@linux.intel.com>
- <20200312143152.GA28601@kernel.org>
- <2e01e17a-962d-571b-4407-70aa270cec6a@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e01e17a-962d-571b-4407-70aa270cec6a@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=EYdjJi1eg7gwDE8+qiJsI5fjOAKRoOIZdPVPZzHXbKM=;
+        b=cQHTGrMqr4dJzCf76fVHqTdMe7gz7ROhYKvhGL5iWc2VtM2SbIm5oNGEAALGwU/SPt
+         G7c2spcJPE3D3nzSKj807Mo3kjT5Mdw2vjeqLiinwmopVlyVK3psPykPfyPl9ux0bXcZ
+         GKQwTB01pLaUFsWO0kS9GSGICB4bgM1XF0cQ5LwckMWiJXuylnCjWsovr+I8HDh0xSCM
+         FrvnNl3f9oUvMfJnpg+zur1rCTnVyincJNUJ4q3Rs9jex8t9ZsicILjTyHZ7e7qm3anJ
+         eebwfR8ewEXWAJm32GqRRyPDby47aPZBE2hhKAwW7PPDT3LOW40197CEOXdim4esTGjW
+         FA/Q==
+X-Gm-Message-State: ANhLgQ33H5C7iuq0Bxhj0MQ5R3nml4YosJHVPeWczxPg8rFbIPfptaCe
+        aUHszjsjn/c6lpE7jtA7uDY=
+X-Google-Smtp-Source: ADFU+vtU7C/3+s0Pk9eeP2zgYFICLmB/RyyyGdx933hyEaJXNcwP3tqeI/5HWn0ccTbWbpltz9yuHQ==
+X-Received: by 2002:a1c:1b8a:: with SMTP id b132mr5690411wmb.93.1584033293552;
+        Thu, 12 Mar 2020 10:14:53 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v10sm3398832wmh.17.2020.03.12.10.14.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 10:14:52 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] ARM: dts: rockchip: remove clock-names property from 'generic-ohci' nodes
+Date:   Thu, 12 Mar 2020 18:14:39 +0100
+Message-Id: <20200312171441.21144-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200312171441.21144-1-jbx6244@gmail.com>
+References: <20200312171441.21144-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 12, 2020 at 07:09:56PM +0300, Alexey Budankov escreveu:
-> 
-> On 12.03.2020 17:31, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Mar 12, 2020 at 03:21:45PM +0300, Alexey Budankov escreveu:
-> >>
-> >> Correct maxnode parameter value passed to mbind() syscall to be
-> >> the amount of node mask bits to analyze plus 1. Dynamically allocate
-> >> node mask memory depending on the index of node of cpu being profiled.
-> >> Fixes: c44a8b44ca9f ("perf record: Bind the AIO user space buffers to nodes")
-> >> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> >> ---
-> >>  tools/perf/util/mmap.c | 21 +++++++++++++++------
-> >>  1 file changed, 15 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> >> index 3b664fa673a6..6d604cd67a95 100644
-> >> --- a/tools/perf/util/mmap.c
-> >> +++ b/tools/perf/util/mmap.c
-> >> @@ -98,20 +98,29 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
-> >>  {
-> >>  	void *data;
-> >>  	size_t mmap_len;
-> >> -	unsigned long node_mask;
-> >> +	unsigned long *node_mask;
-> >> +	unsigned long node_index;
-> >> +	int err = 0;
-> >>  
-> >>  	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
-> >>  		data = map->aio.data[idx];
-> >>  		mmap_len = mmap__mmap_len(map);
-> >> -		node_mask = 1UL << cpu__get_node(cpu);
-> >> -		if (mbind(data, mmap_len, MPOL_BIND, &node_mask, 1, 0)) {
-> >> -			pr_err("Failed to bind [%p-%p] AIO buffer to node %d: error %m\n",
-> >> -				data, data + mmap_len, cpu__get_node(cpu));
-> >> +		node_index = cpu__get_node(cpu);
-> >> +		node_mask = bitmap_alloc(node_index + 1);
-> >> +		if (!node_mask) {
-> >> +			pr_err("Failed to allocate node mask for mbind: error %m\n");
-> >>  			return -1;
-> >>  		}
-> >> +		set_bit(node_index, node_mask);
-> >> +		if (mbind(data, mmap_len, MPOL_BIND, node_mask, node_index + 1 + 1/*nr_bits + 1*/, 0)) {
-> > 
-> >                                                                                   ^^^^^^^^^^^^^^
-> > 										  Leftover?
-> 
-> Intentionally put it here to document kernel behavior for mbind() syscall
-> because currently it is different from the man page [1] documented:
-> 
-> "nodemask points to a bit mask of nodes containing up to maxnode bits.
->  The bit mask size is rounded to the next multiple of sizeof(unsigned
->  long), but the kernel will use bits only up to maxnode.  A NULL value
->  of nodemask or a maxnode value of zero specifies the empty set of
->  nodes.  If the value of maxnode is zero, the nodemask argument is
->  ignored.  Where a nodemask is required, it must contain at least one
->  node that is on-line, allowed by the thread's current cpuset context
->  (unless the MPOL_F_STATIC_NODES mode flag is specified), and contains
->  memory."
+A test with the command below gives for example this error:
 
-Ok, will add the above as a comment above the line with that comment.
- 
-> ~Alexey
-> 
-> [1] http://man7.org/linux/man-pages/man2/mbind.2.html
+arch/arm/boot/dts/rv1108-evb.dt.yaml: usb@30160000:
+'clock-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 
+'clock-names' is not a valid property name for usb_host nodes with
+compatible string 'generic-ohci', so remove them.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/generic-ohci.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk322x.dtsi | 3 ---
+ arch/arm/boot/dts/rv1108.dtsi | 1 -
+ 2 files changed, 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 6503247e9..06172ebbf 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -732,7 +732,6 @@
+ 		reg = <0x300a0000 0x20000>;
+ 		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
+-		clock-names = "usbhost", "utmi";
+ 		phys = <&u2phy0_host>;
+ 		phy-names = "usb";
+ 		status = "disabled";
+@@ -753,7 +752,6 @@
+ 		reg = <0x300e0000 0x20000>;
+ 		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
+-		clock-names = "usbhost", "utmi";
+ 		phys = <&u2phy1_otg>;
+ 		phy-names = "usb";
+ 		status = "disabled";
+@@ -774,7 +772,6 @@
+ 		reg = <0x30120000 0x20000>;
+ 		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
+-		clock-names = "usbhost", "utmi";
+ 		phys = <&u2phy1_host>;
+ 		phy-names = "usb";
+ 		status = "disabled";
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index d33e606be..153868c62 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -505,7 +505,6 @@
+ 		reg = <0x30160000 0x20000>;
+ 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST0>, <&u2phy>;
+-		clock-names = "usbhost", "utmi";
+ 		phys = <&u2phy_host>;
+ 		phy-names = "usb";
+ 		status = "disabled";
 -- 
+2.11.0
 
-- Arnaldo
