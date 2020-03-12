@@ -2,168 +2,213 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E572DC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42136C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB48D2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:12:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rMsUEwK5"
+	by mail.kernel.org (Postfix) with ESMTP id 1DADB20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgCLLMF (ORCPT
+        id S1727067AbgCLLNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:12:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42648 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCLLMF (ORCPT
+        Thu, 12 Mar 2020 07:13:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35172 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCLLNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:12:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v11so6881998wrm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 04:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yKVMhGEhHj2nAvWVxK/ozTDgieqKZsKk3C5oNd2q3Mc=;
-        b=rMsUEwK5b57qYCS0YtjFicxSGjju0PHMOEO6LbfrtwixQXZWUMmNw8tLz2nmCAzlGI
-         JYpc50qaz/WsVbrs0/ZNvUC65ZwvXuFADfekz9Lsk1Qo6tPvoxS4XUpjhQGjlu8nNdfK
-         q92CjZSOqgmz7ZQUInDsSV8MZHuzY72bm7BjZkICBRF2SXelBJGCLyBrGqlDbrlqRxlX
-         ZKSX8FS02qHDZZPQX5NdAOMahl/1qdhH2ZnkqZtUM/87XWX3QPFCmImELjrBzS7ANPsM
-         ceO16sYaMf7ipiCLspxciTCWiHnhNIG4JASPwD6ruPcUkmnSGOFbTQOTCG0eVM6OxObv
-         ff5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yKVMhGEhHj2nAvWVxK/ozTDgieqKZsKk3C5oNd2q3Mc=;
-        b=bym35VN21EQkBP5jTw+xrijbh6ZY7CxP1dhtz3D4G0kSDmcpMmfNt8Vn3IxyMxuiBR
-         Qpovoje7VFZV/2IAVnxg+HWvYhGS/Ff5YOOHI1j3FnldsjIEkHXWq0vxRa4FnpHW7yRL
-         CwEpwb/tTGmxUlU6ymR3kaQp24d5biR6CoWSRvMyjnpqoFPynnag6yQCQf2Y8PXLL5EA
-         29RzaUdfdADbI+uMptUyUU3wh76PEnGjXijkcg8V/z2axv1jKldaYE4mE6OL0VPFtnEj
-         ztX1D9/AkD4pirjTk1LRResWDwv/lEj9ofT8zsgRMbnV5q627A6R0YYVggrXO4l4x8ew
-         819A==
-X-Gm-Message-State: ANhLgQ2oJ9HFZldYnLRJohNGH6S9RanDp8BhIytaT5vaiK1cz3PYlvxC
-        RhsmiQnAQTyZ2mx3AmcK/0uRwQ==
-X-Google-Smtp-Source: ADFU+vvuhEJ1A6Ra0+pNYlmAUpQkagno2JoCT+VM1Wvj7haaQO4gvg3G3raCXzYU9XoLla9HfBvCkw==
-X-Received: by 2002:adf:e68b:: with SMTP id r11mr9872626wrm.138.1584011523138;
-        Thu, 12 Mar 2020 04:12:03 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f? ([2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f])
-        by smtp.googlemail.com with ESMTPSA id u20sm12214644wmj.14.2020.03.12.04.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 04:12:02 -0700 (PDT)
-Subject: Re: [PATCH] thermal: add COMPILE_TEST support for i.MX8MM
-To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1583509057-8197-1-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7808e8ca-2b2f-05cc-8b34-c2d36a30b4dd@linaro.org>
-Date:   Thu, 12 Mar 2020 12:12:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 07:13:50 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jCLmb-0006Sp-Fe; Thu, 12 Mar 2020 11:13:45 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] ACPI: sysfs: copy ACPI data using io memory copying
+Date:   Thu, 12 Mar 2020 11:13:45 +0000
+Message-Id: <20200312111345.1057569-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1583509057-8197-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2020 16:37, Anson Huang wrote:
-> Add COMPILE_TEST support to i.MX8MM thermal driver for better compile
-> testing coverage.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied, thanks
+Reading ACPI data on ARM64 at a non-aligned offset from
+/sys/firmware/acpi/tables/data/BERT will cause a splat because
+the data is I/O memory mapped and being read with just a memcpy.
+Fix this by introducing an I/O variant of memory_read_from_buffer
+and using I/O memory mapped copies instead.
 
->  drivers/thermal/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 4d6753f..91af271 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -265,7 +265,7 @@ config IMX_SC_THERMAL
->  
->  config IMX8MM_THERMAL
->  	tristate "Temperature sensor driver for Freescale i.MX8MM SoC"
-> -	depends on ARCH_MXC
-> +	depends on ARCH_MXC || COMPILE_TEST
->  	depends on OF
->  	help
->  	  Support for Thermal Monitoring Unit (TMU) found on Freescale i.MX8MM SoC.
-> 
+Fixes the following splat:
 
+[  439.789355] Unable to handle kernel paging request at virtual address ffff800041ac0007
+[  439.797275] Mem abort info:
+[  439.800078]   ESR = 0x96000021
+[  439.803131]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  439.808437]   SET = 0, FnV = 0
+[  439.811486]   EA = 0, S1PTW = 0
+[  439.814621] Data abort info:
+[  439.817489]   ISV = 0, ISS = 0x00000021
+[  439.821319]   CM = 0, WnR = 0
+[  439.824282] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000817fc000
+[  439.830979] [ffff800041ac0007] pgd=000000bffcfff003, pud=0000009f27cee003, pmd=000000bf4b993003, pte=0068000080280703
+[  439.841584] Internal error: Oops: 96000021 [#1] SMP
+[  439.846449] Modules linked in: nls_iso8859_1 dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua ipmi_ssif input_leds joydev ipmi_devintf ipmi_msghandler thunderx2_pmu sch_fq_codel ip_tables x_tables autofs4 btrfs zstd_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor xor_neon raid6_pq libcrc32c raid1 raid0 multipath linear i2c_smbus ast i2c_algo_bit crct10dif_ce drm_vram_helper uas ttm ghash_ce drm_kms_helper sha2_ce syscopyarea sha256_arm64 qede sysfillrect mpt3sas sha1_ce sysimgblt fb_sys_fops raid_class qed drm scsi_transport_sas usb_storage ahci crc8 gpio_xlp i2c_xlp9xx hid_generic usbhid hid aes_neon_bs aes_neon_blk aes_ce_blk crypto_simd cryptd aes_ce_cipher
+[  439.908474] CPU: 2 PID: 3926 Comm: a.out Not tainted 5.4.0-14-generic #17-Ubuntu
+[  439.915855] Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL027 07/01/2019
+[  439.923844] pstate: 80400009 (Nzcv daif +PAN -UAO)
+[  439.928625] pc : __memcpy+0x90/0x180
+[  439.932192] lr : memory_read_from_buffer+0x64/0x88
+[  439.936968] sp : ffff8000350dbc70
+[  439.940270] x29: ffff8000350dbc70 x28: ffff009e9c444b00
+[  439.945568] x27: 0000000000000000 x26: 0000000000000000
+[  439.950866] x25: 0000000056000000 x24: ffff800041ac0000
+[  439.956164] x23: ffff009ea163f980 x22: 0000000000000007
+[  439.961462] x21: ffff8000350dbce8 x20: 000000000000000e
+[  439.966760] x19: 0000000000000007 x18: ffff8000112f64a8
+[  439.972058] x17: 0000000000000000 x16: 0000000000000000
+[  439.977355] x15: 0000000080280000 x14: ffff800041aed000
+[  439.982653] x13: ffff009ee9fa2840 x12: ffff800041ad1000
+[  439.987951] x11: ffff8000115e1360 x10: ffff8000115e1360
+[  439.993248] x9 : 0000000000010000 x8 : ffff800011ad2658
+[  439.998546] x7 : ffff800041ac0000 x6 : ffff009ea163f980
+[  440.003844] x5 : 0140000000000000 x4 : 0000000000010000
+[  440.009141] x3 : ffff800041ac0000 x2 : 0000000000000007
+[  440.014439] x1 : ffff800041ac0007 x0 : ffff009ea163f980
+[  440.019737] Call trace:
+[  440.022173]  __memcpy+0x90/0x180
+[  440.025392]  acpi_data_show+0x54/0x80
+[  440.029044]  sysfs_kf_bin_read+0x6c/0xa8
+[  440.032954]  kernfs_file_direct_read+0x90/0x2d0
+[  440.037470]  kernfs_fop_read+0x68/0x78
+[  440.041210]  __vfs_read+0x48/0x90
+[  440.044511]  vfs_read+0xd0/0x1a0
+[  440.047726]  ksys_read+0x78/0x100
+[  440.051028]  __arm64_sys_read+0x24/0x30
+[  440.054852]  el0_svc_common.constprop.0+0xdc/0x1d8
+[  440.059629]  el0_svc_handler+0x34/0xa0
+[  440.063366]  el0_svc+0x10/0x14
+[  440.066411] Code: 36180062 f8408423 f80084c3 36100062 (b8404423)
+[  440.072492] ---[ end trace 45fb374e8d2d800e ]---
 
+A simple reproducer is as follows:
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+        int fd;
+        char buffer[7];
+        ssize_t n;
+
+        fd = open("/sys/firmware/acpi/tables/data/BERT", O_RDONLY);
+        if (fd < 0) {
+                perror("open failed");
+                return -1;
+        }
+        do {
+                n = read(fd, buffer, sizeof(buffer));
+        } while (n > 0);
+
+        return 0;
+}
+
+BugLink: https://bugs.launchpad.net/bugs/1866772
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/acpi/sysfs.c   |  2 +-
+ fs/libfs.c             | 33 +++++++++++++++++++++++++++++++++
+ include/linux/string.h |  2 ++
+ 3 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index c60d2c6d31d6..fb9e216cb8c0 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -446,7 +446,7 @@ static ssize_t acpi_data_show(struct file *filp, struct kobject *kobj,
+ 	base = acpi_os_map_memory(data_attr->addr, data_attr->attr.size);
+ 	if (!base)
+ 		return -ENOMEM;
+-	rc = memory_read_from_buffer(buf, count, &offset, base,
++	rc = memory_read_from_io_buffer(buf, count, &offset, base,
+ 				     data_attr->attr.size);
+ 	acpi_os_unmap_memory(base, data_attr->attr.size);
+ 
+diff --git a/fs/libfs.c b/fs/libfs.c
+index c686bd9caac6..3e112c51ce7b 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -800,6 +800,39 @@ ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
+ }
+ EXPORT_SYMBOL(memory_read_from_buffer);
+ 
++/**
++ * memory_read_from_io_buffer - copy data from a io memory mapped buffer
++ * @to: the kernel space buffer to read to
++ * @count: the maximum number of bytes to read
++ * @ppos: the current position in the buffer
++ * @from: the buffer to read from
++ * @available: the size of the buffer
++ *
++ * The memory_read_from_buffer() function reads up to @count bytes from the
++ * io memory mappy buffer @from at offset @ppos into the kernel space address
++ * starting at @to.
++ *
++ * On success, the number of bytes read is returned and the offset @ppos is
++ * advanced by this number, or negative value is returned on error.
++ **/
++ssize_t memory_read_from_io_buffer(void *to, size_t count, loff_t *ppos,
++				   const void *from, size_t available)
++{
++	loff_t pos = *ppos;
++
++	if (pos < 0)
++		return -EINVAL;
++	if (pos >= available)
++		return 0;
++	if (count > available - pos)
++		count = available - pos;
++	memcpy_fromio(to, from + pos, count);
++	*ppos = pos + count;
++
++	return count;
++}
++EXPORT_SYMBOL(memory_read_from_io_buffer);
++
+ /*
+  * Transaction based IO.
+  * The file expects a single write which triggers the transaction, and then
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 6dfbb2efa815..0c6ec2aa3909 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -216,6 +216,8 @@ int bprintf(u32 *bin_buf, size_t size, const char *fmt, ...) __printf(3, 4);
+ 
+ extern ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
+ 				       const void *from, size_t available);
++extern ssize_t memory_read_from_io_buffer(void *to, size_t count, loff_t *ppos,
++					  const void *from, size_t available);
+ 
+ int ptr_to_hashval(const void *ptr, unsigned long *hashval_out);
+ 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.25.1
 
