@@ -2,223 +2,105 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BE0C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036FC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAD120578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECC0206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nL4Hv1FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388024AbgCLG51 (ORCPT
+        id S2388000AbgCLHB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:57:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11667 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387831AbgCLG50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:57:26 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0A42B9EC5D086AEAD8DE;
-        Thu, 12 Mar 2020 14:57:08 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 12 Mar 2020
- 14:56:58 +0800
-Subject: Re: [PATCH v5 03/23] irqchip/gic-v4.1: Ensure mutual exclusion
- between vPE affinity change and RD access
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-4-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <b2c9b596-29b9-d785-3a60-9814d1c35655@huawei.com>
-Date:   Thu, 12 Mar 2020 14:56:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 12 Mar 2020 03:01:56 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35368 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387831AbgCLHBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:01:55 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C71TsD089814;
+        Thu, 12 Mar 2020 02:01:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583996489;
+        bh=2DcFuiREd1lLevtuAMxfcFQw8QwTShJd4BPuKAz9Lh0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nL4Hv1FKZs/YfiOt8XmC7MZAc+wkXNl8hk7ZXvwXvsGxmXagJd6RhnIu//VFvqN4M
+         zftKyV63MeMCsh91IERuLv4S2K+/wPJlsq6ZXITZIB0qzzSHFSnsuIRHtgEs7NYw3n
+         vvdkDBs130WKzqh06H8UE7NWKw1RWwvdWqsHprw4=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C71TPB017366;
+        Thu, 12 Mar 2020 02:01:29 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
+ Mar 2020 02:01:28 -0500
+Received: from localhost.localdomain (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 12 Mar 2020 02:01:28 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02C71O9n084767;
+        Thu, 12 Mar 2020 02:01:24 -0500
+Subject: Re: [PATCH v6 3/3] drm: bridge: cdns-mhdp: add j721e wrapper
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Yuti Amonkar <yamonkar@cadence.com>
+CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>, <praneeth@ti.com>, <jsarha@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>
+References: <1582712579-28504-1-git-send-email-yamonkar@cadence.com>
+ <1582712579-28504-4-git-send-email-yamonkar@cadence.com>
+ <20200311205217.GD4863@pendragon.ideasonboard.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <0e9b73b7-a960-e2a1-d8a1-f12309755176@ti.com>
+Date:   Thu, 12 Mar 2020 09:01:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-4-maz@kernel.org>
+In-Reply-To: <20200311205217.GD4863@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> Before GICv4.1, all operations would be serialized with the affinity
-> changes by virtue of using the same ITS command queue. With v4.1, things
-> change, as invalidations (and a number of other operations) are issued
-> using the redistributor MMIO frame.
-> 
-> We must thus make sure that these redistributor accesses cannot race
-> against aginst the affinity change, or we may end-up talking to the
-          ^^^^^^
-> wrong redistributor.
-> 
-> To ensure this, we expand the irq_to_cpuid() helper to take a spinlock
-> when the LPI is mapped to a vLPI (a new per-VPE lock) on each operation
-> that requires mutual exclusion.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+Hi Laurent,
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+On 11/03/2020 22:52, Laurent Pinchart wrote:
 
-
-Thanks
-
-> ---
->   drivers/irqchip/irq-gic-v3-its.c   | 56 +++++++++++++++++++++++++-----
->   include/linux/irqchip/arm-gic-v4.h |  5 +++
->   2 files changed, 53 insertions(+), 8 deletions(-)
+>> +void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
+>> +{
+>> +	/*
+>> +	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
+>> +	 * to eDP DPI2. This is the only supported SST configuration on
+>> +	 * J721E.
 > 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index da883a691028..1af713990123 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -239,15 +239,41 @@ static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
->   	return NULL;
->   }
->   
-> -static int irq_to_cpuid(struct irq_data *d)
-> +static int vpe_to_cpuid_lock(struct its_vpe *vpe, unsigned long *flags)
-> +{
-> +	raw_spin_lock_irqsave(&vpe->vpe_lock, *flags);
-> +	return vpe->col_idx;
-> +}
-> +
-> +static void vpe_to_cpuid_unlock(struct its_vpe *vpe, unsigned long flags)
-> +{
-> +	raw_spin_unlock_irqrestore(&vpe->vpe_lock, flags);
-> +}
-> +
-> +static int irq_to_cpuid_lock(struct irq_data *d, unsigned long *flags)
->   {
-> -	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->   	struct its_vlpi_map *map = get_vlpi_map(d);
-> +	int cpu;
->   
-> -	if (map)
-> -		return map->vpe->col_idx;
-> +	if (map) {
-> +		cpu = vpe_to_cpuid_lock(map->vpe, flags);
-> +	} else {
-> +		/* Physical LPIs are already locked via the irq_desc lock */
-> +		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-> +		cpu = its_dev->event_map.col_map[its_get_event_id(d)];
-> +		/* Keep GCC quiet... */
-> +		*flags = 0;
-> +	}
->   
-> -	return its_dev->event_map.col_map[its_get_event_id(d)];
-> +	return cpu;
-> +}
-> +
-> +static void irq_to_cpuid_unlock(struct irq_data *d, unsigned long flags)
-> +{
-> +	struct its_vlpi_map *map = get_vlpi_map(d);
-> +
-> +	if (map)
-> +		vpe_to_cpuid_unlock(map->vpe, flags);
->   }
->   
->   static struct its_collection *valid_col(struct its_collection *col)
-> @@ -1329,7 +1355,9 @@ static void direct_lpi_inv(struct irq_data *d)
->   {
->   	struct its_vlpi_map *map = get_vlpi_map(d);
->   	void __iomem *rdbase;
-> +	unsigned long flags;
->   	u64 val;
-> +	int cpu;
->   
->   	if (map) {
->   		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-> @@ -1344,10 +1372,12 @@ static void direct_lpi_inv(struct irq_data *d)
->   	}
->   
->   	/* Target the redistributor this LPI is currently routed to */
-> -	rdbase = per_cpu_ptr(gic_rdists->rdist, irq_to_cpuid(d))->rd_base;
-> +	cpu = irq_to_cpuid_lock(d, &flags);
-> +	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
->   	gic_write_lpir(val, rdbase + GICR_INVLPIR);
->   
->   	wait_for_syncr(rdbase);
-> +	irq_to_cpuid_unlock(d, flags);
->   }
->   
->   static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
-> @@ -3486,17 +3516,25 @@ static int its_vpe_set_affinity(struct irq_data *d,
->   {
->   	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
->   	int from, cpu = cpumask_first(mask_val);
-> +	unsigned long flags;
->   
->   	/*
->   	 * Changing affinity is mega expensive, so let's be as lazy as
->   	 * we can and only do it if we really have to. Also, if mapped
->   	 * into the proxy device, we need to move the doorbell
->   	 * interrupt to its new location.
-> +	 *
-> +	 * Another thing is that changing the affinity of a vPE affects
-> +	 * *other interrupts* such as all the vLPIs that are routed to
-> +	 * this vPE. This means that the irq_desc lock is not enough to
-> +	 * protect us, and that we must ensure nobody samples vpe->col_idx
-> +	 * during the update, hence the lock below which must also be
-> +	 * taken on any vLPI handling path that evaluates vpe->col_idx.
->   	 */
-> -	if (vpe->col_idx == cpu)
-> +	from = vpe_to_cpuid_lock(vpe, &flags);
-> +	if (from == cpu)
->   		goto out;
->   
-> -	from = vpe->col_idx;
->   	vpe->col_idx = cpu;
->   
->   	/*
-> @@ -3512,6 +3550,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
->   
->   out:
->   	irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> +	vpe_to_cpuid_unlock(vpe, flags);
->   
->   	return IRQ_SET_MASK_OK_DONE;
->   }
-> @@ -3855,6 +3894,7 @@ static int its_vpe_init(struct its_vpe *vpe)
->   		return -ENOMEM;
->   	}
->   
-> +	raw_spin_lock_init(&vpe->vpe_lock);
->   	vpe->vpe_id = vpe_id;
->   	vpe->vpt_page = vpt_page;
->   	if (gic_rdists->has_rvpeid)
-> diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-> index d9c34968467a..439963f4c66a 100644
-> --- a/include/linux/irqchip/arm-gic-v4.h
-> +++ b/include/linux/irqchip/arm-gic-v4.h
-> @@ -53,6 +53,11 @@ struct its_vpe {
->   		};
->   	};
->   
-> +	/*
-> +	 * Ensures mutual exclusion between affinity setting of the
-> +	 * vPE and vLPI operations using vpe->col_idx.
-> +	 */
-> +	raw_spinlock_t		vpe_lock;
->   	/*
->   	 * This collection ID is used to indirect the target
->   	 * redistributor for this VPE. The ID itself isn't involved in
-> 
+> Without hardware documentation I can't really comment on this, but I'd
+> like to make sure it doesn't imply that the MHDP has more than one input
+> and one output.
 
+You can download the TRM for j721e here:
+
+http://www.ti.com/lit/pdf/spruil1
+
+MHDP has one DP output, but 4 inputs to support MST and split/dual panel modes. None of those are 
+supported by the drivers, but perhaps some thought should be paid to figure out if adding these 
+features affect the DT bindings.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
