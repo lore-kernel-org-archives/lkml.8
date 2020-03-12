@@ -2,86 +2,135 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E7BC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AB7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6359420716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32F3206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xYgKvx61"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PL0NMlFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbgCLOHQ (ORCPT
+        id S1727616AbgCLOH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:07:16 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41607 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLOHP (ORCPT
+        Thu, 12 Mar 2020 10:07:27 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41233 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLOH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:07:15 -0400
-Received: by mail-io1-f65.google.com with SMTP id m25so5775075ioo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:07:14 -0700 (PDT)
+        Thu, 12 Mar 2020 10:07:27 -0400
+Received: by mail-vs1-f68.google.com with SMTP id k188so3730015vsc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:07:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oCQZrJERoMLVJX5x1RC4/10D7o7Of6OtemKn4HOrLdo=;
-        b=xYgKvx61D4K49Vvkz8w1kRkqt+NeOXWdiLUS1MBdwmJxvRzERDXCuph6yDN4el87a7
-         LwKf4V4k2gjhHiqLtE3Ei2sAqnRrW8nuRpZWfzqrMrToy8FOe6FE45ghOG0kyLxQJFJi
-         Dp5viiCX/mPV+Kbtx+gkoNohSerKHKasipXZ/JNB4t8GP1XR2EhZwIIGhHs9Ti1jcRl5
-         6VpzNL9+idY3vxZGg/K/H/qTlcNnMGpDccW1I1pUD7h9/wwVQUJTQNrmIQBNPkO1Yv1E
-         +4U6vJhcUKN5IYEx8ZLCqIUp7Rb+Jr4ignKtRV473wjYuaLZRzSguZd8Q32OHC8FsMco
-         Mx9g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=buBSO5k2b4C3kXNX/XPJLGtnWR4DhQhQeL2M9/aAXBc=;
+        b=PL0NMlFZDgWMBsxgRB2pgKNVkX0QVKlDI0Zgo8PzJZAAqc8i0og3nDOyzEF9+WQtsw
+         SC9zrMXfzEX+sEZ3IeFjJQZVBShaMrVOCy2podIC8PitQXH2UCd3sRPjKxbiK+kdwAJ8
+         uga1GbAAMTawwtIWkMjWNKsKhaiEzxvbd2ningh9nfW8kluStifKW2zIib2FqduaatD5
+         aEi2/9tviHac2S6Rn8F+elUSfTJUMvml6l9LH8mhHDrGWgogrDC57/vaZP5XvoFy+U4y
+         WH92eQQiU3LyrEJAzS+mhy526Cg2yWgTtLo5T3AXeS949FRQuBZ0FSBNuU6U8XMeBb9q
+         Ba1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oCQZrJERoMLVJX5x1RC4/10D7o7Of6OtemKn4HOrLdo=;
-        b=JYauAa7vq6yrEsmx1tTs0JgprLs7oL4VP7aV+5izc+YB/kKJmiOaEv+wjNjq55ZXhD
-         NF4WrvcPrdQ5eF2QT9Ego5udyCt1F3Bc76NFu7q6eN/6jPkzutq5dIIqYmtDhykpSdbg
-         xsNqpnRAFNPjw9klqaY2w8PzyEsrQJQt1C9dftvyWN1h8rYe2HzFU2No9p7g2LKNF1ef
-         aGtPpO0DXGdGErdPztm1+V/ECfT360wrmxlNuZZDh5mn+1tYnnfRCaYdHCKhDDboDqXy
-         er3arHOD5xhSILr2fm3r+DKR1n50fSDoSnsO6nr+yY1E65p4BasqUBG7N3f/i7O62D9M
-         KvDw==
-X-Gm-Message-State: ANhLgQ0roBibC/3pHaKH5GeVl6ScLY9SEMdlvb6o5woU31tMUyktGocw
-        aFE+VBtPKEfqEi94M8JKymWYRgmPge+NkA==
-X-Google-Smtp-Source: ADFU+vsD36ki6VGiTjq4LiW76CyWNgNwT3q+tOD2iHOtZOyEJTeKdsK1gWHmB2n7L38BS0zcPcRsdA==
-X-Received: by 2002:a5d:9b12:: with SMTP id y18mr7789355ion.176.1584022032775;
-        Thu, 12 Mar 2020 07:07:12 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 4sm6131345ill.46.2020.03.12.07.07.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:07:10 -0700 (PDT)
-Subject: Re: [PATCH] ahci: Add Intel Comet Lake H RAID PCI ID
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200227122822.14059-1-kai.heng.feng@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7d7f9e0b-7410-1642-cc63-ef6fcda93540@kernel.dk>
-Date:   Thu, 12 Mar 2020 08:07:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=buBSO5k2b4C3kXNX/XPJLGtnWR4DhQhQeL2M9/aAXBc=;
+        b=ZCwVtTncryPoyi6CaMai3ZK0YOSsvneFZUFroOh0G7ooTei4ep5vER3ln18F4pIZ4o
+         Ex3oe76mOh3cxm+9c1zGblVVm4OQXukX/p1PRwKz+gw7tQ6ftUp4CZjJNmAvljm4i4aD
+         x9mjDbAKzaCU6cLtMadSeJzyAAXPofBP6KQak3ThJa3oD9OOp3IpI48y9HE2IeKGg7hj
+         rPxMEptN228nurxtZM/HY16LGdvjXqZS0V+1hZ6Zy1h8Re9syrwZ6k4A6yUwNjsN9AIN
+         U6UOjUGdptIfLzvH+Zfgbi2dofjyXln/Dfio7bwj+dD+Vy/0gC/SfGaBAgY/FmLr8AgO
+         XjxQ==
+X-Gm-Message-State: ANhLgQ3RFMYUrfOSlHyHSDGlelbz2PTLqHO0urPQrndC7vADULcORxBb
+        /uOXV0pvULIwHJL/NtiTS1NbWo1t5M/Y0f+pV3Lr9Q==
+X-Google-Smtp-Source: ADFU+vvKK/JxbKesCpiaMAfl5MC6dMr3G/EvpE0o1cQyilJQELyMRXAEvEhzVVgWT69tflBxzZwNt+1+f4g7iLxY3Ow=
+X-Received: by 2002:a67:2ec6:: with SMTP id u189mr5576185vsu.200.1584022045458;
+ Thu, 12 Mar 2020 07:07:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200227122822.14059-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
+ <CAPDyKFp+XwGog_w+8Sv1hYA-Umi6Rt2LYR1fyMEEb9abdb9nGQ@mail.gmail.com> <a51badd7ba6fc1938a120b8a3b8a423ca9a3613b.camel@suse.de>
+In-Reply-To: <a51badd7ba6fc1938a120b8a3b8a423ca9a3613b.camel@suse.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 12 Mar 2020 15:06:47 +0100
+Message-ID: <CAPDyKFprX9cLXxGQJ9E8H_A-PfWYyrL3SShuJi7-M1KobGWrEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] Raspbery Pi 4 vmmc regulator support
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        phil@raspberrypi.com,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 5:28 AM, Kai-Heng Feng wrote:
-> Add the PCI ID to the driver list to support this new device.
+On Thu, 12 Mar 2020 at 14:13, Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Ulf,
+>
+> On Thu, 2020-03-12 at 14:08 +0100, Ulf Hansson wrote:
+> > On Fri, 6 Mar 2020 at 18:44, Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > The series first cleans up a common pattern, which is ultimately needed
+> > > to integrate the regulator with bcm2711's sdhci-iproc. It then
+> > > introduces the relevant device-tree changes.
+> > >
+> > > ---
+> > >
+> > > Changes since v1:
+> > >  - Use helper function istead of quirk
+> > >  - Add GPIO label
+> > >
+> > > Nicolas Saenz Julienne (11):
+> > >   mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
+> > >   mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
+> > >   mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
+> > >   mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
+> > >   mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
+> > >   mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
+> > >   mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
+> > >   mmc: sdhci: Unexport sdhci_set_power_noreg()
+> > >   mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
+> > >   ARM: dts: bcm2711: Update expgpio's GPIO labels
+> > >   ARM: dts: bcm2711: Add vmmc regulator in emmc2
+> > >
+> > >  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 13 ++++++++++++-
+> > >  drivers/mmc/host/sdhci-iproc.c        | 17 ++++++++++++++++-
+> > >  drivers/mmc/host/sdhci-milbeaut.c     | 13 +------------
+> > >  drivers/mmc/host/sdhci-of-arasan.c    | 15 ++-------------
+> > >  drivers/mmc/host/sdhci-of-at91.c      | 18 +-----------------
+> > >  drivers/mmc/host/sdhci-pxav3.c        | 20 +-------------------
+> > >  drivers/mmc/host/sdhci-xenon.c        | 20 +-------------------
+> > >  drivers/mmc/host/sdhci.c              | 24 +++++++++++++++++++++---
+> > >  drivers/mmc/host/sdhci.h              |  5 +++--
+> > >  drivers/mmc/host/sdhci_am654.c        | 17 +++--------------
+> > >  10 files changed, 61 insertions(+), 101 deletions(-)
+> > >
+> > > --
+> > > 2.25.1
+> > >
+> >
+> > Patch 1-4, 6, 9 applied for next, thanks!
+>
+> I think you meant to apply 1-4, 7 and 9. Patch 6 is one of the contentious
+> ones.
 
-Applied for 5.7, thanks.
+Yes, that's what I did, but told you about 6. :-)
 
--- 
-Jens Axboe
+Thanks and sorry for the noise.
 
+Kind regards
+Uffe
