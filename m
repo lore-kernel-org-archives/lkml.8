@@ -2,192 +2,157 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F99C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F4C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65086206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AymwMeaV"
+	by mail.kernel.org (Postfix) with ESMTP id 072DD206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgCLJY0 (ORCPT
+        id S1726837AbgCLJY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:24:26 -0400
-Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:60926
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726632AbgCLJYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:24:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ER1EAvLitKRts18IFl+MYar6ZTWi+w4gwbTm6KMdQiD+gCtZYP8lJUreTx3ZgRTQf9210PxM6TFK02t3xqzzXdLR28V9tT/J3x8A/RCYbRTcpUt8qojtAQKiuA9xC4JPxZKRgm08zpwS5P4zPmfDHRae0fKr69kYLYaMTcQmLhL8tSJWoZe3uK9ZVJbRwFOZ3NtBNE+Pu6JPcl7md5Fq2GKAMJ3GL525nSli9fPWVZqMalGsvW1XytV22N38jI4M8f43mMMoPRWiJtQNVgbzB/PwDo7ZHZqz1vmfvfZLjLd+WqLA0uFpS/dkwPG6KrcXKoETKahhL+HpGqbQ9P8Oew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0CMnX4vMzPYzS9g30+XGH16lJIrzgO4jK1RlzhTYEw=;
- b=VbGxkuh609XNHr6heiXGTls5b+ZvikoqfTO4Qlntpw860SqGrAkCfs3ScDb0ixBtyZRBOyY0m7bu7VSqsLtbkvXx+HXKtC1i1lUKdhfvUajU+GiJmkryLWMBxVHI1Z30fg4R/cYqTirBsQVWZusJASDLDspvyWKQ1edsVisObnX+YpmSt/NO5gJ9c4jD9phs1LoLuhIyF8Lj9N7TwqhVHKC2wo3kE7dbjVkfhCsTqU7Dl8gFCqyEmIrkKskiYKPZXh5dFHv/wK10jRM7UV6IpoeYPLmvxPfeHBZU5cfda5NOGWlQy1wU3zooNaari7wU8P/bGyEhHxEI6q1xm7pmaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0CMnX4vMzPYzS9g30+XGH16lJIrzgO4jK1RlzhTYEw=;
- b=AymwMeaVx/frPOqJ7P3GEThhatjWNXazi6fGugBrY8TTYIsxBe2SsyFhx+NUxtqgspYTZuBjzKP68kSVKm1jG5CyqbF5UwP2mj/6qrbg5u5buifosXBjQgDocDBiCkmVt8MhTp1Bw+bvpN7RBcBQQNtRH+07w/9Sp/Gsb7k6wn4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5588.eurprd04.prod.outlook.com (20.178.119.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.16; Thu, 12 Mar 2020 09:24:21 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 09:24:21 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        allison@lohutok.net, info@metux.net, Anson.Huang@nxp.com,
-        leonard.crestez@nxp.com, git@andred.net, abel.vesa@nxp.com,
-        ard.biesheuvel@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V1 3/4] ARM: imx: move cpu definitions into a header
-Date:   Thu, 12 Mar 2020 17:17:24 +0800
-Message-Id: <1584004645-26720-4-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584004645-26720-1-git-send-email-peng.fan@nxp.com>
-References: <1584004645-26720-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0302CA0001.apcprd03.prod.outlook.com
- (2603:1096:3:2::11) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Thu, 12 Mar 2020 05:24:29 -0400
+Received: from relay.sw.ru ([185.231.240.75]:37434 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbgCLJY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 05:24:28 -0400
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jCK4M-0004oB-TH; Thu, 12 Mar 2020 12:23:59 +0300
+Subject: Re: [PATCH RFC 0/5] fs, ext4: Physical blocks placement hint for
+ fallocate(0): fallocate2(). TP defrag.
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
+        krisman@collabora.com, surajjs@amazon.com,
+        Dmitry Monakhov <dmonakhov@gmail.com>,
+        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
+        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <20200302165637.GA6826@mit.edu>
+ <2b2bb85f-8062-648a-1b6e-7d655bf43c96@virtuozzo.com>
+ <C4175F35-E9D4-4B79-B1A0-047A51DE3287@dilger.ca>
+ <46c1ed68-ba2f-5738-1257-8fd1b6b87023@virtuozzo.com>
+ <B6B72600-AB08-42F5-A9FF-0A0D2189CAFB@dilger.ca>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <326d9ec9-6671-61af-57a0-e1c3f72f658c@virtuozzo.com>
+Date:   Thu, 12 Mar 2020 12:23:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR0302CA0001.apcprd03.prod.outlook.com (2603:1096:3:2::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2835.7 via Frontend Transport; Thu, 12 Mar 2020 09:24:16 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7d5423a9-3aff-444e-5376-08d7c6672564
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5588:|AM0PR04MB5588:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB558866E322E59B3D684A217488FD0@AM0PR04MB5588.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(199004)(8936002)(478600001)(66946007)(81156014)(86362001)(6486002)(6512007)(69590400007)(52116002)(9686003)(81166006)(26005)(2906002)(4326008)(8676002)(6506007)(7416002)(5660300002)(2616005)(36756003)(316002)(66556008)(6666004)(66476007)(956004)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5588;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PBOGHYBxUL8FGXL4WX07nhT3dTcUOhq+LnZlVm6P1B6S+KisnV4BShZFAnNJZOzzHEyfC3HPP6LtcUQwPRxCMQB48DW71CLASy1yFweCE8edum/kW57vmHwPeyW5Rj0wnS1UYWfPtPbGXufSPCCyl5Xy7K75dQSrEKxSlz7j/FoLM73nJ+MpfIFD1ppKYzq587hu1BoaTfvqZ3wYKPPmzknLxfYMLbLJ5v8G5xTSP359EL36hXxzgRfSFShkax2PdoilOnDurIqe9gpx/JADdZjXn+pM6ta5ZPYoXs0jNaShx0Gi29XfFmXx7khh9zdbOKpoESjtGOce7MKC/AtcykoSSobjbUDbLytU3O9ZXMaPczxuEtn3dlZjaLqLSJcHUV4J720wxoa6QjOEs0CGQKq/G5dAi/uiNZwxWuJmw7VMqOLlkv5Rao14SSw6OMIBfmkB1gMnDD9ZpsocKWNmAXHo8lagMjANDeaDrJiErbycffjuzvKuHVe1U1edaET9
-X-MS-Exchange-AntiSpam-MessageData: dyNYyDdcFUHdCzl5QrCI0vQJxM7+mEus1foNhA2vkkf3df8Z3fKTULVIpsoWNkmDraT7yFZFMEICvwt1qn3dA4ilM3fpyN+e5TGxCDlLLhIl2oqCd4Am3mq1MBh6Ew21/Qit2+uJ4GE7OyhlEddJng==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d5423a9-3aff-444e-5376-08d7c6672564
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 09:24:20.9346
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NLvHly9FcFqfzUeqV9hYz7/2lFvU9UzjJjqrEBPEXCXV8/HadndJq2jhb09zbsPf1ypchOzP3XYllzfy4kDveA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5588
+In-Reply-To: <B6B72600-AB08-42F5-A9FF-0A0D2189CAFB@dilger.ca>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On 12.03.2020 03:31, Andreas Dilger wrote:
+> On Mar 11, 2020, at 2:29 PM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>> On 11.03.2020 22:26, Andreas Dilger wrote:
+>>> On Mar 3, 2020, at 2:57 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>>
+>>>> On 02.03.2020 19:56, Theodore Y. Ts'o wrote:
+>>>>> Kirill,
+>>>>>
+>>>>> In a couple of your comments on this patch series, you mentioned
+>>>>> "defragmentation".  Is that because you're trying to use this as part
+>>>>> of e4defrag, or at least, using EXT4_IOC_MOVE_EXT?
+>>>>>
+>>>>> If that's the case, you should note that input parameter for that
+>>>>> ioctl is:
+>>>>>
+>>>>> struct move_extent {
+>>>>> 	__u32 reserved;		/* should be zero */
+>>>>> 	__u32 donor_fd;		/* donor file descriptor */
+>>>>> 	__u64 orig_start;	/* logical start offset in block for orig */
+>>>>> 	__u64 donor_start;	/* logical start offset in block for donor */
+>>>>> 	__u64 len;		/* block length to be moved */
+>>>>> 	__u64 moved_len;	/* moved block length */
+>>>>> };
+>>>>>
+>>>>> Note that the donor_start is separate from the start of the file that
+>>>>> is being defragged.  So you could have the userspace application
+>>>>> fallocate a large chunk of space for that donor file, and then use
+>>>>> that donor file to defrag multiple files if you want to close pack
+>>>>> them.
+>>>>
+>>>> The practice shows it's not so. Your suggestion was the first thing we tried,
+>>>> but it works bad and just doubles/triples IO.
+>>>>
+>>>> Let we have two files of 512Kb, and they are placed in separate 1Mb clusters:
+>>>>
+>>>> [[512Kb file][512Kb free]][[512Kb file][512Kb free]]
+>>>>
+>>>> We want to pack both of files in the same 1Mb cluster. Packed together on block
+>>>> device, they will be in the same server of underlining distributed storage file
+>>>> system. This gives a big performance improvement, and this is the price I aimed.
+>>>>
+>>>> In case of I fallocate a large hunk for both of them, I have to move them
+>>>> both to this new hunk. So, instead of moving 512Kb of data, we will have to move
+>>>> 1Mb of data, i.e. double size, which is counterproductive.
+>>>>
+>>>> Imaging another situation, when we have
+>>>> [[1020Kb file]][4Kb free]][[4Kb file][1020Kb free]]
+>>>>
+>>>> Here we may just move [4Kb file] into [4Kb free]. But your suggestion again
+>>>> forces us to move 1Mb instead of 4Kb, which makes IO 256 times worse! This is
+>>>> terrible! And this is the thing I try prevent with finding a new interface.
+>>>
+>>> One idea I had, which may work for your use case, is to run fallocate() on
+>>> the *1MB-4KB file* to allocate the last 4KB in that hunk, then use that block
+>>> as the donor file for the 1MB+4KB file.  The ext4 allocation algorithms should
+>>> always give you that 4KB chunk if it is free, and that avoids the need to try
+>>> and force the allocator to select that block through some other method.
+>>
+>> Do you mean the following:
+>>
+>> 1)fallocate() 4K at the end of *1MB-4KB* the first file (==> this increases the file length).
+> 
+> You can use FALLOCATE_KEEP_SIZE to avoid changing the size of the file.
 
-The soc device register code will be moved to drivers/soc/imx/,
-the code needs the cpu type definitions. So let's move the cpu
-type definitions to a header.
+Ok, but there still remains the problem with fallocation of a block in front of target file:
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm/mach-imx/mxc.h | 22 +---------------------
- include/soc/imx/cpu.h   | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 21 deletions(-)
- create mode 100644 include/soc/imx/cpu.h
+[4KB hole][1MB-4KB file][hole][4KB file]
 
-diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
-index 2bfd2d59b4a6..fe2d0f5abfcc 100644
---- a/arch/arm/mach-imx/mxc.h
-+++ b/arch/arm/mach-imx/mxc.h
-@@ -8,35 +8,15 @@
- #define __ASM_ARCH_MXC_H__
- 
- #include <linux/types.h>
-+#include <soc/imx/cpu.h>
- 
- #ifndef __ASM_ARCH_MXC_HARDWARE_H__
- #error "Do not include directly."
- #endif
- 
--#define MXC_CPU_MX1		1
--#define MXC_CPU_MX21		21
--#define MXC_CPU_MX25		25
--#define MXC_CPU_MX27		27
--#define MXC_CPU_MX31		31
--#define MXC_CPU_MX35		35
--#define MXC_CPU_MX51		51
--#define MXC_CPU_MX53		53
--#define MXC_CPU_IMX6SL		0x60
--#define MXC_CPU_IMX6DL		0x61
--#define MXC_CPU_IMX6SX		0x62
--#define MXC_CPU_IMX6Q		0x63
--#define MXC_CPU_IMX6UL		0x64
--#define MXC_CPU_IMX6ULL		0x65
--/* virtual cpu id for i.mx6ulz */
--#define MXC_CPU_IMX6ULZ		0x6b
--#define MXC_CPU_IMX6SLL		0x67
--#define MXC_CPU_IMX7D		0x72
--#define MXC_CPU_IMX7ULP		0xff
--
- #define IMX_DDR_TYPE_LPDDR2		1
- 
- #ifndef __ASSEMBLY__
--extern unsigned int __mxc_cpu_type;
- 
- #ifdef CONFIG_SOC_IMX6SL
- static inline bool cpu_is_imx6sl(void)
-diff --git a/include/soc/imx/cpu.h b/include/soc/imx/cpu.h
-new file mode 100644
-index 000000000000..0669fc08a501
---- /dev/null
-+++ b/include/soc/imx/cpu.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef __IMX_CPU_H__
-+#define __IMX_CPU_H__
-+
-+#define MXC_CPU_MX1		1
-+#define MXC_CPU_MX21		21
-+#define MXC_CPU_MX25		25
-+#define MXC_CPU_MX27		27
-+#define MXC_CPU_MX31		31
-+#define MXC_CPU_MX35		35
-+#define MXC_CPU_MX51		51
-+#define MXC_CPU_MX53		53
-+#define MXC_CPU_IMX6SL		0x60
-+#define MXC_CPU_IMX6DL		0x61
-+#define MXC_CPU_IMX6SX		0x62
-+#define MXC_CPU_IMX6Q		0x63
-+#define MXC_CPU_IMX6UL		0x64
-+#define MXC_CPU_IMX6ULL		0x65
-+/* virtual cpu id for i.mx6ulz */
-+#define MXC_CPU_IMX6ULZ		0x6b
-+#define MXC_CPU_IMX6SLL		0x67
-+#define MXC_CPU_IMX7D		0x72
-+#define MXC_CPU_IMX7ULP		0xff
-+
-+#ifndef __ASSEMBLY__
-+extern unsigned int __mxc_cpu_type;
-+#endif
-+
-+#endif
--- 
-2.16.4
+Is there a high-probably way that ext4 allocator returns a block before target file?
 
+>> 2)EXT4_IOC_MOVE_EXT *4KB* the second file in that new hunk.
+>> 3)truncate 4KB at the end of the first file.
+>>
+>> If so, this can't be an online defrag, since some process may want to increase
+>> *1MB-4KB* file in between. This will just bring to data corruption.
+> 
+> You previously stated that one of the main reasons to do the defrag is because
+> the files are not being modified.  It would be possible to detect the case of
+> the file being modified by the file version and/or size and/or time change
+> before removing the fallocated block.
+
+Yes, files should not be modified in parallel, but there is no 100% guarantee.
+It's almost 100% by statistics, but since there is multi-user system (I defrag
+fs on VPS), there are possible exceptions. And the whole architecture must be
+safe in any cases.
+
+File version does not look acceptable for online defrag, since there is no a way,
+which allows to check the version and to remove fallocated block *atomically*.
+
+>> Another problem is that power lose between 1 and 3 will result in that file
+>> length remain *1MB* instead of *1MB-4KB*.
+> 
+> With FALLOCATE_KEEP_SIZE you can just use this file as the donor file to
+> allocate the blocks, then migrate it to another file without having written
+> anything into it.
+
+In case of some task decides to write into fallocated block, there will be data
+corruption.
