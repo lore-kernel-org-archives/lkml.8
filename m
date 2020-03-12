@@ -2,129 +2,122 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63982C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83924C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FFA2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5D82067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="piJo3Qvo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NeWi4sT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgCLNJA (ORCPT
+        id S1727341AbgCLNJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:09:00 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44146 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgCLNI6 (ORCPT
+        Thu, 12 Mar 2020 09:09:09 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:42170 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbgCLNJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:08:58 -0400
-Received: by mail-vs1-f68.google.com with SMTP id u24so3597465vso.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:08:58 -0700 (PDT)
+        Thu, 12 Mar 2020 09:09:08 -0400
+Received: by mail-ua1-f67.google.com with SMTP id v16so988706ual.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c/71/1S9FFPBZLngXcn7eOGZxEYwsgQn+LiJXaTEkt8=;
-        b=piJo3Qvo8x1s8VTBvAp8jS5t4o5VQEuBs+lWQCHYrxpJbtweH35oefXEg9GnzRQtdz
-         61TRYLXGKrksVOp7wxdDFIZl5QZ824OocSJHbPk7P8hZ70jpr88EaUGavwPNoL4Dn36K
-         Nl5oXBejzLR1jLeDJKzYb6ixDcAWzPP7oWG8OeFjKk4/PM28R2Me2D0Tsq7x8rhewXrt
-         r9U/8MqANn4Ec6qJ2Rhiv85PM01uXdt4/JzUZZopZGKv0JxfViBO1WHel4O7GIJWC1qc
-         CC+Rw5K2v3jnnd/eFLnzoQo/ZNl/T0nWcHZQA9pE0ttsgYASG3J1iRFvKPj7l5rZ/lPs
-         Rsiw==
+        bh=LyzsKuloOrXeAT1eDgIMEyFoe/19CJB+RPiJ8KPwQIw=;
+        b=NeWi4sT4tcbOtVyLPuM+OlmGb0SVww73M2/R4+x0yevjrTcctku9ZniQ0wxvDpbhJ3
+         I4R/OYEqZArLPzoutN66dWfc7JJ37NZL/mNx9nxoeLvvnrgJEWcc1CXVMf+zn3Au+w3U
+         okoA4mIsV2nkwV65aXMAwIswdl64TXCOqmu4YYKwjkzos3miKzEHnZ+GpHOuYx7uLGaE
+         zHIWyCppm77BMtgL6QzXZ1Hmzbggl/6H03ugd/cIfkOT8qbVLz6/gLHeUuFfSjA9Xeoa
+         MPG4tdiKgMXWO+eh5rsKNsC90o+9x14NA86uN0lqIQ3Mf/DoxgdetNVvKcjGiJ0mRcBA
+         R3aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c/71/1S9FFPBZLngXcn7eOGZxEYwsgQn+LiJXaTEkt8=;
-        b=N8ufiusFBtcRhgXgH7TD9zP+UcwdJqmtL1tippmkGmTYWXBDLX5TFGvqJev4WaP6PG
-         B1d15Cxu4+kOVhmqtX9EK+mu2u4cn7kUka/v1FYqsgAiVKcJc6/X1Sr+ac++U/e51zy1
-         ktakIE8vxO1wHRYK87i4PAMhFS8+75umvcpSVpkJ2arhKL8uwqad0Dcsrj66kQVN6BgW
-         UmEsi6fsO6+yWEN6W4TuzD6QXxK3WmaQvxN5D8MbuWa0LfhNm0hcij86XND2AbOq5YXE
-         jYprbZCqUHDbHY2HPm7tIcL27pQVMQzea5+aiyWQ72U7/S9lo4M6RkvH716NU2ui1/ri
-         j5+Q==
-X-Gm-Message-State: ANhLgQ0DXCof6D19xg79qiptDhRu+OTsZFLolzCAt+YY3kW9+imOVc6Y
-        FYTOuTndHILU+Dtr04mvJRnGflT4Mju3yAFXa3Rdvg==
-X-Google-Smtp-Source: ADFU+vvkBY6+7KljoIBo06yuh++7mQGBlfwWaxlmBrxgvs2H6ahSYqDiyk/zugbPV+nCMOkSfEf3tQK6yQglm6UvXwc=
-X-Received: by 2002:a05:6102:2051:: with SMTP id q17mr5487529vsr.165.1584018537836;
- Thu, 12 Mar 2020 06:08:57 -0700 (PDT)
+        bh=LyzsKuloOrXeAT1eDgIMEyFoe/19CJB+RPiJ8KPwQIw=;
+        b=TK5ymRcXE4fM8nrALM6HSyjy4Z9wpY4QEELaiRWHcdKNvcs6LBUDm5CYYZBU2j3z0f
+         EJ0/90yG/7CyFAR96iMVGlNgZwU/EdOiNWokyOMfX7sF80rPKM8w27f5FXfTHewYy5IY
+         IJ0+PSiP2u07eGPFBwVg8QNnM2OS34PojSoqbq/iv6MjbSsOQ4eMAdG1evlQlHDRop7C
+         YFRixZnC0fFgrJJ3W7mnakNhZX90pAYfr5bJQCQ6ZoPpWmQyzT9gTXNQoWPllKzyD4WR
+         i9s1rMOpTvgrQBXR3oLQvudN93ETa+g0dE2HSNbthK5Xpb3QP1hLx1jcActD/6WRgDC1
+         S1hA==
+X-Gm-Message-State: ANhLgQ2cr9D7PHvdhU9swZAXD8SDO6hc+UJABTpXERNDD7B54Rm5UIKt
+        a88plgDPUh/0WkGXxSE60AogwPc+UsNVnyl44Eomrw==
+X-Google-Smtp-Source: ADFU+vvpfThPEsySr4RvSlP6UPDA5AYK/x2Ak/VHoJ9GoNUgCMWeZ+k5a42yKU7sePemyrIkQzJo3xMLVDtx8jEJPkw=
+X-Received: by 2002:ab0:7381:: with SMTP id l1mr4821390uap.104.1584018547554;
+ Thu, 12 Mar 2020 06:09:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200307160556.16226-1-jbx6244@gmail.com>
-In-Reply-To: <20200307160556.16226-1-jbx6244@gmail.com>
+References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Mar 2020 14:08:21 +0100
-Message-ID: <CAPDyKFq22RTPQ2FD+yMYTstyEhqU=6piiiDkEFs4CB5f6uRG4Q@mail.gmail.com>
-Subject: Re: [PATCH v1] dt-bindings: mmc: synopsys-dw-mshc: fix
- clock-freq-min-max in example
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+Date:   Thu, 12 Mar 2020 14:08:31 +0100
+Message-ID: <CAPDyKFp+XwGog_w+8Sv1hYA-Umi6Rt2LYR1fyMEEb9abdb9nGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] Raspbery Pi 4 vmmc regulator support
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        phil@raspberrypi.com,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        DTML <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Mar 2020 at 17:06, Johan Jonker <jbx6244@gmail.com> wrote:
+On Fri, 6 Mar 2020 at 18:44, Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> A test with the command below does not detect all errors
-> in combination with 'additionalProperties: false' and
-> allOf:
->   - $ref: "synopsys-dw-mshc-common.yaml#"
-> allOf:
->   - $ref: "mmc-controller.yaml#"
+> The series first cleans up a common pattern, which is ultimately needed
+> to integrate the regulator with bcm2711's sdhci-iproc. It then
+> introduces the relevant device-tree changes.
 >
-> 'additionalProperties' applies to all properties that are not
-> accounted-for by 'properties' or 'patternProperties' in
-> the immediate schema.
+> ---
 >
-> First when we combine synopsys-dw-mshc.yaml,
-> synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-> this error:
+> Changes since v1:
+>  - Use helper function istead of quirk
+>  - Add GPIO label
 >
-> Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.example.dt.yaml:
-> mmc@12200000: 'clock-freq-min-max' does not match any of the regexes:
-> '^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-> uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
+> Nicolas Saenz Julienne (11):
+>   mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
+>   mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
+>   mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
+>   mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
+>   mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
+>   mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
+>   mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
+>   mmc: sdhci: Unexport sdhci_set_power_noreg()
+>   mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
+>   ARM: dts: bcm2711: Update expgpio's GPIO labels
+>   ARM: dts: bcm2711: Add vmmc regulator in emmc2
 >
-> 'clock-freq-min-max' is deprecated, so replace it by 'max-frequency'.
+>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 13 ++++++++++++-
+>  drivers/mmc/host/sdhci-iproc.c        | 17 ++++++++++++++++-
+>  drivers/mmc/host/sdhci-milbeaut.c     | 13 +------------
+>  drivers/mmc/host/sdhci-of-arasan.c    | 15 ++-------------
+>  drivers/mmc/host/sdhci-of-at91.c      | 18 +-----------------
+>  drivers/mmc/host/sdhci-pxav3.c        | 20 +-------------------
+>  drivers/mmc/host/sdhci-xenon.c        | 20 +-------------------
+>  drivers/mmc/host/sdhci.c              | 24 +++++++++++++++++++++---
+>  drivers/mmc/host/sdhci.h              |  5 +++--
+>  drivers/mmc/host/sdhci_am654.c        | 17 +++--------------
+>  10 files changed, 61 insertions(+), 101 deletions(-)
 >
-> make ARCH=arm dt_binding_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+> --
+> 2.25.1
 >
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Applied for next, thanks!
+Patch 1-4, 6, 9 applied for next, thanks!
 
 Kind regards
 Uffe
-
-
-> ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-> index 05f9f36dc..dd2c1b147 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-> @@ -62,7 +62,7 @@ examples:
->        cap-mmc-highspeed;
->        cap-sd-highspeed;
->        card-detect-delay = <200>;
-> -      clock-freq-min-max = <400000 200000000>;
-> +      max-frequency = <200000000>;
->        clock-frequency = <400000000>;
->        data-addr = <0x200>;
->        fifo-depth = <0x80>;
-> --
-> 2.11.0
->
