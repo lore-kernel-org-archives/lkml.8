@@ -2,166 +2,190 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AADC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF63C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E801D20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248A620637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 22:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yd9MiQY+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+/ITpjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCLWXc (ORCPT
+        id S1726775AbgCLWYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 18:23:32 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33998 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgCLWXc (ORCPT
+        Thu, 12 Mar 2020 18:24:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35126 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726621AbgCLWYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 18:23:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iiReo9Iqud/DA9U+IeqU+NwjNu9N8bsJJVgU+1dNGHY=; b=Yd9MiQY+ZzpHxCYCBkuLnHwgyy
-        vQ5vPPg6Db0SafyhJjFabDGbn/XuRdwzcRxFm6ZexHLcBltrt7jYoZn2wiR6PL8bqTtpdMnMefQJq
-        hR7M6VTCp/452VzpN4RUm/E/kZQDXvoAmol+1lyK1tZY/Msz8Bi9/2cDzGXSNzdblvSNLgWmCPTYS
-        12Vxz7ISpC34S8ZdrWavC2TQoTN8n6oRnjae2JODQ3wCchePwl8sEZ1uJw3Zne7/GmP+IABWS+xet
-        GtGRCvJ6DPsjtPosv6lOT5zaJ2LHw38ViE0OBJVA5UuNZRYzUijC3nI+G3yhgQhcBfcPLyDBzDSGg
-        XbdpCXmA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCWEg-0004iD-Lq; Thu, 12 Mar 2020 22:23:27 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C907798114E; Thu, 12 Mar 2020 23:23:24 +0100 (CET)
-Date:   Thu, 12 Mar 2020 23:23:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [RFC][PATCH 00/16] objtool: vmlinux.o and noinstr validation
-Message-ID: <20200312222324.GD5086@worktop.programming.kicks-ass.net>
-References: <20200312134107.700205216@infradead.org>
- <20200312162337.GU12561@hirez.programming.kicks-ass.net>
+        Thu, 12 Mar 2020 18:24:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584051883;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bpupobxRF3hx7fAwy8nqRUHW9GglCl8DazgzCAB+Nfs=;
+        b=Z+/ITpjc/92/qrn8sz6BiVYrcWIycmrwZ01UnY76Qun8fl5sTwtoAIyPtOvuSxvAasIcwI
+        Nb6bLzDIoOi/p065JPO6Z+ldDxInbZoBeZsEQRGhLcmLo+Kx7ZpN8nwTJ3i66q3DAPYeNg
+        g35qGRjMJKtn87iMt2zvrC13Yin6JuM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-193-y3n5Gr3pN5aAQVsjHnzDGw-1; Thu, 12 Mar 2020 18:24:42 -0400
+X-MC-Unique: y3n5Gr3pN5aAQVsjHnzDGw-1
+Received: by mail-wr1-f71.google.com with SMTP id j17so3279776wru.19
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 15:24:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bpupobxRF3hx7fAwy8nqRUHW9GglCl8DazgzCAB+Nfs=;
+        b=hLazGkRA91V3R0yUOLCqsBPfTtKvkuvZKnAzM70RACjsXXBVedScKUIFz7ttqvXm7q
+         bTSyNP9Ry8uER+cu2BVPDsZkULbALXOgLht8gNMfe2YKkCHs8YwD4f4MbmT1hqYmgMB1
+         5JzzCTtXRuwNzjKzpIklvcxzgfOBACu/jL7H6lNhnUDX3R4P3I0x5YMhwtQeJX5SSpjo
+         qJE4JhSMcmO+rjcwplG9fr8Q+j+EIY/P2qZzekgK0Ma5cRUjFF0Se4m1OhQlO4M/7pfb
+         h60YK3cTKxpsbE04jACy38nsNTjOyZH2xoKnzhFXxWG97vo/yEgy/uHqz4vBwaal7hV3
+         Bd4Q==
+X-Gm-Message-State: ANhLgQ3a30EkuREjV43d9/vwpTX3FwEOTt/gbPk/oWxChOESe8Rolt6S
+        jn3KUfWCCM7bS8h8U8q0a3hQYg03oc8FnXoUQcAFqOvkmt+36SPA0zBZHu3Sc5AJF8n47pvpMXH
+        5HLkk7H5krqszFpw9TPYwRrrahHM+whn8m/K8cweI
+X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr13039805wrs.272.1584051881158;
+        Thu, 12 Mar 2020 15:24:41 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vstn9gf/+BK/otI89IhYPwm2ycD7a/U4sJ+WG+RIIK9soeSGbPrem6/VaOE0m7/54auwNNCRCBnZOY00Qa0khM=
+X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr13039774wrs.272.1584051880862;
+ Thu, 12 Mar 2020 15:24:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312162337.GU12561@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200224095223.13361-1-mgorman@techsingularity.net>
+ <20200309191233.GG10065@pauld.bos.csb> <20200309203625.GU3818@techsingularity.net>
+ <20200312095432.GW3818@techsingularity.net> <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
+ <20200312155640.GX3818@techsingularity.net> <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
+ <20200312214736.GA3818@techsingularity.net>
+In-Reply-To: <20200312214736.GA3818@techsingularity.net>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Thu, 12 Mar 2020 23:24:29 +0100
+Message-ID: <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 05:23:37PM +0100, Peter Zijlstra wrote:
+> I'll continue thinking about it but whatever chance there is of
+> improving it while keeping CPU balancing, NUMA balancing and wake affine
+> consistent with each other, I think there is no chance with the
+> inconsistent logic used in the vanilla code :(
 
-> So one of the problem i've ran into while playing with this and Thomas'
-> patches is that it is 'difficult' to deal with indirect function calls.
-> 
-> objtool basically gives up instantly.
-> 
-> I know smatch has passes were it looks for function pointer assignments
-> and carries that forward into it's callchain generation. Doing something
-> like that for objtool is going to be 'fun'...
-> 
-> For now I've got limited success dodging a few instances with
-> __always_inline (which then results in the compiler resolving the
-> indirection).
+Thank you, Mel!
 
-Here's a little something that at least detects 'immediate' function
-pointers crossing the boundary.
 
-It's slow though; it almost tripples the runtime. But I'm too tired to
-make it fast, maybe tomorrow.
+On Thu, Mar 12, 2020 at 10:47 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Thu, Mar 12, 2020 at 05:54:29PM +0100, Jirka Hladky wrote:
+> > >
+> > > find it unlikely that is common because who acquires such a large machine
+> > > and then uses a tiny percentage of it.
+> >
+> >
+> > I generally agree, but I also want to make a point that AMD made these
+> > large systems much more affordable with their EPYC CPUs. The 8 NUMA node
+> > server we are using costs under $8k.
+> >
+> >
+> >
+> > > This is somewhat of a dilemma. Without the series, the load balancer and
+> > > NUMA balancer use very different criteria on what should happen and
+> > > results are not stable.
+> >
+> >
+> > Unfortunately, I see instabilities also for the series. This is again for
+> > the sp_C test with 8 threads executed on dual-socket AMD 7351 (EPYC Naples)
+> > server with 8 NUMA nodes. With the series applied, the runtime varies from
+> > 86 to 165 seconds! Could we do something about it? The runtime of 86
+> > seconds would be acceptable. If we could stabilize this case and get
+> > consistent runtime around 80 seconds, the problem would be gone.
+> >
+> > Do you experience the similar instability of results on your HW for sp_C
+> > with low thread counts?
+> >
+>
+> I saw something similar but observed that it depended on whether the
+> worker tasks got spread wide or not which partially came down to luck.
+> The question is if it's possible to pick a point where we spread wide
+> and can recover quickly enough when tasks need to remain close without
+> knowledge of the future. Putting a balancing limit on tasks that
+> recently woke would be one option but that could also cause persistent
+> improper balancing for tasks that wake frequently.
+>
+> > Runtime with this series applied:
+> >  $ grep "Time in seconds" *log
+> > sp.C.x.defaultRun.008threads.loop01.log: Time in seconds =
+> >   125.73
+> > sp.C.x.defaultRun.008threads.loop02.log: Time in seconds =
+> >    87.54
+> > sp.C.x.defaultRun.008threads.loop03.log: Time in seconds =
+> >    86.93
+> > sp.C.x.defaultRun.008threads.loop04.log: Time in seconds =
+> >   165.98
+> > sp.C.x.defaultRun.008threads.loop05.log: Time in seconds =
+> >   114.78
+> >
+> > For comparison, here are vanilla kernel results:
+> > $ grep "Time in seconds" *log
+> > sp.C.x.defaultRun.008threads.loop01.log: Time in seconds =
+> >    59.83
+> > sp.C.x.defaultRun.008threads.loop02.log: Time in seconds =
+> >    67.72
+> > sp.C.x.defaultRun.008threads.loop03.log: Time in seconds =
+> >    63.62
+> > sp.C.x.defaultRun.008threads.loop04.log: Time in seconds =
+> >    55.01
+> > sp.C.x.defaultRun.008threads.loop05.log: Time in seconds =
+> >    65.20
+> >
+> >
+> >
+> > > In *general*, I found that the series won a lot more than it lost across
+> > > a spread of workloads and machines but unfortunately it's also an area
+> > > where counter-examples can be found.
+> >
+> >
+> > OK, fair enough. I understand that there will always be trade-offs when
+> > making changes to scheduler like this. And I agree that cases with higher
+> > system load (where is series is helpful) outweigh the performance drops for
+> > low threads counts. I was hoping that it would be possible to improve the
+> > small threads results while keeping the gains for other scenarios:-)  But
+> > let's be realistic - I would be happy to fix the extreme case mentioned
+> > above. The other issues where performance drop is about 20% are OK with me
+> > and are outweighed by the gains for different scenarios.
+> >
+>
+> I'll continue thinking about it but whatever chance there is of
+> improving it while keeping CPU balancing, NUMA balancing and wake affine
+> consistent with each other, I think there is no chance with the
+> inconsistent logic used in the vanilla code :(
+>
+> --
+> Mel Gorman
+> SUSE Labs
+>
 
----
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -247,6 +247,9 @@ static int decode_instructions(struct ob
- 		    strncmp(sec->name, ".discard.", 9))
- 			sec->text = true;
-
-+		if (!strcmp(sec->name, ".noinstr.text"))
-+			sec->noinstr = true;
-+
- 		for (offset = 0; offset < sec->len; offset += insn->len) {
- 			insn = malloc(sizeof(*insn));
- 			if (!insn) {
-@@ -2040,6 +2043,28 @@ static int validate_return(struct symbol
- 	return 0;
- }
-
-+static int validate_rela(struct instruction *insn, struct insn_state *state)
-+{
-+	struct section *sec;
-+	struct rela *rela;
-+
-+	if (!(state->noinstr && state->instr <= 0))
-+		return 0;
-+
-+	rela = find_rela_by_dest_range(insn->sec, insn->offset, insn->len);
-+	if (!rela || !rela->sym || !rela->sym->sec)
-+		return 0;
-+
-+	sec = rela->sym->sec;
-+	if (sec->text && !sec->noinstr) {
-+		WARN_FUNC("loading non-noinstr function pointer\n",
-+			  insn->sec, insn->offset);
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2222,6 +2247,10 @@ static int validate_branch(struct objtoo
- 			return 0;
-
- 		case INSN_STACK:
-+			ret = validate_rela(insn, &state);
-+			if (ret)
-+				return ret;
-+
- 			if (update_insn_state(insn, &state))
- 				return 1;
-
-@@ -2285,6 +2314,10 @@ static int validate_branch(struct objtoo
- 			break;
-
- 		default:
-+			ret = validate_rela(insn, &state);
-+			if (ret)
-+				return ret;
-+
- 			break;
- 		}
-
-@@ -2442,8 +2475,8 @@ static int validate_sec_functions(struct
- 	 * not correctly determine insn->call_dest->sec (external symbols do
- 	 * not have a section).
- 	 */
--	if (vmlinux && !strcmp(sec->name, ".noinstr.text"))
--		state.noinstr = true;
-+	if (vmlinux)
-+		state.noinstr = sec->noinstr;
-
- 	list_for_each_entry(func, &sec->symbol_list, list) {
- 		if (func->type != STT_FUNC)
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -43,7 +43,7 @@ struct section {
- 	char *name;
- 	int idx;
- 	unsigned int len;
--	bool changed, text, rodata;
-+	bool changed, text, rodata, noinstr;
- };
-
- struct symbol {
+-- 
+-Jirka
 
