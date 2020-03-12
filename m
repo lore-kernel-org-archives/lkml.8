@@ -2,91 +2,89 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B9FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42770C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EF420650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEB22067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nKoesXei"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0+qXPbtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbgCLNnG (ORCPT
+        id S1727386AbgCLNoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:43:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34557 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726641AbgCLNnF (ORCPT
+        Thu, 12 Mar 2020 09:44:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40953 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLNoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:43:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584020585; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=Y/dcz94yMDkLEqXytCTThtLkiGIChjJJikH8kQiomQU=;
- b=nKoesXeiIbIc94suQgE+gVe3pdkTB/N0qOzs3AYmJmY4f3wu8uzpqnGcr73bXOR804wqXzpm
- JzNLYexH+nbFMsQg0gWToRM8UNonIApiNeerCzsLp1Pqxtg2/lgSsvfWaiBPWe7hafyix3xL
- zOk5rtFShsSaW5Kf4vePYaGBNe8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6a3c68.7fc4bb397d50-smtp-out-n01;
- Thu, 12 Mar 2020 13:43:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 82B12C4478C; Thu, 12 Mar 2020 13:43:02 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 473FFC433CB;
-        Thu, 12 Mar 2020 13:42:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 473FFC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Mar 2020 09:44:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id d8so5695104ion.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jSod36pOWDs7X6aIKTPYmJy2lYb5ks2I2R+9h0FGWFU=;
+        b=0+qXPbtGwDNE2YoNE0/9VIQd8MBavMQgoIxqFLu3EY73F2R3ZlDW7Gd3co7LH0Ul1a
+         G+NbPTk12xnDTBtWv8RvV13XG61ItjUpzps9ExMctG060ZIss78OP2m2PNU4PLUJI8IM
+         FHY36kGwS586lRSR9BCxgZbEpkYDxCZFbmfrLcCbPjR9c6m87/ft2eVyqEy+9v4mAYkw
+         pv0qFd3LE9AlAIkcSoPczCGDeGvI4dL4D3o1plsYgrSMeezl+uFeMID2zw1eE6174Plp
+         gbNNSpq/DYxQ7AzFFNUIMBgBSIrPyVeOadoCU/SAvR7dS51stOKlgMGaBKuQ1MUk7of6
+         WugQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jSod36pOWDs7X6aIKTPYmJy2lYb5ks2I2R+9h0FGWFU=;
+        b=t6OLFuegC0q5Mh5NMIW7j9BYrnjYi2NwxXLtI1OOMG7SAX8PcWdikNQ7z4UUcrKowP
+         dW0SbyDkfxH59VI6vkmF7uS86Ewm9wX69BNCHDALz8r2em/9SsB1dDiMoRkKblGx1hP5
+         pK46HfC0Q3/mAzTn9lwDGyj+sbEiBTi1S5Z4zEcYs/C6puy1HBojveDuEWCy2QitiWQd
+         FIL1rGx9PCMO6SawWNF3WESR6bxJgDyjVt1oVtV/nwEFLN9dKo9n+QNiPC/9zFWjO3gI
+         xR8K+RJxaokl13yawGC/aJBIpQYQg65oifReYsagzdepYoA5KfQgMedhA2BD5H1y1RpK
+         Hk5g==
+X-Gm-Message-State: ANhLgQ2spHKGieMLBVXjjUZ6bqv01Gyr11qEXaojrUIe/KHVXZybqabJ
+        WEiba1cf5+AANCzhoUqFCk7WsA==
+X-Google-Smtp-Source: ADFU+vtkdkvvhK1Qd+AjLgeTPV6ydTaQgxfR/zxzfvz+3djEa3i9d5g8qDxKTYrXRZCJwr4GdUbzVw==
+X-Received: by 2002:a02:3f4c:: with SMTP id c12mr1230937jaf.115.1584020693065;
+        Thu, 12 Mar 2020 06:44:53 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id q6sm5341596ild.70.2020.03.12.06.44.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 06:44:52 -0700 (PDT)
+Subject: Re: [PATCH 2/2] AHCI: Add support for Loongson 7A1000 SATA controller
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+References: <1583844608-30029-1-git-send-email-yangtiezhu@loongson.cn>
+ <1583844608-30029-2-git-send-email-yangtiezhu@loongson.cn>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <12315c32-4e97-8d05-2dff-709fad3b0d38@kernel.dk>
+Date:   Thu, 12 Mar 2020 07:44:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1583844608-30029-2-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] libertas: Use new structure for SPI transfer delays
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200227140634.9286-1-sergiu.cuciurean@analog.com>
-References: <20200227140634.9286-1-sergiu.cuciurean@analog.com>
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Cc:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        <libertas-dev@lists.infradead.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <dcbw@redhat.com>,
-        <allison@lohutok.net>, <tglx@linutronix.de>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200312134302.82B12C4478C@smtp.codeaurora.org>
-Date:   Thu, 12 Mar 2020 13:43:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
+On 3/10/20 6:50 AM, Tiezhu Yang wrote:
+> Loongson 7A1000 SATA controller uses BAR0 as the base address register.
 
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current
-> `delay_usecs` with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-
-Patch applied to wireless-drivers-next.git, thanks.
-
-32521a913852 libertas: Use new structure for SPI transfer delays
+Applied with the pci vendor addition for 5.7, thanks.
 
 -- 
-https://patchwork.kernel.org/patch/11408719/
+Jens Axboe
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
