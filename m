@@ -2,105 +2,79 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036FC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14CDC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECC0206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:01:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nL4Hv1FK"
+	by mail.kernel.org (Postfix) with ESMTP id 988F8206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583996564;
+	bh=RoDs+BZ8xZZ2MVR/CWWKnEHPByp/T5HVVPijHZAYftY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eZd4iC1ohKHgYS81nuJ9N1aq/v/ex9w+NMLOI7hYHAgz729iTdIESJodtC7q0eP+k
+	 4Zm33p2qugAlP3TK8V3948U/zuST1fFNczEiQ50HCCo7EBETXR3OtgmJ0bPlA8MZPN
+	 Falk0Z+vFOq00/hZiCo2IMknQgcdKBMi1G4YlLvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388000AbgCLHB4 (ORCPT
+        id S2388022AbgCLHCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:01:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35368 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387831AbgCLHBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:01:55 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C71TsD089814;
-        Thu, 12 Mar 2020 02:01:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583996489;
-        bh=2DcFuiREd1lLevtuAMxfcFQw8QwTShJd4BPuKAz9Lh0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nL4Hv1FKZs/YfiOt8XmC7MZAc+wkXNl8hk7ZXvwXvsGxmXagJd6RhnIu//VFvqN4M
-         zftKyV63MeMCsh91IERuLv4S2K+/wPJlsq6ZXITZIB0qzzSHFSnsuIRHtgEs7NYw3n
-         vvdkDBs130WKzqh06H8UE7NWKw1RWwvdWqsHprw4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C71TPB017366;
-        Thu, 12 Mar 2020 02:01:29 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Mar 2020 02:01:28 -0500
-Received: from localhost.localdomain (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Mar 2020 02:01:28 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02C71O9n084767;
-        Thu, 12 Mar 2020 02:01:24 -0500
-Subject: Re: [PATCH v6 3/3] drm: bridge: cdns-mhdp: add j721e wrapper
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Yuti Amonkar <yamonkar@cadence.com>
-CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>, <praneeth@ti.com>, <jsarha@ti.com>,
-        <mparab@cadence.com>, <sjakhade@cadence.com>
-References: <1582712579-28504-1-git-send-email-yamonkar@cadence.com>
- <1582712579-28504-4-git-send-email-yamonkar@cadence.com>
- <20200311205217.GD4863@pendragon.ideasonboard.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <0e9b73b7-a960-e2a1-d8a1-f12309755176@ti.com>
-Date:   Thu, 12 Mar 2020 09:01:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 12 Mar 2020 03:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387955AbgCLHCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:02:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2D8206B1;
+        Thu, 12 Mar 2020 07:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583996562;
+        bh=RoDs+BZ8xZZ2MVR/CWWKnEHPByp/T5HVVPijHZAYftY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aYc1X675fzGC9pZTGUhNN6xAgyVkfy/3fQzSQdf1Qk4drBiTeL2emyojaTrj6fSaO
+         lWN8Y71PRGatZWPelR2qQSmAQPbGXD5b3a4xygWzwQLa+TA1yUGtlWjELDJuJM7T1C
+         PvmGd8FePuCJQfqSbxUZL4StoGvbFkBlELze+JT8=
+Date:   Thu, 12 Mar 2020 08:02:40 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/169] 5.4.25-rc4 review
+Message-ID: <20200312070240.GA4157582@kroah.com>
+References: <20200311204002.240698596@linuxfoundation.org>
+ <5371323a-516e-cfa0-d8c0-c37599fb6442@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20200311205217.GD4863@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5371323a-516e-cfa0-d8c0-c37599fb6442@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-On 11/03/2020 22:52, Laurent Pinchart wrote:
-
->> +void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
->> +{
->> +	/*
->> +	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
->> +	 * to eDP DPI2. This is the only supported SST configuration on
->> +	 * J721E.
+On Wed, Mar 11, 2020 at 03:06:04PM -0700, Guenter Roeck wrote:
+> On 3/11/20 1:41 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.25 release.
+> > There are 169 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri, 13 Mar 2020 20:39:27 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Without hardware documentation I can't really comment on this, but I'd
-> like to make sure it doesn't imply that the MHDP has more than one input
-> and one output.
+> drivers/gpu/drm/virtio/virtgpu_object.c:31:67: error: expected ')' before 'int'
+>    31 | module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
+> 
+> Commit b0138364da17 ("drm/virtio: module_param_named() requires linux/moduleparam.h")
+> is still missing.
 
-You can download the TRM for j721e here:
+Now added, thanks.
 
-http://www.ti.com/lit/pdf/spruil1
-
-MHDP has one DP output, but 4 inputs to support MST and split/dual panel modes. None of those are 
-supported by the drivers, but perhaps some thought should be paid to figure out if adding these 
-features affect the DT bindings.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+greg k-h
