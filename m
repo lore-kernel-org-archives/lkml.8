@@ -2,116 +2,123 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F04C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7605FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8B620650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EAA20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hlXc9bv7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJrSE5Jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgCLOVs (ORCPT
+        id S1727656AbgCLOVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:21:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45107 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbgCLOVs (ORCPT
+        Thu, 12 Mar 2020 10:21:53 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35359 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727531AbgCLOVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:21:48 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e18so6621650ljn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:21:46 -0700 (PDT)
+        Thu, 12 Mar 2020 10:21:52 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d5so7370147wrc.2;
+        Thu, 12 Mar 2020 07:21:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=79OHKgNVg5IiTjP/EryhR/on7yjmd+OeOqFhBOB19Rg=;
-        b=hlXc9bv7wKtJYos/CvmIf1aWytTx7tjjvZA7MyZXi7udPi5CdammboSrae1hgCitp/
-         MSpq1qvYRN9mFEXkFN/xNTTmmao3V3GjlW0KxdQXRUqYqGp5IwObLZ7yB+renP8z+pfN
-         tTWRkIMDIS1GZe95+PfMemVe3rr1Kwnkd636g3iGRWP+yiHdYGH7FrFNCkkgIeRsEdxg
-         L1z1MSWPXkvi5ST+LYKisjEtlJI83foQzqkY8AUQk+nrdOaavjVDuTxl3sWpnDBKyxpA
-         I+Y+/KkkggsGEGEO3b8x79C2+nvBFhV0SVSG0v4dMd8b9iZmSihZqNyIYhxl61ZhaL+L
-         SMHA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gncaKHlGYMiKjX4sUuFMWjZl82hyQMZIVGetmMWGMr4=;
+        b=GJrSE5JljgPIy7GJ26yd0y69d3urc3B9e8ZWqQEF8muD6z8T86/uC92s8gY3SRNiG4
+         bpP9CSPY/neoaIaf/Wj4nm18otZKJGlS6Owg5WkauwFOxKQfp/x4DDua2s0/8VuVXUZg
+         lSiPs+GTfg7aWqe0aIJhw73J6Cud9m4lVT5iCnrRXCUh6EfdUogcJVgfqti2u/1KD2dD
+         flmSu/zkWFgpjRNd3Ul1sGD/G2YyI1QG54mVgSHjG8BWPrkn6L7sWNSfvMm396Y3J3mt
+         pmUx7xva5B7NV3d5sUQXRoau2daPsbFjqO8OCLsv9f6N1K6pxchGgfDu8hQIrjh1Mop/
+         t8mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=79OHKgNVg5IiTjP/EryhR/on7yjmd+OeOqFhBOB19Rg=;
-        b=EvTMv+P4uuTVWdoSNhzI6VhDDuVQu7M8H8KjNTtxfpDNSzQYFjvcAt1NHUrK9H3XlI
-         GQQsOBCMg9zRiw2VWSheK6uUicVq6metFN3APSyhPU6qrv9AeWO1+DBJwdrhAfKN+m97
-         3O5UIWptWKvDY/h+PS2LzRxlI1N+GR6utFa4QV4Edcx9tWrA8SqJ6U5F10GABSSf4ziL
-         u5/DdhtznWLfpL9dOVrD3x3Z9r17gYW3ViD38Xh8FqV+ocYp4H/HRiQIPFr9b7aegT8d
-         Eo0X3B0BW50fToajNzilweWR1wB7z8izCf2j7oJFTtARxi7pfYjvZKI0cLWOKPGZMFth
-         hgAQ==
-X-Gm-Message-State: ANhLgQ281yN3WR9WBLH2yKDaPdsnkKiFiUheNiI7rGrLrW85JjX6AwCb
-        h+x990VhYgFsDtLKPtdayNg1qfxfHvdYXqiHEkLQRQ==
-X-Google-Smtp-Source: ADFU+vtcIZFKaUxv+zzMf8n7cOQduYtCadrIv8wfIOW4HDImubBu1ngGLVdiQB+7d6huEorOiDcjWc0JqvkBbK9RrNg=
-X-Received: by 2002:a05:651c:2c1:: with SMTP id f1mr5239338ljo.125.1584022905409;
- Thu, 12 Mar 2020 07:21:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gncaKHlGYMiKjX4sUuFMWjZl82hyQMZIVGetmMWGMr4=;
+        b=Z/uQVJ6o0IinG21/s5aKg7QeP/b1ahSpSjATA9RVCl2oyIfRCU205oyEiaPkOG0ekk
+         qyZwBnJl4YkjXBKkWkwVDs5YoLI004b+jcMR0t2qpQrFC127rdeAXCWWqCMQ1/iXS8GI
+         TBJd3zDlMW0z046Sye2piI7zTRcf3NjquWTFpsL0uvMnVekmqZ+5vUhbazZw+dX1V/eR
+         gWlLySwtrgjqOfuqjXH8XujjYj9iHQiMinf0Up8dqG5dyAabfn0zS8DzTmLRI/ZYSlG+
+         B25/EA2VY7a5CBWuXDawuD5KBpF285SzM4JFq+SQLQxshJbrjzRcfI1ZGl26vPSm9Iv4
+         TU6w==
+X-Gm-Message-State: ANhLgQ0g7qE6S662amvpb37FKrsPciC4vT3DGRkRgtpH2f5qc/4+k+DE
+        bgIBycHQHh7phxhbHc4vxNE=
+X-Google-Smtp-Source: ADFU+vsK0fbeyDur5IWtE1LylMm8T3bgSUztJQb/MaRc0NjUZle/FrXWbXUSZRSZYuWqWVNvPuwm7Q==
+X-Received: by 2002:a5d:6191:: with SMTP id j17mr10660139wru.323.1584022910595;
+        Thu, 12 Mar 2020 07:21:50 -0700 (PDT)
+Received: from gabrielDell.schule.local ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id w4sm23911030wrl.12.2020.03.12.07.21.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 07:21:50 -0700 (PDT)
+From:   Gabriel Ravier <gabravier@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gabriel Ravier <gabravier@gmail.com>
+Subject: [PATCH] gpio-hammer: Avoid potential overflow in main
+Date:   Thu, 12 Mar 2020 15:21:42 +0100
+Message-Id: <20200312142142.1846910-1-gabravier@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
+References: <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
 MIME-Version: 1.0
-References: <20200218151812.7816-1-geert+renesas@glider.be> <20200218151812.7816-3-geert+renesas@glider.be>
-In-Reply-To: <20200218151812.7816-3-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Mar 2020 15:21:34 +0100
-Message-ID: <CACRpkda1JAnC=Feb39GeKEEP6q8Qwpsth6J+4OKj6A8S3YAUyQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] gpiolib: Add support for GPIO line table lookup
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+If '-o' was used more than 64 times in a single invocation of gpio-hammer,
+this could lead to an overflow of the 'lines' array. This commit fixes
+this by avoiding the overflow and giving a proper diagnostic back to the
+user
 
-I'm sorry for the slow review, it's a large patch set and
-takes some time to sit down and review, and see whether my
-earlier comments have been addressed.
+Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
+---
+ tools/gpio/gpio-hammer.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-On Tue, Feb 18, 2020 at 4:18 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
+index 0e0060a6e..d0be21af1 100644
+--- a/tools/gpio/gpio-hammer.c
++++ b/tools/gpio/gpio-hammer.c
+@@ -135,7 +135,14 @@ int main(int argc, char **argv)
+ 			device_name = optarg;
+ 			break;
+ 		case 'o':
+-			lines[i] = strtoul(optarg, NULL, 10);
++			/*
++			 * Avoid overflow. Do not immediately error, we want to
++			 * be able to accurately report on the amount of times
++			 *'-o' was given to give an accurate error message
++			 */
++			if (i < GPIOHANDLES_MAX)
++				lines[i] = strtoul(optarg, NULL, 10);
++
+ 			i++;
+ 			break;
+ 		case '?':
+@@ -143,6 +150,14 @@ int main(int argc, char **argv)
+ 			return -1;
+ 		}
+ 	}
++
++	if (i >= GPIOHANDLES_MAX) {
++		fprintf(stderr,
++			"Only %d occurences of '-o' are allowed, %d were found\n",
++			GPIOHANDLES_MAX, i + 1);
++		return -1;
++	}
++
+ 	nlines = i;
+ 
+ 	if (!device_name || !nlines) {
+-- 
+2.24.1
 
-> Currently GPIOs can only be referred to by GPIO controller and offset in
-> GPIO lookup tables.
->
-> Add support for looking them up by line name.
-> Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
-> that this field can have two meanings, and update the kerneldoc and
-> GPIO_LOOKUP*() macros.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-I will try to understand why this change is necessary to implement
-the gpio aggregator (probablt I will comment that on the other
-patches like "aha now I see it" or so, but it would help a lot if the
-commit message
-would state the technical reason to why we need to do this change,
-like what it is that you want to do and why you cannot do it without
-this change.
-
-Yours,
-Linus Walleij
