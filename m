@@ -2,248 +2,142 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966D9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7302C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7752067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD692067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IoE/2Iw6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="h20ntI3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgCLPLd (ORCPT
+        id S1727771AbgCLPLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:11:33 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:39939 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgCLPLc (ORCPT
+        Thu, 12 Mar 2020 11:11:49 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:14477 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbgCLPLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:11:32 -0400
-Received: by mail-vs1-f67.google.com with SMTP id c18so3889781vsq.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aytfa47Jnv1baE6T4xAivgCSNWzsN1btynmuDugX0MI=;
-        b=IoE/2Iw6hLwgGmhKMJNG/4UhJ0wVGKCW9T4pRR2Qa4fZHzQ3TXTOHQP+bUNL69zbkZ
-         VKBY78IScTYuBXmtWmj/HqgUx5Ktg09oS5tuDD6QWBxwqF6Qs30ZMAFElIWWT0S/icvw
-         VGu1s+rAK0mYSwcuoFry4F+5XVWxY/aT3jbJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aytfa47Jnv1baE6T4xAivgCSNWzsN1btynmuDugX0MI=;
-        b=E5yuhDnySMt/WzFYj3x4Kxf0BOmVtUcSkkg1tor4/XPmUm7Rab/ozwaB/C3VyDO3ly
-         dV8CYoIOYXpuLjcEYoxPhMKFCYUELdkd9sApg7JyjI4dkfZNW9qYuPUwlzVexMIA+4iY
-         0fSopdD7L1NwZkCOx8tWirY0yISp4fNuutVlDhyTumiX7sNQF5kej6cVwsGmhmAAUwWM
-         Js2bxo9gH4AHA+tq6v+bKK3+EeMkKLt2AJ08ku3VcUmqJZ6yxJdvyocoSGBh1TZf4fy3
-         AYFmfOHV6NrUnm/TNilX72loT3mWWl7oivlZ8dbTeTUxA0gK3M858uGVObRrL4YtCsHl
-         GroA==
-X-Gm-Message-State: ANhLgQ1jAaca7JPNULbfh6ka3pkCYJgaNuxeoe1jallA0XxlNajnS0z2
-        +eHQAu0zIXARrwFuYQ7/rZjOb+hPoeo=
-X-Google-Smtp-Source: ADFU+vvSo/btCTmEkDpJKC3mKqj50XiFBi96yZ2rI/xaTDQbwcgfwuOEAITR7J+JwDmw/MBOmzTtyA==
-X-Received: by 2002:a67:69d8:: with SMTP id e207mr5987215vsc.141.1584025889300;
-        Thu, 12 Mar 2020 08:11:29 -0700 (PDT)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id w70sm11150168vke.26.2020.03.12.08.11.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 08:11:24 -0700 (PDT)
-Received: by mail-vs1-f46.google.com with SMTP id 7so3870958vsr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:11:23 -0700 (PDT)
-X-Received: by 2002:a67:694f:: with SMTP id e76mr5417277vsc.73.1584025882577;
- Thu, 12 Mar 2020 08:11:22 -0700 (PDT)
+        Thu, 12 Mar 2020 11:11:49 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 11:11:48 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1584025908;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=E/iioeUyGvUs2PCKR77Yq3QSzc2cyAnhIsuxWm1+EHU=;
+  b=h20ntI3KTS4SeiXOMo7KMN6Gzy6Uo9XafIY0MA5XPkqcPcy6N8456UvT
+   vhS4mCR7xfPCWgN07pKOSxDnjSg09IyYaW5lQWs0zcz1a8R0xjjpbUT6R
+   JePY9v14CgsnlnnMj0itXRqfjr5HfullqlNLwmZpeDQPns2SQxQMOElN8
+   M=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: juTW57c1Nu9s/elcsbYtUaVbY4J0Q77f36sXCUBorbJPvEaGDjzf3fZzPIj3EP8OrxKujqz7de
+ z7Tf+KC1CJJBGOkRcy9CcSVcEQngsMqY/l45AkANeecc2r3xHBzRjuMOu1ktP+L5hb4TLvW/Nw
+ wU5DYgD1CXd/I+3JAxTFx8YCXKp9//kyfyw6f7bq9q+jSXIGL+8DawiAW9vuSe51mZUHoGiY0G
+ xInV59drshdWYL3Z0QxIQyNQsg2ykjCRPuO+5yK/bwblyKqAMtvCeiLF+u4/eBKl4o07hAHnqu
+ GII=
+X-SBRS: 2.7
+X-MesageID: 14034391
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,545,1574139600"; 
+   d="scan'208";a="14034391"
+Subject: Re: [Xen-devel] [PATCH 1/2] x86/xen: Make the boot CPU idle task
+ reliable
+To:     Miroslav Benes <mbenes@suse.cz>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <sstabellini@kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+        <jpoimboe@redhat.com>
+CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <live-patching@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+        <jslaby@suse.cz>
+References: <20200312142007.11488-1-mbenes@suse.cz>
+ <20200312142007.11488-2-mbenes@suse.cz>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <dc55b23b-c0d2-3be0-222f-d104548c8cf4@citrix.com>
+Date:   Thu, 12 Mar 2020 15:04:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
- <1583746236-13325-5-git-send-email-mkshah@codeaurora.org> <CAD=FV=VknUHs8R6pu3pBCR-D50ibeuSVVp9=_t7NLa4U+06XKQ@mail.gmail.com>
- <8810b558-f552-19dc-a5dc-4e64b37f35d8@codeaurora.org> <CAD=FV=XajZ5V_uZryghaBkH=4jv4T-ifuQE2NKbU4RgNVho_9A@mail.gmail.com>
- <e7723b03-ce7e-ff4b-e2b4-3d93f970748c@codeaurora.org> <CAD=FV=XFL9UZ44Q0xjMVsuok+CK9iWs4X3fkWXFHZrkw-ptfXw@mail.gmail.com>
- <5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org>
-In-Reply-To: <5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 12 Mar 2020 08:11:10 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com>
-Message-ID: <CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com>
-Subject: Re: [PATCH v13 4/5] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200312142007.11488-2-mbenes@suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Quoting below may look funny since you replied with HTML mail and all
-old quoting was lost.  :(  I tried my best.
-
-On Thu, Mar 12, 2020 at 3:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On 12/03/2020 14:20, Miroslav Benes wrote:
+> The unwinder reports the boot CPU idle task's stack on XEN PV as
+> unreliable, which affects at least live patching. There are two reasons
+> for this. First, the task does not follow the x86 convention that its
+> stack starts at the offset right below saved pt_regs. It allows the
+> unwinder to easily detect the end of the stack and verify it. Second,
+> startup_xen() function does not store the return address before jumping
+> to xen_start_kernel() which confuses the unwinder.
 >
-> > Specifically I wouldn't trust all callers of rpmh_write() /
-> > rpmh_write_async() to never send the same data.  If it was just an
-> > speed/power optimization then sure you could trust them, but this is
-> > for correctness.
+> Amend both issues by moving the starting point of initial stack in
+> startup_xen() and storing the return address before the jump.
 >
-> yes we should trust callers not to send duplicate data.
-
-I guess we'll see how this works out.  Since this only affects the
-"zero active-only" case and I'm pretty sure that case has more
-important issues, I'm OK w/ ignoring for now.
-
-
-> > Hrmm, thinking about this again, though, I'm still not convinced I
-> > understand what prevents the firmware from triggering "sleep mode"
-> > while the sleep/wake TCS is being borrowed for an active-only
-> > transaction.  If we're sitting in rpmh_write() and sleeping in
-> > wait_for_completion_timeout() couldn't the system go idle and trigger
-> > sleep mode?  In OSI-mode (with last man down) you'll always have a
-> > rpmh_flush() called by the last man down so you know you can make sure
-> > you're in a consistent state (one final flush and no more active-only
-> transactions will happen).  Without last man down you have to assume
-> > it can happen at any time don't you?
->>
-> > ...so I guess I'll go back to asserting that zero-active-TCS is
-> > incompatible with non-OSI unless you have some way to prevent the
-> > sleep mode from being triggered while you've borrowed the wake TCS.
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> ---
+>  arch/x86/xen/xen-head.S | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> i had change for this in v4 to handle same.
->
-> Link: https://patchwork.kernel.org/patch/11366205/
->
-> + /*
-> + * RPMh domain can not be powered off when there is pending ACK for
-> + * ACTIVE_TCS request. Exit when controller is busy.
-> + */
->
-> before calling rpmh_flush() we check ctrlr is idle (ensuring
->
-> tcs_is_free() check passes)  this will ensure that
->
-> previous active transaction is completed before going ahead.
->
-> i will add this check in v14.
->
-> since this curretntly check for ACTIVE TCS only, i will update it to check the repurposed "WAKE TCS" is also free.
+> diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+> index 1d0cee3163e4..642f346bfe02 100644
+> --- a/arch/x86/xen/xen-head.S
+> +++ b/arch/x86/xen/xen-head.S
+> @@ -35,7 +35,7 @@ SYM_CODE_START(startup_xen)
+>  	rep __ASM_SIZE(stos)
+>  
+>  	mov %_ASM_SI, xen_start_info
+> -	mov $init_thread_union+THREAD_SIZE, %_ASM_SP
+> +	mov $init_thread_union+THREAD_SIZE-SIZEOF_PTREGS, %_ASM_SP
+>  
+>  #ifdef CONFIG_X86_64
+>  	/* Set up %gs.
+> @@ -51,7 +51,9 @@ SYM_CODE_START(startup_xen)
+>  	wrmsr
+>  #endif
+>  
+> +	push $1f
+>  	jmp xen_start_kernel
+> +1:
 
-The difficulty isn't in adding a simple check, it's in adding a check
-that is race free and handles locking properly.  Specifically looking
-at your the v4 you pointed to, I see things like this:
+Hang on.  Isn't this just a `call` instruction written in longhand?
 
-  if (!rpmh_rsc_ctrlr_is_idle(drv))
-    return -EBUSY;
-  return rpmh_flush(&drv->client);
-
-The rpmh_rsc_ctrlr_is_idle() grabs a spin lock implying that there
-could be other people acting on RPMh at the same time (otherwise, why
-do you even need locks?).  ...but when it returns the lock is
-released.  Once the lock is dropped then other clients are free to
-start using RPMH because nothing prevents them.  ...then you go ahead
-and start flushing.
-
-Said another way: due to the way you've structured locking in that
-patch rpmh_rsc_ctrlr_is_idle() is inherently dangerous because it
-returns an instantaneous state that may well have changed between the
-spin_unlock_irqrestore() at the end of the function and when the
-function returns.
-
-You could, of course, fix this by requiring that the caller hold the
-'drv->lock' for both the calls to rpmh_rsc_ctrlr_is_idle() and
-rpmh_flush() (ignoring the fact the drv->lock is nominally part of
-rpmh-rsc.c and not rpmh.c).  Now it would be safe from the problem I
-described.  ...but now you get into a new problem.  If you ever hold
-two locks you always need to make sure you grab them in the same order
-any time you grab them both.  ...but tcs_write() we first grab a
-tcs_lock and _then_ drv->lock.  That means the "fix" of holding
-drv->lock for both the calls to rpmh_rsc_ctrlr_is_idle() and
-rpmh_flush() won't work because rpmh_flush() will need to grab a
-tcs_lock.  Possibly we could make this work by eliminating the "tcs
-lock" and just having the one big "drv->lock" protect everything (or
-introducing a new "super lock" making the other two meaningless).  It
-would certainly be easier to reason about...
-
-NOTE: the only way I'm able to reason about all the above things is
-because I spent all the time to document what rpmh-rsc is doing and
-what assumptions the various functions had [1].  It'd be great if that
-could get a review.
-
-
-> > This whole "no active TCS" is really quite a mess.  Given how broken
-> > it seems to me it almost feels like we should remove "no active TCS"
-> > from the driver for now and then re-add it in a later patch when we
-> > can really validate everything.  I tried addressing this in my
-> > rpmh-rsc cleanup series and every time I thought I had a good solution
-> > I could find another way to break it.
-> >
-> > Do you actually have the "no active TCS" case working on the current
-> > code, or does it only work on some downstream variant of the driver?
-> >
-> > It works fine on downstream variant. Some checks are still needed like above from v4
-> >
-> > since we do rpmh_flush() immediatly for dirty caches now.
-
-OK.  So I take it you haven't tested the "zero active" case with the
-upstream code?  In theory it should be easy to test, right?  Just hack
-the driver to pretend there are zero active TCSs?
-
-Which SoCs in specific need the zero active TCSs?  We are spending a
-lot of time talking about this and reviewing the code with this in
-mind.  It adds a lot of complexity to the driver.  If nothing under
-active development needs it I think we should do ourselves a favor and
-remove it for now, then add it back later.  Otherwise this whole
-process is just going to take a lot more time.
-
-
-> > I'm not saying we should limit the total number of requests to 1000.
-> > I'm saying that if there are 1000 active clients then that's a
-> > problem.  Right now there are something like 4 clients.  It doesn't
-> > matter how fast those clients are sending, active_clients will only be
-> > at most 4 and that would only be if they were all running their code
-> > at the exact same time.
-> >
-> > I want to be able to quickly detect this type of bug:
-> >
-> > start_transaction()
-> > ret = rpmh_write()
-> > if (ret)
-> >   return ret;
-> > ret = rpmh_write()
-> > end_transaction()
-> > return ret;
-> >
-> > ...in other words: someone has a code path where start_transaction()
-> > is called but never end_transaction().  I'm proposing that if we ever
-> > see the ridiculous value of 1000 active clients the only way it could
-> > happen is if one of the clients started more times than they ended.
-> >
-> >
-> > I guess maybe by the time there were 1000 it would be too late,
-> > though, because we'd have skipped A LOT of flushes by then?  Maybe
-> > instead we should add something where if RPMH is "ditry" for more than
-> > a certain amount of time we put a warning?
->
-> IMO, we should not add any such warning with any number.
-> There are only 4 clients and unlikely to have any new ones. those 4 we should be able to ensure
-> that they invoke end_transaction(), if they have already done start_transaction().beside,
-> Function description also says that "this must be ended by invoking rpmh_end_transaction()"
-> i am ok to also add  saying that "rpmh do not check this, so its caller's responsibility to
-> end it"
-
-I don't agree but I won't argue further.  If you want to leave out the
-WARN() then so be it.
-
--Doug
-
-[1] https://lore.kernel.org/r/20200311161104.RFT.v2.5.I52653eb85d7dc8981ee0dafcd0b6cc0f273e9425@changeid
+~Andrew
