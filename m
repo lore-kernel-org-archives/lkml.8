@@ -2,194 +2,101 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD19C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51B8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D808206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvlWQc6W"
+	by mail.kernel.org (Postfix) with ESMTP id 96D89206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgCLN1j (ORCPT
+        id S1727099AbgCLN3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:27:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45303 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLN1j (ORCPT
+        Thu, 12 Mar 2020 09:29:54 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41205 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgCLN3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:27:39 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b22so2660799pls.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JKFqhd+nMSKzAdoK7AjT9pTQERNeETS/59Lgbygkk7g=;
-        b=OvlWQc6WNDKyowJH9y7kcTign22MgmP0oeefvShUzlLlMI4OJsS/HVZP5lLVLKdOaX
-         PUSTrSA/qK7Ylf81hq66/4wLWraG0Ry8kSqXplcY9boO4EBryXKGH1l2XwYCMnB+heDX
-         5Ks886ykbbEpB1U0DwnksAHNoP2WgQba7UO2ibSAqONwpzRK/YAJtGS1jdpXCF7UvgWh
-         4PIIq+dMMtIyQPpEQRMZ+sLjLuSxEC8l+QyZprGHgFYGb86ECgAb1xV8+Xvsxx73iI3A
-         DrsoB5yONwZFvex3s2IZmqYBpbt0VTWJTHYhQdohvi1zVPQ7EC1BNY0bfNsKHWq6Mzvv
-         UpcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JKFqhd+nMSKzAdoK7AjT9pTQERNeETS/59Lgbygkk7g=;
-        b=KC3ffJa43eeuNV0Z/5D8Uo/nuHnX5fHUuqZneaNpiSxFZtL/FIvyoIF+o4NHQ6EcAv
-         ERTwpiQIFX81G9rnMrkKCqI8uZLDJmhopo7VKDrAPuw3KnFzHBbaHASteXoOxtp5tTUg
-         6/QvBn7u1OfcoMG5Opnp+vD+8a1+15C0NGHMpK5Y4xkmIRp9TSW2RMyCUH8F1cKHDLxc
-         gIjAJU3LYMDcbpRv0OhQ18IncdO/gLMVJHoRPNIMbxee0ZLlb+CkjtxvxMTxByI3dp8E
-         zzZIOA9r0E/Nc/3Fe/NEFM3thECHI9cmRzSLr0o/1+wInGi1wyNH7Vnz5EjPiBeprArT
-         b+fA==
-X-Gm-Message-State: ANhLgQ2rt99N+X+yrjpw75LO6gVfNEyRDa5BibcfWDWF4eplZIH2z+A6
-        wXIqZqIYv2xIotXUOuaZkVk=
-X-Google-Smtp-Source: ADFU+vv1g/KTsOCtkIcpAhvugu4fcEvtCVm20e2j1kQt3LgV/3Qdfaeon9yFI0blBvlDo9PwSbvnig==
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr4331961pjq.143.1584019657326;
-        Thu, 12 Mar 2020 06:27:37 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id s13sm9204098pjp.1.2020.03.12.06.27.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Mar 2020 06:27:36 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 18:57:34 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] ARM: footbridge: replace setup_irq() by request_irq()
-Message-ID: <20200312132734.GA5294@afzalpc>
-References: <20200301122131.3902-1-afzal.mohd.ma@gmail.com>
- <20200312123432.GZ25745@shell.armlinux.org.uk>
+        Thu, 12 Mar 2020 09:29:54 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCNuC-0007Km-DG; Thu, 12 Mar 2020 14:29:44 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCNuA-0001ji-U0; Thu, 12 Mar 2020 14:29:42 +0100
+Date:   Thu, 12 Mar 2020 14:29:42 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
+Message-ID: <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200312123432.GZ25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-occur after memory allocators are ready.
+On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
+> Hi all,
+> 
+> I am working on adding an old A10 device to mainline and noticed an issue
+> when testing on 5.5.8 vs master.
+> 
+> Since 5.6-rc1, I can't control the brightness of my LCD backlight anymore.
+> The backlight stays on full brightness instead. I am controlling the
+> brightness value via sysfs for testing.
+> 
+> I am not sure if this is a general pwm-sun4i issue or if it is related to
+> the backlight. However I narrowed it down to one commit for pwm-sun4i:
+> 
+> fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> 
+> If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
+> master, the backlight works fine. Unfortunately, due to my lack of kernel
+> experience, I can't see how the commit above broke it.
 
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
+Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
+this. Looking at the output of
 
-Hence replace setup_irq() by request_irq().
+	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
 
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+(i.e. ignoring whitespace changes) I don't see how the behaviour you're
+reporting can be explained.
 
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
+Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
+commit?
 
-v4:
- * Fix build warning in isa-irq.c & ensure no build warnings
-v3:
- * Split out from series, also create subarch level patch as Thomas
-	suggested to take it thr' respective maintainers
- * Modify string displayed in case of error as suggested by Thomas
- * Re-arrange code as required to improve readability
- * Remove irrelevant parts from commit message & improve
- 
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
+Can you install a tool to inspect register values and check how the
+affected registers change if you switch kernel versions and/or pwm
+settings?
 
- arch/arm/mach-footbridge/dc21285-timer.c | 11 +++--------
- arch/arm/mach-footbridge/isa-irq.c       | 10 ++++------
- arch/arm/mach-footbridge/isa-timer.c     | 11 +++--------
- 3 files changed, 10 insertions(+), 22 deletions(-)
+(e.g.
+	memtool md 0x1c20e00+0xc
+)
 
-diff --git a/arch/arm/mach-footbridge/dc21285-timer.c b/arch/arm/mach-footbridge/dc21285-timer.c
-index f76212d2dbf1..2908c9ef3c9b 100644
---- a/arch/arm/mach-footbridge/dc21285-timer.c
-+++ b/arch/arm/mach-footbridge/dc21285-timer.c
-@@ -101,13 +101,6 @@ static irqreturn_t timer1_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction footbridge_timer_irq = {
--	.name		= "dc21285_timer1",
--	.handler	= timer1_interrupt,
--	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
--	.dev_id		= &ckevt_dc21285,
--};
--
- /*
-  * Set up timer interrupt.
-  */
-@@ -118,7 +111,9 @@ void __init footbridge_timer_init(void)
- 
- 	clocksource_register_hz(&cksrc_dc21285, rate);
- 
--	setup_irq(ce->irq, &footbridge_timer_irq);
-+	if (request_irq(ce->irq, timer1_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
-+			"dc21285_timer1", &ckevt_dc21285))
-+		pr_err("Failed to request irq %d (dc21285_timer1)", ce->irq);
- 
- 	ce->cpumask = cpumask_of(smp_processor_id());
- 	clockevents_config_and_register(ce, rate, 0x4, 0xffffff);
-diff --git a/arch/arm/mach-footbridge/isa-irq.c b/arch/arm/mach-footbridge/isa-irq.c
-index 88a553932c33..842ddb4121ef 100644
---- a/arch/arm/mach-footbridge/isa-irq.c
-+++ b/arch/arm/mach-footbridge/isa-irq.c
-@@ -96,11 +96,6 @@ static void isa_irq_handler(struct irq_desc *desc)
- 	generic_handle_irq(isa_irq);
- }
- 
--static struct irqaction irq_cascade = {
--	.handler = no_action,
--	.name = "cascade",
--};
--
- static struct resource pic1_resource = {
- 	.name	= "pic1",
- 	.start	= 0x20,
-@@ -160,7 +155,10 @@ void __init isa_init_irq(unsigned int host_irq)
- 
- 		request_resource(&ioport_resource, &pic1_resource);
- 		request_resource(&ioport_resource, &pic2_resource);
--		setup_irq(IRQ_ISA_CASCADE, &irq_cascade);
-+
-+		irq = IRQ_ISA_CASCADE;
-+		if (request_irq(irq, no_action, 0, "cascade", NULL))
-+			pr_err("Failed to request irq %u (cascade)\n", irq);
- 
- 		irq_set_chained_handler(host_irq, isa_irq_handler);
- 
-diff --git a/arch/arm/mach-footbridge/isa-timer.c b/arch/arm/mach-footbridge/isa-timer.c
-index 82f45591fb2c..723e3eae995d 100644
---- a/arch/arm/mach-footbridge/isa-timer.c
-+++ b/arch/arm/mach-footbridge/isa-timer.c
-@@ -25,17 +25,12 @@ static irqreturn_t pit_timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction pit_timer_irq = {
--	.name		= "pit",
--	.handler	= pit_timer_interrupt,
--	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
--	.dev_id		= &i8253_clockevent,
--};
--
- void __init isa_timer_init(void)
- {
- 	clocksource_i8253_init();
- 
--	setup_irq(i8253_clockevent.irq, &pit_timer_irq);
-+	if (request_irq(i8253_clockevent.irq, pit_timer_interrupt,
-+			IRQF_TIMER | IRQF_IRQPOLL, "pit", &i8253_clockevent))
-+		pr_err("Failed to request irq %d(pit)\n", i8253_clockevent.irq);
- 	clockevent_i8253_init(false);
- }
+Best regards
+Uwe
+
 -- 
-2.25.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
