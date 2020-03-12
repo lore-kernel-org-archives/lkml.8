@@ -2,229 +2,219 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0738C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ADDC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F56720663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q0emyiH4"
+	by mail.kernel.org (Postfix) with ESMTP id BC59A2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584039700;
+	bh=XH+7+H4b5e/aZT8dqro7RSjMfRJxb4gqiPehAzrxmLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0gwTJVxZb6St8d9XC4W8GOAR3Yz4wJpCS8gQZRkcUa2k0+tG8ArJWi1HvUZ4RqZMO
+	 Tg4K3PPk0zAqJ0DuL5NN5L6/uzVqzs9dHDKnutNbXlTxzZsHN2oEmp3BIaG8/UQemq
+	 Sn8Sr7yX1hDzV1i3cR9GUbbj9LjTZi/fh+DTRHjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgCLS4w (ORCPT
+        id S1726637AbgCLTBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:56:52 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:50467 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgCLS4t (ORCPT
+        Thu, 12 Mar 2020 15:01:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46781 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLTBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:56:49 -0400
-Received: by mail-qk1-f202.google.com with SMTP id z185so5147606qkc.17
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=kJTSRv0ipA/LGaJ/irvxa1s6RApiBKOCTBDPilrDk+I=;
-        b=Q0emyiH4rIcLyUi7f84W7F55EBn3KSNPdY897wfO+mXCpz1ySv8ZRZRto5jAR4gIQi
-         0O+khqavkm6BnEblYbBum4WMyKGv0Z722OcGmZTMjBdxnW6Ad8F7xLtkufO7aHToMwlb
-         TOXy1fjskCEP6mi4srQjgxtN70QVTwDmvlhS/rcfTGxUgw9QucI2LzxUC1IMIASYFCK/
-         PYGu0n7IN6IBl5MnE8xdyv1KAiCmvjesk/bpjpl9WZcaEajBPnhOlQ7dNukrIPuqdfZ6
-         O2jLXcNw8z96wgrZ2dnT1j3nSH1xyvv2Zdg7/PRczenbo5D+f+4tC2PCE6FBPfOq2g1M
-         Tx6w==
+        Thu, 12 Mar 2020 15:01:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 111so7412515oth.13;
+        Thu, 12 Mar 2020 12:01:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=kJTSRv0ipA/LGaJ/irvxa1s6RApiBKOCTBDPilrDk+I=;
-        b=Xi8a3oVXX6lxjj9Ei7uYSnMLw3qawxbXVmiF30TPPl1Z4UuZa+doorwxD+VRWcvKx7
-         p19D8ECQH7nQc/A44aQujTf8XTcuENYgJkluxNH8DelYbgR2QD6q6eL15ZWAE3DwA8fP
-         byvWz6d+5cGuwn0HMADVnStJVN7a+XmWpv7AbT/itK1HNyPXvFy2+Vowoob/Wj7p4l4b
-         DlsSGv95BxdYzvmUSTE1g6olRR1YwZGwl02Y0WSGNuvkgDQouxLKxag4sNLfiRGAsOVm
-         GpQVgEmsGd3Ksg4Nyiyc/hJccAiNBtt75TtfEIeHAF2iiTMCbTPi34wyUAXVrn+o6U4N
-         2+Jg==
-X-Gm-Message-State: ANhLgQ1T5Z+qg2JEbZi4PAhtIjFCGbl9kjcfuHJa1OkKOPyrSXM41gfO
-        UNHi1JxKenGagX86sRbhlowAz35Xnpnl
-X-Google-Smtp-Source: ADFU+vueXXRsbKUuDgz64Asxn3hRuSV3ePwURwTunWQv2Wfz8U72NIAnhYvRMF43t7S7B8JDCPzIqLkHoR33
-X-Received: by 2002:a25:e88:: with SMTP id 130mr10846597ybo.174.1584039406189;
- Thu, 12 Mar 2020 11:56:46 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 11:56:29 -0700
-In-Reply-To: <20200312185629.141280-1-rajatja@google.com>
-Message-Id: <20200312185629.141280-6-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200312185629.141280-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v9 5/5] drm/i915: Enable support for integrated privacy screen
-From:   Rajat Jain <rajatja@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
-        <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
-        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=af3K31gbmEa2HSipqb/CVegw26DVeeUMqwIKy4x1Vpc=;
+        b=j8Nzoqh46yNFazPSZPOBKkIDviqcSYIufx7a4UEQt6WF7/AZIBhu4nUaANPh02ktT4
+         LziQr7V8Y08WJXkhQklC3MvYQvh7zp/hO+LW+c4xtuCrxB6JMb0sLn9mnvWmvqq2j/p2
+         y/6oavn+2qr2L935jU0aKFv5wxUqhXIbfzIjTpXmAyIzPjSFkDmVhS1dS9J2nKkjMcXU
+         TlwCXBWnlMGrDZccrvuWkMcC0y8h30oHbN069Ed5tiPNMPJS6cXNcBhXCVVG6FPLdLu9
+         caUDD1raR0/uKfKGXYwd3RBV18l/mKdrL/kHVbtFYOF5fYMR4ACQg5Q4xS5grdNojELq
+         fKaA==
+X-Gm-Message-State: ANhLgQ0gP5RqyDFY49cjJoF9OuEMppu2DhSnQsBYGWuod97utvcJRB7i
+        CfaJ0DJKpb7+4qsPOYHQvQ==
+X-Google-Smtp-Source: ADFU+vv3ZuHu4x1L1sfY2PAUzJV8g1Jh+MrCLTT7IlFPBsGUChTOAm8/09BwXfsWt4P0yLJN/VLj7A==
+X-Received: by 2002:a9d:6752:: with SMTP id w18mr7374480otm.123.1584039698352;
+        Thu, 12 Mar 2020 12:01:38 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j132sm4176497oih.1.2020.03.12.12.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 12:01:36 -0700 (PDT)
+Received: (nullmailer pid 25434 invoked by uid 1000);
+        Thu, 12 Mar 2020 19:01:35 -0000
+Date:   Thu, 12 Mar 2020 14:01:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: thermal: Add yaml bindings for
+ thermal cooling-devices
+Message-ID: <20200312190135.GA14131@bogus>
+References: <cover.1583412540.git.amit.kucheria@linaro.org>
+ <9a2052ee2afa43048bd4e2594d015fca6bbf5116.1583412540.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a2052ee2afa43048bd4e2594d015fca6bbf5116.1583412540.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for an ACPI based integrated privacy screen that is
-available on some systems.
+On Thu, Mar 05, 2020 at 06:26:42PM +0530, Amit Kucheria wrote:
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
+> 
+> The property #cooling-cells is required in each device that acts as a
+> cooling device - whether active or passive. So any device that can
+> throttle its performance to passively reduce heat dissipation (e.g.
+> cpus, gpus) and any device that can actively dissipate heat at different
+> levels (e.g. fans) will contain this property.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  .../thermal/thermal-cooling-devices.yaml      | 114 ++++++++++++++++++
+>  1 file changed, 114 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> new file mode 100644
+> index 0000000000000..4745ea4b41ae7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> @@ -0,0 +1,114 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Thermal cooling device binding
+> +
+> +maintainers:
+> +  - Amit Kucheria <amitk@kernel.org>
+> +
+> +description: |
+> +  Thermal management is achieved in devicetree by describing the sensor hardware
+> +  and the software abstraction of cooling devices and thermal zones required to
+> +  take appropriate action to mitigate thermal overload.
+> +
+> +  The following node types are used to completely describe a thermal management
+> +  system in devicetree:
+> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> +   - cooling-device: device used to dissipate heat either passively or artively
+> +   - thermal-zones: a container of the following node types used to describe all
+> +     thermal data for the platform
+> +
+> +  This binding describes the cooling devices.
+> +
+> +  There are essentially two ways to provide control on power dissipation:
+> +    - Passive cooling: by means of regulating device performance. A typical
+> +      passive cooling mechanism is a CPU that has dynamic voltage and frequency
+> +      scaling (DVFS), and uses lower frequencies as cooling states.
+> +    - Active cooling: by means of activating devices in order to remove the
+> +      dissipated heat, e.g. regulating fan speeds.
+> +
+> +  Any cooling device has a range of cooling states (i.e. different levels of
+> +  heat dissipation). They also have a way to determine the state of cooling in
+> +  which the device is. For example, a fan's cooling states correspond to the
+> +  different fan speeds possible. Cooling states are referred to by single
+> +  unsigned integers, where larger numbers mean greater heat dissipation. The
+> +  precise set of cooling states associated with a device should be defined in
+> +  a particular device's binding.
+> +
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v9: same as v8
-v8: - separate the APCI privacy screen into a separate patch.
-    - Don't destroy the property if there is no privacy screen (because
-      drm core doesn't like destroying property in late_register()).
-    - The setting change needs to be committed in ->update_pipe() for 
-      ddi.c as well as dp.c and both of them call intel_dp_add_properties()
-v7: Look for ACPI node in ->late_register() hook.
-    Do the scan only once per drm_device (instead of 1 per drm_connector)
-v6: Addressed minor comments from Jani at
-    https://lkml.org/lkml/2020/1/24/1143
-     - local variable renamed.
-     - used drm_dbg_kms()
-     - used acpi_device_handle()
-     - Used opaque type acpi_handle instead of void*
-v5: same as v4
-v4: Same as v3
-v3: fold the code into existing acpi_device_id_update() function
-v2: formed by splitting the original patch into ACPI lookup, and privacy
-    screen property. Also move it into i915 now that I found existing code
-    in i915 that can be re-used.
+This and patch 1 should have a 'select: true' so that this schema is 
+applied to all nodes (it does nothing if #cooling-cells is not present).
 
- drivers/gpu/drm/i915/display/intel_atomic.c |  2 ++
- drivers/gpu/drm/i915/display/intel_ddi.c    |  1 +
- drivers/gpu/drm/i915/display/intel_dp.c     | 34 ++++++++++++++++++++-
- drivers/gpu/drm/i915/display/intel_dp.h     |  5 +++
- 4 files changed, 41 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-index d043057d2fa03..9898d8980e7ce 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-@@ -150,6 +150,8 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
- 	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
- 	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
- 	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
-+	    new_conn_state->base.privacy_screen_status !=
-+		old_conn_state->base.privacy_screen_status ||
- 	    !blob_equal(new_conn_state->base.hdr_output_metadata,
- 			old_conn_state->base.hdr_output_metadata))
- 		crtc_state->mode_changed = true;
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 73d0f4648c06a..69a5423216dc5 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -3708,6 +3708,7 @@ static void intel_ddi_update_pipe(struct intel_encoder *encoder,
- 	if (!intel_crtc_has_type(crtc_state, INTEL_OUTPUT_HDMI))
- 		intel_ddi_update_pipe_dp(encoder, crtc_state, conn_state);
- 
-+	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
- 	intel_hdcp_update_pipe(encoder, crtc_state, conn_state);
- }
- 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 3ddc424b028c1..5f33ebb466135 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -62,6 +62,7 @@
- #include "intel_lspcon.h"
- #include "intel_lvds.h"
- #include "intel_panel.h"
-+#include "intel_privacy_screen.h"
- #include "intel_psr.h"
- #include "intel_sideband.h"
- #include "intel_tc.h"
-@@ -5886,6 +5887,10 @@ intel_dp_connector_register(struct drm_connector *connector)
- 		dev_priv->acpi_scan_done = true;
- 	}
- 
-+	/* Check for integrated Privacy screen support */
-+	if (intel_privacy_screen_present(to_intel_connector(connector)))
-+		drm_connector_attach_privacy_screen_property(connector);
-+
- 	DRM_DEBUG_KMS("registering %s bus for %s\n",
- 		      intel_dp->aux.name, connector->kdev->kobj.name);
- 
-@@ -6883,6 +6888,33 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
- 		connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
- 
- 	}
-+
-+	/*
-+	 * Created here, but depending on result of probing for privacy-screen
-+	 * in intel_dp_connector_register(), gets attached in that function.
-+	 * Need to create here because the drm core doesn't like creating
-+	 * properties during ->late_register().
-+	 */
-+	drm_connector_create_privacy_screen_property(connector);
-+}
-+
-+void
-+intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-+			       const struct intel_crtc_state *crtc_state,
-+			       const struct drm_connector_state *conn_state)
-+{
-+	struct drm_connector *connector = conn_state->connector;
-+
-+	intel_privacy_screen_set_val(to_intel_connector(connector),
-+				     conn_state->privacy_screen_status);
-+}
-+
-+static void intel_dp_update_pipe(struct intel_encoder *encoder,
-+				 const struct intel_crtc_state *crtc_state,
-+				 const struct drm_connector_state *conn_state)
-+{
-+	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
-+	intel_panel_update_backlight(encoder, crtc_state, conn_state);
- }
- 
- static void intel_dp_init_panel_power_timestamps(struct intel_dp *intel_dp)
-@@ -7826,7 +7858,7 @@ bool intel_dp_init(struct drm_i915_private *dev_priv,
- 	intel_encoder->compute_config = intel_dp_compute_config;
- 	intel_encoder->get_hw_state = intel_dp_get_hw_state;
- 	intel_encoder->get_config = intel_dp_get_config;
--	intel_encoder->update_pipe = intel_panel_update_backlight;
-+	intel_encoder->update_pipe = intel_dp_update_pipe;
- 	intel_encoder->suspend = intel_dp_encoder_suspend;
- 	if (IS_CHERRYVIEW(dev_priv)) {
- 		intel_encoder->pre_pll_enable = chv_dp_pre_pll_enable;
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
-index 0c7be8ed1423a..e4594e27ce5a8 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.h
-+++ b/drivers/gpu/drm/i915/display/intel_dp.h
-@@ -123,4 +123,9 @@ static inline unsigned int intel_dp_unused_lane_mask(int lane_count)
- 
- u32 intel_dp_mode_to_fec_clock(u32 mode_clock);
- 
-+void
-+intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-+			       const struct intel_crtc_state *crtc_state,
-+			       const struct drm_connector_state *conn_state);
-+
- #endif /* __INTEL_DP_H__ */
--- 
-2.25.1.481.gfbce0eb801-goog
-
+> +properties:
+> +  "#cooling-cells":
+> +    description:
+> +        Must be 2, in order to specify minimum and maximum cooling state used in
+> +        the cooling-maps reference. The first cell is the minimum cooling state
+> +        and the second cell is the maximum cooling state requested.
+> +    const: 2
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/thermal/thermal.h>
+> +
+> +    // Example 1: Cpufreq cooling device on CPU0
+> +    cpus {
+> +            #address-cells = <2>;
+> +            #size-cells = <0>;
+> +
+> +            CPU0: cpu@0 {
+> +                    device_type = "cpu";
+> +                    compatible = "qcom,kryo385";
+> +                    reg = <0x0 0x0>;
+> +                    enable-method = "psci";
+> +                    cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +                                       &LITTLE_CPU_SLEEP_1
+> +                                       &CLUSTER_SLEEP_0>;
+> +                    capacity-dmips-mhz = <607>;
+> +                    dynamic-power-coefficient = <100>;
+> +                    qcom,freq-domain = <&cpufreq_hw 0>;
+> +                    #cooling-cells = <2>;
+> +                    next-level-cache = <&L2_0>;
+> +                    L2_0: l2-cache {
+> +                            compatible = "cache";
+> +                            next-level-cache = <&L3_0>;
+> +                            L3_0: l3-cache {
+> +                                    compatible = "cache";
+> +                            };
+> +                    };
+> +          };
+> +
+> +          /* ... */
+> +
+> +    };
+> +
+> +    /* ... */
+> +
+> +    thermal-zones {
+> +            cpu0-thermal {
+> +                    polling-delay-passive = <250>;
+> +                    polling-delay = <1000>;
+> +
+> +                    thermal-sensors = <&tsens0 1>;
+> +
+> +                    trips {
+> +                            cpu0_alert0: trip-point0 {
+> +                                    temperature = <90000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                            };
+> +                    };
+> +
+> +                    cooling-maps {
+> +                            map0 {
+> +                                    trip = <&cpu0_alert0>;
+> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>;
+> +                            };
+> +                    };
+> +            };
+> +
+> +            /* ... */
+> +    };
+> +...
+> -- 
+> 2.20.1
+> 
