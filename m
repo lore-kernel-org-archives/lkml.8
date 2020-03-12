@@ -2,123 +2,77 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BB9C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FA8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6442071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZhCBOK2C"
+	by mail.kernel.org (Postfix) with ESMTP id D5F3320716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584023256;
+	bh=NBfZaoPVGopy564X9jgj14gpTLz9p4AtaD57fbxxlBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pcKuuo95y8u25p1URs8QkdHGopKF7OfBvBqqbOeyf3UK4H0wRzmL56thAQUb9AhK7
+	 JHG/qa46MmLusKuuyv/m8FvDbOjqPUX/Wo5Y+YooyeOFm7HIl4NUguy4Z4Vzvks2x1
+	 J9HI1F+XxoK6IBQGuQaGs8xkGHmYXxskE/nJu3z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgCLOZu (ORCPT
+        id S1727599AbgCLO1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:25:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33476 "EHLO mail.skyhub.de"
+        Thu, 12 Mar 2020 10:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgCLOZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:25:50 -0400
-Received: from zn.tnic (p200300EC2F0DBF0041CBC9F757D3F2F8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:bf00:41cb:c9f7:57d3:f2f8])
+        id S1727340AbgCLO1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:27:35 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 41FE31EC0273;
-        Thu, 12 Mar 2020 15:25:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584023148;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+tS8ojAFOCBQv6/DTX9OrTW5DWYkaLIc3oLYcrJwoD4=;
-        b=ZhCBOK2CBD/GCBpSmUns5EqYzMJoB3mkYEb6Sx3K6VFiQb6pVOZLpi0ERuDYGQRapsRJwN
-        +9B6FrrVfmd8ICewwRhhU81tO1HwizyhV3zrtvjE5Ifi1+daYh4tcezWXwfY3ODrMTCljL
-        1dklxduA2Q4FrPj7nJ4s0GXvUph1x6k=
-Date:   Thu, 12 Mar 2020 15:25:53 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
- purgatory.ro has missing symbols
-Message-ID: <20200312142553.GF15619@zn.tnic>
-References: <20200311214601.18141-1-hdegoede@redhat.com>
- <20200311214601.18141-3-hdegoede@redhat.com>
- <20200312001006.GA170175@rani.riverdale.lan>
- <3d58e77d-41e5-7927-fe84-4c058015e469@redhat.com>
- <20200312114225.GB15619@zn.tnic>
- <899f366e-385d-bafa-9051-4e93dc9ba321@redhat.com>
- <20200312125032.GC15619@zn.tnic>
- <8af51d90-27fa-6d2a-2159-ef0a9089453a@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 095EE20650;
+        Thu, 12 Mar 2020 14:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584023254;
+        bh=NBfZaoPVGopy564X9jgj14gpTLz9p4AtaD57fbxxlBg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q/VzJofeHWyEZaMZ4TO3oapRN+d4deZwCz/ZgR9waOARWpnw4C+EdWAQXMvbGxxNi
+         fjFr/M1u+iH9Yys4vFp8Oc3vZPpIA9Cf2x6INiJFNJymPQ4zeovLQOGz8g7mp4jqxg
+         Rsj+433EcZYFxIp9Qg8SYcEkI+zfwKS0RaAczCck=
+Date:   Thu, 12 Mar 2020 22:27:22 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        peng.fan@nxp.com, aford173@gmail.com, ping.bai@nxp.com,
+        jun.li@nxp.com, shengjiu.wang@nxp.com, bjorn.andersson@linaro.org,
+        olof@lixom.net, vkoul@kernel.org, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 RESEND 4/4] arm64: dts: imx8mm: Add thermal zone
+ support
+Message-ID: <20200312142721.GC1249@dragon>
+References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
+ <1582947862-11073-4-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8af51d90-27fa-6d2a-2159-ef0a9089453a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1582947862-11073-4-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 02:34:30PM +0100, Hans de Goede wrote:
-> Which is why I have been fixing the issues which the 0day bot finds,
-> but then I get complaints about reving the patch set to quickly...
-
-So here's what I'm seeing: patchsets get sent and 0day bot finds an
-issue almost each time. Which tells me, this patchset doesn't look ready.
-
-I suggested you to do "make randconfig" builds to find those breakages
-yourself but if you prefer 0day bot to do that, that's fine too.
-
-> In my experience once a patch-set has a maintainers attention,
-> quickly fixing any issues found usually is the right approach.
-> Because then usually it can get merged quickly and both the maintainer
-> and I can move on to other stuff. I'm sorry if you are finding this
-> annoying.
-
-My experience shows that almost always there's an aspect where both the
-submitter and the maintainer haven't thought about and hurrying stuff
-makes it worse. That's why I prefer stuff to be hammered out and tested
-properly and *then* applied.
-
-> TBH I'm quite unhappy that I'm being "yelled" at now (or so it
-> feels) while all I'm doing is trying to fix a long standing issue :(
-
-What in my reply made you feel you're being "yelled" at?
-
-> No not ok, I'm doing my best to help make things better here and
-> in return I'm getting what feels as a bunch of negativity and that
-> is NOT ok!
-
-I have no clue what in my replies made you feel that. Please explain.
-How should I have replied so that it doesn't come across negative?
-
-> Now as how to move forward with this, I suggest that:
+On Sat, Feb 29, 2020 at 11:44:22AM +0800, Anson Huang wrote:
+> Add thermal zone and tmu node to support i.MX8MM thermal
+> driver, ONLY cpu thermal zone is supported, and cpu cooling
+> is also added.
 > 
-> 1) We wait a bit to see if the 0daybot finds any more existing issues
-> which are exposed by my patch
-> 
-> 2) Change my patch to check for missing symbols to use the approach
-> which Arvind has suggested
-> 
-> 3) Check that "kexec -l <kernel>" + "kexec -e" still work
-> 
-> 4) Post v6.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-5) Wait for 0day bot to chew on it too.
-
-> Does that work for you ?
-
-Yes, sounds ok.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Applied, thanks.
