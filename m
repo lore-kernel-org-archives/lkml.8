@@ -2,91 +2,105 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCB3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F31DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FF220650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAAF20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NqsRJy8I"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HGQ0BJ43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCLNmS (ORCPT
+        id S1727420AbgCLNmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:42:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37800 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgCLNmS (ORCPT
+        Thu, 12 Mar 2020 09:42:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:19027 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727007AbgCLNmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:42:18 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so6496798ljd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+DOluD+F62+UVUFsNUjLxaC0lyKRRbWzeQTro9ET2IA=;
-        b=NqsRJy8IfYtvVOx2m61P7EUj7eKkRQC1W1McHaxUOH/XTR5geJiuT5IJcQaQ3nXb8l
-         M2LJAR79pVa8FQ+2/8ZcyBkREzLsxQmsdbbnBNAajt6/Ur8nAhUkN6nyGyUdPBeF+Yj9
-         RhXI9+Db1pLJ5PtMWY5BohGHdNAG2Ng5Rzj0pir3fqfrWTc9vkEjUFRCeagCFSGP8NmW
-         bTHID97c2LnvrSgLULrX+b0XRz6Ao3DLXkRhPWVncjiq3WLfRBMTsvoDvyJpmRX0AuSh
-         vlLjYb7s73jyHx2EESmsqa8I/fTvd11T3BvX3H2aaKOFsXdqHfLK8Lr0bPskf+BhItYG
-         jQXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+DOluD+F62+UVUFsNUjLxaC0lyKRRbWzeQTro9ET2IA=;
-        b=XHgUgn9ecxM7qOkUyyxYos+jZm2o9P6X49ZORAJEs/dBGpM8iws3z21GyfuUo6umMh
-         7cEz/Kuk4h2LQupxh5pID/3aw+dve1YaztSj6CFsiZD0s8UwTe/rQ420Jbq63JV1a7aR
-         BzoRoLWuDky4l7AVyRHAEMmprr+xUJAXjchwbHbrJBNkfqb+xRh/WyNNsPuDVSVWo7rC
-         Z6qkz4PYe/Cv+PpDawQW5yg4dgTTrRqGSXrFaClRyCJVQklgnxDGQ2186xdtsOWbGKyj
-         x1mpjXphZxxWmVf1CCXmhYMqIijM3KT16MNUZQojxBXMxOP7YLOasfV6vFMe9WQB/Iyc
-         RQsw==
-X-Gm-Message-State: ANhLgQ3tibwZOnuTIirM5slXLnwEgjW6p4cGXuehZcDR4aCL3WowaCyg
-        rMyRrMrlHvwG4blkdzqWQxOkFv4aW7aEUNLHqbMf5fG8HfE=
-X-Google-Smtp-Source: ADFU+vthVOyM/lwX5Bu49UX4rxF6kLF6196E1PSZp8U0hCci6QQU3TSCkkgWEyqH9cjxUW9PFpIMdwSr5W2lUW0E3Dc=
-X-Received: by 2002:a2e:8ecf:: with SMTP id e15mr3002789ljl.223.1584020536783;
- Thu, 12 Mar 2020 06:42:16 -0700 (PDT)
+        Thu, 12 Mar 2020 09:42:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584020552; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=brj+jEimEbgqUT3L9Fd4dgJ89y8xN4cQmfXxdzVnq20=;
+ b=HGQ0BJ43E4Hn5GRXPAHIw4beShYnBUhCqhahtzC5cxOSHRsqsacROOAO2+KUMJABwYVcuVce
+ NOFAH965xvYLxpvo3FSc3MyCTafKBlxGC6LsoQ1rsnYcqfUOuuwjOfWi/16Fw2Acjv/N9dmh
+ DPMhZNKwpgJqroV/VXVQ7IrpFn0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6a3c32.7ff2f309fa40-smtp-out-n02;
+ Thu, 12 Mar 2020 13:42:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1FC1DC433BA; Thu, 12 Mar 2020 13:42:10 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 435A7C433CB;
+        Thu, 12 Mar 2020 13:42:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 435A7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
-In-Reply-To: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Mar 2020 14:42:05 +0100
-Message-ID: <CACRpkdb3VzOFmnZkXXopsbKAAiQ9nzsqm6fMpcsCfmuvmaeOmg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] mwifiex: set needed_headroom, not hard_header_len
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200227000511.256055-1-briannorris@chromium.org>
+References: <20200227000511.256055-1-briannorris@chromium.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Arend Van Spriel <arend@broadcom.com>,
+        Brian Norris <briannorris@chromium.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200312134210.1FC1DC433BA@smtp.codeaurora.org>
+Date:   Thu, 12 Mar 2020 13:42:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 4:43 PM Tim Harvey <tharvey@gateworks.com> wrote:
+Brian Norris <briannorris@chromium.org> wrote:
 
-> If there are no parent resources do not call irq_chip_request_resources_parent
-> at all as this will return an error.
->
-> This resolves a regression where devices using a thunderx gpio as an interrupt
-> would fail probing.
->
-> Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> hard_header_len provides limitations for things like AF_PACKET, such
+> that we don't allow transmitting packets smaller than this.
+> 
+> needed_headroom provides a suggested minimum headroom for SKBs, so that
+> we can trivally add our headers to the front.
+> 
+> The latter is the correct field to use in this case, while the former
+> mostly just prevents sending small AF_PACKET frames.
+> 
+> In any case, mwifiex already does its own bounce buffering [1] if we
+> don't have enough headroom, so hints (not hard limits) are all that are
+> needed.
+> 
+> This is the essentially the same bug (and fix) that brcmfmac had, fixed
+> in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
+> additional header space").
+> 
+> [1] mwifiex_hard_start_xmit():
+> 	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
+> 	[...]
+> 		/* Insufficient skb headroom - allocate a new skb */
+> 
+> Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
 
-This patch does not apply to the mainline kernel or v5.6-rc1.
+Patch applied to wireless-drivers-next.git, thanks.
 
-Please verify:
-1. If the problem is still in v5.6 (we refactored the driver to
-   use GPIOLIB_IRQCHIP)
+9454f7a895b8 mwifiex: set needed_headroom, not hard_header_len
 
-2. If not, only propose it for linux-stable v5.5 etc.
+-- 
+https://patchwork.kernel.org/patch/11407493/
 
-Yours,
-Linus Walleij
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
