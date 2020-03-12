@@ -2,122 +2,84 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7722CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849F6C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4435B2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559612067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l3oOOhXE"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Nsh7A3T9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCLLPF (ORCPT
+        id S1727137AbgCLLQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:15:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50401 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbgCLLPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:15:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584011704; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=JvY4YuFQKu3F3qg6UDk12ZxFyQvOOD4Ta+PnExuPT7Y=; b=l3oOOhXEjJEza6v6HJ50yNQuJlrgWoBo21ATD5uR6hkCF2PSw+fFUFD3e+uUXfzbOERG6V7E
- h/jCuK7WzftqhSGTh0FF35d+XhYxoKT0PE899QgxSC+Fk4Rohbd6hY9fRaGuzEv9EmL9i9R+
- U3eCbWq2PKNP8p7XXu2o5GFB1aI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6a19a4.7fcdc5e9ae68-smtp-out-n01;
- Thu, 12 Mar 2020 11:14:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E6341C433D2; Thu, 12 Mar 2020 11:14:43 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 12 Mar 2020 07:16:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:41585 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgCLLP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:15:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE765C433CB;
-        Thu, 12 Mar 2020 11:14:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AE765C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: fix long latency due to discard during umount
-Date:   Thu, 12 Mar 2020 16:44:31 +0530
-Message-Id: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48dR8X5Bv8z9sPF;
+        Thu, 12 Mar 2020 22:15:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584011757;
+        bh=4geycpt2qvWbUaRVZsgFbTdpxz2a/tZbMuUtWLTmjn8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Nsh7A3T9QhufussDqh6t2HhZOJeKPshqGQLRydZ+4DqE+DrYrNK8p09zF6lMuNbPp
+         lqkyUlaVR+EWRRHqzjzcy/Df2pSVAHJJvp0A5SlXuPfvbSNYH34AQONTelobFpo72G
+         7oz//YPk0Ej2OZc7yxOHsdnwE3hMi42WqftrRjwvwnKodujlENXI1qwe2svalECXMO
+         muqFxOsAtIuAnGakEDji8IzpRNo7xRVqmdTBStq9I/w3//nIYtD95x3qjjBoKNydll
+         prwdvFroRQMPje7gm8XTWT2INbodh9tjCxtJCNxb6TFYHU2Ku9N9/8wMdU5+Pett6E
+         uE1RDylgnsSpw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-efi@vger.kernel.org,
+        linux-s390@vger.kernel.org, x86@kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>, zohar@linux.ibm.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v3] ima: add a new CONFIG for loading arch-specific policies
+In-Reply-To: <1583715471-15525-1-git-send-email-nayna@linux.ibm.com>
+References: <1583715471-15525-1-git-send-email-nayna@linux.ibm.com>
+Date:   Thu, 12 Mar 2020 22:15:54 +1100
+Message-ID: <87d09hj02d.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-F2FS already has a default timeout of 5 secs for discards that
-can be issued during umount, but it can take more than the 5 sec
-timeout if the underlying UFS device queue is already full and there
-are no more available free tags to be used. In that case, submit_bio()
-will wait for the already queued discard requests to complete to get
-a free tag, which can potentially take way more than 5 sec.
+Nayna Jain <nayna@linux.ibm.com> writes:
+> From: Nayna Jain <nayna@linux.vnet.ibm.com>
+>
+> Every time a new architecture defines the IMA architecture specific
+> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> include file needs to be updated. To avoid this "noise", this patch
+> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> the different architectures to select it.
+>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Philipp Rudo <prudo@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> ---
+> v3:
+> * Removes CONFIG_IMA dependency. Thanks Ard.
+> * Updated the patch with improvements suggested by Michael. It now uses
+> "imply" instead of "select". Thanks Michael.
 
-Fix this by submitting the discard requests with REQ_NOWAIT
-flags during umount. This will return -EAGAIN for UFS queue/tag full
-scenario without waiting in the context of submit_bio(). The FS can
-then handle these requests by retrying again within the stipulated
-discard timeout period to avoid long latencies.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
- fs/f2fs/segment.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index fb3e531..a06bbac 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
- 	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
- 					&(dcc->fstrim_list) : &(dcc->wait_list);
--	int flag = dpolicy->sync ? REQ_SYNC : 0;
-+	int flag;
- 	block_t lstart, start, len, total_len;
- 	int err = 0;
- 
-+	flag = dpolicy->sync ? REQ_SYNC : 0;
-+	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-+
- 	if (dc->state != D_PREP)
- 		return 0;
- 
-@@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 		bio->bi_end_io = f2fs_submit_discard_endio;
- 		bio->bi_opf |= flag;
- 		submit_bio(bio);
-+		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
-+			dc->state = D_PREP;
-+			err = dc->error;
-+			break;
-+		}
- 
- 		atomic_inc(&dcc->issued_discard);
- 
-@@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
- 			}
- 
- 			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-+			if (dc->error == -EAGAIN) {
-+				congestion_wait(BLK_RW_ASYNC, HZ/50);
-+				__relocate_discard_cmd(dcc, dc);
-+			}
- 
- 			if (issued >= dpolicy->max_requests)
- 				break;
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+cheers
