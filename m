@@ -2,117 +2,231 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE9BC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF090C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F008820736
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE860206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584044190;
-	bh=69TQm2Yza8V2TKbJE8TX3UGaXrfSg4iCK1riz4AAUcc=;
+	s=default; t=1584044591;
+	bh=lK+DbZu+ysfioTaOjQp7MwFz+Cg7MyJVUs9MvHtpsk0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sIaswILjTZIMJNdWfsGZZ+WvZuHuBptQmLqDBZ6Twsp7pK3jlrQ8i3M/KiL6mhhnL
-	 XlC7V6UL4WS85VxblTLwX/6nt8ZOV8pwfiBiqRE67JrfLnSEMb372FAZvUEQ/ySmU4
-	 r3c1zvdtvgE0UUVd66S7eZu0e4AJm1snOUgxZkhQ=
+	b=rFjTtc8NYtNNEjSJUU0l3VnTO3ZnrGg/4e9hBMImw974skH5fFhGPY5ixoSFV4PSX
+	 U8QdXbrSXQI7a4qqU4cIFxYAN4NeHTwnyE0Dofnal8h6uhWXJVCont1WwBMcuZyZwS
+	 z2KpAxeeYOV40xPy4IJAeyy5fG7rA7/21p2hDp8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgCLUQ2 (ORCPT
+        id S1726859AbgCLUXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:16:28 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50631 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLUQ2 (ORCPT
+        Thu, 12 Mar 2020 16:23:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45466 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgCLUXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 16:16:28 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a5so7550619wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 13:16:27 -0700 (PDT)
+        Thu, 12 Mar 2020 16:23:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e9so507381otr.12;
+        Thu, 12 Mar 2020 13:23:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yLZW/qZRAwj/qZJYLmvntwJ6WgyWrrnV7NOpGpMsiCs=;
-        b=jbV8E88NLQfbdkS5DY1hzLENcONNrR0k9Pwhzs7tkxp9eZ6d2bsxc1adv190rwQWtL
-         XNfi9B7ftJW8lfcB1nIDV+clmE73IhaEOsFt1IwGvOy3xGpsb4CPSpoa8wRl9EC7c7pS
-         TLFRPEyILOXy75AgkcWaqEPDQ7tGlwRd0lo4Jz+fr/tw+4X38k8gCgG3sJcxrVP7EcR6
-         SBzvPmSk1YwGBkxH5YjBi3+9i4jSwPzSxJODV1B8iOKV1swggOAkTj+EOEGpbhdQmj+E
-         tG4iBZG6y04VpKJ5r8bfQniryKnj/aD6sGuISv6KCKjPBOVEhsGP/Gt/7ww8Hcwc+Q9n
-         2ETQ==
-X-Gm-Message-State: ANhLgQ0+LhEg5CUvGQ5Nw15/DHRcgHwQCosG5xDJ0vZVxnz9y7PBYXFZ
-        Hmhskg1Ixv4wUt0pk+ENthtlZmNT
-X-Google-Smtp-Source: ADFU+vtu0EFJe8mhzRbybBzoeEImlTuTlN0krmWnh7UWi4FFLFI3RkTCF8/xnt5kVpC7WefZTxBQQg==
-X-Received: by 2002:a1c:9602:: with SMTP id y2mr6345011wmd.23.1584044186750;
-        Thu, 12 Mar 2020 13:16:26 -0700 (PDT)
-Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
-        by smtp.gmail.com with ESMTPSA id i10sm70877339wrn.53.2020.03.12.13.16.24
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=edf5TR5CVR3TN5pRGNKw9mhGgcBOLphtKYRyAygi4sY=;
+        b=QQhr5uZJGjtNzJQYLqDEl5pPyg0tHdFHW7T2iP3nu1ZyBt5N8WJSjwG19AZKXo4aH6
+         aFAwJdzS3taS4F3XYCJZLmIRBpNyexkZfEXpE7kjv1klKLjIV3q7rzQfI1aJIPJvR273
+         evvPtNtkKZOxp/cgBMlU4TNHoNP2mDy3kzeZCSvYV4gKL4NYx/ZsA4eYSjIn+hiJrdx2
+         oaiLEG83faoHIka9fDLHGNMPP6xRjey8EfQ32ZvW+5BACTJCRNHDwbBmbknWsR7nIw1F
+         sEUPRDeMfPhboSUiczs6srj7cI7OMlTKz49zin/uZaJ1Z7KeTJHX9qhkq9SEgj5yADf2
+         uM8w==
+X-Gm-Message-State: ANhLgQ1JjwX81rUjeCFNAvb94FGxWc52q8WUwCe0LiJdBFkr/1sMXGql
+        kQX4XyG60kDYLoftHpDaYn6+DdE=
+X-Google-Smtp-Source: ADFU+vvOQCNhP9ZLDZQxkhEt/jrr6BlY7/vHQ5vgiZhlBHGBv/gpom62mtJzEUMw2/nTR4mZwAQuMA==
+X-Received: by 2002:a9d:6452:: with SMTP id m18mr7677326otl.366.1584044588129;
+        Thu, 12 Mar 2020 13:23:08 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w18sm12789082otl.60.2020.03.12.13.23.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 13:16:25 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 21:16:24 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
-Message-ID: <20200312201624.GD23944@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
- <20200310221019.GE8447@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
- <20200311082736.GA23944@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003111238570.171292@chino.kir.corp.google.com>
- <20200312083241.GT23944@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003121115480.158939@chino.kir.corp.google.com>
+        Thu, 12 Mar 2020 13:23:07 -0700 (PDT)
+Received: (nullmailer pid 10568 invoked by uid 1000);
+        Thu, 12 Mar 2020 20:23:06 -0000
+Date:   Thu, 12 Mar 2020 15:23:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        kuninori.morimoto.gx@renesas.com, peter.ujfalusi@ti.com,
+        broonie@kernel.org, linux-imx@nxp.com, devicetree@vger.kernel.org,
+        Xiubo.Lee@gmail.com, shengjiu.wang@nxp.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        ranjani.sridharan@linux.intel.com, liam.r.girdwood@linux.intel.com,
+        sound-open-firmware@alsa-project.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Add FSL CPU DAI bindings
+Message-ID: <20200312202306.GA18767@bogus>
+References: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
+ <20200306111353.12906-2-daniel.baluta@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2003121115480.158939@chino.kir.corp.google.com>
+In-Reply-To: <20200306111353.12906-2-daniel.baluta@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12-03-20 11:20:33, David Rientjes wrote:
-> On Thu, 12 Mar 2020, Michal Hocko wrote:
+On Fri, Mar 06, 2020 at 01:13:52PM +0200, Daniel Baluta wrote:
+> From: Daniel Baluta <daniel.baluta@nxp.com>
 > 
-> > > I think the changelog clearly states that we need to guarantee that a 
-> > > reclaimer will yield the processor back to allow a victim to exit.  This 
-> > > is where we make the guarantee.  If it helps for the specific reason it 
-> > > triggered in my testing, we could add:
-> > > 
-> > > "For example, mem_cgroup_protected() can prohibit reclaim and thus any 
-> > > yielding in page reclaim would not address the issue."
-> > 
-> > I would suggest something like the following:
-> > "
-> > The reclaim path (including the OOM) relies on explicit scheduling
-> > points to hand over execution to tasks which could help with the reclaim
-> > process.
+> Add dt bindings for he Generic FSL CPU DAI.
 > 
-> Are there other examples where yielding in the reclaim path would "help 
-> with the reclaim process" other than oom victims?  This sentence seems 
-> vague.
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  .../devicetree/bindings/sound/fsl,dai.yaml    | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,dai.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,dai.yaml b/Documentation/devicetree/bindings/sound/fsl,dai.yaml
+> new file mode 100644
+> index 000000000000..e6426af67d30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,dai.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-In the context of UP and !PREEMPT this also includes IO flushers,
-filesystems rely on workers and there are things I am very likely not
-aware of. If you think this is vaague then feel free to reformulate.
-All I really do care about is what the next paragraph is explaining.
+Dual license new bindings please:
 
-> > Currently it is mostly shrink_page_list which yields CPU for
-> > each reclaimed page. This might be insuficient though in some
-> > configurations. E.g. when a memcg OOM path is triggered in a hierarchy
-> > which doesn't have any reclaimable memory because of memory reclaim
-> > protection (MEMCG_PROT_MIN) then there is possible to trigger a soft
-> > lockup during an out of memory situation on non preemptible kernels
-> > <PUT YOUR SOFT LOCKUP SPLAT HERE>
-> > 
-> > Fix this by adding a cond_resched up in the reclaim path and make sure
-> > there is a yield point regardless of reclaimability of the target
-> > hierarchy.
-> > "
-> > 
+(GPL-2.0-only OR BSD-2-Clause)
 
--- 
-Michal Hocko
-SUSE Labs
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/fsl,dai.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic CPU FSL DAI driver for resource management
+
+Bindings are for h/w devices, not drivers.
+
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com>
+> +
+> +description: |
+> +  On platforms with a DSP we need to split the resource handling between
+> +  Application Processor (AP) and DSP. On platforms where the DSP doesn't
+> +  have an easy access to resources, the AP will take care of
+> +  configuring them. Resources handled by this generic driver are: clocks,
+> +  power domains, pinctrl.
+
+The DT should define a DSP node with resources that are part of the 
+DSP. What setup the AP has to do should be implied by the compatible 
+string and possibly what resources are described.
+
+Or maybe the audio portion of the DSP is a child node...
+
+> +
+> +properties:
+> +  '#sound-dai-cells':
+> +    const: 0
+> +
+> +  compatible:
+> +    enum:
+> +      - fsl,esai-dai
+> +      - fsl,sai-dai
+
+Not very specific. There's only 2 versions of the DSP and ways it is 
+integrated?
+
+> +
+> +  clocks:
+> +    oneOf:
+> +      - items: # for ESAI
+> +          - description: Core clock used to access registers.
+> +          - description: ESAI baud clock for ESAI controller used to derive
+> +                         HCK, SCK and FS.
+> +          - description: The system clock derived from ahb clock used to derive
+> +                         HCK, SCK and FS.
+> +          - description: SPBA clock is required when ESAI is placed as a bus
+> +                         slave of the SP Bus and when two or more bus masters
+> +                         (CPU, DMA or DSP) try to access it. This property is
+> +                         optional depending on SoC design.
+> +      - items: # for SAI
+> +          - description: Bus clock for accessing registers
+> +          - description: Master clock 0 for providing bit clock and frame clock
+> +          - description: Master clock 1 for providing bit clock and frame clock
+> +          - description: Master clock 2 for providing bit clock and frame clock
+> +          - description: Master clock 3 for providing bit clock and frame clock
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items: # for ESAI
+> +          - const: core
+> +          - const: extal
+> +          - const: fsys
+> +          - const: spba
+> +      - items: # for SAI
+> +          - const: bus
+> +          - const: mclk0
+> +          - const: mclk1
+> +          - const: mclk2
+> +          - const: mclk3
+> +
+> +  pinctrl-0:
+> +    description: Should specify pin control groups used for this controller.
+> +
+> +  pinctrl-names:
+> +    const: default
+
+pinctrl properties are implicitly allowed an don't have to be listed 
+here.
+
+> +
+> +  power-domains:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+
+Don't need a type.
+
+> +    description:
+> +      List of phandles and PM domain specifiers, as defined by bindings of the
+> +      PM domain provider.
+
+Don't need to re-define common properties.
+
+You do need to say how many power domains (maxItems: 1?).
+
+> +
+> +  fsl,dai-index:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: Physical DAI index, must match the index from topology file
+
+Sorry, we don't do indexes in DT.
+
+What's a topology file?
+
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - fsl,dai-index
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx8-clock.h>
+> +    esai0_port: esai-port {
+> +         #sound-dai-cells = <0>;
+> +        compatible = "fsl,esai-dai";
+> +
+> +        fsl,dai-index = <0>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pinctrl_esai0>;
+> +
+> +        clocks = <&esai0_lpcg 1>, <&esai0_lpcg 0>,  <&esai0_lpcg 1>,
+> +            <&clk_dummy>;
+> +        clock-names = "core", "extal", "fsys", "spba";
+> +    };
+> -- 
+> 2.17.1
+> 
