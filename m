@@ -2,107 +2,197 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F48C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8362FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74EB206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EDD52071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584033827;
-	bh=iqV0woTK+1QbFs1jWfR/8C8FIBB4oluJrGxTmnqVE60=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pRfUhoupKE3tRgCDCA+MQi2hhUSGi2TfFryvwEeaOuY/Ef7Zvl7jkFUjaNNJPs4ZA
-	 GeIFUnNOo9qj0A4Rt5FAxU5QfMnbF+eooqopqIF0VXFJY8KyZZhXkZNI7s5MmoM/Oi
-	 oDKku6UGKnQ6Z6idA9MXmW9NQiC1xx107dn276f4=
+	s=default; t=1584033960;
+	bh=PTvuO3YiFJRIht1oaTpuGfBpue7S7PiLmmQVu1qVIn4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wFZZIN1eLxlhj7qxfaj+iZginHVK38oVx45OaCmg1LtlmyNhYx2voHmVKhzsghlTC
+	 i82eEfuQz75jwqokpdQwlEJomvu5ktfdUY8Vh4t1TTpjaF+lX1UWzkAexJlfuaAQn0
+	 DZhXLvr98Ygec5jtuXRbKW0iPc+Orwt4YpiFwHDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgCLRXq (ORCPT
+        id S1726475AbgCLRZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 13:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLRXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:23:46 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726254AbgCLRZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:25:58 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6342067C;
-        Thu, 12 Mar 2020 17:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD11C20736
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584033825;
-        bh=iqV0woTK+1QbFs1jWfR/8C8FIBB4oluJrGxTmnqVE60=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gswYtdvMC1EGaa0AsecLAx8y70uxeabXgKreyJqKoprJOJYs1nQk7+t7R1FdYw25q
-         Br7LSwcTwvVc7fbBtGBF35dvgBru7G5ce1cwtn5GTM94/11qSKcRsHljB0m6hqeCR2
-         T75uS+dsBc59atUIi9qGDfFSezinHb2K8xUT7WRU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jCRYd-00CHKE-NI; Thu, 12 Mar 2020 17:23:43 +0000
+        s=default; t=1584033958;
+        bh=PTvuO3YiFJRIht1oaTpuGfBpue7S7PiLmmQVu1qVIn4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=v4yGTumBUbUn7LDvYCm6yGZ6JW8eLb4w5G5kAmN2IEtHIgm/n7DUy3NLoGqNvt2ub
+         ZZOYtOwqpI3b1qbtf2yCXD6alkY0I5+wnGXaibG00eUYNsMyMQaHlqlWsXiKiafHoi
+         oUbwUWuSNs0I9SO6qDyTuDW4ZeQhXkk6+Rm2oU1k=
+Received: by mail-qt1-f182.google.com with SMTP id l13so4994423qtv.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:25:57 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ33klbpNwAncdDRZ1U8uMW8r7q/ME90ytkhFpesFiHCqlUUFIH2
+        c0znARcIFIlGjQ1WpYLjZujQWANXWNnMxzeu3A==
+X-Google-Smtp-Source: ADFU+vuTNhe4RU9kuU5b409wZdxlxUCyoJ8PZURcjbAM9GBDKgaJKZ5s5NABcrdZFt2QuePKLVKem4BfjeKrNJsx1fQ=
+X-Received: by 2002:ac8:1b33:: with SMTP id y48mr8614017qtj.136.1584033956950;
+ Thu, 12 Mar 2020 10:25:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Mar 2020 17:23:43 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 01/23] irqchip/gic-v3: Use SGIs without active state if
- offered
-In-Reply-To: <1fa8ab2f-6766-9dc1-53a6-9cead19a5a7b@redhat.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-2-maz@kernel.org>
- <1fa8ab2f-6766-9dc1-53a6-9cead19a5a7b@redhat.com>
-Message-ID: <0f3c1c819a98deb77261e89eefa10e3f@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200306124930.20978-1-laurentiu.palcu@oss.nxp.com> <20200306124930.20978-4-laurentiu.palcu@oss.nxp.com>
+In-Reply-To: <20200306124930.20978-4-laurentiu.palcu@oss.nxp.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 12 Mar 2020 12:25:45 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJbZdrANVLgaiDWO0V8bzZ568hHZ8Fu5UZ7D5Nr3hjHiA@mail.gmail.com>
+Message-ID: <CAL_JsqJbZdrANVLgaiDWO0V8bzZ568hHZ8Fu5UZ7D5Nr3hjHiA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: display: imx: add bindings for DCSS
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On Fri, Mar 6, 2020 at 6:50 AM Laurentiu Palcu
+<laurentiu.palcu@oss.nxp.com> wrote:
+>
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
-On 2020-03-12 17:16, Auger Eric wrote:
-> Hi Marc,
+Please send to DT list if you want timely (by some definition) feedback.
 
-[...]
+> Add bindings for iMX8MQ Display Controller Subsystem.
+>
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> ---
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> new file mode 100644
+> index 000000000000..fde6ec8cb0c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: iMX8MQ Display Controller Subsystem (DCSS)
+> +
+> +maintainers:
+> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> +
+> +description:
+> +
+> +  The DCSS (display controller sub system) is used to source up to three
+> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
+> +  image processing capabilities are included to provide a solution capable of
+> +  driving next generation high dynamic range displays.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx8mq-dcss
+> +
+> +  reg:
+> +    maxItems: 2
 
->> diff --git a/include/linux/irqchip/arm-gic-v3.h 
->> b/include/linux/irqchip/arm-gic-v3.h
->> index 83439bfb6c5b..c29a02678a6f 100644
->> --- a/include/linux/irqchip/arm-gic-v3.h
->> +++ b/include/linux/irqchip/arm-gic-v3.h
->> @@ -57,6 +57,7 @@
->>  #define GICD_SPENDSGIR			0x0F20
->> 
->>  #define GICD_CTLR_RWP			(1U << 31)
->> +#define GICD_CTLR_nASSGIreq		(1U << 8)
-> I am not able to find this bit in Arm IHI 0069F (ID022020)
-> same for the bit in GICD_TYPER. Do we still miss part of the spec?
+Need to say what each entry is.
 
-See my response to Zenghui (TL;DR: this addition to the spec missed the
-cut-off for revision F and will be added in the next round).
 
-Thanks,
+> +
+> +  interrupts:
+> +    maxItems: 3
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Can drop. Implied by 'items' list.
+
+> +    items:
+> +      - description: Context loader completion and error interrupt
+> +      - description: DTG interrupt used to signal context loader trigger time
+> +      - description: DTG interrupt for Vblank
+> +
+> +  interrupt-names:
+> +    maxItems: 3
+
+Can drop.
+
+> +    items:
+> +      - const: ctxld
+> +      - const: ctxld_kick
+> +      - const: vblank
+> +
+> +  clocks:
+> +    maxItems: 5
+
+Can drop.
+
+> +    items:
+> +      - description: Display APB clock for all peripheral PIO access interfaces
+> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> +      - description: RTRAM clock
+> +      - description: Pixel clock, can be driver either by HDMI phy clock or MIPI
+> +      - description: DTRC clock, needed by video decompressor
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: axi
+> +      - const: rtrm
+> +      - const: pix
+> +      - const: dtrc
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      A port node pointing to the input port of a HDMI/DP or MIPI display bridge.
+> +
+> +examples:
+> +  - |
+> +    dcss: display-controller@32e00000 {
+> +        compatible = "nxp,imx8mq-dcss";
+> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> +        interrupts = <6>, <8>, <9>;
+> +        interrupt-names = "ctxld", "ctxld_kick", "vblank";
+> +        interrupt-parent = <&irqsteer>;
+> +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> +                 <&clk 254>,<&clk 122>;
+> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
+> +        assigned-clock-rates = <800000000>,
+> +                               <400000000>;
+> +        port {
+> +            dcss_out: endpoint {
+> +                remote-endpoint = <&hdmi_in>;
+> +            };
+> +        };
+> +    };
+> +
+> --
+> 2.17.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
