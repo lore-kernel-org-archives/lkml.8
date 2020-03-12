@@ -2,127 +2,102 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D824C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10680C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB411206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D720C206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584047682;
-	bh=kH7OpHtL5gqk6iZqiPRVZccVHyVSdTfxcqLyi8aRIww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oulP58zEnUdfY3QDXGMF11+H3VjvMwHyGvxKX8RPlCQjN/OvyHwqLlH9f/5dxTWZa
-	 QaHlMoAS6JBdIGzz554mU4xP9ytIt/NuhS8EeXPyxMxdymUlgnRi/WOy4lp/9SulWT
-	 05tL8QXUtajB0EczDlCTqNSdknVL/kWwPWwFxosI=
+	s=default; t=1584047730;
+	bh=ccRwF32HhslBrkGGDOXUK8qvOUyLzLxr8tzfObRY5mc=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=GN+P4by33ydTAmKpihhJkKF0raOauw2jE4qkCiOGC7bScsOxED8CoZ0SqsfL3JAiC
+	 iX8pZTvlTRkjYB8npWgqGCjcBfPPIIHrulwAY/nFVoCJXh8QrJ1ZnsYC8B2TqZcB7L
+	 SCtK/B2TBij2UIe+947CbBNctnyhFCKO6P1hNS04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgCLVOl (ORCPT
+        id S1726621AbgCLVP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:14:41 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34340 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgCLVOk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:14:40 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j16so7876996otl.1;
-        Thu, 12 Mar 2020 14:14:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hb+jggLgxrgsVbgn5UC+wajZRLswbi9I3/cHFEMhG5A=;
-        b=I0hcORIboNsydVKFvFAMTfb5QsiIeJ7AD9yPDv/N/8rOEpXFiNdtdy7YGGIWvbbTiI
-         5eHd85Uzo7iXn0mLlEZ+9CdN4FJieilTXU7jGW79nktR5j2u0uJcYr++J7SMMTqiVC/q
-         pzDuZwuIeYIpmTH0KNtx19JsLc61wKJIcw+J9wRAmBhOrPQKvyv3QApMHJutYeuJ+6Lo
-         eRjyCru7rEelSwfCt3CGvgsA0rV+iFkuyj3KhyDweT7kJJabOWkWqGkjYQl2/idAe/J7
-         r2IIWOnXxrYhs1F90q4oLDOFovT7mI7KS3T4cmG/iJbzGq6zGLuNxQ/sNii8EKiKDkp9
-         cdNw==
-X-Gm-Message-State: ANhLgQ3E8J4dOKaWISXbRZujgN4cleF9CEkZDKoGUN+cyiuJEl8B/snm
-        zadyFtit0znC7JYIbRe11g==
-X-Google-Smtp-Source: ADFU+vuljXtmuwnM4UV2KeJttRiC0WN1lGhphK05ESUgIzEivH+NonbDuzc8edu6d6mjGc5QIpJOag==
-X-Received: by 2002:a9d:c61:: with SMTP id 88mr7164473otr.144.1584047679639;
-        Thu, 12 Mar 2020 14:14:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v12sm1633771otp.75.2020.03.12.14.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 14:14:39 -0700 (PDT)
-Received: (nullmailer pid 27028 invoked by uid 1000);
-        Thu, 12 Mar 2020 21:14:38 -0000
-Date:   Thu, 12 Mar 2020 16:14:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200312211438.GA21883@bogus>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+        Thu, 12 Mar 2020 17:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgCLVP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:15:29 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4F1206B7;
+        Thu, 12 Mar 2020 21:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584047728;
+        bh=ccRwF32HhslBrkGGDOXUK8qvOUyLzLxr8tzfObRY5mc=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=pVZohXdY8ZM//YXY0/tKkWezoBiKOpsXJWqkU6Jm7b+hHfquUcMVyG1FIadSzhVxO
+         lAGiLX7orcIq/1o9OyW8AVrtsm+/kY4VEr3RuGLMCz9pcW7opFaTCbCIlLk6y7Z/NO
+         gIr42rHmixMkKKg7Ie7gaxn2VL/7RtP95b1U+vLQ=
+Received: by pali.im (Postfix)
+        id 7DC70896; Thu, 12 Mar 2020 22:15:26 +0100 (CET)
+Date:   Thu, 12 Mar 2020 22:15:26 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Change email address for Pali =?utf-8?B?Um9ow6Fy?=
+Message-ID: <20200312211526.oahg6mdbvkxlkezi@pali>
+References: <20200307104237.8199-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200307104237.8199-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Saturday 07 March 2020 11:42:37 Pali Rohár wrote:
+> For security reasons I stopped using gmail account and kernel address is
+> now up-to-date alias to my personal address.
 > 
-> Optional regmap property will be used to refer to a syscon-controller
-> having a reboot tolerant register mapped.
-
-NAK. It should simply be a child node of the 'syscon-controller'.
-
+> People periodically send me emails to address which they found in source
+> code of drivers, so this change reflects state where people can contact me.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Signed-off-by: Pali Rohár <pali@kernel.org>
 > ---
->  .../bindings/power/reset/syscon-reboot-mode.yaml         | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-> index e09bb07b1abb..f47bf52ad983 100644
-> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-> @@ -13,9 +13,8 @@ description: |
->    This driver gets reboot mode magic value from reboot-mode driver
->    and stores it in a SYSCON mapped register. Then the bootloader
->    can read it and take different action according to the magic
-> -  value stored. The SYSCON mapped register is retrieved from the
-> -  parental dt-node plus the offset. So the SYSCON reboot-mode node
-> -  should be represented as a sub-node of a "syscon", "simple-mfd" node.
-> +  value stored. The SYSCON mapped register is retrieved either from
-> +  the parental dt-node or from a regmap phandle plus the offset.
->  
->  properties:
->    compatible:
-> @@ -29,6 +28,10 @@ properties:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description: Offset in the register map for the mode register (in bytes).
->  
-> +  regmap:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to the register map node.
-> +
->  patternProperties:
->    "^mode-.+":
->      $ref: /schemas/types.yaml#/definitions/uint32
-> -- 
-> 2.25.1
-> 
+
+Greg, could you or someone else help me where to (re)send this patch?
+MAINTAINERS file does not specify who is maintainer of MAINTAINERS file
+itself and scripts/get_maintainer.pl did not help me too. Main entry is
+LKML list.
+
+As this change is across more subsystems I do not know who can take such
+patch and I do not thing it make sense to split such change into more
+patches (one for each subsystem).
+
+>  .../ABI/testing/sysfs-platform-dell-laptop       |  8 ++++----
+>  MAINTAINERS                                      | 16 ++++++++--------
+>  arch/arm/mach-omap2/omap-secure.c                |  2 +-
+>  arch/arm/mach-omap2/omap-secure.h                |  2 +-
+>  arch/arm/mach-omap2/omap-smc.S                   |  2 +-
+>  drivers/char/hw_random/omap3-rom-rng.c           |  4 ++--
+>  drivers/hwmon/dell-smm-hwmon.c                   |  4 ++--
+>  drivers/platform/x86/dell-laptop.c               |  4 ++--
+>  drivers/platform/x86/dell-rbtn.c                 |  4 ++--
+>  drivers/platform/x86/dell-rbtn.h                 |  2 +-
+>  drivers/platform/x86/dell-smbios-base.c          |  4 ++--
+>  drivers/platform/x86/dell-smbios-smm.c           |  2 +-
+>  drivers/platform/x86/dell-smbios.h               |  2 +-
+>  drivers/platform/x86/dell-smo8800.c              |  2 +-
+>  drivers/platform/x86/dell-wmi.c                  |  4 ++--
+>  drivers/power/supply/bq2415x_charger.c           |  4 ++--
+>  drivers/power/supply/bq27xxx_battery.c           |  2 +-
+>  drivers/power/supply/isp1704_charger.c           |  2 +-
+>  drivers/power/supply/rx51_battery.c              |  4 ++--
+>  fs/udf/ecma_167.h                                |  2 +-
+>  fs/udf/osta_udf.h                                |  2 +-
+>  include/linux/power/bq2415x_charger.h            |  2 +-
+>  tools/laptop/freefall/freefall.c                 |  2 +-
+>  23 files changed, 41 insertions(+), 41 deletions(-)
