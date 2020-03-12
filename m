@@ -2,69 +2,95 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB838C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D253C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A925F206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAD8206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OzGXpN/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388063AbgCLH1d (ORCPT
+        id S2388126AbgCLH1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:27:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:35189 "EHLO verein.lst.de"
+        Thu, 12 Mar 2020 03:27:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36763 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387898AbgCLH1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:27:33 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A1F4D68B05; Thu, 12 Mar 2020 08:27:29 +0100 (CET)
-Date:   Thu, 12 Mar 2020 08:27:29 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations
- V5
-Message-ID: <20200312072729.GA9345@lst.de>
-References: <20200227052442.22524-1-ira.weiny@intel.com> <20200305155144.GA5598@lst.de> <20200309170437.GA271052@iweiny-DESK2.sc.intel.com> <20200311033614.GQ1752567@magnolia> <20200311063942.GE10776@dread.disaster.area> <20200311064412.GA11819@lst.de> <20200312004932.GH10776@dread.disaster.area>
+        id S2387898AbgCLH1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:27:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48dL582Qy8z9sP7;
+        Thu, 12 Mar 2020 18:27:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583998060;
+        bh=c+rAYHbp+CWwrpwAgZbZp1cZ0QKLCcf5lW53irVv3PI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OzGXpN/7wXBQU6t1aFaQaVvZO+aL1CGyxX0Uui0vFCpb7+8QLws07oX+UgD1SBIfI
+         VKxJ4huhnbN/rZAy1UhMyA8uJvgjkjC8EUzz6ps+v+4VWWCRurrsRTsbeFDJkinHcz
+         uxukrM8bx21Ciicge6j2Gl89GfbEJYmIxZ2/GNClVa2CmrGFwaszk7Qz1weyrYTHcR
+         j6Q4FKdDxMGmTBIWvEiWWfks5ivC1jfEm7rI53U4gYrtNLFrQzW/stEoCiicMthUC+
+         A1Cl/4x3T8yMgu3ObF0K+gacLPof8r5pPLIk/Q9md0MNOkeCzdXofpwf09BltQyqxL
+         NMQ+pu4J8gwOQ==
+Date:   Thu, 12 Mar 2020 18:27:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200312182725.618ca518@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312004932.GH10776@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/signed; boundary="Sig_/6AnB0cUAvhJeWDf2gBGAu8J";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:49:32AM +1100, Dave Chinner wrote:
-> > > IOWs, the dax_associate_page() related functionality probably needs
-> > > to be a filesystem callout - part of the aops vector, I think, so
-> > > that device dax can still use it. That way XFS can go it's own way,
-> > > while ext4 and device dax can continue to use the existing mechanism
-> > > mechanisn that is currently implemented....
-> > 
-> > s/XFS/XFS with rmap/, as most XFS file systems currently don't have
-> > that enabled we'll also need to keep the legacy path around.
-> 
-> Sure, that's trivially easy to handle in the XFS code once the
-> callouts are in place.
-> 
-> But, quite frankly, we can enforce rmap to be enabled 
-> enabled because nobody is using a reflink enabled FS w/ DAX right
-> now. Everyone will have to mkfs their filesystems anyway to enable
-> reflink+dax, so we simply don't allow reflink+dax to be enabled
-> unless rmap is also enabled. Simple, easy, trivial.
+--Sig_/6AnB0cUAvhJeWDf2gBGAu8J
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-True, I think rmap will be required for DAX+reflink.  But we still
-need the legacy infrastructure for error reporting.
+Hi all,
+
+After merging the akpm-current tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
+
+mm/gup.c:119:13: warning: 'put_compound_head' defined but not used [-Wunuse=
+d-function]
+  119 | static void put_compound_head(struct page *page, int refs, unsigned=
+ int flags)
+      |             ^~~~~~~~~~~~~~~~~
+
+Introduced by commit
+
+  6379e529ebe4 ("mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN=
+ pages"")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6AnB0cUAvhJeWDf2gBGAu8J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5p5F0ACgkQAVBC80lX
+0GwjOAf/cdZH8I0YAlg+3Fy/ktiK28PhLGJWZjcUtuSZKv50dP9+cxAvTFjwBUtw
+d13vEwqe5JugAadgw5coPwam6SczTs6QPtG+Pya9REV81Pau93UKzNpGk/sPbi5d
+AMTOOAf+PYaQAETGRO0+VD85xi4Dk7Eh6X6rFV1FiLnem0y7WEA5ejpvLIJJZ3mv
+h/660GsYR8dO05THCqp7EftGIUjaDHLsXrx3Tt+ZQSVHsoPh/e5iSnrRqIkQMQCA
++9RjbZwe76AeyP41UXfEML21JCo2LKARnjIH67ecuhMW+mEmWMDFdYkrPaB+PGz2
+KulttTHAVjcvuuMtWrc83IDi7jpQWQ==
+=IB4z
+-----END PGP SIGNATURE-----
+
+--Sig_/6AnB0cUAvhJeWDf2gBGAu8J--
