@@ -4,20 +4,20 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB642C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA35BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9BD20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63B8206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgCLSpZ (ORCPT
+        id S1726801AbgCLSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:45:25 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23434 "EHLO mga02.intel.com"
+        Thu, 12 Mar 2020 14:45:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:23441 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgCLSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726683AbgCLSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 14:45:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,9 +25,9 @@ Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 11:45:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="416041226"
+   d="scan'208";a="416041235"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 11:45:22 -0700
+  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 11:45:23 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 01/10] KVM: nVMX: Move reflection check into nested_vmx_reflect_vmexit()
-Date:   Thu, 12 Mar 2020 11:45:12 -0700
-Message-Id: <20200312184521.24579-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/10] KVM: VMX: Convert local exit_reason to u16 in nested_vmx_exit_reflected()
+Date:   Thu, 12 Mar 2020 11:45:15 -0700
+Message-Id: <20200312184521.24579-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200312184521.24579-1-sean.j.christopherson@intel.com>
 References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
@@ -49,79 +49,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the call to nested_vmx_exit_reflected() from vmx_handle_exit() into
-nested_vmx_reflect_vmexit() and change the semantics of the return value
-for nested_vmx_reflect_vmexit() to indicate whether or not the exit was
-reflected into L1.  nested_vmx_exit_reflected() and
-nested_vmx_reflect_vmexit() are intrinsically tied together, calling one
-without simultaneously calling the other makes little sense.
+Store only the basic exit reason in the local "exit_reason" variable in
+nested_vmx_exit_reflected().  Except for tracing, all references to
+exit_reason are expecting to encounter only the basic exit reason.
 
-No functional change intended.
+Opportunistically align the params to nested_vmx_exit_handled_msr().
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.h | 16 +++++++++++-----
- arch/x86/kvm/vmx/vmx.c    |  4 ++--
- 2 files changed, 13 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 21d36652f213..6bc379cf4755 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -72,12 +72,16 @@ static inline bool nested_ept_ad_enabled(struct kvm_vcpu *vcpu)
- }
- 
- /*
-- * Reflect a VM Exit into L1.
-+ * Conditionally reflect a VM-Exit into L1.  Returns %true if the VM-Exit was
-+ * reflected into L1.
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index cb05bcbbfc4e..1848ca0116c0 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5374,7 +5374,7 @@ static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
+  * MSR bitmap. This may be the case even when L0 doesn't use MSR bitmaps.
   */
--static inline int nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
--					    u32 exit_reason)
-+static inline bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
-+					     u32 exit_reason)
+ static bool nested_vmx_exit_handled_msr(struct kvm_vcpu *vcpu,
+-	struct vmcs12 *vmcs12, u32 exit_reason)
++					struct vmcs12 *vmcs12, u16 exit_reason)
  {
--	u32 exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+	u32 exit_intr_info;
-+
-+	if (!nested_vmx_exit_reflected(vcpu, exit_reason))
-+		return false;
+ 	u32 msr_index = kvm_rcx_read(vcpu);
+ 	gpa_t bitmap;
+@@ -5523,7 +5523,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu)
+ 	u32 intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+-	u32 exit_reason = vmx->exit_reason;
++	u16 exit_reason;
  
- 	/*
- 	 * At this point, the exit interruption info in exit_intr_info
-@@ -85,6 +89,8 @@ static inline int nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
- 	 * we need to query the in-kernel LAPIC.
+ 	if (vmx->nested.nested_run_pending)
+ 		return false;
+@@ -5548,13 +5548,15 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu)
  	 */
- 	WARN_ON(exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT);
+ 	nested_mark_vmcs12_pages_dirty(vcpu);
+ 
+-	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), exit_reason,
++	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), vmx->exit_reason,
+ 				vmcs_readl(EXIT_QUALIFICATION),
+ 				vmx->idt_vectoring_info,
+ 				intr_info,
+ 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+ 				KVM_ISA_VMX);
+ 
++	exit_reason = vmx->exit_reason;
 +
-+	exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
- 	if ((exit_intr_info &
- 	     (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) ==
- 	    (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) {
-@@ -96,7 +102,7 @@ static inline int nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
- 
- 	nested_vmx_vmexit(vcpu, exit_reason, exit_intr_info,
- 			  vmcs_readl(EXIT_QUALIFICATION));
--	return 1;
-+	return true;
- }
- 
- /*
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 57742ddfd854..c1caac7e8f57 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5863,8 +5863,8 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
- 	if (vmx->emulation_required)
- 		return handle_invalid_guest_state(vcpu);
- 
--	if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
--		return nested_vmx_reflect_vmexit(vcpu, exit_reason);
-+	if (is_guest_mode(vcpu) && nested_vmx_reflect_vmexit(vcpu, exit_reason))
-+		return 1;
- 
- 	if (exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
- 		dump_vmcs();
+ 	switch (exit_reason) {
+ 	case EXIT_REASON_EXCEPTION_NMI:
+ 		if (is_nmi(intr_info))
 -- 
 2.24.1
 
