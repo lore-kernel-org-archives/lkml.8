@@ -2,100 +2,93 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A37DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E654FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501BE206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0enO67a"
+	by mail.kernel.org (Postfix) with ESMTP id AD7B5206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584047861;
+	bh=eVkJr6K1/dgNOd9AvEZsmHET88/10Wi0yKtvYJehzHg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XoDBOsDoOinkjovSPZoigQz0stkaoBrgMMKY0AKtOE+j7WINtaZqjB+MiitVVYJkK
+	 bO12ktcqNLE5IcU8JkoM6ynRViAnSOmhuKSpLeC9DYcfcWCUc972n5atpjDVjwhRkJ
+	 UFQAeetkaBwv2np1NXDprLCk+1oGEZVsNK6S+RdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCLVQX (ORCPT
+        id S1726669AbgCLVRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:16:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46899 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCLVQX (ORCPT
+        Thu, 12 Mar 2020 17:17:40 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43845 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCLVRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:16:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n15so9368903wrw.13;
-        Thu, 12 Mar 2020 14:16:21 -0700 (PDT)
+        Thu, 12 Mar 2020 17:17:40 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x1so4006663qkx.10;
+        Thu, 12 Mar 2020 14:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OoRMJHL0lSK4lVACsrhjsoeS3m+0TZ7d70msLMcwZXM=;
-        b=f0enO67akTjopRTWqxr9OXsYNFl1y1vda7MC0cyMvXeSTXMulMQzzWpxOQmZjXWkw/
-         SvQ/PejNSH6KWtM48vIFSosY4KrvgVui3/hs1MtMZK/HlyubRuWEjmiZJzQ9X5Veo63V
-         zk9SANcBaya12IWkiMc0LXsLdHDe7O4M5/AeuKBfxJSZVQapD6ICkpOOyJTTloE5yeb2
-         7EY/J+nz6/VvDma5jFofVyrjRXvvMB5E65OmQAz6O4Ff/t3skTaLu8WDDUFn7q/1hE4V
-         8EabQ+PC6HPcBCbEmZTwnH9kN1XdgejpEkOhFgZ7Qi9IoE1vxx1W44F5M0HvoHH6xxe4
-         yBPw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RLLdpBX2XKQXFbUwZ31dgJPGrBdnYXHSYA1R5S4vBIc=;
+        b=nafpvQB+7bG/ZUvDhm5LjCl4nvLQnxxIyec6VTyQay4nPmSqm9GglLBQ41WHplB6Kj
+         z65YMzxgI2/c+oherRtGga5POxFF3dzDE6JQnBFz0Q6EQNw3V5ZnRLt4/mttipbB6XYm
+         o8P9+pw/t/g/MyuwdXIFhrUurLR4dxznhPLAtr3kAkOMnGIYqyreRDTnL258s2JnodxV
+         h1Ju25+Aa8Zs5DsEIdYa7n5NdXeUn95cvLzzkco6S7ut0i+mifEaMIXOMe5UJ6CGLKO4
+         I9HuLnfoxqWE5ALbdgC2h30KKkvJMAXzlvUcHxPu/gGkabIEFSOckJPx5m+tZ9g0VbdI
+         WCNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OoRMJHL0lSK4lVACsrhjsoeS3m+0TZ7d70msLMcwZXM=;
-        b=AS/kmQ4HoeUSOgwAbIXuRmxKr+WtY0T1Dw5MYzYj613FHx6kcOIpUP7HBGi+6UlK95
-         7KBl9o+9mbz0TLcSaiOrzdrJmmBHGrCo0lJ1w9PJ23c2r+1JxuVWgAcO7M54x+JtLmDa
-         NM29kI3lUeAF7niMnA1P4ZquCWwR1IhmGk7HuaiHvJyqZkUH+fYpSOADdKmcKKnk8oTc
-         1PDA14CylzaaNmZq38C+mxMbDCDHNStIOyu0QC35PaBXSCjSw0qLPGjQaNcFOwvr+5V8
-         5dpuZikx+j5hPir4TgXYWT4EGdsQtDlzJM+psk+zbUEHriWDMk2eACRYOJO89WaoP0+N
-         BnwA==
-X-Gm-Message-State: ANhLgQ045GjZTzx4WNdX9c9ET6yl+NN+tcHM1/CbbwboDgBSWYdJ37Fa
-        BlBwV0/tbomougoHpk3zwGsOHexuzSUZe9vAsxA=
-X-Google-Smtp-Source: ADFU+vsEHGHrexnu9ajEOuztTkNdb4fV9udOvVmtFGq+NVjQuWlQ8XfZ3prQYZRqoV0QXCYAc0BynI/yrz09GLW65GA=
-X-Received: by 2002:a5d:61c9:: with SMTP id q9mr13587880wrv.164.1584047781214;
- Thu, 12 Mar 2020 14:16:21 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=RLLdpBX2XKQXFbUwZ31dgJPGrBdnYXHSYA1R5S4vBIc=;
+        b=SRmWCOL2iQNNUxPy2hf2j+VZGegLW+kK+IqqiwoN1QnLNLdqdiTJSymEvDfrkm9CHm
+         2ku3ORsL039ygO0TYcjNcRREHi5419TdiFbYVSfuRrVnWeJszskoRfuUrn8F7tl9ft1U
+         U2QzpBK25gV/yzWWGmvMKPa6w3KOOKOGHWogS0dlBbvukyZB1KvMIM+NKGlXxNZ2s4ci
+         sjutDroswiwr7/+KZ31KNeHwgNeMh2JtrOeh3dwOTaGnOM5dGiHiqLAZkXtKUqAJF54b
+         zto3EB+tg7LC2gm1xgfO/0mVaxlW87s6m52iR6Po//Xk1E/ZFoB/EpPZBJVSQlkCHenr
+         GSvA==
+X-Gm-Message-State: ANhLgQ3t0zTn3FmgYiOIfbZ2Qr43273JH6aKFcip2lU1b4bM/QzM4KE6
+        JDEggaQ0gduEb4yKWE83GdY=
+X-Google-Smtp-Source: ADFU+vv/ttLvSy9SVHIvSLeCKLXPTxanYEzI1C0Ul5P0Gxcc0wCMfp5jYyJrRDuefnvRh9cWb5Ab0g==
+X-Received: by 2002:a05:620a:943:: with SMTP id w3mr10149142qkw.85.1584047857109;
+        Thu, 12 Mar 2020 14:17:37 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::25ed])
+        by smtp.gmail.com with ESMTPSA id q142sm8396730qke.45.2020.03.12.14.17.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 14:17:36 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 17:17:35 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     gregkh@linuxfoundation.org, Daniel Xu <dxu@dxuuu.xyz>
+Cc:     cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
+        viro@zeniv.linux.org.uk, shakeelb@google.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v3 0/4] Support user xattrs in cgroupfs
+Message-ID: <20200312211735.GA1967398@mtj.thefacebook.com>
+References: <20200312200317.31736-1-dxu@dxuuu.xyz>
 MIME-Version: 1.0
-References: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
- <20200210095817.13226-5-daniel.baluta@oss.nxp.com> <20200219221422.GA32379@bogus>
-In-Reply-To: <20200219221422.GA32379@bogus>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 12 Mar 2020 23:16:09 +0200
-Message-ID: <CAEnQRZA6PEhfO0y5xWvAJZcK784n_2FXgDgYAfdDFUa2Osj7XQ@mail.gmail.com>
-Subject: Re: [RESEND 4/4] dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
-To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312200317.31736-1-dxu@dxuuu.xyz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:15 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, 10 Feb 2020 11:58:17 +0200, Daniel Baluta wrote:
-> > From: Paul Olaru <paul.olaru@nxp.com>
-> >
-> > This is the same DSP from the hardware point of view, but it gets a
-> > different compatible string due to usage in a separate platform.
-> >
-> > Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > ---
-> >  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
->
-> Acked-by: Rob Herring <robh@kernel.org>
+Hello,
 
-Hi Rob,
+Daniel, the patchset looks good to me. Thanks a lot for working on
+this.
 
-Who should take this patch? Mark applied first 3 patches in the series.
+Greg, provided that there aren't further objections, how do you wanna
+route the patches? I'd be happy to take them through cgroup tree but
+any tree is fine by me.
+
+Thanks.
+
+-- 
+tejun
