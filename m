@@ -2,177 +2,124 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B256C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4018EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC31206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B811206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="O1IP2r4N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xdfkgIKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgCLQup (ORCPT
+        id S1726437AbgCLQym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:50:45 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:56279 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLQuo (ORCPT
+        Thu, 12 Mar 2020 12:54:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39459 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgCLQyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:50:44 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1A69122FAC;
-        Thu, 12 Mar 2020 17:50:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584031841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kjJ10yaE4xOITwa0lcGngsQWRZEzeFLVFpTKECi5fjM=;
-        b=O1IP2r4NgRR8jB5FfvAbMpoq+5dm1oyxRXXBswapjXuY8YadbpB9YjHm64TjJieI0e66TR
-        QyczEjlcMl9E5JR1cfxQCLPfQ6bb4cjq4WB7y2/0sykEI5cAdeOQgqHiXSEnE1Rtx/TKFv
-        Ew4c3ToeJGp+bFBbOTxgIAllCSdA4lA=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Mar 2020 17:50:40 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: ls1028a: disable the felix switch by
- default
-In-Reply-To: <20200312164320.22349-2-michael@walle.cc>
-References: <20200312164320.22349-1-michael@walle.cc>
- <20200312164320.22349-2-michael@walle.cc>
-Message-ID: <5c06000e9ca893cdf431f29618428630@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 1A69122FAC
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email];
-         RCPT_COUNT_TWELVE(0.00)[13];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[davemloft.net,gmail.com,lunn.ch,nxp.com,kernel.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Thu, 12 Mar 2020 12:54:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f7so7151880wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=SArDM61DxsV/GfIWell/Cxt1WwRsKAiACjdjeXTddrQ=;
+        b=xdfkgIKDq/iyo0jVzHfWYkFQBzAhD+amF2xVuFZiZuPFBLkNKlPqzVR/U4w6ISbDy1
+         34r7Max0IjBk7BZbBcrlubWi4PBD4s2cJ54a9tHl+X9eb+SLAiKZFIApKq9q7Eh3PjeU
+         dWmyrehxec3cI3q2IhUjBgTf0oQqxWr+jvgHI+XUM5rz104CVwxX363QqpEHhRRegATb
+         37YRG45gRy5fMwn4BNhGSwEfocGasGpwFCfFsSe7sgs87+l1KUbeZgPzul+244z+5WOK
+         oT3MnAXNwMSpwMRG1s4OJhRMGQY/HBEBvoWPzIP4TGJHbph/UU3CFy9c1YW/CJ3Rm/uo
+         O8Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SArDM61DxsV/GfIWell/Cxt1WwRsKAiACjdjeXTddrQ=;
+        b=rmivPA+NwpoX/a09HaDVvh7q0iemocNG8UjwUbgjSkd2NkGHfQ1++557UVL00L/hHx
+         O/S30dE7e4QJURYfQgwXYP7eFEATIZnPfd/yBUJEgxoFWkYTPPDCXH2HsFxbtQ2HhpzV
+         pzIDJUN/cWgrA6tpdketUx5un6UzwMVaoa/TVlwJXTMGWqi/mY5YGpjKOeIrNLXZKs3t
+         WwSnM/4bcsL2g6AysucWhmEwPa37t2MK6GGAY16YovrR7YnQ2Fud64H0I68x3Ap/h6We
+         4rdsey8qvOEvVlC464CV/yb71AO2U2G/LkqESimm+pvKDWM/Ai7LwY/1VwpxeKZDk/x/
+         bEqA==
+X-Gm-Message-State: ANhLgQ1sxkfZfG6ZlL6OwKBXxDkVcvM5QwYMH64FgwLS8GKZFEWf6Z45
+        3HnOasj8Fw7V9AC6s6Ah/CQx2w==
+X-Google-Smtp-Source: ADFU+vvO/mQyWf1rzzDFXOfoL87wwi34LMOyqMTw2r+lLghq5vklIPIotAJ6X2CWp3yj5KpPIpUm0w==
+X-Received: by 2002:a7b:c3d1:: with SMTP id t17mr5649753wmj.27.1584032077771;
+        Thu, 12 Mar 2020 09:54:37 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:e531:1d0b:d2d6:94d6])
+        by smtp.gmail.com with ESMTPSA id t81sm12818786wmb.15.2020.03.12.09.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 09:54:36 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/fair: improve spreading of utilization
+Date:   Thu, 12 Mar 2020 17:54:29 +0100
+Message-Id: <20200312165429.990-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-12 17:43, schrieb Michael Walle:
-> Disable the felix switch by default and enable it per board which are
-> actually using it.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+During load_balancing, a group with spare capacity will try to pull some
+utilizations from an overloaded group. In such case, the load balance
+looks for the runqueue with the highest utilization. Nevertheless, it
+should also ensure that there are some pending tasks to pull otherwise
+the load balance will fail to pull a task and the spread of the load will
+be delayed.
 
-I forgot to mention that this patch depends on the following series:
-   
-https://lore.kernel.org/linux-devicetree/20200311074929.19569-1-michael@walle.cc/
+This situation is quite transient but it's possible to highlight the
+effect with a short run of sysbench test so the time to spread task impacts
+the global result significantly.
 
-Sorry,
--michael
+Below are the average results for 15 iterations on an arm64 octo core:
+sysbench --test=cpu --num-threads=8  --max-requests=1000 run
 
-> ---
->  .../boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts  | 4 ++++
->  .../boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts      | 4 ++++
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts             | 4 ++++
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi                | 3 ++-
->  4 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git
-> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> index a83a176cf18a..d4ca12b140b4 100644
-> --- 
-> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> +++ 
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> @@ -63,6 +63,10 @@
->  	};
->  };
-> 
-> +&mscc_felix {
-> +	status = "okay";
-> +};
-> +
->  &mscc_felix_port0 {
->  	label = "swp0";
->  	managed = "in-band-status";
-> diff --git
-> a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
-> index 0a34ff682027..901b5b161def 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
-> @@ -48,6 +48,10 @@
->  	status = "okay";
->  };
-> 
-> +&mscc_felix {
-> +	status = "okay";
-> +};
-> +
->  &mscc_felix_port0 {
->  	label = "gbe0";
->  	phy-handle = <&phy0>;
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index 0d27b5667b8c..8294d364112e 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -228,6 +228,10 @@
->  	status = "okay";
->  };
-> 
-> +&mscc_felix {
-> +	status = "okay";
-> +};
-> +
->  &mscc_felix_port0 {
->  	label = "swp0";
->  	managed = "in-band-status";
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index c09279379723..70a10268bb83 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -933,10 +933,11 @@
->  				fsl,extts-fifo;
->  			};
-> 
-> -			ethernet-switch@0,5 {
-> +			mscc_felix: ethernet-switch@0,5 {
->  				reg = <0x000500 0 0 0 0>;
->  				/* IEP INT_B */
->  				interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> 
->  				ports {
->  					#address-cells = <1>;
+                           tip/sched/core  +patchset
+total time:                172ms           158ms
+per-request statistics:
+         avg:                1.337ms         1.244ms
+         max:               21.191ms        10.753ms
+
+The average max doesn't fully reflect the wide spread of the value which
+ranges from 1.350ms to more than 41ms for the tip/sched/core and from
+1.350ms to 21ms with the patch.
+
+Other factors like waiting for an idle load balance or cache hotness
+can delay the spreading of the tasks which explains why we can still
+have up to 21ms with the patch.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 3c8a379c357e..97a0307312d9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9025,6 +9025,14 @@ static struct rq *find_busiest_queue(struct lb_env *env,
+ 		case migrate_util:
+ 			util = cpu_util(cpu_of(rq));
+ 
++			/*
++			 * Don't try to pull utilization from a CPU with one
++			 * running task. Whatever its utilization, we will fail
++			 * detach the task.
++			 */
++			if (nr_running <= 1)
++				continue;
++
+ 			if (busiest_util < util) {
+ 				busiest_util = util;
+ 				busiest = rq;
+-- 
+2.17.1
+
