@@ -2,121 +2,180 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAC820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:36:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBPx9XDF"
+	by mail.kernel.org (Postfix) with ESMTP id 4C13A20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgCLPgT (ORCPT
+        id S1727669AbgCLPh0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:36:19 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:40735 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgCLPgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:36:18 -0400
-Received: by mail-vk1-f193.google.com with SMTP id k63so1690994vka.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ItaK786plfh9KkQVyoZ6Tvgm7U7BspaorwTITRYkRFc=;
-        b=XBPx9XDFdcQlQtO0sfLYBzfLTIt6Rd5TvDrP9aLHPP7BKpYySz4vyjUciwhdNBl7iO
-         N419sJMtK1ssgutjTDScHGBRnEQb6lGqUb/0h6ICfwDS8hXb3z0MqmyGAXMz+KUyScZ1
-         1KNej7SBKjM5gd9WZVe+funDyMZ6vpSkDin6m041sG4KRhuiPfSPBLCle7Qow5Ot2+Qe
-         L8JGYeBgfnGo4Ggw6yzdws+D7wr1bkQRtXEGrrEPDT+3rHZbg6wAy/A5GHtQMfprQhz8
-         7twkRHcsQIHaLC/ayciTnH1iH3BFwJIn4+ae39J3ujZ/MT4/kyonZU4tnDmpAoUfX1pV
-         VSvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ItaK786plfh9KkQVyoZ6Tvgm7U7BspaorwTITRYkRFc=;
-        b=OF0Qr0eugHfA/3WaxxTkKU2cQExAP/g9vkFxrNm7Q9Q5wmgGWyFMK8wGwNiVNZD2ee
-         vW4Ohax46sAnakkvDklv1TLsB0Uv51K13ufOC81YB6qq59aOh5yZXXoT8liN/82fsVOm
-         Q0Mysw0WYSI3r+CuUJ3RkXoqsoZZX3ZSFrjlEs9hZkMrxLe0DZcIpAvkaFz7wefciJ7x
-         0JdAbjP+RQqcsz8MuDwu73l5S6qJP6VUkVYLXRgXhgNbzyBqeUjEDqX+hM/1FnRaVte4
-         24byH8NhUIFmPcGezLR91gmTss45UJER4BFc2vTTubTLOiro96OnZHkAtSJhCMy9SqQf
-         vDkg==
-X-Gm-Message-State: ANhLgQ0Tce6br58lZdd7+pKgBfeVfcfctqjQkvnkoXpH3m/gwh+VLRBg
-        5+JPoZEy15P9VFMyP63+rUdTC8o2TyCzQ+gkU/8JfQ==
-X-Google-Smtp-Source: ADFU+vtp2YzztepF0ByqDCsdpx/wxjPTae7z5wkbFT4j3VYmnzNKQ+GMvxjgwUcAW74SJSoAJAcalE+p8TSApJMHn28=
-X-Received: by 2002:a1f:2947:: with SMTP id p68mr5727151vkp.43.1584027377545;
- Thu, 12 Mar 2020 08:36:17 -0700 (PDT)
+        Thu, 12 Mar 2020 11:37:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12758 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727240AbgCLPhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:37:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 08:37:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="415974688"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 08:37:24 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 12 Mar 2020 08:37:24 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 12 Mar 2020 08:37:07 -0700
+Received: from bgsmsx105.gar.corp.intel.com (10.223.43.197) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 12 Mar 2020 08:37:06 -0700
+Received: from BGSMSX107.gar.corp.intel.com ([169.254.9.15]) by
+ BGSMSX105.gar.corp.intel.com ([169.254.3.70]) with mapi id 14.03.0439.000;
+ Thu, 12 Mar 2020 21:07:04 +0530
+From:   "Laxminarayan Bharadiya, Pankaj" 
+        <pankaj.laxminarayan.bharadiya@intel.com>
+To:     =?iso-8859-1?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        "Lattannavar, Sameer" <sameer.lattannavar@intel.com>
+CC:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "tzimmermann@suse.de" <tzimmermann@suse.de>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>,
+        "Kunche, Kishore" <kishore.kunche@intel.com>
+Subject: RE: [RFC][PATCH 0/5] Introduce drm scaling filter property
+Thread-Topic: [RFC][PATCH 0/5] Introduce drm scaling filter property
+Thread-Index: AQHV+HctBjfB2kqX90uGdf9/VtAqI6hFFo+g
+Date:   Thu, 12 Mar 2020 15:37:03 +0000
+Message-ID: <E92BA18FDE0A5B43B7B3DA7FCA031286057B3798@BGSMSX107.gar.corp.intel.com>
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200312140434.GG13686@intel.com>
+In-Reply-To: <20200312140434.GG13686@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.223.10.10]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com>
- <CAPDyKFpAgk0uboGXdmA_m1-2=GK2oRXVv+97ZFFFAtT-ZZo4fw@mail.gmail.com> <7bf5bfb5-b07c-96d3-2c33-124085a36a65@nvidia.com>
-In-Reply-To: <7bf5bfb5-b07c-96d3-2c33-124085a36a65@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Mar 2020 16:35:41 +0100
-Message-ID: <CAPDyKFoJvaCj=wkV_ok=sLJK18ukf1UavCvDN-E_oFVkpwPbmw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific set_timeout callback
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bradley Bolen <bradleybolen@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Mar 2020 at 16:28, Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
->
->
-> On 3/12/20 6:08 AM, Ulf Hansson wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > -trimmed cc list
-> >
-> > On Thu, 12 Mar 2020 at 00:51, Sowjanya Komatineni
-> > <skomatineni@nvidia.com> wrote:
-> >> Tegra host supports HW busy detection and timeouts based on the
-> >> count programmed in SDHCI_TIMEOUT_CONTROL register and max busy
-> >> timeout it supports is 11s in finite busy wait mode.
-> >>
-> >> Some operations like SLEEP_AWAKE, ERASE and flush cache through
-> >> SWITCH commands take longer than 11s and Tegra host supports
-> >> infinite HW busy wait mode where HW waits forever till the card
-> >> is busy without HW timeout.
-> >>
-> >> This patch implements Tegra specific set_timeout sdhci_ops to allow
-> >> switching between finite and infinite HW busy detection wait modes
-> >> based on the device command expected operation time.
-> >>
-> >> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> > Applied for next, thanks!
-> >
-> > We should probably tag this for stable as well, don't you think?
-> >
-> > Kind regards
-> > Uffe
->
-> Yes, we need this for stable as well. As this is applied for next, looks
-> like can't re-send patch with tag.
->
-> Can you please help to add tag if you don't mind?
 
-Yes, I will amend the change to add the stable tag, no worries!
 
-Thanks for confirming!
+> -----Original Message-----
+> From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Sent: 12 March 2020 19:35
+> To: Laxminarayan Bharadiya, Pankaj
+> <pankaj.laxminarayan.bharadiya@intel.com>
+> Cc: jani.nikula@linux.intel.com; daniel@ffwll.ch; intel-
+> gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; airlied@linux.ie;
+> maarten.lankhorst@linux.intel.com; tzimmermann@suse.de;
+> mripard@kernel.org; mihail.atanassov@arm.com; linux-
+> kernel@vger.kernel.org; Nautiyal, Ankit K <ankit.k.nautiyal@intel.com>
+> Subject: Re: [RFC][PATCH 0/5] Introduce drm scaling filter property
+> 
+> On Tue, Feb 25, 2020 at 12:35:40PM +0530, Pankaj Bharadiya wrote:
+> > Integer scaling (IS) is a nearest-neighbor upscaling technique that
+> > simply scales up the existing pixels by an integer (i.e., whole
+> > number) multiplier. Nearest-neighbor (NN) interpolation works by
+> > filling in the missing color values in the upscaled image with that of
+> > the coordinate-mapped nearest source pixel value.
+> >
+> > Both IS and NN preserve the clarity of the original image. In
+> > contrast, traditional upscaling algorithms, such as bilinear or
+> > bicubic interpolation, result in blurry upscaled images because they
+> > employ interpolation techniques that smooth out the transition from
+> > one pixel to another.  Therefore, integer scaling is particularly
+> > useful for pixel art games that rely on sharp, blocky images to
+> > deliver their distinctive look.
+> >
+> > Many gaming communities have been asking for integer-mode scaling
+> > support, some links and background:
+> >
+> > https://software.intel.com/en-us/articles/integer-scaling-support-on-i
+> > ntel-graphics http://tanalin.com/en/articles/lossless-scaling/
+> > https://community.amd.com/thread/209107
+> > https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1002
+> > /feature-request-nonblurry-upscaling-at-integer-rat/
+> >
+> > This patch series -
+> >   - Introduces new scaling filter property to allow userspace to
+> >     select  the driver's default scaling filter or Nearest-neighbor(NN)
+> >     filter for scaling operations on crtc/plane.
+> >   - Implements and enable integer scaling for i915
+> >
+> > Userspace patch series link: TBD.
+> 
+> That needs to be done or this will go nowhere.
 
-[...]
+Yes, Sameer is working on enabling this feature in Kodi. 
+Sameer, please share link here once you post patches.
+ 
+Thanks,
+Pankaj
 
-Kind regards
-Uffe
+> 
+> >
+> > Thanks to Shashank for initiating this work. His initial RFC can be
+> > found here [1]
+> >
+> > [1] https://patchwork.freedesktop.org/patch/337082/
+> >
+> > Modifications done in this series -
+> >    - refactored code and incorporated initial review comments and
+> >      added 2 scaling filter types (default and NN) to begin with.
+> >    - added scaling filter property support for planes and new API
+> >      helpers for drivers to setup this property.
+> >    - rewrote code to enable integer scaling and NN filter for i915
+> >
+> >
+> > Pankaj Bharadiya (5):
+> >   drm: Introduce scaling filter property
+> >   drm/drm-kms.rst: Add Scaling filter property documentation
+> >   drm/i915: Enable scaling filter for plane and pipe
+> >   drm/i915: Introduce scaling filter related registers and bit fields.
+> >   drm/i915/display: Add Nearest-neighbor based integer scaling support
+> >
+> >  Documentation/gpu/drm-kms.rst                |   6 ++
+> >  drivers/gpu/drm/drm_atomic_uapi.c            |   8 ++
+> >  drivers/gpu/drm/drm_crtc.c                   |  16 +++
+> >  drivers/gpu/drm/drm_mode_config.c            |  13 +++
+> >  drivers/gpu/drm/drm_plane.c                  |  35 +++++++
+> >  drivers/gpu/drm/i915/display/intel_display.c | 100 ++++++++++++++++++-
+> >  drivers/gpu/drm/i915/display/intel_display.h |   2 +
+> >  drivers/gpu/drm/i915/display/intel_sprite.c  |  32 ++++--
+> >  drivers/gpu/drm/i915/i915_reg.h              |  21 ++++
+> >  include/drm/drm_crtc.h                       |  10 ++
+> >  include/drm/drm_mode_config.h                |   6 ++
+> >  include/drm/drm_plane.h                      |  14 +++
+> >  12 files changed, 252 insertions(+), 11 deletions(-)
+> >
+> > --
+> > 2.23.0
+> 
+> --
+> Ville Syrjälä
+> Intel
