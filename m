@@ -2,125 +2,126 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE33EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE49C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F1020674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="M0zd3UDi"
+	by mail.kernel.org (Postfix) with ESMTP id 73F3420716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584049954;
+	bh=xetrKM6LDYJ9gs1w1p1i3KvxcG9WdpkyTnxKOTfJ158=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xvWr/CTBk7nMrTZu+nkFDGRwsTyRxGBXrNjlguCRzgJPul/la0Sd+6LBglHlV/Myf
+	 W8Onz/ur+jqex/iGW7wQrZXZDRR49JXqlVnrX0kiqThQY4MU/x7e8A0+L1xEggs0kT
+	 XSvIDJ46iCv9nGnpZgHkBk5+gQO7SXxlneo6ZapM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgCLVtH (ORCPT
+        id S1726636AbgCLVwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:49:07 -0400
-Received: from hr2.samba.org ([144.76.82.148]:24712 "EHLO hr2.samba.org"
+        Thu, 12 Mar 2020 17:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgCLVtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:49:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-         s=42; h=Message-ID:Cc:To:From:Date;
-        bh=1JcRWJgIjBZEatikoz0G3mL9EJsdG0P/Ykm3OGVRQo4=; b=M0zd3UDimz2yegwwlZBWRu1Sjm
-        Hb2a9sq9I/B2kDBeJsob+VR2XNQaYH9Iy1mlh80tLPM12bcDfMTE7Vl1rQta5McDePT92ZD8iJVx9
-        4tIkUFiaXRuJxqXRY1b3LYV5TT9y0Y51MUhnzpAXCmeCh50oytdBZauYcQ24b2HFNK/RLcTAtOrD5
-        hTBFgTzdVQ0ofrJuWOVAaffympfy8PogEB8b5bMOrBCYsIUxsV32VOqKq22+55Ix0JZtWjbxJNRV1
-        6vDfCbps6fckISnbwkJA83CC45iVr8ot0VEw954sESPpX3S08kajgNhTB7NTflfsu+IYxtRNf86CY
-        b+xx302xd92v1CkKTYCFMBwqmCqn0RvpztruQ3/4/poqm41ia+R5OfQLbgustha/L4tkO0VQG5NXK
-        fyDcx1FGbGK/vnFmBQd79m7VBcS1nIU1N2SRWXJu2fLt8wJuxfBAzUQjf6/twU2w9n5Gnq5D+R541
-        DWEaB6FUBoQZBsoGn8v9YsSo;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_RSA_CHACHA20_POLY1305:256)
-        (Exim)
-        id 1jCVhO-0001fg-IM; Thu, 12 Mar 2020 21:49:02 +0000
-Date:   Thu, 12 Mar 2020 14:48:54 -0700
-From:   Jeremy Allison <jra@samba.org>
-To:     Stefan Metzmacher <metze@samba.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, jlayton@redhat.com,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph =?iso-8859-1?Q?B=F6hme?= <slow@samba.org>,
-        Volker Lendecke <vl@sernet.de>
-Subject: Re: [PATCH 01/14] VFS: Add additional RESOLVE_* flags [ver #18]
-Message-ID: <20200312214854.GA19247@jeremy-acer>
-Reply-To: Jeremy Allison <jra@samba.org>
-References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
- <158376245699.344135.7522994074747336376.stgit@warthog.procyon.org.uk>
- <20200310005549.adrn3yf4mbljc5f6@yavin>
- <CAHk-=wiEBNFJ0_riJnpuUXTO7+_HByVo-R3pGoB_84qv3LzHxA@mail.gmail.com>
- <580352.1583825105@warthog.procyon.org.uk>
- <CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com>
- <3d209e29-e73d-23a6-5c6f-0267b1e669b6@samba.org>
- <CAHk-=wgu3Wo_xcjXnwski7JZTwQFaMmKD0hoTZ=hqQv3-YojSg@mail.gmail.com>
- <8d24e9f6-8e90-96bb-6e98-035127af0327@samba.org>
+        id S1726513AbgCLVwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:52:33 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4B37206FA;
+        Thu, 12 Mar 2020 21:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584049952;
+        bh=xetrKM6LDYJ9gs1w1p1i3KvxcG9WdpkyTnxKOTfJ158=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iZDruLD/esx01jsUaVmBEENE8s1u6DrLkuszVaBGC2W54LhJI9AiseKPc1pJfacrE
+         /PZ5njJR4xDh9yofvVSEWRDLrJNTSGIB/O145PIkSJOpjW9gbsS+rLI2eVSWENjm67
+         8pV7sF+5vdHXa2d42HQahTtTvprQ3Ei21Ytsgunk=
+Date:   Thu, 12 Mar 2020 16:52:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200312215230.GA195113@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8d24e9f6-8e90-96bb-6e98-035127af0327@samba.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f07d850f-473f-6fa0-81f3-b38a104a5e86@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:11:09PM +0100, Stefan Metzmacher wrote:
-> Am 12.03.20 um 17:24 schrieb Linus Torvalds:
-> > On Thu, Mar 12, 2020 at 2:08 AM Stefan Metzmacher <metze@samba.org> wrote:
-> >>
-> >> The whole discussion was triggered by the introduction of a completely
-> >> new fsinfo() call:
-> >>
-> >> Would you propose to have 'at_flags' and 'resolve_flags' passed in here?
+On Thu, Mar 12, 2020 at 02:29:58PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Hi,
+> 
+> On 3/12/20 2:02 PM, Austin.Bolen@dell.com wrote:
+> > On 3/12/2020 2:53 PM, Bjorn Helgaas wrote:
+> > > On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > > On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
+> > > > > Is any synchronization needed here between the EDR path and the
+> > > > > hotplug/enumeration path?
+> > > > If we want to follow the implementation note step by step (in
+> > > > sequence) then we need some synchronization between EDR path and
+> > > > enumeration path. But if it's OK to achieve the same end result by
+> > > > following steps out of sequence then we don't need to create any
+> > > > dependency between EDR and enumeration paths. Currently we follow
+> > > > the latter approach.
+> > > What would the synchronization look like?
+> > > 
+> > > Ideally I think it would be better to follow the order in the
+> > > flowchart if it's not too onerous.  That will make the code easier to
+> > > understand.  The current situation with this dependency on pciehp and
+> > > what it will do leaves a lot of things implicit.
+> > > 
+> > > What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+> > > 
+> > > IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
+> > > unbinds the drivers and removes the devices.  If that doesn't happen,
+> > > and Linux clears the DPC trigger to bring the link back up, will those
+> > > drivers try to operate uninitialized devices?
+> > > 
+> > > Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
+> >   From one of Sathya's other responses:
 > > 
-> > Yes, I think that would be the way to go.
-> 
-> Ok, that's also fine for me:-)
-> 
-> >>> If we need linkat2() and friends, so be it. Do we?
-> >>
-> >> Yes, I'm going to propose something like this, as it would make the life
-> >> much easier for Samba to have the new features available on all path
-> >> based syscalls.
+> > "If hotplug is not supported then there is support to enumerate
+> > devices via polling  or ACPI events. But a point to note
+> > here is, enumeration path is independent of error handler path, and
+> > hence there is no explicit trigger or event from error handler path
+> > to enumeration path to kick start the enumeration."
 > > 
-> > Will samba actually use them? I think we've had extensions before that
-> > weren't worth the non-portability pain?
+> > The EDR standard doesn't have any dependency on hot-plug. It sounds like
+> > in the current implementation there's some manual intervention needed if
+> > hot-plug is not supported?
+> No, there is no need for manual intervention even in non hotplug
+> cases.
 > 
-> Yes, we're currently moving to the portable *at() calls as a start.
-> And we already make use of Linux only feature for performance reasons
-> in other places. Having the new resolve flags will make it possible to
-> move some of the performance intensive work into non-linux specific
-> modules as fallback.
-> 
-> I hope that we'll use most of this through io_uring in the end,
-> that's the reason Jens added the IORING_REGISTER_PERSONALITY feature
-> used for IORING_OP_OPENAT2.
-> 
-> > But yes, if we have a major package like samba use it, then by all
-> > means let's add linkat2(). How many things are we talking about? We
-> > have a number of system calls that do *not* take flags, but do do
-> > pathname walking. I'm thinking things like "mkdirat()"?)
-> 
-> I haven't looked them up in detail yet.
-> Jeremy can you provide a list?
+> For ACPI events case, we would rely on ACPI event to kick start the
+> enumeration.  And for polling model, there is an independent polling
+> thread which will kick start the enumeration.
 
-Fixing the flags argument on fchmodat() to actually *implement*
-AT_SYMLINK_NOFOLLOW would be a good start :-).
+I'm guessing the ACPI case works via hotplug_is_native(): if
+CONFIG_HOTPLUG_PCI_PCIE=n, pciehp_is_native() returns false, and
+acpiphp manages hotplug.
 
-As for the syscalls that don't have
-flags I'm thinking of the things like:
+What if CONFIG_HOTPLUG_PCI_ACPI=n also?
 
-getxattr/setxattr/removexattr just off the top of my head.
+Where is the polling thread?
 
-Jeremy.
+> Above both enumeration models are totally independent and has
+> no dependency on error handler thread.
+
+I see they're currently independent from the EDR thread, but it's not
+clear to me that there's no dependency.  After all, both EDR and the
+hotplug paths are operating on the same devices at roughly the same
+time, so we should have some story about what keeps them from getting
+in each other's way.
+
+> We will decide which model to use based on hardware capability and
+> _OSC negotiation or kernel command line option.
