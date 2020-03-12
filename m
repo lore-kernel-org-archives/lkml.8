@@ -2,132 +2,158 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53D5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3213C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2DE20734
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C13A20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="OSD8Lyx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbgCLDPD (ORCPT
+        id S2387732AbgCLDRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:15:03 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:59838 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387453AbgCLDPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:15:03 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07444842|-1;CH=green;DM=||false|;DS=CONTINUE|ham_regular_dialog|0.00684787-0.000191967-0.99296;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhiwei_liu@c-sky.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.H-3cCKL_1583982869;
-Received: from 172.16.31.150(mailfrom:zhiwei_liu@c-sky.com fp:SMTPD_---.H-3cCKL_1583982869)
-          by smtp.aliyun-inc.com(10.147.42.197);
-          Thu, 12 Mar 2020 11:14:30 +0800
-Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     guoren@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Anup.Patel@wdc.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Dave Martin <Dave.Martin@arm.com>, Alistair.Francis@wdc.com,
-        wenmeng_zhang <wenmeng_zhang@c-sky.com>
-References: <20200308094954.13258-1-guoren@kernel.org>
- <CAHCEeh+XYD3uVmaQRGpY=VGxpO9hzMeKasNmAojhkZe9PJ9Lug@mail.gmail.com>
- <95e3bba4-65c0-8991-9523-c16977f6350f@c-sky.com>
- <CAHCEehK0rgBpEzrWar1UTWJoOz=OQi18iw4Y+v3z5Hi=7JCEWw@mail.gmail.com>
- <CAHCEehLq5f+DGusL0T4ZUuJ2hTRhSyLSGRpKHhq5b4J3nXfBHg@mail.gmail.com>
-From:   LIU Zhiwei <zhiwei_liu@c-sky.com>
-Message-ID: <1da6bf25-431b-7b69-0b09-66dae4ad18ca@c-sky.com>
-Date:   Thu, 12 Mar 2020 11:14:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 11 Mar 2020 23:17:15 -0400
+Received: from ozlabs.org ([203.11.71.1]:57597 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387453AbgCLDRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 23:17:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48dDX763dwz9sPR;
+        Thu, 12 Mar 2020 14:17:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1583983033;
+        bh=NYSOgErceRZJLp/xhjanawo/XQMAhfY+yiI337uW+Qk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=OSD8Lyx3xrxhWAEI+wgWyFt6E/eO4ACheAw4shLgaOJKkqc+Z/pfVN7Ehxkv+w4yH
+         KiWqQYV0mxii7ZiLPQn5dqs8DXSML59RcWEDJqop/j2OSfcfxUoIoFoHZBqPx084+Y
+         /weP1HgNFxOYNoVnTO7JT9CxQb8zv1gAXZA8YCV8OsWgocTc+uj3cL9eX9yNfekE8f
+         Rrwh1sKZU8N0xC8PHFZOddHIRY8zZlziOoQMB0TOhOJpv0b8mW913Ttes0q59JebZ2
+         G7Wzi2FrKuLuXKyNMnuqDEUSDiclYKun0MiEl7+DOgnyFPBlsBX58JVL9I714kdMI4
+         mvRU/zLWRN5og==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Paul Mackerras <paulus@samba.org>, vishal.l.verma@intel.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 1/5] mm/memremap_pages: Introduce memremap_compat_align()
+In-Reply-To: <158328768844.2223916.3587427265166021149.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158328768294.2223916.16551505954326988623.stgit@dwillia2-desk3.amr.corp.intel.com> <158328768844.2223916.3587427265166021149.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 12 Mar 2020 14:17:09 +1100
+Message-ID: <87o8t2i7nu.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <CAHCEehLq5f+DGusL0T4ZUuJ2hTRhSyLSGRpKHhq5b4J3nXfBHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/3/10 17:19, Greentime Hu wrote:
-> On Tue, Mar 10, 2020 at 4:54 PM Greentime Hu <greentime.hu@sifive.com> wrote:
->> On Mon, Mar 9, 2020 at 6:27 PM LIU Zhiwei <zhiwei_liu@c-sky.com> wrote:
->>> On 2020/3/9 11:41, Greentime Hu wrote:
->>>> On Sun, Mar 8, 2020 at 5:50 PM <guoren@kernel.org> wrote:
->>>>> From: Guo Ren <guoren@linux.alibaba.com>
->>>>>
->>>>> The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
->>>>> 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
->>>>>
->>>>> The patch implement basic context switch, sigcontext save/restore and
->>>>> ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
->>>>> is implemented. We need to discuss about vlen-size for libc sigcontext and
->>>>> ptrace (the maximum size of vlen is unlimited in spec).
->>>>>
->>>>> Puzzle:
->>>>> Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
->>>>> before, and riscv also met vlen size problem. Let's discuss the common issue
->>>>> for all architectures and we need a better solution for unlimited vlen.
->>>>>
->>>>> Any help are welcomed :)
->>>>>
->>>>>    1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
->>>> Hi Guo,
->>>>
->>>> Thanks for your patch.
->>>> It seems the qemu repo doesn't have this branch?
->>> Hi Greentime,
->>>
->>> It's a promise from me. Now it's ready.  You can turn on vector by
->>> "qemu-system-riscv64 -cpu rv64,v=true,vext_spec=v0.7.1".
->>>
->>> Zhiwei
->>>
->>>
->> Hi Zhiwei,
->>
->> Thank you, I see the branch in the repo now. I will give it a try and
->> let you know if I have any problem. :)
-> Hi Zhiwei & Guo,
+Dan Williams <dan.j.williams@intel.com> writes:
+> The "sub-section memory hotplug" facility allows memremap_pages() users
+> like libnvdimm to compensate for hardware platforms like x86 that have a
+> section size larger than their hardware memory mapping granularity.  The
+> compensation that sub-section support affords is being tolerant of
+> physical memory resources shifting by units smaller (64MiB on x86) than
+> the memory-hotplug section size (128 MiB). Where the platform
+> physical-memory mapping granularity is limited by the number and
+> capability of address-decode-registers in the memory controller.
 >
-> It seems current version only support v0.7.1 in qemu but this patchset
-> is verified in qemu too and it is based on 0.8.
-> Would you please provide the qemu with 0.8 vector spec supported?
-Hi Greentime,
-vector-upstream-v3 only supports v0.7.1. It  is under reviewed in QEMU 
-community.
-Maybe I will also support v0.8 after it is merged.
-
-As Guo Ren said, the kernel patch set works both  for v0.7.1 and v0.8,
-which only uses the common instructions and CSRs.
-> or
-> Did I miss something?
+> While the sub-section support allows memremap_pages() to operate on
+> sub-section (2MiB) granularity, the Power architecture may still
+> require 16MiB alignment on "!radix_enabled()" platforms.
 >
-> 489             if (cpu->cfg.vext_spec) {
-> 490                 if (!g_strcmp0(cpu->cfg.vext_spec, "v0.7.1")) {
-> 491                     vext_version = VEXT_VERSION_0_07_1;
-> 492                 } else {
-> 493                     error_setg(errp,
-> 494                            "Unsupported vector spec version '%s'",
-> 495                            cpu->cfg.vext_spec);
-> 496                     return;
-> 497                 }
-> 498             }
+> In order for libnvdimm to be able to detect and manage this per-arch
+> limitation, introduce memremap_compat_align() as a common minimum
+> alignment across all driver-facing memory-mapping interfaces, and let
+> Power override it to 16MiB in the "!radix_enabled()" case.
 >
-> By the way, can I specify vlen in Qemu?
-Yes, you can specify vlen through QEMU command line like
-“-cpu rv64,v=true,vext_spec=v0.7.1,vlen=256”
+> The assumption / requirement for 16MiB to be a viable
+> memremap_compat_align() value is that Power does not have platforms
+> where its equivalent of address-decode-registers never hardware remaps a
+> persistent memory resource on smaller than 16MiB boundaries. Note that I
+> tried my best to not add a new Kconfig symbol, but header include
+> entanglements defeated the #ifndef memremap_compat_align design pattern
+> and the need to export it defeats the __weak design pattern for arch
+> overrides.
+>
+> Based on an initial patch by Aneesh.
+>
+> Link: http://lore.kernel.org/r/CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com
+> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Reported-by: Jeff Moyer <jmoyer@redhat.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  arch/powerpc/Kconfig      |    1 +
+>  arch/powerpc/mm/ioremap.c |   21 +++++++++++++++++++++
+>  drivers/nvdimm/pfn_devs.c |    2 +-
+>  include/linux/memremap.h  |    8 ++++++++
+>  include/linux/mmzone.h    |    1 +
+>  lib/Kconfig               |    3 +++
+>  mm/memremap.c             |   23 +++++++++++++++++++++++
+>  7 files changed, 58 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 497b7d0b2d7e..e6ffe905e2b9 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -122,6 +122,7 @@ config PPC
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+>  	select ARCH_HAS_KCOV
+>  	select ARCH_HAS_HUGEPD			if HUGETLB_PAGE
+> +	select ARCH_HAS_MEMREMAP_COMPAT_ALIGN
+>  	select ARCH_HAS_MMIOWB			if PPC64
+>  	select ARCH_HAS_PHYS_TO_DMA
+>  	select ARCH_HAS_PMEM_API
+> diff --git a/arch/powerpc/mm/ioremap.c b/arch/powerpc/mm/ioremap.c
+> index fc669643ce6a..b1a0aebe8c48 100644
+> --- a/arch/powerpc/mm/ioremap.c
+> +++ b/arch/powerpc/mm/ioremap.c
+> @@ -2,6 +2,7 @@
+>  
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+> +#include <linux/mmzone.h>
+>  #include <linux/vmalloc.h>
+>  #include <asm/io-workarounds.h>
+>  
+> @@ -97,3 +98,23 @@ void __iomem *do_ioremap(phys_addr_t pa, phys_addr_t offset, unsigned long size,
+>  
+>  	return NULL;
+>  }
+> +
+> +#ifdef CONFIG_ZONE_DEVICE
+> +/*
+> + * Override the generic version in mm/memremap.c.
+> + *
+> + * With hash translation, the direct-map range is mapped with just one
+> + * page size selected by htab_init_page_sizes(). Consult
+> + * mmu_psize_defs[] to determine the minimum page size alignment.
+> +*/
+> +unsigned long memremap_compat_align(void)
+> +{
+> +	unsigned int shift = mmu_psize_defs[mmu_linear_psize].shift;
+> +
+> +	if (radix_enabled())
+> +		return SUBSECTION_SIZE;
+> +	return max(SUBSECTION_SIZE, 1UL << shift);
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(memremap_compat_align);
+> +#endif
 
-Currently , vlen supports up to 512 bits, with a default value 128 bits.
+LGTM.
 
-> Thank you. :)
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
+cheers
