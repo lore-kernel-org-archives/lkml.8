@@ -2,142 +2,189 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E30C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E72C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E87820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3262067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eeMbBp12"
+	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="MyXtIA+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgCLO5s (ORCPT
+        id S1727649AbgCLPAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:57:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56384 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727241AbgCLO5r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:57:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584025066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y9BiE/HHtrwYLPDrEYfMy85B46eYpg1Qlp9PySkGqkw=;
-        b=eeMbBp12T7pIGQBtRO+AQlKzJehT6KOjtYHBTTQa3ePG5YKwMMfZpnEMTcjgMFeZxNE6no
-        hgpY6KSn6VRsf7ACuCKmAK24jw/idlOs8Hzki3dyD7KlVCsD6kNco/3VQBK+joJJqBVBF8
-        /25eBpcd4Z1yHZ7/3lKG3w6Jjz8yH8w=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-zmg3j9h2PHyF1X7J4fnFmw-1; Thu, 12 Mar 2020 10:57:44 -0400
-X-MC-Unique: zmg3j9h2PHyF1X7J4fnFmw-1
-Received: by mail-wr1-f71.google.com with SMTP id z13so2741887wrv.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:57:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y9BiE/HHtrwYLPDrEYfMy85B46eYpg1Qlp9PySkGqkw=;
-        b=KCip+uDmGtQMuMsoCHSpfneDPpFVOhDGVIMuWl5LAJXgayuG5CAENvb3AcEqXMXC1N
-         CMw6kqjbaI0WMq/04sW2DrRTf/IRFRdfIUrTrEJ0GrlG4glx9UBNqTZXV/Ek2VfZ383s
-         +7eqGt1/P49KT7/OwnY2pzIvuRDJOZw4NOugIHDH5fALkcn0DcU05tRKfoGS1ZaNJ/3e
-         0ULitDt0lncER9+8aLcarqtxIlqqH5z7dd3x9RrMqAD0RzqCAdoplfDzCL/7EvBJ1FO+
-         fBnK0EQ+cFs5JjX+YvFteHXPMW3d7pkXsNL45nuo+SIbghXZkGDR8Pj3DOa8UnF2qOo+
-         2Tgw==
-X-Gm-Message-State: ANhLgQ3g3F0JimUhCd05PvEN+GiJQJaad6i7i5HzyefhQw+VoH/ndCvR
-        ZHUXd8el/sn26M2CjOtmME0CuEzN5Cd0GVU1cZO+4R2Xh7BMIjCbVI+kL5663brA/QsbSqiLS9G
-        5tMd36SAx2B3voj6K5qokfzSK
-X-Received: by 2002:adf:e5d2:: with SMTP id a18mr3697470wrn.334.1584025063153;
-        Thu, 12 Mar 2020 07:57:43 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vutKOKjAYrJX87oG5W63GUQb+emBV4G27C2zp5/6DHbAwJ9kGIiD1GDP0LQWNnKHvjJ4ObyCg==
-X-Received: by 2002:adf:e5d2:: with SMTP id a18mr3697448wrn.334.1584025062935;
-        Thu, 12 Mar 2020 07:57:42 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id d1sm13161470wrw.52.2020.03.12.07.57.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:57:42 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
- purgatory.ro has missing symbols
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200311214601.18141-1-hdegoede@redhat.com>
- <20200311214601.18141-3-hdegoede@redhat.com>
- <20200312001006.GA170175@rani.riverdale.lan>
- <3d58e77d-41e5-7927-fe84-4c058015e469@redhat.com>
- <20200312114225.GB15619@zn.tnic>
- <899f366e-385d-bafa-9051-4e93dc9ba321@redhat.com>
- <20200312125032.GC15619@zn.tnic>
- <8af51d90-27fa-6d2a-2159-ef0a9089453a@redhat.com>
- <20200312142553.GF15619@zn.tnic>
- <94c6f903-7dca-503e-aca7-1ee4641bcdac@redhat.com>
- <20200312144922.GG15619@zn.tnic>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <69daa857-4dd0-730d-cebd-45c37cc5f66a@redhat.com>
-Date:   Thu, 12 Mar 2020 15:57:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200312144922.GG15619@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 12 Mar 2020 11:00:41 -0400
+Received: from mail-eopbgr1310043.outbound.protection.outlook.com ([40.107.131.43]:43856
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727512AbgCLPAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:00:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mEn2npwSui5Ge2zatyc15N3+LkqvSVRlR2q9NioAXSeaZw05wWZy1b18Akt4e0o9xmx3M1mnS19hUcQTIFgCJ4oSYvdUN8xjJmSmlxJuN430QMv/d4f8P3v+93hG6Cj7qdfN0+CL/KlDHUOn/G95ayTeyLv3kygVb4Mpo94KmsXHPlw2w9nHLgN1ddrP4bijlrl8mM0q/7/Z4nBN7yb/AHqAPSCCXFhZLA2OpKe9KrzE0Pm46AA4mjJH9iE57PuyqSAAPuuyv4DL/oijy1LG3KKXm2gdYkaniKbge/KtqiU+YSb9ZhsaEEop/ZQw+Nn/9eK4337lanuBZcuN3lTUNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aaRC0Dcl9Rpe7zrJyfbuU6j122qFtotn0Scx+r5MAUk=;
+ b=WrPoz+SV4dC6cxt1OHKDUZrCuFwrZV/MXB1vAz3JnFfBdU0F3BUMHPvVtD2ckYA5XT4PXGiEVxrocyGy9EAdtO7RQKroEVNBC1ICw1o/LoEhjavTQV0iYJenV86MYZX5QBNGQyTa9CBraMNl+aiFJCGlixDsd61l7qHNSwy77I0NABxbfEx20vBMOs7TQFUHDELU/WFsQMP1pz0oE+tzSDZw8r3I1/Inrg/EVn3ZCqpux5XfBZBUfnv+kXDHcs/0MA0fjtQ5mkX/dAUg7XTbkG34uTc54BytnahipxVwdncJ2AYtnT8NDogfqpf9dSy15GngfdCs889HVBhAkleoPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=teo-en-ming-corp.com; dmarc=pass action=none
+ header.from=teo-en-ming-corp.com; dkim=pass header.d=teo-en-ming-corp.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=teoenmingcorp.onmicrosoft.com; s=selector2-teoenmingcorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aaRC0Dcl9Rpe7zrJyfbuU6j122qFtotn0Scx+r5MAUk=;
+ b=MyXtIA+6UZUpgmLcHAdBBhN/aBtQ1wwgKSlyUyG32HGFRYhwwcyyEXw3xH7gvbrRAN5dqAo0r4KEn947KNFcWZ4PrrVdrL8JLqH2m0tzfeVasOXSTpRb7WCUS1RDajs3poWrtGIX/SjhRxkPCpgrGPhHTjATAv14fu7uigmfdNg=
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
+ SG2PR01MB2427.apcprd01.prod.exchangelabs.com (20.177.82.209) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Thu, 12 Mar 2020 14:59:46 +0000
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::684a:9e0b:7e12:18bd]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::684a:9e0b:7e12:18bd%4]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
+ 14:59:46 +0000
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+Subject: Announcing Teo En Ming Linux 2020.03 (FINAL)
+Thread-Topic: Announcing Teo En Ming Linux 2020.03 (FINAL)
+Thread-Index: AQHV+H7Qnyp1oQ0wikGFEnyap5hYAQ==
+Date:   Thu, 12 Mar 2020 14:59:45 +0000
+Message-ID: <SG2PR01MB21413EA3DF193D1115DD605987FD0@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ceo@teo-en-ming-corp.com; 
+x-originating-ip: [118.189.211.120]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f3e727ab-e889-477d-cff9-08d7c696010d
+x-ms-traffictypediagnostic: SG2PR01MB2427:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2PR01MB2427BFA24E66D1FC68D7EC1087FD0@SG2PR01MB2427.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0340850FCD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(39830400003)(346002)(136003)(199004)(508600001)(8676002)(316002)(86362001)(66946007)(66446008)(66556008)(64756008)(26005)(186003)(76116006)(66476007)(6506007)(81166006)(71200400001)(7696005)(2906002)(52536014)(8936002)(9686003)(81156014)(4326008)(966005)(6916009)(107886003)(33656002)(5660300002)(55016002)(19273905006)(562404015)(563064011);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB2427;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3qoW8xP72VQgc6LlW1djov0axAtZYKcVpeGikt4uT7OghDIsfQ7Ix5VnChDypKFjO+Wd+QndqQFTYFSkQE8VZ1D5H9KPRbWPOVtz5NAgZ/9CcX0Sr/oFbBrlAvc35/HncdHcmxCdygSN4YuxIAFDShbgGV72nzvqxc+YwXAAPTzd+1p8atn5WqSBbphYgMglyYJsZ4eVEui2tqDzO6nKfvDFvcgVmjZkW2iTHLbb3/aOXjq92JGbe/RV8DzgO3S9VWvCNsQomWPA4Ys+pISBDNwX3J/pm09G9LXKO//WA/F+giFkp2z3YDo+jT0p+V/K5SPlTc6iyRBX9H8BZqNrjI7yVVkxDJAeTq2iq9flG1DERbo+aDp7my8rdrxtj5FrXLP0RbAnkwR1AkqUuWNg2VV2/tJoW8ld6RUResVj83b8RxFmvxCeHPZpeq9ePqB3RpEr75AFEljn1ptqsNEblopGHYoxVKvCPOBrKVVqgjeDenkmnuagfohKyJFsHHyJDIzrtC5tkfvwLTlgu+v/96rPnl8O6QkgTzawBT6DzCa/i59z5Oo70bGM6p60p27tpMaBTdA/CyGSzvtwitTYYg==
+x-ms-exchange-antispam-messagedata: CTcieKinq/O9K+Xed+HCMuFHbg9nJi+oWEnOJbIEokZ/j51fkw02OKp0N7KUAuOYWGMqmray5x9pbdgqW5vVc4qKiSnBCXX3CAlmQzetsSWQ7F3Akl40MQOyueJfEWgSm1Jc5rsZRFWxyJoF30u7Vg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: teo-en-ming-corp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3e727ab-e889-477d-cff9-08d7c696010d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 14:59:45.8382
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s1L3mU2wduviyKo7jelF7oizbZU/iHHVFCGbjBwAZ8lHSvPm54ISmG+rdZ+GTl57I3AlvcdgTd++MCyYQNAbgMe5SCQJZ9bnYFoNbRYLWtw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB2427
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/12/20 3:49 PM, Borislav Petkov wrote:
-> On Thu, Mar 12, 2020 at 03:38:22PM +0100, Hans de Goede wrote:
->> So I've send out 2 versions, not 5 not 10, but only 2 versions in
->> the past 2 days and you start complaining about me rushing this and
->> not fixing it properly, to me that does not come across positive.
-> 
-> Maybe there's a misunderstanding: when you send a patchset which is not
-> marked RFC, I read this, as, this patchset is ready for application. But
-> then the 0day bot catches build errors which means, not ready yet.
-> 
-> And I believe you expected for the 0day bot to test the patches first
-> and they should then to be considered for application. Yes, no?
-
-I guess this is the root cause of our misunderstanding. I certainly
-did not expect the 0day bot to catch any issues, because I did not
-expect there to be any pre-existing issues.
-
-As said I wrote the patch because my sha256 changes from a while ago
-broke the purgatory because of introducing a missing symbol. My intend
-was to avoid a repeat of that regression by catching issues like this
-during build time.  I did not expect there to already be (more)
-such issues in the existing code; and I certainly did not expect
-there to be more then 1 such issue.
-
-So having to do v4 to fix one pre-existing issue was a surprise.
-Having to then do a v5 because there was more then one pre-existing
-issue was an even bigger surprise.
-
-I understand that you are pushing-back against people using 0day bot
-to find bugs for them and that was never my goal.
-
-OTOH I don't appreciate getting push-back because if my change
-exposing *pre*-existing bugs. I am not responsible for those
-pre-existing bugs and as such I also do not feel responsible for
-0day bot triggering on them. Are the 0day bot reports and the need
-to rev the patch-set and post a new version annoying? Yes they are;
-however they are not my fault.
-
-Regards,
-
-Hans
-
+Subject: Announcing Teo En Ming Linux 2020.03 (FINAL)=0A=
+=0A=
+12 MARCH 2020 THURSDAY=0A=
+SINGAPORE, SINGAPORE=0A=
+=0A=
+ANNOUNCEMENT=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+=0A=
+I have just created my own custom Linux distribution called Teo En Ming Lin=
+ux 2020.03 (FINAL), which is based on=0A=
+Linux From Scratch 20200302-systemd and Linux Kernel 5.5.7, all compiled fr=
+om sources.=0A=
+=0A=
+You may want to watch a short 6-min YouTube video of the live demo of Teo E=
+n Ming Linux 2020.03 (FINAL) at the following URL:=0A=
+=0A=
+https://www.youtube.com/watch?v=3DWfKh2WlmzKo=0A=
+=0A=
+Redundant YouTube video:=0A=
+=0A=
+https://www.youtube.com/watch?v=3DU6csdSCrKnI=0A=
+=0A=
+Live bootable DVD iso will be available for download soon. Stay tuned for d=
+ownload links.=0A=
+=0A=
+REFERENCES=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+=0A=
+[1] Linux From Scratch, Version 20200302-systemd, Published March 2nd, 2020=
+=0A=
+=0A=
+Link: http://www.linuxfromscratch.org/lfs/view/systemd/index.html=0A=
+=0A=
+[2] Linux kernel version suffix + CONFIG_LOCALVERSION=0A=
+=0A=
+Link: https://unix.stackexchange.com/questions/194129/linux-kernel-version-=
+suffix-config-localversion=0A=
+=0A=
+[3] [SOLVED] Can not boot lfs=0A=
+=0A=
+Link: https://www.linuxquestions.org/questions/linux-from-scratch-13/can-no=
+t-boot-lfs-4175627243/=0A=
+=0A=
+[4] USING GRUB ON UEFI (***MOST IMPORTANT TOPIC***)=0A=
+=0A=
+Link: http://www.linuxfromscratch.org/hints/downloads/files/lfs-uefi.txt=0A=
+=0A=
+[5] Beyond Linux=AE From Scratch (systemd Edition), Version 2020-03-10=0A=
+=0A=
+Link: http://www.linuxfromscratch.org/blfs/view/systemd/=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+-----BEGIN EMAIL SIGNATURE-----=0A=
+=0A=
+The Gospel for all Targeted Individuals (TIs):=0A=
+=0A=
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of=0A=
+U.S. Embassy Workers=0A=
+=0A=
+Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
+e.html=0A=
+=0A=
+***************************************************************************=
+*****************=0A=
+=0A=
+=0A=
+=0A=
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic=0A=
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the United=
+ Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 2019) and A=
+ustralia (25 Dec 2019 to 9 Jan 2020):=0A=
+=0A=
+=0A=
+[1] https://tdtemcerts.wordpress.com/=0A=
+=0A=
+[2] https://tdtemcerts.blogspot.sg/=0A=
+=0A=
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming=0A=
+=0A=
+-----END EMAIL SIGNATURE-----=0A=
+=0A=
+=0A=
+=0A=
