@@ -2,102 +2,117 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF75C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04241C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899C520716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584012562;
-	bh=c1Tkwtt6Q3KUnkyDaMi3qBLKWijI0RvNPV7M8ktFILg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z1bGwbPiKkyOLsurJ0H7mIzZrCAGeltk+8RYa5lEXAzSttTj1UeH1JrUbdcIFwdFm
-	 K/L6+IbO9vxJYrAmKfk8Zw9coky3skpgDXIOHRMcyL5+xXxpmf+exWFPW5bvbQtTFJ
-	 XAq0wJkPiowhqTGTHw/dqa4zqVkmbTI8C+ywgN2Q=
+	by mail.kernel.org (Postfix) with ESMTP id D74E02071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCLL3V (ORCPT
+        id S1726801AbgCLLap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:29:21 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35105 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLL3V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:29:21 -0400
-Received: by mail-lj1-f196.google.com with SMTP id u12so6011896ljo.2;
-        Thu, 12 Mar 2020 04:29:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OAB6gMFhzcwV5kl/BeI0JFOF2f+1j5wU7pBRkTaOMms=;
-        b=ba9QbPYTFtD80twZyp20xPwaLRb2wWYzVtnxKSTyKqvKa40VmWqbhmDyU6j6UWQGfR
-         RCqtof/uX13eCypXBzE6e/T6x+YrcJg5bChqKzcwrB7Gk8wOYMRqjdWzCQgdYMY1o/DH
-         y2D7bHNanL7N4x5doVrnW3RPsbRAbW/Am3yu1P4OUuZw7UUpJBRB2bsOyILXcA5XE1gM
-         MVaiejCMujxV+KqLDI2VvceH9xpKVjkHNmUAdg9HVXcOnVi1upyditsR63BGK+uEfoAR
-         vMm8i5gOVaAgJb1uiMoQ4rRMdexhdfe84WeQI2Qb6zo4i4FBnw70bmTrE6+5XM88x+ja
-         U+tQ==
-X-Gm-Message-State: ANhLgQ1xs7p/JIM3GFo4WjmEVpXNzrwLwHkzY/HjfTC3A51rQozLBk7y
-        /umCgmQspIxMepSglw3yRRNULOjO
-X-Google-Smtp-Source: ADFU+vsJP7t4xJ7Am4mlVefGnSM8da6qHpJKNrhjHxIcIFcm1xif9tjnNVK425LKCeM/0vb7SFVMsg==
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr4997656lji.181.1584012557059;
-        Thu, 12 Mar 2020 04:29:17 -0700 (PDT)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id u16sm7597252lfl.37.2020.03.12.04.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 04:29:16 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jCM1R-0005rr-13; Thu, 12 Mar 2020 12:29:05 +0100
-Date:   Thu, 12 Mar 2020 12:29:05 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] media: fix USB descriptor issues
-Message-ID: <20200312112905.GQ14211@localhost>
-References: <20200103163513.1229-1-johan@kernel.org>
- <20200214080254.GK4150@localhost>
- <20200312112330.GO14211@localhost>
- <82e0041b-be4b-1681-c016-d4eeea37abea@xs4all.nl>
+        Thu, 12 Mar 2020 07:30:45 -0400
+Received: from sauhun.de ([88.99.104.3]:41382 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgCLLap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:30:45 -0400
+Received: from localhost (p54B331A0.dip0.t-ipconnect.de [84.179.49.160])
+        by pokefinder.org (Postfix) with ESMTPSA id 66DED2C1ECC;
+        Thu, 12 Mar 2020 12:30:43 +0100 (CET)
+Date:   Thu, 12 Mar 2020 12:30:43 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
+ requesting ancillary addresses
+Message-ID: <20200312113042.GD1013@ninjato>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+ <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
+ <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+ <dc831357-8545-6f6e-71a2-bef282e0bd94@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rz+pwK2yUstbofK6"
 Content-Disposition: inline
-In-Reply-To: <82e0041b-be4b-1681-c016-d4eeea37abea@xs4all.nl>
+In-Reply-To: <dc831357-8545-6f6e-71a2-bef282e0bd94@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 12:26:35PM +0100, Hans Verkuil wrote:
-> On 3/12/20 12:23 PM, Johan Hovold wrote:
-> > On Fri, Feb 14, 2020 at 09:02:54AM +0100, Johan Hovold wrote:
-> >> On Fri, Jan 03, 2020 at 05:35:07PM +0100, Johan Hovold wrote:
-> >>> This series fixes a number of issues due to missing or incomplete sanity
-> >>> checks that could lead to NULL-pointer dereferences, memory corruption
-> >>> or driver misbehaviour when a device has unexpected descriptors.
-> >>
-> >>> Johan Hovold (6):
-> >>>   media: flexcop-usb: fix endpoint sanity check
-> >>>   media: ov519: add missing endpoint sanity checks
-> >>>   media: stv06xx: add missing descriptor sanity checks
-> >>>   media: xirlink_cit: add missing descriptor sanity checks
-> >>>   media: dib0700: fix rc endpoint lookup
-> >>>   media: iguanair: fix endpoint sanity check
-> >>
-> >> Just sending a reminder about these as it seems only the last one has
-> >> made into mainline (and stable) yet.
-> > 
-> > Another month, another reminder. Three of the above patches still hasn't
-> > been applied.
-> 
-> I've delegated these to me and will make a PR today/tomorrow.
 
-Thanks, Hans!
+--rz+pwK2yUstbofK6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Johan
+
+> >> +               strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, siz=
+eof(client->name));
+>=20
+> Any strong reason for not giving the device a more informative name?
+
+Yes, sadly...
+
+> Reading "dummy" in several /sys/bus/i2c/devices/?-????/name files is not
+> helping. Using the 'name' string that is passed to
+> i2c_new_ancillary_device() would be way better, perhaps prefixed by
+> dev->name. But this opens the question of why not doing it in
+
+=2E.. I never liked the plain "dummy" name as well. However, because
+'name' is what we need to bind to a driver we can't have a more
+descriptive or run-time generated name at that place.
+
+> i2c_new_dummy_device() as well, which currently receives no "name"
+> parameter.
+
+I thought about it but discarded the idea because then you still have
+no connection to the driver which created the dummy device. My
+favourite idea so far is to advertise i2c_new_ancillary_device() instead
+of i2c_new_dummy_device(), because there we already have access to the
+client structure. With that, we could add another link in sysfs to the
+main address and vice-versa.
+
+> Of course this is not strictly related to this patch and can be done in
+> a later step.
+
+Exactly.
+
+
+--rz+pwK2yUstbofK6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5qHWIACgkQFA3kzBSg
+KbYqEA//dr8XFHEYXWhQXqlofteHQgPuqLLgw5ruq9PvVCpv51Scsz/RjoUKvanT
+s3/CZjL+MvvHDvvpKjCpW6/ImDM2KSGalPy0ZAQ0GaOtS2aqaLvieLsnxGPF2FLl
+QLBufHNjG6DOkO6PrQ44SLRFvpKw2iBMihmGyJBRjWWMtPrpgw5fO0omoM3IogPj
+t+W0+Fou6p6dgiTYhGCIOYi8YHAHEZt+HPhBExDRHfbeF3K9IXGwA84m8uTCVEP6
+2XZoR4mjO5fbXGMWp5uhB9EtXridUSmUTavnG/vOFki6i8Nw36bscICAgRVaHk3m
+nhK4s53VEt1EB8dyW61ZUAfBqwwCHKfbmRneKpDtytOi7PS2eHrSTC1hCioparvh
+ifGDynlbyaEbJtxmmp2ukgSxLiO9V3r4HgHnnU7L+yUMUApcVX6o7ftRgMjKK4oj
+rYOnylcJyC151MOY4T+2fSl9VCmkcBsz8K5LoU/iN0TF6/x0W3OQ6Nv1p+t1k2oe
+105gZoZ/9d+7ja7MfJB23p0neb8SE0BVgkFtvLkJyvpyEw3f/JMdE1g3fjCAlb4u
+dB0enc8/ncA+yoGOTtN2ADXCPvteTcfK+GC9/Tlmd1HJwWlIWu24IVYJFAg6a4Ln
+HTILjLrr6L9HRNaemVxKdq1c/fTAPMFJB2ReDoHJokKjoTPULn0=
+=WKGM
+-----END PGP SIGNATURE-----
+
+--rz+pwK2yUstbofK6--
