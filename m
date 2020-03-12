@@ -2,104 +2,321 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F0FC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B28C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20358206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9519120716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipOTqq4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387942AbgCLGks (ORCPT
+        id S2387932AbgCLGnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:40:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35201 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387859AbgCLGkr (ORCPT
+        Thu, 12 Mar 2020 02:43:10 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40231 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387767AbgCLGnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:40:47 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jCHWN-0008Mo-GT; Thu, 12 Mar 2020 07:40:43 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jCHWN-0003bp-0t; Thu, 12 Mar 2020 07:40:43 +0100
-Date:   Thu, 12 Mar 2020 07:40:42 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200312064042.p7himm3odxjyzroi@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200312042210.17344-5-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 12 Mar 2020 02:43:09 -0400
+Received: by mail-pj1-f67.google.com with SMTP id bo3so802879pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 23:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=lUERM7Qq7L21zPRInzp+Vo7o3ub8a1SQMk5EzorQgRk=;
+        b=ipOTqq4lN7tjIvgBZU2FYKSYys/RDrOH9oKO7IRsMLReYqNl+/QpNpAVMHpbW880bF
+         7XuabCcgawOrQgBj3H/5WnUO4T7Rqdpig+9G0/hHYgLLu5o42YsPo2/a62O44ZkwyLOb
+         v1picodFYnOBi8uZyCBQOx4xF9O/EJLEmDqGniplXrd7oU0hZfUjw1I5wda4aetgDw0M
+         1Xwp8u6Hg2TJ/QCiCqoL+cmcGbjehzpjL69VhKm3WREfoYvlaEDm7UmuDHl5DBtMpMAl
+         MiOYnViPH91cBt0FLhfutsfb8ATCQAfZzhOtjOhY72P1wfh4vw98u+MFxuAGNaQgyOdF
+         e1GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=lUERM7Qq7L21zPRInzp+Vo7o3ub8a1SQMk5EzorQgRk=;
+        b=gv5msL1W58QsdnRfl/myBvVp00dmF6iJCI9zSyW/gOKDJtUkebyhnF0I/284sefKAK
+         aT6eTH7aU+nwQnvKMuCeavMQCH87mH2MxpIQPc7vfes8nR+PlPSxXwifkEGMh/ZleGPj
+         /wln0YCvmST8HMUs09PrpBfYWlsl6lnx3g1fJifoULXqUKzV3VVHkq+hSN85wtsacS2b
+         IOO9PZUasApSeyurXEviE/8XLevAvFDkBNCFB+h7PmHqQG7KwvefRTv7lm09BotPQF9D
+         WhGj/mZt3q0OrcA4aMV4XT13USPtMJqGwZwDmIu8w/hBP/arm5SaCz28/ofRdVFlOVrK
+         8Ydg==
+X-Gm-Message-State: ANhLgQ0B1pNWLDPGSWaP3rSBQjBkGLiBN2JMS45DQ5EmnL6vKFdXxZNQ
+        RfjoYOO3swu0gEM7MbNoTPE=
+X-Google-Smtp-Source: ADFU+vs0i6ulQr7NepE6JKHjykO5z8qfOoxKMZd7knwn9clMSdhePgDSve/6oRVAJa9fdQ/0MSyOEQ==
+X-Received: by 2002:a17:90a:8806:: with SMTP id s6mr2625599pjn.141.1583995385763;
+        Wed, 11 Mar 2020 23:43:05 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id j17sm8250777pfr.176.2020.03.11.23.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 23:43:04 -0700 (PDT)
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vitaly Bordug <vitb@kernel.crashing.org>
+Subject: [PATCH v4] powerpc: Replace setup_irq() by request_irq()
+Date:   Thu, 12 Mar 2020 12:12:55 +0530
+Message-Id: <20200312064256.18735-1-afzal.mohd.ma@gmail.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200304004746.4557-1-afzal.mohd.ma@gmail.com>
+References: <20200304004746.4557-1-afzal.mohd.ma@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> Only the Timer control register(TCLR) cannot be updated when the timer
-> is running. Registers like Counter register(TCRR), loader register(TLDR),
-> match register(TMAR) can be updated when the counter is running. Since
-> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> timer for period/duty_cycle update.
+request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+occur after memory allocators are ready.
 
-I'm not sure what is sensible here. Stopping the PWM for a short period
-is bad, but maybe emitting a wrong period isn't better. You can however
-optimise it if only one of period or duty_cycle changes.
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
 
-@Thierry, what is your position here? I tend to say a short stop is
-preferable.
+Hence replace setup_irq() by request_irq().
 
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  drivers/pwm/pwm-omap-dmtimer.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-> index 85b17b49980b..c56e7256e923 100644
-> --- a/drivers/pwm/pwm-omap-dmtimer.c
-> +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> @@ -19,6 +19,13 @@
->   * Limitations:
->   * - When PWM is stopped, timer counter gets stopped immediately. This
->   *   doesn't allow the current PWM period to complete and stops abruptly.
-> + * - When PWM is running and changing both duty cycle and period,
-> + *   we cannot prevent in software that the output might produce
-> + *   a period with mixed settings. Especially when period/duty_cyle
-> + *   is updated while the pwm pin is high, current pwm period/duty_cycle
-> + *   can get updated as below based on the current timer counter:
-> + *   	- period for current cycle =  current_period + new period
-> + *   	- duty_cycle for current period = current period + new duty_cycle.
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 
-In case we stay with a short stop, adding something like:
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
 
- - The PWM has to be stopped for updates of both period and duty_cycle.
+v4:
+ * pass non-NULL dev_id while requesting shared irq in mpc85xx_cds.c, as
+	request_irq() can fail due to sanity check, which is not done in
+	setup_irq()
+v3:
+ * Split out from tree wide series, as Thomas suggested to get it thr'
+	respective maintainers
+ * Modify pr_err displayed in case of error
+ * Re-arrange code & choose pr_err args as required to improve readability
+ * Remove irrelevant parts from commit message & improve
+ 
+v2:
+ * Replace pr_err("request_irq() on %s failed" by
+           pr_err("%s: request_irq() failed"
+ * Commit message massage
 
-Best regards
-Uwe
+ arch/powerpc/platforms/85xx/mpc85xx_cds.c | 11 ++++-----
+ arch/powerpc/platforms/8xx/cpm1.c         |  9 ++-----
+ arch/powerpc/platforms/8xx/m8xx_setup.c   |  9 ++-----
+ arch/powerpc/platforms/chrp/setup.c       | 14 ++++-------
+ arch/powerpc/platforms/powermac/pic.c     | 29 +++++++++--------------
+ arch/powerpc/platforms/powermac/smp.c     | 12 ++++------
+ 6 files changed, 29 insertions(+), 55 deletions(-)
 
+diff --git a/arch/powerpc/platforms/85xx/mpc85xx_cds.c b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
+index 6b1436abe9b1..915ab6710b93 100644
+--- a/arch/powerpc/platforms/85xx/mpc85xx_cds.c
++++ b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
+@@ -218,12 +218,6 @@ static irqreturn_t mpc85xx_8259_cascade_action(int irq, void *dev_id)
+ {
+ 	return IRQ_HANDLED;
+ }
+-
+-static struct irqaction mpc85xxcds_8259_irqaction = {
+-	.handler = mpc85xx_8259_cascade_action,
+-	.flags = IRQF_SHARED | IRQF_NO_THREAD,
+-	.name = "8259 cascade",
+-};
+ #endif /* PPC_I8259 */
+ #endif /* CONFIG_PCI */
+ 
+@@ -271,7 +265,10 @@ static int mpc85xx_cds_8259_attach(void)
+ 	 *  disabled when the last user of the shared IRQ line frees their
+ 	 *  interrupt.
+ 	 */
+-	if ((ret = setup_irq(cascade_irq, &mpc85xxcds_8259_irqaction))) {
++	ret = request_irq(cascade_irq, mpc85xx_8259_cascade_action,
++			  IRQF_SHARED | IRQF_NO_THREAD, "8259 cascade",
++			  cascade_node);
++	if (ret) {
+ 		printk(KERN_ERR "Failed to setup cascade interrupt\n");
+ 		return ret;
+ 	}
+diff --git a/arch/powerpc/platforms/8xx/cpm1.c b/arch/powerpc/platforms/8xx/cpm1.c
+index a43ee7d1ff85..4db4ca2e1222 100644
+--- a/arch/powerpc/platforms/8xx/cpm1.c
++++ b/arch/powerpc/platforms/8xx/cpm1.c
+@@ -120,12 +120,6 @@ static irqreturn_t cpm_error_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction cpm_error_irqaction = {
+-	.handler = cpm_error_interrupt,
+-	.flags = IRQF_NO_THREAD,
+-	.name = "error",
+-};
+-
+ static const struct irq_domain_ops cpm_pic_host_ops = {
+ 	.map = cpm_pic_host_map,
+ };
+@@ -187,7 +181,8 @@ unsigned int __init cpm_pic_init(void)
+ 	if (!eirq)
+ 		goto end;
+ 
+-	if (setup_irq(eirq, &cpm_error_irqaction))
++	if (request_irq(eirq, cpm_error_interrupt, IRQF_NO_THREAD, "error",
++			NULL))
+ 		printk(KERN_ERR "Could not allocate CPM error IRQ!");
+ 
+ 	setbits32(&cpic_reg->cpic_cicr, CICR_IEN);
+diff --git a/arch/powerpc/platforms/8xx/m8xx_setup.c b/arch/powerpc/platforms/8xx/m8xx_setup.c
+index f1c805c8adbc..df4d57d07f9a 100644
+--- a/arch/powerpc/platforms/8xx/m8xx_setup.c
++++ b/arch/powerpc/platforms/8xx/m8xx_setup.c
+@@ -39,12 +39,6 @@ static irqreturn_t timebase_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction tbint_irqaction = {
+-	.handler = timebase_interrupt,
+-	.flags = IRQF_NO_THREAD,
+-	.name = "tbint",
+-};
+-
+ /* per-board overridable init_internal_rtc() function. */
+ void __init __attribute__ ((weak))
+ init_internal_rtc(void)
+@@ -157,7 +151,8 @@ void __init mpc8xx_calibrate_decr(void)
+ 					(TBSCR_TBF | TBSCR_TBE));
+ 	immr_unmap(sys_tmr2);
+ 
+-	if (setup_irq(virq, &tbint_irqaction))
++	if (request_irq(virq, timebase_interrupt, IRQF_NO_THREAD, "tbint",
++			NULL))
+ 		panic("Could not allocate timer IRQ!");
+ }
+ 
+diff --git a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
+index fcf6f2342ef4..8328cd5817b0 100644
+--- a/arch/powerpc/platforms/chrp/setup.c
++++ b/arch/powerpc/platforms/chrp/setup.c
+@@ -451,13 +451,6 @@ static void __init chrp_find_openpic(void)
+ 	of_node_put(np);
+ }
+ 
+-#if defined(CONFIG_VT) && defined(CONFIG_INPUT_ADBHID) && defined(CONFIG_XMON)
+-static struct irqaction xmon_irqaction = {
+-	.handler = xmon_irq,
+-	.name = "XMON break",
+-};
+-#endif
+-
+ static void __init chrp_find_8259(void)
+ {
+ 	struct device_node *np, *pic = NULL;
+@@ -541,8 +534,11 @@ static void __init chrp_init_IRQ(void)
+ 		if (of_node_is_type(kbd->parent, "adb"))
+ 			break;
+ 	of_node_put(kbd);
+-	if (kbd)
+-		setup_irq(HYDRA_INT_ADB_NMI, &xmon_irqaction);
++	if (kbd) {
++		if (request_irq(HYDRA_INT_ADB_NMI, xmon_irq, 0, "XMON break",
++				NULL))
++			pr_err("Failed to register XMON break interrupt\n");
++	}
+ #endif
+ }
+ 
+diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+index 2e969073473d..4921bccf0376 100644
+--- a/arch/powerpc/platforms/powermac/pic.c
++++ b/arch/powerpc/platforms/powermac/pic.c
+@@ -250,20 +250,6 @@ static unsigned int pmac_pic_get_irq(void)
+ 	return irq_linear_revmap(pmac_pic_host, irq);
+ }
+ 
+-#ifdef CONFIG_XMON
+-static struct irqaction xmon_action = {
+-	.handler	= xmon_irq,
+-	.flags		= IRQF_NO_THREAD,
+-	.name		= "NMI - XMON"
+-};
+-#endif
+-
+-static struct irqaction gatwick_cascade_action = {
+-	.handler	= gatwick_action,
+-	.flags		= IRQF_NO_THREAD,
+-	.name		= "cascade",
+-};
+-
+ static int pmac_pic_host_match(struct irq_domain *h, struct device_node *node,
+ 			       enum irq_domain_bus_token bus_token)
+ {
+@@ -384,12 +370,17 @@ static void __init pmac_pic_probe_oldstyle(void)
+ 		out_le32(&pmac_irq_hw[i]->enable, 0);
+ 
+ 	/* Hookup cascade irq */
+-	if (slave && pmac_irq_cascade)
+-		setup_irq(pmac_irq_cascade, &gatwick_cascade_action);
++	if (slave && pmac_irq_cascade) {
++		if (request_irq(pmac_irq_cascade, gatwick_action,
++				IRQF_NO_THREAD, "cascade", NULL))
++			pr_err("Failed to register cascade interrupt\n");
++	}
+ 
+ 	printk(KERN_INFO "irq: System has %d possible interrupts\n", max_irqs);
+ #ifdef CONFIG_XMON
+-	setup_irq(irq_create_mapping(NULL, 20), &xmon_action);
++	i = irq_create_mapping(NULL, 20);
++	if (request_irq(i, xmon_irq, IRQF_NO_THREAD, "NMI - XMON", NULL))
++		pr_err("Failed to register NMI-XMON interrupt\n");
+ #endif
+ }
+ 
+@@ -441,7 +432,9 @@ static void __init pmac_pic_setup_mpic_nmi(struct mpic *mpic)
+ 		nmi_irq = irq_of_parse_and_map(pswitch, 0);
+ 		if (nmi_irq) {
+ 			mpic_irq_set_priority(nmi_irq, 9);
+-			setup_irq(nmi_irq, &xmon_action);
++			if (request_irq(nmi_irq, xmon_irq, IRQF_NO_THREAD,
++					"NMI - XMON", NULL))
++				pr_err("Failed to register NMI-XMON interrupt\n");
+ 		}
+ 		of_node_put(pswitch);
+ 	}
+diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
+index f95fbdee6efe..c55bf474ed4e 100644
+--- a/arch/powerpc/platforms/powermac/smp.c
++++ b/arch/powerpc/platforms/powermac/smp.c
+@@ -399,21 +399,19 @@ static int __init smp_psurge_kick_cpu(int nr)
+ 	return 0;
+ }
+ 
+-static struct irqaction psurge_irqaction = {
+-	.handler = psurge_ipi_intr,
+-	.flags = IRQF_PERCPU | IRQF_NO_THREAD,
+-	.name = "primary IPI",
+-};
+-
+ static void __init smp_psurge_setup_cpu(int cpu_nr)
+ {
++	unsigned long flags = IRQF_PERCPU | IRQF_NO_THREAD;
++	int irq;
++
+ 	if (cpu_nr != 0 || !psurge_start)
+ 		return;
+ 
+ 	/* reset the entry point so if we get another intr we won't
+ 	 * try to startup again */
+ 	out_be32(psurge_start, 0x100);
+-	if (setup_irq(irq_create_mapping(NULL, 30), &psurge_irqaction))
++	irq = irq_create_mapping(NULL, 30);
++	if (request_irq(irq, psurge_ipi_intr, flags, "primary IPI", NULL))
+ 		printk(KERN_ERR "Couldn't get primary IPI interrupt");
+ }
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.18.0
+
