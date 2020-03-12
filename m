@@ -2,161 +2,142 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC844C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760D1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AA72067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584010958;
-	bh=wh3flAKU3hCv7GRRbGVzhVIEk8a48kvifamNIQEdZDU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptmrocuI/XL2/gwRkvgpfHlwVR3Jll/Brq/pkGoue0iJ3MPEeMyJxaTVmMPvuohlV
-	 tnbgrq+BrpU2ZLLrHdjlghpzkCT1XjAdwySoGIXAAaFK6k8jPLnwgyDNwweAUDvlrv
-	 6+5xLXIJc2UtFHNlz1XhykG0k+wMfaeYFyx/LwMc=
+	by mail.kernel.org (Postfix) with ESMTP id 528472067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+/F6SeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCLLCb (ORCPT
+        id S1727021AbgCLLDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:02:31 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42441 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLLCb (ORCPT
+        Thu, 12 Mar 2020 07:03:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35913 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgCLLDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:02:31 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t21so4417237lfe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 04:02:30 -0700 (PDT)
+        Thu, 12 Mar 2020 07:03:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i13so3105929pfe.3;
+        Thu, 12 Mar 2020 04:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pKYK7XuX1YFNh896hiehTgCzkX40kEf/9nhkQKtK0l4=;
+        b=C+/F6SeJycKnjKSOBztDw6bVo8M6ZPM5DA78TCH1Y8ba2J4XsdN/Wju1dsOgM0vnNK
+         JInYlEZgXXmcKGDKC2ZC/M8nk8kD50pePWyAOXbTotWUv8rxW1nA+bSSSxtJl0qIEadZ
+         gaCoummqI7dYIdbvSdSchypMUVe4eRnj6KgPgOL9maeO68r+xAJbgXr0RhmrjA/8rQ1H
+         OutfQSaLFO21VzQudFH7COJAzXuIUs2Z2IvrIRUKa10vfVgiwwio+ITaMVc/e7TKNudm
+         v7iUGd6v/ad9iYZru8GvbdVd7GIP+R0sqypyNlOWtF3q0zEiFJ4c8x06V+ah7z9yb8Ye
+         wctg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6Mj3MJcwV2Ob5PmZcW233AWny7Gxsi3b1PdwO4Wtlog=;
-        b=QXc6aW5hOgaTMMasA6Lm+N8eIPWlqSayO/WjiblEhksuWHiuJNUjW8vxUndyt03W6Y
-         q91zyOM3Rz6I9Rjs4S/Nkp6xPIE5TCSXb6+egRa41VUq42IQ945aXmDygRtnqCSWUi2f
-         dSBJ5Wx869e8O99W6twdAxRRcFnMOCz8E88iDpwaye433UkaZa+W4AdpOhqWabGlWcK6
-         MLL1r9wd6WauivMsVa+RkHACJP+q6kclrzjrWQ37FVe+HTE0jFMSZQdXXaNHM0P4ieks
-         xmUuLKt7s+iiR1+hJD/7j/Ue4Woyam5klPYXXBSgr8JY9yoXpAnkNkdn5Co/nnNrz1gb
-         ggCw==
-X-Gm-Message-State: ANhLgQ170tfO1ExBZYk71GDbjxWEkYkIN5r2qAfR3QhrP/ptC+CNBtkh
-        bVJFcO8OERbbU9vyDUhSboo=
-X-Google-Smtp-Source: ADFU+vur2Hbz9dWEyrJsg/slUxBKugdWUurH4O/r2TmqsuxboHAg+aABhoo4sGy+ldWfEnNpdgPsyg==
-X-Received: by 2002:ac2:5e31:: with SMTP id o17mr4661566lfg.123.1584010949191;
-        Thu, 12 Mar 2020 04:02:29 -0700 (PDT)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id s21sm2096862lfc.28.2020.03.12.04.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 04:02:26 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1jCLbS-0005kR-M1; Thu, 12 Mar 2020 12:02:14 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Axel Haslam <ahaslam@baylibre.com>,
-        Bryan ODonoghue <pure.logic@nexus-software.ie>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pKYK7XuX1YFNh896hiehTgCzkX40kEf/9nhkQKtK0l4=;
+        b=hM2tRjmy24EzBytjMDTdU22VkW3Prd0wWazBBhpp0CifubLUJ06Wwh2gmgmM2s4txV
+         QBSLTDlGyRbycgl3207O12BmFAi7ISn4Cb3k5crWYSAgRbmdS7rYLpss6SvI3eTGGPzP
+         lhwruuCI3IxMQclnd+0VCr3cZ/E0vHYFmEKPLIfGJ8zFdzAlfGFM8mTGvT6A8ur5CjHB
+         EgCvl4nknM4XdiCphDNpX+EtroGcWcfnmo9b2ICLiCd4P17KFYnRxYOBf0hqRnRvAxH3
+         vxs2NtZMWtOP/tZTes63ev5jCzfYJakEFYRsAfRnfDHnepkXLebt1jx0G10ZPJqGy3VO
+         zTLA==
+X-Gm-Message-State: ANhLgQ1eYfWpK7jvzJvfhZ/Xc4PdYj2Fv5Y/aXY4JwGITksxNDrDsNnN
+        fkvx7ml6G/mLxWYsUrpDyMCnx2Wn
+X-Google-Smtp-Source: ADFU+vuYFXCI5kM8QwO7/B+q1D/8Ri7ptyZd0xLHbfND5evlaesaulF8wXsODyGSPPCinn15U5C/Cg==
+X-Received: by 2002:a62:7c15:: with SMTP id x21mr7829438pfc.132.1584010991184;
+        Thu, 12 Mar 2020 04:03:11 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id nl3sm9397786pjb.12.2020.03.12.04.03.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 04:03:10 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/170] 5.4.25-rc5 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] staging: greybus: loopback_test: fix potential path truncations
-Date:   Thu, 12 Mar 2020 12:01:51 +0100
-Message-Id: <20200312110151.22028-4-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200312110151.22028-1-johan@kernel.org>
-References: <20200312110151.22028-1-johan@kernel.org>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200312062811.479223593@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <d7c92c7c-7e50-fce8-ca6b-ced75561179f@roeck-us.net>
+Date:   Thu, 12 Mar 2020 04:03:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312062811.479223593@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer GCC warns about possible truncations of two generated path names as
-we're concatenating the configurable sysfs and debugfs path prefixes
-with a filename and placing the results in buffers of the same size as
-the maximum length of the prefixes.
+On 3/11/20 11:29 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.25 release.
+> There are 170 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 14 Mar 2020 06:27:28 +0000.
+> Anything received after that time might be too late.
+> 
 
-	snprintf(d->name, MAX_STR_LEN, "gb_loopback%u", dev_id);
+Five is the charm ...
 
-	snprintf(d->sysfs_entry, MAX_SYSFS_PATH, "%s%s/",
-		 t->sysfs_prefix, d->name);
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 422 pass: 422 fail: 0
 
-	snprintf(d->debugfs_entry, MAX_SYSFS_PATH, "%sraw_latency_%s",
-		 t->debugfs_prefix, d->name);
-
-Fix this by separating the maximum path length from the maximum prefix
-length and reducing the latter enough to fit the generated strings.
-
-Note that we also need to reduce the device-name buffer size as GCC
-isn't smart enough to figure out that we ever only used MAX_STR_LEN
-bytes of it.
-
-Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/staging/greybus/tools/loopback_test.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
-index d38bb4fbd6b9..69c6dce9be31 100644
---- a/drivers/staging/greybus/tools/loopback_test.c
-+++ b/drivers/staging/greybus/tools/loopback_test.c
-@@ -19,6 +19,7 @@
- #include <signal.h>
- 
- #define MAX_NUM_DEVICES 10
-+#define MAX_SYSFS_PREFIX 0x80
- #define MAX_SYSFS_PATH	0x200
- #define CSV_MAX_LINE	0x1000
- #define SYSFS_MAX_INT	0x20
-@@ -67,7 +68,7 @@ struct loopback_results {
- };
- 
- struct loopback_device {
--	char name[MAX_SYSFS_PATH];
-+	char name[MAX_STR_LEN];
- 	char sysfs_entry[MAX_SYSFS_PATH];
- 	char debugfs_entry[MAX_SYSFS_PATH];
- 	struct loopback_results results;
-@@ -93,8 +94,8 @@ struct loopback_test {
- 	int stop_all;
- 	int poll_count;
- 	char test_name[MAX_STR_LEN];
--	char sysfs_prefix[MAX_SYSFS_PATH];
--	char debugfs_prefix[MAX_SYSFS_PATH];
-+	char sysfs_prefix[MAX_SYSFS_PREFIX];
-+	char debugfs_prefix[MAX_SYSFS_PREFIX];
- 	struct timespec poll_timeout;
- 	struct loopback_device devices[MAX_NUM_DEVICES];
- 	struct loopback_results aggregate_results;
-@@ -907,10 +908,10 @@ int main(int argc, char *argv[])
- 			t.iteration_max = atoi(optarg);
- 			break;
- 		case 'S':
--			snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
-+			snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
- 			break;
- 		case 'D':
--			snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
-+			snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
- 			break;
- 		case 'm':
- 			t.mask = atol(optarg);
-@@ -961,10 +962,10 @@ int main(int argc, char *argv[])
- 	}
- 
- 	if (!strcmp(t.sysfs_prefix, ""))
--		snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", sysfs_prefix);
-+		snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", sysfs_prefix);
- 
- 	if (!strcmp(t.debugfs_prefix, ""))
--		snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", debugfs_prefix);
-+		snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", debugfs_prefix);
- 
- 	ret = find_loopback_devices(&t);
- 	if (ret)
--- 
-2.24.1
-
+Guenter
