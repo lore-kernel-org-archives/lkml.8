@@ -2,145 +2,111 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF068C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A79B206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584037076;
-	bh=8csvVhRW3l5KCsMDr6QYUn3YY8DNKrig/Br59Zsgyso=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYccds3EvlE51cc50ZfAtcHXUaqUAaLbU957w09H8uHjhsmsDeNWPNJoty1eFnb+U
-	 fFGuz4a5WRebFhubih6EjXu0IT1M+EH4NORZAUxfDJv8Rq0SkE7gibU94tq052jwcg
-	 vBoYxaeKQ4EHXghWdd9OIAkHuWQdJAJAKS15HwWI=
+	by mail.kernel.org (Postfix) with ESMTP id C6C98206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:20:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PbsJWk4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCLSRz (ORCPT
+        id S1726616AbgCLSUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgCLSRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:17:06 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09AF92073B;
-        Thu, 12 Mar 2020 18:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584037025;
-        bh=8csvVhRW3l5KCsMDr6QYUn3YY8DNKrig/Br59Zsgyso=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUOWK6m2oCPce5Zcj5hEAhQGIF/dz9Zo7wrRTl1/JXfyQS90EQoAs+oqFFW5L9SZC
-         RT+sD7HaVJDt3YhIWuIBa74IM0uh24/BeWSYLXIfT8b4hZo6MjRF9rssLA2Ib8CEOC
-         AVxL7KmXQ34FEQYjwcx3sLFhVLPs5y8WQ7YfttDY=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC tip/core/rcu 03/16] rcutorture: Add flag to produce non-busy-wait task stalls
-Date:   Thu, 12 Mar 2020 11:16:49 -0700
-Message-Id: <20200312181702.8443-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200312181618.GA21271@paulmck-ThinkPad-P72>
-References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
+        Thu, 12 Mar 2020 14:20:36 -0400
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:44316 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgCLSUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:20:36 -0400
+Received: by mail-pl1-f176.google.com with SMTP id d9so2968022plo.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=sitKDgz0+LgOUGSpSSKOiwIOdws21DnB8cqKgpJ9nJM=;
+        b=PbsJWk4cyqT0fCsrZEU4WqJL4RHHSQpca/DV1+0vlTsK4AeMwDGs4i3AdILikQOpB7
+         0OKTw82se3eH+rxgIAdo4VLn3zynA4SxqPgmhAkWM3p+BJrcvGQxNzZ6OuJw0SXEmWAz
+         aCVGrFuKkm2qtNNPs7PVXUSpWNXF/qhfQmOZ3L4vJ5lyNq7dSbO6PX1JA6Q4XZxuGUuf
+         qkVI0aTv8TfqHZ5nQey6dupAMuDBbXytb7GeCoKv4BcQ445jFrpcndcitndxjkYIE0jQ
+         63B3Y6M/dUWY3HlN7SBazVSznnaqH/ZrIYb9oca6+/ZDfIM042kSZ9GaEgd/kHM04o9Q
+         5Rcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=sitKDgz0+LgOUGSpSSKOiwIOdws21DnB8cqKgpJ9nJM=;
+        b=MYM4+NmlPShd0PnAvy5huUfneSBbYdlJOM4Fw6PiTZXZBM+nNYN+UZBe3WQVVYwPXf
+         eWDCh9dMFq+rUVhrg5+hvrD6dlHJqhkGMS3mg//4SEG5JcX6ozxXJ4J0TE+mZEFsa+7A
+         Y1NU6x1HWBN3RFqkefj1y9AiXCddX2cBVuesf3pKwWWcttY1OdsiOZRLbzqcl+CdZX+p
+         MXprSnXCzfCgzASLZTK1ij2tlCCaQEjPoS2nfiY4JcluWyWrY0K4mAqp9N47xd1hHsE3
+         hGgFj7Cg9p54dLbEk3dXqeyh6aKFHiNdK5c4Yo1BMfHfcSxWE+6Yv8OHEu1Bs1M+t554
+         4SNw==
+X-Gm-Message-State: ANhLgQ3mpGSesvHK79MR4r3RgXlc4d6BBj2uCkXKANer58iZFW+uSA+B
+        LgJLm3pSvcEFSlqiXXngSqZC/ugtQwY=
+X-Google-Smtp-Source: ADFU+vtDzVDzQennu+P0iZ4plMN3zZILYTl7HKoNff1VX+/NCUykYYtYOBjMkO1u7Mr2wMvpjotZXw==
+X-Received: by 2002:a17:90b:310c:: with SMTP id gc12mr4901073pjb.193.1584037234557;
+        Thu, 12 Mar 2020 11:20:34 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id e7sm1869108pfj.97.2020.03.12.11.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 11:20:33 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 11:20:33 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP
+ systems
+In-Reply-To: <20200312083241.GT23944@dhcp22.suse.cz>
+Message-ID: <alpine.DEB.2.21.2003121115480.158939@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com> <20200310221019.GE8447@dhcp22.suse.cz> <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com> <20200311082736.GA23944@dhcp22.suse.cz> <alpine.DEB.2.21.2003111238570.171292@chino.kir.corp.google.com>
+ <20200312083241.GT23944@dhcp22.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Thu, 12 Mar 2020, Michal Hocko wrote:
 
-This commit aids testing of RCU task stall warning messages by adding
-an rcutorture.stall_cpu_block module parameter that results in the
-induced stall sleeping within the RCU read-side critical section.
-Spinning with interrupts disabled is still available via the
-rcutorture.stall_cpu_irqsoff module parameter, and specifying neither
-of these two module parameters will spin with preemption disabled.
+> > I think the changelog clearly states that we need to guarantee that a 
+> > reclaimer will yield the processor back to allow a victim to exit.  This 
+> > is where we make the guarantee.  If it helps for the specific reason it 
+> > triggered in my testing, we could add:
+> > 
+> > "For example, mem_cgroup_protected() can prohibit reclaim and thus any 
+> > yielding in page reclaim would not address the issue."
+> 
+> I would suggest something like the following:
+> "
+> The reclaim path (including the OOM) relies on explicit scheduling
+> points to hand over execution to tasks which could help with the reclaim
+> process.
 
-Note that sleeping (as opposed to preemption) results in additional
-complaints from RCU at context-switch time, so yet more testing.
+Are there other examples where yielding in the reclaim path would "help 
+with the reclaim process" other than oom victims?  This sentence seems 
+vague.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- kernel/rcu/rcutorture.c                         | 13 ++++++++-----
- 2 files changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 6d16b78..17eff15 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4161,6 +4161,11 @@
- 			Duration of CPU stall (s) to test RCU CPU stall
- 			warnings, zero to disable.
- 
-+	rcutorture.stall_cpu_block= [KNL]
-+			Sleep while stalling if set.  This will result
-+			in warnings from preemptible RCU in addition
-+			to any other stall-related activity.
-+
- 	rcutorture.stall_cpu_holdoff= [KNL]
- 			Time to wait (s) after boot before inducing stall.
- 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index b3301f3..f75d466 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -102,6 +102,7 @@ torture_param(int, stall_cpu, 0, "Stall duration (s), zero to disable.");
- torture_param(int, stall_cpu_holdoff, 10,
- 	     "Time to wait before starting stall (s).");
- torture_param(int, stall_cpu_irqsoff, 0, "Disable interrupts while stalling.");
-+torture_param(int, stall_cpu_block, 0, "Sleep while stalling.");
- torture_param(int, stat_interval, 60,
- 	     "Number of seconds between stats printk()s");
- torture_param(int, stutter, 5, "Number of seconds to run/halt test");
-@@ -1599,6 +1600,7 @@ static int rcutorture_booster_init(unsigned int cpu)
-  */
- static int rcu_torture_stall(void *args)
- {
-+	int idx;
- 	unsigned long stop_at;
- 
- 	VERBOSE_TOROUT_STRING("rcu_torture_stall task started");
-@@ -1610,21 +1612,22 @@ static int rcu_torture_stall(void *args)
- 	if (!kthread_should_stop()) {
- 		stop_at = ktime_get_seconds() + stall_cpu;
- 		/* RCU CPU stall is expected behavior in following code. */
--		rcu_read_lock();
-+		idx = cur_ops->readlock();
- 		if (stall_cpu_irqsoff)
- 			local_irq_disable();
--		else
-+		else if (!stall_cpu_block)
- 			preempt_disable();
- 		pr_alert("rcu_torture_stall start on CPU %d.\n",
- 			 smp_processor_id());
- 		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
- 				    stop_at))
--			continue;  /* Induce RCU CPU stall warning. */
-+			if (stall_cpu_block)
-+				schedule_timeout_uninterruptible(HZ);
- 		if (stall_cpu_irqsoff)
- 			local_irq_enable();
--		else
-+		else if (!stall_cpu_block)
- 			preempt_enable();
--		rcu_read_unlock();
-+		cur_ops->readunlock(idx);
- 		pr_alert("rcu_torture_stall end.\n");
- 	}
- 	torture_shutdown_absorb("rcu_torture_stall");
--- 
-2.9.5
-
+> Currently it is mostly shrink_page_list which yields CPU for
+> each reclaimed page. This might be insuficient though in some
+> configurations. E.g. when a memcg OOM path is triggered in a hierarchy
+> which doesn't have any reclaimable memory because of memory reclaim
+> protection (MEMCG_PROT_MIN) then there is possible to trigger a soft
+> lockup during an out of memory situation on non preemptible kernels
+> <PUT YOUR SOFT LOCKUP SPLAT HERE>
+> 
+> Fix this by adding a cond_resched up in the reclaim path and make sure
+> there is a yield point regardless of reclaimability of the target
+> hierarchy.
+> "
+> 
