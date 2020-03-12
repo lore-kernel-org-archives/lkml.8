@@ -2,133 +2,138 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7EEC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C05C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D51206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AF4206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2yXsaWw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IP3ABait"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgCLMGN (ORCPT
+        id S1727142AbgCLMGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:06:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47038 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726669AbgCLMGN (ORCPT
+        Thu, 12 Mar 2020 08:06:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46595 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCLMGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:06:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584014771;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xSNpSvUKNp6/83m+odfBvo9SeOnVj+MqMyFuwojaVPk=;
-        b=O2yXsaWwRD8HiRU0vj4NgFDQYwcuUARYsgHFUHnoYw02CrSfwaITk0e7TDDtm7IyNOIr0i
-        FCw9thqyPlAAAArNiX3xzTmPPoK9Wf8bAos3QBsmm8P+pFIuhsI2yclNFgU85/1/Ni2v8x
-        MGvcImHtllhKLV/r+fG0fArgKq9aPFk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-xsa8WEcqPLSY8UBARSi1HA-1; Thu, 12 Mar 2020 08:06:06 -0400
-X-MC-Unique: xsa8WEcqPLSY8UBARSi1HA-1
-Received: by mail-wr1-f71.google.com with SMTP id j17so2514178wru.19
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 05:06:06 -0700 (PDT)
+        Thu, 12 Mar 2020 08:06:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n15so7071579wrw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 05:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WpIF59sushRUzQN6JFPoJ2ob7mS8MGSjQgRAtDMNHBs=;
+        b=IP3ABaitp1o1i8i4tS3GZkiE1lze4gcNrgfGixIs7X3iDBfMmRoX/QUCwfKK7Pubt3
+         WJaqkGTvHbPJ2dZW3uq0Z6X7ryK1WqR33Nif/+lQatPxW9IsShhy+1yFhCCNChpDYWAq
+         lecZu/uTsgJ7MIAF1utJOaOP9y9rggX0E47GI4019g6VNBxeKB56MhFtQb7GJRrresdF
+         Xe7XEsR59mrvqopwsswO3pSiaKe+svMQ0B8GKFICSceRWiDXnt+9Vbvq9eBsatrtOkFT
+         lHL8Qm0x/C7DNVKolSUtm5K7MTa0X0N/nXw52GHc4PHBrxxSyaykpCie5jqGmVqCl8Iw
+         QyYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xSNpSvUKNp6/83m+odfBvo9SeOnVj+MqMyFuwojaVPk=;
-        b=eo0QL1udmZwMVnL/Eke0Or/e6uZdzsJfx3xVHHr8KStMt6cnfb6WC9bEF6+nzS6I14
-         KByqGeEbw3EFHTSjfrswGXutlOw/Cxw25Pcid6AvZulCm/Iz5ZKXGSqN+g+TMq4gcwqA
-         o4cjkvdELtOZc3WBj36yobKhXWl9e9r/Qbkg7v0hf+exc/CGguE1twgNQ259fJ8A3Gsh
-         eQYMA+jxYOpoeQXkf1LNAFOtJy+WxeIbFbyEECQhpH6AsANlHGwn8uYpdGVkUdK3FEpo
-         /edKbQt2udhbTjt32+BtmicaTcT97VN/ztZUoj5TBIa9O6dwb0L7Xge5cPc3GHBAQH7s
-         fxug==
-X-Gm-Message-State: ANhLgQ2X29A5alqo2L10Fo+3qZx0dHlaROpul4AkZUbqhAhm4KxV2wc8
-        UFfVah/unq+2/n197z/0Oh6aSE8NzAgMDWG5qVwOgOqoSmeO+SXv5AptXcXYKtdQSmRGExHbdWz
-        YxJA38Yj4Hcq9fHNsqJqrmTiT
-X-Received: by 2002:a1c:2d4f:: with SMTP id t76mr4516860wmt.60.1584014764913;
-        Thu, 12 Mar 2020 05:06:04 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vt+HRWOgRlV2pNiPqlueoA4u8RAn38ejkM1ffrZr8wxJmwV3UnkER85ZZH0WJCOEzq7uqjitA==
-X-Received: by 2002:a1c:2d4f:: with SMTP id t76mr4516835wmt.60.1584014764673;
-        Thu, 12 Mar 2020 05:06:04 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id w4sm23445550wrl.12.2020.03.12.05.06.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 05:06:03 -0700 (PDT)
-Subject: Re: [RFC v2] x86: Select HARDIRQS_SW_RESEND on x86
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <87sgk4naqh.fsf@nanos.tec.linutronix.de>
- <0e5b484d-89f5-c018-328a-fb4a04c6cd91@redhat.com>
- <87fteek27x.fsf@nanos.tec.linutronix.de>
- <218eb262-011f-0739-8e74-9ca3ef793bb8@redhat.com>
- <87a74mk0gm.fsf@nanos.tec.linutronix.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9a7ebae2-fa65-4a85-5951-120f3543e5fb@redhat.com>
-Date:   Thu, 12 Mar 2020 13:06:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WpIF59sushRUzQN6JFPoJ2ob7mS8MGSjQgRAtDMNHBs=;
+        b=B4wFvInwREfmPUj0hLD8O0EdR9TcJMtzJP5p6flgGmmaTr7EDTF7HHPDOpO2zuV9tG
+         3fR/dCcUXbqI97WpDC/hom+fg+GYLpm3KptH77klC2mo/zyloMbiWUHBNrs6yO6ZOHwC
+         UqLrzsvN5YRa58zMIQt8FmCggtNkry10kq1x7XTQg4zV1+Wk8Ylj0+eHdhdu9VdOmI0I
+         9H8UAvG4hdZMo6mbcYvVKfm/NWOHeXSKd2cuMGdL2BvhGlOMUXzghizce3Ocqm/YCbQe
+         QqJ5i5GZiwEdY+u7Y2hcia+PUgup22pK2FB7efIis+SMfHA+thz9AylgJ0WPyhb2c2No
+         K79A==
+X-Gm-Message-State: ANhLgQ1HtoLd2mPjA9BNzMOfuB3toets13BfQ4z5P4Wl+Iyo64p4dd3k
+        D3lM/qYYdJM4k16a4a2rJiYtdvRPAW7nqLsT8iEOzA==
+X-Google-Smtp-Source: ADFU+vuG4nmHESpyz83ycBTMualHGTG00Wir4cgLn4BKFEmt3VQqAC1YdhwQi5UUXGr4YGTw3WJ7f7+rh1jsecG7oNs=
+X-Received: by 2002:adf:e98c:: with SMTP id h12mr10978634wrm.345.1584014794085;
+ Thu, 12 Mar 2020 05:06:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87a74mk0gm.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200312113006.GA20562@mwanda>
+In-Reply-To: <20200312113006.GA20562@mwanda>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Thu, 12 Mar 2020 13:06:23 +0100
+Message-ID: <CAG_fn=WP0xeCaWpWzhzvT-uxW4w1dvVvxZ=yBGKGTNFwjD=gJw@mail.gmail.com>
+Subject: Re: [PATCH] lib/stackdepot.c: fix a condition in stack_depot_fetch()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Miles Chen <miles.chen@mediatek.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Mar 12, 2020 at 12:30 PM Dan Carpenter <dan.carpenter@oracle.com> w=
+rote:
+>
+> We should check for a NULL pointer first before adding the offset.
+> Otherwise if the pointer is NULL and the offset is non-zero, it will
+> lead to an Oops.
 
-On 3/11/20 11:09 PM, Thomas Gleixner wrote:
-> Hans de Goede <hdegoede@redhat.com> writes:
->> On 3/11/20 10:31 PM, Thomas Gleixner wrote:
->>> Hans de Goede <hdegoede@redhat.com> writes:
->>>>> I just need to stare at the legacy PIC and the virt stuff.
->>>>>
->>>>>> Also maybe we should add a Cc: stable@vger.kernel.org ??? This seems like
->>>>>> somewhat a big change for that but it does solve some real issues...
->>>>>
->>>>> Yes. Let me stare at the couple of weird irqchips which might get
->>>>> surprised. I'll teach them not to do that :)
->>>>
->>>> I know that you are very busy, still I'm wondering is there any progress
->>>> on this ?
->>>
->>> Bah. That fell through the cracks, but actually I looked at this due to
->>> the PCI-E AER wreckage. So yes, this is fine, but we want:
->>>
->>>    https://lkml.kernel.org/r/20200306130623.590923677@linutronix.de
->>>    https://lkml.kernel.org/r/20200306130623.684591280@linutronix.de
->>>
->>> if we want to backport this to stable.
->>
->> So far I have seen a few, but not a lot of devices which need this, so
->> I'm not 100% sure what to do here.
->>
->> Do you consider this change safe / suitable for stable if those 2 patches
->> are backported and applied first?
-> 
-> I think so. The two patches are on my list for backports anyway, but I
-> wanted to give them some time to simmer.
+ Thanks!
 
-OK, I'll submit this patch for stable then once your backports have landed.
+> Fixes: d45048e65a59 ("lib/stackdepot.c: check depot_index before accessin=
+g the stack slab")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Regards,
+Acked-by: Alexander Potapenko <glider@google.com>
 
-Hans
+> ---
+>  lib/stackdepot.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+> index da5d1880bf34..2caffc64e4c8 100644
+> --- a/lib/stackdepot.c
+> +++ b/lib/stackdepot.c
+> @@ -207,18 +207,16 @@ unsigned int stack_depot_fetch(depot_stack_handle_t=
+ handle,
+>         size_t offset =3D parts.offset << STACK_ALLOC_ALIGN;
+>         struct stack_record *stack;
+>
+> +       *entries =3D NULL;
+>         if (parts.slabindex > depot_index) {
+>                 WARN(1, "slab index %d out of bounds (%d) for stack id %0=
+8x\n",
+>                         parts.slabindex, depot_index, handle);
+> -               *entries =3D NULL;
+>                 return 0;
+>         }
+>         slab =3D stack_slabs[parts.slabindex];
+> -       stack =3D slab + offset;
+> -       if (!stack) {
+> -               *entries =3D NULL;
+> +       if (!slab)
+>                 return 0;
+> -       }
+> +       stack =3D slab + offset;
+>
+>         *entries =3D stack->entries;
+>         return stack->size;
+> --
+> 2.20.1
+>
 
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
