@@ -2,127 +2,275 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C50BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C44EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4526A206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FE6206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZPvq+Kj1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgCLRzA (ORCPT
+        id S1726579AbgCLR5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:55:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:63361 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLRy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:54:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 10:54:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="442138934"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Mar 2020 10:54:56 -0700
-Received: from [10.255.182.54] (abudanko-mobl.ccr.corp.intel.com [10.255.182.54])
-        by linux.intel.com (Postfix) with ESMTP id ACCEF58010D;
-        Thu, 12 Mar 2020 10:54:51 -0700 (PDT)
-Subject: Re: [PATCH v1] perf record: fix binding of AIO user space buffers to
- nodes
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c7ea8ffe-1357-bf9e-3a89-1da1d8e9b75b@linux.intel.com>
- <20200312143152.GA28601@kernel.org>
- <2e01e17a-962d-571b-4407-70aa270cec6a@linux.intel.com>
- <20200312171214.GD12036@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <b2f46add-51d3-0cf0-3acf-985e9fbcde47@linux.intel.com>
-Date:   Thu, 12 Mar 2020 20:54:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 12 Mar 2020 13:57:07 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34595 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgCLR5G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:57:06 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a23so2967558plm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:57:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GKEz68ESpXPJAa072THG40UuPGrAcIH+DPdEMO7j2rE=;
+        b=ZPvq+Kj12dIhn0kdh7yG+ylXCTV/0P8J0zTihIgJE2H/xy+CMR+0eWx3Ce13it3VgZ
+         QgTZ2hMd4TPYl007AOOdZjTg+6pnnH6amVEmgywPGBzfUpe6u2lawlkUYp6yf7XfggSF
+         4UkUXH2YGQDphdFeGekiNLk23qfeaVBgDvhzo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GKEz68ESpXPJAa072THG40UuPGrAcIH+DPdEMO7j2rE=;
+        b=o8+0ql5NFWiDvaeFXxAiX5BO3Za3nUSNAhY1JklXQFzQ80LFo8NE7ObhUDpRK9CxmE
+         p/rxh+vdBnzDu7mPMLuRZt0M+8GpQdt5UbPw6obvvrmQZSa3IkjDA2c/pS2VMB7rQyP+
+         vsnRowupWV027qFPOFClLHDbwhqHxrwwIGwq4bIIu2xydFTK1uGbymn43yrPMTWFZPc+
+         nUDgGU4wgwUEmyWgvMOyUrbjmewioVDiPjJNOPs0njzTdbvpJEgc8G1HVM50A920FxJ2
+         AlDYNFVC1OMQMXeA4D7Oz/c5wwVRTBBmviwx8wCo66478GrsUj+M6GVAV5HzR4dJ0GeB
+         mpDw==
+X-Gm-Message-State: ANhLgQ0+rykYQZncEPgiboUitrA+KWyrKYe2LOOPgHBuvcgmhloE8zp+
+        ukHyuz6zTjfNcwV2NOL8KOTmTw==
+X-Google-Smtp-Source: ADFU+vtCt0C9TUxn16fx/bv9wbFqznFCKGIPg1zghwQKKRPO9+0wp4OyWbK3t71joEE3ZMDtDc94Eg==
+X-Received: by 2002:a17:90a:7345:: with SMTP id j5mr5209763pjs.69.1584035824155;
+        Thu, 12 Mar 2020 10:57:04 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id y143sm6420522pfb.22.2020.03.12.10.57.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 10:57:02 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 10:57:01 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v2] thermal: devfreq_cooling: Use PM QoS to set frequency
+ limits
+Message-ID: <20200312175701.GE144492@google.com>
+References: <CGME20200116231233epcas1p363ab7e3ad2966d0ae7bac11e33aa6b83@epcas1p3.samsung.com>
+ <20200116151219.v2.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+ <d73e67eb-4f2d-dc4b-c718-929a964d3640@samsung.com>
+ <20200312003519.GD144492@google.com>
+ <f09ad5b3-c997-187a-d637-cc7cdcb282f9@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200312171214.GD12036@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <f09ad5b3-c997-187a-d637-cc7cdcb282f9@arm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lukasz,
 
+thanks for the review!
 
-On 12.03.2020 20:12, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Mar 12, 2020 at 07:09:56PM +0300, Alexey Budankov escreveu:
->>
->> On 12.03.2020 17:31, Arnaldo Carvalho de Melo wrote:
->>> Em Thu, Mar 12, 2020 at 03:21:45PM +0300, Alexey Budankov escreveu:
->>>>
->>>> Correct maxnode parameter value passed to mbind() syscall to be
->>>> the amount of node mask bits to analyze plus 1. Dynamically allocate
->>>> node mask memory depending on the index of node of cpu being profiled.
->>>> Fixes: c44a8b44ca9f ("perf record: Bind the AIO user space buffers to nodes")
->>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>> ---
->>>>  tools/perf/util/mmap.c | 21 +++++++++++++++------
->>>>  1 file changed, 15 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
->>>> index 3b664fa673a6..6d604cd67a95 100644
->>>> --- a/tools/perf/util/mmap.c
->>>> +++ b/tools/perf/util/mmap.c
->>>> @@ -98,20 +98,29 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
->>>>  {
->>>>  	void *data;
->>>>  	size_t mmap_len;
->>>> -	unsigned long node_mask;
->>>> +	unsigned long *node_mask;
->>>> +	unsigned long node_index;
->>>> +	int err = 0;
->>>>  
->>>>  	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
->>>>  		data = map->aio.data[idx];
->>>>  		mmap_len = mmap__mmap_len(map);
->>>> -		node_mask = 1UL << cpu__get_node(cpu);
->>>> -		if (mbind(data, mmap_len, MPOL_BIND, &node_mask, 1, 0)) {
->>>> -			pr_err("Failed to bind [%p-%p] AIO buffer to node %d: error %m\n",
->>>> -				data, data + mmap_len, cpu__get_node(cpu));
->>>> +		node_index = cpu__get_node(cpu);
->>>> +		node_mask = bitmap_alloc(node_index + 1);
->>>> +		if (!node_mask) {
->>>> +			pr_err("Failed to allocate node mask for mbind: error %m\n");
->>>>  			return -1;
->>>>  		}
->>>> +		set_bit(node_index, node_mask);
->>>> +		if (mbind(data, mmap_len, MPOL_BIND, node_mask, node_index + 1 + 1/*nr_bits + 1*/, 0)) {
->>>
->>>                                                                                   ^^^^^^^^^^^^^^
->>> 										  Leftover?
->>
->> Intentionally put it here to document kernel behavior for mbind() syscall
->> because currently it is different from the man page [1] documented:
->>
->> "nodemask points to a bit mask of nodes containing up to maxnode bits.
->>  The bit mask size is rounded to the next multiple of sizeof(unsigned
->>  long), but the kernel will use bits only up to maxnode.  A NULL value
->>  of nodemask or a maxnode value of zero specifies the empty set of
->>  nodes.  If the value of maxnode is zero, the nodemask argument is
->>  ignored.  Where a nodemask is required, it must contain at least one
->>  node that is on-line, allowed by the thread's current cpuset context
->>  (unless the MPOL_F_STATIC_NODES mode flag is specified), and contains
->>  memory."
+I'll rebase and send v3. Hopefully it doesn't cause too much extra
+work for your changes.
+
+Thanks
+
+Matthias
+
+On Thu, Mar 12, 2020 at 11:39:56AM +0000, Lukasz Luba wrote:
+> Hi Matthias,
 > 
-> Ok, will add the above as a comment above the line with that comment.
-
-Thanks!
-~Alexey
+> I just saw this email below the patch. I wasn't aware that you
+> are working on this. I will have to update my changes...
+> 
+> It looks good to me.
+> Unfortunately, it does not apply on top of Amit's commit
+> 1b5cb9570670a6277cc0 thermal: devfreq_cooling: Appease the kernel-doc deity
+> 
+> Could you check this?
+> 
+> Other then that
+> 
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> 
+> Regards,
+> Lukasz
+> 
+> On 3/12/20 12:35 AM, Matthias Kaehlcke wrote:
+> > Is any further action needed from my side or can this land?
+> > 
+> > Thanks
+> > 
+> > Matthias
+> > 
+> > On Fri, Jan 17, 2020 at 02:22:02PM +0900, Chanwoo Choi wrote:
+> > > On 1/17/20 8:12 AM, Matthias Kaehlcke wrote:
+> > > > Now that devfreq supports limiting the frequency range of a device
+> > > > through PM QoS make use of it instead of disabling OPPs that should
+> > > > not be used.
+> > > > 
+> > > > The switch from disabling OPPs to PM QoS introduces a subtle behavioral
+> > > > change in case of conflicting requests (min > max): PM QoS gives
+> > > > precedence to the MIN_FREQUENCY request, while higher OPPs disabled
+> > > > with dev_pm_opp_disable() would override MIN_FREQUENCY.
+> > > > 
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > ---
+> > > > 
+> > > > Changes in v2:
+> > > > - added documentation for 'req_max_freq'
+> > > > - fixed jumps in of_devfreq_cooling_register_power() unwind
+> > > > - added comment about behavioral change to the commit message
+> > > > 
+> > > >   drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
+> > > >   1 file changed, 23 insertions(+), 47 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+> > > > index ef59256887ff63..cbbaf5bc425d1a 100644
+> > > > --- a/drivers/thermal/devfreq_cooling.c
+> > > > +++ b/drivers/thermal/devfreq_cooling.c
+> > > > @@ -24,11 +24,13 @@
+> > > >   #include <linux/idr.h>
+> > > >   #include <linux/slab.h>
+> > > >   #include <linux/pm_opp.h>
+> > > > +#include <linux/pm_qos.h>
+> > > >   #include <linux/thermal.h>
+> > > >   #include <trace/events/thermal.h>
+> > > > -#define SCALE_ERROR_MITIGATION 100
+> > > > +#define HZ_PER_KHZ		1000
+> > > > +#define SCALE_ERROR_MITIGATION	100
+> > > >   static DEFINE_IDA(devfreq_ida);
+> > > > @@ -53,6 +55,8 @@ static DEFINE_IDA(devfreq_ida);
+> > > >    *		'utilization' (which is	'busy_time / 'total_time').
+> > > >    *		The 'res_util' range is from 100 to (power_table[state] * 100)
+> > > >    *		for the corresponding 'state'.
+> > > > + * @req_max_freq:	PM QoS request for limiting the maximum frequency
+> > > > + *			of the devfreq device.
+> > > >    */
+> > > >   struct devfreq_cooling_device {
+> > > >   	int id;
+> > > > @@ -65,49 +69,9 @@ struct devfreq_cooling_device {
+> > > >   	struct devfreq_cooling_power *power_ops;
+> > > >   	u32 res_util;
+> > > >   	int capped_state;
+> > > > +	struct dev_pm_qos_request req_max_freq;
+> > > >   };
+> > > > -/**
+> > > > - * partition_enable_opps() - disable all opps above a given state
+> > > > - * @dfc:	Pointer to devfreq we are operating on
+> > > > - * @cdev_state:	cooling device state we're setting
+> > > > - *
+> > > > - * Go through the OPPs of the device, enabling all OPPs until
+> > > > - * @cdev_state and disabling those frequencies above it.
+> > > > - */
+> > > > -static int partition_enable_opps(struct devfreq_cooling_device *dfc,
+> > > > -				 unsigned long cdev_state)
+> > > > -{
+> > > > -	int i;
+> > > > -	struct device *dev = dfc->devfreq->dev.parent;
+> > > > -
+> > > > -	for (i = 0; i < dfc->freq_table_size; i++) {
+> > > > -		struct dev_pm_opp *opp;
+> > > > -		int ret = 0;
+> > > > -		unsigned int freq = dfc->freq_table[i];
+> > > > -		bool want_enable = i >= cdev_state ? true : false;
+> > > > -
+> > > > -		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
+> > > > -
+> > > > -		if (PTR_ERR(opp) == -ERANGE)
+> > > > -			continue;
+> > > > -		else if (IS_ERR(opp))
+> > > > -			return PTR_ERR(opp);
+> > > > -
+> > > > -		dev_pm_opp_put(opp);
+> > > > -
+> > > > -		if (want_enable)
+> > > > -			ret = dev_pm_opp_enable(dev, freq);
+> > > > -		else
+> > > > -			ret = dev_pm_opp_disable(dev, freq);
+> > > > -
+> > > > -		if (ret)
+> > > > -			return ret;
+> > > > -	}
+> > > > -
+> > > > -	return 0;
+> > > > -}
+> > > > -
+> > > >   static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
+> > > >   					 unsigned long *state)
+> > > >   {
+> > > > @@ -134,7 +98,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+> > > >   	struct devfreq_cooling_device *dfc = cdev->devdata;
+> > > >   	struct devfreq *df = dfc->devfreq;
+> > > >   	struct device *dev = df->dev.parent;
+> > > > -	int ret;
+> > > > +	unsigned long freq;
+> > > >   	if (state == dfc->cooling_state)
+> > > >   		return 0;
+> > > > @@ -144,9 +108,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+> > > >   	if (state >= dfc->freq_table_size)
+> > > >   		return -EINVAL;
+> > > > -	ret = partition_enable_opps(dfc, state);
+> > > > -	if (ret)
+> > > > -		return ret;
+> > > > +	freq = dfc->freq_table[state];
+> > > > +
+> > > > +	dev_pm_qos_update_request(&dfc->req_max_freq,
+> > > > +				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
+> > > >   	dfc->cooling_state = state;
+> > > > @@ -529,9 +494,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+> > > >   	if (err)
+> > > >   		goto free_dfc;
+> > > > -	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
+> > > > +	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
+> > > > +				     DEV_PM_QOS_MAX_FREQUENCY,
+> > > > +				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
+> > > >   	if (err < 0)
+> > > >   		goto free_tables;
+> > > > +
+> > > > +	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
+> > > > +	if (err < 0)
+> > > > +		goto remove_qos_req;
+> > > >   	dfc->id = err;
+> > > >   	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
+> > > > @@ -552,6 +523,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+> > > >   release_ida:
+> > > >   	ida_simple_remove(&devfreq_ida, dfc->id);
+> > > > +
+> > > > +remove_qos_req:
+> > > > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
+> > > > +
+> > > >   free_tables:
+> > > >   	kfree(dfc->power_table);
+> > > >   	kfree(dfc->freq_table);
+> > > > @@ -600,6 +575,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
+> > > >   	thermal_cooling_device_unregister(dfc->cdev);
+> > > >   	ida_simple_remove(&devfreq_ida, dfc->id);
+> > > > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
+> > > >   	kfree(dfc->power_table);
+> > > >   	kfree(dfc->freq_table);
+> > > > 
+> > > 
+> > > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > > 
+> > > -- 
+> > > Best Regards,
+> > > Chanwoo Choi
+> > > Samsung Electronics
