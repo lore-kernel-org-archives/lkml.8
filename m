@@ -4,87 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466B2C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63982C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3052067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FFA2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SE5CYPIz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="piJo3Qvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgCLNIz (ORCPT
+        id S1727316AbgCLNJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:08:55 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36968 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgCLNIy (ORCPT
+        Thu, 12 Mar 2020 09:09:00 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44146 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbgCLNI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:08:54 -0400
-Received: by mail-vs1-f67.google.com with SMTP id o24so3623010vsp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:08:52 -0700 (PDT)
+        Thu, 12 Mar 2020 09:08:58 -0400
+Received: by mail-vs1-f68.google.com with SMTP id u24so3597465vso.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:08:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LCpLsjhLXqr8ggz/g7xy6/f16tUDkY6B6Kn6YoYqpUE=;
-        b=SE5CYPIzIyid17hSGz1XcILHYzJtY8UUO98gqgEp4CJnYHME3htfnaICAfLF5FgNqM
-         qOw4RnCvaSmVbCnCuBp1xms7EHt5OUHz5MGB+yQFX86jBpJ2tJ3TErluuvyefoQLcRT3
-         2NQmpjTa3CrDs1eTaEuQoNZCn5RNOFtblECM6Cpqaaot1jZd0LG3AJ6fE7cX/LTAOCrH
-         dw4svMTbd2gqpgR1scyiOSn1uc9ivxqPdVjQLXUq7xeqipU5JRU++MFycq4H/YG4zi/y
-         WnjaeE5r+sJgpgw+8bOpjbrfBYSbu6k63Vv6duO2LuP3QZSTiBe1JO3QiUBBmZyXHhTg
-         sUeg==
+        bh=c/71/1S9FFPBZLngXcn7eOGZxEYwsgQn+LiJXaTEkt8=;
+        b=piJo3Qvo8x1s8VTBvAp8jS5t4o5VQEuBs+lWQCHYrxpJbtweH35oefXEg9GnzRQtdz
+         61TRYLXGKrksVOp7wxdDFIZl5QZ824OocSJHbPk7P8hZ70jpr88EaUGavwPNoL4Dn36K
+         Nl5oXBejzLR1jLeDJKzYb6ixDcAWzPP7oWG8OeFjKk4/PM28R2Me2D0Tsq7x8rhewXrt
+         r9U/8MqANn4Ec6qJ2Rhiv85PM01uXdt4/JzUZZopZGKv0JxfViBO1WHel4O7GIJWC1qc
+         CC+Rw5K2v3jnnd/eFLnzoQo/ZNl/T0nWcHZQA9pE0ttsgYASG3J1iRFvKPj7l5rZ/lPs
+         Rsiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LCpLsjhLXqr8ggz/g7xy6/f16tUDkY6B6Kn6YoYqpUE=;
-        b=FX3AoUmMBZDEN2FgBk0U1fX4vSE1Bias7GTGPmnZ8hWzMb0m/EjL/rNTsI8AAdZiL6
-         p34OjAqFDH+PrQ0O4EAfJ1EEX4QFIG6ZE6/YDondXayM2761u1BVSzjxuh7nxxsKSpdr
-         mo00OmYwTnwGclpurhKO2kaMKuC8Qxtgh8tM4CCU/qCGGmZs22y8rv9ujZMXio4RTZzs
-         WO2KzMqistLwk2uNVOH3nEpASYctfCVaUxuBzUbkiNsShyAgiaYiA+rjEyWOkxIwmcS/
-         nORLJl4xxV4juoj5Ej6D5LJMsL9F9k5KbIgILuxxfT0g7jQL2+2Bmzw4w++lX/CJeFAs
-         utSg==
-X-Gm-Message-State: ANhLgQ0UHgA/2cx3l2c4PV1zcseOxb6wwBxiR80gzWIgYkfCL1NvIL4F
-        mI0M2OLwUqSMYvAWNHKjaT6uIjK2YHGljccy0gCoUg==
-X-Google-Smtp-Source: ADFU+vuqWI1okeIEKVWttizSEM5+86jFnLV1WXerjvGWOLaY7prRU7aBOXi7RzasPCbo3bmZNaNLqK66zhw+3WtGSdQ=
-X-Received: by 2002:a67:646:: with SMTP id 67mr4966608vsg.34.1584018532247;
- Thu, 12 Mar 2020 06:08:52 -0700 (PDT)
+        bh=c/71/1S9FFPBZLngXcn7eOGZxEYwsgQn+LiJXaTEkt8=;
+        b=N8ufiusFBtcRhgXgH7TD9zP+UcwdJqmtL1tippmkGmTYWXBDLX5TFGvqJev4WaP6PG
+         B1d15Cxu4+kOVhmqtX9EK+mu2u4cn7kUka/v1FYqsgAiVKcJc6/X1Sr+ac++U/e51zy1
+         ktakIE8vxO1wHRYK87i4PAMhFS8+75umvcpSVpkJ2arhKL8uwqad0Dcsrj66kQVN6BgW
+         UmEsi6fsO6+yWEN6W4TuzD6QXxK3WmaQvxN5D8MbuWa0LfhNm0hcij86XND2AbOq5YXE
+         jYprbZCqUHDbHY2HPm7tIcL27pQVMQzea5+aiyWQ72U7/S9lo4M6RkvH716NU2ui1/ri
+         j5+Q==
+X-Gm-Message-State: ANhLgQ0DXCof6D19xg79qiptDhRu+OTsZFLolzCAt+YY3kW9+imOVc6Y
+        FYTOuTndHILU+Dtr04mvJRnGflT4Mju3yAFXa3Rdvg==
+X-Google-Smtp-Source: ADFU+vvkBY6+7KljoIBo06yuh++7mQGBlfwWaxlmBrxgvs2H6ahSYqDiyk/zugbPV+nCMOkSfEf3tQK6yQglm6UvXwc=
+X-Received: by 2002:a05:6102:2051:: with SMTP id q17mr5487529vsr.165.1584018537836;
+ Thu, 12 Mar 2020 06:08:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583916962-9467-1-git-send-email-skomatineni@nvidia.com> <1583916962-9467-2-git-send-email-skomatineni@nvidia.com>
-In-Reply-To: <1583916962-9467-2-git-send-email-skomatineni@nvidia.com>
+References: <20200307160556.16226-1-jbx6244@gmail.com>
+In-Reply-To: <20200307160556.16226-1-jbx6244@gmail.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Mar 2020 14:08:16 +0100
-Message-ID: <CAPDyKFrF4EahPZ3VxEGYBbxCGXAEHFZHtte79CW=2-jEpvLvTA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bradley Bolen <bradleybolen@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Date:   Thu, 12 Mar 2020 14:08:21 +0100
+Message-ID: <CAPDyKFq22RTPQ2FD+yMYTstyEhqU=6piiiDkEFs4CB5f6uRG4Q@mail.gmail.com>
+Subject: Re: [PATCH v1] dt-bindings: mmc: synopsys-dw-mshc: fix
+ clock-freq-min-max in example
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--trimmed cc list
-
-On Thu, 12 Mar 2020 at 00:51, Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
+On Sat, 7 Mar 2020 at 17:06, Johan Jonker <jbx6244@gmail.com> wrote:
 >
-> Tegra sdhci host supports HW busy detection of the device busy
-> signaling over data0 lane.
+> A test with the command below does not detect all errors
+> in combination with 'additionalProperties: false' and
+> allOf:
+>   - $ref: "synopsys-dw-mshc-common.yaml#"
+> allOf:
+>   - $ref: "mmc-controller.yaml#"
 >
-> So, this patch enables host capability MMC_CAP_wAIT_WHILE_BUSY.
+> 'additionalProperties' applies to all properties that are not
+> accounted-for by 'properties' or 'patternProperties' in
+> the immediate schema.
 >
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> First when we combine synopsys-dw-mshc.yaml,
+> synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
+> this error:
+>
+> Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.example.dt.yaml:
+> mmc@12200000: 'clock-freq-min-max' does not match any of the regexes:
+> '^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
+> uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
+>
+> 'clock-freq-min-max' is deprecated, so replace it by 'max-frequency'.
+>
+> make ARCH=arm dt_binding_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
 Applied for next, thanks!
 
@@ -92,24 +108,23 @@ Kind regards
 Uffe
 
 
-
 > ---
->  drivers/mmc/host/sdhci-tegra.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index fa8f6a4..1c381f8 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -1580,6 +1580,8 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->         if (rc)
->                 goto err_parse_dt;
->
-> +       host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
-> +
->         if (tegra_host->soc_data->nvquirks & NVQUIRK_ENABLE_DDR50)
->                 host->mmc->caps |= MMC_CAP_1_8V_DDR;
->
+> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+> index 05f9f36dc..dd2c1b147 100644
+> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+> @@ -62,7 +62,7 @@ examples:
+>        cap-mmc-highspeed;
+>        cap-sd-highspeed;
+>        card-detect-delay = <200>;
+> -      clock-freq-min-max = <400000 200000000>;
+> +      max-frequency = <200000000>;
+>        clock-frequency = <400000000>;
+>        data-addr = <0x200>;
+>        fifo-depth = <0x80>;
 > --
-> 2.7.4
+> 2.11.0
 >
