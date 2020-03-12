@@ -2,63 +2,119 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AAEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CBE20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1540020736
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WPUU4xVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbgCLG2o (ORCPT
+        id S2387960AbgCLG2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:28:44 -0400
-Received: from smtprelay0180.hostedemail.com ([216.40.44.180]:45052 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387831AbgCLG2o (ORCPT
+        Thu, 12 Mar 2020 02:28:51 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60080 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387948AbgCLG2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:28:44 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id B623C182CED34;
-        Thu, 12 Mar 2020 06:28:43 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: force01_4c0870e44a755
-X-Filterd-Recvd-Size: 1322
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 12 Mar 2020 06:28:42 +0000 (UTC)
-Message-ID: <cf74e8fdd3ee99aec86cec4abfdb1ce84b7fd90a.camel@perches.com>
-Subject: Re: [PATCH -next 001/491] MELLANOX ETHERNET INNOVA DRIVERS: Use
- fallthrough;
-From:   Joe Perches <joe@perches.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     borisp@mellanox.com, saeedm@mellanox.com, leon@kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 23:26:59 -0700
-In-Reply-To: <20200311.232302.1442236068172575398.davem@davemloft.net>
-References: <cover.1583896344.git.joe@perches.com>
-         <605f5d4954fcb254fe6fc5c22dc707f29b3b7405.1583896347.git.joe@perches.com>
-         <20200311.232302.1442236068172575398.davem@davemloft.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 12 Mar 2020 02:28:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583994530; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=1U9Dhk5Hq6bAWxKppOxTuYI7ucms9N1Z1Z8GWTVbRSk=;
+ b=WPUU4xVjsY8ZUmqel4UFjlLx4hnUrXe7pa0LJtKIBORDzoP600ZNGqsv04EEiZFWpMEgTVMQ
+ ++eqEprO/tdtvM/WGIA8GgtSz4vxdoOZBaltpNaDLWkQ5NOQ2VEycDCsd8z5268/9OgMoFTy
+ aX+5ldy1IIBSiaGLOdy0SmCCICo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e69d68f.7efb4d199ed8-smtp-out-n01;
+ Thu, 12 Mar 2020 06:28:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 04A0BC43637; Thu, 12 Mar 2020 06:28:30 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FDDEC433CB;
+        Thu, 12 Mar 2020 06:28:30 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 12 Mar 2020 11:58:30 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Sibi Sankar <sibis@codeaurora.org>,
+        ohad@wizery.com, devicetree@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, iommu@lists.linux-foundation.org,
+        robh+dt@kernel.org, agross@kernel.org,
+        saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
+In-Reply-To: <a50040a9-54fe-f682-dd7e-b2991b48d633@arm.com>
+References: <20200309182255.20142-1-sibis@codeaurora.org>
+ <20200310112332.GG3794@8bytes.org>
+ <4ed6ddd667a3e6f670084a443d141474@codeaurora.org>
+ <20200310162320.GL3794@8bytes.org>
+ <a50040a9-54fe-f682-dd7e-b2991b48d633@arm.com>
+Message-ID: <ff805c5c647326c5edaddf2efec5cb87@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 23:23 -0700, David Miller wrote:
-> Joe, please use Subject line subsystem prefixes consistent with what would
-> be used for other changes to these drivers.
+Hi Robin,
 
-Not easy to do for scripted patches.
-There's no mechanism that scriptable.
+On 2020-03-10 22:14, Robin Murphy wrote:
+> On 10/03/2020 4:23 pm, Joerg Roedel wrote:
+>> On Tue, Mar 10, 2020 at 07:30:50PM +0530, Sibi Sankar wrote:
+>>> The accesses are initiated by the firmware
+>>> and they access modem reserved regions.
+>>> However as explained in ^^ any accesses
+>>> outside the region will result in a violation
+>>> and is controlled through XPUs (protection units).
+>> 
+>> Okay, this sounds like a case for arm_smmu_get_resv_region(). It 
+>> should
+>> return an entry for the reserved memory region the firmware needs to
+>> access, so that generic iommu can setup this mapping.
+>> 
+>> Note that it should return that entry only for your device, not for 
+>> all
+>> devices. Maybe there is a property in DT or IORT you can set to
+>> transport this information into the arm-smmu driver.
+>> 
+>> This is pretty similar to RMRR mapping on the Intel VT-d IOMMU or
+>> Unity-mapped ranges in the AMD-Vi IOMMU.
+> 
+> Yup, a way to describe boot-time memory regions in IORT is in the
+> process of being specced out; the first attempt at an equivalent for
+> DT is here:
+> 
+> https://lore.kernel.org/linux-iommu/20191209150748.2471814-1-thierry.reding@gmail.com/
+> 
+> If that's not enough and the SMMU still needs to treat certain Stream
+> IDs specially because they may be untranslatable (due to having direct
+> access to memory as a side-channel), then that should be handled in
+> the SoC-specific corner of the SMMU driver, not delegated to
+> individual endpoint drivers.
+> 
 
-I'm not going to hand-edit 500 patches.
+Are you talking about this one for SoC specific change - 
+https://lore.kernel.org/patchwork/patch/1183530/
 
+Thanks,
+Sai
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
