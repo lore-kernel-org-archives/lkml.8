@@ -2,158 +2,100 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DA4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE8AC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE742071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E07206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BMCTDmm9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIvMy9yG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgCLOia (ORCPT
+        id S1727674AbgCLOjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:38:30 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26345 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727359AbgCLOia (ORCPT
+        Thu, 12 Mar 2020 10:39:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35614 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbgCLOjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584023908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RWwK6IUdYRnqNPC8KqT1WwmV8MAzWningNKkG04QsFg=;
-        b=BMCTDmm9lu/L0uA7qN0ufQZp4Z5/auLbB51pg7dPs3OEd4te7A41E23vnaprnjSvDbOLS8
-        kIu+HFiCFn+yEVSkx+/zkIize9WPQadaXqmTi2xSW3AJ4TqIMykJbhFIdqjQr8uA6iz2h+
-        0joyBMOOqe1ZB5nRoGOJax4CzaZOD+0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-zhnDCHdxNcKY3-rPimw8RA-1; Thu, 12 Mar 2020 10:38:25 -0400
-X-MC-Unique: zhnDCHdxNcKY3-rPimw8RA-1
-Received: by mail-wr1-f72.google.com with SMTP id z13so2698716wrv.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:38:25 -0700 (PDT)
+        Thu, 12 Mar 2020 10:39:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d5so7453266wrc.2;
+        Thu, 12 Mar 2020 07:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Gh68Trk0v1VLiAj6jDTGi0HWdz0Xo0dSTWDaOMm1MTw=;
+        b=LIvMy9yGVZS4Ff7qe030zT5MGioQil0x/ntqKRVbs/0DuarcdPb8iUCe6m36CDbCVG
+         gfyMwbvb7pzqHndVHhVrvtV5VSxyBdspyYsnDUTpPprK23HjP9UDezOu08708IXtadRS
+         jBiTuILhvPxhxdchFvTBDPkGF6Fj9aL6qP349QFgOLaNo1W/EIr5y7TQzu837KdbAbCC
+         JqIDUA5NPHwqxC5Q3EYLcoJNig194jeNcZZqX7NIYr7rFes8fCjMyC8IfQRnVa9WEFDl
+         kkL6Nhdvb6HdKbnMt0vgMEkw9k+s4d+7Y3kX50ef2g87/Dpum6/OkTqvmUnBp7O2ETwT
+         dmdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RWwK6IUdYRnqNPC8KqT1WwmV8MAzWningNKkG04QsFg=;
-        b=acYtJYo7w3npNApULEZ+x41GVpf2LVxXKnizsXtM580D5Qb1cKRE3iEilCfqBAI/3C
-         mZTR2ddaY/LKSOjz9b58S4IBkRAmD9al6Oh0pG0T3HnykaHtoJkudT3a45R5FDK3/M8q
-         kz5yhpZPEjV4vH3Tbw9ypArXk4FUWo7p5EWc1Gni0BfL5xHqoE5VsIuvXT+dsXscecsn
-         A1+fyTUTBs8oK0xJ/LpWQk6wvWCoSPv2YGRai3pPFUIiaWNcOwKjMGFcFm0Idjam/4/m
-         w1i/6JTTbLczW22LcXWf6wb9SMW9mnsMdHnICH2yI/SLnqu/Q7qeOxXF7fDBMEmZ2VyH
-         Vulg==
-X-Gm-Message-State: ANhLgQ3Z9zoJP67RL+VVWAEeWmKKUIVT/ddS5d3EE4Kliny+mAMKpH92
-        X5BY2eAQ5Nkz5ijy/uYxUwEQyToE8hHj3H6GZlPiVphw88xShayNyUTatdNEb7AkXNXKmp2zY0Q
-        1gYwYeC6NqtN/s1XEXOS9tTKa
-X-Received: by 2002:adf:ee02:: with SMTP id y2mr10832310wrn.23.1584023903943;
-        Thu, 12 Mar 2020 07:38:23 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsCyiNMu5UigVrpXztFr7FX9dh2gaJ801u9H/YxZqKbf8bqUI8lsg4DMfdHgWruzVs1DM4ekA==
-X-Received: by 2002:adf:ee02:: with SMTP id y2mr10832287wrn.23.1584023903750;
-        Thu, 12 Mar 2020 07:38:23 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id w22sm12951369wmk.34.2020.03.12.07.38.22
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Gh68Trk0v1VLiAj6jDTGi0HWdz0Xo0dSTWDaOMm1MTw=;
+        b=PNzZOu88/mKkVcki50ZNFv+870h5gdpGq6akQP1hj9B6gHUTuOz6vFACi2KQ3ftH4B
+         A2zRxoZFKwVdyNj7QOcEaBSV8CBsJtAWPxQxF/RZlB68hRXQX2KFbKWmXQquVHV9Wz5Z
+         SsCn9y0/J4K9bXkppstPKCxlIN4bDMYEvLONRAc9iCx4ZWZtDCl9orDV6AKp7jRkPEfS
+         cyADSPYyECM+p4QZ9GXvrV/PsBNX0lcAxuOR27QjUiUFU+/fDAXaccAFM9FoOAsDbemd
+         3fypbNckvBSzHt8tFfY+41x7Sahr2VQD+pdJw9FTyTx9v5yn6uDZhH7m9eemzwNmfIF2
+         Qdcw==
+X-Gm-Message-State: ANhLgQ2v4RZ7OXkpjzXgBptDvM2UgA21IwBvIcQaVjDLCvgjWQuzJ1MR
+        rEnYIgVEHl2lxhUjxvlh8MEDTfh7+i4cvw==
+X-Google-Smtp-Source: ADFU+vtd6pFHy8us6TRQj7Sj0ZChzcReBnODNWMt6SuYH+Snk6tVg1B51+V/2fjT4roFTLE5Xa2e0Q==
+X-Received: by 2002:a5d:6a0e:: with SMTP id m14mr11537032wru.202.1584023962390;
+        Thu, 12 Mar 2020 07:39:22 -0700 (PDT)
+Received: from [10.7.1.8] ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id c8sm66848031wru.7.2020.03.12.07.39.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 07:38:23 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
- purgatory.ro has missing symbols
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200311214601.18141-1-hdegoede@redhat.com>
- <20200311214601.18141-3-hdegoede@redhat.com>
- <20200312001006.GA170175@rani.riverdale.lan>
- <3d58e77d-41e5-7927-fe84-4c058015e469@redhat.com>
- <20200312114225.GB15619@zn.tnic>
- <899f366e-385d-bafa-9051-4e93dc9ba321@redhat.com>
- <20200312125032.GC15619@zn.tnic>
- <8af51d90-27fa-6d2a-2159-ef0a9089453a@redhat.com>
- <20200312142553.GF15619@zn.tnic>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <94c6f903-7dca-503e-aca7-1ee4641bcdac@redhat.com>
-Date:   Thu, 12 Mar 2020 15:38:22 +0100
+        Thu, 12 Mar 2020 07:39:21 -0700 (PDT)
+Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200312094008.1833929-1-gabravier@gmail.com>
+ <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
+ <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com>
+ <CAMpxmJVSPA9CQBGULyk69KaP42oMdKGg883z0FeFC_mSA5w2xA@mail.gmail.com>
+ <55db9307-9a20-239e-127c-ea043600248d@gmail.com>
+ <CAMpxmJXUa7rk51XXvLjgueD9i1k98A+5gLx9WowChRb64k1mPQ@mail.gmail.com>
+From:   Gabriel Ravier <gabravier@gmail.com>
+Message-ID: <ba18951f-abf9-06eb-22a5-3f92d3c89fa2@gmail.com>
+Date:   Thu, 12 Mar 2020 15:39:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200312142553.GF15619@zn.tnic>
+In-Reply-To: <CAMpxmJXUa7rk51XXvLjgueD9i1k98A+5gLx9WowChRb64k1mPQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/12/20 3:25 PM, Borislav Petkov wrote:
-> On Thu, Mar 12, 2020 at 02:34:30PM +0100, Hans de Goede wrote:
-
-<snip>
-
->> No not ok, I'm doing my best to help make things better here and
->> in return I'm getting what feels as a bunch of negativity and that
->> is NOT ok!
-> 
-> I have no clue what in my replies made you feel that. Please explain.
-> How should I have replied so that it doesn't come across negative?
-
-I posted v3 of this patch 5 months ago, then after 0day bot found
-an issue after the resend I send a v4 honestly believing that that
-was the only issue with it.
-
-0day bot found another issue, so I send out v5, checking what special
-options similar code (EFI libstub) uses to make sure I cover all special
-cases this time.
-
-So I've send out 2 versions, not 5 not 10, but only 2 versions in
-the past 2 days and you start complaining about me rushing this and
-not fixing it properly, to me that does not come across positive.
-
-More specifically my intentions / motives on this were well intended
-and I too believe in fixing things the proper way. Your reply suggested
-that I just want to rush this through, which calls my motives into
-question, for which in my mind there was no reason.
-
-If you complain about 2 versions in 2 days, or 5 versions over 5 months
-then that feels exaggerated and it certainly does not give me a feeling
-that the effort which I'm putting into this is being appreciated.
-
-Anyways we have a plan how to move forward with this now, so lets
-focus on that.
-
->> Now as how to move forward with this, I suggest that:
+On 3/12/20 3:36 PM, Bartosz Golaszewski wrote:
+> czw., 12 mar 2020 o 15:33 Gabriel Ravier <gabravier@gmail.com> napisał(a):
+>> Ah, seems like I didn't read the guide to getting code into the kernel
+>> thoroughly enough. Should I send the patch yet again just with a v2 in
+>> the subject header or is there no need to bother with that ?
 >>
->> 1) We wait a bit to see if the 0daybot finds any more existing issues
->> which are exposed by my patch
->>
->> 2) Change my patch to check for missing symbols to use the approach
->> which Arvind has suggested
->>
->> 3) Check that "kexec -l <kernel>" + "kexec -e" still work
->>
->> 4) Post v6.
-> 
-> 5) Wait for 0day bot to chew on it too.
-> 
->> Does that work for you ?
-> 
-> Yes, sounds ok.
+> Please do so that patchwork picks it up. Also: please don't top-post
+> on LKML ie. respond below others' text.
+>
+> Bart
 
-Ok, then lets move forward with this.
+Ok, will send it with s/PATCH/PATCH v2 ASAP.
 
-Regards,
-
-Hans
+Btw, is the "top-posting" the reason why lkml.org doesn't seem to be 
+able to find my replies to your posts ?
 
