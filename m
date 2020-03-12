@@ -2,39 +2,42 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A76C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB219C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5CE2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56B620716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbgCLHMY (ORCPT
+        id S2388148AbgCLHMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:12:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11632 "EHLO huawei.com"
+        Thu, 12 Mar 2020 03:12:21 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11635 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388069AbgCLHMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388089AbgCLHMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 03:12:19 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ED8102E6CF4DC1D5E059;
-        Thu, 12 Mar 2020 15:12:13 +0800 (CST)
+        by Forcepoint Email with ESMTP id 16476B0A14B8EB317EBF;
+        Thu, 12 Mar 2020 15:12:14 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 12 Mar 2020 15:12:05 +0800
+ 14.3.487.0; Thu, 12 Mar 2020 15:12:06 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 0/4] net: hns3: fixes for -net
-Date:   Thu, 12 Mar 2020 15:11:02 +0800
-Message-ID: <1583997066-24773-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net 3/4] net: hns3: fix RMW issue for VLAN filter switch
+Date:   Thu, 12 Mar 2020 15:11:05 +0800
+Message-ID: <1583997066-24773-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583997066-24773-1-git-send-email-tanhuazhong@huawei.com>
+References: <1583997066-24773-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -44,28 +47,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series includes several bugfixes for the HNS3 ethernet driver.
+From: Jian Shen <shenjian15@huawei.com>
 
-[patch 1] fixes an "tc qdisc del" failure.
-[patch 2] fixes SW & HW VLAN table not consistent issue.
-[patch 3] fixes a RMW issue related to VLAN filter switch.
-[patch 4] clears port based VLAN when uploading PF.
+According to the user manual, the ingress and egress VLAN filter
+are configured at the same time. Currently, hclge_init_vlan_config()
+and hclge_set_vlan_spoofchk() will both change the VLAN filter
+switch. So it's necessary to read the old configuration before
+modifying it.
 
-Jian Shen (3):
-  net: hns3: fix VF VLAN table entries inconsistent issue
-  net: hns3: fix RMW issue for VLAN filter switch
-  net: hns3: clear port base VLAN when unload PF
+Fixes: 22044f95faa0 ("net: hns3: add support for spoof check setting")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-Yonglong Liu (1):
-  net: hns3: fix "tc qdisc del" failed issue
-
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  1 +
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 43 ++++++++++++++++++++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  1 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  3 ++
- 5 files changed, 45 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 6deeb96..06d0ed0 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -7745,16 +7745,27 @@ static int hclge_set_vlan_filter_ctrl(struct hclge_dev *hdev, u8 vlan_type,
+ 	struct hclge_desc desc;
+ 	int ret;
+ 
+-	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_VLAN_FILTER_CTRL, false);
+-
++	/* read current vlan filter parameter */
++	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_VLAN_FILTER_CTRL, true);
+ 	req = (struct hclge_vlan_filter_ctrl_cmd *)desc.data;
+ 	req->vlan_type = vlan_type;
+-	req->vlan_fe = filter_en ? fe_type : 0;
+ 	req->vf_id = vf_id;
+ 
+ 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
++	if (ret) {
++		dev_err(&hdev->pdev->dev,
++			"failed to get vlan filter config, ret = %d.\n", ret);
++		return ret;
++	}
++
++	/* modify and write new config parameter */
++	hclge_cmd_reuse_desc(&desc, false);
++	req->vlan_fe = filter_en ?
++			(req->vlan_fe | fe_type) : (req->vlan_fe & ~fe_type);
++
++	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
+ 	if (ret)
+-		dev_err(&hdev->pdev->dev, "set vlan filter fail, ret =%d.\n",
++		dev_err(&hdev->pdev->dev, "failed to set vlan filter, ret = %d.\n",
+ 			ret);
+ 
+ 	return ret;
 -- 
 2.7.4
 
