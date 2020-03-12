@@ -2,335 +2,126 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97720C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF812C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5FD206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B40206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1HT3VKA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYU7Fc2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCLIkT (ORCPT
+        id S1726683AbgCLIk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:40:19 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35038 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgCLIkS (ORCPT
+        Thu, 12 Mar 2020 04:40:57 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:32938 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgCLIk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:40:18 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m9so3174684vso.2;
-        Thu, 12 Mar 2020 01:40:17 -0700 (PDT)
+        Thu, 12 Mar 2020 04:40:57 -0400
+Received: by mail-pj1-f67.google.com with SMTP id dw20so517992pjb.0;
+        Thu, 12 Mar 2020 01:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QcZ2BowIj1mMaoHi3wMrHLLDZ1v/hgy/7xmi7Ci4Dsc=;
-        b=D1HT3VKAqPG6bFLUnNWaDvqxxKjE8znuqxzMFvXsPD3pGdZuik3/hEnhbU02/L2ADl
-         cL7P1YUss6RDwgxxLwbj0JEgr4QRVmu/cTzzx3mAXyufZ+XGAjs6n9vo6y2yblO/ol/h
-         G9RT+1znCthaOL4Y8oHV0uQHe+1LHqOb1TNwHZAfYEd3AvYc+smer8FfDV7ezVHIeCRl
-         BYe7+INiwtzWvZ8xbnloH42dMN1E/ALBH+EaXZp5CpO9zO2zbTV2RE1WnezYlKiT4ZVe
-         plTPv64rQDY3EkbLU5hxO3C22fxI7VAxDtXDchkLGwqIGv3sJvgvFBqIeYGTViQI2/Uy
-         epxQ==
+        bh=B66v4eXPQ7K83ouJ2mPSLQXCELI/fDI8PZuRhUCkLnE=;
+        b=TYU7Fc2fKR+lYRhdC12JYyZExBYrzc3NrCl6ugsTHfm8MzFBfhvhUw+s6jbUgTo+R+
+         fDraAnZ+8JGEkVg+ImFpwiwiewaq+qaHw0CrmmgNCR8VyNfrVwQ/CQYEhIp493bdEoYP
+         m2F/HdSYgp9LccmIbihcO6NjIJ+omW9sm28hz+JjxXEBJerHu6L2FRWNID1pepwD5AYM
+         dIsldxeMszGF09fsj3Vc0AE+MZGMTmO6NQApXPZ2zaQrEo0mZ7Us6GxQa7p004K0mwkZ
+         xTnixzieTBUen4tV/j0C2YQM/sbdrtSc9S0NMMKAraw/NkxTB84MvcAqRD7AmOUJKAaS
+         d3gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QcZ2BowIj1mMaoHi3wMrHLLDZ1v/hgy/7xmi7Ci4Dsc=;
-        b=gUPkUGqFV+0CImxFu5jMjLt3aPc44ByPDN3RwMwMiJyzYCk1KJNQWbia69yHJML8mF
-         8XibyC/7V18GsWnIKkHW3bA1V3+JUejuYLI+0+/DjNvQR0Tcrc0VYsJgyj7nO0D6ApC5
-         DGRi4nRZL9pagX7Eg8RxfUEP1yafF2qbbVaFx5KmLVR7nMatPLmA3YaBQ6+4rcboZEqD
-         qL5vZnZOiCNqofl4Z0xJTJGpFXVc1kZW1xgVzK3lsg011w2USjKO5GpueoIgOSITfLwy
-         kWkInxcDwj2kI5E2t57ff6p8hOme20wpN5m9u1sPF/39++zlfZiOT4xoNs5uL5v4CKMg
-         L5rg==
-X-Gm-Message-State: ANhLgQ1qQKiutjsm04L13DanL7eQ0zlxF2xAth6bia4Qj1FO37wao/9T
-        z4RUiICcS3WMwfCmEFPR5mDZ+z32iHGj3PEQH48Z0iGq
-X-Google-Smtp-Source: ADFU+vsLYTD5Vxqa/lXMMHg3t0IXeGXaNxnkcHGdweKfRcrDq4G6yKM9B+MXoTO1Kjs0f8JpNJNWy6/HGhBQuRkpDCQ=
-X-Received: by 2002:a67:24c1:: with SMTP id k184mr4601402vsk.177.1584002416920;
- Thu, 12 Mar 2020 01:40:16 -0700 (PDT)
+        bh=B66v4eXPQ7K83ouJ2mPSLQXCELI/fDI8PZuRhUCkLnE=;
+        b=A95dgAVs25IiPOof0m05hd+ACwXXdI5BTJ3GiJDteib9RsA3H4bgLcUm+xS/2iF6bh
+         JQGuWCRfaGRnlb43jaLpV87gDCbWFevSvxmpput0c4qoNc+rk2RnYdpFrCmNbosrpcGB
+         XdbHd1ymy72T4jGyOFP0mVMzhiPIv+5lZ30L/0YhPTM0QljQne4PGvvUNT+bSZksk7a7
+         ONsJOiwxN6AsCM0RHinl6mD9494ZqfvG3qtEBNnCL5F+fVakqp1wdklce2BJNIGlHlLc
+         Pe7PPYbWiQqGklOVa2UrAjpj/RKw2Dw+6AaIzIQhg/sPBvzbVFEA2lBsqVGddHu5a+A0
+         iMXg==
+X-Gm-Message-State: ANhLgQ32ry3e8UXbSNh5fJ9r66eVeZmSOQbQwMv1e+fiCUYj4nWVmrsH
+        VrvJDhabHMt99G8mRrcMDsO7zeOjyODSGtxR7UY=
+X-Google-Smtp-Source: ADFU+vuCKsscjSBeYXkw3i4mhPJxhdDEyr6X9XyMUb7h5TIyA/i3v2HoTj6+Kfbm9VvcmM/QGsM3gb/gwmJ8NJ7ImUc=
+X-Received: by 2002:a17:90a:77c3:: with SMTP id e3mr2939586pjs.143.1584002454410;
+ Thu, 12 Mar 2020 01:40:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200303093327.8720-1-gmayyyha@gmail.com> <CAOi1vP8jZ2tX_dg90uZY5G8cKX2Lzyu2vrGT_Ew0gVsnK4DDMA@mail.gmail.com>
- <CAB9OAC1+OOgaLF33bSrQ3WeKZyU0qwBqUQzi9MOXwzGta_b2XA@mail.gmail.com> <CAOi1vP9ZHj7gyrjrMmA2oa+cY3ZEO+4-mdJ0HMX7zSWvi_FRTA@mail.gmail.com>
-In-Reply-To: <CAOi1vP9ZHj7gyrjrMmA2oa+cY3ZEO+4-mdJ0HMX7zSWvi_FRTA@mail.gmail.com>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Thu, 12 Mar 2020 16:40:05 +0800
-Message-ID: <CAB9OAC0ZQtti3R3dtxfShBTJXvmwKb_cyY9K=k1mmq3kDm_myQ@mail.gmail.com>
-Subject: Re: [v2] ceph: using POOL FULL flag instead of OSDMAP FULL flag
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+References: <20200311125135.30832-1-ple@baylibre.com> <20200311125135.30832-4-ple@baylibre.com>
+ <20200311135535.GQ1922688@smile.fi.intel.com> <20200312005333.GH1639@pendragon.ideasonboard.com>
+In-Reply-To: <20200312005333.GH1639@pendragon.ideasonboard.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 12 Mar 2020 10:40:46 +0200
+Message-ID: <CAHp75Vc8oREKpiz6pR_QiTDHbymh-KKEP5ZzcT8iDJhZs=0bMw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm: bridge: add it66121 driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Phong LE <ple@baylibre.com>, narmstrong@baylibre.com,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        heiko.stuebner@theobroma-systems.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>, icenowy@aosc.io,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 9:41 PM Ilya Dryomov <idryomov@gmail.com> wrote:
->
-> On Wed, Mar 11, 2020 at 10:55 AM Yanhu Cao <gmayyyha@gmail.com> wrote:
+On Thu, Mar 12, 2020 at 2:56 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wed, Mar 11, 2020 at 03:55:35PM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 11, 2020 at 01:51:34PM +0100, Phong LE wrote:
+> > > This commit is a simple driver for bridge HMDI it66121.
+> > > The input format is RBG and there is no color conversion.
+> > > Audio, HDCP and CEC are not supported yet.
 > >
-> > On Tue, Mar 10, 2020 at 4:43 AM Ilya Dryomov <idryomov@gmail.com> wrote:
-> > >
-> > > On Tue, Mar 3, 2020 at 10:33 AM Yanhu Cao <gmayyyha@gmail.com> wrote:
-> > > >
-> > > > CEPH_OSDMAP_FULL/NEARFULL has been deprecated since mimic, so it
-> > > > does not work well in new versions, added POOL flags to handle it.
-> > > >
-> > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > > ---
-> > > >  fs/ceph/file.c                  |  9 +++++++--
-> > > >  include/linux/ceph/osd_client.h |  2 ++
-> > > >  include/linux/ceph/osdmap.h     |  3 ++-
-> > > >  net/ceph/osd_client.c           | 23 +++++++++++++----------
-> > > >  4 files changed, 24 insertions(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > > index 7e0190b1f821..84ec44f9d77a 100644
-> > > > --- a/fs/ceph/file.c
-> > > > +++ b/fs/ceph/file.c
-> > > > @@ -1482,7 +1482,9 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> > > >         }
-> > > >
-> > > >         /* FIXME: not complete since it doesn't account for being at quota */
-> > > > -       if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
-> > > > +       if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL) ||
-> > > > +           pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> > > > +                                               CEPH_POOL_FLAG_FULL)) {
-> > > >                 err = -ENOSPC;
-> > > >                 goto out;
-> > > >         }
-> > > > @@ -1575,7 +1577,10 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> > > >         }
-> > > >
-> > > >         if (written >= 0) {
-> > > > -               if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-> > > > +               if (ceph_osdmap_flag(&fsc->client->osdc,
-> > > > +                                       CEPH_OSDMAP_NEARFULL) ||
-> > > > +                   pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> > > > +                                       CEPH_POOL_FLAG_NEARFULL))
-> > > >                         iocb->ki_flags |= IOCB_DSYNC;
-> > > >                 written = generic_write_sync(iocb, written);
-> > > >         }
-> > > > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> > > > index 5a62dbd3f4c2..be9007b93862 100644
-> > > > --- a/include/linux/ceph/osd_client.h
-> > > > +++ b/include/linux/ceph/osd_client.h
-> > > > @@ -375,6 +375,8 @@ static inline bool ceph_osdmap_flag(struct ceph_osd_client *osdc, int flag)
-> > > >         return osdc->osdmap->flags & flag;
-> > > >  }
-> > > >
-> > > > +bool pool_flag(struct ceph_osd_client *osdc, s64 pool_id, int flag);
-> > > > +
-> > > >  extern int ceph_osdc_setup(void);
-> > > >  extern void ceph_osdc_cleanup(void);
-> > > >
-> > > > diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
-> > > > index e081b56f1c1d..88faacc11f55 100644
-> > > > --- a/include/linux/ceph/osdmap.h
-> > > > +++ b/include/linux/ceph/osdmap.h
-> > > > @@ -36,7 +36,8 @@ int ceph_spg_compare(const struct ceph_spg *lhs, const struct ceph_spg *rhs);
-> > > >
-> > > >  #define CEPH_POOL_FLAG_HASHPSPOOL      (1ULL << 0) /* hash pg seed and pool id
-> > > >                                                        together */
-> > > > -#define CEPH_POOL_FLAG_FULL            (1ULL << 1) /* pool is full */
-> > > > +#define CEPH_POOL_FLAG_FULL            (1ULL << 1)  /* pool is full */
-> > > > +#define CEPH_POOL_FLAG_NEARFULL        (1ULL << 11) /* pool is nearfull */
-> > > >
-> > > >  struct ceph_pg_pool_info {
-> > > >         struct rb_node node;
-> > > > diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> > > > index b68b376d8c2f..9ad2b96c3e78 100644
-> > > > --- a/net/ceph/osd_client.c
-> > > > +++ b/net/ceph/osd_client.c
-> > > > @@ -1447,9 +1447,9 @@ static void unlink_request(struct ceph_osd *osd, struct ceph_osd_request *req)
-> > > >                 atomic_dec(&osd->o_osdc->num_homeless);
-> > > >  }
-> > > >
-> > > > -static bool __pool_full(struct ceph_pg_pool_info *pi)
-> > > > +static bool __pool_flag(struct ceph_pg_pool_info *pi, int flag)
-> > > >  {
-> > > > -       return pi->flags & CEPH_POOL_FLAG_FULL;
-> > > > +       return pi->flags & flag;
-> > > >  }
-> > > >
-> > > >  static bool have_pool_full(struct ceph_osd_client *osdc)
-> > > > @@ -1460,14 +1460,14 @@ static bool have_pool_full(struct ceph_osd_client *osdc)
-> > > >                 struct ceph_pg_pool_info *pi =
-> > > >                     rb_entry(n, struct ceph_pg_pool_info, node);
-> > > >
-> > > > -               if (__pool_full(pi))
-> > > > +               if (__pool_flag(pi, CEPH_POOL_FLAG_FULL))
-> > > >                         return true;
-> > > >         }
-> > > >
-> > > >         return false;
-> > > >  }
-> > > >
-> > > > -static bool pool_full(struct ceph_osd_client *osdc, s64 pool_id)
-> > > > +bool pool_flag(struct ceph_osd_client *osdc, s64 pool_id, int flag)
-> > > >  {
-> > > >         struct ceph_pg_pool_info *pi;
-> > > >
-> > > > @@ -1475,8 +1475,10 @@ static bool pool_full(struct ceph_osd_client *osdc, s64 pool_id)
-> > > >         if (!pi)
-> > > >                 return false;
-> > > >
-> > > > -       return __pool_full(pi);
-> > > > +       return __pool_flag(pi, flag);
-> > > >  }
-> > > > +EXPORT_SYMBOL(pool_flag);
-> > > > +
-> > > >
-> > > >  /*
-> > > >   * Returns whether a request should be blocked from being sent
-> > > > @@ -1489,7 +1491,7 @@ static bool target_should_be_paused(struct ceph_osd_client *osdc,
-> > > >         bool pauserd = ceph_osdmap_flag(osdc, CEPH_OSDMAP_PAUSERD);
-> > > >         bool pausewr = ceph_osdmap_flag(osdc, CEPH_OSDMAP_PAUSEWR) ||
-> > > >                        ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
-> > > > -                      __pool_full(pi);
-> > > > +                      __pool_flag(pi, CEPH_POOL_FLAG_FULL);
-> > > >
-> > > >         WARN_ON(pi->id != t->target_oloc.pool);
-> > > >         return ((t->flags & CEPH_OSD_FLAG_READ) && pauserd) ||
-> > > > @@ -2320,7 +2322,8 @@ static void __submit_request(struct ceph_osd_request *req, bool wrlocked)
-> > > >                    !(req->r_flags & (CEPH_OSD_FLAG_FULL_TRY |
-> > > >                                      CEPH_OSD_FLAG_FULL_FORCE)) &&
-> > > >                    (ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
-> > > > -                   pool_full(osdc, req->r_t.base_oloc.pool))) {
-> > > > +                  pool_flag(osdc, req->r_t.base_oloc.pool,
-> > > > +                            CEPH_POOL_FLAG_FULL))) {
-> > > >                 dout("req %p full/pool_full\n", req);
-> > > >                 if (ceph_test_opt(osdc->client, ABORT_ON_FULL)) {
-> > > >                         err = -ENOSPC;
-> > > > @@ -2539,7 +2542,7 @@ static int abort_on_full_fn(struct ceph_osd_request *req, void *arg)
-> > > >
-> > > >         if ((req->r_flags & CEPH_OSD_FLAG_WRITE) &&
-> > > >             (ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
-> > > > -            pool_full(osdc, req->r_t.base_oloc.pool))) {
-> > > > +            pool_flag(osdc, req->r_t.base_oloc.pool, CEPH_POOL_FLAG_FULL))) {
-> > > >                 if (!*victims) {
-> > > >                         update_epoch_barrier(osdc, osdc->osdmap->epoch);
-> > > >                         *victims = true;
-> > > > @@ -3707,7 +3710,7 @@ static void set_pool_was_full(struct ceph_osd_client *osdc)
-> > > >                 struct ceph_pg_pool_info *pi =
-> > > >                     rb_entry(n, struct ceph_pg_pool_info, node);
-> > > >
-> > > > -               pi->was_full = __pool_full(pi);
-> > > > +               pi->was_full = __pool_flag(pi, CEPH_POOL_FLAG_FULL);
-> > > >         }
-> > > >  }
-> > > >
-> > > > @@ -3719,7 +3722,7 @@ static bool pool_cleared_full(struct ceph_osd_client *osdc, s64 pool_id)
-> > > >         if (!pi)
-> > > >                 return false;
-> > > >
-> > > > -       return pi->was_full && !__pool_full(pi);
-> > > > +       return pi->was_full && !__pool_flag(pi, CEPH_POOL_FLAG_FULL);
-> > > >  }
-> > > >
-> > > >  static enum calc_target_result
-> > >
-> > > Hi Yanhu,
-> > >
-> > > Sorry for a late reply.
-> > >
-> > > This adds some unnecessary churn and also exposes a helper that
-> > > must be called under osdc->lock without making that obvious.  How
-> > > about the attached instead?
-> > >
-> > > ceph_pg_pool_flags() takes osdmap instead of osdc, making it clear
-> > > that the caller is resposibile for keeping the map stable.
-> > >
-> > > Thanks,
-> > >
-> > >                 Ilya
+> > I guess you should have been told in your company how to use get_maintainer.pl
+> > to avoid spamming people.
 > >
-> > net/ceph/osdmap.c
-> > --------------------------
-> > bool ceph_pg_pool_flags(struct ceph_osdmap *map, s64 pool_id, int flag)
-> > {
-> >         struct ceph_pg_pool_info *pi;
-> >
-> >         /* CEPH_OSDMAP_FULL|CEPH_OSDMAP_NEARFULL deprecated since mimic */
-> >         if (flag & (CEPH_POOL_FLAG_FULL|CEPH_POOL_FLAG_NEARFULL))
-> >                 if (map->flags & (CEPH_OSDMAP_FULL|CEPH_OSDMAP_NEARFULL))
-> >                         return true;
-> >
-> >         pi = ceph_pg_pool_by_id(map, pool_id);
-> >         if (!pi)
-> >                 return false;
-> >
-> >         return pi->flags & flag;
-> > }
-> >
-> > fs/ceph/file.c
-> > -----------------
-> > ceph_write_iter() {
-> > ...
-> >         down_read(&osdc->lock);
-> >         if (ceph_pg_pool_flags(osdc->osdmap, ci->i_layout.pool_id,
-> >                                CEPH_POOL_FLAG_FULL|CEPH_POOL_FLAG_FULL_QUOTA)) {
-> >                 err = -ENOSPC;
-> >                 up_read(&osdc->lock);
-> >                 goto out;
-> >         }
-> >         up_read(&osdc->lock);
-> > ...
-> >          down_read(&osdc->lock);
-> >           if (ceph_pg_pool_flags(osdc->osdmap, ci->i_layout.pool_id,
-> >                                         CEPH_POOL_FLAG_NEARFULL))
-> >               iocb->ki_flags |= IOCB_DSYNC;
-> >           up_read(&osdc->lock);
-> > ...
-> > }
-> >
-> > how about this?
->
-> Well, this takes osdc->lock and looks up ceph_pg_pool_info twice.
-> Given that these checks are inherently racy, I think doing it once
-> at the top makes more sense.
+> > Hint:
+> >       scripts/get_maintainer.pl --git --git-min-percent=67 ...
 
-be modified as follow.
+> I didn't even know about those options...
 
-ceph_write_iter() {
-...
-        down_read(&osdc->lock);
-        pi = ceph_pg_pool_by_id(osdc->osdmap, ci->i_layout.pool_id);
-        if (!pi) {
-                err = -ENOENT;
-                up_read(&osdc->lock);
-                goto out;
-        }
-        up_read(&osdc->lock);
-...
-}
+Doesn't one usually look at the help of the tool they are using?
+How does one know what it does by default?
 
->
-> Also, I don't think this does what you intended it to do.  Your
-> ceph_pg_pool_flags(..., CEPH_POOL_FLAG_FULL) returns true even if
-> the map only has CEPH_OSDMAP_NEARFULL, triggering early ENOSPC.
->
+> I don't think we can't expect
+> contributors to know about this if it's not even documented in
+> Documentation/process/.
 
-Ah... my mistake. According to OSDMAP/POOL flag to do respectively.
+This is indeed not good and there is room for improvement.
 
-        if (ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
-            ceph_pg_pool_flags(pi, CEPH_POOL_FLAG_FULL)) {
-                err = -ENOSPC;
-                goto out;
-        }
+> And even in that case, if this is what every
+> contribution should use by default, then those options should become the
+> default for the get_maintainer.pl script.
 
-include/linux/ceph/osdmap.h
---------------------------------------
-static inline bool ceph_pg_pool_flags(struct ceph_pg_pool_info *pi,  int flag)
-{
-        return pi->flags & flag;
-}
+I don't think so. There is a common sense rule in play.
+By default get_maintainer.pl shows the roles of the people, so, when
+one puts the name at least they may read what the role of the
+recipient in question. If I see too many people in the list (let's say
+4+), I definitely will start looking for the explanation why.
 
-Thanks.
+-- 
+With Best Regards,
+Andy Shevchenko
