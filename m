@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C14C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4389EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC572071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCD7206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SV/fFcT2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kld42q1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387605AbgCLA5g (ORCPT
+        id S2387614AbgCLA5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:57:36 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:48346 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387481AbgCLA5f (ORCPT
+        Wed, 11 Mar 2020 20:57:38 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:51393 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387596AbgCLA5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:57:35 -0400
-Received: by mail-pf1-f202.google.com with SMTP id h24so1759098pfn.15
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:57:33 -0700 (PDT)
+        Wed, 11 Mar 2020 20:57:37 -0400
+Received: by mail-pl1-f202.google.com with SMTP id 71so2309094plb.18
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=/y2DfBHFZLeDghC1UZR41SBlZKupXvp616ynoTxZM98=;
-        b=SV/fFcT2tloK2zMo+2k9wlKlbaMrmAFNisfw9kLxe9ZoA4Np+tDrDDzkSKkjHMvvij
-         Uv9PsRDuhz8AG/bOwby+Lh541GkOm/VshGZocjUlvgFEDNtYSK5OO9U0TEjyq7dCgxgU
-         eGFLF0GIL6vAY+LFh9gHqUrGN6/jmxNhqfsI1AZRy8RZOswfhWLQkZcAl1EQpJA9p62X
-         /x8N7qnmob6AsbtpexGvUh4Qt0z80SxMTzs/6FnVrivoXdS2RNxV1nsFOZjkfIUaDIJ+
-         bMPeVi9VDiH5OwJG4oOI5zYCFah7NMp6weJwhC9ji200LWQzC8QGI2Ab8qGVTeaoe7cq
-         8jqg==
+        bh=qcAbkvR7kU9GB1azrgjvmFCJa8d2ObkOS72LyCjQKeM=;
+        b=kld42q1U0KGeRzqOZmRraNv1+UX7d+mQxkgHJPWyahGGbF1o+gobLTW7aoJiccLH6N
+         L/MYAV3kva8BWYWtsBMMLAVPdGIHHinyShlDsoTLYyQGqGHDKfDyn9w4ItBqj+ChJmCw
+         q9WQxbrfpeCrY4yCYgpA89eWSMw40MIrDTKZ0Qr8O+gBklH6yoIeOSAeDyGucZVtB/AS
+         zhE1LpYJWRkOC/w4KAxl/d3CrdNR/TVBVhTT21IB26b2bPqULyxGNgccUAjNKPmiTnHi
+         4wFNa6hVUpgHObyb8WMn5dZ81qyqQ/KxZFSuXKaVYjZccKg8nrxT3ckfld4vk2HSU3Yf
+         jaJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=/y2DfBHFZLeDghC1UZR41SBlZKupXvp616ynoTxZM98=;
-        b=ke5hYbQWcGuN00IHACJTaDOmVCC/XoDSHMbjo919jQRh/1X050MfWMikLcR9HAI6VP
-         Jk2UgXLlZiH+uD9sUuaRRRSiChZ/rRDvE484CET8Ek2y6DOJmcQORU0fL8hkJLNmbtgw
-         iwpNRzTzTKFxnHnXTLYueHtcFLdT1nzgQVFCM2A7kGL26QrBUIvQ1fFJvsbVUGPWpZJH
-         DQyrOMQbvNcZcfwnNJT5MTy2nu7R6CCRPzaAKoL2s2IDYHrK1yIn/9DfXcxJ+unogJat
-         sMB0J8IBX8jGE/o2vn0R+8048Rh8ckWQ9krZ831uqCmdd1iSEgJ7UTXQ+N8LTSxW5oQH
-         Hbnw==
-X-Gm-Message-State: ANhLgQ2Z32/Lh0eXKsisQqWWm5BkG627hzJ5f6DJHl1+OwpJPe9ao6Og
-        sd9u+R03sJOvedV9VRnP2rrfwkKVjObV
-X-Google-Smtp-Source: ADFU+vshLizOflftnOWAs5W4UTktoOcTU0+c29PIy5C8WM7kPuxnrhF5DwPYwb2WnQXzrBKA5lGcUBJQZ1ZW
-X-Received: by 2002:a17:90a:a893:: with SMTP id h19mr1486955pjq.30.1583974653042;
- Wed, 11 Mar 2020 17:57:33 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 17:57:19 -0700
+        bh=qcAbkvR7kU9GB1azrgjvmFCJa8d2ObkOS72LyCjQKeM=;
+        b=VIlldxrbgEOnSp3JJBwDqwyfWOtSJ4P3WSY2be94mN6Anwl6+DKuhaeOwmKbq3hv0+
+         qmnW776v7loPfDJlFIwBgKq7zRy4NE7RLWLkGDy43wIkfjZDiabwuElT42M4RkzKwgca
+         SKHi/QSvGT3aKWag0IRFVEo4sMhg9ZYU/aAYfwOccVPIBbwnMcJvSGgtPxuPlY+EE20o
+         vy5Ov6P0cx8IKyRquj1AZfSxQTCuac59QrbJNOIihHKxYrHgtv7s7vkoecqW6/eQrXTK
+         Dp+nCtNPm9Q8liTTZAXDVguzX/eorehSiqRd//61I4MDyyk3UL6OQqjdE6oK3BdJG41Q
+         zBPg==
+X-Gm-Message-State: ANhLgQ3f1zokpRUmVg9ObiRKEicFW3H8tsho2v801T+VDyAe4CTK0sv5
+        2UxF2oHI5aqA6jzGA6AFQ2hhZNXAJ5va
+X-Google-Smtp-Source: ADFU+vu1Xs54tHs0E7QPhfTcOhZHWqyiAbMJr5sRKMFDtIKtzeMAufemiv/Tazb0GPl3kNKKokeoTjqugE3a
+X-Received: by 2002:a17:90a:2a89:: with SMTP id j9mr1400770pjd.64.1583974655490;
+ Wed, 11 Mar 2020 17:57:35 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 17:57:20 -0700
 In-Reply-To: <20200312005722.48803-1-rajatja@google.com>
-Message-Id: <20200312005722.48803-3-rajatja@google.com>
+Message-Id: <20200312005722.48803-4-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200312005722.48803-1-rajatja@google.com>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v8 2/5] drm/connector: Add support for privacy-screen property
+Subject: [PATCH v8 3/5] drm/i915: Lookup and attach ACPI device node for connectors
 From:   Rajat Jain <rajatja@google.com>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -88,173 +88,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for generic electronic privacy screen property, that
-can be added by systems that have an integrated EPS.
+Lookup and attach ACPI nodes for intel connectors. The lookup is done
+in compliance with ACPI Spec 6.3
+https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
+(Ref: Pages 1119 - 1123).
+
+This can be useful for any connector specific platform properties. (This
+will be used for privacy screen in next patch).
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v8: Remove the ...destroy_privacy_screen() method and let the property
-    be destroyed along with others at the time of device destruction.
-    (because drm core doesn't also like properties destroyed in
-     late_register()).
-v7: * Initial version, formed by moving the privacy-screen property into
-      drm core.
-    * Break the init_property() into create_property() and attach_property()
-      so that property can be created while registering connector, but
-      attached in late_register() (after ACPI node detection).
+v8: Also print the connector name in debug message.
+v7: Look for ACPI node in ->late_register() hook.
+    Do the scan only once per drm_device (instead of 1 per drm_connector)
+v6: Addressed minor comments from Jani at
+    https://lkml.org/lkml/2020/1/24/1143
+     - local variable renamed.
+     - used drm_dbg_kms()
+     - used acpi_device_handle()
+     - Used opaque type acpi_handle instead of void*
+v5: same as v4
+v4: Same as v3
+v3: fold the code into existing acpi_device_id_update() function
+v2: formed by splitting the original patch into ACPI lookup, and privacy
+    screen property. Also move it into i915 now that I found existing code
+    in i915 that can be re-used.
 
- drivers/gpu/drm/drm_atomic_uapi.c |  4 +++
- drivers/gpu/drm/drm_connector.c   | 51 +++++++++++++++++++++++++++++++
- include/drm/drm_connector.h       | 24 +++++++++++++++
- 3 files changed, 79 insertions(+)
+ drivers/gpu/drm/i915/display/intel_acpi.c     | 26 +++++++++++++++++++
+ .../drm/i915/display/intel_display_types.h    |  5 ++++
+ drivers/gpu/drm/i915/display/intel_dp.c       | 14 ++++++++++
+ drivers/gpu/drm/i915/i915_drv.h               |  2 ++
+ 4 files changed, 47 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
-index a1e5e262bae2d..843a8cdacd149 100644
---- a/drivers/gpu/drm/drm_atomic_uapi.c
-+++ b/drivers/gpu/drm/drm_atomic_uapi.c
-@@ -766,6 +766,8 @@ static int drm_atomic_connector_set_property(struct drm_connector *connector,
- 						   fence_ptr);
- 	} else if (property == connector->max_bpc_property) {
- 		state->max_requested_bpc = val;
-+	} else if (property == connector->privacy_screen_property) {
-+		state->privacy_screen_status = val;
- 	} else if (connector->funcs->atomic_set_property) {
- 		return connector->funcs->atomic_set_property(connector,
- 				state, property, val);
-@@ -842,6 +844,8 @@ drm_atomic_connector_get_property(struct drm_connector *connector,
- 		*val = 0;
- 	} else if (property == connector->max_bpc_property) {
- 		*val = state->max_requested_bpc;
-+	} else if (property == connector->privacy_screen_property) {
-+		*val = state->privacy_screen_status;
- 	} else if (connector->funcs->atomic_get_property) {
- 		return connector->funcs->atomic_get_property(connector,
- 				state, property, val);
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index f632ca05960e7..9a127f67fc59b 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -1171,6 +1171,10 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
-  *	can also expose this property to external outputs, in which case they
-  *	must support "None", which should be the default (since external screens
-  *	have a built-in scaler).
-+ *
-+ * privacy-screen:
-+ *	This optional property can be used to enable / disable an integrated
-+ *	electronic privacy screen that is available on some displays.
-  */
- 
- int drm_connector_create_standard_properties(struct drm_device *dev)
-@@ -2137,6 +2141,53 @@ int drm_connector_set_panel_orientation_with_quirk(
+diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
+index 3e6831cca4ac1..c203fdd7fda8d 100644
+--- a/drivers/gpu/drm/i915/display/intel_acpi.c
++++ b/drivers/gpu/drm/i915/display/intel_acpi.c
+@@ -222,13 +222,26 @@ static u32 acpi_display_type(struct intel_connector *connector)
+ 	return display_type;
  }
- EXPORT_SYMBOL(drm_connector_set_panel_orientation_with_quirk);
  
-+static const struct drm_prop_enum_list privacy_screen_enum[] = {
-+	{ PRIVACY_SCREEN_DISABLED, "Disabled" },
-+	{ PRIVACY_SCREEN_ENABLED, "Enabled" },
-+};
-+
-+/**
-+ * drm_connector_create_privacy_screen_property -
-+ *     create the drm connecter's privacy-screen property.
-+ * @connector: connector for which to create the privacy-screen property
-+ *
-+ * This function creates the "privacy-screen" property for the
-+ * connector. It is not attached.
++/*
++ * Ref: ACPI Spec 6.3
++ * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
++ * Pages 1119 - 1123 describe, what I believe, a standard way of
++ * identifying / addressing "display panels" in the ACPI. It provides
++ * a way for the ACPI to define devices for the display panels attached
++ * to the system. It thus provides a way for the BIOS to export any panel
++ * specific properties to the system via ACPI (like device trees).
 + */
-+void
-+drm_connector_create_privacy_screen_property(struct drm_connector *connector)
-+{
-+	if (connector->privacy_screen_property)
-+		return;
-+
-+	connector->privacy_screen_property =
-+		drm_property_create_enum(connector->dev, DRM_MODE_PROP_ENUM,
-+					 "privacy-screen", privacy_screen_enum,
-+					 ARRAY_SIZE(privacy_screen_enum));
-+}
-+EXPORT_SYMBOL(drm_connector_create_privacy_screen_property);
-+
-+/**
-+ * drm_connector_attach_privacy_screen_property -
-+ *     attach the drm connecter's privacy-screen property.
-+ * @connector: connector on which to attach the privacy-screen property
-+ *
-+ * This function attaches the "privacy-screen" property to the
-+ * connector. Initial state of privacy-screen is set to disabled.
-+ */
-+void
-+drm_connector_attach_privacy_screen_property(struct drm_connector *connector)
-+{
-+	struct drm_property *prop = connector->privacy_screen_property;
-+
-+	if (!prop)
-+		return;
-+
-+	drm_object_attach_property(&connector->base, prop,
-+				   PRIVACY_SCREEN_DISABLED);
-+}
-+EXPORT_SYMBOL(drm_connector_attach_privacy_screen_property);
-+
- int drm_connector_set_obj_prop(struct drm_mode_object *obj,
- 				    struct drm_property *property,
- 				    uint64_t value)
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 2113500b4075d..f1a42987c5693 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -254,6 +254,20 @@ enum drm_panel_orientation {
- 	DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
- };
+ void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
+ {
+ 	struct drm_device *dev = &dev_priv->drm;
+ 	struct intel_connector *connector;
+ 	struct drm_connector_list_iter conn_iter;
++	struct acpi_device *conn_dev, *parent;
++	u64 conn_addr;
+ 	u8 display_index[16] = {};
  
-+/**
-+ * enum drm_privacy_screen_status - privacy screen status
-+ *
-+ * This enum is used to track and control the state of the integrated privacy
-+ * screen present on some display panels, via the "privacy-screen" property.
-+ *
-+ * @PRIVACY_SCREEN_DISABLED: The privacy-screen on the panel is disabled
-+ * @PRIVACY_SCREEN_ENABLED:  The privacy-screen on the panel is enabled
-+ **/
-+enum drm_privacy_screen_status {
-+	PRIVACY_SCREEN_DISABLED = 0,
-+	PRIVACY_SCREEN_ENABLED = 1,
-+};
++	parent = ACPI_COMPANION(&dev->pdev->dev);
 +
- /*
-  * This is a consolidated colorimetry list supported by HDMI and
-  * DP protocol standard. The respective connectors will register
-@@ -656,6 +670,8 @@ struct drm_connector_state {
+ 	/* Populate the ACPI IDs for all connectors for a given drm_device */
+ 	drm_connector_list_iter_begin(dev, &conn_iter);
+ 	for_each_intel_connector_iter(connector, &conn_iter) {
+@@ -242,6 +255,19 @@ void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
+ 		device_id |= display_index[type]++ << ACPI_DISPLAY_INDEX_SHIFT;
+ 
+ 		connector->acpi_device_id = device_id;
++
++		/* Build the _ADR to look for */
++		conn_addr = device_id | ACPI_DEVICE_ID_SCHEME |
++				ACPI_BIOS_CAN_DETECT;
++
++		drm_dbg_kms(dev, "%s: Looking for ACPI node at _ADR=%llX\n",
++			    connector->base.kdev ?
++				dev_name(connector->base.kdev) : "NONAME",
++			    conn_addr);
++
++		/* Look up the connector device, under the PCI device */
++		conn_dev = acpi_find_child_device(parent, conn_addr, false);
++		connector->acpi_handle = acpi_device_handle(conn_dev);
+ 	}
+ 	drm_connector_list_iter_end(&conn_iter);
+ }
+diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
+index 5e00e611f077f..d70612cc1ba2a 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_types.h
++++ b/drivers/gpu/drm/i915/display/intel_display_types.h
+@@ -411,9 +411,14 @@ struct intel_connector {
  	 */
- 	u8 max_bpc;
+ 	struct intel_encoder *encoder;
  
-+	enum drm_privacy_screen_status privacy_screen_status;
++#ifdef CONFIG_ACPI
+ 	/* ACPI device id for ACPI and driver cooperation */
+ 	u32 acpi_device_id;
+ 
++	/* ACPI handle corresponding to this connector display, if found */
++	acpi_handle acpi_handle;
++#endif
 +
- 	/**
- 	 * @hdr_output_metadata:
- 	 * DRM blob property for HDR output metadata
-@@ -1255,6 +1271,12 @@ struct drm_connector {
- 	 */
- 	struct drm_property *max_bpc_property;
+ 	/* Reads out the current hw, returning true if the connector is enabled
+ 	 * and active (i.e. dpms ON state). */
+ 	bool (*get_hw_state)(struct intel_connector *);
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 0a417cd2af2bc..3ddc424b028c1 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -44,6 +44,7 @@
+ #include "i915_debugfs.h"
+ #include "i915_drv.h"
+ #include "i915_trace.h"
++#include "intel_acpi.h"
+ #include "intel_atomic.h"
+ #include "intel_audio.h"
+ #include "intel_connector.h"
+@@ -5864,6 +5865,7 @@ static int
+ intel_dp_connector_register(struct drm_connector *connector)
+ {
+ 	struct intel_dp *intel_dp = intel_attached_dp(to_intel_connector(connector));
++	struct drm_i915_private *dev_priv = to_i915(connector->dev);
+ 	int ret;
  
-+	/**
-+	 *  @privacy_screen_property: Optional property for the connector to
-+	 *  control the integrated privacy screen, if available.
+ 	ret = intel_connector_register(connector);
+@@ -5872,6 +5874,18 @@ intel_dp_connector_register(struct drm_connector *connector)
+ 
+ 	intel_connector_debugfs_add(connector);
+ 
++	/*
++	 * Lookup the ACPI node corresponding to the connector. This needs
++	 * to be done in ->late_register() hook since it needs to iterate
++	 * over all the connectors after they are registered. Calling it
++	 * once for the device is enough since a single call will update
++	 * for all connectors.
 +	 */
-+	struct drm_property *privacy_screen_property;
++	if (!dev_priv->acpi_scan_done) {
++		intel_acpi_device_id_update(dev_priv);
++		dev_priv->acpi_scan_done = true;
++	}
 +
- #define DRM_CONNECTOR_POLL_HPD (1 << 0)
- #define DRM_CONNECTOR_POLL_CONNECT (1 << 1)
- #define DRM_CONNECTOR_POLL_DISCONNECT (1 << 2)
-@@ -1561,6 +1583,8 @@ int drm_connector_set_panel_orientation_with_quirk(
- 	int width, int height);
- int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
- 					  int min, int max);
-+void drm_connector_create_privacy_screen_property(struct drm_connector *conn);
-+void drm_connector_attach_privacy_screen_property(struct drm_connector *conn);
+ 	DRM_DEBUG_KMS("registering %s bus for %s\n",
+ 		      intel_dp->aux.name, connector->kdev->kobj.name);
  
- /**
-  * struct drm_tile_group - Tile group metadata
+diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
+index 19195bde4921b..4e23d7a4a2129 100644
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -1189,6 +1189,8 @@ struct drm_i915_private {
+ 
+ 	bool ipc_enabled;
+ 
++	bool acpi_scan_done;
++
+ 	/* Used to save the pipe-to-encoder mapping for audio */
+ 	struct intel_encoder *av_enc_map[I915_MAX_PIPES];
+ 
 -- 
 2.25.1.481.gfbce0eb801-goog
 
