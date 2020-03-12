@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FC1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F80C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1340720751
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B892D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584037040;
-	bh=8VEeb7FDFFHZE7VvW+cGXYKxIpj4f7PaqyJX7M8QAxQ=;
+	s=default; t=1584037045;
+	bh=46Y0syeN0fspmA6DHe+GbTJI7oNgLerV0q9wzIkFIJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XCLSiXbBEVLI55S+M2nKK7Buo0MuBan72VvaK4v3H1PUnKnpult3s8qWsYnZ3Vo6
-	 WmENoyLa/Jc0IJITHeACZf9ty+pKutSaYXEifAIC//En/kyrFgpAd5e/12J2/GFVnQ
-	 1YCHXZMWBi3/q760QAdwBshY64YyvGk4CheqGTJ4=
+	b=wqqGIOXTXgPyMRfCuk2uwr2W5VxHn5rkRKKA4dPTGVE5NJClI6EWQlZ79X2lvU02J
+	 HpziPJM1LjKqA/ZlusxwT51kIxUP3iv+KKD+a1aWlou0elQOLEl142AK0kgqVOujl9
+	 A4QqQCi51OiDP7bcdhTJv42/idSi+dCpcaBv5v7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgCLSRS (ORCPT
+        id S1726874AbgCLSRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:17:18 -0400
+        Thu, 12 Mar 2020 14:17:24 -0400
 Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgCLSRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:17:09 -0400
+        id S1726752AbgCLSRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:17:10 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DFFA2076E;
-        Thu, 12 Mar 2020 18:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 964582074D;
+        Thu, 12 Mar 2020 18:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584037028;
-        bh=8VEeb7FDFFHZE7VvW+cGXYKxIpj4f7PaqyJX7M8QAxQ=;
+        s=default; t=1584037029;
+        bh=46Y0syeN0fspmA6DHe+GbTJI7oNgLerV0q9wzIkFIJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7BRWNCvwRKF4ucldc29wrTptPxKBJ6ibudrtRWcXbhZxGBySah0bbE22eQRj9THy
-         a/1O77uv2k8rs7iBKP6HAK4k2siyB6OWuqWwWvf/BupHfWet6FecxXs4OKkVe6O0Ii
-         vP65opBLo4FF/cC3jn3t0I0OMwK5ngzOAtnKFbcE=
+        b=NbcV6GyurdlFwnAgF97xdUuay0g3xpVWjwhiVEKsJ8VrLguwo92rPEqfgWpeNFWtG
+         52i1E3JTCJBlppVXx59iYpLNCKRj/nJOKbEwXji4Tuasmzpqe9L+Ab8NGGEfT6UAv9
+         /ah0+TPnS7FNNHJ5Oop/8bpofdVvWOe1cMApGhOw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC tip/core/rcu 11/16] rcu-tasks: Use unique names for RCU-Tasks kthreads and messages
-Date:   Thu, 12 Mar 2020 11:16:57 -0700
-Message-Id: <20200312181702.8443-11-paulmck@kernel.org>
+Subject: [PATCH RFC tip/core/rcu 15/16] rcutorture: Add torture tests for RCU Tasks Trace
+Date:   Thu, 12 Mar 2020 11:17:01 -0700
+Message-Id: <20200312181702.8443-15-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200312181618.GA21271@paulmck-ThinkPad-P72>
 References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
@@ -61,83 +61,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit causes the flavors of RCU Tasks to use different names
-for their kthreads and in their console messages.
+This commit adds the definitions required to torture the tracing flavor
+of RCU tasks.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ kernel/rcu/Kconfig.debug                           |  2 +
+ kernel/rcu/rcu.h                                   |  1 +
+ kernel/rcu/rcutorture.c                            | 43 +++++++++++++++++++++-
+ .../selftests/rcutorture/configs/rcu/CFLIST        |  1 +
+ .../selftests/rcutorture/configs/rcu/TRACE01       | 10 +++++
+ .../selftests/rcutorture/configs/rcu/TRACE01.boot  |  1 +
+ 6 files changed, 57 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRACE01
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRACE01.boot
 
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 1d25c50..6a5b2b7e 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -22,6 +22,8 @@ typedef void (*rcu_tasks_gp_func_t)(struct rcu_tasks *rtp);
-  * @kthread_ptr: This flavor's grace-period/callback-invocation kthread.
-  * @gp_func: This flavor's grace-period-wait function.
-  * @call_func: This flavor's call_rcu()-equivalent function.
-+ * @name: This flavor's textual name.
-+ * @kname: This flavor's kthread name.
-  */
- struct rcu_tasks {
- 	struct rcu_head *cbs_head;
-@@ -31,16 +33,20 @@ struct rcu_tasks {
- 	struct task_struct *kthread_ptr;
- 	rcu_tasks_gp_func_t gp_func;
- 	call_rcu_func_t call_func;
-+	char *name;
-+	char *kname;
+diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
+index b15a3bd..a4db41d 100644
+--- a/kernel/rcu/Kconfig.debug
++++ b/kernel/rcu/Kconfig.debug
+@@ -25,6 +25,7 @@ config RCU_PERF_TEST
+ 	select SRCU
+ 	select TASKS_RCU
+ 	select TASKS_RUDE_RCU
++	select TASKS_TRACE_RCU
+ 	default n
+ 	help
+ 	  This option provides a kernel module that runs performance
+@@ -43,6 +44,7 @@ config RCU_TORTURE_TEST
+ 	select SRCU
+ 	select TASKS_RCU
+ 	select TASKS_RUDE_RCU
++	select TASKS_TRACE_RCU
+ 	default n
+ 	help
+ 	  This option provides a kernel module that runs torture tests
+diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+index c574620..72903867 100644
+--- a/kernel/rcu/rcu.h
++++ b/kernel/rcu/rcu.h
+@@ -442,6 +442,7 @@ enum rcutorture_type {
+ 	RCU_FLAVOR,
+ 	RCU_TASKS_FLAVOR,
+ 	RCU_TASKS_RUDE_FLAVOR,
++	RCU_TASKS_TRACING_FLAVOR,
+ 	RCU_TRIVIAL_FLAVOR,
+ 	SRCU_FLAVOR,
+ 	INVALID_RCU_FLAVOR
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 1acafc5..ae26ea8 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -45,6 +45,7 @@
+ #include <linux/sched/sysctl.h>
+ #include <linux/oom.h>
+ #include <linux/tick.h>
++#include <linux/rcupdate_trace.h>
+ 
+ #include "rcu.h"
+ 
+@@ -758,6 +759,44 @@ static struct rcu_torture_ops tasks_rude_ops = {
+ 	.name		= "tasks-rude"
  };
  
--#define DEFINE_RCU_TASKS(name, gp, call)				\
--static struct rcu_tasks name =						\
-+#define DEFINE_RCU_TASKS(rt_name, gp, call, n)				\
-+static struct rcu_tasks rt_name =					\
- {									\
--	.cbs_tail = &name.cbs_head,					\
--	.cbs_wq = __WAIT_QUEUE_HEAD_INITIALIZER(name.cbs_wq),		\
--	.cbs_lock = __RAW_SPIN_LOCK_UNLOCKED(name.cbs_lock),		\
-+	.cbs_tail = &rt_name.cbs_head,					\
-+	.cbs_wq = __WAIT_QUEUE_HEAD_INITIALIZER(rt_name.cbs_wq),	\
-+	.cbs_lock = __RAW_SPIN_LOCK_UNLOCKED(rt_name.cbs_lock),		\
- 	.gp_func = gp,							\
- 	.call_func = call,						\
-+	.name = n,							\
-+	.kname = #rt_name,						\
- }
- 
- /* Track exiting tasks in order to allow them to be waited for. */
-@@ -145,8 +151,8 @@ static void __init rcu_spawn_tasks_kthread_generic(struct rcu_tasks *rtp)
++/*
++ * Definitions for tracing RCU-tasks torture testing.
++ */
++
++static int tasks_tracing_torture_read_lock(void)
++{
++	rcu_read_lock_trace();
++	return 0;
++}
++
++static void tasks_tracing_torture_read_unlock(int idx)
++{
++	rcu_read_unlock_trace();
++}
++
++static void rcu_tasks_tracing_torture_deferred_free(struct rcu_torture *p)
++{
++	call_rcu_tasks_trace(&p->rtort_rcu, rcu_torture_cb);
++}
++
++static struct rcu_torture_ops tasks_tracing_ops = {
++	.ttype		= RCU_TASKS_TRACING_FLAVOR,
++	.init		= rcu_sync_torture_init,
++	.readlock	= tasks_tracing_torture_read_lock,
++	.read_delay	= rcu_read_delay,  /* just reuse rcu's version. */
++	.readunlock	= tasks_tracing_torture_read_unlock,
++	.get_gp_seq	= rcu_no_completed,
++	.deferred_free	= rcu_tasks_tracing_torture_deferred_free,
++	.sync		= synchronize_rcu_tasks_trace,
++	.exp_sync	= synchronize_rcu_tasks_trace,
++	.call		= call_rcu_tasks_trace,
++	.cb_barrier	= rcu_barrier_tasks_trace,
++	.fqs		= NULL,
++	.stats		= NULL,
++	.irq_capable	= 1,
++	.name		= "tasks-tracing"
++};
++
+ static unsigned long rcutorture_seq_diff(unsigned long new, unsigned long old)
  {
- 	struct task_struct *t;
+ 	if (!cur_ops->gp_diff)
+@@ -1316,6 +1355,7 @@ static bool rcu_torture_one_read(struct torture_random_state *trsp)
+ 				  rcu_read_lock_bh_held() ||
+ 				  rcu_read_lock_sched_held() ||
+ 				  srcu_read_lock_held(srcu_ctlp) ||
++				  rcu_read_lock_trace_held() ||
+ 				  torturing_tasks());
+ 	if (p == NULL) {
+ 		/* Wait for rcu_torture_writer to get underway */
+@@ -2435,7 +2475,8 @@ rcu_torture_init(void)
+ 	int firsterr = 0;
+ 	static struct rcu_torture_ops *torture_ops[] = {
+ 		&rcu_ops, &rcu_busted_ops, &srcu_ops, &srcud_ops,
+-		&busted_srcud_ops, &tasks_ops, &tasks_rude_ops, &trivial_ops,
++		&busted_srcud_ops, &tasks_ops, &tasks_rude_ops,
++		&tasks_tracing_ops, &trivial_ops,
+ 	};
  
--	t = kthread_run(rcu_tasks_kthread, rtp, "rcu_tasks_kthread");
--	if (WARN_ONCE(IS_ERR(t), "%s: Could not start Tasks-RCU grace-period kthread, OOM is now expected behavior\n", __func__))
-+	t = kthread_run(rcu_tasks_kthread, rtp, "%s_kthread", rtp->kname);
-+	if (WARN_ONCE(IS_ERR(t), "%s: Could not start %s grace-period kthread, OOM is now expected behavior\n", __func__, rtp->name))
- 		return;
- 	smp_mb(); /* Ensure others see full kthread. */
- }
-@@ -342,7 +348,7 @@ static void rcu_tasks_wait_gp(struct rcu_tasks *rtp)
- }
- 
- void call_rcu_tasks(struct rcu_head *rhp, rcu_callback_t func);
--DEFINE_RCU_TASKS(rcu_tasks, rcu_tasks_wait_gp, call_rcu_tasks);
-+DEFINE_RCU_TASKS(rcu_tasks, rcu_tasks_wait_gp, call_rcu_tasks, "RCU Tasks");
- 
- /**
-  * call_rcu_tasks() - Queue an RCU for invocation task-based grace period
-@@ -438,7 +444,8 @@ static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
- EXPORT_SYMBOL_GPL(rcu_tasks_rude_wait_gp);
- 
- void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func);
--DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude);
-+DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude,
-+		 "RCU Tasks Rude");
- 
- /**
-  * call_rcu_tasks_rude() - Queue a callback rude task-based grace period
+ 	if (!torture_init_begin(torture_type, verbose))
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFLIST b/tools/testing/selftests/rcutorture/configs/rcu/CFLIST
+index ec0c72f..dfb1817 100644
+--- a/tools/testing/selftests/rcutorture/configs/rcu/CFLIST
++++ b/tools/testing/selftests/rcutorture/configs/rcu/CFLIST
+@@ -15,3 +15,4 @@ TASKS01
+ TASKS02
+ TASKS03
+ RUDE01
++TRACE01
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TRACE01 b/tools/testing/selftests/rcutorture/configs/rcu/TRACE01
+new file mode 100644
+index 0000000..078e2c1
+--- /dev/null
++++ b/tools/testing/selftests/rcutorture/configs/rcu/TRACE01
+@@ -0,0 +1,10 @@
++CONFIG_SMP=y
++CONFIG_NR_CPUS=4
++CONFIG_HOTPLUG_CPU=y
++CONFIG_PREEMPT_NONE=y
++CONFIG_PREEMPT_VOLUNTARY=n
++CONFIG_PREEMPT=n
++CONFIG_DEBUG_LOCK_ALLOC=y
++CONFIG_PROVE_LOCKING=y
++#CHECK#CONFIG_PROVE_RCU=y
++CONFIG_RCU_EXPERT=y
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TRACE01.boot b/tools/testing/selftests/rcutorture/configs/rcu/TRACE01.boot
+new file mode 100644
+index 0000000..9675ad6
+--- /dev/null
++++ b/tools/testing/selftests/rcutorture/configs/rcu/TRACE01.boot
+@@ -0,0 +1 @@
++rcutorture.torture_type=tasks-tracing
 -- 
 2.9.5
 
