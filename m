@@ -2,134 +2,106 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16F4C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCDDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB452071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584013134;
-	bh=MZCqMF9dtPQuoAguywZt1bk0weVwPYLBA3uj+VpWdE8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jPkqNt0LtpLKaZBnojKCDneqwpBBS3k73Fn8qYz162zTKj6UUquoAPITHLXeMTflj
-	 aQc9LFPiUn8H9AxfaIKUXNdsUZ43FWgmGU/i1WdCVvhUVLw4+aF6Nf4skuLch/vsWr
-	 1hCB2ZtIGsWGyprDnR3VqGMbrW0/LDMP+eTMG8MQ=
+	by mail.kernel.org (Postfix) with ESMTP id BD23B206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCLLix (ORCPT
+        id S1726946AbgCLLjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 07:39:44 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29762 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgCLLix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:38:53 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84C8220716;
-        Thu, 12 Mar 2020 11:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584013132;
-        bh=MZCqMF9dtPQuoAguywZt1bk0weVwPYLBA3uj+VpWdE8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2ng77m7TDLvyNg6BYuMI4v6AdCxHOhAE8hNV1FlsNwNFGnq5UaRGkdwQiTkb24T8X
-         TzvFZUIhHbUu0F2zNHmh5pTeSgOxSh9MCbK4m1YdPwQnkx0IvOyLWJKUtcef5p2opf
-         jqul0bD56qAUB6RC0OE3Ze5FGcrOFGjMLA/JHVJY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jCMAs-00CCW8-Pf; Thu, 12 Mar 2020 11:38:50 +0000
+        id S1725268AbgCLLjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:39:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 04:39:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
+   d="scan'208";a="242995404"
+Received: from swaydand-mobl1.amr.corp.intel.com (HELO [10.255.230.33]) ([10.255.230.33])
+  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 04:39:41 -0700
+Subject: Re: [PATCH] soundwire: stream: use sdw_write instead of update
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20200312100105.5293-1-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <b235b88a-acdc-cec4-0c00-2609c3774fa1@linux.intel.com>
+Date:   Thu, 12 Mar 2020 05:45:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 12 Mar 2020 11:38:50 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, linux-kernel-owner@vger.kernel.org,
-        mkshah=codeaurora.org@mg.codeaurora.org
-Subject: Re: [RFC 1/2] irqchip: qcom: pdc: Introduce irq_set_wake call
-In-Reply-To: <6fd12e17-5216-d136-b454-2ee7e4a1686e@codeaurora.org>
-References: <1581944408-7656-1-git-send-email-mkshah@codeaurora.org>
- <1581944408-7656-2-git-send-email-mkshah@codeaurora.org>
- <158216527227.184098.17500969657143611632@swboyd.mtv.corp.google.com>
- <4c80783d-8ad0-9bd8-c42e-01659fa81afe@codeaurora.org>
- <158265096050.177367.409185999509868538@swboyd.mtv.corp.google.com>
- <55bfc524f6c45419227c228c86fb20dc@misterjones.org>
- <6fd12e17-5216-d136-b454-2ee7e4a1686e@codeaurora.org>
-Message-ID: <68130578959b36d92b721131a9b35e94@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: mkshah@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org, evgreen@chromium.org, mka@chromium.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, linux-kernel-owner@vger.kernel.org, mkshah=codeaurora.org@mg.codeaurora.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200312100105.5293-1-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-12 11:33, Maulik Shah wrote:
-> On 2/27/2020 6:39 AM, Marc Zyngier wrote:
->> Maulik,
->> 
->> I'd appreciate if you could Cc me on all irqchip patches.
+
+
+On 3/12/20 5:01 AM, Srinivas Kandagatla wrote:
+> There is no point in using update for registers with write mask
+> as 0xFF, this adds unecessary traffic on the bus.
+> Just use sdw_write directly.
+
+well in theory you could have two streams share the same port, that's 
+allowed by the specification.
+
+But since it clearly documented as not supported
+
+	/*
+	 * Since bus doesn't support sharing a port across two streams,
+	 * it is safe to reset this register
+	 */
+
+this mask handing is indeed completely overkill.
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
 > 
-> Sure Marc, i kept you in Cc for V2 addressing stephen's comments.
-
-Thanks. Make sure you use maz@kernel.org (I accidentally replied from
-my personal address).
-
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   drivers/soundwire/stream.c | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
 > 
->> 
->> On 2020-02-25 17:16, Stephen Boyd wrote:
->>> Quoting Maulik Shah (2020-02-21 03:20:59)
->>>> 
->>>> On 2/20/2020 7:51 AM, Stephen Boyd wrote:
->>>> 
->>>>     How are wakeups supposed to work when the CPU cluster power is 
->>>> disabled
->>>>     in low power CPU idle modes? Presumably the parent irq 
->>>> controller is
->>>>     powered off (in this case it's an ARM GIC) and we would need to 
->>>> have the
->>>>     interrupt be "enabled" or "unmasked" at the PDC for the irq to 
->>>> wakeup
->>>>     the cluster.
->>>> 
->>>> Correct. Interrupt needs to be "enabled" or "unmasked" at wakeup 
->>>> capable PDC
->>>> for irqchip to wakeup from "deep" low power modes where parent GIC 
->>>> may not be
->>>> monitoring interrupt and only PDC is monitoring.
->>>> these "deep" low power modes can either be triggered by kernel 
->>>> "suspend" or
->>>> "cpuidle" path for which drivers may or may not have registered for 
->>>> suspend or
->>>> cpu/cluster pm notifications to make a decision of enabling wakeup 
->>>> capability.
->> 
->> Loosing interrupt delivery in idle is not an acceptable behaviour. 
->> Idle != suspend.
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index 00348d1fc606..1b43d03c79ea 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -313,9 +313,9 @@ static int sdw_enable_disable_slave_ports(struct sdw_bus *bus,
+>   	 * it is safe to reset this register
+>   	 */
+>   	if (en)
+> -		ret = sdw_update(s_rt->slave, addr, 0xFF, p_rt->ch_mask);
+> +		ret = sdw_write(s_rt->slave, addr, p_rt->ch_mask);
+>   	else
+> -		ret = sdw_update(s_rt->slave, addr, 0xFF, 0x0);
+> +		ret = sdw_write(s_rt->slave, addr, 0x0);
+>   
+>   	if (ret < 0)
+>   		dev_err(&s_rt->slave->dev,
+> @@ -464,10 +464,9 @@ static int sdw_prep_deprep_slave_ports(struct sdw_bus *bus,
+>   		addr = SDW_DPN_PREPARECTRL(p_rt->num);
+>   
+>   		if (prep)
+> -			ret = sdw_update(s_rt->slave, addr,
+> -					 0xFF, p_rt->ch_mask);
+> +			ret = sdw_write(s_rt->slave, addr, p_rt->ch_mask);
+>   		else
+> -			ret = sdw_update(s_rt->slave, addr, 0xFF, 0x0);
+> +			ret = sdw_write(s_rt->slave, addr, 0x0);
+>   
+>   		if (ret < 0) {
+>   			dev_err(&s_rt->slave->dev,
 > 
-> Agree, we are not lossing it, but rather RFC v1 was keeping a
-> requirement on drivers to keep wake
-> enabled by calling irq_set_wake when the interrupt is routed via PDC,
-> even after coming out of suspend.
-
-An endpoint driver shouldn't have to know what interrupt controller it
-is connected to. So your "when the interrupt is routed via PDC" is
-not enforceable.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
