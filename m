@@ -2,131 +2,124 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B43C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB58C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115F42074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618CC2074D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qa/JjpNb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UleuOCyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731530AbgCLAJl (ORCPT
+        id S1731560AbgCLAKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:09:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39632 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLAJl (ORCPT
+        Wed, 11 Mar 2020 20:10:12 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42985 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731418AbgCLAKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:09:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id j20so1873770pll.6;
-        Wed, 11 Mar 2020 17:09:40 -0700 (PDT)
+        Wed, 11 Mar 2020 20:10:11 -0400
+Received: by mail-qt1-f194.google.com with SMTP id g16so3019239qtp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=9ApGOF5PBkyoeBPogSoc/7/ab/yJXEM4Uq6xzW0uckE=;
-        b=qa/JjpNbOa07fUsB4jPdLDm52/jZZEQRH9wlnggCo8DYirC2AP/CxM7bIpeGf+pTsZ
-         Uv9+2rKZqzD67ItMqFhBlkKxIM3pO4GTO/b21mX73+MdeJ8hXW9aA30m/c7gsxNFkmvY
-         2l3HzKT7rZseU2snFyYgrJqHPN997zzhpWRiGk0t+jriJZeQ3BOe/fmG//AR7IdLhdFr
-         uQzd7AOSjXIYBl7IBeG3pQGBBvzaLhYsBEqU4s+4zR1iUyentr12iqjc2dKsAzemOigy
-         iZ6MrnT4onYr65Ude8HVtSsE4M05XvWBLKobbUKLxWtQ+JleX207ym20znvdc2QktO4I
-         g/WQ==
+        bh=Qc/yKi3r5phF37+WiquQaUgtp6vC7iVWg5HXpKVNHvY=;
+        b=UleuOCyzScWPzaYnbq5Vl4d9u/jYen5HaFT4NjASEaVmKSLebHkxpuzDgqGWwJEPU+
+         RcBSWcy7xhAmGMJBjx485y/rbmdoBOgZiBDljVp074P/by3anY3lGdAUXV12OPEKofSP
+         ZK49zx85MNrptMRKu4UI3e+q7O+VVLG2Qz+587tu9kKpZRUbGvu/TVoSi+mRX0Aty8Yc
+         U4xu3UvMxHqHpHgDQs90A+2cFmwYM3alc6hccB75Fddps+HgN6Kj1OHO90xl4nX1jDaP
+         RcLk/N5RXF0hEp2nzrSrpMQKj0vXsVfKjWx+4nbv9R7Ts5YpkNEAGDqamLGcFvb0bZTG
+         vNaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9ApGOF5PBkyoeBPogSoc/7/ab/yJXEM4Uq6xzW0uckE=;
-        b=YUG1Kq1UZ+prDqZwEjuFB0cFS+/Z+xMDNN/06MwmJmi9uLavE6pEYQJMbSsl+cBWQc
-         9byuM/Pu3yNbdwayZE4Ih7fQBKQaRU0KqhOuWktZ0uT0zROjaligoNrGhoeL2WwqPAm7
-         pNGzUnxTJjmgVSOJabrPvzkDhGlM0y2SNedAyCwL3WYxOqG9iyYyCrygDQdtssdlthRJ
-         ZWeMWoMrXDqQ67GbU48FQ6/nsPtmuhCwC9p3UXzGG27CeLzvWulEGRm2upgkI1+n/9mc
-         CN5NV2JZmjAlOO/loQDTLhQakmD0R7xoOOn7SJkh8+XtXAkC2MzwJdDIZOoFpr9P/bXj
-         G27A==
-X-Gm-Message-State: ANhLgQ1J8Hj/svtUJQ+mbd5lKDpstkXGE9+JsemWRlDdz1HtYczHh2Pa
-        f0WIaI30Y16BJn7CsTK7pN0=
-X-Google-Smtp-Source: ADFU+vtML21USPDOMZ+PmnB2abZahmaHnFt3ItHVXPSoef4wnUi8Xp1UT2B8XYgt+E7etOPYpGvc6g==
-X-Received: by 2002:a17:902:d88d:: with SMTP id b13mr5144514plz.228.1583971779921;
-        Wed, 11 Mar 2020 17:09:39 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
-        by smtp.gmail.com with ESMTPSA id e11sm9957036pfj.95.2020.03.11.17.09.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 17:09:39 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 17:09:31 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Subject: Re: [PATCH v2] usb: gadget: aspeed: improve vhub port irq handling
-Message-ID: <20200312000930.GA3956@taoren-ubuntu-R90MNF91>
-References: <20200305234746.1002-1-rentao.bupt@gmail.com>
- <481e9b7d40c51505518a34ddc2515d3200dbf158.camel@kernel.crashing.org>
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qc/yKi3r5phF37+WiquQaUgtp6vC7iVWg5HXpKVNHvY=;
+        b=V7y2cqiQmPl16w41oGXMhQ4TTAnhoY9pTFN4F7YDhuaATyI/bI/uNCw7xLS7XDxrNm
+         orJ3A1jPbv2T3o8oZ8CFsEUtpJ3DOXivYi6uKYKaoeVgmkLXz5XeggXrgXvvJcZwqqIn
+         2r3me/DQ8SjeB2/N+lJtn+uzveQBSvdk0lWHrdl1wSzMrfUNb2wvFs+VrOqA4R73wiO9
+         sRVJDRuWvN8BHAdWeDp4yoj6CoTA+w+Mddfija9kTXF3A6p5WKcu8TAH2tyxdD5zAkrb
+         wWPVFJghkYOhSJn2+wFSonmWJDae8ieqI2yCOB5Ot9GypU4Lchus17oaWGlQEYmXOeCa
+         JViw==
+X-Gm-Message-State: ANhLgQ0MZqGhqYfa2pPjYCk3epWg/OAcdxcA0rBve5/dYFYBuniIDE9g
+        UdmJswAKj0DLV8YU2duzgqw=
+X-Google-Smtp-Source: ADFU+vsqUIyMwwS7FG7fCqKbhNQ/W74LVZ8XcWboYSPZmIH9X0r1+tC+dgyj501iQfZ6mDw9855fcg==
+X-Received: by 2002:ac8:4659:: with SMTP id f25mr5002889qto.273.1583971810279;
+        Wed, 11 Mar 2020 17:10:10 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id m1sm4683932qtm.22.2020.03.11.17.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 17:10:10 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 11 Mar 2020 20:10:08 -0400
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
+ purgatory.ro has missing symbols
+Message-ID: <20200312001006.GA170175@rani.riverdale.lan>
+References: <20200311214601.18141-1-hdegoede@redhat.com>
+ <20200311214601.18141-3-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <481e9b7d40c51505518a34ddc2515d3200dbf158.camel@kernel.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200311214601.18141-3-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
-
-On Wed, Mar 11, 2020 at 12:31:22PM +1100, Benjamin Herrenschmidt wrote:
-> On Thu, 2020-03-05 at 15:47 -0800, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> > 
-> > This patch evaluates vhub ports' irq mask before going through per-port
-> > irq handling one by one, which helps to speed up irq handling in case
-> > there is no port interrupt.
-> > 
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > ---
-> >  Changes in v2:
-> >    - use "for_each_set_bit" to speed up port irq handling.
-> > 
-> >  drivers/usb/gadget/udc/aspeed-vhub/core.c | 11 ++++++++---
-> >  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  8 +++-----
-> >  2 files changed, 11 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> > index f8d35dd60c34..af2dbd405361 100644
-> > --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> > @@ -134,11 +134,14 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
-> >  	}
-> >  
-> >  	/* Handle device interrupts */
-> > -	for (i = 0; i < vhub->max_ports; i++) {
-> > -		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
-> > +	if (istat & vhub->port_irq_mask) {
-> > +		int offset = VHUB_IRQ_DEV1_BIT;
-> > +		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
-> >  
-> > -		if (istat & dev_mask)
-> > +		for_each_set_bit_from(offset, (unsigned long *)&istat, size) 
+On Wed, Mar 11, 2020 at 10:46:01PM +0100, Hans de Goede wrote:
+> Since we link purgatory.ro with -r aka we enable "incremental linking"
+> no checks for unresolved symbols is done while linking purgatory.ro.
 > 
-> That type cast is very bad. It will not work on big endian for example
-> (yes this driver isn't used on big endian today but still).
-> 
-> Please assign istat to an unsigned long (or make it unsigned long to
-> begin with).
 
-Thanks for pointing it out. Will fix it in v3.
+Do we actually need to link purgatory with -r? We could use
+--emit-relocs to get the relocation sections generated the way the main
+x86 kernel does, no?
 
-Cheers,
+Eg like the below? This would avoid the double-link creating
+purgatory.chk.
 
-Tao
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index fb4ee5444379..5332f95ca1d3 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -14,8 +14,8 @@ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+ 
+ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+ 
+-LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+-targets += purgatory.ro
++LDFLAGS_purgatory := -e purgatory_start --emit-relocs -nostdlib -z nodefaultlib
++targets += purgatory
+ 
+ KASAN_SANITIZE	:= n
+ KCOV_INSTRUMENT := n
+@@ -55,7 +55,7 @@ CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
+ CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
+ CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
+ 
+-$(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
++$(obj)/purgatory: $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+ 
+ targets += kexec-purgatory.c
+@@ -63,7 +63,7 @@ targets += kexec-purgatory.c
+ quiet_cmd_bin2c = BIN2C   $@
+       cmd_bin2c = $(objtree)/scripts/bin2c kexec_purgatory < $< > $@
+ 
+-$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro FORCE
++$(obj)/kexec-purgatory.c: $(obj)/purgatory FORCE
+ 	$(call if_changed,bin2c)
+ 
+ obj-$(CONFIG_KEXEC_FILE)	+= kexec-purgatory.o
