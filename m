@@ -2,189 +2,579 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EB0C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87F0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7536420716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584012986;
-	bh=LKWtGGI9AnwEudfUs8VdWf8pChWSEoS/sWmnLwQTbwA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cDhvpEXFmcr0QHdXBhrBbV+uM3ZmQbNW0tgoxeaHdIzBXkCLbXsY1JNN+9FvwXQBu
-	 9nZZZ6M2L+Am4tYgxHVw/8mtUYYKUDsm23/rTxEed7tU26kH73qo0ySAJ9ChRpzr9a
-	 ylERw1ZNA3qd0SHCG/ZA3NWV5Z5+yyLyYfeeBN6g=
+	by mail.kernel.org (Postfix) with ESMTP id B08EF20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgCLLgZ (ORCPT
+        id S1726752AbgCLLii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:36:25 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39594 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLLgZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:36:25 -0400
-Received: by mail-ed1-f66.google.com with SMTP id df19so782401edb.6;
-        Thu, 12 Mar 2020 04:36:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SU5e8ThZ/jC6l2UHW2mQ5E13HASsfjr4EObVUxdLUKU=;
-        b=hE6aLurI21dc7rP1w4ZEV0CdNNOTs8HeoGRJ+kK9fYyS6q1sr3btQUR5OGdyIcE9Nj
-         ClQFjBiIclBgc3AwZpuwqn3F92g8/Gk2ps0vEsmXvXUUWZ0TDylXnJrms3hbChicWeZA
-         3C4lYlKmI4Z9v65IAGVubl2hlWr7bfHaCmL+U1FpNLxjxqr7RyMwrhX9UMZZc2MQQ2lR
-         46afVyie7xl22BBa3/GN3XWQH/Mm+mayVbXZQfnzVWP8s0uEL3uw/dSES+mLa6JJYso4
-         UaWnbFM+w9dNS+b/5CO4dpDzjxNIsgghdZe0RcAoelqCUtl08RPOcwPA3hCKIzFZCgjy
-         6Spw==
-X-Gm-Message-State: ANhLgQ0qM1LNkwD3DQoLdxG4oY/uR8pEe6cxmjJLYqAn73dh4/VQgy2d
-        fUSHZf7oe8oe/05dnKAMh2o=
-X-Google-Smtp-Source: ADFU+vsylhNgZSPB6ysmt4xorqw0nqsEk6Kn+5R8nMgLFy+Xyx8N/GRpEYUw1R9C56oPpL4PPbVHKQ==
-X-Received: by 2002:a50:ec0b:: with SMTP id g11mr7520505edr.80.1584012982435;
-        Thu, 12 Mar 2020 04:36:22 -0700 (PDT)
-Received: from pi3 ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id v5sm377196edt.43.2020.03.12.04.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 04:36:21 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 12:36:18 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCHv3 5/5] clk: samsung: exynos542x: Move FSYS subsystem
- clocks to its sub-CMU
-Message-ID: <20200312113618.GA6206@pi3>
-References: <20200310194854.831-1-linux.amoon@gmail.com>
- <20200310194854.831-6-linux.amoon@gmail.com>
- <20200311144248.GA4455@kozik-lap>
- <CANAwSgQWYdh3awuMCjUvz6EvnwMq9rDOSBn5EkNcA7OfsjoEwA@mail.gmail.com>
+        Thu, 12 Mar 2020 07:38:38 -0400
+Received: from mx.sdf.org ([205.166.94.20]:49663 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgCLLii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:38:38 -0400
+Received: from sdf.org (IDENT:lkml@rie.sdf.org [205.166.94.4])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02CBcCeQ020700
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Thu, 12 Mar 2020 11:38:12 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02CBcAI3021715;
+        Thu, 12 Mar 2020 11:38:10 GMT
+Date:   Thu, 12 Mar 2020 11:38:10 +0000
+From:   George Spelvin <lkml@SDF.ORG>
+To:     chris@chris-wilson.co.uk
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-kernel@vger.kernel.org, lkml@sdf.org
+Subject: [CODE] lib/math/prime_numbers.c: halve memory usage
+Message-ID: <20200312113810.GA11889@SDF.ORG>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Content-Disposition: inline
-In-Reply-To: <CANAwSgQWYdh3awuMCjUvz6EvnwMq9rDOSBn5EkNcA7OfsjoEwA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:04:57PM +0530, Anand Moon wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your review comments.
-> 
-> On Wed, 11 Mar 2020 at 20:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 07:48:54PM +0000, Anand Moon wrote:
-> > > FSYS power domain support usbdrd3, pdma and usb2 power gaiting,
-> > > hence move FSYS clk setting to sub-CMU block to support power domain
-> > > on/off sequences for device nodes.
-> > >
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > ---
-> > > New patch in the series
-> > > ---
-> > >  drivers/clk/samsung/clk-exynos5420.c | 45 +++++++++++++++++++++-------
-> > >  1 file changed, 34 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> > > index c9e5a1fb6653..6c4c47dfcdce 100644
-> > > --- a/drivers/clk/samsung/clk-exynos5420.c
-> > > +++ b/drivers/clk/samsung/clk-exynos5420.c
-> > > @@ -859,12 +859,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
-> > >       DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
-> > >       DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
-> > >
-> > > -     /* USB3.0 */
-> > > -     DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
-> > > -     DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
-> > > -     DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
-> > > -     DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
-> >
-> > According to clock diagram these are still in CMU TOP, not FSYS.
-> >
-> > > -
-> > >       /* MMC */
-> > >       DIV(0, "dout_mmc0", "mout_mmc0", DIV_FSYS1, 0, 10),
-> > >       DIV(0, "dout_mmc1", "mout_mmc1", DIV_FSYS1, 10, 10),
-> > > @@ -1031,8 +1025,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
-> > />
-> > >       /* FSYS Block */
-> > >       GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
-> > > -     GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
-> > > -     GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
-> > >       GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
-> > >       GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
-> > >       GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
-> > > @@ -1040,9 +1032,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
-> > >       GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
-> > >       GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
-> > >                       GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
-> > > -     GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-> > > -     GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
-> > > -     GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
-> > >       GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
-> > >                       SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
-> > >
-> > > @@ -1258,6 +1247,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
-> > >       { DIV2_RATIO0, 0, 0x30 },       /* DIV dout_gscl_blk_300 */
-> > >  };
-> > >
-> > > +/* USB3.0 */
-> > > +static const struct samsung_div_clock exynos5x_fsys_div_clks[] __initconst = {
-> > > +     DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
-> > > +     DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
-> > > +     DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
-> > > +     DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
-> > > +};
-> > > +
-> > > +static const struct samsung_gate_clock exynos5x_fsys_gate_clks[] __initconst = {
-> > > +     GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
-> > > +     GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
-> > > +     GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-> > > +     GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
-> > > +     GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
-> > > +};
-> > > +
-> > > +static struct exynos5_subcmu_reg_dump exynos5x_fsys_suspend_regs[] = {
-> > > +     { GATE_IP_FSYS, 0xffffffff, 0xffffffff }, /* FSYS gates */
-> >
-> > This looks wrong. GATE_IP_FSYS has fields also for FSYS2 clocks which
-> > you are not suspending. They do not belong to this CMU.
-> >
-> 
-> Ok. I change the from GATE_IP_FSYS to GATE_BUS_FSYS0 in the above
-> exynos5x_fsys_gate_clks to make this consistent to used GATE_BUS_FSYS0 for CMU,
-> with this change it works as per previously.
+I ran across the prime number generator, and after wondering WTF it was 
+doing in the kernel (it turns out it's used by some of the GPU self-tests
+and not routine kernel operation), noticed it could use some optimization.
 
-Wait, you should set here proper registers with proper mask.
-> 
-> > Don't you need to save also parts of GATE_BUS_FSYS0?
-> 
-> GATE_BUS_FSYS0 and GATE_IP_FSYS are already part of list
-> of control register which are saved and restored during suspend and resume
-> so no point in adding this here, I should drop the GATE_IP_FSYS reg
-> dump over here.
+In particular, a tiny bit of special-case code to handle the prime 2
+lets you limit the bitmap to odd numbers, which halves the memory usage.
 
-Since registers are used in separate sub CMU devices, each should
-save/restore its part.
+There are ways to do better; if you special-case 2, 3 and 5, then you
+can halve memory usage again because all other primes fall into 8 residue 
+classes mod 30, but that comes with a significant code-size increase.
 
-Best regards,
-Krzysztof
+Two other optimizations I folded in:
+- Start clearing the sieve at p**2, since any smaller composite
+  has smaller factors than p and has already been excluded.
+- In slow_is_prime_number(), do trial division starting with the
+  smallest divisors, since they are most likely to terminate
+  the loop.
 
+What follows is my current code, in a test harness for user-space testing.
+The "#if 0" sections comment out kernel-only code, and the #else
+sections provide the necessary stubs to let the code be compiled
+as a standalone executable.  Changing that to #if 1 produces a kernel
+source file.
+
+Comments?
+
+One change I'm thinking of making is choosing the array sizes  
+so sizeof(struct primes) + bitmap_size(primes->sz) is a power of
+2 in size.  That's slightly more than doubling each iteration.
+
+--- 8< --- cut here --- 8< ---
+// SPDX-License-Identifier: GPL-2.0-only
+#define pr_fmt(fmt) "prime numbers: " fmt "\n"
+
+# if 0
+#include <linux/module.h>
+#include <linux/mutex.h>
+#include <linux/prime_numbers.h>
+#include <linux/slab.h>
+#else
+#include <assert.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+#if ULONG_MAX == 0xffffffff
+#define BITS_PER_LONG 32
+#else
+#define BITS_PER_LONG 64
+#endif
+#define BITS_TO_LONGS(x) ((size_t)((x) + BITS_PER_LONG - 1)/BITS_PER_LONG)
+struct rcu_head { };
+
+#define DEFINE_MUTEX(lock) struct rcu_head lock;
+#define mutex_lock(lock) (void)(lock)
+#define mutex_unlock(lock) (void)(lock)
+#define __rcu /*nothing*/
+#define RCU_INITIALIZER(x) (x)
+#define rcu_read_lock() (void)0
+#define rcu_read_unlock() (void)0
+#define rcu_dereference(x) (x)
+#define rcu_dereference_protected(p, c) (p)
+#define rcu_assign_pointer(ptr, new) ((ptr) = (new))
+
+static inline unsigned long __fls(unsigned long word)
+{
+        return (sizeof(word) * 8) - 1 - __builtin_clzl(word);
+}
+static inline unsigned long __ffs(unsigned long word)
+{
+        return __builtin_ctzl(word);
+}
+
+
+static unsigned long int_sqrt(unsigned long x)
+{
+        unsigned long b, m, y = 0;
+
+        if (x <= 1)
+                return x;
+
+        m = 1UL << (__fls(x) & ~1UL);
+        while (m != 0) {
+                b = y + m;
+                y >>= 1;
+
+                if (x >= b) {
+                        x -= b;
+                        y += m;
+                }
+                m >>= 2;
+        }
+
+        return y;
+}
+
+#define BUG_ON(x) assert(!(x))
+#define round_up(x, y) ((((x) - 1) | ((unsigned long)(y) - 1)) + 1)
+#define round_down(x, y) ((x)  & ~((unsigned long)(y) - 1))
+#define roundup(x, y) (((x) + ((y) - 1)) / (y) * (y))
+#define kmalloc(size, flags) malloc(size)
+#define kfree free
+#define kfree_rcu(ptr, rcu) free(ptr)
+
+#define BIT(x) (1ul << (x))
+#define BIT_MASK(b) BIT((b) & (BITS_PER_LONG - 1))
+#define BIT_WORD(b) ((b) / BITS_PER_LONG)
+static inline void __clear_bit(int nr, volatile unsigned long *addr)
+{
+        unsigned long mask = BIT_MASK(nr);
+        unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+
+        *p &= ~mask;
+}
+static inline int test_bit(int nr, const volatile unsigned long *addr)
+{
+        return 1UL & (addr[BIT_WORD(nr)] >> (nr & (BITS_PER_LONG-1)));
+}
+
+
+static inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
+{
+        unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
+        memset(dst, 0xff, len);
+}
+
+static inline void bitmap_copy(unsigned long *dst, const unsigned long *src,
+                        unsigned int nbits)
+{
+        unsigned int len = BITS_TO_LONGS(nbits) * sizeof(unsigned long);
+        memcpy(dst, src, len);
+}
+
+#define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+#define unlikely(x)     __builtin_expect(x, 0)
+#define likely(x)       __builtin_expect(!!(x), 1)
+
+static unsigned long min(unsigned long x, unsigned long y)
+{
+	return x < y ? x : y;
+}
+static inline unsigned long find_next_bit(const unsigned long *addr1,
+                unsigned long nbits, unsigned long start)
+{
+        unsigned long tmp;
+
+        if (unlikely(start >= nbits))
+                return nbits;
+
+        tmp = addr1[start / BITS_PER_LONG];
+
+        /* Handle 1st word. */
+        tmp &= BITMAP_FIRST_WORD_MASK(start);
+        start = round_down(start, BITS_PER_LONG);
+
+        while (!tmp) {
+                start += BITS_PER_LONG;
+                if (start >= nbits)
+                        return nbits;
+
+                tmp = addr1[start / BITS_PER_LONG];
+        }
+
+        return min(start + __ffs(tmp), nbits);
+}
+
+#define EXPORT_SYMBOL(x) /*nothing*/
+
+#endif
+
+#define bitmap_size(nbits) (BITS_TO_LONGS(nbits) * sizeof(unsigned long))
+
+struct primes {
+	struct rcu_head rcu;
+	unsigned long last, sz;
+	unsigned long primes[];
+};
+
+/*
+ * The bitmap stores odd numbers.  Bit i corresponds to
+ * the integer 2*i+1.  sz is the number of bits in the array.
+ * last is the index of the last set bit (greatest prime).
+ */
+static const struct primes small_primes = {
+	.last = (127-1)/2,
+	.sz = 64,
+	.primes = {
+		BIT((3 - 1)/2) |
+		BIT((5 - 1)/2) |
+		BIT((7 - 1)/2) |
+		BIT((11 - 1)/2) |
+		BIT((13 - 1)/2) |
+		BIT((17 - 1)/2) |
+		BIT((19 - 1)/2) |
+		BIT((23 - 1)/2) |
+		BIT((29 - 1)/2) |
+		BIT((31 - 1)/2) |
+		BIT((37 - 1)/2) |
+		BIT((41 - 1)/2) |
+		BIT((43 - 1)/2) |
+		BIT((47 - 1)/2) |
+		BIT((53 - 1)/2) |
+		BIT((59 - 1)/2) |
+#if BITS_PER_LONG == 64
+		BIT((61 - 1)/2) |
+		BIT((67 - 1)/2) |
+		BIT((71 - 1)/2) |
+		BIT((73 - 1)/2) |
+		BIT((79 - 1)/2) |
+		BIT((83 - 1)/2) |
+		BIT((89 - 1)/2) |
+		BIT((97 - 1)/2) |
+		BIT((101 - 1)/2) |
+		BIT((103 - 1)/2) |
+		BIT((107 - 1)/2) |
+		BIT((109 - 1)/2) |
+		BIT((113 - 1)/2) |
+		BIT((127 - 1)/2)
+#elif BITS_PER_LONG == 32
+		BIT((61 - 1)/2),
+		BIT((67 - 65)/2) |
+		BIT((71 - 65)/2) |
+		BIT((73 - 65)/2) |
+		BIT((79 - 65)/2) |
+		BIT((83 - 65)/2) |
+		BIT((89 - 65)/2) |
+		BIT((97 - 65)/2) |
+		BIT((101 - 65)/2) |
+		BIT((103 - 65)/2) |
+		BIT((107 - 65)/2) |
+		BIT((109 - 65)/2) |
+		BIT((113 - 65)/2) |
+		BIT((127 - 65)/2)
+#else
+#error "unhandled BITS_PER_LONG"
+#endif
+	}
+};
+
+static DEFINE_MUTEX(lock);
+static const struct primes __rcu *primes = RCU_INITIALIZER(&small_primes);
+
+static unsigned long selftest_max;
+
+/*
+ * Fallback test if we can't allocate a sieve.
+ * The argument is guaranteed odd, and larger than
+ * the small_primes limit.
+ */
+static bool slow_is_prime_number(unsigned long x)
+{
+	unsigned i, y = int_sqrt(x);
+
+	assert(0);
+
+	for (i = 3; i < y; i += 2)
+		if (x % i == 0)
+			return false;
+	return true;
+}
+
+/*
+ * Fallback test if we can't allocate a sieve.
+ * The argument is guaranteed odd, and larger than
+ * the small_primes limit.
+ */
+static unsigned long slow_next_prime_number(unsigned long x)
+{
+	while (x < ULONG_MAX && !slow_is_prime_number(x += 2))
+		;
+
+	return x;
+}
+
+/*
+ * Return the index of the last set bit in the region.  The bit is
+ * guaranteed to exist, so there's no need to check for array underrun.
+ */
+static unsigned long
+find_last_bit(const unsigned long *addr, unsigned long size)
+{
+	unsigned long x, idx = BIT_WORD(size);
+
+	do
+		x = addr[--idx];
+	while (!x);
+	return idx * BITS_PER_LONG + __fls(x);
+}
+
+/*
+ * Generate a new, larger, prime bitmap.
+ * @x: the index of the number we're trying to look up.
+ *
+ * Called with rcu_read_lock held.  Drops it internally.
+ * Returns true with it reacquired on success.
+ * Returns false with it dropped on failure.
+ */
+static bool expand_to_next_prime(unsigned long x)
+{
+	const struct primes *p;
+	struct primes *new;
+	unsigned long sz, y;
+
+	rcu_read_unlock();
+
+	/* Betrand's Postulate (or Chebyshev's theorem) states that if n > 3,
+	 * there is always at least one prime p between n and 2n - 2.
+	 * Equivalently, if n > 1, then there is always at least one prime p
+	 * such that n < p < 2n.
+	 *
+	 * http://mathworld.wolfram.com/BertrandsPostulate.html
+	 * https://en.wikipedia.org/wiki/Bertrand's_postulate
+	 */
+	sz = 2 * x;
+	if (sz < x)
+		return false;
+
+	sz = round_up(sz, BITS_PER_LONG);
+	new = kmalloc(sizeof(*new) + bitmap_size(sz),
+		      GFP_KERNEL | __GFP_NOWARN);
+	if (!new)
+		return false;
+
+	mutex_lock(&lock);
+	p = rcu_dereference_protected(primes, lockdep_is_held(&lock));
+	if (x < p->last) {	/* Recheck under lock */
+		kfree(new);
+		goto unlock;
+	}
+
+	new->sz = sz;
+	bitmap_fill(new->primes, sz);
+	bitmap_copy(new->primes, p->primes, p->sz);
+	/*
+	 * This is where all the magic happens.  For each prime z in
+	 * the bitmap, starting at max(z**2, p->sz*2+1), clear the bits
+	 * corresponding to multiples of z.  When z**2 exceeds the new
+	 * size, we're done.
+	 */
+	y = 0;
+	for (;;) {
+		unsigned long z, m;
+
+		y = find_next_bit(new->primes, sz, y + 1);
+		m = 2 * y * (y + 1);	/* The index of (2*y+1)**2 */
+
+		if (m >= sz)
+			break;
+		z = 2 * y + 1;	/* The prime corresponding to index y */
+		if (m < p->sz)
+			m = roundup(p->sz - y, z) + y;
+		do {
+			__clear_bit(m, new->primes);
+			m += z;
+		} while (m < sz);
+	}
+	new->last = find_last_bit(new->primes, sz);
+
+	BUG_ON(new->last <= x);
+
+	rcu_assign_pointer(primes, new);
+	if (p != &small_primes)
+		kfree_rcu((struct primes *)p, rcu);
+
+unlock:
+	mutex_unlock(&lock);
+	rcu_read_lock();
+	return true;
+}
+
+static void free_primes(void)
+{
+	const struct primes *p;
+
+	mutex_lock(&lock);
+	p = rcu_dereference_protected(primes, lockdep_is_held(&lock));
+	if (p != &small_primes) {
+		rcu_assign_pointer(primes, &small_primes);
+		kfree_rcu((struct primes *)p, rcu);
+	}
+	mutex_unlock(&lock);
+}
+
+/**
+ * next_prime_number - return the next prime number
+ * @x: the starting point for searching to test
+ *
+ * A prime number is an integer greater than 1 that is only divisible by
+ * itself and 1.  The set of prime numbers is computed using the sieve of
+ * Eratosthenes (on finding a prime, all multiples of that prime are removed
+ * from the set) enabling a fast lookup of the next prime number larger than
+ * @x. If the sieve fails (memory limitation), the search falls back to using
+ * slow trial-divison, up to the value of ULONG_MAX (which is reported as the
+ * final prime as a sentinel).
+ *
+ * Returns: the next prime number larger than @x
+ */
+unsigned long next_prime_number(unsigned long x)
+{
+	const struct primes *p;
+
+	if (x < 2)
+		return 2;
+	x = (x - 1) >> 1;
+
+	rcu_read_lock();
+	while (x >= (p = rcu_dereference(primes))->last)
+		if (!expand_to_next_prime(x))
+			return slow_next_prime_number(2*x+3);
+	x = find_next_bit(p->primes, p->last, x + 1);
+	rcu_read_unlock();
+
+	return 2*x+1;
+}
+EXPORT_SYMBOL(next_prime_number);
+
+/**
+ * is_prime_number - test whether the given number is prime
+ * @x: the number to test
+ *
+ * A prime number is an integer greater than 1 that is only divisible by
+ * itself and 1. Internally a cache of prime numbers is kept (to speed up
+ * searching for sequential primes, see next_prime_number()), but if the number
+ * falls outside of that cache, its primality is tested using trial-divison.
+ *
+ * Returns: true if @x is prime, false for composite numbers.
+ */
+bool is_prime_number(unsigned long x)
+{
+	const struct primes *p;
+	bool result;
+
+	if (x % 2 == 0)
+		return x == 2;
+	x >>= 1;
+
+	rcu_read_lock();
+	while (x >= (p = rcu_dereference(primes))->sz)
+		if (!expand_to_next_prime(x))
+			return slow_is_prime_number(2*x+1);
+	result = test_bit(x, p->primes);
+	rcu_read_unlock();
+
+	return result;
+}
+EXPORT_SYMBOL(is_prime_number);
+
+#if 0
+static void dump_primes(void)
+{
+	const struct primes *p;
+	char *buf;
+
+	buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+
+	rcu_read_lock();
+	p = rcu_dereference(primes);
+
+	if (buf)
+		bitmap_print_to_pagebuf(true, buf, p->primes, p->sz);
+	pr_info("primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s",
+		p->last, p->sz, p->primes[BITS_TO_LONGS(p->sz) - 1], buf);
+
+	rcu_read_unlock();
+
+	kfree(buf);
+}
+
+static int selftest(unsigned long max)
+{
+	unsigned long x, last;
+
+	if (!max)
+		return 0;
+
+	for (last = 0, x = 2; x < max; x++) {
+		bool slow = slow_is_prime_number(x);
+		bool fast = is_prime_number(x);
+
+		if (slow != fast) {
+			pr_err("inconsistent result for is-prime(%lu): slow=%s, fast=%s!",
+			       x, slow ? "yes" : "no", fast ? "yes" : "no");
+			goto err;
+		}
+
+		if (!slow)
+			continue;
+
+		if (next_prime_number(last) != x) {
+			pr_err("incorrect result for next-prime(%lu): expected %lu, got %lu",
+			       last, x, next_prime_number(last));
+			goto err;
+		}
+		last = x;
+	}
+
+	pr_info("selftest(%lu) passed, last prime was %lu", x, last);
+	return 0;
+
+err:
+	dump_primes();
+	return -EINVAL;
+}
+
+static int __init primes_init(void)
+{
+	return selftest(selftest_max);
+}
+
+static void __exit primes_exit(void)
+{
+	free_primes();
+}
+
+module_init(primes_init);
+module_exit(primes_exit);
+
+module_param_named(selftest, selftest_max, ulong, 0400);
+
+MODULE_AUTHOR("Intel Corporation");
+MODULE_LICENSE("GPL");
+#else
+int
+main(void)
+{
+	unsigned long x;
+
+	for (x = 0; x < 1<<24; x = next_prime_number(x))
+		printf("%lu\n", x);
+	free_primes();
+	return 0;
+}
+#endif
