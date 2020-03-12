@@ -2,123 +2,101 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C720BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1A4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A657F206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F61C2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCLLm6 (ORCPT
+        id S1726976AbgCLLog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:42:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19326 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLLm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:42:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 04:42:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
-   d="scan'208";a="389577574"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.134]) ([10.249.169.134])
-  by orsmga004.jf.intel.com with ESMTP; 12 Mar 2020 04:42:54 -0700
-Subject: Re: [PATCH v2 3/6] kvm: x86: Emulate split-lock access as a write
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@aculab.com>
-References: <20200203151608.28053-1-xiaoyao.li@intel.com>
- <20200203151608.28053-4-xiaoyao.li@intel.com>
- <95d29a81-62d5-f5b6-0eb6-9d002c0bba23@redhat.com>
- <878sl945tj.fsf@nanos.tec.linutronix.de>
- <d690c2e3-e9ef-a504-ede3-d0059ec1e0f6@redhat.com>
- <20200227001117.GX9940@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <18333d32-9ec4-4aee-8c58-b2f44bb8e83d@intel.com>
-Date:   Thu, 12 Mar 2020 19:42:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 12 Mar 2020 07:44:36 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54575 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLLog (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:44:36 -0400
+X-Originating-IP: 90.66.181.224
+Received: from localhost (lfbn-lyo-1-2013-224.w90-66.abo.wanadoo.fr [90.66.181.224])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7A727240004;
+        Thu, 12 Mar 2020 11:44:32 +0000 (UTC)
+Date:   Thu, 12 Mar 2020 12:44:32 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
+Message-ID: <20200312114432.GA3384@piout.net>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+ <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
+ <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
+ <e43eaaf1-a294-902f-9a52-ebf8b29acab1@lucaceresoli.net>
+ <20200312111950.GA1013@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200227001117.GX9940@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312111950.GA1013@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/2020 8:11 AM, Sean Christopherson wrote:
-> On Tue, Feb 11, 2020 at 02:34:18PM +0100, Paolo Bonzini wrote:
->> On 11/02/20 14:22, Thomas Gleixner wrote:
->>> Paolo Bonzini <pbonzini@redhat.com> writes:
->>>> On 03/02/20 16:16, Xiaoyao Li wrote:
->>>>> A sane guest should never tigger emulation on a split-lock access, but
->>>>> it cannot prevent malicous guest from doing this. So just emulating the
->>>>> access as a write if it's a split-lock access to avoid malicous guest
->>>>> polluting the kernel log.
->>>>
->>>> Saying that anything doing a split lock access is malicious makes little
->>>> sense.
->>>
->>> Correct, but we also have to accept, that split lock access can be used
->>> in a malicious way, aka. DoS.
->>
->> Indeed, a more accurate emulation such as temporarily disabling
->> split-lock detection in the emulator would allow the guest to use split
->> lock access as a vehicle for DoS, but that's not what the commit message
->> says.  If it were only about polluting the kernel log, there's
->> printk_ratelimited for that.  (In fact, if we went for incorrect
->> emulation as in this patch, a rate-limited pr_warn would be a good idea).
->>
->> It is much more convincing to say that since this is pretty much a
->> theoretical case, we can assume that it is only done with the purpose of
->> DoS-ing the host or something like that, and therefore we kill the guest.
+On 12/03/2020 12:19:51+0100, Wolfram Sang wrote:
+> > Clearly this does not fit the case reported by Alexandre: a device
+> > having a driver which is known to be badly buggy, so we don't want to
+> > instantiate it. But again, this should not affect DT as it is not
+> > describing the HW, but only an implementation detail. Probably disabling
+> > or blacklisting the driver would be a better option there?
 > 
-> The problem with "kill the guest", and the reason I'd prefer to emulate the
-> split-lock as a write, is that killing the guest in this case is annoyingly
-> difficult.
+> "Fixing the driver" is the first thing coming to my mind ;) But yeah,
+> blacklisting would be another good solution. With only the information
+> above, DT is not the right place to fix a broken driver.
 > 
-> Returning X86EMUL_UNHANDLEABLE / EMULATION_FAILED gets KVM to
-> handle_emulation_failure(), but handle_emulation_failure() will only "kill"
-> the guest if emulation failed in L1 CPL==0.  For all other modes, it will
-> inject a #UD and resume the guest.  KVM also injects a #UD for L1 CPL==0,
-> but that's the least annoying thing.
+
+To be clear, the driver is working properly but the HW isn't. It is a
+PMIC and we need to avoid linux talking to it so the PMIC doesn't end up
+killing the bus.
+
+We end up with a node properly described in the device tree but with
+status = "disabled". The relevance to the discussion was that you know
+what is there and you want to avoid using its address.
+
+See the pmic node on i2c1 in arch/arm/boot/dts/at91-sama5d3_xplained.dts
+for what I'm referring to.
+
+> > My apologies to Wolfram, I appreciate a lot the effort you are doing,
+> > but before reviewing this patch I have never realized what I tried to
+> > explain above.
 > 
-> Adding a new emulation type isn't an option because this code can be
-> triggered through normal emulation.  A new return type could be added for
-> split-lock, but that's code I'd really not add, both from an Intel
-> perspective and a KVM maintenance perspective.  And, we'd still have the
-> conundrum of what to do if/when split-lock #AC is exposed to L1, e.g. in
-> that case, KVM should inject an #AC into L1, not kill the guest.  Again,
-> totally doable, but ugly and IMO an unnecessary maintenance burden.
+> All good, Luca! Talking over code usually brings in viewpoints which
+> have been missed so far. This is expected. Actually, I am very happy to
+> have this discussion!
 > 
-> I completely agree that poorly emulating the instruction from the (likely)
-> malicious guest is a hack, but it's a simple and easy to maintain hack.
+> All the best,
+> 
+>    Wolfram
+> 
 
-Paolo,
 
-What's your opinion about above?
 
->>>> Split lock detection is essentially a debugging feature, there's a
->>>> reason why the MSR is called "TEST_CTL".  So you don't want to make the
->>>
->>> The fact that it ended up in MSR_TEST_CTL does not say anything. That's
->>> where they it ended up to be as it was hastily cobbled together for
->>> whatever reason.
->>
->> Or perhaps it was there all the time in test silicon or something like
->> that...  That would be a very plausible reason for all the quirks behind it.
->>
->> Paolo
->>
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
