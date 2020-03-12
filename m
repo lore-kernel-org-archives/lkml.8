@@ -2,122 +2,151 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83924C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBE4C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5D82067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44A920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NeWi4sT4"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AdZtKeCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgCLNJJ (ORCPT
+        id S1727218AbgCLNK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:09:09 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42170 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgCLNJI (ORCPT
+        Thu, 12 Mar 2020 09:10:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42537 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCLNK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:09:08 -0400
-Received: by mail-ua1-f67.google.com with SMTP id v16so988706ual.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:09:08 -0700 (PDT)
+        Thu, 12 Mar 2020 09:10:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id e11so5975892qkg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LyzsKuloOrXeAT1eDgIMEyFoe/19CJB+RPiJ8KPwQIw=;
-        b=NeWi4sT4tcbOtVyLPuM+OlmGb0SVww73M2/R4+x0yevjrTcctku9ZniQ0wxvDpbhJ3
-         I4R/OYEqZArLPzoutN66dWfc7JJ37NZL/mNx9nxoeLvvnrgJEWcc1CXVMf+zn3Au+w3U
-         okoA4mIsV2nkwV65aXMAwIswdl64TXCOqmu4YYKwjkzos3miKzEHnZ+GpHOuYx7uLGaE
-         zHIWyCppm77BMtgL6QzXZ1Hmzbggl/6H03ugd/cIfkOT8qbVLz6/gLHeUuFfSjA9Xeoa
-         MPG4tdiKgMXWO+eh5rsKNsC90o+9x14NA86uN0lqIQ3Mf/DoxgdetNVvKcjGiJ0mRcBA
-         R3aA==
+         :cc:content-transfer-encoding;
+        bh=Fw7HC8zfyv7xlZ8Y772nkRRedqdvBOfOWFl3YVWCR/U=;
+        b=AdZtKeCPQg9PgXC0gviIyq+JosFZw/cAj9pq91dp7zf89VIQDfzUxGcjz8E8TkavhT
+         RXxwgeNdTPjfEsKrFyHeXoXs7WFrhj9ob0zHAdnhajSny3M5b/maHxghCUkR8VcOIgg8
+         s7uOi1wR/QJzem+7e/rCx/FDiXmep2ZF3NmBzvwQXQZTX9kvfEW9Fl1Zpgba+BubQ0EU
+         sFyIF4FLnctOXb1QrFeHZe455H9ZlDTzReH8Cha5blAUVyxNOr4DMlDMzccRxpGsxaLg
+         4+l1Ydhy9ahwwDJucHO68yg8M6y40megUBqte2rt2btM9CIDfaqWnmrbvt3Burx5y9Lg
+         mD4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LyzsKuloOrXeAT1eDgIMEyFoe/19CJB+RPiJ8KPwQIw=;
-        b=TK5ymRcXE4fM8nrALM6HSyjy4Z9wpY4QEELaiRWHcdKNvcs6LBUDm5CYYZBU2j3z0f
-         EJ0/90yG/7CyFAR96iMVGlNgZwU/EdOiNWokyOMfX7sF80rPKM8w27f5FXfTHewYy5IY
-         IJ0+PSiP2u07eGPFBwVg8QNnM2OS34PojSoqbq/iv6MjbSsOQ4eMAdG1evlQlHDRop7C
-         YFRixZnC0fFgrJJ3W7mnakNhZX90pAYfr5bJQCQ6ZoPpWmQyzT9gTXNQoWPllKzyD4WR
-         i9s1rMOpTvgrQBXR3oLQvudN93ETa+g0dE2HSNbthK5Xpb3QP1hLx1jcActD/6WRgDC1
-         S1hA==
-X-Gm-Message-State: ANhLgQ2cr9D7PHvdhU9swZAXD8SDO6hc+UJABTpXERNDD7B54Rm5UIKt
-        a88plgDPUh/0WkGXxSE60AogwPc+UsNVnyl44Eomrw==
-X-Google-Smtp-Source: ADFU+vvpfThPEsySr4RvSlP6UPDA5AYK/x2Ak/VHoJ9GoNUgCMWeZ+k5a42yKU7sePemyrIkQzJo3xMLVDtx8jEJPkw=
-X-Received: by 2002:ab0:7381:: with SMTP id l1mr4821390uap.104.1584018547554;
- Thu, 12 Mar 2020 06:09:07 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Fw7HC8zfyv7xlZ8Y772nkRRedqdvBOfOWFl3YVWCR/U=;
+        b=WviQO3rMkWUsp2Ffx2MRz2RWb/JqHxoEHGV+0j79YutKzPzc/JcmQ9cTkXG00n5prb
+         vpzX8qXw5N6BxcoVVTjJQve/FSIec+wJPzgpsTDZ9WmxkeH9SfoGegreQT/T0EfokUmM
+         Kf6gaiQBI/Gx+IRDiux2WL+X1E31+V87n7NCOY8rZtrrkYUEhTEoDR2KbWPMjA92w0D7
+         YSUx3v59BT/RAnZCebhr++jbmuW81FLyuOW3CQt2TUWM98piHVdeN1VnPCIXiUF/mgTF
+         tR5Vu2ZuPdsHhOzoDfRhGGCWeWWJJDvNV2q2WSmZltAAj+gsThXTn5WMA85A+rozv0y0
+         dSwA==
+X-Gm-Message-State: ANhLgQ29uEf+0ypBI5qyG0zKmMUjadrprvMsjLatmE4cjf30ZE3np16W
+        ZH8PzGPkJmEodgi0Lc+RdtyNBZCUfOEXRjgxBp3tNg==
+X-Google-Smtp-Source: ADFU+vsmLosOjuDP68r5eZPgol6dnmqRd+ZILVuI3Tk+l4vBb9/VptFkuJxMubd5z3NSwovTdmfxm5comn6Ihs5O5vc=
+X-Received: by 2002:a05:620a:1362:: with SMTP id d2mr7822512qkl.120.1584018652254;
+ Thu, 12 Mar 2020 06:10:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
-In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Mar 2020 14:08:31 +0100
-Message-ID: <CAPDyKFp+XwGog_w+8Sv1hYA-Umi6Rt2LYR1fyMEEb9abdb9nGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] Raspbery Pi 4 vmmc regulator support
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        phil@raspberrypi.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        DTML <devicetree@vger.kernel.org>
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
+ <20200121134157.20396-6-sakari.ailus@linux.intel.com> <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+ <20200311085555.GH5379@paasikivi.fi.intel.com>
+In-Reply-To: <20200311085555.GH5379@paasikivi.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 12 Mar 2020 14:10:32 +0100
+Message-ID: <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] at24: Support probing while off
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 at 18:44, Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+=C5=9Br., 11 mar 2020 o 09:56 Sakari Ailus <sakari.ailus@linux.intel.com> n=
+apisa=C5=82(a):
 >
-> The series first cleans up a common pattern, which is ultimately needed
-> to integrate the regulator with bcm2711's sdhci-iproc. It then
-> introduces the relevant device-tree changes.
+> Hi Bartosz,
 >
-> ---
+> Thanks for the reply.
 >
-> Changes since v1:
->  - Use helper function istead of quirk
->  - Add GPIO label
+> On Wed, Jan 29, 2020 at 02:36:17PM +0100, Bartosz Golaszewski wrote:
+> > wt., 21 sty 2020 o 14:41 Sakari Ailus <sakari.ailus@linux.intel.com> na=
+pisa=C5=82(a):
+> > >
+> > > In certain use cases (where the chip is part of a camera module, and =
+the
+> > > camera module is wired together with a camera privacy LED), powering =
+on
+> > > the device during probe is undesirable. Add support for the at24 to
+> > > execute probe while being powered off. For this to happen, a hint in =
+form
+> > > of a device property is required from the firmware.
+> > >
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > >  drivers/misc/eeprom/at24.c | 31 +++++++++++++++++++++----------
+
+[snip!]
+
+> > >
+> > >  static int at24_remove(struct i2c_client *client)
+> > >  {
+> > > +       bool low_power;
+> > > +
+> > >         pm_runtime_disable(&client->dev);
+> > > -       pm_runtime_set_suspended(&client->dev);
+> > > +       low_power =3D acpi_dev_state_low_power(&client->dev);
+> >
+> > This is inconsistent. You define the low_power field in the context
+> > structure (BTW the name low_power is a bit vague here - without
+> > looking at its assignment it would make me think it's about something
+> > battery-related, how about 'off_at_probe'?) and instead of reusing
 >
-> Nicolas Saenz Julienne (11):
->   mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
->   mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: Unexport sdhci_set_power_noreg()
->   mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
->   ARM: dts: bcm2711: Update expgpio's GPIO labels
->   ARM: dts: bcm2711: Add vmmc regulator in emmc2
->
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 13 ++++++++++++-
->  drivers/mmc/host/sdhci-iproc.c        | 17 ++++++++++++++++-
->  drivers/mmc/host/sdhci-milbeaut.c     | 13 +------------
->  drivers/mmc/host/sdhci-of-arasan.c    | 15 ++-------------
->  drivers/mmc/host/sdhci-of-at91.c      | 18 +-----------------
->  drivers/mmc/host/sdhci-pxav3.c        | 20 +-------------------
->  drivers/mmc/host/sdhci-xenon.c        | 20 +-------------------
->  drivers/mmc/host/sdhci.c              | 24 +++++++++++++++++++++---
->  drivers/mmc/host/sdhci.h              |  5 +++--
->  drivers/mmc/host/sdhci_am654.c        | 17 +++--------------
->  10 files changed, 61 insertions(+), 101 deletions(-)
->
-> --
-> 2.25.1
+> The field was called probe_powered_off in v1, but I changed it to
+> probe_low_power (and renamed related functions etc.) based on review
+> comments --- for the device may not be powered off actually.
 >
 
-Patch 1-4, 6, 9 applied for next, thanks!
+But is it actually ever low-power? What are the possible logical
+states of the device? If I understood correctly: it's either off or on
+at probe - not actually low-power. Am I missing something? In your
+cover letter you're writing: "These patches enable calling (and
+finishing) a driver's probe function without powering on the
+respective device on busses where the practice is to power on the
+device for probe." To me there's no mention of a low-power state,
+which makes the name 'probe_low_power' seem completely unrelated.
 
-Kind regards
-Uffe
+> > this field here, you call acpi_dev_state_low_power() again. Either
+> > don't store the context for the life-time of the device if not
+> > necessary or don't call acpi_dev_state_low_power() at remove, although
+> > the commit message doesn't describe whether the latter is done on
+> > purpose.
+>
+> Right. probe-low-power property has the same effect on remove for
+> consistency, i.e. the device can remain in low power state during remove.
+> This is documented in probe_low_power field documentation in the first
+> patch.
+>
+
+Just please don't store any state if you're not using it outside of
+the probe() function.
+
+Bartosz
