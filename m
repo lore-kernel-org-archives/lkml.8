@@ -2,165 +2,264 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F56AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC1CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F96B206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:23:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="glCnOijC"
+	by mail.kernel.org (Postfix) with ESMTP id 65155206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgCLMXP (ORCPT
+        id S1726669AbgCLM1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:23:15 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49234 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCLMXP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:23:15 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200312122310euoutp0187e38ee15bf364e5b53a575cce99dc9d~7jfgmLb3l1872918729euoutp015
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200312122310euoutp0187e38ee15bf364e5b53a575cce99dc9d~7jfgmLb3l1872918729euoutp015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584015790;
-        bh=KzxZBLdgOdzsUcEhVdsz8kOz2UhbX/Mn/GC75XiJdQo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=glCnOijCbw/nuM6NsdMmMVIECm1MiCzZUj2sSPIEi5DKYnfaFek4Jj6IfPgllMHzg
-         g8GOID0f8wZKig1jvMfBGexf3ugTdTzqDc9LtWOZ3iLzy1GoQNKAj4E8gBEswIEAIi
-         ZqiTvYCJF2VOh1PFfUiTf8OraQvMlM6dWLcol+vU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200312122310eucas1p248d7df962a275fd68002c1b663bd5414~7jfgZ9dYs2610326103eucas1p2c;
-        Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 83.31.60679.EA92A6E5; Thu, 12
-        Mar 2020 12:23:10 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200312122310eucas1p1165dfbb441a2f266968e1e00e2844d04~7jff9o2Sa0606306063eucas1p1g;
-        Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200312122310eusmtrp15834f53c8b385a8c2fde9062d825ae9b~7jff87kn_2583225832eusmtrp1k;
-        Thu, 12 Mar 2020 12:23:10 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-15-5e6a29aeb3b9
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 6D.45.08375.EA92A6E5; Thu, 12
-        Mar 2020 12:23:10 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200312122309eusmtip1bf6446eaa137bee6ae0461c1c87828a4~7jffe4j6A2241122411eusmtip1t;
-        Thu, 12 Mar 2020 12:23:09 +0000 (GMT)
-Subject: Re: [PATCH] ARM: boot: Fix ATAGs with appended DTB
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <f30208dc-e74a-cae7-95e6-d99220d9735c@samsung.com>
-Date:   Thu, 12 Mar 2020 13:23:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.5.0
+        Thu, 12 Mar 2020 08:27:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22515 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgCLM1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:27:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 05:27:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,544,1574150400"; 
+   d="scan'208";a="235010884"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 12 Mar 2020 05:27:00 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 12 Mar 2020 14:27:00 +0200
+Date:   Thu, 12 Mar 2020 14:27:00 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     "Laxminarayan Bharadiya, Pankaj" 
+        <pankaj.laxminarayan.bharadiya@intel.com>
+Cc:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "tzimmermann@suse.de" <tzimmermann@suse.de>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "Souza, Jose" <jose.souza@intel.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>
+Subject: Re: [RFC][PATCH 3/5] drm/i915: Enable scaling filter for plane and
+ pipe
+Message-ID: <20200312122700.GE13686@intel.com>
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200225070545.4482-4-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200310160545.GI13686@intel.com>
+ <E92BA18FDE0A5B43B7B3DA7FCA031286057B2BE5@BGSMSX107.gar.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdV9VyS3kBnhFT-5ry_O-aRafq-8Yor0xxxnjGqNQiSgZw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut3t3d11OrvN1sigapBjlo/rjliYGJbcosIgMY+qqy9R01m5a
-        RpK9RbSmFurUlB6YplazNKZCTnSWNrWFlkkpmWg08VXks9xulv993znfOd/54JCYtFvoTkar
-        TrNqlSJWRojx6uap9o2VXjHhvsYZT3ouq1lEF+Vk4HRZTT1GF+ZnIXqwp15A6750CWmzvoCg
-        nw+PCGjD7XpE3xkaIuiPmdkoaDlj7urEmJnpLMQMtlwnmMw3GxlDYypiqu5fYDIujxDMzTlf
-        5mdbJs5M6FaHiMPEAcfZ2OhEVu0TGCmOSjf3CE/m2J8d6J0RpaBxuzRkRwK1BT63j6M0JCal
-        1EMELV8nRTyZRPCjtBzjyQQCfY1FtDhSPVWM840SBE36XCFPLAj6HnfgVpUT5Q/G/lqBFTtT
-        Svh18bZtL0Y9wmDwZqHQ2iAoP0izpBFWLKECQdP9zjaMU+sg29hl07hQcsgvbcR5jSO8yhuw
-        YTtqP+j6hm0Yo9ZAjaUA47Eb9AwUCaxmQI2JIP31LYK/eyfMax4IeewE34zP/uZZBa3Z6Tg/
-        cBlBv6lCxJN0BOZLuYhX+UOvaXphE7lg4QWP9T58eQdUf69B1jJQDvDe4sgf4QBZ1TkYX5ZA
-        6jUpr/YArbHyn21Dx1tMg2TaJdG0S+Jol8TR/vctRngZcmMTuDgly21SsWe8OUUcl6BSeh+L
-        j9OhhXdrnTdOvkD62aMGRJFIZi/xdY0JlwoViVxSnAEBicmcJRFrlOFSyXFF0jlWHR+hTohl
-        OQNaSeIyN8nmu8NyKaVUnGZPsOxJVr3YFZB27ikomKgbPjLb9nsX2TCZ4vZbberlXJ8+7Qyt
-        UB4y4h9CkPyK9CopD11WkFzqqz3l0hhkmkmoGuxPjRkrWrnr/O4VX5yaWrU+mvJgzwN5ReNr
-        Kz69vHeC1NbdGH2iOrx3T21YS3OyZt9We7NHbvb8wf5t2zfY7w4oMOnHnSKp0WjHkjAZzkUp
-        /NZjak7xBwUhp8RqAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsVy+t/xu7rrNLPiDP60clr8nXSM3WL+9F4W
-        i1Xb9zJbzJ09idHi2a29TBabHl9jtbi8aw6bxdaX75gsDk3dy2gx78ULNovbEyczOnB7XL52
-        kdnj969JjB7PTrSzeUw8q+tx6HAHo8fmJfUevc3v2Dz6/xp4fDszkcXj8ya5AK4oPZui/NKS
-        VIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyey7dYC6bzVDy5
-        85u9gfETZxcjJ4eEgInEtp8LWLoYuTiEBJYySiz9/I8VIiEjcXJaA5QtLPHnWhcbRNFrRon9
-        z1+zgySEBawljj/czQRiiwikS7w++YUZpIhZYC2zxISpMxghOrYyS/xYep4FpIpNwFCi6y3I
-        KE4OXgE7iQnXr4DFWQRUJSYfvwa2TlQgVuLGzA4miBpBiZMzn4DVcAoESmx68BLMZhYwk5i3
-        +SEzhC0vsf3tHChbXOLWk/lMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy021CtOzC0u
-        zUvXS87P3cQIjOZtx35u3sF4aWPwIUYBDkYlHl4Dsaw4IdbEsuLK3EOMEhzMSiK88fLpcUK8
-        KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0w0eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNIT
-        S1KzU1MLUotg+pg4OKUaGBkLngpHnrNfep+b6Xrt5F39i05nTfVfWKO3+7fMlunvuPveWUt1
-        +8px31c3Mzc4sFprNaPBJo5Th1gUeH8+vHMoYmuUZ1XmgVLJ9u+foozMH3fJaqRVNcSarNCq
-        rnXZ6fH1l+/5HyZF76+wblRiLNyYZ/twZnvql9cLuG4XM++1e/1yxn/n50osxRmJhlrMRcWJ
-        AKNhF/r8AgAA
-X-CMS-MailID: 20200312122310eucas1p1165dfbb441a2f266968e1e00e2844d04
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83
-References: <CGME20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83@eucas1p1.samsung.com>
-        <20200225144749.19815-1-geert+renesas@glider.be>
-        <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
-        <20200226174905.GE25745@shell.armlinux.org.uk>
-        <CAMuHMdW1ojYyWXZpzgiy8PrZnR2PQ9n3SEDrQ7hFFUg0j-jegg@mail.gmail.com>
-        <20200226175723.GF25745@shell.armlinux.org.uk>
-        <CAMuHMdV9VyS3kBnhFT-5ry_O-aRafq-8Yor0xxxnjGqNQiSgZw@mail.gmail.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E92BA18FDE0A5B43B7B3DA7FCA031286057B2BE5@BGSMSX107.gar.corp.intel.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Mar 12, 2020 at 08:58:42AM +0000, Laxminarayan Bharadiya, Pankaj wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > Sent: 10 March 2020 21:36
+> > To: Laxminarayan Bharadiya, Pankaj
+> > <pankaj.laxminarayan.bharadiya@intel.com>
+> > Cc: jani.nikula@linux.intel.com; daniel@ffwll.ch; intel-
+> > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; airlied@linux.ie;
+> > maarten.lankhorst@linux.intel.com; tzimmermann@suse.de;
+> > mripard@kernel.org; mihail.atanassov@arm.com; Joonas Lahtinen
+> > <joonas.lahtinen@linux.intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>;
+> > Chris Wilson <chris@chris-wilson.co.uk>; Souza, Jose
+> > <jose.souza@intel.com>; Juha-Pekka Heikkila
+> > <juhapekka.heikkila@gmail.com>; linux-kernel@vger.kernel.org; Nautiyal,
+> > Ankit K <ankit.k.nautiyal@intel.com>
+> > Subject: Re: [RFC][PATCH 3/5] drm/i915: Enable scaling filter for plane and
+> > pipe
+> > 
+> > On Tue, Feb 25, 2020 at 12:35:43PM +0530, Pankaj Bharadiya wrote:
+> > > Attach scaling filter property for crtc and plane and program the
+> > > scaler control register for the selected filter type.
+> > >
+> > > This is preparatory patch to enable Nearest-neighbor integer scaling.
+> > >
+> > > Signed-off-by: Pankaj Bharadiya
+> > > <pankaj.laxminarayan.bharadiya@intel.com>
+> > > Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
+> > > ---
+> > >  drivers/gpu/drm/i915/display/intel_display.c | 17 +++++++++++++++--
+> > > drivers/gpu/drm/i915/display/intel_sprite.c  | 12 +++++++++++-
+> > >  drivers/gpu/drm/i915/i915_reg.h              |  1 +
+> > >  3 files changed, 27 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/i915/display/intel_display.c
+> > > b/drivers/gpu/drm/i915/display/intel_display.c
+> > > index 3031e64ee518..b5903ef3c5a0 100644
+> > > --- a/drivers/gpu/drm/i915/display/intel_display.c
+> > > +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> > > @@ -6242,6 +6242,8 @@ static void skl_pfit_enable(const struct
+> > intel_crtc_state *crtc_state)
+> > >  	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+> > >  	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+> > >  	enum pipe pipe = crtc->pipe;
+> > > +	const struct drm_crtc_state *state = &crtc_state->uapi;
+> > > +	u32 scaling_filter = PS_FILTER_MEDIUM;
+> > >  	const struct intel_crtc_scaler_state *scaler_state =
+> > >  		&crtc_state->scaler_state;
+> > >
+> > > @@ -6258,6 +6260,11 @@ static void skl_pfit_enable(const struct
+> > intel_crtc_state *crtc_state)
+> > >  		pfit_w = (crtc_state->pch_pfit.size >> 16) & 0xFFFF;
+> > >  		pfit_h = crtc_state->pch_pfit.size & 0xFFFF;
+> > >
+> > > +		if (state->scaling_filter ==
+> > > +		    DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
+> > > +			scaling_filter = PS_FILTER_PROGRAMMED;
+> > > +		}
+> > 
+> > Just make that a function that can be used all over.
+> > skl_scaler_filter(scaling_filter) or something.
+> > 
+> > > +
+> > >  		hscale = (crtc_state->pipe_src_w << 16) / pfit_w;
+> > >  		vscale = (crtc_state->pipe_src_h << 16) / pfit_h;
+> > >
+> > > @@ -6268,8 +6275,10 @@ static void skl_pfit_enable(const struct
+> > > intel_crtc_state *crtc_state)
+> > >
+> > >  		spin_lock_irqsave(&dev_priv->uncore.lock, irqflags);
+> > >
+> > > -		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
+> > PS_SCALER_EN |
+> > > -				  PS_FILTER_MEDIUM | scaler_state-
+> > >scalers[id].mode);
+> > > +		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
+> > > +				  PS_SCALER_EN |
+> > > +				  scaling_filter |
+> > > +				  scaler_state->scalers[id].mode);
+> > >  		intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, id),
+> > >  				  PS_Y_PHASE(0) |
+> > PS_UV_RGB_PHASE(uv_rgb_vphase));
+> > >  		intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, id), @@
+> > -16695,6
+> > > +16704,10 @@ static int intel_crtc_init(struct drm_i915_private *dev_priv,
+> > enum pipe pipe)
+> > >  		dev_priv->plane_to_crtc_mapping[i9xx_plane] = crtc;
+> > >  	}
+> > >
+> > > +
+> > > +	if (INTEL_GEN(dev_priv) >= 11)
+> > 
+> > gen >= 10 actually. Even glk seems to have it but bspec says not to use it on
+> > glk. Supposedly not validated.
+> > 
+> > ilk/snb/ivb pfits also has programmable coefficients actually. So IMO we
+> > should enable this on those as well.
+> 
+> OK. I need to explore bspec more for these platforms.
+> To begin with I would like to stick to gen >=10.
 
-On 26.02.2020 21:48, Geert Uytterhoeven wrote:
-> Hi Russell,
->
-> On Wed, Feb 26, 2020 at 6:57 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
->> On Wed, Feb 26, 2020 at 06:56:06PM +0100, Geert Uytterhoeven wrote:
->>> On Wed, Feb 26, 2020 at 6:49 PM Russell King - ARM Linux admin
->>> <linux@armlinux.org.uk> wrote:
->>>> On Wed, Feb 26, 2020 at 07:35:14AM +0100, Marek Szyprowski wrote:
->>>>> On 25.02.2020 15:47, Geert Uytterhoeven wrote:
->>>>>> At early boot, register r8 may contain an ATAGs or DTB pointer.
->>>>>> When an appended DTB is found, its address is stored in r8, for
->>>>>> extraction of the RAM base address later.
->>>>>>
->>>>>> However, if r8 contained an ATAGs pointer before, that pointer will be
->>>>>> lost, and the provided ATAGs is no longer folded into the provided DTB.
->>>>>>
->>>>>> Fix this by leaving r8 untouched.
->>>>>>
->>>>>> Fixes: 137e522593918be2 ("ARM: 8960/1: boot: Obtain start of physical memory from DTB")
->>>>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>> The original commit hasn't been submitted, so it can be fixed before it
->>>> hits mainline if you want.  Let me know what you want to do.  Thanks.
->>> Fixing the original is fine for me, of course.
->>> Thanks!
->> Please submit a replacement for 8960/1, thanks.
-> Done.
+Sure. You can also have a look at the intel_scaling_coef hacks I posted
+to igt-dev for details on how to drive them all. I already reverse
+engineered them sufficiently so that I was able to program them ;)
 
-Gentle ping. This fix is still not present in linux-next for over 2 weeks...
+> 
+> > 
+> > The bigger problem will be how is userspace supposed to use this if it's a crtc
+> > property? Those will not get automagically exposed via xrandr.
+> > 
+> > > +		drm_crtc_enable_scaling_filter(&crtc->base);
+> > > +
+> > >  	intel_color_init(crtc);
+> > >
+> > >  	drm_WARN_ON(&dev_priv->drm, drm_crtc_index(&crtc->base) !=
+> > > crtc->pipe); diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c
+> > > b/drivers/gpu/drm/i915/display/intel_sprite.c
+> > > index 7abeefe8dce5..fd7b31a21723 100644
+> > > --- a/drivers/gpu/drm/i915/display/intel_sprite.c
+> > > +++ b/drivers/gpu/drm/i915/display/intel_sprite.c
+> > > @@ -414,6 +414,12 @@ skl_program_scaler(struct intel_plane *plane,
+> > >  	u16 y_hphase, uv_rgb_hphase;
+> > >  	u16 y_vphase, uv_rgb_vphase;
+> > >  	int hscale, vscale;
+> > > +	const struct drm_plane_state *state = &plane_state->uapi;
+> > > +	u32 scaling_filter = PS_FILTER_MEDIUM;
+> > > +
+> > > +	if (state->scaling_filter ==
+> > DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
+> > > +		scaling_filter = PS_FILTER_PROGRAMMED;
+> > > +	}
+> > >
+> > >  	hscale = drm_rect_calc_hscale(&plane_state->uapi.src,
+> > >  				      &plane_state->uapi.dst,
+> > > @@ -441,7 +447,8 @@ skl_program_scaler(struct intel_plane *plane,
+> > >  	}
+> > >
+> > >  	intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, scaler_id),
+> > > -			  PS_SCALER_EN | PS_PLANE_SEL(plane->id) | scaler-
+> > >mode);
+> > > +			  scaling_filter | PS_SCALER_EN |
+> > > +			  PS_PLANE_SEL(plane->id) | scaler->mode);
+> > >  	intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, scaler_id),
+> > >  			  PS_Y_PHASE(y_vphase) |
+> > PS_UV_RGB_PHASE(uv_rgb_vphase));
+> > >  	intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, scaler_id), @@
+> > > -3104,6 +3111,9 @@ skl_universal_plane_create(struct drm_i915_private
+> > > *dev_priv,
+> > >
+> > >  	drm_plane_create_zpos_immutable_property(&plane->base,
+> > plane_id);
+> > >
+> > > +	if (INTEL_GEN(dev_priv) >= 11)
+> > 
+> > also gen>=10
+> > 
+> > Also this patch breaks things as we don't yet have the code to program the
+> > coefficients. So the series needs to be reordered.
+> 
+> Will reorder the series.
+> 
+> Thanks,
+> Pankaj
+> > 
+> > > +		drm_plane_enable_scaling_filter(&plane->base);
+> > > +
+> > >  	drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
+> > >
+> > >  	return plane;
+> > > diff --git a/drivers/gpu/drm/i915/i915_reg.h
+> > > b/drivers/gpu/drm/i915/i915_reg.h index f45b5e86ec63..34923b1c284c
+> > > 100644
+> > > --- a/drivers/gpu/drm/i915/i915_reg.h
+> > > +++ b/drivers/gpu/drm/i915/i915_reg.h
+> > > @@ -7212,6 +7212,7 @@ enum {
+> > >  #define PS_PLANE_SEL(plane) (((plane) + 1) << 25)
+> > >  #define PS_FILTER_MASK         (3 << 23)
+> > >  #define PS_FILTER_MEDIUM       (0 << 23)
+> > > +#define PS_FILTER_PROGRAMMED   (1 << 23)
+> > >  #define PS_FILTER_EDGE_ENHANCE (2 << 23)
+> > >  #define PS_FILTER_BILINEAR     (3 << 23)
+> > >  #define PS_VERT3TAP            (1 << 21)
+> > > --
+> > > 2.23.0
+> > 
+> > --
+> > Ville Syrjälä
+> > Intel
 
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Ville Syrjälä
+Intel
