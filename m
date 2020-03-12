@@ -2,135 +2,82 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB21C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA925C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4D920578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A593620578
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584003372;
+	bh=8QZh21af5Fq8pk6AVSwtgBWIbWoSoo/av/UThU89jgk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lg0FwSirIvmIxd02Q0CvMN9pFlVY5fnQ4ks8Sb3ossy+hqs5aND11GS1feRLVS4tu
+	 nhZ17+U0BIKlKSsWg+4l4RCDYYxFyymz6w3/cFEJ+BKhm2ToflP28knWijus9qXy+V
+	 3sHEziXNmf3R0WA1WsqDcEuM6WADrHpDO77VF6pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgCLIz7 (ORCPT
+        id S1726620AbgCLI4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:55:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39716 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgCLIz7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 04:55:59 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 47F8C29642E
-Subject: Re: [PATCH] ASoC: dt-bindings: google,cros-ec-codec: Fix dtc warnings
- in example
-To:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Benson Leung <bleung@chromium.org>, alsa-devel@alsa-project.org
-References: <20200311205841.2710-1-robh@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <d6c612db-d4fd-e0e5-aff0-c3963322830c@collabora.com>
-Date:   Thu, 12 Mar 2020 09:55:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 12 Mar 2020 04:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgCLI4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 04:56:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804AB20578;
+        Thu, 12 Mar 2020 08:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584003369;
+        bh=8QZh21af5Fq8pk6AVSwtgBWIbWoSoo/av/UThU89jgk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sTEfR3h6Df7AETe+7aig03ZmzrrMs3fYM5/vV9O9ydYgT6/GmR43kj99xShU9Dy4y
+         hYaKcWsWo9Ni06FAEMg49ds5PlA3w05JlPYen+utH/iySKROYqOBHrnEwv4MvsM7ZU
+         yQYjUfOI7rE8qyRSyJxf7hxeaWEjyu1T2x8RL0x8=
+Date:   Thu, 12 Mar 2020 09:56:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next 005/491] ARM/UNIPHIER ARCHITECTURE: Use fallthrough;
+Message-ID: <20200312085606.GA154268@kroah.com>
+References: <cover.1583896344.git.joe@perches.com>
+ <dae0878058223a42c77d725b8d7c5845a7ef9dc0.1583896348.git.joe@perches.com>
+ <CAK7LNAS7GAk9yXkPhbS3ByU+n9Gb-rk0PeLcXLCNwpW1B22aeg@mail.gmail.com>
+ <891a42ad8d8fd7beca911845108e1ded022ef3f7.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311205841.2710-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <891a42ad8d8fd7beca911845108e1ded022ef3f7.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 11/3/20 21:58, Rob Herring wrote:
-> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-> when building the binding examples. These were fixed treewide in
-> 5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
-> warnings:
+On Wed, Mar 11, 2020 at 07:31:07AM -0700, Joe Perches wrote:
+> On Wed, 2020-03-11 at 14:15 +0900, Masahiro Yamada wrote:
+> > On Wed, Mar 11, 2020 at 2:07 PM Joe Perches <joe@perches.com> wrote:
+> > > Convert the various uses of fallthrough comments to fallthrough;
+> > > 
+> > > Done via script
+> > > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> > > 
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> > 
+> > Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > 
+> > 
+> > But, I think the patch subject should be prefixed:
+> > "serial: 8250_uniphier:"
 > 
-> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:17.28-21.11:
-> Warning (unit_address_vs_reg): /example-0/reserved_mem: node has a reg or ranges property, but no unit name
-> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:22.19-32.11:
-> Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg property
-> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.37-31.15:
-> Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
+> Yeah thanks, that's difficult to script though.
 > 
-> Fixing the above, then results in:
 > 
-> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.13-23:
-> Warning (reg_format): /example-0/cros-ec@0:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:27.37-32.15:
-> Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
-> 
-> Fixes: eadd54c75f1e ("dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.")
-> Cc: Cheng-Yi Chiang <cychiang@chromium.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Just a minor nit, but the patch looks good to me, so:
-
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-
-> ---
->  .../bindings/sound/google,cros-ec-codec.yaml  | 27 +++++++++++--------
->  1 file changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-> index 94a85d0cbf43..c84e656afb0a 100644
-> --- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-> +++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-> @@ -44,19 +44,24 @@ additionalProperties: false
->  
->  examples:
->    - |
-> -    reserved_mem: reserved_mem {
-> +    reserved_mem: reserved-mem@52800000 {
->          compatible = "shared-dma-pool";
-> -        reg = <0 0x52800000 0 0x100000>;
-> +        reg = <0x52800000 0x100000>;
->          no-map;
->      };
-> -    cros-ec@0 {
-> -        compatible = "google,cros-ec-spi";
-> -        #address-cells = <2>;
-> -        #size-cells = <1>;
-> -        cros_ec_codec: ec-codec {
-> -            compatible = "google,cros-ec-codec";
-> -            #sound-dai-cells = <1>;
-> -            reg = <0x0 0x10500000 0x80000>;
-> -            memory-region = <&reserved_mem>;
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        cros-ec@0 {
-> +            compatible = "google,cros-ec-spi";
-> +            #address-cells = <2>;
-> +            #size-cells = <1>;
-> +            reg = <0>;
-> +            cros_ec_codec: ec-codec@10500000 {
-
-nit: shouldn't this be just codec@105500000 to match the class? However I am not
-sure codec is a class itself.
-
-> +                compatible = "google,cros-ec-codec";
-> +                #sound-dai-cells = <1>;
-> +                reg = <0x0 0x10500000 0x80000>;
-> +                memory-region = <&reserved_mem>;
-> +            };
->          };
->      };
-> 
+Kernel development is hard :)
