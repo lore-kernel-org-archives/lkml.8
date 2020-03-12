@@ -2,240 +2,229 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F32EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A863C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082DC206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588FB206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TdpPWItD"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="O7Jmh8qu";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="JucBbRYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgCLRHH (ORCPT
+        id S1726557AbgCLRHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:07:07 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36576 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726254AbgCLRHH (ORCPT
+        Thu, 12 Mar 2020 13:07:42 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:25080 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726085AbgCLRHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:07:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584032826;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pou48natwVAOL5ibEHgzrpyDUrATr5dT40KwpqtjSdc=;
-        b=TdpPWItDIOD2nvS3fqdjTen9yCB2bnuzx35PKxVH2JpKcP+Xdvz8ARrUAPIMUvVykub6qQ
-        mstvWo+17pwOaN8x/Mc6qvQUM0VwaWgmHFhXsVCVEx2vesaSGXaHDIVIboMt2IZBelUV70
-        nRPww5s28xu0l7081Oy0HpSYgNroLCI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-bvw3th6KP7-PVy15IH6MKg-1; Thu, 12 Mar 2020 13:07:04 -0400
-X-MC-Unique: bvw3th6KP7-PVy15IH6MKg-1
-Received: by mail-wm1-f71.google.com with SMTP id w12so2124943wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:07:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=Pou48natwVAOL5ibEHgzrpyDUrATr5dT40KwpqtjSdc=;
-        b=LsJjuK5Ifq2EjYkSXvyAThFqXBUNLw5obthDfo0B53AxI1WcgcdrS/ju5iJ38YFi5V
-         jRW/yQbUqPBtPPCbMVZ4aNJZpdtdjwh7HnoLSvItLwJ+KDHNtKIb7MnT42FkCQZGeKQy
-         N7OBHTNHVZ+2L8Z9Hio+83dS6iEg1XK7dP8Tjb8YOa9l/DSJ03njoE/bi1SyC3obBl3G
-         a3OC0vF99YhcfVpAXU9lsyD2Mw/Qf3+pYG8EsThJstyvBwQwGEeA7uS1LOk2hI2hxneN
-         glVKJdxw0+gIZNDSBmv3RZXsuQ79uY7bDof/flOMxAHFYAkP3GlB/M/r3JCwVP4uNEWl
-         BIRw==
-X-Gm-Message-State: ANhLgQ2cQJlRWfHzpxTEN75awdTv3yT3XMAifvUKzTxJm3DVxexpFNbi
-        QSOhWv5NJf53QuLptG9IXqwyR5e+wOSAFVU8htYQvpmRO53O03ukkKtt9tbdNdWZOgayzmV6QLp
-        P2/5Vo0cjNnS5ke3ukZUligGp9Ckcbaq3NQNVYnN6
-X-Received: by 2002:a5d:414d:: with SMTP id c13mr12501273wrq.40.1584032823275;
-        Thu, 12 Mar 2020 10:07:03 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vt5l7qlGcrEh5p+/sZCDc0to9Wjr3aHjAZrUXKdxt7Jyk/HqVmvVeRJtiVdwY6wTDs+RyruWmKv/csfepNgHls=
-X-Received: by 2002:a5d:414d:: with SMTP id c13mr12501239wrq.40.1584032822978;
- Thu, 12 Mar 2020 10:07:02 -0700 (PDT)
+        Thu, 12 Mar 2020 13:07:42 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CH6jwG014722;
+        Thu, 12 Mar 2020 10:07:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=facebook;
+ bh=2MVioacD/H7eOK1hLafJmanRgPVlFOqC+u6lk9Q37Yc=;
+ b=O7Jmh8quV+OEHftR/MyM4/p59DGFev+jBi0zfDTgq1Y/cO/DFyO3JlLHVj193tPHALko
+ RZhHESnkhj4K7pHmaK2Y142Mgnz2mFlx+CzYMugOP01qJfzed8DMt6Bp/S0hIg2y+Ef2
+ kdHWVWjomr7fEOaTyPolnNfs/FeERq8LQLk= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yqacsbrng-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 12 Mar 2020 10:07:22 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 12 Mar 2020 10:07:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E70GuMEQYsa83FIStaV9JemRX907zOQrNcrMYnzghYHUVRbyKxCeu6pmK93X7L37jk4tT+9HKQ3OHyzwWb815jv7h5SbXBNs/0ZKBb//JpNvz03Wz/SLfYZaI18fsRx85eUpHjela1eQmbEfRX0EJaWAHeD5Q+RApLKbm68MtJ59fpdE2j4canml95DP4GzbXBwIW91UjzfVsm2l++IyHzJjGWsMns79oWtvNbZTgNGHJ+UM/jpqm1ahOiuqGoo4VchA6xEF7e+oR4dffPEKxMXn2jyMAT/eWEz2MLDl6uTDn2WKKzHzuHolMaY/A41ulm64gh++cPvJ1LmST71vHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2MVioacD/H7eOK1hLafJmanRgPVlFOqC+u6lk9Q37Yc=;
+ b=DINVr1IqxlpD6VRMxXMLiw7dXCgwPcBQpW69WzoibdYjHa79I/NEfR+vDvHcvKuqK19yNgiazEBLqXPU+/uBtHQzFic+jRb/n7+2+qKP6u2DU6wE8pEBW+2wwtQSzplZchBH5wq72f6HXNK03o4CCd+OUJjLMk83OzCwYbsc1CbCYwuAUaIyfhxHwDBse0BKDB6/pJzNyPdFlJyjKt4g6gQH6SEdWk5ZME/O4dkqczzBBb4oLLO8uI4kRJ21jZjdSY6f21EM/3/p+A+Xv1dMeIYZip9DzbIjEF9l+d5b8mYi4dwBc5wefFbI8aAg/ohlIt7NpUdq470qFqipxJeLJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2MVioacD/H7eOK1hLafJmanRgPVlFOqC+u6lk9Q37Yc=;
+ b=JucBbRYsiJ/AuMpBtZXOB03uEyf0GyptWQXmm7QMk//MjVHn0nrip7xlF3VnNRwPXGZoGndESsgeVRAQY+nEBcj5R9e75r0GbND38bLH7XPTLoRNlMe9dDOj6r6WAcI89kesschNU3Ect+MpstC7L5zgptHa6f0UepZ+2sZ18E4=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1487.namprd15.prod.outlook.com (2603:10b6:300:b2::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Thu, 12 Mar
+ 2020 17:07:19 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
+ 17:07:19 +0000
+Date:   Thu, 12 Mar 2020 10:07:15 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Joonsoo Kim <js1304@gmail.com>
+CC:     Vlastimil Babka <vbabka@suse.cz>, Rik van Riel <riel@surriel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH] mm,page_alloc,cma: conditionally prefer cma pageblocks
+ for movable allocations
+Message-ID: <20200312170715.GA5764@carbon.DHCP.thefacebook.com>
+References: <20200306150102.3e77354b@imladris.surriel.com>
+ <8e67d88f-3ec8-4795-35dc-47e3735e530e@suse.cz>
+ <20200311173526.GH96999@carbon.dhcp.thefacebook.com>
+ <CAAmzW4PRCGdZXGceSCfzpesUXNd8GU-zLt-m+t762=WH-BjmoA@mail.gmail.com>
+ <20200312023952.GA3040@carbon.lan>
+ <CAAmzW4MMV8jgboSgHizUoH6wuuztCTJRY7AGN95869rrfH++=Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAmzW4MMV8jgboSgHizUoH6wuuztCTJRY7AGN95869rrfH++=Q@mail.gmail.com>
+X-ClientProxiedBy: MWHPR20CA0008.namprd20.prod.outlook.com
+ (2603:10b6:300:13d::18) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
 MIME-Version: 1.0
-References: <20200224095223.13361-1-mgorman@techsingularity.net>
- <20200309191233.GG10065@pauld.bos.csb> <20200309203625.GU3818@techsingularity.net>
- <20200312095432.GW3818@techsingularity.net> <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
- <20200312155640.GX3818@techsingularity.net>
-In-Reply-To: <20200312155640.GX3818@techsingularity.net>
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Thu, 12 Mar 2020 18:06:51 +0100
-Message-ID: <CAE4VaGALRsggp4Z3g01y1v=q5A=8OqGLuwOeD8oj7P-BkdWNBw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-To:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:b75) by MWHPR20CA0008.namprd20.prod.outlook.com (2603:10b6:300:13d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17 via Frontend Transport; Thu, 12 Mar 2020 17:07:18 +0000
+X-Originating-IP: [2620:10d:c090:400::5:b75]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 81675679-ebd5-4118-d9cf-08d7c6a7d262
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1487:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR15MB1487428568E8F178B41F59D6BEFD0@MWHPR15MB1487.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0340850FCD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(39860400002)(346002)(366004)(199004)(54906003)(966005)(66476007)(478600001)(66946007)(66556008)(186003)(16526019)(316002)(81166006)(8676002)(81156014)(86362001)(7416002)(8936002)(9686003)(4326008)(6916009)(55016002)(5660300002)(52116002)(53546011)(7696005)(6666004)(1076003)(6506007)(33656002)(2906002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1487;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uKISOI0cwE951KrvpuON7gtknD4NWUPOoWjrpSiyLsxI57brqkrlV9iPPQoh6bXAIJOWjg5oTHkxwQgQ/ta1GtfcJgZHJMYv7dTziLWe24o7o9cMqm34Kp6WZ+ffLlGo/mo710tx8CUNB0wHf/edjdZgtA4EzgWMO4HIHv0vbAc7Hl4kG+meg4lmn41ioZHiIMpw+Z7bV0aCCHcfVi71IOuxLFuQkblE+q6CEen46Rl7hx40ggw7/scA/K7HLCoi1DNCWWjt/19NwGrWbsEWf3puc7CsrQpiaoEHFkKotIRNJWNi05oW60r5ahZnf2dVXt7AwKbSl2uI+o25Irzmosc4xJNySas3KUBdRWSTzK6wwC8qM9p+PN3h4Pg2DW47ipsOPhjG5OEj7sQzoo4XFT/sWAhTcyY0EmweTG4kwxwwAZstAtMi474m+DUkKyE74ib0ng0PfhnfOoga6p9oNY6mKufmTV3m6y91rYTgUBl3NAgKeBrpkjUSCWFaVhsF1bQGV5eQHE4/x2EkvuQm2xt88i7wpYQdIY4bonvEugfjuoflEOr620Eyw1FvQs/C
+X-MS-Exchange-AntiSpam-MessageData: d8v/c5XnSrJ8z1DSuU4gShDjlFngCIB7ycCRN5vNmZg1Vmwiow4ngWXAohtnXPK94wk0uHWqzA7sKFMXHefRmDjzOkEayl/yN0cE1HcsaYHtTwwAhWQRJ3xBA9g8RAZbUP0217XgQeFl+mPE0OMq1JD533RAtqrDjiKruOqRVRrOpG/d7lfYJXilKmuf63dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81675679-ebd5-4118-d9cf-08d7c6a7d262
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 17:07:19.3083
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1101fO8ZM2JOsIMXTnDrcEridGshbtBqojtI7oHm50iqpHjGyUtR0Xj1BDFLXxgi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1487
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-12_11:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 spamscore=0 bulkscore=0 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120087
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> find it unlikely that is common because who acquires such a large machine
-> and then uses a tiny percentage of it.
-
-I generally agree, but I also want to make a point that AMD made these
-large systems much more affordable with their EPYC CPUs. The 8 NUMA
-node server we are using costs under $8k.
-
->
-> This is somewhat of a dilemma. Without the series, the load balancer and
-> NUMA balancer use very different criteria on what should happen and
-> results are not stable.
-
-Unfortunately, I see instabilities also for the series. This is again
-for the sp_C test with 8 threads executed on dual-socket AMD 7351
-(EPYC Naples) server with 8 NUMA nodes. With the series applied, the
-runtime varies from 86 to 165 seconds! Could we do something about it?
-The runtime of 86 seconds would be acceptable. If we could stabilize
-this case and get consistent runtime around 80 seconds, the problem
-would be gone.
-
-Do you experience the similar instability of results on your HW for
-sp_C with low thread counts?
-
-Runtime with this series applied:
- $ grep "Time in seconds" *log
-sp.C.x.defaultRun.008threads.loop01.log: Time in seconds =
-      125.73
-sp.C.x.defaultRun.008threads.loop02.log: Time in seconds =
-       87.54
-sp.C.x.defaultRun.008threads.loop03.log: Time in seconds =
-       86.93
-sp.C.x.defaultRun.008threads.loop04.log: Time in seconds =
-      165.98
-sp.C.x.defaultRun.008threads.loop05.log: Time in seconds =
-      114.78
-
-For comparison, here are vanilla kernel results:
-$ grep "Time in seconds" *log
-sp.C.x.defaultRun.008threads.loop01.log: Time in seconds =
-       59.83
-sp.C.x.defaultRun.008threads.loop02.log: Time in seconds =
-       67.72
-sp.C.x.defaultRun.008threads.loop03.log: Time in seconds =
-       63.62
-sp.C.x.defaultRun.008threads.loop04.log: Time in seconds =
-       55.01
-sp.C.x.defaultRun.008threads.loop05.log: Time in seconds =
-       65.20
-
-> In *general*, I found that the series won a lot more than it lost across
-> a spread of workloads and machines but unfortunately it's also an area
-> where counter-examples can be found.
-
-OK, fair enough. I understand that there will always be trade-offs
-when making changes to scheduler like this. And I agree that cases
-with higher system load (where is series is helpful) outweigh the
-performance drops for low threads counts. I was hoping that it would
-be possible to improve the small threads results while keeping the
-gains for other scenarios:-)  But let's be realistic - I would be
-happy to fix the extreme case mentioned above. The other issues where
-performance drop is about 20% are OK with me and are outweighed by the
-gains for different scenarios.
-
-Thanks again for looking into it. I know that covering all cases is
-hard. I very much appreciate what you do!
-
-Jirka
-
-
-On Thu, Mar 12, 2020 at 4:56 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Thu, Mar 12, 2020 at 01:10:36PM +0100, Jirka Hladky wrote:
-> > Hi Mel,
+On Thu, Mar 12, 2020 at 05:56:34PM +0900, Joonsoo Kim wrote:
+> 2020년 3월 12일 (목) 오전 11:40, Roman Gushchin <guro@fb.com>님이 작성:
 > >
-> > thanks a lot for analyzing it!
+> > On Thu, Mar 12, 2020 at 10:41:28AM +0900, Joonsoo Kim wrote:
+> > > Hello, Roman.
 > >
-> > My big concern is that the performance drop for low threads counts (roughly
-> > up to 2x number of NUMA nodes) is not just a rare corner case, but it might
-> > be more common.
->
-> That is hard to tell. In my case I was seeing the problem running a HPC
-> workload, dedicated to that machine and using only 6% of available CPUs. I
-> find it unlikely that is common because who acquires such a large machine
-> and then uses a tiny percentage of it. Rember also the other points I made
-> such as 1M migrations happening in the first few seconds just trying to
-> deal with the load balancer and NUMA balancer fighting each other. While
-> that might happen to be good for SP, it's not universally good behaviour
-> and I've dealt with issues in the past whereby the NUMA balancer would
-> get confused and just ramp up the frequency it samples and migrates trying
-> to override the load balancer.
->
-> > We see the drop for the following benchmarks/tests,
-> > especially on 8 NUMA nodes servers. However, four and even 2 NUMA node
-> > servers are affected as well.
+> > Hello, Joonsoo!
 > >
-> > Numbers show average performance drop (median of runtime collected from 5
-> > subsequential runs) compared to vanilla kernel.
+> > >
+> > > 2020년 3월 12일 (목) 오전 2:35, Roman Gushchin <guro@fb.com>님이 작성:
+> > > >
+> > > > On Wed, Mar 11, 2020 at 09:51:07AM +0100, Vlastimil Babka wrote:
+> > > > > On 3/6/20 9:01 PM, Rik van Riel wrote:
+> > > > > > Posting this one for Roman so I can deal with any upstream feedback and
+> > > > > > create a v2 if needed, while scratching my head over the next piece of
+> > > > > > this puzzle :)
+> > > > > >
+> > > > > > ---8<---
+> > > > > >
+> > > > > > From: Roman Gushchin <guro@fb.com>
+> > > > > >
+> > > > > > Currently a cma area is barely used by the page allocator because
+> > > > > > it's used only as a fallback from movable, however kswapd tries
+> > > > > > hard to make sure that the fallback path isn't used.
+> > > > >
+> > > > > Few years ago Joonsoo wanted to fix these kinds of weird MIGRATE_CMA corner
+> > > > > cases by using ZONE_MOVABLE instead [1]. Unfortunately it was reverted due to
+> > > > > unresolved bugs. Perhaps the idea could be resurrected now?
+> > > >
+> > > > Hi Vlastimil!
+> > > >
+> > > > Thank you for this reminder! I actually looked at it and also asked Joonsoo in private
+> > > > about the state of this patch(set). As I understand, Joonsoo plans to resubmit
+> > > > it later this year.
+> > > >
+> > > > What Rik and I are suggesting seems to be much simpler, however it's perfectly
+> > > > possible that Joonsoo's solution is preferable long-term.
+> > > >
+> > > > So if the proposed patch looks ok for now, I'd suggest to go with it and return
+> > > > to this question once we'll have a new version of ZONE_MOVABLE solution.
+> > >
+> > > Hmm... utilization is not the only matter for CMA user. The more
+> > > important one is
+> > > success guarantee of cma_alloc() and this patch would have a bad impact on it.
+> > >
+> > > A few years ago, I have tested this kind of approach and found that increasing
+> > > utilization increases cma_alloc() failure. Reason is that the page
+> > > allocated with
+> > > __GFP_MOVABLE, especially, by sb_bread(), is sometimes pinned by someone.
+> > >
+> > > Until now, cma memory isn't used much so this problem doesn't occur easily.
+> > > However, with this patch, it would happen.
 > >
-> > 2x AMD 7351 (EPYC Naples), 8 NUMA nodes
-> > ===================================
-> > NAS: sp_C test: -50%, peak perf. drop with 8 threads
->
-> I hadn't tested 8 threads specifically I think that works out as
-> using 12.5% of the available machine. The allowed imbalance between
-> nodes means that some SP instances will stack on the same node but not
-> the same CPU.
->
-> > NAS: mg_D: -10% with 16 threads
->
-> While I do not have the most up to date figures available, I found the
-> opposite trend at 21 threads (the test case I used were 1/3rd available
-> CPUs and as close to maximum CPUs as possible). There I found it was 10%
-> faster for an 8 node machine.
->
-> For 4 nodes, using a single JVM was performance neutral *on average* but
-> much less variable. With one JVM per node, there was a mix of small <2%
-> regressions for some thread counts and up to 9% faster on others.
->
-> > SPECjvm2008: co_sunflow test: -20% (peak drop with 8 threads)
-> > SPECjvm2008: compress and cr_signverify tests: -10%(peak drop with 8
-> > threads)
->
-> I didn't run SPECjvm for multiple thread sizes so I don't have data yet
-> and may not have for another day at least.
->
-> > SPECjbb2005: -10% for 16 threads
-> >
->
-> I found this to depend in the number of JVMs used and the thread count.
-> Slower at low thread counts, faster at higher thread counts but with
-> more stable results with the series applied and less NUMA balancer
-> activity.
->
-> This is somewhat of a dilemma. Without the series, the load balancer and
-> NUMA balancer use very different criteria on what should happen and
-> results are not stable. In some cases acting randomly happens to work
-> out and in others it does not and overall it depends on the workload and
-> machine. It's very highly dependent on both the workload and the machine
-> and it's a question if we want to continue dealing with two parts of the
-> scheduler disagreeing on what criteria to use or try to improve the
-> reconciled load and memory balancer sharing similar logic.
->
-> In *general*, I found that the series won a lot more than it lost across
-> a spread of workloads and machines but unfortunately it's also an area
-> where counter-examples can be found.
->
-> --
-> Mel Gorman
-> SUSE Labs
->
+> > Sure, but the whole point of cma is to be able to use the cma area
+> > effectively by movable pages. Otherwise we can just reserve it and
+> > have 100% reliability.
+> 
+> I agree with that cma area should be used effectively. However, cma_alloc()
+> failure is functional failure in embedded system so we need to approach
+> this problem more carefully. At least, to control the behaviour, configurable
+> option (default is current behaviour) would be necessary.
 
+Do we know who can test it? Adding a configuration option is a last resort
+measure, I really hope we can avoid it.
 
--- 
--Jirka
+> 
+> > So I'd focus on fixing page migration issues, rather than trying
+> > to keep it empty most of the time.
+> 
+> Great! Fixing page migration issue is always good thing!
+> 
+> > Btw, I've fixed two issues, which dramatically increased the success
+> > rate of 1 GB page allocation in my case:
+> >
+> > https://patchwork.kernel.org/patch/11420997/
+> > https://lore.kernel.org/patchwork/patch/1202868/
+> >
+> > (They both are on the way to upstream, but not there yet)
+> >
+> > Can you, please, pull them and try?
+> 
+> Unfortunately, I lose my test setup for this problem so cannot try it now.
+> I will try it as soon as possible.
 
+Thanks! Looking forward to it...
+
+> 
+> Anyway, AFAIR, I saw the problem while journal is continually working
+> on ext4. Have you checked this case?
+
+My ext4 fix sounds very similar to what you're describing, but it's hard to
+say for sure.
+
+Thanks!
