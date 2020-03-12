@@ -2,117 +2,398 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E9EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF35CC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851C7206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:24:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="veMpOTUU"
+	by mail.kernel.org (Postfix) with ESMTP id 79D06206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgCLVYg (ORCPT
+        id S1726623AbgCLVYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 12 Mar 2020 17:24:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33116 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCLVYg (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:54101 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgCLVYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Mar 2020 17:24:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g15so7911482otr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 14:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yneQvF1hJ6usEuyq8GRX0R/tqhEUa2ADiPsauSWrEoo=;
-        b=veMpOTUUSKk1W5Plq7w4iE7Xt1rV0F4lX3yPBIvfpYb2t5xTRND3xkNjF9g+0xvqcY
-         udwQD0tPcclqNbSWSOTjEVNFTTvEsXqM/8WgqlQCzk2RARQoL90+mVV1LH42xfvFxY84
-         BFwWsOAkzSPw+cjGCzq/VZZlWWtI9rTgmHp0AN/namW0Ydo3EjAiuomey/w574B4pIAY
-         Dug3uROiEIhpw8xk4zNUVLs8qpWMlTIKEmbM9qJYx1qXxkUUsPIi2IATNuUUsZAJWnjy
-         U8CvEYAF5deAy9pojvLdDL8kyOsfTQVREiMVJUlytE7e+r+Cv7oAKrehSDgIVcSEQuNr
-         i8oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yneQvF1hJ6usEuyq8GRX0R/tqhEUa2ADiPsauSWrEoo=;
-        b=FXg7H1i7sziFA/0UwiycZCyTgQ2tovLimdU14PSPtcuW3g6wJmZAkCTbdbjwp66MR8
-         Eyb8fBW5h9aaGi6WeI2ZsrqMsdybTrh+Kva2USPtaQWK8Y0KzRu4YjvTqEqrqX2Q0S0k
-         B6iPLpJOCGIjbitishxAmSvFJsg3LrhSnyd1DGe8noMhg4Li4zfPAWqMAte8gGI+j7Kb
-         +lGffylrFv8xEw5awwf9vzMPJ/eDq/s4TJnEDD6cDd7gM69KKi3094j+MZPeTdjMMN0t
-         2351i2FUINu3KQYO/hMdRqss8e4dMFTEtRc9zJo38Y267qm7JQmUp6lA0Y/nyx58UI10
-         Wz9g==
-X-Gm-Message-State: ANhLgQ2srkZMDoSGxVStaMdiT+pkIa2o7l3D+dgroHLmlIEv7V2drPrl
-        ASILdNqxwWljID57H+mOqfDe+3diJgu+JWukltOBEA==
-X-Google-Smtp-Source: ADFU+vt1skaCzP8TliGQbHDYNhthb6VYqsycJG+E3FvK2DBWiWqsqVXuZ72fekv6VyZiDHN5wUM39ikwyWWuxTZiomA=
-X-Received: by 2002:a9d:69c5:: with SMTP id v5mr2878249oto.228.1584048273870;
- Thu, 12 Mar 2020 14:24:33 -0700 (PDT)
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jCVJb-000465-SS; Thu, 12 Mar 2020 21:24:28 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     christian.brauner@ubuntu.com
+Cc:     ard.biesheuvel@linaro.org, ardb@kernel.org, arve@android.com,
+        gregkh@linuxfoundation.org, hridya@google.com,
+        joel@joelfernandes.org, john.stultz@linaro.org,
+        keescook@chromium.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        maco@android.com, naresh.kamboju@linaro.org, shuah@kernel.org,
+        tkjos@android.com, Todd Kjos <tkjos@google.com>
+Subject: [PATCH] binderfs: port to new mount api
+Date:   Thu, 12 Mar 2020 22:24:20 +0100
+Message-Id: <20200312212420.4032188-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <cb9b03b2a391b064573c152696d99017f76e8603.1584033751.git.jpoimboe@redhat.com>
- <DECA668C-B7EA-4663-8ABB-5B9E0495F498@amacapital.net>
-In-Reply-To: <DECA668C-B7EA-4663-8ABB-5B9E0495F498@amacapital.net>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 12 Mar 2020 22:24:07 +0100
-Message-ID: <CAG48ez3xfARut-t38p=+Vx6mogESL4OFjJdjp=1F7Vukg4+ijg@mail.gmail.com>
-Subject: Re: [PATCH 03/14] x86/entry/64: Fix unwind hints in register clearing code
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>, Miroslav Benes <mbenes@suse.cz>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 8:29 PM Andy Lutomirski <luto@amacapital.net> wrote=
-:
-> > On Mar 12, 2020, at 10:31 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrot=
-e:
-> > =EF=BB=BFThe PUSH_AND_CLEAR_REGS macro zeroes each register immediately=
- after
-> > pushing it.  If an NMI or exception hits after a register is cleared,
-> > but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
-> > wrongly think the previous value of the register was zero.  This can
-> > confuse the unwinding process and cause it to exit early.
-> >
-> > Because ORC is simpler than DWARF, there are a limited number of unwind
-> > annotation states, so it's not possible to add an individual unwind hin=
-t
-> > after each push/clear combination.  Instead, the register clearing
-> > instructions need to be consolidated and moved to after the
-> > UNWIND_HINT_REGS annotation.
->
-> I don=E2=80=99t suppose you know how bad t he performance hit is on a non=
--PTI machine?
-[...]
-> > +    xorl    %edx,  %edx    /* nospec dx  */
-> > +    xorl    %ecx,  %ecx    /* nospec cx  */
-> > +    xorl    %r8d,  %r8d    /* nospec r8  */
-> > +    xorl    %r9d,  %r9d    /* nospec r9  */
-> > +    xorl    %r10d, %r10d    /* nospec r10 */
-> > +    xorl    %r11d, %r11d    /* nospec r11 */
-> > +    xorl    %ebx,  %ebx    /* nospec rbx */
-> > +    xorl    %ebp,  %ebp    /* nospec rbp */
-> > +    xorl    %r12d, %r12d    /* nospec r12 */
-> > +    xorl    %r13d, %r13d    /* nospec r13 */
-> > +    xorl    %r14d, %r14d    /* nospec r14 */
-> > +    xorl    %r15d, %r15d    /* nospec r15 */
+It's time we port binderfs to the new mount api. We can make use of the
+new option parser, get nicer infrastructure and it will be easiert if we
+ever add any new mount options.
 
-I'm curious what the reason for a performance impact would be. Are you
-worried about the performance of the instruction decoder or the
-renamer? As long as those aren't slowed down, this will just end up
-giving the store uops to the backend earlier, right? (Since the XOR
-instructions shouldn't reach the backend at all AKAIU.)
+This survives testing with the binderfs selftests:
+
+for i in `seq 1 1000`; do ./binderfs_test; done
+
+including the new stress tests I sent out for review today:
+
+ [==========] Running 3 tests from 1 test cases.
+ [ RUN      ] global.binderfs_stress
+ [       OK ] global.binderfs_stress
+ [ RUN      ] global.binderfs_test_privileged
+ # Tests are not run as root. Skipping privileged tests
+ [       OK ] global.binderfs_test_privileged
+ [ RUN      ] global.binderfs_test_unprivileged
+ # Allocated new binder device with major 243, minor 4, and name my-binder
+ # Detected binder version: 8
+ [       OK ] global.binderfs_test_unprivileged
+ [==========] 3 / 3 tests passed.
+ [  PASSED  ]
+
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ drivers/android/binderfs.c | 200 +++++++++++++++++++------------------
+ 1 file changed, 105 insertions(+), 95 deletions(-)
+
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index f303106b3362..2c89e0b5a82d 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -18,7 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/mount.h>
+-#include <linux/parser.h>
++#include <linux/fs_parser.h>
+ #include <linux/radix-tree.h>
+ #include <linux/sched.h>
+ #include <linux/seq_file.h>
+@@ -48,26 +48,30 @@ static dev_t binderfs_dev;
+ static DEFINE_MUTEX(binderfs_minors_mutex);
+ static DEFINE_IDA(binderfs_minors);
+ 
+-enum {
++enum binderfs_param {
+ 	Opt_max,
+ 	Opt_stats_mode,
+-	Opt_err
+ };
+ 
+ enum binderfs_stats_mode {
+-	STATS_NONE,
+-	STATS_GLOBAL,
++	binderfs_stats_mode_unset,
++	binderfs_stats_mode_global,
+ };
+ 
+-static const match_table_t tokens = {
+-	{ Opt_max, "max=%d" },
+-	{ Opt_stats_mode, "stats=%s" },
+-	{ Opt_err, NULL     }
++static const struct constant_table binderfs_param_stats[] = {
++	{ "global", binderfs_stats_mode_global },
++	{}
+ };
+ 
+-static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
++const struct fs_parameter_spec binderfs_fs_parameters[] = {
++	fsparam_u32("max",	Opt_max),
++	fsparam_enum("stats",	Opt_stats_mode, binderfs_param_stats),
++	{}
++};
++
++static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
+ {
+-	return inode->i_sb->s_fs_info;
++	return sb->s_fs_info;
+ }
+ 
+ bool is_binderfs_device(const struct inode *inode)
+@@ -246,7 +250,7 @@ static long binder_ctl_ioctl(struct file *file, unsigned int cmd,
+ static void binderfs_evict_inode(struct inode *inode)
+ {
+ 	struct binder_device *device = inode->i_private;
+-	struct binderfs_info *info = BINDERFS_I(inode);
++	struct binderfs_info *info = BINDERFS_SB(inode->i_sb);
+ 
+ 	clear_inode(inode);
+ 
+@@ -264,97 +268,85 @@ static void binderfs_evict_inode(struct inode *inode)
+ 	}
+ }
+ 
+-/**
+- * binderfs_parse_mount_opts - parse binderfs mount options
+- * @data: options to set (can be NULL in which case defaults are used)
+- */
+-static int binderfs_parse_mount_opts(char *data,
+-				     struct binderfs_mount_opts *opts)
++static int binderfs_fs_context_parse_param(struct fs_context *fc,
++					   struct fs_parameter *param)
+ {
+-	char *p, *stats;
+-	opts->max = BINDERFS_MAX_MINOR;
+-	opts->stats_mode = STATS_NONE;
+-
+-	while ((p = strsep(&data, ",")) != NULL) {
+-		substring_t args[MAX_OPT_ARGS];
+-		int token;
+-		int max_devices;
+-
+-		if (!*p)
+-			continue;
+-
+-		token = match_token(p, tokens, args);
+-		switch (token) {
+-		case Opt_max:
+-			if (match_int(&args[0], &max_devices) ||
+-			    (max_devices < 0 ||
+-			     (max_devices > BINDERFS_MAX_MINOR)))
+-				return -EINVAL;
+-
+-			opts->max = max_devices;
+-			break;
+-		case Opt_stats_mode:
+-			if (!capable(CAP_SYS_ADMIN))
+-				return -EINVAL;
++	int opt;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
++	struct fs_parse_result result;
+ 
+-			stats = match_strdup(&args[0]);
+-			if (!stats)
+-				return -ENOMEM;
++	opt = fs_parse(fc, binderfs_fs_parameters, param, &result);
++	if (opt < 0)
++		return opt;
+ 
+-			if (strcmp(stats, "global") != 0) {
+-				kfree(stats);
+-				return -EINVAL;
+-			}
++	switch (opt) {
++	case Opt_max:
++		if (result.uint_32 > BINDERFS_MAX_MINOR)
++			return invalfc(fc, "Bad value for '%s'", param->key);
+ 
+-			opts->stats_mode = STATS_GLOBAL;
+-			kfree(stats);
+-			break;
+-		default:
+-			pr_err("Invalid mount options\n");
+-			return -EINVAL;
+-		}
++		ctx->max = result.uint_32;
++		break;
++	case Opt_stats_mode:
++		if (!capable(CAP_SYS_ADMIN))
++			return -EPERM;
++
++		ctx->stats_mode = result.uint_32;
++		break;
++	default:
++		return invalfc(fc, "Unsupported parameter '%s'", param->key);
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int binderfs_remount(struct super_block *sb, int *flags, char *data)
++static int binderfs_fs_context_reconfigure(struct fs_context *fc)
+ {
+-	int prev_stats_mode, ret;
+-	struct binderfs_info *info = sb->s_fs_info;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
++	struct binderfs_info *info = BINDERFS_SB(fc->root->d_sb);
+ 
+-	prev_stats_mode = info->mount_opts.stats_mode;
+-	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
+-	if (ret)
+-		return ret;
++	if (info->mount_opts.stats_mode != ctx->stats_mode)
++		return invalfc(fc, "Binderfs stats mode cannot be changed during a remount");
+ 
+-	if (prev_stats_mode != info->mount_opts.stats_mode) {
+-		pr_err("Binderfs stats mode cannot be changed during a remount\n");
+-		info->mount_opts.stats_mode = prev_stats_mode;
+-		return -EINVAL;
+-	}
++	info->mount_opts.stats_mode = ctx->stats_mode;
++	info->mount_opts.max = ctx->max;
+ 
+ 	return 0;
+ }
+ 
+-static int binderfs_show_mount_opts(struct seq_file *seq, struct dentry *root)
++static int binderfs_show_options(struct seq_file *seq, struct dentry *root)
+ {
+-	struct binderfs_info *info;
++	struct binderfs_info *info = BINDERFS_SB(root->d_sb);
+ 
+-	info = root->d_sb->s_fs_info;
+ 	if (info->mount_opts.max <= BINDERFS_MAX_MINOR)
+ 		seq_printf(seq, ",max=%d", info->mount_opts.max);
+-	if (info->mount_opts.stats_mode == STATS_GLOBAL)
++
++	switch (info->mount_opts.stats_mode) {
++	case binderfs_stats_mode_unset:
++		break;
++	case binderfs_stats_mode_global:
+ 		seq_printf(seq, ",stats=global");
++		break;
++	}
+ 
+ 	return 0;
+ }
+ 
++static void binderfs_put_super(struct super_block *sb)
++{
++	struct binderfs_info *info = sb->s_fs_info;
++
++	if (info && info->ipc_ns)
++		put_ipc_ns(info->ipc_ns);
++
++	kfree(info);
++	sb->s_fs_info = NULL;
++}
++
+ static const struct super_operations binderfs_super_ops = {
+ 	.evict_inode    = binderfs_evict_inode,
+-	.remount_fs	= binderfs_remount,
+-	.show_options	= binderfs_show_mount_opts,
++	.show_options	= binderfs_show_options,
+ 	.statfs         = simple_statfs,
++	.put_super	= binderfs_put_super,
+ };
+ 
+ static inline bool is_binderfs_control_device(const struct dentry *dentry)
+@@ -653,10 +645,11 @@ static int init_binder_logs(struct super_block *sb)
+ 	return ret;
+ }
+ 
+-static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
++static int binderfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	int ret;
+ 	struct binderfs_info *info;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
+ 	struct inode *inode = NULL;
+ 	struct binderfs_device device_info = { 0 };
+ 	const char *name;
+@@ -689,16 +682,14 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	info->ipc_ns = get_ipc_ns(current->nsproxy->ipc_ns);
+ 
+-	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
+-	if (ret)
+-		return ret;
+-
+ 	info->root_gid = make_kgid(sb->s_user_ns, 0);
+ 	if (!gid_valid(info->root_gid))
+ 		info->root_gid = GLOBAL_ROOT_GID;
+ 	info->root_uid = make_kuid(sb->s_user_ns, 0);
+ 	if (!uid_valid(info->root_uid))
+ 		info->root_uid = GLOBAL_ROOT_UID;
++	info->mount_opts.max = ctx->max;
++	info->mount_opts.stats_mode = ctx->stats_mode;
+ 
+ 	inode = new_inode(sb);
+ 	if (!inode)
+@@ -730,36 +721,55 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+ 			name++;
+ 	}
+ 
+-	if (info->mount_opts.stats_mode == STATS_GLOBAL)
++	if (info->mount_opts.stats_mode == binderfs_stats_mode_global)
+ 		return init_binder_logs(sb);
+ 
+ 	return 0;
+ }
+ 
+-static struct dentry *binderfs_mount(struct file_system_type *fs_type,
+-				     int flags, const char *dev_name,
+-				     void *data)
++static int binderfs_fs_context_get_tree(struct fs_context *fc)
+ {
+-	return mount_nodev(fs_type, flags, data, binderfs_fill_super);
++	return get_tree_nodev(fc, binderfs_fill_super);
+ }
+ 
+-static void binderfs_kill_super(struct super_block *sb)
++static void binderfs_fs_context_free(struct fs_context *fc)
+ {
+-	struct binderfs_info *info = sb->s_fs_info;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
++
++	fc->fs_private = NULL;
++	kfree(ctx);
++}
+ 
+-	kill_litter_super(sb);
++static const struct fs_context_operations binderfs_fs_context_ops = {
++	.free		= binderfs_fs_context_free,
++	.get_tree	= binderfs_fs_context_get_tree,
++	.parse_param	= binderfs_fs_context_parse_param,
++	.reconfigure	= binderfs_fs_context_reconfigure,
++};
+ 
+-	if (info && info->ipc_ns)
+-		put_ipc_ns(info->ipc_ns);
++static int binderfs_init_fs_context(struct fs_context *fc)
++{
++	struct binderfs_mount_opts *ctx;
+ 
+-	kfree(info);
++	ctx = kzalloc(sizeof(struct binderfs_mount_opts), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->max = BINDERFS_MAX_MINOR;
++	ctx->stats_mode = binderfs_stats_mode_unset;
++
++	fc->fs_private = ctx;
++	fc->ops = &binderfs_fs_context_ops;
++
++	return 0;
+ }
+ 
+ static struct file_system_type binder_fs_type = {
+-	.name		= "binder",
+-	.mount		= binderfs_mount,
+-	.kill_sb	= binderfs_kill_super,
+-	.fs_flags	= FS_USERNS_MOUNT,
++	.name			= "binder",
++	.init_fs_context	= binderfs_init_fs_context,
++	.parameters		= binderfs_fs_parameters,
++	.kill_sb		= kill_litter_super,
++	.fs_flags		= FS_USERNS_MOUNT,
+ };
+ 
+ int __init init_binderfs(void)
+
+base-commit: f17f06a0c7794d3a7c2425663738823354447472
+-- 
+2.25.1
+
