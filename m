@@ -2,275 +2,107 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C44EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE214C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55FE6206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB08A20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZPvq+Kj1"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Haae2SBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCLR5H (ORCPT
+        id S1726550AbgCLSC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:57:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34595 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgCLR5G (ORCPT
+        Thu, 12 Mar 2020 14:02:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39020 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgCLSC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:57:06 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a23so2967558plm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:57:04 -0700 (PDT)
+        Thu, 12 Mar 2020 14:02:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r15so8684281wrx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GKEz68ESpXPJAa072THG40UuPGrAcIH+DPdEMO7j2rE=;
-        b=ZPvq+Kj12dIhn0kdh7yG+ylXCTV/0P8J0zTihIgJE2H/xy+CMR+0eWx3Ce13it3VgZ
-         QgTZ2hMd4TPYl007AOOdZjTg+6pnnH6amVEmgywPGBzfUpe6u2lawlkUYp6yf7XfggSF
-         4UkUXH2YGQDphdFeGekiNLk23qfeaVBgDvhzo=
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=CRd8IUcL1IWZS04LIYFbzj4WsXVZJS20ANjjPe46vbU=;
+        b=Haae2SBurX0dFdW2FA0odm7mGIYVgXxbkX+kRhvt4ySMuKlguBzaUtjNrkfEaiED2N
+         mbGRZT1Dix/XuTr0AVw4HxlQ1lhNxqlheMxxT7Vxz3Cz1I+Ulb5n/EARnD4G3g00Lwwn
+         6gqr2BrDtb+6qJLFLYJHzj2AY9s6hHt0U7yk0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GKEz68ESpXPJAa072THG40UuPGrAcIH+DPdEMO7j2rE=;
-        b=o8+0ql5NFWiDvaeFXxAiX5BO3Za3nUSNAhY1JklXQFzQ80LFo8NE7ObhUDpRK9CxmE
-         p/rxh+vdBnzDu7mPMLuRZt0M+8GpQdt5UbPw6obvvrmQZSa3IkjDA2c/pS2VMB7rQyP+
-         vsnRowupWV027qFPOFClLHDbwhqHxrwwIGwq4bIIu2xydFTK1uGbymn43yrPMTWFZPc+
-         nUDgGU4wgwUEmyWgvMOyUrbjmewioVDiPjJNOPs0njzTdbvpJEgc8G1HVM50A920FxJ2
-         AlDYNFVC1OMQMXeA4D7Oz/c5wwVRTBBmviwx8wCo66478GrsUj+M6GVAV5HzR4dJ0GeB
-         mpDw==
-X-Gm-Message-State: ANhLgQ0+rykYQZncEPgiboUitrA+KWyrKYe2LOOPgHBuvcgmhloE8zp+
-        ukHyuz6zTjfNcwV2NOL8KOTmTw==
-X-Google-Smtp-Source: ADFU+vtCt0C9TUxn16fx/bv9wbFqznFCKGIPg1zghwQKKRPO9+0wp4OyWbK3t71joEE3ZMDtDc94Eg==
-X-Received: by 2002:a17:90a:7345:: with SMTP id j5mr5209763pjs.69.1584035824155;
-        Thu, 12 Mar 2020 10:57:04 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id y143sm6420522pfb.22.2020.03.12.10.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 10:57:02 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 10:57:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2] thermal: devfreq_cooling: Use PM QoS to set frequency
- limits
-Message-ID: <20200312175701.GE144492@google.com>
-References: <CGME20200116231233epcas1p363ab7e3ad2966d0ae7bac11e33aa6b83@epcas1p3.samsung.com>
- <20200116151219.v2.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
- <d73e67eb-4f2d-dc4b-c718-929a964d3640@samsung.com>
- <20200312003519.GD144492@google.com>
- <f09ad5b3-c997-187a-d637-cc7cdcb282f9@arm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=CRd8IUcL1IWZS04LIYFbzj4WsXVZJS20ANjjPe46vbU=;
+        b=luMCTmp6pxsJaXSkLf1CtP0bcDMoJAdZtOGqeHXXL80oVy4/oaE3IKQSo62DDfTdZp
+         /PC+EH35OQAcH1Y10qbUClRCgdWE9MTTg+bzlmjwMFXT8aNXCzQ4ElJ/mJfNhlbEf3Rp
+         /T43+G5EH8ck9V+g3qMXTTEVNF0L2gAbohpYxvy3gy4KCgomTtPTaJmFusMcbwXYjHVE
+         e+1IHkIWc6pWDdPCdAGCqDUgSQAaK3diKnz2RrVSkPXnh30QGCHj/SCWhXdtHZDda36z
+         9na/5RwWsPNNnsWvdvNwtriBY4Nba+qezQ3YTZyRKFcL2mQgT3qHxeQ4mc3GNRKQ/sGV
+         e6dg==
+X-Gm-Message-State: ANhLgQ2cYw33TWDnpmyY2yVsMbddjfZE4Doh2uir0fO63yIv4Rbd54e6
+        AoI0dF55umBDzwTsvcdTkvdceQ==
+X-Google-Smtp-Source: ADFU+vsZkrnnVJ1X3zqzCkFEciPWmkOFQhOVZNvmD7Ds5YPo0PFp30zOhwIn2DsIoCNmjexoQjXayA==
+X-Received: by 2002:a5d:4f0e:: with SMTP id c14mr12216319wru.100.1584036176193;
+        Thu, 12 Mar 2020 11:02:56 -0700 (PDT)
+Received: from localhost ([89.32.122.5])
+        by smtp.gmail.com with ESMTPSA id i6sm11878144wru.40.2020.03.12.11.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 11:02:55 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 18:02:54 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH 1/2] mm, memcg: Fix corruption on 64-bit divisor in
+ memory.high throttling
+Message-ID: <80780887060514967d414b3cd91f9a316a16ab98.1584036142.git.chris@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f09ad5b3-c997-187a-d637-cc7cdcb282f9@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+0e4b01df8659 had a bunch of fixups to use the right division method.
+However, it seems that after all that it still wasn't right -- div_u64
+takes a 32-bit divisor.
 
-thanks for the review!
+The headroom is still large (2^32 pages), so on mundane systems you
+won't hit this, but this should definitely be fixed.
 
-I'll rebase and send v3. Hopefully it doesn't cause too much extra
-work for your changes.
+Fixes: 0e4b01df8659 ("mm, memcg: throttle allocators when failing reclaim over memory.high")
+Reported-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-mm@kvack.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-team@fb.com
+Cc: stable@vger.kernel.org # 5.4.x
+---
+ mm/memcontrol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 63bb6a2aab81..a70206e516fe 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2339,7 +2339,7 @@ void mem_cgroup_handle_over_high(void)
+ 	 */
+ 	clamped_high = max(high, 1UL);
+ 
+-	overage = div_u64((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT,
++	overage = div64_u64((u64)(usage - high) << MEMCG_DELAY_PRECISION_SHIFT,
+ 			  clamped_high);
+ 
+ 	penalty_jiffies = ((u64)overage * overage * HZ)
+-- 
+2.25.1
 
-Matthias
-
-On Thu, Mar 12, 2020 at 11:39:56AM +0000, Lukasz Luba wrote:
-> Hi Matthias,
-> 
-> I just saw this email below the patch. I wasn't aware that you
-> are working on this. I will have to update my changes...
-> 
-> It looks good to me.
-> Unfortunately, it does not apply on top of Amit's commit
-> 1b5cb9570670a6277cc0 thermal: devfreq_cooling: Appease the kernel-doc deity
-> 
-> Could you check this?
-> 
-> Other then that
-> 
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-> 
-> Regards,
-> Lukasz
-> 
-> On 3/12/20 12:35 AM, Matthias Kaehlcke wrote:
-> > Is any further action needed from my side or can this land?
-> > 
-> > Thanks
-> > 
-> > Matthias
-> > 
-> > On Fri, Jan 17, 2020 at 02:22:02PM +0900, Chanwoo Choi wrote:
-> > > On 1/17/20 8:12 AM, Matthias Kaehlcke wrote:
-> > > > Now that devfreq supports limiting the frequency range of a device
-> > > > through PM QoS make use of it instead of disabling OPPs that should
-> > > > not be used.
-> > > > 
-> > > > The switch from disabling OPPs to PM QoS introduces a subtle behavioral
-> > > > change in case of conflicting requests (min > max): PM QoS gives
-> > > > precedence to the MIN_FREQUENCY request, while higher OPPs disabled
-> > > > with dev_pm_opp_disable() would override MIN_FREQUENCY.
-> > > > 
-> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > ---
-> > > > 
-> > > > Changes in v2:
-> > > > - added documentation for 'req_max_freq'
-> > > > - fixed jumps in of_devfreq_cooling_register_power() unwind
-> > > > - added comment about behavioral change to the commit message
-> > > > 
-> > > >   drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
-> > > >   1 file changed, 23 insertions(+), 47 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-> > > > index ef59256887ff63..cbbaf5bc425d1a 100644
-> > > > --- a/drivers/thermal/devfreq_cooling.c
-> > > > +++ b/drivers/thermal/devfreq_cooling.c
-> > > > @@ -24,11 +24,13 @@
-> > > >   #include <linux/idr.h>
-> > > >   #include <linux/slab.h>
-> > > >   #include <linux/pm_opp.h>
-> > > > +#include <linux/pm_qos.h>
-> > > >   #include <linux/thermal.h>
-> > > >   #include <trace/events/thermal.h>
-> > > > -#define SCALE_ERROR_MITIGATION 100
-> > > > +#define HZ_PER_KHZ		1000
-> > > > +#define SCALE_ERROR_MITIGATION	100
-> > > >   static DEFINE_IDA(devfreq_ida);
-> > > > @@ -53,6 +55,8 @@ static DEFINE_IDA(devfreq_ida);
-> > > >    *		'utilization' (which is	'busy_time / 'total_time').
-> > > >    *		The 'res_util' range is from 100 to (power_table[state] * 100)
-> > > >    *		for the corresponding 'state'.
-> > > > + * @req_max_freq:	PM QoS request for limiting the maximum frequency
-> > > > + *			of the devfreq device.
-> > > >    */
-> > > >   struct devfreq_cooling_device {
-> > > >   	int id;
-> > > > @@ -65,49 +69,9 @@ struct devfreq_cooling_device {
-> > > >   	struct devfreq_cooling_power *power_ops;
-> > > >   	u32 res_util;
-> > > >   	int capped_state;
-> > > > +	struct dev_pm_qos_request req_max_freq;
-> > > >   };
-> > > > -/**
-> > > > - * partition_enable_opps() - disable all opps above a given state
-> > > > - * @dfc:	Pointer to devfreq we are operating on
-> > > > - * @cdev_state:	cooling device state we're setting
-> > > > - *
-> > > > - * Go through the OPPs of the device, enabling all OPPs until
-> > > > - * @cdev_state and disabling those frequencies above it.
-> > > > - */
-> > > > -static int partition_enable_opps(struct devfreq_cooling_device *dfc,
-> > > > -				 unsigned long cdev_state)
-> > > > -{
-> > > > -	int i;
-> > > > -	struct device *dev = dfc->devfreq->dev.parent;
-> > > > -
-> > > > -	for (i = 0; i < dfc->freq_table_size; i++) {
-> > > > -		struct dev_pm_opp *opp;
-> > > > -		int ret = 0;
-> > > > -		unsigned int freq = dfc->freq_table[i];
-> > > > -		bool want_enable = i >= cdev_state ? true : false;
-> > > > -
-> > > > -		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
-> > > > -
-> > > > -		if (PTR_ERR(opp) == -ERANGE)
-> > > > -			continue;
-> > > > -		else if (IS_ERR(opp))
-> > > > -			return PTR_ERR(opp);
-> > > > -
-> > > > -		dev_pm_opp_put(opp);
-> > > > -
-> > > > -		if (want_enable)
-> > > > -			ret = dev_pm_opp_enable(dev, freq);
-> > > > -		else
-> > > > -			ret = dev_pm_opp_disable(dev, freq);
-> > > > -
-> > > > -		if (ret)
-> > > > -			return ret;
-> > > > -	}
-> > > > -
-> > > > -	return 0;
-> > > > -}
-> > > > -
-> > > >   static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
-> > > >   					 unsigned long *state)
-> > > >   {
-> > > > @@ -134,7 +98,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
-> > > >   	struct devfreq_cooling_device *dfc = cdev->devdata;
-> > > >   	struct devfreq *df = dfc->devfreq;
-> > > >   	struct device *dev = df->dev.parent;
-> > > > -	int ret;
-> > > > +	unsigned long freq;
-> > > >   	if (state == dfc->cooling_state)
-> > > >   		return 0;
-> > > > @@ -144,9 +108,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
-> > > >   	if (state >= dfc->freq_table_size)
-> > > >   		return -EINVAL;
-> > > > -	ret = partition_enable_opps(dfc, state);
-> > > > -	if (ret)
-> > > > -		return ret;
-> > > > +	freq = dfc->freq_table[state];
-> > > > +
-> > > > +	dev_pm_qos_update_request(&dfc->req_max_freq,
-> > > > +				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
-> > > >   	dfc->cooling_state = state;
-> > > > @@ -529,9 +494,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
-> > > >   	if (err)
-> > > >   		goto free_dfc;
-> > > > -	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
-> > > > +	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
-> > > > +				     DEV_PM_QOS_MAX_FREQUENCY,
-> > > > +				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
-> > > >   	if (err < 0)
-> > > >   		goto free_tables;
-> > > > +
-> > > > +	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
-> > > > +	if (err < 0)
-> > > > +		goto remove_qos_req;
-> > > >   	dfc->id = err;
-> > > >   	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
-> > > > @@ -552,6 +523,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
-> > > >   release_ida:
-> > > >   	ida_simple_remove(&devfreq_ida, dfc->id);
-> > > > +
-> > > > +remove_qos_req:
-> > > > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
-> > > > +
-> > > >   free_tables:
-> > > >   	kfree(dfc->power_table);
-> > > >   	kfree(dfc->freq_table);
-> > > > @@ -600,6 +575,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
-> > > >   	thermal_cooling_device_unregister(dfc->cdev);
-> > > >   	ida_simple_remove(&devfreq_ida, dfc->id);
-> > > > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
-> > > >   	kfree(dfc->power_table);
-> > > >   	kfree(dfc->freq_table);
-> > > > 
-> > > 
-> > > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > > 
-> > > -- 
-> > > Best Regards,
-> > > Chanwoo Choi
-> > > Samsung Electronics
