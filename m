@@ -2,347 +2,144 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9456C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD72C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C713420716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9EA2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AncVZ1gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgCLSG5 (ORCPT
+        id S1726716AbgCLSHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:06:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:38573 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgCLSG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:06:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 11:06:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="277909647"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Mar 2020 11:06:51 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jCSEO-0094JE-Gf; Thu, 12 Mar 2020 20:06:52 +0200
-Date:   Thu, 12 Mar 2020 20:06:52 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, fabrice.gasnier@st.com,
-        beniamin.bia@analog.com, linus.walleij@linaro.org,
-        u.kleine-koenig@pengutronix.de, fabrizio.castro@bp.renesas.com,
-        info@metux.net, hancock@sedsystems.ca, gregory.clement@bootlin.com,
-        renatogeh@gmail.com, plr.vincent@gmail.com,
-        miquel.raynal@bootlin.com, marcelo.schmitt1@gmail.com,
-        paul@crapouillou.net, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 4/5] power: supply: Add support for mps mp2629 battery
- charger
-Message-ID: <20200312180652.GL1922688@smile.fi.intel.com>
-References: <20200312172649.13702-1-sravanhome@gmail.com>
- <20200312172649.13702-5-sravanhome@gmail.com>
+        Thu, 12 Mar 2020 14:07:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:32891 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgCLSHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:07:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay11so2981626plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=o5Rs9S0RYunQW4vpCbkDqGUyyhPOaydkpJow5/jb/es=;
+        b=AncVZ1gcQLTl82u2dTBzHwOLmeA0NJKMbQrX2PCLBsijaiX2atkSN9hoqI5Qb9Npx3
+         8GaIyWKe2T+f3rJk9RzzXQvZCz65ujA0Onk1Krr2sLslYH2+Ej0b5HDR/Z7+nA7cKvv9
+         r3niug17WALbTsxFhepXZT41hlg5nsQurA6/uCQTafgAFIH/wehKB6T2dlHwgkWPGauz
+         zo75aSP9c7eqrU9821PiMNY5XtBF9RQlmaqAvWKIi1b+8qcXzEDWbArHW/eL6vqrpqpu
+         wDzxTcsPCVCzbYiCPYsfZEZD6stNOsNK1RcP4yLw5qLo75IdiEoIsLtKQ1KDcsDH10qc
+         9pCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=o5Rs9S0RYunQW4vpCbkDqGUyyhPOaydkpJow5/jb/es=;
+        b=lAonWZSkV6bAm69PiMVgioQWhKs0/B88VP8F1urLOWN1q8TQ+tdmwHlYFAtaI2uHEl
+         WxdPNZ0EhCJz3d2EZF0OXKCIl2ChsjOjmHueqCx8gF76UQVKeMGIwcH6InuwH9eclTJv
+         ifVO495G568aX6esen9gl5m40MofnBugTYSIFZuxpyn1UjuOuHSu5nMd/vLCOA17k7R2
+         SQpsx0WjKcafew2E8ThEo0ym+QowRgzhXr+rdfs01X+gMd9By7gqUIXje3LgDCiaWKSc
+         btTqqbjxdL3BGe6QYd8BJ5qVZGfOy57fgCpaxHjFWR4Uo1URDxYynAf3RaLiQTzIbkUJ
+         ydEA==
+X-Gm-Message-State: ANhLgQ3HaTq/8KIHJBRwxLFkqU6DE7W5AH9oRWsFxd4x5C92ap/Ek133
+        WPjrIJ9v1kciMGhvThQs/i8k3g==
+X-Google-Smtp-Source: ADFU+vsZ2i5IaQQYazSCYmNou7CThfHcLBtO490lloSMclgQlcjk8rpyVT2JOpYqkc4ADG591zTA5A==
+X-Received: by 2002:a17:902:db83:: with SMTP id m3mr9039744pld.133.1584036437569;
+        Thu, 12 Mar 2020 11:07:17 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id e18sm9603469pjt.41.2020.03.12.11.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 11:07:16 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 11:07:15 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP
+ systems
+In-Reply-To: <202003120012.02C0CEUB043533@www262.sakura.ne.jp>
+Message-ID: <alpine.DEB.2.21.2003121101030.158939@chino.kir.corp.google.com>
+References: <993e7783-60e9-ba03-b512-c829b9e833fd@i-love.sakura.ne.jp> <alpine.DEB.2.21.2003111513180.195367@chino.kir.corp.google.com> <202003120012.02C0CEUB043533@www262.sakura.ne.jp>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312172649.13702-5-sravanhome@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:26:48PM +0100, Saravanan Sekar wrote:
-> The mp2629 provides switching-mode battery charge management for
-> single-cell Li-ion or Li-polymer battery. Driver supports the
-> access/control input source and battery charging parameters.
-
-...
-
->  drivers/power/supply/Kconfig          |  14 +-
-
-Why unrelated changes here?
-
-...
-
-> +#include <linux/kernel.h>
-> +#include <linux/kthread.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/iio/types.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/workqueue.h>
-
-All of them are needed?
-
-...
-
-> +enum mp2629_source_type {
-> +	MP2629_SOURCE_TYPE_NO_INPUT,
-> +	MP2629_SOURCE_TYPE_NON_STD,
-> +	MP2629_SOURCE_TYPE_SDP,
-> +	MP2629_SOURCE_TYPE_CDP,
-> +	MP2629_SOURCE_TYPE_DCP,
-> +	MP2629_SOURCE_TYPE_OTG = 7
-
- + comma? (It is not obvious there will be no extension in the future)
-
-> +};
-> +
-> +enum {
-> +	INPUT_ILIM,
-> +	INPUT_VLIM,
-> +	CHARGE_ILIM,
-> +	CHARGE_VLIM,
-> +	PRECHARGE,
-
-> +	TERM_CURRENT
-
-Ditto.
-
-> +};
-
-...
-
-> +static enum power_supply_usb_type mp2629_usb_types[] = {
-> +	POWER_SUPPLY_USB_TYPE_SDP,
-> +	POWER_SUPPLY_USB_TYPE_DCP,
-> +	POWER_SUPPLY_USB_TYPE_CDP,
-> +	POWER_SUPPLY_USB_TYPE_PD_DRP,
-
-> +	POWER_SUPPLY_USB_TYPE_UNKNOWN,
-
-Here it seems other way around, i.e. no comma.
-
-> +};
-> +
-> +static enum power_supply_property mp2629_charger_usb_props[] = {
-> +	POWER_SUPPLY_PROP_ONLINE,
-> +	POWER_SUPPLY_PROP_USB_TYPE,
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_CURRENT_NOW,
-> +	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-
-> +	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT
-
-...but here again, it can be extended.
-
-> +};
-> +
-> +static enum power_supply_property mp2629_charger_bat_props[] = {
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_HEALTH,
-> +	POWER_SUPPLY_PROP_CHARGE_TYPE,
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_CURRENT_NOW,
-> +	POWER_SUPPLY_PROP_CAPACITY,
-> +	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
-> +	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX
-
-Ditto.
-
-> +};
-> +
-> +static struct mp2629_prop props[] = {
-> +	MP2629_PROPS(INPUT_ILIM, 100000, 3250000, 50000, 0),
-> +	MP2629_PROPS(INPUT_VLIM, 3800000, 5300000, 100000, 0),
-> +	MP2629_PROPS(CHARGE_ILIM, 320000, 4520000, 40000, 0),
-> +	MP2629_PROPS(CHARGE_VLIM, 3400000, 4670000, 10000, 1),
-> +	MP2629_PROPS(PRECHARGE, 120000, 720000, 40000, 4),
-
-> +	MP2629_PROPS(TERM_CURRENT, 80000, 680000, 40000, 0)
-
-Ditto.
-
-> +};
-
-...
-
-> +static char *adc_chan_name[] = { "mp2629-batt-volt", "mp2629-system-volt",
-> +				 "mp2629-input-volt", "mp2629-batt-current",
-> +				 "mp2629-input-current" };
-
-One item per line, please. And comma in the last, new compatible hw might have
-more channels.
-
-> +	ret = mp2629_get_value(map, prop->reg, &rval);
-> +	if (!ret) {
-> +		rval = (rval & prop->mask) >> prop->shift;
-> +		val->intval = (rval * prop->step) + prop->min;
-> +	}
-
-Sounds like regmap field operation...
-Ditto for similar code.
-
-> +
-> +	return ret;
-> +}
-
-...
-
-
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-
-return -EINVAL;
-
-...
-
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-
-Ditto.
-
-...
-
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-
-Ditto.
-
-...
-
-> +	return (psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT ||
-> +		psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT ||
-> +		psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT ||
-> +		psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE);
-
-Too many parentheses.
-
-...
-
-> +	return (psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT ||
-> +		psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT);
-
-Ditto.
-
-...
-
-> +	if (kstrtol(buf, 10, &val) < 0)
-> +		return -EINVAL;
-
-Don't shadow the actual error code.
-
-> +
-> +	if (val < 0 && val > 140)
-
-> +		return -EINVAL;
-
-ERANGE is better.
-
-...
-
-> +static DEVICE_ATTR(batt_impedance_compensation, 0644,
-> +		mp2629_sysfs_impedance_show, mp2629_sysfs_impedance_store);
-
-DEVICE_ATTR_RW()
-
-> +static struct attribute *mp2629_charger_sysfs_attrs[] = {
-> +	&dev_attr_batt_impedance_compensation.attr,
-
-> +	NULL,
-
-No comma.
-
-> +};
-
-...
-
-> +static int mp2629_charger_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mp2629_charger *charger;
-> +	struct mp2629_info *info;
-> +	struct power_supply_config psy_cfg = {0};
-> +	int ret, i;
-
-> +	platform_set_drvdata(pdev, charger);
-
-> +	info = dev_get_drvdata(dev->parent);
-
-Could be assigned in definition block above.
-
-> +	charger->info = info;
-> +	charger->dev = dev;
-> +
-> +	for (i = 0; i < MP2629_ADC_CHAN_END; i++) {
-> +		charger->iiochan[i] = iio_channel_get(dev, adc_chan_name[i]);
-> +		if (IS_ERR(charger->iiochan[i])) {
-> +			ret = PTR_ERR(charger->iiochan[i]);
-> +			goto iio_fail;
-> +		}
-> +	}
-
-> +	return 0;
-> +
-> +iio_fail:
-
-> +	for (i = 0; i < MP2629_ADC_CHAN_END; i++) {
-> +		if (charger->iiochan[i] && !(IS_ERR(charger->iiochan[i])))
-> +			iio_channel_release(charger->iiochan[i]);
-> +	}
-
-	while (i--)
-		iio_channel_release(charger->iiochan[i]);
-
-> +
-> +	dev_err(dev, "driver register fail: %d\n", ret);
-> +	return ret;
-> +}
-
-...
-
-> +	for (i = 0; i < MP2629_ADC_CHAN_END; i++) {
-
-> +		if (charger->iiochan[i])
-
-When this is possible?
-And shouldn't iio_channel_release() take care of NULL pointer? If it doesn't,
-fix it in preparatory patch.
-
-> +			iio_channel_release(charger->iiochan[i]);
-> +	}
-
-...
-
-> +static const struct of_device_id mp2629_charger_of_match[] = {
-> +	{ .compatible = "mps,mp2629_charger"},
-
-> +	{},
-
-No comma.
-
-> +};
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On Thu, 12 Mar 2020, Tetsuo Handa wrote:
+
+> > On Thu, 12 Mar 2020, Tetsuo Handa wrote:
+> > > > If you have an alternate patch to try, we can test it.  But since this 
+> > > > cond_resched() is needed anyway, I'm not sure it will change the result.
+> > > 
+> > > schedule_timeout_killable(1) is an alternate patch to try; I don't think
+> > > that this cond_resched() is needed anyway.
+> > > 
+> > 
+> > You are suggesting schedule_timeout_killable(1) in shrink_node_memcgs()?
+> > 
+> 
+> Andrew Morton also mentioned whether cond_resched() in shrink_node_memcgs()
+> is enough. But like you mentioned,
+> 
+
+It passes our testing because this is where the allocator is looping while 
+the victim is trying to exit if only it could be scheduled.
+
+> you can try re-adding sleep outside of oom_lock:
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index d09776cd6e10..3aee7e0eca4e 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1576,6 +1576,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  	 */
+>  	ret = should_force_charge() || out_of_memory(&oc);
+>  	mutex_unlock(&oom_lock);
+> +	schedule_timeout_killable(1);
+>  	return ret;
+>  }
+>  
+
+If current was process chosen for oom kill, this would actually induce the 
+problem, not fix it.
+
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..e80158049651 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3797,7 +3797,6 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
+>  	 */
+>  	if (!mutex_trylock(&oom_lock)) {
+>  		*did_some_progress = 1;
+> -		schedule_timeout_uninterruptible(1);
+>  		return NULL;
+>  	}
+>  
+> @@ -4590,6 +4589,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  
+>  	/* Retry as long as the OOM killer is making progress */
+>  	if (did_some_progress) {
+> +		schedule_timeout_uninterruptible(1);
+>  		no_progress_loops = 0;
+>  		goto retry;
+>  	}
+> 
+> By the way, will you share the reproducer (and how to use the reproducer) ?
+> 
+
+On an UP kernel with swap disabled, you limit a memcg to 100MB and start 
+three processes that each fault 40MB attached to it.  Same reproducer as 
+the "mm, oom: make a last minute check to prevent unnecessary memcg oom 
+kills" patch except in that case there are two cores.
