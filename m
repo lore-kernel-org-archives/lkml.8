@@ -2,101 +2,147 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51B8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85259C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D89206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE9B206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:30:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVRH8Apv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgCLN3y (ORCPT
+        id S1727304AbgCLNay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:29:54 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41205 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgCLN3y (ORCPT
+        Thu, 12 Mar 2020 09:30:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35289 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLNay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:29:54 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jCNuC-0007Km-DG; Thu, 12 Mar 2020 14:29:44 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jCNuA-0001ji-U0; Thu, 12 Mar 2020 14:29:42 +0100
-Date:   Thu, 12 Mar 2020 14:29:42 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
-Message-ID: <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
-References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+        Thu, 12 Mar 2020 09:30:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m3so6325929wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YFj8ouBRBQRWFj3KwgY//JcyUR/0eXxupmXWGHAN4Vw=;
+        b=DVRH8Apv2LINZDFgD8KwFPHDjaTQswejXip32XqeIb2rCC+defR+2oSnBWDwR453Yu
+         DEvugxEZDrIRUJNtRn0zeIx+cSHY2U0RCKQdhEi6UkDRHNB0r2qNmhbnXcpzmiZk3HHa
+         82cm6C+jrAlUw3zL0nur/Vk0u/RcYTKd4gdzi5aoWei0HOziatZC+G7E73xYwvRSRC/G
+         dsmL9AycDzhogRPw5Zt7yRBZIuz+qtUzZU4PQmMJxOpE5ndZKY4ckZsL7XHMfRwcX0by
+         oXrvsGOwbRS+CW45RK7Cxv0mnvR9zOI8OO0PFSRNxJvkf3O05wGTIKDxXzaUWIveMem4
+         TQGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YFj8ouBRBQRWFj3KwgY//JcyUR/0eXxupmXWGHAN4Vw=;
+        b=pkl3YUKONoS04oUrfMC67Gol/lZvN+s155eIKANSvIOXj5B0vzJD6UK7M8QyaJ5Uc7
+         vmsyuR8ekyUdLKVKf/U/MimVt2c+N4Qq9oOwdMI0gi6yHi+Ad05HGv1bJ6q6TcU7wyQR
+         O2Ner3Tg7oJA+Q1vqJOg5VJWuMD6n76xaN1eq6F0R2IjBL6n7tLzU8lcJyTXqUW1FVfh
+         G+UzbULzKwdXDPmbO5UrVbT8/GcRsETCMn1cCvPwIpwDvRDS8v9+quOaDfy05a/SC9Pz
+         Spdd1VWNuv0QkjLchYEdJsGE4HY75Kqh2J2LsAi9Q0OdC/QZfhYgfPVTJmSogsIlMhdc
+         rRaw==
+X-Gm-Message-State: ANhLgQ2s/Wm3RpoXdGlTNwO/SuOwYem/q75zXQurBXWG5V3tRGSS+v5x
+        rIttnopkrzrhuKzDA3kXEx0aUloj9t1LdOD3lcA=
+X-Google-Smtp-Source: ADFU+vsv1KiMmMA9QEO7iTQY9DWEiRMAYh9G6htFZh3AFiMGQuMRc9LZSyCS1oJr94mdwlv5KNdiaU7T9dFQbyn9KUk=
+X-Received: by 2002:a1c:1fc7:: with SMTP id f190mr4787185wmf.2.1584019852225;
+ Thu, 12 Mar 2020 06:30:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200312124414.439-1-bhe@redhat.com> <20200312124414.439-2-bhe@redhat.com>
+In-Reply-To: <20200312124414.439-2-bhe@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 12 Mar 2020 14:30:41 +0100
+Message-ID: <CAM9Jb+h5N=zd8iCsiRN+8EnnAYkFeT93FaOGpmzeM=B17UciKg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] mm/sparse.c: introduce new function fill_subsection_map()
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
+        David Hildenbrand <david@redhat.com>,
+        richard.weiyang@gmail.com, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
-> Hi all,
-> 
-> I am working on adding an old A10 device to mainline and noticed an issue
-> when testing on 5.5.8 vs master.
-> 
-> Since 5.6-rc1, I can't control the brightness of my LCD backlight anymore.
-> The backlight stays on full brightness instead. I am controlling the
-> brightness value via sysfs for testing.
-> 
-> I am not sure if this is a general pwm-sun4i issue or if it is related to
-> the backlight. However I narrowed it down to one commit for pwm-sun4i:
-> 
-> fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-> 
-> If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
-> master, the backlight works fine. Unfortunately, due to my lack of kernel
-> experience, I can't see how the commit above broke it.
+>
+> Factor out the code that fills the subsection map from section_activate()
+> into fill_subsection_map(), this makes section_activate() cleaner and
+> easier to follow.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/sparse.c | 32 +++++++++++++++++++++-----------
+>  1 file changed, 21 insertions(+), 11 deletions(-)
+>
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index cf28505e82c5..5919bc5b1547 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -792,24 +792,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>                 ms->section_mem_map = (unsigned long)NULL;
+>  }
+>
+> -static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> -               unsigned long nr_pages, struct vmem_altmap *altmap)
+> +static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  {
+> -       DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>         struct mem_section *ms = __pfn_to_section(pfn);
+> -       struct mem_section_usage *usage = NULL;
+> +       DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>         unsigned long *subsection_map;
+> -       struct page *memmap;
+>         int rc = 0;
+>
+>         subsection_mask_set(map, pfn, nr_pages);
+>
+> -       if (!ms->usage) {
+> -               usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+> -               if (!usage)
+> -                       return ERR_PTR(-ENOMEM);
+> -               ms->usage = usage;
+> -       }
+>         subsection_map = &ms->usage->subsection_map[0];
+>
+>         if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+> @@ -820,6 +811,25 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>                 bitmap_or(subsection_map, map, subsection_map,
+>                                 SUBSECTIONS_PER_SECTION);
+>
+> +       return rc;
+> +}
+> +
+> +static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> +               unsigned long nr_pages, struct vmem_altmap *altmap)
+> +{
+> +       struct mem_section *ms = __pfn_to_section(pfn);
+> +       struct mem_section_usage *usage = NULL;
+> +       struct page *memmap;
+> +       int rc = 0;
+> +
+> +       if (!ms->usage) {
+> +               usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+> +               if (!usage)
+> +                       return ERR_PTR(-ENOMEM);
+> +               ms->usage = usage;
+> +       }
+> +
+> +       rc = fill_subsection_map(pfn, nr_pages);
+>         if (rc) {
+>                 if (usage)
+>                         ms->usage = NULL;
+> --
 
-Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
-this. Looking at the output of
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-
-(i.e. ignoring whitespace changes) I don't see how the behaviour you're
-reporting can be explained.
-
-Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
-commit?
-
-Can you install a tool to inspect register values and check how the
-affected registers change if you switch kernel versions and/or pwm
-settings?
-
-(e.g.
-	memtool md 0x1c20e00+0xc
-)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> 2.17.2
+>
+>
