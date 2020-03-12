@@ -2,86 +2,95 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F97C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82579C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F325206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C0A206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 12:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgCLMkP (ORCPT
+        id S1727347AbgCLMkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 08:40:15 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60016 "EHLO fornost.hmeau.com"
+        Thu, 12 Mar 2020 08:40:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38502 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgCLMkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 08:40:14 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jCN85-000244-Er; Thu, 12 Mar 2020 23:40:02 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Mar 2020 23:40:01 +1100
-Date:   Thu, 12 Mar 2020 23:40:01 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Connor Kuehl <ckuehl@redhat.com>
-Cc:     thomas.lendacky@amd.com, davem@davemloft.net, gary.hook@amd.com,
-        erdemaktas@google.com, rientjes@google.com, brijesh.singh@amd.com,
-        npmccallum@redhat.com, bsd@redhat.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] crypto: ccp: use file mode for sev ioctl permissions
-Message-ID: <20200312124001.GG28885@gondor.apana.org.au>
-References: <20200306172010.1213899-1-ckuehl@redhat.com>
- <20200306172010.1213899-2-ckuehl@redhat.com>
+        id S1725978AbgCLMkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:40:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A46F4B1DE;
+        Thu, 12 Mar 2020 12:40:28 +0000 (UTC)
+Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-3-minchan@kernel.org>
+ <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
+ <20200310222008.GB72963@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <07109fb3-dcf3-0252-4515-7e476fadc259@suse.cz>
+Date:   Thu, 12 Mar 2020 13:40:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306172010.1213899-2-ckuehl@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200310222008.GB72963@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:20:10AM -0800, Connor Kuehl wrote:
-> Instead of using CAP_SYS_ADMIN which is restricted to the root user,
-> check the file mode for write permissions before executing commands that
-> can affect the platform. This allows for more fine-grained access
-> control to the SEV ioctl interface. This would allow a SEV-only user
-> or group the ability to administer the platform without requiring them
-> to be root or granting them overly powerful permissions.
+On 3/10/20 11:20 PM, Minchan Kim wrote:
+> On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
+>> On 3/2/20 8:36 PM, Minchan Kim wrote:
+>> > There is usecase that System Management Software(SMS) want to give
+>> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+>> > in the case of Android, it is the ActivityManagerService.
+>> > 
+>> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+>> 
+>> You mean MADV_DONTNEED?
 > 
-> For example:
-> 
-> chown root:root /dev/sev
-> chmod 600 /dev/sev
-> setfacl -m g:sev:r /dev/sev
-> setfacl -m g:sev-admin:rw /dev/sev
-> 
-> In this instance, members of the "sev-admin" group have the ability to
-> perform all ioctl calls (including the ones that modify platform state).
-> Members of the "sev" group only have access to the ioctls that do not
-> modify the platform state.
-> 
-> This also makes opening "/dev/sev" more consistent with how file
-> descriptors are usually handled. By only checking for CAP_SYS_ADMIN,
-> the file descriptor could be opened read-only but could still execute
-> ioctls that modify the platform state. This patch enforces that the file
-> descriptor is opened with write privileges if it is going to be used to
-> modify the platform state.
-> 
-> This flexibility is completely opt-in, and if it is not desirable by
-> the administrator then they do not need to give anyone else access to
-> /dev/sev.
-> 
-> Signed-off-by: Connor Kuehl <ckuehl@redhat.com>
-> ---
->  drivers/crypto/ccp/sev-dev.c | 33 +++++++++++++++++----------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
+> Mean to DONT_NEED's future version.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+What's that exactly?
+
+>> 
+>> > required to make the reclaim decision is not known to the app.
+>> 
+>> This seems to be mixing up the differences between MADV_DONTNEED and
+>> COLD/PAGEOUT and self-imposed vs external memory hints?
+> 
+> Sorry, I don't understand what you want here.
+
+You say that process_madvise(MADV_[COLD|PAGEEOUT]) is similar to
+madvise(MADV_WONTNEED) but the difference is that the information
+required to make the reclaim decision is not known to the app.
+
+I see two differences. One is madvise vs process_madvise, which is explained by
+"reclaim decision is not known to the app."
+The other is MADV_WONTNEED vs MADV_[COLD|PAGEEOUT], which is... I'm not sure
+until you say what's "DONT_NEED's future version" :D
+
+Anyway I assume this part is from the versions where the new COLD and PAGEOUT
+flags were introduced together with external memory hinting API?
