@@ -2,107 +2,80 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E72C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B51BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B83205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:49:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Zv00U6h9"
+	by mail.kernel.org (Postfix) with ESMTP id 4710C206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCLOtV (ORCPT
+        id S1727716AbgCLOuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:49:21 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37140 "EHLO mail.skyhub.de"
+        Thu, 12 Mar 2020 10:50:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34743 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbgCLOtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:49:20 -0400
-Received: from zn.tnic (p200300EC2F0DBF0041CBC9F757D3F2F8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:bf00:41cb:c9f7:57d3:f2f8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 615171EC0CB8;
-        Thu, 12 Mar 2020 15:49:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584024558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=mBHoZL5njnwvI/eO0xcZnPNgJOJeyF1z9HV0KTmorIA=;
-        b=Zv00U6h9WsbrsPqWRyn1OwR5ShWoAnRfcGRtafOow3qt5JhRm99BRvNVVkAxu2p9BuoBmo
-        4ZcAlrp5t+o2H84NsH1HzCnFG6faYBXKpY5AOeA1yv78m1dw+qsH+jRnJjqk/6qVRmEhNy
-        wpr5K0A/TGVjHakyu1TGbK9vw1yI2Xo=
-Date:   Thu, 12 Mar 2020 15:49:22 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        id S1727072AbgCLOuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:50:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 07:50:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="235042911"
+Received: from mylly.fi.intel.com (HELO [10.237.72.151]) ([10.237.72.151])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Mar 2020 07:50:08 -0700
+Subject: Re: [PATCH 4/6] i2c: designware: Detect the FIFO size in the common
+ code
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey.Semin@baikalelectronics.ru
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
- purgatory.ro has missing symbols
-Message-ID: <20200312144922.GG15619@zn.tnic>
-References: <20200311214601.18141-1-hdegoede@redhat.com>
- <20200311214601.18141-3-hdegoede@redhat.com>
- <20200312001006.GA170175@rani.riverdale.lan>
- <3d58e77d-41e5-7927-fe84-4c058015e469@redhat.com>
- <20200312114225.GB15619@zn.tnic>
- <899f366e-385d-bafa-9051-4e93dc9ba321@redhat.com>
- <20200312125032.GC15619@zn.tnic>
- <8af51d90-27fa-6d2a-2159-ef0a9089453a@redhat.com>
- <20200312142553.GF15619@zn.tnic>
- <94c6f903-7dca-503e-aca7-1ee4641bcdac@redhat.com>
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132151.2ABC38030786@mail.baikalelectronics.ru>
+ <20200306150138.GN1748204@smile.fi.intel.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <c119e638-0fd5-8ad0-be7f-ac408e62e66f@linux.intel.com>
+Date:   Thu, 12 Mar 2020 16:50:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <94c6f903-7dca-503e-aca7-1ee4641bcdac@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200306150138.GN1748204@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 03:38:22PM +0100, Hans de Goede wrote:
-> So I've send out 2 versions, not 5 not 10, but only 2 versions in
-> the past 2 days and you start complaining about me rushing this and
-> not fixing it properly, to me that does not come across positive.
-
-Maybe there's a misunderstanding: when you send a patchset which is not
-marked RFC, I read this, as, this patchset is ready for application. But
-then the 0day bot catches build errors which means, not ready yet.
-
-And I believe you expected for the 0day bot to test the patches first
-and they should then to be considered for application. Yes, no?
-
-That's why I suggested you to do randconfig builds yourself and not
-depend on the 0day bot as it is known to be unreliable.
-
-So I didn't do anything to make you feel negative - definitely not
-intentionally.
-
-> More specifically my intentions / motives on this were well intended
-> and I too believe in fixing things the proper way. Your reply suggested
-> that I just want to rush this through, which calls my motives into
-> question, for which in my mind there was no reason.
+On 3/6/20 5:01 PM, Andy Shevchenko wrote:
+> On Fri, Mar 06, 2020 at 04:19:54PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+>> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>>
+>> The problem with detecting the FIFO depth in the platform driver
+>> is that in order to implement this we have to access the controller
+>> IC_COMP_PARAM_1 register. Currently it's done before the
+>> i2c_dw_set_reg_access() method execution, which is errors prone since
+>> the method determines the registers endianness and access mode and we
+>> can't use dw_readl/dw_writel accessors before this information is
+>> retrieved. We also can't move the i2c_dw_set_reg_access() function
+>> invocation to after the master/slave probe functions call (when endianness
+>> and access mode are determined), since the FIFO depth information is used
+>> by them for initializations. So in order to fix the problem we have no
+>> choice but to move the FIFO size detection methods to the common code and
+>> call it at the probe stage.
 > 
-> If you complain about 2 versions in 2 days, or 5 versions over 5 months
-> then that feels exaggerated and it certainly does not give me a feeling
-> that the effort which I'm putting into this is being appreciated.
-
-I believe I already explained what my problem with that is. If you don't
-see it, then let's agree to disagree.
-
-> Anyways we have a plan how to move forward with this now, so lets
-> focus on that.
-
-Yes, let's do that.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> Sounds reasonable.
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
