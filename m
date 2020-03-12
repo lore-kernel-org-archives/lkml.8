@@ -2,99 +2,106 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490F4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892B9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF1220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DZqs4TO/"
+	by mail.kernel.org (Postfix) with ESMTP id 62185206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584026278;
+	bh=/8fTxMFbD2pIIFtiaYwed7HV9jiPfyLfEJ1Kh/0PzVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VCe2/WjlwUfRGkN3d3dXft6IaQppMb1jIGDLpwv7h6fLD9wKfyY7zY5E+cqSC1gAA
+	 uPdJOmnaSRwiVTkCmMoViNIt/jYn+jc2hfTOaLFIJL1W/nJ11g4sdH+eGhFfbZBOSt
+	 UH3Qrf0gjHS539+Y/R3hnJUGvW6n93XIbYW7OQ/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgCLPR4 (ORCPT
+        id S1727870AbgCLPR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 12 Mar 2020 11:17:56 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:39370 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbgCLPRz (ORCPT
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:47044 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727549AbgCLPR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:17:55 -0400
-Received: by mail-qv1-f66.google.com with SMTP id fc12so2782820qvb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 08:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ucB0jSYs7otvL+Roe4QFbncbHLIRwSx5DdcgmtIHpGI=;
-        b=DZqs4TO/YQ1WXVFv4NNXH/1f3ChovaXoOleqUsNYg1faonPhV3acnKgRE9fakNAfQ+
-         ojunQdZ18rtTzshYz8pc69vmqnTIrLJ/nAqGlbFAZAXa0oFo402XVNje7hc3PK9vBw6P
-         bIGSwaNxXi/Xq5+7Ish4Ljnw1JIJlvJkO/jt+NGa3eAkA5CPprRXfXJZQ5b4JJL5ciw5
-         XIuOGnQjX5HVPZ+v8/CuyttFyl6Z804UvSd1RwehT1BeFDPehqwsJAf5ydsT7CCqK9cz
-         rKh/yd9Kogy7wrxs3oe8oi+Qxg+qjvwJ0O1wpIUXJ3davcOEOvvGHer0Nd2COT8NfLXb
-         gPFg==
+        Thu, 12 Mar 2020 11:17:56 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a22so5788327oid.13;
+        Thu, 12 Mar 2020 08:17:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ucB0jSYs7otvL+Roe4QFbncbHLIRwSx5DdcgmtIHpGI=;
-        b=uWnO1jo6RMHvP3vX7+KLO+kRB+nvtg2R+fq/vYy1mjyczC2XS88q7Ba8fadwFOSgsm
-         Mfk3qYXZtq3Ve6H3/qmjjY76W3cuvY6eQuveOvGHZ3ozef+6uEbrWJCnu/FCvnZngVrp
-         6DG738XnrkA4Yu6H8t7xWZDyZDr8rokwR8b+5YSFDlOTRylow0JlHgxlMlY72zEEPFOq
-         OcuxPiMvYHgOAYNXUSqmC7y12bpcQlOKTeZgZeGN8vkDQ5d9EyzLT+kjU94o7NiX0S7O
-         zMyryiUKymfev+H8zeFxcK0y89a0j/NqqSkVP3i/H7XcMH60s6eSpmykH1a3bx4ujHZP
-         r15w==
-X-Gm-Message-State: ANhLgQ348p0CCyGYvLMT20DQ68cer6CY75uiNRDuv3KkoX3Pd2GQLYU5
-        Pw3tF2lQ5jJBv+OFVzHYkzy1SQ==
-X-Google-Smtp-Source: ADFU+vsie6w+TM81UO1bRct3BslZgyNzyOBijs1IZJ0N9tNY/N449Z2WBPij8ldirt/oZ1ctWF5yaA==
-X-Received: by 2002:a05:6214:1351:: with SMTP id b17mr7980984qvw.251.1584026269849;
-        Thu, 12 Mar 2020 08:17:49 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x188sm18344452qka.53.2020.03.12.08.17.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Mar 2020 08:17:49 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jCPam-0007eN-LV; Thu, 12 Mar 2020 12:17:48 -0300
-Date:   Thu, 12 Mar 2020 12:17:48 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+c3b8c2a85d37162cc6ab@syzkaller.appspotmail.com>
-Cc:     dledford@redhat.com, kamalheib1@gmail.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING: ODEBUG bug in remove_client_context
-Message-ID: <20200312151748.GP31668@ziepe.ca>
-References: <00000000000041c6a905a0a295ef@google.com>
+        bh=rHiigiRwWdeqsTTALfFLdUeJZ+/BBDh3z6SgaZUc3ZY=;
+        b=hxmkl2UNItgX4D688vPbYm1ji3LDbawSCy3mKgzPXizuunK8zmpS/aaPLVxGSlqTy4
+         6iOifX/qczNqwM9IZN0MQr+VMjMMOZpyt2sXVppmSbRerSsicik8vrGpWSjgK5FS1ZFZ
+         nCNzsObasipj7jHHya/6v/e4QnWstukd3/7U7f4WjP/VZjDvsHSXxyI58jpyszub7Xt/
+         iey4Oa7JP324ZN/t4hu5xwkbqgKnIa0qhwzSBj/Tq6lxw0VKhX7W8rc2X7yjY2/D31y0
+         daAZNbRSXiC+CBDhb9wP05dxsDtaWOzye9KAmRJndF+xpFxWYfq15N0fxrD5nfSgfnob
+         2mFg==
+X-Gm-Message-State: ANhLgQ0pSYblDCbQ4JcfCYD/XavYzlc//QYN9fJ/L7ZHcvIzQRDhjvjM
+        JB8KfAxxpup7WfJpCrlyTg==
+X-Google-Smtp-Source: ADFU+vvYViH6zu1LQKfvsKC98PIW22YAry8cj86SwVNzzddHoLKUHC9/jtwAo4z7+fj1dyHXKjTVqw==
+X-Received: by 2002:aca:b5c3:: with SMTP id e186mr2886726oif.114.1584026274247;
+        Thu, 12 Mar 2020 08:17:54 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q22sm1368687oic.22.2020.03.12.08.17.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 08:17:53 -0700 (PDT)
+Received: (nullmailer pid 8236 invoked by uid 1000);
+        Thu, 12 Mar 2020 15:17:52 -0000
+Date:   Thu, 12 Mar 2020 10:17:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
+Message-ID: <20200312151752.GA7490@bogus>
+References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00000000000041c6a905a0a295ef@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 11:37:12PM -0700, syzbot wrote:
-> Hello,
+On Wed, 11 Mar 2020 15:18:24 +0530, Vinay Simha BN wrote:
+> Add yaml documentation for DSI/LVDS tc358775 bridge
 > 
-> syzbot found the following crash on:
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 > 
-> HEAD commit:    61a09258 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10a6d70de00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7aef917d2e37d731
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c3b8c2a85d37162cc6ab
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> ---
+> v1:
+>  Initial version
+> ---
+>  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
+>  1 file changed, 174 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
 > 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c3b8c2a85d37162cc6ab@syzkaller.appspotmail.com
 
-#syz dup: WARNING: ODEBUG bug in smc_ib_remove_dev
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Jason
+Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml:  while scanning for the next token
+found character that cannot start any token
+  in "<unicode string>", line 11, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml: ignoring, error parsing file
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1252753
+Please check and re-submit.
