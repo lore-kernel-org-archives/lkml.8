@@ -2,173 +2,154 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1887CC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAB9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FE8206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4450D206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j0RzlUpF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JA+OPDXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCLXDA (ORCPT
+        id S1726820AbgCLXED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 19:03:00 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33784 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgCLXDA (ORCPT
+        Thu, 12 Mar 2020 19:04:03 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44179 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgCLXEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 19:03:00 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A2B7F5F;
-        Fri, 13 Mar 2020 00:02:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584054177;
-        bh=n1RmDaPINq/9UEwuYap1gQ4IHXGw18k1yY1Z161d2l8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j0RzlUpFWNePXY9BtYpu/R2uq3jNPUKgnQGwJF0K3Nz0EG3g4AuRS/fbjYO2/3ImW
-         e8f0pYaoq5lQdcGdl0VaHfek8/F/HWkmijLUyU6rU0ujXnseBFkZ/CmAFDXCHGhcTh
-         TF7GLUK33rMLlZhRKGreLMqV66Gg2tzb9p+WKG5E=
-Date:   Fri, 13 Mar 2020 01:02:53 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] media: i2c: ov5645: Switch to assigned-clock-rates
-Message-ID: <20200312230253.GB30932@pendragon.ideasonboard.com>
-References: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdUgMHjU_ZANzJbxQji6K7Pdc-jD4C7JatQc-OtN=jJt_w@mail.gmail.com>
- <OSBPR01MB3590906C6121D1DFFF4ABF0DAAFD0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+        Thu, 12 Mar 2020 19:04:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b72so3999795pfb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 16:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XAdSv21dSQkMe6ASh/4rd2HigmIRXAw4ZLVXNFDtyVU=;
+        b=JA+OPDXa5jC/dqTY/BEaS2/VtEz+hMQLPwkTH8PkNmHkGYFL8RCOVkhO580y5J9feL
+         NicY7eREQT5oZj3PsVQz0IPqODw6jQceJy7EWL+cyn6pTIYff70HIED0XoJiL9enhaFP
+         94gwRLRJ2dUCBQUV8j1eGG2g+ss9Oc1MJDrsk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XAdSv21dSQkMe6ASh/4rd2HigmIRXAw4ZLVXNFDtyVU=;
+        b=NlBq9r0que5eWkhxqoaIf9Fvpym1xoOLp/BlE3LjQ7Qfh+xtZqVGXNTT/mpj3FGK3X
+         vtjgpKxxMZer//EeCSv7LGCIMWYmOxPTgPeTIDkT1m+nZniSFhNCC/L2dQbMx9Lmr9bh
+         U7PjbZCOJ/pK3mz/aAhwB0IwwlaOajz8frVu/My07Hf3HH1DUXyfUVmkyf2DGQ0soZ92
+         ZiGfEuHQ3y5to5+NnRIqBhO3jul7/idL9WZsnqrECnAHslWM8xn/D5DGwwYe3Mwt6YkM
+         1d7F+Rac+ua4ERNWdkMjYXw9YxfAijP0VMbfzXZHvtwnW7Xfw0e2cghNrRzzOLzzal2y
+         d1Dw==
+X-Gm-Message-State: ANhLgQ0wEr1pYNZ1ZYoNHOpfzrj359VAj5M/xBBI0gRoZOJbbvsl8UCm
+        W44HcnVhrpGlyWb4Lne891RYF8cKpfw=
+X-Google-Smtp-Source: ADFU+vvjno42cAm5y/8oQ65JfHb1VuFeqX7rgvYx+44CmwxBfeik0igWnv24J20CGxcvQt2nVdmHZQ==
+X-Received: by 2002:aa7:990e:: with SMTP id z14mr8766053pff.274.1584054241555;
+        Thu, 12 Mar 2020 16:04:01 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id v123sm28763161pfb.85.2020.03.12.16.04.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 16:04:01 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH v4 3/4] platform/chrome: typec: Get PD_CONTROL cmd version
+Date:   Thu, 12 Mar 2020 15:57:17 -0700
+Message-Id: <20200312225719.14753-4-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+In-Reply-To: <20200312225719.14753-1-pmalani@chromium.org>
+References: <20200312225719.14753-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB3590906C6121D1DFFF4ABF0DAAFD0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Query the EC to determine the version number of the PD_CONTROL
+command which is supported by the EC. Also store this value in the Type
+C data struct since it will be used to determine how to parse the
+response to queries for port information from the EC.
 
-On Thu, Mar 12, 2020 at 09:52:38PM +0000, Prabhakar Mahadev Lad wrote:
-> On 12 March 2020 21:42, Geert Uytterhoeven wrote:
-> > On Thu, Mar 12, 2020 at 10:13 PM Lad Prabhakar wrote:
-> > > This patch switches to assigned-clock-rates for specifying the clock rate.
-> > > The clk-conf.c internally handles setting the clock rate when
-> > > assigned-clock-rates is passed.
-> > >
-> > > The driver now sets the clock frequency only if the deprecated
-> > > property clock-frequency is defined instead assigned-clock-rates, this
-> > > is to avoid breakage with existing DT binaries.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/drivers/media/i2c/ov5645.c
-> > > +++ b/drivers/media/i2c/ov5645.c
-> > > @@ -1055,6 +1055,7 @@ static int ov5645_probe(struct i2c_client *client)
-> > >         struct device_node *endpoint;
-> > >         struct ov5645 *ov5645;
-> > >         u8 chip_id_high, chip_id_low;
-> > > +       bool set_clk = false;
-> > >         unsigned int i;
-> > >         u32 xclk_freq;
-> > >         int ret;
-> > > @@ -1094,10 +1095,17 @@ static int ov5645_probe(struct i2c_client
-> > *client)
-> > >                 return PTR_ERR(ov5645->xclk);
-> > >         }
-> > >
-> > > -       ret = of_property_read_u32(dev->of_node, "clock-frequency",
-> > &xclk_freq);
-> > > +       ret = of_property_read_u32(dev->of_node, "assigned-clock-rates",
-> > > +                                  &xclk_freq);
-> > >         if (ret) {
-> >
-> > I think you can just leave out the above check...
-> >
-> > > -               dev_err(dev, "could not get xclk frequency\n");
-> > > -               return ret;
-> > > +               /* check if deprecated property clock-frequency is defined */
-> > > +               ret = of_property_read_u32(dev->of_node, "clock-frequency",
-> > > +                                          &xclk_freq);
-> > > +               if (ret) {
-> >
-> > ... and ignore the absence of the deprecated property.
-> >
-> > > +                       dev_err(dev, "could not get xclk frequency\n");
-> > > +                       return ret;
-> > > +               }
-> > > +               set_clk = true;
-> >
-> > I.e. just
-> >
-> >         /* check if deprecated property clock-frequency is defined */
-> >         xclk_freq = 0;
-> >         of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
-> >         if (xclk_freq) {
-> >                 ret = clk_set_rate(ov5645->xclk, xclk_freq);
-> >                 if (ret) {
-> >                         dev_err(dev, "could not set xclk frequency\n");
-> >                         return ret;
-> >                 }
-> >         } else {
-> >                 xclk_freq = clk_get_rate(ov5645->xclk, xclk_freq);
-> >         }
-> >
-> I did think about it initially, but realized the clk_get_rate may vary platform to platform
-> for example in G2E clk_get_rate() returns a frequency of 24242424 with
-> assigned-clock-rates set to  24000000 and probe would fail due to a check for
-> external clock must be 24MHz, with 1% tolerance.
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
-Then you need to handle the tolerance in this driver :-)
+Changes in v4:
+- No changes
 
-> > >         }
-> > >
-> > >         /* external clock must be 24MHz, allow 1% tolerance */ @@
-> > > -1107,10 +1115,12 @@ static int ov5645_probe(struct i2c_client *client)
-> > >                 return -EINVAL;
-> > >         }
-> > >
-> > > -       ret = clk_set_rate(ov5645->xclk, xclk_freq);
-> > > -       if (ret) {
-> > > -               dev_err(dev, "could not set xclk frequency\n");
-> > > -               return ret;
-> > > +       if (set_clk) {
-> > > +               ret = clk_set_rate(ov5645->xclk, xclk_freq);
-> > > +               if (ret) {
-> > > +                       dev_err(dev, "could not set xclk frequency\n");
-> > > +                       return ret;
-> > > +               }
-> > >
-> > >         }
-> > >
-> > >         for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
+Changes in v3:
+- Moved if statement check in the end of probe() from this patch to a
+  previous patch.
 
+Changes in v2:
+- No changes.
+
+ drivers/platform/chrome/cros_ec_typec.c | 32 +++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 02e6d5cbbbf7a..9f692eb78b322 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -21,6 +21,7 @@ struct cros_typec_data {
+ 	struct device *dev;
+ 	struct cros_ec_device *ec;
+ 	int num_ports;
++	unsigned int cmd_ver;
+ 	/* Array of ports, indexed by port number. */
+ 	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+ 	/* Initial capabilities for each port. */
+@@ -171,6 +172,31 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
+ 	return ret;
+ }
+ 
++static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
++{
++	struct ec_params_get_cmd_versions_v1 req_v1;
++	struct ec_response_get_cmd_versions resp;
++	int ret;
++
++	/* We're interested in the PD control command version. */
++	req_v1.cmd = EC_CMD_USB_PD_CONTROL;
++	ret = cros_typec_ec_command(typec, 1, EC_CMD_GET_CMD_VERSIONS,
++				    &req_v1, sizeof(req_v1), &resp,
++				    sizeof(resp));
++	if (ret < 0)
++		return ret;
++
++	if (resp.version_mask & EC_VER_MASK(1))
++		typec->cmd_ver = 1;
++	else
++		typec->cmd_ver = 0;
++
++	dev_dbg(typec->dev, "PD Control has version mask 0x%hhx\n",
++		typec->cmd_ver);
++
++	return 0;
++}
++
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id cros_typec_acpi_id[] = {
+ 	{ "GOOG0014", 0 },
+@@ -202,6 +228,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+ 	typec->ec = dev_get_drvdata(pdev->dev.parent);
+ 	platform_set_drvdata(pdev, typec);
+ 
++	ret = cros_typec_get_cmd_version(typec);
++	if (ret < 0) {
++		dev_err(dev, "failed to get PD command version info\n");
++		return ret;
++	}
++
+ 	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
+ 				    &resp, sizeof(resp));
+ 	if (ret < 0)
 -- 
-Regards,
+2.25.1.481.gfbce0eb801-goog
 
-Laurent Pinchart
