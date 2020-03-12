@@ -2,121 +2,115 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D3BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87FC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2B52071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:41:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObuVaSHS"
+	by mail.kernel.org (Postfix) with ESMTP id 9A1542072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584024121;
+	bh=rwALx85sL9uxz9h24BYrbFnTq6oyh/cOVDhdniakHzk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Yeg6WlSWoDF3nNOHLmPwduMdaGS8fOIITosZfOcDVScsJv/xFdRV1sQJJUu6aciTS
+	 Wmj1wDT4zAlBkrrBjR3VRoCsOsDZH2XWWewH/hrTKofkUU+4gydxL+3tgw6CBflJVx
+	 /8yUMtJHOhn50W8cE1G1D30MzyYdLJJ//EDXy8Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbgCLOl6 (ORCPT
+        id S1727682AbgCLOmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:41:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41374 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgCLOl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:41:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s14so7814707wrt.8;
-        Thu, 12 Mar 2020 07:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gncaKHlGYMiKjX4sUuFMWjZl82hyQMZIVGetmMWGMr4=;
-        b=ObuVaSHSHRk2Hrq4XpimsPWCcjNXTvsyH7O8FGmhyNND/wlELZmS67Dh9m5M0JPmDo
-         4OVYQ2PclxxWjRwPl0QX5RnMML962Sxh1CH0vbph8jOR4dFjT5zO2qdm72vKvmkgqyxJ
-         FKNtULLgGzA009qznGjeQpagTfV7KJ/tSBE/LRniUAeakIZ6893NdN5/3Z9Fc2jp5Sil
-         /bDAsVttmGd9LSNEfrQjU9pvCQ5vfuqo+Aj29Wi5gKkEFMpq1dlKaMQRZhvwR2xbQ0++
-         KmtqLCfZ8xBFgSVmdzTZ28WKJHDHM1jgc4Hlm6D0/e9aVk6HWCpurfoKlAc+FbJLTqhh
-         PH7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gncaKHlGYMiKjX4sUuFMWjZl82hyQMZIVGetmMWGMr4=;
-        b=a6X9Ed4rF6ZhjAERFPhohsP5qIfzpWf2D1cThj1lhFAf5yafwDJCQ/KtjtTNA8trtQ
-         4PioIDm8gN+8sHvZQlYrIRDvNtYJo3mT1Jw3rJiyp3/6GSHxNIalYBbkzbO1hyPYjCEZ
-         4O5f9y/WjnJDLRtcTh3m+25kNCYu4pi7+VCcujfgn/6vARGmNO3rtpryhcHgcvr3quQn
-         uVHoWUxepSkTfH0sN0+pgX2mWoJVPmrlJIPAmG4imqFOd0owfq0cQZ6pLZK6Lw/Pbvsw
-         pi2aziPc/EtDTMU6NuuijHHbfpoo57aUqrAXG23jwmd+ZhFzXXk4ZT2dmkIZR3fpgXpS
-         RJOw==
-X-Gm-Message-State: ANhLgQ25q7sbSK0yRF8QpVF0BzYLq/eGmSzNXa5yu/Or7tsuxdeqS6at
-        puLUZ6du3BfP2tS9oJ9khAI=
-X-Google-Smtp-Source: ADFU+vtj39tnigbG/Ug6Aihm/fRB/IG2KtNkoyhISRykNe3bOE8YUL2PAmieLwCZ829nAhrgBh9xqQ==
-X-Received: by 2002:adf:eb48:: with SMTP id u8mr11212418wrn.283.1584024116381;
-        Thu, 12 Mar 2020 07:41:56 -0700 (PDT)
-Received: from gabrielDell.schule.local ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id h15sm8960869wrw.97.2020.03.12.07.41.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 07:41:55 -0700 (PDT)
-From:   Gabriel Ravier <gabravier@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gabriel Ravier <gabravier@gmail.com>
-Subject: [PATCH v2] gpio-hammer: Avoid potential overflow in main
-Date:   Thu, 12 Mar 2020 15:40:16 +0100
-Message-Id: <20200312144015.1848245-1-gabravier@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 12 Mar 2020 10:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgCLOl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:41:59 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DFC5206E7;
+        Thu, 12 Mar 2020 14:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584024119;
+        bh=rwALx85sL9uxz9h24BYrbFnTq6oyh/cOVDhdniakHzk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1XtiEyLN/mnOQ3bewdx1k97d0rs0nBAo4iMJlADMpY54tvJoyAfqZRVkn+pY3Mear
+         H3fiV7NixjRk6sHXRrkbfsjJ8wm/5LNnZN+pQJKFaS+gH1B2Iw/0gy43OnwJKu+JXo
+         g4f5WXrBhK/85gaNhjO46JDvgsgtlva/prm2iMWw=
+Date:   Thu, 12 Mar 2020 09:41:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     paulus@samba.org, mpe@ellerman.id.au, tyreld@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
+ 'value'
+Message-ID: <20200312144157.GA110750@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312143800.GA109542@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If '-o' was used more than 64 times in a single invocation of gpio-hammer,
-this could lead to an overflow of the 'lines' array. This commit fixes
-this by avoiding the overflow and giving a proper diagnostic back to the
-user
+On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> > 
+> > drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
+> > drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
+> > 	variable value set but not used [-Wunused-but-set-variable]
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> 
+> Michael, if you want this:
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> If you don't mind, edit the subject to follow the convention, e.g.,
+> 
+>   PCI: rpaphp: Remove unused variable 'value'
+> 
+> Apparently simple_strtoul() is deprecated and we're supposed to use
+> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
+> little, too, e.g.,
+> 
+>   if (kstrtoul(drc_type, 0, &value) == 0)
+>     return 1;
+> 
+>   return 0;
 
-Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
----
- tools/gpio/gpio-hammer.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+I guess there are several other uses of simple_strtoul() in this file.
+Not sure if it's worth changing them all, just this one, or just the
+patch below as-is.
 
-diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-index 0e0060a6e..d0be21af1 100644
---- a/tools/gpio/gpio-hammer.c
-+++ b/tools/gpio/gpio-hammer.c
-@@ -135,7 +135,14 @@ int main(int argc, char **argv)
- 			device_name = optarg;
- 			break;
- 		case 'o':
--			lines[i] = strtoul(optarg, NULL, 10);
-+			/*
-+			 * Avoid overflow. Do not immediately error, we want to
-+			 * be able to accurately report on the amount of times
-+			 *'-o' was given to give an accurate error message
-+			 */
-+			if (i < GPIOHANDLES_MAX)
-+				lines[i] = strtoul(optarg, NULL, 10);
-+
- 			i++;
- 			break;
- 		case '?':
-@@ -143,6 +150,14 @@ int main(int argc, char **argv)
- 			return -1;
- 		}
- 	}
-+
-+	if (i >= GPIOHANDLES_MAX) {
-+		fprintf(stderr,
-+			"Only %d occurences of '-o' are allowed, %d were found\n",
-+			GPIOHANDLES_MAX, i + 1);
-+		return -1;
-+	}
-+
- 	nlines = i;
- 
- 	if (!device_name || !nlines) {
--- 
-2.24.1
-
+> > ---
+> >  drivers/pci/hotplug/rpaphp_core.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> > index e408e40..5d871ef 100644
+> > --- a/drivers/pci/hotplug/rpaphp_core.c
+> > +++ b/drivers/pci/hotplug/rpaphp_core.c
+> > @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
+> >  
+> >  static int is_php_type(char *drc_type)
+> >  {
+> > -	unsigned long value;
+> >  	char *endptr;
+> >  
+> >  	/* PCI Hotplug nodes have an integer for drc_type */
+> > -	value = simple_strtoul(drc_type, &endptr, 10);
+> > +	simple_strtoul(drc_type, &endptr, 10);
+> >  	if (endptr == drc_type)
+> >  		return 0;
+> >  
+> > -- 
+> > 2.7.4
+> > 
