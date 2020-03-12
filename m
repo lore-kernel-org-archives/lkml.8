@@ -2,132 +2,115 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295B9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30044C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BC1206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0B12072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="h1Zr6c+U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T4T7iRek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbgCLA4O (ORCPT
+        id S2387580AbgCLA53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:56:14 -0400
-Received: from mail-co1nam11on2048.outbound.protection.outlook.com ([40.107.220.48]:26730
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387404AbgCLA4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:56:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JnktPdPqhGmq+mTf8YWypPtEJ8QDBU6qItPqJZJP2ZO9jNVy8fScHpavq3kL0Vv3AJ7EHzjGqzmv43gSsBJtsmcwtsI4QFwO1US7NOgaf2G8f1SliWEmeWTS/+Ltac8TyDhQVUD4pZmYeWLS72kjbMp+VTFL5Qeq/eyjOgzquCbdIITRiz51FCH+MTs6kja1cuiul3PaIcw4blAKIHKA16bgGBATsIcnLGtE2RUY040o1vHv8wtJIT90BZrFYB8gnTYWs1OX57ZNKanQQn+bn5HYOr0CQK1GCzKlaMwiHgKzvRtzIXHsT3t9G0EipMXH8UWu0xmo7vX3sMjieo0PjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I1yW9YWezLSb77Gyj3ohrw8ymBJtQrxXvv5eCvZGvSE=;
- b=gnqN5NcIHNN6x40BrxjxbdQsYssHNfr/10mcd2F/tW0ZUxJe80ASvcal11GYGKCBgcAiKJZ3DnL5RN6C459qsjR19+HCrmMciHNmK/HJp35ECuhQsIWeM/AF//BFD1uj+eh1BfIouKjtDLaCZ+RpemE9qiO/Qd3SbERQdzw/ms1Z9VHSx1qlCMvCIcrEHiQrx4hNQnPnhABhAxC9aGoeeqk1ZXls7zUxC3LU7Nmpc71yx0BPEB13cRymW7lYoF+K0WKZRlf2/U46dI8H6NusKVVDcddsx2Vt/fDj/rjPq9d4EP7PeeU+W3zK7Z3DrMPqkxBS26al5ASNnKkPw21bgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Wed, 11 Mar 2020 20:57:29 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:47074 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387481AbgCLA53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 20:57:29 -0400
+Received: by mail-pf1-f201.google.com with SMTP id f75so2621918pfa.13
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I1yW9YWezLSb77Gyj3ohrw8ymBJtQrxXvv5eCvZGvSE=;
- b=h1Zr6c+UYeLu+7OGgDaiQaKd0pW1Dsxi3uuCLWm4Cb/fEwAB+BWPnCr01609ZVitJWNxSfmhaHe0bouAzNf5kYeSg/rjhqfKezJ/x7l9v0Mise79P6zncHFuaJTAmuobcBDzCYJASnDFrg/uvkLgOEDIk2KjAYGnGqd0V3w3seE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=aduggan@synaptics.com; 
-Received: from SN6PR03MB4144.namprd03.prod.outlook.com (2603:10b6:805:be::17)
- by SN6PR03MB4064.namprd03.prod.outlook.com (2603:10b6:805:b9::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Thu, 12 Mar
- 2020 00:56:10 +0000
-Received: from SN6PR03MB4144.namprd03.prod.outlook.com
- ([fe80::4027:d39:bb5:4662]) by SN6PR03MB4144.namprd03.prod.outlook.com
- ([fe80::4027:d39:bb5:4662%4]) with mapi id 15.20.2814.007; Thu, 12 Mar 2020
- 00:56:10 +0000
-From:   Andrew Duggan <aduggan@synaptics.com>
-To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Duggan <aduggan@synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Hollinsky <phollinsky@holtechnik.com>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-Subject: [PATCH] Input: synaptics-rmi4 - Do not set reduced reporting mode thresholds are not set by the driver
-Date:   Wed, 11 Mar 2020 17:55:49 -0700
-Message-Id: <20200312005549.29922-1-aduggan@synaptics.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR03CA0032.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::45) To SN6PR03MB4144.namprd03.prod.outlook.com
- (2603:10b6:805:be::17)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from noble.synaptics-inc.local (192.147.44.15) by BYAPR03CA0032.namprd03.prod.outlook.com (2603:10b6:a02:a8::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 12 Mar 2020 00:56:09 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [192.147.44.15]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6fc687e7-154d-4e84-2eb5-08d7c62027ab
-X-MS-TrafficTypeDiagnostic: SN6PR03MB4064:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR03MB406417B10E57115EF44C5634B2FD0@SN6PR03MB4064.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-Forefront-PRVS: 0340850FCD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39850400004)(136003)(396003)(366004)(346002)(376002)(199004)(6512007)(5660300002)(4326008)(26005)(956004)(66556008)(2906002)(66476007)(66946007)(6486002)(81166006)(36756003)(478600001)(6666004)(86362001)(8936002)(2616005)(52116002)(8676002)(81156014)(186003)(1076003)(54906003)(316002)(16526019)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR03MB4064;H:SN6PR03MB4144.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3i4Mgqol+P95HXrY4a3rOeUNGG8Xw/UrrV/8Wr8HtAiS8LdbaTsvQMcqGOsRyUow22Q1nxXM9zOydqGoy6aKsklq1TBK7/8fcn6yiccVBnAOqyXLT5D0hUCGSGyeABXpOcJjOt/B7zfKkTU116+t0yZtxe4FSMUXn6qxIYa4JzORRDV+r3BbX6c5nw5QaYg1ZFMMWrlB8xYWabMUrdlUNX1VyZONqYbJSJNXfyLEztAFLf10Pf2qwu6BKnKkd3DnjlDeR8jaHgwg6b7aK3Gij0pXt0qXa6a5eJp8YKQW8iHBOa/nFrYj0GH1wC2c5he7szRWfdbQwaL3SvnYlV0RuGdevsTuf+6CDAnzD3UEjEVKewFAuvSVP04dWN+akeJCq9U5lH5E/DqoeEdHTEumpkiEDWoFCKyxlvT0OnKyugbdJKXlV4DUUrw9lzPK9/ZX
-X-MS-Exchange-AntiSpam-MessageData: 2FDBqmU1XWheCWvXRarZk25BuQ3gB5sR5tqR/XfVgFD034047AjXqOQKArnIed8zjj7rX1ONf/4ma3KO/WiW1bh5D+y8z96aXwlPcO50G0whwqtKgjp3949fUVc+Ddi/SVWf1lvtFCRyJRj2PlL8Xw==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fc687e7-154d-4e84-2eb5-08d7c62027ab
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 00:56:10.6445
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ze2yTwnnRRn0tw+qMo9SuHuMKmJ6GC0qAt62mHUEX9F2bKzqKC+fI0gnvbiWatSDbmjVUlmC7r4PvRoB+edN/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB4064
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=sei44eoljO70BQTRmM/UvmF8MrB7eTx6LtWSPNoZXds=;
+        b=T4T7iRekar5ZIxwrvQxe3HvHCJpb2oLeUGHCNohdw8sqcT+F+yCqOpLBpmBLtwukB5
+         zXnW2C571C8qx/GVByfeMpQGiEjtzCaVS6MyjfOqOxsC/S1K5BahZAs60IZ0XNE1G2Hz
+         oWJaah+eorGWc/Gt+SV18LNHqaiiU7Ra/rQUiDyJz8YpOmpHQf881pLXWqWWTnrIG9xp
+         xaaCJrqGivEdS4NX+PJnxMUrZ2L9v0l/E/aR0fWIaps4HDYOx3CNbMtLQUXtRFM+pN3C
+         rwQ1cvvbDRLCYiycdpkjaQ4IDRN4XrCb0Z7EeC7sdHjyn/o6xQSZWmo2mqLHspas4qWW
+         mTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=sei44eoljO70BQTRmM/UvmF8MrB7eTx6LtWSPNoZXds=;
+        b=B3hwVcmGgdTMdEsmhPPPTMMH19rAvuwWTF8ZqrGo+MVwY3ORT1tWZx2RaK5qk0L/rE
+         lhPrfKOTmZnyFmNTrZo9dyMOYtkR6uWSjSPiFXdzd1iE9UH6k6B58MhfyfVsa6mrnVao
+         Xy0T2Xycw+TFp06ZLpP1nbHGD2XlHUuo9iKeQJ3US0NVBDN48APpJAerF/fzL6MAG/uV
+         SVE4YVeuHALXRLE74kDLtYZHsbAvy6TLC82fjoiF3KX5AtsSXjQCrKhoGfKYSPQFVQ6P
+         rtSZGxYk2tvM+19n910ehrqgfdRFD4/WmluXOBnCWbP8G2yiNfqd6xbK/hgh9oLPMJul
+         4kqQ==
+X-Gm-Message-State: ANhLgQ1AEZtfMc858Tw+BnTjSPLs+kRdE6X278E+p9mpbP2ph6rVtd0F
+        3Bdbc9Mbqdtz9sJfHHkVOiczErda6p1K
+X-Google-Smtp-Source: ADFU+vueKqfD5oH+ZMgo/VSjBEC/kZSY8+bu/uN24FhFc6J20lIsRGi+drzdDsHdvjfQ+t/HUa/T8WAxDlOn
+X-Received: by 2002:a17:90b:1989:: with SMTP id mv9mr1462161pjb.72.1583974647951;
+ Wed, 11 Mar 2020 17:57:27 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 17:57:17 -0700
+Message-Id: <20200312005722.48803-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v8 0/5] drm/i915: Support for integrated privacy screens
+From:   Rajat Jain <rajatja@google.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
+        <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
+        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
+        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous patch "c5ccf2ad3d33 (Input: synaptics-rmi4 - switch to
-reduced reporting mode)" enabled reduced reporting mode unintentionally
-on some devices, if the firmware was configured with default Delta X/Y
-threshold values. The result unintentionally degrade the performance of
-some touchpads.
+This patchset adds support for integrated privacy screen on some laptops
+using the ACPI methods to detect and control the feature.
 
-This patch checks to see that the driver is modifying the delta X/Y
-thresholds before modifying the reporting mode.
+Rajat Jain (5):
+  intel_acpi: Rename drm_dev local variable to dev
+  drm/connector: Add support for privacy-screen property
+  drm/i915: Lookup and attach ACPI device node for connectors
+  drm/i915: Add helper code for ACPI privacy screen
+  drm/i915: Enable support for integrated privacy screen
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
- drivers/input/rmi4/rmi_f11.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_atomic_uapi.c             |   4 +
+ drivers/gpu/drm/drm_connector.c               |  51 +++++
+ drivers/gpu/drm/i915/Makefile                 |   3 +-
+ drivers/gpu/drm/i915/display/intel_acpi.c     |  30 ++-
+ drivers/gpu/drm/i915/display/intel_atomic.c   |   2 +
+ drivers/gpu/drm/i915/display/intel_ddi.c      |   1 +
+ .../drm/i915/display/intel_display_types.h    |   5 +
+ drivers/gpu/drm/i915/display/intel_dp.c       |  48 ++++-
+ drivers/gpu/drm/i915/display/intel_dp.h       |   5 +
+ .../drm/i915/display/intel_privacy_screen.c   | 184 ++++++++++++++++++
+ .../drm/i915/display/intel_privacy_screen.h   |  27 +++
+ drivers/gpu/drm/i915/i915_drv.h               |   2 +
+ include/drm/drm_connector.h                   |  24 +++
+ 13 files changed, 382 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
+ create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
 
-diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
-index 6adea8a3e8fb..ffa39ab153f2 100644
---- a/drivers/input/rmi4/rmi_f11.c
-+++ b/drivers/input/rmi4/rmi_f11.c
-@@ -1203,8 +1203,8 @@ static int rmi_f11_initialize(struct rmi_function *fn)
- 	 * If distance threshold values are set, switch to reduced reporting
- 	 * mode so they actually get used by the controller.
- 	 */
--	if (ctrl->ctrl0_11[RMI_F11_DELTA_X_THRESHOLD] ||
--	    ctrl->ctrl0_11[RMI_F11_DELTA_Y_THRESHOLD]) {
-+	if (sensor->axis_align.delta_x_threshold ||
-+	    sensor->axis_align.delta_y_threshold) {
- 		ctrl->ctrl0_11[0] &= ~RMI_F11_REPORT_MODE_MASK;
- 		ctrl->ctrl0_11[0] |= RMI_F11_REPORT_MODE_REDUCED;
- 	}
 -- 
-2.20.1
+2.25.1.481.gfbce0eb801-goog
 
