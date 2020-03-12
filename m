@@ -2,106 +2,143 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73693C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88E2C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6E020716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF3D206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+UNAh6w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXGd+n5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgCLKMo (ORCPT
+        id S1726712AbgCLKNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:12:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39154 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgCLKMn (ORCPT
+        Thu, 12 Mar 2020 06:13:32 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43931 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725978AbgCLKNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:12:43 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w65so3030262pfb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g2ic8RCgE8xfXSotQsLJPMX+SIIxXdgAWghsG0UmqWY=;
-        b=G+UNAh6wj/c0SGz5GhPSr+VYq88055m5ZZtvU0lGNrZyPFoDBu4p2FqlJVbHL/0EUl
-         6ARFETg2dQqDIZvvCsZcC4vZgzQ/u3QoEqcHtqMHvJUDVrmr3IDXqXgtNF8Jk2zJj0Bo
-         SkAT9oTLszdsWdZwcJ1HgX6P1ICWSXNQdtu/iGNnBZyYFIPlEeqB33DuXHZ9T1e6nCNm
-         qsdslFvy+BKwlPpw7fWakLpmb321bPsUvyvoOvrkrCz7G/hpLnLamMC3W3UN4XnrgEoL
-         SJ/l+N9kwwd6BEVVF+n3HteQBjQY1arEZRxvnFSreA83IHR9Q9hU6IEvl6EZDs+yDaji
-         uUcg==
+        Thu, 12 Mar 2020 06:13:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584008010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ejjCb6q7RFGex98QgUcKFdkFFuRhyJT6HKlrMbk1V7o=;
+        b=NXGd+n5FipH+PEq3N9pHJqE9ufgennMjqzYqRvSPUcQcVsAEjMwBh4h2EVxgDwaTr1in6E
+        oILGQ5f47lETu7LrHS8fv4O3P8iBOFLbSJtPottSPDLNddAFbu6KvL/26OM4tJRJWs8Dh8
+        LqpZ227xH1MiDMZP7zblZE5BVOPjrd8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-8riPDHsBPZ2kGdMZ0nqG3Q-1; Thu, 12 Mar 2020 06:13:28 -0400
+X-MC-Unique: 8riPDHsBPZ2kGdMZ0nqG3Q-1
+Received: by mail-ed1-f70.google.com with SMTP id ck15so4421482edb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:13:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g2ic8RCgE8xfXSotQsLJPMX+SIIxXdgAWghsG0UmqWY=;
-        b=NZTFZc6OER7eOMq9FXH0TVXd+1Dmlgs3sqtWVyrEj1STMvCHXqxSfum1Dlm7FWv62g
-         31RsNrMbbNeJLg5IEbpnu3ys13QAOGTvq7McfpJc+SWY0ypWkGPvW0WerzDLA+xkJMEo
-         N/6dHZofoBLWUD+yybUWdrziflqW0GYBmf98A/zwy3g6ND4q7/NkoOMHxT0H7sPDq4eE
-         DJR6hU0JQIOMTLim+fhYjzfy5kHPBPYvaryOCPyjazDAgoEj9KC+Ydva1UdV44ATMq9q
-         ZN6c7XzRhKiFBv+YWlD26JXhIklwNIbw2FcB6Kgrbsc/AMYF+NPcTi6p7QWkXbIR/yoK
-         /ILQ==
-X-Gm-Message-State: ANhLgQ0JIBtjzTMH55Tt34z6hnjCm59v1XFoCCpDQTkwy5YCzxKHbUCw
-        6RnbLKjBDnccoBtvfiiE6yLueg==
-X-Google-Smtp-Source: ADFU+vsNpY0Hm54zBz9SHVmV3vmk513jLZGv0nsBMg1SxW2mhGr4zvQGzyTXRNQMCzGHjdW03YDzuA==
-X-Received: by 2002:a63:b216:: with SMTP id x22mr6869446pge.198.1584007960467;
-        Thu, 12 Mar 2020 03:12:40 -0700 (PDT)
-Received: from localhost ([122.171.122.128])
-        by smtp.gmail.com with ESMTPSA id k5sm8173410pju.29.2020.03.12.03.12.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Mar 2020 03:12:39 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 15:42:32 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Sricharan R <sricharan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilia Lin <ilia.lin@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: qcom: Add support for krait based socs
-Message-ID: <20200312101232.fmjs3zjl3gud5myh@vireshk-i7>
-References: <20200219205546.6800-1-ansuelsmth@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ejjCb6q7RFGex98QgUcKFdkFFuRhyJT6HKlrMbk1V7o=;
+        b=fJFfDTYuLHUT8Z47C1oVbXm/Q52pmsHFAtHU6/imUu3vIuGAGfTfbsxpWiyFcieNTO
+         kgk6oS72sIUSjh7Mrbk+OA80dXy+RuHYUa84sBgQ+P3M+kBWVE5pYdsIfNfaPJ09XMho
+         DwiQ2WPWGGunTD5LhVcXeEllqGTOVhQzY7N3QKvXRlBycm/pTgrf7e2zvNEPa2+ZEOVU
+         1fjx5grebefdSR4W8vLwgQ9j5iE9EnWCVLlm/mefGZmVnKpmtOwu35LvUVDnGv02XpJt
+         SrrzYOeJieSJQW+ChULJ5V5dQ8bBKphcR1JF1wKH86Kdx3/JevT/wDlnIw7VuRhJQuF0
+         ndkA==
+X-Gm-Message-State: ANhLgQ32y8JioTSwDK566PnptFpe60OzNEgdEjF9ttLDHkC5qMVWsXqY
+        RzdF3zeKSKhRBiMlTCn/JpjeAAkC1L7NToScsz7+SqmGj8eCG1F7eeAGdZ8b0ZGrj7vDtRWdrxF
+        GcLx220m/6VTEAN0JqRX2Z1gaGGIpvBX5OI+5XKUW
+X-Received: by 2002:a17:906:52c9:: with SMTP id w9mr6171796ejn.70.1584008007539;
+        Thu, 12 Mar 2020 03:13:27 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvpEEsl+KDmI2d5YoafqKJXuS1jFr+++rr3fY/v2Mogk34K+lvAjJl+ymSHsNqgBDuc+bVz8D/6j6haGwk/nZA=
+X-Received: by 2002:a17:906:52c9:: with SMTP id w9mr6171780ejn.70.1584008007278;
+ Thu, 12 Mar 2020 03:13:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219205546.6800-1-ansuelsmth@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200312135457.6891749e@canb.auug.org.au>
+In-Reply-To: <20200312135457.6891749e@canb.auug.org.au>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 12 Mar 2020 11:12:51 +0100
+Message-ID: <CAGnkfhztbmpP0=KT-iNbkUGKerhX04ENFsexA4_2cP_RUs0Png@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Coly Li <colyli@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-02-20, 21:55, Ansuel Smith wrote:
-> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
-> that has KRAIT processors the voltage/current value of each OPP
-> varies based on the silicon variant in use.
-> 
-> The required OPP related data is determined based on
-> the efuse value. This is similar to the existing code for
-> kryo cores. So adding support for krait cores here.
-> 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/opp/qcom-nvmem-cpufreq.txt       |   3 +-
->  drivers/cpufreq/Kconfig.arm                   |   2 +-
->  drivers/cpufreq/cpufreq-dt-platdev.c          |   5 +
->  drivers/cpufreq/qcom-cpufreq-nvmem.c          | 181 ++++++++++++++++--
->  4 files changed, 173 insertions(+), 18 deletions(-)
+On Thu, Mar 12, 2020 at 3:55 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the block tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> In file included from fs/erofs/xattr.h:10,
+>                  from fs/erofs/inode.c:7:
+> fs/erofs/inode.c: In function 'erofs_read_inode':
+> fs/erofs/internal.h:197:31: error: 'PAGE_SECTORS_SHIFT' undeclared (first use in this function); did you mean 'PA_SECTION_SHIFT'?
+>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>       |                               ^~~~~~~~~~~~~~~~~~
+> fs/erofs/inode.c:122:30: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>   122 |   inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+>       |                              ^~~~~~~~~~~~~~~~~~~~~
+> fs/erofs/internal.h:197:31: note: each undeclared identifier is reported only once for each function it appears in
+>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>       |                               ^~~~~~~~~~~~~~~~~~
+> fs/erofs/inode.c:122:30: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>   122 |   inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK;
+>       |                              ^~~~~~~~~~~~~~~~~~~~~
+> In file included from fs/erofs/data.c:7:
+> fs/erofs/data.c: In function 'erofs_read_raw_page':
+> fs/erofs/internal.h:197:31: error: 'PAGE_SECTORS_SHIFT' undeclared (first use in this function); did you mean 'PA_SECTION_SHIFT'?
+>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>       |                               ^~~~~~~~~~~~~~~~~~
+> fs/erofs/data.c:226:4: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>   226 |    LOG_SECTORS_PER_BLOCK;
+>       |    ^~~~~~~~~~~~~~~~~~~~~
+> fs/erofs/internal.h:197:31: note: each undeclared identifier is reported only once for each function it appears in
+>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>       |                               ^~~~~~~~~~~~~~~~~~
+> fs/erofs/data.c:226:4: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>   226 |    LOG_SECTORS_PER_BLOCK;
+>       |    ^~~~~~~~~~~~~~~~~~~~~
+> fs/erofs/data.c: In function 'erofs_bmap':
+> fs/erofs/internal.h:197:31: error: 'PAGE_SECTORS_SHIFT' undeclared (first use in this function); did you mean 'PA_SECTION_SHIFT'?
+>   197 | #define LOG_SECTORS_PER_BLOCK PAGE_SECTORS_SHIFT
+>       |                               ^~~~~~~~~~~~~~~~~~
+> fs/erofs/data.c:351:16: note: in expansion of macro 'LOG_SECTORS_PER_BLOCK'
+>   351 |   if (block >> LOG_SECTORS_PER_BLOCK >= blks)
+>       |                ^~~~~~~~~~~~~~~~~~~~~
+>
+> Caused by commit
+>
+>   61c7d3d5e015 ("block: refactor duplicated macros")
+>
+> I have used the block tree from next-20200311 for today.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-Can someone from Qcom team review this ?
+Hi,
 
--- 
-viresh
+I was building a kernel without erofs. Just including
+include/linux/blkdev.h will fix it, should I amend the
+patch or send a fix?
+
+Cheers,
+
+
+--
+Matteo Croce
+per aspera ad upstream
+
