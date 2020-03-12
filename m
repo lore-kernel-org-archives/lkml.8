@@ -2,129 +2,110 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F146EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A776C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E009A20736
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFB520691
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387852AbgCLFiQ (ORCPT
+        id S2387855AbgCLFjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:38:16 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:31661 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387758AbgCLFiQ (ORCPT
+        Thu, 12 Mar 2020 01:39:19 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42962 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387758AbgCLFjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:38:16 -0400
-X-IronPort-AV: E=Sophos;i="5.70,543,1574092800"; 
-   d="scan'208";a="86204183"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 12 Mar 2020 13:38:09 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id AEC43406AB15;
-        Thu, 12 Mar 2020 13:28:07 +0800 (CST)
-Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Thu, 12 Mar 2020 13:38:06 +0800
-Received: from TEST.g08.fujitsu.local (10.167.226.147) by
- G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1395.4 via Frontend Transport; Thu, 12 Mar 2020 13:38:05 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-Subject: [RFC PATCH] x86/apic: Drop superfluous apic_phys
-Date:   Thu, 12 Mar 2020 13:38:04 +0800
-Message-ID: <20200312053804.2252-1-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.1
+        Thu, 12 Mar 2020 01:39:19 -0400
+Received: by mail-ed1-f66.google.com with SMTP id n18so5857523edw.9;
+        Wed, 11 Mar 2020 22:39:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GyEctpegj5STeTjjZ2lmve0OwmDxyLCYf/jINEN4q7Q=;
+        b=L4YO4cPY0MZt2OJG1Eml024G+aab7lkvuJCqVkMfIBN3Pa2GQ11CLyDA7PUMC1C/s5
+         8tgeqh1Jpb/Xn2VYMZ0rwp+4UDaqVv15VqoDSKzz3RL4pWeXyBiVQcwiejzHawII9QLi
+         vCn7MVOpYNtuQkpUBK1pR96QXx5LobjGnykWGkbOCguxNt6d7O5Uho16eF+oGUk+LY/D
+         W+ZgTioirRggWbhjQpsryhr8Hp3805dejQjgmPLAyigDy6FE26RWlVftZhW7XPyNUbpW
+         xro2hE+Iu8F6w+Vs6lFhzwKh87JHQHl/XrrZk0E/crUtkR5Xg7Qqbi5Kv68MKAlwgn+J
+         c4/A==
+X-Gm-Message-State: ANhLgQ1FWznOEjlNcDlmf7jyP948YGU0OzMbxmuHApK8ti6N9lCm812e
+        lEGStaX1VmFBx5VMqIvHIIHDEmteH54=
+X-Google-Smtp-Source: ADFU+vsVx5bfqJUMOm3tua8s6I123OBOrui2RoI8jFzntkGLTVb+v0zkhJk8eRdaj510XksASOuizA==
+X-Received: by 2002:a17:906:130d:: with SMTP id w13mr5340194ejb.114.1583991556925;
+        Wed, 11 Mar 2020 22:39:16 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id z19sm2683472eja.53.2020.03.11.22.39.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 22:39:16 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 6so4677484wmi.5;
+        Wed, 11 Mar 2020 22:39:16 -0700 (PDT)
+X-Received: by 2002:a1c:41d6:: with SMTP id o205mr2669040wma.122.1583991556192;
+ Wed, 11 Mar 2020 22:39:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: AEC43406AB15.A9AB4
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+In-Reply-To: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Thu, 12 Mar 2020 13:39:04 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65mTzDo3hBWydQtEfVs1hnw7URWA4HCWRfs3if5MeadtQ@mail.gmail.com>
+Message-ID: <CAGb2v65mTzDo3hBWydQtEfVs1hnw7URWA4HCWRfs3if5MeadtQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 0/3] crypto: sun4i-ss: fix SHA1 on A33 SecuritySystem
+To:     LABBE Corentin <clabbe.montjoie@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-crypto@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-apic_phys seems having totally the same meaning as mp_lapic_addr, except it is
-static, replace it.
+On Wed, Nov 20, 2019 at 11:28 PM Corentin Labbe
+<clabbe.montjoie@gmail.com> wrote:
+>
+> Thanks to Igor Pecovnik, I have now in my kernelCI lab, a sun8i-a33-olinuxino.
+> Strange behavour, crypto selftests was failling but only for SHA1 on
+> this A33 SoC.
+>
+> This is due to the A33 SS having a difference with all other SS, it give SHA1 digest directly in BE.
+> This serie handle this difference.
+>
+> Changes since v1:
+> - removed compatible fallback
+>
+> Corentin Labbe (3):
+>   dt-bindings: crypto: add new compatible for A33 SS
+>   ARM: dts: sun8i: a33: add the new SS compatible
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
-Not sure if there is still any corner case, but it boots fine.
+Merged these two as fixes for v5.6, as the driver changes made it in v5.6-rc1.
+Not sure if they will be accepted though.
 
- arch/x86/kernel/apic/apic.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ChenYu
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 5f973fed3c9f..5b7b59951421 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -199,8 +199,6 @@ unsigned int lapic_timer_period = 0;
- 
- static void apic_pm_activate(void);
- 
--static unsigned long apic_phys __ro_after_init;
--
- /*
-  * Get the LAPIC version
-  */
-@@ -1170,7 +1168,7 @@ void clear_local_APIC(void)
- 	u32 v;
- 
- 	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
-+	if (!x2apic_mode && !mp_lapic_addr)
- 		return;
- 
- 	maxlvt = lapic_get_maxlvt();
-@@ -1261,7 +1259,7 @@ void apic_soft_disable(void)
- void disable_local_APIC(void)
- {
- 	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
-+	if (!x2apic_mode && !mp_lapic_addr)
- 		return;
- 
- 	apic_soft_disable();
-@@ -2111,14 +2109,12 @@ void __init init_apic_mappings(void)
- 		pr_info("APIC: disable apic facility\n");
- 		apic_disable();
- 	} else {
--		apic_phys = mp_lapic_addr;
--
- 		/*
- 		 * If the system has ACPI MADT tables or MP info, the LAPIC
- 		 * address is already registered.
- 		 */
- 		if (!acpi_lapic && !smp_found_config)
--			register_lapic_address(apic_phys);
-+			register_lapic_address(mp_lapic_addr);
- 	}
- 
- 	/*
-@@ -2874,11 +2870,11 @@ early_param("apic", apic_set_verbosity);
- 
- static int __init lapic_insert_resource(void)
- {
--	if (!apic_phys)
-+	if (!mp_lapic_addr)
- 		return -1;
- 
- 	/* Put local APIC into the resource map. */
--	lapic_resource.start = apic_phys;
-+	lapic_resource.start = mp_lapic_addr;
- 	lapic_resource.end = lapic_resource.start + PAGE_SIZE - 1;
- 	insert_resource(&iomem_resource, &lapic_resource);
- 
--- 
-2.21.1
-
-
-
+>   crypto: sun4i-ss: add the A33 variant of SS
+>
+>  .../crypto/allwinner,sun4i-a10-crypto.yaml    |  2 ++
+>  arch/arm/boot/dts/sun8i-a33.dtsi              |  2 +-
+>  .../crypto/allwinner/sun4i-ss/sun4i-ss-core.c | 22 ++++++++++++++++++-
+>  .../crypto/allwinner/sun4i-ss/sun4i-ss-hash.c |  5 ++++-
+>  drivers/crypto/allwinner/sun4i-ss/sun4i-ss.h  |  9 ++++++++
+>  5 files changed, 37 insertions(+), 3 deletions(-)
+>
+> --
+> 2.23.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191120152833.20443-1-clabbe.montjoie%40gmail.com.
