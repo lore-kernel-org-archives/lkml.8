@@ -4,248 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08CAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF5EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98383206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68095206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 11:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCLLkC (ORCPT
+        id S1726921AbgCLLlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:40:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:60922 "EHLO foss.arm.com"
+        Thu, 12 Mar 2020 07:41:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:60960 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgCLLkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:40:02 -0400
+        id S1725268AbgCLLlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 07:41:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67AA031B;
-        Thu, 12 Mar 2020 04:40:01 -0700 (PDT)
-Received: from [10.37.12.166] (unknown [10.37.12.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7158A3F67D;
-        Thu, 12 Mar 2020 04:39:58 -0700 (PDT)
-Subject: Re: [PATCH v2] thermal: devfreq_cooling: Use PM QoS to set frequency
- limits
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Eduardo Valentin <edubezval@gmail.com>
-References: <CGME20200116231233epcas1p363ab7e3ad2966d0ae7bac11e33aa6b83@epcas1p3.samsung.com>
- <20200116151219.v2.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
- <d73e67eb-4f2d-dc4b-c718-929a964d3640@samsung.com>
- <20200312003519.GD144492@google.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <f09ad5b3-c997-187a-d637-cc7cdcb282f9@arm.com>
-Date:   Thu, 12 Mar 2020 11:39:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ACA331B;
+        Thu, 12 Mar 2020 04:41:35 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11AB33F67D;
+        Thu, 12 Mar 2020 04:41:33 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 11:41:31 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/14] net: axienet: Add mii-tool support
+Message-ID: <20200312114131.070d9a1c@donnerap.cambridge.arm.com>
+In-Reply-To: <CH2PR02MB700089E502A8C146D71C67C8C7350@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+ <20200110115415.75683-10-andre.przywara@arm.com>
+ <CH2PR02MB700089E502A8C146D71C67C8C7350@CH2PR02MB7000.namprd02.prod.outlook.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200312003519.GD144492@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Mon, 13 Jan 2020 06:12:10 +0000
+Radhey Shyam Pandey <radheys@xilinx.com> wrote:
 
-I just saw this email below the patch. I wasn't aware that you
-are working on this. I will have to update my changes...
+Hi,
 
-It looks good to me.
-Unfortunately, it does not apply on top of Amit's commit
-1b5cb9570670a6277cc0 thermal: devfreq_cooling: Appease the kernel-doc deity
+(sorry, forgot to send this out before posting v2)
 
-Could you check this?
-
-Other then that
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Regards,
-Lukasz
-
-On 3/12/20 12:35 AM, Matthias Kaehlcke wrote:
-> Is any further action needed from my side or can this land?
+> > -----Original Message-----
+> > From: Andre Przywara <andre.przywara@arm.com>
+> > Sent: Friday, January 10, 2020 5:24 PM
+> > To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> > <radheys@xilinx.com>
+> > Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> > <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: [PATCH 09/14] net: axienet: Add mii-tool support
+> > 
+> > mii-tool is useful for debugging, and all it requires to work is to wire
+> > up the ioctl ops function pointer.
+> > Add this to the axienet driver to enable mii-tool.
+> > 
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > index 7a747345e98e..64f799f3d248 100644
+> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > @@ -1152,6 +1152,16 @@ static void axienet_poll_controller(struct net_device
+> > *ndev)
+> >  }
+> >  #endif
+> > 
+> > +static int axienet_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+> > +{
+> > +	struct axienet_local *lp = netdev_priv(dev);
+> > +
+> > +	if (!netif_running(dev))
+> > +		return -EINVAL;  
 > 
-> Thanks
+> I think phy ioctl should be allowed even if the device is not up. 
+> Or is there any specific reason for keeping it?
+
+I found that some of the drivers check this (macb, stmmac), while others (dpaa2, mvneta, mvpp2, mtk_eth) don't. I don't know the reasons for that, so I play safe here.
+Happy to change this if someone provides some rationale.
+
+Cheers,
+Andre.
+
 > 
-> Matthias
+> > +
+> > +	return phylink_mii_ioctl(lp->phylink, rq, cmd);
+> > +}
+> > +
+> >  static const struct net_device_ops axienet_netdev_ops = {
+> >  	.ndo_open = axienet_open,
+> >  	.ndo_stop = axienet_stop,
+> > @@ -1159,6 +1169,7 @@ static const struct net_device_ops
+> > axienet_netdev_ops = {
+> >  	.ndo_change_mtu	= axienet_change_mtu,
+> >  	.ndo_set_mac_address = netdev_set_mac_address,
+> >  	.ndo_validate_addr = eth_validate_addr,
+> > +	.ndo_do_ioctl = axienet_ioctl,
+> >  	.ndo_set_rx_mode = axienet_set_multicast_list,
+> >  #ifdef CONFIG_NET_POLL_CONTROLLER
+> >  	.ndo_poll_controller = axienet_poll_controller,
+> > --
+> > 2.17.1  
 > 
-> On Fri, Jan 17, 2020 at 02:22:02PM +0900, Chanwoo Choi wrote:
->> On 1/17/20 8:12 AM, Matthias Kaehlcke wrote:
->>> Now that devfreq supports limiting the frequency range of a device
->>> through PM QoS make use of it instead of disabling OPPs that should
->>> not be used.
->>>
->>> The switch from disabling OPPs to PM QoS introduces a subtle behavioral
->>> change in case of conflicting requests (min > max): PM QoS gives
->>> precedence to the MIN_FREQUENCY request, while higher OPPs disabled
->>> with dev_pm_opp_disable() would override MIN_FREQUENCY.
->>>
->>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>> ---
->>>
->>> Changes in v2:
->>> - added documentation for 'req_max_freq'
->>> - fixed jumps in of_devfreq_cooling_register_power() unwind
->>> - added comment about behavioral change to the commit message
->>>
->>>   drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
->>>   1 file changed, 23 insertions(+), 47 deletions(-)
->>>
->>> diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
->>> index ef59256887ff63..cbbaf5bc425d1a 100644
->>> --- a/drivers/thermal/devfreq_cooling.c
->>> +++ b/drivers/thermal/devfreq_cooling.c
->>> @@ -24,11 +24,13 @@
->>>   #include <linux/idr.h>
->>>   #include <linux/slab.h>
->>>   #include <linux/pm_opp.h>
->>> +#include <linux/pm_qos.h>
->>>   #include <linux/thermal.h>
->>>   
->>>   #include <trace/events/thermal.h>
->>>   
->>> -#define SCALE_ERROR_MITIGATION 100
->>> +#define HZ_PER_KHZ		1000
->>> +#define SCALE_ERROR_MITIGATION	100
->>>   
->>>   static DEFINE_IDA(devfreq_ida);
->>>   
->>> @@ -53,6 +55,8 @@ static DEFINE_IDA(devfreq_ida);
->>>    *		'utilization' (which is	'busy_time / 'total_time').
->>>    *		The 'res_util' range is from 100 to (power_table[state] * 100)
->>>    *		for the corresponding 'state'.
->>> + * @req_max_freq:	PM QoS request for limiting the maximum frequency
->>> + *			of the devfreq device.
->>>    */
->>>   struct devfreq_cooling_device {
->>>   	int id;
->>> @@ -65,49 +69,9 @@ struct devfreq_cooling_device {
->>>   	struct devfreq_cooling_power *power_ops;
->>>   	u32 res_util;
->>>   	int capped_state;
->>> +	struct dev_pm_qos_request req_max_freq;
->>>   };
->>>   
->>> -/**
->>> - * partition_enable_opps() - disable all opps above a given state
->>> - * @dfc:	Pointer to devfreq we are operating on
->>> - * @cdev_state:	cooling device state we're setting
->>> - *
->>> - * Go through the OPPs of the device, enabling all OPPs until
->>> - * @cdev_state and disabling those frequencies above it.
->>> - */
->>> -static int partition_enable_opps(struct devfreq_cooling_device *dfc,
->>> -				 unsigned long cdev_state)
->>> -{
->>> -	int i;
->>> -	struct device *dev = dfc->devfreq->dev.parent;
->>> -
->>> -	for (i = 0; i < dfc->freq_table_size; i++) {
->>> -		struct dev_pm_opp *opp;
->>> -		int ret = 0;
->>> -		unsigned int freq = dfc->freq_table[i];
->>> -		bool want_enable = i >= cdev_state ? true : false;
->>> -
->>> -		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
->>> -
->>> -		if (PTR_ERR(opp) == -ERANGE)
->>> -			continue;
->>> -		else if (IS_ERR(opp))
->>> -			return PTR_ERR(opp);
->>> -
->>> -		dev_pm_opp_put(opp);
->>> -
->>> -		if (want_enable)
->>> -			ret = dev_pm_opp_enable(dev, freq);
->>> -		else
->>> -			ret = dev_pm_opp_disable(dev, freq);
->>> -
->>> -		if (ret)
->>> -			return ret;
->>> -	}
->>> -
->>> -	return 0;
->>> -}
->>> -
->>>   static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
->>>   					 unsigned long *state)
->>>   {
->>> @@ -134,7 +98,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
->>>   	struct devfreq_cooling_device *dfc = cdev->devdata;
->>>   	struct devfreq *df = dfc->devfreq;
->>>   	struct device *dev = df->dev.parent;
->>> -	int ret;
->>> +	unsigned long freq;
->>>   
->>>   	if (state == dfc->cooling_state)
->>>   		return 0;
->>> @@ -144,9 +108,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
->>>   	if (state >= dfc->freq_table_size)
->>>   		return -EINVAL;
->>>   
->>> -	ret = partition_enable_opps(dfc, state);
->>> -	if (ret)
->>> -		return ret;
->>> +	freq = dfc->freq_table[state];
->>> +
->>> +	dev_pm_qos_update_request(&dfc->req_max_freq,
->>> +				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
->>>   
->>>   	dfc->cooling_state = state;
->>>   
->>> @@ -529,9 +494,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
->>>   	if (err)
->>>   		goto free_dfc;
->>>   
->>> -	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
->>> +	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
->>> +				     DEV_PM_QOS_MAX_FREQUENCY,
->>> +				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
->>>   	if (err < 0)
->>>   		goto free_tables;
->>> +
->>> +	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
->>> +	if (err < 0)
->>> +		goto remove_qos_req;
->>>   	dfc->id = err;
->>>   
->>>   	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
->>> @@ -552,6 +523,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
->>>   
->>>   release_ida:
->>>   	ida_simple_remove(&devfreq_ida, dfc->id);
->>> +
->>> +remove_qos_req:
->>> +	dev_pm_qos_remove_request(&dfc->req_max_freq);
->>> +
->>>   free_tables:
->>>   	kfree(dfc->power_table);
->>>   	kfree(dfc->freq_table);
->>> @@ -600,6 +575,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
->>>   
->>>   	thermal_cooling_device_unregister(dfc->cdev);
->>>   	ida_simple_remove(&devfreq_ida, dfc->id);
->>> +	dev_pm_qos_remove_request(&dfc->req_max_freq);
->>>   	kfree(dfc->power_table);
->>>   	kfree(dfc->freq_table);
->>>   
->>>
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>
->> -- 
->> Best Regards,
->> Chanwoo Choi
->> Samsung Electronics
+
