@@ -2,94 +2,91 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30F3C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09906C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74D82074E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n2xdJFi9"
+	by mail.kernel.org (Postfix) with ESMTP id 29AF52074E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 03:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbgCLDMC (ORCPT
+        id S2387718AbgCLDMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:12:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39320 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387453AbgCLDMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:12:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C3Bp2g146961;
-        Thu, 12 Mar 2020 03:11:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=OYSuTOTjcPPFisULBlKET82iKgFLW3T6hyi+6amkn/g=;
- b=n2xdJFi95ly0jcbHuXT/wIozg0BWQraJIdgxNCOi1DY8qhoBp7LWFq9R8GXAk4Yyf1yd
- 3KiBbk3yBCPyakxAFz81RKKyYLwQk5cFjsHqjqYrsKseiSXbLWBWEudZ43sULoVsJElW
- WZIDYBy1hrQd1Z/3bty2nbS33LqbzG7ZtT8tIQOGBUt2TDHZ0Uy0irJ2T4vaBt+hwB3o
- j/xwavaqG3bDyQxmP3iV+CSY2rTJlTPACIZY3G4oq9dZFJ/vMI5eygkf9HznEKbY7hOa
- 0GYCkn/eKCHAqE/wRfsWzy/PKXmR9nVVLvSK7c9Xs1ggx9lJlUN7hTGBm6h7MxjWd3yY pA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2ym31uq4j3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 03:11:51 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C38Wg8114916;
-        Thu, 12 Mar 2020 03:11:51 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yp8qy921m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 03:11:51 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02C3BoOg023419;
-        Thu, 12 Mar 2020 03:11:50 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Mar 2020 20:11:49 -0700
-To:     John Garry <john.garry@huawei.com>
-Cc:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, Luo Jiaxing <luojiaxing@huawei.com>
-Subject: Re: [PATCH] scsi: hisi_sas: Use dev_err() in read_iost_itct_cache_v3_hw()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1583940144-230800-1-git-send-email-john.garry@huawei.com>
-Date:   Wed, 11 Mar 2020 23:11:47 -0400
-In-Reply-To: <1583940144-230800-1-git-send-email-john.garry@huawei.com> (John
-        Garry's message of "Wed, 11 Mar 2020 23:22:24 +0800")
-Message-ID: <yq1sgie9si4.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 11 Mar 2020 23:12:14 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:56808 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387453AbgCLDMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 23:12:14 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jCEG9-0001ok-N0; Thu, 12 Mar 2020 14:11:46 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Mar 2020 14:11:45 +1100
+Date:   Thu, 12 Mar 2020 14:11:45 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, jdike@addtoit.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, miguel.ojeda.sandonis@gmail.com,
+        willy@haproxy.com, ksenija.stanojevic@gmail.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, mpm@selenic.com,
+        jonathan@buzzard.org.uk, benh@kernel.crashing.org,
+        davem@davemloft.net, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com
+Subject: Re: [PATCH v2 1/2] misc: cleanup minor number definitions in c file
+ into miscdevice.h
+Message-ID: <20200312031145.GA19920@gondor.apana.org.au>
+References: <20200311071654.335-1-zhenzhong.duan@gmail.com>
+ <20200311071654.335-2-zhenzhong.duan@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=798
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003120014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxlogscore=875 mlxscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003120014
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311071654.335-2-zhenzhong.duan@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 11, 2020 at 03:16:53PM +0800, Zhenzhong Duan wrote:
+> HWRNG_MINOR and RNG_MISCDEV_MINOR are duplicate definitions, use
+> unified HWRNG_MINOR instead and moved into miscdevice.h
+> 
+> ANSLCD_MINOR and LCD_MINOR are duplicate definitions, use unified
+> LCD_MINOR instead and moved into miscdevice.h
+> 
+> MISCDEV_MINOR is renamed to PXA3XX_GCU_MINOR and moved into
+> miscdevice.h
+> 
+> Other definitions are just moved without any change.
+> 
+> Link: https://lore.kernel.org/lkml/20200120221323.GJ15860@mit.edu/t/
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Build-tested-by: Willy TARREAU <wtarreau@haproxy.com>
+> Build-tested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  arch/um/drivers/random.c         |  4 +---
+>  drivers/auxdisplay/charlcd.c     |  2 --
+>  drivers/auxdisplay/panel.c       |  2 --
+>  drivers/char/applicom.c          |  1 -
+>  drivers/char/nwbutton.h          |  1 -
+>  drivers/char/toshiba.c           |  2 --
+>  drivers/macintosh/ans-lcd.c      |  2 +-
+>  drivers/macintosh/ans-lcd.h      |  2 --
+>  drivers/macintosh/via-pmu.c      |  3 ---
+>  drivers/sbus/char/envctrl.c      |  2 --
+>  drivers/sbus/char/uctrl.c        |  2 --
+>  drivers/video/fbdev/pxa3xx-gcu.c |  7 +++----
+>  include/linux/miscdevice.h       | 10 ++++++++++
+>  kernel/power/user.c              |  2 --
+>  14 files changed, 15 insertions(+), 27 deletions(-)
 
-John,
-
-> The print of pr_err() does not come with device information, so
-> replace it with dev_err(). Also improve the grammar in the message.
-
-Applied to 5.7/scsi-queue, thanks!
-
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
