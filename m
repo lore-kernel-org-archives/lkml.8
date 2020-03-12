@@ -2,142 +2,127 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A234EC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C50BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878C4206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4526A206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 17:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgCLRxI (ORCPT
+        id S1726526AbgCLRzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:53:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31843 "EHLO mga11.intel.com"
+        Thu, 12 Mar 2020 13:55:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:63361 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbgCLRxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:53:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1725268AbgCLRy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:54:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 10:53:07 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 10:54:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
-   d="scan'208";a="354183796"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Mar 2020 10:53:02 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jCS11-00947a-BG; Thu, 12 Mar 2020 19:53:03 +0200
-Date:   Thu, 12 Mar 2020 19:53:03 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, fabrice.gasnier@st.com,
-        beniamin.bia@analog.com, linus.walleij@linaro.org,
-        u.kleine-koenig@pengutronix.de, fabrizio.castro@bp.renesas.com,
-        info@metux.net, hancock@sedsystems.ca, gregory.clement@bootlin.com,
-        renatogeh@gmail.com, plr.vincent@gmail.com,
-        miquel.raynal@bootlin.com, marcelo.schmitt1@gmail.com,
-        paul@crapouillou.net, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 3/5] iio: adc: mp2629: Add support for mp2629 ADC driver
-Message-ID: <20200312175303.GK1922688@smile.fi.intel.com>
-References: <20200312172649.13702-1-sravanhome@gmail.com>
- <20200312172649.13702-4-sravanhome@gmail.com>
+   d="scan'208";a="442138934"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Mar 2020 10:54:56 -0700
+Received: from [10.255.182.54] (abudanko-mobl.ccr.corp.intel.com [10.255.182.54])
+        by linux.intel.com (Postfix) with ESMTP id ACCEF58010D;
+        Thu, 12 Mar 2020 10:54:51 -0700 (PDT)
+Subject: Re: [PATCH v1] perf record: fix binding of AIO user space buffers to
+ nodes
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <c7ea8ffe-1357-bf9e-3a89-1da1d8e9b75b@linux.intel.com>
+ <20200312143152.GA28601@kernel.org>
+ <2e01e17a-962d-571b-4407-70aa270cec6a@linux.intel.com>
+ <20200312171214.GD12036@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b2f46add-51d3-0cf0-3acf-985e9fbcde47@linux.intel.com>
+Date:   Thu, 12 Mar 2020 20:54:48 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312172649.13702-4-sravanhome@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200312171214.GD12036@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:26:47PM +0100, Saravanan Sekar wrote:
-> Add support for 8-bit resolution ADC readings for input power
-> supply and battery charging measurement. Provides voltage, current
-> readings to mp2629 power supply driver.
-
-...
-
-> +	struct mp2629_info *info = adc_info->info;
-> +	unsigned int rval;
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = mp2629_get_value(info->regmap, chan->address, &rval);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (chan->address == MP2629_INPUT_VOLT)
-> +			rval &= 0x7f;
-> +		*val = rval;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->channel) {
-> +		case MP2629_BATT_VOLT:
-> +		case MP2629_SYSTEM_VOLT:
-> +			*val = 20;
-> +			return IIO_VAL_INT;
-> +
-> +		case MP2629_INPUT_VOLT:
-> +			*val = 60;
-> +			return IIO_VAL_INT;
-> +
-> +		case MP2629_BATT_CURRENT:
-> +			*val = 175;
-> +			*val2 = 10;
-> +			return IIO_VAL_FRACTIONAL;
-> +
-> +		case MP2629_INPUT_CURRENT:
-> +			*val = 133;
-> +			*val2 = 10;
-> +			return IIO_VAL_FRACTIONAL;
-> +		}
-> +		break;
-> +
-> +	default:
-
-> +		ret = -EINVAL;
-> +		break;
-
-return -EINVAL;
-
-> +	}
-> +
-
-> +	return ret;
-
-	return 0;
-?
-
-What is default case for wrong channel in INFO_SCALE?
-
-> +}
-
-...
-
-> +static const struct of_device_id mp2629_adc_of_match[] = {
-> +	{ .compatible = "mps,mp2629_adc"},
-
-> +	{},
-
-No comma needed.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
+On 12.03.2020 20:12, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 12, 2020 at 07:09:56PM +0300, Alexey Budankov escreveu:
+>>
+>> On 12.03.2020 17:31, Arnaldo Carvalho de Melo wrote:
+>>> Em Thu, Mar 12, 2020 at 03:21:45PM +0300, Alexey Budankov escreveu:
+>>>>
+>>>> Correct maxnode parameter value passed to mbind() syscall to be
+>>>> the amount of node mask bits to analyze plus 1. Dynamically allocate
+>>>> node mask memory depending on the index of node of cpu being profiled.
+>>>> Fixes: c44a8b44ca9f ("perf record: Bind the AIO user space buffers to nodes")
+>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>> ---
+>>>>  tools/perf/util/mmap.c | 21 +++++++++++++++------
+>>>>  1 file changed, 15 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+>>>> index 3b664fa673a6..6d604cd67a95 100644
+>>>> --- a/tools/perf/util/mmap.c
+>>>> +++ b/tools/perf/util/mmap.c
+>>>> @@ -98,20 +98,29 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
+>>>>  {
+>>>>  	void *data;
+>>>>  	size_t mmap_len;
+>>>> -	unsigned long node_mask;
+>>>> +	unsigned long *node_mask;
+>>>> +	unsigned long node_index;
+>>>> +	int err = 0;
+>>>>  
+>>>>  	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
+>>>>  		data = map->aio.data[idx];
+>>>>  		mmap_len = mmap__mmap_len(map);
+>>>> -		node_mask = 1UL << cpu__get_node(cpu);
+>>>> -		if (mbind(data, mmap_len, MPOL_BIND, &node_mask, 1, 0)) {
+>>>> -			pr_err("Failed to bind [%p-%p] AIO buffer to node %d: error %m\n",
+>>>> -				data, data + mmap_len, cpu__get_node(cpu));
+>>>> +		node_index = cpu__get_node(cpu);
+>>>> +		node_mask = bitmap_alloc(node_index + 1);
+>>>> +		if (!node_mask) {
+>>>> +			pr_err("Failed to allocate node mask for mbind: error %m\n");
+>>>>  			return -1;
+>>>>  		}
+>>>> +		set_bit(node_index, node_mask);
+>>>> +		if (mbind(data, mmap_len, MPOL_BIND, node_mask, node_index + 1 + 1/*nr_bits + 1*/, 0)) {
+>>>
+>>>                                                                                   ^^^^^^^^^^^^^^
+>>> 										  Leftover?
+>>
+>> Intentionally put it here to document kernel behavior for mbind() syscall
+>> because currently it is different from the man page [1] documented:
+>>
+>> "nodemask points to a bit mask of nodes containing up to maxnode bits.
+>>  The bit mask size is rounded to the next multiple of sizeof(unsigned
+>>  long), but the kernel will use bits only up to maxnode.  A NULL value
+>>  of nodemask or a maxnode value of zero specifies the empty set of
+>>  nodes.  If the value of maxnode is zero, the nodemask argument is
+>>  ignored.  Where a nodemask is required, it must contain at least one
+>>  node that is on-line, allowed by the thread's current cpuset context
+>>  (unless the MPOL_F_STATIC_NODES mode flag is specified), and contains
+>>  memory."
+> 
+> Ok, will add the above as a comment above the line with that comment.
+
+Thanks!
+~Alexey
