@@ -2,147 +2,128 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8979DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F9CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5972E205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 19:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D22205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 20:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X1qtGcuv"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="cIkAcMhS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vyqXOR93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgCLT7m (ORCPT
+        id S1726893AbgCLUDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:59:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35424 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLT7m (ORCPT
+        Thu, 12 Mar 2020 16:03:41 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:44665 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726483AbgCLUDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:59:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m3so7795036wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 12:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ob+DDAJoCv1eNbpOzJsx/saHpEetRfJlb0KnNJ3G6Og=;
-        b=X1qtGcuvtvqFLuJpd+LP+okeBAHhenV4fi3+E47XtLVTi50WomOHJaVXJwKPrIFDNz
-         2cgvozUVrPAkfJ7GJYn2XZchKUpD4GXfk7rc2yCfXHtFbfM5ntfsjQjfwWnt6GkiWKPX
-         DN6er1P1AU3isxcGno53R5S2vZ8pQgAQSPrk8emtJchUerRbWdHHszfgp6DeV03f++2Y
-         eTMbqy3iqlNvvYRKL5hu+qAhApLzaCbPp8q8xLrSjYIJc3Puu8749dkNxIFhnI/TO1w+
-         Px5ldX2pwZszdBWGLq1okMV/XR7fCGe6oaoq0UvtFaYL8U3JVT+YA3vLxWWVzCs9x3+l
-         oU6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ob+DDAJoCv1eNbpOzJsx/saHpEetRfJlb0KnNJ3G6Og=;
-        b=iU64dwnw9wjIgmHoa+Cz/qJs+PA58BLY2Gx7ajb+lTtAuYsr/MFFngVSytBEAHYkwi
-         vSj7Bq/1Li55Pf+Z3H0DDypL203M0W4r54sBkbQjqvw4xz2b8FHgDPI7bTE/8o6knPx3
-         AZ2dCF8Z69qlIsHjrCVIm/QY+q0Zx7y6UNSygNxI2iQ3lF3WhtPVNvEGVlQ7sMwrM2Hd
-         ok9iv3FmQUrgRAzfVf746u74DZBDKpinZAr94Y89a64J1GeRfeH1C5oT8AYt4BQzt8ff
-         8FVfia/CWHob//BdECQydACMu8IOsZbOfBd23iHlgDT7UiWjZyXnRZUyn/5M0kp/dRkV
-         ESEQ==
-X-Gm-Message-State: ANhLgQ0YGjNpxrWRO3wd6GIRWZ659LWrAb1muwYFa+hHKGCpl/djdK8s
-        DYDfMZcqf6RcdXaSqpx6EQVEV3+xMb0VaA3LwXWkEQ==
-X-Google-Smtp-Source: ADFU+vtNzD+KVArkr1t+ZItRwBiWwgsZ175SQZjbBDipJcKcWr0rV2ntzewY7uSWxCh7efF2btQLS9IY5JEAkPzrMJg=
-X-Received: by 2002:a7b:cc98:: with SMTP id p24mr6032809wma.29.1584043180023;
- Thu, 12 Mar 2020 12:59:40 -0700 (PDT)
+        Thu, 12 Mar 2020 16:03:40 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 0B1B354C;
+        Thu, 12 Mar 2020 16:03:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 12 Mar 2020 16:03:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=oNeib/zSSc/Ml
+        kvsC3EDiuR3sxV3CwZWI/SYjFLvvIM=; b=cIkAcMhS3F04KFXhXECfvihZaf8SY
+        lPxqdOqgjYNwFGO9F5UFYat0HY5wgx6OW9YDVKODzOcamBNuRf/kw83vHAvatcnn
+        2HmDqZ+OlK3yfReHpgShA/10rN2lvn71rZZ8rjfiVoJHROORqAtZf+opPmyxnUaY
+        3fw5n5SZP7/tQHVCy2Vo2aUafyrv4otknmDIUa22Mn1A5bRdRq0ovugHYUodg4wd
+        sIoICvzv2uEic/aE9lkSWANZmYgCoygfY3CLbKdJg37+KyNM7wBBnIJ4So9aFuqv
+        /H0Pk1edYdg4OwDiZqF2Ui+9iEpqB19qnPaPYtDjmmcn+P5EdQP50ozQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=oNeib/zSSc/MlkvsC3EDiuR3sxV3CwZWI/SYjFLvvIM=; b=vyqXOR93
+        COmOhbX1RIN751Q5MG7SCcb03XDg3em6YYUQyr8Kd5M461/4aEC5mJrT2lGFiUtG
+        y7FDLsoh4+qQGwsXSKwMKu4KYfsj7slwQ0RdEE1hiTVoQDwVhOu/Z6uD7/Z4nItZ
+        6SLYaIU/YliddTr0RbbAocMOOoIparKJCDVvhV70o+2ojBT5PQRIeAeBnzUAp9Xk
+        kFSz3Kn6XolT2J0bEywrHa9mN53odhfbcN+sTduAqGfKFUTeIpLWla9vZ2UEIMpp
+        rCpo+umVFTPRBYkg2aSTrPcTbi3rDYPUajO83kpUrG/bpECikiTrzDvaDixm33Vi
+        k4ySUJvfmisOsw==
+X-ME-Sender: <xms:mpVqXjVLoivK4Yc5b0KWtMlTn4XliHCUABnVaIKzYyhAWybL4LtqXw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedgudefgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
+    fvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceo
+    ugiguhesugiguhhuuhdrgiihiieqnecukfhppeduieefrdduudegrddufedvrdegnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
+    uhhuuhdrgiihii
+X-ME-Proxy: <xmx:mpVqXimla0zLy3fAs-t2EyUxTsAe69uxYDMtIYSsfqBwJUh1Tli5Ew>
+    <xmx:mpVqXq5JZwEybnX1azVIvR5RfU7SCMUFo0PaaCvx8mOhg0TvwlU7yg>
+    <xmx:mpVqXoLQWKcEKSKODIwuFLNSjkyUakshfDzpVYzVsrx_z_0P1fzTrA>
+    <xmx:mpVqXtj__-sVJ0XrVWJUnnpCfgmCdjrr3zwMRunsDmQO7XzGJMV_04FDSQI>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.132.4])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4ACDD306130A;
+        Thu, 12 Mar 2020 16:03:37 -0400 (EDT)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     cgroups@vger.kernel.org, tj@kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, viro@zeniv.linux.org.uk
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, shakeelb@google.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kernel-team@fb.com
+Subject: [PATCH v3 1/4] kernfs: kvmalloc xattr value instead of kmalloc
+Date:   Thu, 12 Mar 2020 13:03:14 -0700
+Message-Id: <20200312200317.31736-2-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200312200317.31736-1-dxu@dxuuu.xyz>
+References: <20200312200317.31736-1-dxu@dxuuu.xyz>
 MIME-Version: 1.0
-References: <20200312155920.50067-1-glider@google.com> <20200312164922.GC21120@lakrids.cambridge.arm.com>
-In-Reply-To: <20200312164922.GC21120@lakrids.cambridge.arm.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Thu, 12 Mar 2020 20:59:28 +0100
-Message-ID: <CAG_fn=VfRW6Gi-a9WCMwoK1-Nc+i+NFLN3ZyhFAUzr-K3LeaZQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: define __alloc_zeroed_user_highpage
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 5:49 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Thu, Mar 12, 2020 at 04:59:20PM +0100, glider@google.com wrote:
-> > When running the kernel with init_on_alloc=3D1, calling the default
-> > implementation of __alloc_zeroed_user_highpage() from include/linux/hig=
-hmem.h
-> > leads to double-initialization of the allocated page (first by the page
-> > allocator, then by clear_user_page().
-> > Calling alloc_page_vma() with __GFP_ZERO, similarly to e.g. x86, seems
-> > to be enough to ensure the user page is zeroed only once.
->
-> Just to check, is there a functional ussue beyond the redundant zeroing,
-> or is this jsut a performance issue?
+xattr values have a 64k maximum size. This can result in an order 4
+kmalloc request which can be difficult to fulfill. Since xattrs do not
+need physically contiguous memory, we can switch to kvmalloc and not
+have to worry about higher order allocations failing.
 
-This is just a performance issue that only manifests when running the
-kernel with init_on_alloc=3D1.
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ fs/xattr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> On architectures with real highmem, does GFP_HIGHUSER prevent the
-> allocator from zeroing the page in this case, or is the architecture
-> prevented from allocating from highmem?
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 90dd78f0eb27..0d3c9b4d1914 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -817,7 +817,7 @@ struct simple_xattr *simple_xattr_alloc(const void *value, size_t size)
+ 	if (len < sizeof(*new_xattr))
+ 		return NULL;
+ 
+-	new_xattr = kmalloc(len, GFP_KERNEL);
++	new_xattr = kvmalloc(len, GFP_KERNEL);
+ 	if (!new_xattr)
+ 		return NULL;
+ 
+@@ -882,7 +882,7 @@ int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
+ 
+ 		new_xattr->name = kstrdup(name, GFP_KERNEL);
+ 		if (!new_xattr->name) {
+-			kfree(new_xattr);
++			kvfree(new_xattr);
+ 			return -ENOMEM;
+ 		}
+ 	}
+@@ -912,7 +912,7 @@ int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
+ 	spin_unlock(&xattrs->lock);
+ 	if (xattr) {
+ 		kfree(xattr->name);
+-		kfree(xattr);
++		kvfree(xattr);
+ 	}
+ 	return err;
+ 
+-- 
+2.21.1
 
-I was hoping one of ARM maintainers can answer this question. My
-understanding was that __GFP_ZERO should be sufficient, but there's
-probably something I'm missing.
-
-
-
-> Thanks,
-> Mark.
->
-> >
-> > Signed-off-by: Alexander Potapenko <glider@google.com>
-> > ---
-> >  arch/arm64/include/asm/page.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/pag=
-e.h
-> > index d39ddb258a049..75d6cd23a6790 100644
-> > --- a/arch/arm64/include/asm/page.h
-> > +++ b/arch/arm64/include/asm/page.h
-> > @@ -21,6 +21,10 @@ extern void __cpu_copy_user_page(void *to, const voi=
-d *from,
-> >  extern void copy_page(void *to, const void *from);
-> >  extern void clear_page(void *to);
-> >
-> > +#define __alloc_zeroed_user_highpage(movableflags, vma, vaddr) \
-> > +     alloc_page_vma(GFP_HIGHUSER | __GFP_ZERO | movableflags, vma, vad=
-dr)
-> > +#define __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE
-> > +
-> >  #define clear_user_page(addr,vaddr,pg)  __cpu_clear_user_page(addr, va=
-ddr)
-> >  #define copy_user_page(to,from,vaddr,pg) __cpu_copy_user_page(to, from=
-, vaddr)
-> >
-> > --
-> > 2.25.1.481.gfbce0eb801-goog
-> >
-
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
