@@ -2,107 +2,331 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FAFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62722C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCEF1206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6EE20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MkoWJc5o"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L5dm9i9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgCLKed (ORCPT
+        id S1726891AbgCLKfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:34:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24541 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726302AbgCLKed (ORCPT
+        Thu, 12 Mar 2020 06:35:02 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34693 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLKfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:34:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584009272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Elhehx58JjnpVasvGfpItQAGWL5MtskgGw42pHcHbh8=;
-        b=MkoWJc5ocHikYfjf6Gclr3HcX2TOHfEXyoTtPKH2w47X5o60BdRg9y+gJyTOrnV62sImiL
-        pKe9PFihso6C8fZpN8Joyewbmw2xgHG4sWiE8BTeAXI9zkdPI1iTd5qduYqf1jjiOkAQw1
-        1BHWAlc0/ABR8+61DWDXdHejs1VP5Tw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-mZfkIStbNYSgFB-GvJ0d3g-1; Thu, 12 Mar 2020 06:34:30 -0400
-X-MC-Unique: mZfkIStbNYSgFB-GvJ0d3g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F178C8017CC;
-        Thu, 12 Mar 2020 10:34:28 +0000 (UTC)
-Received: from elisabeth (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 348FB272A5;
-        Thu, 12 Mar 2020 10:34:23 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 11:34:16 +0100
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Shreeya Patel <shreeya.patel23498@gmail.com>,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
-        daniel.baluta@gmail.com, hverkuil@xs4all.nl,
-        Larry.Finger@lwfinger.net
-Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8723bs: rtw_mlme: Remove
- unnecessary conditions
-Message-ID: <20200312113416.23d3db5c@elisabeth>
-In-Reply-To: <61a6c3d7-6592-b57b-6466-995309302cc2@linux.microsoft.com>
-References: <20200311135859.5626-1-shreeya.patel23498@gmail.com>
-        <61a6c3d7-6592-b57b-6466-995309302cc2@linux.microsoft.com>
-Organization: Red Hat
+        Thu, 12 Mar 2020 06:35:02 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200312103500euoutp018f938afa15f4083d055cf2b331e1ac19~7iBER0w4n2423424234euoutp01V
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200312103500euoutp018f938afa15f4083d055cf2b331e1ac19~7iBER0w4n2423424234euoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584009300;
+        bh=AiOwCiA5oENJbiCHlPl0UpmDzAqEPqryxHVgvTC19wg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=L5dm9i9tomU8x3kHzl9LBdBJnThr3zNCnFB/NaH8Omzjdd+fKJDamzmoduFfR7dLz
+         gLreFCfMM1XoOJxJ03u46xPyM2zJZ7vhesxnhy4lHqelIBV2WpVatUu394ANNrErFL
+         I/Q/wqu2JFNoRBwJiZlfGCn78yhgVn5XQIAmmTsc=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200312103500eucas1p12967ea27427738d5ae7909845814ebaa~7iBEAaqFV0146001460eucas1p1w;
+        Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id E9.7C.60698.4501A6E5; Thu, 12
+        Mar 2020 10:35:00 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200312103500eucas1p218e348ce77ea151b242c14ba0f537f85~7iBDuGq3U1187611876eucas1p2y;
+        Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200312103500eusmtrp13b891e36b3f717d378584d6713e99866~7iBDteKoo1916019160eusmtrp1Z;
+        Thu, 12 Mar 2020 10:35:00 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-c7-5e6a1054625d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BE.13.07950.4501A6E5; Thu, 12
+        Mar 2020 10:35:00 +0000 (GMT)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200312103459eusmtip2e6281c38db6d2828e4bfe0828417dd13~7iBDAKM2Q1315613156eusmtip2K;
+        Thu, 12 Mar 2020 10:34:59 +0000 (GMT)
+Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
+To:     Vinay Simha BN <simhavcs@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <a721cdd3-72e7-a1ef-6b45-d4dcc2787de6@samsung.com>
+Date:   Thu, 12 Mar 2020 11:34:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djP87ohAllxBofnylv0njvJZDH/yDlW
+        iytf37NZdE5cwm5xedccNovWvUfYLT5ffsnmwO6xc9Zddo/ZHTNZPTat6mTz2P7tAavH/e7j
+        TB6fN8kFsEVx2aSk5mSWpRbp2yVwZSxfdJOxoFG9Yuu+iSwNjO9kuhg5OSQETCRWvnjJ3MXI
+        xSEksIJRYsGE7ywQzhdGibblz1lAqoQEPjNKTFug08XIAdaxqpcfomY5o8SXP4fYIZy3jBKP
+        T31iBWkQFvCSOL1iCTuILSIQL7F3+SqwqcwC3UwS038/ACtiE9CU+Lv5JhuIzStgJ/Fkcy8T
+        iM0ioCpxes4CsLioQITEtO3/GCFqBCVOznwCdhGngJPElVcHwGxmAXmJ7W/nMEPY4hK3nsxn
+        gvhtH7vEpes6ELaLxL1uiOMkBIQlXh3fwg5hy0icntzDAmHXS9xf0QIOCwmBDkaJrRt2MkMk
+        rCXunPvFBvI+M9DR63fpQ4QdJU7272KFhAqfxI23ghAn8ElM2jadGSLMK9HRJgRRrShx/+xW
+        qIHiEksvfGWbwKg0C8ljs5A8MwvJM7MQ9i5gZFnFKJ5aWpybnlpsnJdarlecmFtcmpeul5yf
+        u4kRmIpO/zv+dQfjvj9JhxgFOBiVeHgnfM6IE2JNLCuuzD3EKMHBrCTCGy+fHifEm5JYWZVa
+        lB9fVJqTWnyIUZqDRUmc13jRy1ghgfTEktTs1NSC1CKYLBMHp1QDo3+tHFO9muLMFZw3d85j
+        enva+ZvpRt4NK+qmFNysYLzaYRuvnbHL805zHe90F6UPjYX/bvJtX5+9e0fUxYZtrY0e//ms
+        d3p7Lvp6eHL/5HOLVn21/KGspPDp02LjB7vY+qy/W6kXrdikPm/TOY3EDQLPPdTPzukwvzmt
+        +u0OoVmFAao5S8N+SSuxFGckGmoxFxUnAgC9eWvMQQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xe7ohAllxBq+PcFr0njvJZDH/yDlW
+        iytf37NZdE5cwm5xedccNovWvUfYLT5ffsnmwO6xc9Zddo/ZHTNZPTat6mTz2P7tAavH/e7j
+        TB6fN8kFsEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp
+        2yXoZSxfdJOxoFG9Yuu+iSwNjO9kuhg5OCQETCRW9fJ3MXJxCAksZZR48PoQYxcjJ1BcXGL3
+        /LfMELawxJ9rXWwgtpDAa0aJxb/zQWxhAS+J0yuWsIPYIgLxEsv2vmUEGcQs0MsksWHreiaI
+        qVMZJTp3fGMCqWIT0JT4u/km2CReATuJJ5t7weIsAqoSp+csAIuLCkRIPJ7YzghRIyhxcuYT
+        FhCbU8BJ4sqrA2A2s4C6xJ95l5ghbHmJ7W/nQNniEreezGeawCg0C0n7LCQts5C0zELSsoCR
+        ZRWjSGppcW56brGRXnFibnFpXrpecn7uJkZg/G079nPLDsaud8GHGAU4GJV4eCd8zogTYk0s
+        K67MPcQowcGsJMIbL58eJ8SbklhZlVqUH19UmpNafIjRFOi5icxSosn5wNSQVxJvaGpobmFp
+        aG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qB0c+gWb11QZ0K2+Wd5bPF/T/u5A50
+        epIh6zonV3hzvpj8f98p4o381ysP3FUMXLZ65vbaB6pPuO6+i1iw6X7AjEdC0RJnVh69dnrf
+        rcySv9wCrjNnHLgYMutI3p9n+9U3y2TYSdVnfmbXf65gNPE4V7XizzsclgoX5I2tQr6/0tg0
+        a3bJjMwNYUosxRmJhlrMRcWJAFxbiqfVAgAA
+X-CMS-MailID: 20200312103500eucas1p218e348ce77ea151b242c14ba0f537f85
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200312080849eucas1p2ebc25fb87cc917986ba0f268272ef2ed
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200312080849eucas1p2ebc25fb87cc917986ba0f268272ef2ed
+References: <CGME20200312080849eucas1p2ebc25fb87cc917986ba0f268272ef2ed@eucas1p2.samsung.com>
+        <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lakshmi,
+Hi Vinay,
 
-On Wed, 11 Mar 2020 19:42:06 -0700
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> wrote:
+Next time add patch version to de subject of email.
 
-> On 3/11/2020 6:58 AM, Shreeya Patel wrote:
-> 
-> > Remove unnecessary if and else conditions since both are leading to the
-> > initialization of "phtpriv->ampdu_enable" with the same value.
-> > 
-> > Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>  
-> 
-> Stating this based on the patch descriptions I have seen.
-> Others, please advise\correct me if I am wrong.
-> 
-> Patch description should state the problem first[1] and then describe 
-> how that is fixed in the given patch.
-> 
-> For example:
-> 
-> In the function rtw_update_ht_cap(), phtpriv->ampdu_enable is set to the 
-> same value in both if and else statements.
-> 
-> This patch removes this unnecessary if-else statement.
 
-That's my general preference as well, but I can't find any point in the
-"Describe your changes" section of submitting-patches.rst actually
-defining the order. I wouldn't imply that from the sequence the steps
-are presented in.
+On 11.03.2020 10:48, Vinay Simha BN wrote:
+> Add yaml documentation for DSI/LVDS tc358775 bridge
+>
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+>
+> ---
+> v1:
+>  Initial version
+> ---
+>  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
+>  1 file changed, 174 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> new file mode 100644
+> index 0000000..e9a9544
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> @@ -0,0 +1,174 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: https://protect2.fireeye.com/url?k=cc9be7f9-9155e4b4-cc9a6cb6-000babff24ad-2a6ce73e1e41d358&u=http://devicetree.org/schemas/display/bridge/toshiba-tc358775.yaml#
+> +$schema: https://protect2.fireeye.com/url?k=293d6151-74f3621c-293cea1e-000babff24ad-793c0a803cb80d71&u=http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +
+> +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> +
+> +maintainers:
+> +	- Vinay Simha BN <simhavcs@gmail.com>
+> +
+> +description: |
+> +	This binding supports DSI to LVDS bridge TC358775
+> +
+> +properties:
+> + compatible:
+> +	const: toshiba,tc358775
+> +
+> + reg:
+> +   maxItems: 1
+> +   description: i2c address of the bridge, 0x0f
+> +
+> + tc, dsi-lanes: 1
+> +   maxItems: 1
+> +   description: Number of DSI data lanes connected to the DSI host. It should
+> +  be one of 1, 2, 3 or 4.
+> +
+> + tc, dual-link: 1
+> +   maxItems: 1
+> +   description: To configure the LVDS transmitter either as single-link or dual-link.
 
-In case it's possible to say everything with a single statement as
-Shreeya did here, though, I guess that becomes rather a linguistic
-factor, and I personally prefer the concise version here.
 
--- 
-Stefano
+As Laurent commented earlier, it would be better to use two ports. See
+for example for input LVDS ports in:
+
+Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+
+Both should be defined in bindings but the 2nd can be optional in dts.
+
+
+Regards
+
+Andrzej
+
+
+> +
+> + vdd-supply:
+> +   maxItems: 1
+> +   description:  1.2V LVDS Power Supply
+> +
+> + vddio-supply:
+> +   maxItems: 1
+> +   description: 1.8V IO Power Supply
+> +
+> + stby-gpios:
+> +   maxItems: 1
+> +   description: Standby pin, Low active
+> +
+> + reset-gpios:
+> +   maxItems: 1
+> +   description: Hardware reset, Low active
+> +
+> + ports:
+> +   type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          DSI Input. The remote endpoint phandle should be a
+> +	  reference to a valid mipi_dsi_host device node.
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS output (panel or connector).
+> +
+> +      required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - dsi-lanes
+> + - vdd-supply
+> + - vddio-supply
+> + - stby-gpios
+> + - reset-gpios
+> + - ports
+> +
+> +examples:
+> + - |
+> +   i2c@78b8000 {
+> +	/* On High speed expansion */
+> +	label = "HS-I2C2";
+> +	status = "okay";
+> +
+> +	tc_bridge: bridge@f {
+> +		status = "okay";
+> +
+> +		compatible = "toshiba,tc358775";
+> +		reg = <0x0f>;
+> +
+> +		tc,dsi-lanes = <4>;
+> +		tc,dual-link = <0>;
+> +
+> +		vdd-supply = <&pm8916_l2>;
+> +		vddio-supply = <&pm8916_l6>;
+> +
+> +		stby-gpio = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +		reset-gpio = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				d2l_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				d2l_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +  };
+> +
+> +  panel: auo,b101xtn01 {
+> +		status = "okay";
+> +		compatible = "auo,b101xtn01", "panel-lvds";
+> +		power-supply = <&pm8916_l14>;
+> +
+> +		width-mm = <223>;
+> +		height-mm = <125>;
+> +
+> +		data-mapping = "jeida-24";
+> +
+> +		panel-timing {
+> +			/* 1366x768 @60Hz */
+> +			clock-frequency = <72000000>;
+> +			hactive = <1366>;
+> +			vactive = <768>;
+> +			hsync-len = <70>;
+> +			hfront-porch = <20>;
+> +			hback-porch = <0>;
+> +			vsync-len = <42>;
+> +			vfront-porch = <14>;
+> +			vback-porch = <0>;
+> +		};
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&d2l_out>;
+> +			};
+> +		};
+> + };
+> +
+> +  mdss@1a00000 {
+> +	status = "okay";
+> +
+> +	mdp@1a01000 {
+> +		status = "okay";
+> +	};
+> +
+> +	dsi@1a98000 {
+> +		status = "okay";
+> +		..
+> +		ports {
+> +			port@1 {
+> +				dsi0_out: endpoint {
+> +					remote-endpoint = <&d2l_in>;
+> +					data-lanes = <0 1 2 3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	dsi-phy@1a98300 {
+> +		status = "okay";
+> +		..
+> +	};
+> + };
+
 
