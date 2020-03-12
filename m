@@ -2,53 +2,45 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB7CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662A92067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157382071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgCLNvs (ORCPT
+        id S1727563AbgCLNv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:51:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37738 "EHLO mx2.suse.de"
+        Thu, 12 Mar 2020 09:51:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:35130 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727471AbgCLNvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:51:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 96743AC8F;
-        Thu, 12 Mar 2020 13:51:39 +0000 (UTC)
-Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
- <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
- <20200311115735.GM23944@dhcp22.suse.cz>
- <20200312052707.GA3277@linux.vnet.ibm.com>
- <C5560C71-483A-41FB-BDE9-526F1E0CFA36@linux.vnet.ibm.com>
- <5e5c736a-a88c-7c76-fc3d-7bc765e8dcba@suse.cz>
- <20200312131438.GB3277@linux.vnet.ibm.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <61437352-8b54-38fa-4471-044a65c9d05a@suse.cz>
-Date:   Thu, 12 Mar 2020 14:51:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727270AbgCLNv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:51:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A810D30E;
+        Thu, 12 Mar 2020 06:51:55 -0700 (PDT)
+Received: from [10.37.12.166] (unknown [10.37.12.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A2B83F534;
+        Thu, 12 Mar 2020 06:51:54 -0700 (PDT)
+Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
+ and delivery
+To:     Cristian Marussi <cristian.marussi@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
+        Jonathan.Cameron@Huawei.com
+References: <20200304162558.48836-1-cristian.marussi@arm.com>
+ <20200304162558.48836-8-cristian.marussi@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
+Date:   Thu, 12 Mar 2020 13:51:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200312131438.GB3277@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200304162558.48836-8-cristian.marussi@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,109 +48,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/20 2:14 PM, Srikar Dronamraju wrote:
-> * Vlastimil Babka <vbabka@suse.cz> [2020-03-12 10:30:50]:
+Hi Cristian,
+
+just one comment below...
+
+On 3/4/20 4:25 PM, Cristian Marussi wrote:
+> Add core SCMI Notifications dispatch and delivery support logic which is
+> able, at first, to dispatch well-known received events from the RX ISR to
+> the dedicated deferred worker, and then, from there, to final deliver the
+> events to the registered users' callbacks.
 > 
->> On 3/12/20 9:23 AM, Sachin Sant wrote:
->> >> On 12-Mar-2020, at 10:57 AM, Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
->> >> * Michal Hocko <mhocko@kernel.org> [2020-03-11 12:57:35]:
->> >>> On Wed 11-03-20 16:32:35, Srikar Dronamraju wrote:
->> >>>> To ensure a cpuless, memoryless dummy node is not online, powerpc need
->> >>>> to make sure all possible but not present cpu_to_node are set to a
->> >>>> proper node.
->> >>> 
->> >>> Just curious, is this somehow related to
->> >>> http://lkml.kernel.org/r/20200227182650.GG3771@dhcp22.suse.cz?
->> >>> 
->> >> 
->> >> The issue I am trying to fix is a known issue in Powerpc since many years.
->> >> So this surely not a problem after a75056fc1e7c (mm/memcontrol.c: allocate
->> >> shrinker_map on appropriate NUMA node"). 
->> >> 
->> >> I tried v5.6-rc4 + a75056fc1e7c but didnt face any issues booting the
->> >> kernel. Will work with Sachin/Abdul (reporters of the issue).
+> Dispatch and delivery is just added here, still not enabled.
 > 
-> I had used v1 and not v2. So my mistake.
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> ---
+> V3 --> V4
+> - dispatcher now handles dequeuing of events in chunks (header+payload):
+>    handling of these in_flight events let us remove one unneeded memcpy
+>    on RX interrupt path (scmi_notify)
+> - deferred dispatcher now access their own per-protocol handlers' table
+>    reducing locking contention on the RX path
+> V2 --> V3
+> - exposing wq in sysfs via WQ_SYSFS
+> V1 --> V2
+> - splitted out of V1 patch 04
+> - moved from IDR maps to real HashTables to store event_handlers
+> - simplified delivery logic
+> ---
+>   drivers/firmware/arm_scmi/notify.c | 334 ++++++++++++++++++++++++++++-
+>   drivers/firmware/arm_scmi/notify.h |   9 +
+>   2 files changed, 342 insertions(+), 1 deletion(-)
 > 
->> > I applied this 3 patch series on top of March 11 next tree (commit d44a64766795 )
->> > The kernel still fails to boot with same call trace.
->> 
-> 
-> While I am not an expert in the slub area, I looked at the patch
-> a75056fc1e7c and had some thoughts on why this could be causing this issue.
-> 
-> On the system where the crash happens, the possible number of nodes is much
-> greater than the number of onlined nodes. The pdgat or the NODE_DATA is only
-> available for onlined nodes.
-> 
-> With a75056fc1e7c memcg_alloc_shrinker_maps, we end up calling kzalloc_node
-> for all possible nodes and in ___slab_alloc we end up looking at the
-> node_present_pages which is NODE_DATA(nid)->node_present_pages.
-> i.e for a node whose pdgat struct is not allocated, we are trying to
-> dereference.
+> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
 
-From what we saw, the pgdat does exist, the problem is that slab's per-node data
-doesn't exist for a node that doesn't have present pages, as it would be a waste
-of memory.
+[snip]
 
-Uh actually you are probably right, the NODE_DATA doesn't exist anymore? In
-Sachin's first report [1] we have
+> +
+> +/**
+> + * scmi_notify  - Queues a notification for further deferred processing
+> + *
+> + * This is called in interrupt context to queue a received event for
+> + * deferred processing.
+> + *
+> + * @handle: The handle identifying the platform instance from which the
+> + *	    dispatched event is generated
+> + * @proto_id: Protocol ID
+> + * @evt_id: Event ID (msgID)
+> + * @buf: Event Message Payload (without the header)
+> + * @len: Event Message Payload size
+> + * @ts: RX Timestamp in nanoseconds (boottime)
+> + *
+> + * Return: 0 on Success
+> + */
+> +int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
+> +		const void *buf, size_t len, u64 ts)
+> +{
+> +	struct scmi_registered_event *r_evt;
+> +	struct scmi_event_header eh;
+> +	struct scmi_notify_instance *ni = handle->notify_priv;
+> +
+> +	/* Ensure atomic value is updated */
+> +	smp_mb__before_atomic();
+> +	if (unlikely(!atomic_read(&ni->enabled)))
+> +		return 0;
+> +
+> +	r_evt = SCMI_GET_REVT(ni, proto_id, evt_id);
+> +	if (unlikely(!r_evt))
+> +		return -EINVAL;
+> +
+> +	if (unlikely(len > r_evt->evt->max_payld_sz)) {
+> +		pr_err("SCMI Notifications: discard badly sized message\n");
+> +		return -EINVAL;
+> +	}
+> +	if (unlikely(kfifo_avail(&r_evt->proto->equeue.kfifo) <
+> +		     sizeof(eh) + len)) {
+> +		pr_warn("SCMI Notifications: queue full dropping proto_id:%d  evt_id:%d  ts:%lld\n",
+> +			proto_id, evt_id, ts);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	eh.timestamp = ts;
+> +	eh.evt_id = evt_id;
+> +	eh.payld_sz = len;
+> +	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
+> +	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
+> +	queue_work(r_evt->proto->equeue.wq,
+> +		   &r_evt->proto->equeue.notify_work);
 
-[    0.000000] numa:   NODE_DATA [mem 0x8bfedc900-0x8bfee3fff]
-[    0.000000] numa:     NODE_DATA(0) on node 1
-[    0.000000] numa:   NODE_DATA [mem 0x8bfed5200-0x8bfedc8ff]
+Is it safe to ignore the return value from the queue_work here?
 
-But in this thread, with your patches Sachin reports:
+Regards,
+Lukasz
 
-[    0.000000] numa:   NODE_DATA [mem 0x8bfedc900-0x8bfee3fff]
-
-So I assume it's just node 1. In that case, node_present_pages is really dangerous.
-
-[1]
-https://lore.kernel.org/linux-next/3381CD91-AB3D-4773-BA04-E7A072A63968@linux.vnet.ibm.com/
-
-> Also for a memoryless/cpuless node or possible but not present nodes,
-> node_to_mem_node(node) will still end up as node (atleast on powerpc).
-
-I think that's the place where this would be best to fix.
-
-> I tried with this hunk below and it works.
-> 
-> But I am not sure if we need to check at other places were
-> node_present_pages is being called.
-
-I think this seems to defeat the purpose of node_to_mem_node()? Shouldn't it
-return only nodes that are online with present memory?
-CCing Joonsoo who seems to have introduced this in ad2c8144418c ("topology: add
-support for node_to_mem_node() to determine the fallback node")
-
-I think we do need well defined and documented rules around node_to_mem_node(),
-cpu_to_node(), existence of NODE_DATA, various node_states bitmaps etc so
-everyone handles it the same, safe way.
-
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 626cbcbd977f..bddb93bed55e 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2571,9 +2571,13 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
->  	if (unlikely(!node_match(page, node))) {
->  		int searchnode = node;
->  
-> -		if (node != NUMA_NO_NODE && !node_present_pages(node))
-> -			searchnode = node_to_mem_node(node);
-> -
-> +		if (node != NUMA_NO_NODE) {
-> +			if (!node_online(node) || !node_present_pages(node)) {
-> +				searchnode = node_to_mem_node(node);
-> +				if (!node_online(searchnode))
-> +					searchnode = first_online_node;
-> +			}
-> +		}
->  		if (unlikely(!node_match(page, searchnode))) {
->  			stat(s, ALLOC_NODE_MISMATCH);
->  			deactivate_slab(s, page, c->freelist, c);
-> 
->> > 
->> 
-> 
 
