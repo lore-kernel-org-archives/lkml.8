@@ -2,181 +2,286 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1624EC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F4CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACC0206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="J1ti6MHR"
+	by mail.kernel.org (Postfix) with ESMTP id 91AF2206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388106AbgCLHZY (ORCPT
+        id S2388112AbgCLHZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:25:24 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:46155 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388079AbgCLHZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:25:23 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id CIDNjX37o9Im2CIDQjieLY; Thu, 12 Mar 2020 08:25:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583997921; bh=mQr4GeLcmudw1gcKjKPAz1IuVLY4RaQ2nqWH7wqy+jw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=J1ti6MHRpdDak2qI1ISVFWbNX/Eqk8v5HE0MuKtdT/18vdtgVe8KxFi6lCp6EdztZ
-         7xL6+6t2eupX1X9SZgNXtHPz6UAXzMVxtdq35evePdisQZ0+Y6iPdgdTiTHqheMeiQ
-         MniCy3+cYl0PytP94YPxVEqMCjgbKXQV9tqiij/a/TkxOxrjFeLYQSFLj/EEGUr0Nn
-         r25LlAdnendD0rs3I7qnrPXfKoe9oSTm/Pb5OTMVCPAqmJ3mjB7DQouQpyRcovcdyK
-         Zin/io82gE0kW1IQnH4/Uuc4V2nYsqcsrmILIQQz4dUA869j+iUndTXI4JsQyg52cH
-         3cQHKyoh9Xk+Q==
-Subject: Re: [PATCH v2 19/22] media: docs: move user-facing docs to the admin
- guide
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Walls <awalls@md.metrocast.net>,
-        Todor Tomov <todor.too@gmail.com>,
-        Antoine Jacquet <royale@zerezo.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
-References: <cover.1583847556.git.mchehab+huawei@kernel.org>
- <05c08367b2c6a5b3f8f29499093d34b1f0d864fe.1583847557.git.mchehab+huawei@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <ec753b2f-955d-fb8c-2cf6-9a26c30a57d0@xs4all.nl>
-Date:   Thu, 12 Mar 2020 08:25:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 12 Mar 2020 03:25:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34638 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387930AbgCLHZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:25:53 -0400
+Received: from [10.130.0.70] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL2ny42lePMQZAA--.26S3;
+        Thu, 12 Mar 2020 15:25:40 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Loongson: Add model name to /proc/cpuinfo
+To:     YunQiang Su <wzssyqa@gmail.com>, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1583908414-22858-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAKcpw6VBiFddr=QsB_HDYStX8Mh7=tf3B_onFDViAq8s_G0gbQ@mail.gmail.com>
+ <8f0eaa0b-e95c-4612-f3a3-9efcd523ae66@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d014ac71-3fdd-f69e-526e-fa98b2c1c853@loongson.cn>
+Date:   Thu, 12 Mar 2020 15:25:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <05c08367b2c6a5b3f8f29499093d34b1f0d864fe.1583847557.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPeQb6Gl82DsP63bTAkbA0dckPqu5XZD0bRXQh7WyweZShLnApqbc6Kmta6Dz/FXo0jepjepVtp54e9tV17baAmZH8XNNx0AC9x9y0H5xPeS8TWdweK1
- vOg1rjf7ek0WywQzmv5/gMJupK32K7deLroJmkkkkeYUKclOO22+VaLj+1C0J9S6iwPBSRcItauCYIEA86W9//RGOxfQHnglxP6CbKiODlmmEai4wnU7pCoW
- 9joPOuP2nMzieB0ZaVtdRHysTwbmJ0PWQI3P7IqoeenjJ2aG2RrBPpSSSMC1R95k7wpNmRIWNRuPM3MJoIgmMbl4dQoJrOnhc73wOOMG4CDjJ5OvNsrLHr+g
- skgB/VK/I1CJU0Zj0CWvnm/wLjVyBZa5ipOkt/3Uov+6hOTMMuft+v8Hibo71AFp3a431I9Ljb7rF193nY31Sv/yDT5mFjVOTBEL6EUZ9rwl+as6iCIztNRY
- rTuTN5ualcPabXhFkgbq62Zz5wqFqfbb/g+e1WnIKhGtx08xjIxmyDWrVMSO6BI4U59tyCyMJ45WJaO0Xkveow4rOCH6WPCXMXi7VGe3+XH8YzFxlLEaDIOh
- YDMdbjutw8KGEte1hWst83KMCwzfHGTTUhg0/jMblQvTWgq9n0RL9KVciAIk0VRr1kK47CFROFkmpIXuk4R+j4izQ8wMnhcWou6WT3YDCBFKEcGaUjz9Dzir
- Eu2XIZ8v+VzfkNCwmlsKMS6D2xwI+xLAXgBS8Oyhtfl6h9GZ8bWkKkYXmu/mIJbd0e/9RJdd0VMNvIJB3hSUzV02/xFBy3BcJ41ReZxkvODmI2fZDJvFkWfn
- VFZz7JC5MeddpJzXQAyA7367IslgEYTl66DP8KDgqDBoAK5bk8dIS/iw7nnqZzkMon9KMMoiJEfhG4kk/tY=
+In-Reply-To: <8f0eaa0b-e95c-4612-f3a3-9efcd523ae66@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9DxL2ny42lePMQZAA--.26S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3JF4rXF18CFWkAF43tw1DWrg_yoWxKw18p3
+        ykAanxGr40gryDG34Sgr1qkryYvr13JF1kuayUtF1UXasYqF13J3srJF15CrZFvr1qkw1f
+        ZFZ09rsxuFWqv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
+        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
+        UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 2:43 PM, Mauro Carvalho Chehab wrote:
-> Most of the driver-specific documentation is meant to help
-> users of the media subsystem.
-> 
-> Move them to the admin-guide.
-> 
-> It should be noticed, however, that several of those files
-> are outdated and will require further work in order to make
-> them useful again.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/admin-guide/index.rst           |   1 +
->  .../admin-guide/kernel-parameters.txt         |   4 +-
->  .../media}/au0828-cardlist.rst                |   0
->  .../media}/avermedia.rst                      |   0
->  .../media}/bt8xx.rst                          |   8 +-
->  .../media}/bttv-cardlist.rst                  |   0
->  .../media}/bttv.rst                           |   0
->  .../media}/cafe_ccic.rst                      |   0
->  .../media}/cardlist.rst                       |   0
->  .../media}/cards.rst                          |   0
->  .../dvb-drivers => admin-guide/media}/ci.rst  |   0
->  .../media}/cpia2.rst                          |   0
->  .../media}/cx23885-cardlist.rst               |   0
->  .../media}/cx88-cardlist.rst                  |   0
->  .../media}/cx88.rst                           |   0
->  .../media}/davinci-vpbe.rst                   |   0
->  .../media}/em28xx-cardlist.rst                |   0
->  .../dvb-drivers => admin-guide/media}/faq.rst |   0
->  .../media}/fimc.rst                           |   0
->  .../media}/gspca-cardlist.rst                 |   0
->  .../v4l-drivers => admin-guide/media}/imx.rst |   0
->  .../media}/imx7.rst                           |   0
->  Documentation/admin-guide/media/index.rst     | 104 ++++++++++++++++++
->  .../media}/intro.rst                          |   0
->  .../media}/ipu3.rst                           |   0
->  .../media}/ipu3_rcb.svg                       |   0
->  .../media}/ivtv-cardlist.rst                  |   0
->  .../media}/ivtv.rst                           |   0
->  .../media}/lmedm04.rst                        |   0
->  .../media}/meye.rst                           |   0
->  .../media}/omap3isp.rst                       |   0
->  .../media}/omap4_camera.rst                   |   0
->  .../media}/opera-firmware.rst                 |   0
->  .../media}/philips.rst                        |   0
->  .../media}/pulse8-cec.rst                     |   0
->  .../media}/qcom_camss.rst                     |   0
->  .../media}/qcom_camss_8x96_graph.dot          |   0
->  .../media}/qcom_camss_graph.dot               |   0
->  .../media}/rcar-fdp1.rst                      |   0
->  .../media}/saa7134-cardlist.rst               |   0
->  .../media}/saa7134.rst                        |   0
->  .../media}/saa7164-cardlist.rst               |   0
->  .../media}/si470x.rst                         |   0
->  .../media}/si4713.rst                         |   0
->  .../media}/si476x.rst                         |   0
->  .../media}/technisat.rst                      |   0
->  .../media}/tm6000-cardlist.rst                |   0
->  .../media}/ttusb-dec.rst                      |   0
->  .../media}/tuner-cardlist.rst                 |   0
->  .../media}/udev.rst                           |   0
->  .../media}/usbvision-cardlist.rst             |   0
->  .../media}/v4l-with-ir.rst                    |   0
->  .../media}/vimc.dot                           |   0
->  .../media}/vimc.rst                           |   0
->  .../media}/vivid.rst                          |   0
->  .../media}/zr364xx.rst                        |   0
->  Documentation/media/cec-drivers/index.rst     |  34 ------
->  Documentation/media/dvb-drivers/index.rst     |  11 --
->  Documentation/media/index.rst                 |   4 +-
->  Documentation/media/v4l-drivers/index.rst     |  25 -----
->  .../zh_CN/video4linux/omap3isp.txt            |   4 +-
->  .../media/v4l/dev-sliced-vbi.rst              |   2 +-
->  .../media/v4l/ext-ctrls-codec.rst             |   2 +-
->  .../media/v4l/ext-ctrls-image-process.rst     |   2 +-
->  .../media/v4l/pixfmt-reserved.rst             |   2 +-
->  MAINTAINERS                                   |  22 ++--
->  drivers/media/pci/bt8xx/Kconfig               |   2 +-
->  drivers/media/pci/meye/Kconfig                |   2 +-
->  drivers/media/radio/si470x/Kconfig            |   2 +-
->  drivers/media/usb/dvb-usb-v2/lmedm04.c        |   2 +-
->  drivers/media/usb/gspca/Kconfig               |   2 +-
->  drivers/media/usb/zr364xx/Kconfig             |   2 +-
->  72 files changed, 136 insertions(+), 101 deletions(-)
->  rename Documentation/{media/v4l-drivers => admin-guide/media}/au0828-cardlist.rst (100%)
->  rename Documentation/{media/dvb-drivers => admin-guide/media}/avermedia.rst (100%)
->  rename Documentation/{media/dvb-drivers => admin-guide/media}/bt8xx.rst (93%)
+On 03/11/2020 05:40 PM, Tiezhu Yang wrote:
+> On 03/11/2020 03:18 PM, YunQiang Su wrote:
+>> Tiezhu Yang <yangtiezhu@loongson.cn> 于2020年3月11日周三 下午2:33写道：
+>>> In the current code, when execute command "cat /proc/cpuinfo" or 
+>>> "lscpu",
+>>> it can not get cpu type and frequency directly because the model 
+>>> name is
+>>> not exist, so add it.
+>> You patch is almost the same with the previous Huacai's.
+>> How do you think about the copyright issue?
+>>
+>> FYI: GPL is copyleft instead of no-copyright-exists-at-all.
+>> I have no idea about whether Loongson has any consideration about 
+>> copyright,
+>> while it is really quite important.
+>
+> Hi YunQiang & Jiaxun,
+>
+> Frankly, I don't know there exists a similar patch in 2018
+> which has not been merged into the mainline tree, I just
+> want to fix the issue of model name when execute cmd
+> "cat /proc/cpuinfo" or "lscpu".
+>
+> How to avoid and solve this case?
+> Add a proper label in the patch?
 
-I would personally prefer to keep the split between v4l and dvb drivers, rather
-then putting them all in the same directory.
+Hi YunQiang, Jiaxun & Huacai,
 
-What was the reason behind this choice?
+Through discussion, I think it is better to resend the old patch by Huacai.
+I will not send a v2 patch.
 
-Regards,
+Thanks,
 
-	Hans
+Tiezhu Yang
+
+>
+> Thanks,
+>
+> Tiezhu Yang
+>
+>>
+>>> E.g. without this patch:
+>>>
+>>> [loongson@localhost ~]$ lscpu
+>>> Architecture:          mips64
+>>> Byte Order:            Little Endian
+>>> CPU(s):                4
+>>> On-line CPU(s) list:   0-3
+>>> Thread(s) per core:    1
+>>> Core(s) per socket:    4
+>>> Socket(s):             1
+>>> NUMA node(s):          1
+>>> L1d cache:             64K
+>>> L1i cache:             64K
+>>> L2 cache:              2048K
+>>> NUMA node0 CPU(s):     0-3
+>>>
+>>> With this patch:
+>>>
+>>> [loongson@localhost ~]$ lscpu
+>>> Architecture:          mips64
+>>> Byte Order:            Little Endian
+>>> CPU(s):                4
+>>> On-line CPU(s) list:   0-3
+>>> Thread(s) per core:    1
+>>> Core(s) per socket:    4
+>>> Socket(s):             1
+>>> NUMA node(s):          1
+>>> Model name:            Loongson-3A R3 (Loongson-3A3000) @ 1449MHz
+>>> L1d cache:             64K
+>>> L1i cache:             64K
+>>> L2 cache:              2048K
+>>> NUMA node0 CPU(s):     0-3
+>>>
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>   arch/mips/include/asm/cpu-info.h |  1 +
+>>>   arch/mips/kernel/cpu-probe.c     | 27 +++++++++++++++++++++++----
+>>>   arch/mips/kernel/proc.c          |  4 ++++
+>>>   3 files changed, 28 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/mips/include/asm/cpu-info.h 
+>>> b/arch/mips/include/asm/cpu-info.h
+>>> index ed7ffe4..50e924e 100644
+>>> --- a/arch/mips/include/asm/cpu-info.h
+>>> +++ b/arch/mips/include/asm/cpu-info.h
+>>> @@ -115,6 +115,7 @@ extern struct cpuinfo_mips cpu_data[];
+>>>   extern void cpu_probe(void);
+>>>   extern void cpu_report(void);
+>>>
+>>> +extern const char *__model_name[];
+>>>   extern const char *__cpu_name[];
+>>>   #define cpu_name_string() __cpu_name[raw_smp_processor_id()]
+>>>
+>>> diff --git a/arch/mips/kernel/cpu-probe.c 
+>>> b/arch/mips/kernel/cpu-probe.c
+>>> index 6ab6b03..3ae40cc 100644
+>>> --- a/arch/mips/kernel/cpu-probe.c
+>>> +++ b/arch/mips/kernel/cpu-probe.c
+>>> @@ -1548,6 +1548,7 @@ static inline void cpu_probe_legacy(struct 
+>>> cpuinfo_mips *c, unsigned int cpu)
+>>>                          set_elf_platform(cpu, "loongson2e");
+>>>                          set_isa(c, MIPS_CPU_ISA_III);
+>>>                          c->fpu_msk31 |= FPU_CSR_CONDX;
+>>> +                       __model_name[cpu] = "Loongson-2E";
+>>>                          break;
+>>>                  case PRID_REV_LOONGSON2F:
+>>>                          c->cputype = CPU_LOONGSON2EF;
+>>> @@ -1555,23 +1556,37 @@ static inline void cpu_probe_legacy(struct 
+>>> cpuinfo_mips *c, unsigned int cpu)
+>>>                          set_elf_platform(cpu, "loongson2f");
+>>>                          set_isa(c, MIPS_CPU_ISA_III);
+>>>                          c->fpu_msk31 |= FPU_CSR_CONDX;
+>>> +                       __model_name[cpu] = "Loongson-2F";
+>>>                          break;
+>>>                  case PRID_REV_LOONGSON3A_R1:
+>>>                          c->cputype = CPU_LOONGSON64;
+>>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>>                          set_elf_platform(cpu, "loongson3a");
+>>>                          set_isa(c, MIPS_CPU_ISA_M64R1);
+>>> -                       c->ases |= (MIPS_ASE_LOONGSON_MMI | 
+>>> MIPS_ASE_LOONGSON_CAM |
+>>> -                               MIPS_ASE_LOONGSON_EXT);
+>>> +                       c->ases |= (MIPS_ASE_LOONGSON_MMI |
+>>> +                                   MIPS_ASE_LOONGSON_CAM |
+>>> +                                   MIPS_ASE_LOONGSON_EXT);
+>>> +                       __model_name[cpu] = "Loongson-3A R1 
+>>> (Loongson-3A1000)";
+>>>                          break;
+>>>                  case PRID_REV_LOONGSON3B_R1:
+>>> +                       c->cputype = CPU_LOONGSON64;
+>>> +                       __cpu_name[cpu] = "ICT Loongson-3";
+>>> +                       set_elf_platform(cpu, "loongson3b");
+>>> +                       set_isa(c, MIPS_CPU_ISA_M64R1);
+>>> +                       c->ases |= (MIPS_ASE_LOONGSON_MMI |
+>>> +                                   MIPS_ASE_LOONGSON_CAM |
+>>> +                                   MIPS_ASE_LOONGSON_EXT);
+>>> +                       __model_name[cpu] = "Loongson-3B R1 
+>>> (Loongson-3B1000)";
+>>> +                       break;
+>>>                  case PRID_REV_LOONGSON3B_R2:
+>>>                          c->cputype = CPU_LOONGSON64;
+>>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>>                          set_elf_platform(cpu, "loongson3b");
+>>>                          set_isa(c, MIPS_CPU_ISA_M64R1);
+>>> -                       c->ases |= (MIPS_ASE_LOONGSON_MMI | 
+>>> MIPS_ASE_LOONGSON_CAM |
+>>> -                               MIPS_ASE_LOONGSON_EXT);
+>>> +                       c->ases |= (MIPS_ASE_LOONGSON_MMI |
+>>> +                                   MIPS_ASE_LOONGSON_CAM |
+>>> +                                   MIPS_ASE_LOONGSON_EXT);
+>>> +                       __model_name[cpu] = "Loongson-3B R2 
+>>> (Loongson-3B1500)";
+>>>                          break;
+>>>                  }
+>>>
+>>> @@ -1926,6 +1941,7 @@ static inline void cpu_probe_loongson(struct 
+>>> cpuinfo_mips *c, unsigned int cpu)
+>>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>>                          set_elf_platform(cpu, "loongson3a");
+>>>                          set_isa(c, MIPS_CPU_ISA_M64R2);
+>>> +                       __model_name[cpu] = "Loongson-3A R2 
+>>> (Loongson-3A2000)";
+>>>                          break;
+>>>                  case PRID_REV_LOONGSON3A_R3_0:
+>>>                  case PRID_REV_LOONGSON3A_R3_1:
+>>> @@ -1933,6 +1949,7 @@ static inline void cpu_probe_loongson(struct 
+>>> cpuinfo_mips *c, unsigned int cpu)
+>>>                          __cpu_name[cpu] = "ICT Loongson-3";
+>>>                          set_elf_platform(cpu, "loongson3a");
+>>>                          set_isa(c, MIPS_CPU_ISA_M64R2);
+>>> +                       __model_name[cpu] = "Loongson-3A R3 
+>>> (Loongson-3A3000)";
+>>>                          break;
+>>>                  }
+>>>
+>>> @@ -1952,6 +1969,7 @@ static inline void cpu_probe_loongson(struct 
+>>> cpuinfo_mips *c, unsigned int cpu)
+>>>                  c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+>>>                  c->ases |= (MIPS_ASE_LOONGSON_MMI | 
+>>> MIPS_ASE_LOONGSON_CAM |
+>>>                          MIPS_ASE_LOONGSON_EXT | 
+>>> MIPS_ASE_LOONGSON_EXT2);
+>>> +               __model_name[cpu] = "Loongson-3A R4 (Loongson-3A4000)";
+>>>                  break;
+>>>          default:
+>>>                  panic("Unknown Loongson Processor ID!");
+>>> @@ -2111,6 +2129,7 @@ u64 __ua_limit;
+>>>   EXPORT_SYMBOL(__ua_limit);
+>>>   #endif
+>>>
+>>> +const char *__model_name[NR_CPUS];
+>>>   const char *__cpu_name[NR_CPUS];
+>>>   const char *__elf_platform;
+>>>
+>>> diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+>>> index f8d3671..5fc74e6 100644
+>>> --- a/arch/mips/kernel/proc.c
+>>> +++ b/arch/mips/kernel/proc.c
+>>> @@ -15,6 +15,7 @@
+>>>   #include <asm/mipsregs.h>
+>>>   #include <asm/processor.h>
+>>>   #include <asm/prom.h>
+>>> +#include <asm/time.h>
+>>>
+>>>   unsigned int vced_count, vcei_count;
+>>>
+>>> @@ -63,6 +64,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+>>>          seq_printf(m, fmt, __cpu_name[n],
+>>>                        (version >> 4) & 0x0f, version & 0x0f,
+>>>                        (fp_vers >> 4) & 0x0f, fp_vers & 0x0f);
+>>> +       if (__model_name[n])
+>>> +               seq_printf(m, "model name\t\t: %s @ %uMHz\n",
+>>> +                     __model_name[n], mips_hpt_frequency / 500000);
+>>>          seq_printf(m, "BogoMIPS\t\t: %u.%02u\n",
+>>>                        cpu_data[n].udelay_val / (500000/HZ),
+>>>                        (cpu_data[n].udelay_val / (5000/HZ)) % 100);
+>>> -- 
+>>> 2.1.0
+>>>
+>>
+
