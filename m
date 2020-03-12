@@ -2,137 +2,232 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2369C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B204FC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8859320674
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:22:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1aj1zSa"
+	by mail.kernel.org (Postfix) with ESMTP id 91F0C20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgCLPWm (ORCPT
+        id S1728097AbgCLPXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:22:42 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35454 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbgCLPWm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:22:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k26so6678827otr.2;
-        Thu, 12 Mar 2020 08:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3CEHFjpyc9/ZGVlSOC4X/gcnKa22KLNZWM3ttUw+GaY=;
-        b=X1aj1zSaQSY8xndb9omYxHIdZwCylcFB6uD+ViZebe28st96b/Zey2TdqN3YVNGQOg
-         XlqWlmyJtDuydUWHsG0xpr+QPpJ0e8baLS1usHhOh2zTO6o7FF3iOd5/zVi3V/EvF1rc
-         yRFl//ENMNcJA1Eih0NRBK+BDyIr7kia9QUdo/Ov77e306V5jLFU6LE1azSZL9WWfum/
-         7JA/dXzoHtyFTgtNwIyZSsRmZCXPYq+iLQCfbo8ep0DXfeJYHYvU1oZZGzchFDg7ur+F
-         gWSpAyav3tYz3HUVumNQicWmIWhB60EwMjUt8KfM87pOlmNxk9lQRXamaz9Gfr54sRXY
-         zzxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3CEHFjpyc9/ZGVlSOC4X/gcnKa22KLNZWM3ttUw+GaY=;
-        b=dBuDNAJiawz2LNz2QWMsoUChlPbASavE+sMy6x9Xnhyr7r8nSQU8bDqDa+y8iOJKGM
-         JftoOs4FD/gW0gqHU29HnGGnlFRf2KNx/69OiyM485gkjVhwEmXvEJnnGtS7oeabViOY
-         f8ViOV+WU75zHasspn7wFbhzgOeWxDLaOtDam/m4r2tujHFpZSOGDA/vFN7xmEI2fGCo
-         fVfRvPOkXcmjWvs3a2DXP/cXaZx5ZCfcwcAuphbwEGsKwuVXDTwpyMeM9ukVQxinDhtQ
-         QEVENwK+REDfhiTqOv4WjSBJ3fLFrgbgSeaaz3UlxFUiobDAuttWJiOqfsyzm6RdTE7X
-         kF6A==
-X-Gm-Message-State: ANhLgQ1SQSr8YW6ZaiWcgD2LAj2V8pEBbtKxnIphqvHE5LKGjwzm0Wog
-        +PH3L4aYNgC3xskJoe9knIO4lv9PNQnCfU23OysyjcAV
-X-Google-Smtp-Source: ADFU+vsjS/B8wd7MjyjSvFWCuIRNbsoBiEnwif9Xs2TVDjTHdUTqIT5q5v2JXe3xoCnprDgyo0xUfH87+FEdx5X+430=
-X-Received: by 2002:a4a:bf19:: with SMTP id r25mr4310784oop.3.1584026561419;
- Thu, 12 Mar 2020 08:22:41 -0700 (PDT)
+        Thu, 12 Mar 2020 11:23:54 -0400
+Received: from relay.sw.ru ([185.231.240.75]:52640 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727446AbgCLPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:23:54 -0400
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jCPgC-0008Rx-Fq; Thu, 12 Mar 2020 18:23:24 +0300
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
+ <87d09hn4kt.fsf@x220.int.ebiederm.org>
+ <dbce35c7-c060-cfd8-bde1-98fd9a0747a9@virtuozzo.com>
+ <87lfo5lju6.fsf@x220.int.ebiederm.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <f4e941aa-3a63-d74a-4f72-0e81e794f622@virtuozzo.com>
+Date:   Thu, 12 Mar 2020 18:23:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200304164700.11574-1-tony.fischetti@gmail.com> <6c58685f039d329615d84e2df1cd2a155db73c61.camel@archlinux.org>
-In-Reply-To: <6c58685f039d329615d84e2df1cd2a155db73c61.camel@archlinux.org>
-From:   Tony Fischetti <tony.fischetti@gmail.com>
-Date:   Thu, 12 Mar 2020 11:22:30 -0400
-Message-ID: <CAOMV6SVxL=DLP6yWa+jHzu5A+PUJTJi4bk_1ZW-kXXwnaCBT5Q@mail.gmail.com>
-Subject: Re: [PATCH] add ALWAYS_POLL quirk to lenovo pixart mouse
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87lfo5lju6.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the feedback, y'all.
-I will rename the device and add the signed-off field and resubmit.
-Thanks again
+On 12.03.2020 17:38, Eric W. Biederman wrote:
+> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> 
+>> On 12.03.2020 15:24, Eric W. Biederman wrote:
+>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+>>>
+>>>> On 09.03.2020 00:38, Eric W. Biederman wrote:
+>>>>>
+>>>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>>>> over the userspace accesses as the arguments from userspace are read.
+>>>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>>>> threads are killed.  The cred_guard_mutex is held over
+>>>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>>>
+>>>>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>>>>> over a possible indefinite userspace waits for userspace.
+>>>>>
+>>>>> Add exec_update_mutex that is only held over exec updating process
+>>>>> with the new contents of exec, so that code that needs not to be
+>>>>> confused by exec changing the mm and the cred in ways that can not
+>>>>> happen during ordinary execution of a process.
+>>>>>
+>>>>> The plan is to switch the users of cred_guard_mutex to
+>>>>> exec_udpate_mutex one by one.  This lets us move forward while still
+>>>>> being careful and not introducing any regressions.
+>>>>>
+>>>>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>>>>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>>>>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>>>>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>>>>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>>>>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>>>>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+>>>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>>>> ---
+>>>>>  fs/exec.c                    | 9 +++++++++
+>>>>>  include/linux/sched/signal.h | 9 ++++++++-
+>>>>>  init/init_task.c             | 1 +
+>>>>>  kernel/fork.c                | 1 +
+>>>>>  4 files changed, 19 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/fs/exec.c b/fs/exec.c
+>>>>> index d820a7272a76..ffeebb1f167b 100644
+>>>>> --- a/fs/exec.c
+>>>>> +++ b/fs/exec.c
+>>>>> @@ -1014,6 +1014,7 @@ static int exec_mmap(struct mm_struct *mm)
+>>>>>  {
+>>>>>  	struct task_struct *tsk;
+>>>>>  	struct mm_struct *old_mm, *active_mm;
+>>>>> +	int ret;
+>>>>>  
+>>>>>  	/* Notify parent that we're no longer interested in the old VM */
+>>>>>  	tsk = current;
+>>>>> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
+>>>>>  			return -EINTR;
+>>>>>  		}
+>>>>>  	}
+>>>>> +
+>>>>> +	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>
+>>>> You missed old_mm->mmap_sem unlock. See here:
+>>>
+>>> Duh.  Thank you.
+>>>
+>>> I actually need to switch the lock ordering here, and I haven't yet
+>>> because my son was sick yesterday.
+>>
+>> There is some fundamental problem with your patch, since the below fires in 100% cases
+>> on current linux-next:
+> 
+> Thank you.
+> 
+> I have just backed this out of linux-next for now because it is clearly
+> flawed.
+> 
+> You make some good points about the recursion.  I will go back to the
+> drawing board and see what I can work out.
+> 
+> 
+>> [   22.838717] kernel BUG at fs/exec.c:1474!
+>>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 47582cd97f86..0f77f8c94905 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1470,8 +1470,10 @@ static void free_bprm(struct linux_binprm *bprm)
+>>  {
+>>  	free_arg_pages(bprm);
+>>  	if (bprm->cred) {
+>> -		if (!bprm->mm)
+>> +		if (!bprm->mm) {
+>> +			BUG_ON(!mutex_is_locked(&current->signal->exec_update_mutex));
+>>  			mutex_unlock(&current->signal->exec_update_mutex);
+>> +		}
+>>  		mutex_unlock(&current->signal->cred_guard_mutex);
+>>  		abort_creds(bprm->cred);
+>>  	}
+>> @@ -1521,6 +1523,7 @@ void install_exec_creds(struct linux_binprm *bprm)
+>>  	 * credentials; any time after this it may be unlocked.
+>>  	 */
+>>  	security_bprm_committed_creds(bprm);
+>> +	BUG_ON(!mutex_is_locked(&current->signal->exec_update_mutex));
+>>  	mutex_unlock(&current->signal->exec_update_mutex);
+>>  	mutex_unlock(&current->signal->cred_guard_mutex);
+>>  }
+>>
+>> ---------------------------------------------------------------------------------------------
+>>
+>> First time the mutex is unlocked in:
+>>
+>> exec_binprm()->search_binary_handler()->.load_binary->install_exec_creds()
+>>
+>> Then exec_binprm()->search_binary_handler()->.load_binary->flush_old_exec() clears mm:
+>>
+>>         bprm->mm = NULL;        
+>>
+>> Second time the mutex is unlocked in free_bprm():
+>>
+>> 	if (bprm->cred) {
+>>                 if (!bprm->mm)
+>>                         mutex_unlock(&current->signal->exec_update_mutex);
+>>
+>> My opinion is we should not relay on side indicators like bprm->mm. Better you may
+>> introduce struct linux_binprm::exec_update_mutex_is_locked. So the next person dealing
+>> with this after you won't waste much time on diving into this. Also, if someone decides
+>> to change the place, where bprm->mm is set into NULL, this person will bump into hell
+>> of dependences between unrelated components like your newly introduced mutex.
+>>
+>> So, I'm strongly for *struct linux_binprm::exec_update_mutex_is_locked*, since this improves
+>> modularity.
+> 
+> Am I wrong or is that also a problem with cred_guard_mutex?
 
-On Tue, Mar 10, 2020 at 9:48 AM Filipe La=C3=ADns <lains@archlinux.org> wro=
-te:
->
-> On Wed, 2020-03-04 at 11:47 -0500, Tony Fischetti wrote:
-> > A lenovo pixart mouse (17ef:608d) is afflicted common the the malfuncti=
-on
-> > where it disconnects and reconnects every minute--each time incrementin=
-g
-> > the device number. This patch adds the device id of the device and
-> > specifies that it needs the HID_QUIRK_ALWAYS_POLL quirk in order to
-> > work properly.
-> > ---
-> >  drivers/hid/hid-ids.h    | 1 +
-> >  drivers/hid/hid-quirks.c | 1 +
-> >  2 files changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> > index 3a400ce603c4..9e1dfc714ea8 100644
-> > --- a/drivers/hid/hid-ids.h
-> > +++ b/drivers/hid/hid-ids.h
-> > @@ -726,6 +726,7 @@
-> >  #define USB_DEVICE_ID_LENOVO_X1_COVER        0x6085
-> >  #define USB_DEVICE_ID_LENOVO_X1_TAB  0x60a3
-> >  #define USB_DEVICE_ID_LENOVO_X1_TAB3 0x60b5
-> > +#define USB_DEVICE_ID_LENOVO_PIXART_USB_OPTICAL_MOUSE        0x608d
->
-> This ID is really ambiguous. Pixart makes the sensors for the big
-> majority of devices. Isn't there any other identifier you could use? If
-> there isn't, you could do USB_DEVICE_ID_LENOVO_MOUSE_608D.
->
-> >  #define USB_VENDOR_ID_LG             0x1fd2
-> >  #define USB_DEVICE_ID_LG_MULTITOUCH  0x0064
-> > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> > index 0e7b2d998395..247747d6d8cf 100644
-> > --- a/drivers/hid/hid-quirks.c
-> > +++ b/drivers/hid/hid-quirks.c
-> > @@ -103,6 +103,7 @@ static const struct hid_device_id hid_quirks[] =3D =
-{
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_PENSKETCH_M=
-912), HID_QUIRK_MULTI_INPUT },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M40=
-6XE), HID_QUIRK_MULTI_INPUT },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTI=
-CAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
-> > +     { HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXAR=
-T_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C=
-007), HID_QUIRK_ALWAYS_POLL },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C=
-077), HID_QUIRK_ALWAYS_POLL },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_K=
-EYBOARD_G710_PLUS), HID_QUIRK_NOGET },
->
-> --
-> Filipe La=C3=ADns
+No, there is no a problem.
 
+cred_guard_mutex is locked in a pair with bprm->cred = prepare_exec_creds() assignment.
 
-
---=20
---
-Tony Fischetti
-tony.fischetti@gmail.com
-(718) 431-4597
+cred_guard_mutex is unlocked in a pair with bprm->cred = NULL clearing (see install_exec_creds()).
+Further free_bprm() skip unlock in case of bprm->cred is NULL.
