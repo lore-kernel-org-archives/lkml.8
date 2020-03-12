@@ -2,126 +2,159 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890C9C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C537EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57592206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:10:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sX/nnTzF"
+	by mail.kernel.org (Postfix) with ESMTP id 9B6762071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584022266;
+	bh=R/lnE+ckVywNCWcx1gHvO2Mh70J2f5SW32TxuQf+zGI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=E8ookXCfQCxtX/q5W71ESIq1qHsJfNKVMcZjXBb6FETieJbfgOzFQR7j/RPBfL9Rg
+	 ULr5cc90AP+7ka2wpjjPW7a8A70XRXM6WrvIYdJzHN6jWvWbRAFW3Xp/KSEvytH8wb
+	 sQ+Doun2QG4e8q803wY3hDvVzwfNOTS+lQvOYhoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbgCLOKm (ORCPT
+        id S1727546AbgCLOLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:10:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41875 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgCLOKl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:10:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s14so7669459wrt.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5ew4nctO4indXSHhLzfgYmvH3/95PcDt5dya905io4s=;
-        b=sX/nnTzF3WpKLW62aZlNhg/tTlQc74J7QTe1pBr91d8+JK2+VEiYuqwttW48ushB4x
-         i3KDywYEXlpUVblBDddQq9yAhpfBBfUBL2gFgMksYr9BFi0NRWSEfBLfg1jZbBrXegBH
-         hiR5L63dnbJuHzhV5khA5kWHnb6YFMboh134KqQmjWahLl88dQ061x4subDiaAU/iLMK
-         lSEl6pYsL1shARFfb7TwcRm8bqMgXOSyKPbmBUJtI5Nsoq9uq2US5HIFzpIa3VxPOBbB
-         n+Y8sFibTJ+s1gY8tMX6ufWMSjxFw7aow0lwiXR3841o2GcXk5J9eG6VTkAYL0sJo8Yt
-         rudA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5ew4nctO4indXSHhLzfgYmvH3/95PcDt5dya905io4s=;
-        b=BLsXuiZFX3IgtS0//AijjMWifEFp+AXPb1veE3JXndvUTqPiyyCuHcWyDJmKDIDaiN
-         zF8Y33+wPuw17Dy6/rqkfP6FysY1t9h1ry+c+EwwHgkUjsb5HFXt0/K05CMqONj/wtT9
-         oZtevdEBfz8zBamJCLIfh4Ig/znJFkXRlwCmTx99yZOO7sI5GqbMF27GIJ+Or7fBqVDM
-         MkCb8QtyIDv89y7j7+W0448AVeDUYVTt8IE8LuBHrLTtuNiaG0IkWbkhnuawdgcIAWuh
-         IkSbeUXyhRqaYb4OIVB8gUUe5lZ65dUC+zzY0DTM4/XU/gvyXAyFOEhhAAUrpYZwHSmR
-         YG9g==
-X-Gm-Message-State: ANhLgQ0pq7ahb6fD6LiDZ09J6EKpDjxqnwwWHtxlg9Vtu3Ix7uuvQAym
-        h7vYhx0xPjFfugwUGxcowKxPbXfZhg+0TB6iecs=
-X-Google-Smtp-Source: ADFU+vu2HXAwbqlqKOCUAswlE7mxU7DuLJWJDNNP8K82VB8pUBhvZNzs6p6b0qoJdIatEFawHfMSI05gTzYSHQzNFMU=
-X-Received: by 2002:adf:c5c8:: with SMTP id v8mr6917160wrg.111.1584022239536;
- Thu, 12 Mar 2020 07:10:39 -0700 (PDT)
+        Thu, 12 Mar 2020 10:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727123AbgCLOLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:11:05 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10BBE206E7;
+        Thu, 12 Mar 2020 14:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584022264;
+        bh=R/lnE+ckVywNCWcx1gHvO2Mh70J2f5SW32TxuQf+zGI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=arv7/+jvUj9iJWfWlYdgqEG39OScPnVN8+yN/RSHbmQJwGazVMLlVu+Tctn3gdPTX
+         FNdntEiwli27ScYUOBN6gfOPY6ZhjBhMcMl/D3RquqPL+Y8s6k9qxCCbZiR8x3ervB
+         d5gWiTZ8T/wMs4bdrTy0xx25QCxA3drilWiFDdc0=
+Date:   Thu, 12 Mar 2020 09:11:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Aman Sharma <amanharitsh123@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
+ correctly
+Message-ID: <20200312141102.GA93224@google.com>
 MIME-Version: 1.0
-References: <cover.1583896344.git.joe@perches.com> <c9f6b726f857935502a4bfb026e27d9e6e5f7e72.1583896349.git.joe@perches.com>
-In-Reply-To: <c9f6b726f857935502a4bfb026e27d9e6e5f7e72.1583896349.git.joe@perches.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 12 Mar 2020 10:10:28 -0400
-Message-ID: <CADnq5_MistiCrp=jRXqpuu03zTYb+Av8EFq2Dkwjvo5_+PrK0w@mail.gmail.com>
-Subject: Re: [PATCH -next 025/491] AMD POWERPLAY: Use fallthrough;
-To:     Joe Perches <joe@perches.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e413f63-06e3-9613-97dc-ff5968a4f759@free.fr>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks! (link fixed locally).
+[+cc another Marc]
 
-Alex
+On Thu, Mar 12, 2020 at 10:53:06AM +0100, Marc Gonzalez wrote:
+> On 11/03/2020 20:19, Aman Sharma wrote:
+> 
+> > diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
+> > index 21a208da3f59..18c2c4313eb5 100644
+> > --- a/drivers/pci/controller/pcie-tango.c
+> > +++ b/drivers/pci/controller/pcie-tango.c
+> > @@ -273,9 +273,9 @@ static int tango_pcie_probe(struct platform_device *pdev)
+> >  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
+> >  
+> >  	virq = platform_get_irq(pdev, 1);
+> > -	if (virq <= 0) {
+> > +	if (virq < 0) {
+> >  		dev_err(dev, "Failed to map IRQ\n");
+> > -		return -ENXIO;
+> > +		return virq;
+> >  	}
+> >  
+> >  	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
+> 
+> Weee, here we go again :-)
+> 
+> https://patchwork.kernel.org/patch/11066455/
+> https://patchwork.kernel.org/patch/10006651/
+> 
+> Last time around, my understanding was that, going forward,
+> the best solution was:
+> 
+> 	virq = platform_get_irq(...)
+> 	if (virq <= 0)
+> 		return virq ? : -ENODEV;
+> 
+> i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
+> 
+> @Bjorn/Lorenzo did you have a change of heart?
 
-On Wed, Mar 11, 2020 at 1:07 AM Joe Perches <joe@perches.com> wrote:
->
-> Convert the various uses of fallthrough comments to fallthrough;
->
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-> index bf04cf..fc5236c 100644
-> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-> @@ -1250,7 +1250,7 @@ static void smu7_set_dpm_event_sources(struct pp_hwmgr *hwmgr, uint32_t sources)
->         switch (sources) {
->         default:
->                 pr_err("Unknown throttling event sources.");
-> -               /* fall through */
-> +               fallthrough;
->         case 0:
->                 protection = false;
->                 /* src is unused */
-> @@ -3698,12 +3698,12 @@ static int smu7_request_link_speed_change_before_state_change(
->                         data->force_pcie_gen = PP_PCIEGen2;
->                         if (current_link_speed == PP_PCIEGen2)
->                                 break;
-> -                       /* fall through */
-> +                       fallthrough;
->                 case PP_PCIEGen2:
->                         if (0 == amdgpu_acpi_pcie_performance_request(hwmgr->adev, PCIE_PERF_REQ_GEN2, false))
->                                 break;
->  #endif
-> -                       /* fall through */
-> +                       fallthrough;
->                 default:
->                         data->force_pcie_gen = smu7_get_current_pcie_speed(hwmgr);
->                         break;
-> --
-> 2.24.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Yes.  In 10006651 (Oct 20, 2017), I thought:
+
+  irq = platform_get_irq(pdev, 0);
+  if (irq <= 0)
+    return -ENODEV;
+
+was fine.  In 11066455 (Aug 7, 2019), I said I thought I was wrong and
+that:
+
+  platform_get_irq() is a generic interface and we have to be able to
+  interpret return values consistently.  The overwhelming consensus
+  among platform_get_irq() callers is to treat "irq < 0" as an error,
+  and I think we should follow suit.
+  ...
+  I think the best pattern is:
+
+    irq = platform_get_irq(pdev, i);
+    if (irq < 0)
+      return irq;
+
+I still think what I said in 2019 is the right approach.  I do see
+your comment in 10006651 about this pattern:
+
+  if (virq <= 0)
+    return virq ? : -ENODEV;
+
+but IMHO it's too complicated for general use.  Admittedly, it's not
+*very* complicated, but it's a relatively unusual C idiom and I
+stumble over it every time I see it.  If 0 is a special case I think
+it should be mapped to a negative error in arch-specific code, which I
+think is what Linus T suggested in [1].
+
+I think there's still a large consensus that "irq < 0" is the error
+case.  In the tree today we have about 1400 callers of
+platform_get_irq() and platform_get_irq_byname() [2].  Of those,
+almost 900 check for "irq < 0" [3], while only about 150 check for
+"irq <= 0" [4] and about 15 use some variant of a "irq ? : -ENODEV"
+pattern.
+
+The bottom line is that in drivers/pci, I'd like to see either a
+single style or a compelling argument for why some checks should be
+"irq < 0" and others should be "irq <= 0".
+
+[1] https://yarchive.net/comp/linux/zero.html
+[2] $ git grep "=.*platform_get_irq" | wc -l
+    1422
+[3] $ git grep -A4 "=.*platform_get_irq" | grep "<\s*0" | wc -l
+    894
+[4] $ git grep -A4 "=.*platform_get_irq" | grep "<=\s*0" | wc -l
+    151
+[5] $ git grep -A4 "=.*platform_get_irq" | grep "return.*?.*:.*;" | wc -l
+    15
