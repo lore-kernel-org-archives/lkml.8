@@ -2,306 +2,177 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA87C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264EEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2621B2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584020892;
-	bh=7Hsrma7qq44/X7MBPxsABvlq+86jNqUnUKNDmU/EK3g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WnTFwK8/Ee5EYzMa8AIByeRLnX+8OJ1MgPFB3blTud78srp9Mgg1YwqkUtApcvZKn
-	 /Mje535X6gyOSX6t3Kj8BDS3a3k7kVy7Lgf/LOgmyN7LDsQ9fb7gIvzJRPSvkaf3N1
-	 iRTcGahCrpaEXSKYDhhLAuxOSldEgc+ijyJ7OVCM=
+	by mail.kernel.org (Postfix) with ESMTP id E58CC206E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZUXzgAIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCLNsL (ORCPT
+        id S1727368AbgCLNto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgCLNsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:48:10 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40DFF2073B;
-        Thu, 12 Mar 2020 13:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584020889;
-        bh=7Hsrma7qq44/X7MBPxsABvlq+86jNqUnUKNDmU/EK3g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0rGL/jpsOQtWPpISYU3YS9UbSv718nA4VU29jMbfh2EeRr5i+94lSA80lYuPPyAEn
-         jFe4jhSGpVPtG97sF9HhcgUNjSYKclxDZI2oYmYnKQwNhXcf4b3yziMqm0npUuVxBv
-         9TzS07zgrM49/ib8eVAsS+PCPDO3EsGR+8gmNujA=
-Received: by mail-qt1-f180.google.com with SMTP id e20so4354267qto.5;
-        Thu, 12 Mar 2020 06:48:09 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2dKxCd56aDwltycNo8Vht9ehpRm3LcSEq0hIgfZKxpqpAQTnX1
-        WGQU62fIVUet16EqvIotLXVtZ3q85m5nbg8OKA==
-X-Google-Smtp-Source: ADFU+vsh/ZBWJP0apj6nbHk+WLm+GcvhF1gv3m9rygFmR6SBqv5Cgnqha1TMbqVjnTFwGemnGfKB8a0ilVOxqUNA2lg=
-X-Received: by 2002:ac8:41d8:: with SMTP id o24mr2209547qtm.300.1584020888314;
- Thu, 12 Mar 2020 06:48:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru> <20200306132510.AC2108030794@mail.baikalelectronics.ru>
-In-Reply-To: <20200306132510.AC2108030794@mail.baikalelectronics.ru>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 12 Mar 2020 08:47:56 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
-Message-ID: <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: Replace DW APB GPIO legacy
- bindings with YAML-based one
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
+        Thu, 12 Mar 2020 09:49:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60477 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726299AbgCLNto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:49:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584020983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CJs8yOMXumhEsBAQIQNOmZwhjwQqs4MeidJ20K6lf6M=;
+        b=ZUXzgAItwOlbusT9W6m0ffsAGzEpiNndLBcJdxW0kUTJIikBspoz+o/iL1msR01a4tGFIE
+        dHQLOj/0kseDgh9K+91NV7SCmv5Bhe5Y4z8qaOLDeTUIl7UKr8FapPqbp7dQB6vE9dIfIK
+        PtyUJLpM/PkTFVkFOELSataTeJYuZs0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-jZYbkkGCNwqYpPfJ6pjZpw-1; Thu, 12 Mar 2020 09:49:42 -0400
+X-MC-Unique: jZYbkkGCNwqYpPfJ6pjZpw-1
+Received: by mail-wr1-f70.google.com with SMTP id l16so1922771wrr.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 06:49:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CJs8yOMXumhEsBAQIQNOmZwhjwQqs4MeidJ20K6lf6M=;
+        b=q9Vje46RE9QNfrAFm8zY37kwHYCXoP2Fknflhuns85jb7B2yMysEzDx7dkNgp6CX7m
+         tqsy0RzJgGDXaYVxEUeNlEMIv6DU56GHCB+1ru8gPfyh5dU74AJINkIrV2fFEfS3qoni
+         KXxiL3V/j/X+zzLvWqf1xhfArWn8as029DLOE64l+Mm9tmE9FMW5rlBHBvox+OM/3Y0P
+         eM6mON+k8Pne5MpDr8pwQn8aE55wi31lzfyAUSM9TRzZVY1x5oE4VMoNhgYKnpmhCqwB
+         qtL/6yyxoigEmeOaQUc9aq1g0oypbiuW+PB4Pb7DiXM0aRgm2NPxwklOnjPsnTO1BajR
+         +IIg==
+X-Gm-Message-State: ANhLgQ3rL/xvjxCUmQAwZSZGXHS6SY5QjXnshaPmvw53IxuKf2vtH74c
+        jopoun0qHuaYwD0ZTasHS76bEKHXl3iF+mMuM1Z7S0nLr7Fyf4aXWMZzCBSFtZgguENxx0jquKN
+        rc2/NR1OlqWuZr9Yi5fceTs8F
+X-Received: by 2002:adf:f847:: with SMTP id d7mr10753585wrq.31.1584020980565;
+        Thu, 12 Mar 2020 06:49:40 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtKExZ6/bWWQcZnhHrIyO98G2UtYV/EjSkAe+g7eZomMLrn+gXs4sxMr/u97SFeMezwkn3ubQ==
+X-Received: by 2002:adf:f847:: with SMTP id d7mr10753567wrq.31.1584020980343;
+        Thu, 12 Mar 2020 06:49:40 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id g7sm274970wrs.68.2020.03.12.06.49.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 06:49:39 -0700 (PDT)
+Subject: Re: [tip: irq/core] x86: Select HARDIRQS_SW_RESEND on x86
+To:     Linus Walleij <linus.walleij@linaro.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+References: <20200123210242.53367-1-hdegoede@redhat.com>
+ <158396292503.28353.1070405680109587154.tip-bot2@tip-bot2>
+ <CACRpkdYPy93bDwPe1wHhcwpgN9uXepKXS1Ca5yFmDVks=r0RoQ@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1cb0397f-e583-3d7e-dff3-2cc916219846@redhat.com>
+Date:   Thu, 12 Mar 2020 14:49:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdYPy93bDwPe1wHhcwpgN9uXepKXS1Ca5yFmDVks=r0RoQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 7:25 AM <Sergey.Semin@baikalelectronics.ru> wrote:
->
+Hi,
 
-Subject is kind of long and wordy. Perhaps:
+On 3/12/20 2:31 PM, Linus Walleij wrote:
+> On Wed, Mar 11, 2020 at 10:42 PM tip-bot2 for Hans de Goede
+> <tip-bot2@linutronix.de> wrote:
+> 
+>>          select GENERIC_GETTIMEOFDAY
+>>          select GENERIC_VDSO_TIME_NS
+>>          select GUP_GET_PTE_LOW_HIGH             if X86_PAE
+>> +       select HARDIRQS_SW_RESEND
+> 
+> Just help me understand the semantics of this thing...
+> 
+> According to the text in KConfig:
+> 
+> # Tasklet based software resend for pending interrupts on enable_irq()
+> config HARDIRQS_SW_RESEND
+>         bool
+> 
+> According to
+> commit a4633adcdbc15ac51afcd0e1395de58cee27cf92
+> 
+>      [PATCH] genirq: add genirq sw IRQ-retrigger
+> 
+>      Enable platforms that do not have a hardware-assisted
+> hardirq-resend mechanism
+>      to resend them via a softirq-driven IRQ emulation mechanism.
+> 
+> so when enable_irq() is called, if the IRQ is already asserted,
+> it will be distributed in the form of a software irq?
+> 
+> OK I give up I don't understand the semantics of this thing.
+> 
+> Maybe it's because I think of a register where the IRQ line
+> is just a level IRQ bit thing that stays high as long as the IRQ
+> is not handled.
+> 
+> So I suppose it is for any type of transient IRQ such as
+> edge triggered that happened before the system came back
+> online entirely and now the only remnant of it is a bit in
+> the irchip status register?
 
-dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
+The way I understand it is like this:
 
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces Synopsys DW GPIO
-> legacy bare text bindings with YAML file. As before the bindings file
-> states that the corresponding dts node is supposed to be compatible
-> with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
-> compatible string and provide a mandatory registers memory range.
-> It may also have an optional clocks and resets phandle references.
->
-> There must be specified at least one subnode with
-> "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
-> which would actually export the GPIO controller functionality. Such
-> nodes should have traditional GPIO controller properties together
-> with optional interrupt-controller attributes if the corresponding
-> controller was synthesized to detected and report the input values
-> change to the parental IRQ controller.
->
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
->
-> ---
->
-> Synopsis DesignWare APB SSI controller has a bindings property
-> "snps,nr-gpios" of numeric type, which means the number of GPIO pins
-> exported by the corresponding controller port. There is also a generic
-> pattern-property "*-gpios", which corresponds to a GPIOs array. As you
-> can see the GPIOs array property wildcard matches the vendor-specific
-> property "snps,nr-gpios" property while having an incompatible type.
-> Due to this the DW APB GPIO dts-nodes evaluation will report the
-> following error:
->
-> snps,nr-gpios:0:0: 8 is not valid under any of the given schemas (Possible causes of the failure):
-> snps,nr-gpios:0:0: missing phandle tag in 8
->
-> I didn't manage to fix the problem by redefining the property schema (this
-> might be impossible anyway). In my opinion the best way to solve it would be
-> to change the DW APB SSI Controller bindings so the driver would accept the
-> standard "ngpios" property for the same purpose. But in this case we would have
-> to alter all the dts files currently having the "snps,dw-apb-ssi" compatible
-> nodes (it's a lot). I know the bindings modifications aren't that much welcome
-> in the kernel community and there are good reasons why. So what do you think
-> would be the better way to fix the problem with the property types collision?
+1. We have an edge triggered IRQ from a peripheral to a
+GPIO controller
 
-Does this change (to dt-schema) work for you?
+2. We have a level triggered IRQ from the GPIO controller to the
+"root" IRQ controller.
 
-diff --git a/schemas/gpio/gpio.yaml b/schemas/gpio/gpio.yaml
-index 1d9c109f9791..d1c08ccfdc1a 100644
---- a/schemas/gpio/gpio.yaml
-+++ b/schemas/gpio/gpio.yaml
-@@ -34,7 +34,7 @@ properties:
-       - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+3. With modern x86 suspend, we do not really put the entire
+system in a firmware-controller suspend state, instead the CPU is
+halted until any IRQ happens; and there is a power-management
+micro-controller which shuts various things down while the CPU
+is halted leading to similar power consumption as old S3 suspend.
 
- patternProperties:
--  ".*-gpios?$":
-+  "(?<!,nr)-gpios?$":
-     $ref: "/schemas/types.yaml#/definitions/phandle-array"
-   "^gpios$":
-     $ref: "/schemas/types.yaml#/definitions/phandle-array"
+The combination of these 3 means that we must ack the edge
+triggered IRQ at the GPIO controller level even while suspended
+(we briefly wake up for this) to make the level-triggered IRQ
+coming from the GPIO controller low so that we can go back to sleep.
 
+When this happens we record in the kernel IRQ tracking data for
+the edge-triggered IRQ tied to the GPIO (there are no "remnants"
+of it in any chuip registers), that the IRQ needs to be replayed
+on resume. Some IRQ controllers allow writing a register to
+retrigger the IRQ without the level on the external GPIO actually
+changing.
 
-> ---
->  .../bindings/gpio/snps,dw-apb-gpio.yaml       | 136 ++++++++++++++++++
->  .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
->  2 files changed, 136 insertions(+), 65 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> new file mode 100644
-> index 000000000000..d9bc12e9e515
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+Some IRQ controllers do not allow this, in this case we need to
+emulate this retriggering in software, this is what the
+HARDIRQS_SW_RESEND option is for, this handles this in a generic
+way, so that we do not have to add emulation to every IRQ-chip
+driver where the hardware lacks a "retrigger" register.
 
-Do you have rights to add BSD?
+> I see that ARM and ARM64 simply just select this. What
+> happens if you do that and why is x86 not selecting it in general?
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/snps,dw-apb-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys DesignWare APB GPIO controller
-> +
-> +description: |
-> +  Synopsys DesignWare GPIO controllers have a configurable number of ports,
-> +  each of which are intended to be represented as child nodes with the generic
-> +  GPIO-controller properties as desribed in this bindings file.
-> +
-> +maintainers:
-> +  - Hoan Tran <hoan@os.amperecomputing.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^gpio@[0-9a-fA-F]+$"
+Erm, "selecting it in general" (well at least on x86) is what
+this patch is doing. But I guess you mean why is this not
+selected on all architectures?  If I've understood tglx correctly
+the HARDIRQS_SW_RESEND option is incompatible with some irq-chip
+drivers. I think it was incompatible with using nested threaded
+handlers are some such...
 
-Lowercase hex for unit-addresses.
+tglx can probably explain this way better then I can :)
 
-> +
-> +  compatible:
-> +    const: snps,dw-apb-gpio
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: APB interface clock source
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
+Regards,
 
-Shouldn't it be "^gpio@..." And unit-addresses should be lowercase.
+Hans
 
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        const: snps,dw-apb-gpio-port
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      gpio-controller: true
-> +
-> +      '#gpio-cells':
-> +        const: 2
-> +
-> +      snps,nr-gpios:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: The number of GPIO pins exported by the port.
-> +        default: 32
-> +        minimum: 1
-> +        maximum: 32
-> +
-> +      interrupts:
-> +        description: |
-> +          The interrupts to the parent controller raised when GPIOs generate
-> +          the interrupts. If the controller provides one combined interrupt
-> +          for all GPIOs, specify a single interrupt. If the controller provides
-> +          one interrupt for each GPIO, provide a list of interrupts that
-> +          correspond to each of the GPIO pins.
-> +        minItems: 1
-> +        maxItems: 32
-> +
-> +      interrupts-extended:
-
-Drop this. It gets added by the tools automatically.
-
-> +        description: |
-> +          When specifying multiple interrupts, if any are unconnected, use
-> +          this property to specify the interrupts and set the interrupt
-> +          controller handle for unused interrupts to 0.
-> +        minItems: 1
-> +        maxItems: 32
-> +
-> +      interrupt-controller: true
-> +
-> +      '#interrupt-cells':
-> +        const: 2
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +
-> +    dependencies:
-> +      interrupt-controller: [ interrupts ]
-> +
-> +    additionalProperties: false
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    gpio: gpio@20000 {
-> +      compatible = "snps,dw-apb-gpio";
-> +      reg = <0x20000 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      porta: gpio@0 {
-> +        compatible = "snps,dw-apb-gpio-port";
-> +        reg = <0>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        snps,nr-gpios = <8>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupt-parent = <&vic1>;
-> +        interrupts = <0>;
-> +      };
-> +
-> +      portb: gpio@1 {
-> +        compatible = "snps,dw-apb-gpio-port";
-> +        reg = <1>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        snps,nr-gpios = <8>;
-> +      };
-> +    };
-> +...
