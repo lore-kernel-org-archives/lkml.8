@@ -2,157 +2,238 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BA7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8504C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1ED20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hrDFZCxO"
+	by mail.kernel.org (Postfix) with ESMTP id AC51B20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 23:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCLXvs (ORCPT
+        id S1727074AbgCLXxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 19:51:48 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51907 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgCLXvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 19:51:48 -0400
-Received: by mail-pj1-f65.google.com with SMTP id y7so3211793pjn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 16:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0KxoRh9qG0nLMfrbberK+fO1rqVz30X/phZqryHpwoE=;
-        b=hrDFZCxOoZIcuiwEPWccramEAhWr1lMdKuusoyTmE2sVv9Z09z1vKUIBrOVGra0QoW
-         Iu+CfN43PYxi12Ebdq88oCKzkUWKHHwbP6LGOUeYqhvDeK58SyOfk0Hd2RUuHTnOpplY
-         VrYaCA/WV4QeV4sUlJrKUygPV+W304zKjQSug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0KxoRh9qG0nLMfrbberK+fO1rqVz30X/phZqryHpwoE=;
-        b=froqoNJD2SibyUGzrfwDlwU7Ws+QpTfXMzD3y0uI3ojDcSMbbXgFYber5CMhqwX+we
-         Wzkvs705ydqacmyEloqQ0mg+6xtachEHalTnPPCnQ/A6tn1JupLoE/l2y6pDd+nq9p63
-         66ThO1GfNK9WHTkzgnTkPpnFXxCXKn24V9OIsdwzHI2A5tZ+2uHKeIjhBvWSbWLnuauo
-         Twjqw/Y3ffJGW7Fl26/qeCbsgwjZSvJynEMc0A1QENVoFAVERMqMoB9CfkC6FqkuvJOw
-         T0L2g+5VyewDgzdSSIyo+G25CmDNNg52p6HXn/lJr7aRbEvpY98xtOtdZ1PhFa1TrRPo
-         Tvzw==
-X-Gm-Message-State: ANhLgQ3Td7THnm400xnM0jpzZTAuJcpYBCp8bzs/L4ioyKxFNlB0v/+s
-        VtDQ7ovS78HwpK6B19YDfbZDww==
-X-Google-Smtp-Source: ADFU+vuYJ4FEHhqKp1ULOQP4BxWE4WCcGej1urOAm1ZQy7sOKoPH70GW5BnhRttob76Zor/FqAJANA==
-X-Received: by 2002:a17:90a:345:: with SMTP id 5mr6721841pjf.134.1584057105987;
-        Thu, 12 Mar 2020 16:51:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id fz3sm10018224pjb.41.2020.03.12.16.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 16:51:45 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 16:51:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Todd Kjos <tkjos@android.com>, ard.biesheuvel@linaro.org,
-        ardb@kernel.org, john.stultz@linaro.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        naresh.kamboju@linaro.org, shuah@kernel.org,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>, hridya@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH 1/3] binderfs: port tests to test harness infrastructure
-Message-ID: <202003121651.149266F1@keescook>
-References: <20200311105309.1742827-1-christian.brauner@ubuntu.com>
- <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+        Thu, 12 Mar 2020 19:53:00 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27380 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbgCLXxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 19:53:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 16:52:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
+   d="scan'208";a="236789453"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Mar 2020 16:52:57 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jCXdI-0008qR-DS; Fri, 13 Mar 2020 07:52:56 +0800
+Date:   Fri, 13 Mar 2020 07:52:12 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/mm] BUILD SUCCESS
+ 6a9feaa8774f3b8210dfe40626a75ca047e4ecae
+Message-ID: <5e6acb2c.BiexAgVZoeb8CFfU%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 02:15:29PM +0100, Christian Brauner wrote:
-> Makes for nicer output and prepares for additional tests.
-> 
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/mm
+branch HEAD: 6a9feaa8774f3b8210dfe40626a75ca047e4ecae  x86/mm/kmmio: Use this_cpu_ptr() instead get_cpu_var() for kmmio_ctx
 
-Yay harness! :)
+elapsed time: 480m
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+configs tested: 175
+configs skipped: 106
 
--Kees
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> ---
->  .../selftests/filesystems/binderfs/Makefile      |  2 ++
->  .../filesystems/binderfs/binderfs_test.c         | 16 ++++++----------
->  2 files changed, 8 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/filesystems/binderfs/Makefile b/tools/testing/selftests/filesystems/binderfs/Makefile
-> index 58cb659b56b4..75315d9ba7a9 100644
-> --- a/tools/testing/selftests/filesystems/binderfs/Makefile
-> +++ b/tools/testing/selftests/filesystems/binderfs/Makefile
-> @@ -3,4 +3,6 @@
->  CFLAGS += -I../../../../../usr/include/
->  TEST_GEN_PROGS := binderfs_test
->  
-> +binderfs_test: binderfs_test.c ../../kselftest.h ../../kselftest_harness.h
-> +
->  include ../../lib.mk
-> diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> index 8c2ed962e1c7..d03ed8eed5eb 100644
-> --- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> +++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> @@ -15,7 +15,9 @@
->  #include <unistd.h>
->  #include <linux/android/binder.h>
->  #include <linux/android/binderfs.h>
-> +
->  #include "../../kselftest.h"
-> +#include "../../kselftest_harness.h"
->  
->  static ssize_t write_nointr(int fd, const void *buf, size_t count)
->  {
-> @@ -252,24 +254,18 @@ static void __do_binderfs_test(void)
->  	ksft_inc_pass_cnt();
->  }
->  
-> -static void binderfs_test_privileged()
-> +TEST(binderfs_test_privileged)
->  {
->  	if (geteuid() != 0)
-> -		ksft_print_msg(
-> -			"Tests are not run as root. Skipping privileged tests\n");
-> +		ksft_print_msg("Tests are not run as root. Skipping privileged tests\n");
->  	else
->  		__do_binderfs_test();
->  }
->  
-> -static void binderfs_test_unprivileged()
-> +TEST(binderfs_test_unprivileged)
->  {
->  	change_to_userns();
->  	__do_binderfs_test();
->  }
->  
-> -int main(int argc, char *argv[])
-> -{
-> -	binderfs_test_privileged();
-> -	binderfs_test_unprivileged();
-> -	ksft_exit_pass();
-> -}
-> +TEST_HARNESS_MAIN
-> 
-> base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
-> -- 
-> 2.25.1
-> 
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+riscv                            allyesconfig
+s390                          debug_defconfig
+sh                          rsk7269_defconfig
+i386                                defconfig
+riscv                               defconfig
+s390                             allmodconfig
+um                                  defconfig
+powerpc                           allnoconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200311
+x86_64               randconfig-a002-20200311
+x86_64               randconfig-a003-20200311
+i386                 randconfig-a001-20200311
+i386                 randconfig-a002-20200311
+i386                 randconfig-a003-20200311
+alpha                randconfig-a001-20200312
+m68k                 randconfig-a001-20200312
+mips                 randconfig-a001-20200312
+nds32                randconfig-a001-20200312
+parisc               randconfig-a001-20200312
+riscv                randconfig-a001-20200312
+c6x                  randconfig-a001-20200313
+h8300                randconfig-a001-20200313
+microblaze           randconfig-a001-20200313
+nios2                randconfig-a001-20200313
+sparc64              randconfig-a001-20200313
+c6x                  randconfig-a001-20200312
+h8300                randconfig-a001-20200312
+microblaze           randconfig-a001-20200312
+nios2                randconfig-a001-20200312
+sparc64              randconfig-a001-20200312
+csky                 randconfig-a001-20200312
+openrisc             randconfig-a001-20200312
+s390                 randconfig-a001-20200312
+sh                   randconfig-a001-20200312
+xtensa               randconfig-a001-20200312
+x86_64               randconfig-b001-20200311
+x86_64               randconfig-b002-20200311
+x86_64               randconfig-b003-20200311
+i386                 randconfig-b001-20200311
+i386                 randconfig-b002-20200311
+i386                 randconfig-b003-20200311
+x86_64               randconfig-c001-20200312
+x86_64               randconfig-c002-20200312
+x86_64               randconfig-c003-20200312
+i386                 randconfig-c001-20200312
+i386                 randconfig-c002-20200312
+i386                 randconfig-c003-20200312
+x86_64               randconfig-c001-20200311
+x86_64               randconfig-c002-20200311
+x86_64               randconfig-c003-20200311
+i386                 randconfig-c001-20200311
+i386                 randconfig-c002-20200311
+i386                 randconfig-c003-20200311
+x86_64               randconfig-d001-20200312
+x86_64               randconfig-d002-20200312
+x86_64               randconfig-d003-20200312
+i386                 randconfig-d001-20200312
+i386                 randconfig-d002-20200312
+i386                 randconfig-d003-20200312
+x86_64               randconfig-e001-20200312
+x86_64               randconfig-e002-20200312
+x86_64               randconfig-e003-20200312
+i386                 randconfig-e001-20200312
+i386                 randconfig-e002-20200312
+i386                 randconfig-e003-20200312
+x86_64               randconfig-f001-20200312
+x86_64               randconfig-f002-20200312
+x86_64               randconfig-f003-20200312
+i386                 randconfig-f001-20200312
+i386                 randconfig-f002-20200312
+i386                 randconfig-f003-20200312
+x86_64               randconfig-g001-20200312
+x86_64               randconfig-g002-20200312
+x86_64               randconfig-g003-20200312
+i386                 randconfig-g001-20200312
+i386                 randconfig-g002-20200312
+i386                 randconfig-g003-20200312
+x86_64               randconfig-h001-20200312
+x86_64               randconfig-h002-20200312
+x86_64               randconfig-h003-20200312
+i386                 randconfig-h001-20200312
+i386                 randconfig-h002-20200312
+i386                 randconfig-h003-20200312
+arm                  randconfig-a001-20200312
+arm64                randconfig-a001-20200312
+ia64                 randconfig-a001-20200312
+powerpc              randconfig-a001-20200312
+arc                  randconfig-a001-20200312
+sparc                randconfig-a001-20200312
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
--- 
-Kees Cook
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
