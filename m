@@ -2,382 +2,164 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C290EC1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA2C1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939B720739
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x03tp4b0"
+	by mail.kernel.org (Postfix) with ESMTP id 3AB3220739
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 04:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbgCLEXZ (ORCPT
+        id S2387803AbgCLEXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 00:23:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47594 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387756AbgCLEXW (ORCPT
+        Thu, 12 Mar 2020 00:23:47 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:63262 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387756AbgCLEXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 00:23:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C4NGoK051601;
-        Wed, 11 Mar 2020 23:23:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583986996;
-        bh=pG4+G30Ueb63gIh4BE/jhpR2Dtnkqg0Kn3QyKIIkjhk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=x03tp4b0vNLjPPfgiSEirGJBFoFrWDJ40OjUjcqVklAP+KoGal88/aZ81nNqiTY3p
-         dMYF80YATtpA3GthDA4MZgpWAzy+2ytF4a3NgSzVOQRBVKFGDv/Ww03Siq/oFOEvlZ
-         UASqAkAaaLiwOQk/9K9Tmrj6xNGgpARnBg1j8VmY=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02C4NGcA080160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Mar 2020 23:23:16 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Mar 2020 23:23:17 -0500
-Received: from localhost.localdomain (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Mar 2020 23:23:16 -0500
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02C4Mvgl065984;
-        Wed, 11 Mar 2020 23:23:13 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v3 5/5] pwm: omap-dmtimer: Implement .apply callback
-Date:   Thu, 12 Mar 2020 09:52:10 +0530
-Message-ID: <20200312042210.17344-6-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200312042210.17344-1-lokeshvutla@ti.com>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
+        Thu, 12 Mar 2020 00:23:46 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02C4NMh7078162;
+        Thu, 12 Mar 2020 13:23:22 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp);
+ Thu, 12 Mar 2020 13:23:22 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02C4NMsG078157;
+        Thu, 12 Mar 2020 13:23:22 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: (from i-love@localhost)
+        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id 02C4NMgH078156;
+        Thu, 12 Mar 2020 13:23:22 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-Id: <202003120423.02C4NMgH078156@www262.sakura.ne.jp>
+X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Thu, 12 Mar 2020 13:23:22 +0900
+References: <alpine.DEB.2.21.2003111513180.195367@chino.kir.corp.google.com> 
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement .apply callback and drop the legacy callbacks(enable, disable,
-config, set_polarity). In .apply() check for the current hardware status
-before changing the pwm configuration.
+> > We used to have a schedule_timeout_killable(1) to address exactly that 
+> > scenario but it was removed in 4.19:
+> > 
+> > commit 9bfe5ded054b8e28a94c78580f233d6879a00146
+> > Author: Michal Hocko <mhocko@suse.com>
+> > Date:   Fri Aug 17 15:49:04 2018 -0700
+> > 
+> >     mm, oom: remove sleep from under oom_lock
+> 
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/pwm/pwm-omap-dmtimer.c | 180 +++++++++++++++++++++++----------
- 1 file changed, 129 insertions(+), 51 deletions(-)
+For the record: If I revert that commit, I can observe that
+current thread sleeps for more than one minute with oom_lock held.
+That is, I don't want to revert that commit.
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index c56e7256e923..0d31833db2e2 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -26,6 +26,11 @@
-  *   can get updated as below based on the current timer counter:
-  *   	- period for current cycle =  current_period + new period
-  *   	- duty_cycle for current period = current period + new duty_cycle.
-+ * - PWM OMAP DM timer cannot change the polarity when pwm is active. When
-+ *   user requests a change in polarity when in active state:
-+ *	- PWM is stopped abruptly(without completing the current cycle)
-+ *	- Polarity is changed
-+ *	- A fresh cycle is started.
-  */
- 
- #include <linux/clk.h>
-@@ -46,8 +51,18 @@
- #define DM_TIMER_LOAD_MIN 0xfffffffe
- #define DM_TIMER_MAX      0xffffffff
- 
-+/**
-+ * struct pwm_omap_dmtimer_chip - Structure representing a pwm chip
-+ *				  corresponding to omap dmtimer.
-+ * @chip:		PWM chip structure representing PWM controller
-+ * @mutex:		Mutex to protect pwm apply state
-+ * @dm_timer:		Pointer to omap dm timer.
-+ * @pdata:		Pointer to omap dm timer ops.
-+ * dm_timer_pdev:	Pointer to omap dm timer platform device
-+ */
- struct pwm_omap_dmtimer_chip {
- 	struct pwm_chip chip;
-+	/* Mutex to protect pwm apply state */
- 	struct mutex mutex;
- 	struct omap_dm_timer *dm_timer;
- 	const struct omap_dm_timer_ops *pdata;
-@@ -60,11 +75,22 @@ to_pwm_omap_dmtimer_chip(struct pwm_chip *chip)
- 	return container_of(chip, struct pwm_omap_dmtimer_chip, chip);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_get_clock_cycles() - Get clock cycles in a time frame
-+ * @clk_rate:	pwm timer clock rate
-+ * @ns:		time frame in nano seconds.
-+ *
-+ * Return number of clock cycles in a given period(ins ns).
-+ */
- static u32 pwm_omap_dmtimer_get_clock_cycles(unsigned long clk_rate, int ns)
- {
- 	return DIV_ROUND_CLOSEST_ULL((u64)clk_rate * ns, NSEC_PER_SEC);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_start() - Start the pwm omap dm timer in pwm mode
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ */
- static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
- {
- 	/*
-@@ -82,33 +108,46 @@ static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
- 	omap->pdata->start(omap->dm_timer);
- }
- 
--static int pwm_omap_dmtimer_enable(struct pwm_chip *chip,
--				   struct pwm_device *pwm)
-+/**
-+ * pwm_omap_dmtimer_is_enabled() -  Detect if the pwm is enabled.
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ *
-+ * Return true if pwm is enabled else false.
-+ */
-+static bool pwm_omap_dmtimer_is_enabled(struct pwm_omap_dmtimer_chip *omap)
- {
--	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	u32 status;
- 
--	mutex_lock(&omap->mutex);
--	omap->pdata->set_pwm(omap->dm_timer,
--			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
--			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
--			     true);
--
--	pwm_omap_dmtimer_start(omap);
--	mutex_unlock(&omap->mutex);
-+	status = omap->pdata->get_pwm_status(omap->dm_timer);
- 
--	return 0;
-+	return !!(status & OMAP_TIMER_CTRL_ST);
- }
- 
--static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
--				     struct pwm_device *pwm)
-+/**
-+ * pwm_omap_dmtimer_polarity() -  Detect the polarity of pwm.
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ *
-+ * Return the polarity of pwm.
-+ */
-+static int pwm_omap_dmtimer_polarity(struct pwm_omap_dmtimer_chip *omap)
- {
--	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	u32 status;
- 
--	mutex_lock(&omap->mutex);
--	omap->pdata->stop(omap->dm_timer);
--	mutex_unlock(&omap->mutex);
-+	status = omap->pdata->get_pwm_status(omap->dm_timer);
-+
-+	return !!(status & OMAP_TIMER_CTRL_SCPWM);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_config() - Update the configuration of pwm omap dm timer
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @duty_ns:	New duty cycle in nano seconds
-+ * @period_ns:	New period in nano seconds
-+ *
-+ * Return 0 if successfully changed the period/duty_cycle else appropriate
-+ * error.
-+ */
- static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 				   struct pwm_device *pwm,
- 				   int duty_ns, int period_ns)
-@@ -116,30 +155,26 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
- 	u32 period_cycles, duty_cycles;
- 	u32 load_value, match_value;
--	struct clk *fclk;
- 	unsigned long clk_rate;
-+	struct clk *fclk;
- 
- 	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
- 		duty_ns, period_ns);
- 
--	mutex_lock(&omap->mutex);
- 	if (duty_ns == pwm_get_duty_cycle(pwm) &&
--	    period_ns == pwm_get_period(pwm)) {
--		/* No change - don't cause any transients. */
--		mutex_unlock(&omap->mutex);
-+	    period_ns == pwm_get_period(pwm))
- 		return 0;
--	}
- 
- 	fclk = omap->pdata->get_fclk(omap->dm_timer);
- 	if (!fclk) {
- 		dev_err(chip->dev, "invalid pmtimer fclk\n");
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	clk_rate = clk_get_rate(fclk);
- 	if (!clk_rate) {
- 		dev_err(chip->dev, "invalid pmtimer fclk rate\n");
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	dev_dbg(chip->dev, "clk rate: %luHz\n", clk_rate);
-@@ -167,7 +202,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 		dev_info(chip->dev,
- 			 "period %d ns too short for clock rate %lu Hz\n",
- 			 period_ns, clk_rate);
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	if (duty_cycles < 1) {
-@@ -199,55 +234,97 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
- 		load_value, load_value,	match_value, match_value);
- 
--	mutex_unlock(&omap->mutex);
--
- 	return 0;
--
--err_einval:
--	mutex_unlock(&omap->mutex);
--
--	return -EINVAL;
- }
- 
--static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
--					 struct pwm_device *pwm,
--					 enum pwm_polarity polarity)
-+/**
-+ * pwm_omap_dmtimer_set_polarity() - Changes the polarity of the pwm dm timer.
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @polarity:	New pwm polarity to be set
-+ */
-+static void pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
-+					  struct pwm_device *pwm,
-+					  enum pwm_polarity polarity)
- {
- 	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	bool enabled;
-+
-+	/* Disable the PWM before changing the polarity. */
-+	enabled = pwm_omap_dmtimer_is_enabled(omap);
-+	if (enabled)
-+		omap->pdata->stop(omap->dm_timer);
- 
--	/*
--	 * PWM core will not call set_polarity while PWM is enabled so it's
--	 * safe to reconfigure the timer here without stopping it first.
--	 */
--	mutex_lock(&omap->mutex);
- 	omap->pdata->set_pwm(omap->dm_timer,
- 			     polarity == PWM_POLARITY_INVERSED,
- 			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
- 			     true);
-+
-+	if (enabled)
-+		pwm_omap_dmtimer_start(omap);
-+}
-+
-+/**
-+ * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @state:	New state to apply
-+ *
-+ * Return 0 if successfully changed the state else appropriate error.
-+ */
-+static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
-+				  struct pwm_device *pwm,
-+				  const struct pwm_state *state)
-+{
-+	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	int ret = 0;
-+
-+	mutex_lock(&omap->mutex);
-+
-+	if (pwm_omap_dmtimer_is_enabled(omap) && !state->enabled) {
-+		omap->pdata->stop(omap->dm_timer);
-+		goto unlock_mutex;
-+	}
-+
-+	if (pwm_omap_dmtimer_polarity(omap) != state->polarity)
-+		pwm_omap_dmtimer_set_polarity(chip, pwm, state->polarity);
-+
-+	ret = pwm_omap_dmtimer_config(chip, pwm, state->duty_cycle,
-+				      state->period);
-+	if (ret)
-+		goto unlock_mutex;
-+
-+	if (!pwm_omap_dmtimer_is_enabled(omap) && state->enabled) {
-+		omap->pdata->set_pwm(omap->dm_timer,
-+				     state->polarity == PWM_POLARITY_INVERSED,
-+				     true,
-+				     OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-+				     true);
-+		pwm_omap_dmtimer_start(omap);
-+	}
-+
-+unlock_mutex:
- 	mutex_unlock(&omap->mutex);
- 
--	return 0;
-+	return ret;
- }
- 
- static const struct pwm_ops pwm_omap_dmtimer_ops = {
--	.enable	= pwm_omap_dmtimer_enable,
--	.disable = pwm_omap_dmtimer_disable,
--	.config	= pwm_omap_dmtimer_config,
--	.set_polarity = pwm_omap_dmtimer_set_polarity,
-+	.apply = pwm_omap_dmtimer_apply,
- 	.owner = THIS_MODULE,
- };
- 
- static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct device_node *timer;
--	struct platform_device *timer_pdev;
--	struct pwm_omap_dmtimer_chip *omap;
- 	struct dmtimer_platform_data *timer_pdata;
- 	const struct omap_dm_timer_ops *pdata;
-+	struct platform_device *timer_pdev;
-+	struct pwm_omap_dmtimer_chip *omap;
- 	struct omap_dm_timer *dm_timer;
--	u32 v;
-+	struct device_node *timer;
- 	int ret = 0;
-+	u32 v;
- 
- 	timer = of_parse_phandle(np, "ti,timers", 0);
- 	if (!timer)
-@@ -280,6 +357,7 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- 	    !pdata->set_load ||
- 	    !pdata->set_match ||
- 	    !pdata->set_pwm ||
-+	    !pdata->get_pwm_status ||
- 	    !pdata->set_prescaler ||
- 	    !pdata->write_counter) {
- 		dev_err(&pdev->dev, "Incomplete dmtimer pdata structure\n");
--- 
-2.23.0
-
+[ 1629.930998][T14021] idle-priority invoked oom-killer: gfp_mask=0x100dca(GFP_HIGHUSER_MOVABLE|__GFP_ZERO), order=0, oom_score_adj=0
+[ 1629.934944][T14021] CPU: 0 PID: 14021 Comm: idle-priority Kdump: loaded Not tainted 5.6.0-rc5+ #968
+[ 1629.938352][T14021] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 07/29/2019
+[ 1629.942211][T14021] Call Trace:
+[ 1629.943956][T14021]  dump_stack+0x71/0xa5
+[ 1629.946041][T14021]  dump_header+0x4d/0x3e0
+[ 1629.948097][T14021]  oom_kill_process+0x179/0x210
+[ 1629.950191][T14021]  out_of_memory+0x109/0x3d0
+[ 1629.952154][T14021]  ? out_of_memory+0x1ea/0x3d0
+[ 1629.954349][T14021]  __alloc_pages_slowpath+0x934/0xb89
+[ 1629.956959][T14021]  __alloc_pages_nodemask+0x333/0x370
+[ 1629.959121][T14021]  handle_pte_fault+0x4ce/0xb40
+[ 1629.961274][T14021]  __handle_mm_fault+0x2b2/0x5e0
+[ 1629.963363][T14021]  handle_mm_fault+0x177/0x360
+[ 1629.965404][T14021]  ? handle_mm_fault+0x46/0x360
+[ 1629.967451][T14021]  do_page_fault+0x2d5/0x680
+[ 1629.969351][T14021]  page_fault+0x34/0x40
+[ 1629.971290][T14021] RIP: 0010:__clear_user+0x36/0x70
+[ 1629.973621][T14021] Code: 0c a7 e2 95 53 48 89 f3 be 14 00 00 00 e8 82 87 b4 ff 0f 01 cb 48 89 d8 48 c1 eb 03 4c 89 e7 83 e0 07 48 89 d9 48 85 c9 74 0f <48> c7 07 00 00 00 00 48 83 c7 08 ff c9 75 f1 48 89 c1 85 c9 74 0a
+[ 1629.980104][T14021] RSP: 0000:ffffa06e0742bd40 EFLAGS: 00050202
+[ 1629.982543][T14021] RAX: 0000000000000000 RBX: 0000000000000200 RCX: 0000000000000002
+[ 1629.985322][T14021] RDX: 0000000000000000 RSI: 00000000a8057a95 RDI: 00007f0ca8605000
+[ 1629.999883][T14021] RBP: ffffa06e0742bd50 R08: 0000000000000001 R09: 0000000000000000
+[ 1630.018164][T14021] R10: 0000000000000000 R11: ffff953843a80978 R12: 00007f0ca8604010
+[ 1630.021491][T14021] R13: 000000000c988000 R14: ffffa06e0742be08 R15: 0000000000001000
+[ 1630.024881][T14021]  clear_user+0x47/0x60
+[ 1630.026651][T14021]  iov_iter_zero+0x95/0x3d0
+[ 1630.028455][T14021]  read_iter_zero+0x38/0xb0
+[ 1630.030234][T14021]  new_sync_read+0x112/0x1b0
+[ 1630.032025][T14021]  __vfs_read+0x27/0x40
+[ 1630.033639][T14021]  vfs_read+0xaf/0x160
+[ 1630.035243][T14021]  ksys_read+0x62/0xe0
+[ 1630.036869][T14021]  __x64_sys_read+0x15/0x20
+[ 1630.038827][T14021]  do_syscall_64+0x4a/0x1e0
+[ 1630.040515][T14021]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 1630.042598][T14021] RIP: 0033:0x7f109bb78950
+[ 1630.044208][T14021] Code: Bad RIP value.
+[ 1630.045798][T14021] RSP: 002b:00007fff499db458 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[ 1630.048558][T14021] RAX: ffffffffffffffda RBX: 0000000200000000 RCX: 00007f109bb78950
+[ 1630.051117][T14021] RDX: 0000000200000000 RSI: 00007f0c9bc7c010 RDI: 0000000000000003
+[ 1630.053715][T14021] RBP: 00007f0c9bc7c010 R08: 0000000000000000 R09: 0000000000021000
+[ 1630.056488][T14021] R10: 00007fff499daea0 R11: 0000000000000246 R12: 00007f0c9bc7c010
+[ 1630.059124][T14021] R13: 0000000000000005 R14: 0000000000000003 R15: 0000000000000000
+[ 1630.061935][T14021] Mem-Info:
+[ 1630.063226][T14021] active_anon:1314192 inactive_anon:5198 isolated_anon:0
+[ 1630.063226][T14021]  active_file:9 inactive_file:0 isolated_file:0
+[ 1630.063226][T14021]  unevictable:0 dirty:0 writeback:0 unstable:0
+[ 1630.063226][T14021]  slab_reclaimable:6649 slab_unreclaimable:268898
+[ 1630.063226][T14021]  mapped:1094 shmem:10475 pagetables:127946 bounce:0
+[ 1630.063226][T14021]  free:25585 free_pcp:62 free_cma:0
+[ 1630.075882][T14021] Node 0 active_anon:5256768kB inactive_anon:20792kB active_file:36kB inactive_file:0kB unevictable:0kB isolated(anon):0kB isolated(file):0kB mapped:4376kB dirty:0kB writeback:0kB shmem:41900kB shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 3158016kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
+[ 1630.084961][T14021] DMA free:15360kB min:132kB low:164kB high:196kB reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:15960kB managed:15360kB mlocked:0kB kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+[ 1630.094169][T14021] lowmem_reserve[]: 0 2717 7644 7644
+[ 1630.096174][T14021] DMA32 free:43680kB min:23972kB low:29964kB high:35956kB reserved_highatomic:0KB active_anon:2733524kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:3129152kB managed:2782468kB mlocked:0kB kernel_stack:0kB pagetables:4764kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+[ 1630.106132][T14021] lowmem_reserve[]: 0 0 4927 4927
+[ 1630.108104][T14021] Normal free:43300kB min:43476kB low:54344kB high:65212kB reserved_highatomic:4096KB active_anon:2523244kB inactive_anon:20792kB active_file:36kB inactive_file:0kB unevictable:0kB writepending:0kB present:5242880kB managed:5045744kB mlocked:0kB kernel_stack:313872kB pagetables:507020kB bounce:0kB free_pcp:248kB local_pcp:248kB free_cma:0kB
+[ 1630.118473][T14021] lowmem_reserve[]: 0 0 0 0
+[ 1630.120348][T14021] DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 1*1024kB (U) 1*2048kB (M) 3*4096kB (M) = 15360kB
+[ 1630.124316][T14021] DMA32: 0*4kB 0*8kB 2*16kB (UM) 2*32kB (UM) 1*64kB (U) 0*128kB 2*256kB (UM) 2*512kB (UM) 1*1024kB (M) 2*2048kB (UM) 9*4096kB (M) = 43680kB
+[ 1630.128773][T14021] Normal: 1231*4kB (UE) 991*8kB (UE) 343*16kB (UME) 230*32kB (UE) 117*64kB (UME) 65*128kB (UME) 7*256kB (UM) 0*512kB 0*1024kB 0*2048kB 0*4096kB = 43300kB
+[ 1630.134207][T14021] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+[ 1630.137435][T14021] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+[ 1630.140770][T14021] 10478 total pagecache pages
+[ 1630.142789][T14021] 0 pages in swap cache
+[ 1630.144572][T14021] Swap cache stats: add 0, delete 0, find 0/0
+[ 1630.146921][T14021] Free swap  = 0kB
+[ 1630.148627][T14021] Total swap = 0kB
+[ 1630.150298][T14021] 2096998 pages RAM
+[ 1630.152078][T14021] 0 pages HighMem/MovableOnly
+[ 1630.154073][T14021] 136105 pages reserved
+[ 1630.156165][T14021] 0 pages cma reserved
+[ 1630.158028][T14021] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),global_oom,task_memcg=/,task=normal-priority,pid=23173,uid=0
+[ 1630.161867][T14021] Out of memory: Killed process 23173 (normal-priority) total-vm:4228kB, anon-rss:88kB, file-rss:0kB, shmem-rss:0kB, UID:0 pgtables:52kB oom_score_adj:1000
+[ 1630.171681][   T18] oom_reaper: reaped process 23173 (normal-priority), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+(...snipped...)
+[ 1800.548694][    C0] idle-priority   R  running task    12416 14021   1183 0x80004080
+[ 1800.550942][    C0] Call Trace:
+[ 1800.552116][    C0]  __schedule+0x28c/0x860
+[ 1800.553531][    C0]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
+[ 1800.555293][    C0]  schedule+0x5f/0xd0
+[ 1800.556618][    C0]  schedule_timeout+0x1ab/0x340
+[ 1800.558151][    C0]  ? __next_timer_interrupt+0xd0/0xd0
+[ 1800.560069][    C0]  schedule_timeout_killable+0x25/0x30
+[ 1800.561836][    C0]  out_of_memory+0x113/0x3d0
+[ 1800.563519][    C0]  ? out_of_memory+0x1ea/0x3d0
+[ 1800.565040][    C0]  __alloc_pages_slowpath+0x934/0xb89
+[ 1800.566727][    C0]  __alloc_pages_nodemask+0x333/0x370
+[ 1800.568397][    C0]  handle_pte_fault+0x4ce/0xb40
+[ 1800.569944][    C0]  __handle_mm_fault+0x2b2/0x5e0
+[ 1800.571527][    C0]  handle_mm_fault+0x177/0x360
+[ 1800.573046][    C0]  ? handle_mm_fault+0x46/0x360
+[ 1800.574592][    C0]  do_page_fault+0x2d5/0x680
+[ 1800.576306][    C0]  page_fault+0x34/0x40
+[ 1800.578413][    C0] RIP: 0010:__clear_user+0x36/0x70
