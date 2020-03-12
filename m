@@ -2,123 +2,91 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2E7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF93DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15222067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="hG2lKuGO"
+	by mail.kernel.org (Postfix) with ESMTP id BAAE52067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 15:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584025634;
+	bh=uPjFqZx/6I5Qs44mY7asg2IZtVGs/xJSbZwp2GMuxw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B+aZ/s5iexqsKIIgVZW1wAw02uRReN/hKHajNoyTLuQfzpaQdVWSlxmxAzWtK1Y4Z
+	 XxJOmltFh+3LugllrAHUKQ8Ht42Wdbfxwpwjh3lTd/X+nVlA/Q3nhoeaa4JNTqIKYG
+	 8Y9bmKuxuMmwa9GPo83WZF4Kc7O4JsPpSpRi8bv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgCLPGU (ORCPT
+        id S1727804AbgCLPHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:06:20 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:56548 "EHLO web0081.zxcs.nl"
+        Thu, 12 Mar 2020 11:07:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:36456 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbgCLPGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 11:06:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
-        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=J6aDQGjkdfrS52YkEz3ek5dt906Ty2Nt38vKTDhn80w=; b=hG2lKuGOULLVa42qYNnOMiU+E+
-        1fF6zxRYgwLngJMFHPGArXhjerUxJQ3plKRZCO5TSTnVi+2Q8tQ6C+C6aNn40pyjspW7YwCzKMQpp
-        syAzO2hUtLaflC0V1kUwjCmFDeZWQlAgJ7edx0xUiyAyRK6Ve3MXMeFoqm/8SuhsGbjvvflanRDwi
-        uJZM+RCzqt5AIQOpws1Wm09byjKK1YZDLkylSTk29ub38ToQxSkCbjKk9IDDgGd0OfMXuFUP4xsVe
-        79E3bHRr3rpcvkxTdxEe+saXneBo447d07pKSoi/9Akj0hMmJk75kVHMFuA+GZIae8997/r68Trkv
-        7nt7VLxQ==;
-Received: from spamrelay.zxcs.nl ([185.104.28.12]:47086 helo=mail-slave02.zxcs.nl)
-        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jCPPT-002SyE-RZ; Thu, 12 Mar 2020 16:06:07 +0100
+        id S1727133AbgCLPHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:07:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D273B30E;
+        Thu, 12 Mar 2020 08:07:12 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5667F3F534;
+        Thu, 12 Mar 2020 08:07:12 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 15:07:10 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
+Message-ID: <20200312150710.GG4038@sirena.org.uk>
+References: <20200312103804.24174-1-peter.chen@nxp.com>
+ <20200312114712.GA4038@sirena.org.uk>
+ <20200312130037.GG14625@b29397-desktop>
+ <20200312143723.GF4038@sirena.org.uk>
+ <20200312150330.GH14625@b29397-desktop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 12 Mar 2020 16:06:07 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
-In-Reply-To: <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
-References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
- <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iAL9S67WQOXgEPD9"
+Content-Disposition: inline
+In-Reply-To: <20200312150330.GH14625@b29397-desktop>
+X-Cookie: Security check:  =?ISO-8859-1?Q?=20=07=07=07INTRUDER?= ALERT!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-12 14:29, Uwe Kleine-König wrote:
-> On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
->> Hi all,
->> 
->> I am working on adding an old A10 device to mainline and noticed an 
->> issue
->> when testing on 5.5.8 vs master.
->> 
->> Since 5.6-rc1, I can't control the brightness of my LCD backlight 
->> anymore.
->> The backlight stays on full brightness instead. I am controlling the
->> brightness value via sysfs for testing.
->> 
->> I am not sure if this is a general pwm-sun4i issue or if it is related 
->> to
->> the backlight. However I narrowed it down to one commit for pwm-sun4i:
->> 
->> fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
->> 
->> If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
->> master, the backlight works fine. Unfortunately, due to my lack of 
->> kernel
->> experience, I can't see how the commit above broke it.
-> 
-> Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
-> this. Looking at the output of
-> 
-> 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
-> 
-> (i.e. ignoring whitespace changes) I don't see how the behaviour you're
-> reporting can be explained.
-> 
-> Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
-> commit?
-> 
-> Can you install a tool to inspect register values and check how the
-> affected registers change if you switch kernel versions and/or pwm
-> settings?
-> 
-> (e.g.
-> 	memtool md 0x1c20e00+0xc
-> )
-> 
-> Best regards
-> Uwe
 
-Thanks for your response.
+--iAL9S67WQOXgEPD9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes I am sure that is the commit. If I am on master, and replace 
-pwm-sun4i.c with the one from 5b090b43, everything works. If I then 
-apply fa4d8178, it stops working.
+On Thu, Mar 12, 2020 at 03:03:26PM +0000, Peter Chen wrote:
+> On 20-03-12 14:37:23, Mark Brown wrote:
 
-And strangely the output of the registers is exactly the same before and 
-after fa4d8178:
+> > Surely it's the GPIO controller that needs pinctrl support then?
 
-01c20e00: 00000050 00130014 00000000 (full brightness)
-01c20e00: 00000050 00130006 00000000 (min brightness)
+> But the pinctrl register value for this gpio will be cleared after
+> suspend, we need to restore it, otherwise, the function will be not
+> gpio. See below patch:
 
-Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the 
-issue.
+I'd expect that this would be handled by the GPIO driver, the user
+shouldn't need to care.
+
+--iAL9S67WQOXgEPD9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5qUB4ACgkQJNaLcl1U
+h9A2lwf+KwAx2wKqIxrmgCUh4bwdLI99EGL396CbJ3ww5s7DbJ3LQ8xCoIWyeUj1
+3QDZPb1D+ssHLm8NHd38ENdymLKODxBec7oCgPCb+V95fCY9K9VEVuMEutldZK3C
+UUn5NjE7VU7lI0ccfW1xWR/36bPOJVVizpNymH3HqffLnJT0yU0OQJnmyoGEi2Xo
+QQg0s4ewdf6Tq6VddR457VMUk2B9uCmKBtOeMB2RarLj+KlamJQHwht7W4R1d1qI
+NQTntqip/UGSt/SSHci3T+XgNG6Ic1ko+/mHnyrQcKohA4UzsaSz8BK/batfhEqL
+HxELrI/BPZLg15ZQ7rSO31bh1Nedwg==
+=4ZCB
+-----END PGP SIGNATURE-----
+
+--iAL9S67WQOXgEPD9--
