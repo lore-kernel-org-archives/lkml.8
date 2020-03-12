@@ -2,266 +2,81 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD531C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B992C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F096206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19722206B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 13:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JJr/LKzc"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HSvOicCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgCLNXa (ORCPT
+        id S1727323AbgCLNX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:23:30 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64842 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727072AbgCLNX3 (ORCPT
+        Thu, 12 Mar 2020 09:23:58 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:4695 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726558AbgCLNX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:23:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584019408; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=A/3mpaZcld7SUksESIFySDDhwjutUcmBEyVAA2r+W5A=; b=JJr/LKzcad9uc9I8hNd/bTpMes1w1KnJM1RFcGbHICqHiFWf/TYdsEaku1CGxAZAEwqKf0V5
- cz6dxUogte6j268pwG8BMvnqZksxRiiqCUH7W+gYh7Aaqx+yAqfNj3DYfFY44fLQwXjPTs0W
- Fw3KmCG76AsXaEUkJqTtvYYSKEQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6a37ca.7fedda5b9148-smtp-out-n02;
- Thu, 12 Mar 2020 13:23:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 08039C433D2; Thu, 12 Mar 2020 13:23:22 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33B22C43636;
-        Thu, 12 Mar 2020 13:23:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33B22C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [RFC v2] irqchip: qcom: pdc: Introduce irq_set_wake call
-Date:   Thu, 12 Mar 2020 18:52:59 +0530
-Message-Id: <1584019379-12085-2-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584019379-12085-1-git-send-email-mkshah@codeaurora.org>
-References: <1584019379-12085-1-git-send-email-mkshah@codeaurora.org>
+        Thu, 12 Mar 2020 09:23:57 -0400
+X-UUID: af957d97b5094ac8a73c892bb2858151-20200312
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=jM6zMEkp2gCDGD/bAUrEXxpJslmHATovcsB4DY5GntA=;
+        b=HSvOicChF8Uzf64Y4kG3f3VxmW80tlMNBtDDi0dr0JNsBWNTAtmwaL3xOZ7pqa0NITca/2pB8R058zPVes5audjtbzROhwIz6uLW778nHJWf3CkvAhejf7QH+f7Nw7VIDyeFWgH7XmHsFzyNMlMDVGVJUklsMbnWQt/yMussTFM=;
+X-UUID: af957d97b5094ac8a73c892bb2858151-20200312
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1577247499; Thu, 12 Mar 2020 21:23:52 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Mar 2020 21:21:40 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Mar 2020 21:21:02 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v3 1/8] scsi: ufs: fix uninitialized tx_lanes in ufshcd_disable_tx_lcc()
+Date:   Thu, 12 Mar 2020 21:23:43 +0800
+Message-ID: <20200312132350.18061-2-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200312132350.18061-1-stanley.chu@mediatek.com>
+References: <20200312132350.18061-1-stanley.chu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the way interrupts get enabled at wakeup capable PDC irq chip.
+SW4gdWZzaGNkX2Rpc2FibGVfdHhfbGNjKCksIGlmIHVmc2hjZF9kbWVfZ2V0KCkgb3IgdWZzaGNk
+X2RtZV9wZWVyX2dldCgpDQpnZXQgZmFpbCwgdW5pbml0aWFsaXplZCB2YXJpYWJsZSAidHhfbGFu
+ZXMiIG1heSBiZSB1c2VkIGFzIHVuZXhwZWN0ZWQgbGFuZQ0KSUQgZm9yIERNRSBjb25maWd1cmF0
+aW9uLg0KDQpGaXggdGhpcyBpc3N1ZSBieSBpbml0aWFsaXppbmcgInR4X2xhbmVzIi4NCg0KU2ln
+bmVkLW9mZi1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNvbT4NCi0tLQ0K
+IGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZz
+L3Vmc2hjZC5jIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KaW5kZXggNTY5OGYxMTY0YTVl
+Li4zMTRlODA4YjBkNGUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQor
+KysgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQpAQCAtNDMxNSw3ICs0MzE1LDcgQEAgRVhQ
+T1JUX1NZTUJPTF9HUEwodWZzaGNkX2hiYV9lbmFibGUpOw0KIA0KIHN0YXRpYyBpbnQgdWZzaGNk
+X2Rpc2FibGVfdHhfbGNjKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGJvb2wgcGVlcikNCiB7DQotCWlu
+dCB0eF9sYW5lcywgaSwgZXJyID0gMDsNCisJaW50IHR4X2xhbmVzID0gMCwgaSwgZXJyID0gMDsN
+CiANCiAJaWYgKCFwZWVyKQ0KIAkJdWZzaGNkX2RtZV9nZXQoaGJhLCBVSUNfQVJHX01JQihQQV9D
+T05ORUNURURUWERBVEFMQU5FUyksDQotLSANCjIuMTguMA0K
 
-Introduce irq_set_wake call which lets interrupts enabled at PDC with
-enable_irq_wake and disabled with disable_irq_wake with certain
-conditions.
-
-Interrupt will get enabled in HW at PDC and its parent GIC if they are
-either enabled is SW or marked as wake up capable.
-
-interrupt will get disabled in HW at PDC and its parent GIC only if its
-disabled in SW and also marked as non-wake up capable.
-
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 124 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 117 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 6ae9e1f..d698cec 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/err.h>
-@@ -30,6 +30,9 @@
- 
- #define PDC_NO_PARENT_IRQ	~0UL
- 
-+DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
-+DECLARE_BITMAP(pdc_enabled_irqs, PDC_MAX_IRQS);
-+
- struct pdc_pin_region {
- 	u32 pin_base;
- 	u32 parent_base;
-@@ -80,20 +83,32 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 	index = pin_out / 32;
- 	mask = pin_out % 32;
- 
--	raw_spin_lock(&pdc_lock);
- 	enable = pdc_reg_read(IRQ_ENABLE_BANK, index);
- 	enable = on ? ENABLE_INTR(enable, mask) : CLEAR_INTR(enable, mask);
- 	pdc_reg_write(IRQ_ENABLE_BANK, index, enable);
--	raw_spin_unlock(&pdc_lock);
- }
- 
- static void qcom_pdc_gic_disable(struct irq_data *d)
- {
-+	bool wake_status;
-+
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
--	pdc_enable_intr(d, false);
--	irq_chip_disable_parent(d);
-+	raw_spin_lock(&pdc_lock);
-+
-+	clear_bit(d->hwirq, pdc_enabled_irqs);
-+	wake_status = test_bit(d->hwirq, pdc_wake_irqs);
-+
-+	/* Disable at PDC HW if wake_status also says same */
-+	if (!wake_status)
-+		pdc_enable_intr(d, false);
-+
-+	raw_spin_unlock(&pdc_lock);
-+
-+	/* Disable at GIC HW if wake_status also says same */
-+	if (!wake_status)
-+		irq_chip_disable_parent(d);
- }
- 
- static void qcom_pdc_gic_enable(struct irq_data *d)
-@@ -101,7 +116,16 @@ static void qcom_pdc_gic_enable(struct irq_data *d)
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
-+	raw_spin_lock(&pdc_lock);
-+
-+	set_bit(d->hwirq, pdc_enabled_irqs);
-+
-+	/* We can blindly enable at PDC HW as we are already in enable path */
- 	pdc_enable_intr(d, true);
-+
-+	raw_spin_unlock(&pdc_lock);
-+
-+	/* We can blindly enable at GIC HW as we are already in enable path */
- 	irq_chip_enable_parent(d);
- }
- 
-@@ -121,6 +145,92 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
- 	irq_chip_unmask_parent(d);
- }
- 
-+/**
-+ * qcom_pdc_gic_set_wake: Enables/Disables interrupt at PDC and parent GIC
-+ *
-+ * @d: the interrupt data
-+ * @on: enable or disable wakeup capability
-+ *
-+ * The SW expects that an irq that's disabled with disable_irq()
-+ * can still wake the system from sleep states such as "suspend to RAM",
-+ * if it has been marked for wakeup.
-+ *
-+ * While the SW may choose to differ status for "wake" and "enabled"
-+ * interrupts, its not the case with HW. There is no dedicated
-+ * configuration in HW to differ "wake" and "enabled". Same is
-+ * case for PDC's parent irq_chip (ARM GIC) which has only GICD_ISENABLER
-+ * to indicate "enabled" or "disabled" status and also there is no .irq_set_wake
-+ * implemented in parent GIC irq_chip.
-+ *
-+ * So, the HW ONLY understands either "enabled" or "disabled".
-+ *
-+ * This function is introduced to handle cases where drivers may invoke
-+ * below during suspend in SW on their irq, and expect to wake up from this
-+ * interrupt.
-+ *
-+ * 1. enable_irq_wake()
-+ * 2. disable_irq()
-+ *
-+ * and below during resume
-+ *
-+ * 3. disable_irq_wake()
-+ * 4. enable_irq()
-+ *
-+ * if (2) is invoked in end and just before suspend, it currently leaves
-+ * interrupt "disabled" at HW and hence not leading to resume.
-+ *
-+ * Note that the order of invoking (1) & (2) may interchange and similarly
-+ * it can interchange for (3) & (4) as per driver's wish.
-+ *
-+ * if the driver call .irq_set_wake first it will enable at HW but later
-+ * call with .irq_disable will disable at HW. so final result is again
-+ * "disabled" at HW whereas the HW expectection is to keep it "enabled"
-+ * since it understands only "enabled" or "disabled".
-+ *
-+ * Hence .irq_set_wake can not just go ahead and  "enable" or "disable"
-+ * at HW blindly, it needs to take in account status of currently "enable"
-+ * or "disable" as well.
-+ *
-+ * Introduce .irq_set_wake in PDC irq_chip to handle above issue.
-+ * The final status in HW should be an "OR" of "enable" and "wake" calls.
-+ * (i.e. same as below table)
-+ * -------------------------------------------------|
-+ * ENABLE in SW | WAKE in SW | PDC & GIC HW Status  |
-+ *      0       |     0      |     0	            |
-+ *      0	|     1      |     1	            |
-+ *	1	|     0      |     1		    |
-+ *	1	|     1      |     1		    |
-+ *--------------------------------------------------|
-+ */
-+
-+static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	bool enabled_status;
-+
-+	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-+		return 0;
-+
-+	raw_spin_lock(&pdc_lock);
-+	enabled_status = test_bit(d->hwirq, pdc_enabled_irqs);
-+	if (on) {
-+		set_bit(d->hwirq, pdc_wake_irqs);
-+		pdc_enable_intr(d, true);
-+	} else {
-+		clear_bit(d->hwirq, pdc_wake_irqs);
-+		pdc_enable_intr(d, enabled_status);
-+	}
-+
-+	raw_spin_unlock(&pdc_lock);
-+
-+	/* Either "wake" or "enabled" need same status at parent as well */
-+	if (on || enabled_status)
-+		irq_chip_enable_parent(d);
-+	else
-+		irq_chip_disable_parent(d);
-+
-+	return irq_chip_set_wake_parent(d, on);
-+}
-+
- /*
-  * GIC does not handle falling edge or active low. To allow falling edge and
-  * active low interrupts to be handled at GIC, PDC has an inverter that inverts
-@@ -203,9 +313,9 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
-+	.irq_set_wake		= qcom_pdc_gic_set_wake,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
--				  IRQCHIP_SET_TYPE_MASKED |
--				  IRQCHIP_SKIP_SET_WAKE,
-+				  IRQCHIP_SET_TYPE_MASKED,
- 	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
