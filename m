@@ -1,292 +1,218 @@
 Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5633AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F346C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34809206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAAE206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 05:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ODkxtSlN"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="eY27Js1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387820AbgCLF0T (ORCPT
+        id S2387827AbgCLF1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 01:26:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47825 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387802AbgCLF0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 01:26:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48dHP25zDRz9sNg;
-        Thu, 12 Mar 2020 16:26:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583990775;
-        bh=J3NxTfTBNnYfk+42d00utDzX+xv3mvYH+ai44NEd8FI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ODkxtSlNQ2HQ2E+jO80/rZrxqaPV1e6eMTz+f4qXyFdO4LwB1LBXMbhi+80L7cidj
-         PpwwmJun3/xo0jI2NjBa73fSLN1PR3XD3dCCDzgpug34FNQ87vo7CjJgp3xaPiSIY4
-         cwijCluzdz5hbIoe7JcGlG4YQhh8Fsuvb04j4i30dxlF2lR7typcCXQkRuAJgUB/GE
-         DPTE3qzG9hkZvpfSIGqpGM/8ARIho1KTUOJAprjaLlUAn2T72qdmNxlKM2WBzAw/ga
-         V6NhTdVu9MfJBdOsXrYorusfGxZnevSg2udgsqzg4AgDpyhWItO513eOE+J6HHs57f
-         IYnS9yma2bXdw==
-Date:   Thu, 12 Mar 2020 16:26:14 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: linux-next: manual merge of the slave-dma tree with Linus' tree
-Message-ID: <20200312162614.1b6b2b0e@canb.auug.org.au>
+        Thu, 12 Mar 2020 01:27:07 -0400
+Received: from rcdn-iport-6.cisco.com ([173.37.86.77]:47479 "EHLO
+        rcdn-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387758AbgCLF1H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 01:27:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=4796; q=dns/txt; s=iport;
+  t=1583990826; x=1585200426;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gWPmi/A6NTE/04xSmZ4GUabsv9Q6xWhRvS9G9c95CO4=;
+  b=eY27Js1AD+DSuxVpvG6XdkqGGhPqdWqtBnG73/qVQ/mIoLetEPG6OHBj
+   LZdET3HSNjEErsoLrSKPI+I9NRBmaraTJCOM+EVCt6twr0YRn0OLMSu2A
+   sT4wd7IhcwXkDyjRfSS0RgJTr+zT4tY9+MuxB8dXQnK+0HRp5GOcJotR2
+   o=;
+X-IronPort-AV: E=Sophos;i="5.70,543,1574121600"; 
+   d="scan'208";a="740563919"
+Received: from rcdn-core-6.cisco.com ([173.37.93.157])
+  by rcdn-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 12 Mar 2020 05:19:59 +0000
+Received: from sjc-ads-7741.cisco.com (sjc-ads-7741.cisco.com [10.30.222.28])
+        by rcdn-core-6.cisco.com (8.15.2/8.15.2) with ESMTP id 02C5JxCm030956;
+        Thu, 12 Mar 2020 05:19:59 GMT
+Received: by sjc-ads-7741.cisco.com (Postfix, from userid 381789)
+        id 6B41B1229; Wed, 11 Mar 2020 22:19:59 -0700 (PDT)
+From:   Manali K Shukla <manashuk@cisco.com>
+To:     bp@alien8.de, linux-edac@vger.kernel.org, mchehab@kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Cc:     xe-linux-external@cisco.com, Borislav Petkov <bp@suse.de>,
+        Aristeu Rozanski Filho <arozansk@redhat.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>,
+        Manali K Shukla <manashuk@cisco.com>
+Subject: [ PATCH stable v4.14] EDAC: Drop per-memory controller buses
+Date:   Wed, 11 Mar 2020 22:19:29 -0700
+Message-Id: <20200312051929.49195-1-manashuk@cisco.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KuEAi6yx2/LKGQjG4dq9pdN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.30.222.28, sjc-ads-7741.cisco.com
+X-Outbound-Node: rcdn-core-6.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KuEAi6yx2/LKGQjG4dq9pdN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Borislav Petkov <bp@suse.de>
 
-Hi all,
+upstream 861e6ed667c83d64a42b0db41a22d6b4de4e913f commit
 
-Today's linux-next merge of the slave-dma tree got a conflict in:
+... and use the single edac_subsys object returned from
+subsys_system_register(). The idea is to have a single bus
+and multiple devices on it.
 
-  drivers/dma/ti/k3-udma.c
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+CC: Aristeu Rozanski Filho <arozansk@redhat.com>
+CC: Greg KH <gregkh@linuxfoundation.org>
+CC: Justin Ernst <justin.ernst@hpe.com>
+CC: linux-edac <linux-edac@vger.kernel.org>
+CC: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: Russ Anderson <rja@hpe.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20180926152752.GG5584@zn.tnic
+[Manali: backport to v4.14 -stable :
+- removing per-MC bus, this enables to get rid of memory controllers
+  maximum number notion
+- value of max number of memory controllers is 2 * MAX_NUMNODES. On two nodes system MAX_NUMNODES value is ‘1’ and
+  so value of max number of memory controller becomes ‘2’, this patch fixes this issue when there are only 2 nodes on the system
+  and number of memory controllers are more than ‘2’]
+(cherry picked from commit 861e6ed667c83d64a42b0db41a22d6b4de4e913f)
+Signed-off-by: Manali K Shukla <manashuk@cisco.com>
+---
+ drivers/edac/edac_mc.c       |  9 +--------
+ drivers/edac/edac_mc_sysfs.c | 30 ++----------------------------
+ include/linux/edac.h         |  6 ------
+ 3 files changed, 3 insertions(+), 42 deletions(-)
 
-between commit:
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 329021189c38..2c740edb440f 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -55,8 +55,6 @@ static LIST_HEAD(mc_devices);
+  */
+ static void const *edac_mc_owner;
+ 
+-static struct bus_type mc_bus[EDAC_MAX_MCS];
+-
+ int edac_get_report_status(void)
+ {
+ 	return edac_report;
+@@ -706,11 +704,6 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
+ 	int ret = -EINVAL;
+ 	edac_dbg(0, "\n");
+ 
+-	if (mci->mc_idx >= EDAC_MAX_MCS) {
+-		pr_warn_once("Too many memory controllers: %d\n", mci->mc_idx);
+-		return -ENODEV;
+-	}
+-
+ #ifdef CONFIG_EDAC_DEBUG
+ 	if (edac_debug_level >= 3)
+ 		edac_mc_dump_mci(mci);
+@@ -750,7 +743,7 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
+ 	/* set load time so that error rate can be tracked */
+ 	mci->start_time = jiffies;
+ 
+-	mci->bus = &mc_bus[mci->mc_idx];
++	mci->bus = edac_get_sysfs_subsys();
+ 
+ 	if (edac_create_sysfs_mci_device(mci, groups)) {
+ 		edac_mc_printk(mci, KERN_WARNING,
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index a4acfa81dfe0..f519189ab342 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -942,27 +942,8 @@ static const struct device_type mci_attr_type = {
+ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
+ 				 const struct attribute_group **groups)
+ {
+-	char *name;
+ 	int i, err;
+ 
+-	/*
+-	 * The memory controller needs its own bus, in order to avoid
+-	 * namespace conflicts at /sys/bus/edac.
+-	 */
+-	name = kasprintf(GFP_KERNEL, "mc%d", mci->mc_idx);
+-	if (!name)
+-		return -ENOMEM;
+-
+-	mci->bus->name = name;
+-
+-	edac_dbg(0, "creating bus %s\n", mci->bus->name);
+-
+-	err = bus_register(mci->bus);
+-	if (err < 0) {
+-		kfree(name);
+-		return err;
+-	}
+-
+ 	/* get the /sys/devices/system/edac subsys reference */
+ 	mci->dev.type = &mci_attr_type;
+ 	device_initialize(&mci->dev);
+@@ -978,7 +959,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
+ 	err = device_add(&mci->dev);
+ 	if (err < 0) {
+ 		edac_dbg(1, "failure: create device %s\n", dev_name(&mci->dev));
+-		goto fail_unregister_bus;
++		goto out;
+ 	}
+ 
+ 	/*
+@@ -1026,10 +1007,8 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
+ 		device_unregister(&dimm->dev);
+ 	}
+ 	device_unregister(&mci->dev);
+-fail_unregister_bus:
+-	bus_unregister(mci->bus);
+-	kfree(name);
+ 
++out:
+ 	return err;
+ }
+ 
+@@ -1060,13 +1039,8 @@ void edac_remove_sysfs_mci_device(struct mem_ctl_info *mci)
+ 
+ void edac_unregister_sysfs(struct mem_ctl_info *mci)
+ {
+-	struct bus_type *bus = mci->bus;
+-	const char *name = mci->bus->name;
+-
+ 	edac_dbg(1, "Unregistering device %s\n", dev_name(&mci->dev));
+ 	device_unregister(&mci->dev);
+-	bus_unregister(bus);
+-	kfree(name);
+ }
+ 
+ static void mc_attr_release(struct device *dev)
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index 90f72336aea6..1f5c3f6fd3e5 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -664,10 +664,4 @@ struct mem_ctl_info {
+ 	bool fake_inject_ue;
+ 	u16 fake_inject_count;
+ };
+-
+-/*
+- * Maximum number of memory controllers in the coherent fabric.
+- */
+-#define EDAC_MAX_MCS	2 * MAX_NUMNODES
+-
+ #endif
+-- 
+2.19.1
 
-  16cd3c670183 ("dmaengine: ti: k3-udma: Workaround for RX teardown with st=
-ale data in peer")
-
-from Linus' tree and commit:
-
-  db8d9b4c9b30 ("dmaengine: ti: k3-udma: Implement custom dbg_summary_show =
-for debugfs")
-
-from the slave-dma tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/dma/ti/k3-udma.c
-index 0536866a58ce,1e6aac87302d..000000000000
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@@ -149,8 -128,19 +149,9 @@@ struct udma_dev=20
- =20
-  	struct udma_chan *channels;
-  	u32 psil_base;
-+ 	u32 atype;
-  };
- =20
- -struct udma_hwdesc {
- -	size_t cppi5_desc_size;
- -	void *cppi5_desc_vaddr;
- -	dma_addr_t cppi5_desc_paddr;
- -
- -	/* TR descriptor internal pointers */
- -	void *tr_req_base;
- -	struct cppi5_tr_resp_t *tr_resp_base;
- -};
- -
-  struct udma_desc {
-  	struct virt_dma_desc vd;
- =20
-@@@ -3381,98 -3276,66 +3409,158 @@@ static int udma_setup_resources(struct=
-=20
-  	return ch_count;
-  }
- =20
- +static int udma_setup_rx_flush(struct udma_dev *ud)
- +{
- +	struct udma_rx_flush *rx_flush =3D &ud->rx_flush;
- +	struct cppi5_desc_hdr_t *tr_desc;
- +	struct cppi5_tr_type1_t *tr_req;
- +	struct cppi5_host_desc_t *desc;
- +	struct device *dev =3D ud->dev;
- +	struct udma_hwdesc *hwdesc;
- +	size_t tr_size;
- +
- +	/* Allocate 1K buffer for discarded data on RX channel teardown */
- +	rx_flush->buffer_size =3D SZ_1K;
- +	rx_flush->buffer_vaddr =3D devm_kzalloc(dev, rx_flush->buffer_size,
- +					      GFP_KERNEL);
- +	if (!rx_flush->buffer_vaddr)
- +		return -ENOMEM;
- +
- +	rx_flush->buffer_paddr =3D dma_map_single(dev, rx_flush->buffer_vaddr,
- +						rx_flush->buffer_size,
- +						DMA_TO_DEVICE);
- +	if (dma_mapping_error(dev, rx_flush->buffer_paddr))
- +		return -ENOMEM;
- +
- +	/* Set up descriptor to be used for TR mode */
- +	hwdesc =3D &rx_flush->hwdescs[0];
- +	tr_size =3D sizeof(struct cppi5_tr_type1_t);
- +	hwdesc->cppi5_desc_size =3D cppi5_trdesc_calc_size(tr_size, 1);
- +	hwdesc->cppi5_desc_size =3D ALIGN(hwdesc->cppi5_desc_size,
- +					ud->desc_align);
- +
- +	hwdesc->cppi5_desc_vaddr =3D devm_kzalloc(dev, hwdesc->cppi5_desc_size,
- +						GFP_KERNEL);
- +	if (!hwdesc->cppi5_desc_vaddr)
- +		return -ENOMEM;
- +
- +	hwdesc->cppi5_desc_paddr =3D dma_map_single(dev, hwdesc->cppi5_desc_vadd=
-r,
- +						  hwdesc->cppi5_desc_size,
- +						  DMA_TO_DEVICE);
- +	if (dma_mapping_error(dev, hwdesc->cppi5_desc_paddr))
- +		return -ENOMEM;
- +
- +	/* Start of the TR req records */
- +	hwdesc->tr_req_base =3D hwdesc->cppi5_desc_vaddr + tr_size;
- +	/* Start address of the TR response array */
- +	hwdesc->tr_resp_base =3D hwdesc->tr_req_base + tr_size;
- +
- +	tr_desc =3D hwdesc->cppi5_desc_vaddr;
- +	cppi5_trdesc_init(tr_desc, 1, tr_size, 0, 0);
- +	cppi5_desc_set_pktids(tr_desc, 0, CPPI5_INFO1_DESC_FLOWID_DEFAULT);
- +	cppi5_desc_set_retpolicy(tr_desc, 0, 0);
- +
- +	tr_req =3D hwdesc->tr_req_base;
- +	cppi5_tr_init(&tr_req->flags, CPPI5_TR_TYPE1, false, false,
- +		      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
- +	cppi5_tr_csf_set(&tr_req->flags, CPPI5_TR_CSF_SUPR_EVT);
- +
- +	tr_req->addr =3D rx_flush->buffer_paddr;
- +	tr_req->icnt0 =3D rx_flush->buffer_size;
- +	tr_req->icnt1 =3D 1;
- +
- +	/* Set up descriptor to be used for packet mode */
- +	hwdesc =3D &rx_flush->hwdescs[1];
- +	hwdesc->cppi5_desc_size =3D ALIGN(sizeof(struct cppi5_host_desc_t) +
- +					CPPI5_INFO0_HDESC_EPIB_SIZE +
- +					CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE,
- +					ud->desc_align);
- +
- +	hwdesc->cppi5_desc_vaddr =3D devm_kzalloc(dev, hwdesc->cppi5_desc_size,
- +						GFP_KERNEL);
- +	if (!hwdesc->cppi5_desc_vaddr)
- +		return -ENOMEM;
- +
- +	hwdesc->cppi5_desc_paddr =3D dma_map_single(dev, hwdesc->cppi5_desc_vadd=
-r,
- +						  hwdesc->cppi5_desc_size,
- +						  DMA_TO_DEVICE);
- +	if (dma_mapping_error(dev, hwdesc->cppi5_desc_paddr))
- +		return -ENOMEM;
- +
- +	desc =3D hwdesc->cppi5_desc_vaddr;
- +	cppi5_hdesc_init(desc, 0, 0);
- +	cppi5_desc_set_pktids(&desc->hdr, 0, CPPI5_INFO1_DESC_FLOWID_DEFAULT);
- +	cppi5_desc_set_retpolicy(&desc->hdr, 0, 0);
- +
- +	cppi5_hdesc_attach_buf(desc,
- +			       rx_flush->buffer_paddr, rx_flush->buffer_size,
- +			       rx_flush->buffer_paddr, rx_flush->buffer_size);
- +
- +	dma_sync_single_for_device(dev, hwdesc->cppi5_desc_paddr,
- +				   hwdesc->cppi5_desc_size, DMA_TO_DEVICE);
- +	return 0;
- +}
- +
-+ #ifdef CONFIG_DEBUG_FS
-+ static void udma_dbg_summary_show_chan(struct seq_file *s,
-+ 				       struct dma_chan *chan)
-+ {
-+ 	struct udma_chan *uc =3D to_udma_chan(chan);
-+ 	struct udma_chan_config *ucc =3D &uc->config;
-+=20
-+ 	seq_printf(s, " %-13s| %s", dma_chan_name(chan),
-+ 		   chan->dbg_client_name ?: "in-use");
-+ 	seq_printf(s, " (%s, ", dmaengine_get_direction_text(uc->config.dir));
-+=20
-+ 	switch (uc->config.dir) {
-+ 	case DMA_MEM_TO_MEM:
-+ 		seq_printf(s, "chan%d pair [0x%04x -> 0x%04x], ", uc->tchan->id,
-+ 			   ucc->src_thread, ucc->dst_thread);
-+ 		break;
-+ 	case DMA_DEV_TO_MEM:
-+ 		seq_printf(s, "rchan%d [0x%04x -> 0x%04x], ", uc->rchan->id,
-+ 			   ucc->src_thread, ucc->dst_thread);
-+ 		break;
-+ 	case DMA_MEM_TO_DEV:
-+ 		seq_printf(s, "tchan%d [0x%04x -> 0x%04x], ", uc->tchan->id,
-+ 			   ucc->src_thread, ucc->dst_thread);
-+ 		break;
-+ 	default:
-+ 		seq_printf(s, ")\n");
-+ 		return;
-+ 	}
-+=20
-+ 	if (ucc->ep_type =3D=3D PSIL_EP_NATIVE) {
-+ 		seq_printf(s, "PSI-L Native");
-+ 		if (ucc->metadata_size) {
-+ 			seq_printf(s, "[%s", ucc->needs_epib ? " EPIB" : "");
-+ 			if (ucc->psd_size)
-+ 				seq_printf(s, " PSDsize:%u", ucc->psd_size);
-+ 			seq_printf(s, " ]");
-+ 		}
-+ 	} else {
-+ 		seq_printf(s, "PDMA");
-+ 		if (ucc->enable_acc32 || ucc->enable_burst)
-+ 			seq_printf(s, "[%s%s ]",
-+ 				   ucc->enable_acc32 ? " ACC32" : "",
-+ 				   ucc->enable_burst ? " BURST" : "");
-+ 	}
-+=20
-+ 	seq_printf(s, ", %s)\n", ucc->pkt_mode ? "Packet mode" : "TR mode");
-+ }
-+=20
-+ static void udma_dbg_summary_show(struct seq_file *s,
-+ 				  struct dma_device *dma_dev)
-+ {
-+ 	struct dma_chan *chan;
-+=20
-+ 	list_for_each_entry(chan, &dma_dev->channels, device_node) {
-+ 		if (chan->client_count)
-+ 			udma_dbg_summary_show_chan(s, chan);
-+ 	}
-+ }
-+ #endif /* CONFIG_DEBUG_FS */
-+=20
-  #define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
-  				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
-  				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
-
---Sig_/KuEAi6yx2/LKGQjG4dq9pdN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5px/YACgkQAVBC80lX
-0GxgiggAk/E0rkHCjTQkK8H2kZGlD/6twDyxiXipWdvcpYOa70rY5TDykg1rMahH
-F4ehqcW1Z7I9fwnz/ZQ2Y5WXcB7WfqUqIdrnSUMjV9+JcUWdEOExaeV+slPmd0r7
-MCx/5eRci2gOfwUnZ75Y0zLHlCBqlM9oBSWguZ3BimxbOpk7Fz6MzB22Hlul93hZ
-F9PWhEqYjsiBWOvItccZWuejQ5Ndq1JeMD76y07aTulZbCorTFYeNDu1EL4aGDyT
-8bU1D4dzypdhXVP+aCtTorajPOnmJcrtE3pdRT6vkEUU0kFbA96iGNzvxhmGHBje
-uBrMeadxO5LaxBOd1f3G1SDhXzn3qw==
-=klqm
------END PGP SIGNATURE-----
-
---Sig_/KuEAi6yx2/LKGQjG4dq9pdN--
