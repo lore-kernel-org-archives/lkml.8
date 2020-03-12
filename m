@@ -2,117 +2,188 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A51C0044D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F47C0044D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAF3206B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583973516;
-	bh=M0b8KPvR/gLuc/ReK/i0DasriG+S9u1FqGtZdG2LmTE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IQbKxfJ+mhrLlWlnRfX/cuVC1D/2bEeOOvCP1hr+uL2B4/IRnYq3xersvt7WjHKqI
-	 16MvAhB+AozjgblFmy8qNnvJrZOyg7z2oyKGRs2pw/KkHoH9+yksW1Mi8FF79shu+0
-	 qG/u1JDSnsWdXeGrIqErBBayFyezCRwGFD8NSyAU=
+	by mail.kernel.org (Postfix) with ESMTP id D5EC720737
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 00:39:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oBo3+263"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387483AbgCLAif (ORCPT
+        id S2387543AbgCLAjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 20:38:35 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36971 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731476AbgCLAie (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 20:38:34 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so4433131ljd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:38:33 -0700 (PDT)
+        Wed, 11 Mar 2020 20:39:40 -0400
+Received: from mail-dm6nam11on2048.outbound.protection.outlook.com ([40.107.223.48]:32833
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387486AbgCLAjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 20:39:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fgeMUgBYqk7R2GtLiMxiMe2SKcffVYei2Rk4+Q/kquwqT3luf/hYoxliNpbd8+qTDBBS1Zdnu2UgNtQiKB9qVQ07ULLUnyigJUz+EtkXUwb2RoeFuSY16ly+bB8hhmlc4zViZdiR6UyGSOA37gSwMtOCgVp8Y1e8r7VqDyrfoV6sqj8jafbxIwi3QFumkxubA8uELYMorK7HTh+riad/m2ptkas3NVlgeFO+NQjPGRkZAG9aUBi5nm267O2Y1eosqYctC4CG4PIJkCNAnRRy0LjhCI3OXlFgBR2YmuPrZ8yrHVMxPhE9PVHDzrZdh85v2MUSlpgVXsSJJ0/XElq6GQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mtblxdy2aDMSi+orff0eKuWX1MniM94QBDKkbCP98W8=;
+ b=RJ5Zui7SiyTWn0o7SfP2wTCClL6HSxt+bQ2VWys6386hlfnNHNoogFcz5ca86LW7Pu90rI1L1Yi1//b72WZjfTJ6aQhJGFhn1XEfrjRBEIz4jn0QQnMiVaaeAE0Bb7PCMS7RhGYLOcy+eiHygs2/0YfsD0wrTYWwqzx/nx6hICtVypZfR5CajFskicKZwWwZgvjaEcBYMgAe/aktlccL45s2MnOk5LQ2Dgrj8hY951TINDqdDKTyvT9AsTo1Z1YWLY+rgg5eaTdIq3NMi0FzG00OrAm/kLfPHbwtqR+FuZiVexKlA6M3pzxFXa1blRRYz3FtqzZFOQ1yzgVR/CLq1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bLKsPDUE1GSvDBpqdETPjKLJMVmpkRahrPwuhoHrW/Q=;
-        b=aWiKx0/Fl3mcmfdqhjXRNIjpIXRXQA9lXQuH4XULt8QTL2rBWyhdbifyR+qeKRaNoI
-         x0Hxy1YTXIwg5BI6xuZDajLdVT9NfgEGBc8lPciBykJqj2ZTl9wIKY+kgOBsd5Ut6QBk
-         rDMVJkdtREVZ9sdyt6WJK5wZ306w1GTPToDjU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bLKsPDUE1GSvDBpqdETPjKLJMVmpkRahrPwuhoHrW/Q=;
-        b=XGi+mXfDhO73pGfPx6CasxHzWFtY5htb4yRvplZToynWRIXJ/P2L1Sowprx7IcKYQ9
-         uNMNubhsBn2Ov74NoYLJIamV0/RcrrzyG7MpuvPEo9oj8o0gNELxAtklFj/5+RdoMQF1
-         1uWAvBKvqeIJ8GEwzJw7woXP2QTsDQ/hvlFE+4P6HoPWPPkmVOmuQQk8U5SLD4ctw2Mu
-         nbTvQhFsiGnBvH4HrBFdZCCtpH7zpQoKKBR+lsWO5B50Z8ovtBbuvnDw2alxcgrJi83y
-         kF0dbZBeQQzWPHxaiHk+Jdm7ZVlmtP+d45GoLHSSOjwgR3X90ezUgsTY8WHC2yGTiLR1
-         udaA==
-X-Gm-Message-State: ANhLgQ2zYEIEn5Kya17D5ze+Egt5kdHjQf9+8zkoKifBmHlsmtYO5hVM
-        USrbPmd9dLbWIUcv1O7IOKOKK4P0C8g=
-X-Google-Smtp-Source: ADFU+vuzWI8QgEkFYlvmtSIaR2KTO55s+B1txxMMYoteQk3VR6s5yVmVtCnJ6PyCZuj64IK1sjwDJw==
-X-Received: by 2002:a2e:b88d:: with SMTP id r13mr3331024ljp.66.1583973512002;
-        Wed, 11 Mar 2020 17:38:32 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id p133sm9992283lfa.82.2020.03.11.17.38.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 17:38:30 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id w1so4433889ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 17:38:30 -0700 (PDT)
-X-Received: by 2002:a2e:6819:: with SMTP id c25mr3564744lja.16.1583973510152;
- Wed, 11 Mar 2020 17:38:30 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mtblxdy2aDMSi+orff0eKuWX1MniM94QBDKkbCP98W8=;
+ b=oBo3+263j2XoUjnC4u9E1qkLzWCc6qf/KwiDUoAwYLmE7bVGbKiQPqA48C6+F93A7AuOA49iP3GhIPQZc7M86C/Mzy38zIHDvdTUUEBOPFnvTCnfQRZJF6Mp+rrVFBzhEd2nASGrPbq6cidvq6hC84OLYwyq2kHQ2nvjQzLlxuE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1148.namprd12.prod.outlook.com (2603:10b6:3:74::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Thu, 12 Mar 2020 00:39:01 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
+ 00:39:01 +0000
+Date:   Thu, 12 Mar 2020 00:38:55 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, brijesh.singh@amd.com
+Subject: Re: [PATCH 04/12] KVM: SVM: Add support for KVM_SEV_RECEIVE_START
+ command
+Message-ID: <20200312003855.GA26448@ashkalra_ubuntu_server>
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+ <0a0b3815e03dcee47ca0fbf4813821877b4c2ea0.1581555616.git.ashish.kalra@amd.com>
+ <CABayD+ciJiF8gf+s6d57vENcnSQPQGzTTwdo0TLBsNLdoy0tWw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABayD+ciJiF8gf+s6d57vENcnSQPQGzTTwdo0TLBsNLdoy0tWw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: DM6PR13CA0048.namprd13.prod.outlook.com
+ (2603:10b6:5:134::25) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
- <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
- <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
- <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
- <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
- <875zfbvrbm.fsf@notabene.neil.brown.name> <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
- <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com> <87v9nattul.fsf@notabene.neil.brown.name>
-In-Reply-To: <87v9nattul.fsf@notabene.neil.brown.name>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 11 Mar 2020 17:38:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
-Message-ID: <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-To:     NeilBrown <neilb@suse.de>
-Cc:     Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server (165.204.77.1) by DM6PR13CA0048.namprd13.prod.outlook.com (2603:10b6:5:134::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.8 via Frontend Transport; Thu, 12 Mar 2020 00:38:59 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 398d0955-4e9e-4b0c-4a92-08d7c61dc1dd
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1148:|DM5PR12MB1148:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1148941169809A6F8D153B638EFD0@DM5PR12MB1148.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0340850FCD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(199004)(7416002)(86362001)(6496006)(52116002)(6916009)(33656002)(2906002)(33716001)(6666004)(8676002)(5660300002)(66476007)(9686003)(55016002)(8936002)(81166006)(81156014)(1076003)(44832011)(478600001)(186003)(316002)(16526019)(26005)(66556008)(54906003)(956004)(66946007)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1148;H:DM5PR12MB1386.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Rt633aPsVroUTIoxhbpI4sU2MkDN8EN5/K7OdHCuxBQ19Q7Z2Fi/r75dYav2C+t/cuFnk5WXQgHrlqqQqkk098MsNTXPg4e+R+rPDeiYhh83cSKeGsdI3jAiy6SX+wSf/cJjbMLbaVq7XDm8pnRd1f3fhpD8FLPrQk8hpzDdOukZXpL5+qjOl8+K7m75pL4gZ1zzsWtTE1lafzGkMWKq2rXBw2kDssWaHr+Yi4uFDnF4kVvKLOBmbNVWZeXxTeSRADguFd7v/ZM9g2b4xUKkDR3uzguMJjZk+qSxxH3WlFC6k+rA6aSSBiMQy8wjUbiOubL/P6HQFSW0QKNmHFfn5nsKA8Y3ZtN3ZXhn2ejTNKGg1/ynz2rwLXEPLQS8L5vfLSFOyNXhwlN4NtpIht72qzpQLI5XiHS+YhcEckACs3pGJ0+VAB9bKfLpc4rvuE8v
+X-MS-Exchange-AntiSpam-MessageData: ZNZHbomLObZQ8S+9w7+sfDJaArOBAbVQKArVKAmWV51BdtJpTvfcmh759HEhzQprpUnz36LU2jOOXwhTRgy7O/SPCKTatvBUi25VfmlrfqBoJrKt0cZCcUVSK6F4kLs9VD5cnPefxtwodFrWiCiC6w==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 398d0955-4e9e-4b0c-4a92-08d7c61dc1dd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 00:39:01.0208
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AdhwcqbM2WjTm5aISMvFh/wBX1osy8MEUNVSUcILx0lkjbrv8OvR2eGrA4HS/A+t8pXHcLSerTY/tXtuSg44eA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 3:22 PM NeilBrown <neilb@suse.de> wrote:
->
-> We can combine the two ideas - move the list_del_init() later, and still
-> protect it with the wq locks.  This avoids holding the lock across the
-> callback, but provides clear atomicity guarantees.
+On Mon, Mar 09, 2020 at 06:41:02PM -0700, Steve Rutherford wrote:
+> > +static int sev_receive_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> > +{
+> > +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > +       struct sev_data_receive_start *start;
+> > +       struct kvm_sev_receive_start params;
+> > +       int *error = &argp->error;
+> > +       void *session_data;
+> > +       void *pdh_data;
+> > +       int ret;
+> > +
+> > +       if (!sev_guest(kvm))
+> > +               return -ENOTTY;
+> > +
+> > +       /* Get parameter from the userspace */
+> > +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
+> > +                       sizeof(struct kvm_sev_receive_start)))
+> > +               return -EFAULT;
+> > +
+> > +       /* some sanity checks */
+> > +       if (!params.pdh_uaddr || !params.pdh_len ||
+> > +           !params.session_uaddr || !params.session_len)
+> > +               return -EINVAL;
+> > +
+> > +       pdh_data = psp_copy_user_blob(params.pdh_uaddr, params.pdh_len);
+> > +       if (IS_ERR(pdh_data))
+> > +               return PTR_ERR(pdh_data);
+> > +
+> > +       session_data = psp_copy_user_blob(params.session_uaddr,
+> > +                       params.session_len);
+> > +       if (IS_ERR(session_data)) {
+> > +               ret = PTR_ERR(session_data);
+> > +               goto e_free_pdh;
+> > +       }
+> > +
+> > +       ret = -ENOMEM;
+> > +       start = kzalloc(sizeof(*start), GFP_KERNEL);
+> > +       if (!start)
+> > +               goto e_free_session;
+> > +
+> > +       start->handle = params.handle;
+> > +       start->policy = params.policy;
+> > +       start->pdh_cert_address = __psp_pa(pdh_data);
+> > +       start->pdh_cert_len = params.pdh_len;
+> > +       start->session_address = __psp_pa(session_data);
+> > +       start->session_len = params.session_len;
+> > +
+> > +       /* create memory encryption context */
+> 
+> Set ret to a different value here, since otherwise this will look like -ENOMEM.
 
-Ugfh. Honestly, this is disgusting.
+But, ret will be the value returned by __sev_issue_cmd(), so why will it
+look like -ENOMEM ?
 
-Now you re-take the same lock in immediate succession for the
-non-callback case.  It's just hidden.
+> 
+> > +       ret = __sev_issue_cmd(argp->sev_fd, SEV_CMD_RECEIVE_START, start,
+> > +                               error);
+> > +       if (ret)
+> > +               goto e_free;
+> > +
+> > +       /* Bind ASID to this guest */
+> 
+> Ideally, set ret to another distinct value, since the error spaces for
+> these commands overlap, so you won't be sure which had the problem.
+> You also wouldn't be sure if one succeeded and the other failed vs
+> both failing.
 
-And it's not like the list_del_init() _needs_ the lock (it's not
-currently called with the lock held).
+Both commands "may" return the same error code as set by sev_do_cmd(), but
+then we need that very specific error code, sev_do_cmd() can't return
+different error codes for each command it is issuing ?
 
-So that "hold the lock over list_del_init()" seems to be horrendously
-bogus. It's only done as a serialization thing for that optimistic
-case.
+> 
+> > +       ret = sev_bind_asid(kvm, start->handle, error);
+> > +       if (ret)
+> > +               goto e_free;
+> > +
 
-And that optimistic case doesn't even *want* that kind of
-serialization. It really just wants a "I'm done" flag.
+Thanks,
+Ashish
 
-So no. Don't do this. It's mis-using the lock in several ways.
-
-             Linus
