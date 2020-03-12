@@ -2,87 +2,91 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBDBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12FEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E871F2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83F9206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 21:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584049424;
-	bh=KE3VtQHIJHSWCRPxa7dXSvmV+IX74w6Vrx2dYxID1CY=;
+	s=default; t=1584049482;
+	bh=UVCZvDjUMrvdXCgL9UBcD0ediP/6S0fruvNh9/e69So=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xARAkYBwqONrERcGhMzSEEJKHRrV+vcH7hfGDatobV4RF2fC0lj6N2lKI9k2LsvUR
-	 wgLIOQZLgfAyt3SoUxHoQAchNRkCCHrVm4utfcDnKAbezvZH0U5/BK+V48YKD3cRKw
-	 PeNEy/7yBj4MpwyiKs1oCnjxD/ejEX1ffZautz2c=
+	b=dZTb3CKyNebT06V5rqVtfxFkNNHYC8IF7Hu2wYbjK9sgvvUjbCXbKASybTnRHYB00
+	 HKTKrb4cqZRbuAadsxtVisIOReQHRueTvt5wXcbZvNyzM/ci32x4kiNT0dzE62d6Rt
+	 H9m6ZN+oJwHwfqyWPdWXXc+kYBOgY5KDOeC5ahkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgCLVnm (ORCPT
+        id S1726621AbgCLVol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:43:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36656 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgCLVnm (ORCPT
+        Thu, 12 Mar 2020 17:44:41 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46263 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgCLVol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:43:42 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j14so7990076otq.3;
-        Thu, 12 Mar 2020 14:43:41 -0700 (PDT)
+        Thu, 12 Mar 2020 17:44:41 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 111so7916033oth.13;
+        Thu, 12 Mar 2020 14:44:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FS6zflFtBZJ0h4IEljhEJ+diBwLFSLqaaufLslTBNpc=;
-        b=YUto8nOYx1ZT2v6aEqhunHehCqagH7dAiTHoYGHfiULcMi5KcB+CSJVQeKoFBmcRkq
-         6hO2OY8x79I/9QMhgsZDWslHvD4HvNilY4YrDe105O9vENGQI74tyOhW4GEyJ5KjVcpI
-         sflAQsbVb+7HWH3eTCHBAdrR0odeVo91vt48IcJVJZ4ILfDRILA7Pc90atdBYjLbZy/h
-         i5bpiKdxMGy6CKisib7dqV8CY+aH4QMenZFFeZJslvBQKCeLUFWF7TZiZrmKb6S6DyRO
-         m+N3SrJY2YlgQ0aKdoRmI40+sTZiOp20Y2RxZV5CjXffJFnoDY3CRs4nfnF8yWfUZNAZ
-         TG0w==
-X-Gm-Message-State: ANhLgQ2/s7Bci37K0SF24lW9dgJm3G4txsIA0meK3x1kSH25hT4JRDKp
-        ncB29WfB8qL1tZebMWkkSg==
-X-Google-Smtp-Source: ADFU+vsw8ICdjL4f6vlMn6s5eYnygJbkzUnQLy5msXRE9bKJvxZl3+HHEAHH9r/ujWAInwFYD5s0hg==
-X-Received: by 2002:a9d:837:: with SMTP id 52mr7862324oty.354.1584049421550;
-        Thu, 12 Mar 2020 14:43:41 -0700 (PDT)
+        bh=G8Txaf4x0VEll/Y3cymC5B34TdWiNjRuLiaS7lxL2Rk=;
+        b=gnshfKkKu2PioU2GRNBmnTwIf0t14XS3eBTSbGEq9Qnv2E86Pp4yI/N6Qt0a6f3igI
+         ltgTpj9yZzwY0tBMCh7haIZlRCYIc1iVyHkcXtL0P5devgbyaGe3oiPflnujU6qAZ17x
+         VgYIi3kcOQXsxNHrJ5b+VEqsuXkAicywjUffipGzavlp0HWQzUGVljuxuz4813CW5rjc
+         AIXQ3AW3TfCZrGLCLxTT9mb69whSsz/+ffvDBPD10GjZ+2QXRkZYJhY0FYeXLIOSAVT5
+         yrP0jCFyYae0KlAQjsr5aG4bv52oqNBcn9kVia1qlHl6zZthbmhh8W8GBFLe8ej4B8BG
+         YHLg==
+X-Gm-Message-State: ANhLgQ3fnHHFubTwWzQbPCT+BOcC9LdUYj26zU5Z7LoMb51Pibn7ytaf
+        S4SS7c7/v1pTUfq1ILrjvQ==
+X-Google-Smtp-Source: ADFU+vsbiUVffUm+4ApajmRGvkt0ZEjeWR//4ZJaqErX1K21MZ7RS+bxjcqpcSKUcfUHWwllU7uIIw==
+X-Received: by 2002:a9d:2215:: with SMTP id o21mr7935579ota.113.1584049478974;
+        Thu, 12 Mar 2020 14:44:38 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t193sm7160303oif.34.2020.03.12.14.43.40
+        by smtp.gmail.com with ESMTPSA id m69sm18815828otc.78.2020.03.12.14.44.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 14:43:40 -0700 (PDT)
-Received: (nullmailer pid 30418 invoked by uid 1000);
-        Thu, 12 Mar 2020 21:43:40 -0000
-Date:   Thu, 12 Mar 2020 16:43:40 -0500
+        Thu, 12 Mar 2020 14:44:38 -0700 (PDT)
+Received: (nullmailer pid 31846 invoked by uid 1000);
+        Thu, 12 Mar 2020 21:44:37 -0000
+Date:   Thu, 12 Mar 2020 16:44:37 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
- controller
-Message-ID: <20200312214340.GA30360@bogus>
-References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132018.C268A8030792@mail.baikalelectronics.ru>
+Subject: Re: [PATCH 2/4] dt-bindings: gpio: Add DW GPIO debounce clocks
+ bindings
+Message-ID: <20200312214437.GA31790@bogus>
+References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132512.46E03803079F@mail.baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306132018.C268A8030792@mail.baikalelectronics.ru>
+In-Reply-To: <20200306132512.46E03803079F@mail.baikalelectronics.ru>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 16:19:52 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
+On Fri, 6 Mar 2020 16:24:46 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
 > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Just add the "be,bt1-i2c" compatible string to the bindings. The rest of
-> the DW APB I2C properties can be freely used to describe the Baikal-T1
-> I2C controller dts-node.
+> Port A of the DW GPIO controller may optionally have a debounce
+> logic enabled if it was synthesized with corresponding functionality
+> enabled. In this case a dedicated reference clocks should be provided
+> to the node with "db" clock-names.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -90,8 +94,8 @@ On Fri, 6 Mar 2020 16:19:52 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
 > Cc: Paul Burton <paulburton@kernel.org>
 > Cc: Ralf Baechle <ralf@linux-mips.org>
 > ---
->  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
