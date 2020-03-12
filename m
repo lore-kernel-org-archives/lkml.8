@@ -2,99 +2,185 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826FEC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CAFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC38920754
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8521420735
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 02:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="frP86w7b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Aq4ppv/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387719AbgCLC6q (ORCPT
+        id S2387740AbgCLC7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 22:58:46 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38453 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387396AbgCLC6p (ORCPT
+        Wed, 11 Mar 2020 22:59:02 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33326 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387680AbgCLC7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 22:58:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so2043646plz.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 19:58:45 -0700 (PDT)
+        Wed, 11 Mar 2020 22:59:01 -0400
+Received: by mail-il1-f196.google.com with SMTP id k29so4122860ilg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 19:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SeETz7OXYdn/hmWZRZ2XZZ0rT8aYFJbbHfhavYQw3LA=;
-        b=frP86w7bphR1Z7uDrs9zocm8B1BWYGaKwCbmSsE+IztfjnVt70UpPd5a2aeEIagfoR
-         6/0rDqSEtmn3qHK2h4uhxzYj4N1ZVu7oDmDNa9SBIWYsPz/fl+8SBUyT7ks+RydaAq/R
-         8cZOsDWyCmteS8dp9uOZgkXvgAR1fQlfkW3piJcPGWr7onIRpQu3DWdPGWH5bZJTxWPh
-         v2zUC4LJzP0QHxc474Guh4ULRGe2tK9B/3v3KQyQvWvvOW6Vu6Su683erl3V5KcLMPw3
-         ypWGw3X//xc3BGQYuVnJtfN9b8LLXcYu+iLM1GKUwCwpHdNh4K4i3WKUWL7SDcjqVQ1D
-         mIWA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TNSqdH25rkbZXOC4Ox8uRLT2VEOtuEyZ2dHYonNu/QI=;
+        b=Aq4ppv/J7eWg+XOWpPvu2fVq/Y33XVySaPn7s+6X5oJE9G6zQt2h1+GpCGrKpVUopP
+         GXlgVXJzDiG2PZoxTOqhy1tIN3Pqy7qT0Urw0U8NtnVyg8rO9mfwIjxWdfqAvzeLHu9z
+         kLmtAFITp6j6hSm9G50l0Mhfs75bsd7QAsKW9j83Y7oSZQHdSIynL+NAVmahGZLvcHKG
+         1FwyVXyA31B7jkVvsmtF0g3cR8Q8n1JmF0zrGqEwb689B7zA0P9g7WCu1Yb3jC+wGOKk
+         dzi575hgyZAUirhW157cKBzWVQjyBD1H0M5E8JhoF6Z+dpAfBujQZ2tl8oyY7CUamweI
+         mxwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SeETz7OXYdn/hmWZRZ2XZZ0rT8aYFJbbHfhavYQw3LA=;
-        b=ETgAI4/hnQVeNUawg5yrnsr0pwMQHxCaw+BvRBgB3G9QrUxJ/qmNMiZtQgSsJ6xvon
-         S1wydhG+Ntk1ObsKYtRKSmAZUSu/MnaOlVwZoky+TRLN+3he+zagwtrfbuIcIahCr6PW
-         Sc0NVe46tRqWYisTQds7FNXtGB3JVdydeTUy47yM19N3upxwT2EDmhV+oE71i8275vlU
-         b0dzPoeRQM9hasW8zLpVSnQ/TFs97VCXafRRqaJ6KEk3eD8cRVmEV9RphJ55krzdhkMN
-         vz4HrKxt/hpKAX1p2AfPUqCbZGti9NGbGfQUdDdLeCsAmDQKHqlCvv+jlojZzt/09ZQ1
-         QsQw==
-X-Gm-Message-State: ANhLgQ3uK5Lc6SzDC4q98EbgyrJXP+hxgmV+cEsrgk+xIcrTU9AqNbN3
-        njXGvOIdoCw6RU1feoY+QZ7N+Q==
-X-Google-Smtp-Source: ADFU+vtAAgdfElq06tfd5YckyfvzrJUYbz75snj/PU15B2U+NbNEZx6l8hpSWV3aXzjE8mcVwGUbag==
-X-Received: by 2002:a17:902:6a84:: with SMTP id n4mr5903125plk.294.1583981924663;
-        Wed, 11 Mar 2020 19:58:44 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id i11sm1910322pfd.202.2020.03.11.19.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 19:58:44 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TNSqdH25rkbZXOC4Ox8uRLT2VEOtuEyZ2dHYonNu/QI=;
+        b=MNBfRjfYGicrKSuQQngxwb1MSKCGN6KdBOUnz9LZVfzKlPtNhhw8RVCHIf3kz3xOEe
+         SfcOQPm9wH1+joADwVaqCRvPCpZeV/De+aP05+7k0gjdUA7JLPnLRBEc9AmFWacwZcBc
+         IyUmjgiEyKf5hiJ5cJMTJ3TEpUqPjqz7C+JsXY14NsPVP9DZkEv6jhBBS62AcTzsBdX/
+         TUMlV4xfh0+AjhHxC+AgjtAuxcRKQmlm44WgWoDsGBp1WA0dpvaq7bIaLwcs1WGZHTGo
+         i3znG8sDYCGXsZXAGHMKPxblb5x0pxGVx6RibvhucPAZyE6Wh9cojFpm931TPO16Ja1I
+         UlwQ==
+X-Gm-Message-State: ANhLgQ1RIqGsoGY8pYHyx0WwUM6maQLQoYYWn0qDqca7JWRA3CFWjPRa
+        IsqVziopgZYs8TS4VQ3Ck3V315HTKxk=
+X-Google-Smtp-Source: ADFU+vsWFFw1PIFdHwO+VpEKjeZH77nIStlDYCQY0Ffmx86909VW1lzaWSIaX0kvVx6B1LLbVJa4cA==
+X-Received: by 2002:a92:d341:: with SMTP id a1mr6128327ilh.257.1583981939682;
+        Wed, 11 Mar 2020 19:58:59 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id j19sm2058397ioj.41.2020.03.11.19.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 19:58:59 -0700 (PDT)
+Subject: Re: [PATCH 1/4] remoteproc: re-check state in
+ rproc_trigger_recovery()
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <agross@kernel.org>,
+        linux-remoteproc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH v3 2/2] riscv: Use macro definition instead of magic number
-Date:   Thu, 12 Mar 2020 10:58:36 +0800
-Message-Id: <20200312025836.68977-3-zong.li@sifive.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200312025836.68977-1-zong.li@sifive.com>
-References: <20200312025836.68977-1-zong.li@sifive.com>
+References: <20200228183359.16229-1-elder@linaro.org>
+ <20200228183359.16229-2-elder@linaro.org> <20200309205633.GF1399@xps15>
+ <20200311234409.GH14744@builder>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <7133ea1c-d50b-a0a0-ab7f-7c99d74771d0@linaro.org>
+Date:   Wed, 11 Mar 2020 21:58:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200311234409.GH14744@builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KERN_VIRT_START defines the start virtual address of kernel space.
-Use this macro instead of magic number.
+On 3/11/20 6:44 PM, Bjorn Andersson wrote:
+> On Mon 09 Mar 13:56 PDT 2020, Mathieu Poirier wrote:
+> 
+>> On Fri, Feb 28, 2020 at 12:33:56PM -0600, Alex Elder wrote:
+>>> Two places call rproc_trigger_recovery():
+>>>   - rproc_crash_handler_work() sets rproc->state to CRASHED under
+>>>     protection of the mutex, then calls it if recovery is not
+>>>     disabled.  This function is called in workqueue context when
+>>>     scheduled in rproc_report_crash().
+>>>   - rproc_recovery_write() calls it in two spots, both of which
+>>>     the only call it if the rproc->state is CRASHED.
+>>>
+>>> The mutex is taken right away in rproc_trigger_recovery().  However,
+>>> by the time the mutex is acquired, something else might have changed
+>>> rproc->state to something other than CRASHED.
+>>
+>> I'm interested in the "something might have changed" part.  The only thing I can
+>> see is if rproc_trigger_recovery() has been called from debugfs between the time
+>> the mutex is released but just before rproc_trigger_recovery() is called in
+>> rproc_crash_handler_work().  In this case we would be done twice, something your
+>> patch prevents.  Have you found other scenarios?
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- arch/riscv/include/asm/kasan.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry I didn't respond earlier, I was on vacation and was
+actively trying to avoid getting sucked into work...
 
-diff --git a/arch/riscv/include/asm/kasan.h b/arch/riscv/include/asm/kasan.h
-index eee6e6588b12..b47045cb85ce 100644
---- a/arch/riscv/include/asm/kasan.h
-+++ b/arch/riscv/include/asm/kasan.h
-@@ -13,7 +13,7 @@
- #define KASAN_SHADOW_SCALE_SHIFT	3
- 
- #define KASAN_SHADOW_SIZE	(UL(1) << (38 - KASAN_SHADOW_SCALE_SHIFT))
--#define KASAN_SHADOW_START	0xffffffc000000000 /* 2^64 - 2^38 */
-+#define KASAN_SHADOW_START	KERN_VIRT_START /* 2^64 - 2^38 */
- #define KASAN_SHADOW_END	(KASAN_SHADOW_START + KASAN_SHADOW_SIZE)
- 
- #define KASAN_SHADOW_OFFSET	(KASAN_SHADOW_END - (1ULL << \
--- 
-2.25.1
+I don't expect my answer here will be very satisfying.
+
+I implemented this a long time ago and don't remember all
+the details. But regardless, if one case permits the crash
+handler to be run twice for a single crash, that's one case
+too many.
+
+I started doing some analysis but have stopped for now
+because Bjorn has already decided to accept it.  If you
+want me to provide some more detail just say so and I'll
+spend a little more time on it tomorrow.
+
+					-Alex
+
+> Alex is right, by checking rproc->state outside of the lock
+> rproc_recovery_write() allows for multiple contexts to enter
+> rproc_trigger_recovery() at once.
+> 
+> Further more, these multiple context will be held up at the
+> mutex_lock_interruptible() and as each one completes the recovery the
+> subsequent ones will stop the rproc, generate a coredump and then start
+> it again.
+> 
+> 
+> This patch would be to fix the latter problem and allows the next patch
+> to move the check in the debugfs interface in under the mutex. As such
+> I've picked up patch 1, 2 and 4.
+> 
+> Regards,
+> Bjorn
+> 
+>> Thanks,
+>> Mathieu
+>>
+>>>
+>>> The work that follows that is only appropriate for a remoteproc in
+>>> CRASHED state.  So check the state after acquiring the mutex, and
+>>> only proceed with the recovery work if the remoteproc is still in
+>>> CRASHED state.
+>>>
+>>> Delay reporting that recovering has begun until after we hold the
+>>> mutex and we know the remote processor is in CRASHED state.
+>>>
+>>> Signed-off-by: Alex Elder <elder@linaro.org>
+>>> ---
+>>>  drivers/remoteproc/remoteproc_core.c | 12 ++++++++----
+>>>  1 file changed, 8 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>>> index 097f33e4f1f3..d327cb31d5c8 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -1653,12 +1653,16 @@ int rproc_trigger_recovery(struct rproc *rproc)
+>>>  	struct device *dev = &rproc->dev;
+>>>  	int ret;
+>>>  
+>>> +	ret = mutex_lock_interruptible(&rproc->lock);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	/* State could have changed before we got the mutex */
+>>> +	if (rproc->state != RPROC_CRASHED)
+>>> +		goto unlock_mutex;
+>>> +
+>>>  	dev_err(dev, "recovering %s\n", rproc->name);
+>>>  
+>>> -	ret = mutex_lock_interruptible(&rproc->lock);
+>>> -	if (ret)
+>>> -		return ret;
+>>> -
+>>>  	ret = rproc_stop(rproc, true);
+>>>  	if (ret)
+>>>  		goto unlock_mutex;
+>>> -- 
+>>> 2.20.1
+>>>
 
