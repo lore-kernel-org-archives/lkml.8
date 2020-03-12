@@ -2,72 +2,94 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D62C10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C2C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561F8206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0405206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 16:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="mGfn/mW/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WJGc90ok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgCLQ4O (ORCPT
+        id S1726492AbgCLQ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:56:14 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43137 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgCLQ4O (ORCPT
+        Thu, 12 Mar 2020 12:56:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31689 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726371AbgCLQ4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 12:56:14 -0400
-Received: by mail-oi1-f196.google.com with SMTP id p125so6162529oif.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 09:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=bJeVGEOJhQ3x+LqFHnf/RuYaBCYgW0ykaFTq1t4JHtY=;
-        b=mGfn/mW/GoolbcV1PTc0a85MLhWgtdyvNluKrc1aRBFsd2QA214Z2FIRHr6qXFrLE5
-         Y2btm9JK2aj6Cp3Mwq5gm3GmA4HoVOppI1yVl/nZa77/TLN535iCt3mmQgwYIrcybMM0
-         m4pISxv1imNPGD0K9zjmrTTyaYl4pmiMq8ULbbovLr+t96jPx37NN8q/04C7/v8IbRAM
-         MNns0d8Jne/+FfP9nAsl9OqEebqJLGUDcxo4Md86P0bE8UZdoHa2SJkz8ZK5NAS5pgQM
-         hnOwnLS/Ub7C444g7x8bWrqrQEmJoRtRAcqi0IpHCv+R3W7paizvbz/5t7e7BKej2tiV
-         8pFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=bJeVGEOJhQ3x+LqFHnf/RuYaBCYgW0ykaFTq1t4JHtY=;
-        b=a9EALmRRidhX59nRSk0hFk56eehjNFBoTJhcxWPVjejm8hQCOeqjhvN8bGtz9oAj//
-         0AKOyIpnc50JPk0kPq3MS+pJfwajO4pXpy1cgouL6B5ZHqbZeGYNbTBCUnWUAoa3nGJT
-         u96jyCH0Bv8gQItWoCyjuwIDwztDz1zGO32We3o28HPcJYbpigMzoDfh3V5FwawY0ISv
-         hjdbg+gfqgN7cOwcENx4UvhfhVQTjaQIk8Wsv420lrxWxbdAVgs0Q3Cvo4gUH7ubLhP1
-         TpZyqD49p5BMu/OZdIWP4vBhiH0neM6fZdxq6Po4zQTB07uom0jwy8K18pQCfrcdAF2W
-         FByw==
-X-Gm-Message-State: ANhLgQ076Ax0DMUnhxA8nl+Ia8wp7S1OE9ACdYBhE3VDGpg5NwSiZ9/T
-        o76iLoxrFQF89n11cXhXN8R+5i5SRLpfyT5GBzlFaQ==
-X-Google-Smtp-Source: ADFU+vvOMmNr555vZMWCxUmatM3kGJLJ4GvExcQYufxjK1GmyDHGmItqGwArj2E0OMryPp55g01pjDTJ1yP7subYJJo=
-X-Received: by 2002:aca:474e:: with SMTP id u75mr3226841oia.52.1584032173760;
- Thu, 12 Mar 2020 09:56:13 -0700 (PDT)
+        Thu, 12 Mar 2020 12:56:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584032211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tC/dXDRVsRvobj4efL+zW9X6MF6Isbjq0hH6zkUllc0=;
+        b=WJGc90okZVWOc9vzRLP4dvIxfomJu09gqCiT8xKH4CDqExSBep0hzUMgk37AJc4Cj9iOeu
+        jG0OQhiqaV9LDNF7crCTwXZ+S7v3Ma8mjVwPQ+SfHyoyW12lIZGNldxNHcRqCYGJ9ptBiF
+        HTM9e9bZ+CVJb38DBFeJCgqRfAnYGOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-XTtHN6DkO069iLfk00j1xg-1; Thu, 12 Mar 2020 12:56:50 -0400
+X-MC-Unique: XTtHN6DkO069iLfk00j1xg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20DAF1060DF7;
+        Thu, 12 Mar 2020 16:56:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 90D01194BB;
+        Thu, 12 Mar 2020 16:56:42 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wgu3Wo_xcjXnwski7JZTwQFaMmKD0hoTZ=hqQv3-YojSg@mail.gmail.com>
+References: <CAHk-=wgu3Wo_xcjXnwski7JZTwQFaMmKD0hoTZ=hqQv3-YojSg@mail.gmail.com> <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk> <158376245699.344135.7522994074747336376.stgit@warthog.procyon.org.uk> <20200310005549.adrn3yf4mbljc5f6@yavin> <CAHk-=wiEBNFJ0_riJnpuUXTO7+_HByVo-R3pGoB_84qv3LzHxA@mail.gmail.com> <580352.1583825105@warthog.procyon.org.uk> <CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com> <3d209e29-e73d-23a6-5c6f-0267b1e669b6@samba.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Stefan Metzmacher <metze@samba.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, jlayton@redhat.com,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/14] VFS: Add additional RESOLVE_* flags [ver #18]
 MIME-Version: 1.0
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Thu, 12 Mar 2020 09:56:02 -0700
-Message-ID: <CAJ+vNU3Rc1xf_vVVEONgExfpGCXC97zKZZq70iE6L2L4VKf4ZQ@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/gic-v3: Workaround Cavium erratum 38539 when
- reading GICD_TYPER2
-To:     maz@kernel.org
-Cc:     catalin.marinas@arm.com, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, msalter@redhat.com,
-        rrichter@marvell.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1147627.1584032201.1@warthog.procyon.org.uk>
+Date:   Thu, 12 Mar 2020 16:56:41 +0000
+Message-ID: <1147628.1584032201@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This resolves failure to boot on OcteonTX (TX1).
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Fixes: f2d8340 ("irqchip/gic-v3: Add GICv4.1 VPEID size discovery")
-Tested-by: Tim Harvey <tharvey@gateworks.com>
+> > The whole discussion was triggered by the introduction of a completely
+> > new fsinfo() call:
+> >
+> > Would you propose to have 'at_flags' and 'resolve_flags' passed in here?
+> 
+> Yes, I think that would be the way to go.
 
-Tim
+Okay, I can do that.
+
+Any thoughts on which set of flags should override the other?  If we're making
+RESOLVE_* flags the new definitive interface, then I feel they should probably
+override the AT_* flags where there's a conflict, ie. RESOLVE_NO_SYMLINKS
+should override AT_SYMLINK_FOLLOW for example.
+
+David
+
