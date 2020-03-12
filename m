@@ -2,240 +2,161 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C8BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871D5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394CE2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643BC2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 09:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="j8TK+EQF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxRW7T4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCLJVQ (ORCPT
+        id S1726704AbgCLJWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:21:16 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:21505 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgCLJVP (ORCPT
+        Thu, 12 Mar 2020 05:22:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46378 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCLJWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 05:21:15 -0400
+        Thu, 12 Mar 2020 05:22:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n15so6388984wrw.13;
+        Thu, 12 Mar 2020 02:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584004874; x=1615540874;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=2uCJ+4ws4cvlEV+wb61ZNYapETdHtIGmrv87apB/d5Y=;
-  b=j8TK+EQFXF/EHi+avbrNqU8NWVYDhBw09s12w/PIVns7kN2QqEwrjDXX
-   9Vkvsw6FXH6cUXSM3i2PojN/4jJjlQBl1VaPlkl30aiZou5e200GATLFH
-   6sHBk9WXnJdDhf0NAc5itj4sYUCLq3H/mKXFRWlPBS1FstdE+heDjlbhz
-   8=;
-IronPort-SDR: byhSOgQR6MQP6GXvYn18sTTUXQ1OXhL4l7uE+EVjmfFsOwkRWzCdefsL6goSsigDWavy6wQX8V
- L/f9xsbvJEUA==
-X-IronPort-AV: E=Sophos;i="5.70,544,1574121600"; 
-   d="scan'208";a="32157934"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Mar 2020 09:21:10 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id D137CA1D81;
-        Thu, 12 Mar 2020 09:21:00 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Thu, 12 Mar 2020 09:20:59 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.152) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 12 Mar 2020 09:20:47 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <aarcange@redhat.com>,
-        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v6 02/14] mm/damon: Implement region based sampling
-Date:   Thu, 12 Mar 2020 10:20:30 +0100
-Message-ID: <20200312092030.347-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200310173938.00002af4@Huawei.com> (raw)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HHo+aNY+ItMgLZP3gvXST00KCY8R68wpUmYZqeWvHHU=;
+        b=lxRW7T4LBzXo1kWzFk6u+QGMGo2x4fwOpjqAolDnEMB+z+jSrygE3gjIvrSspfJHBD
+         yoL4KvabJ6thodLNwwrYxCbr88vK2ahpVQ7sp0dqerLUEBMPFRn1eoK4yZUHKiKj/k9r
+         LmLzAs+zUi6hrgJSTr3HUjJEF7ra46B4vRBn1d2x3xfxLqeHRpnh7eAgNd+c+NBnzd+N
+         2C1UwqqjI6MZzYWBve5ZH1jEOU43TnQX1tuBb9c/i9rCa9BTzkhZDNhU/0Ppfr79jm+x
+         UyrZIjUT1oIhVhRuYzIra6K80yT11l4tKDJCViyotTucHimfPqdvOvN3nHN7ab7cxOgf
+         3CHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HHo+aNY+ItMgLZP3gvXST00KCY8R68wpUmYZqeWvHHU=;
+        b=l8J+lYTvjBil8EDO76B8o4rxfbjqg2e+k5U1vmo9RUbNGQuD0XEgBRFlRD387JN2eN
+         D140ifXtT79ZRBHCUkVWNJEKaCFmoy2VxA+OazC1brV/3sN13g7JWpae5W7rnnnGG2IF
+         ndz16ga7id/BXHWJGgKT1qS3bQ4NzdJd6iBY+K8SyTo4MHoVG4DyqQbApNqDvNOMWQgz
+         ws2y4TVLsqizANxopY6sidzoql6bWbRrpKwLoN4dww5829+GF7J7LwDf/eo9xe/lvZ1B
+         oFCwxIkR3yVhiJv2F/16a7xaIiULXH5NpfbOgm1kW/fxh/e7m0AgKvEiWtJN4lOmIexa
+         hcLA==
+X-Gm-Message-State: ANhLgQ2vol6O0hnUoE/QRmDGgTdxXjE73RA2EWVMdXeTdRpa8NjlZJaU
+        S+M00MDHlL3Xrrp21QywPWA=
+X-Google-Smtp-Source: ADFU+vu+H+W/kbDo5m03E1ZndkH8CbtAimq06IQy/GCG4aI1sj02lg6E/ZZsbkef8gkBlgqAfDOr2g==
+X-Received: by 2002:adf:f652:: with SMTP id x18mr9857970wrp.299.1584004956982;
+        Thu, 12 Mar 2020 02:22:36 -0700 (PDT)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id v10sm1700802wmh.17.2020.03.12.02.22.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 02:22:35 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 10:22:32 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V5 00/21] Tegra XUSB OTG support
+Message-ID: <20200312092232.GA1199023@ulmo>
+References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
+ <20200217085130.GJ1339021@ulmo>
+ <20200227173226.GA1114616@ulmo>
+ <20200304070100.GA1271591@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.152]
-X-ClientProxiedBy: EX13D15UWB003.ant.amazon.com (10.43.161.138) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
+In-Reply-To: <20200304070100.GA1271591@kroah.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 17:39:38 +0000 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> On Tue, 10 Mar 2020 17:22:40 +0100
-> SeongJae Park <sjpark@amazon.com> wrote:
-> 
-> > On Tue, 10 Mar 2020 15:55:10 +0000 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > 
-> > > On Tue, 10 Mar 2020 12:52:33 +0100
-> > > SeongJae Park <sjpark@amazon.com> wrote:
-> > >   
-> > > > Added replies to your every comment in line below.  I agree to your whole
-> > > > opinions, will apply those in next spin! :)
-> > > >   
-> > > 
-> > > One additional question inline that came to mind.  Using a single statistic
-> > > to monitor huge page and normal page hits is going to give us problems
-> > > I think.  
-> > 
-> > Ah, you're right!!!  This is indeed a critical bug!
-> > 
-> > > 
-> > > Perhaps I'm missing something?
-> > >   
-> > > > > > +/*
-> > > > > > + * Check whether the given region has accessed since the last check    
-> > > > > 
-> > > > > Should also make clear that this sets us up for the next access check at
-> > > > > a different memory address it the region.
-> > > > > 
-> > > > > Given the lack of connection between activities perhaps just split this into
-> > > > > two functions that are always called next to each other.    
-> > > > 
-> > > > Will make the description more clearer as suggested.
-> > > > 
-> > > > Also, I found that I'm not clearing *pte and *pmd before going 'mkold', thanks
-> > > > to this comment.  Will fix it, either.
-> > > >   
-> > > > >     
-> > > > > > + *
-> > > > > > + * mm	'mm_struct' for the given virtual address space
-> > > > > > + * r	the region to be checked
-> > > > > > + */
-> > > > > > +static void kdamond_check_access(struct damon_ctx *ctx,
-> > > > > > +			struct mm_struct *mm, struct damon_region *r)
-> > > > > > +{
-> > > > > > +	pte_t *pte = NULL;
-> > > > > > +	pmd_t *pmd = NULL;
-> > > > > > +	spinlock_t *ptl;
-> > > > > > +
-> > > > > > +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-> > > > > > +		goto mkold;
-> > > > > > +
-> > > > > > +	/* Read the page table access bit of the page */
-> > > > > > +	if (pte && pte_young(*pte))
-> > > > > > +		r->nr_accesses++;
-> > > > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE    
-> > > > > 
-> > > > > Is it worth having this protection?  Seems likely to have only a very small
-> > > > > influence on performance and makes it a little harder to reason about the code.    
-> > > > 
-> > > > It was necessary for addressing 'implicit declaration' problem of 'pmd_young()'
-> > > > and 'pmd_mkold()' for build of DAMON on several architectures including User
-> > > > Mode Linux.
-> > > > 
-> > > > Will modularize the code for better readability.
-> > > >   
-> > > > >     
-> > > > > > +	else if (pmd && pmd_young(*pmd))
-> > > > > > +		r->nr_accesses++;  
-> > > 
-> > > So we increment a region count by one if we have an access in a huge page, or
-> > > in a normal page.
-> > > 
-> > > If we get a region that has a mixture of the two, this seems likely to give a
-> > > bad approximation.
-> > > 
-> > > Assume the region is accessed 'evenly' but each " 4k page" is only hit 10% of the time
-> > > (where a hit is in one check period)
-> > > 
-> > > If our address in a page, then we'll hit 10% of the time, but if it is in a 2M
-> > > huge page then we'll hit a much higher percentage of the time.
-> > > 1 - (0.9^512) ~= 1
-> > > 
-> > > Should we look to somehow account for this?  
-> > 
-> > Yes, this is really critical bug and we should fix this!  Thank you so much for
-> > finding this!
-> > 
-> > >   
-> > > > > > +#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
-> > > > > > +
-> > > > > > +	spin_unlock(ptl);
-> > > > > > +
-> > > > > > +mkold:
-> > > > > > +	/* mkold next target */
-> > > > > > +	r->sampling_addr = damon_rand(ctx, r->vm_start, r->vm_end);
-> > > > > > +
-> > > > > > +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-> > > > > > +		return;
-> > > > > > +
-> > > > > > +	if (pte) {
-> > > > > > +		if (pte_young(*pte)) {
-> > > > > > +			clear_page_idle(pte_page(*pte));
-> > > > > > +			set_page_young(pte_page(*pte));
-> > > > > > +		}
-> > > > > > +		*pte = pte_mkold(*pte);
-> > > > > > +	}
-> > > > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > > > +	else if (pmd) {
-> > > > > > +		if (pmd_young(*pmd)) {
-> > > > > > +			clear_page_idle(pmd_page(*pmd));
-> > > > > > +			set_page_young(pmd_page(*pmd));
-> > > > > > +		}
-> > > > > > +		*pmd = pmd_mkold(*pmd);
-> > > > > > +	}  
-> > 
-> > This is also very problematic if several regions are backed by a single huge
-> > page, as only one region in the huge page will be checked as accessed.
-> > 
-> > Will address these problems in next spin!
-> 
-> Good point.  There is little point in ever having multiple regions including
-> a single huge page.  Would it be possible to tweak the region splitting algorithm
-> to not do this?
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, it would be a good solution.  However, I believe this is a problem of the
-access checking mechanism, as the definition of the region is only 'memory
-area having similar access frequency'.  Adding more rules such as 'it should
-be aligned by HUGE PAGE size' might make things more complex.  Also, we're
-currently using page table Accessed bits as the primitive for the access check,
-but it could be extended to other primitives in future.   Therefore, I would
-like to modify the access checking mechanism to aware the huge pages
-existance.
+On Wed, Mar 04, 2020 at 08:01:00AM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Feb 27, 2020 at 06:32:26PM +0100, Thierry Reding wrote:
+> > On Mon, Feb 17, 2020 at 09:51:30AM +0100, Thierry Reding wrote:
+> > > On Mon, Feb 10, 2020 at 01:41:26PM +0530, Nagarjuna Kristam wrote:
+> > > > This patch series adds OTG support on XUSB hardware used in Tegra21=
+0 and
+> > > > Tegra186 SoCs.
+> > > >=20
+> > > > This patchset is composed with :
+> > > >  - dt bindings of XUSB Pad Controller
+> > > >  - dt bindings for XUSB device Driver
+> > > >  - Tegra PHY driver for usb-role-switch and usb-phy
+> > > >  - Tegra XUSB host mode driver to support OTG mode
+> > > >  - Tegra XUSB device mode driver to use usb-phy and multi device mo=
+de
+> > > >  - dts for XUSB pad controller
+> > > >  - dts for xudc for Jetson TX1 and TX2
+> > > >  - dts for Jetson-TK1
+> > > >  - dts for Jetson-Nano
+> > > >=20
+> > > > Tegra Pad controller driver register for role switch updates for
+> > > > OTG/peripheral capable USB ports and adds usb-phy for that correspo=
+nding
+> > > > USB ports.
+> > > >=20
+> > > > Host and Device mode drivers gets usb-phy from USB2's phy and regis=
+ters
+> > > > notifier for role changes to perform corresponding role tasks.
+> > > >=20
+> > > > Order of merging Patches:
+> > > > Please merge DT changes first followed Tegra PHY driver changes and=
+ then
+> > > > USB driver changes.
+> > >=20
+> > > Felipe, Greg, Kishon,
+> > >=20
+> > > Given the runtime dependencies between these various parts, I could p=
+ick
+> > > these up into the Tegra tree if you provide an Acked-by.
+> >=20
+> > Ping. Are you guys okay if I pick these up into the Tegra tree?
+>=20
+> That's up to Felipe, I have no opinion :)
 
-For regions containing both regular pages and huge pages, the huge pages will
-make some errorneous high access frequency as you noted before,  but the
-adaptive regions adjustment will eventually split them.
+Felipe, Kishon,
 
-If you have other concerns or opinions, please let me know.
+I've picked up the device tree changes into the Tegra tree. Let me know
+if you also want me to pick up the USB and PHY driver changes.
 
+Thierry
 
-Thanks,
-SeongJae Park
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Jonathan
-> 
-> > 
-> > 
-> > Thanks,
-> > SeongJae Park
-> > 
-> > > > > > +#endif
-> > > > > > +
-> > > > > > +	spin_unlock(ptl);
-> > > > > > +}
-> > > > > > +  
-> > > 
-> > >   
-> 
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5p/04ACgkQ3SOs138+
+s6EaeRAAlYPSUblcoth+8aD57Q5QnSCc7cNHu/mUZZSec1OvLuHKqKs74gAcDa38
+fbTqyMY/OlKiZ4RIixrST8bZ+VT+IDp/4GHFS3G0nC6wlK340+NpE2RxtPAeS+Oh
+WuAg+p5PnLd7JwixjUuJPAVe+J/jt3l4BD5KN2cibwMdeV+jwlEZJ1OJrx+s0GW0
+eAnAAQmb/yZlYneiR2y1NRSW2qbWfv6D81ZR5f7xAkuZHjF3+d/L0EZdsZHgH3gR
+3KRfEY0On0s+oWrDR3d4y3h3cfJJIYegpqA6PaFcTjMdNEFcR+R/BGter/OQDbVE
+HeaFN8FBIUl2r+hgf33t4sT2EvYx5DJtxoDv/u7kwpDxXA53BLHDnEfXyyOU8JeN
+nuuipt+DOGyFfgmQNgx0aqaabl04wXEpUvBWxECp8IYB2gmiXL0PPzNC/qDIE8id
+z5p0H6GxXHWTiwsU5JwfHG9zNwppRl9I+XqgHIaSS4jWcmyQC0QwJysPBudXwy2c
+mqWjrd+/q3cqBByBVMslEssxvURdOmnDQ0NYXTPMnWWUWOpizZWxFHBEHh/DGQ3z
+W6pxj8LePB/B7bu7c9BeoR3mhs65sJsalbge2xk1nrYL1q1hat+3udkCcu71JGG1
+W+Sl2jl5CtuW9XE8PYYm0vEhV7FRJqbo6a5/Dea9L/aEISKpL4A=
+=l/y7
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
