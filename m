@@ -2,117 +2,84 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A06C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BAAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4774B206E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584023795;
-	bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=anIEQyxNJCHLxoUItaXSFSInI0pb6rBAOZrelFYdUo6uo/07x18lh99EoBx9LaInr
-	 OEqOAWlpvcxxwO49Cn32fR2lIaIj5UyQbpFnxisoRUTuj4byy5FZHkNiRdUlaZ00yT
-	 SYcwSe5DdhzWH4bwnEMNmro94GPcJ3Pp0mi7j9lg=
+	by mail.kernel.org (Postfix) with ESMTP id DE84720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YfOKPY4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbgCLOge (ORCPT
+        id S1727673AbgCLOgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:36:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727450AbgCLOge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:36:34 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBBD20663;
-        Thu, 12 Mar 2020 14:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584023793;
-        bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lUGEe582YRpKTnG8i9OWpZeKCS0w2sKbrZrH+wNKDMwTbcv40YsTGVN7EDD9WAB+c
-         WcnXpZKVBz1VdLv8TKiuRGPLpXFSTRSI8dDGMW/rOgcvdbghZ9dS1s5snK+RHSSuGV
-         KW1ASOZmiwp/vVcu4bnb5sE34/Uflsq6JaJ9APSQ=
-Date:   Thu, 12 Mar 2020 22:36:22 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1] ARM: dts: imx6q-marsboard: properly define rgmii PHY
-Message-ID: <20200312143621.GD1249@dragon>
-References: <20200306080353.9284-1-o.rempel@pengutronix.de>
+        Thu, 12 Mar 2020 10:36:46 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35127 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbgCLOgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:36:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d8so6537612qka.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 07:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pDY8xeaqVT16OVqXjF+yX34JfO0w5VqAE9l+u7irw8k=;
+        b=YfOKPY4/iOX9Q9D4X/p6nAEZCn/Z0A5y6Rln3atF7K0qlP3aXneadOvx5f/8zZZtMN
+         bYiiCeXH51hPlBzI/7hsC1bFYWWUyzp/QnqDjHP3eDXHFLCb+4OIYJjawyx7vacLFsYt
+         I8gfOkQeRRYK1ZsSXwB39fFhFQGMJIqsV+Mnssbl/FKxsbqp+KPZaaxe3V4X5Jp75fH8
+         PI8OfhEgzOBoQuUkrEexo2MuFq24Gld2USGJQsGgV8JDfdHphefO3Vt4m2hqrbqFKzHx
+         9wzinGd2PZ+8+jHN0wmCs3Ggum25fHjqLM1yH1aXoSGs9YMp0wwKI2ZHGQlf6Zv4fRZ6
+         xcRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pDY8xeaqVT16OVqXjF+yX34JfO0w5VqAE9l+u7irw8k=;
+        b=npVB/YvuZ9Z1hxEvWQG/rJWj/hvuT8JhVGBt9thH0Hhg3ibKL+wnvS2b/yfmQM3ihS
+         eTicfg86eV2ZVkJrs+p4W3oPdt21aVUDtKW1zgLXf8g7VITU3RVKDlG1cDTfUfRATmTa
+         xRX8csCAnOgJBUcun/m7qxOzlisVizjPVybuxGw/cmxrumL0Oi/8qN/xO39oycIs2I6g
+         WyychcqsfbaalDAHRgThmZU24hftCkRPf1Q2BEaSeNhSkZ0HUXl2l8+TT/n5x/mg7M0x
+         JFcziHcu/Wfti+VXjsoOUjMzg/27NJxDeeioziJA9yGApEUZcHpiDM9A7bMK7oAU4TR6
+         P+Cg==
+X-Gm-Message-State: ANhLgQ1gSWNHQEkB5ccuiUo5eXr188p91eZNfcP8uo5mTs6Kqb5z0RHQ
+        ayKuJQwXJc+yg8fF8zIq1y3hBqjzqd1qcguAuv46MA==
+X-Google-Smtp-Source: ADFU+vta/F4GC4v5YWObbXQ/e2bdQG4kRWcWHvfhT/l/rSyfIxC9+FmFkvA1SmG6C1ow9rx3x5ItKmWC94sTc0imGwQ=
+X-Received: by 2002:a05:620a:2117:: with SMTP id l23mr7812945qkl.323.1584023804704;
+ Thu, 12 Mar 2020 07:36:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306080353.9284-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200312094008.1833929-1-gabravier@gmail.com> <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
+ <38cbabe3-151b-1fd6-9d36-f27e9c9aa414@gmail.com> <CAMpxmJVSPA9CQBGULyk69KaP42oMdKGg883z0FeFC_mSA5w2xA@mail.gmail.com>
+ <55db9307-9a20-239e-127c-ea043600248d@gmail.com>
+In-Reply-To: <55db9307-9a20-239e-127c-ea043600248d@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 12 Mar 2020 15:36:33 +0100
+Message-ID: <CAMpxmJXUa7rk51XXvLjgueD9i1k98A+5gLx9WowChRb64k1mPQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
+To:     Gabriel Ravier <gabravier@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:03:53AM +0100, Oleksij Rempel wrote:
-> The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> support provided on this board. Define MDIO bus and the PHY node to make
-> it work properly.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  arch/arm/boot/dts/imx6q-marsboard.dts | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
-> index 84b30bd6908f..019488aaa30b 100644
-> --- a/arch/arm/boot/dts/imx6q-marsboard.dts
-> +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
-> @@ -111,8 +111,23 @@ &fec {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_enet>;
->  	phy-mode = "rgmii-id";
-> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
->  	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* Atheros AR8035 PHY */
-> +		rgmii_phy: ethernet-phy@4 {
-> +			reg = <4>;
-> +
-> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
-> +
+czw., 12 mar 2020 o 15:33 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
+(a):
+>
+> Ah, seems like I didn't read the guide to getting code into the kernel
+> thoroughly enough. Should I send the patch yet again just with a v2 in
+> the subject header or is there no need to bother with that ?
+>
 
-Drop these newlines.
+Please do so that patchwork picks it up. Also: please don't top-post
+on LKML ie. respond below others' text.
 
-Shawn
-
-> +			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-> +			reset-assert-us = <10000>;
-> +			reset-deassert-us = <1000>;
-> +		};
-> +	};
->  };
->  
->  &hdmi {
-> -- 
-> 2.25.1
-> 
+Bart
