@@ -2,120 +2,104 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9739EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F0FC1975A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF2D20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20358206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 06:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387979AbgCLGhO (ORCPT
+        id S2387942AbgCLGks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:37:14 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:43257 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387786AbgCLGhO (ORCPT
+        Thu, 12 Mar 2020 02:40:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35201 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387859AbgCLGkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 02:37:14 -0400
-Received: by mail-il1-f200.google.com with SMTP id t9so3198502ilk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 23:37:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=FuH0nsCbwe86/j2RoJ1s3qJai4VV2bvq/TdtvNazlJE=;
-        b=lLxMViHK54QswxMwFCNOMCldi4XYjq7iwdo9DSFdwwfyWcbJpyKK46j9z9n/X8k1lY
-         YylletaYMehLdA0agJBeNbE8/r1zrW+yp5TC8vNttflTcsKoOscIaILiPiiNbSYkEjSy
-         5bBLfu28NW1tmG9AMoIoKHLMFhiCq+RULxqJReuIJeTkqO5RdZv2RjaJhxUTMRbYbasx
-         K6W3KsO1paLMYq7lR/SG7SAUk6Q5zmQwAlJi6BE1vWWPw8AGEgt4z7rWUrs8NbfbZUsQ
-         /iVu+///GaU0FCMoHnOy0qKv63ckftlkqAkCyComKkZ9FF7fFJvnWtj17lVjZMepo1y6
-         8wtA==
-X-Gm-Message-State: ANhLgQ1tvq+Mi0g2GeJOkSmKFabM1JtQDSY8YryFGaqmbC7ueVijd9WJ
-        wa0HaE/VdxiRMYdbuFCX7P037rty+LcWagx+J5uRitleuqML
-X-Google-Smtp-Source: ADFU+vvZFSVb32AaAPGQNJt0QTHRGIRHmGWOfnZ9CqGWioVTITgpF3zUSoTuKs+f9tVy8KMCaJEqIWr57Fyf8zqGAot/tm+pq3Nn
+        Thu, 12 Mar 2020 02:40:47 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCHWN-0008Mo-GT; Thu, 12 Mar 2020 07:40:43 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCHWN-0003bp-0t; Thu, 12 Mar 2020 07:40:43 +0100
+Date:   Thu, 12 Mar 2020 07:40:42 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8ec2:: with SMTP id q185mr6112676iod.180.1583995032813;
- Wed, 11 Mar 2020 23:37:12 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 23:37:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000041c6a905a0a295ef@google.com>
-Subject: WARNING: ODEBUG bug in remove_client_context
-From:   syzbot <syzbot+c3b8c2a85d37162cc6ab@syzkaller.appspotmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, kamalheib1@gmail.com,
-        leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312042210.17344-5-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+> Only the Timer control register(TCLR) cannot be updated when the timer
+> is running. Registers like Counter register(TCRR), loader register(TLDR),
+> match register(TMAR) can be updated when the counter is running. Since
+> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+> timer for period/duty_cycle update.
 
-syzbot found the following crash on:
+I'm not sure what is sensible here. Stopping the PWM for a short period
+is bad, but maybe emitting a wrong period isn't better. You can however
+optimise it if only one of period or duty_cycle changes.
 
-HEAD commit:    61a09258 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a6d70de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7aef917d2e37d731
-dashboard link: https://syzkaller.appspot.com/bug?extid=c3b8c2a85d37162cc6ab
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+@Thierry, what is your position here? I tend to say a short stop is
+preferable.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> Tested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  drivers/pwm/pwm-omap-dmtimer.c | 21 +++++++--------------
+>  1 file changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+> index 85b17b49980b..c56e7256e923 100644
+> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> @@ -19,6 +19,13 @@
+>   * Limitations:
+>   * - When PWM is stopped, timer counter gets stopped immediately. This
+>   *   doesn't allow the current PWM period to complete and stops abruptly.
+> + * - When PWM is running and changing both duty cycle and period,
+> + *   we cannot prevent in software that the output might produce
+> + *   a period with mixed settings. Especially when period/duty_cyle
+> + *   is updated while the pwm pin is high, current pwm period/duty_cycle
+> + *   can get updated as below based on the current timer counter:
+> + *   	- period for current cycle =  current_period + new period
+> + *   	- duty_cycle for current period = current period + new duty_cycle.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c3b8c2a85d37162cc6ab@syzkaller.appspotmail.com
+In case we stay with a short stop, adding something like:
 
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: work_struct hint: smc_ib_port_event_work+0x0/0x340 net/smc/smc_ib.c:523
-WARNING: CPU: 0 PID: 298 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
-WARNING: CPU: 0 PID: 298 at lib/debugobjects.c:488 __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-WARNING: CPU: 0 PID: 298 at lib/debugobjects.c:488 debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 298 Comm: kworker/u4:5 Not tainted 5.6.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events_unbound ib_unregister_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
-RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-RIP: 0010:debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Code: 74 08 4c 89 f7 e8 64 26 18 fe 4d 8b 06 48 c7 c7 13 08 d1 88 48 c7 c6 cf f8 ce 88 48 89 da 89 e9 4d 89 f9 31 c0 e8 14 c0 ae fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df ff 05 56 28 b1 05 48 8b 5c 24
-RSP: 0018:ffffc90001e07b78 EFLAGS: 00010046
-RAX: 4ee5a22e59a59c00 RBX: ffffffff88d4e56a RCX: ffff8880a8a14440
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff815e16e6 R09: ffffed1015d04592
-R10: ffffed1015d04592 R11: 0000000000000000 R12: ffff88809325f864
-R13: ffffffff8b558e00 R14: ffffffff890d13a0 R15: ffffffff87bf6590
- kfree+0xfc/0x220 mm/slab.c:3756
- remove_client_context+0xb3/0x1e0 drivers/infiniband/core/device.c:724
- disable_device+0xec/0x2e0 drivers/infiniband/core/device.c:1268
- __ib_unregister_device+0x6c/0x160 drivers/infiniband/core/device.c:1435
- ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1545
- process_one_work+0x76e/0xfd0 kernel/workqueue.c:2264
- worker_thread+0xa7f/0x1450 kernel/workqueue.c:2410
- kthread+0x317/0x340 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ - The PWM has to be stopped for updates of both period and duty_cycle.
 
+Best regards
+Uwe
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
