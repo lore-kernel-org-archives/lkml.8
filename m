@@ -2,123 +2,72 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F018C1975A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DAFC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275B12067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V4idd58r"
+	by mail.kernel.org (Postfix) with ESMTP id 2119C2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 18:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgCLSe7 (ORCPT
+        id S1726772AbgCLSfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 14:34:59 -0400
-Received: from mout.gmx.net ([212.227.15.19]:34145 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgCLSe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 14:34:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1584038093;
-        bh=f56xVHIr6zr2PZHI0TS7LUqKLBAli/KY7kMif9yhxy0=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=V4idd58raCGnnFUXYwiJAquLjofThszFDTGpDCYypEnYHfbhB7mP64BSV32P2pr6k
-         ztzTuqHMWIsVXjIbSzMvgFPgrhn48OFl1tYcNHQtAJXj7GG78a3o3DZv/Pzu2YQBYm
-         kWVNn7zRD90TKX+woWpRtnMUCcH4bTm7Wy+wS4Kw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.34]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mdeb5-1jlnUC1PTV-00Zejg; Thu, 12
- Mar 2020 19:34:53 +0100
-Date:   Thu, 12 Mar 2020 19:34:52 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Daniel W . S . Almeida" <dwlsalmeida@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: driver-api/gpio/driver.rst: fix code blocks
-Message-ID: <20200312183452.GF2376@latitude>
-References: <20200312180650.1365059-1-steve@sk2.org>
+        Thu, 12 Mar 2020 14:35:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:39938 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCLSfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 14:35:02 -0400
+Received: by mail-io1-f69.google.com with SMTP id z207so2372100iof.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 11:35:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ir7UeiOgRla46VgJyqdvELP5IALvlHJBWBv4Kon2YiQ=;
+        b=UVJq4bKgNRagxL/7qzXTjlp6g5EbFHHpc9Vkg3yf2mGMLdHUD6VC5AeCmrEj9GCPed
+         YvG4evgNTjOgXwKdJR4/mP/o/0UMMj+dtv3mOiqhpM7J0zm6STmuLUTtZpv/Jvhki4PU
+         nozsG6F484OdF4Hbq59+dHg2Xw3t/N+kwibphBZhMNigws9WDR3PLwBpFcjvPnxNjQKc
+         rt6KLHcqpYIlNeSZZr3gfWupRKKrpQI55J3STTFVLCQWL2uLiP01ELWm/RHyx/v+7G2c
+         terXCmG6QDzapwMeGxWdSAt9gTQW6gkcVzqwWLl7VfrrIVK4Uq+J1g3RWfAFZiUqt6zs
+         Pwgg==
+X-Gm-Message-State: ANhLgQ3hdOoNBee9+1F3VPp3HoGjQQ/gr5VjtYDDcwi3jGriB02m/LsD
+        uPK9bCtChc/ZxCvB/mJXIX84KcZhreZugnSgmmH1PTi9sTvg
+X-Google-Smtp-Source: ADFU+vuGqMVU/sCZ2uqRsye5iy6iExo0L2KoabBfOjwzUDCql4SHBehAYnSYwmvKUogZv6oHxiMhvYUhcEbBhS3sxDoZr2KgrRRU
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jTMWTj4UTAEmbWeb"
-Content-Disposition: inline
-In-Reply-To: <20200312180650.1365059-1-steve@sk2.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:4djGkxK8HRts3U3sv1OSqZPHYAc9JiWcsVUMAEWwSiJThefE6M+
- 3Ezy8jEu8zfg7xKAal+KwWz3gjK3FhwyEAq+kRaNwmJrjKY84WFKSsOGveklpff+zkbD8bs
- ygbmt74xP9CLDdxTdGJbQG3uAN+NwxZ/I9B1JhPe0F15fwQM495YAlczrPICqL5f+B7NlEe
- Aeu3653rM46ouuEAVJUkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:307PlKFVLfM=:3EP8wbRYu7nviegtlfHjn6
- HuoFGhZZBF3DzJCP+NO7jRuVdk8CKE1BDc3YNLY07OMrA7PbEtVPq1ADLL/XQkS0UWfhRKG4D
- vMRMgWiPu5usclWPXALb8LM2m5Jvtibf1gZwsXVdDPapLX5Bx4dsbgsMk7P0Ob/OiVx8Vz4IS
- TIZKVlFXPKhmpPYWawlpiYh24cFNmuhg6qx4vJQajXYRhP0gmXCy5Nktc2JWqSOA2c5hKF3yR
- JxUEIfm9emrJWqmHS+7DT9PspgruTIcXcQJRfXZLmBad7q7C8uVgAR9CKgdse5LB1PE79W+4O
- AODaBvFpbE0wmG8jN7OMpASuzZdlwOT4TmeFFwLHK/PzbyUdNOPNT35dg+B6059I6PYqTQGd4
- ptdXqUfIJ8IBV/dIEBaRZn8Teig0axAooO7XY4Hp7pQxJFRxc+y1frOv6bpm2Q7kzoqe+aaHf
- tbeQUB5T9fHb7LQhK6x3Qrn8o10w1mdWCRCVsHaP59GF945a6LvYsEL18JEWsUmKBesfGiFxm
- IukK7Y7eqHGJDweDHUxVlEpIUHW+nJV83I3IiK0BAdZcdqIvvc8PaAL8JRzrUJHRt8LUQj4yg
- 5G6AYut50uYROz4VQuawhr0RwIVgnXyA1WBsN0q4XoC7o/Ou4QWLyomTqDhpcqSecwf/YHa1l
- Zz3c7u6eBFPLL3zOXNK2SKZ+9hnYsYV5PYeY9cosRZ3QOH3XBQJax3DsWfMb0LICwZHCYAeMg
- 7Il15ezjkbrFRB0cDxbvZcKQo/iXIWYYNUv1CADzU3ky2AKE4aVcVP2oYC/nBhzKF8XfuxHkd
- YfZA52F/qlN8o82v6sYnPNtCuSBSfDKJKgW3NfL9/uhTxqwktxj7UbLm5bQ2a84gyV5M2c0rC
- 5/8q/GDf2Et8Y8tdz3qw9yFxJurIieIzq9wME2ik8dStJgDXOhzWsKAxrcA7qFOy1RLnYBbfN
- 4a/yOlZRA3BtXYe67WfRFgjslot88ebFApiNjjjrHqRRfgbt6Ft3CpNX7AMSJTLWdyOiHEl07
- bZfljBEiN7kEEFXdvaQsNGWuVuxUizHP47gksdmpMk7Oxcy/2CLchkUt8bYZKulyrmC43YRNO
- ph1O7IhuCcWdoj+k4hKrrfOxMbV3Vzk6y20WiPE/j4i1SFk4QGtBXP5EU54mDEpcmy/AvJq+g
- +emx98YZjW+jfwkeuR5u7d1OQ9fwylZHG7kv3lhyLsrUdTCS1AVs1xtPwMqb7uDcIhCRtiJju
- wcZ7ku/bKlc31GiFq
+X-Received: by 2002:a02:5489:: with SMTP id t131mr9106656jaa.134.1584038101466;
+ Thu, 12 Mar 2020 11:35:01 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 11:35:01 -0700
+In-Reply-To: <CAJfpegswE6pLBbBmbkPMjmLPjgvn5z=gDEB6cTpe7o84hOuroA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000059489f05a0ac9cae@google.com>
+Subject: Re: WARNING: lock held when returning to user space in ovl_write_iter
+From:   syzbot <syzbot+9331a354f4f624a52a55@syzkaller.appspotmail.com>
+To:     jiufei.xue@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
+        mszeredi@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---jTMWTj4UTAEmbWeb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-On Thu, Mar 12, 2020 at 07:06:51PM +0100, Stephen Kitt wrote:
-> -is a typical example of a cascaded interrupt handler using gpio_irq_chip=
-::
-> +is a typical example of a cascaded interrupt handler using gpio_irq_chip:
+Reported-and-tested-by: syzbot+9331a354f4f624a52a55@syzkaller.appspotmail.com
 
-Thanks for the patch, but Mauro already fixed it:
+Tested on:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-?id=3Dc1c8b1ff0a1985d4992f49a5775bbcf6ee5ccfba
+commit:         63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=9331a354f4f624a52a55
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=134ceef9e00000
 
-
-
-Cheers,
-Jonathan Neusch=C3=A4fer
-
---jTMWTj4UTAEmbWeb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5qgMUACgkQCDBEmo7z
-X9uQ9g/+JakMD13xglbFpTuEQ4Ny5G7da9WPxI7Gw3nEFve3nK3g/iipF76GJYmy
-UutgaQ0n18lyy531xH77pkVtLeQlWSh60i6yvMn0BDx0x6rRbJ4fXipAXNw2P4Q1
-eelUj7tGn8ZgHCDbeF30zxFd5qm/xGBgw7eIZe7pht+836WspJTSZCNuWh3sEGFW
-Mq7UtnKVqx11uTun7sOzp1JUuCiDDe6LXjqGVpORTImU1D27M+Wv5J44sOAXqJyq
-XOyY83v7JLHow2RANRH+griJFctFYuRpNHpLVuXp/+ROfaQPLPf2DpMx2CdsQKCn
-jMCsLd0wb23nFiO2KFQv3nzlXa0qd8KLmCCKdogul//De1DikOcFMQhvU+0CucVq
-uaV5OflNViaJ6UCI6frDPfpFiEl7cFU/3iA3ETqdSkXr0f58P4yVWAG77Iu9zLB8
-UNm9vCQoRbV3j3n89cD0oS1u7ET+ejBTWV1XwdQWA9PChIkqmKJYnRmAlovxkrP9
-le46kHIugAmGFitu1vaLEZi7BKd6m3NglIzUXevHpUVCB9XTya76rmDOUseOCMqO
-32Sl0FcawyMp5A6fhNWBtm20B/s+w0dJEkfMGKdJyF23nChFvD9uNDtRJAffl5QI
-PCf6461DD3KaHIkZEoJNX8HsdLk67lHYQemv+BfKk5zQ5zSXd2E=
-=MRzh
------END PGP SIGNATURE-----
-
---jTMWTj4UTAEmbWeb--
+Note: testing is done by a robot and is best-effort only.
