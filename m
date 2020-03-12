@@ -2,144 +2,99 @@ Return-Path: <SRS0=+FT0=45=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226B8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114BAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00AC1206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA7C20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Mar 2020 10:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DmyVra3y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="INV4LL9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgCLKOM (ORCPT
+        id S1726492AbgCLKPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:14:12 -0400
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:36252 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgCLKOL (ORCPT
+        Thu, 12 Mar 2020 06:15:48 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43423 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLKPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:14:11 -0400
-Received: by mail-oi1-f178.google.com with SMTP id k18so4926553oib.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:14:11 -0700 (PDT)
+        Thu, 12 Mar 2020 06:15:48 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so2837784pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 03:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jmkbYdX8+j8+5rRfl7f3e7GwQSqimyD7SYnYxFyR5E0=;
-        b=DmyVra3yF33pND3KBYCG1WrIzqhrPuc37FpVnMX4LRRIrYiXGMpvgPZFZ7bNhx38Jy
-         bhBBWOZx+Hi9tJnU7TiJIYR5QAN9paP3kNEAOpLdvqCbpSmYXC0ndWO8Wn/G8hMEoBWI
-         7UbF6503aN9fGMsUHVjHpDJ76xjYIUVcSLLlauXJTrBry+6gqbCXkADBm/lhFTPE2dP1
-         m6psJHurWRf9QyJqhxENGmofwGS/ziPISB+aR3e8Ybrc6JRvHO8HRLcHdNUT0jYcd5Iz
-         uNQuf9VPV1M4kv2mOkskGWHMi8hhUlsOp9R+iuDNgOSSId1M6ByOnNrpRR+9MNvpccEg
-         cW6w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NrWeVKFKm3KJNrhGkRSBOYO/xSPIyOJst+AQW6M9RlY=;
+        b=INV4LL9JXfbpzVD8X22Gzz4sGDVyD0phYXZQyeiJmO9hr7b6vrOq4zFT5582gefjGs
+         b5tydoyHozZ0f3bpca+Kd/p2S9/V6Y6aiTWPnr0ZDOPGH6Ezrlph57M+fAJXh3XLihFN
+         CGwlKXzSHIlrwTz/0VZPEMV9a1IX4SOV+4fnViqwf9TDKAai7+ANbFEv1kDJZ4OzC/B7
+         3D7JvUo009N7SdgRmuTRgvewAOOllNZ/H7xymAeE9sbdzcUs+IW8JLmvr5H/Sof7zHgy
+         c37veR7aR/9LU0Mksf/C564ikV2HJlrWyJZa5YeeY12sAamI3BoW3s4XnPsxEK6MvN2B
+         uFmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jmkbYdX8+j8+5rRfl7f3e7GwQSqimyD7SYnYxFyR5E0=;
-        b=awaPACZI9UHyiIx474e5p7icLxpB9hunSvrrioBALZmdDLxoGQQ96errM02mD5ZQRI
-         Pia/N256/SUFfAoFcmyZOB+DeeiEYrvKTwi3821sclAuaejJJb9L9+kSY7DrFuQcY9Mw
-         jEIXfWTvSgGGrOCkqpSrJ21uHIAmR1tocC040L8fQtiitzqn4OnpGL/bBmJ64Wj8ZMuX
-         m3v6+dw5zcIOv1HQyo2YLbdG/uFoMyBcaSJfLq3/4bDQeSy8MIJRVyk48WlbcnHLMtrE
-         IMxwhLDEF/fK1bQS+3oNzVY7iRdmmmk5xcCR2dRw9U2R0Due9kCNE+5daVD0goSVDbxu
-         z8qg==
-X-Gm-Message-State: ANhLgQ3rup21pLw0aPN6Fwo5ESQHVeMzGYb+iO3rO9RQShedtePh8trf
-        5IJK3Jj2iVYftpENBAiOdWXXrFLJhhxFRUphswj8rQ==
-X-Google-Smtp-Source: ADFU+vuvLA7OJNogZQsqCnB5B9kakN6GgYe45+rLlUxm/uBRIXUsVnDaJlTEPNY27ZGSH15nNbJL51uwKZO17iVx8DY=
-X-Received: by 2002:aca:ab4b:: with SMTP id u72mr2054085oie.26.1584008050585;
- Thu, 12 Mar 2020 03:14:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NrWeVKFKm3KJNrhGkRSBOYO/xSPIyOJst+AQW6M9RlY=;
+        b=WKLtvlrMNjT5xIVzgRv8pRlDvH9kjf8pnk+MJ01+ZFP3uiJrQOOI4x7shWlld7vKYw
+         D1HjYsf7IvEgZ9eihq19TCGirrs819pMMzb2N0eMOQxvCdLUtomL5M3CA957gqnxU0As
+         4Fuks6BH1w0cOxbwIma1NEWtJ7RJ4yYGWed9l8djBZ9SUW9Ju86tiKmmoO1M6v68RXJW
+         IIfChqiXwxP4sOcQRh+XfSt7N2ICEuaHTQ4l0gACODGuXioUZ9mTy3JQ0/6pAaDe6BJR
+         QdBACrqu+Mh0fcBPmJTH0aS7XYIMP+bkzeLAQpJJdvabzfZlImNBBL87PM5m//WW0ziC
+         4DHQ==
+X-Gm-Message-State: ANhLgQ0bBGGKkqsLx1CyMVPMLg6k6vp+JCJex/iyzBQbMfE33x0ZhcDu
+        wQH1QBcrGM8IPX2DsjzA/zzftQ==
+X-Google-Smtp-Source: ADFU+vuI3QrWm3vKU3oXZdjQWeApNK1gMeLeM9Hp1wmXvFbbfWlWeXr+uPrSgioZqMfq5JoeGYvaNA==
+X-Received: by 2002:a63:da45:: with SMTP id l5mr6719291pgj.273.1584008145505;
+        Thu, 12 Mar 2020 03:15:45 -0700 (PDT)
+Received: from localhost ([122.171.122.128])
+        by smtp.gmail.com with ESMTPSA id p21sm53946207pfn.103.2020.03.12.03.15.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 03:15:44 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 15:45:43 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, Anson.Huang@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        abel.vesa@nxp.com
+Subject: Re: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
+ intermediate callbacks
+Message-ID: <20200312101543.ktvmfedt2o4ovsms@vireshk-i7>
+References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
+ <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-2-robert.foss@linaro.org> <CAOMZO5C9Oj+SmTroE+bSsGcOPpz6se+WOqw1qJU9x6TrzbzZKw@mail.gmail.com>
- <CAG3jFyuLMxUEr7yZAHT99JK8NoUZc-aquuMEtSBH_Vipa-_giQ@mail.gmail.com>
-In-Reply-To: <CAG3jFyuLMxUEr7yZAHT99JK8NoUZc-aquuMEtSBH_Vipa-_giQ@mail.gmail.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Thu, 12 Mar 2020 11:13:59 +0100
-Message-ID: <CAG3jFytyTO9h311WzTGDwDzGF-rwY1ANC=mhXXGxn6v83Anqmw@mail.gmail.com>
-Subject: Re: [v1 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     ben.kao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 16:51, Robert Foss <robert.foss@linaro.org> wrote:
->
-> Hey Fabio,
->
-> Thanks for having a look at this series so quickly.
->
-> On Tue, 10 Mar 2020 at 14:57, Fabio Estevam <festevam@gmail.com> wrote:
-> >
-> > Hi Robert,
-> >
-> > On Tue, Mar 10, 2020 at 10:46 AM Robert Foss <robert.foss@linaro.org> wrote:
-> >
-> > > +    ov8856: camera-sensor@10 {
-> > > +        compatible = "ovti,ov8856";
-> > > +        reg = <0x10>;
-> > > +        reset-gpios = <&pio 111 GPIO_ACTIVE_HIGH>;
-> >
-> > Could you double check this is correct? Other OmniVision sensors have
-> > reset-gpios as active low.
->
-> I have tested this, unfortunately I don't have access to a ov8856
-> datasheet that includes
-> this level of detail. But I have tested this.
->
-> >
-> > I suspect that the driver has also an inverted logic, so that's why it works.
->
-> That could explain it still working. Let me have a look into the
-> driver and see what it does.
->
+On 19-02-20, 15:59, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Platforms may need to implement platform specific get_intermediate and
+> target_intermediate hooks.
+> 
+> Update cpufreq-dt driver's platform data to contain those for such
+> platforms.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/cpufreq/cpufreq-dt.c | 4 ++++
+>  drivers/cpufreq/cpufreq-dt.h | 4 ++++
+>  2 files changed, 8 insertions(+)
 
-I had a look at some of OmniVision drivers, and there does seem to be
-a logical inversion in some of them,
-but not all of them.
+Applied. Thanks.
 
-ov7251:
-- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-  to the hardware pin XSHUTDOWN which is physically active low.
-
-ov5640:
-- reset-gpios: reference to the GPIO connected to the reset pin, if any.
-           This is an active low signal to the OV5640.
-
-I think the confusion stems from the XSHUTDOWN pin being mapped to a
-GPIO called reset, and the two being logically inverted. Currently
-this series does several mappings.
-
-XSHUTDOWN -> reset-gpio -> n_shutdn_gpio
-       ^                           ^                      ^
-Physical Pin               DT                Driver
-
-I think changing to what ov5640 does makes the most sense.
-XSHUTDOWN -> reset-gpio -> reset_gpio
-
-> >
-> > I don't have access to the datasheet though, so I am just guessing.
->
-> Me neither unfortunately, if anyone does have a link for it, I would
-> very much appreciate it.
+-- 
+viresh
