@@ -2,110 +2,117 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFC4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C881C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1942073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042CE2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584131605;
+	bh=Z5/ANwaJRsxTperPsOjqXDHSTFsjsliL0uw9pV+2bT8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=J6jDSbAO/hPeyTTxXIWofZWFiuIIIlkur+l1uxaRmm0mexsYbFrIT9WiLEvpWyYRm
+	 t+tg9T9xrEnWSa1KF//d2KsNbhp1QU582Atpxe+1P5gX+oB2hl9javqPUmw62dpptR
+	 /7YNLgollSLSmRs/xWyeigLLezaFogotqEOvH8ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgCMUdT (ORCPT
+        id S1727486AbgCMUdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:33:19 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:41102 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726620AbgCMUdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:33:18 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 13 Mar 2020 16:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727433AbgCMUdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 16:33:22 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1-us4.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id C1B9ABC0067;
-        Fri, 13 Mar 2020 20:33:16 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 13 Mar
- 2020 20:33:10 +0000
-From:   Edward Cree <ecree@solarflare.com>
-Subject: [PATCH] genirq: fix reference leaks on irq affinity notifiers
-To:     <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>, <ben@decadent.org.uk>,
-        <psodagud@codeaurora.org>
-Message-ID: <24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com>
-Date:   Fri, 13 Mar 2020 20:33:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        by mail.kernel.org (Postfix) with ESMTPSA id C08D52073E;
+        Fri, 13 Mar 2020 20:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584131601;
+        bh=Z5/ANwaJRsxTperPsOjqXDHSTFsjsliL0uw9pV+2bT8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=y4AuYnGVGvKRDjAaHcCc8XFtWkUoE/v5dSJEAHS2HnBZ/tBJxvsdm8np2CZv9+DLB
+         kdG8YrUwsM8ADfSTj4erJMmm9NsDDr26zY8wMsY/GNDN/lohaBoud6qLBnGWHZXKtC
+         IzcK6TVHZgciRdEV21NZO+3SbDQv40SQ3W9RtreA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 943A53522891; Fri, 13 Mar 2020 13:33:21 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 13:33:21 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jens Axboe <axboe@fb.com>, Tejun Heo <tj@kernel.org>,
+        io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc
+Message-ID: <20200313203321.GD3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <00e5ab7d-f0ad-bc94-204a-d2b7fb88f594@fb.com>
+ <CAHk-=wgGN-9dmso4L+6RWdouEg4zQfd74m23K6c9E_=Qua+H1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25288.001
-X-TM-AS-Result: No-4.513400-8.000000-10
-X-TMASE-MatchedRID: zkqBtM+YTpwNvGXOmeXzxbdHEv7sR/Ow+Ln5aB/lEhkqAZlo5C3Li9xw
-        X69jh9hhYle1ctMjSuwfWekSZjAGEYfQM/V9rvosbrJ9gVnOsZ1n8lEQGNBaxtSVUkz9BPXehp4
-        SQh/ttLdmzI/Ui5zayWaZdF3A++/3UgWC6f7WjHED2WXLXdz+AZnaxzJFBx6vVj3J63pAR3yW1R
-        oeNht4ReLzNWBegCW2RYvisGWbbS+No+PRbWqfRK6NVEWSRWybgsOxTmV7m9X/SXFxjWC0Qy2FC
-        R9X31/66cPP3ofk5Hd1gqe814IbULtn8aI+WdhDEQBc3c/Nvs/7VchQhFJDnuTnUBvBY7m9kERy
-        uRHFgnhSMqc7UpUorBKRsPC6bTvOqrQxXydIwG+QvGxhMZ/1zQ==
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.513400-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25288.001
-X-MDID: 1584131597-hbuiMMj_lOgn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgGN-9dmso4L+6RWdouEg4zQfd74m23K6c9E_=Qua+H1Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The handling of notify->work did not properly maintain notify->kref in two
- cases:
-1) where the work was already scheduled, another irq_set_affinity_locked()
-   would get the ref and (no-op-ly) schedule the work.  Thus when
-   irq_affinity_notify() ran, it would drop the original ref but not the
-   additional one.
-2) when cancelling the (old) work in irq_set_affinity_notifier(), if there
-   was outstanding work a ref had been got for it but was never put.
-Fix both by checking the return values of the work handling functions
- (schedule_work() for (1) and cancel_work_sync() for (2)) and put the
- extra ref if the return value indicates preexisting work.
+On Fri, Mar 13, 2020 at 01:18:30PM -0700, Linus Torvalds wrote:
+> On Fri, Mar 13, 2020 at 10:50 AM Jens Axboe <axboe@fb.com> wrote:
+> >
+> > Just a single fix here, improving the RCU callback ordering from last
+> > week. After a bit more perusing by Paul, he poked a hole in the
+> > original.
+> 
+> Ouch.
+> 
+> If I read this patch correctly, you're now adding a rcu_barrier() onto
+> the system workqueue for each io_uring context freeing op.
+> 
+> This makes me worry:
+> 
+>  - I think system_wq is unordered, so does it even guarantee that the
+> rcu_barrier happens after whatever work you're expecting it to be
+> after?
+> 
+> Or is it using a workqueue not because it wants to serialize with any
+> other work, but because it needs to use rcu_barrier in a context where
+> it can't sleep?
+> 
+> But the commit message does seem to imply that ordering is important..
+> 
+>  - doesn't this have the potential to flood the system_wq be full of
+> flushing things that all could take a while..
+> 
+> I've pulled it, and it may all be correct, just chalk this message up
+> to "Linus got nervous looking at it".
+> 
+> Added Paul and Tejun to the participants explicitly.
 
-Fixes: cd7eab44e994 ("genirq: Add IRQ affinity notifiers")
-Fixes: 59c39840f5ab ("genirq: Prevent use-after-free and work list corruption")
-Signed-off-by: Edward Cree <ecree@solarflare.com>
----
- kernel/irq/manage.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+The idea is that rcu_barrier() waits for callbacks from all earlier
+call_rcu()s to be invoked.  So as long as you know that the call_rcu()
+happened earlier than the rcu_barrier(), the rcu_barrier() is guaranteed
+to wait for that call_rcu()'s callback.
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 7eee98c38f25..b3aa1db895e6 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -323,7 +323,10 @@ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
- 
- 	if (desc->affinity_notify) {
- 		kref_get(&desc->affinity_notify->kref);
--		schedule_work(&desc->affinity_notify->work);
-+		if (!schedule_work(&desc->affinity_notify->work))
-+			/* Work was already scheduled, drop our extra ref */
-+			kref_put(&desc->affinity_notify->kref,
-+				 desc->affinity_notify->release);
- 	}
- 	irqd_set(data, IRQD_AFFINITY_SET);
- 
-@@ -423,7 +426,9 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
- 
- 	if (old_notify) {
--		cancel_work_sync(&old_notify->work);
-+		if (cancel_work_sync(&old_notify->work))
-+			/* Pending work had a ref, put that one too */
-+			kref_put(&old_notify->kref, old_notify->release);
- 		kref_put(&old_notify->kref, old_notify->release);
- 	}
- 
+In this case (and Jens will correct me in the sadly likely event that
+I get the story confused), we have a call_rcu() followed by scheduling
+work on that same task.  The work has to start executing after it was
+scheduled, so if that work does an rcu_barrier(), then that rcu_barrier()
+will wait on the call_rcu()'s callback to be invoked.
+
+Jens could invoke the rcu_barrier() just before scheduling the work,
+but the synchronous delay from the rcu_barrier() is a problem.
+
+Jens, what did I mess up in the above story?  ;-)
+
+I defer to Jens and Tejun on the possibility of ending up with all
+workqueue kthreads waiting on rcu_barrier().  If that is a problem,
+there are some ways of dealing with it, though none that I can think of
+that come for free.
+
+							Thanx, Paul
