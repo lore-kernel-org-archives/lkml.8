@@ -2,51 +2,52 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816F7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4637DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A9220749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D4F20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c3p903Bl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nbgv68aY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgCMPrL (ORCPT
+        id S1727197AbgCMPrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:11 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43848 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgCMPrK (ORCPT
+        Fri, 13 Mar 2020 11:47:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39952 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgCMPrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:47:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkpMx111156;
-        Fri, 13 Mar 2020 10:46:51 -0500
+        Fri, 13 Mar 2020 11:47:14 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkxmX061727;
+        Fri, 13 Mar 2020 10:46:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584114411;
-        bh=0dMsf4DYliKZ83tWSPvhlqALpn5mL3GmCMMJqyYrE8c=;
-        h=From:To:CC:Subject:Date;
-        b=c3p903BlIQnmIPf6Gbg0hmBbYhHR9P1okNG6qelJVOkU77Zz2soQEE/cvVUcqBnOp
-         +jTPOYkYtXJ1Y6AcFwP/u+oRfBnvXSJ94PMdm0Gasj1ZphgYjSCw5TISkrYTpTIVyC
-         bZXfEnhqQ/tlhUOW8k7O6a2JIqnj85nxxAq5uR20=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkpes126450;
-        Fri, 13 Mar 2020 10:46:51 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1584114419;
+        bh=UhAG0/4iSjuMUuigRDZlf5dFQbmSluLyCCpQMKeb6Jg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Nbgv68aY0m78gK+qQ99gmIZi+F1Y6IEwGsQKyuzMc61nesheeqaFMDITJz+tWYFXi
+         ikvEHhVVI+QVQwj/vgpTI5voKrtNw9Q82ES2vg7qVrb+J/bX/2W1GgJhDDDr911ucA
+         f291c8EGs9lRgClPDwjUnTqLuHf8D4FZwL7uDxxc=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DFkxto012943
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Mar 2020 10:46:59 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 10:46:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 10:46:59 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 10:46:51 -0500
+ Frontend Transport; Fri, 13 Mar 2020 10:46:59 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSE034352;
-        Fri, 13 Mar 2020 10:46:47 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSG034352;
+        Fri, 13 Mar 2020 10:46:55 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -60,10 +61,12 @@ CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v3 00/12] mtd: spi-nor: add xSPI Octal DTR support
-Date:   Fri, 13 Mar 2020 21:16:33 +0530
-Message-ID: <20200313154645.29293-1-p.yadav@ti.com>
+Subject: [PATCH v3 02/12] spi: atmel-quadspi: reject DTR ops
+Date:   Fri, 13 Mar 2020 21:16:35 +0530
+Message-ID: <20200313154645.29293-3-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200313154645.29293-1-p.yadav@ti.com>
+References: <20200313154645.29293-1-p.yadav@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -73,87 +76,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Double Transfer Rate (DTR) ops are added in spi-mem. But this controller
+doesn't support DTR transactions. Since we don't use the default
+supports_op(), which rejects all DTR ops, do that explicitly in our
+supports_op().
 
-This series adds support for octal DTR flashes in the spi-nor framework,
-and then adds hooks for the Cypress Semper flash which is an xSPI
-compliant Octal DTR flash.
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/spi/atmel-quadspi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-This series assumes that the flash is handed to the kernel in Legacy SPI
-mode. That is why there is no tracking of the state the flash is in.
-Ability to detect the flash mode and then run the SFDP procedure in that
-mode will be added as a follow up series.
-
-Tested on TI J721e EVM with 1-bit ECC on the Cypress flash.
-
-v1 can be found at [0]. v2 can be found at [1].
-
-[0] https://lore.kernel.org/linux-mtd/20200211133348.15558-1-p.yadav@ti.com/
-[1] https://lore.kernel.org/linux-mtd/20200226093703.19765-1-p.yadav@ti.com/
-
-Changes in v3:
-- Drop the DT properties "spi-rx-dtr" and "spi-tx-dtr". Instead, if
-  later a need is felt to disable DTR in case someone has a board with
-  Octal DTR capable flash but does not support DTR transactions for some
-  reason, a property like "spi-no-dtr" can be added.
-
-- Remove mode bits SPI_RX_DTR and SPI_TX_DTR.
-
-- Remove the Cadence Quadspi controller patch to un-block this series. I
-  will submit it as a separate patch.
-
-- Rebase on latest 'master' and fix merge conflicts.
-
-- Update read and write dirmap templates to use DTR.
-
-- Rename 'is_dtr' to 'dtr'.
-
-- Make 'dtr' a bitfield.
-
-- Reject DTR ops in spi_mem_default_supports_op().
-
-- Update atmel-quadspi to reject DTR ops. All other controller drivers
-  call spi_mem_default_supports_op() so they will automatically reject
-  DTR ops.
-
-- Add support for both enabling and disabling DTR modes.
-
-- Perform a Software Reset on flashes that support it when shutting
-  down.
-
-- Disable Octal DTR mode on suspend, and re-enable it on resume.
-
-- Drop enum 'spi_mem_cmd_ext' and make command opcode u16 instead.
-  Update spi-nor to use the 2-byte command instead of the command
-  extension. Since we still need a "extension type", mode that enum to
-  spi-nor and name it 'spi_nor_cmd_ext'.
-
-- Default variable address width to 3 to fix SMPT parsing.
-
-- Drop non-volatile change to uniform sector mode and rely on parsing
-  SMPT.
-
-Pratyush Yadav (12):
-  spi: spi-mem: allow specifying whether an op is DTR or not
-  spi: atmel-quadspi: reject DTR ops
-  spi: spi-mem: allow specifying a command's extension
-  mtd: spi-nor: add support for DTR protocol
-  mtd: spi-nor: default to address width of 3 for configurable widths
-  mtd: spi-nor: get command opcode extension type from BFPT
-  mtd: spi-nor: parse xSPI Profile 1.0 table
-  mtd: spi-nor: use dummy cycle and address width info from SFDP
-  mtd: spi-nor: enable octal DTR mode when possible
-  mtd: spi-nor: perform a Soft Reset on shutdown
-  mtd: spi-nor: Disable Octal DTR mode on suspend.
-  mtd: spi-nor: add support for Cypress Semper flash
-
- drivers/mtd/spi-nor/spi-nor.c | 692 ++++++++++++++++++++++++++++++----
- drivers/spi/atmel-quadspi.c   |   4 +
- drivers/spi/spi-mem.c         |   3 +
- include/linux/mtd/spi-nor.h   |  73 +++-
- include/linux/spi/spi-mem.h   |  13 +-
- 5 files changed, 702 insertions(+), 83 deletions(-)
-
---
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index 13def7f78b9e..91c1515ea72a 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -210,6 +210,10 @@ static bool atmel_qspi_supports_op(struct spi_mem *mem,
+ 		op->dummy.nbytes == 0)
+ 		return false;
+ 
++	/* DTR ops not supported. */
++	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
++		return false;
++
+ 	return true;
+ }
+ 
+-- 
 2.25.0
 
