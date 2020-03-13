@@ -2,137 +2,147 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F87C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2707C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B49820724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="es0oC2DC"
+	by mail.kernel.org (Postfix) with ESMTP id B0C5120724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCMIbR (ORCPT
+        id S1726553AbgCMIbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:31:17 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:22807 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726230AbgCMIbR (ORCPT
+        Fri, 13 Mar 2020 04:31:23 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:40135 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgCMIbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:31:17 -0400
-X-UUID: 2120b3acc30d47e49fd3bd8032cb54b2-20200313
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uadq0m8B7fzPLQ9yivfxpszXKt2Y0MnLJJvhYfcT86c=;
-        b=es0oC2DCWpi85tLVMMHXqJvn/N1ZThUznfcSkUMgTN8ELZGSUIDP8XHC33nRQ2Yr0NV1AOSOxyCSNCgVZJfBB4t659oeI7GO7AmU4p1HRnLY51XK5VGhJmrDipIobldNRjZ5lYzgQNzxyikbUdEAKA1xEU8Wp12eULFVaCRs1kM=;
-X-UUID: 2120b3acc30d47e49fd3bd8032cb54b2-20200313
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ran.bi@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2122994655; Fri, 13 Mar 2020 16:31:11 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
- (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 13 Mar
- 2020 16:30:04 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 13 Mar 2020 16:31:01 +0800
-Message-ID: <1584088256.16960.9.camel@mhfsdcap03>
-Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek
- MT6358 RTC
-From:   Ran Bi <ran.bi@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Fri, 13 Mar 2020 04:31:21 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1Mr9O4-1jiCrb2HEU-00oFj6; Fri, 13 Mar 2020 09:31:09 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id C340E650117;
+        Fri, 13 Mar 2020 08:31:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id cxOrl4KuroB3; Fri, 13 Mar 2020 09:31:08 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 5C8C964FBDA;
+        Fri, 13 Mar 2020 09:31:08 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.10.2.141) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 13 Mar 2020 09:31:08 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id EB30A804F8; Fri, 13 Mar 2020 09:31:07 +0100 (CET)
+Date:   Fri, 13 Mar 2020 09:31:07 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Fri, 13 Mar 2020 16:30:56 +0800
-In-Reply-To: <20200313072230.GC3142@dell>
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200312074407.GA3142@dell> <1584003477.6269.8.camel@mhfsdcap03>
-         <20200313072230.GC3142@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
+Message-ID: <20200313083107.GB3832@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20200113141459.GA3606@pflmari>
+ <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
+X-Originating-IP: [10.10.2.141]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A627063
+X-Provags-ID: V03:K1:fjYydfuJxQy/H8udIdxXYJOsSL6CEuFrOL2Fk27fHc9ELzJwygD
+ tSR2eDKm9wVKROUb22OoSignvMm//2ihBwndyENNAK1vw/GGwbcPzSuRsgCu/zXswPhjrJn
+ QsZzGMdofYcDj+izAhTTtYzE5VeqCNqGS4xRBqOAryw0OIO6FHPkMRAt/l4/5JB4YS/HPn4
+ kp84HfyyRUDGN8AOVHeUQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nKFlS+QJRi8=:1hjS7oGd246sQU4texx2hz
+ 4v7AJxdCoJqx8xpbGKHdB9Pvql+H9DIKCZmGbdhJ61fgZfWZgzxSnlk+ZAEbigmrPk0kKyKrW
+ PHPZDGOpXzDeA8Ef2W0HEQjyfAQuCKobDjYHbVMh/nyAglluh2o47IDnbhoxkSZhw7pcafeba
+ K2HqgerOeNZAUqNArlqJ1NqQ/3OwMFA9DPEM2qWzQ8fUMBlA9fWoTMrvlWCWd2WcQAYlstWIy
+ o70LXvpY+iDiRz+c3WYjesFkIMry8EVlFrXYohAfYxhwQCVTiuLQORvwwvJSZtvU9R01sdamG
+ yaY0BJYKO4U1QmMrP9BQV5e7e4CY5urvdeO3Ix4e3um3lS0qmnupPFlw7D/Yep7Dlxmo53mGy
+ bjyUacXnvTtr30ea36Q5GDn4qDIt5dehhaSOjQmZpaGXLWI8zRv5mvbGAnkL+AhM4l2GoS6Dz
+ K7ofXW9K11lGMcq0xZcT5ZyHg1/7yYqz//H0oyCneSERixHlNZqMaMagyrUvD0vwTUHXzA4zO
+ 2i0PaJyzb+1gcT7XIHEvQQbM9wYFO1aCbeVmW/MHE6PM439FQGxZQr8X+LNgjUatujp5nkggt
+ 6iDjtuATX6TQ/NjqSTSqkdEpMQVRbJ9Fx6bJal80kQOK+DlABQFHLHWntV2BNNoMyQup653l3
+ LofCZS37X6F/5PQRn01zznxopDl2SjoAzAO5NyhlPqYAANlXqzk1Wn8YsdwoBddys6LRWz2WN
+ C6nb47Ai2HZ1IYQxf59b00qmuIywIUKxMaFIZKYdl3uxm/p7qByxHkNpBAzdPxQXsXtC5QGho
+ /Vegu7uGUml07e2l1aSEQlYklRNoFYobAa7tzF1fnLzLgiuj4TfGQZvwveoH3k1M1jZiZ1a
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAzLTEzIGF0IDA3OjIyICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
-IFRodSwgMTIgTWFyIDIwMjAsIFJhbiBCaSB3cm90ZToNCj4gDQo+ID4gT24gVGh1LCAyMDIwLTAz
-LTEyIGF0IDA3OjQ0ICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gPiBPbiBXZWQsIDExIE1h
-ciAyMDIwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZyb206IFJh
-biBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgYWRkIHN1
-cHBvcnQgZm9yIHRoZSBNZWRpYVRlayBNVDYzNTggUlRDLiBEcml2ZXIgdXNpbmcNCj4gPiA+ID4g
-Y29tcGF0aWJsZSBkYXRhIHRvIHN0b3JlIGRpZmZlcmVudCBSVENfV1JUR1IgYWRkcmVzcyBvZmZz
-ZXQuDQo+ID4gPiA+IFRoaXMgcmVwbGFjZSBSVENfV1JUR1IgdG8gUlRDX1dSVEdSX01UNjMyMyBp
-biBtdDYzMjMtcG93ZXJvZmYNCj4gPiA+ID4gZHJpdmVyIHdoaWNoIG9ubHkgbmVlZGVkIGJ5IGFy
-bXY3IENQVSB3aXRob3V0IEFURi4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJh
-biBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSHNpbi1I
-c2l1bmcgV2FuZyA8aHNpbi1oc2l1bmcud2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gPiA+IC0tLQ0K
-PiA+ID4gPiAgZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYyB8ICAyICstDQo+
-ID4gPiA+ICBkcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgICAgICAgIHwgMzIgKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tLS0tLS0NCj4gPiA+ID4gIGluY2x1ZGUvbGludXgvbWZkL210
-NjM5Ny9ydGMuaCAgICAgICAgfCAgOSArKysrKysrKy0NCj4gPiA+ID4gIDMgZmlsZXMgY2hhbmdl
-ZCwgMzMgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+ID4gPiA+IA0KPiA+IA0KPiA+
-IDwuLi4+DQo+ID4gDQo+ID4gPiA+ICANCj4gPiA+ID4gICNkZWZpbmUgUlRDX0lSUV9TVEEgICAg
-ICAgICAgICAweDAwMDINCj4gPiA+ID4gICNkZWZpbmUgUlRDX0lSUV9TVEFfQUwgICAgICAgICBC
-SVQoMCkNCj4gPiA+ID4gQEAgLTY1LDYgKzY3LDEwIEBADQo+ID4gPiA+ICAjZGVmaW5lIE1US19S
-VENfUE9MTF9ERUxBWV9VUyAgMTANCj4gPiA+ID4gICNkZWZpbmUgTVRLX1JUQ19QT0xMX1RJTUVP
-VVQgICAoamlmZmllc190b191c2VjcyhIWikpDQo+ID4gPiA+ICANCj4gPiA+ID4gK3N0cnVjdCBt
-dGtfcnRjX2RhdGEgew0KPiA+ID4gPiArCXUzMgkJCXdydGdyOw0KPiA+ID4gPiArfTsNCj4gPiA+
-IA0KPiA+ID4gRG8geW91IGV4cGVjdCB0byBhZGQgbW9yZSBwcm9wZXJ0aWVzIHRvIHRoaXMgc3Ry
-dWN0Pw0KPiA+ID4gDQo+ID4gPiBJZiBub3QsIGl0IHNlZW1zIGEgYml0IG92ZXJraWxsLg0KPiA+
-ID4gDQo+ID4gDQo+ID4gWWVzLCB3ZSB3b3VsZCBhZGQgbW9yZSBwcm9wZXJ0aWVzIGhlcmUgaW4g
-ZnV0dXJlIHBhdGNoZXMuDQo+ID4gDQo+ID4gPiA+ICBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7DQo+ID4g
-PiA+ICAJc3RydWN0IGRldmljZSAgICAgICAgICAgKmRldjsNCj4gPiA+ID4gIAlzdHJ1Y3QgcnRj
-X2RldmljZSAgICAgICAqcnRjX2RldjsNCj4gPiA+ID4gQEAgLTc0LDYgKzgwLDcgQEAgc3RydWN0
-IG10NjM5N19ydGMgew0KPiA+ID4gPiAgCXN0cnVjdCByZWdtYXAgICAgICAgICAgICpyZWdtYXA7
-DQo+ID4gPiA+ICAJaW50ICAgICAgICAgICAgICAgICAgICAgaXJxOw0KPiA+ID4gPiAgCXUzMiAg
-ICAgICAgICAgICAgICAgICAgIGFkZHJfYmFzZTsNCj4gPiA+ID4gKwljb25zdCBzdHJ1Y3QgbXRr
-X3J0Y19kYXRhICpkYXRhOw0KPiA+ID4gDQo+ID4gPiAnZGF0YScgaXMgYSB0ZXJyaWJsZSB2YXJp
-YWJsZSBuYW1lLg0KPiA+ID4gDQo+ID4gPiBXaHkgZG8geW91IG5lZWQgdG8gc3RvcmUgdGhpcz8N
-Cj4gPiA+IA0KPiA+ID4gSXQncyBvbmUgdmFyaWFibGUgd2hpY2ggaXMgdXNlZCBvbmNlIEFGQUlD
-VC4NCj4gPiANCj4gPiBJIHdvdWxkIHJlbmFtZSAnZGF0YScgdG8gJ2NvbmZpZycuDQo+ID4gDQo+
-ID4gVGhpcyBzdHJ1Y3Qgd2lsbCBiZSBleHRlbmRlZCBpbiBmdXR1cmUgcGF0Y2hlcyB0byBhY2hp
-ZXZlIG1vcmUgUE1JQyBjaGlwDQo+ID4gY29tcGF0aWJpbGl0eS4NCj4gDQo+IE9uIGNsb3NlciBp
-bnNwZWN0aW9uLCBpdCBsb29rcyBsaWtlIHdydGdyIChhbHNvIG5vdCBhIGdyZWF0IG5hbWUgZm9y
-IGENCj4gdmFyaWFibGUgYnkgdGhlIHdheSkgaXMgYSByZWdpc3RlciBhZGRyZXNzLiAgSXMgdGhh
-dCBjb3JyZWN0Pw0KPiBJbml0aWFsbHkgSSB0aG91Z2h0IGl0IHdhcyBhIG1vZGVsIG51bWJlciwg
-d2hpY2ggd291bGQgaGF2ZSBiZWVuIGENCj4gc3VpdGFibGUgY2FuZGlkYXRlIGZvciBlbnRyeSBp
-bnRvIE9GIC5kYXRhLg0KPiANCj4gSG93ZXZlciwgZGVzY3JpYmluZyByZWdpc3RlciBhZGRyZXNz
-ZXMgaW4gT0YgLmRhdGEgZG9lcyBub3Qgc291bmQgbGlrZQ0KPiBnb29kIHByYWN0aWNlLiAgSXQg
-aXMgdXN1YWxseSB1c2VkIHRvIGlkZW50aWZ5IGEgcGxhdGZvcm0gaW4gdGhlIGNhc2VzDQo+IHdo
-ZXJlIHBsYXRmb3JtcyBjYW5ub3QgYmUgb3RoZXJ3aXNlIGR5bmFtaWNhbGx5IGludGVycm9nYXRl
-ZCBmb3IgbW9kZWwNCj4gbnVtYmVyIHZpYSBhIHJlZ2lzdGVyIHJlYWQuDQo+IA0KPiBEZXNjcmli
-aW5nIHJlZ2lzdGVyIG1hcHMgdmlhICdjb25maWcnIGRhdGEgaXMgYSBzbGlwcGVyeSBzbG9wZS4N
-Cj4gDQoNCndydGdyIGlzIGEgc3BlY2lhbCByZWdpc3RlciBjYWxsZWQgIndyaXRlIHRyaWdnZXIi
-IHdoaWNoIGNvdWxkIGFwcGx5IFJUQw0KcmVnaXN0ZXIgY2hhbmdlIGFmdGVyIHdyaXRlIDEgdG8g
-dGhpcyByZWdpc3Rlci4gSSBzdXBwb3NlIEkgY291bGQgcmVuYW1lDQppdCB0byAidHJpZ2dlciIu
-DQoNCk1vc3QgUlRDIHJlZ2lzdGVyIG9mZnNldCB3YXMgc2FtZSBiZXR3ZWVuIDYzOTcgYW5kIDYz
-NTggUE1JQyBjaGlwIGV4Y2VwdA0KdGhpcyB0cmlnZ2VyIHJlZ2lzdGVyLiBTbyBJIHdvdWxkIGxp
-a2UgdG8gc3RvcmUgdGhpcyBkaWZmZXJlbmNlIGludG8gT0YNCmRhdGEuIE90aGVyd2lzZSwgSSBu
-ZWVkIGEgbG9uZyBpZi1lbHNlIGNvbmRpdGlvbiBiYXNlZCBvbiBtb2RlbCBudW1iZXINCm9yIHJl
-Z2lzdGVyIHJlYWQuDQogDQo=
+Hi Hans,
 
+Hans Verkuil, Fri, Mar 13, 2020 09:21:05 +0100:
+> As a general note for this series: it might be better to have two
+> patch series: one for patches 1 and 3-6 (not sure whether 5 can be included
+> or not), and one where the public API changes (i.e. new V4L2 audio controls)
+> are added. The first can probably be merged fairly quickly, the second will
+> likely require more iterations since public API patches always take much longer
+> before they are mature.
+
+I see. After the discussion started, I started to have suspicions of my own
+regarding the V4L2 ioctls. Except for log-status, which is a practical
+diagnostics feature (even supported by v4l2-ctl), I'm thinking about dropping
+them altogether in favor of audio soc DAI implementation.
+The DAI implementation does all we ever needed from the device. Besides,
+selecting a I2S protocol variant from user space (I2S vs I2S/TDM) never felt
+right.
+
+Shall I submit the log-status separately?
+
+Regards,
+Alex
+
+> On 1/13/20 3:14 PM, Alex Riesen wrote:
+> > This adds minimal support for controlling the audio output I2S port available
+> > on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
+> > signal from the decoded HDMI stream.
+> > 
+> > An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
+> > code.
+> > 
+> > Alex Riesen (8):
+> >  1. media: adv748x: add a device-specific wrapper for register block read
+> >  2. media: adv748x: add audio mute control and output selection ioctls
+> >  3. media: adv748x: add log_status ioctl
+> >  4. media: adv748x: reserve space for the audio (I2S) port in the driver
+> >     structures
+> >  5. media: adv748x: add an ASoC DAI definition to the driver
+> >  6. media: adv748x: reduce amount of code for bitwise modification of
+> >     device registers
+> >  7. dt-bindings: adv748x: add information about serial audio interface
+> >     (I2S/TDM)
+> >  8. arm64: dts: renesas: salvator: add a connection from adv748x codec
+> >     (HDMI input) to the R-Car SoC
+> > 
+> >  .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
+> >  .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
+> >  .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
+> >  drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
+> >  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
+> >  drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
+> >  6 files changed, 523 insertions(+), 11 deletions(-)
+> > 
