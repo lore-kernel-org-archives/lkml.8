@@ -2,278 +2,194 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DAAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435A0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513B0206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7BC206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:08:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Sbm3XzXt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahp/vhh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgCMQHN (ORCPT
+        id S1727069AbgCMQIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:07:13 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:34791 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCMQHM (ORCPT
+        Fri, 13 Mar 2020 12:08:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55295 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726406AbgCMQIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:07:12 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id CA5DF23EC2;
-        Fri, 13 Mar 2020 17:07:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584115630;
+        Fri, 13 Mar 2020 12:08:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584115688;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EdJOEklCGNc4MOP7NsgRfesvmIzFSxGDZJkVUdK2A1g=;
-        b=Sbm3XzXtHK4jjR8MLIql6/oOrZb4dyCI6UiH8NYVS/daIn/crTPuvHn2VBpoGdsCkb/2sJ
-        q5DE6ywjfxnN5mQsWgopjnwSuIoAUMwxhk+IzY71OzNnDs+u5eZsDFsNOTC3oRq6gdyPc5
-        MTxr+ixZH8Jzp0Lxj0lDbLcsIzERa84=
+        bh=yBLvGUzHFvIP3IVSZ/c85odnzZRogFcsQVQP2EXP6J4=;
+        b=ahp/vhh9VJARD7R3oY4mkkMCgNdERVNc9ocjIdc/K/mtd6iFvXTWo2Qye/rhsd/xt2vCWw
+        a11EzkFu9HmP9oOBdrzNi9RTheakjPZGNgxuL+ZjeTyjHd6eAhQdWbJ6vfJ+GIDkVInTaH
+        r1u8EpUCJzJZreG/c6pPCfR1SmMPzKc=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-R8YqYZH4PNWL515Mxk00TA-1; Fri, 13 Mar 2020 12:08:07 -0400
+X-MC-Unique: R8YqYZH4PNWL515Mxk00TA-1
+Received: by mail-il1-f198.google.com with SMTP id u9so1475654iln.22
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:08:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yBLvGUzHFvIP3IVSZ/c85odnzZRogFcsQVQP2EXP6J4=;
+        b=Gmnb8yVLhP/dynCTZlJXPL8F7wPW7Nchb20xA2vWWpEqTShYCTTCFF3n27PQouObuF
+         fibedJW0bQjNlEVXt0+Qjdwt0cAPtr7N5+81BqjwHU+6WA9kMVNTS6yMLWaIvnUpsmnX
+         avG+zIi6DKU5Kr9S4wVAWCJ6D1whR6bNfMDzRNLCjNaIliexNpaoLqQlXbjlMaJKBI/E
+         lDut0NAFtbbYv6IqnNcwA7fIE/nKOc4KApY0NMSLU7zNHbYE+vocNO6LvAUuWVexAwfW
+         nPQ5Wt2AwNjVF33Co1O2EeQXMgugQkm5FPQk8rxHU6ze6bLhhBWe46gAnEYbtijytcac
+         +QIQ==
+X-Gm-Message-State: ANhLgQ3L+5uXYdwE5p0X62BmC6m13G+Mxzu8CwjY01+w1OilcpMweJKD
+        70XZxjEmy7f+Crq1vN0FAxFdg2BkHOiDjAUh84BC6uGPUiEIw/Z5fBnifH+GJIO4tfDDegKW2p8
+        zN8trS0zSMmwlYE60mFMUqKYQLHRsgWinlUvqhqwr
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr14650327ils.86.1584115686327;
+        Fri, 13 Mar 2020 09:08:06 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsRX7xXbdN9pKVmaa7xC0rKq8tThI8Bh2C5Erfi6nuMwFeJvnu5PGc/GZS27u6Ahub/3KQaFmtVV8xgkMODcg4=
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr14650290ils.86.1584115685968;
+ Fri, 13 Mar 2020 09:08:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Mar 2020 17:07:07 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
-References: <20200310125542.5939-1-olteanv@gmail.com>
- <615284875b709f602d57e4a4621a83c1@walle.cc>
- <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
- <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
-Message-ID: <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: CA5DF23EC2
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com> <20200313005252.GA1292@linux.intel.com>
+In-Reply-To: <20200313005252.GA1292@linux.intel.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Fri, 13 Mar 2020 12:07:55 -0400
+Message-ID: <CAOASepMN1fmDaPjJJ-rpbLNPGUzE2LNB69s3X5mDBEhXziZ_UQ@mail.gmail.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-10 16:22, schrieb Michael Walle:
-> Hi Vladimir,
-> 
-> Am 2020-03-10 15:56, schrieb Vladimir Oltean:
->>> (2) Also, reading the flash, every second time there is 
->>> (reproducibly)
->>> an
->>> IO error:
->>> 
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> 01000000
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> hexdump: /dev/mtd0: Input/output error
->>> 00dc0000
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> 01000000
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> hexdump: /dev/mtd0: Input/output error
->>> 00e6a000
->>> 
->> 
->> Just to be clear, issue 2 is seen only after you abort another
->> transaction, right?
-> 
-> No, just normal uninterrupted reading. Just tried it right after
-> reboot. Doesn't seem to be every second time though, just random
-> which makes me wonder if that is another problem now. Also the
-> last successful reading is random.
+On Thu, Mar 12, 2020 at 8:52 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Wed, Mar 11, 2020 at 03:30:44PM -0400, Nathaniel McCallum wrote:
+> > On Tue, Mar 3, 2020 at 6:40 PM Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > + * The exit handler's return value is interpreted as follows:
+> > > + *  >0:                continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
+> > > + *   0:                success, return @ret to the caller
+> > > + *  <0:                error, return @ret to the caller
+> > > + *
+> > > + * The userspace exit handler is responsible for unwinding the stack, e.g. to
+> > > + * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
+> >
+> > Unless I misunderstand, this documentation...
+>
+> Hrm, that does appear wrong.  I'm guessing that was leftover from a previous
+> incarnation of the code.  Or I botched the description, which is just as
+> likely.
 
+I figured out what happened on my end. This documentation error led me
+to misread the code. More below.
 
-Ok I guess I know what the root cause is. This is an extract of
-the current code:
+> > > + * The exit handler may also transfer control, e.g. via longjmp() or a C++
+> > > + * exception, without returning to __vdso_sgx_enter_enclave().
+> > > + *
+> > > + * Return:
+> > > + *  0 on success,
+> > > + *  -EINVAL if ENCLU leaf is not allowed,
+> > > + *  -EFAULT if an exception occurs on ENCLU or within the enclave
+> > > + *  -errno for all other negative values returned by the userspace exit handler
+> > > + */
+>
+> ...
+>
+> > > +       /* Load the callback pointer to %rax and invoke it via retpoline. */
+> > > +       mov     0x20(%rbp), %rax
+> > > +       call    .Lretpoline
+> > > +
+> > > +       /* Restore %rsp to its post-exit value. */
+> > > +       mov     %rbx, %rsp
+> >
+> > ... doesn't seem to match this code.
+> >
+> > If the handler pops from the stack and then we restore the stack here,
+> > the handler had no effect.
+> >
+> > Also, one difference between this interface and a raw ENCLU[EENTER] is
+> > that we can't pass arguments on the untrusted stack during EEXIT. If
+> > we want to support that workflow, then we need to allow the ability
+> > for the handler to pop "additional" values without restoring the stack
+> > pointer to the exact value here.
+>
+> > Also, one difference between this interface and a raw ENCLU[EENTER] is
+> > that we can't pass arguments on the untrusted stack during EEXIT. If
+> > we want to support that workflow, then we need to allow the ability
+> > for the handler to pop "additional" values without restoring the stack
+> > pointer to the exact value here.
+>
+> The callback shenanigans exist precisely to allow passing arguments on the
+> untrusted stack.  The vDSO is very careful to preserve the stack memory
+> above RSP, and to snapshot RSP at the time of exit, e.g. the arguments in
+> memory and their addresses relative to u_rsp live across EEXIT.  It's the
+> same basic concept as regular function calls, e.g. the callee doesn't pop
+> params off the stack, it just knows what addresses relative to RSP hold
+> the data it wants.  The enclave, being the caller, is responsible for
+> cleaning up u_rsp.
+>
+> FWIW, if the handler reaaaly wanted to pop off the stack, it could do so,
+> fixup the stack, and then re-call __vdso_sgx_enter_enclave() instead of
+> returning (to the original __vdso_sgx_enter_enclave()).
 
-> static int dspi_transfer_one_message(struct spi_controller *ctlr,
-> 				     struct spi_message *message)
-> {
-> ..
-> 	/* Kick off the interrupt train */
-> 	dspi_fifo_write(dspi);
-> 
-> 	status = wait_event_interruptible(dspi->waitq,
-> 					  dspi->waitflags);
-> 	dspi->waitflags = 0;
-> ..
-> }
-> 
-> static int dspi_rxtx(struct fsl_dspi *dspi)
-> {
-> 	dspi_fifo_read(dspi);
-> 
-> 	if (!dspi->len)
-> 		/* Success! */
-> 		return 0;
-> 
-> 	dspi_fifo_write(dspi);
-> 
-> 	return -EINPROGRESS;
-> }
+My understanding from the documentation issue above was that *if* you
+wanted to push parameters back on the stack during enclave exit, you
+would *have* to supply a handler so it could pop the parameters and
+reset the stack. Which is why restoring %rsp from %rbx didn't make
+sense to me.
 
-dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
-access shared data like, dspi->words_in_flight. In the EIO error case
-the following bytes_sent is -1, because dspi->words_in_flight is -1.
+Related to my other message in this thread, if
+__vdso_sgx_enter_enclave() preserved %rbx and took @leaf as a stack
+parameter, you could call __vdso_sgx_enter_enclave() from C so long as
+the enclave didn't push return arguments on the stack. A workaround
+for that case would be to fix up the stack in the handler. It would be
+enough for the handler to simply set %rbx to the desired stack
+location and return (though all of this unclean of course).
 
-> /* Update total number of bytes that were transferred */
-> bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+> > > +       /*
+> > > +        * If the return from callback is zero or negative, return immediately,
+> > > +        * else re-execute ENCLU with the postive return value interpreted as
+> > > +        * the requested ENCLU leaf.
+> > > +        */
+> > > +       cmp     $0, %eax
+> > > +       jle     .Lout
+> > > +       jmp     .Lenter_enclave
+> > > +
+> > > +.Lretpoline:
+> > > +       call    2f
+> > > +1:     pause
+> > > +       lfence
+> > > +       jmp     1b
+> > > +2:     mov     %rax, (%rsp)
+> > > +       ret
+> > > +       .cfi_endproc
+> > > +
+> > > +_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
+>
 
-words_in_flight is always -1 after dspi_fifo_read() was called. In
-the error case, the ISR kicks in right in the middle of the execution
-of dspi_fifo_write() in dspi_transfer_one_message().
-
-> static void dspi_fifo_write(struct fsl_dspi *dspi)
-> {
-> ..
-> 	if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
-> 		dspi_eoq_fifo_write(dspi);
-> 	 else
-> 		dspi_xspi_fifo_write(dspi);
-
-Now if the ISR is executed right here..
-
-> 
-> 	/* Update total number of bytes that were transferred */
-> 	bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
-
-.. words_in_flight might be -1.
-
-> 	msg->actual_length += bytes_sent;
-
-and bytes_sent is negative. And this causes an IO error because
-the returned overall message length doesn't match.
-
-> 	dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
-> ..
-> }
-
-I could not reproduce the issue with the following patch. I don't
-know if I got the locking correct though or if there is a better
-way to go.
-
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 8b16de9ed382..578fedeb16a0 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -224,6 +224,7 @@ struct fsl_dspi {
-         u16                                     tx_cmd;
-         const struct fsl_dspi_devtype_data      *devtype_data;
-
-+       spinlock_t lock;
-         wait_queue_head_t                       waitq;
-         u32                                     waitflags;
-
-@@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
-
-  static int dspi_rxtx(struct fsl_dspi *dspi)
-  {
-+       unsigned long flags;
-+
-+       spin_lock_irqsave(&dspi->lock, flags);
-         dspi_fifo_read(dspi);
-
--       if (!dspi->len)
-+       if (!dspi->len) {
-                 /* Success! */
-+               spin_unlock_irqrestore(&dspi->lock, flags);
-                 return 0;
-+       }
-
-         dspi_fifo_write(dspi);
-
-+       spin_unlock_irqrestore(&dspi->lock, flags);
-         return -EINPROGRESS;
-  }
-
-@@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct 
-spi_controller *ctlr,
-         struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
-         struct spi_device *spi = message->spi;
-         struct spi_transfer *transfer;
-+       unsigned long flags;
-         int status = 0;
-+       int i = 0;
-
-         if (dspi->irq)
-                 dspi_enable_interrupts(dspi, true);
-@@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct 
-spi_controller *ctlr,
-                                 goto out;
-                 } else if (dspi->irq) {
-                         /* Kick off the interrupt train */
-+                       spin_lock_irqsave(&dspi->lock, flags);
-                         dspi_fifo_write(dspi);
-+                       spin_unlock_irqrestore(&dspi->lock, flags);
-
-                         status = wait_event_interruptible(dspi->waitq,
-                                                           
-dspi->waitflags);
-@@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device 
-*pdev)
-         ctlr->cleanup = dspi_cleanup;
-         ctlr->slave_abort = dspi_slave_abort;
-         ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
-+       spin_lock_init(&dspi->lock);
-
-         pdata = dev_get_platdata(&pdev->dev);
-         if (pdata) {
-
-
-
--michael
