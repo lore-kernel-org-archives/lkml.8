@@ -2,116 +2,232 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A714CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AACC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6C9206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LG80tKO3"
+	by mail.kernel.org (Postfix) with ESMTP id C0F40206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584127700;
+	bh=yapCUX29JNfAWIVIeh7jsoA5HNjFmMIPVC77TJPQL1o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=gNVctjPEf1WAEPv3AFjhN2I/XdQWe0CHh7WksYCBwiMm+vAcx/f7E4EGMN7XoKjRB
+	 CVDHG/IpzqHuBjeoLWzSxcKx1fbddR0ehcriFn+MLXAH7YZamkhNp1O2Zi9GKLx8DS
+	 LoiqZEMsYsw+Id+l1ug9Hh1vp0IAWBFW9kzR4tLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCMT1B (ORCPT
+        id S1726908AbgCMT2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:27:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42071 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgCMT1A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:27:00 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v11so13554547wrm.9
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 12:26:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1pG2P4gJmNI7Qn+nP1qasHd1nymYVND/EIcK9k9tKMg=;
-        b=LG80tKO32s6P3MMoAvcgefezx+DsOR8dap92rwBTuBKgel9CwL8fK28dLQdZqH+13Q
-         BDn0bD02jpUSBMmJV1N8FXyV+LdVXVFTqM+NR8hGB0pDhZzFk3R1mn5zcCvAeEJnkmJ8
-         6s4s1P7pWqd8RdT+zvgsjJ27QI0qfavvn3zYpelZqTQVvjLM35cI5tV5FIaYmseEHMQT
-         hAln01F48F108FzoZxxoe4vkJKphlgzV1mwGaTGGX2zBNji7hf5RjjBO2Wg7D/ZqEFK8
-         /KN+uUtY4YJW71Fi7tbFLMNBMSC5+wYCJ68zHCyp6aIv6pz4URmyRWVDm8xMbw/mhoqB
-         TrwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1pG2P4gJmNI7Qn+nP1qasHd1nymYVND/EIcK9k9tKMg=;
-        b=nfJk26RVOD19cLRGqkxpJo8D0Tuc7SugOja9SMlgh2ur4hxNL+1V/K1O12sBYymCm8
-         To4miZrlu8A1QmXa2MhlcUNz9YXX40TR7+owJpTnP7EG1aSjSlz0cdUwRhE4dfjSEeGf
-         HYxZ6IU6gJ7ZtrAF2zfLrL8gPge2erJFKFWnd3Lfk+fT6sXG1FkEOZ/+72mMG12Sb98k
-         UTdjxE29xYyWOVryH2zeQw2iF0i70Aj0Tl180ZAfWpN4OKyr5dGVN91jcxbLSYK5j4Z3
-         ktLB5JIrtBoQTWkKH/RdD08vImgBA4WA/gdGOuOlUwTFlvqkAU/njulFATJHCCwXpom1
-         Efxw==
-X-Gm-Message-State: ANhLgQ0bJ5reUwGd6PpCURfvS/+pdTdhdct7e/r0/etlYcFZ+oVJ245V
-        ZXzQBG8AsF5t2pCuhcaPB2Q=
-X-Google-Smtp-Source: ADFU+vvi7ViW/Oe085hOiFD7DEEBRsb6UehypN9PKy4YZYAW3HGcdQQ0YeSpwNsLn2ch7WRCpCPxAA==
-X-Received: by 2002:adf:dec8:: with SMTP id i8mr19986530wrn.326.1584127618599;
-        Fri, 13 Mar 2020 12:26:58 -0700 (PDT)
-Received: from giga-mm ([62.68.26.17])
-        by smtp.gmail.com with ESMTPSA id o3sm19528945wme.36.2020.03.13.12.26.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 12:26:57 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 20:26:56 +0100
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next 008/491] ARM/CIRRUS LOGIC EP93XX ARM ARCHITECTURE:
- Use fallthrough;
-Message-Id: <20200313202656.ed9ca1d31aaa1ccc9eaa9844@gmail.com>
-In-Reply-To: <e26a22c41c72290be469229f578e80c9e6dae5ed.1583896348.git.joe@perches.com>
-References: <cover.1583896344.git.joe@perches.com>
-        <e26a22c41c72290be469229f578e80c9e6dae5ed.1583896348.git.joe@perches.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Mar 2020 15:28:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbgCMT2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 15:28:19 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495BD206B1;
+        Fri, 13 Mar 2020 19:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584127698;
+        bh=yapCUX29JNfAWIVIeh7jsoA5HNjFmMIPVC77TJPQL1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PGO1SC2kjiJuHd7q8l3Oaw4ZZKtP6j31JDY4vXHzBeg1ywBssky/guA6yQU9k2Dnl
+         fX7r1N94x1hYtIrLL3hXICnruOlAlswFrwb6N/duu63CCAgKeW1BLk88fiwd9L4vrt
+         Fb8y/jT5nn3vIzysClfOi6bnWO6eEMJpxToD0TBk=
+Date:   Fri, 13 Mar 2020 14:28:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200313192816.GA127896@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4d06c72d-7f77-84d5-4163-187bc62b903a@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Joe,
+[+cc Russell, Sam, Oliver since we're talking about the error recovery
+flow.  The code we're talking about is at [1]]
 
-On Tue, 10 Mar 2020 21:51:22 -0700
-Joe Perches <joe@perches.com> wrote:
-
-> Convert the various uses of fallthrough comments to fallthrough;
+On Thu, Mar 12, 2020 at 11:22:13PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> On 3/12/2020 3:32 PM, Bjorn Helgaas wrote:
+> > On Thu, Mar 12, 2020 at 02:59:15PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > On 3/12/20 12:53 PM, Bjorn Helgaas wrote:
+> > > > On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > > > On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
+> > > > > > Is any synchronization needed here between the EDR path and the
+> > > > > > hotplug/enumeration path?
+> > > > > If we want to follow the implementation note step by step (in
+> > > > > sequence) then we need some synchronization between EDR path and
+> > > > > enumeration path. But if it's OK to achieve the same end result by
+> > > > > following steps out of sequence then we don't need to create any
+> > > > > dependency between EDR and enumeration paths. Currently we follow
+> > > > > the latter approach.
+> > > > What would the synchronization look like?
+> > > we might need some way to disable the enumeration path till
+> > > we get response from firmware.
+> > > 
+> > > In native hot plug case, I think we can do it in two ways.
+> > > 
+> > > 1. Disable hotplug notification in slot ctl registers.
+> > >      (pcie_disable_notification())
+> > > 2. Some how block hotplug driver from processing the new
+> > >      events (not sure how feasible its).
+> > > 
+> > > Following method 1 would be easy, But I am not sure whether
+> > > its alright to disable them randomly. I think, unless we
+> > > clear the status as well, we might get some issues due to stale
+> > > notification history.
+> > > 
+> > > For ACPI event case, I am not sure whether we have some
+> > > communication protocol in place to disable receiving ACPI
+> > > events temporarily.
+> > > 
+> > > For polling model, we need to disable to the polling
+> > > timer thread till we receive _OST response from firmware.
+> > > > 
+> > > > Ideally I think it would be better to follow the order in the
+> > > > flowchart if it's not too onerous.
+> > > None of the above changes will be pretty and I think it will
+> > > not be simple as well.
+> > > >    That will make the code easier to
+> > > > understand.  The current situation with this dependency on pciehp and
+> > > > what it will do leaves a lot of things implicit.
+> > > > 
+> > > > What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+> > > > 
+> > > > IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
+> > > > unbinds the drivers and removes the devices.
+> > > 
+> > > >   If that doesn't happen, and Linux clears the DPC trigger to bring
+> > > >   the link back up, will those drivers try to operate uninitialized
+> > > >   devices?
+> > > 
+> > > I don't think this will happen. In DPC reset_link before we bring up
+> > > the device we wait for link to go down first using
+> > > pcie_wait_for_link(pdev, false) function.
+> > 
+> > I understand that, but these child devices were reset when DPC
+> > disabled the link.  When the link comes back up, their BARs
+> > contain zeros.
+> > 
+> > If CONFIG_HOTPLUG_PCI_PCIE=y, the DLLSC interrupt will cause
+> > pciehp to unbind the driver.  It seems like the unbind races with
+> > the EDR notify handler.
 > 
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
-
-I think the patch is OK, but the automatically-generated first
-commit message line has a room for improvement.
-
-But, as I understood, it has chances to be re-sent as one patch for
-all files.
-
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  arch/arm/mach-ep93xx/crunch.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Agree. But even if there is a race condition, after clearing DPC
+> trigger status, if hotplug driver properly removes/re-enumerates the
+> driver then the end result will still be same. There should be no
+> functional impact.
 > 
-> diff --git a/arch/arm/mach-ep93xx/crunch.c b/arch/arm/mach-ep93xx/crunch.c
-> index 1c05c5b..f02e978 100644
-> --- a/arch/arm/mach-ep93xx/crunch.c
-> +++ b/arch/arm/mach-ep93xx/crunch.c
-> @@ -49,8 +49,7 @@ static int crunch_do(struct notifier_block *self, unsigned long cmd, void *t)
->  		 * FALLTHROUGH: Ensure we don't try to overwrite our newly
->  		 * initialised state information on the first fault.
->  		 */
-> -		/* Fall through */
-> -
-> +		fallthrough;
->  	case THREAD_NOTIFY_EXIT:
->  		crunch_task_release(thread);
->  		break;
+> > If pciehp unbinds the driver before edr_handle_event() calls
+> > pcie_do_recovery(), this seems fine -- we'll call
+> > dpc_reset_link(), which brings up the link, we won't call any
+> > driver callbacks because there's no driver, and another DLLSC
+> > interrupt will cause pciehp to re-enumerate, which will
+> > re-initialize the device, then rebind the driver.
+> > 
+> > If the EDR notify handler runs before pciehp unbinds the driver,
+>
+> In the above case, from the kernel perspective device is still
+> accessible and IIUC, it will try to recover it in pcie_do_recovery()
+> using one of the callbacks.
+> 
+> int (*mmio_enabled)(struct pci_dev *dev);
+> int (*slot_reset)(struct pci_dev *dev);
+> void (*resume)(struct pci_dev *dev);
+> 
+> One of these callbacks will do pci_restore_state() to restore the
+> device, and IO will not attempted in these callbacks until the device
+> is successfully recovered.
 
--- 
-Alexander Sverdlin.
+That might be what *should* happen, but I don't think it's what
+*does* happen.
+
+I don't think we use .mmio_enabled() and .slot_reset() for EDR
+because Linux EDR currently depends on DPC, so we'll be using
+dpc_reset_link(), which normally returns PCI_ERS_RESULT_RECOVERED,
+so pcie_do_recovery() skips .mmio_enabled() and .slot_reset().
+
+I looked at the first few .resume() implementations (FWIW, I used [2]
+to find them), and none of them calls pci_restore_state() before doing
+I/O to the device:
+
+  ioat_pcie_error_resume()
+  pci_resume() (hfi1)
+  qib_pci_resume()
+  cxl_pci_resume()
+  genwqe_err_resume()
+  ...
+
+But I assume you've tested EDR with some driver that *does* call
+pci_restore_state()?  Or maybe you have pciehp enabled, and it always
+wins the race and unbinds the driver before the EDR notification?  It
+would be interesting to make pciehp *lose* the race and see if
+anything breaks.
+
+pci-error-recovery.rst does not mention any requirement for the driver
+to call pci_restore_state(), and I think any state restoration like
+that should be the responsibility of the PCI core, not the driver.
+
+> > couldn't EDR bring up the link and call driver .mmio_enabled() before
+> > the device has been initialized?
+>
+> Calling mmio_enabled in this case should not be a problem right?
+>
+> Please check the following content from
+> Documentation/PCI/pci-error-recovery.rst. IIUC (following content),
+> IO will not be attempted until the device is successfully
+> re-configured.
+> 
+> STEP 2: MMIO Enabled
+> --------------------
+> This callback is made if all drivers on a segment agree that they can
+> try to recover and if no automatic link reset was performed by the HW.
+> If the platform can't just re-enable IOs without a slot reset or a link
+> reset, it will not call this callback, and instead will have gone
+> directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
+> 
+> > If CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=y, I could
+> > believe that the situations are similar to the above.
+> > 
+> > What if CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=n?  Then
+> > I assume there's nothing to unbind the driver, so pcie_do_recovery()
+> > will call the driver .mmio_enabled() and other recovery callbacks on a
+> > device that hasn't been initialized?
+> 
+> probably in .slot_reset() callback device config will be restored and it
+> will make the device functional again.
+
+I don't think .mmio_enabled() is a problem because IIUC, the device
+should not have been reset before calling .mmio_enabled().
+
+But I think .slot_reset() *is* a problem.  I looked at several
+.slot_reset() implementations ([3]); some called pci_restore_state(),
+but many did not.
+
+If no hotplug driver is enabled, I think the .slot_reset() callbacks
+that do not call pci_restore_state() are broken.
+
+> Also since in above case hotplug is not supported, topology change will
+> not be supported.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=review/edr
+[2] F='\.resume'; git grep -A 10 "struct pci_error_handlers" | grep "$F\s*=" | sed -e "s/.*$F\s*=\s*//" -e 's/,\s*$//'
+[3] F='\.slot_reset'; git grep -A 10 "struct pci_error_handlers" | grep "$F\s*=" | sed -e "s/.*$F\s*=\s*//" -e 's/,\s*$//'
