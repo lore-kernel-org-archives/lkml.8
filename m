@@ -2,74 +2,132 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B4DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E23C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F034E2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3992073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ekZ6qGKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgCMMz5 (ORCPT
+        id S1726761AbgCMM4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:55:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55808 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgCMMz5 (ORCPT
+        Fri, 13 Mar 2020 08:56:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49394 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726216AbgCMM4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:55:57 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jCjqy-0003LU-TV; Fri, 13 Mar 2020 12:55:53 +0000
-Date:   Fri, 13 Mar 2020 13:55:51 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     ard.biesheuvel@linaro.org, ardb@kernel.org, arve@android.com,
-        gregkh@linuxfoundation.org, hridya@google.com,
-        joel@joelfernandes.org, john.stultz@linaro.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, maco@android.com,
-        naresh.kamboju@linaro.org, shuah@kernel.org, tkjos@android.com,
-        Todd Kjos <tkjos@google.com>
-Subject: Re: [PATCH] binderfs: port to new mount api
-Message-ID: <20200313125551.hqhoick2vpnecvvx@wittgenstein>
-References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
- <20200312212420.4032188-1-christian.brauner@ubuntu.com>
- <202003121655.486AB8E3@keescook>
+        Fri, 13 Mar 2020 08:56:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584104193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oFffVLBSrzUJVd5vEtDabzgVlUp9IT+H+W/QmhOzo6U=;
+        b=ekZ6qGKojEKQL9dYsAZ0HIkVitI6dml8zSPcLfInU55AJmlIWJjThdcV/OJ/PpKnpc0IcD
+        kpSDpXIL2gEGLzB+5dOtLdMC4w74FT/mnEEHlfERel8b/ZKDp3wKIRpR/Xqnyo8nBSy8ki
+        GPtK0mYMjEmqRMR26zOHlDzSM4Imy4g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-02CmSrC5PQeF8AD9mm0GyQ-1; Fri, 13 Mar 2020 08:56:31 -0400
+X-MC-Unique: 02CmSrC5PQeF8AD9mm0GyQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A99A800D50;
+        Fri, 13 Mar 2020 12:56:30 +0000 (UTC)
+Received: from localhost (ovpn-12-51.pek2.redhat.com [10.72.12.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7F921001902;
+        Fri, 13 Mar 2020 12:56:29 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 20:56:27 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200313125627.GA8518@MiWiFi-R3L-srv>
+References: <20200313214214.4d2e2af6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202003121655.486AB8E3@keescook>
+In-Reply-To: <20200313214214.4d2e2af6@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:56:11PM -0700, Kees Cook wrote:
-> On Thu, Mar 12, 2020 at 10:24:20PM +0100, Christian Brauner wrote:
-> > It's time we port binderfs to the new mount api. We can make use of the
-> > new option parser, get nicer infrastructure and it will be easiert if we
-> > ever add any new mount options.
-> > 
-> > This survives testing with the binderfs selftests:
-> > 
-> > for i in `seq 1 1000`; do ./binderfs_test; done
-> > 
-> > including the new stress tests I sent out for review today:
-> > 
-> >  [==========] Running 3 tests from 1 test cases.
-> >  [ RUN      ] global.binderfs_stress
-> >  [       OK ] global.binderfs_stress
-> >  [ RUN      ] global.binderfs_test_privileged
-> >  # Tests are not run as root. Skipping privileged tests
-> >  [       OK ] global.binderfs_test_privileged
+On 03/13/20 at 09:42pm, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I would use the XFAIL harness infrastructure for these kinds of skips.
+> After merging the akpm-current tree, today's linux-next build (x86_64
+> allnoconfig) produced this warning:
+> 
+> mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-Wunused-function]
+>   311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>       |            ^~~~~~~~~~~~~~~~~~~
+> mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used [-Wunused-function]
+>   306 | static bool is_subsection_map_empty(struct mem_section *ms)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~
+> mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-Wunused-function]
+>   301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>       |            ^~~~~~~~~~~~~~~~~~~~
+> 
+> Introduced by commits
+> 
+>   38eb09ac7c29 ("mm/sparse.c: introduce new function fill_subsection_map()")
+>   334411156ba6 ("mm/sparse.c: introduce a new function clear_subsection_map()")
 
-Hmyeah, will do.
+Hi Stephen,
 
-Christian
+I made below change, but I can't triger these warnings. Could you try
+below patch, see if it's works?
+
+
+From 9be668f1e30b6bb4ed5f4a07e7d3bb76d3f58f35 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 13 Mar 2020 20:25:54 +0800
+Subject: [PATCH] mm/sparse.c: fix the building warning with !SPARSEMEM
+
+Stephen reported below warnings are seen with allnoconfig on x86_64.
+Fix it by making those dummy functions sub-section map handling visible
+with CONFIG_SPARSEMEM enabled.
+
+mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-Wunused-function]
+  311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+      |            ^~~~~~~~~~~~~~~~~~~
+mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used [-Wunused-function]
+  306 | static bool is_subsection_map_empty(struct mem_section *ms)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~
+mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-Wunused-function]
+  301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+      |            ^~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ mm/sparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 362018e82e22..9e08d118719f 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -293,7 +293,7 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+ 
+ 	return rc;
+ }
+-#else
++#elif defined(CONFIG_SPARSEMEM)
+ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+ {
+ }
+-- 
+2.17.2
+
