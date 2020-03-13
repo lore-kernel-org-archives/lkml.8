@@ -2,171 +2,158 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE4DC10DCE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816F7C4CECE
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8D42072C
+	by mail.kernel.org (Postfix) with ESMTP id 54A9220749
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAIDs6Wq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c3p903Bl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCMPrK (ORCPT
+        id S1727180AbgCMPrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:10 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43883 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgCMPrK (ORCPT
+        Fri, 13 Mar 2020 11:47:11 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43848 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgCMPrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 11:47:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a6so10507271otb.10;
-        Fri, 13 Mar 2020 08:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g2F6bNMNbjYMOmG6AT0+6XH/uYDDsMXrJ7rvJH7Wv54=;
-        b=gAIDs6WqqY4C6m2b5QdZWRTmIT3xf9Ik6Np8m+/Z/J5ikCql9gM3IwFQvuOl178Nzr
-         3IZ3HkdzXqzSrRImXqzs86OwH+pAqPX8nDIT3mW1Ilmq8XWcuyISAxCtav2E5OxoXkJd
-         a2/19fycsXGRTcGjxcuP0a4HCJbtcxuT8E/3Qd61YjhSuJj8H7bt5BJQisMoSsu6OF3r
-         8isHVQs3wlSr7wkc0M+N89U79Mnd2s08qw4ocvTBql6Eg+sDcwjF1Pu6TDMJAIo8zT6Y
-         gfs62X7oCtBvDY2WKFVGT1I4sbyDSbi3FtifMvad/OCwI0ELcGXTZnGrLvH6ugFlEC4R
-         c8YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g2F6bNMNbjYMOmG6AT0+6XH/uYDDsMXrJ7rvJH7Wv54=;
-        b=XVE0VxwrCVLEO5V98fKz8acmFiGv/jUojnE2W++fOjpwFofD87GyP01HwEhGJ/j/vV
-         NSQ92Bc3uFZBDBmw79VNs321qnswRbVk9pjaWHHZWQBsGSVhVlLUT312SGFLQ0Bsbp8E
-         CEmm2f12k95wtqVAN5jBDSf7rAAzMtGprx3O/eZDgLzh/n3EKHlK6X4kkOhjgVbL9vAw
-         N+hepm5fDcpOZ9JhNixxOF2XEv3tbUuxknh3PaaYbMA5TLQZzv1spsyRY0lqJVAxkX8d
-         hjEqvZLbi8XCNvwNudE2cIdyM7imThEvEsH83z9yqARld5Zlf8rQjsJPosBN8UdJ1Pi7
-         eYEw==
-X-Gm-Message-State: ANhLgQ3TP83z58uukKKZiBgiYo8b/71g979ylFZ5hsJ/lwMLQShyJE52
-        MlR+Y6ZO1GpjHT46BshifjfcsbLgkXA+ZvDoEUM=
-X-Google-Smtp-Source: ADFU+vu760GpCPmD7yZUXlIQeGa3R1i+fs+y1tbGVZM1WMb4f80I+07TGxLiEF8SFrU09Xrxz1LyHjcMcOFDGWeTS2I=
-X-Received: by 2002:a05:6830:20c9:: with SMTP id z9mr11632227otq.44.1584114429233;
- Fri, 13 Mar 2020 08:47:09 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkpMx111156;
+        Fri, 13 Mar 2020 10:46:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584114411;
+        bh=0dMsf4DYliKZ83tWSPvhlqALpn5mL3GmCMMJqyYrE8c=;
+        h=From:To:CC:Subject:Date;
+        b=c3p903BlIQnmIPf6Gbg0hmBbYhHR9P1okNG6qelJVOkU77Zz2soQEE/cvVUcqBnOp
+         +jTPOYkYtXJ1Y6AcFwP/u+oRfBnvXSJ94PMdm0Gasj1ZphgYjSCw5TISkrYTpTIVyC
+         bZXfEnhqQ/tlhUOW8k7O6a2JIqnj85nxxAq5uR20=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkpes126450;
+        Fri, 13 Mar 2020 10:46:51 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 10:46:50 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 10:46:51 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSE034352;
+        Fri, 13 Mar 2020 10:46:47 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH v3 00/12] mtd: spi-nor: add xSPI Octal DTR support
+Date:   Fri, 13 Mar 2020 21:16:33 +0530
+Message-ID: <20200313154645.29293-1-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 13 Mar 2020 15:46:42 +0000
-Message-ID: <CA+V-a8vchrpa-1N1J+yVdo6-3zouOHX6=G4epWm68yirPirzag@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] Add support for PCIe controller to work in
- endpoint mode on R-Car SoCs
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn/Kishon,
+Hi,
 
-On Fri, Feb 28, 2020 at 3:41 PM Lad Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> This patch series adds support for PCIe controller on rcar to work in
-> endpoint mode, this also extends the epf framework to handle base region
-> for mapping PCI address locally.
->
-> Note:
-> The cadence/rockchip/designware endpoint drivers are build tested only.
->
-> Changes for v5:
-> 1] Rebased the patches on next branch of https://git.kernel.org/pub/scm/
->    linux/kernel/git/helgaas/pci.git
-> 2] Fixed review comments reported by Kishon while fetching the matching
->    window in function pci_epc_get_matching_window()
-> 3] Fixed review comments reported by Bjorn
->    a] Split patch up first patch so that its easier to review and incremental
->    b] Fixed typos
-> 4] Included Reviewed tag from Rob for the dt-binding patch
-> 5] Fixed issue reported by Nathan for assigning variable to itself
->
-> Changes for v4:
-> 1] Fixed dtb_check error reported by Rob
-> 2] Fixed review comments reported by Kishon
->    a] Dropped pci_epc_find_best_fit_window()
->    b] Fixed initializing mem ptr in __pci_epc_mem_init()
->    c] Dropped map_size from pci_epc_mem_window structure
->
-> Changes for v3:
-> 1] Fixed review comments from Bjorn and Kishon.
-> 3] Converted to DT schema
->
-> Changes for v2:
-> 1] Fixed review comments from Biju for dt-bindings to include an example
->    for a tested platform.
-> 2] Fixed review comments from Kishon to extend the features of outbound
->    regions in epf framework.
-> 3] Added support to parse outbound-ranges in OF.
->
-> Lad Prabhakar (7):
->   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
->   PCI: rcar: Move shareable code to a common file
->   PCI: rcar: Fix calculating mask for PCIEPAMR register
->   PCI: endpoint: Add support to handle multiple base for mapping
->     outbound memory
->   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
->     controller
->   PCI: rcar: Add support for rcar PCIe controller in endpoint mode
->   misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
->
-Gentle ping.
+This series adds support for octal DTR flashes in the spi-nor framework,
+and then adds hooks for the Cypress Semper flash which is an xSPI
+compliant Octal DTR flash.
 
-Cheers,
---Prabhakar Lad
+This series assumes that the flash is handed to the kernel in Legacy SPI
+mode. That is why there is no tracking of the state the flash is in.
+Ability to detect the flash mode and then run the SFDP procedure in that
+mode will be added as a follow up series.
 
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml       |   76 ++
->  arch/arm64/configs/defconfig                       |    2 +-
->  drivers/misc/pci_endpoint_test.c                   |    3 +
->  drivers/pci/controller/Kconfig                     |   15 +-
->  drivers/pci/controller/Makefile                    |    3 +-
->  drivers/pci/controller/cadence/pcie-cadence-ep.c   |    7 +-
->  drivers/pci/controller/dwc/pcie-designware-ep.c    |   29 +-
->  drivers/pci/controller/pcie-rcar-ep.c              |  490 ++++++++
->  drivers/pci/controller/pcie-rcar-host.c            | 1053 +++++++++++++++++
->  drivers/pci/controller/pcie-rcar.c                 | 1229 +-------------------
->  drivers/pci/controller/pcie-rcar.h                 |  129 ++
->  drivers/pci/controller/pcie-rockchip-ep.c          |    7 +-
->  drivers/pci/endpoint/pci-epc-mem.c                 |  167 ++-
->  include/linux/pci-epc.h                            |   39 +-
->  14 files changed, 1985 insertions(+), 1264 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
->
-> --
-> 2.7.4
->
+Tested on TI J721e EVM with 1-bit ECC on the Cypress flash.
+
+v1 can be found at [0]. v2 can be found at [1].
+
+[0] https://lore.kernel.org/linux-mtd/20200211133348.15558-1-p.yadav@ti.com/
+[1] https://lore.kernel.org/linux-mtd/20200226093703.19765-1-p.yadav@ti.com/
+
+Changes in v3:
+- Drop the DT properties "spi-rx-dtr" and "spi-tx-dtr". Instead, if
+  later a need is felt to disable DTR in case someone has a board with
+  Octal DTR capable flash but does not support DTR transactions for some
+  reason, a property like "spi-no-dtr" can be added.
+
+- Remove mode bits SPI_RX_DTR and SPI_TX_DTR.
+
+- Remove the Cadence Quadspi controller patch to un-block this series. I
+  will submit it as a separate patch.
+
+- Rebase on latest 'master' and fix merge conflicts.
+
+- Update read and write dirmap templates to use DTR.
+
+- Rename 'is_dtr' to 'dtr'.
+
+- Make 'dtr' a bitfield.
+
+- Reject DTR ops in spi_mem_default_supports_op().
+
+- Update atmel-quadspi to reject DTR ops. All other controller drivers
+  call spi_mem_default_supports_op() so they will automatically reject
+  DTR ops.
+
+- Add support for both enabling and disabling DTR modes.
+
+- Perform a Software Reset on flashes that support it when shutting
+  down.
+
+- Disable Octal DTR mode on suspend, and re-enable it on resume.
+
+- Drop enum 'spi_mem_cmd_ext' and make command opcode u16 instead.
+  Update spi-nor to use the 2-byte command instead of the command
+  extension. Since we still need a "extension type", mode that enum to
+  spi-nor and name it 'spi_nor_cmd_ext'.
+
+- Default variable address width to 3 to fix SMPT parsing.
+
+- Drop non-volatile change to uniform sector mode and rely on parsing
+  SMPT.
+
+Pratyush Yadav (12):
+  spi: spi-mem: allow specifying whether an op is DTR or not
+  spi: atmel-quadspi: reject DTR ops
+  spi: spi-mem: allow specifying a command's extension
+  mtd: spi-nor: add support for DTR protocol
+  mtd: spi-nor: default to address width of 3 for configurable widths
+  mtd: spi-nor: get command opcode extension type from BFPT
+  mtd: spi-nor: parse xSPI Profile 1.0 table
+  mtd: spi-nor: use dummy cycle and address width info from SFDP
+  mtd: spi-nor: enable octal DTR mode when possible
+  mtd: spi-nor: perform a Soft Reset on shutdown
+  mtd: spi-nor: Disable Octal DTR mode on suspend.
+  mtd: spi-nor: add support for Cypress Semper flash
+
+ drivers/mtd/spi-nor/spi-nor.c | 692 ++++++++++++++++++++++++++++++----
+ drivers/spi/atmel-quadspi.c   |   4 +
+ drivers/spi/spi-mem.c         |   3 +
+ include/linux/mtd/spi-nor.h   |  73 +++-
+ include/linux/spi/spi-mem.h   |  13 +-
+ 5 files changed, 702 insertions(+), 83 deletions(-)
+
+--
+2.25.0
+
