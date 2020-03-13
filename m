@@ -2,114 +2,146 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3648EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88946C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11EE7205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTGbH6It"
+	by mail.kernel.org (Postfix) with ESMTP id 695D8206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgCMAfp (ORCPT
+        id S1726954AbgCMAwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:35:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42238 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726898AbgCMAfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:35:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584059744;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=zevsMC0uowAKEZtQLATwyqk885Y78IJeVZqy5nvGUjY=;
-        b=CTGbH6ItRUldNME4Pe3Kiy9LW19wcgZLHsM0qUICc4Y5cW5ej1tHM34WKMJ87JY+bg3Sbo
-        QHCTl5EmwUmnfosCe9MvGl+BPvGLt1YNM+rhO8JWAuG2Q33k6NYbUS8jm2fHtpiYnozVqe
-        qmmmEczlny3AK8RatW02RyluoW9PnC8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-JKPR12MkNUy4Gv_xan9-CA-1; Thu, 12 Mar 2020 20:35:40 -0400
-X-MC-Unique: JKPR12MkNUy4Gv_xan9-CA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE5EA107ACC7;
-        Fri, 13 Mar 2020 00:35:38 +0000 (UTC)
-Received: from localhost (ovpn-121-102.rdu2.redhat.com [10.10.121.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C667F60C63;
-        Fri, 13 Mar 2020 00:35:35 +0000 (UTC)
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, Bruno Meneguele <bmeneg@redhat.com>
-Subject: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
-Date:   Thu, 12 Mar 2020 21:35:33 -0300
-Message-Id: <20200313003533.2203429-1-bmeneg@redhat.com>
+        Thu, 12 Mar 2020 20:52:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16259 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCMAwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 20:52:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 17:52:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
+   d="scan'208";a="243215849"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 17:52:53 -0700
+Date:   Thu, 12 Mar 2020 17:52:53 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200313005252.GA1292@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace libraries, e.g. glibc's dprintf(), expect the default return va=
-lue
-for invalid seek situations: -ESPIPE, but when the IO was over /dev/kmsg =
-the
-current state of kernel code was returning the generic case of an -EINVAL=
-.
-Hence, userspace programs were not behaving as expected or documented.
+On Wed, Mar 11, 2020 at 03:30:44PM -0400, Nathaniel McCallum wrote:
+> On Tue, Mar 3, 2020 at 6:40 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> > + * The exit handler's return value is interpreted as follows:
+> > + *  >0:                continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
+> > + *   0:                success, return @ret to the caller
+> > + *  <0:                error, return @ret to the caller
+> > + *
+> > + * The userspace exit handler is responsible for unwinding the stack, e.g. to
+> > + * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
+> 
+> Unless I misunderstand, this documentation...
 
-With this patch we add SEEK_CUR case returning the expected value and als=
-o a
-simple mention of it in kernel's documentation for those relying on that =
-for
-guidance.
+Hrm, that does appear wrong.  I'm guessing that was leftover from a previous
+incarnation of the code.  Or I botched the description, which is just as
+likely.
 
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
----
- Documentation/ABI/testing/dev-kmsg | 2 ++
- kernel/printk/printk.c             | 4 ++++
- 2 files changed, 6 insertions(+)
+> > + * The exit handler may also transfer control, e.g. via longjmp() or a C++
+> > + * exception, without returning to __vdso_sgx_enter_enclave().
+> > + *
+> > + * Return:
+> > + *  0 on success,
+> > + *  -EINVAL if ENCLU leaf is not allowed,
+> > + *  -EFAULT if an exception occurs on ENCLU or within the enclave
+> > + *  -errno for all other negative values returned by the userspace exit handler
+> > + */
 
-diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testi=
-ng/dev-kmsg
-index f307506eb54c..8533d28e6fda 100644
---- a/Documentation/ABI/testing/dev-kmsg
-+++ b/Documentation/ABI/testing/dev-kmsg
-@@ -56,6 +56,8 @@ Description:	The /dev/kmsg character device node provid=
-es userspace access
- 		  seek after the last record available at the time
- 		  the last SYSLOG_ACTION_CLEAR was issued.
-=20
-+		While SEEK_CUR sets -ESPIPE (invalid seek) to errno.
-+
- 		The output format consists of a prefix carrying the syslog
- 		prefix including priority and facility, the 64 bit message
- 		sequence number and the monotonic timestamp in microseconds,
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ad4606234545..d02606723d2d 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -963,6 +963,10 @@ static loff_t devkmsg_llseek(struct file *file, loff=
-_t offset, int whence)
- 		user->idx =3D log_next_idx;
- 		user->seq =3D log_next_seq;
- 		break;
-+	case SEEK_CUR:
-+		/* return the default errno for invalid seek */
-+		ret =3D -ESPIPE;
-+		break;
- 	default:
- 		ret =3D -EINVAL;
- 	}
---=20
-2.24.1
+...
 
+> > +       /* Load the callback pointer to %rax and invoke it via retpoline. */
+> > +       mov     0x20(%rbp), %rax
+> > +       call    .Lretpoline
+> > +
+> > +       /* Restore %rsp to its post-exit value. */
+> > +       mov     %rbx, %rsp
+> 
+> ... doesn't seem to match this code.
+> 
+> If the handler pops from the stack and then we restore the stack here,
+> the handler had no effect.
+> 
+> Also, one difference between this interface and a raw ENCLU[EENTER] is
+> that we can't pass arguments on the untrusted stack during EEXIT. If
+> we want to support that workflow, then we need to allow the ability
+> for the handler to pop "additional" values without restoring the stack
+> pointer to the exact value here.
+
+> Also, one difference between this interface and a raw ENCLU[EENTER] is
+> that we can't pass arguments on the untrusted stack during EEXIT. If
+> we want to support that workflow, then we need to allow the ability
+> for the handler to pop "additional" values without restoring the stack
+> pointer to the exact value here.
+
+The callback shenanigans exist precisely to allow passing arguments on the
+untrusted stack.  The vDSO is very careful to preserve the stack memory
+above RSP, and to snapshot RSP at the time of exit, e.g. the arguments in
+memory and their addresses relative to u_rsp live across EEXIT.  It's the
+same basic concept as regular function calls, e.g. the callee doesn't pop
+params off the stack, it just knows what addresses relative to RSP hold
+the data it wants.  The enclave, being the caller, is responsible for
+cleaning up u_rsp.
+
+FWIW, if the handler reaaaly wanted to pop off the stack, it could do so,
+fixup the stack, and then re-call __vdso_sgx_enter_enclave() instead of
+returning (to the original __vdso_sgx_enter_enclave()).
+
+> > +       /*
+> > +        * If the return from callback is zero or negative, return immediately,
+> > +        * else re-execute ENCLU with the postive return value interpreted as
+> > +        * the requested ENCLU leaf.
+> > +        */
+> > +       cmp     $0, %eax
+> > +       jle     .Lout
+> > +       jmp     .Lenter_enclave
+> > +
+> > +.Lretpoline:
+> > +       call    2f
+> > +1:     pause
+> > +       lfence
+> > +       jmp     1b
+> > +2:     mov     %rax, (%rsp)
+> > +       ret
+> > +       .cfi_endproc
+> > +
+> > +_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
