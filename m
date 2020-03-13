@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B9EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5962C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1865820754
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871A820637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgCMXyI (ORCPT
+        id S1727883AbgCMXyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:54:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50074 "EHLO
+        Fri, 13 Mar 2020 19:54:10 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50066 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbgCMXyC (ORCPT
+        with ESMTP id S1727756AbgCMXyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:54:02 -0400
+        Fri, 13 Mar 2020 19:54:03 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7t-00B6bR-Gc; Fri, 13 Mar 2020 23:54:01 +0000
+        id 1jCu7t-00B6bE-6v; Fri, 13 Mar 2020 23:54:01 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 33/69] atomic_open(): return the right dentry in FMODE_OPENED case
-Date:   Fri, 13 Mar 2020 23:53:21 +0000
-Message-Id: <20200313235357.2646756-33-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 31/69] massage __follow_mount_rcu() a bit
+Date:   Fri, 13 Mar 2020 23:53:19 +0000
+Message-Id: <20200313235357.2646756-31-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,40 +42,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-->atomic_open() might have used a different alias than the one we'd
-passed to it; in "not opened" case we take care of that, in "opened"
-one we don't.  Currently we don't care downstream of "opened" case
-which alias to return; however, that will change shortly when we
-get to unifying may_open() calls.
-
-It's not hard to get right in all cases, anyway.
+make the loop more similar to that in follow_managed(), with
+explicit tracking of flags, etc.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/namei.c | 70 +++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 35 insertions(+), 35 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 40d5f7abfa54..88f985aff4f8 100644
+index b45ec86dc7b3..18c46b8db244 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -2949,11 +2949,15 @@ static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
- 	d_lookup_done(dentry);
- 	if (!error) {
- 		if (file->f_mode & FMODE_OPENED) {
-+			int acc_mode = op->acc_mode;
-+			if (unlikely(dentry != file->f_path.dentry)) {
-+				dput(dentry);
-+				dentry = dget(file->f_path.dentry);
+@@ -1269,12 +1269,6 @@ int follow_down_one(struct path *path)
+ }
+ EXPORT_SYMBOL(follow_down_one);
+ 
+-static inline int managed_dentry_rcu(const struct path *path)
+-{
+-	return (path->dentry->d_flags & DCACHE_MANAGE_TRANSIT) ?
+-		path->dentry->d_op->d_manage(path, true) : 0;
+-}
+-
+ /*
+  * Try to skip to top of mountpoint pile in rcuwalk mode.  Fail if
+  * we meet a managed dentry that would need blocking.
+@@ -1282,43 +1276,49 @@ static inline int managed_dentry_rcu(const struct path *path)
+ static bool __follow_mount_rcu(struct nameidata *nd, struct path *path,
+ 			       struct inode **inode, unsigned *seqp)
+ {
++	struct dentry *dentry = path->dentry;
++	unsigned int flags = dentry->d_flags;
++
++	if (likely(!(flags & DCACHE_MANAGED_DENTRY)))
++		return true;
++
++	if (unlikely(nd->flags & LOOKUP_NO_XDEV))
++		return false;
++
+ 	for (;;) {
+-		struct mount *mounted;
+ 		/*
+ 		 * Don't forget we might have a non-mountpoint managed dentry
+ 		 * that wants to block transit.
+ 		 */
+-		switch (managed_dentry_rcu(path)) {
+-		case -ECHILD:
+-		default:
+-			return false;
+-		case -EISDIR:
+-			return true;
+-		case 0:
+-			break;
++		if (unlikely(flags & DCACHE_MANAGE_TRANSIT)) {
++			int res = dentry->d_op->d_manage(path, true);
++			if (res)
++				return res == -EISDIR;
++			flags = dentry->d_flags;
+ 		}
+ 
+-		if (!d_mountpoint(path->dentry))
+-			return !(path->dentry->d_flags & DCACHE_NEED_AUTOMOUNT);
+-
+-		mounted = __lookup_mnt(path->mnt, path->dentry);
+-		if (!mounted)
+-			break;
+-		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+-			return false;
+-		path->mnt = &mounted->mnt;
+-		path->dentry = mounted->mnt.mnt_root;
+-		nd->flags |= LOOKUP_JUMPED;
+-		*seqp = read_seqcount_begin(&path->dentry->d_seq);
+-		/*
+-		 * Update the inode too. We don't need to re-check the
+-		 * dentry sequence number here after this d_inode read,
+-		 * because a mount-point is always pinned.
+-		 */
+-		*inode = path->dentry->d_inode;
++		if (flags & DCACHE_MOUNTED) {
++			struct mount *mounted = __lookup_mnt(path->mnt, dentry);
++			if (mounted) {
++				path->mnt = &mounted->mnt;
++				dentry = path->dentry = mounted->mnt.mnt_root;
++				nd->flags |= LOOKUP_JUMPED;
++				*seqp = read_seqcount_begin(&dentry->d_seq);
++				*inode = dentry->d_inode;
++				/*
++				 * We don't need to re-check ->d_seq after this
++				 * ->d_inode read - there will be an RCU delay
++				 * between mount hash removal and ->mnt_root
++				 * becoming unpinned.
++				 */
++				flags = dentry->d_flags;
++				continue;
 +			}
- 			/*
- 			 * We didn't have the inode before the open, so check open
- 			 * permission here.
- 			 */
--			int acc_mode = op->acc_mode;
- 			if (file->f_mode & FMODE_CREATED) {
- 				WARN_ON(!(open_flag & O_CREAT));
- 				fsnotify_create(dir, dentry);
++			if (read_seqretry(&mount_lock, nd->m_seq))
++				return false;
++		}
++		return !(flags & DCACHE_NEED_AUTOMOUNT);
+ 	}
+-	return !read_seqretry(&mount_lock, nd->m_seq) &&
+-		!(path->dentry->d_flags & DCACHE_NEED_AUTOMOUNT);
+ }
+ 
+ static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
 -- 
 2.11.0
 
