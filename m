@@ -2,77 +2,46 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FC2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8682072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W1HrsZ8+"
+	by mail.kernel.org (Postfix) with ESMTP id 7F01B2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgCMOKG (ORCPT
+        id S1726898AbgCMOKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:10:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45830 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726861AbgCMOKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584108604;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F1V8F7R+emEsH2Puu+xTU6xnzq5JbKAu2uhy1Jl9ZpQ=;
-        b=W1HrsZ8+iu+NhfnOVMYd86Cwh5jX8ZGRpnqp1lA1lNgqrDnPOyMaYU9iKVpeWGhGUJ/bZY
-        smxqA1XI3agKUWweOEjP1HdiO+pvXROkmWPM8bP+jTH4MgSBqYmdc8NLZ6RjNKEZDFuVvl
-        CEP/OPQ1VjkLmdnyPFscXkpMImpVB08=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-g9vBft6BNmmdRxJRKpiV1g-1; Fri, 13 Mar 2020 10:09:59 -0400
-X-MC-Unique: g9vBft6BNmmdRxJRKpiV1g-1
-Received: by mail-wr1-f71.google.com with SMTP id p5so4276876wrj.17
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:09:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=F1V8F7R+emEsH2Puu+xTU6xnzq5JbKAu2uhy1Jl9ZpQ=;
-        b=ZGYMLrEnaBXxaVxFWrRU2F0N5On16ZmmG7GOpRSYgJznl6vIagPlMHgaAeffpN2Ng7
-         UlSfcTvr9yyXgS1HjDLjOAa+PvcE//ZrL9G3JOVGPVn+nB5FPhoEDQfQ6tQ8ZDylqTKc
-         6Sk4DVtAhkjKOffA0IJ1gMq8BqgcWGmg1f1xrHTLu6J1yUW9qOdnpRtRzSsQQQobUfZ2
-         kD0GtbucChRzzQt+GF8IDzO7Oou7HhjNg3aAgp26EJ/Inc4uVSyb40xaCmxdwBFS49t3
-         h22T6BgX8gA/igzSHMIFEXU9WgA2RWPBaXlTMiNl6j4stgxizywgbOO0PLF2X3F17mxI
-         YPlQ==
-X-Gm-Message-State: ANhLgQ3GpFQDYRnBEkkyFnrKUUb9+VlmvPgYafpLYkMy3hmnSKh28xpq
-        1NUOpBNNylPHMGRBU1ZPcqwovdDp94fkJuOsQuwp+HGp/+d95YtTHVS3kVOMB/juQ0EGJquCqP7
-        4jnTud64peVNawBgGIWYIThpJ
-X-Received: by 2002:adf:9071:: with SMTP id h104mr18213507wrh.359.1584108597987;
-        Fri, 13 Mar 2020 07:09:57 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvhEwV3TeTg8xQbLJb4GROPa8wOf4t+geLxrOrIV4oik7bg0a3LBUdPL/nDNQ3nNvTxJhw7oQ==
-X-Received: by 2002:adf:9071:: with SMTP id h104mr18213482wrh.359.1584108597771;
-        Fri, 13 Mar 2020 07:09:57 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id k126sm17084484wme.4.2020.03.13.07.09.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 07:09:54 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH 09/10] KVM: VMX: Cache vmx->exit_reason in local u16 in vmx_handle_exit_irqoff()
-In-Reply-To: <20200312184521.24579-10-sean.j.christopherson@intel.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com> <20200312184521.24579-10-sean.j.christopherson@intel.com>
-Date:   Fri, 13 Mar 2020 15:09:47 +0100
-Message-ID: <87h7ysny6s.fsf@vitty.brq.redhat.com>
+        Fri, 13 Mar 2020 10:10:13 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1279 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbgCMOKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:10:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 07:10:12 -0700
+X-IronPort-AV: E=Sophos;i="5.70,548,1574150400"; 
+   d="scan'208";a="237232618"
+Received: from unknown (HELO localhost) ([10.252.52.87])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 07:10:09 -0700
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        "ksummit-discuss\@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        "tech-board-discuss\@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation Technical Advisory Board Elections -- Change to charter
+In-Reply-To: <20200313081216.627c5bdf@gandalf.local.home>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name> <20200312003436.GF1639@pendragon.ideasonboard.com> <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com> <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com> <20200313093548.GA2089143@kroah.com> <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz> <20200313100755.GA2161605@kroah.com> <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com> <20200313103720.GA2215823@kroah.com> <CAMuHMdW6Br+x+_9xP+X4xr6FP_uNpZ6q6065RJH-9yFy_8fiZA@mail.gmail.com> <20200313081216.627c5bdf@gandalf.local.home>
+Date:   Fri, 13 Mar 2020 16:10:29 +0200
+Message-ID: <874kusl50q.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,52 +49,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> Use a u16 to hold the exit reason in vmx_handle_exit_irqoff(), as the
-> checks for INTR/NMI/WRMSR expect to encounter only the basic exit reason
-> in vmx->exit_reason.
+On Fri, 13 Mar 2020, Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Fri, 13 Mar 2020 11:50:45 +0100
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-
-True Sean would also add:
-
-"No functional change intended."
-
-"Opportunistically align the params to handle_external_interrupt_irqoff()."
-
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>> > > > Given that before now, there has not be any way to vote for the TAB
+>> > > > remotely, it's less restrictive :)  
+>> > >
+>> > > But people without kernel.org accounts could still vote in person before,
+>> > > right?  
+>> >
+>> > Yes, and they still can today, this is expanding the pool, not
+>> > restricting it.  
+>> 
+>> Oh right, assumed we'll still have a conference in person, and unrestricted
+>> travel.
 >
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index d43e1d28bb58..910a7cadeaf7 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6287,16 +6287,16 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
->  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
->  
->  static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
-> -	enum exit_fastpath_completion *exit_fastpath)
-> +				   enum exit_fastpath_completion *exit_fastpath)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	u16 exit_reason = vmx->exit_reason;
->  
-> -	if (vmx->exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
-> +	if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
->  		handle_external_interrupt_irqoff(vcpu);
-> -	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
-> +	else if (exit_reason == EXIT_REASON_EXCEPTION_NMI)
->  		handle_exception_nmi_irqoff(vmx);
-> -	else if (!is_guest_mode(vcpu) &&
-> -		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
-> +	else if (!is_guest_mode(vcpu) && exit_reason == EXIT_REASON_MSR_WRITE)
->  		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
->  }
+> Correct. But if we don't change the voting requirements, and the conference
+> is canceled, or people are restricted from traveling, then those people
+> will not be able to vote with the current charter.
+>
+> We are trying to extend who can vote beyond those that the charter allows.
+> We are not preventing those that can vote under the current rules from
+> voting.  IIUC, we are trying to create absentee voting which we never had
+> before. Thus, you can either vote the current way by getting travel to
+> wherever Kernel Summit is and attending the conference, or we can extend
+> the charter so that if you can not come for whatever reason, you have an
+> option to vote remotely, if you satisfy the new requirements. Remember, not
+> attending means you do not satisfy the current requirements.
+>
+> The TAB has bikeshed this a bit internally, and came up with the conclusion
+> that kernel.org accounts is a very good "first step". If this proves to be
+> a problem, we can look at something else. This is why we are being a bit
+> vague in the changes so that if something better comes along we can switch
+> to that. After some experience in various methods (if we try various
+> methods), we could always make whatever method works best as an official
+> method at a later time.
+>
+> But for now, we need to come up with something that makes it hard for
+> ballot stuffing, and a kernel.org account (plus activity in the kernel)
+> appears to be the best solution we know of.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Thanks for writing this. I, for one, would welcome more open and
+proactive communication from the TAB.
+
+Have you considered whether the eligibility for running and voting
+should be made the same? As it is, absolutely anyone can self-nominate
+and run.
+
+
+BR,
+Jani.
+
 
 -- 
-Vitaly
-
+Jani Nikula, Intel Open Source Graphics Center
