@@ -2,130 +2,114 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5E0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3648EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766E420637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584059511;
-	bh=U6yu3h1JK3KYJor/2fq9U7mcNdls4bBnMQ63AohUn3s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Lm3BGwa0hLeChg1Hv1Yjv2Zhr+5pYlBhXQNDdX/evnRERf2pgClPEv8z74iGSmsFM
-	 74gWQFrHh/O+DeeTe46GLM5laiREjCbdkubFTuoTWUIR1xVj4P926766iQefgD+Y9E
-	 /OoT4lGV7T29aGq6KHW76199b4k2VqigKULQF9ok=
+	by mail.kernel.org (Postfix) with ESMTP id 11EE7205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:35:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTGbH6It"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCMAbu (ORCPT
+        id S1727021AbgCMAfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbgCMAbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:31:50 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 12 Mar 2020 20:35:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42238 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726898AbgCMAfp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 20:35:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584059744;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zevsMC0uowAKEZtQLATwyqk885Y78IJeVZqy5nvGUjY=;
+        b=CTGbH6ItRUldNME4Pe3Kiy9LW19wcgZLHsM0qUICc4Y5cW5ej1tHM34WKMJ87JY+bg3Sbo
+        QHCTl5EmwUmnfosCe9MvGl+BPvGLt1YNM+rhO8JWAuG2Q33k6NYbUS8jm2fHtpiYnozVqe
+        qmmmEczlny3AK8RatW02RyluoW9PnC8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-JKPR12MkNUy4Gv_xan9-CA-1; Thu, 12 Mar 2020 20:35:40 -0400
+X-MC-Unique: JKPR12MkNUy4Gv_xan9-CA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F9E6205F4;
-        Fri, 13 Mar 2020 00:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584059509;
-        bh=U6yu3h1JK3KYJor/2fq9U7mcNdls4bBnMQ63AohUn3s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k0hfjg76kLJmC1o/ed6y+DKXm+1hSq9XjHy56gkrPxIn1xmxjuNe6vjBVy5dF6Jzy
-         3JWhHOXmBXxL+uAHm+kAtb0I8xUJgj7kFd1q4VpC8sgTYXdjA55Xf56X+iT+3/lHU5
-         On1nYG8MSqt41J1nrnU4vHCSkaCmrROEUWrISTdo=
-Date:   Thu, 12 Mar 2020 17:31:48 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-Id: <20200312173148.6647751b1ad538687563f652@linux-foundation.org>
-In-Reply-To: <20200312182725.618ca518@canb.auug.org.au>
-References: <20200312182725.618ca518@canb.auug.org.au>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE5EA107ACC7;
+        Fri, 13 Mar 2020 00:35:38 +0000 (UTC)
+Received: from localhost (ovpn-121-102.rdu2.redhat.com [10.10.121.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C667F60C63;
+        Fri, 13 Mar 2020 00:35:35 +0000 (UTC)
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, Bruno Meneguele <bmeneg@redhat.com>
+Subject: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
+Date:   Thu, 12 Mar 2020 21:35:33 -0300
+Message-Id: <20200313003533.2203429-1-bmeneg@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Mar 2020 18:27:25 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Userspace libraries, e.g. glibc's dprintf(), expect the default return va=
+lue
+for invalid seek situations: -ESPIPE, but when the IO was over /dev/kmsg =
+the
+current state of kernel code was returning the generic case of an -EINVAL=
+.
+Hence, userspace programs were not behaving as expected or documented.
 
-> Hi all,
-> 
-> After merging the akpm-current tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
-> 
-> mm/gup.c:119:13: warning: 'put_compound_head' defined but not used [-Wunused-function]
->   119 | static void put_compound_head(struct page *page, int refs, unsigned int flags)
->       |             ^~~~~~~~~~~~~~~~~
-> 
-> Introduced by commit
-> 
->   6379e529ebe4 ("mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN pages"")
-> 
+With this patch we add SEEK_CUR case returning the expected value and als=
+o a
+simple mention of it in kernel's documentation for those relying on that =
+for
+guidance.
 
-Thanks.
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+---
+ Documentation/ABI/testing/dev-kmsg | 2 ++
+ kernel/printk/printk.c             | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-I think this is right.  And I don't think it'll apply to most recent
--next.
-
---- a/mm/gup.c~mm-gup-track-foll_pin-pages-fix-2-fix
-+++ a/mm/gup.c
-@@ -78,21 +78,6 @@ static __maybe_unused struct page *try_g
- 	return NULL;
- }
- 
--static void put_compound_head(struct page *page, int refs, unsigned int flags)
--{
--	if (flags & FOLL_PIN)
--		refs *= GUP_PIN_COUNTING_BIAS;
--
--	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
--	/*
--	 * Calling put_page() for each ref is unnecessarily slow. Only the last
--	 * ref needs a put_page().
--	 */
--	if (refs > 1)
--		page_ref_sub(page, refs - 1);
--	put_page(page);
--}
--
- /**
-  * try_grab_page() - elevate a page's refcount by a flag-dependent amount
-  *
-@@ -1967,7 +1952,24 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
-  * This code is based heavily on the PowerPC implementation by Nick Piggin.
-  */
- #ifdef CONFIG_HAVE_FAST_GUP
+diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testi=
+ng/dev-kmsg
+index f307506eb54c..8533d28e6fda 100644
+--- a/Documentation/ABI/testing/dev-kmsg
++++ b/Documentation/ABI/testing/dev-kmsg
+@@ -56,6 +56,8 @@ Description:	The /dev/kmsg character device node provid=
+es userspace access
+ 		  seek after the last record available at the time
+ 		  the last SYSLOG_ACTION_CLEAR was issued.
+=20
++		While SEEK_CUR sets -ESPIPE (invalid seek) to errno.
 +
-+static void put_compound_head(struct page *page, int refs, unsigned int flags)
-+{
-+	if (flags & FOLL_PIN)
-+		refs *= GUP_PIN_COUNTING_BIAS;
-+
-+	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
-+	/*
-+	 * Calling put_page() for each ref is unnecessarily slow. Only the last
-+	 * ref needs a put_page().
-+	 */
-+	if (refs > 1)
-+		page_ref_sub(page, refs - 1);
-+	put_page(page);
-+}
-+
- #ifdef CONFIG_GUP_GET_PTE_LOW_HIGH
-+
- /*
-  * WARNING: only to be used in the get_user_pages_fast() implementation.
-  *
-_
+ 		The output format consists of a prefix carrying the syslog
+ 		prefix including priority and facility, the 64 bit message
+ 		sequence number and the monotonic timestamp in microseconds,
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index ad4606234545..d02606723d2d 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -963,6 +963,10 @@ static loff_t devkmsg_llseek(struct file *file, loff=
+_t offset, int whence)
+ 		user->idx =3D log_next_idx;
+ 		user->seq =3D log_next_seq;
+ 		break;
++	case SEEK_CUR:
++		/* return the default errno for invalid seek */
++		ret =3D -ESPIPE;
++		break;
+ 	default:
+ 		ret =3D -EINVAL;
+ 	}
+--=20
+2.24.1
 
