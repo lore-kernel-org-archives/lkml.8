@@ -2,312 +2,330 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBF4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E66C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F174E20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9800D20749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nB6Bk/bv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PB7qv3MG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCMPry (ORCPT
+        id S1727081AbgCMPtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:54 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40068 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgCMPrx (ORCPT
+        Fri, 13 Mar 2020 11:49:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44327 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726674AbgCMPtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:47:53 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFleuu061889;
-        Fri, 13 Mar 2020 10:47:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584114460;
-        bh=PBtgqtv7pcaHGKUb/NLZhIfHzgeOSmG9PfYewmWYmAw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nB6Bk/bvxmTt7rWzHREbXvMHXI9s5NKfFz79xjxmEmhW5pjN1OgGTABBS+pJWjcU3
-         t89QVJXS42amY/GK71UyWcTp6GUguQIEuWy95b7TJVuJr+UbSUrhj4aF1kncF81Z83
-         1NgvwRlxGvLvIyvv1FiwC3idPVIxNz9ZR04xWjxs=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DFleei090982
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 10:47:40 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 10:47:40 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 10:47:40 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSQ034352;
-        Fri, 13 Mar 2020 10:47:36 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v3 12/12] mtd: spi-nor: add support for Cypress Semper flash
-Date:   Fri, 13 Mar 2020 21:16:45 +0530
-Message-ID: <20200313154645.29293-13-p.yadav@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200313154645.29293-1-p.yadav@ti.com>
-References: <20200313154645.29293-1-p.yadav@ti.com>
+        Fri, 13 Mar 2020 11:49:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584114548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8bUXgYRPclKxqAi1i8ua31qOg4xoF1OaWr/dXz7BtFg=;
+        b=PB7qv3MGJ5OKDQlIBN1IlreYQPPYBFdN7c6jVxOOFSd7eApk8/pp1g0IWtlWWd24R81jEu
+        20K8g8HA+Mh+gSQ8eF2mN+WP6eRLdIcDatbRykGdXkWCOksFT/Pa3OcWj0yzhRGlf+LHCk
+        VKQCGNfv2s0OfQAP2Ep0QvysK4s3OoA=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-14-rHnS7_p1NOW4Frx6D6UBhA-1; Fri, 13 Mar 2020 11:49:07 -0400
+X-MC-Unique: rHnS7_p1NOW4Frx6D6UBhA-1
+Received: by mail-io1-f70.google.com with SMTP id d13so6622375ioo.23
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:49:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8bUXgYRPclKxqAi1i8ua31qOg4xoF1OaWr/dXz7BtFg=;
+        b=Wn5xg5S2932xM4mq89F+Fsj2L1cc2fsz/BpvMf7yJzsAa6bNKcHu0O+uPE61/yyNt5
+         NeEKnGnBdiMIJrlAb2BGxIzHn6z5AQGQPaFtaqSKWrWPfpHBSGzCZIwASACttnQ1f19G
+         Q8bZwvjhgBs2MqfSwpkNQP/w6wWq/RR2fHNYtwIWABKJzhD+FhCxERCiEmBpveyB+Ilw
+         UYa3lw8422PvpqNO8LHL/sQ/ER68lEY0sfFbMYj5Eshbc5h/ZRaw4wZvokdqBU0sxNA2
+         hu46EGKyfVfznjUIO1JVyhKlzKL7l28iTz+9q3qYehUxsoywbqLFn1I2vPd0z4vPKXW7
+         lOuA==
+X-Gm-Message-State: ANhLgQ0aIn+TmeCDryDQ1wFd7ld4rj7iClKch3Z3dWDoPUumx3h4WMYD
+        T+7XXno+tDrnVNhXjsdSNjL7Mr7PIHLRlGAVavESndRkgxmwh7v9rprsE1+VoxfkIb9yV8EhnCo
+        qFnSVqxMqLsCnqnRUsCF4WE6kRGmXwauAae+JBH3q
+X-Received: by 2002:a6b:7e45:: with SMTP id k5mr8766341ioq.95.1584114546120;
+        Fri, 13 Mar 2020 08:49:06 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuYcyP+1YgLDSvOwFVTwDXNeGAhQtzs36/oQAkHkt29OyCkLN7DT8mStsJSdhKPxb4+Es3hZFAGHreqpfLaNY4=
+X-Received: by 2002:a6b:7e45:: with SMTP id k5mr8766298ioq.95.1584114545654;
+ Fri, 13 Mar 2020 08:49:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com> <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+In-Reply-To: <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Fri, 13 Mar 2020 11:48:54 -0400
+Message-ID: <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Cypress Semper flash is an xSPI compliant octal DTR flash. Add
-support for using it in octal DTR mode.
+On Wed, Mar 11, 2020 at 1:38 PM Jethro Beekman <jethro@fortanix.com> wrote:
+>
+> On 2020-03-11 18:30, Nathaniel McCallum wrote:
+> > On Tue, Mar 3, 2020 at 6:40 PM Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> >>
+> >> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> >>
+> >> An SGX runtime must be aware of the exceptions, which happen inside an
+> >> enclave. Introduce a vDSO call that wraps EENTER/ERESUME cycle and returns
+> >> the CPU exception back to the caller exactly when it happens.
+> >>
+> >> Kernel fixups the exception information to RDI, RSI and RDX. The SGX call
+> >> vDSO handler fills this information to the user provided buffer or
+> >> alternatively trigger user provided callback at the time of the exception.
+> >>
+> >> The calling convention is custom and does not follow System V x86-64 ABI.
+> >>
+> >> Suggested-by: Andy Lutomirski <luto@amacapital.net>
+> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >> Co-developed-by: Cedric Xing <cedric.xing@intel.com>
+> >> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+> >> Tested-by: Jethro Beekman <jethro@fortanix.com>
+> >> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >> ---
+> >>  arch/x86/entry/vdso/Makefile             |   2 +
+> >>  arch/x86/entry/vdso/vdso.lds.S           |   1 +
+> >>  arch/x86/entry/vdso/vsgx_enter_enclave.S | 187 +++++++++++++++++++++++
+> >>  arch/x86/include/uapi/asm/sgx.h          |  37 +++++
+> >>  4 files changed, 227 insertions(+)
+> >>  create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >>
+> >> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> >> index 657e01d34d02..fa50c76a17a8 100644
+> >> --- a/arch/x86/entry/vdso/Makefile
+> >> +++ b/arch/x86/entry/vdso/Makefile
+> >> @@ -24,6 +24,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)       := y
+> >>
+> >>  # files to link into the vdso
+> >>  vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
+> >> +vobjs-$(VDSO64-y)              += vsgx_enter_enclave.o
+> >>
+> >>  # files to link into kernel
+> >>  obj-y                          += vma.o extable.o
+> >> @@ -90,6 +91,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS
+> >>  CFLAGS_REMOVE_vclock_gettime.o = -pg
+> >>  CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
+> >>  CFLAGS_REMOVE_vgetcpu.o = -pg
+> >> +CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
+> >>
+> >>  #
+> >>  # X32 processes use x32 vDSO to access 64bit kernel data.
+> >> diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
+> >> index 36b644e16272..4bf48462fca7 100644
+> >> --- a/arch/x86/entry/vdso/vdso.lds.S
+> >> +++ b/arch/x86/entry/vdso/vdso.lds.S
+> >> @@ -27,6 +27,7 @@ VERSION {
+> >>                 __vdso_time;
+> >>                 clock_getres;
+> >>                 __vdso_clock_getres;
+> >> +               __vdso_sgx_enter_enclave;
+> >>         local: *;
+> >>         };
+> >>  }
+> >> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >> new file mode 100644
+> >> index 000000000000..94a8e5f99961
+> >> --- /dev/null
+> >> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >> @@ -0,0 +1,187 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +
+> >> +#include <linux/linkage.h>
+> >> +#include <asm/export.h>
+> >> +#include <asm/errno.h>
+> >> +
+> >> +#include "extable.h"
+> >> +
+> >> +#define EX_LEAF                0*8
+> >> +#define EX_TRAPNR      0*8+4
+> >> +#define EX_ERROR_CODE  0*8+6
+> >> +#define EX_ADDRESS     1*8
+> >> +
+> >> +.code64
+> >> +.section .text, "ax"
+> >> +
+> >> +/**
+> >> + * __vdso_sgx_enter_enclave() - Enter an SGX enclave
+> >> + * @leaf:      ENCLU leaf, must be EENTER or ERESUME
+> >> + * @tcs:       TCS, must be non-NULL
+> >> + * @e:         Optional struct sgx_enclave_exception instance
+> >> + * @handler:   Optional enclave exit handler
+> >> + *
+> >> + * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant with the
+> >> + * x86-64 ABI, i.e. cannot be called from standard C code.
+> >> + *
+> >> + * Input ABI:
+> >> + *  @leaf      %eax
+> >> + *  @tcs       8(%rsp)
+> >> + *  @e                 0x10(%rsp)
+> >> + *  @handler   0x18(%rsp)
+> >> + *
+> >> + * Output ABI:
+> >> + *  @ret       %eax
+> >> + *
+> >> + * All general purpose registers except RAX, RBX and RCX are passed as-is to
+> >> + * the enclave. RAX, RBX and RCX are consumed by EENTER and ERESUME and are
+> >> + * loaded with @leaf, asynchronous exit pointer, and @tcs respectively.
+> >> + *
+> >> + * RBP and the stack are used to anchor __vdso_sgx_enter_enclave() to the
+> >> + * pre-enclave state, e.g. to retrieve @e and @handler after an enclave exit.
+> >> + * All other registers are available for use by the enclave and its runtime,
+> >> + * e.g. an enclave can push additional data onto the stack (and modify RSP) to
+> >> + * pass information to the optional exit handler (see below).
+> >> + *
+> >> + * Most exceptions reported on ENCLU, including those that occur within the
+> >> + * enclave, are fixed up and reported synchronously instead of being delivered
+> >> + * via a standard signal. Debug Exceptions (#DB) and Breakpoints (#BP) are
+> >> + * never fixed up and are always delivered via standard signals. On synchrously
+> >> + * reported exceptions, -EFAULT is returned and details about the exception are
+> >> + * recorded in @e, the optional sgx_enclave_exception struct.
+> >> +
+> >> + * If an exit handler is provided, the handler will be invoked on synchronous
+> >> + * exits from the enclave and for all synchronously reported exceptions. In
+> >> + * latter case, @e is filled prior to invoking the handler.
+> >> + *
+> >> + * The exit handler's return value is interpreted as follows:
+> >> + *  >0:                continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
+> >> + *   0:                success, return @ret to the caller
+> >> + *  <0:                error, return @ret to the caller
+> >> + *
+> >> + * The userspace exit handler is responsible for unwinding the stack, e.g. to
+> >> + * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
+> >> + * The exit handler may also transfer control, e.g. via longjmp() or a C++
+> >> + * exception, without returning to __vdso_sgx_enter_enclave().
+> >> + *
+> >> + * Return:
+> >> + *  0 on success,
+> >> + *  -EINVAL if ENCLU leaf is not allowed,
+> >> + *  -EFAULT if an exception occurs on ENCLU or within the enclave
+> >> + *  -errno for all other negative values returned by the userspace exit handler
+> >> + */
+> >> +#ifdef SGX_KERNEL_DOC
+> >> +/* C-style function prototype to coerce kernel-doc into parsing the comment. */
+> >> +int __vdso_sgx_enter_enclave(int leaf, void *tcs,
+> >> +                            struct sgx_enclave_exception *e,
+> >> +                            sgx_enclave_exit_handler_t handler);
+> >> +#endif
+> >> +SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> >
+> > Currently, the selftest has a wrapper around
+> > __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
+> > registers (CSRs), though it uses none of them. Then it calls this
+> > function which uses %rbx but preserves none of the CSRs. Then it jumps
+> > into an enclave which zeroes all these registers before returning.
+> > Thus:
+> >
+> >   1. wrapper saves all CSRs
+> >   2. wrapper repositions stack arguments
+> >   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
+> >   4. selftest zeros all CSRs
+> >   5. wrapper loads all CSRs
+> >
+> > I'd like to propose instead that the enclave be responsible for saving
+> > and restoring CSRs. So instead of the above we have:
+> >   1. __vdso_sgx_enter_enclave() saves %rbx
+> >   2. enclave saves CSRs
+> >   3. enclave loads CSRs
+> >   4. __vdso_sgx_enter_enclave() loads %rbx
+> >
+> > I know that lots of other stuff happens during enclave transitions,
+> > but at the very least we could reduce the number of instructions
+> > through this critical path.
+>()
+> The current calling convention for __vdso_sgx_enter_enclave has been carefully designed to mimic just calling ENCLU[EENTER] as closely as possible.
+>
+> I'm not sure why you're referring to the selftest wrapper here, that doesn't seem relevant to me.
 
-The flash by default boots in a hybrid sector mode. But the sector map
-table on the part I had was programmed incorrectly and the SMPT values
-on the flash don't match the public datasheet. Specifically, in some
-places erase type 3 was used instead of 4. In addition, the region sizes
-were incorrect in some places. So, for testing I set CFR3N[3] to enable
-uniform sector sizes. Since the uniform sector mode bit is a
-non-volatile bit, this series does not change it to avoid making any
-permanent changes to the flash configuration. The correct data to
-implement a fixup is not available right now and will be done in a
-follow-up patch if needed.
+Thinking about this more carefully, I still think that at least part
+of my critique still stands.
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 156 ++++++++++++++++++++++++++++++++++
- include/linux/mtd/spi-nor.h   |  13 +++
- 2 files changed, 169 insertions(+)
+__vdso_sgx_enter_enclave() doesn't use the x86-64 ABI. This means that
+there will always be an assembly wrapper for
+__vdso_sgx_enter_enclave(). But because __vdso_sgx_enter_enclave()
+doesn't save %rbx, the wrapper is forced to in order to be called from
+C.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 32f7ecbc38d4..daaff3dc7376 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -264,6 +264,10 @@ struct flash_info {
- #define SPI_NOR_SRST_SLEEP_MIN	200
- #define SPI_NOR_SRST_SLEEP_MAX	400
- 
-+/* Forward declaration that will be used by s28hs512t_post_sfdp_fixup(). */
-+static void spi_nor_set_pp_settings(struct spi_nor_pp_command *pp,
-+				    u8 opcode, enum spi_nor_protocol proto);
-+
- /**
-  * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
-  *			   extension type.
-@@ -2297,6 +2301,84 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
- 	return ret;
- }
- 
-+/**
-+ * spi_nor_cypress_octal_enable() - Enable octal DTR mode on Cypress flashes.
-+ * @nor:		pointer to a 'struct spi_nor'
-+ *
-+ * This also sets the memory access latency cycles to 20, which is the default
-+ * in the spi-nor framework.
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+static int spi_nor_cypress_octal_enable(struct spi_nor *nor, bool enable)
-+{
-+	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width;
-+	int ret;
-+
-+	if (enable)
-+		addr_width = 3;
-+	else
-+		addr_width = 4;
-+
-+	if (enable) {
-+		/* Use 20 dummy cycles for memory array reads. */
-+		ret = spi_nor_write_enable(nor);
-+		if (ret)
-+			return ret;
-+
-+		*buf = SPINOR_REG_CYPRESS_CFR2V_MEMLAT_8_20;
-+		op = (struct spi_mem_op)
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WR_ANY_REG, 1),
-+				   SPI_MEM_OP_ADDR(addr_width,
-+						   SPINOR_REG_CYPRESS_CFR2V,
-+						   1),
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+		if (ret) {
-+			dev_warn(nor->dev,
-+				 "failed to set default memory latency value: %d\n",
-+				 ret);
-+			return ret;
-+		}
-+		ret = spi_nor_wait_till_ready(nor);
-+		if (ret)
-+			return ret;
-+
-+		nor->read_dummy = 20;
-+	}
-+
-+	/* Set/unset the octal and DTR enable bits. */
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		*buf = SPINOR_REG_CYPRESS_CFR5V_OCT_DTR_EN;
-+	else
-+		*buf = SPINOR_REG_CYPRESS_CFR5V_OCT_DTR_DS;
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WR_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width,
-+					   SPINOR_REG_CYPRESS_CFR5V,
-+					   1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+
-+	if (!enable)
-+		spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
-+
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret) {
-+		dev_warn(nor->dev, "Failed to enable octal DTR mode\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * spi_nor_sr1_bit6_quad_enable() - Set the Quad Enable BIT(6) in the Status
-  * Register 1.
-@@ -2509,6 +2591,77 @@ static struct spi_nor_fixups gd25q256_fixups = {
- 	.default_init = gd25q256_default_init,
- };
- 
-+static void s28hs512t_default_init(struct spi_nor *nor)
-+{
-+	nor->params.octal_dtr_enable = spi_nor_cypress_octal_enable;
-+}
-+
-+static void s28hs512t_post_sfdp_fixup(struct spi_nor *nor)
-+{
-+	/*
-+	 * On older versions of the flash the xSPI Profile 1.0 table has the
-+	 * 8D-8D-8D Fast Read opcode as 0x00. But it actually should be 0xEE.
-+	 */
-+	if (nor->params.reads[SNOR_CMD_READ_8_8_8_DTR].opcode == 0)
-+		nor->params.reads[SNOR_CMD_READ_8_8_8_DTR].opcode =
-+			SPINOR_OP_CYPRESS_RD_FAST;
-+
-+	/* This flash is also missing the 4-byte Page Program opcode bit. */
-+	spi_nor_set_pp_settings(&nor->params.page_programs[SNOR_CMD_PP],
-+				SPINOR_OP_PP_4B, SNOR_PROTO_1_1_1);
-+	/*
-+	 * Since xSPI Page Program opcode is backward compatible with
-+	 * Legacy SPI, use Legacy SPI opcode there as well.
-+	 */
-+	spi_nor_set_pp_settings(&nor->params.page_programs[SNOR_CMD_PP_8_8_8_DTR],
-+				SPINOR_OP_PP_4B, SNOR_PROTO_8_8_8_DTR);
-+
-+	/*
-+	 * The xSPI Profile 1.0 table advertises the number of additional
-+	 * address bytes needed for Read Status Register command as 0 but the
-+	 * actual value for that is 4.
-+	 */
-+	nor->params.rdsr_addr_nbytes = 4;
-+}
-+
-+static int s28hs512t_post_bfpt_fixup(struct spi_nor *nor,
-+				     const struct sfdp_parameter_header *bfpt_header,
-+				     const struct sfdp_bfpt *bfpt,
-+				     struct spi_nor_flash_parameter *params)
-+{
-+	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width = 3;
-+	int ret;
-+
-+	/*
-+	 * The BFPT table advertises a 512B page size but the page size is
-+	 * actually configurable (with the default being 256B). Read from
-+	 * CFR3V[4] and set the correct size.
-+	 */
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RD_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_CYPRESS_CFR3V, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_IN(1, buf, 1));
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret)
-+		return ret;
-+
-+	if (*buf & SPINOR_REG_CYPRESS_CFR3V_PGSZ)
-+		params->page_size = 512;
-+	else
-+		params->page_size = 256;
-+
-+	return 0;
-+}
-+
-+static struct spi_nor_fixups s28hs512t_fixups = {
-+	.default_init = s28hs512t_default_init,
-+	.post_sfdp = s28hs512t_post_sfdp_fixup,
-+	.post_bfpt = s28hs512t_post_bfpt_fixup,
-+};
-+
- /* NOTE: double check command sets and memory organization when you add
-  * more nor chips.  This current list focusses on newer chips, which
-  * have been converging on command sets which including JEDEC ID.
-@@ -2771,6 +2924,9 @@ static const struct flash_info spi_nor_ids[] = {
- 	{ "s25fl064l",  INFO(0x016017,      0,  64 * 1024, 128, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
- 	{ "s25fl128l",  INFO(0x016018,      0,  64 * 1024, 256, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
- 	{ "s25fl256l",  INFO(0x016019,      0,  64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-+	{ "s28hs512t",  INFO(0x345b1a,      0, 256 * 1024, 256, SECT_4K | SPI_NOR_OCTAL_DTR_READ | SPI_NOR_SOFT_RESET)
-+		.fixups = &s28hs512t_fixups,
-+	},
- 
- 	/* SST -- large erase sizes are "overlays", "sectors" are 4K */
- 	{ "sst25vf040b", INFO(0xbf258d, 0, 64 * 1024,  8, SECT_4K | SST_WRITE) },
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index 13679197dec1..20337bcda207 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -154,6 +154,19 @@
- #define SR2_QUAD_EN_BIT1	BIT(1)
- #define SR2_QUAD_EN_BIT7	BIT(7)
- 
-+/* For Cypress flash. */
-+#define SPINOR_OP_RD_ANY_REG			0x65	/* Read any register */
-+#define SPINOR_OP_WR_ANY_REG			0x71	/* Write any register */
-+#define SPINOR_REG_CYPRESS_CFR2V		0x00800003
-+#define SPINOR_REG_CYPRESS_CFR2V_MEMLAT_8_20	0x8
-+#define SPINOR_REG_CYPRESS_CFR3V		0x00800004
-+#define SPINOR_REG_CYPRESS_CFR3V_PGSZ		BIT(4) /* Page size. */
-+#define SPINOR_REG_CYPRESS_CFR4V		0x00800005
-+#define SPINOR_REG_CYPRESS_CFR5V		0x00800006
-+#define SPINOR_REG_CYPRESS_CFR5V_OCT_DTR_EN	0x3
-+#define SPINOR_REG_CYPRESS_CFR5V_OCT_DTR_DS	0
-+#define SPINOR_OP_CYPRESS_RD_FAST		0xee
-+
- /* Supported SPI protocols */
- #define SNOR_PROTO_INST_MASK	GENMASK(23, 16)
- #define SNOR_PROTO_INST_SHIFT	16
--- 
-2.25.0
+A common pattern for the wrapper will be to do something like this:
+
+# void enter_enclave(rdi, rsi, rdx, unused, r8, r9, @tcs, @e,
+@handler, @leaf, @vdso)
+enter_enclave:
+    push %rbx
+    push $0 /* align */
+    push 0x48(%rsp)
+    push 0x48(%rsp)
+    push 0x48(%rsp)
+
+    mov 0x70(%rsp), %eax
+    call *0x68(%rsp)
+
+    add $0x20, %rsp
+    pop %rbx
+    ret
+
+Because __vdso_sgx_enter_enclave() doesn't preserve %rbx, the wrapper
+is forced to reposition stack parameters in a performance-critical
+path. On the other hand, if __vdso_sgx_enter_enclave() preserved %rbx,
+you could implement the above as:
+
+# void enter_enclave(rdi, rsi, rdx, unused, r8, r9, @tcs, @e,
+@handler, @leaf, @vdso)
+enter_enclave:
+    mov 0x20(%rsp), %eax
+    jmp *0x28(%rsp)
+
+This also implies that if __vdso_sgx_enter_enclave() took @leaf as a
+stack parameter and preserved %rbx, it would be x86-64 ABI compliant
+enough to call from C if the enclave preserves all callee-saved
+registers besides %rbx (Enarx does).
+
+What are the downsides of this approach? It also doesn't harm the more
+extended case when you need to use an assembly wrapper to setup
+additional registers. This can still be done. It does imply an extra
+push and mov instruction. But because there are currently an odd
+number of stack function parameters, the push also removes an
+alignment instruction where the stack is aligned before the call to
+__vdso_sgx_enter_enclave() (likely). Further, the push and mov are
+going to be performed by *someone* in order to call
+__vdso_sgx_enter_enclave() from C.
+
+Therefore, I'd like to propose that __vdso_sgx_enter_enclave():
+  * Preserve %rbx.
+  * Take the leaf as an additional stack parameter instead of passing
+it in %rax.
+
+Then C can call it without additional overhead. And people who need to
+"extend" the C ABI can still do so.
 
