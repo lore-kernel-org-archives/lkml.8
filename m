@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3E8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9464AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6852220746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4A320749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xw438WV3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uz6SfjQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgCMPrq (ORCPT
+        id S1727132AbgCMPrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44034 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbgCMPrl (ORCPT
+        Fri, 13 Mar 2020 11:47:49 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55262 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbgCMPrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:47:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFlSwc111344;
-        Fri, 13 Mar 2020 10:47:28 -0500
+        Fri, 13 Mar 2020 11:47:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFlaou062943;
+        Fri, 13 Mar 2020 10:47:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584114448;
-        bh=gDJ5RliIP25FZjm+6Odmd+Qk278xQ7CJ+hSrzysKQug=;
+        s=ti-com-17Q1; t=1584114456;
+        bh=GCR07WRKEb3uBFyLtrNoiwFaOeGSGBrdACJjmVEVr8A=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xw438WV3HSYVSd89T6RPoP1IA+A/r2TmSFhNLg7FYO6W5PaX89k9qkOprXb2efiqn
-         FQHyRh6M+qwxPhLCMzEZiawqmGzMk1vBZGRRSG/YoGWHlAENPGIzN2UG290qOszrc6
-         26JdS/EVsPyPg58FoJx4tgWpv1WAVs8vs5JtAskU=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DFlS8H048844
+        b=uz6SfjQwP8ojPXmcP8GDbDcyESJzuWd+RuObBiPZou4jqyoe6he/rmCwDRY7z9juz
+         kZ/FtamVNZBFSswi99raooX1kYdHCHOcKNw5g77nZC8T6FYfSRR8/P1qDoyLnl1Ozn
+         PFPcI36zLqc0Z8lm5H8BkY+cyL2s/6EcbmVoYgWg=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DFla8g090945
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 10:47:28 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 13 Mar 2020 10:47:36 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 10:47:28 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 10:47:36 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 10:47:28 -0500
+ Frontend Transport; Fri, 13 Mar 2020 10:47:36 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSN034352;
-        Fri, 13 Mar 2020 10:47:24 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSP034352;
+        Fri, 13 Mar 2020 10:47:32 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -61,9 +61,9 @@ CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v3 09/12] mtd: spi-nor: enable octal DTR mode when possible
-Date:   Fri, 13 Mar 2020 21:16:42 +0530
-Message-ID: <20200313154645.29293-10-p.yadav@ti.com>
+Subject: [PATCH v3 11/12] mtd: spi-nor: Disable Octal DTR mode on suspend.
+Date:   Fri, 13 Mar 2020 21:16:44 +0530
+Message-ID: <20200313154645.29293-12-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200313154645.29293-1-p.yadav@ti.com>
 References: <20200313154645.29293-1-p.yadav@ti.com>
@@ -76,88 +76,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow flashes to specify a hook to enable octal DTR mode. Use this hook
-whenever possible to get optimal transfer speeds.
+On resume, the init procedure will be run that will re-enable it.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 35 +++++++++++++++++++++++++++++++++++
- include/linux/mtd/spi-nor.h   |  2 ++
- 2 files changed, 37 insertions(+)
+ drivers/mtd/spi-nor/spi-nor.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 16d7516f2470..5e225d1b29f7 100644
+index fcc087ff5148..32f7ecbc38d4 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -5232,6 +5232,35 @@ static void spi_nor_init_params(struct spi_nor *nor)
- 	spi_nor_late_init_params(nor);
+@@ -5379,6 +5379,23 @@ static void spi_nor_soft_reset(struct spi_nor *nor)
+ 	usleep_range(SPI_NOR_SRST_SLEEP_MIN, SPI_NOR_SRST_SLEEP_MAX);
  }
  
-+/** spi_nor_octal_dtr_enable() - enable Octal DTR I/O if needed
-+ * @nor:                 pointer to a 'struct spi_nor'
-+ * @enable:              whether to enable or disable Octal DTR
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+static int spi_nor_octal_dtr_enable(struct spi_nor *nor, bool enable)
++/* mtd suspend handler */
++static int spi_nor_suspend(struct mtd_info *mtd)
 +{
++	struct spi_nor *nor = mtd_to_spi_nor(mtd);
++	struct device *dev = nor->dev;
 +	int ret;
 +
-+	if (!nor->params.octal_dtr_enable)
-+		return 0;
-+
-+	if (!(spi_nor_get_protocol_width(nor->read_proto) == 8 ||
-+	      spi_nor_get_protocol_width(nor->write_proto) == 8))
-+		return 0;
-+
-+	ret = nor->params.octal_dtr_enable(nor, enable);
-+	if (ret)
++	/* Disable octal DTR mode if we enabled it. */
++	ret = spi_nor_octal_dtr_enable(nor, false);
++	if (ret) {
++		dev_err(dev, "suspend() failed\n");
 +		return ret;
-+
-+	if (enable)
-+		nor->reg_proto = SNOR_PROTO_8_8_8_DTR;
-+	else
-+		nor->reg_proto = SNOR_PROTO_1_1_1;
++	}
 +
 +	return 0;
 +}
 +
- /**
-  * spi_nor_quad_enable() - enable Quad I/O if needed.
-  * @nor:                pointer to a 'struct spi_nor'
-@@ -5271,6 +5300,12 @@ static int spi_nor_init(struct spi_nor *nor)
+ /* mtd resume handler */
+ static void spi_nor_resume(struct mtd_info *mtd)
  {
- 	int err;
+@@ -5564,6 +5581,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+ 	mtd->size = params->size;
+ 	mtd->_erase = spi_nor_erase;
+ 	mtd->_read = spi_nor_read;
++	mtd->_suspend = spi_nor_suspend;
+ 	mtd->_resume = spi_nor_resume;
  
-+	err = spi_nor_octal_dtr_enable(nor, true);
-+	if (err) {
-+		dev_dbg(nor->dev, "octal mode not supported\n");
-+		return err;
-+	}
-+
- 	err = spi_nor_quad_enable(nor);
- 	if (err) {
- 		dev_dbg(nor->dev, "quad mode not supported\n");
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index f1db613e0320..923bd34ced84 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -544,6 +544,7 @@ struct spi_nor_locking_ops {
-  *                      higher index in the array, the higher priority.
-  * @erase_map:		the erase map parsed from the SFDP Sector Map Parameter
-  *                      Table.
-+ * @octal_dtr_enable:	enables SPI NOR octal DTR mode.
-  * @quad_enable:	enables SPI NOR quad mode.
-  * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
-  * @convert_addr:	converts an absolute address into something the flash
-@@ -567,6 +568,7 @@ struct spi_nor_flash_parameter {
- 
- 	struct spi_nor_erase_map        erase_map;
- 
-+	int (*octal_dtr_enable)(struct spi_nor *nor, bool enable);
- 	int (*quad_enable)(struct spi_nor *nor);
- 	int (*set_4byte)(struct spi_nor *nor, bool enable);
- 	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
+ 	if (nor->params.locking_ops) {
 -- 
 2.25.0
 
