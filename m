@@ -2,88 +2,304 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA712C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA0C20749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CCA2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzcuKmtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgCMSgv (ORCPT
+        id S1727341AbgCMShH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:36:51 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60254 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgCMSgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:36:51 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1jCpAv-0002bu-Ds; Fri, 13 Mar 2020 12:36:50 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1jCpAv-0000hP-0P; Fri, 13 Mar 2020 12:36:49 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 13 Mar 2020 12:36:08 -0600
-Message-Id: <20200313183608.2646-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Mar 2020 14:37:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43687 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbgCMShH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:37:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id p125so10444588oif.10;
+        Fri, 13 Mar 2020 11:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z2trbxzJC/FwVJ14wGx3MPfubEaOIzpJQIrh+2wVgFY=;
+        b=mzcuKmtUQZyWH4Pf77Qr0js03KndplB9ELTaUosYTbR+YkMlpJ4m/Jkr7GY09fCYaP
+         triLZawvMDZ63a7oJ1Eab7BhdGKN+Uu0PT9ccrkCVTebkEM5KQmcFDT3smzxjAusjlaQ
+         dhb07csyUj8c74jUdhcL5YzoPQH7J5B2yS5PlRscyJAeLcA7OA31C0c4DsP8rKnUmLoC
+         YGJmYMqqrlMrsjQj8bU6XnJLe/23BS3lUMSWG7oOHvayD3gGsiKLAWvmyKWWUcBTH/FD
+         05SD9iA7/zcUX4Sn+ILHHMFoxI8vPEyb8fWUhpYCXfr12D53xFBVMKZHTpc3GftXovLe
+         VNCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z2trbxzJC/FwVJ14wGx3MPfubEaOIzpJQIrh+2wVgFY=;
+        b=dIwXvgNikPrLn7sv/aqhl4zHVkOYYsl/WI4YpmXnE19Ubur7tRLwXHBkwYcFRwrByh
+         5QSiTbiDYGPMscI/kJ9JUwodmjkZ0WYvqN/3A95kWGkejOsy4mn/uH0Yl9S0bX10fJHH
+         ijXv4brVMJLrJIVIxujWzwBR8T8+RTI7YJ+3e6nl0pi16drrzft7cx6Rvu626s3eIfzV
+         t7n8qzAhCXiQkY9tfvsn3EaQ9nAeXY2zJG6hk+Tq5SuhshtZJo7fWp0Zq7I0j9uVFbri
+         GFdWnrdR251wrgLjKLey/pTQKrUlU5Macir5F151PswkNzOTPXbbBzCMsIn9//+oY6jX
+         7AZw==
+X-Gm-Message-State: ANhLgQ1FplmExJJapZAo6tMRYabfp1UvcekGQUvv7PfFCwV2WThyrQM+
+        Wk2xZxtMlsfX5WgTsBjk+vAoMYT/uIPgrTQxtNU=
+X-Google-Smtp-Source: ADFU+vs7RYmyl77czaL//uHcgbnbdjFxtE/PfPB2JTe7UrcBmbnG/Zw6x3QRUaTwTPDYg9FZgY0m8+9wSKekn3kpzGE=
+X-Received: by 2002:aca:d489:: with SMTP id l131mr8388649oig.5.1584124626176;
+ Fri, 13 Mar 2020 11:37:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, bigeasy@linutronix.de, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] PCI/switchtec: Fix init_completion race condition with poll_wait()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20200306125608.11717-1-Po.Liu@nxp.com> <20200306125608.11717-3-Po.Liu@nxp.com>
+In-Reply-To: <20200306125608.11717-3-Po.Liu@nxp.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Fri, 13 Mar 2020 11:36:54 -0700
+Message-ID: <CAM_iQpW-qjM5H00sUbPhrimJ2aPDAiO=bTVuF88bCtPH=qz4gQ@mail.gmail.com>
+Subject: Re: [RFC,net-next 2/9] net: qos: introduce a gate control flow action
+To:     Po Liu <Po.Liu@nxp.com>
+Cc:     David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
+        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
+        leoyang.li@nxp.com, michael.chan@broadcom.com, vishal@chelsio.com,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Pieter Jansen van Vuuren 
+        <pieter.jansenvanvuuren@netronome.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>, moshe@mellanox.com,
+        ivan.khoronzhuk@linaro.org, Murali Karicheri <m-karicheri2@ti.com>,
+        andre.guedes@linux.intel.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to init_completion() in mrpc_queue_cmd() can theoretically
-race with the call to poll_wait() in switchtec_dev_poll().
+On Fri, Mar 6, 2020 at 5:14 AM Po Liu <Po.Liu@nxp.com> wrote:
+> +static int parse_gate_list(struct nlattr *list,
+> +                          struct tcf_gate_params *sched,
+> +                          struct netlink_ext_ack *extack)
+> +{
+> +       struct nlattr *n;
+> +       int err, rem;
+> +       int i = 0;
+> +
+> +       if (!list)
+> +               return -EINVAL;
+> +
+> +       nla_for_each_nested(n, list, rem) {
+> +               struct tcfg_gate_entry *entry;
+> +
+> +               if (nla_type(n) != TCA_GATE_ONE_ENTRY) {
+> +                       NL_SET_ERR_MSG(extack, "Attribute isn't type 'entry'");
+> +                       continue;
+> +               }
+> +
+> +               entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> +               if (!entry) {
+> +                       NL_SET_ERR_MSG(extack, "Not enough memory for entry");
+> +                       return -ENOMEM;
+> +               }
 
-  poll()			write()
-    switchtec_dev_poll()   	  switchtec_dev_write()
-      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
-			               init_completion(&s->comp)
-				         init_waitqueue_head(&s->comp.wait)
+You need to free all previous allocated entries on this list
+when an error happens, right?
 
-To my knowledge, no one has hit this bug, but we should fix it for
-correctness.
 
-Fix this by using reinit_completion() instead of init_completion() in
-mrpc_queue_cmd().
+> +
+> +               err = parse_gate_entry(n, entry, i, extack);
+> +               if (err < 0) {
+> +                       kfree(entry);
+> +                       return err;
+> +               }
+> +
+> +               list_add_tail(&entry->list, &sched->entries);
+> +               i++;
+> +       }
+> +
+> +       sched->num_entries = i;
+> +
+> +       return i;
+> +}
+> +
+> +static int tcf_gate_init(struct net *net, struct nlattr *nla,
+> +                        struct nlattr *est, struct tc_action **a,
+> +                        int ovr, int bind, bool rtnl_held,
+> +                        struct tcf_proto *tp, u32 flags,
+> +                        struct netlink_ext_ack *extack)
+> +{
+> +       struct tc_action_net *tn = net_generic(net, gate_net_id);
+> +       enum tk_offsets tk_offset = TK_OFFS_TAI;
+> +       struct nlattr *tb[TCA_GATE_MAX + 1];
+> +       struct tcf_chain *goto_ch = NULL;
+> +       struct tcfg_gate_entry *next;
+> +       struct tcf_gate_params *p;
+> +       struct gate_action *gact;
+> +       s32 clockid = CLOCK_TAI;
+> +       struct tc_gate *parm;
+> +       struct tcf_gate *g;
+> +       int ret = 0, err;
+> +       u64 basetime = 0;
+> +       u32 gflags = 0;
+> +       s32 prio = -1;
+> +       ktime_t start;
+> +       u32 index;
+> +
+> +       if (!nla)
+> +               return -EINVAL;
+> +
+> +       err = nla_parse_nested_deprecated(tb, TCA_GATE_MAX,
+> +                                         nla, gate_policy, NULL);
+> +       if (err < 0)
+> +               return err;
+> +
+> +       if (!tb[TCA_GATE_PARMS])
+> +               return -EINVAL;
+> +       parm = nla_data(tb[TCA_GATE_PARMS]);
+> +       index = parm->index;
+> +       err = tcf_idr_check_alloc(tn, &index, a, bind);
+> +       if (err < 0)
+> +               return err;
+> +
+> +       if (err && bind)
+> +               return 0;
+> +
+> +       if (!err) {
+> +               ret = tcf_idr_create_from_flags(tn, index, est, a,
+> +                                               &act_gate_ops, bind, flags);
+> +               if (ret) {
+> +                       tcf_idr_cleanup(tn, index);
+> +                       return ret;
+> +               }
+> +
+> +               ret = ACT_P_CREATED;
+> +       } else if (!ovr) {
+> +               tcf_idr_release(*a, bind);
+> +               return -EEXIST;
+> +       }
+> +
+> +       if (tb[TCA_GATE_PRIORITY])
+> +               prio = nla_get_s32(tb[TCA_GATE_PRIORITY]);
+> +
+> +       if (tb[TCA_GATE_BASE_TIME])
+> +               basetime = nla_get_u64(tb[TCA_GATE_BASE_TIME]);
+> +
+> +       if (tb[TCA_GATE_FLAGS])
+> +               gflags = nla_get_u32(tb[TCA_GATE_FLAGS]);
+> +
+> +       if (tb[TCA_GATE_CLOCKID]) {
+> +               clockid = nla_get_s32(tb[TCA_GATE_CLOCKID]);
+> +               switch (clockid) {
+> +               case CLOCK_REALTIME:
+> +                       tk_offset = TK_OFFS_REAL;
+> +                       break;
+> +               case CLOCK_MONOTONIC:
+> +                       tk_offset = TK_OFFS_MAX;
+> +                       break;
+> +               case CLOCK_BOOTTIME:
+> +                       tk_offset = TK_OFFS_BOOT;
+> +                       break;
+> +               case CLOCK_TAI:
+> +                       tk_offset = TK_OFFS_TAI;
+> +                       break;
+> +               default:
+> +                       NL_SET_ERR_MSG(extack, "Invalid 'clockid'");
+> +                       goto release_idr;
+> +               }
+> +       }
+> +
+> +       err = tcf_action_check_ctrlact(parm->action, tp, &goto_ch, extack);
+> +       if (err < 0)
+> +               goto release_idr;
+> +
+> +       g = to_gate(*a);
+> +
+> +       gact = kzalloc(sizeof(*gact), GFP_KERNEL);
+> +       if (!gact) {
+> +               err = -ENOMEM;
+> +               goto put_chain;
+> +       }
+> +
+> +       p = get_gate_param(gact);
+> +
+> +       INIT_LIST_HEAD(&p->entries);
+> +       if (tb[TCA_GATE_ENTRY_LIST]) {
+> +               err = parse_gate_list(tb[TCA_GATE_ENTRY_LIST], p, extack);
+> +               if (err < 0)
+> +                       goto release_mem;
+> +       }
+> +
+> +       if (tb[TCA_GATE_CYCLE_TIME]) {
+> +               p->tcfg_cycletime = nla_get_u64(tb[TCA_GATE_CYCLE_TIME]);
+> +       } else {
+> +               struct tcfg_gate_entry *entry;
+> +               ktime_t cycle = 0;
+> +
+> +               list_for_each_entry(entry, &p->entries, list)
+> +                       cycle = ktime_add_ns(cycle, entry->interval);
+> +               p->tcfg_cycletime = cycle;
+> +       }
+> +
+> +       if (tb[TCA_GATE_CYCLE_TIME_EXT])
+> +               p->tcfg_cycletime_ext =
+> +                       nla_get_u64(tb[TCA_GATE_CYCLE_TIME_EXT]);
+> +
+> +       p->tcfg_priority = prio;
+> +       p->tcfg_basetime = basetime;
+> +       p->tcfg_clockid = clockid;
+> +       p->tcfg_flags = gflags;
+> +
+> +       gact->tk_offset = tk_offset;
+> +       spin_lock_init(&gact->entry_lock);
+> +       hrtimer_init(&gact->hitimer, clockid, HRTIMER_MODE_ABS);
+> +       gact->hitimer.function = gate_timer_func;
+> +
+> +       err = gate_get_start_time(gact, &start);
+> +       if (err < 0) {
+> +               NL_SET_ERR_MSG(extack,
+> +                              "Internal error: failed get start time");
+> +               goto release_mem;
+> +       }
+> +
+> +       gact->current_close_time = start;
+> +       gact->current_gate_status = GATE_ACT_GATE_OPEN | GATE_ACT_PENDING;
+> +
+> +       next = list_first_entry(&p->entries, struct tcfg_gate_entry, list);
+> +       rcu_assign_pointer(gact->next_entry, next);
+> +
+> +       gate_start_timer(gact, start);
+> +
+> +       spin_lock_bh(&g->tcf_lock);
+> +       goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
+> +       gact = rcu_replace_pointer(g->actg, gact,
+> +                                  lockdep_is_held(&g->tcf_lock));
+> +       spin_unlock_bh(&g->tcf_lock);
+> +
+> +       if (goto_ch)
+> +               tcf_chain_put_by_act(goto_ch);
+> +       if (gact)
+> +               kfree_rcu(gact, rcu);
+> +
+> +       if (ret == ACT_P_CREATED)
+> +               tcf_idr_insert(tn, *a);
+> +       return ret;
+> +
+> +release_mem:
+> +       kfree_rcu(gact, rcu);
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/pci/switch/switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No need to bother RCU for an error path, right?
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index a823b4b8ef8a..81dc7ac01381 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
- 	kref_get(&stuser->kref);
- 	stuser->read_len = sizeof(stuser->data);
- 	stuser_set_state(stuser, MRPC_QUEUED);
--	init_completion(&stuser->comp);
-+	reinit_completion(&stuser->comp);
- 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
- 
- 	mrpc_cmd_submit(stdev);
--- 
-2.20.1
-
+Thanks.
