@@ -2,137 +2,140 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0150AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA3BC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D270520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE86F206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZMhb5Hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgCMLBL (ORCPT
+        id S1726543AbgCMLCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:01:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:51413 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgCMLBL (ORCPT
+        Fri, 13 Mar 2020 07:02:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25985 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726387AbgCMLCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:01:11 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MP2zs-1iyMZU39UC-00PMtr; Fri, 13 Mar 2020 12:01:00 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id E0870650143;
-        Fri, 13 Mar 2020 11:00:59 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LPjvyzd8EQDE; Fri, 13 Mar 2020 12:00:59 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 6E0BA64DAFB;
-        Fri, 13 Mar 2020 12:00:59 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 13 Mar 2020 12:00:59 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 07B1C804FB; Fri, 13 Mar 2020 12:00:59 +0100 (CET)
-Date:   Fri, 13 Mar 2020 12:00:59 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 2/8] media: adv748x: add audio mute control and output
- selection ioctls
-Message-ID: <20200313110058.GG3832@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141521.GC3606@pflmari>
- <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
- <20200313102600.GF3832@pflmari>
- <c260defe-bb3c-0dc2-476f-5cf8ff27b915@xs4all.nl>
+        Fri, 13 Mar 2020 07:02:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584097359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tfub7WJ366iIWPYFGkBjzwdHOoRbkxCwrjycNLUZ/PI=;
+        b=FZMhb5Hvfe+ZvxrPS7TcKE5T3iTXrGq7lgWpKYSNMxwxAMCijNJBzWCh3bHI3pL/ytAwpI
+        NmklXHS1lf3ZRhGhorg8L14lnqaR3nv3Jh041vaAq9uN+aSzNuLTOJR04mgkmmdQ+krjCx
+        fOJ+KdKzNXeS9MeNMUHoRQzZijQfQsU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-266-UwMOmhpxPC2gvyIP_3s6Eg-1; Fri, 13 Mar 2020 07:02:32 -0400
+X-MC-Unique: UwMOmhpxPC2gvyIP_3s6Eg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C66E4192D786;
+        Fri, 13 Mar 2020 11:02:30 +0000 (UTC)
+Received: from localhost (ovpn-121-102.rdu2.redhat.com [10.10.121.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FDBB92965;
+        Fri, 13 Mar 2020 11:02:30 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 08:02:29 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com, rostedt@goodmis.org
+Subject: Re: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
+Message-ID: <20200313110229.GI13406@glitch>
+References: <20200313003533.2203429-1-bmeneg@redhat.com>
+ <20200313073425.GA219881@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200313073425.GA219881@google.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KrHCbChajFcK0yQE"
 Content-Disposition: inline
-In-Reply-To: <c260defe-bb3c-0dc2-476f-5cf8ff27b915@xs4all.nl>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A627061
-X-Provags-ID: V03:K1:3Ofwenwb96VNbyiZ3gemfAxrGl8LtKlVY4L0aNeMY8UcUx1r3Tk
- MfqQ6hAD+1hC0xASi3PqDPjZ1I2jmMSY+Q5zgR2lQCSNJHgTsZfiyNigohk9kVGGZS435cE
- /QL7l/U8D5XetA2r2f1+fLE1ph+bK+l59+QpZ11MRACuqmlB5GS4KqFLAQybM1Lxrd6+X9S
- Us9VfkV9GnBxPy73tkdjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7wohRYBtbPU=:AZLb+M/6MgmERsFtBFql09
- beUFS4dmlE+okxsS18E67R/O8cB1Qbq53qfICquZFiqKdluUKPMhIDGcQQ5DElEkBBuOu1hpw
- I70OE3W4+2RzWIVoIjHnN2jYShVp4KkOD0y1LinL70/aDde26lrdN6F0KMqLAMgG+JWJmu1yG
- oyX9CKWVqkMTBMG823/boJWtTdGQf2SRq3v5cisMiyAvgrIfFKoldeJAqJfj7ZE1S7x2NyTXt
- OP4c6mZH293OkrhPhRGh+swNNfk5CJuZWcJJDg5K5gQ+ZizknnwUsaWpQhFokiAR2v2AYHi0T
- 79KgQ/VZdV9xiYQRYK06tAM/Lyz1GeYn3+d93uKJB+6XUPEgzQp8WqkNq1gqkenDJqFKQBFFg
- tQ9PdGsJLSz7E1QqaA+Uvwf4IBd7MG5G+T86VO+IKZLFZiMoAKAo/jKGzfFC/nbN1aehWh8jG
- WMby7BShV0PeJtpZuDBJT7OFU49pgRC8xaYADfBVbmRMMWkvEQQ/i/h5cWlvkpUihi9fbdgiW
- LSIZjOD2pTCYZs1su8N9Ax/ZRfx3culU+vD5gwAqN7eNVyfNP7LxAp33I/iRadGspDTs5AhpM
- pVGNNrNGDQzXYXlLrjcV2oHIvFcvJHnVAvPYCwtVNwdZZ9Hvk244H0F99HWvw0ZaaJpX9izpj
- VWGH1EXJSeaGV9+EiJWHeBalTR/4jY08WvRZ3Er8J7yb37COOJkzegdtIqHFoVPqeyN729BBK
- y/sh+BhMTcbaTflUiQ+jJcHWKh8l3b29yU1RLqR8ku1KOFck4oVf6XdLvW/J6HR208uSMT3P+
- NT3jhCiQYXFi4qJ9oE+oDxR7K/m6LY4Wgq3nWSrz3aB1MPTb1rmsB2ZL5rwDDGCpbg+dTvV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans Verkuil, Fri, Mar 13, 2020 11:52:03 +0100:
-> On 3/13/20 11:26 AM, Alex Riesen wrote:
-> > Hans Verkuil, Fri, Mar 13, 2020 09:16:11 +0100:
-> >> Generally an hdmi driver will configure the i2s audio automatically, which is
-> >> typically connected to the SoC and controlled by the ALSA driver of the SoC,
-> >> but there may well be missing features (audio never got a lot of attention in
-> >> hdmi receivers). So what I would like to know is: what features are missing?
-> > 
-> > Well, the audio is missing. The current adv748x driver does not export the
-> > audio features of the device at all. There is no code to enable the I2S audio
-> > output and it is disabled (all clock and the data lines) by default.
-> 
-> Sorry, I was vague in my question. Obviously that needs to be added, but besides
-> adding the low-level i2s support I was wondering if there are additional things
-> that need to be exposed to userspace in order for audio to fully work.
+--KrHCbChajFcK0yQE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-None that I can't expose over the DAI interfaces: clocks, I2S format,
-mute/demute ... All covered.
+On Fri, Mar 13, 2020 at 04:34:25PM +0900, Sergey Senozhatsky wrote:
+> On (20/03/12 21:35), Bruno Meneguele wrote:
+> >=20
+> > Userspace libraries, e.g. glibc's dprintf(), expect the default return =
+value
+> > for invalid seek situations: -ESPIPE, but when the IO was over /dev/kms=
+g the
+> > current state of kernel code was returning the generic case of an -EINV=
+AL.
+> > Hence, userspace programs were not behaving as expected or documented.
+> >=20
+>=20
+> Hmm. I don't think I see ESPIPE in documentation [0], [1], [2]
+>=20
+> [0] https://pubs.opengroup.org/onlinepubs/9699919799/functions/fprintf.ht=
+ml
+> [1] http://man7.org/linux/man-pages/man3/dprintf.3p.html
+> [2] http://man7.org/linux/man-pages/man3/fprintf.3p.html
+>=20
+> =09-ss
+>=20
 
-> >> Anything missing can likely be resolved by adding HDMI audio specific V4L2 controls,
-> >> which would be the right approach for this.
-> >>
-> >> So I would expect to see a proposal for V4L2_CID_DV_RX_AUDIO_ controls to be
-> >> added here:
-> >>
-> >> https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-dv.html
-> > 
-> > This seems to be an explicitly "digital video" control class. And it has no
-> > control option for mute. Or did you mean a similarly structured new class for
-> > "digital audio"?
-> 
-> There are no DV_ audio controls at all today. So any new audio controls would be
-> added to the DV class. But if there is nothing that needs to be exposed, then
-> nothing needs to be added :-)
+Ok, I poorly expressed the notion of "documentantion". The userspace
+doesn't tell about returning -ESPIPE, but to the functions work properly
+they watch for -ESPIPE returning from the syscall. For instance, gblic
+dprintf() implementation:
 
-Ah, alright. I shall keep an eye on it, maybe I shall find something to expose :)
+dprintf:
+  __vdprintf_internal:
+    _IO_new_file_attach:
 
-Regards,
-Alex
+  if (_IO_SEEKOFF (fp, (off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
+      =3D=3D _IO_pos_BAD && errno !=3D ESPIPE)
+    return NULL;
+
+With that, if the seek fails, but return anything other than ESPIPE the
+dprintf() will also fail returning -EINVAL to dprintf() caller. While if
+ESPIPE is returned, it's "ignored" and the call still works. The way we
+have today make kmsg an exception case among the rest of the system
+files where you can open with dprintf.
+
+One of the things I could agree with is removing the SEEK call from
+dprintf, since fprintf basically follows the same steps, but doesn't
+seek anything.  But at the same time, IMO it makes sense to make kmsg
+interface complaint with the errno return values.
+
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--KrHCbChajFcK0yQE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl5raEUACgkQYdRkFR+R
+okPnQAgAoEVvkr9xuWNi7/5UFSFUCzBWggHS62VeY1aVd+yBi04vKD0eeHERUsCV
+0z4B/Bz9/6QvmuEMm1+xsOfzimrnhrvdJaf3i8o/4GPEZOiDfv7I/FRMd3eIFUtC
+/BWcuRAd53x8zPDbqRrtfc/oHysW6ClTHu+DjIeidwDJ67W75u2hwRDaNf0sonu4
+VA0+SyaLTtnFC+gYAh2vFpleQJ8feEEraFjFIhZLK0hP/5UTvCDv76GWG3WXaL1B
+2nXGBf16LEe546UbPcSBhaRc+w9aaynfZUgj9GYbP5Mg29egSdhF6AEJ+Kq044pO
+G3ZYD4XRaVtbvPTlCQD7yHUiKcSLfg==
+=+ptV
+-----END PGP SIGNATURE-----
+
+--KrHCbChajFcK0yQE--
+
