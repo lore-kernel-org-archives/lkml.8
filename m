@@ -2,114 +2,97 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BF5C5ACC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6533DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D42072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584115533;
-	bh=Bvh/Q7EbRtajUaWy5dHeFmGlTN0o6U8tvfsJdHTlJ9Q=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=bxrTF5qYK7vp80n6oNrnt8/50X6ENPVOnV94MfDKBXK6FHibVH/aHwWSDi/pWOG1G
-	 4/p0ioyOzCx6BQaYDzDEUQimyZnm27dMvr52hgBstsklrab2Yp/Ebuxg+utNWN34Ph
-	 YliP751GqBdX+4ZjHoPPyuA2v/ir0VO13KHNUXoM=
+	by mail.kernel.org (Postfix) with ESMTP id 41485206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCMQFc (ORCPT
+        id S1727002AbgCMQGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgCMQFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:05:31 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFC8B206EB;
-        Fri, 13 Mar 2020 16:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584115531;
-        bh=Bvh/Q7EbRtajUaWy5dHeFmGlTN0o6U8tvfsJdHTlJ9Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Jp5rb4jEwbDeIH0KiE/cAnLC9Yk3FoDiIEM5Pyu6bFo/s8AcLCbAadPrz4L1mnW4e
-         xCbihyWDn+iqc9UrvjS3y/nFMJmYSj9FPSpEpjScOWAYoevoQ0gAEkJAiZh7eejESM
-         N27P6U3pkYbsrZqPZcssCtjlg0c3LxgN5A7u+kJU=
-Subject: Re: [PATCH v4] Documentation: kunit: Make the KUnit documentation
- less UML-specific
-To:     Frank Rowand <frowand.list@gmail.com>,
-        David Gow <davidgow@google.com>, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, corbet@lwn.net
-Cc:     kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tim.Bird@sony.com, Frank Rowand <frank.rowand@sony.com>,
-        shuah <shuah@kernel.org>
-References: <20200228191821.42412-1-davidgow@google.com>
- <dd15aa59-d2ef-d42e-1a4f-82b42e2ea350@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ec2f35ef-54d2-cd67-5e30-33ce7612a6d4@kernel.org>
-Date:   Fri, 13 Mar 2020 10:05:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 12:06:31 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:45204
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbgCMQGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:06:30 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id F3855426B9B;
+        Sat, 14 Mar 2020 00:06:29 +0800 (+08)
 MIME-Version: 1.0
-In-Reply-To: <dd15aa59-d2ef-d42e-1a4f-82b42e2ea350@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Date:   Sat, 14 Mar 2020 00:06:29 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming.com
+Subject: Does Linux Kernel 5.5.7 Have Automatic Built-in Support for aufs and
+ unionfs Filesystems?
+Message-ID: <1c77c006df55f4562a91a9fb5efedd47@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 9:50 AM, Frank Rowand wrote:
-> Hi David,
-> 
-> On 2/28/20 1:18 PM, David Gow wrote:
->> Remove some of the outmoded "Why KUnit" rationale, and move some
->> UML-specific information to the kunit_tool page. Also update the Getting
->> Started guide to mention running tests without the kunit_tool wrapper.
->>
->> Signed-off-by: David Gow <davidgow@google.com>
->> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->> Sorry: I missed a couple of issues in the last version. They're fixed
->> here, and I think this should be ready to go.
->>
->> Changelog:
->>
->> v4:
->> - Fix typo: s/offsers/offers
->> - Talk about KUnit tests running on most "architectures" instead of
->>    "kernel configurations.
->> v3:
->> https://lore.kernel.org/linux-kselftest/20200214235723.254228-1-davidgow@google.com/T/#u
->> - Added a note that KUnit can be used with UML, both with and without
->>    kunit_tool to replace the section moved to kunit_tool.
->> v2:
->> https://lore.kernel.org/linux-kselftest/f99a3d4d-ad65-5fd1-3407-db33f378b1fa@gmail.com/T/
->> - Reinstated the "Why Kunit?" section, minus the comparison with other
->>    testing frameworks (covered in the FAQ), and the description of UML.
->> - Moved the description of UML into to kunit_tool page.
->> - Tidied up the wording around how KUnit is built and run to make it
->>    work
->>    without the UML description.
->> v1:
->> https://lore.kernel.org/linux-kselftest/9c703dea-a9e1-94e2-c12d-3cb0a09e75ac@gmail.com/T/
->> - Initial patch
-> 
-> Thanks for all the changes.  The documents are now much more understandable
-> and useful.
-> 
+Good morning from Singapore,
 
-Is this ready to go? If it goes through doc tree:
+Does Linux Kernel 5.5.7 have automatic built-in support for aufs and 
+unionfs filesystems? Or do I need to apply the aufs and unionfs patches 
+as outlined in the following year 2013 guide?
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Guide: "New hint submission: Build your own LFS livecd."
 
-Otherwise, I can pic it up.
+Link: 
+http://lists.linuxfromscratch.org/pipermail/hints/2013-March/003307.html
 
-thanks,
--- Shuah
+I have just created my own custom Linux distribution called Teo En Ming 
+Linux 2020.03 (FINAL), which is based on Linux From Scratch 
+20200302-systemd and Linux Kernel 5.5.7. I am trying to create a 
+bootable Live CD/DVD iso of Teo En Ming Linux 2020.03 (FINAL).
+
+Hopefully I do not have to patch Linux Kernel 5.5.7 to enable support 
+for aufs and unionfs filesystems.
+
+Nonetheless, compiling Linux Kernel 5.5.7 took only a mere 19 minutes on 
+my latest state-of-the-art AMD Ryzen 3 3200G processor with Radeon Vega 
+8 Graphics and Gigabyte B450M DS3H Socket AM4 motherboard with 32 GB 
+Transcend DDR4-2666 RAM.
+
+Please advise.
+
+Thank you.
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
