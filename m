@@ -2,131 +2,159 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2C4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D570FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49B0206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584122851;
-	bh=dqIuswp1RKk/FdTFaLj3rD9WStIXPmXy//brccWYJDs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iK7APLlnkzv/0yQ68GTqRJ4bwHo7TWyFKLG2ADNUshTOnrnZlQVaA0KzsWrUSVSp0
-	 LBCSQfaG78BgQYZ4Fk5TjvASM22VF+bQZEfUWpalaZwoGmb9GKu5soa1JGasvtNmIk
-	 kMdYTj+6lWE4uI6wTZpWXHkLtbfFS4qLKfnl+5n0=
+	by mail.kernel.org (Postfix) with ESMTP id AF2EA206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ltpOjwUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCMSHa (ORCPT
+        id S1727131AbgCMSIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:07:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34906 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgCMSHa (ORCPT
+        Fri, 13 Mar 2020 14:08:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40338 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgCMSIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:07:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k8so8913139oik.2;
-        Fri, 13 Mar 2020 11:07:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XfdUP3YGPmXKGkwHkk+uuVO8kCTOJvEs+/FfsSsBG+o=;
-        b=TsImVrcyGRWLdZ+ghcPIMZerBiFeMOY3FYbeIXP2tDC9gcSf7HAqba+rZzv/Zc/xoQ
-         3JgZwcUifupmtoYxzbVFvoLDzB3LYqu54s5tLfn+hE/9XSEQ/do+U4oKs+DdfPKjY/Qt
-         nTkumcqPdGgR7VrF2bu6xcRhnFztFi0beZ2T1AKdGfive17Ne3Cs0Dk+tkmGXMxnbM8p
-         EBu9lvGbV6+F/3zpLDlccfDxj8uszf/ukmv3JshExtoK9ac3pzocoL4j+N2Cyv1413/G
-         98WVZRYXuTzcMraRuc9FTssb7wPtvsBRBdI0Y4nqC74K+go0kLaYXUmqeiDw7Oa/0dnK
-         1Eyg==
-X-Gm-Message-State: ANhLgQ2oGc/3PxgkVog/1mrmhKXpEYTcd+Wf7QuHynWT2Hc3TgIGklCi
-        jxrXeatIZ44Qu8QG/9aR6w==
-X-Google-Smtp-Source: ADFU+vvVX5P8LfcDS2EEYM59OmWbE1ipOo1GIc6HBscLEHtBCb9LizJUYnklHCLbjBQQR2+W7LYBFg==
-X-Received: by 2002:a05:6808:9bb:: with SMTP id e27mr2718525oig.36.1584122849148;
-        Fri, 13 Mar 2020 11:07:29 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id w18sm13886991otl.60.2020.03.13.11.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 11:07:28 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH v2] dt-bindings: display: ti: Fix dtc unit-address warnings in examples
-Date:   Fri, 13 Mar 2020 13:07:27 -0500
-Message-Id: <20200313180727.23044-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Mar 2020 14:08:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sm9lx4VdUohUXvAjpj0yBSZAySlCfCCdyaJH+g1bYAg=; b=ltpOjwUiVsOu+HlhGfFteJQezK
+        wLgqoYGqJ4JNeAPwGPIWz6w2vgbXZGygUIqyT5xp955yAi/Y6Bxh2X9Wds/IoFYEY5mG3JA8dPnY9
+        mo/aLNNkfatizxDcYV8bHLm2Q2dIpuXwKJviwQrQ0Y6k/3Jjnj30yZaeKADhOuMoeQM1jPcSZGvN6
+        BEcjWfLkhvAT00SnKbaVq4RYYU5ak+/+6kGCBTmCjNHPxU1e9rmS5YE2OvvLqEKfJGi9vDItIMnLl
+        LTjQjd70S+u6g54Sw8q59XRWwyuyGiwHyQ3flQDrQKNVsQnymMf2+Ux5Kki3Wolrn8C75gu9WMrG6
+        wnACyQ4A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCojF-0003YF-RR; Fri, 13 Mar 2020 18:08:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 13093300470;
+        Fri, 13 Mar 2020 19:08:11 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CF2192BE08CBF; Fri, 13 Mar 2020 19:08:11 +0100 (CET)
+Date:   Fri, 13 Mar 2020 19:08:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     tglx@linutronix.de, john.stultz@linaro.org, sboyd@kernel.org,
+        rostedt@goodmis.org, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] timer: silenct a lockdep splat with debugobjects
+Message-ID: <20200313180811.GD12521@hirez.programming.kicks-ass.net>
+References: <20200313154221.1566-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313154221.1566-1-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-when building the binding examples. These were fixed treewide in
-5.6-rc5, but some new display bindings have been added with new
-warnings:
+On Fri, Mar 13, 2020 at 11:42:21AM -0400, Qian Cai wrote:
+> psi_enqueue() calls add_timer() with pi->lock and rq->lock held which
+> in-turn could allcate with debugobjcets in the locking order,
+> 
+> pi->lock
+>   rq->lock
+>     base->lock
+>       batched_entropy_u32.lock
+> 
+> while the random code could always call into the scheduler via
+> try_to_wake_up() in the locking order,
+> 
+> batched_entropy_u32.lock
+>   pi->lock
+> 
+> Thus, it could generate a lockdep splat below right after boot. Ideally,
+> psi_enqueue() might be able to be called without either pi->lock or
+> rq->lock held, but it is tricky to do.
+> 
+> Since,
+> 
+> 1) debugobjects is only used in a debug kernel.
+> 2) the chance to trigger a real deadlock is relative low.
+> 3) once the splat happened, it will disable lockdep to prevent it from
+>    catching any more important issues later.
+> 
+> just silent the splat by temporarily lettting lockdep ignore lockes
+> inside debug_timer_activate() which sounds like a reasonable tradeoff
+> for debug kernels.
 
-Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
 
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Drop panel fixes as there's another patch fixing the 3 panels plus
-   others.
----
- Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 4820823515e9..27bfb8376d71 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -1036,7 +1036,13 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * It will allocate under rq->lock and trigger a lockdep slat with
+> +	 * random code. Don't disable lockdep with debugobjects.
+> +	 */
+> +	lockdep_off();
+>  	debug_timer_activate(timer);
+> +	lockdep_on();
+>  
+>  	timer->expires = expires;
+>  	/*
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index cac61a998203..aa5543a64526 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -121,7 +121,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/irq.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
--    dss: dss@04a00000 {
-+    dss: dss@4a00000 {
-             compatible = "ti,am65x-dss";
-             reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
-                     <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-index ade9b2f513f5..6d47cd7206c2 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-@@ -154,7 +154,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/irq.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
--    dss: dss@04a00000 {
-+    dss: dss@4a00000 {
-             compatible = "ti,j721e-dss";
-             reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
-                     <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-index 385bd060ccf9..7cb37053e95b 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-@@ -81,7 +81,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
- 
--    dss: dss@02540000 {
-+    dss: dss@2540000 {
-             compatible = "ti,k2g-dss";
-             reg =   <0x02540000 0x400>,
-                     <0x02550000 0x1000>,
--- 
-2.20.1
+You have to be f'ing kidding me. You've just earned yourself a lifetime
+membership of 'the tinker crew'.
 
+> 00: [  321.355501] -> #3 (batched_entropy_u32.lock){-.-.}:
+> 00: [  321.355523]        lock_acquire+0x212/0x460
+> 00: [  321.355536]        _raw_spin_lock_irqsave+0xc4/0xe0
+> 00: [  321.355551]        get_random_u32+0x5a/0x138
+> 00: [  321.355564]        new_slab+0x188/0x760
+> 00: [  321.355576]        ___slab_alloc+0x5d2/0x928
+> 00: [  321.355589]        __slab_alloc+0x52/0x88
+> 00: [  321.355801]        kmem_cache_alloc+0x34a/0x558
+> 00: [  321.355819]        fill_pool+0x29e/0x490
+> 00: [  321.355835]        __debug_object_init+0xa0/0x828
+> 00: [  321.355848]        debug_object_activate+0x200/0x368
+> 00: [  321.355864]        add_timer+0x242/0x538
+> 00: [  321.355877]        queue_delayed_work_on+0x13e/0x148
+> 00: [  321.355893]        init_mm_internals+0x4c6/0x550
+> 00: [  321.355905]        kernel_init_freeable+0x224/0x590
+> 00: [  321.355921]        kernel_init+0x22/0x188
+> 00: [  321.355933]        ret_from_fork+0x30/0x34
+
+Did you actually look at debug_object_activate() and read?
+
+The only reason that is calling into __debug_object_init() is because it
+hadn't been initialized yet when it got activated. That *immediately*
+should've been a clue.
+
+You can initialize this stuff early. For instance:
+
+  INIT_DELAYED_WORK()
+    __INIT_DELAYED_WORK()
+      __init_timer()
+        init_timer_key()
+	  debug_init()
+	    debug_timer_init()
+	      debug_object_init()
+	        __debug_object_init()
+
+And we're right at where the above callchain goes wrong.
+
+Now, it actually looks like kernel/sched/psi.c actually initializes all
+delayed works it uses. This then leaves other random delayed works to
+establish the base->lock <- entropy.lock relation.
+
+This just means we need to find and kill all such delayed_work users
+that fail to properly initialize their data structure.
+
+I'm not going to do that just now, the kids need attention.
