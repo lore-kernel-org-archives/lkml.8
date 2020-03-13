@@ -2,111 +2,84 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAE6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6425C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE8C206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBC6206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgCMBjV (ORCPT
+        id S1726731AbgCMBlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:39:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11640 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726546AbgCMBjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:39:21 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F35E4EF00CE69FBB0358;
-        Fri, 13 Mar 2020 09:39:17 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 13 Mar 2020
- 09:39:10 +0800
-Subject: Re: [PATCH v5 01/23] irqchip/gic-v3: Use SGIs without active state if
- offered
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-2-maz@kernel.org>
- <63f6530a-9369-31e6-88d0-5337173495b9@huawei.com>
- <51b2c74fdbcca049cc01be6d78c7c693@kernel.org>
- <1bff1835ba7d6e22edb836d38cf16a14@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <3e20f3c3-0312-bd29-dcfc-2afee764ef19@huawei.com>
-Date:   Fri, 13 Mar 2020 09:39:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 12 Mar 2020 21:41:36 -0400
+Received: from m177126.mail.qiye.163.com ([123.58.177.126]:5417 "EHLO
+        m177126.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbgCMBlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:41:36 -0400
+X-Greylist: delayed 332 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 21:41:35 EDT
+Received: from vivo.com (wm-5 [127.0.0.1])
+        by m177126.mail.qiye.163.com (Hmail) with ESMTP id 34ADF182C0B;
+        Fri, 13 Mar 2020 09:35:28 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <APYA*ADSCJWJ*JO7xH64KaqT.3.1584063328152.Hmail.luochucheng@vivo.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, wenhu.wang@vivo.com,
+        trivial@kernel.org
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gRml4IG1pc3NpbmcgJ2JpdCcgaW4gY29tbWVudA==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <B95E9CA5-2E6A-4F8B-9B8F-BC4F4D49CBF3@dilger.ca>
 MIME-Version: 1.0
-In-Reply-To: <1bff1835ba7d6e22edb836d38cf16a14@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Received: from luochucheng@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 13 Mar 2020 09:35:28 +0800 (GMT+08:00)
+From:   =?UTF-8?B?572X5qWa5oiQ?= <luochucheng@vivo.com>
+Date:   Fri, 13 Mar 2020 09:35:28 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VLTkhCQkJCS0tDSkxDTFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTU1OQkNCSUlON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6KyI6UTo*KDgxLDFRMTRMAzNNTzAaCi9VSFVKTkNPS01ISElDTkpMVTMWGhIXVRcOFBgTDhgT
+        HhUcOw0SDRRVGBQWRVlXWRILWUFZTkNVSU5KVUxPVUlJTVlXWQgBWUFPSklCNwY+
+X-HM-Tid: 0a70d18830076458kurs34adf182c0b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/3/12 20:05, Marc Zyngier wrote:
-> On 2020-03-12 09:28, Marc Zyngier wrote:
->> Hi Zenghui,
->>
->> On 2020-03-12 06:30, Zenghui Yu wrote:
->>> Hi Marc,
->>>
->>> On 2020/3/5 4:33, Marc Zyngier wrote:
->>>> To allow the direct injection of SGIs into a guest, the GICv4.1
->>>> architecture has to sacrifice the Active state so that SGIs look
->>>> a lot like LPIs (they are injected by the same mechanism).
->>>>
->>>> In order not to break existing software, the architecture gives
->>>> offers guests OSs the choice: SGIs with or without an active
->>>> state. It is the hypervisors duty to honor the guest's choice.
->>>>
->>>> For this, the architecture offers a discovery bit indicating whether
->>>> the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
->>>> bit indicating whether the guest wants Active-less SGIs or not
->>>> (controlled by GICD_CTLR.nASSGIreq).
->>>
->>> I still can't find the description of these two bits in IHI0069F.
->>> Are they actually architected and will be available in the future
->>> version of the spec?  I want to confirm it again since this has a
->>> great impact on the KVM code, any pointers?
->>
->> Damn. The bits *are* in the engineering spec version 19 (unfortunately
->> not a public document, but I believe you should have access to it).
->>
->> If the bits have effectively been removed from the spec, I'll drop the
->> GICv4.1 code from the 5.7 queue until we find a way to achieve the same
->> level of support.
->>
->> I've emailed people inside ARM to find out.
-> 
-> I've now had written confirmation that the bits are still there.
-> 
-> It is just that the current revision of the documentation was cut *before*
-> they made it into the architecture (there seem to be a 6 month delay 
-> between
-> the architecture being sampled and the documentation being released).
-
-I see. Thanks for the confirmation!
-
-
-Zenghui
-
+VGhhdCBzb3VuZHMgcmVhc29uYWJsZS4gSSB3aWxsIHN1Ym1pdCBhIG5ldyBwYXRjaCBiYXNlZCBv
+biAnMzItYml0JyBhbmQgJzY0LWJpdCcKCkZyb206IEFuZHJlYXMgRGlsZ2VyIDxhZGlsZ2VyQGRp
+bGdlci5jYT4KRGF0ZTogMjAyMC0wMy0xMyAwNToyNzo0OApUbzogIEhhbnMgZGUgR29lZGUgPGhk
+ZWdvZWRlQHJlZGhhdC5jb20+CkNjOiAgQ2h1Y2hlbmcgTHVvIDxsdW9jaHVjaGVuZ0B2aXZvLmNv
+bT4sTGludXggRlMgRGV2ZWwgPGxpbnV4LWZzZGV2ZWxAdmdlci5rZXJuZWwub3JnPixsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnLHdlbmh1LndhbmdAdml2by5jb20sdHJpdmlhbEBrZXJuZWwu
+b3JnClN1YmplY3Q6IFJlOiBbUEFUQ0hdIEZpeCBtaXNzaW5nICdiaXQnIGluIGNvbW1lbnQ+T24g
+TWFyIDEyLCAyMDIwLCBhdCA0OjQwIEFNLCBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
+Y29tPiB3cm90ZToKPj4gCj4+IEhpLAo+PiAKPj4gT24gMy8xMi8yMCA4OjQwIEFNLCBDaHVjaGVu
+ZyBMdW8gd3JvdGU6Cj4+PiBUaGUgbWlzc2luZyB3b3JkIG1heSBtYWtlIGl0IGhhcmQgZm9yIG90
+aGVyIGRldmVsb3BlcnMgdG8KPj4+IHVuZGVyc3RhbmQgaXQuCj4+PiBTaWduZWQtb2ZmLWJ5OiBD
+aHVjaGVuZyBMdW8gPGx1b2NodWNoZW5nQHZpdm8uY29tPgo+PiAKPj4gVGhhbmtzIGZvciBjYXRj
+aGluZyB0aGlzOgo+PiAKPj4gQWNrZWQtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhh
+dC5jb20+Cj4KPk5vdCB0byBuaXQtcGljaywgYnV0IHRoZXNlIHNob3VsZCBwcm9wZXJseSBiZSB3
+cml0dGVuIGFzICIzMi1iaXQiIGFuZCAiNjQtYml0Ii4KPlRoYXQgY2FuIGJlIGVhc2lseSBmaXhl
+ZCBpbiB0aGUgcGF0Y2ggYmVmb3JlIHVwc3RyZWFtIHN1Ym1pc3Npb24uCj4KPkNoZWVycywgQW5k
+cmVhcwo+Cj4+IFJlZ2FyZHMsCj4+IAo+PiBIYW5zCj4+IAo+PiAKPj4+IC0tLQo+Pj4gIGZzL3Zi
+b3hzZi9kaXIuYyB8IDIgKy0KPj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkKPj4+IGRpZmYgLS1naXQgYS9mcy92Ym94c2YvZGlyLmMgYi9mcy92Ym94c2Yv
+ZGlyLmMKPj4+IGluZGV4IGRkMTQ3YjQ5MDk4Mi4uYmU0ZjcyNjI1ZDM2IDEwMDY0NAo+Pj4gLS0t
+IGEvZnMvdmJveHNmL2Rpci5jCj4+PiArKysgYi9mcy92Ym94c2YvZGlyLmMKPj4+IEBAIC0xMzQs
+NyArMTM0LDcgQEAgc3RhdGljIGJvb2wgdmJveHNmX2Rpcl9lbWl0KHN0cnVjdCBmaWxlICpkaXIs
+IHN0cnVjdCBkaXJfY29udGV4dCAqY3R4KQo+Pj4gIAkJZF90eXBlID0gdmJveHNmX2dldF9kX3R5
+cGUoaW5mby0+aW5mby5hdHRyLm1vZGUpOwo+Pj4gICAgCQkvKgo+Pj4gLQkJICogT24gMzIgYml0
+IHN5c3RlbXMgcG9zIGlzIDY0IHNpZ25lZCwgd2hpbGUgaW5vIGlzIDMyIGJpdAo+Pj4gKwkJICog
+T24gMzIgYml0IHN5c3RlbXMgcG9zIGlzIDY0IGJpdCBzaWduZWQsIHdoaWxlIGlubyBpcyAzMiBi
+aXQKPj4+ICAJCSAqIHVuc2lnbmVkIHNvIGZha2VfaW5vIG1heSBvdmVyZmxvdywgY2hlY2sgZm9y
+IHRoaXMuCj4+PiAgCQkgKi8KPj4+ICAJCWlmICgoaW5vX3QpKGN0eC0+cG9zICsgMSkgIT0gKHU2
+NCkoY3R4LT5wb3MgKyAxKSkgewo+PiAKPgo+Cj5DaGVlcnMsIEFuZHJlYXMKPgo+Cj4KPgo+Cg0K
+DQo=
