@@ -2,182 +2,157 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16008C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC5FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D4320691
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A942072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgCMGWQ (ORCPT
+        id S1726328AbgCMGbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:22:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23735 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbgCMGWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:22:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 23:22:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,547,1574150400"; 
-   d="scan'208";a="416195912"
-Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.251.228.67]) ([10.251.228.67])
-  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 23:22:14 -0700
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <20200312223222.GA200236@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <4d06c72d-7f77-84d5-4163-187bc62b903a@linux.intel.com>
-Date:   Thu, 12 Mar 2020 23:22:13 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 02:31:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11670 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbgCMGbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:31:51 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0ED352C1F36F6B23641E;
+        Fri, 13 Mar 2020 14:31:01 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 13 Mar
+ 2020 14:30:56 +0800
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
+ <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
+ <20200313033912.GJ20234@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <a8f01157-0b1b-d83a-488d-bb48cf8954ab@huawei.com>
+Date:   Fri, 13 Mar 2020 14:30:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200312223222.GA200236@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200313033912.GJ20234@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-
-On 3/12/2020 3:32 PM, Bjorn Helgaas wrote:
-> On Thu, Mar 12, 2020 at 02:59:15PM -0700, Kuppuswamy Sathyanarayanan wrote:
->> Hi Bjorn,
->>
->> On 3/12/20 12:53 PM, Bjorn Helgaas wrote:
->>> On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
->>>> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
->>>>> Is any synchronization needed here between the EDR path and the
->>>>> hotplug/enumeration path?
->>>> If we want to follow the implementation note step by step (in
->>>> sequence) then we need some synchronization between EDR path and
->>>> enumeration path. But if it's OK to achieve the same end result by
->>>> following steps out of sequence then we don't need to create any
->>>> dependency between EDR and enumeration paths. Currently we follow
->>>> the latter approach.
->>> What would the synchronization look like?
->> we might need some way to disable the enumeration path till
->> we get response from firmware.
->>
->> In native hot plug case, I think we can do it in two ways.
->>
->> 1. Disable hotplug notification in slot ctl registers.
->>      (pcie_disable_notification())
->> 2. Some how block hotplug driver from processing the new
->>      events (not sure how feasible its).
->>
->> Following method 1 would be easy, But I am not sure whether
->> its alright to disable them randomly. I think, unless we
->> clear the status as well, we might get some issues due to stale
->> notification history.
->>
->> For ACPI event case, I am not sure whether we have some
->> communication protocol in place to disable receiving ACPI
->> events temporarily.
->>
->> For polling model, we need to disable to the polling
->> timer thread till we receive _OST response from firmware.
+On 2020/3/13 11:39, Sahitya Tummala wrote:
+> On Fri, Mar 13, 2020 at 10:20:04AM +0800, Chao Yu wrote:
+>> On 2020/3/12 19:14, Sahitya Tummala wrote:
+>>> F2FS already has a default timeout of 5 secs for discards that
+>>> can be issued during umount, but it can take more than the 5 sec
+>>> timeout if the underlying UFS device queue is already full and there
+>>> are no more available free tags to be used. In that case, submit_bio()
+>>> will wait for the already queued discard requests to complete to get
+>>> a free tag, which can potentially take way more than 5 sec.
 >>>
->>> Ideally I think it would be better to follow the order in the
->>> flowchart if it's not too onerous.
->> None of the above changes will be pretty and I think it will
->> not be simple as well.
->>>    That will make the code easier to
->>> understand.  The current situation with this dependency on pciehp and
->>> what it will do leaves a lot of things implicit.
+>>> Fix this by submitting the discard requests with REQ_NOWAIT
+>>> flags during umount. This will return -EAGAIN for UFS queue/tag full
+>>> scenario without waiting in the context of submit_bio(). The FS can
+>>> then handle these requests by retrying again within the stipulated
+>>> discard timeout period to avoid long latencies.
 >>>
->>> What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>> ---
+>>>  fs/f2fs/segment.c | 14 +++++++++++++-
+>>>  1 file changed, 13 insertions(+), 1 deletion(-)
 >>>
->>> IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
->>> unbinds the drivers and removes the devices.
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index fb3e531..a06bbac 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>>  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+>>>  					&(dcc->fstrim_list) : &(dcc->wait_list);
+>>> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+>>> +	int flag;
+>>>  	block_t lstart, start, len, total_len;
+>>>  	int err = 0;
+>>>  
+>>> +	flag = dpolicy->sync ? REQ_SYNC : 0;
+>>> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+>>> +
+>>>  	if (dc->state != D_PREP)
+>>>  		return 0;
+>>>  
+>>> @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  		bio->bi_end_io = f2fs_submit_discard_endio;
+>>>  		bio->bi_opf |= flag;
+>>>  		submit_bio(bio);
+>>> +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
 >>
->>>   If that doesn't happen, and Linux clears the DPC trigger to bring
->>>   the link back up, will those drivers try to operate uninitialized
->>>   devices?
+>> If we want to update dc->state, we need to cover it with dc->lock.
+> 
+> Sure, will update it.
+> 
 >>
->> I don't think this will happen. In DPC reset_link before we bring up
->> the device we wait for link to go down first using
->> pcie_wait_for_link(pdev, false) function.
+>>> +			dc->state = D_PREP;
+>>
+>> BTW, one dc can be referenced by multiple bios, so dc->state could be updated to
+>> D_DONE later by f2fs_submit_discard_endio(), however we just relocate it to
+>> pending list... which is inconsistent status.
 > 
-> I understand that, but these child devices were reset when DPC
-> disabled the link.  When the link comes back up, their BARs contain
-> zeros.
-> 
-> If CONFIG_HOTPLUG_PCI_PCIE=y, the DLLSC interrupt will cause pciehp to
-> unbind the driver.  It seems like the unbind races with the EDR notify
-> handler. '
+> In that case dc->bio_ref will reflect it and until it becomes 0, the dc->state
+> will not be updated to D_DONE in f2fs_submit_discard_endio()?
 
-Agree. But even if there is a race condition, after clearing DPC trigger
-status, if hotplug driver properly removes/re-enumerates the driver then
-the end result will still be same. There should be no functional impact.
+__submit_discard_cmd()
+ lock()
+ dc->state = D_SUBMIT;
+ dc->bio_ref++;
+ unlock()
+...
+ submit_bio()
+				f2fs_submit_discard_endio()
+				 dc->error = -EAGAIN;
+				 lock()
+				 dc->bio_ref--;
 
-  If pciehp unbinds the driver before edr_handle_event() calls
-> pcie_do_recovery(), this seems fine -- we'll call dpc_reset_link(),
-> which brings up the link, we won't call any driver callbacks because
-> there's no driver, and another DLLSC interrupt will cause pciehp to
-> re-enumerate, which will re-initialize the device, then rebind the
-> driver.
-> 
-> If the EDR notify handler runs before pciehp unbinds the driver,
-In the above case, from the kernel perspective device is still 
-accessible and IIUC, it will try to recover it in pcie_do_recovery()
-using one of the callbacks.
+ dc->state = D_PREP;
 
-int (*mmio_enabled)(struct pci_dev *dev);
-int (*slot_reset)(struct pci_dev *dev);
-void (*resume)(struct pci_dev *dev);
+				 dc->state = D_DONE;
+				 unlock()
 
-One of these callbacks will do pci_restore_state() to restore the
-device, and IO will not attempted in these callbacks until the device
-is successfully recovered.
-
-> couldn't EDR bring up the link and call driver .mmio_enabled() before
-> the device has been initialized?
-Calling mmio_enabled in this case should not be a problem right ?
-
-Please check the following content from 
-Documentation/PCI/pci-error-recovery.rst. IIUC (following content), IO 
-will not be attempted until
-the device is successfully re-configured.
-
-STEP 2: MMIO Enabled
---------------------
-This callback is made if all drivers on a segment agree that they can
-try to recover and if no automatic link reset was performed by the HW.
-If the platform can't just re-enable IOs without a slot reset or a link
-reset, it will not call this callback, and instead will have gone
-directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
-
+So finally, dc's state is D_DONE, and it's in wait list, then will be relocated
+to pending list.
 
 > 
-> If CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=y, I could
-> believe that the situations are similar to the above.
+> Thanks,
 > 
-> What if CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=n?  Then
-> I assume there's nothing to unbind the driver, so pcie_do_recovery()
-> will call the driver .mmio_enabled() and other recovery callbacks on a
-> device that hasn't been initialized?
-
-probably in .slot_reset() callback device config will be restored and it
-will make the device functional again.
-
-Also since in above case hotplug is not supported, topology change will
-not be supported.
-
+>>
+>> Thanks,
+>>
+>>> +			err = dc->error;
+>>> +			break;
+>>> +		}
+>>>  
+>>>  		atomic_inc(&dcc->issued_discard);
+>>>  
+>>> @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  			}
+>>>  
+>>>  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>> +			if (dc->error == -EAGAIN) {
+>>> +				congestion_wait(BLK_RW_ASYNC, HZ/50);
+>>> +				__relocate_discard_cmd(dcc, dc);
+>>> +			}
+>>>  
+>>>  			if (issued >= dpolicy->max_requests)
+>>>  				break;
+>>>
 > 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
