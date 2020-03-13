@@ -2,215 +2,130 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22169C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348B9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCB620724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584107572;
-	bh=gbQYfc95VUt2xsmHphOrZ4dB5Q3e2DQEEkyOEiCVu+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XBKGrSOE/RjFyLvTx7grBFbVRzUTHQgRyV5i2IX9NRG8VI4f+uD/hodbP4zVWmC4O
-	 W1+CcvubvXpBJWKtQP0kKHimaSjM1LoPDYgigTBOXn5ITrBMHXFR+xrncGhbG1S47o
-	 QzXY1xadXxRzmD5Qd+VjBHTX5YUH4KjrFYqkpkbM=
+	by mail.kernel.org (Postfix) with ESMTP id 0BD0A20746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pC+JllgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgCMNwv (ORCPT
+        id S1726785AbgCMNxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgCMNwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:52:50 -0400
-Received: from localhost (unknown [171.76.107.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A492C20724;
-        Fri, 13 Mar 2020 13:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584107569;
-        bh=gbQYfc95VUt2xsmHphOrZ4dB5Q3e2DQEEkyOEiCVu+I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=epZzDc9IPI4mcc2M4oFk1ni+nevBZsI67E8xm0cfmRRBZAQy5Mamup/jvVk69ZQKd
-         Nz21udT9XPwziB6k1fpOn0CwT43kAPVdSlsNyAABh0xaM/6rOMO1ET2B0g5GjBsAS9
-         zpC+oOfo+C8PXCN2bJ0O+l8EaIxcSQOaT2S19MfE=
-Date:   Fri, 13 Mar 2020 19:22:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] arm64: dts: qcom: c630: Enable audio support
-Message-ID: <20200313135243.GL4885@vkoul-mobl>
-References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
- <20200312143024.11059-4-srinivas.kandagatla@linaro.org>
+        Fri, 13 Mar 2020 09:53:05 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38312 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgCMNxF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 09:53:05 -0400
+Received: by mail-qt1-f196.google.com with SMTP id e20so7511960qto.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 06:53:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QhTAEUb0CKU7cUmJxlGIQXm3jXmhdS/EU6RvOkuimUc=;
+        b=pC+JllgYSu5r6kQR54aaqYTMDt6E7+AP+ncEtV8/YJ7mtqAZ/2/JYJ/wDnhHDRcsL6
+         wGq6H8l+r6u7GBB/45/+tQudBCb9mu78Avehje7/VxZi4jxYZfF81mhLMeT/vArq3S7p
+         c0yFXsamH0g2jmyGiOq1jVRlozRFMuNOs/NPhv0i4XVpoGWWb3gyPcBgIiW3Ib6T+VCW
+         /0Gl8bTAOzm/JqFK4BGGMEOctYH9YKTlLUXdlRYVt/vfTj/Fqh6IabQZfdZBjqHlwS0r
+         jj5DXo9RjV8u0QTPnxbmB7gfSro/CIIAXgPqOBMtta9EsCrid91JuPTnGP9jCuOY6qfk
+         kF9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QhTAEUb0CKU7cUmJxlGIQXm3jXmhdS/EU6RvOkuimUc=;
+        b=o53ykfHt2IghHa0AQbyw+dlYGQelxmWSePoO+eqFZ7ALYQ0M07+sPHkEVORJbmLd6d
+         56/OJ8pkBLdNTRRJHrXxpwarIyHK31Ik5AlYY43foW8LurHCHWic63t8RzAknpMXvnvB
+         UVzXMUPdbRc++8FbEWCqhrlnkrfevmN3qzZOu1Q7USLELtSA/IReax+uj0nOEiki0GvJ
+         Jah+l7irwDTE0wbWIZxZYZuQGxuYkp944SOWIxJvKLO/UNViA2tGFaVKjjQmx0++hNgT
+         NZbC1QHHT3JLyWDg0UOxVbcs/s0qDm/rreIHI5kOfpCPp+/56+Yq6g4rHvtTgGBnChNS
+         e4xA==
+X-Gm-Message-State: ANhLgQ0jER0+sZmvMWcxOs71hcAkZYjj/Q5VRbXXlvXdLtBGDwts8ix0
+        79af67OC7ORkm5/ti5d8uhYWMw==
+X-Google-Smtp-Source: ADFU+vtU2B6nwFziiJDBl9BQ05KoFsPk7oHkeEWfg9BnU1sdLDW+4Hmsyy4Ve0AZoOIF5eZX7mrJGg==
+X-Received: by 2002:ac8:7b2f:: with SMTP id l15mr12116784qtu.320.1584107584469;
+        Fri, 13 Mar 2020 06:53:04 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id x6sm9609039qke.43.2020.03.13.06.53.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 06:53:03 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jCkkJ-0006cr-Bd; Fri, 13 Mar 2020 10:53:03 -0300
+Date:   Fri, 13 Mar 2020 10:53:03 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Gal Pressman <galpress@amazon.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Mark Zhang <markz@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: Re: [PATCH rdma-next v1 00/11] Add Enhanced Connection Established
+ (ECE)
+Message-ID: <20200313135303.GA25305@ziepe.ca>
+References: <20200310091438.248429-1-leon@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312143024.11059-4-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200310091438.248429-1-leon@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-03-20, 14:30, Srinivas Kandagatla wrote:
-> This patch add support to audio via WSA881x Speakers and Headset.
+On Tue, Mar 10, 2020 at 11:14:27AM +0200, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 113 ++++++++++++++++++
->  1 file changed, 113 insertions(+)
+> Changelog:
+>  v1: Dropped field_avail patch in favor of mass conversion to use function
+>      which already exists in the kernel code.
+>  v0: https://lore.kernel.org/lkml/20200305150105.207959-1-leon@kernel.org
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> index b255be3a4a0a..31c22836f84e 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -7,7 +7,10 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> +#include <dt-bindings/sound/qcom,q6afe.h>
-> +#include <dt-bindings/sound/qcom,q6asm.h>
->  #include "sdm845.dtsi"
->  #include "pm8998.dtsi"
->  
-> @@ -353,6 +356,107 @@
->  	status = "okay";
->  };
->  
-> +&wcd9340{
+> Enhanced Connection Established or ECE is new negotiation scheme
+> introduced in IBTA v1.4 to exchange extra information about nodes
+> capabilities and later negotiate them at the connection establishment
+> phase.
+> 
+> The RDMA-CM messages (REQ, REP, SIDR_REQ and SIDR_REP) were extended
+> to carry two fields, one new and another gained new functionality:
+>  * VendorID is a new field that indicates that common subset of vendor
+>    option bits are supported as indicated by that VendorID.
+>  * AttributeModifier already exists, but overloaded to indicate which
+>    vendor options are supported by this VendorID.
+> 
+> This is kernel part of such functionality which is responsible to get data
+> from librdmacm and properly create and handle RDMA-CM messages.
+> 
+> Thanks
+> 
+> Leon Romanovsky (11):
+>   RDMA/mlx4: Delete duplicated offsetofend implementation
+>   RDMA/mlx5: Use offsetofend() instead of duplicated variant
+>   RDMA/cm: Delete not implemented CM peer to peer communication
 
-We sort this alphabetically, so this should come little later, other
-than this, lgtm
+These ones applied to for-next
 
-> +	pinctrl-0 = <&wcd_intr_default>;
-> +	pinctrl-names = "default";
-> +	clock-names = "extclk";
-> +	clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
-> +	reset-gpios = <&tlmm 64 0>;
-> +	vdd-buck-supply = <&vreg_s4a_1p8>;
-> +	vdd-buck-sido-supply = <&vreg_s4a_1p8>;
-> +	vdd-tx-supply = <&vreg_s4a_1p8>;
-> +	vdd-rx-supply = <&vreg_s4a_1p8>;
-> +	vdd-io-supply = <&vreg_s4a_1p8>;
-> +	swm: swm@c85 {
-> +		left_spkr: wsa8810-left{
-> +			compatible = "sdw10217211000";
-> +			reg = <0 3>;
-> +			powerdown-gpios = <&wcdgpio 2 GPIO_ACTIVE_HIGH>;
-> +			#thermal-sensor-cells = <0>;
-> +			sound-name-prefix = "SpkrLeft";
-> +			#sound-dai-cells = <0>;
-> +		};
-> +
-> +		right_spkr: wsa8810-right{
-> +			compatible = "sdw10217211000";
-> +			powerdown-gpios = <&wcdgpio 3 GPIO_ACTIVE_HIGH>;
-> +			reg = <0 4>;
-> +			#thermal-sensor-cells = <0>;
-> +			sound-name-prefix = "SpkrRight";
-> +			#sound-dai-cells = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +&q6asmdai {
-> +	dai@0 {
-> +		reg = <0>;
-> +		direction = <2>;
-> +	};
-> +
-> +	dai@1 {
-> +		reg = <1>;
-> +		direction = <1>;
-> +	};
-> +};
-> +
-> +&sound {
-> +	compatible = "qcom,db845c-sndcard";
-> +	model = "Lenovo-YOGA-C630-13Q50";
-> +
-> +	audio-routing =
-> +		"RX_BIAS", "MCLK",
-> +		"AMIC2", "MIC BIAS2",
-> +		"SpkrLeft IN", "SPK1 OUT",
-> +		"SpkrRight IN", "SPK2 OUT",
-> +		"MM_DL1",  "MultiMedia1 Playback",
-> +		"MultiMedia2 Capture", "MM_UL2";
-> +
-> +	mm1-dai-link {
-> +		link-name = "MultiMedia1";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA1>;
-> +		};
-> +	};
-> +
-> +	mm2-dai-link {
-> +		link-name = "MultiMedia2";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA2>;
-> +		};
-> +	};
-> +
-> +	slim-dai-link {
-> +		link-name = "SLIM Playback";
-> +		cpu {
-> +			sound-dai = <&q6afedai SLIMBUS_0_RX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +
-> +		codec {
-> +			sound-dai =  <&left_spkr>, <&right_spkr>, <&swm 0>, <&wcd9340 0>;
-> +		};
-> +	};
-> +
-> +	slimcap-dai-link {
-> +		link-name = "SLIM Capture";
-> +		cpu {
-> +			sound-dai = <&q6afedai SLIMBUS_0_TX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +
-> +		codec {
-> +			sound-dai = <&wcd9340 1>;
-> +		};
-> +	};
-> +};
-> +
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>, <81 4>;
->  
-> @@ -382,6 +486,15 @@
->  		bias-pull-up;
->  		drive-strength = <2>;
->  	};
-> +
-> +	wcd_intr_default: wcd_intr_default {
-> +		pins = <54>;
-> +		function = "gpio";
-> +
-> +		input-enable;
-> +		bias-pull-down;
-> +		drive-strength = <2>;
-> +	};
->  };
->  
->  &uart6 {
-> -- 
-> 2.21.0
+>   RDMA/efa: Use in-kernel offsetofend() to check field availability
 
--- 
-~Vinod
+This needs resending
+
+>   RDMA/cm: Add Enhanced Connection Establishment (ECE) bits
+>   RDMA/uapi: Add ECE definitions to UCMA
+>   RDMA/ucma: Extend ucma_connect to receive ECE parameters
+>   RDMA/ucma: Deliver ECE parameters through UCMA events
+>   RDMA/cm: Send and receive ECE parameter over the wire
+>   RDMA/cma: Connect ECE to rdma_accept
+>   RDMA/cma: Provide ECE reject reason
+
+These need userspace to not be RFC
+
+Jason
