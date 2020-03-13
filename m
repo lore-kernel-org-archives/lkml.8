@@ -2,138 +2,173 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19105C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55AEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36C3206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:05:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ic+gFwS7"
+	by mail.kernel.org (Postfix) with ESMTP id AA3C620736
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584065337;
+	bh=wg5KqU2C89V9sg161ELK0XjctmpbtMv04NWPVqqLNgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mDXDaB4pBPBf3hnvraoPuegIswA5yv4LTTCZyrGITLYdy/NsFFeQRJ0mIbkiMhzl+
+	 O8Hc9tyTk5Y1jk2EqAFq2RXx+NOZzCLYrYjLUzrUtWrmuSBkUIVb/H5WelBMhrVVPh
+	 Sl3cy8rmbM/NDWFJqLsl13Di7QDKUvhYwVjukpcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgCMCFI (ORCPT
+        id S1726393AbgCMCI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:05:08 -0400
-Received: from mail-db8eur05on2072.outbound.protection.outlook.com ([40.107.20.72]:38091
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbgCMCFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:05:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=To0N281RWkUwUgzM8kLesiOrwDQ0P6s/Qjce0DCJyUh7yVSU909bfoqZrq2c0X2R0Dmd6s0rFAVGvNdNYiphZC80XGzPEJtSd/8dy3AOqAkPLHprHItywh7r2I2PTbxsjUwmOM+AVuXws1dJ3MFFw/vcPdvsznRedoOmYqehib1oQSmGjVE/iGSeo8/8lwtSqE3Ip2hV58982PwA9lVyWHHuejSp/vlyWfBx/8A58U/NkhEqb18p+qH6YqUZocL4N8Pntow1P7wU2tXY46Cy6EBv50DFFONtlvzrM1tZj2cOf1SOUH8gtvcWHu8xxMVHbTCzIrhLfZ3ZKAUbuvajqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiXC1bkJhvkPhtJJc2/V1Kn8ft8EI+LD5V+/7IkcqlI=;
- b=k4bHetj2rzSZK3Iszpxt1EMwt4D9YDlWVa4rdEEpD3dp0n7DLoVf0+foGDHhbocsR9WvajuqmegHFyStQT8F19AwL2XqrfZ0wOgYvWPm4EcYroAeGY4YJNj5eQAhJ0UQcPDspMFH4HESDw8140X1ZgSpheBPfpF5Qe6bu55AJ5ltYV3y1uzb6ICxut+T8c4BYadiVb50DY6ujCssEecS62XDG20JIQllG8lSGBOS7smwnNPyRAaJlwCjZyFAQRbx+o0xaA2QKhpcPPwGgJlTwSfIeY8mQqc1e6tEJ21cgNN7pXaYmz/V40bZ0GmhAgnya8vvzP28ZIXnnxLvNNAX3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiXC1bkJhvkPhtJJc2/V1Kn8ft8EI+LD5V+/7IkcqlI=;
- b=ic+gFwS7msvMwX6K1HnkBNqgu+n++7yW8MkblFcLgsh3+yJfziGsek4w4BGK8FWgMmHGTcGTeE0B6Cmqs0SfS3HZUUrnxzAS4Brxq5TtHNjGHFK5dkUX42h4/oUNnHuPtSUHq/5+4ccYQou2kjcSkwxUYwOGMSJ5nyaIjzr1NPM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6324.eurprd04.prod.outlook.com (20.179.34.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Fri, 13 Mar 2020 02:05:05 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 02:05:05 +0000
-From:   peng.fan@nxp.com
-To:     broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2] regmap: debugfs: check count when read regmap file
-Date:   Fri, 13 Mar 2020 09:58:07 +0800
-Message-Id: <1584064687-12964-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0112.apcprd03.prod.outlook.com
- (2603:1096:4:91::16) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Thu, 12 Mar 2020 22:08:56 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52623 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgCMCI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 22:08:56 -0400
+Received: by mail-pj1-f67.google.com with SMTP id f15so3346004pjq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 19:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6UIHhrii+PcyoxAnOQshJ7x6jz3aQd0Zby/DnhIzfq0=;
+        b=CLo7Mw1jrvzDulQDPztJ+80D+fkpsgE9fgeAlZToS71hqAFmlUB2sMLuTZpIjRUHkF
+         qK4kmVqlBe/kk0lgE/0sCQFKRzMO6Jdop/e9tKZt4PvMZK2etnPssklgsHxOmy4fQig6
+         A7HrO0sNttqTddmNTsA+XxDYe57quskTKvBzhDGy8jlkSgZe3R8S8tFpXTFNUYYwGzdI
+         Kr+U6dB7YrUY6eVdNKg2yNJyGNgAYYTmeP6/NibTHLvkOXynIhpyyX8pWH7mnEbi3QoC
+         9EoCwBcLvovwnfpAMdFENFMeM5la+R39m2I+t2vV9uucaY+aqPDg1/ZrSa7HKwM1gm7T
+         tjpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6UIHhrii+PcyoxAnOQshJ7x6jz3aQd0Zby/DnhIzfq0=;
+        b=sRIwSSzsS+ryl8WCEvjZ8+3Pka5sEW9QOr/VrGMBbmZB0jgY1jv5ki5ItXdzOyMno7
+         /b5kIhOcGPMqzrAEv2bjPnEMfsrOc1VuKuVubhSBhQ1b29laJGqYxd1+U1RyVYuh//DM
+         a7B4bOSwkuuT2rQU4rmQKir0LE+/EhGaB0zFnbMhuCaTbrCqWGAasRDLc2boVF09WeAB
+         au2jUKIBECFSe3ymJFvxQ6S2cmt/7fsAPaWagmrltVuE+qJTvTKdJoS++KqPTS64Hxum
+         i9dP2YvI1ZX9hfD9saLGZRMY4J8JJMkO+lDwZr5Fzi1l9OWRNAnv/gRxaleH0DfCVsxv
+         Rj/w==
+X-Gm-Message-State: ANhLgQ0JsjC4syLsTDp5SeT7OWT0pXK9yaaYCtX/G95Bk1pnpFewLdoU
+        iJIFCBAsrSGdhbNHoF0OjOQ=
+X-Google-Smtp-Source: ADFU+vuutzwBmcIdOCi8oQVsDTjhXluTb57K0NN9SVwUs1eLvmIYsApAiIHBj/rV/kBV+HB5FJcjJg==
+X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr11018356plo.45.1584065334674;
+        Thu, 12 Mar 2020 19:08:54 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id o126sm9027476pfb.140.2020.03.12.19.08.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 19:08:53 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 19:08:51 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+Message-ID: <20200313020851.GD68817@google.com>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200312082248.GS23944@dhcp22.suse.cz>
+ <20200312201602.GA68817@google.com>
+ <20200312204155.GE23944@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR03CA0112.apcprd03.prod.outlook.com (2603:1096:4:91::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2835.7 via Frontend Transport; Fri, 13 Mar 2020 02:05:02 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9ec3658b-4c2b-4daf-2df6-08d7c6f2f25e
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6324:|AM0PR04MB6324:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB6324CF4CCECA4E9ED453CB1888FA0@AM0PR04MB6324.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(376002)(366004)(396003)(199004)(2906002)(478600001)(52116002)(86362001)(316002)(66556008)(9686003)(81166006)(6512007)(4326008)(81156014)(8936002)(6486002)(956004)(66946007)(8676002)(66476007)(6506007)(69590400007)(186003)(5660300002)(26005)(2616005)(36756003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6324;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U+mRxw7MuNlAM6dM1lbR79g3gsg4NYaXbBeuwgLt+ukX9TdDenRqNMwWAOybd3SaQecoNwiKrKN6nU0BN7N+BgxC4P4KtJsICnEU9V36Z6cvv6+4NYk2o6aaZ12LyJ7stBj5FSfOtTC5YN11qxZ8xT7GNY7iiGYeJnaifiXBivkFEswe4xovs/NgRsT9kFailv6NdmAbD7GD+pEf4CmbQJrBHfa+z4SU4Xo9i1De85g5R19PzHpaCg5DpIBy8lbbRnyVzEoc3gnQJMJrTSODXmLGKk2a4Ws4jZHH2YOmaA599M1ys9cgqv6xYfFAo7DND0x3egPmGfMRafurLebHH4inn5o8pKv6ZJVxDVmF4GM5T/eRukY9iIYhKKTARj7FKw3fPlzMHjdWIRO167XWakAHODf7u+wbjY5/ZFcdlss4UR1rlSkk8VlwQO6vnf15BrmE+GxktJAYTL6Ku/GGEGA4vkY7yTtzbswCm2dyKFdbLIJ3o5sEP5HcQo8ctQsG
-X-MS-Exchange-AntiSpam-MessageData: n1XuXhBx/RnR+y/9dYzmJ7+BIZFaHerJKXeZBFmLL95q2JLtjZX6pU/E5aipioOFX/M+KBIczESOpbF5rqNsdAtEVbCaxOy3j2gFey5xEGLE67G9iXwApES9R2Yk21f79WbxvpEcrZNf/cx2vdwjbA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ec3658b-4c2b-4daf-2df6-08d7c6f2f25e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 02:05:05.0775
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /f3oYFpQObBsI/QKbc74ZsDkaDzltcSjNL7bP/fGVnzX9dcqerqBmrnIBYL/Z3objjKMHLEBprQBr+/NHUOAdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6324
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312204155.GE23944@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Thu, Mar 12, 2020 at 09:41:55PM +0100, Michal Hocko wrote:
+> On Thu 12-03-20 13:16:02, Minchan Kim wrote:
+> > On Thu, Mar 12, 2020 at 09:22:48AM +0100, Michal Hocko wrote:
+> [...]
+> > > From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
+> > > From: Michal Hocko <mhocko@suse.com>
+> > > Date: Thu, 12 Mar 2020 09:04:35 +0100
+> > > Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
+> > > 
+> > > Jann has brought up a very interesting point [1]. While shared pages are
+> > > excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
+> > > that way. This can lead to all sorts of hard to debug problems. E.g.
+> > > performance problems outlined by Daniel [2]. There are runtime
+> > > environments where there is a substantial memory shared among security
+> > > domains via CoW memory and a easy to reclaim way of that memory, which
+> > > MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
+> > > in for the parent process which might be more privileged or even open
+> > > side channel attacks. The feasibility of the later is not really clear
+> > 
+> > I am not sure it's a good idea to mention performance stuff because
+> > it's rather arguble. You and Johannes already pointed it out when I sbumit
+> > early draft which had shared page filtering out logic due to performance
+> > reason. You guys suggested the shared pages has higher chance to be touched
+> > so that if it's really hot pages, that whould keep in the memory. I agree.
+> 
+> Yes, the hot memory is likely to be referenced but the point was an
+> unexpected latency because of the major fault. I have to say that I have
 
-When executing the following command, we met kernel dump.
-dmesg -c > /dev/null; cd /sys;
-for i in `ls /sys/kernel/debug/regmap/* -d`; do
-	echo "Checking regmap in $i";
-	cat $i/registers;
-done && grep -ri "0x02d0" *;
+I don't understand your point here. If it's likely to be referenced
+among several processes, it doesn't have the major fault latency.
+What's your point here?
 
-It is because the count value is too big, and kmalloc fails. So add an
-upper bound check to allow max size `PAGE_SIZE << (MAX_ORDER - 1)`.
+> underestimated the issue because I was not aware of runtimes mentioned
+> in the referenced links. Essentially a lot of CoW memory shared over
+> security domains.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/base/regmap/regmap-debugfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I tend to agree about security part in the description, but still don't
+agree with performance concern in the description so I'd like to remove
+it in the description. Current situation is caused by security concern
+unfortunately, not performance reason.
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index e72843fe41df..089e5dc7144a 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -227,6 +227,9 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
- 	if (*ppos < 0 || !count)
- 		return -EINVAL;
- 
-+	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
-+		count = PAGE_SIZE << (MAX_ORDER - 1);
-+
- 	buf = kmalloc(count, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
-@@ -371,6 +374,9 @@ static ssize_t regmap_reg_ranges_read_file(struct file *file,
- 	if (*ppos < 0 || !count)
- 		return -EINVAL;
- 
-+	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
-+		count = PAGE_SIZE << (MAX_ORDER - 1);
-+
- 	buf = kmalloc(count, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
--- 
-2.16.4
+> 
+> > I think the only reason at this moment is just vulnerability.
+> > 
+> > > to me TBH but there is no real reason for exposure at this stage. It
+> > > seems there is no real use case to depend on reclaiming CoW memory via
+> > > madvise at this stage so it is much easier to simply disallow it and
+> > > this is what this patch does. Put it simply MADV_{PAGEOUT,COLD} can
+> > > operate only on the exclusively owned memory which is a straightforward
+> > > semantic.
+> > > 
+> > > [1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
+> > > [2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
+> > > 
+> > > Signed-off-by: Michal Hocko <mhocko@suse.com>
+> > > ---
+> > >  mm/madvise.c | 12 +++++++++---
+> > >  1 file changed, 9 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/mm/madvise.c b/mm/madvise.c
+> > > index 43b47d3fae02..4bb30ed6c8d2 100644
+> > > --- a/mm/madvise.c
+> > > +++ b/mm/madvise.c
+> > > @@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+> > >  		}
+> > >  
+> > >  		page = pmd_page(orig_pmd);
+> > > +
+> > > +		/* Do not interfere with other mappings of this page */
+> > 
+> > 
+> > How about this?
+> > /*
+> >  * paging out only single mapped private pages for anonymous mapping,
+> >  * otherwise, it opens a side channel.
+> >  */
+> 
+> I am not sure this is much more helpful without a larger context. I
+> would stick with the wording unless you insist.
 
+The comment you provides explain what code does, not *why*.
+Comment is always lack of explaining the whole story but we try to
+demonstrate a certain context to make reader careful.
+Havind said, I will not insist on it.
+
+Thanks.
