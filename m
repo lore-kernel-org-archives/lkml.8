@@ -2,163 +2,133 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDE2C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6F2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D01B20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B418206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgCMOtf (ORCPT
+        id S1726794AbgCMOvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:49:35 -0400
-Received: from smtp2.ustc.edu.cn ([202.38.64.46]:58941 "EHLO ustc.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726591AbgCMOtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:49:35 -0400
-Received: from xhacker (unknown [101.86.20.80])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygDn7ZF7nWteRsk8AA--.11228S2;
-        Fri, 13 Mar 2020 22:49:31 +0800 (CST)
-Date:   Fri, 13 Mar 2020 22:47:39 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 4/4] regulator: mp886x: add MP8867 support
-Message-ID: <20200313224739.17b5ed70@xhacker>
+        Fri, 13 Mar 2020 10:51:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:56596 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbgCMOvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:51:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9BC331B;
+        Fri, 13 Mar 2020 07:51:21 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D75D3F67D;
+        Fri, 13 Mar 2020 07:51:20 -0700 (PDT)
+Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Qi Liu <liuqi115@huawei.com>, will@kernel.org,
+        mark.rutland@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linuxarm@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1584014816-1908-1-git-send-email-liuqi115@huawei.com>
+ <49a04327-b58b-3103-f992-97e8838c41df@arm.com>
+ <20200313141416.00002e89@Huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <314f612d-d6e2-3855-44f1-d6cab756aac9@arm.com>
+Date:   Fri, 13 Mar 2020 14:50:55 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200313141416.00002e89@Huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygDn7ZF7nWteRsk8AA--.11228S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWry5Wr1rWFyUGryDuw1DAwb_yoW5Aw1DpF
-        W5WrsIkrWkXa4xGF4xCFya93Wa9wn7t3s7ZryIkw4ay3ZxJF4fXFn7ZFySvFyrCrWkJF1j
-        yayUCry09F4UJrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E
-        4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-        WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-        Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-        W3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8TCJPUUUUU==
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+On 2020-03-13 2:14 pm, Jonathan Cameron wrote:
+> On Fri, 13 Mar 2020 13:23:53 +0000
+> Robin Murphy <robin.murphy@arm.com> wrote:
+> 
+>> On 2020-03-12 12:06 pm, Qi Liu wrote:
+>>> From: Qi liu <liuqi115@huawei.com>
+>>>
+>>> PCIe PMU Root Complex Integrate End Point(IEP) device is
+>>> supported to sample bandwidth, latency, buffer occupation,
+>>> bandwidth utilization etc.
+>>> Each PMU IEP device monitors multiple root ports, and each
+>>> IEP is registered as a pmu in /sys/bus/event_source/devices,
+>>> so users can select the target IEP, and use filter to select
+>>> root port, function and event.
+>>> Filtering options are:
+>>> event:    - select the event.
+>>> subevent: - select the subevent.
+>>> port:     - select target root port.
+>>> func:     - select target EP device under the port.
+>>>
+>>> Example: hisi_pcie_00_14_00/event=0x08,subevent=0x04,   \
+>>> port=0x05,func=0x00/ -I 1000
+>>>
+>>> PMU IEP device is described by its bus, device and function,
+>>> target root port is 0x05 and target EP under it is function
+>>> 0x00. Subevent 0x04 of event 0x08 is sampled.
+>>>
+>>> Note that in this RFC:
+>>> 1. PCIe PMU IEP hardware is still in development.
+>>> 2. Perf common event list is undetermined, and name of these
+>>> events still need to be discussed.
+>>> 3. port filter could only select one port each time.
+>>> 4. There are two possible schemes of pmu registration, one is
+>>> register each root port as a pmu, it is easier for users to
+>>> select target port. The other one is register each IEP as pmu,
+>>> for counters are per IEP, not per root port, the second scheme
+>>> describes hardware PMC much more reasonable, but need to add
+>>> "port" filter option to select port. We use the second one in
+>>> this RFC.
+>>>
+> 
+> Whilst it's great to have detailed feedback, just to make it clear...
+> 
+> This is an RFC for the reasons above.  They include that the hardware
+> is still in development - i.e. we can't test it because they've not finished
+> implementation yet.
 
-MP8867 is an I2C-controlled adjustable voltage regulator made by
-Monolithic Power Systems. The difference between MP8867 and MP8869
-are:
-1.If V_BOOT, the vref of MP8869 is fixed at 600mv while vref of
-MP8867 is determined by the I2C control.
-2.For MP8867, when setting voltage, if the steps is within 5, we
-need to manually set the GO BIT to 0.
+That's OK - TBH I'd be more sympathetic if I wasn't still in the middle 
+of developing a massively more complicated PMU driver for hardware that 
+*does* exist, but that I only have sporadic access to one trivial 
+configuration of :)
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/regulator/mp886x.c | 62 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
+> The intention of posting so early is to get some feedback on the general
+> approach and the specific points in 2,3 and 4 above.
 
-diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
-index 2f0f54b..721f982 100644
---- a/drivers/regulator/mp886x.c
-+++ b/drivers/regulator/mp886x.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- //
--// MP8869 regulator driver
-+// MP8867/MP8869 regulator driver
- //
- // Copyright (C) 2020 Synaptics Incorporated
- //
-@@ -118,6 +118,62 @@ static const struct regulator_ops mp8869_regulator_ops = {
- 	.get_mode = mp886x_get_mode,
- };
- 
-+static int mp8867_set_voltage_sel(struct regulator_dev *rdev, unsigned sel)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, delta;
-+
-+	ret = mp8869_set_voltage_sel(rdev, sel);
-+	if (ret < 0)
-+		return ret;
-+
-+	delta = di->sel - sel;
-+	if (abs(delta) <= 5)
-+		ret = regmap_update_bits(rdev->regmap, MP886X_SYSCNTLREG1,
-+					 MP886X_GO, 0);
-+	di->sel = sel;
-+
-+	return ret;
-+}
-+
-+static int mp8867_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, uv;
-+	unsigned int val;
-+	bool fbloop;
-+
-+	ret = regmap_read(rdev->regmap, rdev->desc->vsel_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	fbloop = val & MP886X_V_BOOT;
-+
-+	val &= rdev->desc->vsel_mask;
-+	val >>= ffs(rdev->desc->vsel_mask) - 1;
-+
-+	if (fbloop) {
-+		uv = regulator_list_voltage_linear(rdev, val);
-+		uv = mp8869_scale(uv, di->r[0], di->r[1]);
-+		return regulator_map_voltage_linear(rdev, uv, uv);
-+	}
-+
-+	return val;
-+}
-+
-+static const struct regulator_ops mp8867_regulator_ops = {
-+	.set_voltage_sel = mp8867_set_voltage_sel,
-+	.get_voltage_sel = mp8867_get_voltage_sel,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.map_voltage = regulator_map_voltage_linear,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.set_mode = mp886x_set_mode,
-+	.get_mode = mp886x_get_mode,
-+};
-+
- static int mp886x_regulator_register(struct mp886x_device_info *di,
- 				     struct regulator_config *config)
- {
-@@ -201,6 +257,10 @@ static int mp886x_i2c_probe(struct i2c_client *client,
- 
- static const struct of_device_id mp886x_dt_ids[] = {
- 	{
-+		.compatible = "mps,mp8867",
-+		.data = &mp8867_regulator_ops
-+	},
-+	{
- 		.compatible = "mps,mp8869",
- 		.data = &mp8869_regulator_ops
- 	},
--- 
-2.7.4
+It's probably hard to comment on point 2 until it's nailed down what 
+actual events exist and what the values represent.
 
+For point 3, there's a relatively intuitive way to support the case 
+where all counters are affected by a single global filter - essentially, 
+the first scheduled event 'claims' the global filter settings, then any 
+further events have to have the same settings to be allowed in - we 
+implement this in arm_smmuv3_pmu.c, for one example.
 
+> The key fiddly point with this is that it is a shared PMU across a set
+> of PCIe Root Ports (there are several of these devices on each SoC in
+> the system covering a set of ports each).
+> That makes for a somewhat fiddly interface, hence the RFC.
+The general rule of thumb I've been told is that the granularity of "a 
+PMU" usually wants to be the granularity at which you can start/stop 
+multiple counters atomically (consider when you want to accurately 
+measure a metric which requires relative values of two or more events). 
+In that context, the structure implemented here looks like the right choice.
+
+Robin.
+
+> 
+> Thanks to everyone who has reviewed though as definitely some stuff for liuqi to
+> fix!
+> 
+> Jonathan
+> 
+> 
