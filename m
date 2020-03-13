@@ -2,179 +2,260 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B8CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FCFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3E520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7AA0206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sp3Yszxu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AlM5pRFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgCMNOL (ORCPT
+        id S1726761AbgCMNOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:14:11 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1585 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726550AbgCMNOK (ORCPT
+        Fri, 13 Mar 2020 09:14:17 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:34652 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgCMNOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:14:10 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DDDJ24004637;
-        Fri, 13 Mar 2020 14:14:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=j30vDKcN8v+9iOfnpvN2SvzZxqqkSw6kVhxLOmAqkK0=;
- b=sp3YszxuO0VPz/8w+rReK8aI6FfHkyGpIn8qTGDCURWbMkKbq/FtgZ9AzX75A2jymgzx
- oH54NnPK6tqrpGRCQdFSiPqS7XLPSBw3nlVPxhbNVATVecm27m1Ic56hwJgmotrB1TXN
- 3RuzPqD+x8kyP4GzfFkC1FgvhRR/0Df6mcuO8Ga68TrARk7SSHxalU6142cRwwJpbd/H
- C8da+g1yLybN5Mi4bNUDDNyAzRBpVPTp1Zlovu1ieKJVBQa6IIDgn985GTVD1U4zEc1I
- 8kcLHGbaBjluR5B60NCn/89yi/E1C5K/+/VzP1zZjLDmHWe0yNuXiPgauacfD0dMzWYR rw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yqt818vdw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 14:14:01 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DB2A10002A;
-        Fri, 13 Mar 2020 14:13:57 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E7DA2A8914;
-        Fri, 13 Mar 2020 14:13:57 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 13 Mar
- 2020 14:13:56 +0100
-Subject: Re: [PATCH] ARM: dts: stm32: Do clean up in stmpic nodes
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200228125205.8126-1-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <4b2c303d-48cb-4e1e-aa4a-faa72852ff55@st.com>
-Date:   Fri, 13 Mar 2020 14:13:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 09:14:17 -0400
+Received: by mail-vk1-f195.google.com with SMTP id w67so2608023vkf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 06:14:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r5nej1zKnErVM5m54Oa8OEYdJkqeTYbYSG60lIVS6MM=;
+        b=AlM5pRFdaXDjEYep11vgb+5n8li/qmCjD7OTv2H8gwaG4LR5CLy7UD/hPFTWaKbdLn
+         qpUzrJj65b/u5moBdm1Z8zmDvNtnwbfkpurjBgjpSiD6fvuyec4p3KZ0lsqQg+hXdk/I
+         x94A/LTz7EzPkaIo9LSAQO93wnDnBB7pfQpQ1fSINeagF4IHQnN9s+EENifH2Bopa43O
+         ocHMUFUw+q1QqiMvnKdzGmhuaF8ypliYhDnspbR0eAHkIbPN1MYe/mnci5D0ZKusbmol
+         nqei0veUc+3zGDmKDx9i5aJ1ca8D9rH9VBRQO5koUw+rEv+o7V2BwR8Phon75UtiGia5
+         sdhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r5nej1zKnErVM5m54Oa8OEYdJkqeTYbYSG60lIVS6MM=;
+        b=XnHk9voI4Cl2gfUNca32DJffIttoGfEgWKPN1RIu11SxARWOGE0W93RXw0vPhoTLRk
+         fLhtuPmHPQBgsjxxn0tSe+YgPoejLtdi3u1RT8L+jDX7nwD3j6t7okdCl/EC8udZ0rEd
+         8MHOsUdOuSm56lSm8FAWUm3JBedPCD64pxKlw/ESUB0PjpynKbWskA/uJxUj2Twa8zfx
+         XFsM6TTJ7MtvIWABCg0S96iawVq6kRh8gphctDQlRJC1q5ix1Dx7Vrh2Q5fnpB/VxJgl
+         4Lge7vpUpXc4AbjIV3SeB1ne+PvrXA1KtpQbqimvbqL0+kfktxUuGzCmfgpKeswD5E+a
+         TYDg==
+X-Gm-Message-State: ANhLgQ3Ibobvst50CbFxV4nD5BtYjEMUEc4hHxWw8jOci9XJPTACPwrE
+        zGnXR+TNkPfCTBf+08UMPWRDE63Ov6BQBeCXeErWIg==
+X-Google-Smtp-Source: ADFU+vsIHMtphZ7t20Aii8tQJpMdxFA3wJFF6idsgMVs2k35O6ilYeLCvXoAQk+u9++kmhpmSvDedexyES6m1u95NLA=
+X-Received: by 2002:a1f:52c5:: with SMTP id g188mr8502433vkb.25.1584105255211;
+ Fri, 13 Mar 2020 06:14:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200228125205.8126-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
+References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
+ <1574254593-16078-5-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFqBusMHWNHBCMXx6TxFO=8B6ytoyvvSfi14Z=-ahBDV5A@mail.gmail.com> <ac341c33-003a-587a-7078-84a7f0c01a3a@linaro.org>
+In-Reply-To: <ac341c33-003a-587a-7078-84a7f0c01a3a@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 13 Mar 2020 14:13:37 +0100
+Message-ID: <CAPDyKFotwoiDkF6Ru39rOv+GxF7dgXG6tc0oQHMim8yKB2hRvQ@mail.gmail.com>
+Subject: Re: [Patch v4 4/7] thermal: Add generic power domain warming device driver.
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin
+[...]
 
-On 2/28/20 1:52 PM, Benjamin Gaignard wrote:
-> Remove unused properties from stpmic node.
-> The issues have been detected by running dtbs_check.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
+> >> +       .get_max_state  = ::pd_wdev_get_max_state,
+> >> +       .get_cur_state  = pd_wdev_get_cur_state,
+> >> +       .set_cur_state  = pd_wdev_set_cur_state,
+> >> +};
+> >> +
+> >> +struct thermal_cooling_device *
+> >> +pwr_domain_warming_register(struct device *parent, char *pd_name, int pd_id)
+> >
+> > Maybe rename this to: thermal_of_pd_warming_register()
+>
+> How about pd_of_warming_register? It is consistent with other cooling
+> device register like cpuidle_of_cooling_register and
+> cpufreq_of_cooling_register.
 
-Applied on stm32-next with commit title updated.
+Well, we actually have the following:
+of_devfreq_cooling_register()
+of_cpufreq_cooling_register()
+cpuidle_of_cooling_register()
 
-Thanks.
-Alex
+So maybe this is the most consistent. :-)
+of_pd_warming_register()
 
+>
+> > Moreover, I think you could replace the "struct device *parent", with
+> > a "struct device_node *node" as in-parameter. That's all you need,
+> > right?
+>
+> You mean pd_wdev->dev.parent need not be populated ? The device
+> in this case will be created under /sys/devices which I do not think
+> is the correct.
 
-> ---
->   arch/arm/boot/dts/stm32mp157a-avenger96.dts | 8 --------
->   arch/arm/boot/dts/stm32mp157c-ed1.dts       | 3 ---
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      | 3 ---
->   3 files changed, 14 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> index cbfa4075907e..1583be1966eb 100644
-> --- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> +++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> @@ -135,10 +135,6 @@
->   		#interrupt-cells = <2>;
->   		status = "okay";
->   
-> -		st,main-control-register = <0x04>;
-> -		st,vin-control-register = <0xc0>;
-> -		st,usb-control-register = <0x30>;
-> -
->   		regulators {
->   			compatible = "st,stpmic1-regulators";
->   
-> @@ -173,7 +169,6 @@
->   				regulator-min-microvolt = <3300000>;
->   				regulator-max-microvolt = <3300000>;
->   				regulator-always-on;
-> -				st,mask_reset;
->   				regulator-initial-mode = <0>;
->   				regulator-over-current-protection;
->   			};
-> @@ -213,8 +208,6 @@
->   
->   			vdd_usb: ldo4 {
->   				regulator-name = "vdd_usb";
-> -				regulator-min-microvolt = <3300000>;
-> -				regulator-max-microvolt = <3300000>;
->   				interrupts = <IT_CURLIM_LDO4 0>;
->   				interrupt-parent = <&pmic>;
->   			};
-> @@ -240,7 +233,6 @@
->   			vref_ddr: vref_ddr {
->   				regulator-name = "vref_ddr";
->   				regulator-always-on;
-> -				regulator-over-current-protection;
->   			};
->   
->   			bst_out: boost {
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> index 1fc43251d697..0c304a024e51 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> @@ -218,8 +218,6 @@
->   
->   			vdd_usb: ldo4 {
->   				regulator-name = "vdd_usb";
-> -				regulator-min-microvolt = <3300000>;
-> -				regulator-max-microvolt = <3300000>;
->   				interrupts = <IT_CURLIM_LDO4 0>;
->   			};
->   
-> @@ -241,7 +239,6 @@
->   			vref_ddr: vref_ddr {
->   				regulator-name = "vref_ddr";
->   				regulator-always-on;
-> -				regulator-over-current-protection;
->   			};
->   
->   			bst_out: boost {
-> diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> index f6672e87aef3..e50ae7faa0ec 100644
-> --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> @@ -304,8 +304,6 @@
->   
->   			vdd_usb: ldo4 {
->   				regulator-name = "vdd_usb";
-> -				regulator-min-microvolt = <3300000>;
-> -				regulator-max-microvolt = <3300000>;
->   				interrupts = <IT_CURLIM_LDO4 0>;
->   			};
->   
-> @@ -328,7 +326,6 @@
->   			vref_ddr: vref_ddr {
->   				regulator-name = "vref_ddr";
->   				regulator-always-on;
-> -				regulator-over-current-protection;
->   			};
->   
->   			 bst_out: boost {
-> 
+Good point!
+
+> With a parent device specified, the power controller that resides the
+> power domain that can act as the warming dev, becomes the parent of the
+> warming dev. In case of this patch series, for the mx warming dev,
+> 179c0000.rsc/179c0000.rsc\:power-controller/ becomes the parent.(The
+> device will be created under
+> /sys/devices/platform/soc\@0/179c0000.rsc/179c0000.rsc\:power-controller/)
+>
+> Other way might be to register the warming device under virtual devices
+> as a new category of devices.
+
+No, that sounds wrong.
+
+Another option is to create a specific bus type for these new
+pd_warming devices. But I admit that sounds a bit too much, let's
+assign a parent.
+
+>
+> I prefer to keep it as a child of the power controller device, but I am
+> open to explore other options and to re-do this bit. What do you think?
+
+Sure, sorry for the noise.
+
+>
+> >
+> >> +{
+> >> +       struct pd_warming_device *pd_wdev;
+> >> +       struct of_phandle_args pd_args;
+> >> +       int ret;
+> >> +
+> >> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
+> >> +       if (!pd_wdev)
+> >> +               return ERR_PTR(-ENOMEM);
+> >> +
+> >> +       dev_set_name(&pd_wdev->dev, "%s_warming_dev", pd_name);
+> >
+> > Perhaps skip the in-param *pd_name and make use of the suggested
+> > "struct device_node *node", the index and something with "warming...",
+> > when setting the name.
+>
+> Won't the index have to be in-param in this case ?
+
+Isn't that already the case?
+
+Huh, long time since I reviewed this.
+
+>
+> >
+> > Just an idea, as to simplify for the caller.
+> >
+> >> +       pd_wdev->dev.parent = parent;
+> >
+> > This isn't needed, I think.
+
+So ignore this comment, as discussed above.
+
+> >
+> >> +
+> >> +       ret = device_register(&pd_wdev->dev);
+> >> +       if (ret)
+> >> +               goto error;
+> >> +
+> >> +       pd_args.np = parent->of_node;
+> >> +       pd_args.args[0] = pd_id;
+> >> +       pd_args.args_count = 1;
+> >> +
+> >> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
+> >> +
+> >
+> > White space.
+>
+> Will fix it.
+>
+> >
+> >> +       if (ret)
+> >> +               goto error;
+> >> +
+> >> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
+> >> +       if (ret < 0)
+> >> +               goto error;
+> >> +
+> >> +       pd_wdev->max_state = ret - 1;
+> >> +       pm_runtime_enable(&pd_wdev->dev);
+> >> +       pd_wdev->runtime_resumed = false;
+> >> +
+> >> +       pd_wdev->cdev = thermal_of_cooling_device_parent_register
+> >> +                                       (NULL, parent, pd_name, pd_wdev,
+> >> +                                        &pd_warming_device_ops);
+> >
+> > As stated in patch3, I don't get it why you need to use this new API
+> > for "parents".
+>
+> I agree with you. I cannot re-collect my thought process for this API.
+> I compiled and tested using the regular API and everything works fine.
+> I will drop patch 3 and use the thermal_of_cooling_device_register here.
+
+Great, one confusing piece seems to go away then. :-)
+
+>
+> >
+> >> +       if (IS_ERR(pd_wdev->cdev)) {
+> >> +               pr_err("unable to register %s cooling device\n", pd_name);
+> >> +               pm_runtime_disable(&pd_wdev->dev);
+> >> +               ret = PTR_ERR(pd_wdev->cdev);
+> >> +               goto error;
+> >> +       }
+> >> +
+> >> +       return pd_wdev->cdev;
+> >> +error:
+> >> +       put_device(&pd_wdev->dev);
+> >
+> > If device_register() succeeds you need to call device_unregister(),
+> > rather than put_device() as a part of the error handling.
+>
+> Will fix this.
+>
+> >
+> >> +       kfree(pd_wdev);
+> >
+> > You need a ->release() callback to manage kfree(), after you called
+> > device_register().
+>
+> mm?? I did not get this. What release callback? You mean for power
+> controller driver to call ?
+
+No, this how life cycle management of devices should be implemented.
+
+Have a look at genpd_release_dev() - and see how that is being used
+for genpd's virtual devices, that should explain more.
+
+>
+> >
+> >> +       return ERR_PTR(ret);
+> >
+> > Another thing is missing in the error path, which is to remove the
+> > device for the genpd. I think calling pm_genpd_remove_device() should
+> > work fine here.
+>
+> I will fix this. I am thinking this will be be needed in
+> pwr_domain_warming_unregister as well.
+
+Yep.
+
+Kind regards
+Uffe
