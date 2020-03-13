@@ -2,320 +2,112 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E09FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9123C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE3B20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q8z7MWVA"
+	by mail.kernel.org (Postfix) with ESMTP id A704820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584122172;
+	bh=AAEHbdTZnL6d7Gr3nuqbX2Ida62RwmUvzgcJbhcDcZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tQeOGlr/aNbqmrSu+1RUps82zZkumOW3hYDQPUobb21qV5X1PBWKhLCnp+5PwPWMU
+	 T85mvvw+kPyn0qmaE9opaqjbEzvKy1XDKIVvGKqVgWQJwHFmSzKjiigGTa5/aeMm20
+	 kJfEDlpqhCFL+0bkc/sflvJ7+MRykzsmaRGt4U+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgCMR4E (ORCPT
+        id S1727345AbgCMR4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:56:04 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53698 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgCMR4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:56:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DHtrX9093567;
-        Fri, 13 Mar 2020 12:55:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584122153;
-        bh=9+M3/8GqrSV5XRtykrwOoSSg5AaxCJwgeHTmu7ukxlU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Q8z7MWVAGSnt9hBJFlwpwxZyci7w7/4hEMXNoeuNWlzIvNRTWZJ9k4kUfXu+aLOwC
-         pWpLPEyYM/fyME7b0dSVyuQxbcf253hVD3oy0YZR787l4HThnYYTt8QbHbuZcFLd89
-         cYe3nFQ92ZbebYOIymoDyKTwB0tL/aZTlvGwJp/M=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DHtrdJ103231
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 12:55:53 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 12:55:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 12:55:52 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DHtpJZ026883;
-        Fri, 13 Mar 2020 12:55:52 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v3 04/10] dt-binding: ti: am65x: document mcu cpsw nuss
-Date:   Fri, 13 Mar 2020 19:55:05 +0200
-Message-ID: <20200313175511.2155-5-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313175511.2155-1-grygorii.strashko@ti.com>
-References: <20200313175511.2155-1-grygorii.strashko@ti.com>
+        Fri, 13 Mar 2020 13:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726637AbgCMR4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:56:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A57320746;
+        Fri, 13 Mar 2020 17:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584122170;
+        bh=AAEHbdTZnL6d7Gr3nuqbX2Ida62RwmUvzgcJbhcDcZA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pLoGD2BLHuWnmuwR3FCgqZMnqxYZ0X2OEV6TzKJA/wugGHSexcEQs6q00affCU/37
+         kzERWpO9BMPm0/E+H28LUYKY1l5WV5VeMf5cxAVYzZY33jq9g8DkvxDIHAVAJN2XhM
+         cmCusoj2BI6gVXH0z0fyi+bOFKoCAHiQBxyDYYYg=
+Date:   Fri, 13 Mar 2020 18:56:08 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: provide devm_platform_ioremap_and_get_resource()
+Message-ID: <20200313175608.GA2306127@kroah.com>
+References: <20200313171902.31836-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313171902.31836-1-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document device tree bindings for The TI AM654x/J721E SoC Gigabit Ethernet MAC
-(Media Access Controller - CPSW2G NUSS). The CPSW NUSS provides Ethernet packet
-communication for the device.
+On Sat, Mar 14, 2020 at 01:19:02AM +0800, Dejin Zheng wrote:
+> Since commit "drivers: provide devm_platform_ioremap_resource()",
+> It was wrap platform_get_resource() and devm_ioremap_resource() as
+> single helper devm_platform_ioremap_resource(). but now, many drivers
+> still used platform_get_resource() and devm_ioremap_resource()
+> together in the kernel tree. The reason can not be replaced is they
+> still need use the resource variables obtained by platform_get_resource().
+> so provide this helper.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/base/platform.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 7fa654f1288b..b3e2409effae 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -62,6 +62,24 @@ struct resource *platform_get_resource(struct platform_device *dev,
+>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>  
+>  #ifdef CONFIG_HAS_IOMEM
+> +/**
+> + * devm_platform_ioremap_and_get_resource - call devm_ioremap_resource() for a
+> + *					    platform device and get resource
+> + *
+> + * @pdev: platform device to use both for memory resource lookup as well as
+> + *        resource management
+> + * @index: resource index
+> + * @res: get the resource
+> + */
+> +void __iomem *
+> +devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
+> +				unsigned int index, struct resource **res)
+> +{
+> +	*res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> +	return devm_ioremap_resource(&pdev->dev, *res);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_and_get_resource);
+> +
+>  /**
+>   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
+>   *				    device
+> -- 
+> 2.25.0
+> 
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 226 ++++++++++++++++++
- 1 file changed, 226 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+I can not take new api functions without some real users of the function
+at the same time.
 
-diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-new file mode 100644
-index 000000000000..c28b5c925377
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-@@ -0,0 +1,226 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/ti,k3-am654-cpsw-nuss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: The TI AM654x/J721E SoC Gigabit Ethernet MAC (Media Access Controller) Device Tree Bindings
-+
-+maintainers:
-+  - Grygorii Strashko <grygorii.strashko@ti.com>
-+  - Sekhar Nori <nsekhar@ti.com>
-+
-+description:
-+  The TI AM654x/J721E SoC Gigabit Ethernet MAC (CPSW2G NUSS) has two ports
-+  (one external) and provides Ethernet packet communication for the device.
-+  CPSW2G NUSS features - the Reduced Gigabit Media Independent Interface (RGMII),
-+  Reduced Media Independent Interface (RMII), the Management Data
-+  Input/Output (MDIO) interface for physical layer device (PHY) management,
-+  new version of Common Platform Time Sync (CPTS), updated Address Lookup
-+  Engine (ALE).
-+  One external Ethernet port (port 1) with selectable RGMII/RMII interfaces and
-+  an internal Communications Port Programming Interface (CPPI5) (Host port 0).
-+  Host Port 0 CPPI Packet Streaming Interface interface supports 8 TX channels
-+  and one RX channels and operating by TI AM654x/J721E NAVSS Unified DMA
-+  Peripheral Root Complex (UDMA-P) controller.
-+  The CPSW2G NUSS is integrated into device MCU domain named MCU_CPSW0.
-+
-+  Additional features
-+  priority level Quality Of Service (QOS) support (802.1p)
-+  Support for Audio/Video Bridging (P802.1Qav/D6.0)
-+  Support for IEEE 1588 Clock Synchronization (2008 Annex D, Annex E and Annex F)
-+  Flow Control (802.3x) Support
-+  Time Sensitive Network Support
-+  IEEE P902.3br/D2.0 Interspersing Express Traffic
-+  IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
-+  Configurable number of addresses plus VLANs
-+  Configurable number of classifier/policers
-+  VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
-+  ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
-+  RX/TX csum offload
-+
-+  Specifications can be found at
-+    http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
-+    http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    oneOf:
-+      - const: ti,am654-cpsw-nuss
-+      - const: ti,j721e-cpsw-nuss
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+       The physical base address and size of full the CPSW2G NUSS IO range
-+
-+  reg-names:
-+    items:
-+      - const: cpsw_nuss
-+
-+  ranges: true
-+
-+  dma-coherent: true
-+
-+  clocks:
-+    description: CPSW2G NUSS functional clock
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  dmas:
-+    minItems: 9
-+    maxItems: 9
-+
-+  dma-names:
-+    items:
-+      - const: tx0
-+      - const: tx1
-+      - const: tx2
-+      - const: tx3
-+      - const: tx4
-+      - const: tx5
-+      - const: tx6
-+      - const: tx7
-+      - const: rx
-+
-+  pinctrl-names: true
-+
-+  ethernet-ports:
-+    type: object
-+    properties:
-+      '#address-cells':
-+        const: 1
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      "^port@[0-9]+$":
-+          type: object
-+          description: CPSW2G NUSS external ports
-+
-+          allOf:
-+            - $ref: ethernet-controller.yaml#
-+
-+          properties:
-+            reg:
-+              items:
-+                - const: 1
-+              description: CPSW port number
-+
-+            phys:
-+              maxItems: 1
-+              description:  phandle on phy-gmii-sel PHY
-+
-+            label:
-+              description: label associated with this port
-+
-+            ti,mac-only:
-+              $ref: /schemas/types.yaml#definitions/flag
-+              description:
-+                Specifies the port works in mac-only mode.
-+
-+            ti,syscon-efuse:
-+              $ref: /schemas/types.yaml#definitions/phandle-array
-+              description:
-+                Phandle to the system control device node which provides access
-+                to efuse IO range with MAC addresses
-+
-+          required:
-+            - reg
-+            - phys
-+
-+  mdio:
-+    type: object
-+    allOf:
-+      - $ref: "ti,davinci-mdio.yaml#"
-+    description:
-+      CPSW MDIO bus.
-+
-+patternProperties:
-+  "^pinctrl-[0-9]+$": true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - ranges
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - dmas
-+  - dma-names
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/k3.h>
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+    #include <dt-bindings/net/ti-dp83867.h>
-+
-+    mcu_cpsw: ethernet@46000000 {
-+        compatible = "ti,am654-cpsw-nuss";
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        reg = <0x0 0x46000000 0x0 0x200000>;
-+        reg-names = "cpsw_nuss";
-+        ranges = <0x0 0x0 0x46000000 0x0 0x200000>;
-+        dma-coherent;
-+        clocks = <&k3_clks 5 10>;
-+        clock-names = "fck";
-+        power-domains = <&k3_pds 5 TI_SCI_PD_EXCLUSIVE>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
-+
-+        dmas = <&mcu_udmap 0xf000>,
-+               <&mcu_udmap 0xf001>,
-+               <&mcu_udmap 0xf002>,
-+               <&mcu_udmap 0xf003>,
-+               <&mcu_udmap 0xf004>,
-+               <&mcu_udmap 0xf005>,
-+               <&mcu_udmap 0xf006>,
-+               <&mcu_udmap 0xf007>,
-+               <&mcu_udmap 0x7000>;
-+        dma-names = "tx0", "tx1", "tx2", "tx3", "tx4", "tx5", "tx6", "tx7",
-+                    "rx";
-+
-+        ethernet-ports {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+
-+              cpsw_port1: port@1 {
-+                    reg = <1>;
-+                    ti,mac-only;
-+                    label = "port1";
-+                    ti,syscon-efuse = <&mcu_conf 0x200>;
-+                    phys = <&phy_gmii_sel 1>;
-+
-+                    phy-mode = "rgmii-rxid";
-+                    phy-handle = <&phy0>;
-+              };
-+        };
-+
-+        davinci_mdio: mdio@f00 {
-+              compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+              reg = <0x0 0xf00 0x0 0x100>;
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              clocks = <&k3_clks 5 10>;
-+              clock-names = "fck";
-+              bus_freq = <1000000>;
-+
-+              phy0: ethernet-phy@0 {
-+                    reg = <0>;
-+                    ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+                    ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+              };
-+        };
-+    };
--- 
-2.17.1
+Please make a patch series modifing drivers to use this new function and
+I will be glad to review it then.
 
+thanks,
+
+greg k-h
