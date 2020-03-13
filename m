@@ -2,99 +2,118 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5C7C5ACC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A4A2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B50720746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1C54Bdb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ExgfqPLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgCMN3k (ORCPT
+        id S1726859AbgCMN35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:29:40 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40240 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgCMN3i (ORCPT
+        Fri, 13 Mar 2020 09:29:57 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52645 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726833AbgCMN35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:29:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z12so1106946wmf.5;
-        Fri, 13 Mar 2020 06:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GUHN0X5sdrI7D0GMcD6M5Z+3axinNY1E4lzMr1PVACQ=;
-        b=G1C54Bdb16WNvSIBd1FwsBhkuDdryGinNrlo8xqYr7AGyLpVtPTtNffGmu5s3IB1Mp
-         xPh5AwgNANFWWIG72b7V7Q8EQgEB9VLMRISdv4vZHRWhZla3ClqFfoJB6UlQ2WpPA/BD
-         OSGWBT/MADHWNNtv66MqlucLcqi1PbRJHsfO2TnpszE9t/MoZP+37qFzFxWhom/MGeEC
-         FlnYVdCPZLOFgzc6ljTbHMEedF05VuLmxcr8K8fepYkadg+ib18o9CCL9sPIralJOiza
-         uD7T3VTPWw+8BnKdm/X/KCsfRSwXLQ8vjweE8oTwFpLrpkrdTBm7HSaslkksP/4gjo8N
-         3jmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GUHN0X5sdrI7D0GMcD6M5Z+3axinNY1E4lzMr1PVACQ=;
-        b=pCWu9YfHh/aLQXqdvzAXS4gkRo1BAVt0+GP/DC6XR3qAf8LYd0vGUXSWvWD2ZfMA6X
-         ctJRjEVZmCJkUgQfAzt9LQijBPX6SVR+L2l686pqkuuI9idphoTNTxCfAfrHkEMIF5mv
-         97J6B64dgGdVQEduuTD+zqM1bcmrLF3J4jiDbjA5jfDsIbV2eqMrO1MwKdLd5Vg0Bo5g
-         Jet9GuxGlOOdFb4RU2DcrjrAOQSb76l75oNh0noK27ORVXHpBy1uQ03HnbX0KXlwvbii
-         aBzBJ+8K9MPVXPt1ZixQrdwge4HCCtvo3GTt+FhsGnEOM1E1pBJ8bFf+b4EIzHttJpWz
-         /6gw==
-X-Gm-Message-State: ANhLgQ161T6zD+fsuR8IZu9OYyInjRACTILwLgxQvH8yKd0z7050XAwd
-        J6i423WNAeikZwfMxtYAzSY=
-X-Google-Smtp-Source: ADFU+vsqxMJxy9G94+rLdzbFa6PMVw0t6uXOSQDXS2UJ1O6jpUhOXYstXxO0/H6x2XH1SMXnO4Mwyw==
-X-Received: by 2002:a1c:ba42:: with SMTP id k63mr11203124wmf.71.1584106175901;
-        Fri, 13 Mar 2020 06:29:35 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id z19sm17576705wma.41.2020.03.13.06.29.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 06:29:35 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] dt-bindings: iio: adc: rockchip-saradc: add description for px30
-Date:   Fri, 13 Mar 2020 14:29:26 +0100
-Message-Id: <20200313132926.10543-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200313132926.10543-1-jbx6244@gmail.com>
-References: <20200313132926.10543-1-jbx6244@gmail.com>
+        Fri, 13 Mar 2020 09:29:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584106195;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3+ksI+XSY2k8kxQCweElbOHXEbbN3FX9hGarbW0qLpE=;
+        b=ExgfqPLCHFei3/BGbAitRC+ZfLQxDc1vIdgQBJY6bAad7v6hYR/0mT+vh8SRdM8MorYZNg
+        R05HXuGLNEhhc+1Li+bjuy5DHpiLStrE2BYt2KlqC/szqE9Ts6/9FPTZrigTq2ImZNjFs2
+        yyTo3bXmoIbBXwWLrXP3lG5GYjEqROI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-SOYfMbpkNq6cmHdbDSn14g-1; Fri, 13 Mar 2020 09:29:52 -0400
+X-MC-Unique: SOYfMbpkNq6cmHdbDSn14g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4302189F762;
+        Fri, 13 Mar 2020 13:29:49 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-125-21.rdu2.redhat.com [10.10.125.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E14A660CC0;
+        Fri, 13 Mar 2020 13:29:47 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] KEYS: Don't write out to userspace while holding
+ key semaphore
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+References: <20200308170410.14166-1-longman@redhat.com>
+ <20200308170410.14166-2-longman@redhat.com>
+ <20200313010425.GA11360@linux.intel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e2dc038b-0283-0bf6-45f6-ad2dd0775e81@redhat.com>
+Date:   Fri, 13 Mar 2020 09:29:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200313010425.GA11360@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The description below is already in use for px30.dtsi,
-but was somehow never added to a document, so add
-"rockchip,px30-saradc", "rockchip,rk3399-saradc"
-for saradc nodes on a px30 platform to rockchip-saradc.yaml.
+On 3/12/20 9:04 PM, Jarkko Sakkinen wrote:
+> On Sun, Mar 08, 2020 at 01:04:09PM -0400, Waiman Long wrote:
+>> +		/*
+>> +		 * Read methods will just return the required length
+>> +		 * without any copying if the provided length isn't big
+>> +		 * enough.
+>> +		 */
+>> +		if ((ret > 0) && (ret <= buflen) && buffer &&
+>> +		    copy_to_user(buffer, tmpbuf, ret))
+>> +			ret = -EFAULT;
+> Please, reorg and remove redundant parentheses:
+>
+> /*
+>  * Read methods will just return the required length
+>  * without any copying if the provided length isn't big
+>  * enough.
+>  */
+> if (ret > 0 && ret <= buflen) {
+> 	if (buffer && copy_to_user(buffer, tmpbuf, ret))
+> 		ret = -EFAULT;
+> }
+>
+> Now the comment is attached to the exact right thing. The previous
+> organization is a pain to look at when backtracking commits for
+> whatever reason in the future.
+Yes, I can reorganize the code.
+> I'm also wondering, would it be possible to rework the code in a way
+> that you don't have check whether buffer is valid on a constant basis?
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+One way to do that is to extract the down_read/up_read block into a
+helper function and then have 2 separate paths - one for length
+retrieval and another one for reading the key. I think that will make
+the code a bit easier easier to read.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-index d3b78604b..5f398d882 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-@@ -17,6 +17,7 @@ properties:
-       - const: rockchip,rk3399-saradc
-       - items:
-           - enum:
-+            - rockchip,px30-saradc
-             - rockchip,rk3308-saradc
-             - rockchip,rk3328-saradc
-             - rockchip,rv1108-saradc
--- 
-2.11.0
+Thanks,
+Longman
 
