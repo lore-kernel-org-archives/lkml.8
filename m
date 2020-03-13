@@ -2,92 +2,124 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F13CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B248FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080162074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4C72074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OLfls09r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgCMUpP convert rfc822-to-8bit (ORCPT
+        id S1727452AbgCMUrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:45:15 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:46855 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgCMUpP (ORCPT
+        Fri, 13 Mar 2020 16:47:22 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44225 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbgCMUrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:45:15 -0400
-Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EB12B200004;
-        Fri, 13 Mar 2020 20:45:05 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] arm: mach-dove: Mark dove_io_desc as __maybe_unused
-In-Reply-To: <20200306125638.8285-1-vincenzo.frascino@arm.com>
-References: <20200306125638.8285-1-vincenzo.frascino@arm.com>
-Date:   Fri, 13 Mar 2020 21:45:04 +0100
-Message-ID: <87mu8kx9v3.fsf@FE-laptop>
+        Fri, 13 Mar 2020 16:47:22 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d9so4819760plo.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 13:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZnKWe5Bitvm6HNCJn4nVCZ5y8dNJJUHTl0yto409qyY=;
+        b=OLfls09rQF1wozKG2lePYqatpiYhqrd+Eq4NXV+WaxGp0AwpkZyKs5j5H9Czd89YJu
+         Lnkds9VKW8VGN7M2OfoTvQEAy8tP8W+TAbAM3dxbO3XCD0fAg3d6VeyauoU1/ZIWL1pr
+         K5CzAYa0jVWTBcascq4e5bUIUdJoyaCCDsJ9Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZnKWe5Bitvm6HNCJn4nVCZ5y8dNJJUHTl0yto409qyY=;
+        b=KmIiI31y3y090LNaF56ijcnz7sHtfaSQGov9VczAjoiIkvrsQVBOCSQcswzwPFrNvC
+         Ak0niyaeih3wd/qWwBwH9eQbAS5l7sYw1TQ/ku/KDvy5SWm6oGPLzn3CUNg7DEeHtBW/
+         cEAWY6/1xasJOiawSCu7eGGHpHloNvImbpdgkWZKGDfFuC7VDPpYa1qIRV+8MfN9s4Jf
+         437XFj9VgugN8LJhDgZHZREjyFD7wIgYrx9ynAOhQeOL/Dgy1Urkh+f9zAsatFUEwLgf
+         +GjrR8u6WqhBhXqvTcikMM6E2x+7GNTvGhK88F7XFC+DyTLVa20pI1o02dYZw+E5viZi
+         W2sw==
+X-Gm-Message-State: ANhLgQ0S3cMjyywcVrF8xmEKKhsqVLuoSPam0ywL2FQBDcpwvC5vmWJ/
+        unIhSJQYVK+yX5sJkV2y2b+0kA==
+X-Google-Smtp-Source: ADFU+vsiBDRZxQvqlXgHWXpfQHmmGpQZZfBg2hu2n/nkhiFxNIU+yUk+rbuPivW6v98RkDC1VvQKZQ==
+X-Received: by 2002:a17:90b:3711:: with SMTP id mg17mr10382797pjb.73.1584132440939;
+        Fri, 13 Mar 2020 13:47:20 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id a13sm26532278pfc.24.2020.03.13.13.47.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 13:47:20 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     gregkh@linuxfoundation.org
+Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
+        bjorn.andersson@linaro.org, akashast@codeaurora.org,
+        skakit@codeaurora.org, rojay@codeaurora.org,
+        mgautam@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Doug Anderson <dianders@google.com>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH 1/2] tty: serial: qcom_geni_serial: No need to stop tx/rx on UART shutdown
+Date:   Fri, 13 Mar 2020 13:46:51 -0700
+Message-Id: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+On a board using qcom_geni_serial I found that I could no longer
+interact with kdb if I got a crash after the "agetty" running on the
+same serial port was killed.  This meant that various classes of
+crashes that happened at reboot time were undebuggable.
 
-> Without this, we get the warnings below when CONFIG_MMU is disabled:
->
-> linux/arch/arm/mach-dove/common.c:51:24: warning: ‘dove_io_desc’ defined
-> but not used [-Wunused-variable]
-> static struct map_desc dove_io_desc[] __initdata = {
->                        ^~~~~~~~~~~~
->
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Cc: Gregory Clement <gregory.clement@bootlin.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reading through the code, I couldn't figure out why qcom_geni_serial
+felt the need to run so much code at port shutdown time.  All we need
+to do is disable the interrupt.
 
-Applied on mvebu/arm
+After I make this change then a hardcoded kgdb_breakpoint in some late
+shutdown code now allows me to interact with the debugger.  I also
+could freely close / re-open the port without problems.
 
-Thanks,
+Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Gregory
-> ---
->  arch/arm/mach-dove/common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/mach-dove/common.c b/arch/arm/mach-dove/common.c
-> index 01b830afcea9..dbe970e37895 100644
-> --- a/arch/arm/mach-dove/common.c
-> +++ b/arch/arm/mach-dove/common.c
-> @@ -48,7 +48,7 @@
->  /*****************************************************************************
->   * I/O Address Mapping
->   ****************************************************************************/
-> -static struct map_desc dove_io_desc[] __initdata = {
-> +static struct map_desc __maybe_unused dove_io_desc[] __initdata = {
->  	{
->  		.virtual	= (unsigned long) DOVE_SB_REGS_VIRT_BASE,
->  		.pfn		= __phys_to_pfn(DOVE_SB_REGS_PHYS_BASE),
-> -- 
-> 2.25.1
->
+ drivers/tty/serial/qcom_geni_serial.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 272bae0eebc7..09d8612517aa 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -827,17 +827,11 @@ static void get_tx_fifo_size(struct qcom_geni_serial_port *port)
+ 
+ static void qcom_geni_serial_shutdown(struct uart_port *uport)
+ {
+-	unsigned long flags;
+-
+ 	/* Stop the console before stopping the current tx */
+ 	if (uart_console(uport))
+ 		console_stop(uport->cons);
+ 
+ 	disable_irq(uport->irq);
+-	spin_lock_irqsave(&uport->lock, flags);
+-	qcom_geni_serial_stop_tx(uport);
+-	qcom_geni_serial_stop_rx(uport);
+-	spin_unlock_irqrestore(&uport->lock, flags);
+ }
+ 
+ static int qcom_geni_serial_port_setup(struct uart_port *uport)
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.25.1.481.gfbce0eb801-goog
+
