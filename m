@@ -2,93 +2,81 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9238BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91CBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6585C2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B10C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgCMJDo (ORCPT
+        id S1726535AbgCMJDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:03:44 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:38446 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCMJDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:03:44 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id A633C804D0;
-        Fri, 13 Mar 2020 10:03:39 +0100 (CET)
-Date:   Fri, 13 Mar 2020 10:03:38 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v3] drm/bochs: downgrade pci_request_region failure from
- error to warning
-Message-ID: <20200313090338.GA31815@ravnborg.org>
-References: <20200313084152.2734-1-kraxel@redhat.com>
+        Fri, 13 Mar 2020 05:03:52 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56746 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726310AbgCMJDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 05:03:51 -0400
+Received: from [10.130.0.70] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL2hUTGteYx4aAA--.10S3;
+        Fri, 13 Mar 2020 17:03:25 +0800 (CST)
+Subject: Re: [PATCH 4/6] MIPS: Loongson: Add DMA support for 7A1000
+To:     Christoph Hellwig <hch@infradead.org>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+ <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
+ <20200313082451.GA20331@infradead.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-mips@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <cc016eff-8897-0d08-b68e-e10eeefdb73c@loongson.cn>
+Date:   Fri, 13 Mar 2020 17:03:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200313084152.2734-1-kraxel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=vkfgAjWNAAAA:8
-        a=20KFwNOVAAAA:8 a=7gkXJVJtAAAA:8 a=XvIV5Jx4ir0DwZFBozwA:9
-        a=wPNLvfGTeEIA:10 a=s88AYcEWOXMFsoP9cgP2:22 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <20200313082451.GA20331@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxL2hUTGteYx4aAA--.10S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYJ7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
+        CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
+        xcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GFWl42
+        xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+        GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+        8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
+        MIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42
+        IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8KZXUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gred.
+On 03/13/2020 04:24 PM, Christoph Hellwig wrote:
+> On Mon, Mar 09, 2020 at 04:23:24PM +0800, Tiezhu Yang wrote:
+>> Implement __phys_to_dma() and __dma_to_phys() according to the
+>> node id offset in 7A1000 DMA route config register.
+> Can you just switch Loongson over to use the dma_pfn_offset field in
+> struct device?  I'd love to kill the __phys_to_dma and __dma_to_phys
+> hooks wherever possible.
 
-On Fri, Mar 13, 2020 at 09:41:52AM +0100, Gerd Hoffmann wrote:
-> Shutdown of firmware framebuffer has a bunch of problems.  Because
-> of this the framebuffer region might still be reserved even after
-> drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
-> 
-> Don't consider pci_request_region() failure for the framebuffer
-> region as fatal error to workaround this issue.
-> 
-> Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-> index 952199cc0462..dce4672e3fc8 100644
-> --- a/drivers/gpu/drm/bochs/bochs_hw.c
-> +++ b/drivers/gpu/drm/bochs/bochs_hw.c
-> @@ -157,10 +157,8 @@ int bochs_hw_init(struct drm_device *dev)
+Hi Christoph,
 
-There is a drm_device avilable.
+Thanks for your suggestion, I will refactor the code.
 
->  		size = min(size, mem);
->  	}
->  
-> -	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
-> -		DRM_ERROR("Cannot request framebuffer\n");
-> -		return -EBUSY;
-> -	}
-> +	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
-> +		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
-So you could use drm_WARN() which is what is preferred these days.
-With this fixed:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Thanks,
 
-	Sam
+Tiezhu Yang
+
