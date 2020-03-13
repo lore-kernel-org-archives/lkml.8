@@ -2,129 +2,103 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10646C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F11DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E264D2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BAF2067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZZU9PqB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCMGha (ORCPT
+        id S1726390AbgCMGjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:37:30 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:60876 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726060AbgCMGha (ORCPT
+        Fri, 13 Mar 2020 02:39:25 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54692 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgCMGjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:37:30 -0400
-X-IronPort-AV: E=Sophos;i="5.70,547,1574092800"; 
-   d="scan'208";a="86262345"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 13 Mar 2020 14:37:22 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 983A250A9984;
-        Fri, 13 Mar 2020 14:27:21 +0800 (CST)
-Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Fri, 13 Mar 2020 14:37:18 +0800
-Received: from TEST.g08.fujitsu.local (10.167.226.147) by
- G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1395.4 via Frontend Transport; Fri, 13 Mar 2020 14:37:17 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-Subject: [RFC PATCH] x86/apic: Drop superfluous apic_phys
-Date:   Fri, 13 Mar 2020 14:37:15 +0800
-Message-ID: <20200313063715.7523-1-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.1
+        Fri, 13 Mar 2020 02:39:24 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D6cLBh045507;
+        Fri, 13 Mar 2020 01:38:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584081501;
+        bh=WnpTMzvGCYaYRe1U/C0Li2r73YcUNVNL0RBtJe7C5ek=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZZU9PqB4WRSyYzB+VHvVQFyK7EmiAjq7ufZBHjGSu7rHcr2wMpyGythnWr56MEX4x
+         jKgXdxchUY48lmtQdykvq64KXsvJoMlqcgXzwCR6gQ//zVXgq0+6FZ8wPsxjJuoGfb
+         7K65LjX1xfW1E8gPKPGXagL9Rca4Yks2WNscriOI=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02D6cL6q015872;
+        Fri, 13 Mar 2020 01:38:21 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 01:38:21 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 01:38:21 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02D6cAZB046397;
+        Fri, 13 Mar 2020 01:38:11 -0500
+Subject: Re: [PATCH 04/23] mtd: spi-nor: Expose stuctures and functions to
+ manufacturer drivers
+To:     <Tudor.Ambarus@microchip.com>, <bbrezillon@kernel.org>,
+        <linux-mtd@lists.infradead.org>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
+        <matthias.bgg@gmail.com>, <vz@mleia.com>,
+        <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
+        <john.garry@huawei.com>, <tglx@linutronix.de>,
+        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
+        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
+        <swboyd@chromium.org>, <opensource@jilayne.com>,
+        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
+        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
+        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
+ <20200302180730.1886678-5-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <6b30b61b-c8e6-956e-b8b0-b795dfc9648f@ti.com>
+Date:   Fri, 13 Mar 2020 12:08:49 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 983A250A9984.A55C0
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+In-Reply-To: <20200302180730.1886678-5-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-apic_phys seems having totally the same meaning as mp_lapic_addr,
-except it is static, replace it.
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
-Not sure if there is still any corner case, but it boots fine.
 
- arch/x86/kernel/apic/apic.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+On 02/03/20 11:37 pm, Tudor.Ambarus@microchip.com wrote:
+> From: Boris Brezillon <bbrezillon@kernel.org>
+> 
+> Expose the flash_info struct and the generic set_4byte() implementations.
+> Some manufacturers rely on the generic set_4byte() implementations.
+> Remove the static specifier and expose their prototypes in core.h.
+> 
+> Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 5f973fed3c9f..5b7b59951421 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -199,8 +199,6 @@ unsigned int lapic_timer_period = 0;
- 
- static void apic_pm_activate(void);
- 
--static unsigned long apic_phys __ro_after_init;
--
- /*
-  * Get the LAPIC version
-  */
-@@ -1170,7 +1168,7 @@ void clear_local_APIC(void)
- 	u32 v;
- 
- 	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
-+	if (!x2apic_mode && !mp_lapic_addr)
- 		return;
- 
- 	maxlvt = lapic_get_maxlvt();
-@@ -1261,7 +1259,7 @@ void apic_soft_disable(void)
- void disable_local_APIC(void)
- {
- 	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
-+	if (!x2apic_mode && !mp_lapic_addr)
- 		return;
- 
- 	apic_soft_disable();
-@@ -2111,14 +2109,12 @@ void __init init_apic_mappings(void)
- 		pr_info("APIC: disable apic facility\n");
- 		apic_disable();
- 	} else {
--		apic_phys = mp_lapic_addr;
--
- 		/*
- 		 * If the system has ACPI MADT tables or MP info, the LAPIC
- 		 * address is already registered.
- 		 */
- 		if (!acpi_lapic && !smp_found_config)
--			register_lapic_address(apic_phys);
-+			register_lapic_address(mp_lapic_addr);
- 	}
- 
- 	/*
-@@ -2874,11 +2870,11 @@ early_param("apic", apic_set_verbosity);
- 
- static int __init lapic_insert_resource(void)
- {
--	if (!apic_phys)
-+	if (!mp_lapic_addr)
- 		return -1;
- 
- 	/* Put local APIC into the resource map. */
--	lapic_resource.start = apic_phys;
-+	lapic_resource.start = mp_lapic_addr;
- 	lapic_resource.end = lapic_resource.start + PAGE_SIZE - 1;
- 	insert_resource(&iomem_resource, &lapic_resource);
- 
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
 -- 
-2.21.1
-
-
-
+Regards
+Vignesh
