@@ -2,115 +2,82 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC8BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA10C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C862E20749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPtKLdwx"
+	by mail.kernel.org (Postfix) with ESMTP id E09DB206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCMMCV (ORCPT
+        id S1726621AbgCMMEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:02:21 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36529 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgCMMCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:02:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i13so5126533pfe.3;
-        Fri, 13 Mar 2020 05:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rqZCr5O2knv3aL7ZNtX8r2mBVRi0LMR1FaqngmkfMJQ=;
-        b=FPtKLdwxpxKxgBSw0iLe9hQY+9YBYCC+tfTvScmCEbdJOHJsBYYHuAl+k90PNga5QY
-         lZzS7M8BrvUJfElR5CzaQHih5TtBsLkO5VjcDyJ39SW/+hUKnro0R/6v+9gO02XfJ36y
-         bdFB4oiab+yez9lnislkboKg9Sa1gmmDA3BfwX4YR7bpwOGaspOj/7ZoItr2tABEHTsb
-         zCcslmDndpKJY9UVCCexfe56WDKdtEc4vR6DXkU00Q2MSk/roP9rFqqXm5Thy0czpKUw
-         cxKxYrSt2ZD7fw8i75yxcLyG0uT0w4/beJEIgVUhBVEE7pVZ5fsvc0DYnFRAyYunYu+z
-         A0QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rqZCr5O2knv3aL7ZNtX8r2mBVRi0LMR1FaqngmkfMJQ=;
-        b=iD0I8pFKkNsdJmVBTRVVNrFC3Qnwv2tr+dm5zHgrFgcrWjzdRvGBYhPuxuWlOnMB6s
-         wOa3bRTBbioeY07UY50LUtfw7YXufA96yVEJj1ATtjaIY4wZYd/6c8FnERV72h+Ayz5U
-         Il1Y1F4ohSuKB1Tj52h8NbV7Ukf+brCaJf1KVfZV61ny8CRJ1tw4g8M1jGHnrVb3p994
-         vvOw1MWrSgyHgb2Pe05AFdYT8yG2gI/xuCJtvYzjxA5MOEP5XAq82wwwEnAmIxqWwiOB
-         Dwwam4KJ7RMwK8/zaSw4Ece8Wbx9+qZVkJ+RIaWrkHkTt+f+N3CcpkokjhZ/f8Dg6YHm
-         /BMg==
-X-Gm-Message-State: ANhLgQ1fIEKtx+z3RnZiX1dui3J0B9mFpow8t3X8sQmUCh6g26Cr/sTd
-        y5pqduVpl2qjoGPUivVx7h0=
-X-Google-Smtp-Source: ADFU+vv5/FxeZwFsfAreMfeCIP6NjJg9aQZfQhnafovcCtB4i0WwjD+KjHrLRS8iNqfBsFIfRPtq3w==
-X-Received: by 2002:a62:1b05:: with SMTP id b5mr11349432pfb.281.1584100940257;
-        Fri, 13 Mar 2020 05:02:20 -0700 (PDT)
-Received: from syed ([117.97.245.141])
-        by smtp.gmail.com with ESMTPSA id 3sm12178433pjg.27.2020.03.13.05.02.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 05:02:19 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 17:32:13 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     vilhelm.gray@gmail.com
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] counter: 104-quad-8: Add lock guards - filter clock
- prescaler
-Message-ID: <20200313120213.GA17855@syed>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 13 Mar 2020 08:04:32 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51924 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMMEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:04:31 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 849271A1419;
+        Fri, 13 Mar 2020 13:04:29 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 781461A13E3;
+        Fri, 13 Mar 2020 13:04:29 +0100 (CET)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 111ED203CE;
+        Fri, 13 Mar 2020 13:04:29 +0100 (CET)
+From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Subject: [PATCH net 0/3] QorIQ DPAA ARM RDBs need internal delay on RGMII
+Date:   Fri, 13 Mar 2020 14:04:22 +0200
+Message-Id: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: git-send-email 2.1.0
+Content-Type: text/plain; charset="us-ascii"
+Reply-to: madalin.bucur@oss.nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add lock protection from race conditions in the 104-quad-8 counter
-driver for filter clock prescaler related changes. There is no IRQ
-handling so used spin_lock calls for protection.
+The QorIQ DPAA 1 based RDB boards require internal delay on
+both Tx and Rx to be set. The patch set ensures all RGMII
+modes are treated correctly by the FMan driver and sets the
+phy-connection-type to "rgmii-id" to restore functionality.
+Previously Rx internal delay was set by board pull-ups and
+was left untouched by the PHY driver. Since commit
+1b3047b5208a80 ("net: phy: realtek: add support for
+configuring the RX delay on RTL8211F") the Realtek 8211F PHY
+driver has control over the RGMII RX delay and it is
+disabling it for other modes than RGMII_RXID and RGMII_ID.
 
-Fixes: 9b74dddf79be ("counter: 104-quad-8: Support Filter Clock Prescaler")
+Please note that u-boot in particular performs a fix-up of
+the PHY connection type and will overwrite the values from
+the Linux device tree. Another patch set was sent for u-boot
+and one needs to apply that [1] to the boot loader, to ensure
+this fix is complete, unless a different bootloader is used.
 
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
-Changes in v4:
- - Shift review-comments section so that it is not in commit message.
+[1] u-boot patches, Madalin Bucur (3):
+  net: fman: add support for all RGMII delay modes
+  armv8/ls1043ardb: RGMII ports require internal delay
+  armv8/ls1046ardb: RGMII ports require internal delay
 
- drivers/counter/104-quad-8.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Madalin Bucur (3):
+  net: fsl/fman: treat all RGMII modes in memac_adjust_link()
+  arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
+  arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
 
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 9dab190..58615e4 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -1230,6 +1230,8 @@ static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
- 	if (ret)
- 		return ret;
- 
-+	spin_lock(&priv->lock);
-+
- 	priv->fck_prescaler[channel_id] = prescaler;
- 
- 	/* Reset Byte Pointer */
-@@ -1240,6 +1242,8 @@ static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
- 	     base_offset + 1);
- 
-+	spin_unlock(&priv->lock);
-+
- 	return len;
- }
- 
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 4 ++--
+ drivers/net/ethernet/freescale/fman/fman_memac.c  | 5 ++++-
+ 3 files changed, 8 insertions(+), 5 deletions(-)
+
 -- 
-2.7.4
+2.1.0
 
