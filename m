@@ -2,241 +2,109 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C835C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B06CC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A432073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624852074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H6/1F5IN"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="C0AKIxz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgCMNmQ (ORCPT
+        id S1726683AbgCMNpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:42:16 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44352 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726327AbgCMNmP (ORCPT
+        Fri, 13 Mar 2020 09:45:31 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7244 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726327AbgCMNpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:42:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584106934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WmJMCPjLeZOGPd5XvclGChfYUeyS2atWd4pQtWyZc14=;
-        b=H6/1F5IN3m8BybRL0RM81CtAAAyEuYErKvkoFUE9BlS+qhg44uH1X3Ge0di0OcMJmHvzmJ
-        xYA9freBuSyzSsK2IhPlwBWIJpODTbZZVu/Bj9h1A78BaP6KnuDLyBOZAIsGmJ1b9YWHR5
-        vP2Vk0VttwGj2c0oJLHHUFBu1EONGnk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-dxlPnEmCMRqY71uj9jQetw-1; Fri, 13 Mar 2020 09:42:06 -0400
-X-MC-Unique: dxlPnEmCMRqY71uj9jQetw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C61518A8CAF;
-        Fri, 13 Mar 2020 13:42:04 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A89A4101D480;
-        Fri, 13 Mar 2020 13:41:55 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 3896722021D; Fri, 13 Mar 2020 09:41:55 -0400 (EDT)
-Date:   Fri, 13 Mar 2020 09:41:55 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Peng Tao <tao.peng@linux.alibaba.com>
-Subject: Re: [PATCH 13/20] fuse, dax: Implement dax read/write operations
-Message-ID: <20200313134155.GA156804@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-14-vgoyal@redhat.com>
- <CAJfpegtpgE+vnN0hvEVMDyNkYZ0h3_kNgxWCQUb2iuBdy8kEsw@mail.gmail.com>
- <20200312160208.GB114720@redhat.com>
- <CAJfpegtuCCRfKfctUyQBimAOpnOTvW5zodLAy307Mr_1h0+e7g@mail.gmail.com>
+        Fri, 13 Mar 2020 09:45:31 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DDhImK025110;
+        Fri, 13 Mar 2020 14:45:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=BzB5x9BXZs8Iatgp2DsUFoNfkqOLF0WtU1RaDu8c6yo=;
+ b=C0AKIxz6AMmzFUGv9Ii97U25jySGU0BnwGzQ1zblOatfce7HuFpUZody8thgAtC7M9sE
+ Fsh3hBpyeuZVrZkEpNNWaYv+UWLrG0g05Awhspf7EEsNfOP2dXpFh8i+xJUsNpGXrhS2
+ sNmAE7AaSztqUOSXVevUOdVz+PARM22UcC2cWR3jCoykZzlKyA0uGpAsC//8RuT3WsUh
+ 9/EwwsD93SK3hTfF1ayQ8+/2yToB6s+/+gypbo+9PSigH5zalfWtE8Zl/6CDjr+DlUWy
+ bhSt56ZmNlA38r1MyF4jZDLk+ef/cRTJd1AYDWn8NWviV1v8lzsXqhsnxE9RsvutAAMu +A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yqt8196eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Mar 2020 14:45:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A212A100038;
+        Fri, 13 Mar 2020 14:45:09 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8C28C2A906E;
+        Fri, 13 Mar 2020 14:45:09 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Mar
+ 2020 14:45:08 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 13 Mar 2020 14:45:09 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
+Thread-Topic: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
+Thread-Index: AQHV59mpsik/WRqXdUuknFgx3rC1tqgj1SiAgAAFrQCAIr0VgIAAAtYA
+Date:   Fri, 13 Mar 2020 13:45:09 +0000
+Message-ID: <1cd9e136-ebdd-f604-9ed8-1f21d4c70adb@st.com>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-4-benjamin.gaignard@st.com>
+ <687ab83c-6381-57aa-3bc1-3628e27644b5@linaro.org>
+ <9cc4af9e-27d0-96c3-b3f1-20c88f89b70a@st.com>
+ <ee131515-cd4c-00b2-5e1f-3abefb634bdd@linaro.org>
+ <4f21f3db-50dd-f412-35dc-1fde7a139c52@linaro.org>
+In-Reply-To: <4f21f3db-50dd-f412-35dc-1fde7a139c52@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <845C408BCC80DC4391DEC3D041AB6476@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtuCCRfKfctUyQBimAOpnOTvW5zodLAy307Mr_1h0+e7g@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_05:2020-03-12,2020-03-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 11:18:15AM +0100, Miklos Szeredi wrote:
-
-[..]
-> > > > +/* offset passed in should be aligned to FUSE_DAX_MEM_RANGE_SZ */
-> > > > +static int fuse_setup_one_mapping(struct inode *inode, loff_t offset,
-> > > > +                                 struct fuse_dax_mapping *dmap, bool writable,
-> > > > +                                 bool upgrade)
-> > > > +{
-> > > > +       struct fuse_conn *fc = get_fuse_conn(inode);
-> > > > +       struct fuse_inode *fi = get_fuse_inode(inode);
-> > > > +       struct fuse_setupmapping_in inarg;
-> > > > +       FUSE_ARGS(args);
-> > > > +       ssize_t err;
-> > > > +
-> > > > +       WARN_ON(offset % FUSE_DAX_MEM_RANGE_SZ);
-> > > > +       WARN_ON(fc->nr_free_ranges < 0);
-> > > > +
-> > > > +       /* Ask fuse daemon to setup mapping */
-> > > > +       memset(&inarg, 0, sizeof(inarg));
-> > > > +       inarg.foffset = offset;
-> > > > +       inarg.fh = -1;
-> > > > +       inarg.moffset = dmap->window_offset;
-> > > > +       inarg.len = FUSE_DAX_MEM_RANGE_SZ;
-> > > > +       inarg.flags |= FUSE_SETUPMAPPING_FLAG_READ;
-> > > > +       if (writable)
-> > > > +               inarg.flags |= FUSE_SETUPMAPPING_FLAG_WRITE;
-> > > > +       args.opcode = FUSE_SETUPMAPPING;
-> > > > +       args.nodeid = fi->nodeid;
-> > > > +       args.in_numargs = 1;
-> > > > +       args.in_args[0].size = sizeof(inarg);
-> > > > +       args.in_args[0].value = &inarg;
-> > >
-> > > args.force = true?
-> >
-> > I can do that but I am not sure what exactly does args.force do and
-> > why do we need it in this case.
-> 
-> Hm, it prevents interrupts.  Looking closely, however it will only
-> prevent SIGKILL from immediately interrupting the request, otherwise
-> it will send an INTERRUPT request and the filesystem can ignore that.
-> Might make sense to have a args.nonint flag to prevent the sending of
-> INTERRUPT...
-
-Hi Miklos,
-
-virtiofs does not support interrupt requests yet. Its fiq interrupt
-handler just does not do anything.
-
-static void virtio_fs_wake_interrupt_and_unlock(struct fuse_iqueue *fiq)
-__releases(fiq->lock)
-{
-        /*
-         * TODO interrupts.
-         *
-         * Normal fs operations on a local filesystems aren't interruptible.
-         * Exceptions are blocking lock operations; for example fcntl(F_SETLKW)
-         * with shared lock between host and guest.
-         */
-        spin_unlock(&fiq->lock);
-}
-
-So as of now setting force or not will not make any difference. We will
-still end up waiting for request to finish.
-
-Infact, I think there is no mechanism to set fc->no_interrupt in
-virtio_fs. If I am reading request_wait_answer(), correctly, it will
-see fc->no_interrupt is not set. That means filesystem supports
-interrupt requests and it will do wait_event_interruptible() and
-not even check for FR_FORCE bit. 
-
-Right now fc->no_interrupt is set in response to INTERRUPT request
-reply. Will it make sense to also be able to set it as part of
-connection negotation protocol and filesystem can tell in the
-beginning itself that it does not support interrupt and virtiofs
-can make use of that.
-
-So force flag is only useful if filesystem does not support interrupt
-and in that case we do wait_event_killable() and upon receiving
-SIGKILL, cancel request if it is still in pending queue. For virtiofs,
-we take request out of fiq->pending queue in submission path itself
-and if it can't be dispatched it waits on virtiofs speicfic queue
-with FR_PENDING cleared. That means, setting FR_FORCE for virtiofs
-does not mean anything as caller will end up waiting for
-request to finish anyway.
-
-IOW, setting FR_FORCE will make sense when we have mechanism to
-detect that request is still queued in virtiofs queues and have
-mechanism to cancel it. We don't have it. In fact, given we are
-a push model, we dispatch request immediately to filesystem,
-until and unless virtqueue is full. So probability of a request
-still in virtiofs queue is low.
-
-So may be we can start setting force at some point of time later
-when we have mechanism to cancel detect and cancel pending requests
-in virtiofs.
-
-> 
-> > First thing it does is that request is allocated with flag __GFP_NOFAIL.
-> > Second thing it does is that caller is forced to wait for request
-> > completion and its not an interruptible sleep.
-> >
-> > I am wondering what makes FUSE_SETUPMAPING/FUSE_REMOVEMAPPING requests
-> > special that we need to set force flag.
-> 
-> Maybe not for SETUPMAPPING (I was confused by the error log).
-> 
-> However if REMOVEMAPPING fails for some reason, than that dax mapping
-> will be leaked for the lifetime of the filesystem.   Or am I
-> misunderstanding it?
-
-FUSE_REMVOEMAPPING is not must. If we send another FUSE_SETUPMAPPING, then
-it will create the new mapping and free up resources associated with
-the previous mapping, IIUC.
-
-So at one point of time we were thinking that what's the point of
-sending FUSE_REMOVEMAPPING. It helps a bit with freeing up filesystem
-resources earlier. So if cache size is big, then there will not be
-much reclaim activity going and if we don't send FUSE_REMOVEMAPPING,
-all these filesystem resources will remain busy on host for a long
-time.
-
-> 
-> > > > +       ret = fuse_setup_one_mapping(inode,
-> > > > +                                    ALIGN_DOWN(pos, FUSE_DAX_MEM_RANGE_SZ),
-> > > > +                                    dmap, true, true);
-> > > > +       if (ret < 0) {
-> > > > +               printk("fuse_setup_one_mapping() failed. err=%d pos=0x%llx\n",
-> > > > +                      ret, pos);
-> > >
-> > > Again.
-> >
-> > Will remove. How about converting some of them to pr_debug() instead? It
-> > can help with debugging if something is not working.
-> 
-> Okay, and please move it to fuse_setup_one_mapping() where there's
-> already a pr_debug() for the success case.
-
-Will do.
-
-> 
->  > > +
-> > > > +       /* Do not use dax for file extending writes as its an mmap and
-> > > > +        * trying to write beyong end of existing page will generate
-> > > > +        * SIGBUS.
-> > >
-> > > Ah, here it is.  So what happens in case of a race?  Does that
-> > > currently crash KVM?
-> >
-> > In case of race, yes, KVM hangs. So no shared directory operation yet
-> > till we have designed proper error handling in kvm path.
-> 
-> I think before this is merged we have to fix the KVM crash; that's not
-> acceptable even if we explicitly say that shared directory is not
-> supported for the time being.
-
-Ok, I will look into it. I had done some work in the past and realized
-its not trivial to fix kvm error paths. There are no users and propagating
-signals back into qemu instances and finding the right process is going to be
-tricky.
-
-Given the complexity of that work, I thought that for now we say that
-shared directory is not supported and once basic dax patches get merged,
-focus on kvm work.
-
-Thanks
-Vivek
-
+DQoNCk9uIDMvMTMvMjAgMjozNCBQTSwgRGFuaWVsIExlemNhbm8gd3JvdGU6DQo+IEhpIEJlbmph
+bWluLA0KPg0KPiBPbiAyMC8wMi8yMDIwIDEyOjA1LCBEYW5pZWwgTGV6Y2FubyB3cm90ZToNCj4N
+Cj4gWyAuLi4gXQ0KPg0KPj4+IEl0IGhhcyBiZSBleGNsdXNpdmUgYW5kIHRoYXQgZXhjbHVkZSB0
+aGUgcHJvYmxlbSB5b3UgZGVzY3JpYmUgYWJvdmUuDQo+PiBPaywgdGhlIHJlZ21hcF93cml0ZSBp
+cyBub3QgYSBmcmVlIG9wZXJhdGlvbiBhbmQgaW4gdGhpcyBjYXNlIHlvdSBjYW4NCj4+IGdldCBy
+aWQgb2YgYWxsIHRoZSByZWdtYXAtaXNoIGluIHRoaXMgZHJpdmVyLg0KPiBBcmUgeW91IHBsYW5u
+aW5nIHRvIHNlbmQgdGhlIG5vbi1yZWdtYXAgdmVyc2lvbj8NCk5vIGJlY2F1c2UgdGhlIHJlZ21h
+cCBpcyBpbmhlcml0ZWQgZnJvbSB0aGUgbWZkIHBhcmVudC4NCkkgY291bGQgdXNlIGZhc3QtaW8g
+dG8gaW1wcm92ZSB0aGF0Lg0KDQpCZW5qYW1pbg0KPg0KPg0KPg0K
