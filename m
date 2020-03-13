@@ -2,188 +2,124 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9D5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D2BC1975A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5B52072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584067250;
-	bh=M76NEENupVehXA7TGC3d9xvQsRxSR1zMhVkA5XMsdsE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/3cVB+ssFRaVTzr+C/xylI88Ldz7eo6NOBYlKzyl7obBoXe/ffLZ3qGRvwav1Jjb
-	 QXWkYo9THKntFea7Im9CDwYYiXPT0ixpREN0PR1yGZnVdMEn47kEqRk8317l3+LnXe
-	 23dUmxJDBVMoPn6isATI1qltW+glVzMvFSIHbowI=
+	by mail.kernel.org (Postfix) with ESMTP id D7BF6206B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NuDoBdHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCMCkt (ORCPT
+        id S1726423AbgCMCrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgCMCks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:40:48 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B95E2073B;
-        Fri, 13 Mar 2020 02:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584067248;
-        bh=M76NEENupVehXA7TGC3d9xvQsRxSR1zMhVkA5XMsdsE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOJlgan3gBFU1jxmFLXVMnQRX1LclFoGfDqBKbBus7JmwhmBDFJKqzFC+9i/RpahC
-         1+KxEYfXELrRLOAeraSauiPvnjzAyqtL3/gUx2DXjfbk/Ho6L5tJC9x/Ivz+MXkteb
-         RcUQtcVLNigX6yqPJiLZpGvL8PZRXlCgk3CG3nfg=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC tip/core/rcu 2/2] rcu: Add comments marking transitions between RCU watching and not
-Date:   Thu, 12 Mar 2020 19:40:46 -0700
-Message-Id: <20200313024046.27622-2-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200313024007.GA27492@paulmck-ThinkPad-P72>
-References: <20200313024007.GA27492@paulmck-ThinkPad-P72>
+        Thu, 12 Mar 2020 22:47:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38414 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCMCrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 22:47:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x11so5447128wrv.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 19:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=OdrpLOjcNV9+wy4GNwbzFp8QEspzVR1N0/SaxxYMR5A=;
+        b=NuDoBdHxvbbaqnKwo1XHy53ClOrSFGSHpDKm2UoEh+goApuSz24i0u5RU8OoHamVM7
+         yMECZOzOwXYTiO5YRBY25Zbsht6q5TIl98DYqD5NVG+hWiGdKtMpD0a6Hs3c0uvoOnet
+         y1luDcq6utIhuQBtF/yTiouNsxZcKdfpekGXY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=OdrpLOjcNV9+wy4GNwbzFp8QEspzVR1N0/SaxxYMR5A=;
+        b=Y7KrpLwXISBhKyYPzU2aXHrwMdXaXWWocE/+r+fX0pgzX1ySE1i8JsSmdy1zaA3Nu6
+         KdyG9EFC+5s4aEssmiMcxHrdqhPfg6IaHgAf5jvM3icOZ/rn0NDBt8nMSXfFfQy4qr/m
+         ZhLuCd1sZeEN3MwhAhUigAXH//eKysfCI7McD24EhLoZxEDzGoaoHI6CG0T6OSSVdpEm
+         lxlx07LpdkrwM2CZfUAkdX3wKrkj8x6dFhsv8YP/hkyys+khqAeZ8WiO+yrJEi/iLl1t
+         UGX+IbvV2w0YA6gDWHbSzj2UANP5skSlEI1iHkmnCa69ZIgLCPpg90ZI1uJyRS1fWtYw
+         s/5Q==
+X-Gm-Message-State: ANhLgQ37xbrYx+xFiZ6NyFA3pOMvu4xSUiNJtGOpxk+pnhmjFgYpD7uP
+        /zsFQjaPOafzemaw+W0ijyN/Kg==
+X-Google-Smtp-Source: ADFU+vvBv9f6+FaaZ139ZafywBC2OcKDNJ12Yf14ArY8iMPQt8yHd/6v2z3jKPrMkNuoGshVYEqjmQ==
+X-Received: by 2002:a5d:508b:: with SMTP id a11mr13838274wrt.332.1584067632756;
+        Thu, 12 Mar 2020 19:47:12 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id p4sm2668427wma.21.2020.03.12.19.47.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 19:47:11 -0700 (PDT)
+Subject: Re: [PATCH] checkpatch: always allow C99 SPDX License Identifer
+ comments
+To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200311191128.7896-1-scott.branden@broadcom.com>
+ <2c4b42d1fb0bdb6604a72b2a10d49f9eae4b0ff4.camel@perches.com>
+ <7056bd62-4251-f9bb-2b97-15f93a1e7142@broadcom.com>
+ <4aadd119d4336de9eafcfbadb951630eb0cf2eb9.camel@perches.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <fa9eaa68-c950-6cc8-78fd-a0f4923ac2c5@broadcom.com>
+Date:   Thu, 12 Mar 2020 19:47:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <4aadd119d4336de9eafcfbadb951630eb0cf2eb9.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Hi Joe,
 
-It is not as clear as it might be just where in RCU's idle entry/exit
-code RCU stops and starts watching the current CPU.  This commit therefore
-adds comments calling out the transitions.
+On 2020-03-11 9:42 p.m., Joe Perches wrote:
+> On Wed, 2020-03-11 at 19:48 -0700, Scott Branden wrote:
+>> Hi Joe,
+>>
+>> On 2020-03-11 7:26 p.m., Joe Perches wrote:
+>>> On Wed, 2020-03-11 at 12:11 -0700, Scott Branden wrote:
+>>>> Always allow C99 comment styles if SPDK-License-Identifier is in comment
+>>>> even if C99_COMMENT_TOLERANCE is specified in the --ignore options.
+>>> Why is this useful?
+>> This is useful because if you run checkpatch with
+>> --ignore=C99_COMMENT_TOLERANCE
+>> right now it will warn on almost every .c file in the linux kernel due
+>> to the decision to
+>> use // SPDX-License-Identifier: at the start of every c file
+> Maybe this is better:
+>
+> Just don't perform any other per-line checks on a valid or invalid
+> SPDX line.
+I tried your change and it works as well.
+Probably better/simpler if no other processing is needed on lines with 
+SPDX-License-Indentifier: on it.
 
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/tree.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index f7d3e48..2f4c91a 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -225,7 +225,9 @@ void rcu_softirq_qs(void)
- 
- /*
-  * Record entry into an extended quiescent state.  This is only to be
-- * called when not already in an extended quiescent state.
-+ * called when not already in an extended quiescent state, that is,
-+ * RCU is watching prior to the call to this function and is no longer
-+ * watching upon return.
-  */
- static void rcu_dynticks_eqs_enter(void)
- {
-@@ -238,7 +240,7 @@ static void rcu_dynticks_eqs_enter(void)
- 	 * next idle sojourn.
- 	 */
- 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
--	/* Better be in an extended quiescent state! */
-+	// RCU is no longer watching.  Better be in extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     (seq & RCU_DYNTICK_CTRL_CTR));
- 	/* Better not have special action (TLB flush) pending! */
-@@ -248,7 +250,8 @@ static void rcu_dynticks_eqs_enter(void)
- 
- /*
-  * Record exit from an extended quiescent state.  This is only to be
-- * called from an extended quiescent state.
-+ * called from an extended quiescent state, that is, RCU is not watching
-+ * prior to the call to this function and is watching upon return.
-  */
- static void rcu_dynticks_eqs_exit(void)
- {
-@@ -261,6 +264,7 @@ static void rcu_dynticks_eqs_exit(void)
- 	 * critical section.
- 	 */
- 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-+	// RCU is now watching.  Better not be in an extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     !(seq & RCU_DYNTICK_CTRL_CTR));
- 	if (seq & RCU_DYNTICK_CTRL_MASK) {
-@@ -571,6 +575,7 @@ static void rcu_eqs_enter(bool user)
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     rdp->dynticks_nesting == 0);
- 	if (rdp->dynticks_nesting != 1) {
-+		// RCU will still be watching, so just do accounting and leave.
- 		rdp->dynticks_nesting--;
- 		return;
- 	}
-@@ -583,7 +588,9 @@ static void rcu_eqs_enter(bool user)
- 	rcu_prepare_for_idle();
- 	rcu_preempt_deferred_qs(current);
- 	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
-+	// RCU is watching here ...
- 	rcu_dynticks_eqs_enter();
-+	// ... but is no longer watching here.
- 	rcu_dynticks_task_enter();
- }
- 
-@@ -663,7 +670,9 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
- 	if (irq)
- 		rcu_prepare_for_idle();
- 
-+	// RCU is watching here ...
- 	rcu_dynticks_eqs_enter();
-+	// ... but is no longer watching here.
- 
- 	if (irq)
- 		rcu_dynticks_task_enter();
-@@ -738,11 +747,14 @@ static void rcu_eqs_exit(bool user)
- 	oldval = rdp->dynticks_nesting;
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && oldval < 0);
- 	if (oldval) {
-+		// RCU was already watching, so just do accounting and leave.
- 		rdp->dynticks_nesting++;
- 		return;
- 	}
- 	rcu_dynticks_task_exit();
-+	// RCU is not watching here ...
- 	rcu_dynticks_eqs_exit();
-+	// ... but is watching here.
- 	rcu_cleanup_after_idle();
- 	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-@@ -819,7 +831,9 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
- 		if (irq)
- 			rcu_dynticks_task_exit();
- 
-+		// RCU is not watching here ...
- 		rcu_dynticks_eqs_exit();
-+		// ... but is watching here.
- 
- 		if (irq)
- 			rcu_cleanup_after_idle();
-@@ -829,9 +843,16 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
- 		   READ_ONCE(rdp->rcu_urgent_qs) &&
- 		   !READ_ONCE(rdp->rcu_forced_tick)) {
-+		// We get here only if we had already exited the extended
-+		// quiescent state and this was an interrupt (not an NMI).
-+		// Therefore, (1) RCU is already watching and (2) The fact
-+		// that we are in an interrupt handler and that the rcu_node
-+		// lock is an irq-disabled lock prevents self-deadlock.
-+		// So we can safely recheck under the lock.
- 		raw_spin_lock_rcu_node(rdp->mynode);
--		// Recheck under lock.
- 		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+			// A nohz_full CPU is in the kernel and RCU
-+			// needs a quiescent state.  Turn on the tick!
- 			WRITE_ONCE(rdp->rcu_forced_tick, true);
- 			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
- 		}
--- 
-2.9.5
+Would you like to just submit your patch or do I need to construct 
+something?
+> ---
+>   scripts/checkpatch.pl | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 529c892..3f2ae7 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3171,6 +3171,7 @@ sub process {
+>   						WARN("SPDX_LICENSE_TAG",
+>   						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
+>   					}
+> +					next;
+>   				}
+>   			}
+>   		}
+>
+>
 
