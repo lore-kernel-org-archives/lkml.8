@@ -5,132 +5,138 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88568C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AF420749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F80C20746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGBliQoj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+VQkJt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgCMKhf (ORCPT
+        id S1726605AbgCMKhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:37:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52362 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgCMKhf (ORCPT
+        Fri, 13 Mar 2020 06:37:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42782 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgCMKhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:37:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 11so9336366wmo.2;
-        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
+        Fri, 13 Mar 2020 06:37:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v11so11413596wrm.9;
+        Fri, 13 Mar 2020 03:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rQjq8uKoRrlLiAy2jC9SVIhkfPttmNZUWXbQLhDZM9k=;
-        b=UGBliQojrFTzcrINN1hj7VaIxQhifS1a+pj8O7CpftaSMpdX/jXa/e2ShvDTKrPtDg
-         /fRJICfUaCPHZHAL/PoJGQZLQbqzlIcyPGAvhNetLxmKmIuVbhuVT/3YC2+sLn6/l/lz
-         YcEuUOumTYQtWC8aSHnVQVQmxI50A+8b/Z1vom5CTboDz/Mr5ZUAmZNTd8D4XkhhACEO
-         2qdHlYmOrqcec5DzyzF0TDDIPkPkJowmXOs3vydQavbqCyfGBQgcpKRnRAiVbOG50JRJ
-         4VXELyeSJOTeO7IQmWQtFWAg96CAYdDzO7cj57V0b5pfjxV5jJWQRlXM66ff9YFUmnVx
-         dDBQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=k4BHlmlIIly19yAcT+U9SlSGDpikfNDuftvz1GG3NyI=;
+        b=n+VQkJt4keLrX9Z1cmab2rKVIEKUzaRGvqgCHicwB+TzWWb5sc/zEKZvz0m2BFBtYY
+         2VfKrgvos4hhjRRo0Lig266Xz4lUDFlz0+LWVKUa42psEC3f5hWh6veiR84uBFMKuSWL
+         MKTsF0XdvTidRIbMHj1jEl5I+pK2xg7chztbVijEKZMNFzrJvT1KlcPd17Bq8QUtIYQ/
+         3/ktCL+6KVRPqV18k3mAf5q+3wzF2sw8GuTnE9SMeZdrJpXsH5W/RtNXsGNBll9I0a6u
+         ScfrJyaHFuO36hRHZeXmlB7kheCnmgP0rirvPSvk2hiuMkLJ3e3Wxxu4WQqno5EXcjsC
+         pN4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rQjq8uKoRrlLiAy2jC9SVIhkfPttmNZUWXbQLhDZM9k=;
-        b=n27B3IQO7RURQVW+annWOAR+hjkzkq4sHop+7Hac/sy/hZT+wzosTBvnPB2DZyZHaM
-         9RSLSHWQ0g+zZEiClrVH639hI5xmaFbE8gcsMXGVa50MNI9SB3kkdf3A+zKIOg4S7HhH
-         6s9fm4486gLcoBjTh1MiDPnuNBhFJgLNmxx695efZt2Aj/hWV7MkFZkpD+YvJ09t7Uxj
-         hg2OwKAL5b7Ld/UJxT6K8PxmtcHo10Abo2wRcy3+m808b+PafH5hrIRyLxWdIlnGa4ut
-         XOKmLlEzR1xQs78Ekk6njsmigwe0x/t5Z1scImYtgy2Sprr4TmMrEf1dHQeenquu0rfj
-         Vuug==
-X-Gm-Message-State: ANhLgQ3MNUVX19FxLbxKjaFyXSHEEmTYA9Tm73NfqyceM1X6rhfq3PV2
-        UQCrPI3/zuG+JxSWYgYRDlvDOiL6
-X-Google-Smtp-Source: ADFU+vsvWMWzKMxNqeNsKtP8NvCy424vINQYoxocmtCUEXMyobJjwyOn9tG53zX72IKMsG6O9hK2aw==
-X-Received: by 2002:a1c:2048:: with SMTP id g69mr10462496wmg.187.1584095853079;
-        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=k4BHlmlIIly19yAcT+U9SlSGDpikfNDuftvz1GG3NyI=;
+        b=Ol8rrHGK901ge8ULntvO3NoPkeaBVCsFImTELjZu5INcVxMrO+RwJ8uPVvKt9gYzSR
+         cbPxZF+w8hSV7BLimDAm9vjpk7/fbEphVz4SKBSyTdhQtO8AENzmd8CmFmgz+Lt3zSjC
+         Fx7hPG3Tm9zYqaUOEoLfVjoLhyVstmRoBXXudmt2s78Ys1SCSEvI9tYXsTjT7zTRM9VE
+         +9t/nqjs275YT8BFJtScmSbWtPXy6KwnWS6EE5CqlkDgxnx3Zr3RjjE6mByXLK1E9uAC
+         k/2y2mUtG+DDuN9WeZs5405G35fd1wA2cqe7Pkic7EhIah4SZ1zawLXW4eNcCaPhFKT7
+         o4Bw==
+X-Gm-Message-State: ANhLgQ1xcBVREOuF6D29Lf/klXbqhcryB9HE79a2JEtASxXDCrBp+mtx
+        gkPvvbF4Bz2pywhLaDByWjVftaoD
+X-Google-Smtp-Source: ADFU+vsCE/NjGMEqAImu3YZBGZWMwPRv2f7D0Xn0qVCk5kqumgbi15H0AYaphrhjWzVuCayVI52zQA==
+X-Received: by 2002:adf:fc0d:: with SMTP id i13mr16858848wrr.364.1584095854238;
+        Fri, 13 Mar 2020 03:37:34 -0700 (PDT)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o3sm17688551wme.36.2020.03.13.03.37.32
+        by smtp.gmail.com with ESMTPSA id o3sm17688551wme.36.2020.03.13.03.37.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 03:37:32 -0700 (PDT)
+        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] ARM: dts: rockchip: add missing @0 to memory nodenames
-Date:   Fri, 13 Mar 2020 11:37:25 +0100
-Message-Id: <20200313103726.1678-1-jbx6244@gmail.com>
+Subject: [PATCH v2 2/2] arm64: dts: rockchip: add missing @0 to memory nodenames
+Date:   Fri, 13 Mar 2020 11:37:26 +0100
+Message-Id: <20200313103726.1678-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200313103726.1678-1-jbx6244@gmail.com>
+References: <20200313103726.1678-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives for example this error:
+A test with the command below gives these errors:
 
-arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
+arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dt.yaml: /: memory:
 False schema does not allow
-{'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+{'reg': [[0, 0, 0, 1073741824]], 'device_type': ['memory']}
+arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dt.yaml: /: memory:
+False schema does not allow
+{'reg': [[0, 0, 0, 2147483648]], 'device_type': ['memory']}
+arch/arm64/boot/dts/rockchip/rk3368-r88.dt.yaml: /: memory:
+False schema does not allow
+{'reg': [[0, 0, 0, 1073741824]], 'device_type': ['memory']}
 
 The memory nodes all have a reg property that requires '@' in
 the nodename. Fix this error by adding the missing '@0' to
 the involved memory nodenames.
 
-make ARCH=arm dtbs_check
+make ARCH=arm64 dtbs_check
 DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
 schemas/root-node.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
-Changes v2:
-  Skip rk3288-veyron
----
- arch/arm/boot/dts/rk3288-phycore-som.dtsi | 2 +-
- arch/arm/boot/dts/rk3288-tinker.dtsi      | 2 +-
- arch/arm/boot/dts/rk3288-vyasa.dts        | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi           | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts            | 2 +-
  3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-index 77a47b9b7..9e76166c3 100644
---- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-@@ -16,7 +16,7 @@
- 	 * Set the minimum memory size here and
- 	 * let the bootloader set the real size.
- 	 */
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x8000000>;
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-index 312582c1b..77ae303b0 100644
---- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-+++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
+index 1c52f47c4..b9e2e4bc0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
 @@ -12,7 +12,7 @@
  		stdout-path = "serial2:115200n8";
  	};
  
 -	memory {
 +	memory@0 {
- 		reg = <0x0 0x0 0x0 0x80000000>;
  		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
  	};
-diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index ba06e9f97..889b95e95 100644
---- a/arch/arm/boot/dts/rk3288-vyasa.dts
-+++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -14,7 +14,7 @@
- 		stdout-path = &uart2;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+index 6cc310255..9435008d5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+@@ -15,7 +15,7 @@
+ 		stdout-path = "serial2:115200n8";
  	};
  
 -	memory {
 +	memory@0 {
- 		reg = <0x0 0x0 0x0 0x80000000>;
  		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+index 006a1fb6a..cf11175ec 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -15,7 +15,7 @@
+ 		stdout-path = "serial2:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
  	};
 -- 
 2.11.0
