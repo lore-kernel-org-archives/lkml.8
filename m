@@ -2,150 +2,151 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B670C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD53C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52372206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A872071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oX1Hbv73"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pl+Pce2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCMABe (ORCPT
+        id S1727142AbgCMABw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:01:34 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44766 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgCMABe (ORCPT
+        Thu, 12 Mar 2020 20:01:52 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34517 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgCMABv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:01:34 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f198so9518097qke.11;
-        Thu, 12 Mar 2020 17:01:33 -0700 (PDT)
+        Thu, 12 Mar 2020 20:01:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a23so3344399plm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4F6aCvMwJEvodjQcp+3IIHrmQA07dblW9GNp3FIT77w=;
-        b=oX1Hbv734WRN6kIB5DlUxS/NzZ85FTGqjDcbH8BscB2d69i7BDHDmpNG4NePCMsrPb
-         L6g4qe+BcN5qh4OFhVR7NsBVYCxzJ3ie9u+Jct5RrfkmQqQplDNydj3RVxkXD7aueEWA
-         sh1StPdX01hI8xYvS0lklsx6eqDJor2pIgC+yx4n5GKyK2Qpoj4jhq1Qq0pmCdLzJir9
-         qII2fu74pN/pVjb9joxsqqs/RDw1LJMwKXvQPVKxl1INCWEwJEqqi2uqx26HxEo4Yyth
-         nhQCzpn9m2bDGDaFEIQ/52830KryQX4kDvcG6FEA2eoDNjQ4ebCvDMByczRBFx/pV4H8
-         fSbA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rmEnGedJS8sxU6HnCpV+Q7c12k0Ug1fpGwxF+f1yIUU=;
+        b=Pl+Pce2CQX2Wi8HakEByaZJ4V1r/N63/wl+7RIrmZoKQhGGn2F42JBBI4IUgM/BOmb
+         A9VQ3xP3ckXlPZZmhQYQ04iCw4Mh77vtilJ5/a+JLuWfCRqQVbjbTH+r8p+VoSHRvpiK
+         uTYRf5M6Fl03wmZyFwKy/znFMKao215IA4kmM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4F6aCvMwJEvodjQcp+3IIHrmQA07dblW9GNp3FIT77w=;
-        b=Nj0VPUihDQjtLBPAiVEVpbVAkCelUpdtcvrsLz8YjK4eWxUQERL3BvSB/r9W99EceA
-         kBNax59LHrcUu+bX9/ZCLWhQzscXLsUAek2c/IMNeotz/aPuwRO6w50Orw457omUpu2N
-         PvspxOE2diNoJfnW/2rZ5pxI6MEdWPOtId0rExOkBcysmjueZswHILZeqTHinzX1FNSe
-         UUpymeAMS2DVhrnR6PiYGz82mcwPzclZr7+1wwW/ejItt7zcZoOs5j7oMAuCUkF9l6Mc
-         GL9j+Q7FDzlbhqhykKTsdsr/BYVJt0AbUSYfypAfan+3QRqbSjS7RPt+SUr2d3XKxa33
-         PzsQ==
-X-Gm-Message-State: ANhLgQ3Te21lY75ZG8FlBtHd3B/vJATZzgBfGBB/oqJQNDwlFSw0DWXS
-        4v8Lq143JTD+lD2BpfJ2pD0=
-X-Google-Smtp-Source: ADFU+vtRT9YtSpWfTr62cQOvqoKlnBy08CT8ETqziryBs19ZCrjhES5yaXYjB8SDzIrv16QSXmQMfg==
-X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr10283265qkl.226.1584057692741;
-        Thu, 12 Mar 2020 17:01:32 -0700 (PDT)
-Received: from localhost.localdomain (ool-45785633.dyn.optonline.net. [69.120.86.51])
-        by smtp.googlemail.com with ESMTPSA id c190sm6819210qkb.80.2020.03.12.17.01.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rmEnGedJS8sxU6HnCpV+Q7c12k0Ug1fpGwxF+f1yIUU=;
+        b=sMF9jqo8jXR/uztmTK5ol6uvlzkDMsZ6Jd885CCsrLCi75c98MjW33nly0Dhupxk7Y
+         qpcJHfONG5QC/t4NuIi/4ZTJ7DIoeOLcGBQbAvjzs8kh7LbGwL4wMAunmVdt6L80eoiU
+         GKnK5YiECKuuf5s+eJWWZLaVAodL1/RcwMZ8ZrW98L2cVGGvm2iJS5MTsnZ1tVIbMgQB
+         uwsHJAJBNd+9MPJ6Lu4ixUv5RCXv0C/vbpSC5OCaiU6jmzQ91yxbiuIJujRLEP2CwaZ6
+         BwBrm/lgT6KlWN1RGl4KgFOPETXd3EQHBiku3sLSenjQEu/m0hXIEOghWduZpz7FIB6z
+         VqHw==
+X-Gm-Message-State: ANhLgQ22WrkpKXvizxB5C8D3dwijclnbvrgULmHlly46Ln1cZhyhvuNS
+        M+qPBhpDn7N191x8l4zAWI7tLw==
+X-Google-Smtp-Source: ADFU+vsQ94Kp0d98Pbb4MXZarpMHv6ibuFITYGGF7X16YL0Ee3aFcR+8dzYWKYGKsg7cimIUlM5axg==
+X-Received: by 2002:a17:902:d684:: with SMTP id v4mr10568065ply.112.1584057709967;
+        Thu, 12 Mar 2020 17:01:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d3sm55113197pfn.113.2020.03.12.17.01.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 17:01:32 -0700 (PDT)
-From:   Vivek Unune <npcomplete13@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        ezequiel@collabora.com, jbx6244@gmail.com, akash@openedev.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vivek Unune <npcomplete13@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: Add Hugsun X99 IR receiver and power led
-Date:   Thu, 12 Mar 2020 20:01:12 -0400
-Message-Id: <20200313000112.19419-1-npcomplete13@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 12 Mar 2020 17:01:49 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 17:01:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v9 13/13] arm64: BTI: Add Kconfig entry for userspace BTI
+Message-ID: <202003121700.9260E027@keescook>
+References: <20200311192608.40095-1-broonie@kernel.org>
+ <20200311192608.40095-14-broonie@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311192608.40095-14-broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - Add Hugsun X99 IR receiver and power led
- - Remove pwm0 node as it interferes with pwer LED gpio
-   Also, it's not used in factory firmware
-   
-Tested with Libreelec kernel v5.6
+On Wed, Mar 11, 2020 at 07:26:08PM +0000, Mark Brown wrote:
+> From: Dave Martin <Dave.Martin@arm.com>
+> 
+> Now that the code for userspace BTI support is in the kernel add the
+> Kconfig entry so that it can be built and used.
+> 
+> [Split out of "arm64: Basic Branch Target Identification support" --
+> broonie]
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
-Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
----
- .../boot/dts/rockchip/rk3399-hugsun-x99.dts   | 37 +++++++++++++++++--
- 1 file changed, 33 insertions(+), 4 deletions(-)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-index d69a613fb65a..df425e164a2e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-@@ -29,6 +29,26 @@
- 		regulator-max-microvolt = <5000000>;
- 	};
- 
-+	ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ir_rx>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&power_led_gpio>;
-+
-+		power-led {
-+			label = "blue:power";
-+			gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+			linux,default-trigger = "none";
-+		};
-+	};
-+
- 	vcc_sys: vcc-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc_sys";
-@@ -483,6 +503,18 @@
- 		};
- 	};
- 
-+	ir {
-+		ir_rx: ir-rx {
-+			rockchip,pins = <0 RK_PA6 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	leds {
-+		power_led_gpio: power-led-gpio {
-+			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins =
-@@ -539,10 +572,6 @@
- 	};
- };
- 
--&pwm0 {
--	status = "okay";
--};
--
- &pwm2 {
- 	status = "okay";
- 	pinctrl-0 = <&pwm2_pin_pull_down>;
+-Kees
+
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  arch/arm64/Kconfig | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 8a15bc68dadd..d65d226a77ec 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1522,6 +1522,28 @@ endmenu
+>  
+>  menu "ARMv8.5 architectural features"
+>  
+> +config ARM64_BTI
+> +	bool "Branch Target Identification support"
+> +	default y
+> +	help
+> +	  Branch Target Identification (part of the ARMv8.5 Extensions)
+> +	  provides a mechanism to limit the set of locations to which computed
+> +	  branch instructions such as BR or BLR can jump.
+> +
+> +	  To make use of BTI on CPUs that support it, say Y.
+> +
+> +	  BTI is intended to provide complementary protection to other control
+> +	  flow integrity protection mechanisms, such as the Pointer
+> +	  authentication mechanism provided as part of the ARMv8.3 Extensions.
+> +	  For this reason, it does not make sense to enable this option without
+> +	  also enabling support for pointer authentication.  Thus, when
+> +	  enabling this option you should also select ARM64_PTR_AUTH=y.
+> +
+> +	  Userspace binaries must also be specifically compiled to make use of
+> +	  this mechanism.  If you say N here or the hardware does not support
+> +	  BTI, such binaries can still run, but you get no additional
+> +	  enforcement of branch destinations.
+> +
+>  config ARM64_E0PD
+>  	bool "Enable support for E0PD"
+>  	default y
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.20.1
-
+Kees Cook
