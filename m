@@ -2,215 +2,191 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DA4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66205C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDA120749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2834020746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="tJmoCOe4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IcXI39oT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgCMPuO (ORCPT
+        id S1726974AbgCMPuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:50:14 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:52023 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgCMPuO (ORCPT
+        Fri, 13 Mar 2020 11:50:52 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:37315 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgCMPuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:50:14 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: cbKeo1Y8w1Ud7j5sRYEZd9a+ZDmCCEDO0aMazeh3KDe2VEyUjPrsikhNxCLBrHoiqdq0gQfv6i
- Uqe/OVuvb0HYlq3Uq4t9nwxoM8+uePj5pEfTFMcSrj2ZKlw0cMZbKVJBFqslzaj1GoaByp3kSl
- 5Qrtdb0OrHQ2X60ykISqC8oXQmW+tGIPR56tymm3Qm7BqS+/0Zmau5tMKQ0Z5HRje8bozCrQ/8
- PtL9MQjeB9UmtuXA7SfOuP4SFx9NilwHHW198y+KEKybWnMm01wwMZnwekGoT1wYEj4XH+glUn
- beA=
-X-IronPort-AV: E=Sophos;i="5.70,549,1574146800"; 
-   d="scan'208";a="69890320"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Mar 2020 08:50:12 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Mar 2020 08:50:07 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 13 Mar 2020 08:50:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lb/nVK8zkSVqF+KFtaxLQbhSdqSZxplCYjT2CEmGA7rRQEhRTEdgrSS41dYd/+ciHg2GkxbQE1ciS3DNWVfr+dzryptucg1ol+oUiqRe1nP5kxzx2/vsnmRUCFKIiA7B0dveGaq+bGNmta4Z+qnzlbnCQC93eH3AO8yZtH1jKpd9qIUHloQGhqW8T5ABD3DP6uyXcxVL4cWk0ImMXMpwQrMgAK6vjEwGln5/Ejn+YzKdNTYxrTdjI1l6ZPfooXYPURuG1wHEBV0hanbnfUuAoUOfgvIIKNQs/nASQLMr9O92V2Pv7dXWsvG2lM0JL0hKkUnlNiqU8uJOkGzcW4XcPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jPmlBCq3srfYpkDt5yvbrsPLnxekGBYkIZrl+4OFc5c=;
- b=Z6NAjCnqZBIV+8Fn0VyTKEJgZEAIyLWdPLhqeRFmBI0ggolHEOEMyLJ3CEo3m406DPQd2RHwsimO7ubUt017UNlqapXkeHLxXwu1lGv7lw3tzeGq8aJGRyj2srZYepOw6ymRW05A+2KMydbXpy6g4cbbwopNzwXFyvElutilxJb/HomhAXCkMY/GYHhub+aLIz5X93XuJCtfF0uo2p72IVu74C7Lw6B88tup/qSce1HyzGBTPdt6cLZv0x+k+1i93y+gojlg2jvcH2z6/UZ//j5awUVmnCPejbjSunAcv/6Tn6C+GI0ZElNU9goOhnt+hIidGQML4cpxO7i1kZJtAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Fri, 13 Mar 2020 11:50:52 -0400
+Received: by mail-pl1-f201.google.com with SMTP id t12so5750213plo.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:50:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jPmlBCq3srfYpkDt5yvbrsPLnxekGBYkIZrl+4OFc5c=;
- b=tJmoCOe4BXcGCaNXfmDUT+8Mh9c4WD3zPimn3hEXkQJq9wrIdZAt9VA4L2p3h7XgImjcZ2jJ+Ehss++omAWFmb+WkDi4sHaTdNViXH3LNSPAdwm7Z2Xsn9aBXE6iEdcS77veA8RT1YJ9GtapGg2ZeV2JS1h/QXHi+QlpoKGAmzY=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
- by MN2PR11MB4126.namprd11.prod.outlook.com (2603:10b6:208:136::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Fri, 13 Mar
- 2020 15:50:10 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 15:50:10 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <linux-mtd@lists.infradead.org>
-CC:     <boris.brezillon@collabora.com>, <kstewart@linuxfoundation.org>,
-        <alexandre.belloni@bootlin.com>, <vigneshr@ti.com>,
-        <linux-aspeed@lists.ozlabs.org>, <thor.thayer@linux.intel.com>,
-        <jethro@fortanix.com>, <rfontana@redhat.com>,
-        <miquel.raynal@bootlin.com>, <opensource@jilayne.com>,
-        <richard@nod.at>, <allison@lohutok.net>, <michal.simek@xilinx.com>,
-        <Ludovic.Desroches@microchip.com>, <joel@jms.id.au>,
-        <nishkadg.linux@gmail.com>, <john.garry@huawei.com>,
-        <vz@mleia.com>, <alexander.sverdlin@nokia.com>,
-        <matthias.bgg@gmail.com>, <tglx@linutronix.de>,
-        <swboyd@chromium.org>, <mika.westerberg@linux.intel.com>,
-        <ludovic.barre@st.com>, <linux-arm-kernel@lists.infradead.org>,
-        <bbrezillon@kernel.org>, <andrew@aj.id.au>,
-        <Nicolas.Ferre@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <dinguyen@kernel.org>, <michael@walle.cc>,
-        <linux-mediatek@lists.infradead.org>, <info@metux.net>
-Subject: Re: [PATCH 01/23] mtd: spi-nor: Stop prefixing generic functions with
- a manufacturer name
-Thread-Topic: [PATCH 01/23] mtd: spi-nor: Stop prefixing generic functions
- with a manufacturer name
-Thread-Index: AQHV+UP9aMq9KhVwKUKrK+Ih7RO/b6hGq5wA
-Date:   Fri, 13 Mar 2020 15:50:10 +0000
-Message-ID: <16008638.kvcHKcsGDv@192.168.1.3>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
- <20200313103007.7d7ea6af@collabora.com> <2838624.3XVpXx8FI0@192.168.1.3>
-In-Reply-To: <2838624.3XVpXx8FI0@192.168.1.3>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 101f555e-8f02-4a38-3139-08d7c7663666
-x-ms-traffictypediagnostic: MN2PR11MB4126:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4126CE5701C57D29EEBD10C7F0FA0@MN2PR11MB4126.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(396003)(346002)(366004)(136003)(199004)(9686003)(6506007)(2906002)(64756008)(4326008)(81166006)(81156014)(8936002)(7416002)(53546011)(6916009)(6512007)(7406005)(86362001)(5660300002)(66446008)(66476007)(186003)(54906003)(91956017)(14286002)(76116006)(8676002)(66946007)(71200400001)(478600001)(316002)(6486002)(26005)(66556008)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4126;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XhhcrOcOhWrquR/SIR3WXQY0tfjEP2p/5vasdxc2YFSLgZAPVehovfM6NDvj2EbbZrUer6suknjLLLRXRtjGEFSamZ6Rw4upBC5iOxhy+AZLrdPU/TFYWkH0f+JekHMks9x/QEgkDK9taNfrIMbvhQ00/xLXNqDc25HxmZbbjRvQd+ROAtgnbjbm7bLsOOlMBUoLPapdr+IwHfw2tt7JNj47AsYjRiKITv5EzEiTUXtSJdCWMlehMbqJ8xG93IUQBUxi2Rqxuyv2ZcN9/5nPG1P75vXbNUwUft8TDlWii7IX8CeXIGxA2PMp4CM+dDbblelI80vefsE+8+KISURHWmEs9a8AStLcT6a/yVsM27PgXT7l61yoGKwbBUzfAU2Igk8C1BVPC8RjkVczfARKDhSqa+irBTn/FNRm2b28k+LejcvRxeY6HIkxMf5DXOZtCoCakdQCSxw7KOqP6qqVDXnu6iyFnyn9IFtSWQkXTVTxxrShF/52toztUCptY88k
-x-ms-exchange-antispam-messagedata: Uca3gAXglqRfETJ4cOmjenxQj8XQMLyShcBh1/HlfH+NHiaFvMXI5B3PX8tlXp2BzMlKyqgdpEuWiCyzARbOLivtAGSXUnpeku43NP18VUz8mAnwdqAMrJ0G/3wIMxgMMia2rKSlhpPwv9euhlq0+w==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4968D74D5D41C449BEF42DBDB71FD00B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 101f555e-8f02-4a38-3139-08d7c7663666
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 15:50:10.7923
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dFI0/8+UneYoZK/vraiXf+nKyKmQJWVCUYHO14qIR7jNnMN/QC7Ld8sy1PSGGFTYwvOuxGDBwIQ0G+CDviml/w/vH5rEuoUOA0/SZU2zk2k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4126
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=eVmA9NNLkJ9r6wHykxZnxklaK4+O9W87gli6+oUvaSc=;
+        b=IcXI39oT2ZNkUUgz6GoA6/U6ExT4ULIi8KVYTiAqH4VORWfRY28VcMnVklHfN6GOyf
+         I/HYqgXVmIn6VUE3+sHvoaVPe2HqKkwEOS/+ZOYnn2uiERmLgQc8Chwi+Uo4gix+qE+Z
+         WVr2uNDLpXTgJZb6KrojURlkR7/ebNNbTiVCFKksRVfwGbD/HGblltprQhYh3ZZK2XEE
+         liohZOsIS9TdorAK2ocIcCP+y5Uh/gIq0XXVcCx0HlTz/Y2iBsczRSy8DyLn73eEIJOr
+         pWwq549tqptYlnD+XzcDEkzsVZjUO+/nQV1o87KhFmKNIh3G+A3vIZsBG2JZZlI9hjTP
+         WMhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=eVmA9NNLkJ9r6wHykxZnxklaK4+O9W87gli6+oUvaSc=;
+        b=ABiZh4W0RazVsEnCpoWGbHZ6Fr22cDkTgO5zIHFD8f9hjFb6mITOCLJxUPkT+SpxcH
+         nVLOycoiP2kGQTUG7hrvWFN3KO0IC/7QqWYn3JBZDDF0rmURdftf47B/4WW9k37h6XsN
+         D/vHwWvveTcW6eovVneBMA+1mL+kCHsY0P8EpZzjpmsyChDliGGZl6HJjxmwLX4lhqtt
+         I3GHdLo88XawJEAKtkJKqzMnNtzxYkQo6iLZoIUhcl/ogTGg/FBKyhhZ1Y+5/STjDHE6
+         xgrlbV3gTH+V8gi36xZfOxgoTLLydIW2xzCmRvelEBFQ+OesDFQ2GsQ2okJeHBAEohfY
+         tPYA==
+X-Gm-Message-State: ANhLgQ3O9cxRS2lIgfsKqY1LH2o8+e214v0Uk6JxHgwtQ8UXtCfWL4wk
+        trVLPtt6tuQ0As/Kt+KPEwbMJeOY994t
+X-Google-Smtp-Source: ADFU+vuHsce+aXNrgiT0n0TIjSDxGmOcV65WFHFx9JOxVyBmdZdjQ3fIhXUlSi5KBZGuC05rzhDkCaOMAzfu
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr10525477pjb.105.1584114651018;
+ Fri, 13 Mar 2020 08:50:51 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 08:50:47 -0700
+Message-Id: <20200313155047.22339-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v2] perf tools: give synthetic mmap events an inode generation
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, iri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, March 13, 2020 4:30:48 PM EET Tudor.Ambarus@microchip.com wrote:
-> > > > - * macronix_set_4byte() - Set 4-byte address mode for Macronix
-> > > > flashes.
-> > > > + * spi_nor_en4_ex4_set_4byte() - Enter/Exit 4-byte mode for Macron=
-ix
-> > > > like
-> > > > + * flashes.
-> > > >=20
-> > > > * @nor:   pointer to 'struct spi_nor'.
-> > > > * @enable:        true to enter the 4-byte address mode, false to e=
-xit
-> > > > the 4-byte *         address mode.
-> > > > *
-> > > > * Return: 0 on success, -errno otherwise.
-> > > > */
-> > > >=20
-> > > > -static int macronix_set_4byte(struct spi_nor *nor, bool enable)
-> > > > +static int spi_nor_en4_ex4_set_4byte(struct spi_nor *nor, bool
-> > > > enable)
-> > >=20
-> > > Sounds a bit weird, how about simplifying this to:
-> > > spi_nor_set_4byte_addr_mode()
-> > >=20
-> > > Or if you want to be specific:
-> > > spi_nor_en_ex_4byte_addr_mode()
-> >=20
-> > You're right. Maybe we can simplify things by having a single function
-> > that does optional steps based on new flags
-> >=20
-> > SPI_NOR_EN_EX_4B_NEEDS_WEN
-> > SPI_NOR_CLEAR_EAR_ON_4B_EXIT
-> >=20
-> > This should probably be done in a separate patch though, so ack on the
-> > spi_nor_en_ex_4byte_addr_mode() rename, assuming we also change the
-> > bool argument name to enter.
->=20
-> A single big function will be ugly to handle because of the
-> spansion_set_4byte() -> it uses a different opcode.
->=20
-> I like the nor->params>set_4byte hook.
->=20
-> I think that spi_nor_en4_ex4_set_4byte() can be renamed to
-> spi_nor_set_4byte() and be the only set_4byte() method exposed to
-> manufacturers.
-> spansion_set_4byte() will be static in core.c and the rest will be privat=
-e
-> in the manufacturer drivers.
->=20
-> Here's how the manufacturers enter and exit the 4 byte mode:
-> -> eon, gidadevice, issi, macronix, xmc use EN4B/EX4B
-> -> micron-st needs WEN -> private method as they are the only ones that
-> require this
-> -> newer spansion have a 4BAM opcode (new, public command), older spansio=
-n
-> flashes use BRWR (legacy in core.c, spansion_set_4byte())
-> -> winbond set_4byte method is hackish and may be reason for just a flash
-> fixup hook -> private method
+When mmap2 events are synthesized the ino_generation isn't being set
+leading to uninitialized memory being compared.
+Caught with clang's -fsanitize=memory.
 
-I'll drop the set_4byte changes from this patch. I'm adding a dedicated pat=
-ch=20
-immediately after this, to implement what I said above.
+==124733==WARNING: MemorySanitizer: use-of-uninitialized-value
+    #0 0x55a96a6a65cc in __dso_id__cmp tools/perf/util/dsos.c:23:6
+    #1 0x55a96a6a81d5 in dso_id__cmp tools/perf/util/dsos.c:38:9
+    #2 0x55a96a6a717f in __dso__cmp_long_name tools/perf/util/dsos.c:74:15
+    #3 0x55a96a6a6c4c in __dsos__findnew_link_by_longname_id tools/perf/util/dsos.c:106:12
+    #4 0x55a96a6a851e in __dsos__findnew_by_longname_id tools/perf/util/dsos.c:178:9
+    #5 0x55a96a6a7798 in __dsos__find_id tools/perf/util/dsos.c:191:9
+    #6 0x55a96a6a7b57 in __dsos__findnew_id tools/perf/util/dsos.c:251:20
+    #7 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
+    #8 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
+    #9 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
+    #10 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
+    #11 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #12 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #13 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #14 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #15 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #16 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #17 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #18 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #19 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #20 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #21 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #22 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #23 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #24 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #25 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #26 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #27 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #28 0x55a96a282223 in main tools/perf/perf.c:538:3
 
-Cheers,
-ta
+  Uninitialized value was stored to memory at
+    #1 0x55a96a6a18f7 in dso__new_id tools/perf/util/dso.c:1230:14
+    #2 0x55a96a6a78ee in __dsos__addnew_id tools/perf/util/dsos.c:233:20
+    #3 0x55a96a6a7bcc in __dsos__findnew_id tools/perf/util/dsos.c:252:21
+    #4 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
+    #5 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
+    #6 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
+    #7 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
+    #8 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #9 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #10 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #11 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #12 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #13 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #14 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #15 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #16 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #17 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #18 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #19 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
 
+  Uninitialized value was stored to memory at
+    #0 0x55a96a7725af in machine__process_mmap2_event tools/perf/util/machine.c:1646:25
+    #1 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #2 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #3 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #4 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #5 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #6 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #7 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #8 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #9 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #10 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #11 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #12 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #13 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #14 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #15 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #16 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #17 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #18 0x55a96a282223 in main tools/perf/perf.c:538:3
+
+  Uninitialized value was created by a heap allocation
+    #0 0x55a96a22f60d in malloc llvm/llvm-project/compiler-rt/lib/msan/msan_interceptors.cpp:925:3
+    #1 0x55a96a882948 in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:655:15
+    #2 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #3 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #4 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #5 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #6 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #7 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #8 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #9 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #10 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #11 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #12 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #13 0x55a96a282223 in main tools/perf/perf.c:538:3
+
+SUMMARY: MemorySanitizer: use-of-uninitialized-value tools/perf/util/dsos.c:23:6 in __dso_id__cmp
+
+v2 fixed a white space issue.
+
+Acked-by: iri Olsa <jolsa@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/synthetic-events.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index dd3e6f43fb86..3f28af39f9c6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -345,6 +345,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			continue;
+ 
+ 		event->mmap2.ino = (u64)ino;
++		event->mmap2.ino_generation = 0;
+ 
+ 		/*
+ 		 * Just like the kernel, see __perf_event_mmap in kernel/perf_event.c
+-- 
+2.25.1.481.gfbce0eb801-goog
 
