@@ -2,195 +2,245 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15123C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DE2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94A5206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7391A2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YXib8MAz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ar2ya/C6";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="G33bbtNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgCMH6S (ORCPT
+        id S1726633AbgCMH6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:58:18 -0400
-Received: from mail-db8eur05on2061.outbound.protection.outlook.com ([40.107.20.61]:63969
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726545AbgCMH6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:58:18 -0400
+        Fri, 13 Mar 2020 03:58:32 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:59666 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgCMH6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 03:58:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1584086312; x=1615622312;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=tcSoLy1EnieZpT0caedtjDa7Hpimh/vLp79G6OSD2BY=;
+  b=ar2ya/C6ss0rBwBGv9cKpzYqbub7cGcq3BpIwQ2ZFMBLMAEYDHsLBKlM
+   7wLqNEq6tKTHXMetdmupYta1FZFh83ER0f5y+kqbOQqMdD3Gpp6ULvvSb
+   TmJIQr2c1+p+FClV57eLzBdnluxOiyQ1UaBCsI8DzxHJHJ/jFVAveKe6S
+   ZcdpfT3SI+Zj5Jzzw9keqUSYYDxEBLmJdwNT5MFv6rZ7RzmdjIxbtDGXB
+   fyQaXRgqSnSFaq/SQRvDI3SpIdh/weq90YB4cmvm2yH6D537XEnDzeAtF
+   N+QcmLTpJMWSnn/0/Ubwwuafpz3xXjTXRCcu66NhfiAkrOn0cNO72ZCtI
+   w==;
+IronPort-SDR: jbkrVR86R3XzxN7KyTX9N+3CEqO369pBZW9jydZUFhFMH87+HB8lndmSIuR0X2GYaGJMNSNAj0
+ UQQM5yzf5thgxtj+fdefc55CUiDmr/a0yuycFMuBHhGbpnuRNhZn5Ype+qv+iRMdo30Jc/fmh1
+ 47AUcyE17dposchMhXD8BGbl/6TN2HbmxM+CvlzRzaZly96uGQ/uvnThYc1poPCCeIXGlQlbwq
+ vLqfbXSFR6AwEQ0YrtB3W61tAJ55LxIhJQRWrAiy/Wgpd1Vws/6rVpRKp4f/S6HfkEATgVh7wj
+ pfI=
+X-IronPort-AV: E=Sophos;i="5.70,547,1574092800"; 
+   d="scan'208";a="136737260"
+Received: from mail-cys01nam02lp2053.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.53])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Mar 2020 15:58:26 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WYiyKx0qTyOZfFDMKJkmAeGCbL6MWRKhIY1xmjqMgORx1p/H6bkhJNTfCoy6wnND8wGXN4X5UdHPVFTSKFFUUum6KYqJt8n/9kLbYGZ7a4vBOCOINae2sPyXAF7COd80P0+2zGKkDTzLpnm8GtS2rcSpIzbQZeH8BmW1bNs/xUwqHSJHxGA+SkprpXfts0M7xVQe/GSU5loyugTU2hj+efs7S8E4vHSyQjT/ypgrEnaGL0H9AupYp6UbcYLq3Kwws5A8Le5at8JwufjKp1JH93A+NpElRUByxXJvBHa9DWiGL0kJyNxRBjmXGsRopVou+WRuGNv4RsGejmCWU9ynPA==
+ b=aRw2WbYLzQcZLiMEwkkD0HkluvdibWPdApg8zol/1N/BC9FKDXKq2k3XgsVfQJjJu8XBBpSnxQPCxxnSuLL2H9/WK1UYS5RtUMh/W4FTB9OXEB46kqfbRPZID2JovmmV1vLmlLcp/2GhlMSdqzV83wRLH2IR+tmoI+ND613FSOC2d1fwpO6LcbQyW7vf8HOKL/90Taad0mVx/SGVFoBUv0nDoBFte+e6SAAeR3dB98/HFdKjYFrtxf/EwGzjUd8WZyEREJKwrBb4IyKsYOIcYGA1F2IyVOOs2Pz64ADvphYb+pi2qtYRha4+AZUoBnGXwPcC6+y52znPB4drAPDHsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0bfKLPsIoHaf2VUXcYPigbNobdml3pQLe0VzlKaZvMo=;
- b=n1N7c8PlpWrV5t+qaN5DzdJuYmIuJNGXfXDe1wYSAiRutr03BEioX9It2+DojvFL3oCjKX0M6A9sFelB54M/KikJPZ2pk0OPlle8IGCJEj20Zq6bBTHzQLsBIe+rQRDr8htSLR8N5eQ4xTB+ISi4+xfGlmCpzeQIa4sWvcLmEo7VLYiwRcpHt6lJuygjJ+oEe7y26dtF3+lF/hgcdgKLHY+ZyOt6RL3y/5ge5jfkZkuRvDAcOSyMhRrTfDEwIvkY+QNNz2+BvmLbJbJLAPC5KEIvAHz4B7ym7Gk9dDZB3aLmgAlVfafuf85Y/KoWpqb+jfnjkJrgUGlQcDM1Mp4Cow==
+ bh=NSdJ4PfdlFJVjQ3OtupZHstMU6rZxhSt+M05Rz6UEFQ=;
+ b=UvPuW+mNLB3b0jYzBy4s9Dkb0vqsiwNrVF9AAy/QTxmVvq9XF2YXYgP8hA7+68bpokxlDGHLtLxqhWbl/hmdbLu0xZ0JZcnvbYyfzxRLKTvL/kgGo0f1HBwZV4dauloqDMs9a3Qb4nWFcLtfcwjrEo2RuE09gYCaaIQgT5/s/LbQCoKuNo7XTrO01qobnVsQToe5YqL/7s1GMUPLEZZhBjBFHiiqYyvspz9aZuHfSeXfu/jo1yCNuMdTa66OKN3UwzJbbvFcM5gbRcXEe/lOboeLfPEV5ewwfionXSva2FDqpDIgNUAuWvUXgGJPcmssbJM3aTLJHcwWG+aw16o/sg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0bfKLPsIoHaf2VUXcYPigbNobdml3pQLe0VzlKaZvMo=;
- b=YXib8MAz1ck6ixm0fJOJhTtBcX/AFcswml4GAe88X2l5uIsqYFw8JFL9Gn1fJQqRoACIdzDOkNRFgASu4fJYHNr1WgkVjm1GBqBFL+tcJR4W0RUoFWq7deTN/4d1mMU7F2nwEpPgJvgQqPRzdNcWCRNTt8WPZzsS0L6PRrn7AaU=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5521.eurprd04.prod.outlook.com (20.178.112.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.16; Fri, 13 Mar 2020 07:58:14 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 07:58:14 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: RE: [RFC 06/11] clk: imx: Add helpers for passing the device as
- argument
-Thread-Topic: [RFC 06/11] clk: imx: Add helpers for passing the device as
- argument
-Thread-Index: AQHV8TqqG8jg875rt0+/0iqjNCvp+qhGN6/w
-Date:   Fri, 13 Mar 2020 07:58:14 +0000
-Message-ID: <AM0PR04MB44816071F2A24C60A7DFC73188FA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
- <1583226206-19758-7-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1583226206-19758-7-git-send-email-abel.vesa@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ec0ac09b-d05d-4747-5133-08d7c7244882
-x-ms-traffictypediagnostic: AM0PR04MB5521:|AM0PR04MB5521:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB55211A6CE2F590697103ED5488FA0@AM0PR04MB5521.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(346002)(396003)(39860400002)(199004)(6506007)(66946007)(6636002)(33656002)(9686003)(76116006)(64756008)(66556008)(52536014)(7696005)(66476007)(81166006)(8936002)(55016002)(81156014)(110136005)(316002)(478600001)(8676002)(44832011)(54906003)(66446008)(5660300002)(71200400001)(4326008)(26005)(7416002)(2906002)(86362001)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5521;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ue4T7VXezXxJ/AjJh/7zE5AmHDVDRFoElRxHQ0VK214XonYyxBqqMtKySmhszLDnqpFeLJwpjv8P7jPs+Mu6gLfWl0+VTwMLXenzteWBPEhNegOScwzf9TfyowEuILtb7mKZc70D3qC07SzrgG1HI4OHEQxo0Oo0YgVCaKKiFh7LZWiBciNPeg8WMdEdmE6ex2Fd6f/k4eZjFE1fNliXBS2Z9ZOl4fQQJYHc9EDygdwP7fdp0UwT+pDslWk0WOxfAXI5GxodGT9ejyy4Facv2gM8Yyo2NQNLdrMCgGjMC+puHr5KMdxUICNwbbr5EfBZRLJNXTIQHrLo2UsoPagmcinjiGBWerhSfh9Pbji8Wf09ttDBxKjro9WalNN7BmIDnLLLDaPVcKl1ncwkPNtS0cXFGuL88GB96IaHpBVScQoX2dQKp969UVaWXYN0O1xRwvlfiB5101LG2jSZ7qVrMr7rZY0w0/ZJOnh7VGZlXVcv0qoWDFJ1QcSfHCvNDNHl
-x-ms-exchange-antispam-messagedata: fzTrsAawOE5xF23sYByPm1RZl4kmZpan4Ei5p/2OP2Zcq3xaYfeUehn8tFItmhP7fj8FYQ1bPyKF/8ZkfVdWBZPhetoUJbSF+IGQcSgpoGD6Gr8NeC7cqpfiH62/qNmojv7TedDYL60KLU0eew03ZA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=NSdJ4PfdlFJVjQ3OtupZHstMU6rZxhSt+M05Rz6UEFQ=;
+ b=G33bbtNvZhFgkoRsOmDlL6aQgjR2JJLdI7iaNTOFVea0IAgVv7O52k4A5IhswWGP/8VtDJrgVz4ruTjDwS3kuGMeyZ/jOs68sOC4SXk5FuFGXRHl43FxvW4bEYjAH2UMV3Ma9WXkpCZuSvr1HvUY7+xSkuPBl5th7GbOGvFdRW4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+ by MN2PR04MB6944.namprd04.prod.outlook.com (2603:10b6:208:1ed::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Fri, 13 Mar
+ 2020 07:58:24 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::159d:10c9:f6df:64c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::159d:10c9:f6df:64c8%6]) with mapi id 15.20.2814.018; Fri, 13 Mar 2020
+ 07:58:23 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
+        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
+Subject: [PATCH v11 11/20] RISC-V: KVM: Handle WFI exits for VCPU
+Date:   Fri, 13 Mar 2020 13:21:22 +0530
+Message-Id: <20200313075131.69837-12-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200313075131.69837-1-anup.patel@wdc.com>
+References: <20200313075131.69837-1-anup.patel@wdc.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR0101CA0057.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:20::19) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec0ac09b-d05d-4747-5133-08d7c7244882
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 07:58:14.3725
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from wdc.com (1.39.129.91) by MA1PR0101CA0057.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:20::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14 via Frontend Transport; Fri, 13 Mar 2020 07:58:16 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [1.39.129.91]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 04c69c8e-60cd-47a9-499e-08d7c7244dda
+X-MS-TrafficTypeDiagnostic: MN2PR04MB6944:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR04MB694457021CD9F6CDBF55E85E8DFA0@MN2PR04MB6944.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 034119E4F6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(199004)(26005)(4326008)(44832011)(55016002)(1076003)(8936002)(478600001)(86362001)(36756003)(66556008)(16526019)(66946007)(956004)(66476007)(186003)(2616005)(316002)(7416002)(6666004)(1006002)(110136005)(8886007)(8676002)(2906002)(81166006)(81156014)(5660300002)(54906003)(52116002)(7696005)(36456003)(42976004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6944;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EAn2BgCfnsBRRyisMyiPyWMmzmXbjfGIXAZAa7R9iNXQf2iVqi0l3WyQgENWLl/l4I9GCSeSSaqi/1c5YEpW8frprGUxrAf0tRla+7cbDJycXE1H8MwB0ClfHTP0MPLFRpg+WddYBeX6dgG2e44ZujMRh0ZKEl2Cz1vdg7riM6W/lLcGlLxs28OWIgC0wy6rM3mVTVoZvqqrwig7NrDW3tu0ZnF7lw/AacmJ8XA2AaerPSvtyPGKvHbU5c3YsjexbAsJrgOh5LkDGKW5PToOa3CRq8olcCi2ba6abaDcmcckqIfzNUgHZ8QL0zcqu3T8k96o8g2k21unRZSBH23b5jgROg7RdG9raE+s+3DsOpFoPYHsSJPEEKJHg6G0JnM37Y8xWzIylogKBfYMrNx0gDxQVFa4li4N41mYoH3Gf9GxwScXsMg0hgF2V9SyFb4rYMxR2+2GkTCLcmnzZLcOZSaPmQKIV9gkf0vHlqIXMsWaMF4rFOrAfsqDb8InVwsHFkPIjzTGGJoN86WVBLXr3Q==
+X-MS-Exchange-AntiSpam-MessageData: RIbT1J/UoYm5jAdCEFL/49YVqndJbUlJtSRwaLORlkwOEDn0rkZx42OxliIEJhesUiZ1kTk/u5yLyUcFTuM/bvK0rdWDeJcriQ3NAZ1lFSfH9hAfLhz43CkkXm2elgbGAPaN2WtYSWGqjYGtdJfTFA==
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04c69c8e-60cd-47a9-499e-08d7c7244dda
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 07:58:23.8104
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4Y6/ABk4TyzYwPs5N/yvmToGf19oW+obJZIk9kNiahfB4aig97zR22iMnxk5p6N5SRT3ik1mzLvHMN1hz4JulQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5521
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SNSTmB4SQSrLMHIc7Z3ENIgpYxJ3Rr9LX7elIxvqjD/Xqzuej0jr9xUBiy1tI042EU5iei6bv66yr6DCNW8kFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6944
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [RFC 06/11] clk: imx: Add helpers for passing the device as argu=
-ment
->=20
-> All the imx clocks that need to be registered by the audiomix need to pas=
-s on
-> the device so that the runtime PM support could work properly.
->=20
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+We get illegal instruction trap whenever Guest/VM executes WFI
+instruction.
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+This patch handles WFI trap by blocking the trapped VCPU using
+kvm_vcpu_block() API. The blocked VCPU will be automatically
+resumed whenever a VCPU interrupt is injected from user-space
+or from in-kernel IRQCHIP emulation.
 
-> ---
->  drivers/clk/imx/clk.h | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h index
-> cb28f06..42960a9 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -321,6 +321,13 @@ static inline struct clk_hw *imx_clk_hw_gate(const
-> char *name, const char *paren
->  				    shift, 0, &imx_ccm_lock);
->  }
->=20
-> +static inline struct clk_hw *imx_dev_clk_hw_gate(struct device *dev, con=
-st
-> char *name,
-> +						const char *parent, void __iomem *reg, u8 shift)
-> {
-> +	return clk_hw_register_gate(dev, name, parent, CLK_SET_RATE_PARENT,
-> reg,
-> +				    shift, 0, &imx_ccm_lock);
-> +}
-> +
->  static inline struct clk_hw *imx_clk_hw_gate_dis(const char *name, const
-> char *parent,
->  		void __iomem *reg, u8 shift)
->  {
-> @@ -422,6 +429,15 @@ static inline struct clk_hw *imx_clk_hw_mux(const
-> char *name, void __iomem *reg,
->  			width, 0, &imx_ccm_lock);
->  }
->=20
-> +static inline struct clk_hw *imx_dev_clk_hw_mux(struct device *dev, cons=
-t
-> char *name,
-> +                        void __iomem *reg, u8 shift, u8 width,
-> +                        const char * const *parents, int num_parents)
-> {
-> +        return clk_hw_register_mux(dev, name, parents, num_parents,
-> +                        CLK_SET_RATE_NO_REPARENT |
-> CLK_SET_PARENT_GATE,
-> +                        reg, shift, width, 0, &imx_ccm_lock); }
-> +
->  static inline struct clk *imx_clk_mux2(const char *name, void __iomem
-> *reg,
->  			u8 shift, u8 width, const char * const *parents,
->  			int num_parents)
-> @@ -484,6 +500,19 @@ static inline struct clk_hw
-> *imx_clk_hw_mux_flags(const char *name,
->  				   reg, shift, width, 0, &imx_ccm_lock);  }
->=20
-> +static inline struct clk_hw *imx_dev_clk_hw_mux_flags(struct device *dev=
-,
-> +						  const char *name,
-> +						  void __iomem *reg, u8 shift,
-> +						  u8 width,
-> +						  const char * const *parents,
-> +						  int num_parents,
-> +						  unsigned long flags)
-> +{
-> +	return clk_hw_register_mux(dev, name, parents, num_parents,
-> +				   flags | CLK_SET_RATE_NO_REPARENT,
-> +				   reg, shift, width, 0, &imx_ccm_lock); }
-> +
->  struct clk_hw *imx_clk_hw_cpu(const char *name, const char
-> *parent_name,
->  		struct clk *div, struct clk *mux, struct clk *pll,
->  		struct clk *step);
-> --
-> 2.7.4
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/riscv/kvm/vcpu_exit.c | 72 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+
+diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
+index cbf973c5f2fb..8d0ae1a23b70 100644
+--- a/arch/riscv/kvm/vcpu_exit.c
++++ b/arch/riscv/kvm/vcpu_exit.c
+@@ -12,6 +12,13 @@
+ #include <linux/kvm_host.h>
+ #include <asm/csr.h>
+ 
++#define INSN_OPCODE_MASK	0x007c
++#define INSN_OPCODE_SHIFT	2
++#define INSN_OPCODE_SYSTEM	28
++
++#define INSN_MASK_WFI		0xffffff00
++#define INSN_MATCH_WFI		0x10500000
++
+ #define INSN_MATCH_LB		0x3
+ #define INSN_MASK_LB		0x707f
+ #define INSN_MATCH_LH		0x1003
+@@ -116,6 +123,67 @@
+ 				 (s32)(((insn) >> 7) & 0x1f))
+ #define MASK_FUNCT3		0x7000
+ 
++static int truly_illegal_insn(struct kvm_vcpu *vcpu,
++			      struct kvm_run *run,
++			      ulong insn)
++{
++	/* Redirect trap to Guest VCPU */
++	kvm_riscv_vcpu_trap_redirect(vcpu, EXC_INST_ILLEGAL, insn);
++
++	return 1;
++}
++
++static int system_opcode_insn(struct kvm_vcpu *vcpu,
++			      struct kvm_run *run,
++			      ulong insn)
++{
++	if ((insn & INSN_MASK_WFI) == INSN_MATCH_WFI) {
++		vcpu->stat.wfi_exit_stat++;
++		if (!kvm_arch_vcpu_runnable(vcpu)) {
++			srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
++			kvm_vcpu_block(vcpu);
++			vcpu->arch.srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
++			kvm_clear_request(KVM_REQ_UNHALT, vcpu);
++		}
++		vcpu->arch.guest_context.sepc += INSN_LEN(insn);
++		return 1;
++	}
++
++	return truly_illegal_insn(vcpu, run, insn);
++}
++
++static int illegal_inst_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
++			      unsigned long insn)
++{
++	unsigned long ut_scause = 0;
++	struct kvm_cpu_context *ct;
++
++	if (unlikely(INSN_IS_16BIT(insn))) {
++		if (insn == 0) {
++			ct = &vcpu->arch.guest_context;
++			insn = kvm_riscv_vcpu_unpriv_read(vcpu, true,
++							  ct->sepc,
++							  &ut_scause);
++			if (ut_scause) {
++				if (ut_scause == EXC_LOAD_PAGE_FAULT)
++					ut_scause = EXC_INST_PAGE_FAULT;
++				kvm_riscv_vcpu_trap_redirect(vcpu, ut_scause,
++							     ct->sepc);
++				return 1;
++			}
++		}
++		if (INSN_IS_16BIT(insn))
++			return truly_illegal_insn(vcpu, run, insn);
++	}
++
++	switch ((insn & INSN_OPCODE_MASK) >> INSN_OPCODE_SHIFT) {
++	case INSN_OPCODE_SYSTEM:
++		return system_opcode_insn(vcpu, run, insn);
++	default:
++		return truly_illegal_insn(vcpu, run, insn);
++	}
++}
++
+ static int emulate_load(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 			unsigned long fault_addr, unsigned long htinst)
+ {
+@@ -537,6 +605,10 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 	ret = -EFAULT;
+ 	run->exit_reason = KVM_EXIT_UNKNOWN;
+ 	switch (scause) {
++	case EXC_INST_ILLEGAL:
++		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
++			ret = illegal_inst_fault(vcpu, run, stval);
++		break;
+ 	case EXC_INST_GUEST_PAGE_FAULT:
+ 	case EXC_LOAD_GUEST_PAGE_FAULT:
+ 	case EXC_STORE_GUEST_PAGE_FAULT:
+-- 
+2.17.1
 
