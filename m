@@ -2,84 +2,61 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6425C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBC6206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71FF206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgCMBlg (ORCPT
+        id S1726437AbgCMBpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:41:36 -0400
-Received: from m177126.mail.qiye.163.com ([123.58.177.126]:5417 "EHLO
-        m177126.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgCMBlg (ORCPT
+        Thu, 12 Mar 2020 21:45:02 -0400
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:33468 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726194AbgCMBpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:41:36 -0400
-X-Greylist: delayed 332 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 21:41:35 EDT
-Received: from vivo.com (wm-5 [127.0.0.1])
-        by m177126.mail.qiye.163.com (Hmail) with ESMTP id 34ADF182C0B;
-        Fri, 13 Mar 2020 09:35:28 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <APYA*ADSCJWJ*JO7xH64KaqT.3.1584063328152.Hmail.luochucheng@vivo.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, wenhu.wang@vivo.com,
-        trivial@kernel.org
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gRml4IG1pc3NpbmcgJ2JpdCcgaW4gY29tbWVudA==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <B95E9CA5-2E6A-4F8B-9B8F-BC4F4D49CBF3@dilger.ca>
+        Thu, 12 Mar 2020 21:45:02 -0400
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1jCZNL-00086Z-QQ; Fri, 13 Mar 2020 02:44:35 +0100
+Date:   Fri, 13 Mar 2020 02:44:35 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     syzbot <syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com>
+Cc:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        hdanton@sina.com, jbenc@redhat.com, kadlec@blackhole.kfki.hu,
+        linux-kernel@vger.kernel.org, moshe@mellanox.com,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, sd@queasysnail.net,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Subject: Re: WARNING in geneve_exit_batch_net (2)
+Message-ID: <20200313014435.GY979@breakpoint.cc>
+References: <0000000000000ea4b4059fb33201@google.com>
+ <000000000000c7979105a0a311f6@google.com>
 MIME-Version: 1.0
-Received: from luochucheng@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 13 Mar 2020 09:35:28 +0800 (GMT+08:00)
-From:   =?UTF-8?B?572X5qWa5oiQ?= <luochucheng@vivo.com>
-Date:   Fri, 13 Mar 2020 09:35:28 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VLTkhCQkJCS0tDSkxDTFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTU1OQkNCSUlON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6KyI6UTo*KDgxLDFRMTRMAzNNTzAaCi9VSFVKTkNPS01ISElDTkpMVTMWGhIXVRcOFBgTDhgT
-        HhUcOw0SDRRVGBQWRVlXWRILWUFZTkNVSU5KVUxPVUlJTVlXWQgBWUFPSklCNwY+
-X-HM-Tid: 0a70d18830076458kurs34adf182c0b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000c7979105a0a311f6@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhdCBzb3VuZHMgcmVhc29uYWJsZS4gSSB3aWxsIHN1Ym1pdCBhIG5ldyBwYXRjaCBiYXNlZCBv
-biAnMzItYml0JyBhbmQgJzY0LWJpdCcKCkZyb206IEFuZHJlYXMgRGlsZ2VyIDxhZGlsZ2VyQGRp
-bGdlci5jYT4KRGF0ZTogMjAyMC0wMy0xMyAwNToyNzo0OApUbzogIEhhbnMgZGUgR29lZGUgPGhk
-ZWdvZWRlQHJlZGhhdC5jb20+CkNjOiAgQ2h1Y2hlbmcgTHVvIDxsdW9jaHVjaGVuZ0B2aXZvLmNv
-bT4sTGludXggRlMgRGV2ZWwgPGxpbnV4LWZzZGV2ZWxAdmdlci5rZXJuZWwub3JnPixsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnLHdlbmh1LndhbmdAdml2by5jb20sdHJpdmlhbEBrZXJuZWwu
-b3JnClN1YmplY3Q6IFJlOiBbUEFUQ0hdIEZpeCBtaXNzaW5nICdiaXQnIGluIGNvbW1lbnQ+T24g
-TWFyIDEyLCAyMDIwLCBhdCA0OjQwIEFNLCBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
-Y29tPiB3cm90ZToKPj4gCj4+IEhpLAo+PiAKPj4gT24gMy8xMi8yMCA4OjQwIEFNLCBDaHVjaGVu
-ZyBMdW8gd3JvdGU6Cj4+PiBUaGUgbWlzc2luZyB3b3JkIG1heSBtYWtlIGl0IGhhcmQgZm9yIG90
-aGVyIGRldmVsb3BlcnMgdG8KPj4+IHVuZGVyc3RhbmQgaXQuCj4+PiBTaWduZWQtb2ZmLWJ5OiBD
-aHVjaGVuZyBMdW8gPGx1b2NodWNoZW5nQHZpdm8uY29tPgo+PiAKPj4gVGhhbmtzIGZvciBjYXRj
-aGluZyB0aGlzOgo+PiAKPj4gQWNrZWQtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhh
-dC5jb20+Cj4KPk5vdCB0byBuaXQtcGljaywgYnV0IHRoZXNlIHNob3VsZCBwcm9wZXJseSBiZSB3
-cml0dGVuIGFzICIzMi1iaXQiIGFuZCAiNjQtYml0Ii4KPlRoYXQgY2FuIGJlIGVhc2lseSBmaXhl
-ZCBpbiB0aGUgcGF0Y2ggYmVmb3JlIHVwc3RyZWFtIHN1Ym1pc3Npb24uCj4KPkNoZWVycywgQW5k
-cmVhcwo+Cj4+IFJlZ2FyZHMsCj4+IAo+PiBIYW5zCj4+IAo+PiAKPj4+IC0tLQo+Pj4gIGZzL3Zi
-b3hzZi9kaXIuYyB8IDIgKy0KPj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
-ZGVsZXRpb24oLSkKPj4+IGRpZmYgLS1naXQgYS9mcy92Ym94c2YvZGlyLmMgYi9mcy92Ym94c2Yv
-ZGlyLmMKPj4+IGluZGV4IGRkMTQ3YjQ5MDk4Mi4uYmU0ZjcyNjI1ZDM2IDEwMDY0NAo+Pj4gLS0t
-IGEvZnMvdmJveHNmL2Rpci5jCj4+PiArKysgYi9mcy92Ym94c2YvZGlyLmMKPj4+IEBAIC0xMzQs
-NyArMTM0LDcgQEAgc3RhdGljIGJvb2wgdmJveHNmX2Rpcl9lbWl0KHN0cnVjdCBmaWxlICpkaXIs
-IHN0cnVjdCBkaXJfY29udGV4dCAqY3R4KQo+Pj4gIAkJZF90eXBlID0gdmJveHNmX2dldF9kX3R5
-cGUoaW5mby0+aW5mby5hdHRyLm1vZGUpOwo+Pj4gICAgCQkvKgo+Pj4gLQkJICogT24gMzIgYml0
-IHN5c3RlbXMgcG9zIGlzIDY0IHNpZ25lZCwgd2hpbGUgaW5vIGlzIDMyIGJpdAo+Pj4gKwkJICog
-T24gMzIgYml0IHN5c3RlbXMgcG9zIGlzIDY0IGJpdCBzaWduZWQsIHdoaWxlIGlubyBpcyAzMiBi
-aXQKPj4+ICAJCSAqIHVuc2lnbmVkIHNvIGZha2VfaW5vIG1heSBvdmVyZmxvdywgY2hlY2sgZm9y
-IHRoaXMuCj4+PiAgCQkgKi8KPj4+ICAJCWlmICgoaW5vX3QpKGN0eC0+cG9zICsgMSkgIT0gKHU2
-NCkoY3R4LT5wb3MgKyAxKSkgewo+PiAKPgo+Cj5DaGVlcnMsIEFuZHJlYXMKPgo+Cj4KPgo+Cg0K
-DQo=
+syzbot <syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com> wrote:
+> syzbot has bisected this bug to:
+> 
+> commit 4e645b47c4f000a503b9c90163ad905786b9bc1d
+> Author: Florian Westphal <fw@strlen.de>
+> Date:   Thu Nov 30 23:21:02 2017 +0000
+> 
+>     netfilter: core: make nf_unregister_net_hooks simple wrapper again
+
+No idea why this turns up, the reproducer doesn't hit any of these code
+paths.
+
+The debug splat is a false-positive; ndo_stop/list_del hasn't run yet.
+I will send a fix for net tree.
