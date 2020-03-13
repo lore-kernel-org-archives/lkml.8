@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1B1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8081C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FCD20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9327520637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgCMX6R (ORCPT
+        id S1728114AbgCMX6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:58:17 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49986 "EHLO
+        Fri, 13 Mar 2020 19:58:21 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49966 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727700AbgCMXx7 (ORCPT
+        with ESMTP id S1727677AbgCMXx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 19:53:59 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7q-00B6ZC-Fu; Fri, 13 Mar 2020 23:53:58 +0000
+        id 1jCu7p-00B6Yi-RP; Fri, 13 Mar 2020 23:53:57 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 11/69] lookup_fast(): consolidate the RCU success case
-Date:   Fri, 13 Mar 2020 23:52:59 +0000
-Message-Id: <20200313235357.2646756-11-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 06/69] handle_mounts(): start building a sane wrapper for follow_managed()
+Date:   Fri, 13 Mar 2020 23:52:54 +0000
+Message-Id: <20200313235357.2646756-6-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,65 +42,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-1) in case of __follow_mount_rcu() failure, lookup_fast() proceeds
-to call unlazy_child() and, should it succeed, handle_mounts().
-Note that we have status > 0 (or we wouldn't be calling
-__follow_mount_rcu() at all), so all stuff conditional upon
-non-positive status won't be even touched.
+All callers of follow_managed() follow it on success with the same steps -
+d_backing_inode(path->dentry) is calculated and stored into some struct inode *
+variable and, in all but one case, an unsigned variable (nd->seq to be) is
+zeroed.  The single exception is lookup_fast() and there zeroing is correct
+thing to do - not doing it is a pointless microoptimization.
 
-Consolidate just that sequence after the call of __follow_mount_rcu().
-
-2) calling d_is_negative() and keeping its result is pointless -
-we either don't get past checking ->d_seq (and don't use the results of
-d_is_negative() at all), or we are guaranteed that ->d_inode and
-type bits of ->d_flags had been consistent at the time of d_is_negative()
-call.  IOW, we could only get to the use of its result if it's
-equal to !inode.  The same ->d_seq check guarantees that after that point
-this CPU won't observe ->d_flags values older than ->d_inode update.
-So 'negative' variable is completely pointless these days.
+	Add a wrapper for follow_managed() that would do that combination.
+It's mostly a vehicle for code massage - it will be changing quite a bit,
+and the current calling conventions are by no means final.  Right now it
+takes path, nameidata and (as out params) inode and seq, similar to
+__follow_mount_rcu().  Which will soon get folded into it...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/namei.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index a613fa52a174..494f4959e790 100644
+index 6938d20aa73a..c104ec75faef 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1631,7 +1631,6 @@ static int lookup_fast(struct nameidata *nd,
- 	 */
- 	if (nd->flags & LOOKUP_RCU) {
- 		unsigned seq;
--		bool negative;
- 		dentry = __d_lookup_rcu(parent, &nd->last, &seq);
- 		if (unlikely(!dentry)) {
- 			if (unlazy_walk(nd))
-@@ -1644,7 +1643,6 @@ static int lookup_fast(struct nameidata *nd,
- 		 * the dentry name information from lookup.
- 		 */
- 		*inode = d_backing_inode(dentry);
--		negative = d_is_negative(dentry);
- 		if (unlikely(read_seqcount_retry(&dentry->d_seq, seq)))
- 			return -ECHILD;
+@@ -1385,6 +1385,18 @@ static bool __follow_mount_rcu(struct nameidata *nd, struct path *path,
+ 		!(path->dentry->d_flags & DCACHE_NEED_AUTOMOUNT);
+ }
  
-@@ -1665,12 +1663,15 @@ static int lookup_fast(struct nameidata *nd,
- 			 * Note: do negative dentry check after revalidation in
- 			 * case that drops it.
- 			 */
--			if (unlikely(negative))
-+			if (unlikely(!inode))
- 				return -ENOENT;
- 			path->mnt = mnt;
- 			path->dentry = dentry;
- 			if (likely(__follow_mount_rcu(nd, path, inode, seqp)))
- 				return 1;
-+			if (unlazy_child(nd, dentry, seq))
-+				return -ECHILD;
-+			return handle_mounts(nd, dentry, path, inode, seqp);
- 		}
- 		if (unlazy_child(nd, dentry, seq))
++static inline int handle_mounts(struct path *path, struct nameidata *nd,
++			  struct inode **inode, unsigned int *seqp)
++{
++	int ret = follow_managed(path, nd);
++
++	if (likely(ret >= 0)) {
++		*inode = d_backing_inode(path->dentry);
++		*seqp = 0; /* out of RCU mode, so the value doesn't matter */
++	}
++	return ret;
++}
++
+ static int follow_dotdot_rcu(struct nameidata *nd)
+ {
+ 	struct inode *inode = nd->inode;
+@@ -1607,7 +1619,6 @@ static int lookup_fast(struct nameidata *nd,
+ 	struct vfsmount *mnt = nd->path.mnt;
+ 	struct dentry *dentry, *parent = nd->path.dentry;
+ 	int status = 1;
+-	int err;
+ 
+ 	/*
+ 	 * Rename seqlock is not required here because in the off chance
+@@ -1677,10 +1688,7 @@ static int lookup_fast(struct nameidata *nd,
+ 
+ 	path->mnt = mnt;
+ 	path->dentry = dentry;
+-	err = follow_managed(path, nd);
+-	if (likely(err > 0))
+-		*inode = d_backing_inode(path->dentry);
+-	return err;
++	return handle_mounts(path, nd, inode, seqp);
+ }
+ 
+ /* Fast lookup failed, do it the slow way */
+@@ -1875,12 +1883,9 @@ static int walk_component(struct nameidata *nd, int flags)
+ 			return PTR_ERR(path.dentry);
+ 
+ 		path.mnt = nd->path.mnt;
+-		err = follow_managed(&path, nd);
++		err = handle_mounts(&path, nd, &inode, &seq);
+ 		if (unlikely(err < 0))
+ 			return err;
+-
+-		seq = 0;	/* we are already out of RCU mode */
+-		inode = d_backing_inode(path.dentry);
+ 	}
+ 
+ 	return step_into(nd, &path, flags, inode, seq);
+@@ -2365,11 +2370,9 @@ static int handle_lookup_down(struct nameidata *nd)
  			return -ECHILD;
+ 	} else {
+ 		dget(path.dentry);
+-		err = follow_managed(&path, nd);
++		err = handle_mounts(&path, nd, &inode, &seq);
+ 		if (unlikely(err < 0))
+ 			return err;
+-		inode = d_backing_inode(path.dentry);
+-		seq = 0;
+ 	}
+ 	path_to_nameidata(&path, nd);
+ 	nd->inode = inode;
+@@ -3392,12 +3395,9 @@ static int do_last(struct nameidata *nd,
+ 		got_write = false;
+ 	}
+ 
+-	error = follow_managed(&path, nd);
++	error = handle_mounts(&path, nd, &inode, &seq);
+ 	if (unlikely(error < 0))
+ 		return error;
+-
+-	seq = 0;	/* out of RCU mode, so the value doesn't matter */
+-	inode = d_backing_inode(path.dentry);
+ finish_lookup:
+ 	error = step_into(nd, &path, 0, inode, seq);
+ 	if (unlikely(error))
 -- 
 2.11.0
 
