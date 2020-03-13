@@ -2,143 +2,116 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24523C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDABC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7CB206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EC42073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mI100v4i"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="f9n1dUEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCMIS0 (ORCPT
+        id S1726462AbgCMIVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:18:26 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39366 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgCMIRq (ORCPT
+        Fri, 13 Mar 2020 04:21:11 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:54945 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726230AbgCMIVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:17:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D8Hifs071929;
-        Fri, 13 Mar 2020 03:17:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584087465;
-        bh=cR2auaaZnVvBiqCa7pzD+K3uPGgTnEYNRzfeAZy+KTw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=mI100v4ipWTgkYhLpGjmRNpHdGYqOcaRWtQh/zfuh4LLXEmgE3JLjbw6egwgz0tdp
-         av+hu2WY6ZcyizdKqMXlkqxZ8T9fRmVWdf0sqY8AISvzZgRah1CrwfLN6QV1y7F3an
-         NRutpBsuqw9qmOjPzyRoA01pvl/IIa4wIPIrm3XQ=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02D8Hing087897
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 03:17:44 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 03:17:42 -0500
-Received: from localhost.localdomain (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 03:17:42 -0500
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02D8HQlc097835;
-        Fri, 13 Mar 2020 03:17:40 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <s-anna@ti.com>, <afd@ti.com>, Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv8 06/15] remoteproc/omap: Initialize and assign reserved memory node
-Date:   Fri, 13 Mar 2020 10:17:09 +0200
-Message-ID: <20200313081718.30612-7-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313081718.30612-1-t-kristo@ti.com>
-References: <20200313081718.30612-1-t-kristo@ti.com>
+        Fri, 13 Mar 2020 04:21:11 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id CfZ3j1HP0hVf8CfZ6jO98M; Fri, 13 Mar 2020 09:21:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1584087669; bh=XOx2gtrl0/QdQw4FtDRbotgoOYOMw8gbaDUKtBrXmIU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=f9n1dUEocS4ZbKtJv1ujdPQ+Sb6+Z2baEEGpQe73vOdLOHnQ+fKmXsMHIzatbxnmB
+         xxTdqa1lUSHiJJjqlPfzZRbuVmAiOPa4azzajjYqywen+hYMgRi54ELArDDahA69Ip
+         WauM5r0lewkJgbCuYfeG3LlmhKrEAqC79D5U1qPCAmdCusSk9StFd8NTEjIdGQYwYk
+         8iO/QUfWGN5Chb+4+44oxWG0wbfLBZmX9cyY7SIGKK1YuqtETz3onH/+kx01Vqv67T
+         8iX++s7J6iwO4BuZhkge0tINE7y4PkYeOVPaoWlhaNgdNG8SW3ixQ2FWMYoaz7zU0g
+         y0B87Pixn+Jjg==
+Subject: Re: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <20200113141459.GA3606@pflmari>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
+Date:   Fri, 13 Mar 2020 09:21:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200113141459.GA3606@pflmari>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfO/W7Ox867vsX2/fQCV+/X9vTuQGo/HQDazp7UvW8nqZsCyj7IkNo50nZuDB6xx2OB/oqZxaNPwA2ybQtLJHH4UFyKbbfRIjzY2yy2WZUa/2NA93YL7a
+ TwkUzK5wcpPQlxxDkuWlo7xW9lU5KjOcElOLWDktwzE3kfCXyt22exvZfmWCfKpLFQkIno+fjRS1S95ikcDhW/wGnpQO/kws0BiaQ912gCuoer1N9+A3/vmf
+ J7TTAxuUEkb/yFMnBNXhEh7z9TOMY3Qo9ifmd32AiEnE6z+TgZlt2ts2I4xgRbEuVVWEyCPtUTW2hJjkHv9QaiZtkKrGqaUvyfM0sPiSJR6jVqra1cwq+Ghm
+ 3MTkO0zdiBsRBPNjeb8lURM1QubTtoCRIgOX9NRaoKGcpNQVtgZbhdQ+63hyTssfm7VWy1PluCwjwCI1mknicCKA0qD1to86bTC0CdfIZoWT+XghdJYwJOzA
+ KiX4tmq2ccDiBA3wqJP+IMrbXN7FR5FsVx7OFt2TKyZLXQS5UlOEhkFq9kz4m9ZJvNYpwEgr5rUbhPZBgIEaPCzelCBO9VmcogrHCvc5meY7CUDHQHg7+bcP
+ jFk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+Hi Alex,
 
-The reserved memory nodes are not assigned to platform devices by
-default in the driver core to avoid the lookup for every platform
-device and incur a penalty as the real users are expected to be
-only a few devices.
+Again, sorry for the late reply.
 
-OMAP remoteproc devices fall into the above category and the OMAP
-remoteproc driver _requires_ specific CMA pools to be assigned
-for each device at the moment to align on the location of the
-vrings and vring buffers in the RTOS-side firmware images. So,
-use the of_reserved_mem_device_init/release() API appropriately
-to assign the corresponding reserved memory region to the OMAP
-remoteproc device. Note that only one region per device is
-allowed by the framework.
+Patch 2/8 has its own comment since that approach won't work.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Andrew F. Davis <afd@ti.com>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/remoteproc/omap_remoteproc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+As a general note for this series: it might be better to have two
+patch series: one for patches 1 and 3-6 (not sure whether 5 can be included
+or not), and one where the public API changes (i.e. new V4L2 audio controls)
+are added. The first can probably be merged fairly quickly, the second will
+likely require more iterations since public API patches always take much longer
+before they are mature.
 
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index 9a82d5c4a06b..b010e0607d5f 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/err.h>
- #include <linux/of_device.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- #include <linux/dma-mapping.h>
- #include <linux/remoteproc.h>
-@@ -486,14 +487,23 @@ static int omap_rproc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
-+	ret = of_reserved_mem_device_init(&pdev->dev);
-+	if (ret) {
-+		dev_warn(&pdev->dev, "device does not have specific CMA pool.\n");
-+		dev_warn(&pdev->dev, "Typically this should be provided,\n");
-+		dev_warn(&pdev->dev, "only omit if you know what you are doing.\n");
-+	}
-+
- 	platform_set_drvdata(pdev, rproc);
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
--		goto free_rproc;
-+		goto release_mem;
- 
- 	return 0;
- 
-+release_mem:
-+	of_reserved_mem_device_release(&pdev->dev);
- free_rproc:
- 	rproc_free(rproc);
- 	return ret;
-@@ -505,6 +515,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
- 
- 	rproc_del(rproc);
- 	rproc_free(rproc);
-+	of_reserved_mem_device_release(&pdev->dev);
- 
- 	return 0;
- }
--- 
-2.17.1
+Regards,
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	Hans
+
+On 1/13/20 3:14 PM, Alex Riesen wrote:
+> This adds minimal support for controlling the audio output I2S port available
+> on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
+> signal from the decoded HDMI stream.
+> 
+> An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
+> code.
+> 
+> Alex Riesen (8):
+>   media: adv748x: add a device-specific wrapper for register block read
+>   media: adv748x: add audio mute control and output selection ioctls
+>   media: adv748x: add log_status ioctl
+>   media: adv748x: reserve space for the audio (I2S) port in the driver
+>     structures
+>   media: adv748x: add an ASoC DAI definition to the driver
+>   media: adv748x: reduce amount of code for bitwise modification of
+>     device registers
+>   dt-bindings: adv748x: add information about serial audio interface
+>     (I2S/TDM)
+>   arm64: dts: renesas: salvator: add a connection from adv748x codec
+>     (HDMI input) to the R-Car SoC
+> 
+>  .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
+>  .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
+>  .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
+>  drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
+>  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
+>  drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
+>  6 files changed, 523 insertions(+), 11 deletions(-)
+> 
+
