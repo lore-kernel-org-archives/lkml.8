@@ -2,131 +2,129 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1474FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A997BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FC4206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtOrXJov"
+	by mail.kernel.org (Postfix) with ESMTP id 8C4CD206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgCMSoF (ORCPT
+        id S1726967AbgCMSoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:44:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45715 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgCMSoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:44:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c145so14261300qke.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oPfbnwPH5IIVEOK88WBUxnAB4zCTEMfYQ9J7La1tTbg=;
-        b=mtOrXJovZrulNgcrS4RDduTA92bcwQ6EoHZd6HDhPnx24yD/61b7M1ibRqIANW/y98
-         XxwbzvddEAuSEyZx1omYEpzvOQtzSPrvjFkmlD27cZLqiEb1GQ0E9Jsqo8Nqs7q1RwOC
-         i4WPxYp2+NcMlA8MTFJx5ONtA/lwQSZTUEW8HbPG7iCMXsX4wT66wfzlDvIPQNJF857i
-         3yH0KbHXRmcbP5+fPypmoyjaeKeRA9viJ7icNoAiSN7h0xcmg4aam/Zb+88ooJiy1AT/
-         X6pJ4/wFQ6R5jngST5qNDBpcgRXVfo+A5qxyM5JiUCsHa4Xbsjw+6Woj2t6Za+ew7i5Q
-         GJbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oPfbnwPH5IIVEOK88WBUxnAB4zCTEMfYQ9J7La1tTbg=;
-        b=cPOEKX9fiFvKTIgWqPIhnF+PI5kPy/Ggd7spWMbZCZsiyBVmBR/Hb3F/K7hkbB36sh
-         0OSfKIIg46dvCy7OBSkrYKck3kUeA+QmQeTIz9mq59elWIVOd4T/CR5sjLdSpXLoOI3B
-         ACuSaquejpPfXB+W+ebvp1VaX2oDArn5TisLMpOPh6YGmU9T8clPOsItC6bRL9omGj3b
-         7OdzoBnkrbAuyMheebrFUqm1J+dbF5ja3GEMsU4oOAzPCFJ2X8ol5t1k5eNj/fKsMvYI
-         v1qszNWJmuYAL0JMitsvTuljH1TbgY2Kp+9FZUNsp1BZ3Jtl2logCX4RPt1DoqiP3GMA
-         B5Pg==
-X-Gm-Message-State: ANhLgQ3ZM5+nRfN+CLdxB7aL0NiaqIAIjChcFAu6mWk8BSEZmIN6k+if
-        G0s1xiNQIl0cG3Ynp6EB6/Q=
-X-Google-Smtp-Source: ADFU+vvbtdaupUA9yHFv1Qeq5VYbIquKYc8X+239uzvfBJfJtwef4zNq1Fl/NZK9tm9+9dDmCa5orA==
-X-Received: by 2002:a37:a08b:: with SMTP id j133mr15266505qke.265.1584125044222;
-        Fri, 13 Mar 2020 11:44:04 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id v19sm14731793qtb.67.2020.03.13.11.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 11:44:03 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3649440009; Fri, 13 Mar 2020 15:44:00 -0300 (-03)
-Date:   Fri, 13 Mar 2020 15:44:00 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf test: print if shell directory isn't present
-Message-ID: <20200313184400.GA9917@kernel.org>
-References: <20200313005602.45236-1-irogers@google.com>
- <20200313093734.GB389625@krava>
+        Fri, 13 Mar 2020 14:44:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5934 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgCMSoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:44:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 11:44:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="442509038"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Mar 2020 11:44:53 -0700
+Date:   Fri, 13 Mar 2020 11:44:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200313184452.GD5181@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+ <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+ <20200313164622.GC5181@linux.intel.com>
+ <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313093734.GB389625@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Mar 13, 2020 at 10:37:34AM +0100, Jiri Olsa escreveu:
-> On Thu, Mar 12, 2020 at 05:56:02PM -0700, Ian Rogers wrote:
-> > If the shell test directory isn't present the exit code will be 255 but
-> > with no error messages printed. Add an error message.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+On Fri, Mar 13, 2020 at 02:32:29PM -0400, Nathaniel McCallum wrote:
+> On Fri, Mar 13, 2020 at 12:46 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Fri, Mar 13, 2020 at 11:48:54AM -0400, Nathaniel McCallum wrote:
+> > > Therefore, I'd like to propose that __vdso_sgx_enter_enclave():
+> > >   * Preserve %rbx.
+> >
+> > At first glance, that looks sane.  Being able to call __vdso... from C
+> > would certainly be nice.
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-Thanks, applied.
-
-- Arnaldo
- 
-> thanks,
-> jirka
+> Agreed. I think ergonomically we want __vdso...() to be called from C
+> and the handler to be implemented in asm (optionally); without
+> breaking the ability to call __vdso..() from asm in special cases.
 > 
-> > ---
-> >  tools/perf/tests/builtin-test.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > index 5f05db75cdd8..54d9516c9839 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -543,8 +543,11 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
-> >  		return -1;
-> >  
-> >  	dir = opendir(st.dir);
-> > -	if (!dir)
-> > +	if (!dir) {
-> > +		pr_err("failed to open shell test directory: %s\n",
-> > +			st.dir);
-> >  		return -1;
-> > +	}
-> >  
-> >  	for_each_shell_test(dir, st.dir, ent) {
-> >  		int curr = i++;
-> > -- 
-> > 2.25.1.481.gfbce0eb801-goog
-> > 
+> I think all ergonomic issues get solved by the following:
+>    * Pass a void * into the handler from C through __vdso...().
+>    * Allow the handler to pop parameters off of the output stack without hacks.
 > 
+> This allows the handler to pop extra arguments off the stack and write
+> them into the memory at the void *. Then the handler can be very small
+> and pass logic back to the caller of __vdso...().
+> 
+> Here's what this all means for the enclave. For maximum usability, the
+> enclave should preserve all callee-saved registers (except %rbx, which
+> is preserved by __vdso..()). For each ABI rule that the enclave
+> breaks, you need logic in a handler to fix it. So if you push return
+> params on the stack, the handler needs to undo that.
 
--- 
+Or the untrusted runtime needs to wrap the __vdso() to save state that is
+clobbered by the enclave.  Just want to make it crystal clear that using a
+handler is only required for stack shenanigans.
 
-- Arnaldo
+> This doesn't compromise the ability to treat __vsdo...() like ENCLU if
+> you need the full power. But it does make it significantly easier to
+> consume when you don't have special needs. So as I see it, __vdso...()
+> should:
+> 
+> 1. preserve %rbx
+> 2. take leaf in %rcx
+> 3. gain a void* stack param which is passed to the handler
+
+Unless I'm misunderstanding the request, this already exists.  %rsp at the
+time of EEXIT is passed to the handler.
+
+> 4. sub/add to %rsp rather than save/restore
+
+Can you elaborate on why you want to sub/add to %rsp instead of having the
+enclave unwind the stack?  Preserving %rsp across EEXIT/ERESUME seems more
+in line with function call semantics, which I assume is desirable?  E.g.
+
+  push param3
+  push param2
+  push param1
+
+  enclu[EEXIT]
+
+  add $0x18, %rsp
+
+> That would make this a very usable and fast interface without
+> sacrificing any of its current power.
