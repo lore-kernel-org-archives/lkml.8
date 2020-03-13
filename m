@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C574C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDA7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BBB2074E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD1B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgCMXyP (ORCPT
+        id S1727951AbgCMXyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:54:15 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50102 "EHLO
+        Fri, 13 Mar 2020 19:54:21 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50214 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgCMXyE (ORCPT
+        with ESMTP id S1727857AbgCMXyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:54:04 -0400
+        Fri, 13 Mar 2020 19:54:07 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7u-00B6c7-B7; Fri, 13 Mar 2020 23:54:02 +0000
+        id 1jCu7y-00B6f3-MU; Fri, 13 Mar 2020 23:54:06 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 40/69] split the lookup-related parts of do_last() into a separate helper
-Date:   Fri, 13 Mar 2020 23:53:28 +0000
-Message-Id: <20200313235357.2646756-40-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 68/69] atomic_open(): no need to pass struct open_flags anymore
+Date:   Fri, 13 Mar 2020 23:53:56 +0000
+Message-Id: <20200313235357.2646756-68-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,122 +42,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+argument had been unused since 1643b43fbd052 (lookup_open(): lift the
+"fallback to !O_CREAT" logics from atomic_open()) back in 2016
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 51 +++++++++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 22 deletions(-)
+ fs/namei.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 798672577367..6530e3cbd486 100644
+index 88ff59dcfd47..36b15f5b09bd 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3112,19 +3112,12 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
- 	return ERR_PTR(error);
- }
- 
--/*
-- * Handle the last step of open()
-- */
--static const char *do_last(struct nameidata *nd,
-+static const char *open_last_lookups(struct nameidata *nd,
- 		   struct file *file, const struct open_flags *op)
+@@ -2932,7 +2932,6 @@ static int may_o_create(const struct path *dir, struct dentry *dentry, umode_t m
+  */
+ static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
+ 				  struct file *file,
+-				  const struct open_flags *op,
+ 				  int open_flag, umode_t mode)
  {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = nd->inode->i_uid;
--	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
--	bool do_truncate;
- 	bool got_write = false;
--	int acc_mode;
- 	unsigned seq;
- 	struct inode *inode;
- 	struct dentry *dentry;
-@@ -3137,9 +3130,9 @@ static const char *do_last(struct nameidata *nd,
- 		if (nd->depth)
- 			put_link(nd);
- 		error = handle_dots(nd, nd->last_type);
--		if (unlikely(error))
--			return ERR_PTR(error);
--		goto finish_open;
-+		if (likely(!error))
-+			error = complete_walk(nd);
-+		return ERR_PTR(error);
+ 	struct dentry *const DENTRY_NOT_SET = (void *) -1UL;
+@@ -3065,7 +3064,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
  	}
  
- 	if (!(open_flag & O_CREAT)) {
-@@ -3152,7 +3145,6 @@ static const char *do_last(struct nameidata *nd,
- 		if (likely(dentry))
- 			goto finish_lookup;
- 
--		BUG_ON(nd->inode != dir->d_inode);
- 		BUG_ON(nd->flags & LOOKUP_RCU);
- 	} else {
- 		/* create side of things */
-@@ -3162,7 +3154,7 @@ static const char *do_last(struct nameidata *nd,
- 		 * about to look up
- 		 */
- 		error = complete_walk(nd);
--		if (error)
-+		if (unlikely(error))
- 			return ERR_PTR(error);
- 
- 		audit_inode(nd->name, dir, AUDIT_INODE_PARENT);
-@@ -3191,10 +3183,8 @@ static const char *do_last(struct nameidata *nd,
- 	else
- 		inode_unlock_shared(dir->d_inode);
- 
--	if (got_write) {
-+	if (got_write)
- 		mnt_drop_write(nd->path.mnt);
--		got_write = false;
--	}
- 
- 	if (IS_ERR(dentry))
- 		return ERR_CAST(dentry);
-@@ -3202,7 +3192,7 @@ static const char *do_last(struct nameidata *nd,
- 	if (file->f_mode & (FMODE_OPENED | FMODE_CREATED)) {
- 		dput(nd->path.dentry);
- 		nd->path.dentry = dentry;
--		goto finish_open_created;
-+		return NULL;
- 	}
- 
- finish_lookup:
-@@ -3218,12 +3208,29 @@ static const char *do_last(struct nameidata *nd,
- 		audit_inode(nd->name, nd->path.dentry, 0);
- 		return ERR_PTR(-EEXIST);
- 	}
--finish_open:
-+
- 	/* Why this, you ask?  _Now_ we might have grown LOOKUP_JUMPED... */
--	error = complete_walk(nd);
--	if (error)
--		return ERR_PTR(error);
--finish_open_created:
-+	return ERR_PTR(complete_walk(nd));
-+}
-+
-+/*
-+ * Handle the last step of open()
-+ */
-+static const char *do_last(struct nameidata *nd,
-+		   struct file *file, const struct open_flags *op)
-+{
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
-+	int open_flag = op->open_flag;
-+	bool do_truncate;
-+	int acc_mode;
-+	const char *link;
-+	int error;
-+
-+	link = open_last_lookups(nd, file, op);
-+	if (unlikely(link))
-+		return link;
-+
- 	if (!(file->f_mode & FMODE_CREATED))
- 		audit_inode(nd->name, nd->path.dentry, 0);
- 	if (open_flag & O_CREAT) {
+ 	if (dir_inode->i_op->atomic_open) {
+-		dentry = atomic_open(nd, dentry, file, op, open_flag, mode);
++		dentry = atomic_open(nd, dentry, file, open_flag, mode);
+ 		if (unlikely(create_error) && dentry == ERR_PTR(-ENOENT))
+ 			dentry = ERR_PTR(create_error);
+ 		return dentry;
 -- 
 2.11.0
 
