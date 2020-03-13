@@ -7,74 +7,75 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA133C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD6EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8102320724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E8020724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gZF2Cv2m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XSViPTWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgCMKpU (ORCPT
+        id S1726594AbgCMKqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:45:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27465 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726414AbgCMKpU (ORCPT
+        Fri, 13 Mar 2020 06:46:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40365 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726387AbgCMKqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:45:20 -0400
+        Fri, 13 Mar 2020 06:46:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584096318;
+        s=mimecast20190719; t=1584096367;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zctn6k2f5mixNGrxrLzyiam0TKHGTxDS/k1jN+OYlZ8=;
-        b=gZF2Cv2m8VhflK0wpDOtLc182kXjTeKi1Urdk1c4yhuXq/FYGu4pKPJ6H/tv9n+UZXv1Lq
-        WAZv/J7IPetJsYkxQIZCDLym5TTLMPWaV8xjZ7/XW3HhGGq+ZGRJ14PPBTSQIaHjbIrycK
-        pIbSocl4w4fZwl3bCZQxtc4i4D8WMXk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-oewnxbT6N0iM-5oIhaf0rg-1; Fri, 13 Mar 2020 06:45:17 -0400
-X-MC-Unique: oewnxbT6N0iM-5oIhaf0rg-1
-Received: by mail-wm1-f69.google.com with SMTP id 20so2778466wmk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:45:17 -0700 (PDT)
+        bh=vtV+aJw4Dht29bLGuz4fZ76FC7NknKrBd/VUbbOd/EA=;
+        b=XSViPTWSYkJTFU7n8+OkNU/ppOw7PTphWN4IcJ742KeTyL++MuqzFQ0hQ+VEd8L9ZkGSK9
+        edpwecOU1mCKDltwVwl0YsImDt5UPQpQ10hE3LokNc0nSQ/rtds+u9/DarLTJml2JYkEq2
+        64sLw0fnQpxoL2+XmwnYNIeG0KOpyCQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-UuTwfVhEPRioskYUGmKWAw-1; Fri, 13 Mar 2020 06:46:01 -0400
+X-MC-Unique: UuTwfVhEPRioskYUGmKWAw-1
+Received: by mail-wr1-f71.google.com with SMTP id b12so4121382wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:46:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zctn6k2f5mixNGrxrLzyiam0TKHGTxDS/k1jN+OYlZ8=;
-        b=MoNvrltS6KGMJKgIHyosOOefzTDfiNmm16Q/3cjioZGk0kb0MHWAOuICzGG+bPxLH2
-         A7tJEOcri3Xtpz2Xphm0XeYP6nqCugPg0FsIfPrXeyTipvWr5JjkXitEDVx3h/+bT8+y
-         E1nuBLBBFCcj49to3bM81Xtb30DI0vS6+phbjp2dCZhl3OoxJATg7GnP44mgn1zTtHGk
-         bUMoivyxOFRIN0wOW+GrPUqPkyso71Fx9ki8DX9m8Ef43HeKrP+/Qn/vU0KwnlSxu+wa
-         5XuWY2EhQObzmd9tAvyRAFv+oJOJDUhcfvLLkMJ5mk8d14UwW8D74udZMJ4s7Bqevggd
-         dSlg==
-X-Gm-Message-State: ANhLgQ3/8+cQ4/NGrjsgaLZddSRCC9OVeGfTEUD9Ncv/ZcRtoEVkSxPc
-        KLAzprIY1QhPg9zpN85FiD04yaZZgx68RBZ1UbuMTjfBRil8ksvbk20vH9nMNe9t8Ld0l94VD3N
-        eiy9NKdSPBvyopDm3zBJa3zLm
-X-Received: by 2002:a1c:9a45:: with SMTP id c66mr9834649wme.115.1584096316103;
-        Fri, 13 Mar 2020 03:45:16 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vviKBLP6HiMs9SO8RNyYOgApRUQbugrPMiXiR6xqFNcz8q1Uphz7JwEuPG86DI5+Afewd8XZg==
-X-Received: by 2002:a1c:9a45:: with SMTP id c66mr9834631wme.115.1584096315904;
-        Fri, 13 Mar 2020 03:45:15 -0700 (PDT)
+        bh=vtV+aJw4Dht29bLGuz4fZ76FC7NknKrBd/VUbbOd/EA=;
+        b=pydO/J44ZT+sJWUFdy2wIhT0gqoUk+KC5EpLhkJ9KyCfkuAm7rp/iRQJkXoGDEoyzl
+         47VxTCvh2RCUV4HHuafEJsQZApWdcQNQkAYrRGdEHQmdkHAOJboRm1cu1JHlC3fHHoJ6
+         Ax0zohFhcD/p29kj3BzJ9xddzh0WbXcuizWoLwWT4wwNAqy2My50C2QMBR0l2FK4SMDC
+         dZwiOirnE0j2EJF+nP532EsQwfBh+1sT0lQvsgiOSPB0lQkEs8fKPDEyb5By/BuwuciG
+         FmRrmqQlrMzHCAxkdYGMiPcsOSCcNbW6uXSb5gZVuauOywQ7Mcc5HoBCpfBvanm+9tS7
+         Gnbw==
+X-Gm-Message-State: ANhLgQ1Kr4tbcuiNv9BvecKU/AzQrwzMFhnS5gyB8XpYH94lcB70sT+k
+        aaC9TS22wlljM1p1KvAY6X31d1hp1N0mvUl+/qSF27RjyAkPTQSXKyCTfFbgO62SnsB2s3IXwim
+        uU9Xn0gl1wztIhU8+zznY6ebA
+X-Received: by 2002:adf:fc81:: with SMTP id g1mr17843739wrr.410.1584096359295;
+        Fri, 13 Mar 2020 03:45:59 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuzspxaIg4ghBUUcSHVHPnTFJA0Yp/blTTVub08BhvaSdIutNqejUAg2LVy4eICj5ERM9ZoLA==
+X-Received: by 2002:adf:fc81:: with SMTP id g1mr17843722wrr.410.1584096359101;
+        Fri, 13 Mar 2020 03:45:59 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id o10sm5209579wrs.65.2020.03.13.03.45.14
+        by smtp.gmail.com with ESMTPSA id m2sm16647724wml.24.2020.03.13.03.45.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 03:45:15 -0700 (PDT)
-Subject: Re: [PATCH] fs: Fix missing 'bit' in comment
-To:     Chucheng Luo <luochucheng@vivo.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wenhu.wang@vivo.com, trivial@kernel.org
-References: <20200313014655.28967-1-luochucheng@vivo.com>
+        Fri, 13 Mar 2020 03:45:58 -0700 (PDT)
+Subject: Re: [PATCH 3/3] virt: vbox: Use fallthrough;
+To:     Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <cover.1584040050.git.joe@perches.com>
+ <68773b4cd82288b78ca6fcde8c43e249a025378a.1584040050.git.joe@perches.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <dfd44b01-3d90-3923-2971-d8d5bce5db08@redhat.com>
-Date:   Fri, 13 Mar 2020 11:45:13 +0100
+Message-ID: <eb4b9c3d-23c4-7b93-9a5d-6686947a818d@redhat.com>
+Date:   Fri, 13 Mar 2020 11:45:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200313014655.28967-1-luochucheng@vivo.com>
+In-Reply-To: <68773b4cd82288b78ca6fcde8c43e249a025378a.1584040050.git.joe@perches.com>
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,13 +86,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 3/13/20 2:46 AM, Chucheng Luo wrote:
-> The missing word may make it hard for other developers to
-> understand it.
+On 3/12/20 8:17 PM, Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
 > 
-> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
+> 
+> And by hand:
+> 
+> drivers/virt/vboxguest/vboxguest_core.c has a fallthrough comment outside
+> of an #ifdef block that causes gcc to emit a warning if converted in-place.
+> 
+> So move the new fallthrough; inside the containing #ifdef/#endif too.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-This new version also looks good to me:
+Patch looks good to me:
 
 Acked-by: Hans de Goede <hdegoede@redhat.com>
 
@@ -99,35 +109,38 @@ Regards,
 
 Hans
 
-p.s.
-
-In the future please mark new versions as such by using e.g.:
-
-git send-email --subject-prefix="PATCH v2" ...
-
-Actually, it would be good to resend this patch (with my
-Acked-by added to the commit msg) this way because now there
-is no way for the fs maintainers to figure out which one
-of the 2 patches you've send out to apply.
-
-
 
 > ---
->   fs/vboxsf/dir.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/virt/vboxguest/vboxguest_core.c  | 2 +-
+>   drivers/virt/vboxguest/vboxguest_utils.c | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/vboxsf/dir.c b/fs/vboxsf/dir.c
-> index dd147b490982..4d569f14a8d8 100644
-> --- a/fs/vboxsf/dir.c
-> +++ b/fs/vboxsf/dir.c
-> @@ -134,7 +134,7 @@ static bool vboxsf_dir_emit(struct file *dir, struct dir_context *ctx)
->   		d_type = vboxsf_get_d_type(info->info.attr.mode);
->   
->   		/*
-> -		 * On 32 bit systems pos is 64 signed, while ino is 32 bit
-> +		 * On 32-bit systems pos is 64-bit signed, while ino is 32-bit
->   		 * unsigned so fake_ino may overflow, check for this.
->   		 */
->   		if ((ino_t)(ctx->pos + 1) != (u64)(ctx->pos + 1)) {
+> diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
+> index d823d5..b690a8 100644
+> --- a/drivers/virt/vboxguest/vboxguest_core.c
+> +++ b/drivers/virt/vboxguest/vboxguest_core.c
+> @@ -1553,8 +1553,8 @@ int vbg_core_ioctl(struct vbg_session *session, unsigned int req, void *data)
+>   #ifdef CONFIG_COMPAT
+>   	case VBG_IOCTL_HGCM_CALL_32(0):
+>   		f32bit = true;
+> +		fallthrough;
+>   #endif
+> -		/* Fall through */
+>   	case VBG_IOCTL_HGCM_CALL(0):
+>   		return vbg_ioctl_hgcm_call(gdev, session, f32bit, data);
+>   	case VBG_IOCTL_LOG(0):
+> diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
+> index 50920b..739618 100644
+> --- a/drivers/virt/vboxguest/vboxguest_utils.c
+> +++ b/drivers/virt/vboxguest/vboxguest_utils.c
+> @@ -311,7 +311,7 @@ static u32 hgcm_call_linear_addr_type_to_pagelist_flags(
+>   	switch (type) {
+>   	default:
+>   		WARN_ON(1);
+> -		/* Fall through */
+> +		fallthrough;
+>   	case VMMDEV_HGCM_PARM_TYPE_LINADDR:
+>   	case VMMDEV_HGCM_PARM_TYPE_LINADDR_KERNEL:
+>   		return VMMDEV_HGCM_F_PARM_DIRECTION_BOTH;
 > 
 
