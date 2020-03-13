@@ -2,126 +2,113 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4141EC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC43C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152EE2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3ED20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K6wE6hPv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvQtaK7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgCMDeP (ORCPT
+        id S1726464AbgCMDfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:34:15 -0400
-Received: from mail-eopbgr70077.outbound.protection.outlook.com ([40.107.7.77]:29806
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbgCMDeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:34:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cu8dIOVqgEnFOolf8YqFV2YxGixmHIOkBTUxS9R0PP/zFA2/xEIAti10ys4ObEJeYxNFvgdIuTrw6jnyJc9AdA8ZfFm7lAVzJA94HlURrLO3LK+TNnkdAbUQVH7ClvvqwF3DpCt7/EFNGqLH1a/3XnewgMp4v9AZ6PBd3vVW2MAaDxQa3NT6q4HNC08cpeaQa0g0ibLU+Fn7JLzylZ/MnrWctWQO2zfSRdWqfZ8Ep2t41IcdpuW32ICO2MjKsqduyf+DCKFJJieZq0kpozEaI87mSQ3jxHZ6bFZONpq3/vxInTjS7NDiY5Ju913liBFpz96ww2tdkyxd3IHekEhy5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w7YZQHG8z16cUe8rr8Z4fTVt5wMLwJRDLNyCE5kFwdo=;
- b=Bord0qL5g078dJ9WtGyuWjf8g9X67g7jWDcr4dX98JrckD1/m8cVolkVC8Bc7cYe5/ck9xt80nIv6zEw5aW+V9YCfUvcN51nCWDmpKLKkJLcSbrh9LGT8IOXiLaPGRSqUZR9ffP/TUApjPJWpZoENKI7oTF9sZBq04FXW8gkksBy2ZqQxGBc5SioYvSbBuyq61wOryhTw6pwzjP3RJEGGNK7kD1wmLP2QNty2BJWQNzYU15BgavS4ElljfoLxXndHSYfULBuDWqLeXpn9TSVqri3FKbrRd2xHf/12CuwTTSfy9x5QJuXjMa1MI5vhdrNb6/KRZIEGJcZ+d2tzghb5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w7YZQHG8z16cUe8rr8Z4fTVt5wMLwJRDLNyCE5kFwdo=;
- b=K6wE6hPvi1wvJDI2bmqTyVZq0sI67H545m5X3mjSYU7/GYAMcHKBUg/p9sZKrxdh147RrS/zRgzIE+tdLeMURq+2LRd8YWFWh22qTfNAgfYEM4TPuo4kohRmwUq9h3sBJ7OMIWnl2CZgRnTi+xc5dpE3TXxm64UUZwYCLleOU4w=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4979.eurprd04.prod.outlook.com (20.177.40.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Fri, 13 Mar 2020 03:34:10 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 03:34:10 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, sboyd@kernel.org, s.hauer@pengutronix.de,
-        linus.walleij@linaro.org, arnd@arndb.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        aisheng.dong@nxp.com, stefan@agner.ch, Anson.Huang@nxp.com,
-        abel.vesa@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
-Date:   Fri, 13 Mar 2020 11:27:16 +0800
-Message-Id: <1584070036-26447-4-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
-References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0178.apcprd06.prod.outlook.com
- (2603:1096:1:1e::32) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Thu, 12 Mar 2020 23:35:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42834 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCMDfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:35:20 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w17so5651091oic.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 20:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o9U8lazxGRetsQy6HWnT4z3HZb84M9DeDJBZYGquUHA=;
+        b=VvQtaK7OKtdcv0KRvKeMjyrYt8hlIs0Vv5qQmDthPKjy15/K2kxiDlKjmOcjnDOcIQ
+         Arp38t5pkvnfhLHd011nBlk0NFRhTjgx9WlVSPdl6p2wwPQCaNY5clM9UxERmPa/GnHM
+         dLjMUs2IQ8Txs3QAkJNvS42FEqhuuAubNu73Hv0+N4oldHeUTEaOF7RHPtZLKKvtjyEy
+         2OTE9jMgKzSSbDsUtXn9X/WqP/121CzAZihC6t7x0V981y3uiWgVL8yxpxZL6aj4++sz
+         t3hsJ6d4CstVJHV69rfRmfc7rqvF9ewNfCIscN5kVhErYC6y8s2efDkpAHNZTxZswWXK
+         EG7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o9U8lazxGRetsQy6HWnT4z3HZb84M9DeDJBZYGquUHA=;
+        b=E/ZsHXGGSJr/ctd1ohi/fpgrcBk8zgAs4DnodciY821nwUzt0Mivh/VeybCiy0fWFB
+         3UhxscqkxiVEkBXkzkf4HT4PTcBGWu/mDEZE1Dfs/FfD+oR8JxYZ2ghbW/hs7LK0w1Jb
+         uzW+PLq9ctRKbuUxM2NbYlEesB2wyy73wjzQlkZZddCipK0+OBP/uJXI1Ls2ZnQfh4ZM
+         nPRebehj7y1pzgkJqMXqRbEijB0LcPIrefB7+ZKrfAyMPEh7mRXCx0VHViA4jSjbQKlp
+         fQqWHCwZ0n+IemqHPEy5mEfpKM+gdoKHo1jQ26wiqkLSXTcfw1N3N95PxWSow01oWTRD
+         KaxA==
+X-Gm-Message-State: ANhLgQ32Eu5pHEmUtLcIEOpbzLTECf9tI338vqh+wUdMKaxF/ZjlOdqn
+        Hfe4nW+ufzhEJc8C+C0OGbQ=
+X-Google-Smtp-Source: ADFU+vu7PRLfbONkr6AgNM7esPfXmysezUGwWouWPhb9//WvPJSpF00Lzuv38/ieLK4bSxa2EB769w==
+X-Received: by 2002:aca:c45:: with SMTP id i5mr5037058oiy.111.1584070519356;
+        Thu, 12 Mar 2020 20:35:19 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id s203sm5817558oib.8.2020.03.12.20.35.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Mar 2020 20:35:18 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 20:35:17 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ndesaulniers@google.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/32: Fix missing NULL pmd check in virt_to_kpte()
+Message-ID: <20200313033517.GA37606@ubuntu-m2-xlarge-x86>
+References: <b1177cdfc6af74a3e277bba5d9e708c4b3315ebe.1583575707.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0178.apcprd06.prod.outlook.com (2603:1096:1:1e::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.16 via Frontend Transport; Fri, 13 Mar 2020 03:34:05 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 09e29b08-9471-4dcb-6abe-08d7c6ff64a8
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4979:|AM0PR04MB4979:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB497979C7838E586679E55DD688FA0@AM0PR04MB4979.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(136003)(346002)(199004)(81156014)(66476007)(478600001)(66556008)(8936002)(956004)(8676002)(52116002)(66946007)(2616005)(81166006)(4744005)(26005)(7416002)(69590400007)(86362001)(6486002)(4326008)(36756003)(6666004)(316002)(6506007)(2906002)(5660300002)(9686003)(6512007)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4979;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Pg/70JwQ4evkZjZlFXuNBvIzWLUTtZemd2SIjWQZphLoi6daI371+xgDBEn+BxP66+81URcRCBWHjkIpUw7GiarPMoXJsfOXOtc3K+ongPlnpalLd+J5y+LoiNVA3C7R+DUHHpvtwMIEwDD7+m39SafgX1Vlkk0IMv2SA7BIAlXQQm7VInUbePJ5qIkGfmzxBBmelM3fb51E7y5evA5yKz2A+XdlfDwqP13mgQbGCVfGlMxcU02GuIqpMtnSCbLbGjkbLeTEuOWiLl9iynjbS2Q+6ADrS7DoUP14Xyw53PHTlitcvxevi6tDZIFf1ErMM1b9sgWZopVuLnZoPAR44fryYBoeqjRM7AGx4e1HYBvFCqsyZd10mQ3DCQ+IyU9YlECg2sqEmtgpG1r17vuh7r4QrJaCtiruhPxeFHQ7RChI12bOnr/RTzPx3Ve5enyZb3DRI2AE9Wjd2JyNu50d6CKrmjf91OmqBsn0PGbHCbGw3tEX+me9r4m4Nn+87O+m
-X-MS-Exchange-AntiSpam-MessageData: QhHCb+0RYdIZ8rdcmnzf2+0OkWG4LQ7IUOeJ9eycdhs9IhMSPsUjVVI/OxOBal4Z2e47QPaEt5z/ZH20arKqHrREKeqQNpN0hq+HMqpxb3RZk79NbwxyztV8JzcMjXEC4LpalkmvYFv/qqEbCahCXA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09e29b08-9471-4dcb-6abe-08d7c6ff64a8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 03:34:10.7421
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7MsmcOGgFttpMPqrIt5wa5EQ1OauLH9UjvSlsNc8BGyqL3VSM1PWl94Ao7iXmCl8Zmhn/+r5BjgH0fNH4waMLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4979
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1177cdfc6af74a3e277bba5d9e708c4b3315ebe.1583575707.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Sat, Mar 07, 2020 at 10:09:15AM +0000, Christophe Leroy wrote:
+> Commit 2efc7c085f05 ("powerpc/32: drop get_pteptr()"),
+> replaced get_pteptr() by virt_to_kpte(). But virt_to_kpte() lacks a
+> NULL pmd check and returns an invalid non NULL pointer when there
+> is no page table.
+> 
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Fixes: 2efc7c085f05 ("powerpc/32: drop get_pteptr()")
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/include/asm/pgtable.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
+> index b80bfd41828d..b1f1d5339735 100644
+> --- a/arch/powerpc/include/asm/pgtable.h
+> +++ b/arch/powerpc/include/asm/pgtable.h
+> @@ -54,7 +54,9 @@ static inline pmd_t *pmd_ptr_k(unsigned long va)
+>  
+>  static inline pte_t *virt_to_kpte(unsigned long vaddr)
+>  {
+> -	return pte_offset_kernel(pmd_ptr_k(vaddr), vaddr);
+> +	pmd_t *pmd = pmd_ptr_k(vaddr);
+> +
+> +	return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+>  }
+>  #endif
+>  
+> -- 
+> 2.25.0
+> 
 
-Select ARM_GIC_V3, then it is able to use gic v3 driver in aarch32
-mode linux on aarch64 hardware. For aarch64 mode, it not hurts
-to select ARM_GIC_V3.
+With QEMU 4.2.0, I can confirm this fixes the panic:
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/soc/imx/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-index 70019cefa617..0b69024296d5 100644
---- a/drivers/soc/imx/Kconfig
-+++ b/drivers/soc/imx/Kconfig
-@@ -21,6 +21,7 @@ config SOC_IMX8M
- 	bool "i.MX8M SoC family support"
- 	depends on ARCH_MXC || COMPILE_TEST
- 	default ARCH_MXC && ARM64
-+	select ARM_GIC_V3
- 	help
- 	  If you say yes here you get support for the NXP i.MX8M family
- 	  support, it will provide the SoC info like SoC family,
--- 
-2.16.4
-
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
