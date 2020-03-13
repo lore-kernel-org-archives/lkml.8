@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B248FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7959C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4C72074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5152074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OLfls09r"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OsR77xO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCMUrW (ORCPT
+        id S1727485AbgCMUrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:47:22 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44225 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgCMUrW (ORCPT
+        Fri, 13 Mar 2020 16:47:25 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40507 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbgCMUrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:47:22 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d9so4819760plo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 13:47:21 -0700 (PDT)
+        Fri, 13 Mar 2020 16:47:23 -0400
+Received: by mail-pj1-f66.google.com with SMTP id bo3so3536630pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 13:47:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZnKWe5Bitvm6HNCJn4nVCZ5y8dNJJUHTl0yto409qyY=;
-        b=OLfls09rQF1wozKG2lePYqatpiYhqrd+Eq4NXV+WaxGp0AwpkZyKs5j5H9Czd89YJu
-         Lnkds9VKW8VGN7M2OfoTvQEAy8tP8W+TAbAM3dxbO3XCD0fAg3d6VeyauoU1/ZIWL1pr
-         K5CzAYa0jVWTBcascq4e5bUIUdJoyaCCDsJ9Y=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WmR0Zy/INv8T8Q5kpQokwP6/VvkYAWeVeStzwjBb3QQ=;
+        b=OsR77xO6S3/Q0dciqM0G3rlzGynb1g8GBeeGYt0oyJ2X9+/Yt1IVFN2292US9JwJ3I
+         m4gWfpLKPMMVfqbtGJzfzOdmZgnRQqxn05Eoc61EAhZQLc44M2ZHEjGuxdb7lXvQIfot
+         YNSbpQjw4kgzI//8hMEzKSiXnvuIlCFUfSj5o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZnKWe5Bitvm6HNCJn4nVCZ5y8dNJJUHTl0yto409qyY=;
-        b=KmIiI31y3y090LNaF56ijcnz7sHtfaSQGov9VczAjoiIkvrsQVBOCSQcswzwPFrNvC
-         Ak0niyaeih3wd/qWwBwH9eQbAS5l7sYw1TQ/ku/KDvy5SWm6oGPLzn3CUNg7DEeHtBW/
-         cEAWY6/1xasJOiawSCu7eGGHpHloNvImbpdgkWZKGDfFuC7VDPpYa1qIRV+8MfN9s4Jf
-         437XFj9VgugN8LJhDgZHZREjyFD7wIgYrx9ynAOhQeOL/Dgy1Urkh+f9zAsatFUEwLgf
-         +GjrR8u6WqhBhXqvTcikMM6E2x+7GNTvGhK88F7XFC+DyTLVa20pI1o02dYZw+E5viZi
-         W2sw==
-X-Gm-Message-State: ANhLgQ0S3cMjyywcVrF8xmEKKhsqVLuoSPam0ywL2FQBDcpwvC5vmWJ/
-        unIhSJQYVK+yX5sJkV2y2b+0kA==
-X-Google-Smtp-Source: ADFU+vsiBDRZxQvqlXgHWXpfQHmmGpQZZfBg2hu2n/nkhiFxNIU+yUk+rbuPivW6v98RkDC1VvQKZQ==
-X-Received: by 2002:a17:90b:3711:: with SMTP id mg17mr10382797pjb.73.1584132440939;
-        Fri, 13 Mar 2020 13:47:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WmR0Zy/INv8T8Q5kpQokwP6/VvkYAWeVeStzwjBb3QQ=;
+        b=CUMrYCbZMYY7a/Yz08xj2R3W+nLV1MfgVmX5hITBz7fqHfGHfj8OwLhJLmDjAcQhqT
+         6sGFWjKoaiG9GOZmEG5tttNnjs+G35M9SPHUC2KnU9R/VinaDm9AanEAaWFCKYTz2xpN
+         2OhFkz/wx2Dq/nHmPI/7xQxDfubU32YNcS0rs5QZHkimobNhsdcfb7C438wfJHzgfcmP
+         ZZElee1zm+fcu9m5eVbT1e6q5q8vRmCNUM0f1xx01ZBy+Qml7ktRHWqTJUls4/YZQSVz
+         GH5q3e17Di1g1DLVz2sckM+p3pCwezOpLOttPP3sJ+teidcIBZijlA+zv0qeKc6Pu60P
+         uJzQ==
+X-Gm-Message-State: ANhLgQ22uixiVBlmqHzRRJoS7z98poCXfdcnVrT0CVFo0jJUNerwRqBT
+        tX+IKsZE5jrTXN/ZViqHixGzOQ==
+X-Google-Smtp-Source: ADFU+vueocNRDiEDaoc5lL0rcsBqaOHG/wMpUZqEnr6mvREDuEKQvFR/4jeFV7cx64SuqEFaTFBMlA==
+X-Received: by 2002:a17:90a:da01:: with SMTP id e1mr12067723pjv.100.1584132442065;
+        Fri, 13 Mar 2020 13:47:22 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id a13sm26532278pfc.24.2020.03.13.13.47.19
+        by smtp.gmail.com with ESMTPSA id a13sm26532278pfc.24.2020.03.13.13.47.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 13:47:20 -0700 (PDT)
+        Fri, 13 Mar 2020 13:47:21 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     gregkh@linuxfoundation.org
 Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
@@ -67,10 +67,12 @@ Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
         Sagar Dharia <sdharia@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-serial@vger.kernel.org
-Subject: [PATCH 1/2] tty: serial: qcom_geni_serial: No need to stop tx/rx on UART shutdown
-Date:   Fri, 13 Mar 2020 13:46:51 -0700
-Message-Id: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+Subject: [PATCH 2/2] tty: serial: qcom_geni_serial: Don't try to manually disable the console
+Date:   Fri, 13 Mar 2020 13:46:52 -0700
+Message-Id: <20200313134635.2.I3648fac6c98b887742934146ac2729ecb7232eb1@changeid>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+In-Reply-To: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+References: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,48 +80,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a board using qcom_geni_serial I found that I could no longer
-interact with kdb if I got a crash after the "agetty" running on the
-same serial port was killed.  This meant that various classes of
-crashes that happened at reboot time were undebuggable.
+The geni serial driver's shutdown code had a special case to call
+console_stop().  Grepping through the code, it was the only serial
+driver doing something like this (the only other caller of
+console_stop() was in serial_core.c).
 
-Reading through the code, I couldn't figure out why qcom_geni_serial
-felt the need to run so much code at port shutdown time.  All we need
-to do is disable the interrupt.
-
-After I make this change then a hardcoded kgdb_breakpoint in some late
-shutdown code now allows me to interact with the debugger.  I also
-could freely close / re-open the port without problems.
+As far as I can tell there's no reason to call console_stop() in the
+geni code.  ...and a good reason _not_ to call it.  Specifically if
+you have an agetty running on the same serial port as the console then
+killing the agetty kills your console and if you start the agetty
+again the console doesn't come back.
 
 Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/tty/serial/qcom_geni_serial.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/tty/serial/qcom_geni_serial.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 272bae0eebc7..09d8612517aa 100644
+index 09d8612517aa..69a0072e0c53 100644
 --- a/drivers/tty/serial/qcom_geni_serial.c
 +++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -827,17 +827,11 @@ static void get_tx_fifo_size(struct qcom_geni_serial_port *port)
+@@ -827,10 +827,6 @@ static void get_tx_fifo_size(struct qcom_geni_serial_port *port)
  
  static void qcom_geni_serial_shutdown(struct uart_port *uport)
  {
--	unsigned long flags;
+-	/* Stop the console before stopping the current tx */
+-	if (uart_console(uport))
+-		console_stop(uport->cons);
 -
- 	/* Stop the console before stopping the current tx */
- 	if (uart_console(uport))
- 		console_stop(uport->cons);
- 
  	disable_irq(uport->irq);
--	spin_lock_irqsave(&uport->lock, flags);
--	qcom_geni_serial_stop_tx(uport);
--	qcom_geni_serial_stop_rx(uport);
--	spin_unlock_irqrestore(&uport->lock, flags);
  }
  
- static int qcom_geni_serial_port_setup(struct uart_port *uport)
 -- 
 2.25.1.481.gfbce0eb801-goog
 
