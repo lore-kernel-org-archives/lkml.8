@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AA0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5DBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFA020650
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971BE206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxRXc6Q5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+SVMP+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgCMStT (ORCPT
+        id S1727295AbgCMStX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:49:19 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35117 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgCMStS (ORCPT
+        Fri, 13 Mar 2020 14:49:23 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39305 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgCMStV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:49:18 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 7so5497069pgr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:49:17 -0700 (PDT)
+        Fri, 13 Mar 2020 14:49:21 -0400
+Received: by mail-pj1-f67.google.com with SMTP id d8so4801360pje.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TIeI33CnP5QKpGnSsdiCsIF7t+lJnBbahrkQscJS5rM=;
-        b=MxRXc6Q5qEBOKxx981TK60HddE0pLJrWcX3X1iyZ58ji4eAMN/2C/jDtrm38DtPic7
-         WTKdLEZgTrOhmpEhA1fBVgjmoGAky3/ysR9xMFQruBvj7SFURkKw/XRkelOb7dD23QHw
-         +IfRERm4I/yexOg3WXfAYAvgHl/u3DuuHv5XJTXYySAvwhJMRcBT1b+2EssY874b3F85
-         gnb5gNxeaa8KDOyoldEDumt6PjiOB9xh5cHWXy5Rp3nmWXLqOc1ZspCuY/5bZbf2FGnC
-         /J/VfA7gOL8lP2BlJw/bN+8TwmQeccm99qkZXO4WHW/5LvsY4yfjK37hxkx/8WeqgMSU
-         8ucw==
+        bh=90AE9sMx0DmNIFlwt1eo4jRDreFCtqYc27Ffu1Laysw=;
+        b=Z+SVMP+BWpseMqQPeLmm/ybhgsB65oa13OSI96503tIGRdkD2U32+m+2S8xKsATDu2
+         G08fVtJ7ru8/9/E2jZemD1CUoxdatZ4GqBRQ5m6MdSstwUowBrbbt0YUhLPdZVhnkm8R
+         wr/evXIx3lO/w4rDKbfGpc5yjPp5ggOSJOTUwN5k+xZsl2LIFWW5CdCuPlApicnqcHvh
+         dQUCvLg0UQG3iXuwrH3GbOyoC97EOrkANjOfN0fn9hE0LQyt9zoLFavobiVA5Cev6wNx
+         x2vUyZ8+dFyyvkFTgW8bXdJQ+fSjqvTJrQgoaYAW9m5P5WnX9nV4roipd3yhJ/e+Kchu
+         w21g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=TIeI33CnP5QKpGnSsdiCsIF7t+lJnBbahrkQscJS5rM=;
-        b=b9ZdPIPeYo6oD+TgncqtcsQ2kuF7QuSW6/N6a7QwGeX1D/IgNoQH1HEeujXzc4qIwI
-         2dv895XJpHDWkd0AAv9KvICJHzicave/BOCFGbsrTx6R62Y5xF3EklcQwQ3F1wuFWTis
-         xZuncWWVPR6Y7qBDBIqhAQuTAcbLoss6hZrNkIMNxcLI+MAG9NUopdHJNtfM4Yas5vk8
-         PBTRpoLLrWNDxLbu2tMFlk99oeQ6PxZCeCk69Aoxk17kU+IWRenxNFhFyP1hjFgQaB/8
-         BrrsYvdfqUcit/a9Gppx7nc1oj5QHL7MVRW596wKM/Vt9qvHjhobHACoBA/xxLUFvwJY
-         fGvw==
-X-Gm-Message-State: ANhLgQ3hCS1zhVLwxq2Xs283q+zfcyJ6KhUG/1+4kuO6S68uD43+BdJy
-        Y917yppj319Bdk2E+rVOZ3jzxd6p5ow=
-X-Google-Smtp-Source: ADFU+vvkOBrXjaB1l0WGIs83+bRdppESvA4cma/FwjlJ3BoPQTY3nqd4/+q+/CvZF6CijnsrogG1PA==
-X-Received: by 2002:a63:d144:: with SMTP id c4mr4258643pgj.261.1584125357061;
-        Fri, 13 Mar 2020 11:49:17 -0700 (PDT)
+        bh=90AE9sMx0DmNIFlwt1eo4jRDreFCtqYc27Ffu1Laysw=;
+        b=Delj9Y4EpnBMYsWrh6PwWcTIBF3jUH7x849iG/7Vf063Igm+NV2tdcwc8SxpNCrDin
+         993QwFp3FUKyWTho8tBG77kpKYynGADIFWxt4BKTIveYxeuLZ77/kShlq79azHGNjlmw
+         r7gX2BO/Xu45/zfXrkHG6NeYwdu/0ec1TOITMYTVbzK7oDF4p0FgrezzxumPJww9nwnR
+         nEv95zwy2SiDM8akZccoj2ds2aQAw9sFvlZW+6fI0ETOSCPal5k19cQsgQgU2kh2zv94
+         sikSxl1VfAvjkDviVMvmK3Nnq28tiro6C5LDeKXe65KYhAqYJaO+Kn81E8bc2hKkrqjI
+         pIYw==
+X-Gm-Message-State: ANhLgQ1QY3eLVESemN97HHxiGY7oh0qslIBJPmGdFjP9z7ibkwCe8TaR
+        MlRj1wS5vLQZDX3UwmcdOYQ=
+X-Google-Smtp-Source: ADFU+vvANNqJb9ZoxH/9mV+/K4EDklVGly0wimelaijHmruWWnFjpQxZD81x8dTuAVTZG74EW28m9Q==
+X-Received: by 2002:a17:902:9a98:: with SMTP id w24mr14554874plp.40.1584125360970;
+        Fri, 13 Mar 2020 11:49:20 -0700 (PDT)
 Received: from localhost ([161.117.239.120])
-        by smtp.gmail.com with ESMTPSA id b3sm12727908pjq.38.2020.03.13.11.49.16
+        by smtp.gmail.com with ESMTPSA id f69sm6493705pfa.124.2020.03.13.11.49.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 11:49:16 -0700 (PDT)
+        Fri, 13 Mar 2020 11:49:20 -0700 (PDT)
 From:   Qiujun Huang <hqjagain@gmail.com>
 To:     willy@infradead.org
 Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
         Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH 1/2] radix-tree: fix kernel-doc for radix_tree_find_next_bit
-Date:   Sat, 14 Mar 2020 02:49:08 +0800
-Message-Id: <20200313184909.4560-2-hqjagain@gmail.com>
+Subject: [PATCH 2/2] radix-tree: fix a typo
+Date:   Sat, 14 Mar 2020 02:49:09 +0800
+Message-Id: <20200313184909.4560-3-hqjagain@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200313184909.4560-1-hqjagain@gmail.com>
 References: <20200313184909.4560-1-hqjagain@gmail.com>
@@ -71,33 +71,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function changed at some point, but the kernel-doc was
-not updated.
+"iff" -> "if"
 
 Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 ---
- lib/radix-tree.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/radix-tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-index c8fa1d274530..379137875e25 100644
+index 379137875e25..0534823adf07 100644
 --- a/lib/radix-tree.c
 +++ b/lib/radix-tree.c
-@@ -178,12 +178,11 @@ static inline void all_tag_set(struct radix_tree_node *node, unsigned int tag)
-  * radix_tree_find_next_bit - find the next set bit in a memory region
+@@ -794,7 +794,7 @@ void *__radix_tree_lookup(const struct radix_tree_root *root,
+  *	Returns:  the slot corresponding to the position @index in the
+  *	radix tree @root. This is useful for update-if-exists operations.
   *
-  * @addr: The address to base the search on
-- * @size: The bitmap size in bits
-+ * @tag: The tag index (< RADIX_TREE_MAX_TAGS)
-  * @offset: The bitnumber to start searching at
-  *
-  * Unrollable variant of find_next_bit() for constant size arrays.
-- * Tail bits starting from size to roundup(size, BITS_PER_LONG) must be zero.
-- * Returns next bit offset, or size if nothing found.
-+ * Returns next bit offset, or RADIX_TREE_MAP_SIZE if nothing found.
-  */
- static __always_inline unsigned long
- radix_tree_find_next_bit(struct radix_tree_node *node, unsigned int tag,
+- *	This function can be called under rcu_read_lock iff the slot is not
++ *	This function can be called under rcu_read_lock if the slot is not
+  *	modified by radix_tree_replace_slot, otherwise it must be called
+  *	exclusive from other writers. Any dereference of the slot must be done
+  *	using radix_tree_deref_slot.
 -- 
 2.17.1
 
