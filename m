@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D044C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45208C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC972074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E0620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgCMX6d (ORCPT
+        id S1727916AbgCMX6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:58:33 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49974 "EHLO
+        Fri, 13 Mar 2020 19:58:42 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49970 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbgCMXx7 (ORCPT
+        with ESMTP id S1727678AbgCMXx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 19:53:59 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7q-00B6Yu-2R; Fri, 13 Mar 2020 23:53:58 +0000
+        id 1jCu7p-00B6Yo-Ue; Fri, 13 Mar 2020 23:53:57 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 08/69] lookup_open(): saner calling conventions (return dentry on success)
-Date:   Fri, 13 Mar 2020 23:52:56 +0000
-Message-Id: <20200313235357.2646756-8-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 07/69] atomic_open(): saner calling conventions (return dentry on success)
+Date:   Fri, 13 Mar 2020 23:52:55 +0000
+Message-Id: <20200313235357.2646756-7-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,135 +42,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-same story as for atomic_open() in the previous commit.
+Currently it either returns -E... or puts (nd->path.mnt,dentry)
+into *path and returns 0.  Make it return ERR_PTR(-E...) or
+dentry; adjust the caller.  Fewer arguments and it's easier
+to keep track of *path contents that way.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 46 +++++++++++++++++++---------------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+ fs/namei.c | 41 ++++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 5f8b791a6d6e..b350e1e2b46f 100644
+index c104ec75faef..5f8b791a6d6e 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3157,10 +3157,9 @@ static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
+@@ -3087,10 +3087,10 @@ static int may_o_create(const struct path *dir, struct dentry *dentry, umode_t m
   *
-  * An error code is returned on failure.
+  * Returns an error code otherwise.
   */
--static int lookup_open(struct nameidata *nd, struct path *path,
--			struct file *file,
+-static int atomic_open(struct nameidata *nd, struct dentry *dentry,
+-			struct path *path, struct file *file,
 -			const struct open_flags *op,
--			bool got_write)
-+static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+-			int open_flag, umode_t mode)
++static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
++				  struct file *file,
 +				  const struct open_flags *op,
-+				  bool got_write)
++				  int open_flag, umode_t mode)
  {
- 	struct dentry *dir = nd->path.dentry;
- 	struct inode *dir_inode = dir->d_inode;
-@@ -3171,7 +3170,7 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
- 
- 	if (unlikely(IS_DEADDIR(dir_inode)))
--		return -ENOENT;
-+		return ERR_PTR(-ENOENT);
- 
- 	file->f_mode &= ~FMODE_CREATED;
- 	dentry = d_lookup(dir, &nd->last);
-@@ -3179,7 +3178,7 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 		if (!dentry) {
- 			dentry = d_alloc_parallel(dir, &nd->last, &wq);
- 			if (IS_ERR(dentry))
--				return PTR_ERR(dentry);
-+				return dentry;
+ 	struct dentry *const DENTRY_NOT_SET = (void *) -1UL;
+ 	struct inode *dir =  nd->path.dentry->d_inode;
+@@ -3131,17 +3131,15 @@ static int atomic_open(struct nameidata *nd, struct dentry *dentry,
+ 			}
+ 			if (file->f_mode & FMODE_CREATED)
+ 				fsnotify_create(dir, dentry);
+-			if (unlikely(d_is_negative(dentry))) {
++			if (unlikely(d_is_negative(dentry)))
+ 				error = -ENOENT;
+-			} else {
+-				path->dentry = dentry;
+-				path->mnt = nd->path.mnt;
+-				return 0;
+-			}
  		}
- 		if (d_in_lookup(dentry))
- 			break;
-@@ -3195,7 +3194,7 @@ static int lookup_open(struct nameidata *nd, struct path *path,
  	}
- 	if (dentry->d_inode) {
- 		/* Cached positive dentry: will open in f_op->open */
--		goto out_no_open;
-+		return dentry;
- 	}
- 
- 	/*
-@@ -3235,19 +3234,9 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 
- 	if (dir_inode->i_op->atomic_open) {
- 		dentry = atomic_open(nd, dentry, file, op, open_flag, mode);
--		if (IS_ERR(dentry)) {
--			error = PTR_ERR(dentry);
--			if (unlikely(error == -ENOENT) && create_error)
--				error = create_error;
--			return error;
--		}
--		if (file->f_mode & FMODE_OPENED) {
--			dput(dentry);
--			return 0;
--		}
--		path->mnt = nd->path.mnt;
--		path->dentry = dentry;
--		return 0;
-+		if (unlikely(create_error) && dentry == ERR_PTR(-ENOENT))
-+			dentry = ERR_PTR(create_error);
-+		return dentry;
- 	}
- 
- no_open:
-@@ -3283,14 +3272,11 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 		error = create_error;
- 		goto out_dput;
- 	}
--out_no_open:
--	path->dentry = dentry;
--	path->mnt = nd->path.mnt;
--	return 0;
-+	return dentry;
- 
- out_dput:
- 	dput(dentry);
+-	dput(dentry);
 -	return error;
-+	return ERR_PTR(error);
++	if (error) {
++		dput(dentry);
++		dentry = ERR_PTR(error);
++	}
++	return dentry;
  }
  
  /*
-@@ -3309,6 +3295,7 @@ static int do_last(struct nameidata *nd,
- 	unsigned seq;
- 	struct inode *inode;
- 	struct path path;
-+	struct dentry *dentry;
- 	int error;
- 
- 	nd->flags &= ~LOOKUP_PARENT;
-@@ -3365,14 +3352,18 @@ static int do_last(struct nameidata *nd,
- 		inode_lock(dir->d_inode);
- 	else
- 		inode_lock_shared(dir->d_inode);
--	error = lookup_open(nd, &path, file, op, got_write);
-+	dentry = lookup_open(nd, file, op, got_write);
- 	if (open_flag & O_CREAT)
- 		inode_unlock(dir->d_inode);
- 	else
- 		inode_unlock_shared(dir->d_inode);
- 
--	if (error)
-+	if (IS_ERR(dentry)) {
-+		error = PTR_ERR(dentry);
- 		goto out;
-+	}
-+	path.mnt = nd->path.mnt;
-+	path.dentry = dentry;
- 
- 	if (file->f_mode & FMODE_OPENED) {
- 		if ((file->f_mode & FMODE_CREATED) ||
-@@ -3380,6 +3371,7 @@ static int do_last(struct nameidata *nd,
- 			will_truncate = false;
- 
- 		audit_inode(nd->name, file->f_path.dentry, 0);
-+		dput(dentry);
- 		goto opened;
+@@ -3236,11 +3234,20 @@ static int lookup_open(struct nameidata *nd, struct path *path,
  	}
  
+ 	if (dir_inode->i_op->atomic_open) {
+-		error = atomic_open(nd, dentry, path, file, op, open_flag,
+-				    mode);
+-		if (unlikely(error == -ENOENT) && create_error)
+-			error = create_error;
+-		return error;
++		dentry = atomic_open(nd, dentry, file, op, open_flag, mode);
++		if (IS_ERR(dentry)) {
++			error = PTR_ERR(dentry);
++			if (unlikely(error == -ENOENT) && create_error)
++				error = create_error;
++			return error;
++		}
++		if (file->f_mode & FMODE_OPENED) {
++			dput(dentry);
++			return 0;
++		}
++		path->mnt = nd->path.mnt;
++		path->dentry = dentry;
++		return 0;
+ 	}
+ 
+ no_open:
 -- 
 2.11.0
 
