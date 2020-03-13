@@ -2,204 +2,308 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8836CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA572C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A15C206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B632073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sq4XHVmj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RP96cRQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgCMORT (ORCPT
+        id S1726866AbgCMOSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:17:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49282 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgCMORT (ORCPT
+        Fri, 13 Mar 2020 10:18:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52286 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726708AbgCMOSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:17:19 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 548C75F;
-        Fri, 13 Mar 2020 15:17:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584109036;
-        bh=cNWnjF6VI23jiFmMB2Z9kPjXU1GPF9FYUM8c0rkqsfs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sq4XHVmjlbnnW+wogjp1YdiXGbDHSx42KHhulBqivBzTCxtqFKJ8mFo0dlzHTI9ar
-         9Cn1ADG+fwz17GazAhlgeNdfuDglKJiKysVreka8tsoddZZ9lLKGEhEGt5OkqwC8RU
-         bPX/VD6oJDBoujSTb8b7SL+xL1BOwc//jiVaDlRg=
-Date:   Fri, 13 Mar 2020 16:17:13 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Phong LE <ple@baylibre.com>, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, sam@ravnborg.org,
-        mripard@kernel.org, heiko.stuebner@theobroma-systems.com,
-        linus.walleij@linaro.org, stephan@gerhold.net, icenowy@aosc.io,
-        broonie@kernel.org, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: add it66121 bindings
-Message-ID: <20200313141713.GG4751@pendragon.ideasonboard.com>
-References: <20200311125135.30832-1-ple@baylibre.com>
- <20200311125135.30832-3-ple@baylibre.com>
- <20200313134013.GC4751@pendragon.ideasonboard.com>
- <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
+        Fri, 13 Mar 2020 10:18:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584109099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=a/bX6MLdVGEOJRUa0j5vwCFdaDXNXItZBhIhxpJd/zk=;
+        b=RP96cRQPGj5ciI+Fm/C6SPyfqg9HuRjUP99IRA/5Xmb4EQaUWIU+SS0o+ppWE/JhkG3/ZH
+        8aDbaA8Psj1zcUNdPWqiJQroj72dX4bzdMOYt2LFVeslG2o2lwE9QcMx2TwPBGLf6lg44E
+        OW55B7eDPDjZ9JpWXiTEih77ViqtTGE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-7Zq0c6knM2GveqHsgfh6uQ-1; Fri, 13 Mar 2020 10:18:18 -0400
+X-MC-Unique: 7Zq0c6knM2GveqHsgfh6uQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 20so3010776wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:18:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=a/bX6MLdVGEOJRUa0j5vwCFdaDXNXItZBhIhxpJd/zk=;
+        b=Kx7jB/TFvbShGUmBvBDVL1vUU8N069uiuwiHRxI2JpQtkv4POBL4EM/S1ynRv3WZ+O
+         EGo4QMkEIOr/ccOwX5n8f97STT8C10yD6KSMIbdgvRkUZoWSONFor5ZyL/1zM5bvTlQk
+         lAFgTbfCg4zmBZQ5kKs0acazBgWJEP9s4hDGRvka9N0uAv/uUZE6mqbXtHha0DM+qkd+
+         2IsIUiRV2oJ5LOQubjvJWmDpsinIGHGddMQMcU0n+ThQrcLzOrlsBs2GL4hFnMPQvjKD
+         XuISL6+/xbp6hY9PpVl1mNATeoEY1CkUUk8osXSwQ/guw2+sjetA0yvv4pg2K8SglHMh
+         Ulsw==
+X-Gm-Message-State: ANhLgQ3k1/7Opu/zfgvlsr5D7pzW4iDgp1RYdvr8fLsPK3rGWE0CfVta
+        5ONinAfI2NFkUdNe8PJBZ0gL1wk7TF+XxYANsZARrJ7JqnbaxntSMWQPelAA04HQV84pJWRUXw7
+        EJ1vexLHcX4OxUjGUGT0Etbzw
+X-Received: by 2002:adf:9204:: with SMTP id 4mr18469988wrj.143.1584109096395;
+        Fri, 13 Mar 2020 07:18:16 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuzpXqe3L+ouh/8OvlTgpWUNLKxe0zIJ7hI+95Xx+Akc5+ovPnyEOyW5bJzS1ZLcrFSCRRLDg==
+X-Received: by 2002:adf:9204:: with SMTP id 4mr18469965wrj.143.1584109096124;
+        Fri, 13 Mar 2020 07:18:16 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id c13sm20182905wro.96.2020.03.13.07.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 07:18:11 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 10/10] KVM: VMX: Convert vcpu_vmx.exit_reason to a union
+In-Reply-To: <20200312184521.24579-11-sean.j.christopherson@intel.com>
+References: <20200312184521.24579-1-sean.j.christopherson@intel.com> <20200312184521.24579-11-sean.j.christopherson@intel.com>
+Date:   Fri, 13 Mar 2020 15:18:09 +0100
+Message-ID: <87eetwnxsu.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-On Fri, Mar 13, 2020 at 03:12:13PM +0100, Neil Armstrong wrote:
-> On 13/03/2020 14:40, Laurent Pinchart wrote:
-> > On Wed, Mar 11, 2020 at 01:51:33PM +0100, Phong LE wrote:
-> >> Add the ITE bridge HDMI it66121 bindings.
-> >>
-> >> Signed-off-by: Phong LE <ple@baylibre.com>
-> >> ---
-> >>  .../bindings/display/bridge/ite,it66121.yaml  | 98 +++++++++++++++++++
-> >>  1 file changed, 98 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> >> new file mode 100644
-> >> index 000000000000..1717e880d130
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> >> @@ -0,0 +1,98 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/display/bridge/ite,it66121.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: ITE it66121 HDMI bridge Device Tree Bindings
-> >> +
-> >> +maintainers:
-> >> +  - Phong LE <ple@baylibre.com>
-> >> +  - Neil Armstrong <narmstrong@baylibre.com>
-> >> +
-> >> +description: |
-> >> +  The IT66121 is a high-performance and low-power single channel HDMI
-> >> +  transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward compatible
-> >> +  to DVI 1.0 specifications.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: ite,it66121
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +    description: base I2C address of the device
-> >> +
-> >> +  reset-gpios:
-> >> +    maxItems: 1
-> >> +    description: GPIO connected to active low reset
-> >> +
-> >> +  vrf12-supply:
-> >> +    maxItems: 1
-> >> +    description: Regulator for 1.2V analog core power.
-> >> +
-> >> +  vcn33-supply:
-> >> +    maxItems: 1
-> >> +    description: Regulator for 3.3V digital core power.
-> >> +
-> >> +  vcn18-supply:
-> >> +    maxItems: 1
-> >> +    description: Regulator for 1.8V IO core power.
-> >> +
-> >> +  interrupts:
-> >> +    maxItems: 1
-> >> +
-> >> +  pclk-dual-edge:
-> >> +    maxItems: 1
-> >> +    description: enable pclk dual edge mode.
-> > 
-> > I'm having a bit of trouble understanding how this operates. Looking at
-> > the driver code the property is only taken into account to calculate the
-> > maximum allowed frequency. How is the IT66121 configured for single vs.
-> > dual pixel clock edge mode ?
-> 
-> Dual edge mode is Dual-Data-Rate mode, the normal mode is MEDIA_BUS_FMT_RGB888_1X24 and dual edge is
-> MEDIA_BUS_FMT_RGB888_2X12_LE (or MEDIA_BUS_FMT_RGB888_2X12_BE, not sure) on a single clock period.
-> 
-> This should be negociated at runtime, but the bus width should be specified somewhere to select
-> one of the modes.
+> Convert vcpu_vmx.exit_reason from a u32 to a union (of size u32).  The
+> full VM_EXIT_REASON field is comprised of a 16-bit basic exit reason in
+> bits 15:0, and single-bit modifiers in bits 31:16.
+>
+> Historically, KVM has only had to worry about handling the "failed
+> VM-Entry" modifier, which could only be set in very specific flows and
+> required dedicated handling.  I.e. manually stripping the FAILED_VMENTRY
+> bit was a somewhat viable approach.  But even with only a single bit to
+> worry about, KVM has had several bugs related to comparing a basic exit
+> reason against the full exit reason stored in vcpu_vmx.
+>
+> Upcoming Intel features, e.g. SGX, will add new modifier bits that can
+> be set on more or less any VM-Exit, as opposed to the significantly more
+> restricted FAILED_VMENTRY, i.e. correctly handling everything in one-off
+> flows isn't scalable.  Tracking exit reason in a union forces code to
+> explicitly choose between consuming the full exit reason and the basic
+> exit reason, and is a convenient way to document and access the
+> modifiers.
+>
+> No functional change intended.
+>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 11 ++++++++---
+>  arch/x86/kvm/vmx/nested.h |  2 +-
+>  arch/x86/kvm/vmx/vmx.c    | 24 ++++++++++++------------
+>  arch/x86/kvm/vmx/vmx.h    | 25 ++++++++++++++++++++++++-
+>  4 files changed, 45 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index c775feca3eb0..0c7cea35dd33 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5307,7 +5307,12 @@ static int handle_vmfunc(struct kvm_vcpu *vcpu)
+>  	return kvm_skip_emulated_instruction(vcpu);
+>  
+>  fail:
+> -	nested_vmx_vmexit(vcpu, vmx->exit_reason,
+> +	/*
+> +	 * This is effectively a reflected VM-Exit, as opposed to a synthesized
+> +	 * nested VM-Exit.  Pass the original exit reason, i.e. don't hardcode
+> +	 * EXIT_REASON_VMFUNC as the exit reason.
+> +	 */
+> +	nested_vmx_vmexit(vcpu, vmx->exit_reason.full,
+>  			  vmcs_read32(VM_EXIT_INTR_INFO),
+>  			  vmcs_readl(EXIT_QUALIFICATION));
+>  	return 1;
+> @@ -5549,14 +5554,14 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu)
+>  	 */
+>  	nested_mark_vmcs12_pages_dirty(vcpu);
+>  
+> -	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), vmx->exit_reason,
+> +	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), vmx->exit_reason.full,
+>  				vmcs_readl(EXIT_QUALIFICATION),
+>  				vmx->idt_vectoring_info,
+>  				intr_info,
+>  				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+>  				KVM_ISA_VMX);
+>  
+> -	exit_reason = vmx->exit_reason;
+> +	exit_reason = vmx->exit_reason.basic;
+>  
+>  	switch (exit_reason) {
+>  	case EXIT_REASON_EXCEPTION_NMI:
+> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+> index 04584bcbcc8d..07ce09f88977 100644
+> --- a/arch/x86/kvm/vmx/nested.h
+> +++ b/arch/x86/kvm/vmx/nested.h
+> @@ -98,7 +98,7 @@ static inline bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu)
+>  			vmcs_read32(VM_EXIT_INTR_ERROR_CODE);
+>  	}
+>  
+> -	nested_vmx_vmexit(vcpu, to_vmx(vcpu)->exit_reason, exit_intr_info,
+> +	nested_vmx_vmexit(vcpu, to_vmx(vcpu)->exit_reason.full, exit_intr_info,
+>  			  vmcs_readl(EXIT_QUALIFICATION));
+>  	return true;
+>  }
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 910a7cadeaf7..521b99f63608 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1588,7 +1588,7 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  	 * i.e. we end up advancing IP with some random value.
+>  	 */
+>  	if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
+> -	    to_vmx(vcpu)->exit_reason != EXIT_REASON_EPT_MISCONFIG) {
+> +	    to_vmx(vcpu)->exit_reason.basic != EXIT_REASON_EPT_MISCONFIG) {
+>  		rip = kvm_rip_read(vcpu);
+>  		rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+>  		kvm_rip_write(vcpu, rip);
+> @@ -5847,7 +5847,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+>  	u32 vectoring_info = vmx->idt_vectoring_info;
+>  	u16 exit_reason;
+>  
+> -	trace_kvm_exit(vmx->exit_reason, vcpu, KVM_ISA_VMX);
+> +	trace_kvm_exit(vmx->exit_reason.full, vcpu, KVM_ISA_VMX);
+>  
+>  	/*
+>  	 * Flush logged GPAs PML buffer, this will make dirty_bitmap more
+> @@ -5866,11 +5866,11 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+>  	if (is_guest_mode(vcpu) && nested_vmx_reflect_vmexit(vcpu))
+>  		return 1;
+>  
+> -	if (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
+> +	if (vmx->exit_reason.failed_vmentry) {
+>  		dump_vmcs();
+>  		vcpu->run->exit_reason = KVM_EXIT_FAIL_ENTRY;
+>  		vcpu->run->fail_entry.hardware_entry_failure_reason
+> -			= vmx->exit_reason;
+> +			= vmx->exit_reason.full;
+>  		return 0;
+>  	}
+>  
+> @@ -5882,7 +5882,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+>  		return 0;
+>  	}
+>  
+> -	exit_reason = vmx->exit_reason;
+> +	exit_reason = vmx->exit_reason.basic;
+>  
+>  	/*
+>  	 * Note:
+> @@ -5900,7 +5900,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+>  		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_DELIVERY_EV;
+>  		vcpu->run->internal.ndata = 3;
+>  		vcpu->run->internal.data[0] = vectoring_info;
+> -		vcpu->run->internal.data[1] = vmx->exit_reason;
+> +		vcpu->run->internal.data[1] = vmx->exit_reason.full;
+>  		vcpu->run->internal.data[2] = vcpu->arch.exit_qualification;
+>  		if (exit_reason == EXIT_REASON_EPT_MISCONFIG) {
+>  			vcpu->run->internal.ndata++;
+> @@ -5960,13 +5960,13 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+>  
+>  unexpected_vmexit:
+>  	vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n",
+> -		    vmx->exit_reason);
+> +		    vmx->exit_reason.full);
+>  	dump_vmcs();
+>  	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+>  	vcpu->run->internal.suberror =
+>  			KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON;
+>  	vcpu->run->internal.ndata = 1;
+> -	vcpu->run->internal.data[0] = vmx->exit_reason;
+> +	vcpu->run->internal.data[0] = vmx->exit_reason.full;
+>  	return 0;
+>  }
+>  
+> @@ -6290,7 +6290,7 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+>  				   enum exit_fastpath_completion *exit_fastpath)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> -	u16 exit_reason = vmx->exit_reason;
+> +	u16 exit_reason = vmx->exit_reason.basic;
+>  
+>  	if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
+>  		handle_external_interrupt_irqoff(vcpu);
+> @@ -6672,11 +6672,11 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  	vmx->nested.nested_run_pending = 0;
+>  	vmx->idt_vectoring_info = 0;
+>  
+> -	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+> -	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+> +	vmx->exit_reason.full = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+> +	if (vmx->exit_reason.basic == EXIT_REASON_MCE_DURING_VMENTRY)
+>  		kvm_machine_check();
+>  
+> -	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+> +	if (vmx->fail || vmx->exit_reason.failed_vmentry)
+>  		return;
+>  
+>  	vmx->loaded_vmcs->launched = 1;
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index e64da06c7009..2d9a005d11ab 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -93,6 +93,29 @@ struct pt_desc {
+>  	struct pt_ctx guest;
+>  };
+>  
+> +union vmx_exit_reason {
+> +	struct {
+> +		u32	basic			: 16;
+> +		u32	reserved16		: 1;
+> +		u32	reserved17		: 1;
+> +		u32	reserved18		: 1;
+> +		u32	reserved19		: 1;
+> +		u32	reserved20		: 1;
+> +		u32	reserved21		: 1;
+> +		u32	reserved22		: 1;
+> +		u32	reserved23		: 1;
+> +		u32	reserved24		: 1;
+> +		u32	reserved25		: 1;
+> +		u32	reserved26		: 1;
+> +		u32	enclave_mode		: 1;
+> +		u32	smi_pending_mtf		: 1;
+> +		u32	smi_from_vmx_root	: 1;
+> +		u32	reserved30		: 1;
+> +		u32	failed_vmentry		: 1;
 
-How about replacing this property by bus-width to report the connected
-bus width ? It should then become an endpoint property.
+Just wondering, is there any particular benefit in using 'u32' instead
+of 'u16' here?
 
-> >> +
-> >> +  port:
-> >> +    type: object
-> >> +
-> >> +    properties:
-> >> +      endpoint:
-> >> +        type: object
-> >> +        description: |
-> >> +          Input endpoints of the bridge.
-> >> +
-> >> +    required:
-> >> +      - endpoint
-> > 
-> > You should have two ports, one for the bridge input, and one for the
-> > bridge output.
-> > 
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - reset-gpios
-> >> +  - vrf12-supply
-> >> +  - vcn33-supply
-> >> +  - vcn18-supply
-> >> +  - interrupts
-> >> +  - port
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    i2c6 {
-> >> +      #address-cells = <1>;
-> >> +      #size-cells = <0>;
-> >> +
-> >> +      it66121hdmitx: it66121hdmitx@4c {
-> >> +        compatible = "ite,it66121";
-> >> +        pinctrl-names = "default";
-> >> +        pinctrl-0 = <&ite_pins_default>;
-> >> +        vcn33-supply = <&mt6358_vcn33_wifi_reg>;
-> >> +        vcn18-supply = <&mt6358_vcn18_reg>;
-> >> +        vrf12-supply = <&mt6358_vrf12_reg>;
-> >> +        reset-gpios = <&pio 160 1 /* GPIO_ACTIVE_LOW */>;
-> >> +        interrupt-parent = <&pio>;
-> >> +        interrupts = <4 8 /* IRQ_TYPE_LEVEL_LOW */>;
-> >> +        reg = <0x4c>;
-> >> +        pclk-dual-edge;
-> >> +
-> >> +        port {
-> >> +          it66121_in: endpoint {
-> >> +            remote-endpoint = <&display_out>;
-> >> +          };
-> >> +        };
-> >> +      };
-> >> +    };
+> +	};
+> +	u32 full;
+> +};
+> +
+>  /*
+>   * The nested_vmx structure is part of vcpu_vmx, and holds information we need
+>   * for correct emulation of VMX (i.e., nested VMX) on this vcpu.
+> @@ -263,7 +286,7 @@ struct vcpu_vmx {
+>  	int vpid;
+>  	bool emulation_required;
+>  
+> -	u32 exit_reason;
+> +	union vmx_exit_reason exit_reason;
+>  
+>  	/* Posted interrupt descriptor */
+>  	struct pi_desc pi_desc;
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-Regards,
+Vitaly
 
-Laurent Pinchart
