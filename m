@@ -2,156 +2,159 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE4DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5BFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7DC20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D391A206B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Fn2NQ+Dt";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Fn2NQ+Dt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlzSqSKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCMPSd (ORCPT
+        id S1726911AbgCMPTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:18:33 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59024 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726420AbgCMPSd (ORCPT
+        Fri, 13 Mar 2020 11:19:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29404 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgCMPTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:18:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A98BA8EE111;
-        Fri, 13 Mar 2020 08:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1584112712;
-        bh=xNlQBaMJxw+xUPY3kKZXizEko19XrBGpMjrdn37j7V8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Fn2NQ+DtzV1RuwZsNXqqrERqDuz1PozzcgC3+Q+vnNGFYwO4TvTPtYtPMwkItYO9f
-         Ks7vONNMJthP8OlcqQwGs7YMORZFS/dp2rupG6gXFluO7Ir8pJn+a7hqNwj+bZksUD
-         VFDAbm7SbUIuS/Llq298v8rOtQwllQ1Mc1b2nJJ4=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1OJPsJR58A3O; Fri, 13 Mar 2020 08:18:32 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id EC94A8EE10C;
-        Fri, 13 Mar 2020 08:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1584112712;
-        bh=xNlQBaMJxw+xUPY3kKZXizEko19XrBGpMjrdn37j7V8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Fn2NQ+DtzV1RuwZsNXqqrERqDuz1PozzcgC3+Q+vnNGFYwO4TvTPtYtPMwkItYO9f
-         Ks7vONNMJthP8OlcqQwGs7YMORZFS/dp2rupG6gXFluO7Ir8pJn+a7hqNwj+bZksUD
-         VFDAbm7SbUIuS/Llq298v8rOtQwllQ1Mc1b2nJJ4=
-Message-ID: <1584112710.3391.12.camel@HansenPartnership.com>
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
- Technical Advisory Board Elections -- Change to charter
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jani Nikula <jani.nikula@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 13 Mar 2020 08:18:30 -0700
-In-Reply-To: <874kusl50q.fsf@intel.com>
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
-         <20200312003436.GF1639@pendragon.ideasonboard.com>
-         <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
-         <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com>
-         <20200313093548.GA2089143@kroah.com>
-         <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
-         <20200313100755.GA2161605@kroah.com>
-         <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
-         <20200313103720.GA2215823@kroah.com>
-         <CAMuHMdW6Br+x+_9xP+X4xr6FP_uNpZ6q6065RJH-9yFy_8fiZA@mail.gmail.com>
-         <20200313081216.627c5bdf@gandalf.local.home> <874kusl50q.fsf@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Mar 2020 11:19:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584112753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g1BOU8Ryb4eDYX9q0GnCAE4TkNIw/xVsOPssVl8EMSI=;
+        b=RlzSqSKtSsi8ePEk8A3y4JZpAw92BPF/ximbPLTqIEcS9IQ2yifHdIjAW0kFgca1s0Oyr3
+        9ZxbZ2ItD9Gj/pnUJE6tvvro7NIbpd+V0V17gFdMr7aa/PYzpMy6T+dy3F2LwFVoKoGI4k
+        0MH+nySTjRCWdfthQSGPg5hsRLuLANg=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-pPVoNVW4PZGs8d3lwXVU1w-1; Fri, 13 Mar 2020 11:19:11 -0400
+X-MC-Unique: pPVoNVW4PZGs8d3lwXVU1w-1
+Received: by mail-qk1-f200.google.com with SMTP id c1so6207060qkg.21
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:19:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g1BOU8Ryb4eDYX9q0GnCAE4TkNIw/xVsOPssVl8EMSI=;
+        b=r8rOhHAKMEkQ5CNSmLY/GB49d1xHsUl9aegniNaR+m9BexgZYxLqAOZ0LLUB0YRwUG
+         fOYtU/NO2xIVeymIfx6gRCBVhmg4XofkBuAY2NcHbqHUjz0mDk+wupfo/JVRe+VrSD6O
+         GzNHOQvdtTq4h61Ze28PzI4SwcPBvDrQ4/VPge4A0hFC6SW06oXG4zsRz/52mB35t8rq
+         R+TK0U09s5cHNOY3lXfREVWPcWWgTm9TknGGkUDXef9qw8/CYS5vcgYtvuU+avKi2TRW
+         e+oT+rMpn52Z8geXhw2xObT7YoPz8sC6nbLRWYzOAac4zMeDTePfcuuuMDpeCKwtMfpO
+         fQ5Q==
+X-Gm-Message-State: ANhLgQ3paSFJCAJmPk6VFLlA7WLkSDyP3N4RPkFbwjavBItOKO/DkSq1
+        l6ydNlbOUB5okVQljbZ5KRTAkiwOKGlBEKnOKG+SB/+xo3LNf6cVnDsLkPgobliXKbi3A627gam
+        hSC7RAz/yPH44BZRbiwB2OAn1
+X-Received: by 2002:a37:6411:: with SMTP id y17mr13891160qkb.437.1584112751202;
+        Fri, 13 Mar 2020 08:19:11 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vupAH6cqSYPKnWKz3hPKhftLx9/aFvP9znQhGbGdRV0AErbIBzYh1MW737PUnv4mpawLxfdPw==
+X-Received: by 2002:a37:6411:: with SMTP id y17mr13891130qkb.437.1584112750917;
+        Fri, 13 Mar 2020 08:19:10 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id v19sm14308824qtb.67.2020.03.13.08.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 08:19:10 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 11:19:08 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ming Lei <minlei@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH] x86/vector: Allow to free vector for managed IRQ
+Message-ID: <20200313151908.GA95517@xz-x1>
+References: <20200312205830.81796-1-peterx@redhat.com>
+ <878sk4ib93.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <878sk4ib93.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-13 at 16:10 +0200, Jani Nikula wrote:
-> On Fri, 13 Mar 2020, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Fri, 13 Mar 2020 11:50:45 +0100
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > 
-> > > > > > Given that before now, there has not be any way to vote for
-> > > > > > the TAB remotely, it's less restrictive :)  
-> > > > > 
-> > > > > But people without kernel.org accounts could still vote in
-> > > > > person before, right?  
-> > > > 
-> > > > Yes, and they still can today, this is expanding the pool, not
-> > > > restricting it.  
-> > > 
-> > > Oh right, assumed we'll still have a conference in person, and
-> > > unrestricted travel.
-> > 
-> > Correct. But if we don't change the voting requirements, and the
-> > conference is canceled, or people are restricted from traveling,
-> > then those people will not be able to vote with the current
-> > charter.
-> > 
-> > We are trying to extend who can vote beyond those that the charter
-> > allows.  We are not preventing those that can vote under the
-> > current rules from voting.  IIUC, we are trying to create absentee
-> > voting which we never had before. Thus, you can either vote the
-> > current way by getting travel to wherever Kernel Summit is and
-> > attending the conference, or we can extend the charter so that if
-> > you can not come for whatever reason, you have an option to vote
-> > remotely, if you satisfy the new requirements. Remember, not
-> > attending means you do not satisfy the current requirements.
-> > 
-> > The TAB has bikeshed this a bit internally, and came up with the
-> > conclusion that kernel.org accounts is a very good "first step". If
-> > this proves to be a problem, we can look at something else. This is
-> > why we are being a bit vague in the changes so that if something
-> > better comes along we can switch to that. After some experience in
-> > various methods (if we try various methods), we could always make
-> > whatever method works best as an official method at a later time.
-> > 
-> > But for now, we need to come up with something that makes it hard
-> > for ballot stuffing, and a kernel.org account (plus activity in the
-> > kernel) appears to be the best solution we know of.
+On Fri, Mar 13, 2020 at 03:24:08PM +0100, Thomas Gleixner wrote:
+> Peter Xu <peterx@redhat.com> writes:
 > 
-> Thanks for writing this. I, for one, would welcome more open and
-> proactive communication from the TAB.
+> > After we introduced the "managed_irq" sub-parameter for isolcpus, it's
+> > possible to free a kernel managed irq vector now.
+> >
+> > It can be triggered easily by booting a VM with a few vcpus, with one
+> > virtio-blk device and then mark some cores as HK_FLAG_MANAGED_IRQ (in
+> > below case, there're 4 vcpus, with vcpu 3 isolated with managed_irq):
+> >
+> > [    2.889911] ------------[ cut here ]------------
+> > [    2.889964] WARNING: CPU: 3 PID: 0 at arch/x86/kernel/apic/vector.c:853 free_moved_vector+0x126/0x160
 > 
-> Have you considered whether the eligibility for running and voting
-> should be made the same? As it is, absolutely anyone can self-
-> nominate and run.
+> <SNIP>
+> 
+> > [    2.890026] softirqs last disabled at (8757): [<ffffffffbb0ecccd>] irq_enter+0x4d/0x70
+> > [    2.890027] ---[ end trace deb5d563d2acb13f ]---
+> 
+> What is this backtrace for? It's completly useless as it merily shows
+> that the warning triggers. Also even if it'd be useful then it wants to
+> be trimmed properly.
 
-When the TAB charter was written (in 2006), the original reason was to
-prevent manipulation (real or imagined) by the committee who would then
-become the arbiters of nominations and thus able to influence who might
-run for the TAB.  There are a couple of reasons for the electorate
-clause: when the TAB was formed, it was done by the kernel developers
-unhappy at the way OSDL (precursor organization to the LF) was behaving
-with regard to the kernel, who forced their way onto its board and
-formed the TAB to gain input and control on behalf of kernel
-developers, so the TAB was formed by kernel developer for kernel
-developers and, since most other non-kernel open source groups had
-their own foundation like entities, keeping it kernel only wasn't seen
-as a problem.  The other reason was that OSDL was a bit unhappy to be
-reformed in this way and we foresaw that one way to dilute the
-reforming influence of the TAB would be to dilute kernel developer
-representation since they were the main community interested in that
-reform.  When the OSDL became the LF, some of the initial antagonism
-and need for reform went away and the elections were opened to the co-
-located conferences as a sign of improved trust.
+I thought it was a good habit to keep the facts of issues.  Backtrace
+is one of them so I kept them.  It could, for example, help people who
+spot the same issue in an old/downstream kernel so when they google or
+grepping git-log they know the exact issue has been solved by some
+commit, even without much knowledge on the internals (because they can
+exactly compare the whole dmesg error).
 
-James
+> 
+> > I believe the same thing will happen to bare metals.
+> 
+> Believe is not really relevant in engineering.
+> 
+> The problem has nothing to do with virt or bare metal. It's a genuine
+> issue.
+> 
+> > When allocating the IRQ for the device, activate_managed() will try to
+> > allocate a vector based on what we've calculated for kernel managed
+> > IRQs (which does not take HK_FLAG_MANAGED_IRQ into account).  However
+> > when we bind the IRQ to the IRQ handler, we'll do irq_startup() and
+> > irq_do_set_affinity(), in which we will start to consider the whole
+> > HK_FLAG_MANAGED_IRQ logic.  This means the chosen core can be
+> > different from when we do the allocation.  When that happens, we'll
+> > need to be able to properly free the old vector on the old core.
+> 
+> There's lots of 'we' in that text. We do nothing really. Please describe
+> things in neutral and factual language.
+> 
+> Also there is another way to trigger this: Offline all non-isolated CPUs
+> in the mask and then bring one online again.
+
+Thanks for your suggestions on not using subjective words and so on.
+I'll remember these.
+
+However I think I still miss one thing in the puzzle (although it
+turns out that we've agreed on removing the warning already, but just
+in case I missed something important) - do you mean that offlining all
+the non-isolated CPUs in the mask won't trigger this already?  Because
+I also saw some similar comment somewhere else...
+
+Here's my understanding - when offlining, we'll disable the CPU and
+reach:
+
+  - irq_migrate_all_off_this_cpu
+    - migrate_one_irq
+      - irq_do_set_affinity
+        - calculate HK_FLAG_MANAGED_IRQ and so on...
+
+Then we can still trigger this irq move event even before we bring
+another housekeeping cpu online, right?  Or could you guide me on what
+I have missed?
+
+Thanks,
+
+-- 
+Peter Xu
 
