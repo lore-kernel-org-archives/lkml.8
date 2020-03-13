@@ -2,157 +2,114 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6313DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509D1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F13206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ACAF206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:29:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="wNEa9VbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgCMQ00 (ORCPT
+        id S1726647AbgCMQ3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:26:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54986 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgCMQ00 (ORCPT
+        Fri, 13 Mar 2020 12:29:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41904 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCMQ3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:26:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 7AD87297056
-Subject: Re: [PATCH v4 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200312225719.14753-1-pmalani@chromium.org>
- <20200312225719.14753-2-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <a2a08abd-ce6b-d045-5e56-1dd9c0a3360c@collabora.com>
-Date:   Fri, 13 Mar 2020 17:26:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 12:29:23 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m25so12577169edq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KQ+pObvU67uvaK3l1r4Ceb5YYAtUXZc7zlplXO9TGzk=;
+        b=wNEa9VbCq5ppXpJfo1/v31ZhKG8uPf7PzMenc8z6vmEiPRA9w/pPKyW5PupisZ+2wm
+         /1jR1aTmSmwc3VGYzygElLlxIeYf8iDy+ZYBCCFSAzNIo4Qhqf2EVsQY2xdC+JJray49
+         u01vKpsXb8UXTPq9xL8qVflCmkWMFcPy3ohoVOFO6yr5Wx5vOxDNototKpEKY+8oXZNU
+         ZY3T4uEoba21JC3zCnFHzr6tNBDmVkym5KePwLGcs3xFJU7aw/cie5ZNNSC+vyHPPitf
+         6TxueY9wS4q7IPVNWnMTG7h0eYTj8SBvSH5GSRB+1Qrpcnnc6Wf/I+hp69E09N7FxlEV
+         0bxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KQ+pObvU67uvaK3l1r4Ceb5YYAtUXZc7zlplXO9TGzk=;
+        b=fn6rCtRqFmBvDBRrGHe4xrLLzYBFBhZi1bVJPDz6S9HW6IVWPCQy8penqRUdCXo+Oy
+         oiE+/ikuO+GDQY0MqwdUBBjMtOMsMzM8oiD4PQf494TamP7Lv4khh9U3X68o7wTUvaj5
+         VhzxcMYtnq0Ao+ELv50PZLIMsLc96Wm/g1FwqG0dNqbFSGTwnP1J6bXyisQwHnuHDWpn
+         ZfWZD1CS32iV4cWohBCD2Hf7/DILIixtNEsEU4qDwgpa/4HoFt6OVMSJProCuoYCoFZn
+         4ddnHZdmXo/Enh9ug0FGE+MMUmji1J3G0dyuY4wnpwcPR3ecXEMdTeNB92CHQTSt4DNA
+         7QCA==
+X-Gm-Message-State: ANhLgQ1es9u6czHf9jMJUniUWhAFJpZij0EYYzzjmNLCkI9nIzHNl2nW
+        MTLkljEcsrYuz5bl2wN/bsQa/+6zwMpsB3HZKH+y
+X-Google-Smtp-Source: ADFU+vuL+b7H+tHmfIL9uEWtaqijyChHCYny1ByjHCCYsp9IHY7VBWU/eiFjWL7wPzp8K/OQLrQaC/SDlvMtNAtsA5M=
+X-Received: by 2002:a17:907:105a:: with SMTP id oy26mr3891035ejb.308.1584116962089;
+ Fri, 13 Mar 2020 09:29:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200312225719.14753-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
+ <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
+ <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+ <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com> <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
+In-Reply-To: <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 13 Mar 2020 12:29:10 -0400
+Message-ID: <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
+        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Thu, Mar 12, 2020 at 3:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-02-13 16:44, Paul Moore wrote:
+> > This is a bit of a thread-hijack, and for that I apologize, but
+> > another thought crossed my mind while thinking about this issue
+> > further ... Once we support multiple auditd instances, including the
+> > necessary record routing and duplication/multiple-sends (the host
+> > always sees *everything*), we will likely need to find a way to "trim"
+> > the audit container ID (ACID) lists we send in the records.  The
+> > auditd instance running on the host/initns will always see everything,
+> > so it will want the full container ACID list; however an auditd
+> > instance running inside a container really should only see the ACIDs
+> > of any child containers.
+>
+> Agreed.  This should be easy to check and limit, preventing an auditd
+> from seeing any contid that is a parent of its own contid.
+>
+> > For example, imagine a system where the host has containers 1 and 2,
+> > each running an auditd instance.  Inside container 1 there are
+> > containers A and B.  Inside container 2 there are containers Y and Z.
+> > If an audit event is generated in container Z, I would expect the
+> > host's auditd to see a ACID list of "1,Z" but container 1's auditd
+> > should only see an ACID list of "Z".  The auditd running in container
+> > 2 should not see the record at all (that will be relatively
+> > straightforward).  Does that make sense?  Do we have the record
+> > formats properly designed to handle this without too much problem (I'm
+> > not entirely sure we do)?
+>
+> I completely agree and I believe we have record formats that are able to
+> handle this already.
 
-On 12/3/20 23:57, Prashant Malani wrote:
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
-> 
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v4:
-> - Rebased on top of usb-connector.yaml file, so the â€œconnectorâ€ property
->   now directly references the â€œusb-connectorâ€ DT binding.
-> 
-> Changes in v3:
-> - Fixed license identifier.
-> - Renamed "port" to "connector".
-> - Made "connector" be a "usb-c-connector" compatible property.
-> - Updated port-number description to explain min and max values,
->   and removed $ref which was causing dt_binding_check errors.
-> - Fixed power-role, data-role and try-power-role details to make
->   dt_binding_check pass.
-> - Fixed example to include parent EC SPI DT Node.
-> 
-> Changes in v2:
-> - No changes. Patch first introduced in v2 of series.
-> 
->  .../bindings/chrome/google,cros-ec-typec.yaml | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 0000000000000..6668d678dbcb4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+I'm not convinced we do.  What about the cases where we have a field
+with a list of audit container IDs?  How do we handle that?
 
-Could you use dual licensing here (GPL-2.0-only OR BSD-2-Clause). In general
-Google is fine with it for bindings.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  connector:
-> +    $ref: /schemas/connector/usb-connector.yaml#
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |+
-> +    cros_ec: ec {
-> +      compatible = "google,cros-ec-spi";
-> +
-
-I guess that it will trigger some warnings once google,cros-ec.yaml is merged.
-Use a full example.
-
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-
-
-> +      typec {
-> +        compatible = "google,cros-ec-typec";
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        connector@0 {
-> +          compatible = "usb-c-connector";
-> +          reg = <0>;
-> +          power-role = "dual";
-> +          data-role = "dual";
-> +          try-power-role = "source";
-> +        };
-> +      };
-> +    };
-> 
+-- 
+paul moore
+www.paul-moore.com
