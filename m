@@ -2,189 +2,94 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E631CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C4DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FC120723
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF47A20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/kUJ8XE"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="oZng4u7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCMDkK (ORCPT
+        id S1726437AbgCMDmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:40:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38193 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCMDkK (ORCPT
+        Thu, 12 Mar 2020 23:42:53 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37055 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgCMDmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:40:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t28so6060819ott.5;
-        Thu, 12 Mar 2020 20:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WIRkI2CYvoKsq9itPKuwu+XPusfRhrw6nx2JHGpkf1E=;
-        b=s/kUJ8XE8j1XYaR6BBWpebhMtpPzhdQckJ3Ju30W08kJ2xQx9Cxz+Mco9AXgXuBrHC
-         Waz4rIBxwEm3In3P7F0tM1c636ASFlUfrTQqmNEQEOlyWbj1GZq8pQnzofLnbuXCPzy3
-         PyUfQ3gpDZxw0x7BDGGKY4kq6J3xJMkOC4aZ9FypuP4xnhCdibYeGVLaBURAT1EmJGcK
-         1Q0q1q8spcrO01cZc1ZPTay39onJ3b2R8XHN8HYO7f5BJjbUDH/nBKnQT3FaleZzkC0y
-         ztHqqF7TdsNuh+/iJLHEi1Mq6oAFDqtoTC4U1JNCOTG+UkFEU/Q46IBKrRdDwdINQZFT
-         nsFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WIRkI2CYvoKsq9itPKuwu+XPusfRhrw6nx2JHGpkf1E=;
-        b=ESGsxrYsYr0tvUxG+c8Y5r+v6rB3Q4g2TQca8u0i7hxj5M+SYaV9O1tl2fqNVWUNJK
-         ffbLy3+4gEf2iBi6CU0/CJYRd56kmbauIytvYzi8bZT4t2RcTVuy8yAKEpM7XBHG43t9
-         iIvBo7PFW8GljZ7xQTMI7sVjz9tKqQgANXTvUG4/UKMs6J9R2WPxpdHfeb+FKmCWog8v
-         SmrpMYoWBU7I2Q+CktJ5q8xGNgflC8qeryPQbgoVRKkMjK1xb4UxxNZFXWQYwDNeMxQs
-         5c1U3T0DmqKpdXYsRI3Y3qj88KHVt5v+pChHZxOGVCxrFjhe3O7NowYlrLYqmp47B+tQ
-         Rx7A==
-X-Gm-Message-State: ANhLgQ29FKA5/625A+gsG+Oi2VgzO6vrdsSPXZjb/t79XBRQS5ik3h2Y
-        +R9bMzcrrBNAdFNp/gSM7Zeqq0qERqcZ2PSDcoLQhlzM
-X-Google-Smtp-Source: ADFU+vt6hs8lhOGWw8jufq1I9KHJ+9mX0sD06x1fgIeR72ObclEhhEE5yw//2AdtH0SykZpfNjftQQmalg9itST0Y+A=
-X-Received: by 2002:a9d:3a62:: with SMTP id j89mr2922525otc.45.1584070809078;
- Thu, 12 Mar 2020 20:40:09 -0700 (PDT)
+        Thu, 12 Mar 2020 23:42:53 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A4BD08365A;
+        Fri, 13 Mar 2020 16:42:49 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1584070969;
+        bh=jiMFXGvBhCI5xK4iuBLsegdABOplq4HGKYU6z5QIHQ0=;
+        h=From:To:Cc:Subject:Date;
+        b=oZng4u7mbjanyfvvbVMxgRn36M0EK+F19nclv9E1iLkTJzBqhjryAFiVZdtD2bA5K
+         c4cjOKED4cnG4wBxEzOZ6giitHAaURPpNOZIPg104yfb/gQPoAWXu6i8gl88tgzMOx
+         V40BsAIxvVX7dcExkN170vWWv+dJTOiG5WCcJfgRLxWx2humBzvmbQ6udyD8ON41av
+         95fHQLrFbz6qd0tcpMhsgvTF68+35gVDrhxFMWdoUbtKj91xw8wRy4zKG7Hu3JIBvD
+         Xq0BVNXkjfEm0tUBOIVPUzp4nIg5mpdmuTO7vMSeA1iu9Q4VWkRxr3KTjRjKMhmuhg
+         n25ZiKgPpNQsg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e6b01370000>; Fri, 13 Mar 2020 16:42:49 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 1F15C13EED5;
+        Fri, 13 Mar 2020 16:42:47 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 2F9A628006E; Fri, 13 Mar 2020 16:42:47 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] gpio: mvebu: avoid error message for optional IRQ
+Date:   Fri, 13 Mar 2020 16:42:44 +1300
+Message-Id: <20200313034244.26336-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1584007547-4802-1-git-send-email-wanpengli@tencent.com>
- <87r1xxrhb0.fsf@vitty.brq.redhat.com> <CANRm+Cwawew=Xygxmzr2jmgPAKqDxvkqxxzjvoxnRRjC_Jx9Xw@mail.gmail.com>
- <79141339-3506-1fe4-2e69-8430f4c202bd@intel.com>
-In-Reply-To: <79141339-3506-1fe4-2e69-8430f4c202bd@intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 13 Mar 2020 11:39:58 +0800
-Message-ID: <CANRm+Cw-t2GXnHjOTPEV6BjwZPDZpwvK4QrUNz+AU21UL4rEww@mail.gmail.com>
-Subject: Re: [PATCH] KVM: VMX: Micro-optimize vmexit time when not exposing PMU
-To:     like.xu@intel.com
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 at 11:23, Xu, Like <like.xu@intel.com> wrote:
->
-> Hi Wanpeng,
->
-> On 2020/3/12 19:05, Wanpeng Li wrote:
-> > On Thu, 12 Mar 2020 at 18:36, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >> Wanpeng Li <kernellwp@gmail.com> writes:
-> >>
-> >>> From: Wanpeng Li <wanpengli@tencent.com>
-> >>>
-> >>> PMU is not exposed to guest by most of cloud providers since the bad performance
-> >>> of PMU emulation and security concern. However, it calls perf_guest_switch_get_msrs()
-> >>> and clear_atomic_switch_msr() unconditionally even if PMU is not exposed to the
-> >>> guest before each vmentry.
-> >>>
-> >>> ~1.28% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my
-> >>> SKX server.
-> >>>
-> >>> Before patch:
-> >>> vmcall 1559
-> >>>
-> >>> After patch:
-> >>> vmcall 1539
-> >>>
-> >>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> >>> ---
-> >>>   arch/x86/kvm/vmx/vmx.c | 3 +++
-> >>>   1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >>> index 40b1e61..fd526c8 100644
-> >>> --- a/arch/x86/kvm/vmx/vmx.c
-> >>> +++ b/arch/x86/kvm/vmx/vmx.c
-> >>> @@ -6441,6 +6441,9 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
-> >>>        int i, nr_msrs;
-> >>>        struct perf_guest_switch_msr *msrs;
-> >>>
-> >>> +     if (!vcpu_to_pmu(&vmx->vcpu)->version)
-> >>> +             return;
-> >>> +
-> >>>        msrs = perf_guest_get_msrs(&nr_msrs);
-> >>>
-> >>>        if (!msrs)
-> >> Personally, I'd prefer this to be expressed as
-> >>
-> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >> index 40b1e6138cd5..ace92076c90f 100644
-> >> --- a/arch/x86/kvm/vmx/vmx.c
-> >> +++ b/arch/x86/kvm/vmx/vmx.c
-> >> @@ -6567,7 +6567,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >>
-> >>          pt_guest_enter(vmx);
-> >>
-> >> -       atomic_switch_perf_msrs(vmx);
-> >> +       if (vcpu_to_pmu(&vmx->vcpu)->version)
-> We may use 'vmx->vcpu.arch.pmu.version'.
+platform_get_irq() will generate an error message if the requested irq
+is not present
 
-Thanks for confirm this. Maybe this is better:
+  mvebu-gpio f1010140.gpio: IRQ index 3 not found
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 40b1e61..b20423c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6567,7 +6567,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+use platform_get_irq_optional() to avoid the error message being
+generated.
 
-        pt_guest_enter(vmx);
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/gpio/gpio-mvebu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--       atomic_switch_perf_msrs(vmx);
-+       if (vcpu_to_pmu(vcpu)->version)
-+               atomic_switch_perf_msrs(vmx);
-        atomic_switch_umwait_control_msr(vmx);
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index d2b999c7987f..3c9f4fb3d5a2 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -1247,7 +1247,7 @@ static int mvebu_gpio_probe(struct platform_device =
+*pdev)
+ 	 * pins.
+ 	 */
+ 	for (i =3D 0; i < 4; i++) {
+-		int irq =3D platform_get_irq(pdev, i);
++		int irq =3D platform_get_irq_optional(pdev, i);
+=20
+ 		if (irq < 0)
+ 			continue;
+--=20
+2.25.1
 
-        if (enable_preemption_timer)
-
->
-> I would vote in favor of adding the "unlikely (vmx->vcpu.arch.pmu.version)"
-> check to the atomic_switch_perf_msrs(), which follows pt_guest_enter(vmx).
-
-This is hotpath, let's save the cost of function call.
-
-    Wanpeng
-
->
-> >> +               atomic_switch_perf_msrs(vmx);
-> >> +
-> > I just hope the beautiful codes before, I testing this version before
-> > sending out the patch, ~30 cycles can be saved which means that ~2%
-> > vmexit time, will update in next version. Let's wait Paolo for other
-> > opinions below.
->
-> You may factor the cost of the "pmu-> version check' itself (~10 cycles)
-> into your overall 'micro-optimize' revenue.
->
-> Thanks,
-> Like Xu
-> >
-> >      Wanpeng
-> >
-> >> Also, (not knowing much about PMU), is
-> >> "vcpu_to_pmu(&vmx->vcpu)->version" check correct?
-> >>
-> >> E.g. in intel_is_valid_msr() correct for Intel PMU or is it stated
-> >> somewhere that it is generic rule?
-> >>
-> >> Also, speaking about cloud providers and the 'micro' nature of this
-> >> optimization, would it rather make sense to introduce a static branch
-> >> (the policy to disable vPMU is likely to be host wide, right)?
-> >>
-> >> --
-> >> Vitaly
-> >>
->
