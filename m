@@ -2,124 +2,104 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB28C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4EBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30F5206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:15:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y6MMbku0"
+	by mail.kernel.org (Postfix) with ESMTP id 1D399206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584119749;
+	bh=DKVElybsjLDvAU1zHyX3rQlN2QwCuWEYTxh2dGG82oY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=a2o4zhMhi9XiscsdfPBLv6Qm267esfghOk6d1fxQGC9L7nW9EYNXDCKiymJ4kvc71
+	 T9FrF7bmOAJ6HY2LB27ur8iPA4b4aUv/3kg2ntW2EdrNkysAOqTJNaRmLONlZYnMvm
+	 PtkGxsPfb5rAlnMhXYh/n4CVg/TIpS5p810i3pKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgCMRP2 (ORCPT
+        id S1727023AbgCMRPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:15:28 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51262 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgCMRP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:15:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a132so10831474wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EiAZ8r1RK4eYPjDEt/gPiQ4hc4RczwbEBzIiaGohL7A=;
-        b=Y6MMbku01pHaOoSgGbj4gF3V6x7FB1fkNAjJ6ru6WyqJeOLaM9BYbK0Ix5GiRzvNyK
-         JIioY1ozgF3HVo4Auv/aymm6AZFpDclDUVmdfoDPF+KPKip5Yk4kG7Hly9cTf+rNIbjt
-         7MLho2yP/uxhsxbFwElwAMRIDoxKMELy3GerALcpDAGTG2KnGEZ+GqcbM0IjWFUDhr7q
-         rowpPLYZoUSujhlAEl+M2aZSrzgSsZCi5RH5aISnBCWJvXcUUYCU1KjnPZLcSm+y37Rq
-         sstjUD42VHXtFuUYk1V6LrY/wCYZhaFm3tgsnEUbTCcAXDxIK+sON7MnL+fUwV5dhLoH
-         PtxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EiAZ8r1RK4eYPjDEt/gPiQ4hc4RczwbEBzIiaGohL7A=;
-        b=S65x48seeSkBaxoYcE4iO7o6xxexIFpEEu/OGhLgioVYdr7UVgQ6No19rPJdUtz5CG
-         RaZiwkpH0vzqv5KgVzxvpwgBi6cVO4Cwlao36MWly0QPTt54DHXHf+w+cPOaMZlkzZ1x
-         suL/NuYKkhu71/6HSln2FVf41Jcem0EjfaCoFR3iBGFhmXGNZdyWkL39NmGYFmfM24QY
-         PZXfbiKEkdPqa/6m571pn93DTIn0ZLSgoeujkCqXO5ydOkxwGbjA5DjR0ToPMueU/v3w
-         KsxN57qdKrUZMiPwKuFew8ei4wQoUc4UfMF5yb+Vef+ZudOsIcCTvs6yXUb45uE4hhvj
-         /rCA==
-X-Gm-Message-State: ANhLgQ3H3nzyVxOYqMOjQvYdAuYgiVdpIngZeVhTPX5rmYaNwY1JVgIz
-        BxxGkrieIyoEw1roV17/dIikiQ==
-X-Google-Smtp-Source: ADFU+vuhetFMtP2EoDOpiocI9rZpw5aJIjO8D6ESXO0czFCY0ade8WAwSU18BkQ9bFFVg+JYF0INNg==
-X-Received: by 2002:a7b:c414:: with SMTP id k20mr11747450wmi.119.1584119725823;
-        Fri, 13 Mar 2020 10:15:25 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id s22sm16474638wmc.16.2020.03.13.10.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 10:15:25 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 17:15:21 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
-        Dietmar.Eggemann@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org
-Subject: Re: [PATCH v4 1/4] PM / EM: add devices to Energy Model
-Message-ID: <20200313171521.GA236432@google.com>
-References: <20200309134117.2331-1-lukasz.luba@arm.com>
- <20200309134117.2331-2-lukasz.luba@arm.com>
- <20200313100407.GA144499@google.com>
- <bd1233f4-6e8b-23d1-e5aa-7c904fbd1bb3@arm.com>
+        Fri, 13 Mar 2020 13:15:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726706AbgCMRPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:15:47 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89F2C206B7;
+        Fri, 13 Mar 2020 17:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584119746;
+        bh=DKVElybsjLDvAU1zHyX3rQlN2QwCuWEYTxh2dGG82oY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S3EXNcORNhvHYil3IrQUOmh+G4aQjFVNfj+/5coCCPOZEAGFzPS/ZRFQtcmPh9AH6
+         ynJBLiSZCIa2l3dgeCF4mXngPhlgzBNz19kAm/2djRuSFgJwG5NdTBG31wdtT76qV4
+         J6zZH4XMtE6cskhNhzI1lTgIKRWz8zn39au6Nj3E=
+Subject: Re: [v2] dma-buf: heaps: bugfix for selftest failure
+To:     Leon He <hexiaolong2008@gmail.com>, sumit.semwal@linaro.org
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, Leon He <leon.he@unisoc.com>,
+        shuah <shuah@kernel.org>
+References: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <8613a6fb-1f3f-81e9-54c9-7356ce99cf87@kernel.org>
+Date:   Fri, 13 Mar 2020 11:15:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd1233f4-6e8b-23d1-e5aa-7c904fbd1bb3@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 13 Mar 2020 at 16:49:24 (+0000), Lukasz Luba wrote:
-<snip>
-> Well if someone would add EM to its platform and call this in
-> hotplug, which is used as cooling method, will see a lot of warnings.
-
-Right, but I guess I was arguing that calling this for CPUs, even on
-hotplug, is kinda wrong.
-
-> I would rather avoid stressing people with this kind of warnings.
-> This is under control and nothing really happens even when they
-> do hotplug very often, like LTP stress tests.
+On 3/7/20 7:02 AM, Leon He wrote:
+> From: Leon He <leon.he@unisoc.com>
 > 
-> I agree to add a print there but warning for me is when something
-> is not OK and should be investigated.
-> I would prefer dev_dbg_once() to print thet the EM is not going to be
-> removed. This will also not pollute dmesg in many logs.
+> There are two errors in the dmabuf-heap selftest:
+> 1. The 'char name[5]' was not initialized to zero, which will cause
+>     strcmp(name, "vgem") failed in check_vgem().
+> 2. The return value of test_alloc_errors() should be reversed, other-
+>     wise the while loop in main() will be broken.
+> 
+> Signed-off-by: Leon He <leon.he@unisoc.com>
+> ---
+>   tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> index cd5e1f6..836b185 100644
+> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> @@ -22,7 +22,7 @@
+>   static int check_vgem(int fd)
+>   {
+>   	drm_version_t version = { 0 };
+> -	char name[5];
+> +	char name[5] = { 0 };
+>   	int ret;
+>   
+>   	version.name_len = 4;
 
-Fair enough, a WARN is maybe a bit over the top. A debug message
-should work.
+Please see my comment on v1 for this.
 
+> @@ -357,7 +357,7 @@ static int test_alloc_errors(char *heap_name)
+>   	if (heap_fd >= 0)
+>   		close(heap_fd);
+>   
+> -	return ret;
+> +	return !ret;
 
-<snip>
-> So these small changes will be present in v5. I have to wait a few
-> days because there is one change to devfreq_cooling.c queuing and I will
-> send v5 with updated patch 3/4 rebased on top.
+This change doesn't make sense. Initializing ret to 0 is a better
+way to go.
 
-Sounds good, thanks.
-Quentin
+thanks,
+-- Shuah
