@@ -2,107 +2,94 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08324C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D040620746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEEDF2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DJ4tjzzk"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="e3GcwYox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgCMKmS (ORCPT
+        id S1726491AbgCMKng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:42:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:48533 "EHLO ozlabs.org"
+        Fri, 13 Mar 2020 06:43:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:38919 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgCMKmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:42:18 -0400
+        id S1726364AbgCMKng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:43:36 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48f2MD26tzz9sRN;
-        Fri, 13 Mar 2020 21:42:16 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584096136;
-        bh=jrmjeEbuq1HfpbJL7+QclLvRYJFhIEMsgxdq99kwO58=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DJ4tjzzkVx3SH1GDRlAsIZUXZklai9Cns36OY3pDkwlgmls3MowQWjcXCNfYEX3+F
-         f6KKlSP2h+bbgeoltLu1pWPJiB4hUS+gSgtx5G4igXROxbpq6auRVqAwHXET5645xm
-         TDK7HTLJcjWN59qRBnatX1+RvhXNIWYHFop4Rw+ZetgczcwB74v5WbkLhYc7/M6F6n
-         KTDU+GhWS0LwDKd3/6v1LYdSQGAgHlTPs4GPA/qSS+m63bbyJqxQl2q+kinD2VdpEp
-         o6KXTtqPmdhxSWmH+eNVxONAlAn9vD66EA6p9OhQMkuW+3QlxY+agXDjEyhteiz6RC
-         BhVGo/kPoRg5w==
-Date:   Fri, 13 Mar 2020 21:42:14 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200313214214.4d2e2af6@canb.auug.org.au>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48f2Nj1nkdz9sQx;
+        Fri, 13 Mar 2020 21:43:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584096214;
+        bh=48BTPpdnvH7ubHf8Mn96zZTm64oFJUSebhf5Q/n0y2U=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=e3GcwYoxeeUUmg4GpRStDdvnzxQK+ciVsY7yqakH7GrxIraMabyMbhFZ9i1cyXFAJ
+         LQDeCWoPVvrQNUHqhoXMPmMEzQfS43lfBi3L26viv/f/xBCNtfEvZ0l+pALgV6hO5U
+         OsQNJZFWHXu6j67mhmgisj+rTFIaO21BK5Yc+gWmxCN2qK+It5nqaYbxkfI/mHkxVP
+         gFc1sUcHR3KYm97tm6aNARINaJvUBjWmYTetktYEDCkh+q0eYWbQcNiWLQP220T/1B
+         faNwPRaJSDAjgifYpLSpCOzdBge9Zz917p3aKmffsrbmZ3IfLN+GyDqwmp0AONgJxZ
+         W48hm3c3qjeAw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Chen Zhou <chenzhou10@huawei.com>
+Cc:     paulus@samba.org, tyreld@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable 'value'
+In-Reply-To: <20200312144157.GA110750@google.com>
+References: <20200312144157.GA110750@google.com>
+Date:   Fri, 13 Mar 2020 21:43:29 +1100
+Message-ID: <877dzoy1pq.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Bjorn Helgaas <helgaas@kernel.org> writes:
+> On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
+>> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
+>> > Fixes gcc '-Wunused-but-set-variable' warning:
+>> > 
+>> > drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
+>> > drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
+>> > 	variable value set but not used [-Wunused-but-set-variable]
+>> > 
+>> > Reported-by: Hulk Robot <hulkci@huawei.com>
+>> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> 
+>> Michael, if you want this:
+>> 
+>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>> 
+>> If you don't mind, edit the subject to follow the convention, e.g.,
+>> 
+>>   PCI: rpaphp: Remove unused variable 'value'
+>> 
+>> Apparently simple_strtoul() is deprecated and we're supposed to use
+>> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
+>> little, too, e.g.,
+>> 
+>>   if (kstrtoul(drc_type, 0, &value) == 0)
+>>     return 1;
+>> 
+>>   return 0;
+>
+> I guess there are several other uses of simple_strtoul() in this file.
+> Not sure if it's worth changing them all, just this one, or just the
+> patch below as-is.
 
-Hi all,
+I'll take this patch as-is, and someone can send a follow-up to convert
+the whole file to kstrtoul().
 
-After merging the akpm-current tree, today's linux-next build (x86_64
-allnoconfig) produced this warning:
-
-mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-W=
-unused-function]
-  311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_=
-pages)
-      |            ^~~~~~~~~~~~~~~~~~~
-mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used=
- [-Wunused-function]
-  306 | static bool is_subsection_map_empty(struct mem_section *ms)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~
-mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-=
-Wunused-function]
-  301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr=
-_pages)
-      |            ^~~~~~~~~~~~~~~~~~~~
-
-Introduced by commits
-
-  38eb09ac7c29 ("mm/sparse.c: introduce new function fill_subsection_map()")
-  334411156ba6 ("mm/sparse.c: introduce a new function clear_subsection_map=
-()")
-
-Or maybe laster patches.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5rY4YACgkQAVBC80lX
-0GzQkwf/fKaM7N7Pnn7CKZuxu5GHmKRZupcDK7DvViaR9hRJXB7sAbd045M3ig05
-k19uEYFPPzarlAn/gEomOJLS4miFMFTsojvC58oJqMTh/LN/FPzOLrPmcUijdVC0
-fp0FrUaKfZnf0XSppQ67lsyQJt8Ib03cQbqDmXWP19/LguXqy+VztplYPpGeZS5Z
-FRDh5/Y+mPaXMpusxKcljwgpId9F4Cmrb/yZktEiCEmeOr2CEdJ+6Rvzv/5mbdqv
-zF26v/byzR/7r9Zt+A2VhAXBPgfR3WyQYi5CIy2xXk+X+9GGLfIebD9Ix38FzFKX
-JQiIHSewNFPyT7zvhc5zhzTkPbn7qA==
-=/a8l
------END PGP SIGNATURE-----
-
---Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w--
+cheers
