@@ -2,52 +2,52 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E758C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7957C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0663420658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762ED20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584069500;
-	bh=PlCamJTnvAikiLhrMigIC4HZB975Y4esN2CyxHaljVg=;
+	s=default; t=1584069508;
+	bh=dBsWz9addWONFKhna+kM5dhqeNsPSINqhlpIe9wHGnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LxWkkDrwb6/IEiB+m7X7OYPcnZNUC0GHShco2xyND4fOvpW/HXSofcG0xHDDM+CUt
-	 KVjYcUM/w/l4TfvL7I8yrWCkMZ5j9RoachwAjqx4uymbt4+OyOQt+L//D6YNE0JdGI
-	 YAa6nFWRfYTIlsCHBvcqt5vR1LCkPYYUIKbz4iVY=
+	b=dIKa4IDiXnQeX11c50T6Vq4tPX5MlPUK/kPnYKRrrZeNVqREnbh9ztruCt10deOkl
+	 OdzlN20EzFZc/VF4nA3jpTaEYjGSciLdhc62DH61rYRMpxm8W6rr2zWSXJLZ6SP0vs
+	 a/pUwuU6qEmCL8kfTsf+KdvQ/9GkmdK65r6AtReE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCMDSS (ORCPT
+        id S1726770AbgCMDS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 23:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbgCMDSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:18:01 -0400
+        id S1726442AbgCMDR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:17:59 -0400
 Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 294EE206F7;
-        Fri, 13 Mar 2020 03:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293112071C;
+        Fri, 13 Mar 2020 03:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584069480;
-        bh=PlCamJTnvAikiLhrMigIC4HZB975Y4esN2CyxHaljVg=;
+        s=default; t=1584069479;
+        bh=dBsWz9addWONFKhna+kM5dhqeNsPSINqhlpIe9wHGnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8c6KBRnKhiuDK3Mv20hHV8q+rrR5AyZ3HS1dfPb7Onx/qQDLRbU2IvwFX4Mxt2vY
-         jcaVbtPn5NXV7XQxGzXdiH+uyU5xa3Cr2BsUu3Jzqeyg3S0joS4bM9ThftcOcE3X2e
-         V+tDw5ecHZEqq4VZutd3YM5DIreveeqD87hpjL3M=
+        b=HkOEPFxekPaOUhpwQXExkI6th5eeIMqR55776626fuZNyXStrSi70kEqHmU8NL97o
+         Fbd4U+DT48btY2a8OE525yZLr8qzcBljr+tC6qWHMKiLJ5kfQ/6ZUQPr1Zf1tbqIiM
+         1/A32nCujHQDknbxy2z20lxbSnqhyiAMUa265XNI=
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     shuah@kernel.org
 Cc:     keescook@chromium.org, luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 3/5] kselftest: run tests by fixture
-Date:   Thu, 12 Mar 2020 20:17:50 -0700
-Message-Id: <20200313031752.2332565-4-kuba@kernel.org>
+Subject: [PATCH 1/5] selftests/seccomp: use correct FIXTURE macro
+Date:   Thu, 12 Mar 2020 20:17:48 -0700
+Message-Id: <20200313031752.2332565-2-kuba@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313031752.2332565-1-kuba@kernel.org>
 References: <20200313031752.2332565-1-kuba@kernel.org>
@@ -58,131 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all tests have a fixture object move from a global
-list of tests to a list of tests per fixture.
+Quoting kdoc:
 
-Order of tests may change as we will now group and run test
-fixture by fixture, rather than in declaration order.
+FIXTURE_DATA:
+ * This call may be used when the type of the fixture data
+ * is needed.  In general, this should not be needed unless
+ * the *self* is being passed to a helper directly.
+
+FIXTURE:
+ * Defines the data provided to TEST_F()-defined tests as *self*.  It should be
+ * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+
+seccomp should use FIXTURE to declare types.
 
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
- tools/testing/selftests/kselftest_harness.h | 42 ++++++++++++---------
- 1 file changed, 25 insertions(+), 17 deletions(-)
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index a396afe4a579..7a3392941a5b 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -637,8 +637,11 @@
- } while (0); OPTIONAL_HANDLER(_assert)
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index ee1b727ede04..7bf82fb07f67 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -909,7 +909,7 @@ TEST(ERRNO_order)
+ 	EXPECT_EQ(12, errno);
+ }
  
- /* Contains all the information about a fixture */
-+struct __test_metadata;
-+
- struct __fixture_metadata {
- 	const char *name;
-+	struct __test_metadata *tests;
- 	struct __fixture_metadata *prev, *next;
- } _fixture_global __attribute__((unused)) = {
- 	.name = "global",
-@@ -684,7 +687,6 @@ struct __test_metadata {
+-FIXTURE_DATA(TRAP) {
++FIXTURE(TRAP) {
+ 	struct sock_fprog prog;
  };
  
- /* Storage for the (global) tests to be run. */
--static struct __test_metadata *__test_list;
- static unsigned int __test_count;
- 
- /*
-@@ -698,24 +700,26 @@ static unsigned int __test_count;
-  */
- static inline void __register_test(struct __test_metadata *t)
- {
-+	struct __fixture_metadata *f = t->fixture;
-+
- 	__test_count++;
- 	/* Circular linked list where only prev is circular. */
--	if (__test_list == NULL) {
--		__test_list = t;
-+	if (f->tests == NULL) {
-+		f->tests = t;
- 		t->next = NULL;
- 		t->prev = t;
- 		return;
- 	}
- 	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) {
- 		t->next = NULL;
--		t->prev = __test_list->prev;
-+		t->prev = f->tests->prev;
- 		t->prev->next = t;
--		__test_list->prev = t;
-+		f->tests->prev = t;
- 	} else {
--		t->next = __test_list;
-+		t->next = f->tests;
- 		t->next->prev = t;
- 		t->prev = t;
--		__test_list = t;
-+		f->tests = t;
- 	}
+@@ -1020,7 +1020,7 @@ TEST_F(TRAP, handler)
+ 	EXPECT_NE(0, (unsigned long)sigsys->_call_addr);
  }
  
-@@ -729,14 +733,15 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
- 	return 0;
+-FIXTURE_DATA(precedence) {
++FIXTURE(precedence) {
+ 	struct sock_fprog allow;
+ 	struct sock_fprog log;
+ 	struct sock_fprog trace;
+@@ -1509,7 +1509,7 @@ void tracer_poke(struct __test_metadata *_metadata, pid_t tracee, int status,
+ 	EXPECT_EQ(0, ret);
  }
  
--void __run_test(struct __test_metadata *t)
-+void __run_test(struct __fixture_metadata *f,
-+		struct __test_metadata *t)
- {
- 	pid_t child_pid;
- 	int status;
- 
- 	t->passed = 1;
- 	t->trigger = 0;
--	printf("[ RUN      ] %s.%s\n", t->fixture->name, t->name);
-+	printf("[ RUN      ] %s.%s\n", f->name, t->name);
- 	alarm(t->timeout);
- 	child_pid = fork();
- 	if (child_pid < 0) {
-@@ -786,13 +791,14 @@ void __run_test(struct __test_metadata *t)
- 		}
- 	}
- 	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
--	       t->fixture->name, t->name);
-+	       f->name, t->name);
- 	alarm(0);
+-FIXTURE_DATA(TRACE_poke) {
++FIXTURE(TRACE_poke) {
+ 	struct sock_fprog prog;
+ 	pid_t tracer;
+ 	long poked;
+@@ -1817,7 +1817,7 @@ void tracer_ptrace(struct __test_metadata *_metadata, pid_t tracee,
+ 		change_syscall(_metadata, tracee, -1, -ESRCH);
  }
  
- static int test_harness_run(int __attribute__((unused)) argc,
- 			    char __attribute__((unused)) **argv)
- {
-+	struct __fixture_metadata *f;
- 	struct __test_metadata *t;
- 	int ret = 0;
- 	unsigned int count = 0;
-@@ -801,13 +807,15 @@ static int test_harness_run(int __attribute__((unused)) argc,
- 	/* TODO(wad) add optional arguments similar to gtest. */
- 	printf("[==========] Running %u tests from %u test cases.\n",
- 	       __test_count, __fixture_count + 1);
--	for (t = __test_list; t; t = t->next) {
--		count++;
--		__run_test(t);
--		if (t->passed)
--			pass_count++;
--		else
--			ret = 1;
-+	for (f = __fixture_list; f; f = f->next) {
-+		for (t = f->tests; t; t = t->next) {
-+			count++;
-+			__run_test(f, t);
-+			if (t->passed)
-+				pass_count++;
-+			else
-+				ret = 1;
-+		}
- 	}
- 	printf("[==========] %u / %u tests passed.\n", pass_count, count);
- 	printf("[  %s  ]\n", (ret ? "FAILED" : "PASSED"));
+-FIXTURE_DATA(TRACE_syscall) {
++FIXTURE(TRACE_syscall) {
+ 	struct sock_fprog prog;
+ 	pid_t tracer, mytid, mypid, parent;
+ };
+@@ -2321,7 +2321,7 @@ struct tsync_sibling {
+ 		}							\
+ 	} while (0)
+ 
+-FIXTURE_DATA(TSYNC) {
++FIXTURE(TSYNC) {
+ 	struct sock_fprog root_prog, apply_prog;
+ 	struct tsync_sibling sibling[TSYNC_SIBLINGS];
+ 	sem_t started;
 -- 
 2.24.1
 
