@@ -2,114 +2,95 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509D1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E79C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACAF206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="wNEa9VbC"
+	by mail.kernel.org (Postfix) with ESMTP id DB780206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584117139;
+	bh=UJ9uLMaNsCdSFf3b8zBqQuLODCb8Yutk8T7Vp7hT9Sg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZEKc0lQgSW+xGZk6vfqRQynwadcFPxmyYsMmdfB1Yfijsx+vzrJdOMG9nP2q4BnYl
+	 KwpGVqropKHdEbrC/Pjx2nkl+G4rIsnySJ20aSkJAU+4Q2EnLV5uM4RwROZC6OAXZF
+	 dT9gUYQshK92G7b0s1Lrmfj8O3eCCv5M9rIu2yrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCMQ3X (ORCPT
+        id S1726716AbgCMQcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:29:23 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41904 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgCMQ3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:29:23 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m25so12577169edq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KQ+pObvU67uvaK3l1r4Ceb5YYAtUXZc7zlplXO9TGzk=;
-        b=wNEa9VbCq5ppXpJfo1/v31ZhKG8uPf7PzMenc8z6vmEiPRA9w/pPKyW5PupisZ+2wm
-         /1jR1aTmSmwc3VGYzygElLlxIeYf8iDy+ZYBCCFSAzNIo4Qhqf2EVsQY2xdC+JJray49
-         u01vKpsXb8UXTPq9xL8qVflCmkWMFcPy3ohoVOFO6yr5Wx5vOxDNototKpEKY+8oXZNU
-         ZY3T4uEoba21JC3zCnFHzr6tNBDmVkym5KePwLGcs3xFJU7aw/cie5ZNNSC+vyHPPitf
-         6TxueY9wS4q7IPVNWnMTG7h0eYTj8SBvSH5GSRB+1Qrpcnnc6Wf/I+hp69E09N7FxlEV
-         0bxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KQ+pObvU67uvaK3l1r4Ceb5YYAtUXZc7zlplXO9TGzk=;
-        b=fn6rCtRqFmBvDBRrGHe4xrLLzYBFBhZi1bVJPDz6S9HW6IVWPCQy8penqRUdCXo+Oy
-         oiE+/ikuO+GDQY0MqwdUBBjMtOMsMzM8oiD4PQf494TamP7Lv4khh9U3X68o7wTUvaj5
-         VhzxcMYtnq0Ao+ELv50PZLIMsLc96Wm/g1FwqG0dNqbFSGTwnP1J6bXyisQwHnuHDWpn
-         ZfWZD1CS32iV4cWohBCD2Hf7/DILIixtNEsEU4qDwgpa/4HoFt6OVMSJProCuoYCoFZn
-         4ddnHZdmXo/Enh9ug0FGE+MMUmji1J3G0dyuY4wnpwcPR3ecXEMdTeNB92CHQTSt4DNA
-         7QCA==
-X-Gm-Message-State: ANhLgQ1es9u6czHf9jMJUniUWhAFJpZij0EYYzzjmNLCkI9nIzHNl2nW
-        MTLkljEcsrYuz5bl2wN/bsQa/+6zwMpsB3HZKH+y
-X-Google-Smtp-Source: ADFU+vuL+b7H+tHmfIL9uEWtaqijyChHCYny1ByjHCCYsp9IHY7VBWU/eiFjWL7wPzp8K/OQLrQaC/SDlvMtNAtsA5M=
-X-Received: by 2002:a17:907:105a:: with SMTP id oy26mr3891035ejb.308.1584116962089;
- Fri, 13 Mar 2020 09:29:22 -0700 (PDT)
+        Fri, 13 Mar 2020 12:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgCMQcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:32:17 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C71B206BE;
+        Fri, 13 Mar 2020 16:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584117137;
+        bh=UJ9uLMaNsCdSFf3b8zBqQuLODCb8Yutk8T7Vp7hT9Sg=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=UE/g3LjyhJa8gflDX21ggALqOZagI2f93Me8yQnI6/xIFheEZYxT2wicWbDM/SkVk
+         iilOTh/8AuagnAWQaMa10epUpGAJSb15ctVjxHlstwD41960w9mcUs2Ug0DnVAjm8J
+         F1eno/74++40wsX6qm5egffxPECDlXa2F31dU6Es=
+Date:   Fri, 13 Mar 2020 17:32:14 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Lucas Tanure <tanure@linux.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] HID: appleir: Remove unnecessary goto label
+In-Reply-To: <7c4c591bc1aa9e269cbf764a03e64d32dd6e6e96.1582998175.git.tanure@linux.com>
+Message-ID: <nycvar.YFH.7.76.2003131731490.19500@cbobk.fhfr.pm>
+References: <7c4c591bc1aa9e269cbf764a03e64d32dd6e6e96.1582998175.git.tanure@linux.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
- <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
- <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com> <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
-In-Reply-To: <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 13 Mar 2020 12:29:10 -0400
-Message-ID: <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 3:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-02-13 16:44, Paul Moore wrote:
-> > This is a bit of a thread-hijack, and for that I apologize, but
-> > another thought crossed my mind while thinking about this issue
-> > further ... Once we support multiple auditd instances, including the
-> > necessary record routing and duplication/multiple-sends (the host
-> > always sees *everything*), we will likely need to find a way to "trim"
-> > the audit container ID (ACID) lists we send in the records.  The
-> > auditd instance running on the host/initns will always see everything,
-> > so it will want the full container ACID list; however an auditd
-> > instance running inside a container really should only see the ACIDs
-> > of any child containers.
->
-> Agreed.  This should be easy to check and limit, preventing an auditd
-> from seeing any contid that is a parent of its own contid.
->
-> > For example, imagine a system where the host has containers 1 and 2,
-> > each running an auditd instance.  Inside container 1 there are
-> > containers A and B.  Inside container 2 there are containers Y and Z.
-> > If an audit event is generated in container Z, I would expect the
-> > host's auditd to see a ACID list of "1,Z" but container 1's auditd
-> > should only see an ACID list of "Z".  The auditd running in container
-> > 2 should not see the record at all (that will be relatively
-> > straightforward).  Does that make sense?  Do we have the record
-> > formats properly designed to handle this without too much problem (I'm
-> > not entirely sure we do)?
->
-> I completely agree and I believe we have record formats that are able to
-> handle this already.
+On Sat, 29 Feb 2020, Lucas Tanure wrote:
 
-I'm not convinced we do.  What about the cases where we have a field
-with a list of audit container IDs?  How do we handle that?
+> Signed-off-by: Lucas Tanure <tanure@linux.com>
+> ---
+>  drivers/hid/hid-appleir.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-appleir.c b/drivers/hid/hid-appleir.c
+> index bf8d4afe0d6a..aafc285b538f 100644
+> --- a/drivers/hid/hid-appleir.c
+> +++ b/drivers/hid/hid-appleir.c
+> @@ -284,10 +284,8 @@ static int appleir_probe(struct hid_device *hid, const struct hid_device_id *id)
+>  	struct appleir *appleir;
+>  
+>  	appleir = kzalloc(sizeof(struct appleir), GFP_KERNEL);
+> -	if (!appleir) {
+> -		ret = -ENOMEM;
+> -		goto allocfail;
+> -	}
+> +	if (!appleir)
+> +		return -ENOMEM;
+>  
+>  	appleir->hid = hid;
+>  
+> @@ -314,7 +312,6 @@ static int appleir_probe(struct hid_device *hid, const struct hid_device_id *id)
+>  	return 0;
+>  fail:
+>  	kfree(appleir);
+> -allocfail:
+>  	return ret;
+>  }
+
+Applied, thanks.
 
 -- 
-paul moore
-www.paul-moore.com
+Jiri Kosina
+SUSE Labs
+
