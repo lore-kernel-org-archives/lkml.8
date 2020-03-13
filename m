@@ -2,143 +2,86 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E67EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A004DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B512206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606B4206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dEoqxqf1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E3LsETVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCMAAc (ORCPT
+        id S1727111AbgCMAAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:00:32 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35395 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgCMAAc (ORCPT
+        Thu, 12 Mar 2020 20:00:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34956 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbgCMAAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:00:32 -0400
-Received: by mail-pj1-f66.google.com with SMTP id mq3so3339677pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:00:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=68Cq5h+6GaqQ99oSPAy6IaN4rpXx7c2iWTnSQGSX7Aw=;
-        b=dEoqxqf1i30Hqx1/xFGfas8I7FnPfE7HxFpLMkCILtUDLqZhex57zJ/JEu7kOHQRdZ
-         EKav1f8IYK2fxkrBBXA3uAc+nNPcN+1Guio6L0do+O3oV+j8OelQ1sonxdnzc+XJFIZ8
-         kxkLdSbC+Z3uNOjUyoUZovQpWcGR5gjC3hXh8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=68Cq5h+6GaqQ99oSPAy6IaN4rpXx7c2iWTnSQGSX7Aw=;
-        b=kwgC5i8Wz78xj0FpJC9hFUYDur+yiZRqztqNFKXLm9QxxG1LG4fNtMrKe9kjRfO8eX
-         9FHA24ZlcN4lmKlmu0cV7F1rub7NAvXx6f3ZkbKoD/uxlbnByRRTYBK6TdHGNRzGhUQh
-         6BOxjCAT2HMZ1u0PakPanu9G9EJYbkKmCy2IbsA3OU4OZlaBPoy8NJqn8Lz0aNy6/Qpr
-         r4drnknpAAujc57n33YJ1fsUddPWrRq70Mv2A/swg8mjY6owW8OXmdh0GjNR+wFPm6Kp
-         WoZpV5zVO/kgj7BEEz0e40F6FH9mqTEvvjsqFbQBmrwMxWpOyB588mZo20fzLaY7N8pI
-         ZhpA==
-X-Gm-Message-State: ANhLgQ3L5waC8xssAQaf+o1j2ZizzKzyBQUAYFxpBa8CGZMWLJNCtu7x
-        XgR161FsvYhoGKD0MuW6jx6v7g==
-X-Google-Smtp-Source: ADFU+vvUroD1W1qqX0EjqEWCImiHJfbhkJXYYbkKwy3WRva09w1jh4DoGHfxFTEJwE4ce0YverNKyg==
-X-Received: by 2002:a17:902:868d:: with SMTP id g13mr10761455plo.36.1584057631106;
-        Thu, 12 Mar 2020 17:00:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 72sm44462738pgd.86.2020.03.12.17.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 17:00:30 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:00:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Daniel Kiss <daniel.kiss@arm.com>
-Subject: Re: [PATCH v9 12/13] mm: smaps: Report arm64 guarded pages in smaps
-Message-ID: <202003121700.C10E9E5@keescook>
-References: <20200311192608.40095-1-broonie@kernel.org>
- <20200311192608.40095-13-broonie@kernel.org>
+        Thu, 12 Mar 2020 20:00:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MPfBgBTboj0bc43lStM8yQNURezi9qaXT/nmdWm1JsM=; b=E3LsETVn3IXeki8GpaDrgp5/JI
+        6t2GPu/fI6eiEvpFhzpVKK1TbPo0iSg7VXSvBBWU0t0BqMznSv+blD8lP9OmPWB5VtL4rvnesFP1j
+        lUFKdBy3IZzvSIJQBsFV/W+tkvv5YmfWOiIE2LkGzOJ42bzANUBiNUcMa6w2HJlzA07gi3/QtgXWp
+        9qi3NiUBVcQ4bznilDvQPGxPPtNRAfiqPVYrGz+bX1zvxy28KqibhLAw/99li534IQbTzefVuDEw2
+        KX5iNKu4eGGo7wLbF2pXL5EmVR1h0HtggWhNWM511Q48vQFM08m0qtrvfE3g+8yEhkOlE3S2JB2XT
+        12v3ljtA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCXkn-00011T-PJ; Fri, 13 Mar 2020 00:00:41 +0000
+Date:   Thu, 12 Mar 2020 17:00:41 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@suse.com, akpm@linux-foundation.org,
+        david@redhat.com
+Subject: Re: [PATCH v2] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200313000041.GM22433@bombadil.infradead.org>
+References: <20200312130822.6589-1-bhe@redhat.com>
+ <20200312133416.GI22433@bombadil.infradead.org>
+ <20200312141826.djb7osbekhcnuexv@master>
+ <20200312142535.GK22433@bombadil.infradead.org>
+ <20200312225055.ksn4ujtkpjgkqiaf@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311192608.40095-13-broonie@kernel.org>
+In-Reply-To: <20200312225055.ksn4ujtkpjgkqiaf@master>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 07:26:07PM +0000, Mark Brown wrote:
-> From: Daniel Kiss <daniel.kiss@arm.com>
+On Thu, Mar 12, 2020 at 10:50:55PM +0000, Wei Yang wrote:
+> On Thu, Mar 12, 2020 at 07:25:35AM -0700, Matthew Wilcox wrote:
+> >Yes, I thought about that.  I decided it wasn't a problem, as long as
+> >the struct page remains aligned, and we now have a guarantee that allocations
+> >above 512 bytes in size are aligned.  With a 64 byte struct page, as long
 > 
-> The arm64 Branch Target Identification support is activated by marking
-> executable pages as guarded pages.  Report pages mapped this way in
-> smaps to aid diagnostics.
+> Where is this 512 bytes condition comes from?
+
+Filesystems need to do I/Os from kmalloc addresses and those I/Os need to
+be 512 byte aligned.
+
+> >as we're allocating at least 8 pages, we know it'll be naturally aligned.
+> >
+> >Your calculation doesn't take into account the size of struct page.
+> >128M / 64k is indeed 2k, but you forgot to multiply by 64, which takes
+> >us to 128kB.
 > 
-> Signed-off-by: Daniel Kiss <daniel.kiss@arm.com>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  Documentation/filesystems/proc.txt | 1 +
->  fs/proc/task_mmu.c                 | 3 +++
->  2 files changed, 4 insertions(+)
+> You are right. While would there be other combination? Or in the future?
 > 
-> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> index 99ca040e3f90..ed5465d0f435 100644
-> --- a/Documentation/filesystems/proc.txt
-> +++ b/Documentation/filesystems/proc.txt
-> @@ -519,6 +519,7 @@ manner. The codes are the following:
->      hg  - huge page advise flag
->      nh  - no-huge page advise flag
->      mg  - mergable advise flag
-> +    bt  - arm64 BTI guarded page
->  
->  Note that there is no guarantee that every flag and associated mnemonic will
->  be present in all further kernel releases. Things get changed, the flags may
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 3ba9ae83bff5..1e3409c484d1 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -668,6 +668,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->  		[ilog2(VM_ARCH_1)]	= "ar",
->  		[ilog2(VM_WIPEONFORK)]	= "wf",
->  		[ilog2(VM_DONTDUMP)]	= "dd",
-> +#ifdef CONFIG_ARM64_BTI
-> +		[ilog2(VM_ARM64_BTI)]	= "bt",
-> +#endif
->  #ifdef CONFIG_MEM_SOFT_DIRTY
->  		[ilog2(VM_SOFTDIRTY)]	= "sd",
->  #endif
-> -- 
-> 2.20.1
+> For example, there are definitions of
 > 
+> #define SECTION_SIZE_BITS       26
+> #define SECTION_SIZE_BITS       24
+> 
+> Are we sure it won't break some thing?
 
--- 
-Kees Cook
+As I said, once it's at least 512 bytes, it'll be 512 byte aligned.  And I
+can't see us having sections smaller than 8 pages, can you?
