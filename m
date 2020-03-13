@@ -2,292 +2,107 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552B4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB6EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6FF20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jmgce857"
+	by mail.kernel.org (Postfix) with ESMTP id 5AB9B2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgCMKVN (ORCPT
+        id S1726461AbgCMKXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:21:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59200 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgCMKVM (ORCPT
+        Fri, 13 Mar 2020 06:23:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:40929 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgCMKXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:21:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UNS9qfdE8QK8g+6d8TkL9IzCb5kYV8ynuRbXqP8orQU=; b=jmgce857R/Quhq12vgQJA2bK3P
-        dNHeyC0SfGhC4DosYbWBYqqNOswRjd0HLKNNT4sD1H+aTUZX8ohBg15HghZ0LQ7R5/gYAKbd4+XZ2
-        KMpf2a+NoSgJiDnYTvrFPX8ZeMyfKT4u8rK0FqN2VWlCUrWZQgjd9Vq5LF27KP3iZT/cC1PA8nd/i
-        vbc3PwQULoSQlRwoNHbknjO3WsZlfNOGpUf2QRdc+2RmqvPp2wZm5Ebsh2L+4k3mVqzZPxkWOr539
-        no9JCHgd6mUS6yxMxoMXDu+jWCFNAI+PIrslYQq+n1fR6WCEdrThvSHTj/pFXNdGdmZnWNjb/iD/8
-        LqolF4sw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jChRF-00077H-SL; Fri, 13 Mar 2020 10:21:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 11629300470;
-        Fri, 13 Mar 2020 11:21:08 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F3A822B64FF63; Fri, 13 Mar 2020 11:21:07 +0100 (CET)
-Date:   Fri, 13 Mar 2020 11:21:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] locking/lockdep: Avoid recursion in
- lockdep_count_{for,back}ward_deps()
-Message-ID: <20200313102107.GX12561@hirez.programming.kicks-ass.net>
-References: <20200312151258.128036-1-boqun.feng@gmail.com>
+        Fri, 13 Mar 2020 06:23:53 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MNL2Y-1iwefF1he6-00OkjQ; Fri, 13 Mar 2020 11:23:51 +0100
+Received: by mail-qk1-f174.google.com with SMTP id e16so11524503qkl.6;
+        Fri, 13 Mar 2020 03:23:51 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ24k8eOENtIYiud4zkwexFqM3w9+zACEQYpvETucADmdnEptKpO
+        bLj9W9LQhDv926st46fMDku8V643+dj9tlrdbJQ=
+X-Google-Smtp-Source: ADFU+vsfaaXYmPUQjslMErhWJ/7BvzHgLpx+ZaRka5jikHGLM6PMuhOsS2wljIY0klh7xwIHigG91vLUduJxNabWMiQ=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr12564191qke.352.1584095030201;
+ Fri, 13 Mar 2020 03:23:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312151258.128036-1-boqun.feng@gmail.com>
+References: <1584070314-26495-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1584070314-26495-1-git-send-email-peng.fan@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Mar 2020 11:23:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
+Message-ID: <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: Makefile: build arm64 device tree
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GYi++AP6j9j2XxjU9mbIA92RCdmrg0YEULM7da0/JU26Z7pmxot
+ 8K1u1ntVwNw3cHkOLDds2HphH5/A/D671faepELJ/5+GPIpbZtePTnx4pNCRHM0Cha/NCu3
+ rS+stg5SNKxXFwty6gi7sF0wgfX2MhpC8NL/byr5DHipzDZ/ycOmO9PBbB2F04zOT49hzns
+ A5A6A4mPKah31B8/dQ6KA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qihaRHoDAgw=:LH8RWLl8m+4ye4gEfDDKXv
+ 2NfTtFYI3hx7oFzT0I0b13mac6Ii//p5pjCkt06yVogAw34obkIXbgWd9kuOa+dg1F4iByEOs
+ fkPy9fFj0wbXZ2vt/Fl3EgyEe4LJSi4xfHJ68LvMwJdz9GeHE0LYl5kPP7w1xUBpR2Tn8FJRn
+ jV0pkNxxzcn6AFjxp/+SXF8EiDqu87ADYxQuVSkjC4vuNw7Tfkza7DZspIZmOmhWhfuHzTXkr
+ BXLCchmqhgYg10M0zSswujj7WcbwknuE9XW/Yi18Hr/KJdtlPmrZlaXzfPXIQFgwir9Xf+ShN
+ gAhq3KOHppdVHG+nRy7rc0aivE1bTqgwXCRuDBmumTNpTkzj1JFvh2Frp6Xu/cNSS/5C1p0y+
+ hYr5nxnkg8XDJ3GhqYdfUqCHrGaKQbr1DZ14iI8jYxr/Ii4nDbZHh6Pye6vonVXxm2XCFjfeD
+ AoTWW7gbH8Ba1G7zD43a7TiZQG/Qv/Jv42CymDiQl+siKikp64/HSg2wMmpR0Zs3MvtAu+oge
+ WBaJAeSEuEGrdHLoTwaDo4r92TyuWvSxGnN2nZ7d6MXPeddWqx/e5JFEXVywoTabaLuxGX5GE
+ 1zPoTF8+sZ+IQo4DLsdlU7GKKUje1iVzn5nIi9e7GkYTPeMgULLB1nguo8yYkf0TKARmePfgE
+ ickx651s2Un8Sxl7F+0sfjFaOYdGikCizZxVHiwB6saf1GK+TweIUaysbIuSH6+BEG+QxaEnb
+ bW/xJ7uC3o3VKQw1EOmyPj2FLhOnNXN5r0xMtJasnObpsqCGs/SG7r8ZlUMqq35i1FKaxct98
+ gl4Zn3atdGppCX0W2iwrAHNQBdG3zgJsGEDPifSke7eZ3B1s0A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:12:55PM +0800, Boqun Feng wrote:
-> The warning got triggered because lockdep_count_forward_deps() call
-> __bfs() without current->lockdep_recursion being set, as a result
-> a lockdep internal function (__bfs()) is checked by lockdep, which is
-> unexpected, and the inconsistency between the irq-off state and the
-> state traced by lockdep caused the warning.
+On Fri, Mar 13, 2020 at 4:38 AM <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> To support aarch32 mode linux on aarch64 hardware, we need
+> build the device tree, so include the arm64 device tree path.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
 
-This also had me look at __bfs(), while there is a WARN in there, it
-doesn't really assert all the expectations.
+There are a few other platforms with similar requirements, in
+particular bcm2837,
+so maybe try doing it the same way they do, see
+arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
 
-This lead to the below patch.
+> V1:
+>  This is just the device tree part. Besides this,
+>  I am not sure whether need to create a standalone defconfig under arm32
+>  for aarch32 mode linux on aarch64 hardware, or use multi_v7_defconfig.
+>  multi_v7_defconfig should be ok, need to include LPAE config.
 
----
-Subject: locking/lockdep: Rework lockdep_lock
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Fri Mar 13 11:09:49 CET 2020
+I'd rather not have a standalone defconfig for it, given that we have a
+single defconfig for all armv6/armv7/armv7hf i.mx machines.
 
-A few sites want to assert we own the graph_lock/lockdep_lock, provide
-a more conventional lock interface for it with a number of trivial
-debug checks.
+There was a suggestion to use a fragment for enabling an LPAE
+multi_v7_defconfig recently, which I think is still under discussion but
+should also help here, both with imx_v6_v7_defconfig and multi_v7_defconfig.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/locking/lockdep.c |   89 +++++++++++++++++++++++++----------------------
- 1 file changed, 48 insertions(+), 41 deletions(-)
+Can you remind us why this platform needs LPAE? Is it only needed to
+support more than 4GB of RAM, or something else on top of that?
+Note that users that actually have 4GB or more on i.mx8 should
+really run a 64-bit kernel anyway, even if they prefer using 32-bit user
+space.
 
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -84,12 +84,39 @@ module_param(lock_stat, int, 0644);
-  * to use a raw spinlock - we really dont want the spinlock
-  * code to recurse back into the lockdep code...
-  */
--static arch_spinlock_t lockdep_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
-+static arch_spinlock_t __lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
-+static struct task_struct *__owner;
-+
-+static inline void lockdep_lock(void)
-+{
-+	DEBUG_LOCKS_WARN_ON(!irqs_disabled());
-+
-+	arch_spin_lock(&__lock);
-+	__owner = current;
-+	current->lockdep_recursion++;
-+}
-+
-+static inline void lockdep_unlock(void)
-+{
-+	if (debug_locks && DEBUG_LOCKS_WARN_ON(__owner != current))
-+		return;
-+
-+	current->lockdep_recursion--;
-+	__owner = NULL;
-+	arch_spin_unlock(&__lock);
-+}
-+
-+static inline bool lockdep_assert_locked(void)
-+{
-+	return DEBUG_LOCKS_WARN_ON(__owner != current);
-+}
-+
- static struct task_struct *lockdep_selftest_task_struct;
- 
-+
- static int graph_lock(void)
- {
--	arch_spin_lock(&lockdep_lock);
-+	lockdep_lock();
- 	/*
- 	 * Make sure that if another CPU detected a bug while
- 	 * walking the graph we dont change it (while the other
-@@ -97,27 +124,15 @@ static int graph_lock(void)
- 	 * dropped already)
- 	 */
- 	if (!debug_locks) {
--		arch_spin_unlock(&lockdep_lock);
-+		lockdep_unlock();
- 		return 0;
- 	}
--	/* prevent any recursions within lockdep from causing deadlocks */
--	current->lockdep_recursion++;
- 	return 1;
- }
- 
--static inline int graph_unlock(void)
-+static inline void graph_unlock(void)
- {
--	if (debug_locks && !arch_spin_is_locked(&lockdep_lock)) {
--		/*
--		 * The lockdep graph lock isn't locked while we expect it to
--		 * be, we're confused now, bye!
--		 */
--		return DEBUG_LOCKS_WARN_ON(1);
--	}
--
--	current->lockdep_recursion--;
--	arch_spin_unlock(&lockdep_lock);
--	return 0;
-+	lockdep_unlock();
- }
- 
- /*
-@@ -128,7 +143,7 @@ static inline int debug_locks_off_graph_
- {
- 	int ret = debug_locks_off();
- 
--	arch_spin_unlock(&lockdep_lock);
-+	lockdep_unlock();
- 
- 	return ret;
- }
-@@ -1475,6 +1490,8 @@ static int __bfs(struct lock_list *sourc
- 	struct circular_queue *cq = &lock_cq;
- 	int ret = 1;
- 
-+	lockdep_assert_locked();
-+
- 	if (match(source_entry, data)) {
- 		*target_entry = source_entry;
- 		ret = 0;
-@@ -1497,8 +1514,6 @@ static int __bfs(struct lock_list *sourc
- 
- 		head = get_dep_list(lock, offset);
- 
--		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
--
- 		list_for_each_entry_rcu(entry, head, entry) {
- 			if (!lock_accessed(entry)) {
- 				unsigned int cq_depth;
-@@ -1725,11 +1740,9 @@ unsigned long lockdep_count_forward_deps
- 	this.class = class;
- 
- 	raw_local_irq_save(flags);
--	current->lockdep_recursion++;
--	arch_spin_lock(&lockdep_lock);
-+	lockdep_lock();
- 	ret = __lockdep_count_forward_deps(&this);
--	arch_spin_unlock(&lockdep_lock);
--	current->lockdep_recursion--;
-+	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- 
- 	return ret;
-@@ -1754,11 +1767,9 @@ unsigned long lockdep_count_backward_dep
- 	this.class = class;
- 
- 	raw_local_irq_save(flags);
--	current->lockdep_recursion++;
--	arch_spin_lock(&lockdep_lock);
-+	lockdep_lock();
- 	ret = __lockdep_count_backward_deps(&this);
--	arch_spin_unlock(&lockdep_lock);
--	current->lockdep_recursion--;
-+	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- 
- 	return ret;
-@@ -2813,7 +2824,7 @@ static inline int add_chain_cache(struct
- 	 * disabled to make this an IRQ-safe lock.. for recursion reasons
- 	 * lockdep won't complain about its own locking errors.
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
-+	if (lockdep_assert_locked())
- 		return 0;
- 
- 	chain = alloc_lock_chain();
-@@ -4968,8 +4979,7 @@ static void free_zapped_rcu(struct rcu_h
- 		return;
- 
- 	raw_local_irq_save(flags);
--	arch_spin_lock(&lockdep_lock);
--	current->lockdep_recursion++;
-+	lockdep_lock();
- 
- 	/* closed head */
- 	pf = delayed_free.pf + (delayed_free.index ^ 1);
-@@ -4981,8 +4991,7 @@ static void free_zapped_rcu(struct rcu_h
- 	 */
- 	call_rcu_zapped(delayed_free.pf + delayed_free.index);
- 
--	current->lockdep_recursion--;
--	arch_spin_unlock(&lockdep_lock);
-+	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- }
- 
-@@ -5027,13 +5036,11 @@ static void lockdep_free_key_range_reg(v
- 	init_data_structures_once();
- 
- 	raw_local_irq_save(flags);
--	arch_spin_lock(&lockdep_lock);
--	current->lockdep_recursion++;
-+	lockdep_lock();
- 	pf = get_pending_free();
- 	__lockdep_free_key_range(pf, start, size);
- 	call_rcu_zapped(pf);
--	current->lockdep_recursion--;
--	arch_spin_unlock(&lockdep_lock);
-+	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- 
- 	/*
-@@ -5055,10 +5062,10 @@ static void lockdep_free_key_range_imm(v
- 	init_data_structures_once();
- 
- 	raw_local_irq_save(flags);
--	arch_spin_lock(&lockdep_lock);
-+	lockdep_lock();
- 	__lockdep_free_key_range(pf, start, size);
- 	__free_zapped_classes(pf);
--	arch_spin_unlock(&lockdep_lock);
-+	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- }
- 
-@@ -5154,10 +5161,10 @@ static void lockdep_reset_lock_imm(struc
- 	unsigned long flags;
- 
- 	raw_local_irq_save(flags);
--	arch_spin_lock(&lockdep_lock);
-+	lockdep_lock();
- 	__lockdep_reset_lock(pf, lock);
- 	__free_zapped_classes(pf);
--	arch_spin_unlock(&lockdep_lock);
-+	lockdep_unlock();
- 	raw_local_irq_restore(flags);
- }
- 
+Turning on LPAE not only disables imx3 and imx5 but also the Cortex-A9
+based imx6 variants.
+
+      Arnd
