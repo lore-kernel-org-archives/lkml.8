@@ -2,137 +2,147 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7122C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2A3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B302074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VJFK31Pl"
+	by mail.kernel.org (Postfix) with ESMTP id 1E0E220724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCMIh0 (ORCPT
+        id S1726437AbgCMIjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:37:26 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:38291 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbgCMIhZ (ORCPT
+        Fri, 13 Mar 2020 04:39:39 -0400
+Received: from m9a0013g.houston.softwaregrp.com ([15.124.64.91]:37699 "EHLO
+        m9a0013g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726300AbgCMIji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:37:25 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Cfokj1LVWhVf8CfoojOB6e; Fri, 13 Mar 2020 09:37:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1584088642; bh=NPDVj0hDHGTudN6m2hDl5vDuc6roQ9SfR7NRCqmST08=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=VJFK31PlgtKdUTAxIara79MLK1CVGweGI7JNsxuMwfny6tUCzfmjwR/Ok+rBhCKm4
-         vp/K0TVQtSUjMWbHGxUDrQAFg7qn36l23L1SrvnibLCOJVEAiy0hPhG8AMB+eahLBa
-         zBe/m0OAedra3RvsdPdODrLiTOW3jDKEcC/EpK0Q8d9B93ZuZGt2RhsIF/OzDtjWVj
-         FIMNOITjFlfVHzTCZY99QEPe0KVgRhKor1Lg31JEZ7/mj4l1aWUv6jkWdC7zcu52cX
-         6H+m3TxXVjNJB49bjlSU+JZS/43x61R9UZfQ3u086crPMOhFkaelvXKp62VVnWtQA6
-         +irAiNbazUH4Q==
-Subject: Re: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20200113141459.GA3606@pflmari>
- <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
- <20200313083107.GB3832@pflmari>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <4ab3dd9f-26fb-ce38-170c-bba4b3777455@xs4all.nl>
-Date:   Fri, 13 Mar 2020 09:37:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 04:39:38 -0400
+X-Greylist: delayed 1046 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Mar 2020 04:39:38 EDT
+Received: FROM m9a0013g.houston.softwaregrp.com (15.121.0.190) BY m9a0013g.houston.softwaregrp.com WITH ESMTP;
+ Fri, 13 Mar 2020 08:38:59 +0000
+Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
+ M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 13 Mar 2020 08:22:06 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (15.124.72.12) by
+ M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 13 Mar 2020 08:22:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IrFzaIygurwH7erOWaPz3lcH44bVFr25qro7/8VPWNpHFknP64i0Ydkt3h6Y3N1txY45eeZKlmHKeip/z5xPSLvePG+avrcaiVdcPhNzEuEQfJHGb1P8+HS36R/+rcAOF87J5hFoXgAjHsq8+qrNNfqrcsdhwlqlDzsEY1Br3NVlVrlY8cByDZ5e7QtlvVrDvGSw/EznM33S4otSPdZ40LAUtjdbVNHp7QD5uYCWagZIuwpr0GMxipDa1G0VymySbq+TvUbo6JAoQwD9nrfZxtwsdVBZG6cA0T8A7BbctgkABo8OHjXzuhY7tGUi1q1VDBbYEY7eodw2DUbGBzlfXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SQ2QwrsjwO68qNLBjLcW4h7Qd7Rw6/cmti52RchPJ6w=;
+ b=nbtSVsjLCtPMbxk4i+NCkZCpprFs05KmXu01KpvoO1mtNTc7q7mFajFfg1CbcZUrY+sq4mAOfqNGJ0zCvXykMWRr0lylt9V9BWy0SS5cOVrrAemAriOWHVFxqKOWxnzcsuoWbAIsj9COwkjqhFWZAgu3NSk9rgxhKIKQ2RayMXi7YFjhlRIEsPn0WNlfWlmKggq3WUJQ9uZWok9c4mYDVs23fo8xzt2Qd0XI+6otDmEmI2DlkeD6H3F5MIOFymZtLG7ZTntEBPsCOR6ZRU6KNzpTAqRkKlKQ3W2yXX4QJyfp6N9jPi/kVayHnFQSQkHxmTuEODqzK7DR7qKzU6L2hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=clin@suse.com; 
+Received: from SN1PR18MB2126.namprd18.prod.outlook.com (2603:10b6:802:29::29)
+ by SN1PR18MB2334.namprd18.prod.outlook.com (2603:10b6:802:26::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18; Fri, 13 Mar
+ 2020 08:22:04 +0000
+Received: from SN1PR18MB2126.namprd18.prod.outlook.com
+ ([fe80::1b1:6ada:da24:d1e9]) by SN1PR18MB2126.namprd18.prod.outlook.com
+ ([fe80::1b1:6ada:da24:d1e9%5]) with mapi id 15.20.2814.007; Fri, 13 Mar 2020
+ 08:22:04 +0000
+Date:   Fri, 13 Mar 2020 16:21:45 +0800
+From:   Chester Lin <clin@suse.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     "lenb@kernel.org" <lenb@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joey Lee <JLee@suse.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>
+Subject: Re: [RFC PATCH v2 1/3] ACPI / hotplug: Send change events for
+ offline/online requests when eject is triggered
+Message-ID: <20200313082026.GA4725@linux-8mug>
+References: <20200103043926.31507-1-clin@suse.com>
+ <20200103043926.31507-2-clin@suse.com>
+ <1702691.vqsIMzBuNn@kreacher>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1702691.vqsIMzBuNn@kreacher>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: LO2P265CA0011.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:62::23) To SN1PR18MB2126.namprd18.prod.outlook.com
+ (2603:10b6:802:29::29)
 MIME-Version: 1.0
-In-Reply-To: <20200313083107.GB3832@pflmari>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEcFIdVlB9n0Nfwlt2moC+Rr0T6Ztdr9G19F2RB1eRFOSl2wOxKv/b8i6Fz/VKQa8SUmHLYTHSddHNm5REyThEuU4PFzEJRphQtUmiTZzUYoCoyecA3w
- +BVXVJyWIZrIZKDL8z9L1TKRYFZknkUQyQ49SMwmjXgVCW4xmoRqsX9rdGNHDMGRTUtODvQOlV2as0WcL9kKkaPO9suFLNN2HM061XgDf45b28+2X69DP51V
- WNRc6ARJs1Bv9pdWRHNTHVEg3pqd+pdo8nAQctf0AIlR7RzV7c2RSeuDVFwTUFoid+F/7XZaPTxrDH1j+C2P8nuQ87NdnuDSfJ6vNyjmGjbl2TW6jHfeWGRh
- JYcODhFG4JNDPDKexZmMwpUJzeuwmLQ8b1rDhNGXOFYGfSphmsMzNazI5OMqMuAU45q9BeIBFuYDZCGq8gmIfAVr1MYc/neBUfTmc6DPYAUOHHUuytXTLOXU
- RfrwpaDirMluhPP5UUgb7Vqn6kstrSTyRvV9R6EIRuJOu+sSXC/0tQgGdni3Fdoe/CpFGmI9TVCVpRDc3K91dCYoqvYoFGxxyYOuGoGpfFQr2qWrkIoCMsNs
- OMs=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linux-8mug (111.249.38.188) by LO2P265CA0011.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:62::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.16 via Frontend Transport; Fri, 13 Mar 2020 08:21:59 +0000
+X-Originating-IP: [111.249.38.188]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d5cf9cdf-eacb-4daf-3d7f-08d7c7279bd2
+X-MS-TrafficTypeDiagnostic: SN1PR18MB2334:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR18MB2334DFE79EBADB56D6E9CC18ADFA0@SN1PR18MB2334.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 034119E4F6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(199004)(53546011)(2906002)(81166006)(52116002)(8676002)(6496006)(54906003)(478600001)(8936002)(66476007)(66556008)(81156014)(6916009)(66946007)(316002)(33716001)(4326008)(16526019)(186003)(6666004)(9686003)(55016002)(956004)(1076003)(86362001)(33656002)(5660300002)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR18MB2334;H:SN1PR18MB2126.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DYBgRGT90xJEYccVNcE76zyfwliPtUsgs58hWJbXjZ+yQCfFL8+6lchPejtpZny+OLcmhpXohoHSiNr6N16tO3m4QMwJrJxXSoY55McoSMwtn3bvDIlVX2EEXU5EAPFDjUoUAYIjMlPx4L7rVzq/BgSlKJ0GZ37a3QwXcYzNziNW/Nm6M8BNAM0WoOZ4ui/9on62WJQQydJvDKNhm5QLM11cSRWrKJuvb7ppuVQYqVzff6g6JJKhRozEwEP2Vxis29vUB6R5lwKkSOnBd3CLPg+W/TEuZMqZuC4wfXbb2HWlozmA4MKJMghWUISGU7HSmBiC7z9slJrpEX9lHmih6M7jJWg5vwkU8BEKSinjwQc7I78YmoODFQKe5Qv6obfGhmLcwmYEvnwhIp/wz0tjOVTcF2i28hGAn5W8DE90Y0IzWWogcdkGEY7jaeULmHgC
+X-MS-Exchange-AntiSpam-MessageData: JX9t1hgeAOV6+MDEK9iqbOxiYJo/DrNpkfAf+kkwS3XkCphpaH+vgh1lpOWlxH4JbVwwPV20MmmM69hcb2Tj9Xs3Jduo425Jl80QjRnszphvk/oFov/qNa0hIhGix6VosHb2ZM7R3xh/s81lAp/5nw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5cf9cdf-eacb-4daf-3d7f-08d7c7279bd2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 08:22:04.1365
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: feLljllCVy2hfUQaFqYeHuJ7eXTjTWgxfXaL99QBFGGLR+sVz1mRms7qeYEdYGi/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR18MB2334
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 9:31 AM, Alex Riesen wrote:
-> Hi Hans,
+Hi Rafael,
+
+On Wed, Jan 15, 2020 at 11:15:08AM +0100, Rafael J. Wysocki wrote:
+> On Friday, January 3, 2020 5:40:09 AM CET Chester Lin wrote:
+> > Here we change offline/online handling in device hotplug by sending change
+> > events to userland as notification so that userland can have control and
+> > determine when will be a good time to put them offline/online based on
+> > current workload. In this approach the real offline/online opertions are
+> > handed over to userland so that userland can have more time to prepare
+> > before any device change actually happens.
+> > 
+> > All child devices under the ejection target are traversed and notified
+> > hierarchically based on ACPI namespace in ascending order when an eject
+> > event happens.
+> > 
+> > Signed-off-by: Chester Lin <clin@suse.com>
 > 
-> Hans Verkuil, Fri, Mar 13, 2020 09:21:05 +0100:
->> As a general note for this series: it might be better to have two
->> patch series: one for patches 1 and 3-6 (not sure whether 5 can be included
->> or not), and one where the public API changes (i.e. new V4L2 audio controls)
->> are added. The first can probably be merged fairly quickly, the second will
->> likely require more iterations since public API patches always take much longer
->> before they are mature.
+> So you replace the old flow with the new one and make the new one mandatory AFAICS.
 > 
-> I see. After the discussion started, I started to have suspicions of my own
-> regarding the V4L2 ioctls. Except for log-status, which is a practical
-> diagnostics feature (even supported by v4l2-ctl), I'm thinking about dropping
-> them altogether in favor of audio soc DAI implementation.
-> The DAI implementation does all we ever needed from the device. Besides,
-> selecting a I2S protocol variant from user space (I2S vs I2S/TDM) never felt
-> right.
-
-That sounds like what everyone else does as well.
-
+> Thus if anyone has relied on the old flow, they now need to switch over.
 > 
-> Shall I submit the log-status separately?
+> This is unfriendly and generally unwelcome, so please avoid making changes like
+> that.
+>
+Thank you for the reminder.
 
-Yes please. In my experience, log status is a very nice and very useful feature.
-
-If you have other sensible cleanups, then feel free to add those as well.
+> Instead, I would consider adding a device attribute to allow user space to
+> opt in for getting offline notifications for specific individual devices (by
+> setting that attribute user space would tell the kernel that it wants to
+> get offline notifications for the device in question and it would take
+> care of offlining it as needed).
+> 
+Thanks for your advice. If no one is working on this device attribute [please free
+feel to correct me if I'm wrong], I am willing to implement it and will send a new
+RFC patch for code review.
 
 Regards,
-
-	Hans
-
-> 
-> Regards,
-> Alex
-> 
->> On 1/13/20 3:14 PM, Alex Riesen wrote:
->>> This adds minimal support for controlling the audio output I2S port available
->>> on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
->>> signal from the decoded HDMI stream.
->>>
->>> An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
->>> code.
->>>
->>> Alex Riesen (8):
->>>  1. media: adv748x: add a device-specific wrapper for register block read
->>>  2. media: adv748x: add audio mute control and output selection ioctls
->>>  3. media: adv748x: add log_status ioctl
->>>  4. media: adv748x: reserve space for the audio (I2S) port in the driver
->>>     structures
->>>  5. media: adv748x: add an ASoC DAI definition to the driver
->>>  6. media: adv748x: reduce amount of code for bitwise modification of
->>>     device registers
->>>  7. dt-bindings: adv748x: add information about serial audio interface
->>>     (I2S/TDM)
->>>  8. arm64: dts: renesas: salvator: add a connection from adv748x codec
->>>     (HDMI input) to the R-Car SoC
->>>
->>>  .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
->>>  .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
->>>  .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
->>>  drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
->>>  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
->>>  drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
->>>  6 files changed, 523 insertions(+), 11 deletions(-)
->>>
-
+Chester
