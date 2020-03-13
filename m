@@ -6,101 +6,63 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BE5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C52C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A40120674
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D6120674
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbgCMSMD (ORCPT
+        id S1726802AbgCMSQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:12:03 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:59974 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgCMSMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:12:03 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jComa-0002J7-J4; Fri, 13 Mar 2020 12:11:41 -0600
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20200313174701.148376-1-bigeasy@linutronix.de>
- <20200313174701.148376-4-bigeasy@linutronix.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <4d3a997d-ced4-3dbe-d766-0b1e9fc35b29@deltatee.com>
-Date:   Fri, 13 Mar 2020 12:11:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 14:16:07 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:56240 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgCMSQH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:16:07 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 9D2E320039;
+        Fri, 13 Mar 2020 19:16:03 +0100 (CET)
+Date:   Fri, 13 Mar 2020 19:16:02 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v3] drm/bochs: downgrade pci_request_region failure from
+ error to warning
+Message-ID: <20200313181602.GA16474@ravnborg.org>
+References: <20200313084152.2734-1-kraxel@redhat.com>
+ <20200313090338.GA31815@ravnborg.org>
+ <20200313143530.6aoagldak3kpe3xv@sirius.home.kraxel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200313174701.148376-4-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, tglx@linutronix.de, torvalds@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org, bigeasy@linutronix.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for
- poll
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313143530.6aoagldak3kpe3xv@sirius.home.kraxel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=TKvIToawjpI_eSArduEA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-03-13 11:46 a.m., Sebastian Andrzej Siewior wrote:
-> The poll callback is abusing the completion wait queue and sticks it into
-> poll_wait() to wake up pollers after a command has completed.
+On Fri, Mar 13, 2020 at 03:35:30PM +0100, Gerd Hoffmann wrote:
+>   Hi,
 > 
-> First of all it's a layering violation as it imposes restrictions on the
-> inner workings of completions. Just because C allows to do so does not
-> justify that in any way. The proper way to do such things is to post
-> patches which extend the core infrastructure and not by silently abusing
-> it.
-
-As I've said previously, I disagree with this approach. Open coding
-standard primitives sweeps issues under the rug and is a step backwards
-for code quality. Calling it a layering violation is just one opinion
-and if it is, the better solution would be to create an interface you
-find appropriate so that it isn't one.
-
-> Aside of that the implementation is seriously broken:
+> > > +	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
+> > > +		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+> > So you could use drm_WARN() which is what is preferred these days.
 > 
->  1) It cannot work with EPOLLEXCLUSIVE
+> Nope, this isn't yet in -fixes.
+Ups, did not see this was for -fixes.
+My ack stands without ths change then.
 
-Why? You don't explain this. And I don't see how this patch would change
-anything to do with the call to poll_wait(). All you've done is
-open-code the completion.
-
-Not that it matters that much, having multiple waiters poll on this
-interface can pretty much never happen. It only makes sense for the
-process who submitted the write to poll on the interface.
-
->  2) It's racy:
-> 
->   poll()	      	  	 write()
->    switchtec_dev_poll()		   switchtec_dev_write()
->     poll_wait(&s->comp.wait);        mrpc_queue_cmd()
->     				       init_completion(&s->comp)
-> 					 init_waitqueue_head(&s->comp.wait)
-
-That's a nice catch! But wouldn't an easier solution be to change the
-code to use reinit_completion() instead of using the bug to justify a
-different change?
-
-Thanks,
-
-Logan
+	Sam
