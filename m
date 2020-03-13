@@ -2,253 +2,93 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AD7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6EBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D7020746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52B82074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584102124;
+	bh=rDGI2YkB+1Ot7lMJwobaCUfsDpwRFEEBsurwzvYrh94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eXR0jNUuQQwExrOitC0IQxfkpAPWp8RyCWd8wi1NNo29cI4LeFzTKR/uEsjD39gdc
+	 +hM7DgsmfC0jpCfK3mWRit0562jAhXy8S2Wpc3Gem3xZ697OivDQxvo4i8x2r7DppU
+	 7JuBK7+5QpD9/C7337sUptgFT+kKLC/7Vb/95Gsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCMMUw (ORCPT
+        id S1726659AbgCMMWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:20:52 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:33938 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbgCMMUv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:20:51 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 13 Mar 2020 08:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMMWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:22:02 -0400
+Received: from localhost (unknown [171.76.107.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 6E41A634C87;
-        Fri, 13 Mar 2020 14:19:49 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jCjI5-0001il-Np; Fri, 13 Mar 2020 14:19:49 +0200
-Date:   Fri, 13 Mar 2020 14:19:49 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [v2 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200313121949.GD5730@valkosipuli.retiisi.org.uk>
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-2-robert.foss@linaro.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2942620724;
+        Fri, 13 Mar 2020 12:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584102122;
+        bh=rDGI2YkB+1Ot7lMJwobaCUfsDpwRFEEBsurwzvYrh94=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mANDAO2tC3XFzypAK7l7i3+Ay/pbKCW6EKkbRLWZFrtgCkBNIkPveguoVTsYRrQhE
+         cBoBan2NSSSHy0p6kkomf1NeA6JZ+dMhxIheAN08u+2iT2ZAkbRipIyu1IcET2UK+C
+         mTsv6PEdfAczPNPbZJgz7kzQBxEzXdVlrwJKJ/tk=
+Date:   Fri, 13 Mar 2020 17:51:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Rander Wang <rander.wang@intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 05/16] soundwire: cadence: add clock_stop/restart routines
+Message-ID: <20200313122156.GG4885@vkoul-mobl>
+References: <20200311184128.4212-1-pierre-louis.bossart@linux.intel.com>
+ <20200311184128.4212-6-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313110350.10864-2-robert.foss@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200311184128.4212-6-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On 11-03-20, 13:41, Pierre-Louis Bossart wrote:
 
-On Fri, Mar 13, 2020 at 12:03:48PM +0100, Robert Foss wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> 
-> This patch adds documentation of device tree in YAML schema for the
-> OV8856 CMOS image sensor.
-> 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
-> 
-> - Changes since v4:
->   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
->   * Add clock-lanes property to example
->   * robher: Fix syntax error in devicetree example
-> 
-> - Changes since v3:
->   * robher: Fix syntax error
->   * robher: Removed maxItems
->   * Fixes yaml 'make dt-binding-check' errors
-> 
-> - Changes since v2:
->   Fixes comments from from Andy, Tomasz, Sakari, Rob.
->   * Convert text documentation to YAML schema.
-> 
-> - Changes since v1:
->   Fixes comments from Sakari, Tomasz
->   * Add clock-frequency and link-frequencies in DT
-> 
->  .../devicetree/bindings/media/i2c/ov8856.yaml | 133 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> new file mode 100644
-> index 000000000000..f5cb9add9277
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2019 MediaTek Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> +
-> +maintainers:
-> +  - Ben Kao <ben.kao@intel.com>
-
-Is Ben aware of this?
-
-> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> +
-> +description: |-
-> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
-> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
-> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
-> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
-> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
-> +  serial data output (up to 4-lane).
-> +
-> +properties:
-> +  compatible:
-> +    const: ovti,ov8856
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description:
-> +      Input clock for the sensor.
-> +    items:
-> +      - const: xvclk
-> +
-> +  clock-frequency:
-> +    description:
-> +      Frequency of the xvclk clock in Hertz.
-> +
-> +  dovdd-supply:
-> +    description:
-> +      Definition of the regulator used as interface power supply.
-> +
-> +  avdd-supply:
-> +    description:
-> +      Definition of the regulator used as analog power supply.
-> +
-> +  dvdd-supply:
-> +    description:
-> +      Definition of the regulator used as digital power supply.
-> +
-> +  reset-gpios:
-> +    description:
-> +      The phandle and specifier for the GPIO that controls sensor reset.
-> +      This corresponds to the hardware pin XSHUTDOWN which is physically
-> +      active low.
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +    description:
-> +      A node containing input and output port nodes with endpoint definitions
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +
-> +        properties:
-> +          clock-lanes:
-> +            maxItems: 1
-> +
-> +          data-lanes:
-> +            maxItems: 1
-> +
-> +          remote-endpoint: true
-> +
-> +        required:
-> +          - clock-lanes
-
-Do you need the clock-lanes property, i.e. does the device support lane
-reordering? If not, it should be removed.
-
-> +          - data-lanes
-> +          - remote-endpoint
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-> +  - dovdd-supply
-> +  - avdd-supply
-> +  - dvdd-supply
-> +  - reset-gpios
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/clock/qcom,camcc-sdm845.h>
-> +
-> +    ov8856: camera-sensor@10 {
-> +        compatible = "ovti,ov8856";
-> +        reg = <0x10>;
-> +        reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&clk_24m_cam>;
-> +
-> +        clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
-> +        clock-names = "xvclk";
-> +        clock-frequency = <19200000>;
-> +
-> +        avdd-supply = <&mt6358_vcama2_reg>;
-> +        dvdd-supply = <&mt6358_vcamd_reg>;
-> +        dovdd-supply = <&mt6358_vcamio_reg>;
-> +
-> +        port {
-> +            wcam_out: endpoint {
-> +                remote-endpoint = <&mipi_in_wcam>;
-> +                clock-lanes = <0>;
-> +                data-lanes = <1 2 3 4>;
-> +                link-frequencies = /bits/ 64 <360000000 180000000>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> \ No newline at end of file
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a6fbdf354d34..0f99e863978a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12355,6 +12355,7 @@ L:	linux-media@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/i2c/ov8856.c
-> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> @@ -225,12 +225,30 @@ static int cdns_clear_bit(struct sdw_cdns *cdns, int offset, u32 value)
+>  			return 0;
 >  
->  OMNIVISION OV9650 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+>  		timeout--;
+> -		udelay(50);
+> +		usleep_range(50, 100);
+
+this seems okay change, but unrelated to this patch
+
+> +int sdw_cdns_clock_stop(struct sdw_cdns *cdns, bool block_wake)
+> +{
+> +	bool slave_present = false;
+> +	struct sdw_slave *slave;
+> +	u32 status;
+> +	int ret;
+> +
+> +	/* Check suspend status */
+> +	status = cdns_readl(cdns, CDNS_MCP_STAT);
+> +	if (status & CDNS_MCP_STAT_CLK_STOP) {
+> +		dev_dbg(cdns->dev, "Clock is already stopped\n");
+> +		return 1;
+
+return of 1..? Does that indicate success/fail..?
 
 -- 
-Regards,
-
-Sakari Ailus
+~Vinod
