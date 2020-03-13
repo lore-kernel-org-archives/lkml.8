@@ -2,97 +2,204 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2E3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5390C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2672073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902C72073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9R+xPKt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oZCvMVNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgCMFIx (ORCPT
+        id S1726420AbgCMFNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 01:08:53 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42502 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgCMFIw (ORCPT
+        Fri, 13 Mar 2020 01:13:14 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:28090 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726365AbgCMFNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 01:08:52 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D58j6v021163;
-        Fri, 13 Mar 2020 00:08:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584076125;
-        bh=/E/5i1Fwav1LiWyY4fZfVtmR3tVhCXpYRpHqTBjFt/0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=O9R+xPKtGJqdK87vuIDVqRSh3r/oXBoGFsl6A3KT60JfJNT1KmrFcyvvLnGdheHXs
-         75sd+iJC/xkUPZpuztT+x8I4v/Ou+dZWYV1dPnZetfSJNe9DLp8n74k+0P/vfkcsM7
-         NfGqVMJb0CSO4U+bHsHqEHKrDfU4vQ4W32wVPodk=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02D58jxl075424
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 00:08:45 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 00:08:45 -0500
-Received: from localhost.localdomain (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 00:08:44 -0500
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02D58fNS037401;
-        Fri, 13 Mar 2020 00:08:42 -0500
-Subject: Re: [PATCH v2 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-CC:     <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <tjoseph@cadence.com>
-References: <20200303103752.13076-1-kishon@ti.com>
- <1583342836-10088-1-git-send-email-alan.mikhak@sifive.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d6f19709-f48c-839a-1323-aaf85e9d56ce@ti.com>
-Date:   Fri, 13 Mar 2020 10:43:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 01:13:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584076393; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=EvnTMH+qZB325+j+Mam9+Ki9mILaWC3EQ/KKtvEmMkM=; b=oZCvMVNJT0yUzR2z+1Lx2OAAzx8A8IP+Lau1DBSOqC4fGoECvQOtcNPHWyyk17b9nvmZdGdm
+ /WBEQQGDPiw3DRkdq7kycjew/1Omks+uxr2PZ6KunZRc07+qw/lzSEhYADwLYcgK3NhSpupk
+ gX23bYrVKtTxpV9RrJkc5fVOF7g=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6b1655.7f870ac0e110-smtp-out-n03;
+ Fri, 13 Mar 2020 05:12:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B0D10C43636; Fri, 13 Mar 2020 05:12:52 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EFD02C433D2;
+        Fri, 13 Mar 2020 05:12:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EFD02C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Fri, 13 Mar 2020 10:42:46 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+Message-ID: <20200313051245.GK20234@codeaurora.org>
+References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
+ <20200312170242.GA185506@google.com>
+ <20200313012604.GI20234@codeaurora.org>
+ <20200313014535.GA72547@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1583342836-10088-1-git-send-email-alan.mikhak@sifive.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313014535.GA72547@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
-
-On 04/03/20 10:57 pm, Alan Mikhak wrote:
-> Hi Kishon,
+On Thu, Mar 12, 2020 at 06:45:35PM -0700, Jaegeuk Kim wrote:
+> On 03/13, Sahitya Tummala wrote:
+> > On Thu, Mar 12, 2020 at 10:02:42AM -0700, Jaegeuk Kim wrote:
+> > > On 03/12, Sahitya Tummala wrote:
+> > > > F2FS already has a default timeout of 5 secs for discards that
+> > > > can be issued during umount, but it can take more than the 5 sec
+> > > > timeout if the underlying UFS device queue is already full and there
+> > > > are no more available free tags to be used. In that case, submit_bio()
+> > > > will wait for the already queued discard requests to complete to get
+> > > > a free tag, which can potentially take way more than 5 sec.
+> > > > 
+> > > > Fix this by submitting the discard requests with REQ_NOWAIT
+> > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
+> > > > scenario without waiting in the context of submit_bio(). The FS can
+> > > > then handle these requests by retrying again within the stipulated
+> > > > discard timeout period to avoid long latencies.
+> > > > 
+> > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > > > ---
+> > > >  fs/f2fs/segment.c | 14 +++++++++++++-
+> > > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > > index fb3e531..a06bbac 100644
+> > > > --- a/fs/f2fs/segment.c
+> > > > +++ b/fs/f2fs/segment.c
+> > > > @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+> > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
+> > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > > +	int flag;
+> > > >  	block_t lstart, start, len, total_len;
+> > > >  	int err = 0;
+> > > >  
+> > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> > > > +
+> > > >  	if (dc->state != D_PREP)
+> > > >  		return 0;
+> > > >  
+> > > > @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
+> > > >  		bio->bi_opf |= flag;
+> > > >  		submit_bio(bio);
+> > > > +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
+> > > > +			dc->state = D_PREP;
+> > > > +			err = dc->error;
+> > > > +			break;
+> > > > +		}
+> > > >  
+> > > >  		atomic_inc(&dcc->issued_discard);
+> > > >  
+> > > > @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > >  			}
+> > > >  
+> > > >  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > > > +			if (dc->error == -EAGAIN) {
+> > > > +				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> > > 
+> > > 						--> need to be DEFAULT_IO_TIMEOUT
+> > 
+> > Yes, i will update it.
+> > 
+> > > 
+> > > > +				__relocate_discard_cmd(dcc, dc);
+> > > 
+> > > It seems we need to submit bio first, and then move dc to wait_list, if there's
+> > > no error, in __submit_discard_cmd().
+> > 
+> > Yes, that is not changed and it still happens for the failed request
+> > that is re-queued here too when it gets submitted again later.
+> > 
+> > I am requeuing the discard request failed with -EAGAIN error back to 
+> > dcc->pend_list[] from wait_list. It will call submit_bio() for this request
+> > and also move to wait_list when it calls __submit_discard_cmd() again next
+> > time. Please let me know if I am missing anything?
 > 
-> I applied this v2 patch series to kernel.org linux 5.6-rc3 and
-> built for x86_64 Debian and riscv. I verified that when I execute
-> the pcitest command on the x86_64 host with -d flag, the riscv
-> endpoint performs the transfer by using an available dma channel.
+> This patch has no problem, but I'm thinking that __submit_discard_cmd() needs
+> to return with any values by assumption where the waiting list should have
+> submitted commands.
 
-Stephen raised a build error issue [1] after including this series. Did
-you also see a similar issue when you tried in x86_64?
+I think dc->queued will indicated that dc is moved to wait_list. This can be
+used along with return value to take right action. Can you check if this
+works?
 
-[1] -> https://lkml.org/lkml/2020/3/12/1217
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index a06bbac..91df060 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1478,7 +1478,7 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+        struct list_head *pend_list;
+        struct discard_cmd *dc, *tmp;
+        struct blk_plug plug;
+-       int i, issued = 0;
++       int i, err, issued = 0;
+        bool io_interrupted = false;
 
-Thanks
-Kishon
+        if (dpolicy->timeout != 0)
+@@ -1517,8 +1517,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+                                break;
+                        }
 
+-                       __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+-                       if (dc->error == -EAGAIN) {
++                       err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
++                       if (err && err != -EAGAIN) {
++                               __remove_discard_cmd(sbi, dc);
++                       } else if (err == -EAGAIN && dc->queued) {
+                                congestion_wait(BLK_RW_ASYNC, HZ/50);
+                                __relocate_discard_cmd(dcc, dc);
+                        }
+
+thanks,
 > 
-> Regards,
-> Alan
-> 
-> Tested-by: Alan Mikhak <alan.mikhak@sifive.com>
-> 
+> > 
+> > Thanks,
+> > 
+> > > 
+> > > > +			}
+> > > >  
+> > > >  			if (issued >= dpolicy->max_requests)
+> > > >  				break;
+> > > > -- 
+> > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > 
+> > -- 
+> > --
+> > Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
