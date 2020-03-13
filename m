@@ -2,103 +2,139 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA212C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AC6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780D1206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QyDpG3qk"
+	by mail.kernel.org (Postfix) with ESMTP id 5644A206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584061035;
+	bh=lHsdMINLLczd7WRRMfdpTyi3bseSfwCftr2S7lte/oE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JVeYRI0V+qE6Zwaa4MGZbr/CrZLTaC9V2ksh0NPT9AxLqzNzrurSm2Lf5WPsguMgO
+	 GOrYx5thwnBXDyRNXziOyZEbJ9JLkNFOlUgNCPbuZbiZwBvn+1mg7/4Ip3EmaK4zHv
+	 S7A7t5wOfP0AU2KF1iZdofXYAL8olsvsPerR/QgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCMA4I (ORCPT
+        id S1727093AbgCMA5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:56:08 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:55923 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgCMA4H (ORCPT
+        Thu, 12 Mar 2020 20:57:14 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52482 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgCMA5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:56:07 -0400
-Received: by mail-pg1-f201.google.com with SMTP id r10so4717082pgu.22
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=8Seoij4ALETWEJFvgHk8UkPpVlPLf3FDOygziQYap+c=;
-        b=QyDpG3qkwbUhxqn8yjbAlijmB/mOmxa7YwBJMTKrPzLOCr9mvxkCuOY3fH9RZdtigw
-         2xMxma3PsOXuHqLOYKdyWkREE97D/rgnxB+Mt92TR6yXVdyZaxNTM2/rJqS5/P2KLAeE
-         G3SXdEssDwkwNV9GAdg6CcCNHMG57OdQS5BGMd68f3I4rcQbH1Fv/0EFm0c1abZcyl90
-         YJLWfdskYOLoAzgHoZK8ctmN0LAZnKiOZZFT3UmSjQRsxW0alfrVbHlLFvVQ1c490Abk
-         l+16bCw4SMAb+D4B/fFmIEUtbX6ECnqEEUWyc6MyCI0QURAjEJEKOkVFM6jwjtLXYAoP
-         bXtg==
+        Thu, 12 Mar 2020 20:57:13 -0400
+Received: by mail-pj1-f66.google.com with SMTP id f15so3273150pjq.2;
+        Thu, 12 Mar 2020 17:57:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=8Seoij4ALETWEJFvgHk8UkPpVlPLf3FDOygziQYap+c=;
-        b=U8Zc04z1Jmr5JvFKDEYL4znKjo2DITgn6bEQTysrkt24QoMovBoO70Ut2c+fvIHZm1
-         X9bVYxLClfrM6YYPSizcjZrt6nrG/PUrtE81CVgeGiUUODdfjWlkpF4IFT+TZdLkUq7n
-         VMPqO/SnhfpT+POgOI0VjXvsYA0KxViHHblxQwmpRBbusRuTQi4wzFmIHWxYWW8B1j5v
-         ZTLoMfmw9gj+4cLpcYcw55ItSC06pF52uHGikMWGgImHWQZMdgVE9q/eXqQGNP8JMa/M
-         BhHppa4u1yDkoeQy3h+8QlXOOIwxofHmHCCfrEZFSI7P4zXSCnk30zym5IBhriCiWk6e
-         XpSQ==
-X-Gm-Message-State: ANhLgQ39kg6nE7DaThF4Yzx7dhr3RQDftuxA0WgP+9EFcI2WRzQzokTl
-        +/szX25nIh6ZsqIcqOKf4rsCEQIF9M/i
-X-Google-Smtp-Source: ADFU+vvsI/W7/KuUwFW4MKOMv7dmgXEzDt3sx/y/sLU4mefzKExncgN6q6hMONuEHkWfj+cv/hkA+eYdzdNU
-X-Received: by 2002:a63:6944:: with SMTP id e65mr11029646pgc.406.1584060966519;
- Thu, 12 Mar 2020 17:56:06 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:56:02 -0700
-Message-Id: <20200313005602.45236-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH] perf test: print if shell directory isn't present
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JYErxPxUaGUBplLH65PeMy/hBKN4L+ixr3Dg3MVBjtY=;
+        b=qaHP9ogT8oLWmwccMZEGLlbI9D/F1DKloHtOY31zjA0L3EH1WcmXf9E1jpHkguu98U
+         8q05vMJC0B3v3dzdE+3ThU1qLnI2QdgeWldMTZgrfQdGO1J0LiPSR/ZrDEzKSNk3w45K
+         7MitT3y0tbKs11M6DlYJLs+Q8xsskBT09fXhErLJkRGv1EA4/pSkHU5AqOaXkoDQp4RY
+         AkLYFeGIAkAO/jiapANF12OKc5sn3qXKBu067kVqjMcZ28rGEx0vCVyF7s2HCrO34E0K
+         yZ4Q8KeqvN1ZcugDk8oxBgDiVhkZG83MOpBw80rKhGKUd4Gepo384WZApKuqEsYvfIQ9
+         CbqQ==
+X-Gm-Message-State: ANhLgQ33LKari1ageN6/hB2JrWuxXwTN7HweA/C13KvXFbe/TICfBfvz
+        ZXG/conHTj8WDqNkg+ESWlc=
+X-Google-Smtp-Source: ADFU+vtVU3sloKfNJ/GHy6v7uSunVn8TinhhgU2e25piz35fqisnm35446HRFefBgI5y9Gx35kOMPg==
+X-Received: by 2002:a17:902:be08:: with SMTP id r8mr10871611pls.321.1584061032688;
+        Thu, 12 Mar 2020 17:57:12 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y7sm16017401pfq.159.2020.03.12.17.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 17:57:11 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A6ED24028E; Fri, 13 Mar 2020 00:57:10 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 00:57:10 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] kmod: make request_module() return an error when
+ autoloading is disabled
+Message-ID: <20200313005710.GQ11244@42.do-not-panic.com>
+References: <20200312202552.241885-1-ebiggers@kernel.org>
+ <20200312202552.241885-2-ebiggers@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312202552.241885-2-ebiggers@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the shell test directory isn't present the exit code will be 255 but
-with no error messages printed. Add an error message.
+On Thu, Mar 12, 2020 at 01:25:49PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> It's long been possible to disable kernel module autoloading completely
+> (while still allowing manual module insertion) by setting
+> /proc/sys/kernel/modprobe to the empty string.  This can be preferable
+> to setting it to a nonexistent file since it avoids the overhead of an
+> attempted execve(), avoids potential deadlocks, and avoids the call to
+> security_kernel_module_request() and thus on SELinux-based systems
+> eliminates the need to write SELinux rules to dontaudit module_request.
+> 
+> However, when module autoloading is disabled in this way,
+> request_module() returns 0.  This is broken because callers expect 0 to
+> mean that the module was successfully loaded.
+> 
+> Apparently this was never noticed because this method of disabling
+> module autoloading isn't used much, and also most callers don't use the
+> return value of request_module() since it's always necessary to check
+> whether the module registered its functionality or not anyway.  But
+> improperly returning 0 can indeed confuse a few callers, for example
+> get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
+> 
+> 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+> 		fs = __get_fs_type(name, len);
+> 		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
+> 	}
+> 
+> This is easily reproduced with:
+> 
+> 	echo > /proc/sys/kernel/modprobe
+> 	mount -t NONEXISTENT none /
+> 
+> It causes:
+> 
+> 	request_module fs-NONEXISTENT succeeded, but still no fs?
+> 	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
+> 	[...]
+> 
+> This should actually use pr_warn_once() rather than WARN_ONCE(), since
+> it's also user-reachable if userspace immediately unloads the module.
+> Regardless, request_module() should correctly return an error when it
+> fails.  So let's make it return -ENOENT, which matches the error when
+> the modprobe binary doesn't exist.
+> 
+> I've also sent patches to document and test this case.
+> 
+> Cc: stable@vger.kernel.org
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jeff Vander Stoep <jeffv@google.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: NeilBrown <neilb@suse.com>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/builtin-test.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 5f05db75cdd8..54d9516c9839 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -543,8 +543,11 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
- 		return -1;
- 
- 	dir = opendir(st.dir);
--	if (!dir)
-+	if (!dir) {
-+		pr_err("failed to open shell test directory: %s\n",
-+			st.dir);
- 		return -1;
-+	}
- 
- 	for_each_shell_test(dir, st.dir, ent) {
- 		int curr = i++;
--- 
-2.25.1.481.gfbce0eb801-goog
-
+  Luis
