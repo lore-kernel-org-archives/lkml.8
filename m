@@ -2,421 +2,74 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA747C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB43C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EDE206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A592206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgCMPej (ORCPT
+        id S1726934AbgCMPey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:34:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34848 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMPej (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:34:39 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jCmKZ-0001Aa-Fc; Fri, 13 Mar 2020 15:34:35 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     gregkh@linuxfoundation.org, tkjos@android.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org
-Cc:     christian.brauner@ubuntu.com, ard.biesheuvel@linaro.org,
-        ardb@kernel.org, arve@android.com, hridya@google.com,
-        joel@joelfernandes.org, john.stultz@linaro.org,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        maco@android.com, naresh.kamboju@linaro.org, shuah@kernel.org,
-        Todd Kjos <tkjos@google.com>
-Subject: [PATCH v2] binderfs: port to new mount api
-Date:   Fri, 13 Mar 2020 16:34:27 +0100
-Message-Id: <20200313153427.141789-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
-References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+        Fri, 13 Mar 2020 11:34:54 -0400
+Received: from muru.com ([72.249.23.125]:60066 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbgCMPex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:34:53 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 06E3C8087;
+        Fri, 13 Mar 2020 15:35:38 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 08:34:49 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+Message-ID: <20200313153449.GD37466@atomide.com>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
+ <20200309180123.GP37466@atomide.com>
+ <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
+ <20200310155242.GT37466@atomide.com>
+ <296e28b7-7925-5dfa-ce5a-c0b2a2f1c2e0@ti.com>
+ <20200312005849.GY37466@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312005849.GY37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I first wrote binderfs the new mount api had not yet landed. Now
-that it has been around for a little while and a bunch of filesystems
-have already been ported we should do so too. When Al sent his
-mount-api-conversion pr he requested that binderfs (and a few others) be
-ported separately. It's time we port binderfs. We can make use of the
-new option parser, get nicer infrastructure and it will be easier if we
-ever add any new mount options.
+* Tony Lindgren <tony@atomide.com> [200312 00:59]:
+> * Lokesh Vutla <lokeshvutla@ti.com> [200311 04:14]:
+> > However, I see an issue with the patch itself as pm_runtime is not disabled
+> > after the pwm is stopped. Not sure how that could be nullified with this approach.
+> 
+> Hmm yeah not sure what could be used to clear things
+> when the current cycle is completed unless there's
+> some interrupt for it.
 
-This survives testing with the binderfs selftests:
+You could enable pm_runtime_use_autosuspend() for pwm use,
+then set the timeout to the cycle length, then in the
+runtime_suspend make sure the enable bit is cleared if
+requested.
 
-for i in `seq 1 1000`; do ./binderfs_test; done
+But this too seems inaccurate, it would be best to clear
+the enable bit on some cycle completion interrupt if
+such thing is available.
 
-including the new stress tests I sent out for review today:
+Regards,
 
- TAP version 13
- 1..1
- # selftests: filesystems/binderfs: binderfs_test
- # [==========] Running 3 tests from 1 test cases.
- # [ RUN      ] global.binderfs_stress
- # [  XFAIL!  ] Tests are not run as root. Skipping privileged tests
- # [==========] Running 3 tests from 1 test cases.
- # [ RUN      ] global.binderfs_stress
- # [       OK ] global.binderfs_stress
- # [ RUN      ] global.binderfs_test_privileged
- # [       OK ] global.binderfs_test_privileged
- # [ RUN      ] global.binderfs_test_unprivileged
- # # Allocated new binder device with major 243, minor 4, and name my-binder
- # # Detected binder version: 8
- # [==========] Running 3 tests from 1 test cases.
- # [ RUN      ] global.binderfs_stress
- # [       OK ] global.binderfs_stress
- # [ RUN      ] global.binderfs_test_privileged
- # [       OK ] global.binderfs_test_privileged
- # [ RUN      ] global.binderfs_test_unprivileged
- # [       OK ] global.binderfs_test_unprivileged
- # [==========] 3 / 3 tests passed.
- # [  PASSED  ]
- ok 1 selftests: filesystems/binderfs: binderfs_test
-
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Commit message adapted to new stresstest output after porting to
-    XFAIL infrastructure.
-    For the stresstest patchset see:
-    https://lore.kernel.org/r/20200313152420.138777-1-christian.brauner@ubuntu.com
----
- drivers/android/binderfs.c | 200 +++++++++++++++++++------------------
- 1 file changed, 104 insertions(+), 96 deletions(-)
-
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index f303106b3362..9ecad74183a3 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -18,7 +18,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/mount.h>
--#include <linux/parser.h>
-+#include <linux/fs_parser.h>
- #include <linux/radix-tree.h>
- #include <linux/sched.h>
- #include <linux/seq_file.h>
-@@ -48,26 +48,30 @@ static dev_t binderfs_dev;
- static DEFINE_MUTEX(binderfs_minors_mutex);
- static DEFINE_IDA(binderfs_minors);
- 
--enum {
-+enum binderfs_param {
- 	Opt_max,
- 	Opt_stats_mode,
--	Opt_err
- };
- 
- enum binderfs_stats_mode {
--	STATS_NONE,
--	STATS_GLOBAL,
-+	binderfs_stats_mode_unset,
-+	binderfs_stats_mode_global,
- };
- 
--static const match_table_t tokens = {
--	{ Opt_max, "max=%d" },
--	{ Opt_stats_mode, "stats=%s" },
--	{ Opt_err, NULL     }
-+static const struct constant_table binderfs_param_stats[] = {
-+	{ "global", binderfs_stats_mode_global },
-+	{}
- };
- 
--static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
-+const struct fs_parameter_spec binderfs_fs_parameters[] = {
-+	fsparam_u32("max",	Opt_max),
-+	fsparam_enum("stats",	Opt_stats_mode, binderfs_param_stats),
-+	{}
-+};
-+
-+static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
- {
--	return inode->i_sb->s_fs_info;
-+	return sb->s_fs_info;
- }
- 
- bool is_binderfs_device(const struct inode *inode)
-@@ -246,7 +250,7 @@ static long binder_ctl_ioctl(struct file *file, unsigned int cmd,
- static void binderfs_evict_inode(struct inode *inode)
- {
- 	struct binder_device *device = inode->i_private;
--	struct binderfs_info *info = BINDERFS_I(inode);
-+	struct binderfs_info *info = BINDERFS_SB(inode->i_sb);
- 
- 	clear_inode(inode);
- 
-@@ -264,97 +268,84 @@ static void binderfs_evict_inode(struct inode *inode)
- 	}
- }
- 
--/**
-- * binderfs_parse_mount_opts - parse binderfs mount options
-- * @data: options to set (can be NULL in which case defaults are used)
-- */
--static int binderfs_parse_mount_opts(char *data,
--				     struct binderfs_mount_opts *opts)
-+static int binderfs_fs_context_parse_param(struct fs_context *fc,
-+					   struct fs_parameter *param)
- {
--	char *p, *stats;
--	opts->max = BINDERFS_MAX_MINOR;
--	opts->stats_mode = STATS_NONE;
--
--	while ((p = strsep(&data, ",")) != NULL) {
--		substring_t args[MAX_OPT_ARGS];
--		int token;
--		int max_devices;
--
--		if (!*p)
--			continue;
--
--		token = match_token(p, tokens, args);
--		switch (token) {
--		case Opt_max:
--			if (match_int(&args[0], &max_devices) ||
--			    (max_devices < 0 ||
--			     (max_devices > BINDERFS_MAX_MINOR)))
--				return -EINVAL;
--
--			opts->max = max_devices;
--			break;
--		case Opt_stats_mode:
--			if (!capable(CAP_SYS_ADMIN))
--				return -EINVAL;
-+	int opt;
-+	struct binderfs_mount_opts *ctx = fc->fs_private;
-+	struct fs_parse_result result;
- 
--			stats = match_strdup(&args[0]);
--			if (!stats)
--				return -ENOMEM;
-+	opt = fs_parse(fc, binderfs_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
- 
--			if (strcmp(stats, "global") != 0) {
--				kfree(stats);
--				return -EINVAL;
--			}
-+	switch (opt) {
-+	case Opt_max:
-+		if (result.uint_32 > BINDERFS_MAX_MINOR)
-+			return invalfc(fc, "Bad value for '%s'", param->key);
- 
--			opts->stats_mode = STATS_GLOBAL;
--			kfree(stats);
--			break;
--		default:
--			pr_err("Invalid mount options\n");
--			return -EINVAL;
--		}
-+		ctx->max = result.uint_32;
-+		break;
-+	case Opt_stats_mode:
-+		if (!capable(CAP_SYS_ADMIN))
-+			return -EPERM;
-+
-+		ctx->stats_mode = result.uint_32;
-+		break;
-+	default:
-+		return invalfc(fc, "Unsupported parameter '%s'", param->key);
- 	}
- 
- 	return 0;
- }
- 
--static int binderfs_remount(struct super_block *sb, int *flags, char *data)
-+static int binderfs_fs_context_reconfigure(struct fs_context *fc)
- {
--	int prev_stats_mode, ret;
--	struct binderfs_info *info = sb->s_fs_info;
-+	struct binderfs_mount_opts *ctx = fc->fs_private;
-+	struct binderfs_info *info = BINDERFS_SB(fc->root->d_sb);
- 
--	prev_stats_mode = info->mount_opts.stats_mode;
--	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
--	if (ret)
--		return ret;
--
--	if (prev_stats_mode != info->mount_opts.stats_mode) {
--		pr_err("Binderfs stats mode cannot be changed during a remount\n");
--		info->mount_opts.stats_mode = prev_stats_mode;
--		return -EINVAL;
--	}
-+	if (info->mount_opts.stats_mode != ctx->stats_mode)
-+		return invalfc(fc, "Binderfs stats mode cannot be changed during a remount");
- 
-+	info->mount_opts.stats_mode = ctx->stats_mode;
-+	info->mount_opts.max = ctx->max;
- 	return 0;
- }
- 
--static int binderfs_show_mount_opts(struct seq_file *seq, struct dentry *root)
-+static int binderfs_show_options(struct seq_file *seq, struct dentry *root)
- {
--	struct binderfs_info *info;
-+	struct binderfs_info *info = BINDERFS_SB(root->d_sb);
- 
--	info = root->d_sb->s_fs_info;
- 	if (info->mount_opts.max <= BINDERFS_MAX_MINOR)
- 		seq_printf(seq, ",max=%d", info->mount_opts.max);
--	if (info->mount_opts.stats_mode == STATS_GLOBAL)
-+
-+	switch (info->mount_opts.stats_mode) {
-+	case binderfs_stats_mode_unset:
-+		break;
-+	case binderfs_stats_mode_global:
- 		seq_printf(seq, ",stats=global");
-+		break;
-+	}
- 
- 	return 0;
- }
- 
-+static void binderfs_put_super(struct super_block *sb)
-+{
-+	struct binderfs_info *info = sb->s_fs_info;
-+
-+	if (info && info->ipc_ns)
-+		put_ipc_ns(info->ipc_ns);
-+
-+	kfree(info);
-+	sb->s_fs_info = NULL;
-+}
-+
- static const struct super_operations binderfs_super_ops = {
- 	.evict_inode    = binderfs_evict_inode,
--	.remount_fs	= binderfs_remount,
--	.show_options	= binderfs_show_mount_opts,
-+	.show_options	= binderfs_show_options,
- 	.statfs         = simple_statfs,
-+	.put_super	= binderfs_put_super,
- };
- 
- static inline bool is_binderfs_control_device(const struct dentry *dentry)
-@@ -653,10 +644,11 @@ static int init_binder_logs(struct super_block *sb)
- 	return ret;
- }
- 
--static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
-+static int binderfs_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	int ret;
- 	struct binderfs_info *info;
-+	struct binderfs_mount_opts *ctx = fc->fs_private;
- 	struct inode *inode = NULL;
- 	struct binderfs_device device_info = { 0 };
- 	const char *name;
-@@ -689,16 +681,14 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	info->ipc_ns = get_ipc_ns(current->nsproxy->ipc_ns);
- 
--	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
--	if (ret)
--		return ret;
--
- 	info->root_gid = make_kgid(sb->s_user_ns, 0);
- 	if (!gid_valid(info->root_gid))
- 		info->root_gid = GLOBAL_ROOT_GID;
- 	info->root_uid = make_kuid(sb->s_user_ns, 0);
- 	if (!uid_valid(info->root_uid))
- 		info->root_uid = GLOBAL_ROOT_UID;
-+	info->mount_opts.max = ctx->max;
-+	info->mount_opts.stats_mode = ctx->stats_mode;
- 
- 	inode = new_inode(sb);
- 	if (!inode)
-@@ -730,36 +720,54 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
- 			name++;
- 	}
- 
--	if (info->mount_opts.stats_mode == STATS_GLOBAL)
-+	if (info->mount_opts.stats_mode == binderfs_stats_mode_global)
- 		return init_binder_logs(sb);
- 
- 	return 0;
- }
- 
--static struct dentry *binderfs_mount(struct file_system_type *fs_type,
--				     int flags, const char *dev_name,
--				     void *data)
-+static int binderfs_fs_context_get_tree(struct fs_context *fc)
- {
--	return mount_nodev(fs_type, flags, data, binderfs_fill_super);
-+	return get_tree_nodev(fc, binderfs_fill_super);
- }
- 
--static void binderfs_kill_super(struct super_block *sb)
-+static void binderfs_fs_context_free(struct fs_context *fc)
- {
--	struct binderfs_info *info = sb->s_fs_info;
-+	struct binderfs_mount_opts *ctx = fc->fs_private;
- 
--	kill_litter_super(sb);
-+	kfree(ctx);
-+}
- 
--	if (info && info->ipc_ns)
--		put_ipc_ns(info->ipc_ns);
-+static const struct fs_context_operations binderfs_fs_context_ops = {
-+	.free		= binderfs_fs_context_free,
-+	.get_tree	= binderfs_fs_context_get_tree,
-+	.parse_param	= binderfs_fs_context_parse_param,
-+	.reconfigure	= binderfs_fs_context_reconfigure,
-+};
- 
--	kfree(info);
-+static int binderfs_init_fs_context(struct fs_context *fc)
-+{
-+	struct binderfs_mount_opts *ctx = fc->fs_private;
-+
-+	ctx = kzalloc(sizeof(struct binderfs_mount_opts), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->max = BINDERFS_MAX_MINOR;
-+	ctx->stats_mode = binderfs_stats_mode_unset;
-+
-+	fc->fs_private = ctx;
-+	fc->ops = &binderfs_fs_context_ops;
-+
-+	return 0;
- }
- 
- static struct file_system_type binder_fs_type = {
--	.name		= "binder",
--	.mount		= binderfs_mount,
--	.kill_sb	= binderfs_kill_super,
--	.fs_flags	= FS_USERNS_MOUNT,
-+	.name			= "binder",
-+	.init_fs_context	= binderfs_init_fs_context,
-+	.parameters		= binderfs_fs_parameters,
-+	.kill_sb		= kill_litter_super,
-+	.fs_flags		= FS_USERNS_MOUNT,
- };
- 
- int __init init_binderfs(void)
-
-base-commit: f17f06a0c7794d3a7c2425663738823354447472
--- 
-2.25.1
-
+Tony
