@@ -2,177 +2,183 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B42C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964A2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91EC0206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616D9206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bHeV3oZz"
+	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="IwGNtYvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgCMLEU (ORCPT
+        id S1726733AbgCMLEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:04:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50207 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgCMLEN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:04:13 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a5so9446778wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 04:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KmK9rPbQ7ZkiTZPfd7jr8oEpxHT6uehvlGdRiVCfa9E=;
-        b=bHeV3oZzGpOJp9X2/+ayJxINfN/+cGoX+D+XUhTs6Q4RfuCAcephVcJEMljWUqg0oY
-         TfV385qnmaVVyq5bXflo/xOe/PW6CJyP7UWZx+Ile8m8rEY48+pmBcBK7vOK/frIvihh
-         jJWxEC/zdw6oE6+NhGS7Y8H/sqWrUhsmqilh55QnUxolhvqTSVDJV67t24HGXxksGqmo
-         2TVgjbWh3d5khSKPFOyWy8L3nXOtL/siZ07IAxXHCcZioSLCFldpaNLx30kHkN2IATKe
-         /kZo0Av80UuI6B3c6Kja3n+wEg4K5XwWh/TC8zULaBHxtjGmpRFxf0aoN+y7As+iRpRe
-         wUig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KmK9rPbQ7ZkiTZPfd7jr8oEpxHT6uehvlGdRiVCfa9E=;
-        b=Zpybe0hO8+/iigO7v5kHJKxkw6hUDAJkidYliSBVEI5z+tIrtw71nNcYuVxJUDm4++
-         1HYL44UJOeS/8ta0WuCzAWz1kKmT1WsvRSYr+LDJxQOBOiCzhKu3ufkUIDigcGG2otvM
-         pmTwQFvNJpMbIC5+kNI+EDTk6WYv0TZiDWVioe3gnQlqY2KGerxKeLtoKdgjfef/Ae3Q
-         FWMsyS1kEMRQvOVhZRobRZT2GwcEHchwYskzqI+8m62pj0xCwzQkhHcIVWCW64431GqF
-         9zfqY9HFZU4YNS3uAo/BWwWw64CzwBa94SGmc+ScVaqHjTXgOY9VNDmHLJZkus/jsJ65
-         MU0A==
-X-Gm-Message-State: ANhLgQ3w90asVeUMhQCEnTQgvm4HWT4ayOM7w1xkkD5J8GkfVz0XDYch
-        l3rcFxHuPuDXoaPosC7eon5IVA==
-X-Google-Smtp-Source: ADFU+vsecmaXEqCn3VzdzRxpowdlFf1VRTVp8EqTIdciEiR4i/mJkERoqke1oLtWuG4/wpapMep3Bw==
-X-Received: by 2002:a7b:cb17:: with SMTP id u23mr10778712wmj.12.1584097452112;
-        Fri, 13 Mar 2020 04:04:12 -0700 (PDT)
-Received: from xps7590.local ([2a02:2450:102f:13b8:c814:5be4:577e:3bd5])
-        by smtp.gmail.com with ESMTPSA id r23sm23578052wrr.93.2020.03.13.04.04.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 04:04:11 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fri, 13 Mar 2020 07:04:31 -0400
+Received: from mail-bn8nam12on2115.outbound.protection.outlook.com ([40.107.237.115]:25793
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbgCMLEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 07:04:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fLTbJC8MhC6oEGWFL5+j+iteNbC1bqX8Z26N0mybcC6x5dkFxWr/Mstt4moMo6Q7Ta8HT2PSPIWamxE0B4dPmBTpy4jBkMDZR9KEd1+ZL72B3LD+pG/7e1ATX6Rqxhv5HrLgsYH6ontkuO3tcxDLRw1PA94Rs/wGpVoOd0Imi/zcrR3HVBn9RGwtywxDaBXMDvZOaWp6gym9Hgijw+xpTTBOxdUEBk5f+soZKm4Lteii9OWrYlZrfjhyFXD8o5iP6Pz2cdDkSMR4Jvsrz+aMUSA3J7nMc9hGKQ94cc/xZb3ceca0PcRqOeAmp0tswoiRqrgCJ/ePNN95FVr1DFAlWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1Od+NrTrql0tkVgx2dHy7tXk6otgJpPhWVCxqjf5FEQ=;
+ b=O+dd6lwo+615A2lVNdnkGAj64erhm6kvh0r32G3WE8R4fh2l4zc422vO27kS+2az81kfb4wRmIC9YO+zMk8eHXwjtmj769UgV6duSjVj2EjAGgm4StWJpBb/ET18JCaRt/iaAkbRFSa4XCiDPVGSBBLTd3I5DVzqotL2bSzxZeiuM6F6US8XgrTY0Kqpwft3RXcCkaIcQN/carqhbnC0hr3iAyqehkJCmSmqA8gy2frgNt9AtFBcvMZbkyhuxAKuWfwzPSTOfQc72hAJfNKXAnZs9T59aZpsLi6fodOpLdChNrmtDccrSi60J6EGtqGPhltdewqzi491vV+V3P3D6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
+ dkim=pass header.d=cypress.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1Od+NrTrql0tkVgx2dHy7tXk6otgJpPhWVCxqjf5FEQ=;
+ b=IwGNtYvFiKskGeYIScsNEvv4JP0IpRVCH13kV4/dNS0fO2guZeErcfuDlDDCR3D2ab40Xa6LhPJ3zwDc/pUGqPatQr3Jlva6hOX37CO6jDVTKv+XKQYZRoUIcGTvxEhJXlmhlq52B/Ei6U/mtiXPbfoQ0CtMHuIR1Abe48TNFt8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Chi-Hsien.Lin@cypress.com; 
+Received: from BYAPR06MB4901.namprd06.prod.outlook.com (2603:10b6:a03:7a::30)
+ by BYAPR06MB5352.namprd06.prod.outlook.com (2603:10b6:a03:ab::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Fri, 13 Mar
+ 2020 11:03:50 +0000
+Received: from BYAPR06MB4901.namprd06.prod.outlook.com
+ ([fe80::3cc3:7b1a:bd7b:a0a9]) by BYAPR06MB4901.namprd06.prod.outlook.com
+ ([fe80::3cc3:7b1a:bd7b:a0a9%5]) with mapi id 15.20.2793.021; Fri, 13 Mar 2020
+ 11:03:50 +0000
+Reply-To: chi-hsien.lin@cypress.com
+Subject: Re: [PATCH v2 0/9] brcmfmac: add support for BCM4359 SDIO chipset
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Soeren Moch <smoch@web.de>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
         linux-arm-kernel@lists.infradead.org
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v2 3/3] media: ov8856: Implement sensor module revision identification
-Date:   Fri, 13 Mar 2020 12:03:50 +0100
-Message-Id: <20200313110350.10864-4-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200313110350.10864-1-robert.foss@linaro.org>
-References: <20200313110350.10864-1-robert.foss@linaro.org>
-MIME-Version: 1.0
+References: <20191211235253.2539-1-smoch@web.de>
+ <1daadfe0-5964-db9b-818c-6e4c75ac6a69@web.de>
+ <22526722-1ae8-a018-0e24-81d7ad7512dd@web.de> <2685733.IzV8dBlDb2@diego>
+From:   Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Message-ID: <d7b05a6c-dfba-c8e0-b5fb-f6f7f5a6c1b7@cypress.com>
+Date:   Fri, 13 Mar 2020 19:03:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+In-Reply-To: <2685733.IzV8dBlDb2@diego>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR21CA0007.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::17) To BYAPR06MB4901.namprd06.prod.outlook.com
+ (2603:10b6:a03:7a::30)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.9.112.143] (61.222.14.99) by BYAPR21CA0007.namprd21.prod.outlook.com (2603:10b6:a03:114::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.6 via Frontend Transport; Fri, 13 Mar 2020 11:03:48 +0000
+X-Originating-IP: [61.222.14.99]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 62396984-5167-4363-aa3b-08d7c73e35ed
+X-MS-TrafficTypeDiagnostic: BYAPR06MB5352:|BYAPR06MB5352:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR06MB5352298F01774CF10B92EBCFBBFA0@BYAPR06MB5352.namprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 034119E4F6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(366004)(376002)(39860400002)(346002)(396003)(199004)(5660300002)(86362001)(956004)(81166006)(52116002)(6666004)(31696002)(81156014)(8676002)(53546011)(2616005)(186003)(66574012)(26005)(16526019)(8936002)(3450700001)(36756003)(31686004)(2906002)(4326008)(478600001)(6486002)(66556008)(316002)(66476007)(66946007)(110136005)(16576012)(55004002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR06MB5352;H:BYAPR06MB4901.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: cypress.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eGiO0gzk4t7r6kvIeuU4WEULq2+RBBElmtOciU4hDrWj8PnVoXBrUJJIK4kBYuKuhj30ryX0OwqGnCq8SXCqDE1SDXI6B+TXb+JWSc8o9sJF3MVORyQs9n3S0bPvwXmn+Cc1yq0Es2FCIgS6QFCiVktB9Szsy6P2TLLbFXX/8OOr49CsUdHic7AXA3/yYQtKpliVlqKdZDnIeiaJtuOkJJTzdFU6Rqr23KGwwYQD1m/xmDT5+kE0YtGMMNW2PPLUD9o19FKtlq8T1qBsEIxkojn+N/FS9EVVA6KLApdTd0jJadcu5mBDmVO2RKiAgF9eGcFx8y8RzWLznX9cMlQ6seBZF/9dl0AESX1ewBUjCKO+ga1/Yi9Pb5c9khKZeOlZbj9cOFoyA9rIblK9AVP2+pniSOkqfz1+ibV8gQaZEnBuccFVjgwpXtSeNRCbZ+My2HX8kygrlyLFJzprsGYB2HOkI2IDmyaNbnPPGQNJd5qsAxnU617moKYTvKXnG6LI
+X-MS-Exchange-AntiSpam-MessageData: jS/uIX4ame7sv/RcBvFv51Mbk/N9GufyJlubKi2gXzfNz4brHfHmA3jJufFNe+XRh0H+uQ4J52Pr/e0DAv/z/a9xo8GHiwzOqc+cUS1Z46h5zd7OZt6AZomHDlPj6WL9j9P+pjvfJ6h8HSK7GQ94rQ==
+X-OriginatorOrg: cypress.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62396984-5167-4363-aa3b-08d7c73e35ed
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 11:03:50.7359
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 011addfc-2c09-450d-8938-e0bbc2dd2376
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 538WHKl5SCZhcVyaaHXJ5euGqVJ8NU7PshdF/NjhCFR/ZjGw9Wml+kpWwJT3JN+uPWSeZYGJMQ0XiPiqFpL58w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB5352
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Query the sensor for its module revision, and compare it
-to known revisions.
-Currently only the '1B' revision has been added.
 
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
----
- drivers/media/i2c/ov8856.c | 54 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-index db61eed223e8..39662d3d86dd 100644
---- a/drivers/media/i2c/ov8856.c
-+++ b/drivers/media/i2c/ov8856.c
-@@ -34,6 +34,18 @@
- #define OV8856_MODE_STANDBY		0x00
- #define OV8856_MODE_STREAMING		0x01
- 
-+/* define 1B module revision */
-+#define OV8856_1B_MODULE		0x02
-+
-+/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
-+ * of the byte in the OTP that means the module revision
-+ */
-+#define OV8856_MODULE_REVISION		0x700f
-+#define OV8856_OTP_MODE_CTRL		0x3d84
-+#define OV8856_OTP_LOAD_CTRL		0x3d81
-+#define OV8856_OTP_MODE_AUTO		0x00
-+#define OV8856_OTP_LOAD_CTRL_ENABLE	BIT(0)
-+
- /* vertical-timings from sensor */
- #define OV8856_REG_VTS			0x380e
- #define OV8856_VTS_MAX			0x7fff
-@@ -711,6 +723,25 @@ static int ov8856_test_pattern(struct ov8856 *ov8856, u32 pattern)
- 				OV8856_REG_VALUE_08BIT, pattern);
- }
- 
-+static int ov8856_check_revision(struct ov8856 *ov8856)
-+{
-+	int ret;
-+
-+	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-+			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
-+	if (ret)
-+		return ret;
-+
-+	ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
-+			       OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
-+	if (ret)
-+		return ret;
-+
-+	return ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
-+				OV8856_REG_VALUE_08BIT,
-+				OV8856_OTP_LOAD_CTRL_ENABLE);
-+}
-+
- static int ov8856_set_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct ov8856 *ov8856 = container_of(ctrl->handler,
-@@ -1144,6 +1175,23 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
- 		return -ENXIO;
- 	}
- 
-+	/* check sensor hardware revision */
-+	ret = ov8856_check_revision(ov8856);
-+	if (ret) {
-+		dev_err(&client->dev, "failed to check sensor revision");
-+		return ret;
-+	}
-+
-+	ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
-+			      OV8856_REG_VALUE_08BIT, &val);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
-+		val,
-+		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
-+		client->addr);
-+
- 	return 0;
- }
- 
-@@ -1254,12 +1302,6 @@ static int ov8856_probe(struct i2c_client *client)
- 		return PTR_ERR(ov8856->xvclk);
- 	}
- 
--	ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
--	if (ret < 0) {
--		dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
--		return ret;
--	}
--
- 	ov8856->reset_gpio = devm_gpiod_get(&client->dev, "reset",
- 					       GPIOD_OUT_HIGH);
- 	if (IS_ERR(ov8856->reset_gpio)) {
--- 
-2.20.1
+On 12/16/2019 7:43, Heiko Stübner wrote:
+> Hi Soeren,
+> 
+> Am Sonntag, 15. Dezember 2019, 22:24:10 CET schrieb Soeren Moch:
+>> On 12.12.19 11:59, Soeren Moch wrote:
+>>> On 12.12.19 10:42, Kalle Valo wrote:
+>>>> Soeren Moch <smoch@web.de> writes:
+>>>>
+>>>>> Add support for the BCM4359 chipset with SDIO interface and RSDB support
+>>>>> to the brcmfmac wireless network driver in patches 1-7.
+>>>>>
+>>>>> Enhance devicetree of the RockPro64 arm64/rockchip board to use an
+>>>>> AP6359SA based wifi/bt combo module with this chipset in patches 8-9.
+>>>>>
+>>>>>
+>>>>> Chung-Hsien Hsu (1):
+>>>>>    brcmfmac: set F2 blocksize and watermark for 4359
+>>>>>
+>>>>> Soeren Moch (5):
+>>>>>    brcmfmac: fix rambase for 4359/9
+>>>>>    brcmfmac: make errors when setting roaming parameters non-fatal
+>>>>>    brcmfmac: add support for BCM4359 SDIO chipset
+>>>>>    arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
+>>>>>    arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
+>>>>>
+>>>>> Wright Feng (3):
+>>>>>    brcmfmac: reset two D11 cores if chip has two D11 cores
+>>>>>    brcmfmac: add RSDB condition when setting interface combinations
+>>>>>    brcmfmac: not set mbss in vif if firmware does not support MBSS
+>>>>>
+>>>>>   .../boot/dts/rockchip/rk3399-rockpro64.dts    | 50 +++++++++++---
+>>>>>   .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  8 ++-
+>>>>>   .../broadcom/brcm80211/brcmfmac/cfg80211.c    | 68 +++++++++++++++----
+>>>>>   .../broadcom/brcm80211/brcmfmac/chip.c        | 54 ++++++++++++++-
+>>>>>   .../broadcom/brcm80211/brcmfmac/chip.h        |  1 +
+>>>>>   .../broadcom/brcm80211/brcmfmac/pcie.c        |  2 +-
+>>>>>   .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 +++++
+>>>>>   include/linux/mmc/sdio_ids.h                  |  2 +
+>>>>>   8 files changed, 176 insertions(+), 26 deletions(-)
+>>>> Just to make sure we are on the same page, I will apply patches 1-7 to
+>>>> wireless-drivers-next and patches 8-9 go to some other tree? And there
+>>>> are no dependencies between the brcmfmac patches and dts patches?
+>>>>
+>>> Yes, this also is my understanding. I'm glad if you are fine with
+>>> patches 1-7.
+>>> Heiko will pick up patches 8-9 later for linux-rockchip independently.
+>>> And if we need another round of review for patches 8-9, I think we don't
+>>> need to bother linux-wireless with this.
+>>
+>> Heiko,
+>>
+>> is this OK for you when patches 1-7 are merged now in wireless-drivers,
+>> and then I send a v3 for patches 8-9 only for you to merge in
+>> linux-rockchip later? Or do you prefer a full v3 for the whole series
+>> with only this pending clock name update in patch 9?
+> 
+> Nope, merging 1-7 from this v2 and then getting a v3 with only the dts
+> stuff is perfectly fine :-)
 
+Soeren,
+
+I suppose patch 1-7 from this serious are all good for merging. Is that 
+right? If so, could you please create a rebased V3?
+
+
+Regards,
+Chi-hsien Lin
+
+> 
+> Heiko
+> 
+> 
+> .
+> 
