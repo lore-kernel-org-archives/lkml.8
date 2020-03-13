@@ -2,122 +2,148 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36857C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EBAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C69206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0F5206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584111385;
+	bh=LAzcPJ5imJkcghWhzqoGEdM+ZgxF28msfALdpuJDjVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h+wJXtujUbECnz5Tpc6Wcu+W0lR8YVg+iJns7R3XGtIn4f1NkLE+z62vm1JB1XDjq
+	 XJNh7+fgGmkXHO4l+JSnTWrj4tpSmM3QMfZAwo0YNBHN04/8MFI2E0c0hkcGCQM8yj
+	 dbWjiLZtwpe7kpG9X3nI9HtIdcBib6TOYlUKNbQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCMOy0 (ORCPT
+        id S1726824AbgCMO4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:54:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726528AbgCMOyZ (ORCPT
+        Fri, 13 Mar 2020 10:56:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40566 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgCMO4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:54:25 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DEpaEO116494
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:54:24 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yr125m2qc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:54:22 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 13 Mar 2020 14:54:19 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 13 Mar 2020 14:54:16 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02DEsFEP53149850
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:54:15 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E8964203F;
-        Fri, 13 Mar 2020 14:54:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7407542045;
-        Fri, 13 Mar 2020 14:54:13 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.190.184])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 13 Mar 2020 14:54:13 +0000 (GMT)
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- integrity tree
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Date:   Fri, 13 Mar 2020 10:54:12 -0400
-In-Reply-To: <20200313210714.58ff3d99@canb.auug.org.au>
-References: <20200313210714.58ff3d99@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031314-0008-0000-0000-0000035CADF7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031314-0009-0000-0000-00004A7DFB59
-Message-Id: <1584111252.5188.16.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_05:2020-03-12,2020-03-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003130077
+        Fri, 13 Mar 2020 10:56:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f3so5486565wrw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:56:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9ElDdxeSYu4NkyRAmxZIQdqY4pRojIvARlsO9YRK9Us=;
+        b=MqPIjjencIy+UVSuoMMpKtvcMzVksS0XRLxtWNatQO+FqHeig6l/5Jdimvruh6iKqD
+         YtbuOixFI7n2hGBvIhPgFzINlT1223dRfzgOy/I2akxkx2Nll6N0YOZGOn3s/ufzjIhc
+         LXJEyIXUzt45omezQRxbbwSBCB9YQLbRY5RzhF1ih/sCNphUGseNll4mWDHZk/GxS/8J
+         u45hJtKmFA65oL5vRl6sN13DBT15EAF64iui6KCpYSNUY8eFMhTrhEuvNVZNQ505HctX
+         6EiHGalHch9vYOQg4mudVPPoXE0K+NuatqNUyfiZiIN7cGHTVgb0Lzgr8QXV61ta+PtV
+         C/mQ==
+X-Gm-Message-State: ANhLgQ1qn8tQz4aDUDguV/jz2BM0ePp9cZJ+VLkto+0W5TJED5iXhtFA
+        TSoZOp4IzKUkiepTriFrHApzI/Eh
+X-Google-Smtp-Source: ADFU+vue2NbGV7G1Z3URoRGbNmt4diUMnxkBPy4bJadi/+ZMVIcecNH72arlxQKgIIPN16O57+azhQ==
+X-Received: by 2002:adf:ef81:: with SMTP id d1mr1471759wro.212.1584111382205;
+        Fri, 13 Mar 2020 07:56:22 -0700 (PDT)
+Received: from localhost (ip-37-188-247-35.eurotel.cz. [37.188.247.35])
+        by smtp.gmail.com with ESMTPSA id 9sm17160750wmo.38.2020.03.13.07.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 07:56:21 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 15:56:19 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v3] mm/sparse.c: Use kvmalloc_node/kvfree to alloc/free
+ memmap for the classic sparse
+Message-ID: <20200313145619.GD21007@dhcp22.suse.cz>
+References: <20200312130822.6589-1-bhe@redhat.com>
+ <20200312141749.GL27711@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312141749.GL27711@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-13 at 21:07 +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the akpm-current tree got a conflict in:
-> 
->   arch/x86/Kconfig
-> 
-> between commits:
-> 
->   9e2b4be377f0 ("ima: add a new CONFIG for loading arch-specific policies")
-> 
-> from the integrity tree and commit:
-> 
->   faaa52178603 ("userfaultfd: wp: add WP pagetable tracking to x86")
-> 
-> from the akpm-current tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> Note that I put the selects in their correct alphabetical position as
-> asked by the comment higher up in the file.  If that had been done in
-> the patches, then there would have been no conflicts ...
+On Thu 12-03-20 22:17:49, Baoquan He wrote:
+> This change makes populate_section_memmap()/depopulate_section_memmap
+> much simpler.
 
-True.  Thanks, Stephan.  Before moving it to "its proper location",
-I'm wondering if there should be a separate section for "imply".
+Not only and you should make it more explicit. It also tries to allocate
+memmaps from the target numa node so this is a functional change. I
+would prefer to have that in a separate patch in case we hit some weird
+NUMA setups which would choke on memory less nodes and similar horrors.
 
-Mimi
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
+I do not see any reason this shouldn't work. Btw. did you get to test
+it?
+
+Feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
+to both patches if you go and split.
+
+> ---
+> v2->v3:
+>   Remove __GFP_NOWARN and use array_size when calling kvmalloc_node()
+>   per Matthew's comments.
+> 
+>  mm/sparse.c | 27 +++------------------------
+>  1 file changed, 3 insertions(+), 24 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index bf6c00a28045..bb99633575b5 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -734,35 +734,14 @@ static void free_map_bootmem(struct page *memmap)
+>  struct page * __meminit populate_section_memmap(unsigned long pfn,
+>  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>  {
+> -	struct page *page, *ret;
+> -	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
+> -
+> -	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
+> -	if (page)
+> -		goto got_map_page;
+> -
+> -	ret = vmalloc(memmap_size);
+> -	if (ret)
+> -		goto got_map_ptr;
+> -
+> -	return NULL;
+> -got_map_page:
+> -	ret = (struct page *)pfn_to_kaddr(page_to_pfn(page));
+> -got_map_ptr:
+> -
+> -	return ret;
+> +	return kvmalloc_node(array_size(sizeof(struct page),
+> +			PAGES_PER_SECTION), GFP_KERNEL, nid);
+>  }
+>  
+>  static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
+>  		struct vmem_altmap *altmap)
+>  {
+> -	struct page *memmap = pfn_to_page(pfn);
+> -
+> -	if (is_vmalloc_addr(memmap))
+> -		vfree(memmap);
+> -	else
+> -		free_pages((unsigned long)memmap,
+> -			   get_order(sizeof(struct page) * PAGES_PER_SECTION));
+> +	kvfree(pfn_to_page(pfn));
+>  }
+>  
+>  static void free_map_bootmem(struct page *memmap)
+> -- 
+> 2.17.2
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
