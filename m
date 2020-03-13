@@ -2,214 +2,218 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C5BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FF0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7004F2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7361E20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="PLoDr7/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCMWIW (ORCPT
+        id S1727290AbgCMWOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:08:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55138 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726543AbgCMWIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 18:08:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 15:08:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,550,1574150400"; 
-   d="scan'208";a="390046224"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 13 Mar 2020 15:08:20 -0700
-Date:   Fri, 13 Mar 2020 15:08:20 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200313220820.GE5181@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
- <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
- <20200313164622.GC5181@linux.intel.com>
- <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
- <20200313184452.GD5181@linux.intel.com>
- <CAOASepP_oGOenjCvAvLg+e+=fz4H0X=cyD+v5ywD0peeXEEmYg@mail.gmail.com>
+        Fri, 13 Mar 2020 18:14:11 -0400
+Received: from mail-mw2nam10on2134.outbound.protection.outlook.com ([40.107.94.134]:38881
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726534AbgCMWOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 18:14:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NSTu4N5eJUSqn1d3hcLan7H2TOzxVcAHV+NZc4YZA6eh+rPb6YInd6OAkQWDjC0p3tjySb/h2NKGsP7Z3mfISZZPa4d6ScMDZXVgxyEc7bkjELMEN0+/DNhjpkBYMB+fHhAPUL0szlCbNwVmP8kxDpCpfpck7hWqLwbtUIMw22ibB7XpVpcbTaT659TQnBWZFBo1rm0Te0PQoQLJbz/NBv74+L13CD3SmssYV+63oLRUDNIk+J6ZaAki7EA4hmnu5U1YunmV2yGwQGW5QTh/sVsKFB1nkoxjeuxjhSByAa9uhgZnIerJeH7Djxu0v+aMY6lX8Q7DmI3kYTf6GxfGaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nuLXJbTKAo2HH6842/Z9yAyAx0RrH3bYr4WSdgTKwbc=;
+ b=Df1GHX2agNvwVf6gPFQtha8rZ1/9Yx+wYFkhSJp5gFBVmQQIWtZKmNlkDuVRDIc1gxrXuuUlxmMpk3+q+LcTR36H+yzwkVTuxMYJ8XiUB9ckzySyeVh8zKoskLlgRc+/TkIKdNnycabKBGQkM0T8O2VLih5tnXaz5NIMR+ME9Me/tbGy5E5yNqkDaL1LUiIyHTlSpvePHy9Dscy0htVuMM9dk2vVPTb4SX0l0d5GrNmHYJnqvPyCKXenEHtoXMIZaqrY3R3ClbLN1o7+12skRNYKZNt8QFKCroK5ALSBEnumcWfN6SNuDSw7njaixlRRUBvlZQ7dvCcY8OaJzZEJbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nuLXJbTKAo2HH6842/Z9yAyAx0RrH3bYr4WSdgTKwbc=;
+ b=PLoDr7/vu2ss8Vsffcu2fuJYRUjfc4YAkcLnjt0t6jSUVwUC1fo5dIvRjiScIhuhQN+jMe5ToeRhxSVlP/CyAnptRYQyoIQjoMC828yTlWovxq3APLbGzDvmMcDdWCpuQFbXhtr3LV1DxONNo8omcSDkv+K2aNztQbaz2mRGDjw=
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com (2603:10b6:300:2::27)
+ by MWHPR13MB1294.namprd13.prod.outlook.com (2603:10b6:300:9b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.5; Fri, 13 Mar
+ 2020 22:14:07 +0000
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::308b:ce00:680a:333e]) by MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::308b:ce00:680a:333e%6]) with mapi id 15.20.2835.003; Fri, 13 Mar 2020
+ 22:14:06 +0000
+From:   "Bird, Tim" <Tim.Bird@sony.com>
+To:     Shuah Khan <shuahkh@osg.samsung.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: cross-compiling vm, confusion over output directory
+Thread-Topic: cross-compiling vm, confusion over output directory
+Thread-Index: AdX5gBczKI3kpl+jT9616UrKn+d3vg==
+Date:   Fri, 13 Mar 2020 22:14:05 +0000
+Message-ID: <MWHPR13MB0895E9C11DB4E72158445944FDFA0@MWHPR13MB0895.namprd13.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tim.Bird@sony.com; 
+x-originating-ip: [160.33.195.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dcff9d1d-049e-470e-fb9f-08d7c79bd878
+x-ms-traffictypediagnostic: MWHPR13MB1294:
+x-microsoft-antispam-prvs: <MWHPR13MB1294DD016D062616114672CAFDFA0@MWHPR13MB1294.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 034119E4F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(199004)(6506007)(8676002)(26005)(316002)(81166006)(8936002)(81156014)(7696005)(110136005)(86362001)(2906002)(76116006)(64756008)(66946007)(66556008)(66446008)(66476007)(33656002)(71200400001)(52536014)(5660300002)(55016002)(186003)(478600001)(9686003)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR13MB1294;H:MWHPR13MB0895.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: sony.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4y6ieppL5SosIe4+k1NRUSrYkFAyHwhcXmuE3KmXBluHaifZkdlxuEDDTGehVLNIQIJ6y8J4ZjGoGqDN2fyrzOkmnlEoGanEuylWqhHpdVs/foWQ6x+QGHexMmlRZ2Ot18XRHveMUGRizGYnFUSIe634KNUkL8QjyMPcmHEFux6RiGOs/CWQhhKT3B9rp1Lafp5nIcUGZSHZnIoW6Ep8VXnHgXRJSi+DOr8yVKNBIfdZ8QOwRw/wmt8DH/nzpig+KMSxxDuw3nOd95oWxp4+8tkNJ3xlAe7KVROr0hHSGknFEFpzZFurgvcVUKFtvt5EiWKt+XVECzVi8ZmbSFMzIF/7pNsJIBQYBYzuz2MUJjMaH8Zl5g2fshev59fCijbwqE9Hzk+JN3GkPGi8pQcIuKrdFg8RoMqdM/9zDNWvsrLmAOh4yrPT5yyke/8I1a5C
+x-ms-exchange-antispam-messagedata: IdHA/Jft8vyXCg3zhgYqL1XlCA8fF/rhsSSwnCnvS0ZV6A915QIA2+HlRZ7StrJvZ5a+X9HeP6S3LzrukVhOFMthskc8e4nOGyX3ga/J2sEkpfqvBK16b4E3EFuwMI+5QOTJAFTGaZFdpzASiWfGWA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepP_oGOenjCvAvLg+e+=fz4H0X=cyD+v5ywD0peeXEEmYg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcff9d1d-049e-470e-fb9f-08d7c79bd878
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 22:14:05.5353
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HBkABwmbpNnq6RY0l44LLXyES78El8J9iZs7WBDjiDexnAtkt+PMfaOS7/FHxjF6zjtO9enI7pQ2YxQEDYaX6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 04:14:01PM -0400, Nathaniel McCallum wrote:
-> On Fri, Mar 13, 2020 at 2:45 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
- > > This doesn't compromise the ability to treat __vsdo...() like ENCLU if
-> > > you need the full power. But it does make it significantly easier to
-> > > consume when you don't have special needs. So as I see it, __vdso...()
-> > > should:
-> > >
-> > > 1. preserve %rbx
-> > > 2. take leaf in %rcx
-> > > 3. gain a void* stack param which is passed to the handler
-> >
-> > Unless I'm misunderstanding the request, this already exists.  %rsp at the
-> > time of EEXIT is passed to the handler.
-> 
-> Sorry, different stack parameter. I mean this:
-> 
-> typedef int (*sgx_enclave_exit_handler_t)(
->     long rdi,
->     long rsi,
->     long rdx,
->     long ursp,
->     long r8,
->     long r9,
->     int ret,
->     void *tcs,
->     struct sgx_enclave_exception *e,
->     void *misc
-> );
-> 
-> int __vdso_sgx_enter_enclave(
->     long rdi,
->     long rsi,
->     long rdx,
->     int leaf,
->     long r8,
->     long r9,
->     void *tcs,
->     struct sgx_enclave_exception *e,
->     void *misc,
->     sgx_enclave_exit_handler_t handler
-> );
-> 
-> This is so that the caller of __vdso...() can pass context into the
-> handler.
+I was working on fixing the cross-compilation for the selftests/vm tests.
+Currently, there are two issues in my testing:
 
-Hrm, I'm not a fan of adding a param that is only consumed by the handler,
-especially when there are multiple alternatives, e.g. fudge the param in
-assembly before calling __vdso(), have the enclave supply the context in a
-volatile register, etc...
+1) problem: required library missing from some cross-compile environments:
+tools/testing/selftests/vm/mlock-random-test.c requires libcap
+be installed.  The target line for mlock-random-test in
+tools/testing/selftests/vm/Makefile looks like this:
 
-> Note that I've also reordered the stack parameters so that the stack
-> order can be reused.
+$(OUTPUT)/mlock-random-test: LDLIBS +=3D -lcap
 
-Ah, ret<->tcs, took me a minute...
+and mlock-random-test.c has this include line:
+#include <sys/capability.h>
 
-Does preserving tsc->e->misc ordering matter all that much?  __vdso() needs
-to manually copy them either way.  I ask because putting @misc at the end
-would allow implementations that don't use @handler to omit the param (if
-I've done my math correctly, which is always a big if).  That would make
-adding the handler-only param a little more palatable.
+this is confusing, since this is different from the header file
+linux/capability.h.  It is associated with the capability library (libcap)
+and not the kernel.  In any event, on some distros and in some
+cross-compile SDKs the package containing these files is not installed
+by default.
 
-> > > 4. sub/add to %rsp rather than save/restore
-> >
-> > Can you elaborate on why you want to sub/add to %rsp instead of having the
-> > enclave unwind the stack?  Preserving %rsp across EEXIT/ERESUME seems more
-> > in line with function call semantics, which I assume is desirable?  E.g.
-> >
-> >   push param3
-> >   push param2
-> >   push param1
-> >
-> >   enclu[EEXIT]
-> >
-> >   add $0x18, %rsp
-> 
-> Before enclave EEXIT, the enclave restores %rsp to the value it had
-> before EENTER was called. Then it pushes additional output arguments
-> onto the stack. The enclave calls EENCLU[EEXIT].
-> 
-> We are now in __vdso...() on the way back to the caller. However, %rsp
-> has a different value than we entered the function with. This breaks
-> x86_64 ABI, obviously. The handler needs to fix this up: how does it
-> do so?
-> 
-> In the current code, __vdso..() saves the value of %rsp, calls the
-> handler and then restores %rsp. The handler can fix up the stack by
-> setting the correct value to %rbx and returning without restoring it.
+Once this library is installed, things progress farther.  Using an Ubuntu
+system, you can install the cross version of this library (for arm64) by do=
+ing:
+$ sudo apt install libcap-dev:arm64
 
-Ah, you're referring to the patch where the handler decides to return all
-the way back to the caller of __vdso...().
+1) solution:
+I would like to add some meta-data about this build dependency, by putting
+something in the settings file as a hint to CI build systems.  Specifically=
+, I'd like to
+create the file 'tools/testing/selftests/vm/settings', with the content:
+NEED_LIB=3Dcap
 
-> But this requires internal knowledge of the __vdso...() function,
-> which could theoretically change in the future.
-> 
-> If instead the __vdso...() only did add/sub, then the handler could do:
-> 1. pop return address
-> 2. pop handler stack params
-> 3. pop enclave additional output stack params
-> 4. push handler stack params
-> 5. push return address
-> 
-> While this is more work, it is standard calling convention work that
-> doesn't require internal knowledge of __vdso..(). Alternatively, if we
-> don't like the extra work, we can document the %rbx hack explicitly
-> into the handler documentation and make it part of the interface. But
-> we need some explicit way for the handler to pop enclave output stack
-> params that doesn't depend on internal knowledge of the __vdso...()
-> invariants.
+We already use settings for other meta-data about a test (right now, just a
+non-default timeout value), but I don't want to create a new file or syntax
+for this build dependency data.
 
-IIUC, this is what you're suggesting?  Having to align the stack makes this
-a bit annoying, but it's not bad by any means.
+Let me know what you think.
 
-diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-index 94a8e5f99961..05d54f79b557 100644
---- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
-+++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-@@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
-        /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
-        mov     %rsp, %rcx
+I may follow up with some script in the kernel source tree to check these
+dependencies, independent of any CI system.  I have such a script in Fuego
+that I could submit, but it would need some work to fit into the kernel bui=
+ld
+flow for kselftest.  The goal would be to provide a nicely formatted warnin=
+g,
+with a recommendation for a package install.  But that's more work than
+I think is needed right now just to let developers know there's a build dep=
+endency
+here.
 
--       /* Save the untrusted RSP in %rbx (non-volatile register). */
-+       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
-        mov     %rsp, %rbx
-+       and     $0xf, %rbx
+2) problem: reference to source-relative header file
+the Makefile for vm uses a relative path for include directories.
+Specifically, it has the line:
+CFLAGS =3D -Wall -I ../../../../../usr/include $(EXTRA_CFLAGS)
 
-        /*
-         * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
-@@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
-        mov     0x20(%rbp), %rax
-        call    .Lretpoline
+I believe this needs to reference kernel include files from the
+output directory, not the source directory.
 
--       /* Restore %rsp to its post-exit value. */
--       mov     %rbx, %rsp
-+       /* Undo the post-exit %rsp adjustment. */
-+       lea     0x20(%rsp,%rbx), %rsp
+With the relative include directory path, the program userfaultfd.c
+gets compilation error like this:
 
+userfaultfd.c:267:21: error: 'UFFD_API_RANGE_IOCTLS_BASIC' undeclared here =
+(not in a function)
+  .expected_ioctls =3D UFFD_API_RANGE_IOCTLS_BASIC,
+                     ^
+userfaultfd.c: In function 'uffd_poll_thread':
+userfaultfd.c:529:8: error: 'UFFD_EVENT_FORK' undeclared (first use in this=
+ function)
+   case UFFD_EVENT_FORK:
+        ^
+userfaultfd.c:529:8: note: each undeclared identifier is reported only once=
+ for each function it appears in
+userfaultfd.c:531:18: error: 'union <anonymous>' has no member named 'fork'
+    uffd =3D msg.arg.fork.ufd;
+                  ^
 
-That's reasonable, let's the handler play more games with minimal overhead.
+2) incomplete solution:
+I originally changed this line to read:
+CFLAGS =3D -Wall -I $(KBUILD_OUTPUT)/usr/include $(EXTRA_CFLAGS)
 
-> > > That would make this a very usable and fast interface without
-> > > sacrificing any of its current power.
-> >
-> 
+This works when the output directory is specified using KBUILD_OUTPUT,
+but not when the output directory is specified using O=3D
+I'm not sure what happens when the output directory is specified
+with a non-source-tree current working directory.
+
+In any event, while researching a proper solution to this, I found
+the following in tools/testing/selftests/Makefile:
+
+If compiling with ifneq ($(O),)
+    BUILD :=3D $(O)
+else
+    ifneq ($(KBUILD_OUTPUT),)
+        BUILD :=3D $(KBUILD_OUTPUT)/kselftest
+    else
+        BUILD :=3D $(shell pwd)
+        DEFAULT_INSTALL_HDR_PATH :=3D 1
+    endif
+endif
+
+This doesn't seem right.  It looks like the selftests Makefile treats a dir=
+ectory
+passed in using O=3D different from one specified using KBUILD_OUTPUT
+or the current working directory.
+In the KBUILD_OUTPUT case, you get an extra 'kselftest' directory layer
+that you don't get for the other two.
+
+In contrast, the kernel top-level Makefile has this:
+ifeq ("$(origin O)", "command line")
+  KBUILD_OUTPUT :=3D $(O)
+endif
+(and from then on, the top-level Makefile appears to only use KBUILD_OUTPUT=
+)
+
+This makes it look like the rest of the kernel build system treats O=3D and=
+ KBUILD_OUTPUT
+identically.
+
+Am I missing something, or is there a flaw in the O=3D/KBUILD_OUTPUT handli=
+ng in
+kselftest?  Please let me know and I'll try to work out an appropriate fix =
+for
+cross-compiling the vm tests.
+ -- Tim
+
