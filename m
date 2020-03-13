@@ -2,165 +2,305 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CCEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9138BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76ABC206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689A02072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lTwGnuyb"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BRd65QOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCMQxF (ORCPT
+        id S1727112AbgCMQx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:53:05 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26578 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726553AbgCMQxF (ORCPT
+        Fri, 13 Mar 2020 12:53:28 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:56853 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMQx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:53:05 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DGikUU025339;
-        Fri, 13 Mar 2020 17:52:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=arHqyZMcMY2U5UePP3d/A6h4uuFwryqbpgb/SdplBto=;
- b=lTwGnuyb67U5yuzXx07vk2tjTfpezVq0/nNNVTwLXH/TqR04GQpSOzpSHEGECnBffzkZ
- misMTC2eb0g4LulXFIeYwjmnaJle0qa9xqgkRzA6eQ+MdKhyAe7IPfPqJ7Oo+f4vwRTI
- LiRn0+y8K1EXvwSwSk9Dp52U4q+7/DMcsreNIxP6IRZri/Szxv9abVZ/4TWdCvdaYkeI
- +/PZHHRtB/CeOUW3J4sNN1J9LQ1V8fUKy/LBPUADcBXNs93dkin7l0AyDzHiH3TnSHMP
- 5igkQ53oYFys+RDFXgLZKovyf58AD67apuMik/iWRx3Wt4uHvh+5vfRSKF45PbESiL2w lg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yqt7t34m3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 17:52:57 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8914110002A;
-        Fri, 13 Mar 2020 17:52:52 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag7node2.st.com [10.75.127.20])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7B3F72B187E;
-        Fri, 13 Mar 2020 17:52:52 +0100 (CET)
-Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG7NODE2.st.com
- (10.75.127.20) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Mar
- 2020 17:52:52 +0100
-Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
- SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
- 15.00.1473.003; Fri, 13 Mar 2020 17:52:52 +0100
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-To:     Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>
-CC:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] remoteproc: fall back to using parent memory pool if
- no dedicated available
-Thread-Topic: [PATCH 1/2] remoteproc: fall back to using parent memory pool if
- no dedicated available
-Thread-Index: AQHV8z8wdNhXoitGJkaDXZkUeB6A96hGxfVg
-Date:   Fri, 13 Mar 2020 16:52:52 +0000
-Message-ID: <ce37072d2f304214aa920e66fa3b30b1@SFHDAG3NODE1.st.com>
-References: <20200305224108.21351-1-s-anna@ti.com>
- <20200305224108.21351-2-s-anna@ti.com>
-In-Reply-To: <20200305224108.21351-2-s-anna@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 13 Mar 2020 12:53:28 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 5143823EC2;
+        Fri, 13 Mar 2020 17:53:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584118404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o/s4NtXKYsxA4RgfwWhA3zpVJzNOf9dpb3C9XBdpNbg=;
+        b=BRd65QOjqf7cKLLcB24LvuK7LUkR5xgsbHrFHLM3TuWylZ9xIxOujPPIK19DqbvhY3px2/
+        Sggp/yOfW6Ia7UX05KEXyIuqiP7a6dlGek0KDpQqKQTH6OkCkyTlbUPXONWCHcB4pW+d+y
+        Ew/y71urxnX0ui2oWJJlD1DTqSMOJ00=
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_06:2020-03-12,2020-03-13 signatures=0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Mar 2020 17:53:24 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
+In-Reply-To: <CA+h21hqk+pVrGgHx4iTshfE3i4WF7VANPfMf2ykPFpL3=ragag@mail.gmail.com>
+References: <20200310125542.5939-1-olteanv@gmail.com>
+ <615284875b709f602d57e4a4621a83c1@walle.cc>
+ <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
+ <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
+ <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
+ <CA+h21hqk+pVrGgHx4iTshfE3i4WF7VANPfMf2ykPFpL3=ragag@mail.gmail.com>
+Message-ID: <4b77ccec9d0de0615985ebf60db9cf67@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 5143823EC2
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suman,
+Am 2020-03-13 17:37, schrieb Vladimir Oltean:
+> Hi Michael,
+> 
+> On Fri, 13 Mar 2020 at 18:07, Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Am 2020-03-10 16:22, schrieb Michael Walle:
+>> > Hi Vladimir,
+>> >
+>> > Am 2020-03-10 15:56, schrieb Vladimir Oltean:
+>> >>> (2) Also, reading the flash, every second time there is
+>> >>> (reproducibly)
+>> >>> an
+>> >>> IO error:
+>> >>>
+>> >>> # hexdump -C /dev/mtd0
+>> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |huhu............|
+>> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |................|
+>> >>> *
+>> >>> 01000000
+>> >>> # hexdump -C /dev/mtd0
+>> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |huhu............|
+>> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |................|
+>> >>> *
+>> >>> hexdump: /dev/mtd0: Input/output error
+>> >>> 00dc0000
+>> >>> # hexdump -C /dev/mtd0
+>> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |huhu............|
+>> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |................|
+>> >>> *
+>> >>> 01000000
+>> >>> # hexdump -C /dev/mtd0
+>> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |huhu............|
+>> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>> >>> |................|
+>> >>> *
+>> >>> hexdump: /dev/mtd0: Input/output error
+>> >>> 00e6a000
+>> >>>
+>> >>
+>> >> Just to be clear, issue 2 is seen only after you abort another
+>> >> transaction, right?
+>> >
+>> > No, just normal uninterrupted reading. Just tried it right after
+>> > reboot. Doesn't seem to be every second time though, just random
+>> > which makes me wonder if that is another problem now. Also the
+>> > last successful reading is random.
+>> 
+>> 
+>> Ok I guess I know what the root cause is. This is an extract of
+>> the current code:
+>> 
+>> > static int dspi_transfer_one_message(struct spi_controller *ctlr,
+>> >                                    struct spi_message *message)
+>> > {
+>> > ..
+>> >       /* Kick off the interrupt train */
+>> >       dspi_fifo_write(dspi);
+>> >
+>> >       status = wait_event_interruptible(dspi->waitq,
+>> >                                         dspi->waitflags);
+>> >       dspi->waitflags = 0;
+>> > ..
+>> > }
+>> >
+>> > static int dspi_rxtx(struct fsl_dspi *dspi)
+>> > {
+>> >       dspi_fifo_read(dspi);
+>> >
+>> >       if (!dspi->len)
+>> >               /* Success! */
+>> >               return 0;
+>> >
+>> >       dspi_fifo_write(dspi);
+>> >
+>> >       return -EINPROGRESS;
+>> > }
+>> 
+>> dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
+>> access shared data like, dspi->words_in_flight. In the EIO error case
+>> the following bytes_sent is -1, because dspi->words_in_flight is -1.
+>> 
+>> > /* Update total number of bytes that were transferred */
+>> > bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+>> 
+>> words_in_flight is always -1 after dspi_fifo_read() was called. In
+>> the error case, the ISR kicks in right in the middle of the execution
+>> of dspi_fifo_write() in dspi_transfer_one_message().
+>> 
+>> > static void dspi_fifo_write(struct fsl_dspi *dspi)
+>> > {
+>> > ..
+>> >       if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
+>> >               dspi_eoq_fifo_write(dspi);
+>> >        else
+>> >               dspi_xspi_fifo_write(dspi);
+>> 
+>> Now if the ISR is executed right here..
+>> 
+>> >
+>> >       /* Update total number of bytes that were transferred */
+>> >       bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+>> 
+>> .. words_in_flight might be -1.
+>> 
+>> >       msg->actual_length += bytes_sent;
+>> 
+>> and bytes_sent is negative. And this causes an IO error because
+>> the returned overall message length doesn't match.
+>> 
+>> >       dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
+>> > ..
+>> > }
+>> 
+>> I could not reproduce the issue with the following patch. I don't
+>> know if I got the locking correct though or if there is a better
+>> way to go.
+>> 
+>> 
+>> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+>> index 8b16de9ed382..578fedeb16a0 100644
+>> --- a/drivers/spi/spi-fsl-dspi.c
+>> +++ b/drivers/spi/spi-fsl-dspi.c
+>> @@ -224,6 +224,7 @@ struct fsl_dspi {
+>>          u16                                     tx_cmd;
+>>          const struct fsl_dspi_devtype_data      *devtype_data;
+>> 
+>> +       spinlock_t lock;
+>>          wait_queue_head_t                       waitq;
+>>          u32                                     waitflags;
+>> 
+>> @@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi 
+>> *dspi)
+>> 
+>>   static int dspi_rxtx(struct fsl_dspi *dspi)
+>>   {
+>> +       unsigned long flags;
+>> +
+>> +       spin_lock_irqsave(&dspi->lock, flags);
+>>          dspi_fifo_read(dspi);
+>> 
+>> -       if (!dspi->len)
+>> +       if (!dspi->len) {
+>>                  /* Success! */
+>> +               spin_unlock_irqrestore(&dspi->lock, flags);
+>>                  return 0;
+>> +       }
+>> 
+>>          dspi_fifo_write(dspi);
+>> 
+>> +       spin_unlock_irqrestore(&dspi->lock, flags);
+>>          return -EINPROGRESS;
+>>   }
+>> 
+>> @@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct
+>> spi_controller *ctlr,
+>>          struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+>>          struct spi_device *spi = message->spi;
+>>          struct spi_transfer *transfer;
+>> +       unsigned long flags;
+>>          int status = 0;
+>> +       int i = 0;
+>> 
+>>          if (dspi->irq)
+>>                  dspi_enable_interrupts(dspi, true);
+>> @@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct
+>> spi_controller *ctlr,
+>>                                  goto out;
+>>                  } else if (dspi->irq) {
+>>                          /* Kick off the interrupt train */
+>> +                       spin_lock_irqsave(&dspi->lock, flags);
+>>                          dspi_fifo_write(dspi);
+>> +                       spin_unlock_irqrestore(&dspi->lock, flags);
+>> 
+>>                          status = 
+>> wait_event_interruptible(dspi->waitq,
+>> 
+>> dspi->waitflags);
+>> @@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device
+>> *pdev)
+>>          ctlr->cleanup = dspi_cleanup;
+>>          ctlr->slave_abort = dspi_slave_abort;
+>>          ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
+>> +       spin_lock_init(&dspi->lock);
+>> 
+>>          pdata = dev_get_platdata(&pdev->dev);
+>>          if (pdata) {
+>> 
+>> 
+>> 
+>> -michael
+> 
+> Thanks for taking such a close look. I haven't had the time to follow 
+> up.
+> Indeed, the ISR, and therefore dspi_fifo_read, can execute before
+> dspi->words_in_flight was populated correctly. And bad things will
+> happen in that case.
+> But I wouldn't introduce a spin lock that disables interrupts on the
+> local CPU just for that - it's too complicated for this driver.
 
-> -----Original Message-----
-> From: Suman Anna <s-anna@ti.com>
-> Sent: jeudi 5 mars 2020 23:41
-> To: Bjorn Andersson <bjorn.andersson@linaro.org>; Loic PALLARDY
-> <loic.pallardy@st.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>; Arnaud POULIQUEN
-> <arnaud.pouliquen@st.com>; Tero Kristo <t-kristo@ti.com>; linux-
-> remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; Suman Anna
-> <s-anna@ti.com>
-> Subject: [PATCH 1/2] remoteproc: fall back to using parent memory pool if=
- no
-> dedicated available
->=20
-> From: Tero Kristo <t-kristo@ti.com>
->=20
-> In some cases, like with OMAP remoteproc, we are not creating dedicated
-> memory pool for the virtio device. Instead, we use the same memory pool
-> for all shared memories. The current virtio memory pool handling forces a
-> split between these two, as a separate device is created for it, causing
-> memory to be allocated from bad location if the dedicated pool is not
-> available. Fix this by falling back to using the parent device memory poo=
-l if
-> dedicated is not available.
->=20
-> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma
-> memory pool")
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  drivers/remoteproc/remoteproc_virtio.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c
-> b/drivers/remoteproc/remoteproc_virtio.c
-> index 8c07cb2ca8ba..4723ebe574b8 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -368,6 +368,16 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev,
-> int id)
->  				goto out;
->  			}
->  		}
-> +	} else {
-> +		struct device_node *np =3D rproc->dev.parent->of_node;
-> +
-> +		/*
-> +		 * If we don't have dedicated buffer, just attempt to
-> +		 * re-assign the reserved memory from our parent.
-> +		 * Failure is non-critical so don't check return value
-> +		 * either.
-> +		 */
-> +		of_reserved_mem_device_init_by_idx(dev, np, 0);
->  	}
-I aven't tested your patchset yet, but reviewing you code,  I wonder if you=
- cannot declare your  memory pool
-in your platform driver using  rproc_of_resm_mem_entry_init. Something like=
-:
-	struct device_node *mem_node;
-	struct reserved_mem *rmem;
+Sure. It was just a quick test whether the problem actually goes away.
 
-	mem_node =3D of_parse_phandle(dev->of_node, "memory-region", 0);
-	rmem =3D of_reserved_mem_lookup(mem_node);
-	mem =3D rproc_of_resm_mem_entry_init(dev, 0,
-							   rmem->size,
-							   rmem->base,
-							   " vdev0buffer");
+> I would just keep the SPI interrupt quiesced via SPI_RSER and enable
+> it only once it's safe, aka after updating dspi->words_in_flight.
 
-A main advantage of this implementation would be that the index of the memo=
-ry region would not be hard coded to 0.
+I didn't want to move the interrupt_enable() around. I leave this up to
+you ;)
 
-Regards,
-Arnaud
->=20
->  	/* Allocate virtio device */
-> --
-> 2.23.0
-
+-michael
