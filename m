@@ -2,132 +2,99 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D63BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81016C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D007F20753
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=studiofuga.com header.i=@studiofuga.com header.b="AHOXe4GV"
+	by mail.kernel.org (Postfix) with ESMTP id 56A752074E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgCMVF0 (ORCPT
+        id S1727299AbgCMVGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:05:26 -0400
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:6330 "EHLO
-        egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbgCMVF0 (ORCPT
+        Fri, 13 Mar 2020 17:06:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48041 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgCMVGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:05:26 -0400
-X-Sender-Id: dreamhost|x-authsender|fuga@studiofuga.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id ACA48920E4B;
-        Fri, 13 Mar 2020 20:58:13 +0000 (UTC)
-Received: from pdx1-sub0-mail-a25.g.dreamhost.com (100-96-42-19.trex.outbound.svc.cluster.local [100.96.42.19])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 03535920E23;
-        Fri, 13 Mar 2020 20:58:13 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|fuga@studiofuga.com
-Received: from pdx1-sub0-mail-a25.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.5);
-        Fri, 13 Mar 2020 20:58:13 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|fuga@studiofuga.com
-X-MailChannels-Auth-Id: dreamhost
-X-Trouble-Turn: 759ed42608d90e84_1584133093442_647394103
-X-MC-Loop-Signature: 1584133093442:1780277765
-X-MC-Ingress-Time: 1584133093441
-Received: from pdx1-sub0-mail-a25.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a25.g.dreamhost.com (Postfix) with ESMTP id 255C5AC605;
-        Fri, 13 Mar 2020 13:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=studiofuga.com; h=
-        content-type:mime-version:subject:from:in-reply-to:date:cc
-        :content-transfer-encoding:message-id:references:to; s=
-        studiofuga.com; bh=ydfbhmckSPSDI5oE8QKXi+Gh/j4=; b=AHOXe4GV4AoZP
-        4BMILKPlmuGVPX76t0irsROmfEr4gm4BOjSv1uOowXA/p146mPVTukv+I8RfC/bv
-        h9HGFQEDFi5s/7XPdKGvsTtyxPAlSPKbKLW63hYVqIH0uZCVz75OAAoAYgNYa8Lv
-        rt+OXhXrw3gOS4BxhkOuv5cQnMxFiY=
-Received: from [192.168.178.37] (unknown [151.55.183.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: fuga@studiofuga.com)
-        by pdx1-sub0-mail-a25.g.dreamhost.com (Postfix) with ESMTPSA id 15C3CAC623;
-        Fri, 13 Mar 2020 13:58:05 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] i2c: mv64xxx: Implement I2C_M_RECV_LEN and
- I2C_FUNC_SMBUS_READ_BLOCK_DATA
-X-DH-BACKEND: pdx1-sub0-mail-a25
-From:   Federico Fuga <fuga@studiofuga.com>
-In-Reply-To: <87k13ox9q1.fsf@FE-laptop>
-Date:   Fri, 13 Mar 2020 21:58:03 +0100
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D320E497-D240-4821-99F7-D0BE8744D3EF@studiofuga.com>
-References: <20200118115820.9080-1-fuga@studiofuga.com>
- <20200222124805.GJ1716@kunai> <87k13ox9q1.fsf@FE-laptop>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: -100
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvjedgudegfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtggfuhfgjfffgkfhfvffosehtqhhmtdhhtddvnecuhfhrohhmpefhvgguvghrihgtohcuhfhughgruceofhhughgrsehsthhuughiohhfuhhgrgdrtghomheqnecukfhppeduhedurdehhedrudekfedruddtkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludelvddrudeikedrudejkedrfeejngdpihhnvghtpeduhedurdehhedrudekfedruddtkedprhgvthhurhhnqdhprghthhephfgvuggvrhhitghoucfhuhhgrgcuoehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmqedpmhgrihhlfhhrohhmpehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+        Fri, 13 Mar 2020 17:06:14 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jCrVH-0003IC-Bk; Fri, 13 Mar 2020 22:05:59 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7674A100C8D; Fri, 13 Mar 2020 22:05:58 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Aman Sharma <amanharitsh123@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq correctly
+In-Reply-To: <20200312141102.GA93224@google.com>
+References: <20200312141102.GA93224@google.com>
+Date:   Fri, 13 Mar 2020 22:05:58 +0100
+Message-ID: <871rpwhsnd.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello all,
+Bjorn,
 
+Bjorn Helgaas <helgaas@kernel.org> writes:
+> On Thu, Mar 12, 2020 at 10:53:06AM +0100, Marc Gonzalez wrote:
+>> Last time around, my understanding was that, going forward,
+>> the best solution was:
+>> 
+>> 	virq = platform_get_irq(...)
+>> 	if (virq <= 0)
+>> 		return virq ? : -ENODEV;
+>> 
+>> i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
+>> 
+>> @Bjorn/Lorenzo did you have a change of heart?
+>
+> Yes.  In 10006651 (Oct 20, 2017), I thought:
+>
+>   irq = platform_get_irq(pdev, 0);
+>   if (irq <= 0)
+>     return -ENODEV;
+>
+> was fine.  In 11066455 (Aug 7, 2019), I said I thought I was wrong and
+> that:
+>
+>   platform_get_irq() is a generic interface and we have to be able to
+>   interpret return values consistently.  The overwhelming consensus
+>   among platform_get_irq() callers is to treat "irq < 0" as an error,
+>   and I think we should follow suit.
+>   ...
+>   I think the best pattern is:
+>
+>     irq = platform_get_irq(pdev, i);
+>     if (irq < 0)
+>       return irq;
 
+Careful. 0 is not a valid interrupt.
 
-> Il giorno 13 mar 2020, alle ore 21:48, Gregory CLEMENT =
-<gregory.clement@bootlin.com> ha scritto:
->=20
-> Hello Wolfram,
->=20
->> On Sat, Jan 18, 2020 at 12:58:20PM +0100, Federico Fuga wrote:
->>> The i2c_mv64xxx driver doesn't implement the I2C_M_REC_LEN function
->>> essential to allow blocks with variable length to be read from an =
-i2c
->>> slave.
->>> This is needed to implement the SMBus Read Block Data function.
->>>=20
->>> This patch implements the function by changing the bytes_left and
->>> msg len on the fly if the flag is specified.
->>>=20
->>> It has been successfully tested on Allwinner A33 with a special
->>> i2c chip that returns variable length blocks on reading.
->>>=20
->>> Signed-off-by: Federico Fuga <fuga@studiofuga.com>
->>> ---
->>=20
->> Gregory, any comment? I can't say much about the implementation. In
->> general, this is a nice feature to have...
->=20
-> I thought I was already sent a reviewed by, as I reviewed this patch
-> before Frederico actually sent it.
->=20
-> So you can even add a
->=20
-> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->=20
-> Thanks,
+Thanks,
 
-
-For what it worth, I can confirm that after many weeks of use the patch =
-works as expected without any issue.
-
-
-Federico
-
-
-
-
-
+        tglx
