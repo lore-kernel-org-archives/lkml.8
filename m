@@ -2,76 +2,122 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD42C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36857C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A405A206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C69206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgCMOww (ORCPT
+        id S1726756AbgCMOy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:52:52 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37579 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726643AbgCMOww (ORCPT
+        Fri, 13 Mar 2020 10:54:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7806 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726528AbgCMOyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:52:52 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 02DEq6H9007099
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 10:52:06 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 25BB9420E5E; Fri, 13 Mar 2020 10:52:06 -0400 (EDT)
-Date:   Fri, 13 Mar 2020 10:52:06 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Tech-board-discuss] [Ksummit-discuss] Linux Foundation
- Technical Advisory Board Elections -- Change to charter
-Message-ID: <20200313145206.GE225435@mit.edu>
-References: <20200313031947.GC225435@mit.edu>
- <87d09gljhj.fsf@intel.com>
- <20200313093548.GA2089143@kroah.com>
- <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
- <20200313100755.GA2161605@kroah.com>
- <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
- <20200313103720.GA2215823@kroah.com>
- <CAMuHMdW6Br+x+_9xP+X4xr6FP_uNpZ6q6065RJH-9yFy_8fiZA@mail.gmail.com>
- <20200313081216.627c5bdf@gandalf.local.home>
- <874kusl50q.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kusl50q.fsf@intel.com>
+        Fri, 13 Mar 2020 10:54:25 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DEpaEO116494
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:54:24 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yr125m2qc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:54:22 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 13 Mar 2020 14:54:19 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Mar 2020 14:54:16 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02DEsFEP53149850
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 14:54:15 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E8964203F;
+        Fri, 13 Mar 2020 14:54:15 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7407542045;
+        Fri, 13 Mar 2020 14:54:13 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.190.184])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Mar 2020 14:54:13 +0000 (GMT)
+Subject: Re: linux-next: manual merge of the akpm-current tree with the
+ integrity tree
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Date:   Fri, 13 Mar 2020 10:54:12 -0400
+In-Reply-To: <20200313210714.58ff3d99@canb.auug.org.au>
+References: <20200313210714.58ff3d99@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031314-0008-0000-0000-0000035CADF7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031314-0009-0000-0000-00004A7DFB59
+Message-Id: <1584111252.5188.16.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_05:2020-03-12,2020-03-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 phishscore=0 mlxlogscore=999
+ spamscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 04:10:29PM +0200, Jani Nikula wrote:
+On Fri, 2020-03-13 at 21:07 +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Have you considered whether the eligibility for running and voting
-> should be made the same? As it is, absolutely anyone can self-nominate
-> and run.
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+> 
+>   arch/x86/Kconfig
+> 
+> between commits:
+> 
+>   9e2b4be377f0 ("ima: add a new CONFIG for loading arch-specific policies")
+> 
+> from the integrity tree and commit:
+> 
+>   faaa52178603 ("userfaultfd: wp: add WP pagetable tracking to x86")
+> 
+> from the akpm-current tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> Note that I put the selects in their correct alphabetical position as
+> asked by the comment higher up in the file.  If that had been done in
+> the patches, then there would have been no conflicts ...
 
-That's always been the case.  However, at least historically, people
-who weren't physically present has never been successful.
+True.  Thanks, Stephan.  Before moving it to "its proper location",
+I'm wondering if there should be a separate section for "imply".
 
-One of the changes last year with the adoption of electronic voting
-was there was only a written nomination statement and not a short
-spoken statement before the vote.
+Mimi
 
-					- Ted
