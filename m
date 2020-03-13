@@ -2,139 +2,165 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50592C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CFEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254E2206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584121799;
-	bh=7f3thBfEynN8Kb15/c88ViQSGjrO0ZDJtS4JzsLaoTA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i7peTK6GjcuXwLxtnOObvxorA1ONnUb8l4QFD/Zqx6lyG0i6YAoY/6Ca22Rzyl11n
-	 TzSMIamGB/WLwAgWuhPzrIcREFlQ/innou8+IgBUqUqo4H3bCAsetpvCCjMCLOamMe
-	 UtG3BR9gI6RjZaN+Rv7vXg1eApZlpKfZlDO87HG0=
+	by mail.kernel.org (Postfix) with ESMTP id D917D206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:50:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKbfHUHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCMRt6 (ORCPT
+        id S1727250AbgCMRuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:49:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36186 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCMRt5 (ORCPT
+        Fri, 13 Mar 2020 13:50:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51322 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727211AbgCMRuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:49:57 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j14so11021780otq.3;
-        Fri, 13 Mar 2020 10:49:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ikJY8jL+WwN9m0h/0ly8EPxlXvIn8mr2TN/3Ad+1Sjw=;
-        b=so5fYZSoCwaFwWyqYnzVHGf7R/BRTOLM0pxs/dR3qdTZ6zLyvss4/5eIoDD+FTJNin
-         9y0AnkjYIoZb+chMW7BbRXnVfr9Z2ca1NP30yrHHAtbTXAgk9dNOoKzW63lQc4yeI5WQ
-         zSs7Pmgq8NoKeneJPe1rSMv9j3oImG4Z/lEskFJpRChMmb3oqZ1GU+JAYFnzcKcwtoq5
-         bjkQSt6g/nZyyDEVnDx9C1XDmcQOJJqYHWFXFOuUArR5xWPIcMi5egEvCD//IVrH/EbG
-         9UqcLjpK63Q173FzarBGGR1Hs2ZpqkNqILmCMN9BjIUbeh0nQi+CxyIlJi5VYwVJSgRH
-         lSsw==
-X-Gm-Message-State: ANhLgQ0XrmWrh2NkhUjAVUv6E7z5iHQBiAjaHHK1bJT15f9AMOsts64G
-        Ecb1pmiAlwj5u/ricw7X6Blh/tDVIUyi6Cmi09U=
-X-Google-Smtp-Source: ADFU+vscUcNl0XqoPtGNKufJ6d5QVPnoK1rJaGUBAwvppGXXEvwIKjNWZWqU+cwx4LdvkSpguWD67ibiRm73DRPkOAE=
-X-Received: by 2002:a9d:67d7:: with SMTP id c23mr12349631otn.262.1584121796924;
- Fri, 13 Mar 2020 10:49:56 -0700 (PDT)
+        Fri, 13 Mar 2020 13:50:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584121804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2y9bOOdnV7SoV4MD1WpKfVVbv/C4nrVUnfO1nhE2Kbg=;
+        b=BKbfHUHGwbPgXxt8H2dKbEwjVKtCfvJMltrqOd1jqonr9vqV18O8iNDe+gLAaDJPq33g8S
+        njpCPxz7ywWdwykXl2u/6/kG2SQKiFShdtJEVubMs+gjh2h8zj/tV2rHpeGAZj+aUylFKZ
+        851NYnGRhko7toZJILTXQerD6YXB+jE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-UH7TaFUzPLSR-Dn6vFuh8w-1; Fri, 13 Mar 2020 13:50:02 -0400
+X-MC-Unique: UH7TaFUzPLSR-Dn6vFuh8w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7490E801E6D;
+        Fri, 13 Mar 2020 17:50:00 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-125-21.rdu2.redhat.com [10.10.125.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 82A4960BF7;
+        Fri, 13 Mar 2020 17:49:58 +0000 (UTC)
+Subject: Re: [PATCH v3 3/3] KEYS: Use kvmalloc() to better handle large buffer
+ allocation
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+References: <20200313152102.1707-1-longman@redhat.com>
+ <20200313152102.1707-4-longman@redhat.com>
+ <20200313164306.GA907@sol.localdomain>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8f2f1787-88b0-f86d-991c-34cfd2f9b4aa@redhat.com>
+Date:   Fri, 13 Mar 2020 13:49:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200304113248.1143057-1-mail@maciej.szmigiero.name> <20200312161751.GA5245@fuller.cnet>
-In-Reply-To: <20200312161751.GA5245@fuller.cnet>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 13 Mar 2020 18:49:45 +0100
-Message-ID: <CAJZ5v0jLOKj5LN5Kmredixomer4BKdBPNwP7gOf7A0tS_WMbDQ@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuidle-haltpoll: allow force loading on hosts without
- the REALTIME hint
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        kvm-devel <kvm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200313164306.GA907@sol.localdomain>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 5:36 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
+On 3/13/20 12:43 PM, Eric Biggers wrote:
+> On Fri, Mar 13, 2020 at 11:21:02AM -0400, Waiman Long wrote:
+>> For large multi-page temporary buffer allocation, the security/keys
+>> subsystem don't need contiguous physical pages. It will work perfectly
+>> fine with virtually mapped pages.
+>>
+>> Replace the kmalloc() call by kvmalloc() and provide a __kvzfree()
+>> helper function to clear and free the kvmalloc'ed buffer. This will
+>> reduce the chance of memory allocation failure just because of highly
+>> fragmented pages.
+>>
+>> Suggested-by: David Howells <dhowells@redhat.com>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  security/keys/internal.h | 14 ++++++++++++++
+>>  security/keys/keyctl.c   | 10 +++++-----
+>>  2 files changed, 19 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/security/keys/internal.h b/security/keys/internal.h
+>> index ba3e2da14cef..855b11eb73ee 100644
+>> --- a/security/keys/internal.h
+>> +++ b/security/keys/internal.h
+>> @@ -16,6 +16,8 @@
+>>  #include <linux/keyctl.h>
+>>  #include <linux/refcount.h>
+>>  #include <linux/compat.h>
+>> +#include <linux/mm.h>
+>> +#include <linux/vmalloc.h>
+>>  
+>>  struct iovec;
+>>  
+>> @@ -349,4 +351,16 @@ static inline void key_check(const struct key *key)
+>>  
+>>  #endif
+>>  
+>> +/*
+>> + * Helper function to clear and free a kvmalloc'ed memory object.
+>> + */
+>> +static inline void __kvzfree(const void *addr, size_t len)
+>> +{
+>> +	if (is_vmalloc_addr(addr)) {
+>> +		memset((void *)addr, 0, len);
+>> +		vfree(addr);
+>> +	} else {
+>> +		kzfree(addr);
+>> +	}
+>> +}
+> Since this takes the length as a parameter, it can be simplified to:
 >
-> On Wed, Mar 04, 2020 at 12:32:48PM +0100, Maciej S. Szmigiero wrote:
-> > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
-> >
-> > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
-> > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
-> > could also be used in scenarios when the host does not advertise the
-> > KVM_HINTS_REALTIME hint.
-> >
-> > While the behavior introduced by the aforementioned commit makes sense as
-> > the default there are cases where the old behavior is desired, for example,
-> > when other kernel changes triggered by presence by this hint are unwanted,
-> > for some workloads where the latency benefit from polling overweights the
-> > loss from idle CPU capacity that otherwise would be available, or just when
-> > running under older Qemu versions that lack this hint.
-> >
-> > Let's provide a typical "force" module parameter that allows restoring the
-> > old behavior.
-> >
-> > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
-> > ---
-> >  drivers/cpuidle/cpuidle-haltpoll.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> >
-> > Changes from v1:
-> > Make the module parameter description more general, don't unnecessarily
-> > break a line in haltpoll_init().
-> >
-> > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> > index b0ce9bc78113..db124bc1ca2c 100644
-> > --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> > @@ -18,6 +18,10 @@
-> >  #include <linux/kvm_para.h>
-> >  #include <linux/cpuidle_haltpoll.h>
-> >
-> > +static bool force __read_mostly;
-> > +module_param(force, bool, 0444);
-> > +MODULE_PARM_DESC(force, "Load unconditionally");
-> > +
-> >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> >  static enum cpuhp_state haltpoll_hp_state;
-> >
-> > @@ -90,6 +94,11 @@ static void haltpoll_uninit(void)
-> >       haltpoll_cpuidle_devices = NULL;
-> >  }
-> >
-> > +static bool haltpool_want(void)
-> > +{
-> > +     return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
-> > +}
-> > +
-> >  static int __init haltpoll_init(void)
-> >  {
-> >       int ret;
-> > @@ -101,8 +110,7 @@ static int __init haltpoll_init(void)
-> >
-> >       cpuidle_poll_state_init(drv);
-> >
-> > -     if (!kvm_para_available() ||
-> > -             !kvm_para_has_hint(KVM_HINTS_REALTIME))
-> > +     if (!kvm_para_available() || !haltpool_want())
-> >               return -ENODEV;
-> >
-> >       ret = cpuidle_register_driver(drv);
+> static inline void __kvzfree(const void *addr, size_t len)
+> {
+> 	if (addr) {
+> 		memset((void *)addr, 0, len);
+> 		kvfree(addr);
+> 	}
+> }
+Yes, that will work too.
+>>  			if (!tmpbuf || unlikely(ret > tmpbuflen)) {
+>>  				if (unlikely(tmpbuf))
+>> -					kzfree(tmpbuf);
+>> +					__kvzfree(tmpbuf, tmpbuflen);
+> Both kzfree() and __kvzfree() handle a NULL pointer, so there's no need for the
+> NULL check first.
 >
-> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+I would like to keep this one because of the unlikely annotation.
 
-I'm taking this as a Reviewed-by, thanks!
+
+>> @@ -920,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>>  				ret = -EFAULT;
+>>  		}
+>>  		if (tmpbuf)
+>> -			kzfree(tmpbuf);
+>> +			__kvzfree(tmpbuf, tmpbuflen);
+> Likewise here.  No need for the NULL check.
+
+Yes, that tmpbuf check is not really necessary, but it doesn't harm either.
+
+My plan is to send out a mm patch to officially add the kvzfree()
+function to mm/util.c. I will remove the tmpbuf check at that time if
+you don't mind.
+
+Cheers,
+Longman
+
