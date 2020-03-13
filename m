@@ -2,146 +2,92 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D459C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B2C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76813206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PFkkDu3q"
+	by mail.kernel.org (Postfix) with ESMTP id D0D3A206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgCMOrM (ORCPT
+        id S1726974AbgCMOrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:47:12 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50642 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgCMOrM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:47:12 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEdgkl099079;
-        Fri, 13 Mar 2020 14:47:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=Bv9nOnLm2ONHio6hokKq2BdqwaVrr/CkDV2+/x9JvxA=;
- b=PFkkDu3qTKUEeDTnwfPo+Wk7XCGQ+a1dd2iI1gArobIOFrszD47a6xQmgfKIeQl6sd4A
- q9uZrb+ukfaN2cB48KFIc1AwB7sXSx4LscJN3577/1LB69vvbrmTczHJ2lay0rMOvOOK
- +CZkqARm7N4GsEuwMcE3VsVJtYE1wNnLpNeTl27qkz1Tc9VdiEumSVQDP69YmOTyRpkN
- 4rYvfCJn+N0WVcRXUmyZQ9LkAYjAdeGlhuiUJ+LrV9RBFX9YcDGWINHu8htGAf8wK/DR
- n7R8vELlbpEfXf0kdBEO4+kkFFzYTYJi5pqLXYEBqLumolUw7hF+kia+bJKjsDVdG4Oo ZA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yqtavm741-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:47:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEcH6C010936;
-        Fri, 13 Mar 2020 14:45:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yqtact4nr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:45:04 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02DEj2mi002895;
-        Fri, 13 Mar 2020 14:45:02 GMT
-Received: from dhcp-10-175-173-225.vpn.oracle.com (/10.175.173.225)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Mar 2020 07:45:02 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v7 kunit-next 2/4] kunit: add log test
-Date:   Fri, 13 Mar 2020 14:44:40 +0000
-Message-Id: <1584110682-3837-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
-References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=3
- malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003130077
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=3
- phishscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 adultscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003130077
+        Fri, 13 Mar 2020 10:47:20 -0400
+Received: from smtp2.ustc.edu.cn ([202.38.64.46]:57977 "EHLO ustc.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726826AbgCMOrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:47:18 -0400
+Received: from xhacker (unknown [101.86.20.80])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygDHzt7znGte28Y8AA--.22343S2;
+        Fri, 13 Mar 2020 22:47:16 +0800 (CST)
+Date:   Fri, 13 Mar 2020 22:45:27 +0800
+From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 3/4] dt-bindings: mp886x: Document MP8867 support
+Message-ID: <20200313224527.3b4ae79b@xhacker>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LkAmygDHzt7znGte28Y8AA--.22343S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4DWF1ruw43urWUJw18Xwb_yoW8Jw4fpF
+        WDCF17tr4vqr1xCa1xt3Wxtw4rWrWku3yrCFyjyw4rK3ZxAan3Xw4agr95uF18CF4rJFWj
+        yrZ0kryrAw12yrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E
+        4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+        WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+        Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+        W3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
+        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8mhF7UUUUU==
+X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the logging test ensures multiple strings logged appear in the
-log string associated with the test when CONFIG_KUNIT_DEBUGFS is
-enabled.
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+MP8867 is an I2C-controlled adjustable voltage regulator made by
+Monolithic Power Systems. The difference between MP8867 and MP8869
+are:
+1.If V_BOOT, the vref of MP8869 is fixed at 600mv while vref of MP8867
+is determined by the I2C control.
+2.For MP8867, when setting voltage, if the steps is within 5, we need
+to manually set the GO_BIT to 0.
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- lib/kunit/kunit-test.c | 41 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/regulator/mp886x.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index aceb5bf..359bc26 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -329,6 +329,45 @@ static void kunit_resource_test_exit(struct kunit *test)
- 	.exit = kunit_resource_test_exit,
- 	.test_cases = kunit_resource_test_cases,
- };
--kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite);
-+
-+static void kunit_log_test(struct kunit *test);
-+
-+static struct kunit_case kunit_log_test_cases[] = {
-+	KUNIT_CASE(kunit_log_test),
-+	{}
-+};
-+
-+static struct kunit_suite kunit_log_test_suite = {
-+	.name = "kunit-log-test",
-+	.test_cases = kunit_log_test_cases,
-+};
-+
-+
-+static void kunit_log_test(struct kunit *test)
-+{
-+	struct kunit_suite *suite = &kunit_log_test_suite;
-+
-+	kunit_log(KERN_INFO, test, "put this in log.");
-+	kunit_log(KERN_INFO, test, "this too.");
-+	kunit_log(KERN_INFO, suite, "add to suite log.");
-+	kunit_log(KERN_INFO, suite, "along with this.");
-+
-+#ifdef CONFIG_KUNIT_DEBUGFS
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(test->log, "put this in log."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(test->log, "this too."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(suite->log, "add to suite log."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(suite->log, "along with this."));
-+#else
-+	KUNIT_EXPECT_PTR_EQ(test, test->log, (char *)NULL);
-+	KUNIT_EXPECT_PTR_EQ(test, suite->log, (char *)NULL);
-+#endif
-+}
-+
-+kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
-+		  &kunit_log_test_suite);
+diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
+index 6858e38..5518678 100644
+--- a/Documentation/devicetree/bindings/regulator/mp886x.txt
++++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+@@ -1,7 +1,9 @@
+-Monolithic Power Systems MP8869 voltage regulator
++Monolithic Power Systems MP8867/MP8869 voltage regulator
  
- MODULE_LICENSE("GPL v2");
+ Required properties:
+-- compatible: "mps,mp8869";
++- compatible: Must be one of the following.
++	"mps,mp8867",
++	"mps,mp8869",
+ - reg: I2C slave address.
+ - enable-gpios: enable gpios.
+ - mps,fb-voltage-divider: An array of two integers containing the resistor
 -- 
-1.8.3.1
+2.7.4
+
 
