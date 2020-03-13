@@ -2,134 +2,179 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9575EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F65AC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7802073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D4B20752
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lS83ri4N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhJNuSGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCMOQW (ORCPT
+        id S1726956AbgCMOQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:16:22 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4654 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgCMOQV (ORCPT
+        Fri, 13 Mar 2020 10:16:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33615 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgCMOQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:16:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e6b95570000>; Fri, 13 Mar 2020 07:14:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 13 Mar 2020 07:16:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 13 Mar 2020 07:16:20 -0700
-Received: from [10.26.11.156] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Mar
- 2020 14:16:18 +0000
-Subject: Re: [PATCH] backlight: lp855x: Ensure regulators are disabled on
- probe failure
-To:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     Milo Kim <milo.kim@ti.com>, Jingoo Han <jingoohan1@gmail.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>
-References: <20200224140748.2182-1-jonathanh@nvidia.com>
- <20200224143732.rreev3ypou26hvx3@holly.lan>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <6ec74817-968b-ab5e-6566-56bbb9b67599@nvidia.com>
-Date:   Fri, 13 Mar 2020 14:16:16 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200224143732.rreev3ypou26hvx3@holly.lan>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584108887; bh=EKNVkhNRFooWTuQAuVXUIF52AnlF8L6H6GznFVFM9h4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lS83ri4NbaFqPyhoKbLqmkCEe3AgsW3k/m5m62gN9bq7V314Au+APvqTQNgPlqlsB
-         pDPu/VR9NZfdx1/3MN+eaSHjMdXQnoBtT77/kW3yrvG01srNHhmFnbLazEQyI0QWlX
-         ccsAna1axRLfJIiXKOVn7aGwyjoYvmli3KdF4KqhSjv8ZsNULtgrTZ9zfxrnvRZGS4
-         Xzj331mbOmXuukiIGnRI1Y/kqFJz+X0Aj4qieHxseYx3348O1L0LlcnpPcXaoOc+yC
-         JHdUEzsiWpdJwpxvP3yGufQLBBG3uxBiq7usviHsstbQ42aFMn8VozH2tPArI4cyc/
-         b9zCDGar1+SPg==
+        Fri, 13 Mar 2020 10:16:26 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a25so12323246wrd.0;
+        Fri, 13 Mar 2020 07:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0geItnR1hP77wUFBV2Yc0AfuV9aOuFucx1z+d3zMZmA=;
+        b=NhJNuSGh3aeUVHWb8I5+1v8F6hpJ820KgXzZRWXUkyFhdPaskoGMldtvlGR0Ob6qTS
+         NEmrVMV+RYx8FFiLoE9i4n71jDeUefLr/d9RKqKQbJkRk12YoKmKRDsROv/BLWYq5ljM
+         kMkvyhzm10Ll4muq6YKBIvVcNESK1s0aERipIKLGamoIMVPASeHQVO3/veCl3x+Xgm4e
+         Np1/VL8EYmVQU3zX0sXV/wv7giAnNTYQYc8DKjDwIEMbewBfGDDDKdwd2J0kahRJLoDh
+         j3AlELAXdArbY897E4d/cVqokpTLtNnA1fCCVhKMqI53MFEPVaTyYZw+UFUdmnJpBsKC
+         H84g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0geItnR1hP77wUFBV2Yc0AfuV9aOuFucx1z+d3zMZmA=;
+        b=HQM/KGP4LlGjjGcWI2wSnDH+r+EdySouzyAtYwy3nGJfvJlw6tL/QHSRPRf4vm9s9h
+         lG9yyEk88OgUYrNnKDAcSYUkL9lGGLeFvE/pzG+TUEW3GBzvBKuMiIflaTAfI2JpJmsP
+         tywtAcgopmFipu/ZPuC6yvKfxUol4SxQhBl6RAoF94eXUcAHmToKfeXN/YgWFmDDVL4G
+         55J0DAPa7ZWUg1aCD/YJQn4EdK5bFg2z1EaKJbtljA1KMkUU4d7s3Ux1r7kFkI9NjFn9
+         WQBjdvqb5ykyyhj7rpXpow85K6AHPlXaFgy7FwUSfHPmfhK8P+IFWPygt3yipotY4dNd
+         X1qQ==
+X-Gm-Message-State: ANhLgQ3WEtLPmERWqkeaXAnp/lmZmWoZ2/K03PbFoQQNv2Wlt819FwwP
+        hxTCOYXrUjkaLvxSmmhD4R0Q5idvPSc=
+X-Google-Smtp-Source: ADFU+vttxcsLA1395SwhltsZMXRdZLBZdeW5S0lXEEqmoBV8/b61sqNbDZFP2BZQupHpawQhmENmMw==
+X-Received: by 2002:a5d:4406:: with SMTP id z6mr18164979wrq.68.1584108983406;
+        Fri, 13 Mar 2020 07:16:23 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id l83sm17561422wmf.43.2020.03.13.07.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 07:16:22 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/4] dt-bindings: Add Broadcom STB USB support
+Date:   Fri, 13 Mar 2020 10:15:42 -0400
+Message-Id: <20200313141545.31943-2-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200313141545.31943-1-alcooperx@gmail.com>
+References: <20200313141545.31943-1-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee, Daniel,
+Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
 
-On 24/02/2020 14:37, Daniel Thompson wrote:
-> On Mon, Feb 24, 2020 at 02:07:48PM +0000, Jon Hunter wrote:
->> If probing the LP885x backlight fails after the regulators have been
->> enabled, then the following warning is seen when releasing the
->> regulators ...
->>
->>  WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
->>  Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
->>  CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
->>  Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
->>
->>  ...
->>
->>  Call trace:
->>   _regulator_put.part.28+0x158/0x160
->>   regulator_put+0x34/0x50
->>   devm_regulator_release+0x10/0x18
->>   release_nodes+0x12c/0x230
->>   devres_release_all+0x34/0x50
->>   really_probe+0x1c0/0x370
->>   driver_probe_device+0x58/0x100
->>   device_driver_attach+0x6c/0x78
->>   __driver_attach+0xb0/0xf0
->>   bus_for_each_dev+0x68/0xc8
->>   driver_attach+0x20/0x28
->>   bus_add_driver+0x160/0x1f0
->>   driver_register+0x60/0x110
->>   i2c_register_driver+0x40/0x80
->>   lp855x_driver_init+0x20/0x1000 [lp855x_bl]
->>   do_one_initcall+0x58/0x1a0
->>   do_init_module+0x54/0x1d0
->>   load_module+0x1d80/0x21c8
->>   __do_sys_finit_module+0xe8/0x100
->>   __arm64_sys_finit_module+0x18/0x20
->>   el0_svc_common.constprop.3+0xb0/0x168
->>   do_el0_svc+0x20/0x98
->>   el0_sync_handler+0xf4/0x1b0
->>   el0_sync+0x140/0x180
->>
->> Fix this by ensuring that the regulators are disabled, if enabled, on
->> probe failure.
->>
->> Finally, ensure that the vddio regulator is disabled in the driver
->> remove handler.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> 
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-I received a bounce from Milo's email and so I am not sure that his
-email address is still valid.
+NOTE: The OHCI driver is not included because it uses the generic
+      platform driver.
 
-Can either of you pick this up?
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+ .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
+ .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+ 2 files changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
 
-Not sure if we should update the MAINTAINERS as well?
-
-Jon
-
+diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+new file mode 100644
+index 000000000000..ad570ca4ca6d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/brcm,bcm7445-ehci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom STB USB EHCI Controller Device Tree Bindings
++
++allOf:
++  - $ref: "usb-hcd.yaml"
++
++maintainers:
++  - Al Cooper <alcooperx@gmail.com>
++
++properties:
++  compatible:
++    contains:
++      const: brcm,bcm7445-ehci
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: Clock specifier for the EHCI clock
++
++  clock-names:
++    const: sw_usb
++
++  phys:
++    description: PHY specifier for the USB PHY
++
++  phy-names:
++    const: usbphy
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - phys
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    ehci@f0b00300 {
++        compatible = "brcm,bcm7445-ehci";
++        reg = <0xf0b00300 0xa8>;
++        interrupts = <0x0 0x5a 0x0>;
++        interrupt-names = "usb0_ehci_0";
++        phys = <&usbphy_0 0x0>;
++        phy-names = "usbphy"
++        clocks = <&usb20>;
++        clock-names = "sw_usb"
++    };
++...
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 3f378951d624..aafc316b5a8e 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -23,6 +23,7 @@ Required properties:
+       device
+     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
+       device
++    - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
+     - "xhci-platform" (deprecated)
+ 
+     When compatible with the generic version, nodes must list the
 -- 
-nvpublic
+2.17.1
+
