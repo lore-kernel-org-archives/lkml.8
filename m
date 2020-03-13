@@ -2,124 +2,154 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D67FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E46BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CF62074C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DD12074C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alFec87B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCMXF3 (ORCPT
+        id S1727492AbgCMXFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:05:29 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:48890 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgCMXF3 (ORCPT
+        Fri, 13 Mar 2020 19:05:32 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44447 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgCMXFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:05:29 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 4408C20029;
-        Sat, 14 Mar 2020 00:05:23 +0100 (CET)
-Date:   Sat, 14 Mar 2020 00:05:21 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: display: ti: Fix dtc unit-address
- warnings in examples
-Message-ID: <20200313230521.GA8476@ravnborg.org>
-References: <20200313180727.23044-1-robh@kernel.org>
+        Fri, 13 Mar 2020 19:05:31 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h16so9104882qtr.11;
+        Fri, 13 Mar 2020 16:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K19tWYumSLxb2jgL1zYdrr/V94anTYSOiMqlc5VxdrE=;
+        b=alFec87BZpXN0KlqpPOND8yBwUN3qvnWceUs7RmxNXeRDLzbLwA4DYwSftKfaQlb/5
+         7CAPgS3YNllTd3voPPiwGOMxjOQZSYwCJA51vA5c2WrbGD0dXJDIk37PRPc9mHoyySa/
+         gIQjUk+ytd9tDQFbOxNsYc6bySk+TmEccp59iajt3fu5Fv8UiXif7ksXa1pNMPrSv3II
+         c0pFJjeFk7YuM2R/Dsl0S74VPm2Wq6bFgbInkAYrPMvMgz2NxorHElKI3Z7GPyyxPvOO
+         UHvD8Ewk/06FHXmloZqLkhsG/pS6FtdDbTO7EKDWK1SBmLHKgaVYuYCuUu7HS5LfHfbd
+         JtQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K19tWYumSLxb2jgL1zYdrr/V94anTYSOiMqlc5VxdrE=;
+        b=cxPVexytEVah9blDzmMz4R5n/i6iI78FtLFAMt2XgUB9rnr36xoFICUT2PIupWfFV/
+         At5nEHNs/WjgWQf8DWKH/Yd60dfBdutC3q4GSGbKYyFrHhwGYN+A6cTPUbhCd9YDepCj
+         +cj3IBbaK047pygZ5WgpkIa+HQot3nNzFmCPLjqGWc/Z8DEc6CcL3itqHQZI8nTpj17n
+         A+R1uaQMERD7guOx2JiIP0KNfo9P1vygUDn+fP+qd95I6LBecrNYHLTaX5sgbzGSm6fb
+         eP+EcUdz24NZdfRtfk9Vk/U4DM6y82fz0+C+xi6LEOtjsfcsd53SB5/QVDK0Lohj+VHq
+         eqyw==
+X-Gm-Message-State: ANhLgQ3u5Jt1eUw5kcx35yrO0NNAIN/7ujeKZnCVJ7cSsEm4zESixHVi
+        4m+P6sI6DtBqK1sS43TXquY=
+X-Google-Smtp-Source: ADFU+vu2A0jQITKSfb9D6lzWugdRnkulN3l3qRdmwJK7GenwUubT5WBUEj4UMaYTfXtbMNN5smwyEQ==
+X-Received: by 2002:ac8:6685:: with SMTP id d5mr15145698qtp.170.1584140730346;
+        Fri, 13 Mar 2020 16:05:30 -0700 (PDT)
+Received: from localhost.localdomain (ool-45785633.dyn.optonline.net. [69.120.86.51])
+        by smtp.googlemail.com with ESMTPSA id i1sm25756015qtg.31.2020.03.13.16.05.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 16:05:29 -0700 (PDT)
+From:   Vivek Unune <npcomplete13@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        npcomplete13@gmail.com, ezequiel@collabora.com, jbx6244@gmail.com,
+        akash@openedev.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] arm64: dts: rockchip: Add Hugsun X99 IR receiver and power led
+Date:   Fri, 13 Mar 2020 19:05:13 -0400
+Message-Id: <20200313230513.123049-1-npcomplete13@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313180727.23044-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=sozttTNsAAAA:8
-        a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=k4r3PqWcPq6Qy1X7_v8A:9
-        a=rbD8nFOAu45xlIuL:21 a=UehPyaCQOHXEbEJC:21 a=CjuIK1q_8ugA:10
-        a=aeg5Gbbo78KNqacMgKqU:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 01:07:27PM -0500, Rob Herring wrote:
-> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-> when building the binding examples. These were fixed treewide in
-> 5.6-rc5, but some new display bindings have been added with new
-> warnings:
-> 
-> Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-> Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-> Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
-> 
-> Cc: Jyri Sarha <jsarha@ti.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+ - Add Hugsun X99 IR receiver and power led
+ - Remove pwm0 node as it interferes with power LED gpio
+   pwm0 is not used in factory firmware as well
 
-> ---
-> v2:
->  - Drop panel fixes as there's another patch fixing the 3 panels plus
->    others.
-Will revisit the panel/ fixes patch and apply tomorrow.
+Tested with LibreElec linux-next-20200305
 
-	Sam
+Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+---
+Changes in v2:
+	- Changed led trigger from none to default-on
+	- Changed led node name from power-led to led-0
+---
+ .../boot/dts/rockchip/rk3399-hugsun-x99.dts   | 37 +++++++++++++++++--
+ 1 file changed, 33 insertions(+), 4 deletions(-)
 
-> ---
->  Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
->  Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
->  Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> index cac61a998203..aa5543a64526 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> @@ -121,7 +121,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/irq.h>
->      #include <dt-bindings/soc/ti,sci_pm_domain.h>
->  
-> -    dss: dss@04a00000 {
-> +    dss: dss@4a00000 {
->              compatible = "ti,am65x-dss";
->              reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
->                      <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> index ade9b2f513f5..6d47cd7206c2 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-> @@ -154,7 +154,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/irq.h>
->      #include <dt-bindings/soc/ti,sci_pm_domain.h>
->  
-> -    dss: dss@04a00000 {
-> +    dss: dss@4a00000 {
->              compatible = "ti,j721e-dss";
->              reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
->                      <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> index 385bd060ccf9..7cb37053e95b 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> @@ -81,7 +81,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
->      #include <dt-bindings/interrupt-controller/irq.h>
->  
-> -    dss: dss@02540000 {
-> +    dss: dss@2540000 {
->              compatible = "ti,k2g-dss";
->              reg =   <0x02540000 0x400>,
->                      <0x02550000 0x1000>,
-> -- 
-> 2.20.1
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+index d69a613fb65a..df425e164a2e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+@@ -29,6 +29,26 @@
+ 		regulator-max-microvolt = <5000000>;
+ 	};
+ 
++	ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ir_rx>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&power_led_gpio>;
++
++		led-0 {
++			label = "blue:power";
++			gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "default-on";
++		};
++	};
++
+ 	vcc_sys: vcc-sys {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc_sys";
+@@ -483,6 +503,18 @@
+ 		};
+ 	};
+ 
++	ir {
++		ir_rx: ir-rx {
++			rockchip,pins = <0 RK_PA6 1 &pcfg_pull_none>;
++		};
++	};
++
++	leds {
++		power_led_gpio: power-led-gpio {
++			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+ 			rockchip,pins =
+@@ -539,10 +572,6 @@
+ 	};
+ };
+ 
+-&pwm0 {
+-	status = "okay";
+-};
+-
+ &pwm2 {
+ 	status = "okay";
+ 	pinctrl-0 = <&pwm2_pin_pull_down>;
+-- 
+2.20.1
+
