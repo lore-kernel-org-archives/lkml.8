@@ -2,72 +2,101 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8D0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFF7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F002206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAC9206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WL8rtzOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCMKFT (ORCPT
+        id S1726535AbgCMKFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:05:19 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2716 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgCMKFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:05:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 03:05:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,548,1574150400"; 
-   d="scan'208";a="237172230"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga008.jf.intel.com with ESMTP; 13 Mar 2020 03:05:16 -0700
-Subject: Re: [PATCH 3/3] perf intel-pt: Update intel-pt.txt file with new
- location of the documentation
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200311122034.3697-1-adrian.hunter@intel.com>
- <20200311122034.3697-4-adrian.hunter@intel.com>
- <20200311140312.GE19277@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <b42e3bad-c000-dfe3-3193-46ecd9b597f6@intel.com>
-Date:   Fri, 13 Mar 2020 12:04:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 06:05:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42470 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgCMKFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:05:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v11so11275246wrm.9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DkgtdvOLhPq5sUtjHRHCpYAFEd/88KxYCJ5Q/7OZdAA=;
+        b=WL8rtzOewU/9s+K0tvQpcOMXbr6z8K1b/4xg47mX7DzD3tGkqmlitudW6dcgGxCTUy
+         ZnhpdCWiUyndV3kwVLwm4Kz9Y1OafWLeQQiRN9Ja3dy85aJ3z2Fwl+xp3bCkdryfSF4x
+         EeZT+N7l9jLcATyhvvHXnq2+ggmZ4axNP8ELE8a5MrgQ0/h8zkmE+SDyru4TbGb+dlKl
+         wE5mVpwdcjsn1PwQd7Ft03lUgseGNgXRaKYBNTIdaMVrLI8FuXLpZRiEa/NsJaaOZuob
+         0Z4A10T7fdFLYy82VZu/Ld6XKr/AEabGd3ymvJgaiGCAUPA9VL/qJUVbEIiFc5tPB0aA
+         bxiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DkgtdvOLhPq5sUtjHRHCpYAFEd/88KxYCJ5Q/7OZdAA=;
+        b=NcLFNI2eqlKD4RgHq43KJOyb155P2cvcuWNoFJjnFM5j+7l28oX/KNdcmFqf2BIXIs
+         mlg4z3pY2IgMNa9yIG55hLEeyvDxUGiyUrjrvo4DqZ7STXgqGsxGPJk+saehGx4P90UT
+         jqfLWZdCFhcxtUfeThiUMKyfPA6PQ4a1Zo86k4ZBXawnAIfcMZyvp2cLcwBMxy52PpBJ
+         YXf5lQ5f4ADOdV42wvBtq9aecyLYrSKTBEc0B5bs08Vhzb8LXmq9mfTBigkX/zOgydTp
+         uqP7XDt8RNcNvJ5n5TDAisyacrBbaSOUjKepWwJpYR+tSFPkdlwCcQ59JPg3JO0bOgpP
+         HFWg==
+X-Gm-Message-State: ANhLgQ0/ajUi7+9oEYWFERDt6+aPRQxRoh3cbOnWfRgdsC9YHf7zSy1A
+        5cojpfhw+7AN3Ha6ft0KhLIAwg==
+X-Google-Smtp-Source: ADFU+vuTRDG0n/eB58imQFTmEl0YspJzXhA4oFvRnCi/L172+s9nTOf1O8dWmim1NZPCcDnu+tPD+g==
+X-Received: by 2002:a5d:5545:: with SMTP id g5mr965179wrw.290.1584093920811;
+        Fri, 13 Mar 2020 03:05:20 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id x13sm16642987wmj.5.2020.03.13.03.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 03:05:20 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 10:05:16 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
+        Dietmar.Eggemann@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org
+Subject: Re: [PATCH v4 1/4] PM / EM: add devices to Energy Model
+Message-ID: <20200313100516.GB144499@google.com>
+References: <20200309134117.2331-1-lukasz.luba@arm.com>
+ <20200309134117.2331-2-lukasz.luba@arm.com>
+ <20200313100407.GA144499@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311140312.GE19277@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313100407.GA144499@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/03/20 4:03 pm, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Mar 11, 2020 at 02:20:34PM +0200, Adrian Hunter escreveu:
->> Make it easy for people looking in intel-pt.txt to find the new file.
-> 
-> Nice, consider making it possible to do:
-> 
-> $ man intel-pt
-> 
-> And it go to what now is:
-> 
-> $ man perf-intel-pt
+On Friday 13 Mar 2020 at 10:04:07 (+0000), Quentin Perret wrote:
+> Not easy to figure out which device has a problem with this. I'm
+> guessing you went that way since this is called before ida_simple_get() ?
+> Could that be refactored to make the error message more useful ?
 
-Couldn't find a way to do that, but after a mandb update, apropos should work.
-
-> 
-> Applied the set,
-
-Thank you!
+Bah, forget that one :)
