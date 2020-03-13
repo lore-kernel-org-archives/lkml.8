@@ -2,91 +2,157 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D9DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECC7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58092074C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34C52074C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1Vej5By"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tm01rBRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgCMXS7 (ORCPT
+        id S1727074AbgCMXVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:18:59 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36483 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgCMXS7 (ORCPT
+        Fri, 13 Mar 2020 19:21:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35930 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMXVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:18:59 -0400
-Received: by mail-il1-f195.google.com with SMTP id h3so10763286ils.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 16:18:58 -0700 (PDT)
+        Fri, 13 Mar 2020 19:21:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i13so6214620pfe.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 16:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H+ochZsnjp+nULBUUFjbPYvrQxl/WHyAk9Sli/WeJEM=;
-        b=R1Vej5Byynd7VIHn9payGZbkP7KlEoNC8RVbdP7UJ8P8/MOGUV5nzqojxlZPbx32gd
-         oPF+5rO9mZv0rVmMwy1K8x2mRSj2Y8OO6HZbk0D7EXBve+ssA0aLjZOspgcOZU/4SBRB
-         WlPBghJN2+P53C/cibvOCl6/8G0AZ99SD8nqnKmIrX9M2jJBy6zm2fR+e+rJT2GrZDb6
-         BvTkbT9wOxkQqS5Sc/Sbf29KPRR+9PcMR3lZZggm9R/OFtIU2BEA5Q0LbQ8X5xGK819J
-         +fzSXpYDeTf2bnFTVx5WvbRorppn0X5/zDP4v1G44I3ODBru5oCejcYfRJGj2dmqf+S4
-         CPtA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=A95DgrDqMmOsmX5x3yg554+ZL48y919uezXM/55G5PU=;
+        b=Tm01rBRAW0ZFBG+QC4kIx4sT7VtjTtOvdeqqnUOMtr5fk7X/XRvK21M80wMnEBjSTz
+         BeMbiTmLzTQPQvLBlbsDT0b1iSbaQGYJ2ocz1LrmI6XmVtQvFJBr0EDFI8CJ8bus+5Ny
+         suzlLI6wmotK36hsxN0IVBQDYzBZAdrTqJE78=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H+ochZsnjp+nULBUUFjbPYvrQxl/WHyAk9Sli/WeJEM=;
-        b=CmgRZ2OJlebSP76ktBjIsybSivr3vCeniK0AgvdSZPnzRMukNVyiAstBoOKW+JHUXU
-         X+r9ewXjZr7MK7xya2KnwfKcLEZhtT94UWegka/tKM9MIjyrkWIcfCzMNGanj4BWa6Dh
-         IstDp7NuX3hUUfPLwhklOE86kxfK8gqwS33Yhu0AFfaKnXY05RthRmSGrSUP3JQbvFB8
-         tN99zVwUeZQgRfwB2bgMvkjc61JXwIh87/lHOY2CZjfS6mo4f+seNR77UZ5UDTUhWza8
-         FD47aG3F/uMYEAH2Gpb7lhiOToIkKSrHlt0MpUEmDBV5gpF0HjfwC35yN8vvhrM+AdKy
-         Zh1A==
-X-Gm-Message-State: ANhLgQ2E9wXjytndB303UblbEjshBNe1pkGtbyUEY+C3u5+GkZYrFZgf
-        Wm5JSIbYJq4hkAkDkl691P/RPcnVeR/iuCjalYM=
-X-Google-Smtp-Source: ADFU+vuvMkFrSIvt1cIgCp/9ZXcNxJMYgLzoQ88Ta4HMOygBLKBzooMHryYn4YYBZg6/ozPzqUj3T7nTIjHZ/lF5tno=
-X-Received: by 2002:a92:860f:: with SMTP id g15mr15699025ild.297.1584141538349;
- Fri, 13 Mar 2020 16:18:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A95DgrDqMmOsmX5x3yg554+ZL48y919uezXM/55G5PU=;
+        b=U1THKUDX3AFRRDRoFgsJJdpdlO3mvD5bLy1AbfBoP1AuUeX1OICYYOZDBbQNJyYxVg
+         D2zjnkAkiTfykR4mnYYqcmcUpFh/X2edCNgoHKtdD1azAJI4+I5btF3FJrbsygUfManw
+         qQojHdCEyNPkOcVoV0fOdRq9Rq9l5Msztgvq5NijvTyGohJiXvGBbQSAVzmkVlZYl7I/
+         6zktVwT0IcQr3p7gGXyJnsT4YaszDqEmAtbIctHE5d9Vf0ldB82tH+959lu0vKxGTCOq
+         Qq8qevtgXF9YHoMsfhG456jgN0Aj6V7vM/h+h8/v00S4CHyzL0FvVr5X+tKprnY8w2xM
+         nP3w==
+X-Gm-Message-State: ANhLgQ0RKV06l3RUzv0vSJrpC7E2KcfqIJfBv7tt0GIhwkVTYouTo7TR
+        9FnljU2UuBoaDw9g+YcOZB9g4a5V55c=
+X-Google-Smtp-Source: ADFU+vtxfTt5P7ljGv+yhPJLm1Iy63R/IokK5uJEJb3cc78hlcgtgq5gd4+p5OZ4CkPf5ydgQepQwg==
+X-Received: by 2002:aa7:9f47:: with SMTP id h7mr14276455pfr.292.1584141677871;
+        Fri, 13 Mar 2020 16:21:17 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 3sm13216636pjg.27.2020.03.13.16.21.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 16:21:16 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:21:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 1/5] selftests/seccomp: use correct FIXTURE macro
+Message-ID: <202003131620.651F12798@keescook>
+References: <20200313031752.2332565-1-kuba@kernel.org>
+ <20200313031752.2332565-2-kuba@kernel.org>
 MIME-Version: 1.0
-References: <20200313184909.4560-1-hqjagain@gmail.com> <20200313184909.4560-2-hqjagain@gmail.com>
- <20200313191426.GO22433@bombadil.infradead.org>
-In-Reply-To: <20200313191426.GO22433@bombadil.infradead.org>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat, 14 Mar 2020 07:18:47 +0800
-Message-ID: <CAJRQjodgLgZShiA4twc6FyNspyoL5h7kGtfeOC9UA=4nD_8Qxg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] radix-tree: fix kernel-doc for radix_tree_find_next_bit
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     gregkh@linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313031752.2332565-2-kuba@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I thought it's better to update the function description as it could
-be more readable from source code.
+On Thu, Mar 12, 2020 at 08:17:48PM -0700, Jakub Kicinski wrote:
+> Quoting kdoc:
+> 
+> FIXTURE_DATA:
+>  * This call may be used when the type of the fixture data
+>  * is needed.  In general, this should not be needed unless
+>  * the *self* is being passed to a helper directly.
+> 
+> FIXTURE:
+>  * Defines the data provided to TEST_F()-defined tests as *self*.  It should be
+>  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+> 
+> seccomp should use FIXTURE to declare types.
 
-On Sat, Mar 14, 2020 at 3:14 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Sat, Mar 14, 2020 at 02:49:08AM +0800, Qiujun Huang wrote:
-> >   * radix_tree_find_next_bit - find the next set bit in a memory region
-> >   *
-> >   * @addr: The address to base the search on
-> > - * @size: The bitmap size in bits
-> > + * @tag: The tag index (< RADIX_TREE_MAX_TAGS)
-> >   * @offset: The bitnumber to start searching at
-> >   *
-> >   * Unrollable variant of find_next_bit() for constant size arrays.
-> > - * Tail bits starting from size to roundup(size, BITS_PER_LONG) must be zero.
-> > - * Returns next bit offset, or size if nothing found.
-> > + * Returns next bit offset, or RADIX_TREE_MAP_SIZE if nothing found.
-> >   */
-> >  static __always_inline unsigned long
-> >  radix_tree_find_next_bit(struct radix_tree_node *node, unsigned int tag,
->
-> Ugh, this is a static function with kernel-doc.  What a waste of time ;-(
+Yup, I ran into this while working on a totally separate series. I sent
+a stand-alone patch for this already. (It's identical to this one.)
+Shuah can take either one. :)
+
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index ee1b727ede04..7bf82fb07f67 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -909,7 +909,7 @@ TEST(ERRNO_order)
+>  	EXPECT_EQ(12, errno);
+>  }
+>  
+> -FIXTURE_DATA(TRAP) {
+> +FIXTURE(TRAP) {
+>  	struct sock_fprog prog;
+>  };
+>  
+> @@ -1020,7 +1020,7 @@ TEST_F(TRAP, handler)
+>  	EXPECT_NE(0, (unsigned long)sigsys->_call_addr);
+>  }
+>  
+> -FIXTURE_DATA(precedence) {
+> +FIXTURE(precedence) {
+>  	struct sock_fprog allow;
+>  	struct sock_fprog log;
+>  	struct sock_fprog trace;
+> @@ -1509,7 +1509,7 @@ void tracer_poke(struct __test_metadata *_metadata, pid_t tracee, int status,
+>  	EXPECT_EQ(0, ret);
+>  }
+>  
+> -FIXTURE_DATA(TRACE_poke) {
+> +FIXTURE(TRACE_poke) {
+>  	struct sock_fprog prog;
+>  	pid_t tracer;
+>  	long poked;
+> @@ -1817,7 +1817,7 @@ void tracer_ptrace(struct __test_metadata *_metadata, pid_t tracee,
+>  		change_syscall(_metadata, tracee, -1, -ESRCH);
+>  }
+>  
+> -FIXTURE_DATA(TRACE_syscall) {
+> +FIXTURE(TRACE_syscall) {
+>  	struct sock_fprog prog;
+>  	pid_t tracer, mytid, mypid, parent;
+>  };
+> @@ -2321,7 +2321,7 @@ struct tsync_sibling {
+>  		}							\
+>  	} while (0)
+>  
+> -FIXTURE_DATA(TSYNC) {
+> +FIXTURE(TSYNC) {
+>  	struct sock_fprog root_prog, apply_prog;
+>  	struct tsync_sibling sibling[TSYNC_SIBLINGS];
+>  	sem_t started;
+> -- 
+> 2.24.1
+> 
+
+-- 
+Kees Cook
