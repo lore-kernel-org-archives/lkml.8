@@ -2,112 +2,157 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9123C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDEDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A704820724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584122172;
-	bh=AAEHbdTZnL6d7Gr3nuqbX2Ida62RwmUvzgcJbhcDcZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tQeOGlr/aNbqmrSu+1RUps82zZkumOW3hYDQPUobb21qV5X1PBWKhLCnp+5PwPWMU
-	 T85mvvw+kPyn0qmaE9opaqjbEzvKy1XDKIVvGKqVgWQJwHFmSzKjiigGTa5/aeMm20
-	 kJfEDlpqhCFL+0bkc/sflvJ7+MRykzsmaRGt4U+s=
+	by mail.kernel.org (Postfix) with ESMTP id 797AA20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wvOFX4BX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgCMR4L (ORCPT
+        id S1727381AbgCMR4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbgCMR4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:56:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A57320746;
-        Fri, 13 Mar 2020 17:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584122170;
-        bh=AAEHbdTZnL6d7Gr3nuqbX2Ida62RwmUvzgcJbhcDcZA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pLoGD2BLHuWnmuwR3FCgqZMnqxYZ0X2OEV6TzKJA/wugGHSexcEQs6q00affCU/37
-         kzERWpO9BMPm0/E+H28LUYKY1l5WV5VeMf5cxAVYzZY33jq9g8DkvxDIHAVAJN2XhM
-         cmCusoj2BI6gVXH0z0fyi+bOFKoCAHiQBxyDYYYg=
-Date:   Fri, 13 Mar 2020 18:56:08 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: provide devm_platform_ioremap_and_get_resource()
-Message-ID: <20200313175608.GA2306127@kroah.com>
-References: <20200313171902.31836-1-zhengdejin5@gmail.com>
+        Fri, 13 Mar 2020 13:56:14 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37496 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbgCMR4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:56:13 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DHu8ZO001000;
+        Fri, 13 Mar 2020 12:56:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584122168;
+        bh=HVHKkDaWEjb8uGXSqOrK8yyo/QsEo/4K0WPdPJl9YeM=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=wvOFX4BXTYPOqZfFmuAX7VE0RzGIj9teBWDLYGQUyrzB6PImTxIOxv03yHU58bEzY
+         AJep5vf7dQiI9u/VAVINWsukvQDm855mDmeJLd26aufu9eYZkxm9dE4ohD82IGNeVS
+         25iZRi1FE5iVR4nmFIDIevwCG0VK6MqDWXEDg1b8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DHu8V0010605
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Mar 2020 12:56:08 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 12:56:08 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 12:56:08 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DHu6Mh048395;
+        Fri, 13 Mar 2020 12:56:07 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v3 06/10] arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+Date:   Fri, 13 Mar 2020 19:55:07 +0200
+Message-ID: <20200313175511.2155-7-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200313175511.2155-1-grygorii.strashko@ti.com>
+References: <20200313175511.2155-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313171902.31836-1-zhengdejin5@gmail.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 01:19:02AM +0800, Dejin Zheng wrote:
-> Since commit "drivers: provide devm_platform_ioremap_resource()",
-> It was wrap platform_get_resource() and devm_ioremap_resource() as
-> single helper devm_platform_ioremap_resource(). but now, many drivers
-> still used platform_get_resource() and devm_ioremap_resource()
-> together in the kernel tree. The reason can not be replaced is they
-> still need use the resource variables obtained by platform_get_resource().
-> so provide this helper.
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
->  drivers/base/platform.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 7fa654f1288b..b3e2409effae 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -62,6 +62,24 @@ struct resource *platform_get_resource(struct platform_device *dev,
->  EXPORT_SYMBOL_GPL(platform_get_resource);
->  
->  #ifdef CONFIG_HAS_IOMEM
-> +/**
-> + * devm_platform_ioremap_and_get_resource - call devm_ioremap_resource() for a
-> + *					    platform device and get resource
-> + *
-> + * @pdev: platform device to use both for memory resource lookup as well as
-> + *        resource management
-> + * @index: resource index
-> + * @res: get the resource
-> + */
-> +void __iomem *
-> +devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
-> +				unsigned int index, struct resource **res)
-> +{
-> +	*res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> +	return devm_ioremap_resource(&pdev->dev, *res);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_and_get_resource);
-> +
->  /**
->   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
->   *				    device
-> -- 
-> 2.25.0
-> 
+Add DT node for the TI AM65x SoC Gigabit Ethernet two ports Switch
+subsystem (CPSW NUSS).
 
-I can not take new api functions without some real users of the function
-at the same time.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 49 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am65.dtsi     |  1 +
+ 2 files changed, 50 insertions(+)
 
-Please make a patch series modifing drivers to use this new function and
-I will be glad to review it then.
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+index ad89f93f30e5..e645664f004e 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+@@ -193,4 +193,53 @@
+ 			#size-cells = <0>;
+ 		};
+ 	};
++
++	mcu_cpsw: ethernet@46000000 {
++		compatible = "ti,am654-cpsw-nuss";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		reg = <0x0 0x46000000 0x0 0x200000>;
++		reg-names = "cpsw_nuss";
++		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
++		dma-coherent;
++		clocks = <&k3_clks 5 10>;
++		clock-names = "fck";
++		power-domains = <&k3_pds 5 TI_SCI_PD_EXCLUSIVE>;
++
++		dmas = <&mcu_udmap 0xf000>,
++		       <&mcu_udmap 0xf001>,
++		       <&mcu_udmap 0xf002>,
++		       <&mcu_udmap 0xf003>,
++		       <&mcu_udmap 0xf004>,
++		       <&mcu_udmap 0xf005>,
++		       <&mcu_udmap 0xf006>,
++		       <&mcu_udmap 0xf007>,
++		       <&mcu_udmap 0x7000>;
++		dma-names = "tx0", "tx1", "tx2", "tx3",
++			    "tx4", "tx5", "tx6", "tx7",
++			    "rx";
++
++		ethernet-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			cpsw_port1: port@1 {
++				reg = <1>;
++				ti,mac-only;
++				label = "port1";
++				ti,syscon-efuse = <&mcu_conf 0x200>;
++				phys = <&phy_gmii_sel 1>;
++			};
++		};
++
++		davinci_mdio: mdio@f00 {
++			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++			reg = <0x0 0xf00 0x0 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&k3_clks 5 10>;
++			clock-names = "fck";
++			bus_freq = <1000000>;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+index aea36e29dd32..5be75e430965 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+@@ -30,6 +30,7 @@
+ 		i2c3 = &main_i2c1;
+ 		i2c4 = &main_i2c2;
+ 		i2c5 = &main_i2c3;
++		ethernet0 = &cpsw_port1;
+ 	};
+ 
+ 	chosen { };
+-- 
+2.17.1
 
-thanks,
-
-greg k-h
