@@ -2,128 +2,167 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A80C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0EC206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UULHVhHo"
+	by mail.kernel.org (Postfix) with ESMTP id ED5AA206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584110898;
+	bh=Jb0CrveDwyKlE1dVdK6ad0RU8fp4lk2yrLfBv/BLK5Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=NqUubhXCOVZVASLL+cSm2VvSoZ3Aj/uRivN5E1v/ZEX68qqLx8m7BJWRH6VaB+f2c
+	 uMyQIHjDG+DoDZAKMf3767HxAaLDgnfBrgxzIvlpaq9Leg84vMoMqPwhL9txaiIVCd
+	 nhD3O4+WLJoZqoAnnMdYr9jHtfqvLUP7Gl7xGtxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCMOrk (ORCPT
+        id S1727000AbgCMOsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:47:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36479 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgCMOrk (ORCPT
+        Fri, 13 Mar 2020 10:48:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37485 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgCMOsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:47:40 -0400
-Received: by mail-il1-f196.google.com with SMTP id h3so9166058ils.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:47:39 -0700 (PDT)
+        Fri, 13 Mar 2020 10:48:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so10838970ljd.4;
+        Fri, 13 Mar 2020 07:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ro1R5ehcYhRf1s0gupnhw5Q+nbHwvID0ows7ral5AwA=;
-        b=UULHVhHoV9B8wA8pT06k5F7CEKhKPJTemEriB5P4jsfUl+0MFuocFV+cKfEBUwJOZR
-         44SDm19Y7MNYFx7IBYDxU1eeSaW08Y1QdU5wPqJ476lvQgn0/8iH8LZarWTvyzQ8f8Pq
-         /yfiAazoYMLLCZA+WD2VvC0CB+j3dinbmK52mQS15VrJHiRU+hrdzgsvFqZQERc3wsoQ
-         g+ZBlhE9WbwRtM/eaNTiBOiVTrV5D3Y6m0xAntdjTsJR7LHKx3cw/ImN5JlKvRE2sZTY
-         CaoeXluOwsKMbIdEpQHSRSCk8Y3XWPOtb/vcDpCSafXtfOW3R/wFvDbweG9ep+FTXkfs
-         6jCQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=OXNW+qbkifm22DDftJr72ZNJUFSaznw2nYVEJ5BnOxE=;
+        b=PfkIXQ3pBeYomndl5GR8VhLHQLpXDfE3PxhidQPKtZSFhuDSPagci8oHW4bZTPB2Cr
+         bSnmxTitHyyoHq4mc1YGFjZvwgrvZvWnZAK5Fa6vG0ymoJK3EmAQN4R64wLCDeEzvxVa
+         r6INAlU2pMfrB0kaT81Frbmif/tieFnHZq9UMxf1CPBv4ccRxjQNNdMIdkM7ujLAGmiz
+         Fsze6+1b1fwYZq/rdtLKTSgfBUkNR8MaYR3X4VbLOVyrzA6y2X5PqgXR9aX/D08ifBEw
+         sOYNA5SOjE2/n/x2/m98HBzvI0sR59T4iyTCGBaf/6TjR61dHom6JSZRr/gYUdiek0FU
+         DvKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ro1R5ehcYhRf1s0gupnhw5Q+nbHwvID0ows7ral5AwA=;
-        b=tKqLShk3TTeXMEsyrFFcSd12F1e+Ic3exe1KBb9GCrffy0z3zZV9tVzysClZbiW1UF
-         LfFkcx9Ukasj96SJV4fCHN76xbFHDTYf4WePrfma95jAf/YKsPEaNu8sW481mVF8nOQx
-         Z4JZYLcWcOSZybmNISMc+mM91p4OC+T12es3MRxFbf/bboAPTntHqB1Qe8yikI0PnhIW
-         9ZDNtVOCxW9DQvGNmb7bCwJF5A6RtHVmshlSzvO9VDRh+j/BRP0OvMphUhZG0AotA3vM
-         2VICkswkZXz/vGJO0DmsZcIvG99mtvLFklEiZE7ZPHF8BbbtAFE/OQqPrEUkz1Q4J/TQ
-         9LlA==
-X-Gm-Message-State: ANhLgQ23dMWpZsgpi/njMm2sTsxexaAm38+qr2ptQ9uRwF9ITn7FfkrB
-        gdXKS/ERSP0EcSsBu6cmLuZ/f/WFvUHLz5L6DseoOg==
-X-Google-Smtp-Source: ADFU+vsUQdVDGeuArwH8++3efQ8y7YMk8cNafYrhvyIqxS2kFexBfegk6QvD0SkMs57BFtt65r+sa+KzO6NudDFAdpc=
-X-Received: by 2002:a92:d191:: with SMTP id z17mr14076733ilz.287.1584110859057;
- Fri, 13 Mar 2020 07:47:39 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=OXNW+qbkifm22DDftJr72ZNJUFSaznw2nYVEJ5BnOxE=;
+        b=ZyZHdo/A+SsaJ38INuv6JU/mUXBkYONuiDNyPeY04mgks4PR6YXwJBazKw7u4H1QM4
+         dtAGdw+IetbAliIpyRZXBEniNO6Eq0IfSj0SmSWmMNOGOYydgI+GIsiGhpd4QIOcYwQ6
+         gAJN12hsnBPZQWhIMBmg7KavpZ1NochRhII6+anDBub5sFao7QtzWlRPeT5A1vCwHUgm
+         QuJLWtsRVYvfuHj5nEK7ehkLbreigoHibk3ry7PweS2Mbxm7kshtcj5OH/mzMA660Ojs
+         4ajmEuacHMUZs6j4cW2shApA0J4OQpOYCtXUqM1OE1Mcx8VAMAco9aNphNEWkO7s3Av+
+         0vfw==
+X-Gm-Message-State: ANhLgQ1QQxrU/uCXVugzYasRFXlkH6RRBrK9M/JTrylAHnrzk6w1Mv79
+        wzqJ++/gz5IxlRn1LkHX7u2QRTvOyg8=
+X-Google-Smtp-Source: ADFU+vuJuYPtQvhZNicE9knXkDuF5e6nkLWn3JOtaxSks+6bSsih9Fg+Op+kMyc5+TogPdovtFYiKg==
+X-Received: by 2002:a2e:9f0e:: with SMTP id u14mr8187467ljk.142.1584110891962;
+        Fri, 13 Mar 2020 07:48:11 -0700 (PDT)
+Received: from saruman (88-113-215-213.elisa-laajakaista.fi. [88.113.215.213])
+        by smtp.gmail.com with ESMTPSA id w28sm1722544lfn.29.2020.03.13.07.48.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 07:48:10 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V5 00/21] Tegra XUSB OTG support
+In-Reply-To: <20200312092232.GA1199023@ulmo>
+References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com> <20200217085130.GJ1339021@ulmo> <20200227173226.GA1114616@ulmo> <20200304070100.GA1271591@kroah.com> <20200312092232.GA1199023@ulmo>
+Date:   Fri, 13 Mar 2020 16:48:06 +0200
+Message-ID: <87r1xwfh09.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
-In-Reply-To: <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 13 Mar 2020 15:47:28 +0100
-Message-ID: <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> Hi Bartosz,
->
-> I'm struggling to figure out if this is the right way to count
-> references for gpio descriptors.
->
-> I cleared up the situation of why we don't want to add kref
-> to gpio_chip in the previous message: I think we got that covered.
-> (If I'm not wrong about it, and I am frequently wrong.)
->
-> This mail is about contrasting the suggested gpio_desc
-> kref with the existing managed resources, i.e. the
-> devm_* mechanisms.
->
-> devm_* macros are elusive because they do not use
-> reference counting at all.
->
-> Instead they put every devm_* requested resource with
-> a destruction function on a list associated with the struct
-> device. Functions get put on that list when we probe a
-> device driver, and the list is iterated and all release functions
-> are called when we exit .probe() with error or after calling the
-> optional .remove() function on the module. (More or less.)
->
-> This means anything devm_* managed lives and dies
-> with the device driver attaching to the device.
-> Documentation/driver-api/driver-model/devres.rst
->
-> If the intention of the patch is that this action is associated
-> with the detachment of the driver, then we are reinventing
-> the wheel we already invented.
->
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-In this case I was thinking about a situation where we pass a
-requested descriptor to some other framework (nvmem in this case)
-which internally doesn't know anything about who manages this resource
-externally. Now we can of course simply not do anything about it and
-expect the user (who passed us the descriptor) to handle the resources
-correctly. But what happens if the user releases the descriptor not on
-driver detach but somewhere else for whatever reason while nvmem
-doesn't know about it? It may try to use the descriptor which will now
-be invalid. Reference counting in this case would help IMHO.
 
-Bart
+Hi,
 
-> E.g. to devm_* it doesn't really matter if someone else is
-> using a struct gpio_desc, or not, but if the current driver
-> is using it, it will be kept around until that driver detaches.
-> No reference counting needed for that.
+Thierry Reding <thierry.reding@gmail.com> writes:
+> On Wed, Mar 04, 2020 at 08:01:00AM +0100, Greg Kroah-Hartman wrote:
+>> On Thu, Feb 27, 2020 at 06:32:26PM +0100, Thierry Reding wrote:
+>> > On Mon, Feb 17, 2020 at 09:51:30AM +0100, Thierry Reding wrote:
+>> > > On Mon, Feb 10, 2020 at 01:41:26PM +0530, Nagarjuna Kristam wrote:
+>> > > > This patch series adds OTG support on XUSB hardware used in Tegra2=
+10 and
+>> > > > Tegra186 SoCs.
+>> > > >=20
+>> > > > This patchset is composed with :
+>> > > >  - dt bindings of XUSB Pad Controller
+>> > > >  - dt bindings for XUSB device Driver
+>> > > >  - Tegra PHY driver for usb-role-switch and usb-phy
+>> > > >  - Tegra XUSB host mode driver to support OTG mode
+>> > > >  - Tegra XUSB device mode driver to use usb-phy and multi device m=
+ode
+>> > > >  - dts for XUSB pad controller
+>> > > >  - dts for xudc for Jetson TX1 and TX2
+>> > > >  - dts for Jetson-TK1
+>> > > >  - dts for Jetson-Nano
+>> > > >=20
+>> > > > Tegra Pad controller driver register for role switch updates for
+>> > > > OTG/peripheral capable USB ports and adds usb-phy for that corresp=
+onding
+>> > > > USB ports.
+>> > > >=20
+>> > > > Host and Device mode drivers gets usb-phy from USB2's phy and regi=
+sters
+>> > > > notifier for role changes to perform corresponding role tasks.
+>> > > >=20
+>> > > > Order of merging Patches:
+>> > > > Please merge DT changes first followed Tegra PHY driver changes an=
+d then
+>> > > > USB driver changes.
+>> > >=20
+>> > > Felipe, Greg, Kishon,
+>> > >=20
+>> > > Given the runtime dependencies between these various parts, I could =
+pick
+>> > > these up into the Tegra tree if you provide an Acked-by.
+>> >=20
+>> > Ping. Are you guys okay if I pick these up into the Tegra tree?
+>>=20
+>> That's up to Felipe, I have no opinion :)
 >
-> So is this related to your problem or do I just get things
-> wrong?
+> Felipe, Kishon,
+>
+> I've picked up the device tree changes into the Tegra tree. Let me know
+> if you also want me to pick up the USB and PHY driver changes.
+
+Sorry for the super long delay, no problems if you want to pick it
+through your tree:
+
+Acked-by: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl5rnSYACgkQzL64meEa
+mQbcOw/+PHC2C6s2hZma+wKIIWRf2etmytep7PH5htS6qBEqiZclRJChw9ks8nh6
+87xBYHbPcR3ajUbf/qLdU53B/P/fv18aBnG+v26qoE6KusJ/SwIuo7IqMtxS4h1e
+SteaHHsqvsQuYpq2Jy10nHTGLszKzjkjKt/ZGgyZ9Naq5IT9A/dyWPjkwOr1Cfen
+ufJ+uqH/aEMcrfL/ejGJLZMVvmi8hIppZnld02J02/Ip4pzp+fSn4/NhXDUlnIa3
+Ru9Zdzs5upEva8KZb7oUiWqZLEUIXHPP4tGDl6AaXmR774EhPXD4vCEo+8SIX2NI
+gQ8zODCKOfEwYCblxhwI5AK+W2i6BEqeKUo+H7PdyU5lFA/SvKnEvrlmL9XECnSL
+2+boUbAC4VdDRQ0ZE4jMep8ehPTBK7SyUVYYGI5TOC4p6O8JvdlSIJS9Bbemo0Lj
+7Z+/zyumOuy4WHe0w6I357LpTv8M6N2jEgOLHqQXqs7ROgQKo8EBgFT9n1lmYZAs
+0zWLZioos7Vy31c3MWWTQdwtvCBz8iSlW+EciKcoYEZt27i2petNrQh0i7hTSyfv
+rakKekvpyBXXSt5BITvCpP0SuvJ6IwXpeWZq7v38juDR2wYh6qWnogSww0pRmjqc
+PMyDMRHSu9WpmR2a+ftAvFmEhIkBV/9bPb10jWwWcXdiwCPhLjM=
+=6Pve
+-----END PGP SIGNATURE-----
+--=-=-=--
