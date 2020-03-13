@@ -2,107 +2,124 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ADFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0167BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6603520663
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C433C20752
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pZQzsGh/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrU2FZRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgCMVna (ORCPT
+        id S1727508AbgCMVnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:43:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38882 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgCMVna (ORCPT
+        Fri, 13 Mar 2020 17:43:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60182 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726534AbgCMVnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:43:30 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z5so6056677pfn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 14:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=SDNw5CeBEFA5vbuaWYRsJmiXk2Vn4f6I+fsRzDcDF5g=;
-        b=pZQzsGh/c0WrWAiFM9UAZpHX38gUmWFqs+L7VOKADQYFP48cNV+2N6hSyfbbG/Pu4d
-         twp6A7jNVhERqTTJ5pgz2tD8/ylTHXn0BFaHcWdrXF5ujuaE7tPCBLOgalpYgJL+gfvW
-         p3BI9lLFF9I+Oy0T0+Tp10+CMuyBhahaFaQf56dY/SR40lJpiEBWd5cY4bFb7vHrn/MD
-         Sw4ITSVRVoaM5PjQy6dJFJM7lxGDnV70uR3dqGKxi4v3ymoKHZo+c4PG+KVRruM8knLX
-         0Oz11Iq5/r4VcNXn0UFD6Ot+Bc8Jhpgk3FXSPFEEJ6o6Sjz5EHKbByKLqdRQICCh6mxc
-         1QBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=SDNw5CeBEFA5vbuaWYRsJmiXk2Vn4f6I+fsRzDcDF5g=;
-        b=owL4vWLEqjARx/4lMFRF0msVrfpBrukxA4KI4DQDhaFsgZb7B6NkNy/k+VPilHk7J0
-         yKZfbjUg1MgvI0m0YEwryrb+B4HOdy0quTkwRY7dqrIhAfd0N/2dzrYR1IgJ+93qBkLx
-         eDKbmZbmM8+9hTYuMMfW49cDheEncTBhDxapEWDi8wr7VHM6t+5bnLRjg9kqZ2YBOaYI
-         acteTSljA9wS/3OulCmXRLlULedRThUQBDwrd33KYW7nGptyob3X/U7FIrcyI9AnncUI
-         JYXAthEwaieH03nfziHzUEWZL4gZEuEj70rSMU5P1UbdjA/llh/mwhwJiFtSZdENYUmf
-         sIPQ==
-X-Gm-Message-State: ANhLgQ1YsGpUWHjGTh87DVPd7IDymV8i1hIBCLgVXaQ11Er34Q5fOFNh
-        0VWbXUnzf3LgKc5PM+aRlQneZbP7oM0=
-X-Google-Smtp-Source: ADFU+vs5HCuqq1xKRwirD0WhYDOW1scUjscD0l2RCmUOOn5TDpACKWyibD3zz0dfth/WUYXLVX/n7g==
-X-Received: by 2002:a62:7c15:: with SMTP id x21mr16494914pfc.132.1584135807311;
-        Fri, 13 Mar 2020 14:43:27 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id z17sm11256310pff.12.2020.03.13.14.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 14:43:26 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 14:43:26 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Huang, Ying" <ying.huang@intel.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH] mm: Code cleanup for MADV_FREE
-In-Reply-To: <20200313090056.2104105-1-ying.huang@intel.com>
-Message-ID: <alpine.DEB.2.21.2003131443030.242651@chino.kir.corp.google.com>
-References: <20200313090056.2104105-1-ying.huang@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 13 Mar 2020 17:43:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584135821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z+yNqTPhCKvphPybR67u1KFL4j6tDivUDXMnB6tP/Oo=;
+        b=WrU2FZRlNVH8EMsPZdBTBFypPV1/IzhIJPkoacZkyv3tStJGSV8C+VNSC5a90aFmzpAHlb
+        iI/XQWuBusqeTY/qehn1GJRhS/qWV1n0EKTryw0/ya4298qTcTs7L71eD1zIUhwMOo5vGU
+        VaoTS5i8B0oVqHBNhS/6Y3ovkzvejYQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-SS9mUficM269v4rFOovXnQ-1; Fri, 13 Mar 2020 17:43:40 -0400
+X-MC-Unique: SS9mUficM269v4rFOovXnQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54850800D48;
+        Fri, 13 Mar 2020 21:43:37 +0000 (UTC)
+Received: from t490s (ovpn-120-126.rdu2.redhat.com [10.10.120.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3686B9A6A;
+        Fri, 13 Mar 2020 21:43:36 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 17:43:32 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, ying.huang@intel.com,
+        kirill.shutemov@linux.intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] page-flags: fix a crash at SetPageError(THP_SWAP)
+Message-ID: <20200313214332.GA14055@t490s>
+References: <20200310235846.1319-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310235846.1319-1-cai@lca.pw>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020, Huang, Ying wrote:
-
-> From: Huang Ying <ying.huang@intel.com>
+On Tue, Mar 10, 2020 at 07:58:46PM -0400, Qian Cai wrote:
+> The commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+> swapped out") supported writing THP to a swap device but forgot to
+> upgrade an older commit df8c94d13c7e ("page-flags: define behavior of
+> FS/IO-related flags on compound pages") which could trigger a crash
+> during THP swapping out with DEBUG_VM_PGFLAGS=y,
 > 
-> Some comments for MADV_FREE is revised and added to help people understand the
-> MADV_FREE code, especially the page flag, PG_swapbacked.  This makes
-> page_is_file_cache() isn't consistent with its comments.  So the function is
-> renamed to page_is_file_lru() to make them consistent again.  All these are put
-> in one patch as one logical change.
+> kernel BUG at include/linux/page-flags.h:317!
 > 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Suggested-by: David Rientjes <rientjes@google.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Rik van Riel <riel@surriel.com>
+> page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
+> page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c
+> index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0
+> compound_pincount:0
+> anon flags:
+> 0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
+> 
+> end_swap_bio_write()
+>   SetPageError(page)
+>     VM_BUG_ON_PAGE(1 && PageCompound(page))
+> 
+> <IRQ>
+> bio_endio+0x297/0x560
+> dec_pending+0x218/0x430 [dm_mod]
+> clone_endio+0xe4/0x2c0 [dm_mod]
+> bio_endio+0x297/0x560
+> blk_update_request+0x201/0x920
+> scsi_end_request+0x6b/0x4b0
+> scsi_io_completion+0x509/0x7e0
+> scsi_finish_command+0x1ed/0x2a0
+> scsi_softirq_done+0x1c9/0x1d0
+> __blk_mqnterrupt+0xf/0x20
+> </IRQ>
+> 
+> Fix by checking PF_NO_TAIL in those places instead.
+> 
+> Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  include/linux/page-flags.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 1bf83c8fcaa7..77de28bfefb0 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -311,7 +311,7 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
+>  
+>  __PAGEFLAG(Locked, locked, PF_NO_TAIL)
+>  PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
+> -PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
+> +PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
+>  PAGEFLAG(Referenced, referenced, PF_HEAD)
+>  	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
+>  	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
+> -- 
+> 2.21.0 (Apple Git-122.2)
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
 
-Acked-by: David Rientjes <rientjes@google.com>
-
-Thanks very much for following through with this Ying!
