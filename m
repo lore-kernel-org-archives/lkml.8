@@ -2,120 +2,232 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CF4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FB0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232522074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1F62074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWuDVdTy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="paIeQVVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCMWsu (ORCPT
+        id S1727521AbgCMWtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:48:50 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36110 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgCMWst (ORCPT
+        Fri, 13 Mar 2020 18:49:31 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35520 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgCMWtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 18:48:49 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j14so11904188otq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 15:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
-        bh=gH+vH+oeiPGMFqi2IIAvq6zNNglZF+XoPGyI7E95+5I=;
-        b=ZWuDVdTy2Lb7+FL+OE9ASOiOvFQb3Y/X2TYyIg0HfIPhi+QtrddD67fCjdlH6PjNPZ
-         veEUtDwQTQ60onWES8RQZoC1KOPce9XGIZQmj3+3WNU7CJFHt9lnvk7IAe8WlaExkO8s
-         XC4MDg8wAP5450Xln7JytB9C8pS17lN/9H9vtFq6NxGKVpog4JnnTQt7C/0f8RkeLjF2
-         VzGMsGomsyvsZWB3rzYlcVPImDC8GsSYdfvOCvsj/zW6di8K1OvNsHCS7pCDyaJswMVp
-         5aR5uAyovh5L7inqv2Tw7nElZ3SmpKJ+1AXNzEePBv31/cMmRcklJW0PPKPROJDBNMCY
-         izmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc;
-        bh=gH+vH+oeiPGMFqi2IIAvq6zNNglZF+XoPGyI7E95+5I=;
-        b=eNWtMOXTD11EZe7xmXsVA8qcQifnrNoHll9dCFQ4RNduRE98aY3QlKH6D0JT3rMJch
-         IAgOfZiY2D8de0Esh6KWMVJ7o1DYWquW67z899v20IgYDAUf34XYIZCh3jUurdQna4+z
-         eyxAOQ3fcJhCSZtBbzmacEEyG0H+/ZMpqxjLaKP/cou+4JLm0XWEUACAnSggeo58vlYM
-         qdnDnleTKLwwn4lHMicsQJUCkCX7mEA5HVFVt7T5x9T03NkI0M9lo0JdhR5izyHGHIXr
-         uP+xBZziSKD5BRqskjOU6xhIFZnDxvHB58TibbpFRxDeNjv5oACQdKuMDLiWJPCyYwqr
-         V0dw==
-X-Gm-Message-State: ANhLgQ2hMQS3JWc3sR/hnsjZLrSLpZ5fr2gwFhkCpRHbpGV7tD6Sbq8x
-        rKwysRnmsmUTA4WpgtbtB/YmEyWp5MPCrXyD4bRiag==
-X-Received: by 2002:a9d:2028:: with SMTP id n37mt14133904ota.127.1584139727224;
- Fri, 13 Mar 2020 15:48:47 -0700 (PDT)
+        Fri, 13 Mar 2020 18:49:31 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DMnNI6065991;
+        Fri, 13 Mar 2020 17:49:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584139763;
+        bh=EDAcxx9hPCEaIVnbAlrIt8w8VCoEDec78aIzj6j3P88=;
+        h=From:To:CC:Subject:Date;
+        b=paIeQVVXlPKNtZhMLBqoOA9zuuvxYb4tyyXMw3lkOCi3syaxOSULT2+afTIhl55vX
+         V6INxKuLXL+ifMkfbDvkHnR9ESH5L2b5FiYg+WX+qVC9m7yW5Up3PBNpSSlfbrA+A9
+         wlK+kVxtQSnlN8pJSYaoWXd//GQxD2Fgwk1yGrLE=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DMnNaD127481
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Mar 2020 17:49:23 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 17:49:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 17:49:23 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DMnM9t008389;
+        Fri, 13 Mar 2020 17:49:22 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 00/11] net: ethernet: ti: cpts: add irq and HW_TS_PUSH events
+Date:   Sat, 14 Mar 2020 00:49:03 +0200
+Message-ID: <20200313224914.5997-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200313223920.124230-1-almasrymina@google.com>
-In-Reply-To: <20200313223920.124230-1-almasrymina@google.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 13 Mar 2020 15:48:36 -0700
-Message-ID: <CAHS8izMcLx93DJtr0kyDz_qm_bNV-EOzKnPGrpQoopBHyJg9=g@mail.gmail.com>
-Subject: Re: [PATCH -next] hugetlb_cgroup: fix illegal access to memory
-Cc:     syzbot <syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 3:39 PM Mina Almasry <almasrymina@google.com> wrote:
->
-> This appears to be a mistake in commit faced7e0806cf ("mm: hugetlb
-> controller for cgroups v2"). Essentially that commit does
-> a hugetlb_cgroup_from_counter assuming that page_counter_try_charge has
-> initialized counter, but if page_counter_try_charge has failed then it
-> seems it does not initialize counter, so
-> hugetlb_cgroup_from_counter(counter) ends up pointing to random memory,
-> causing kasan to complain.
->
-> Solution, simply use h_cg, instead of
-> hugetlb_cgroup_from_counter(counter), since that is a reference to the
-> hugetlb_cgroup anyway. After this change kasan ceases to complain.
->
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Reported-by: syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com
-> Fixes: commit faced7e0806cf ("mm: hugetlb controller for cgroups v2")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Giuseppe Scrivano <gscrivan@redhat.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: mike.kravetz@oracle.com
-> Cc: rientjes@google.com
->
-> ---
->  mm/hugetlb_cgroup.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-> index 7994eb8a2a0b4..aabf65d4d91ba 100644
-> --- a/mm/hugetlb_cgroup.c
-> +++ b/mm/hugetlb_cgroup.c
-> @@ -259,8 +259,7 @@ static int __hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
->                     __hugetlb_cgroup_counter_from_cgroup(h_cg, idx, rsvd),
->                     nr_pages, &counter)) {
->                 ret = -ENOMEM;
-> -               hugetlb_event(hugetlb_cgroup_from_counter(counter, idx), idx,
-> -                             HUGETLB_MAX);
-> +               hugetlb_event(h_cg, idx, HUGETLB_MAX);
->                 css_put(&h_cg->css);
->                 goto done;
->         }
-> --
-> 2.25.1.481.gfbce0eb801-goog
+Hi Richard, All,
 
-The patch this fixes is in linus's tree, but isn't in 5.5 stable yet.
+This is re-spin of patches to add CPSW IRQ and HW_TS_PUSH events support I've
+sent long time ago [1]. In this series, I've tried to restructure and split changes,
+and also add few additional optimizations comparing to initial RFC submission [1].
+
+The HW_TS_PUSH events intended to serve for different timesync purposes on of
+which is to add PPS generation function, which can be implemented as below:
+
+                     +-----------------+
+                     | Control         |
+                     | application     |
+            +------->+                 +----------+
+            |        |                 |          |
+            |        |                 |          |
+            |        +-----------------+          |
+            |                                     |
+            |                                     |
+            | PTP_EXTTS_REQUEST                   |
+            |                                     |
+            |                                     |
+ +----------------------------------------------------------------+
+            |                                     |    Kernel
+    +-------+----------+                  +-------v--------+
+    |  \dev\ptpX       |                  | /sys/class/pwm/|
+    |                  |                  |                |
+    +-------^----------+                  +-------+--------+
+            |                                     |
+            |                                     |
+            |                             +-------v-------------------+
+    +-------+----------+                  |                           |
+    | CPTS driver      |                  |pwm/pwm-omap-dmtimer.c     |
+    |                  |                  +---------------------------+
+    +-------^----------+                  |clocksource/timer_ti_dm.c  |
+            |                             +-------+-------------------+
+            |HWx_TS_PUSH evt                      |
+ +----------------------------------------------------------------+
+            |                                     |         HW
+    +-------+----------+                  +-------v--------+
+    | CPTS             |                  | DMTimer        |
+    |                  |                  |                |
+    |      HWx_TS_PUSH X<-----------------+                |
+    |                  +                  |                |
+    +------------------+                  +-------+--------+
+                                                  |
+                                                  X timer4
+
+
+As per my knowledge there is at least one public implemented above PPS generation
+schema from Tusori Tibor [2] based on initial HW_TS_PUSH enable submission[1].
+And now there is work done by Lokesh Vutla <lokeshvutla@ti.com> published to
+enable PWM enable/improve PWM adjustment from user space [3][4][5].
+
+Main changes comparing to initial submission:
+- both RX/TX timestamp processing deferred to ptp worker
+- both CPTS IRQ and polling events processing supported to make it work for
+  Keystone 2 also
+- switch to use new .gettimex64() interface
+- no DT updates as number of HWx_TS_PUSH inputs is static per HW
+
+Dependency:
+ ff7cf1822b93 kthread: mark timer used by delayed kthread works as IRQ safe
+ which was merged in -next, but has to be back-ported for testing with earlier
+ versions
+
+Testing on am571x-idk/omap2plus_defconfig/+CONFIG_PREEMPT=y:
+1) testing HW_TS_PUSH
+ - enable pwm in DT
+	pwm16: dmtimer-pwm {
+		compatible = "ti,omap-dmtimer-pwm";
+		ti,timers = <&timer16>;
+		#pwm-cells = <3>;
+	};
+ - configure and start pwm
+  echo 0 > /sys/class/pwm/pwmchip0/export                                                                          
+  echo 1000000000 > /sys/class/pwm/pwmchip0/pwm0/period                                                            
+  echo 500000000 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle                                                         
+  echo 1 > /sys/class/pwm/pwmchip0/pwm0/enable   
+ - test HWx_TS_PUSH using Kernel selftest testptp application
+  ./tools/testing/selftests/ptp/testptp -d /dev/ptp0 -e 1000 -i 3
+
+2) testing phc2sys
+# ./linuxptp/phc2sys -s CLOCK_REALTIME -c eth0 -m -O 0 -u30                                            
+phc2sys[1616.791]: eth0 rms 408190379792180864 max 1580914543017209856 freq +864 +/- 4635 delay 645 +/- 29
+phc2sys[1646.795]: eth0 rms 41 max 108 freq +0 +/- 36 delay 656 +/- 29
+phc2sys[1676.800]: eth0 rms 43 max 83 freq +2 +/- 38 delay 650 +/- 0
+phc2sys[1706.804]: eth0 rms 39 max 87 freq +4 +/- 34 delay 672 +/- 55
+phc2sys[1736.808]: eth0 rms 35 max 66 freq +1 +/- 30 delay 667 +/- 49
+phc2sys[1766.813]: eth0 rms 38 max 79 freq +2 +/- 33 delay 656 +/- 29
+phc2sys[1796.817]: eth0 rms 45 max 98 freq +1 +/- 39 delay 656 +/- 29
+phc2sys[1826.821]: eth0 rms 40 max 87 freq +5 +/- 35 delay 650 +/- 0
+phc2sys[1856.826]: eth0 rms 29 max 76 freq -0 +/- 25 delay 656 +/- 29
+phc2sys[1886.830]: eth0 rms 40 max 97 freq +4 +/- 35 delay 667 +/- 49
+phc2sys[1916.834]: eth0 rms 42 max 94 freq +2 +/- 36 delay 661 +/- 41
+phc2sys[1946.839]: eth0 rms 40 max 91 freq +2 +/- 35 delay 661 +/- 41
+phc2sys[1976.843]: eth0 rms 46 max 88 freq -0 +/- 40 delay 667 +/- 49
+phc2sys[2006.847]: eth0 rms 49 max 97 freq +2 +/- 43 delay 650 +/- 0
+
+3) testing ptp4l
+- 1G connection
+# ./linuxptp/ptp4l -P -2 -H -i eth0 -l 6 -m -q -p /dev/ptp0 -f ptp.cfg -s                              
+ptp4l[862.891]: port 1: UNCALIBRATED to SLAVE on MASTER_CLOCK_SELECTED
+ptp4l[923.894]: rms 1019697354682 max 5768279314068 freq +26053 +/- 72 delay 488 +/- 1
+ptp4l[987.896]: rms 13 max 26 freq +26005 +/- 29 delay 488 +/- 1
+ptp4l[1051.899]: rms 14 max 50 freq +25895 +/- 21 delay 488 +/- 1
+ptp4l[1115.901]: rms 11 max 27 freq +25878 +/- 17 delay 488 +/- 1
+ptp4l[1179.904]: rms 10 max 27 freq +25857 +/- 12 delay 488 +/- 1
+ptp4l[1243.906]: rms 14 max 37 freq +25851 +/- 15 delay 488 +/- 1
+ptp4l[1307.909]: rms 12 max 33 freq +25835 +/- 15 delay 488 +/- 1
+ptp4l[1371.911]: rms 11 max 27 freq +25832 +/- 14 delay 488 +/- 1
+ptp4l[1435.914]: rms 11 max 26 freq +25823 +/- 11 delay 488 +/- 1
+ptp4l[1499.916]: rms 10 max 29 freq +25829 +/- 11 delay 489 +/- 1
+ptp4l[1563.919]: rms 11 max 27 freq +25827 +/- 12 delay 488 +/- 1
+
+- 10M connection
+# ./linuxptp/ptp4l -P -2 -H -i eth0 -l 6 -m -q -p /dev/ptp0 -f ptp.cfg -s                              
+ptp4l[51.955]: port 1: UNCALIBRATED to SLAVE on MASTER_CLOCK_SELECTED
+ptp4l[112.957]: rms 279468848453933920 max 1580914542977391360 freq +25390 +/- 3207 delay 8222 +/- 36
+ptp4l[176.960]: rms 254 max 522 freq +25809 +/- 219 delay 8271 +/- 30
+ptp4l[240.962]: rms 271 max 684 freq +25868 +/- 234 delay 8249 +/- 22
+ptp4l[304.965]: rms 263 max 556 freq +25894 +/- 227 delay 8225 +/- 47
+ptp4l[368.967]: rms 238 max 648 freq +25908 +/- 204 delay 8234 +/- 40
+ptp4l[432.970]: rms 274 max 658 freq +25932 +/- 237 delay 8241 +/- 22
+ptp4l[496.972]: rms 247 max 557 freq +25943 +/- 213 delay 8223 +/- 26
+ptp4l[560.974]: rms 291 max 756 freq +25968 +/- 251 delay 8244 +/- 41
+ptp4l[624.977]: rms 249 max 697 freq +25975 +/- 216 delay 8258 +/- 22
+
+[1] https://lore.kernel.org/patchwork/cover/799251/
+[2] https://usermanual.wiki/Document/SetupGuide.632280828.pdf
+    https://github.com/t-tibor/msc_thesis
+[3] https://patchwork.kernel.org/cover/11421329/
+[4] https://patchwork.kernel.org/cover/11433197/
+[5] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
+
+Grygorii Strashko (11):
+  net: ethernet: ti: cpts: use dev_yy() api for logs
+  net: ethernet: ti: cpts: separate hw counter read from timecounter
+  net: ethernet: ti: cpts: move tc mult update in cpts_fifo_read()
+  net: ethernet: ti: cpts: switch to use new .gettimex64() interface
+  net: ethernet: ti: cpts: optimize packet to event matching
+  net: ethernet: ti: cpts: move tx timestamp processing to ptp worker
+    only
+  net: ethernet: ti: cpts: rework locking
+  net: ethernet: ti: cpts: move rx timestamp processing to ptp worker
+    only
+  net: ethernet: ti: cpts: add irq support
+  net: ethernet: ti: cpts: add support for HW_TS_PUSH events
+  net: ethernet: ti: cpsw: enable cpts irq
+
+ drivers/net/ethernet/ti/cpsw.c        |  35 +-
+ drivers/net/ethernet/ti/cpsw_new.c    |  33 +-
+ drivers/net/ethernet/ti/cpsw_priv.c   |  17 +-
+ drivers/net/ethernet/ti/cpsw_priv.h   |   2 +
+ drivers/net/ethernet/ti/cpts.c        | 508 +++++++++++++++++---------
+ drivers/net/ethernet/ti/cpts.h        |  27 +-
+ drivers/net/ethernet/ti/netcp_ethss.c |   3 +-
+ 7 files changed, 442 insertions(+), 183 deletions(-)
+
+-- 
+2.17.1
+
