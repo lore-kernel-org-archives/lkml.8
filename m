@@ -2,130 +2,117 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688B6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF91C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE86206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A81206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:20:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pNnl0Z2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgCMHOb (ORCPT
+        id S1726414AbgCMHUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:14:31 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51883 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgCMHOa (ORCPT
+        Fri, 13 Mar 2020 03:20:41 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51998 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgCMHUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:14:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jCeWW-0001RC-J0; Fri, 13 Mar 2020 08:14:24 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jCeWW-00042G-26; Fri, 13 Mar 2020 08:14:24 +0100
-Date:   Fri, 13 Mar 2020 08:14:24 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
-Message-ID: <20200313071423.c4t3onkft4r66hav@pengutronix.de>
-References: <20200313131903.3975cdd2@canb.auug.org.au>
- <20200313064807.op4ghjsc22du3q4e@pengutronix.de>
- <20200313080514.3f65c8d9@coco.lan>
+        Fri, 13 Mar 2020 03:20:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02D7JUEO118126;
+        Fri, 13 Mar 2020 07:20:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=89vp+zN42N9ozDuBNs14lAfstpR3evh7sDJu7fH/Y0E=;
+ b=pNnl0Z2voFEtbAqhJf+4WUHBUcN739NV15wKgSMy4svibtpWsExTbW8buCV24nDfHIrD
+ 8+X+POqul71kLJftq/l2IpkatwAtDCu9UkmZgTunKMtxKzMQKyoilEcYK5KzVmp2zanF
+ Shww8rOm8DznVcKgpXxdpTs4z9SLzehTZX1U9suN6fBgzxBbZP4INMNQb/SjQhqp3WBq
+ FpcW5j8kd3o21p1qky48405NxEdv8rfN4+MFU9rvIhWbzl758DV8ft6DCewJ7/MBtb9h
+ +s7CicgyU08Sqo0XVE1+EqvDOxnzFi59O9Zg9tMHRY0SkzeP6bD5C1oSmkwqtE/nguWa aw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yqtavj8aj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 07:20:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02D7KHVg007103;
+        Fri, 13 Mar 2020 07:20:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2yqtaaj6he-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 07:20:29 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02D7KRBD003373;
+        Fri, 13 Mar 2020 07:20:27 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Mar 2020 00:20:26 -0700
+Date:   Fri, 13 Mar 2020 10:20:21 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
+        sbrivio@redhat.com, daniel.baluta@gmail.com,
+        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
+        Larry.Finger@lwfinger.net
+Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8723bs: sdio_halinit:
+ Remove unnecessary conditions
+Message-ID: <20200313072021.GQ11561@kadam>
+References: <20200311133811.2246-1-shreeya.patel23498@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313080514.3f65c8d9@coco.lan>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:13:26 up 118 days, 22:32, 137 users,  load average: 0.09, 0.07,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200311133811.2246-1-shreeya.patel23498@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003130040
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ phishscore=0 priorityscore=1501 clxscore=1031 mlxscore=0 adultscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003130040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-13 08:05, Mauro Carvalho Chehab wrote:
-> Em Fri, 13 Mar 2020 07:48:07 +0100
-> Marco Felsch <m.felsch@pengutronix.de> escreveu:
-> 
-> > Hi Stephen,
-> > 
-> > On 20-03-13 13:19, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > After merging the v4l-dvb tree, today's linux-next build (arm
-> > > multi_v7_defconfig) failed like this:
-> > > 
-> > > ERROR: modpost: "fwnode_get_name" [drivers/media/v4l2-core/v4l2-fwnode.ko] undefined!
-> > > 
-> > > Caused by commit
-> > > 
-> > >   dfc22c073b78 ("media: v4l2-fwnode: add initial connector parsing support")
-> > > 
-> > > I have used the v4l-dvb tree from next-20200312 for today.  
-> > 
-> > I'm sorry for that. I put my branch on our 0day to test most of the
-> > compile configs. Obviously this casae wasn't covered..
-> > 
-> > @Sakari
-> > I will send a patch to fix this by adding:
-> > EXPORT_SYMBOL_GPL(fwnode_get_name).
-> 
-> There is already such patch at next-20200312:
-
-You're right. This answers my question why I got no build errors..
-
-Regards,
-  Marco
-
-> $ git show a7914d1072fb8ddeb2ec87bba1d28812483a3565
-> commit a7914d1072fb8ddeb2ec87bba1d28812483a3565
-> Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Date:   Mon Mar 2 16:53:51 2020 +0300
-> 
->     device property: Export fwnode_get_name()
->     
->     This makes it possible to take advantage of the function in
->     the device drivers.
->     
->     Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->     Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->     Link: https://lore.kernel.org/r/20200302135353.56659-8-heikki.krogerus@linux.intel.com
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 511f6d7acdfe..5f35c0ccf5e0 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -566,6 +566,7 @@ const char *fwnode_get_name(const struct fwnode_handle *fwnode)
->  {
->         return fwnode_call_ptr_op(fwnode, get_name);
->  }
-> +EXPORT_SYMBOL_GPL(fwnode_get_name);
+On Wed, Mar 11, 2020 at 07:08:11PM +0530, Shreeya Patel wrote:
+> diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+> index e813382e78a6..643592b0bd38 100644
+> --- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+> +++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+> @@ -551,18 +551,11 @@ static void HalRxAggr8723BSdio(struct adapter *padapter)
 >  
->  /**
->   * fwnode_get_name_prefix - Return the prefix of node for printing purposes
-> 
-> 
-> 
-> 
-> Thanks,
-> Mauro
+>  	pregistrypriv = &padapter->registrypriv;
+>  
+> -	if (pregistrypriv->wifi_spec) {
+> -		/*  2010.04.27 hpfan */
+> -		/*  Adjust RxAggrTimeout to close to zero disable RxAggr, suggested by designer */
+> -		/*  Timeout value is calculated by 34 / (2^n) */
+> -		valueDMATimeout = 0x06;
+> -		valueDMAPageCount = 0x06;
+> -	} else {
+> -		/*  20130530, Isaac@SD1 suggest 3 kinds of parameter */
+> -		/*  TX/RX Balance */
+> -		valueDMATimeout = 0x06;
+> -		valueDMAPageCount = 0x06;
+> -	}
+> +	/*  2010.04.27 hpfan */
+
+Delete these sorts of comments where it's just a name of someone and
+a time stamp when they wrote it.  We don't know how to contact "hpfan"
+so it's useless.
+
+regards,
+dan carpenter
+
+
