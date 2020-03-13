@@ -2,172 +2,220 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDF2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A67C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA03206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99BE206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="LGYXmthH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgCMQqX (ORCPT
+        id S1726767AbgCMQrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:46:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18929 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbgCMQqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:46:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:46:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="243428918"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2020 09:46:22 -0700
-Date:   Fri, 13 Mar 2020 09:46:22 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200313164622.GC5181@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
- <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+        Fri, 13 Mar 2020 12:47:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43687 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCMQrs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:47:48 -0400
+Received: by mail-ed1-f67.google.com with SMTP id dc19so12649671edb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CgoM3beKoYI/5+BkvNF0e0zNF8rAhCT7BQOep064wDk=;
+        b=LGYXmthHZQmVeL3ORXAKlyXPn1vaS3e9UjtSB+15SH4QeWbUDxHZTA0wy6LXXSzU/y
+         AReDf/yNrW9KPOCuIFvFj8Lfr3Di/5qM1MMnxAfvmosg3+zMlQ0sG1h+tbIuzRJZnPGO
+         swdDQJLr7xPNoDTfBhEVjMDfsrwKTQJV4bSWXD9bugamcRKUt7zf8ITOeN7sc3ZoTK9J
+         32u0WLMxZ0xZ9QOW0Ub2cm8b85Yb1sMclPYCpKfHE8DO4V6pq5xMAVki0Yt1ISvmXyI7
+         iokKMBnrf8sn27LHEqKQc/RQ9QkZnxS3FLoraxrwV596hqsYFM7i92OTGeE+0NDjlzoO
+         dEow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CgoM3beKoYI/5+BkvNF0e0zNF8rAhCT7BQOep064wDk=;
+        b=WxXz9Es/wxnBomMfhmDI1iutnDSdqORa1g5itQ4KYBzgl4OJYKTLV3CBoI9loxmdi+
+         dDKMNRB0B3cEipVY3KEM5vTBGg2Yq1yUxmEuqylBwobuDkOnSp6AkeqCrguTNURhZoDU
+         823Z2c2tn98II6IefOtP1pT1pWVttHUZpETvU6WO3Fq2IXch59OOXLd3OHMpaNlelUMv
+         Ovfwv/VdjDRuEVJ9D2RSO/8K98VWit8JRZJhzLNnTyvaN3xA/ks5H5Nbo3+52gK5EGm+
+         WevexLGDdWhp6yQri4reCEGJ0ezEQBezm/o3Rgkal+seBBhZlHySPw6p4Cz7mt18q5ne
+         wiMg==
+X-Gm-Message-State: ANhLgQ1LRE5pkC0pQB0plMUpud9A4Rzxf4WNRhBQ2Ew6uAJRi6ihecZr
+        fVPptxNVjvJR8tXBO3+zTucOS2SmyBh1URxFBMdX
+X-Google-Smtp-Source: ADFU+vs1EpKcsGEO9GGNfp34//T93kL6R9Gi6RqejfY1jY1yluK7L7lRWoiZjwp6ZdPwGaa0kzHD5f4noecjshH23Kg=
+X-Received: by 2002:a17:907:271a:: with SMTP id w26mr130507ejk.271.1584118065825;
+ Fri, 13 Mar 2020 09:47:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <cover.1577736799.git.rgb@redhat.com> <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
+ <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
+ <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca> <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
+ <20200205235056.e5365xtgz7rbese2@madcap2.tricolour.ca> <CAHC9VhTM6MDHLcBfwJ_9DCroG0VA-meO770ihjn1sVy6=0JrHw@mail.gmail.com>
+ <20200312205147.plxs4czjeuu4davj@madcap2.tricolour.ca>
+In-Reply-To: <20200312205147.plxs4czjeuu4davj@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 13 Mar 2020 12:47:34 -0400
+Message-ID: <CAHC9VhTqWdXMsbSbsWJzRRvVbSaaFBmnFFsVutM7XSx5NT_FJA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 11:48:54AM -0400, Nathaniel McCallum wrote:
-> Thinking about this more carefully, I still think that at least part
-> of my critique still stands.
-> 
-> __vdso_sgx_enter_enclave() doesn't use the x86-64 ABI. This means that
-> there will always be an assembly wrapper for
-> __vdso_sgx_enter_enclave(). But because __vdso_sgx_enter_enclave()
-> doesn't save %rbx, the wrapper is forced to in order to be called from
-> C.
-> 
-> A common pattern for the wrapper will be to do something like this:
-> 
-> # void enter_enclave(rdi, rsi, rdx, unused, r8, r9, @tcs, @e,
-> @handler, @leaf, @vdso)
-> enter_enclave:
->     push %rbx
->     push $0 /* align */
->     push 0x48(%rsp)
->     push 0x48(%rsp)
->     push 0x48(%rsp)
-> 
->     mov 0x70(%rsp), %eax
->     call *0x68(%rsp)
-> 
->     add $0x20, %rsp
->     pop %rbx
->     ret
-> 
-> Because __vdso_sgx_enter_enclave() doesn't preserve %rbx, the wrapper
-> is forced to reposition stack parameters in a performance-critical
-> path. On the other hand, if __vdso_sgx_enter_enclave() preserved %rbx,
-> you could implement the above as:
-> 
-> # void enter_enclave(rdi, rsi, rdx, unused, r8, r9, @tcs, @e,
-> @handler, @leaf, @vdso)
-> enter_enclave:
->     mov 0x20(%rsp), %eax
->     jmp *0x28(%rsp)
-> 
-> This also implies that if __vdso_sgx_enter_enclave() took @leaf as a
-> stack parameter and preserved %rbx, it would be x86-64 ABI compliant
-> enough to call from C if the enclave preserves all callee-saved
-> registers besides %rbx (Enarx does).
-> 
-> What are the downsides of this approach? It also doesn't harm the more
-> extended case when you need to use an assembly wrapper to setup
-> additional registers. This can still be done. It does imply an extra
-> push and mov instruction. But because there are currently an odd
-> number of stack function parameters, the push also removes an
-> alignment instruction where the stack is aligned before the call to
-> __vdso_sgx_enter_enclave() (likely). Further, the push and mov are
-> going to be performed by *someone* in order to call
-> __vdso_sgx_enter_enclave() from C.
-> 
-> Therefore, I'd like to propose that __vdso_sgx_enter_enclave():
->   * Preserve %rbx.
+On Thu, Mar 12, 2020 at 4:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-02-13 16:49, Paul Moore wrote:
+> > On Wed, Feb 5, 2020 at 6:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-02-05 18:05, Paul Moore wrote:
+> > > > On Thu, Jan 30, 2020 at 2:28 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > On 2020-01-22 16:29, Paul Moore wrote:
+> > > > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > >
+> > > > > > > Track the parent container of a container to be able to filter and
+> > > > > > > report nesting.
+> > > > > > >
+> > > > > > > Now that we have a way to track and check the parent container of a
+> > > > > > > container, modify the contid field format to be able to report that
+> > > > > > > nesting using a carrat ("^") separator to indicate nesting.  The
+> > > > > > > original field format was "contid=<contid>" for task-associated records
+> > > > > > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
+> > > > > > > records.  The new field format is
+> > > > > > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
+> > > > > >
+> > > > > > Let's make sure we always use a comma as a separator, even when
+> > > > > > recording the parent information, for example:
+> > > > > > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
+> > > > >
+> > > > > The intent here is to clearly indicate and separate nesting from
+> > > > > parallel use of several containers by one netns.  If we do away with
+> > > > > that distinction, then we lose that inheritance accountability and
+> > > > > should really run the list through a "uniq" function to remove the
+> > > > > produced redundancies.  This clear inheritance is something Steve was
+> > > > > looking for since tracking down individual events/records to show that
+> > > > > inheritance was not aways feasible due to rolled logs or search effort.
+> > > >
+> > > > Perhaps my example wasn't clear.  I'm not opposed to the little
+> > > > carat/hat character indicating a container's parent, I just think it
+> > > > would be good to also include a comma *in*addition* to the carat/hat.
+> > >
+> > > Ah, ok.  Well, I'd offer that it would be slightly shorter, slightly
+> > > less cluttered and having already written the parser in userspace, I
+> > > think the parser would be slightly simpler.
+> > >
+> > > I must admit, I was a bit puzzled by your snippet of code that was used
+> > > as a prefix to the next item rather than as a postfix to the given item.
+> > >
+> > > Can you say why you prefer the comma in addition?
+> >
+> > Generally speaking, I believe that a single delimiter is both easier
+> > for the eyes to parse, and easier/safer for machines to parse as well.
+> > In this particular case I think of the comma as a delimiter and the
+> > carat as a modifier, reusing the carat as a delimiter seems like a bad
+> > idea to me.
+>
+> I'm not crazy about this idea, but I'll have a look at how much work it
+> is to recode the userspace search tools.  It also adds extra characters
+> and noise into the string format that seems counterproductive.
 
-At first glance, that looks sane.  Being able to call __vdso... from C
-would certainly be nice.
+If anything the parser should be *easier* (although both parsers
+should fall into the "trivial" category).  The comma is the one and
+only delimiter, and if the ACID starts with a carat then it is a
+parent of the preceding ACID.
 
->   * Take the leaf as an additional stack parameter instead of passing
-> it in %rax.
+> > > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > > > > index ef8e07524c46..68be59d1a89b 100644
+> > > > > > > --- a/kernel/audit.c
+> > > > > > > +++ b/kernel/audit.c
+> > > > > >
+> > > > > > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
+> > > > > > >                 audit_netns_contid_add(new->net_ns, contid);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
+> > > > > >
+> > > > > > If we need a forward declaration, might as well just move it up near
+> > > > > > the top of the file with the rest of the declarations.
+> > > > >
+> > > > > Ok.
+> > > > >
+> > > > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
+> > > > > > > +{
+> > > > > > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
+> > > > > > > +       int h;
+> > > > > >
+> > > > > > It seems safer to pass the audit container ID object and not the u64.
+> > > > >
+> > > > > It would also be faster, but in some places it isn't available such as
+> > > > > for ptrace and signal targets.  This also links back to the drop record
+> > > > > refcounts to hold onto the contobj until process exit, or signal
+> > > > > delivery.
+> > > > >
+> > > > > What we could do is to supply two potential parameters, a contobj and/or
+> > > > > a contid, and have it use the contobj if it is valid, otherwise, use the
+> > > > > contid, as is done for names and paths supplied to audit_log_name().
+> > > >
+> > > > Let's not do multiple parameters, that begs for misuse, let's take the
+> > > > wrapper function route:
+> > > >
+> > > >  func a(int id) {
+> > > >    // important stuff
+> > > >  }
+> > > >
+> > > >  func ao(struct obj) {
+> > > >    a(obj.id);
+> > > >  }
+> > > >
+> > > > ... and we can add a comment that you *really* should be using the
+> > > > variant that passes an object.
+> > >
+> > > I was already doing that where it available, and dereferencing the id
+> > > for the call.  But I see an advantage to having both parameters supplied
+> > > to the function, since it saves us the trouble of dereferencing it,
+> > > searching for the id in the hash list and re-locating the object if the
+> > > object is already available.
+> >
+> > I strongly prefer we not do multiple parameters for the same "thing";
+>
+> So do I, ideally.  However...
+>
+> > I would much rather do the wrapper approach as described above.  I
+> > would also like to see us use the audit container ID object as much as
+> > possible, using a bare integer should be a last resort.
+>
+> It is not clear to me that you understood what I wrote above.  I can't
+> use the object pointer where preferable because there are a few cases
+> where only the ID is available.  If only the ID is available, I would
+> have to make a best effort to look up the object pointer and am not
+> guaranteed to find it (invalid, stale, signal info...).  If I am forced
+> to use only one, it becomes the ID that is used, and I no longer have
+> the benefit of already having the object pointer for certainty and
+> saving work.  For all cases where I have the object pointer, which is
+> most cases, and most frequently used cases, I will have to dereference
+> the object pointer to an ID, then go through the work again to re-locate
+> the object pointer.  This is less certain, and more work.  Reluctantly,
+> the only practical solution I see here is to supply both, favouring the
+> object pointer if it is valid, then falling back on the ID from the next
+> parameter.
 
-Does the leaf even need to be a stack param?  Wouldn't it be possible to
-use %rcx as @leaf instead of @unusued?  E.g.
+It has been a while since I last looked at the patchset, but my
+concern over the prefered use of the ACID number vs the ACID object is
+that the number offers no reuse protection where the object does.  I
+really would like us to use the object everywhere it is possible.
 
-int __vdso_sgx_enter_enclave(unsigned long rdi, unsigned long rsi,
-			     unsigned long rdx, unsigned int leaf,
-			     unsigned long r8,  unsigned long r9,
-			     void *tcs, struct sgx_enclave_exception *e,
-			     sgx_enclave_exit_handler_t handler)
-{
-	push	%rbp
-	mov	%rsp, %rbp
-	push	%rbx
-
-	mov	%ecx, %eax
-.Lenter_enclave
-	cmp	$0x2, %eax
-	jb	.Linvalid_leaf
-	cmp	$0x3, %eax
-	ja	.Linvalid_leaf
-
-	mov	0x0x10(%rbp), %rbx
-	lea	.Lasync_exit_pointer(%rip), %rcx
-
-.Lasync_exit_pointer:
-.Lenclu_eenter_eresume:
-	enclu
-
-	xor	%eax, %eax
-
-.Lhandle_exit:
-	cmp	$0, 0x20(%rbp)
-	jne	.Linvoke_userspace_handler
-
-.Lout
-	pop	%rbx
-	leave
-	ret
-}
-		
-
-> Then C can call it without additional overhead. And people who need to
-> "extend" the C ABI can still do so.
-> 
+-- 
+paul moore
+www.paul-moore.com
