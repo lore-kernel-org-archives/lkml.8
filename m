@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E395C5ACC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC2EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746FC206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5E3206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCMRrf (ORCPT
+        id S1727306AbgCMRrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:47:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47760 "EHLO
+        Fri, 13 Mar 2020 13:47:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47731 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbgCMRrd (ORCPT
+        with ESMTP id S1727146AbgCMRrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:47:33 -0400
+        Fri, 13 Mar 2020 13:47:24 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1jCoP0-00017r-0C; Fri, 13 Mar 2020 18:47:18 +0100
+        id 1jCoP3-00017r-Dx; Fri, 13 Mar 2020 18:47:21 +0100
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -33,13 +33,10 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 3/9] pci/switchtec: Don't abuse completion wait queue for poll
-Date:   Fri, 13 Mar 2020 18:46:55 +0100
-Message-Id: <20200313174701.148376-4-bigeasy@linutronix.de>
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 8/9] lockdep: Annotate irq_work
+Date:   Fri, 13 Mar 2020 18:47:00 +0100
+Message-Id: <20200313174701.148376-9-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200313174701.148376-1-bigeasy@linutronix.de>
 References: <20200313174701.148376-1-bigeasy@linutronix.de>
@@ -50,131 +47,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The poll callback is abusing the completion wait queue and sticks it into
-poll_wait() to wake up pollers after a command has completed.
+Mark irq_work items with IRQ_WORK_HARD_IRQ which should be invoked in
+hardirq context even on PREEMPT_RT. IRQ_WORK without this flag will be
+invoked in softirq context on PREEMPT_RT.
 
-First of all it's a layering violation as it imposes restrictions on the
-inner workings of completions. Just because C allows to do so does not
-justify that in any way. The proper way to do such things is to post
-patches which extend the core infrastructure and not by silently abusing
-it.
+Set ->irq_config to 1 for the IRQ_WORK items which are invoked in softirq
+context so lockdep knows that these can safely acquire a spinlock_t.
 
-Aside of that the implementation is seriously broken:
-
- 1) It cannot work with EPOLLEXCLUSIVE
-
- 2) It's racy:
-
-  poll()	      	  	 write()
-   switchtec_dev_poll()		   switchtec_dev_write()
-    poll_wait(&s->comp.wait);        mrpc_queue_cmd()
-    				       init_completion(&s->comp)
-					 init_waitqueue_head(&s->comp.wait)
-
-Replace it with a regular wait queue which removes the completion abuse and
-cures #1 and #2 above.
-
-Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/pci/switch/switchtec.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ include/linux/irq_work.h |  2 ++
+ include/linux/irqflags.h | 13 +++++++++++++
+ kernel/irq_work.c        |  2 ++
+ kernel/rcu/tree.c        |  1 +
+ kernel/time/tick-sched.c |  1 +
+ 5 files changed, 19 insertions(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index a823b4b8ef8a9..e69cac84b605f 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -52,10 +52,11 @@ struct switchtec_user {
+diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
+index 02da997ad12ce..3b752e80c017d 100644
+--- a/include/linux/irq_work.h
++++ b/include/linux/irq_work.h
+@@ -18,6 +18,8 @@
 =20
- 	enum mrpc_state state;
+ /* Doesn't want IPI, wait for tick: */
+ #define IRQ_WORK_LAZY		BIT(2)
++/* Run hard IRQ context, even on RT */
++#define IRQ_WORK_HARD_IRQ	BIT(3)
 =20
--	struct completion comp;
-+	wait_queue_head_t cmd_comp;
- 	struct kref kref;
- 	struct list_head list;
+ #define IRQ_WORK_CLAIMED	(IRQ_WORK_PENDING | IRQ_WORK_BUSY)
 =20
-+	bool cmd_done;
- 	u32 cmd;
- 	u32 status;
- 	u32 return_code;
-@@ -77,7 +78,7 @@ static struct switchtec_user *stuser_create(struct switch=
-tec_dev *stdev)
- 	stuser->stdev =3D stdev;
- 	kref_init(&stuser->kref);
- 	INIT_LIST_HEAD(&stuser->list);
--	init_completion(&stuser->comp);
-+	init_waitqueue_head(&stuser->cmd_comp);
- 	stuser->event_cnt =3D atomic_read(&stdev->event_cnt);
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 9c17f9c827aac..f23f540e0ebba 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -69,6 +69,17 @@ do {						\
+ 			current->irq_config =3D 0;	\
+ 	  } while (0)
 =20
- 	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
-@@ -175,7 +176,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
- 	kref_get(&stuser->kref);
- 	stuser->read_len =3D sizeof(stuser->data);
- 	stuser_set_state(stuser, MRPC_QUEUED);
--	init_completion(&stuser->comp);
-+	stuser->cmd_done =3D false;
- 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
++# define lockdep_irq_work_enter(__work)					\
++	  do {								\
++		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
++			current->irq_config =3D 1;			\
++	  } while (0)
++# define lockdep_irq_work_exit(__work)					\
++	  do {								\
++		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
++			current->irq_config =3D 0;			\
++	  } while (0)
++
+ #else
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+@@ -83,6 +94,8 @@ do {						\
+ # define lockdep_softirq_exit()		do { } while (0)
+ # define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
+ # define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
++# define lockdep_irq_work_enter(__work)		do { } while (0)
++# define lockdep_irq_work_exit(__work)		do { } while (0)
+ #endif
 =20
- 	mrpc_cmd_submit(stdev);
-@@ -222,7 +223,8 @@ static void mrpc_complete_cmd(struct switchtec_dev *std=
-ev)
- 		memcpy_fromio(stuser->data, &stdev->mmio_mrpc->output_data,
- 			      stuser->read_len);
- out:
--	complete_all(&stuser->comp);
-+	stuser->cmd_done =3D true;
-+	wake_up_interruptible(&stuser->cmd_comp);
- 	list_del_init(&stuser->list);
- 	stuser_put(stuser);
- 	stdev->mrpc_busy =3D 0;
-@@ -529,10 +531,11 @@ static ssize_t switchtec_dev_read(struct file *filp, =
-char __user *data,
- 	mutex_unlock(&stdev->mrpc_mutex);
+ #if defined(CONFIG_IRQSOFF_TRACER) || \
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 828cc30774bc4..48b5d1b6af4d3 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -153,7 +153,9 @@ static void irq_work_run_list(struct llist_head *list)
+ 		 */
+ 		flags =3D atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
 =20
- 	if (filp->f_flags & O_NONBLOCK) {
--		if (!try_wait_for_completion(&stuser->comp))
-+		if (!stuser->cmd_done)
- 			return -EAGAIN;
- 	} else {
--		rc =3D wait_for_completion_interruptible(&stuser->comp);
-+		rc =3D wait_event_interruptible(stuser->cmd_comp,
-+					      stuser->cmd_done);
- 		if (rc < 0)
- 			return rc;
- 	}
-@@ -580,7 +583,7 @@ static __poll_t switchtec_dev_poll(struct file *filp, p=
-oll_table *wait)
- 	struct switchtec_dev *stdev =3D stuser->stdev;
- 	__poll_t ret =3D 0;
++		lockdep_irq_work_enter(work);
+ 		work->func(work);
++		lockdep_irq_work_exit(work);
+ 		/*
+ 		 * Clear the BUSY bit and return to the free state if
+ 		 * no-one else claimed it meanwhile.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index d91c9156fab2e..5066d1dd30777 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1113,6 +1113,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *=
+rdp)
+ 		    !rdp->rcu_iw_pending && rdp->rcu_iw_gp_seq !=3D rnp->gp_seq &&
+ 		    (rnp->ffmask & rdp->grpmask)) {
+ 			init_irq_work(&rdp->rcu_iw, rcu_iw_handler);
++			atomic_set(&rdp->rcu_iw.flags, IRQ_WORK_HARD_IRQ);
+ 			rdp->rcu_iw_pending =3D true;
+ 			rdp->rcu_iw_gp_seq =3D rnp->gp_seq;
+ 			irq_work_queue_on(&rdp->rcu_iw, rdp->cpu);
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 4be756b88a48e..3e2dc9b8858c7 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -245,6 +245,7 @@ static void nohz_full_kick_func(struct irq_work *work)
 =20
--	poll_wait(filp, &stuser->comp.wait, wait);
-+	poll_wait(filp, &stuser->cmd_comp, wait);
- 	poll_wait(filp, &stdev->event_wq, wait);
+ static DEFINE_PER_CPU(struct irq_work, nohz_full_kick_work) =3D {
+ 	.func =3D nohz_full_kick_func,
++	.flags =3D ATOMIC_INIT(IRQ_WORK_HARD_IRQ),
+ };
 =20
- 	if (lock_mutex_and_test_alive(stdev))
-@@ -588,7 +591,7 @@ static __poll_t switchtec_dev_poll(struct file *filp, p=
-oll_table *wait)
-=20
- 	mutex_unlock(&stdev->mrpc_mutex);
-=20
--	if (try_wait_for_completion(&stuser->comp))
-+	if (stuser->cmd_done)
- 		ret |=3D EPOLLIN | EPOLLRDNORM;
-=20
- 	if (stuser->event_cnt !=3D atomic_read(&stdev->event_cnt))
-@@ -1272,7 +1275,8 @@ static void stdev_kill(struct switchtec_dev *stdev)
-=20
- 	/* Wake up and kill any users waiting on an MRPC request */
- 	list_for_each_entry_safe(stuser, tmpuser, &stdev->mrpc_queue, list) {
--		complete_all(&stuser->comp);
-+		stuser->cmd_done =3D true;
-+		wake_up_interruptible(&stuser->cmd_comp);
- 		list_del_init(&stuser->list);
- 		stuser_put(stuser);
- 	}
+ /*
 --=20
 2.25.1
 
