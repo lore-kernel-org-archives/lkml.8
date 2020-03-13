@@ -2,72 +2,112 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DE8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20200C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17492073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4B5206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W0rvU+KL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgCMJl7 (ORCPT
+        id S1726530AbgCMJrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:41:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60272 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbgCMJl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:41:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 23046ABF4;
-        Fri, 13 Mar 2020 09:41:57 +0000 (UTC)
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation Technical
- Advisory Board Elections -- Change to charter
-To:     Greg KH <greg@kroah.com>, Jani Nikula <jani.nikula@intel.com>
-Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
- <20200312003436.GF1639@pendragon.ideasonboard.com>
- <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
- <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com>
- <20200313093548.GA2089143@kroah.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
-Date:   Fri, 13 Mar 2020 10:41:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 05:47:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38200 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgCMJrb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 05:47:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D9lM2A008991;
+        Fri, 13 Mar 2020 04:47:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584092842;
+        bh=mFzRNpBAm8x3OIHFlE8PDdI7a4X4HaLXzV5MEkFtlhc=;
+        h=From:To:CC:Subject:Date;
+        b=W0rvU+KLaYvI7S2b8FRlhtGfW1Q/C/VchZIVjvSBWkjjJq+0q4sXU40yJFRSSJIgw
+         HaFgmWwOYPMnjx+IrY6UnYHjh8lu+l5Wo+aH+9GWF8pKYCOuduk0HVOyGsMM22PwnT
+         lFrfA5K85HOlSwLrvgRJHyPtvleIZWb1KYSXFe9w=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02D9lMsN019353;
+        Fri, 13 Mar 2020 04:47:22 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 04:47:21 -0500
+Received: from localhost.localdomain (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 04:47:21 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02D9lInb126551;
+        Fri, 13 Mar 2020 04:47:18 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <tony@atomide.com>
+CC:     <hch@lst.de>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
+        <nm@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <stable@kernel.org>
+Subject: [PATCH v2] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Date:   Fri, 13 Mar 2020 11:47:17 +0200
+Message-ID: <20200313094717.6671-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200313093548.GA2089143@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 10:35 AM, Greg KH wrote:
->> Not that I'm saying there's an easy solution, but obviously kernel.org
->> account is not as problem free as you might think.
-> 
-> We are not saying it is "problem free", but what really is the problem
-> with it?
+The L3 interconnect's memory map is from 0x0 to
+0xffffffff. Out of this, System memory (SDRAM) can be
+accessed from 0x80000000 to 0xffffffff (2GB)
 
-IIUC there is no problem for its current use, but it would be rather restrictive
-if it was used as the only criterion for being able to vote for TAB remotely.
+DRA7 does support 4GB of SDRAM but upper 2GB can only be
+accessed by the MPU subsystem.
 
-> thanks,
-> 
-> greg k-h
-> _______________________________________________
-> Ksummit-discuss mailing list
-> Ksummit-discuss@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
-> 
+Add the dma-ranges property to reflect the physical address limit
+of the L3 bus.
+
+Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
+and CONFIG_ARM_LPAE enabled. This is because the controller
+supports 64-bit DMA and its driver sets the dma_mask to 64-bit
+thus resulting in DMA accesses beyond L3 limit of 2G.
+
+Setting the correct bus_dma_limit fixes the issue.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Cc: stable@kernel.org
+---
+
+Changelog:
+v2:
+- Revised patch with minimal intrusion. i.e. don't change #size-cells
+  of device node.
+
+ arch/arm/boot/dts/dra7.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d78b684e7fca..058b8cbb8ef3 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -148,6 +148,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2";
+ 		reg = <0x0 0x44000000 0x0 0x1000000>,
+ 		      <0x0 0x45000000 0x0 0x1000>;
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
