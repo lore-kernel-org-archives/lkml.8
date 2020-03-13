@@ -2,81 +2,86 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD20C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD5DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBC22071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584061711;
-	bh=GZXF1jbEMHNkWN+8nJgNpRV11roNj+xqkyTJlQsyCsg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Qh6Y8xDQlUGaBcHWcj2cOOmG3QxMnLvJl2CN4x2qWzIpICbb0eDfsTI5WX1Z9II5F
-	 7i1u0hQKr32SWmGv3mYNOMIkr3tW21rkrkvJSksxJtUZZSxVP8yntKMFY+N3mDO58Z
-	 yWumgeSwnUZmwftLNbok83N/lNIZn9SdKijQaKLs=
+	by mail.kernel.org (Postfix) with ESMTP id C159F20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNnFX82R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgCMBIa (ORCPT
+        id S1727176AbgCMBI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgCMBIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:08:30 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A039206EB;
-        Fri, 13 Mar 2020 01:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584061709;
-        bh=GZXF1jbEMHNkWN+8nJgNpRV11roNj+xqkyTJlQsyCsg=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=eR6+dcJpWpjNfwnVeJzuK3xox8/tEOS1wOokhuk4NTBoQfP5Bvu0x88mdzjgBKBCX
-         uef9agDZTbZ2IJp0OZaMQxQZMQa2n6L4hHT/RVBdirmx6AVnCuxIDwlV5boXG+vsqr
-         21765VUGy9wpS57nBFY4jA2jYYpzI6dHpSIJVuIM=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Mar 2020 21:08:56 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44646 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgCMBI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:08:56 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b186so6377994lfg.11;
+        Thu, 12 Mar 2020 18:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nFZTwxtvHmbR8FGBAZEQHlHjy9eP9xsGyxbdiqw2rGg=;
+        b=LNnFX82RYgXEDMompu9/c4zJOWIAlzVHb6INpXilyJDbBastB2ziUScbZI4T+IM7ko
+         0cYpxyUgHgdQgJDRA6R+87+CPu6Hkx3m6O01vtDXNwKLvbBTGgkmzw51KqukLu9xwblK
+         Nvb2amlzx/Tg6p++ePzzAeAMrl8OQL0ByPUMeD301IB0Ae7tpfkjeQi8oymqZKHYcP0t
+         Z4Zif9TK5JZWvb4mtfmAWlUFU71cHBXfkp3uMeNVIcQu1K7ER5+t2aocfIeF9LsJGnps
+         boV4cNnSfVkDvOyDiU47ghx90sAOxVTPfmbuWrbMo3nsnOJCGJvmC5KxTZ1PhgiRYif9
+         DWKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFZTwxtvHmbR8FGBAZEQHlHjy9eP9xsGyxbdiqw2rGg=;
+        b=BHHqHwpk0JGbHfhUS8mHfVBXVDVAiKESit1NxpTK7eCp3kZkkcXHv3LJqj9HkcxhZH
+         mx/EPID2ntJj2+Zd23ThNH4tmAU8cIMSAYwZieTaanYOhsfA8FpmQ6kYCIK4nHLenw4u
+         Q9qw8TDH4qHzNvrUcpY7UFEuBad9J4BOuApeo2VabV5A28TH3k/SvyI5P8TeHNFcFKlv
+         xaKVFGE7HwZX6hoBRTvYz7E+ZeqnMxxd489kyY/xRfe7HjsVPLehkTZ1gg+6qdM/bKER
+         8JYJIq0jIZ/8MyUTttQNrGHqMh6Oph3Djk5EtMcGbGY4JWUsNEEq7E8JhqpPZ/VidbLc
+         M7IQ==
+X-Gm-Message-State: ANhLgQ2ppxBbtnyxiLcCCI6xtODBsjwSHj2+vGvCiLtAxxZeR6BSRbDT
+        lEgFsNJ/vHVXQIyDWjQIA9QKRHSKrtOyGfUl7F08RA==
+X-Google-Smtp-Source: ADFU+vtXInopGZMDeZeZx9zVUljjBPFpFJTFPdHx5ySCV4yRy4d6Er6IXK+MP69DM49KA9iBWwjPGO5n7wY60TQDRMQ=
+X-Received: by 2002:ac2:418b:: with SMTP id z11mr6952361lfh.134.1584061734030;
+ Thu, 12 Mar 2020 18:08:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5a40506025566ddab97109fc0a66eb9e0c80d9ab.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech> <5a40506025566ddab97109fc0a66eb9e0c80d9ab.1582533919.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH 19/89] clk: bcm: rpi: Split pllb clock hooks
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Thu, 12 Mar 2020 18:08:28 -0700
-Message-ID: <158406170873.149997.17369022998670776550@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200310215824.17139-1-steve@sk2.org>
+In-Reply-To: <20200310215824.17139-1-steve@sk2.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 12 Mar 2020 18:08:42 -0700
+Message-ID: <CAADnVQKX=LP_6FZm7Viiimb36+9Ok5Yqa5uM=ZXX=5kc2j38qQ@mail.gmail.com>
+Subject: Re: [PATCH v3] docs: sysctl/kernel: document BPF entries
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maxime Ripard (2020-02-24 01:06:21)
-> The driver only supports the pllb for now and all the clock framework hoo=
-ks
-> are a mix of the generic firmware interface and the specifics of the pllb.
-> Since we will support more clocks in the future let's split the generic a=
-nd
-> specific hooks
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
+On Tue, Mar 10, 2020 at 3:21 PM Stephen Kitt <steve@sk2.org> wrote:
+>
+> Based on the implementation in kernel/bpf/syscall.c,
+> kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
+> in bpftool-prog.rst.
+>
+> The section style doesn't match the surrounding sections; it matches
+> the style of the reworked kernel.rst queued up in docs-next.
+>
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Applied. Thanks
