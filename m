@@ -2,175 +2,120 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C66C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABA420749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFC520746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XRoPckVu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jkW5cons"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgCMMcA (ORCPT
+        id S1726738AbgCMMcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:32:00 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46551 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgCMMcA (ORCPT
+        Fri, 13 Mar 2020 08:32:07 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42572 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgCMMcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:32:00 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n15so11842239wrw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 05:31:58 -0700 (PDT)
+        Fri, 13 Mar 2020 08:32:07 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q19so10266227ljp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 05:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nkJTLjWp/ZvPZWaJtzZTNn9m69bxqKBFlhfJaMFnbMw=;
-        b=XRoPckVuNUtZmv/Cb5MFur3Ea3UulvDP2g99TSXf953Gh1SPRQeT6DFpIvMwpVIDG4
-         Z67R0VLBop2l4TRE/KPlXu8Dt+h8F8utzDIxjg7RoyBaLXqtMEfwBFKZL3BS4nbr+5ib
-         Ipob4oSPQH8YJgNdZlSfSt0QGiwZE6xoltIYLGYMDFj389MTRXLisq/3VhqlaY9PMoEK
-         8BRCmv9FTouaqkmW/dBshkW3dKtDilkTTVno5u05RKCWUd9Wsh22b9jmJeE3+SRzNi/U
-         Xi8eYMUb8bWyNQ0m61si5daI2CpoEuU2SYeCnkVr5lJKYVgemsijdbGK3yo3cwZSxh0Q
-         DwzQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pBlq/kgkQyhz5z+kgPkCmkKYG8Mjt0ntSBe3WF4OdCY=;
+        b=jkW5consK0RByS6GU/4ZhlnhmYj7/yeW/UsEMuEtvTrZDAgRnD/y/i9kzpm2kNX9WV
+         3Gh61938BuefWmhxi/Z+KvJmDt8a3JlaQ/dqxENm+PSTnGk5MFBnM+9yYJJ7NpvFf5Rm
+         VMT+st2Irg5+W96HeMZDKA0oS2z6iRexVDV0LfNn4gVKPOq8Hqq9sns9GdMQh4TepN0/
+         SMdPcO90UR5bZ+wOV7udGPsGmkWiRcLJr0+HIX6fM1IerjT+bjmTFzV07OodCL6wDZqM
+         tI2Lw79XyPUg/HhX0eKEWjVrfDcwvxkKOmU2YmzQhWBo/uKBhaR+YBdZNjrg1NBDboZL
+         nLEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=nkJTLjWp/ZvPZWaJtzZTNn9m69bxqKBFlhfJaMFnbMw=;
-        b=cEjFpEnvA7kqwmbxHUPR1wn2iwkIaTFK3bGGcWNRZBdJ9/+q60kyhsIYQP7Qd1ethY
-         qobwYNM8InyXUjsEmUqGU7fZQWG+eq2oMv0oxR7pMwcRzED2LiDVmzMADN1x7EFuQ2r/
-         DURHhQbxHK0m7LXKK0usFJazdQG6PQ7sW0pbnr4XKeg0WMz5r5qNWMjhXU00yjHLyrac
-         IXVasSxW3+mb15ZJIlhvUoFhhFZVHh0bFh6PEug/kBKNOuyfHMFDEnTSKb7zqOusB6kb
-         XDMm21Sn0f59t5B7p3jts6AwAOvbSNgKW9wXmq4JiQzbO+Sf3xtZhjuIkp6+7XfMVx7u
-         2xkQ==
-X-Gm-Message-State: ANhLgQ33nOSIjyhSRNOHkOYn/6xeUGH0W0UY2+t4K2UCm0MA5+EvjOZ5
-        TBHcoFlgMKsqMKIyvuKj7yUAG8W8NZA=
-X-Google-Smtp-Source: ADFU+vu6dcTKKhIsRtRu5AWKMxBh+Il5Nx3NH3Yy5uCwJJN9lazkuBAfHWNFO7rkGaVzqBqjRA27Yw==
-X-Received: by 2002:adf:9364:: with SMTP id 91mr17174282wro.223.1584102717997;
-        Fri, 13 Mar 2020 05:31:57 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:40fb:3990:3519:cc26? ([2a01:e34:ed2f:f020:40fb:3990:3519:cc26])
-        by smtp.googlemail.com with ESMTPSA id l83sm17191214wmf.43.2020.03.13.05.31.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 05:31:57 -0700 (PDT)
-Subject: Re: [PATCH] thermal: imx: Calling
- imx_thermal_unregister_legacy_cooling() in .remove
-To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pBlq/kgkQyhz5z+kgPkCmkKYG8Mjt0ntSBe3WF4OdCY=;
+        b=REjBpWMkNt3gVUVwAVjXTl48yGIf7y9imOJs9IVxzugBVWpf8V/w891NW+LieP/VVX
+         UgY2ZhlcIhmTHDCZU4SPcq1tFnBKnKz+9xQQRUBXostSF8Q32SZK21vuWDj4OND49RjL
+         eema4o5LaoZDWd5HeiT2euDyIj9FtZJYgn3V+rIheqdKVNXm2r0vSqluktWkZ05WsDi5
+         WTqmo2j+sUwWYinm0q5S7TEKk9qdWMByzxsWX0/R4lt7d+KcEybIw3UxHk11OvTLh/z0
+         i1fyvN9eGfBa207EIBNszEkgh63YbOQFzv5/XsMHhCqmK6dlfF54oAY6DtzWTMAuc8Tx
+         8CTA==
+X-Gm-Message-State: ANhLgQ1gfnC5cPd+5fFFubcp7zzyGYKOqOGMYL18ToMIrm4BD02Tx/i9
+        QMWxaWsA5x0uW1Cced2eNbb0cA==
+X-Google-Smtp-Source: ADFU+vs7HWPz2lfZBxaBCERnGMae9SB3J/PkZFnSFf+rUqekHZ8JoPmWsq2+8bG2XUqZij5Dk8cJFQ==
+X-Received: by 2002:a2e:9ac5:: with SMTP id p5mr8365764ljj.200.1584102725175;
+        Fri, 13 Mar 2020 05:32:05 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id v17sm19194591lfn.64.2020.03.13.05.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 05:32:03 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1584088094-24857-1-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <58ad76cb-5187-cb59-87cb-e6b75051b46a@linaro.org>
-Date:   Fri, 13 Mar 2020 13:31:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.6-rc6 take2
+Date:   Fri, 13 Mar 2020 13:32:02 +0100
+Message-Id: <20200313123202.23685-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1584088094-24857-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/03/2020 09:28, Anson Huang wrote:
-> imx_thermal_unregister_legacy_cooling() should be used for handling
-> legacy cpufreq cooling cleanups in .remove callback instead of
-> calling cpufreq_cooling_unregister() and cpufreq_cpu_put() directly,
-> especially for !CONFIG_CPU_FREQ scenario, no operation needed for
-> handling legacy cpufreq cooling cleanups at all.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Linus,
 
-Applied, thanks
+Here's a PR with a couple of MMC fixes intended for v5.6-rc6. Details about the
+highlights are as usual found in the signed tag.
 
-> ---
->  drivers/thermal/imx_thermal.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-> index d2fa301..e761c9b 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -865,8 +865,7 @@ static int imx_thermal_remove(struct platform_device *pdev)
->  		clk_disable_unprepare(data->thermal_clk);
->  
->  	thermal_zone_device_unregister(data->tz);
-> -	cpufreq_cooling_unregister(data->cdev);
-> -	cpufreq_cpu_put(data->policy);
-> +	imx_thermal_unregister_legacy_cooling(data);
->  
->  	return 0;
->  }
-> 
+Please pull this in!
+
+Kind regards
+Ulf Hansson
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+The following changes since commit 31e43f31890ca6e909b27dcb539252b46aa465da:
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+  mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x (2020-03-04 15:41:22 +0100)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.6-rc1-2
+
+for you to fetch changes up to 18d200460cd73636d4f20674085c39e32b4e0097:
+
+  mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command (2020-03-12 13:36:55 +0100)
+
+----------------------------------------------------------------
+MMC core:
+ - Fix HW busy detection support for host controllers requiring the
+   MMC_RSP_BUSY response flag (R1B) to be set for the command. In
+   particular for CMD6 (eMMC), erase/trim/discard (SD/eMMC) and CMD5
+   (eMMC sleep).
+
+MMC host:
+ - sdhci-omap|tegra: Fix support for HW busy detection
+
+----------------------------------------------------------------
+Ulf Hansson (5):
+      mmc: core: Allow host controllers to require R1B for CMD6
+      mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
+      mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+      mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+      mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
+
+ drivers/mmc/core/core.c        | 5 ++++-
+ drivers/mmc/core/mmc.c         | 7 +++++--
+ drivers/mmc/core/mmc_ops.c     | 6 ++++--
+ drivers/mmc/host/sdhci-omap.c  | 3 +++
+ drivers/mmc/host/sdhci-tegra.c | 3 +++
+ include/linux/mmc/host.h       | 1 +
+ 6 files changed, 20 insertions(+), 5 deletions(-)
