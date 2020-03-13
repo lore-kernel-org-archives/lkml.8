@@ -2,132 +2,129 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C2EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10646C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1811F2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E264D2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCMGby (ORCPT
+        id S1726414AbgCMGha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:31:54 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36323 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgCMGby (ORCPT
+        Fri, 13 Mar 2020 02:37:30 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:60876 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726060AbgCMGha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:31:54 -0400
-Received: by mail-io1-f67.google.com with SMTP id d15so8261697iog.3;
-        Thu, 12 Mar 2020 23:31:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gwo18I+qhDyK0f9CRK6fxLCdLThMsDTks/uef8gm4kY=;
-        b=arC548UFw58zPiZMTGpKSTA6C6cShe4/2dw/ERpegDkNqAfCg04TZN4DNuXAGiPlWr
-         wpIlPtGJ8GPVxD37ww0/w34k112uvnTr9PsHbgyAiKqDeKaTewKk4XNcZL3L1tLv/2Ty
-         zhQaCGOfFI4vhmKGlFgoFBweHPRg9V4g50Cg4rmKpBG1oULr/u58nB5rowQucqVdBFDC
-         taW9/oROrxRrnjSpEKQiok8fJOJ9zvNbuhGz9A+i/aAJOr4VSfxZSZb2aS4P5uMEe/F6
-         9Q/rIiQfE5+nL17Egz0+euMGpKMeuYP5t2KK/XV6aDHDZVyI+pT+jdTTsK+Bl2C+vh78
-         JTHA==
-X-Gm-Message-State: ANhLgQ0vLxbb7Qf1CtK3POF+QhCCMG9wEy8KvB0KkXthXDXKSdlgNBJf
-        kmxekXZfdla1cQouxOd53WTgJoMlPyH+Z8GESaAVT+cW
-X-Google-Smtp-Source: ADFU+vsYn7olWjR5ZdnVzmHpadFtCBryj55XjQULGF5Jf4ExDfr1NLEO1VzBnFywsf13xgwymPRjhRkizQCmf4VjPIo=
-X-Received: by 2002:a6b:8ec2:: with SMTP id q185mr10907291iod.180.1584081112766;
- Thu, 12 Mar 2020 23:31:52 -0700 (PDT)
+        Fri, 13 Mar 2020 02:37:30 -0400
+X-IronPort-AV: E=Sophos;i="5.70,547,1574092800"; 
+   d="scan'208";a="86262345"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 13 Mar 2020 14:37:22 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 983A250A9984;
+        Fri, 13 Mar 2020 14:27:21 +0800 (CST)
+Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Fri, 13 Mar 2020 14:37:18 +0800
+Received: from TEST.g08.fujitsu.local (10.167.226.147) by
+ G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1395.4 via Frontend Transport; Fri, 13 Mar 2020 14:37:17 +0800
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+Subject: [RFC PATCH] x86/apic: Drop superfluous apic_phys
+Date:   Fri, 13 Mar 2020 14:37:15 +0800
+Message-ID: <20200313063715.7523-1-caoj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <1584069257-30896-1-git-send-email-lixing@loongson.cn> <1584069257-30896-3-git-send-email-lixing@loongson.cn>
-In-Reply-To: <1584069257-30896-3-git-send-email-lixing@loongson.cn>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Fri, 13 Mar 2020 14:38:20 +0800
-Message-ID: <CAAhV-H6_eouq_i9RRntTVk2kwEDf62zSoy1Xz9rD30cVjKcRyg@mail.gmail.com>
-Subject: Re: [PATCH v2 Resend 3/3] KVM: MIPS: Support kvm modules autoprobed
- when startup system
-To:     Xing Li <lixing@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>, kvm@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, maobibo@loongson.cn,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 983A250A9984.A55C0
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Lixing,
+apic_phys seems having totally the same meaning as mp_lapic_addr,
+except it is static, replace it.
 
-On Fri, Mar 13, 2020 at 11:14 AM Xing Li <lixing@loongson.cn> wrote:
->
-> Currently, the module_init of kvm_mips_init cannot force the kvm
-> modules insmod when startup system.
->
-> Add new feature CPU_MIPS_VZ in elf_hwcap to support KVM auto probe
-> when hardware virtualization supported.
-I think this patch is not suitable, because:
-1, KVM has VZ mode and TE mode, you only consider VZ mode?
-2, As X86 does, you can use udev or modprobe.conf to autoprobe kvm module.
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+Not sure if there is still any corner case, but it boots fine.
 
-Regards,
-Huacai
->
-> Signed-off-by: Xing Li <lixing@loongson.cn>
-> ---
->  arch/mips/include/uapi/asm/hwcap.h | 1 +
->  arch/mips/kernel/cpu-probe.c       | 4 +++-
->  arch/mips/kvm/mips.c               | 3 ++-
->  3 files changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
-> index 1ade1da..9e66509 100644
-> --- a/arch/mips/include/uapi/asm/hwcap.h
-> +++ b/arch/mips/include/uapi/asm/hwcap.h
-> @@ -17,5 +17,6 @@
->  #define HWCAP_LOONGSON_MMI  (1 << 11)
->  #define HWCAP_LOONGSON_EXT  (1 << 12)
->  #define HWCAP_LOONGSON_EXT2 (1 << 13)
-> +#define HWCAP_MIPS_VZ       (1 << 14)
->
->  #endif /* _UAPI_ASM_HWCAP_H */
-> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-> index c543326..b305269 100644
-> --- a/arch/mips/kernel/cpu-probe.c
-> +++ b/arch/mips/kernel/cpu-probe.c
-> @@ -2242,8 +2242,10 @@ void cpu_probe(void)
->         if (cpu_has_loongson_ext2)
->                 elf_hwcap |= HWCAP_LOONGSON_EXT2;
->
-> -       if (cpu_has_vz)
-> +       if (cpu_has_vz) {
->                 cpu_probe_vz(c);
-> +               elf_hwcap |= HWCAP_MIPS_VZ;
-> +       }
->
->         cpu_probe_vmbits(c);
->
-> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-> index 1109924..1da5df3 100644
-> --- a/arch/mips/kvm/mips.c
-> +++ b/arch/mips/kvm/mips.c
-> @@ -19,6 +19,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/fs.h>
->  #include <linux/memblock.h>
-> +#include <linux/cpufeature.h>
->
->  #include <asm/fpu.h>
->  #include <asm/page.h>
-> @@ -1742,7 +1743,7 @@ static void __exit kvm_mips_exit(void)
->         unregister_die_notifier(&kvm_mips_csr_die_notifier);
->  }
->
-> -module_init(kvm_mips_init);
-> +module_cpu_feature_match(MIPS_VZ, kvm_mips_init);
->  module_exit(kvm_mips_exit);
->
->  EXPORT_TRACEPOINT_SYMBOL(kvm_exit);
-> --
-> 2.1.0
->
+ arch/x86/kernel/apic/apic.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 5f973fed3c9f..5b7b59951421 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -199,8 +199,6 @@ unsigned int lapic_timer_period = 0;
+ 
+ static void apic_pm_activate(void);
+ 
+-static unsigned long apic_phys __ro_after_init;
+-
+ /*
+  * Get the LAPIC version
+  */
+@@ -1170,7 +1168,7 @@ void clear_local_APIC(void)
+ 	u32 v;
+ 
+ 	/* APIC hasn't been mapped yet */
+-	if (!x2apic_mode && !apic_phys)
++	if (!x2apic_mode && !mp_lapic_addr)
+ 		return;
+ 
+ 	maxlvt = lapic_get_maxlvt();
+@@ -1261,7 +1259,7 @@ void apic_soft_disable(void)
+ void disable_local_APIC(void)
+ {
+ 	/* APIC hasn't been mapped yet */
+-	if (!x2apic_mode && !apic_phys)
++	if (!x2apic_mode && !mp_lapic_addr)
+ 		return;
+ 
+ 	apic_soft_disable();
+@@ -2111,14 +2109,12 @@ void __init init_apic_mappings(void)
+ 		pr_info("APIC: disable apic facility\n");
+ 		apic_disable();
+ 	} else {
+-		apic_phys = mp_lapic_addr;
+-
+ 		/*
+ 		 * If the system has ACPI MADT tables or MP info, the LAPIC
+ 		 * address is already registered.
+ 		 */
+ 		if (!acpi_lapic && !smp_found_config)
+-			register_lapic_address(apic_phys);
++			register_lapic_address(mp_lapic_addr);
+ 	}
+ 
+ 	/*
+@@ -2874,11 +2870,11 @@ early_param("apic", apic_set_verbosity);
+ 
+ static int __init lapic_insert_resource(void)
+ {
+-	if (!apic_phys)
++	if (!mp_lapic_addr)
+ 		return -1;
+ 
+ 	/* Put local APIC into the resource map. */
+-	lapic_resource.start = apic_phys;
++	lapic_resource.start = mp_lapic_addr;
+ 	lapic_resource.end = lapic_resource.start + PAGE_SIZE - 1;
+ 	insert_resource(&iomem_resource, &lapic_resource);
+ 
+-- 
+2.21.1
+
+
+
