@@ -2,109 +2,72 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D58C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6958C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D1620746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vsgXryl3"
+	by mail.kernel.org (Postfix) with ESMTP id 81B98206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgCMMuV (ORCPT
+        id S1726721AbgCMMyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:50:21 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59864 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726534AbgCMMuV (ORCPT
+        Fri, 13 Mar 2020 08:54:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55745 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgCMMyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:50:21 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DClBBG009053;
-        Fri, 13 Mar 2020 13:50:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=r4gx10/wtvNnRN5cGMpKMfyjngW05Zoe7Hit39sNOOI=;
- b=vsgXryl3gsHhysTHeFNVOvbdWiNlUdW0cEZqWoEBwuAtx9dMlhCnEfi1/5P/RApZgbKE
- cFQh5E/t/8unfbgFBVUzql5SDo5MBvM6I92G1WOpcqjzWwUcJsjgB2LhIUPkGK4XAsAv
- Phah9YYFe5kZnCjZgQkj8JUuhs3kjHxLI1jtmZ4X4Z/Iz2wLi6CJrJB2Z7fV6t3001op
- e7fXivhc9aGBE8JH6UpU/GXsCjU9aIsEtIr3Kfu4xCVIFDQVDiNHsKmwRPBY9eHrOq+j
- 6ez0T8BGwCkFOybaUdKVuy2LE/0Qp96LR8FnLJIjTdqUvD/xY93n7gDmmsPenQDO7olc og== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yqt82gm58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 13:50:12 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E27DF100038;
-        Fri, 13 Mar 2020 13:50:11 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CED582A7F68;
-        Fri, 13 Mar 2020 13:50:11 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 13 Mar
- 2020 13:50:10 +0100
-Subject: Re: [PATCH] ARM: dts: stm32: set i2c4 bus freq to 400KHz on stm32mp15
- DK boards
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1581355056-13884-1-git-send-email-alain.volmat@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <7f8a5f6d-4d62-3649-efda-3d02f89a4d07@st.com>
-Date:   Fri, 13 Mar 2020 13:50:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 08:54:10 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jCjpF-0003Gu-EH; Fri, 13 Mar 2020 12:54:05 +0000
+Date:   Fri, 13 Mar 2020 13:54:04 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Todd Kjos <tkjos@android.com>, ard.biesheuvel@linaro.org,
+        ardb@kernel.org, john.stultz@linaro.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        naresh.kamboju@linaro.org, shuah@kernel.org,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>, hridya@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH 2/3] binderfs: add stress test for binderfs binder devices
+Message-ID: <20200313125404.fnsktenn5crufkxr@wittgenstein>
+References: <20200311105309.1742827-1-christian.brauner@ubuntu.com>
+ <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+ <20200312131531.3615556-2-christian.brauner@ubuntu.com>
+ <202003121652.00BBA1D98@keescook>
 MIME-Version: 1.0
-In-Reply-To: <1581355056-13884-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202003121652.00BBA1D98@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alain
-
-On 2/10/20 6:17 PM, Alain Volmat wrote:
-> On DK boards, all I2C4 bus slaves supports I2C Fast Mode hence setting
-> the bus frequency to 400 KHz.
+On Thu, Mar 12, 2020 at 04:53:17PM -0700, Kees Cook wrote:
+> On Thu, Mar 12, 2020 at 02:15:30PM +0100, Christian Brauner wrote:
+> > This adds a stress test that should hopefully help us catch regressions
+> > for [1], [2], and [3].
+> > 
+> > [1]: 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
+> > [2]: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > [3]: 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 > 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> index 7f5fcb2c5b03..2521f428ae67 100644
-> --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> @@ -221,6 +221,7 @@
->   	pinctrl-1 = <&i2c4_pins_sleep_a>;
->   	i2c-scl-rising-time-ns = <185>;
->   	i2c-scl-falling-time-ns = <20>;
-> +	clock-frequency = <400000>;
->   	status = "okay";
->   	/* spare dmas for other usage */
->   	/delete-property/dmas;
-> 
+> Do you care about 80-char line limits? (Or does the selftest tree? There
+> are a few in here...)
 
-Applied on stm32-next.
+They should mostly all be calls to kselftest print functions. I usually
+never wrap them in tests so it's easy to do:
 
-Thanks.
-Alex
+git grep "Find me this error string"
+
+which becames annoying when you wrap them. :)
