@@ -2,113 +2,80 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A5BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E14206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BE520749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="Mw+VFPC1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a//WCCTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCMSrh (ORCPT
+        id S1727212AbgCMStQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:47:37 -0400
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:39099 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgCMSrg (ORCPT
+        Fri, 13 Mar 2020 14:49:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38775 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgCMStQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:47:36 -0400
-Received: by mail-qt1-f171.google.com with SMTP id f17so7135368qtq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:47:34 -0700 (PDT)
+        Fri, 13 Mar 2020 14:49:16 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w3so4679532plz.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=mj7rGF7ON3Eo/FvVmngslw/F8fURXQu1EMn3nTTBUPQ=;
-        b=Mw+VFPC1w0UbdRMWSYVpgl8XZWcn/xyU7HjgZBjymT1LdxHLk54OdU9J7RryeWrV6G
-         pmCAsvxCw6XBIrR2Z5DSa9CfEeJcGKuh/zQ62J5GrmsM23BnS/TkQOWWIGVCT/cPUhnP
-         mm/zvQEUeE+q3yK42lamLdvqmphm2Ot6wWUJv1CQBEctQWHl5XrvfaJBRTO78Y/uEQWX
-         1l7qCdw3dlmrC8UvDgfJkqLAkCDAm4l7/mSIUZHe+CJjQxziWFJmZIyA+x8UAD/HVCqX
-         kJqpDXv5yS7j0ShkpKY8fpwCpz07OokC7FALZ+xhU7HVgk00IIS+O4y9al6ahGYBMuiP
-         ykgA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=290YlVmLLJJCRCOssjWMCt+6MQ1MCmicBbphMv3GKW8=;
+        b=a//WCCTIxbhDJJjElvavoIj0VS8lmbZBNll/awQhVSp5zV/NoBNUmnd30LnTqTf4iR
+         noMvqM4z510w0BljkxbNQVHJLLh8sqcT/0aFTEvXNnlvhxBSI2g+WhCyTfRz7WqSrglg
+         VCvP1dSyj9kRgMVETR2vWRcSXNNl2sLozXt1fGZ+ygyV49WxLG1EkwQhkKBeMpLkQI04
+         FiADtQyAEoOx5gbFXJF7uRzKbEw3cUgB7L0qcM07g9ecSfMbaQrEdC0rKNABZmJDMhbm
+         PwSbuqAvZmQAFQHtIP+dwFRdW1BWOcSxsZhTY+dQiSPEbBmSM9Q8LGdB3K1AVtblT1sY
+         Tc7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=mj7rGF7ON3Eo/FvVmngslw/F8fURXQu1EMn3nTTBUPQ=;
-        b=qVFTQ8zjbKGnAlHzaRIThdvLULOg8KiaUkClOvpLkW33K3nlbELhjKJX13Mpt1Gn4M
-         BtAET+JbyEEb2g3+7X2/gsTv1jCRKWtUiWgF5v952wQlu0CqKiolWP275uF3NijMqYa7
-         W9YvClqHR5ZmR8qGpd4TAjytzyIrDllPMKS/P8fnWDMi6T13DR5LVjraBScbwmvcaTUX
-         asql5geMCgpno3jmeopb72Fs/DLm5QQvzDV7iPOfcj3xuquMN5++bySjWHmUhNMhPxUy
-         Pw+8iht2QmNAi5xxtlS+jGSkH68anjBFPDw6uwLAHt7KrVW5ZgA5MM6MEeNM4ek8AWON
-         naqw==
-X-Gm-Message-State: ANhLgQ3+dV331OtEBRl0ANVrE+iYOJsUkKO8YJs1QyPTKjqgDczhOfoL
-        I3PfBkoMBKMr1dUb8wi7Xk4spA==
-X-Google-Smtp-Source: ADFU+vt5NDaayPMUHsXSY8k4ZwE0SyPb1aBxsDRcUQaLRF+uXaXF3f1cbfLoYMcPhiB48Es6cJN9Mg==
-X-Received: by 2002:aed:2202:: with SMTP id n2mr14466967qtc.4.1584125254322;
-        Fri, 13 Mar 2020 11:47:34 -0700 (PDT)
-Received: from [192.168.1.106] ([107.15.81.208])
-        by smtp.gmail.com with ESMTPSA id w1sm14917915qkc.117.2020.03.13.11.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 11:47:33 -0700 (PDT)
-To:     lsf-pc <lsf-pc@lists.linuxfoundation.org>
-Cc:     Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nvme@vger.kernel.org" <linux-nvme@vger.kernel.org>
-From:   Josef Bacik <josef@toxicpanda.com>
-Subject: LSF/MM/BPF 2020: Postponement announcement
-Message-ID: <e4f390c7-3b25-67c8-5d6d-d7e87ba1c072@toxicpanda.com>
-Date:   Fri, 13 Mar 2020 14:47:32 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=290YlVmLLJJCRCOssjWMCt+6MQ1MCmicBbphMv3GKW8=;
+        b=tq83aa/UlHoCdIIikW5iV/yKMZQG16rc31PLTfpNjHwRC+vuUF48zikAHrdpKZDJek
+         6bcjQdreXn7a9O6zGAh49C9oILeT5FtI+piE6BvHOtYMd6OZGcRrju5UoRnZPKvZ5usI
+         NLxBNkji0BO6yGmZFRRb4WNwYy4XTJHLZsNMSQ90EyNRBi964MEu/sxsibjPXGyJbvBE
+         s2/oA2rob6/H2NlJytDgFUWuytNPax1f1lYZqB5ZavEf/0jhTVd/7fKa3jyWEbEYdJ+R
+         cAsuqSVjoQMSCYYDIqmRcxyT51AYzEFYr/EW1N4bGhfRtD2yhjwHH6DG37kWzQAk6TSa
+         W7lw==
+X-Gm-Message-State: ANhLgQ0jW9N/iCTJYc5erENHkf73Nird1UYSnLUOXNg7cDoLbUbVKqLT
+        vGCfqD5fsrFoPxzU12ePEqlVPLROpvY=
+X-Google-Smtp-Source: ADFU+vt9smw2Ms7j7aSyz07798hwnZCsUi94kWwcs60oW4y2CSgQ+ltkGIe3P5nFTpkPHSgK5ku11g==
+X-Received: by 2002:a17:902:d917:: with SMTP id c23mr14446314plz.292.1584125353885;
+        Fri, 13 Mar 2020 11:49:13 -0700 (PDT)
+Received: from localhost ([161.117.239.120])
+        by smtp.gmail.com with ESMTPSA id 18sm60087181pfj.20.2020.03.13.11.49.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 11:49:13 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     willy@infradead.org
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH 0/2] radix-tree: fix some errors in comment
+Date:   Sat, 14 Mar 2020 02:49:07 +0800
+Message-Id: <20200313184909.4560-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Update the comment.
 
-Unfortunately given the escalating nature of the response to COVID-19 we are
-making the decision to change the original LSF/MM/BPF dates in April 2020.  We
-currently do not have concrete plans about how we will reschedule, the Linux
-Foundation is working very hard at getting us alternative dates as we speak.
-Once the new plans are concretely made we will notify everyone again with the
-new plans.
+Qiujun Huang (2):
+  radix-tree: fix kernel-doc for radix_tree_find_next_bit
+  radix-tree: fix a typo
 
-The tentative plan is to keep the attendees as they are if we reschedule within
-2020.  This includes anybody that declined for travel related concerns.  We will
-re-send all invitations again to the original invitees so it's clear that you
-have been invited.
+ lib/radix-tree.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-If we have to reschedule into 2021 then we will redo the CFP once we are closer
-to the actual date again and redo all of the invites and topics so we're as up
-to date as possible with the current state of the community.
+-- 
+2.17.1
 
-We will keep the current program committee and I will continue to chair until we
-have the next LSF/MM/BPF.
-
-Thank you on behalf of the program committee:
-
-         Josef Bacik (Filesystems)
-         Amir Goldstein (Filesystems)
-         Martin K. Petersen (Storage)
-         Omar Sandoval (Storage)
-         Michal Hocko (MM)
-         Dan Williams (MM)
-         Alexei Starovoitov (BPF)
-         Daniel Borkmann (BPF)
