@@ -2,169 +2,105 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1F8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329F9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D22A206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1756E206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgCMLEz (ORCPT
+        id S1726546AbgCMLGr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:04:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50432 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726387AbgCMLEz (ORCPT
+        Fri, 13 Mar 2020 07:06:47 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49561 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726488AbgCMLGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:04:55 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DB35ml076016
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:04:53 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqyhtamg5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:04:52 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 13 Mar 2020 11:04:49 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 13 Mar 2020 11:04:45 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02DB4ivV40239484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 11:04:44 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02E884204F;
-        Fri, 13 Mar 2020 11:04:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8041D4204D;
-        Fri, 13 Mar 2020 11:04:41 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 13 Mar 2020 11:04:41 +0000 (GMT)
-Date:   Fri, 13 Mar 2020 16:34:40 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christopher Lameter <cl@linux.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
- <20200311115735.GM23944@dhcp22.suse.cz>
- <20200312052707.GA3277@linux.vnet.ibm.com>
- <C5560C71-483A-41FB-BDE9-526F1E0CFA36@linux.vnet.ibm.com>
- <5e5c736a-a88c-7c76-fc3d-7bc765e8dcba@suse.cz>
- <20200312131438.GB3277@linux.vnet.ibm.com>
- <61437352-8b54-38fa-4471-044a65c9d05a@suse.cz>
- <20200312161310.GC3277@linux.vnet.ibm.com>
- <e115048c-be38-c298-b8d1-d4b513e7d2fb@suse.cz>
- <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
+        Fri, 13 Mar 2020 07:06:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-80-gv2f1hCOODeqrgtDqydigQ-1; Fri, 13 Mar 2020 11:06:42 +0000
+X-MC-Unique: gv2f1hCOODeqrgtDqydigQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 13 Mar 2020 11:06:42 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 13 Mar 2020 11:06:42 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Bruno Meneguele' <bmeneg@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "pmladek@suse.com" <pmladek@suse.com>,
+        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+Subject: RE: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
+Thread-Topic: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
+Thread-Index: AQHV+SbtOwT0X58SokiO9wU0er7wyahGXCjQ
+Date:   Fri, 13 Mar 2020 11:06:42 +0000
+Message-ID: <b9427c068f3f4af9bf2bd290d88f84b9@AcuMS.aculab.com>
+References: <20200313003533.2203429-1-bmeneg@redhat.com>
+ <20200313073425.GA219881@google.com> <20200313110229.GI13406@glitch>
+In-Reply-To: <20200313110229.GI13406@glitch>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 20031311-0012-0000-0000-0000039069FE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031311-0013-0000-0000-000021CD3F2C
-Message-Id: <20200313110440.GA25144@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003130060
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Joonsoo Kim <js1304@gmail.com> [2020-03-13 18:47:49]:
-
-> > >>
-> > >> > Also for a memoryless/cpuless node or possible but not present nodes,
-> > >> > node_to_mem_node(node) will still end up as node (atleast on powerpc).
-> > >>
-> > >> I think that's the place where this would be best to fix.
-> > >>
+From: Bruno Meneguele
+> Sent: 13 March 2020 11:02
+> On Fri, Mar 13, 2020 at 04:34:25PM +0900, Sergey Senozhatsky wrote:
+> > On (20/03/12 21:35), Bruno Meneguele wrote:
 > > >
-> > > Maybe. I thought about it but the current set_numa_mem semantics are apt
-> > > for memoryless cpu node and not for possible nodes.  We could have upto 256
-> > > possible nodes and only 2 nodes (1,2) with cpu and 1 node (1) with memory.
-> > > node_to_mem_node seems to return what is set in set_numa_mem().
-> > > set_numa_mem() seems to say set my numa_mem node for the current memoryless
-> > > node to the param passed.
+> > > Userspace libraries, e.g. glibc's dprintf(), expect the default return value
+> > > for invalid seek situations: -ESPIPE, but when the IO was over /dev/kmsg the
+> > > current state of kernel code was returning the generic case of an -EINVAL.
+> > > Hence, userspace programs were not behaving as expected or documented.
 > > >
-> > > But how do we set numa_mem for all the other 253 possible nodes, which
-> > > probably will have 0 as default?
-> > >
-> > > Should we introduce another API such that we could update for all possible
-> > > nodes?
 > >
-> > If we want to rely on node_to_mem_node() to give us something safe for each
-> > possible node, then probably it would have to be like that, yeah.
+> > Hmm. I don't think I see ESPIPE in documentation [0], [1], [2]
 > >
-> > >> > I tried with this hunk below and it works.
-> > >> >
-> > >> > But I am not sure if we need to check at other places were
-> > >> > node_present_pages is being called.
-> > >>
-> > >> I think this seems to defeat the purpose of node_to_mem_node()? Shouldn't it
-> > >> return only nodes that are online with present memory?
-> > >> CCing Joonsoo who seems to have introduced this in ad2c8144418c ("topology: add
-> > >> support for node_to_mem_node() to determine the fallback node")
-> > >>
-> > >
-> > > Agree
+> > [0] https://pubs.opengroup.org/onlinepubs/9699919799/functions/fprintf.html
+> > [1] http://man7.org/linux/man-pages/man3/dprintf.3p.html
+> > [2] http://man7.org/linux/man-pages/man3/fprintf.3p.html
+> >
+> > 	-ss
+> >
 > 
-> I lost all the memory about it. :)
-> Anyway, how about this?
+> Ok, I poorly expressed the notion of "documentantion". The userspace
+> doesn't tell about returning -ESPIPE, but to the functions work properly
+> they watch for -ESPIPE returning from the syscall. For instance, gblic
+> dprintf() implementation:
 > 
-> 1. make node_present_pages() safer
-> static inline node_present_pages(nid)
-> {
-> if (!node_online(nid)) return 0;
-> return (NODE_DATA(nid)->node_present_pages);
-> }
+> dprintf:
+>   __vdprintf_internal:
+>     _IO_new_file_attach:
 > 
+>   if (_IO_SEEKOFF (fp, (off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
+>       == _IO_pos_BAD && errno != ESPIPE)
+>     return NULL;
 
-Yes this would help.
+Someone explain why it is doing an explicit seek to the current position?
+The only reason to do that is to get the current offset.
 
-> 2. make node_to_mem_node() safer for all cases
-> In ppc arch's mem_topology_setup(void)
-> for_each_present_cpu(cpu) {
->  numa_setup_cpu(cpu);
->  mem_node = node_to_mem_node(numa_mem_id());
->  if (!node_present_pages(mem_node)) {
->   _node_numa_mem_[numa_mem_id()] = first_online_node;
->  }
-> }
-> 
+	David
 
-But here as discussed above, we miss the case of possible but not present nodes.
-For such nodes, the above change may not update, resulting in they still
-having 0. And node 0 can be only possible but not present.
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
