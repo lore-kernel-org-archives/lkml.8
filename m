@@ -2,118 +2,110 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F32C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076BEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A52320746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FEF2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:21:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoWgrXRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgCMPTk (ORCPT
+        id S1726810AbgCMPVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:19:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40696 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgCMPTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:19:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 98C4DAE61;
-        Fri, 13 Mar 2020 15:19:37 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
-To:     Jaewon Kim <jaewon31.kim@samsung.com>, adobriyan@gmail.com,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, Linux API <linux-api@vger.kernel.org>,
-        Leon Romanovsky <leon@kernel.org>
-References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
- <20200311034441.23243-1-jaewon31.kim@samsung.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
-Date:   Fri, 13 Mar 2020 16:19:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200311034441.23243-1-jaewon31.kim@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Mar 2020 11:21:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52241 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726651AbgCMPVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:21:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584112889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=PNyjHm+IZ1fvNEx5HMZqidw/J156+wuo7jGfMRKY4Vs=;
+        b=JoWgrXRft3/68U+VAnyHB306PAFj6sauoVdhKRJYBdi9O4mjcp3zBatOb1r8Ore8wsoOoZ
+        EekxiYWFlIUhqxL7+fJi5P24Vcr2t3S/Odcw2A2Ui8jQUBJK3hH5SJy0rlGiEE7l92E1wc
+        Uvz8QQBCKgDNSoEC/E/XBsK7b4Q+whI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-7lRX4n-MPCaBRrVDLTE9Ag-1; Fri, 13 Mar 2020 11:21:25 -0400
+X-MC-Unique: 7lRX4n-MPCaBRrVDLTE9Ag-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 879888026B1;
+        Fri, 13 Mar 2020 15:21:23 +0000 (UTC)
+Received: from llong.com (ovpn-125-21.rdu2.redhat.com [10.10.125.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B39A91D61;
+        Fri, 13 Mar 2020 15:21:18 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v3 0/3] KEYS: Read keys to internal buffer & then copy to userspace
+Date:   Fri, 13 Mar 2020 11:20:59 -0400
+Message-Id: <20200313152102.1707-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+CC linux-api, please include in future versions as well
+v3:
+ - Reorganize the keyctl_read_key() code to make it more readable as
+   suggested by Jarkko Sakkinen.
+ - Add patch 3 to use kvmalloc() for safer large buffer allocation as
+   suggested by David Howells.
 
-On 3/11/20 4:44 AM, Jaewon Kim wrote:
-> /proc/meminfo or show_free_areas does not show full system wide memory
-> usage status. There seems to be huge hidden memory especially on
-> embedded Android system. Because it usually have some HW IP which do not
-> have internal memory and use common DRAM memory.
-> 
-> In Android system, most of those hidden memory seems to be vmalloc pages
-> , ion system heap memory, graphics memory, and memory for DRAM based
-> compressed swap storage. They may be shown in other node but it seems to
-> useful if /proc/meminfo shows all those extra memory information. And
-> show_mem also need to print the info in oom situation.
-> 
-> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
-> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
-> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
-> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
-> 
-> Memory usage of specific driver can be various so that showing the usage
-> through upstream meminfo.c is not easy. To print the extra memory usage
-> of a driver, introduce following APIs. Each driver needs to count as
-> atomic_long_t.
-> 
-> int register_extra_meminfo(atomic_long_t *val, int shift,
-> 			   const char *name);
-> int unregister_extra_meminfo(atomic_long_t *val);
-> 
-> Currently register ION system heap allocator and zsmalloc pages.
-> Additionally tested on local graphics driver.
-> 
-> i.e) cat /proc/meminfo | tail -3
-> IonSystemHeap:    242620 kB
-> ZsPages:          203860 kB
-> GraphicDriver:    196576 kB
-> 
-> i.e.) show_mem on oom
-> <6>[  420.856428]  Mem-Info:
-> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
-> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
+v2:
+ - Handle NULL buffer and buflen properly in patch 1.
+ - Fix a bug in big_key.c.
+ - Add patch 2 to handle arbitrary large user-supplied buflen.
 
-I like the idea and the dynamic nature of this, so that drivers not present
-wouldn't add lots of useless zeroes to the output.
-It also makes simpler the decisions of "what is important enough to need its own
-meminfo entry".
+The current security key read methods are called with the key semaphore
+held.  The methods then copy out the key data to userspace which is
+subjected to page fault and may acquire the mmap semaphore. That can
+result in circular lock dependency and hence a chance to get into
+deadlock.
 
-The suggestion for hunting per-driver /sys files would only work if there was a
-common name to such files so once can find(1) them easily.
-It also doesn't work for the oom/failed alloc warning output.
+To avoid such a deadlock, an internal buffer is now allocated for getting
+out the necessary data first. After releasing the key semaphore, the
+key data are then copied out to userspace sidestepping the circular
+lock dependency.
 
-I think a new meminfo_extra file is a reasonable compromise, as there might be
-tools periodically reading /proc/meminfo and thus we would limit the overhead of
-that.
+The keyutils test suite was run and the test passed with these patchset
+applied without any falure.
 
-> Jaewon Kim (3):
->   proc/meminfo: introduce extra meminfo
->   mm: zsmalloc: include zs page size in proc/meminfo
->   android: ion: include system heap size in proc/meminfo
-> 
->  drivers/staging/android/ion/ion.c             |   2 +
->  drivers/staging/android/ion/ion.h             |   1 +
->  drivers/staging/android/ion/ion_system_heap.c |   2 +
->  fs/proc/meminfo.c                             | 103 ++++++++++++++++++++++++++
->  include/linux/mm.h                            |   4 +
->  lib/show_mem.c                                |   1 +
->  mm/zsmalloc.c                                 |   2 +
->  7 files changed, 115 insertions(+)
-> 
+Waiman Long (3):
+  KEYS: Don't write out to userspace while holding key semaphore
+  KEYS: Avoid false positive ENOMEM error on key read
+  KEYS: Use kvmalloc() to better handle large buffer allocation
+
+ include/linux/key-type.h                  |  2 +-
+ security/keys/big_key.c                   | 11 ++-
+ security/keys/encrypted-keys/encrypted.c  |  7 +-
+ security/keys/internal.h                  | 14 ++++
+ security/keys/keyctl.c                    | 87 ++++++++++++++++++++---
+ security/keys/keyring.c                   |  6 +-
+ security/keys/request_key_auth.c          |  7 +-
+ security/keys/trusted-keys/trusted_tpm1.c | 14 +---
+ security/keys/user_defined.c              |  5 +-
+ 9 files changed, 107 insertions(+), 46 deletions(-)
+
+-- 
+2.18.1
 
