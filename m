@@ -2,135 +2,66 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DE8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55008C5ACBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A442073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB042073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:25:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h0nC3b0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCMIYa (ORCPT
+        id S1726569AbgCMIZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:24:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38218 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726406AbgCMIY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:24:28 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BF70989F9F3AB0862FD1;
-        Fri, 13 Mar 2020 16:24:22 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 13 Mar 2020 16:24:15 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 1/2] net: hns3: add a conversion for mailbox's response code
-Date:   Fri, 13 Mar 2020 16:23:42 +0800
-Message-ID: <1584087823-61800-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584087823-61800-1-git-send-email-tanhuazhong@huawei.com>
-References: <1584087823-61800-1-git-send-email-tanhuazhong@huawei.com>
+        Fri, 13 Mar 2020 04:25:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34010 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgCMIZO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 04:25:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/ZdDlbLqNOvakJ4NWfeKFrm2xJH0FxuVXIiomBTeWY0=; b=h0nC3b0lys4AAFlklVuzX011mM
+        aHVnRucRLsffajpU6AVN5ImOUq9DYUQk/8gBFO80Sg/fTAjqTJ0XiqmWvPve7tuqVDjJEqyAmYuUZ
+        bqQ/GWEiKM8bO0yKpKacYY2OQJClYNWda3Wf4EyMniDg4/SLt23w5bwyeHZu2x52xijyMGx23TdqG
+        T83ispvqZvSbDr2cgRfJPZ4jpDnloh/lNDY7Vdho5o+etQWEpjKmccgwP0uzeCdHBOnDLLv68D5vd
+        B6GTSlbxQfeBfIwAJxva6gGs6+dJtEAhcXMLMzVmW7AQktEp5K2Clsb0pU1yj3qpp0rNK3viZRG0l
+        WR2idzGg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCfch-0005OI-Ce; Fri, 13 Mar 2020 08:24:51 +0000
+Date:   Fri, 13 Mar 2020 01:24:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-mips@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 4/6] MIPS: Loongson: Add DMA support for 7A1000
+Message-ID: <20200313082451.GA20331@infradead.org>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+ <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+On Mon, Mar 09, 2020 at 04:23:24PM +0800, Tiezhu Yang wrote:
+> Implement __phys_to_dma() and __dma_to_phys() according to the
+> node id offset in 7A1000 DMA route config register.
 
-Currently, when mailbox handling fails, the PF driver
-just responds 1 to the VF driver. It is not sufficient
-for the VF driver to find out why its mailbox fails.
-
-So the error should be responded to VF, but the error
-is type int and the response field in struct
-hclge_mbx_pf_to_vf_cmd is type u16, a conversion is
-needed.
-
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c   | 16 +++++++++++++++-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c |  7 ++++++-
- 2 files changed, 21 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 3d850f6..b5dcbc6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -5,6 +5,11 @@
- #include "hclge_mbx.h"
- #include "hnae3.h"
- 
-+static u16 hclge_errno_to_resp(int errno)
-+{
-+	return abs(errno);
-+}
-+
- /* hclge_gen_resp_to_vf: used to generate a synchronous response to VF when PF
-  * receives a mailbox message from VF.
-  * @vport: pointer to struct hclge_vport
-@@ -21,6 +26,7 @@ static int hclge_gen_resp_to_vf(struct hclge_vport *vport,
- 	struct hclge_dev *hdev = vport->back;
- 	enum hclge_cmd_status status;
- 	struct hclge_desc desc;
-+	u16 resp;
- 
- 	resp_pf_to_vf = (struct hclge_mbx_pf_to_vf_cmd *)desc.data;
- 
-@@ -43,7 +49,15 @@ static int hclge_gen_resp_to_vf(struct hclge_vport *vport,
- 	resp_pf_to_vf->msg[0] = HCLGE_MBX_PF_VF_RESP;
- 	resp_pf_to_vf->msg[1] = vf_to_pf_req->msg[0];
- 	resp_pf_to_vf->msg[2] = vf_to_pf_req->msg[1];
--	resp_pf_to_vf->msg[3] = (resp_status == 0) ? 0 : 1;
-+	resp = hclge_errno_to_resp(resp_status);
-+	if (resp < SHRT_MAX) {
-+		resp_pf_to_vf->msg[3] = resp;
-+	} else {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to send response to VF, response status %d is out-of-bound\n",
-+			resp);
-+		return -EINVAL;
-+	}
- 
- 	if (resp_data && resp_data_len > 0)
- 		memcpy(&resp_pf_to_vf->msg[4], resp_data, resp_data_len);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index 7cbd715..5b481f9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -5,6 +5,11 @@
- #include "hclgevf_main.h"
- #include "hnae3.h"
- 
-+static int hclgevf_resp_to_errno(u16 resp_code)
-+{
-+	return resp_code ? -resp_code : 0;
-+}
-+
- static void hclgevf_reset_mbx_resp_status(struct hclgevf_dev *hdev)
- {
- 	/* this function should be called with mbx_resp.mbx_mutex held
-@@ -193,7 +198,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 
- 			resp->origin_mbx_msg = (req->msg[1] << 16);
- 			resp->origin_mbx_msg |= req->msg[2];
--			resp->resp_status = req->msg[3];
-+			resp->resp_status = hclgevf_resp_to_errno(req->msg[3]);
- 
- 			temp = (u8 *)&req->msg[4];
- 			for (i = 0; i < HCLGE_MBX_MAX_RESP_DATA_SIZE; i++) {
--- 
-2.7.4
-
+Can you just switch Loongson over to use the dma_pfn_offset field in
+struct device?  I'd love to kill the __phys_to_dma and __dma_to_phys
+hooks wherever possible.
