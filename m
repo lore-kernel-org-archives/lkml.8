@@ -2,88 +2,88 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4143C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DB2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9C120746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584094086;
-	bh=eOHdzKsuiDRxoSeOKx1T/q3qpP4W3MG5l3YkkamaGsA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=awJ8mBoas8fByHq1R0T3QBkoF4Q1I4t9Kqwrze/PWlUxaOW+RM9sWm0T1WrDlN3K/
-	 8wsi96RIl9XO1qig7U16OtMVgcp3j6QVBlj0bAxf9hbsVZ32QxH8lxO6ZVETMNXTU8
-	 y3Ul1wx9AhU6x6N0Y/0eozcxgXAmDhNLuKeonpt8=
+	by mail.kernel.org (Postfix) with ESMTP id 5DDA720724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgCMKIF (ORCPT
+        id S1726491AbgCMKJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbgCMKIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:08:01 -0400
-Received: from localhost.localdomain (unknown [171.76.107.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B4842074D;
-        Fri, 13 Mar 2020 10:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584094081;
-        bh=eOHdzKsuiDRxoSeOKx1T/q3qpP4W3MG5l3YkkamaGsA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSsgxDNmXiZrw4DKDd+KmQgD7Mgpyg3FDetFtJO6IsqW34smLhVCZK3ICsd1Wdd9c
-         fhb6Qqmvm5ZrRg3Urk8f2gr4LoQRruUovC/BWuvANCIKxMrkFbAwOCjUqWCtD+JmqW
-         7EBwxmyIup0Qr/J7Ux64EwNssBQKtBnB2KH1Hu7o=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 9/9] ALSA: compress: bump the version
-Date:   Fri, 13 Mar 2020 15:37:08 +0530
-Message-Id: <20200313100708.1558658-10-vkoul@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200313095318.1555163-2-vkoul@kernel.org>
-References: <20200313095318.1555163-2-vkoul@kernel.org>
+        Fri, 13 Mar 2020 06:09:42 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:35973 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgCMKJm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:09:42 -0400
+Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N5max-1jMwc32PVb-017Edn; Fri, 13 Mar 2020 11:09:40 +0100
+Received: by mail-qv1-f43.google.com with SMTP id cz10so4255862qvb.0;
+        Fri, 13 Mar 2020 03:09:40 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ209Q0Xsh9YwcpYqDKGyqqBhasdFmUT/aaujawpP+VxKKMRDH2r
+        qOIimB7zMzPIZNlOAz6Fp734atSGuZS/nVZ1SkY=
+X-Google-Smtp-Source: ADFU+vt+dplEfE+ba1F4rk6ReC6fOrvYlwWx8VR6mDemNP62902HsNZ8v7xXfhRh1qV8DDzdMc9fSjwZ+1FAfpkb8Yk=
+X-Received: by 2002:a0c:f647:: with SMTP id s7mr11509624qvm.4.1584094179347;
+ Fri, 13 Mar 2020 03:09:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com> <1584070036-26447-2-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1584070036-26447-2-git-send-email-peng.fan@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Mar 2020 11:09:23 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1T5+9XioY5qW4Eoxbanp65cS+ffLie+erANw4ywUEAGA@mail.gmail.com>
+Message-ID: <CAK8P3a1T5+9XioY5qW4Eoxbanp65cS+ffLie+erANw4ywUEAGA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: freescale: drop the dependency on ARM64 for i.MX8M
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:+RmOc7PXrsJSseKFFBMuCwfk87T03nH+DfBJenBveFxpC9xrbSI
+ m/SFNuWTW79eFjW7rMdCsFBy0DTmjPfb9+HqAG7/qudSFDwqqccemVmTEuBfErUomcKfGt/
+ nUpXsva7jeiXj5JlfAEEIGFhQE6OXLLm4bgU5YvVMoDR07BrJph2bfDkIc7qWAuDQb98XvV
+ NvgkoeUc16DaRjjUoP0Ug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xNaAwfrGQp0=:+myvPq7H2ApqeT+VMcVZs6
+ lGCZV5hVheumvIlXb3BZo2fbv4RnixOFSTdm7+QoRQx/hi/DGw1rUdsh2zvppGbzGWBGyBl8M
+ 65HhMj8ICSOQQL3fTIm2+dFWLlCYiTnlvKxnZggO0MeocB22oY+3G5rCqiIgElm0ChT7cDYY2
+ YxuZ/NbFJFrlSuivnUjVZ6xLSiCkIEnu0SQGkHlXxDScZJBJXcijF1iQ2xizqOVx/60PhmMf7
+ C0vXc8sxgr6JeYGjIRnLSGDHTK69Dhk5SguF+uzhgrSd6q7DMSIeDZCB5+xXS4qZgTQTHLuIQ
+ RhBAAylr6vdlZkcWA9Z7HT7UhVxd7JjhvGI3jCscxxZWkjB7ZVqJo1n77s9usgpao6NYFDzvM
+ VhmeW2Sxjhq2mP3FDrjjPH4EMYxpNT7+vWzmG6wa/0LJJFh/5LRKXQlkNEbBXZrDNbvJyfSyE
+ IYUPY7m/W6XJKjnfk1mRY88ZtlVypm/LHLFUpdMvtWdIJ0OmOKLNkIHVO+q3I6bR4L/VPXmGR
+ KO3tBYwbpjubhnTO1FjA0xugdaolwiU5PpxrzEsAK4ofThRgdUiF4jzhuRO/Cvyy358a/CAC3
+ x29QxxiCJLa2v/0gvr57szgbKs3V2kp5six51UFFDvLw885rr0CzTq2QHnsvySWBUMs3OVzN1
+ NLzxrq0kKC2dwCbIYpTj8tCxWnBCbsaSYBaBtL3+T7fhv9AuDkBc7U93D7gGsivst5sEGNBTS
+ P96FSuzJJ2PRp4SOHyUhtDX91Ix80vaqC7Nj6pnfsrQP9gPImeuSjTVk7ZOlOig56dp0rpfMK
+ +OtQ6POH8GcvhrHL0FZjkww/sBGchp4i+jviHaY3Cu9C9ry3Bc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have added support for bunch of new decoders and parameters for
-decoders. To help users find the support bump the version up to 0,2,0.
+On Fri, Mar 13, 2020 at 4:34 AM <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> Moving to support aarch32 mode on aarch64 hardware, need to drop
+> the dependency on ARM64 to make the driver could be selected for
+> ARM32.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- include/uapi/sound/compress_offload.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/sound/compress_offload.h b/include/uapi/sound/compress_offload.h
-index 56d95673ce0f..7184265c0b0d 100644
---- a/include/uapi/sound/compress_offload.h
-+++ b/include/uapi/sound/compress_offload.h
-@@ -31,7 +31,7 @@
- #include <sound/compress_params.h>
- 
- 
--#define SNDRV_COMPRESS_VERSION SNDRV_PROTOCOL_VERSION(0, 1, 2)
-+#define SNDRV_COMPRESS_VERSION SNDRV_PROTOCOL_VERSION(0, 2, 0)
- /**
-  * struct snd_compressed_buffer - compressed buffer
-  * @fragment_size: size of buffer fragment in bytes
--- 
-2.24.1
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
