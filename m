@@ -2,95 +2,75 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE718C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57744C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6EA206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584122251;
-	bh=scJcWT2vJcl91+Z4McFhqKmdpOAJU7p9JnspO5sOidU=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=0tJP148ulNI2goceMAfpUsd7j4XvHEA5RLgyvOMc02v3wT7cGo9oDo7ko9tV3Qcr8
-	 SSHVem1pIC8ymGw20pkE/9G4aUTmqQ6JsoWdCVa0Lx9+56VF5c21PDZYBAxGgwYbpP
-	 evrMaDqFGJ3u8+yqfuBU98u0Nh3e+jzXV4gOvUiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2F82020724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:58:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pajlEWhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCMR5a (ORCPT
+        id S1727266AbgCMR6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:57:30 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41772 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgCMR5a (ORCPT
+        Fri, 13 Mar 2020 13:58:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38004 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbgCMR6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:57:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s15so11004979otq.8;
-        Fri, 13 Mar 2020 10:57:29 -0700 (PDT)
+        Fri, 13 Mar 2020 13:58:04 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k21so10329989oij.5;
+        Fri, 13 Mar 2020 10:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FIpHicZ3t9iIlvAbQDoq7yMgDqITyaH5TIJrz/BqXnM=;
+        b=pajlEWhQvJv7jUlPghiKengiEw+LA672a3zHZyhTIOIHNd9fbK7F02v7SZS7Nd/Yve
+         wtvsHNiX3lOcQn+dJ716JHkKLfoznlfBDDbeIhxP0mWrbijWm495IPRMOQiT9e4w/O8K
+         FoNMZhdEgNALYCPWXluzZo/AN7pMYm61cEta/Sn93JLSZ+Y0Yiat2z2sQDalnTpHdDNB
+         atMJwbAPz/9RzSGLNGFx4ukFpNnR5a4Pvn6sf9PSTT6jFV+cbEfcNfz2VUd2ryytvo3p
+         3E/NuSx+rIPqfe/9kP+K4kA6kveUAkUbP2Q09Lr8qUMLHTlNN7dLFAbFmWDIz4B2GCCy
+         saMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=kLdCsylq7ymvsLWW1Tomdsn2gQzxTDWi2whnqygK6E8=;
-        b=crn+EoBRDxNCs4yLokjdGnB0IF8CdtJr8HtGcg/pFU4+oLyV0mR+33cE0+XvB5Ev0+
-         VNqcW9LtUXfexaMhb38N42qH2/E2HyZm6jlPp/ZsoqXZmqNWxTuB2E2wmQfrobZ3i/fP
-         l7dPjC1UPolNLWfkGXgkzc/QcipQ3ypXdFv5BNIKCphDoCtupgtCILdkvOTETGGwFTDx
-         cvSIdgD2mBqsManudZ8/evRvBIwmTeF8F0dLNCgpVZRo+LYoBR4fKkQm0SJ4/xkGQ1bo
-         vXAlXoiiAKPOcSGX+lWmybgwROgZIGEnycGnX2VUtMxZGCijjcBC2kLiXlb9AnBIG1px
-         TZXA==
-X-Gm-Message-State: ANhLgQ1rJZFMAE1S7LXqfbvEp9KFD9AOwhaItfm+tIVcCW52KiAB/gco
-        UAxNhy1lVchSUi8ALU0d+SdQUx+3jbk/me1ZBUcKyUfu
-X-Google-Smtp-Source: ADFU+vtweMgXIzJn2iPLwZF3jGereyWgy3X44S6BAEkg8nTVJYfPgZLH6IbraHsv5pyOvDW7Ro+68vaNw/6kklmhv3g=
-X-Received: by 2002:a9d:7653:: with SMTP id o19mr11654242otl.118.1584122249475;
- Fri, 13 Mar 2020 10:57:29 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FIpHicZ3t9iIlvAbQDoq7yMgDqITyaH5TIJrz/BqXnM=;
+        b=ZGLec1gsFLlUi7SynTdRDmPOMIv9gihN1pPs/F09PoHcyWoWfeRQaXzihHtJ+shh+h
+         /V9hYl0GBWBEI97+HucFEj1NQ+4fFJPmnnafLldrUY5tJyO9bxxVtb3oiz1e3b9pP0wF
+         BnyFtu7SswfnOxB6iFdL/4hHf20s0lq/zfQcq0T9HAVRTVv/4X0Y9H5Uf/dQXR1v0KEu
+         80bnVI51FBrMja+5xax9FlWJCa5ScO35n1OnkUS+ajqKFe8Oeyg2UU4pLuyMUQ/PhRuL
+         GxINqt9EZDFj0yKOXB+sgrKoSMyjUxSBFQLyx3cVxLBrKXg4e2c03t312wH+ImGisNil
+         qnRw==
+X-Gm-Message-State: ANhLgQ0h0cPVhGeOCOPLgRG8nqQzjConudNQOtExjBruU0mpAlBSGwSn
+        3jlDhQOlyEPl21H8Jp/KbvX8EJD/3HZkUmS4eew=
+X-Google-Smtp-Source: ADFU+vtEY7euvss/M7JNwQVhcGKtmxZ40FX07jehyrWbEISEBbbCApK8W2f0qsKVuiT238XrGK1YqqP9yLq4nUKVpPs=
+X-Received: by 2002:a05:6808:b24:: with SMTP id t4mr8115642oij.72.1584122283944;
+ Fri, 13 Mar 2020 10:58:03 -0700 (PDT)
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 13 Mar 2020 18:57:18 +0100
-Message-ID: <CAJZ5v0jcZsixVWpfb=OkWNPD8Q=DC-Q-gvEzLh7vkCksT3a0HA@mail.gmail.com>
-Subject: [GIT PULL] Power management fix for v5.6-rc6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <00000000000061573105a08774c2@google.com>
+In-Reply-To: <00000000000061573105a08774c2@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Fri, 13 Mar 2020 10:57:52 -0700
+Message-ID: <CAM_iQpUBL=P6xvnyZckwVPUnmxReFDXJpfTA-ZtMqeAnh-4XVA@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in route4_change
+To:     syzbot <syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-Please pull from the tag
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.6-rc6
-
-with top-most commit bce74b1feb01accc6654a1f3e37958478d3a4fbc
-
- Merge tag 'linux-cpupower-5.6-rc6' of
-git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux
-
-on top of commit 2c523b344dfa65a3738e7039832044aa133c75fb
-
- Linux 5.6-rc5
-
-to receive a power management fix for 5.6-rc6.
-
-This fixes cpupower utility build failures with -fno-common
-enabled (Mike Gilbert).
-
-Thanks!
-
-
----------------
-
-Mike Gilbert (1):
-      cpupower: avoid multiple definition with gcc -fno-common
-
----------------
-
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+#syz test: https://github.com/congwang/linux.git tcindex
