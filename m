@@ -2,70 +2,84 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88289C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EC8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5317220749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D8B206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EuRQd5Ze"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cqm94L5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCMNdG (ORCPT
+        id S1726691AbgCMNfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:33:06 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54523 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgCMNdF (ORCPT
+        Fri, 13 Mar 2020 09:35:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34917 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgCMNfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:33:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n8so9961159wmc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 06:33:03 -0700 (PDT)
+        Fri, 13 Mar 2020 09:35:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d5so11791988wrc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 06:35:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LjnIa5czhZ90JtQBFVRg5fkvm0j0Tbj99Zacb6jIP1w=;
-        b=EuRQd5ZejDOiKZcRRHTIkogL7X/HxaCg7vN6W9xTCSMn2CIU+zi6dDzcBjBx8UFPdr
-         Dz5CD6alhCKRiG07sog1/AM0iyjfTCF+tZOH8BHEUgQ7FwJtImZccjQT/4KJKLo+9wCE
-         ADWJKhaeiaXVvbfKYg+APspo+Z+pD+J1mRyIFpWHFoyRt1t/ZHViPsGX8aYK3gtUIy+0
-         RMsR3nYtNjy0AenHguC9gdJXj2CesVDbmT2PA3jCPlCOTbY/m81eab/r8p5vnPyzGMSY
-         uAv48Zz0uXVu6gpinPBfgyiU6mz7Fy/QE0RFeI3xFf36dFER1xcKW/GfhwnzgHXMjGhn
-         bgIw==
+        bh=Uxgr8eJPrALgZlzAnzxy30p4Axrz0B4cgshrg/CLoBY=;
+        b=Cqm94L5XDzcSAYTUKC6xi9AzsuFnjbCCiE5aObyf9bre4viJ8AmCpFLs/ob+KFiJO9
+         pw+oOvzNL//TD40/5n4lqwp3KTAtad8nMpMWJLpwXG2m8yb8z5/KNX3l+01Ett63WDBm
+         1dK732y8CIqKQTalm0lWPfsy+uRLqJt4jSKE+8q7FN22UsHenx+gCBEvorfVtHu4E+qb
+         +uqAEW3GZ5uk+Be3XIDF6+9QQYQcKoIRCPmpYD5NvPPeoz3R75dDhiExNOq8SwmVLG2C
+         rnxuWJaM0PV9NETqnhzk7S44rAtFpy2wawh/DeOAgd8elW/swlf//HCPp6+MvNzrOn+l
+         ppsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=LjnIa5czhZ90JtQBFVRg5fkvm0j0Tbj99Zacb6jIP1w=;
-        b=M1pa25MaiuRcpj4x3jlF4xEv0GCAfKy57WCuSp8+jEZlX0qZZ3KNkFcHsec1gauQ8a
-         WScG7zESjIzt3MsEnXT2q4Cyzl6wIiQV3p5kMhIf4hzfPoShxeGzv21+4YQpbjECZaDj
-         3PX3XxmBnhVc3RtJw2zr31MSZ/n+Pyk6OvjahW3Z9blBp0Kkk4aRkgh9Yafc4VC6mTwC
-         HjX3r2D6lKI3tPHdzso+RhdjKjzjZgEKuZO81jEuUOZZhMjoPY/8XAeQn/GJmsSEtZPy
-         UW3G9HV5mnShrlIfV2Bu7EJeUZkzIM/OfoRO2imM88fXqW0Y9qesHzC3dkc2ZthSj69O
-         KqaQ==
-X-Gm-Message-State: ANhLgQ2LeVA52Ar+0jTDqMJQOjaWwVu97V6PUU5DTvHynAPW6h7Lp7Kn
-        vTaimVWvBuVV+1BvI3JbkohWPkEMdMQ=
-X-Google-Smtp-Source: ADFU+vtQgxEeMd3PVIBdTqgiUf0QUqIljm0MnfwmwMmqjIcFKtlXnmqERc8Y/T/+2fEWD2LssZQFkg==
-X-Received: by 2002:a1c:41d6:: with SMTP id o205mr10756239wma.122.1584106382776;
-        Fri, 13 Mar 2020 06:33:02 -0700 (PDT)
+        bh=Uxgr8eJPrALgZlzAnzxy30p4Axrz0B4cgshrg/CLoBY=;
+        b=aJR06gpOITivJLUtIQYE9oF0ZeLal5CaQWk11fd5cLgRB0cxA+Lhcz8xYKQYM9q7KG
+         WrKp3mfycEAbK4gnSXSS2YQUyYf4TrMSQOUQrWPH/qfbtPHLB2lNB+uJudp7xbkIUKvA
+         UxGlhZNhtQIqtpwEzUGxjkix8DZDJbShKFTTwETJvPV8PhEx0iZtvSfaC0AEBxaDDZUT
+         0LDrNthtXHgMpWOgtShvECZ2rSXSvX3fYbdn0L5pwjbca1CC1tEoKYA4siV8Lqg0i6DO
+         LpnVJVpaNWVLMNY2kG7L7RfDvuJSzJ/Jy2pQNUU41uFbL64ls4OXSQ55fjEMMU17IJXQ
+         ZChQ==
+X-Gm-Message-State: ANhLgQ1gwNrPq6b5DJ+qjrPMfJJxkL42s6uQkdy/xToSERHiskuYMj01
+        6ZbgalpxMwUw7B4pCDElRaY4tA==
+X-Google-Smtp-Source: ADFU+vtO+nnEpJjmOUdiyB88LmfdjKhoWdHAiYJ+oRlB0lyggTtKIy7fhts2gRi7CaSNZ518d0BvbA==
+X-Received: by 2002:a5d:6245:: with SMTP id m5mr17992620wrv.154.1584106501220;
+        Fri, 13 Mar 2020 06:35:01 -0700 (PDT)
 Received: from ?IPv6:2a01:e34:ed2f:f020:40fb:3990:3519:cc26? ([2a01:e34:ed2f:f020:40fb:3990:3519:cc26])
-        by smtp.googlemail.com with ESMTPSA id s7sm5413721wri.61.2020.03.13.06.33.01
+        by smtp.googlemail.com with ESMTPSA id r9sm9939021wma.47.2020.03.13.06.34.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 06:33:02 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Thermal extensions for flexibility in cooling device
- bindings
-To:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
-        rui.zhang@intel.com, linux-pm@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     amit.kucheria@verdurent.com, corbet@lwn.net,
-        dietmar.eggemann@arm.com
-References: <20191216140622.25467-1-lukasz.luba@arm.com>
+        Fri, 13 Mar 2020 06:35:00 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-4-benjamin.gaignard@st.com>
+ <687ab83c-6381-57aa-3bc1-3628e27644b5@linaro.org>
+ <9cc4af9e-27d0-96c3-b3f1-20c88f89b70a@st.com>
+ <ee131515-cd4c-00b2-5e1f-3abefb634bdd@linaro.org>
 Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
  sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
@@ -120,12 +134,12 @@ Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
  X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
  fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <11b6ccb2-ddd8-39cf-a3c8-4dd53e7e50d8@linaro.org>
-Date:   Fri, 13 Mar 2020 14:33:00 +0100
+Message-ID: <4f21f3db-50dd-f412-35dc-1fde7a139c52@linaro.org>
+Date:   Fri, 13 Mar 2020 14:34:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20191216140622.25467-1-lukasz.luba@arm.com>
+In-Reply-To: <ee131515-cd4c-00b2-5e1f-3abefb634bdd@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -135,40 +149,19 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Lukasz,
+Hi Benjamin,
 
-On 16/12/2019 15:06, lukasz.luba@arm.com wrote:
-> From: Lukasz Luba <lukasz.luba@arm.com>
+On 20/02/2020 12:05, Daniel Lezcano wrote:
+
+[ ... ]
+
+>> It has be exclusive and that exclude the problem you describe above.
 > 
-> Hi all,
-> 
-> This patch set adds extensions to existing thermal zones and cooling devices
-> binding. Currently they are pinned using static definitions e.g. DT cooling
-> maps. These changes enable userspace like trusted middleware to change the
-> layout of cooling maps unbinding and binding the cooling devices.
-> It might be helpful for drivers loaded as a modules. They can be added to
-> existing thermal zones to take part of the power split.
-> It is based on the current work in thermal branch thermal/linux-next
-> https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/linux-next
+> Ok, the regmap_write is not a free operation and in this case you can
+> get rid of all the regmap-ish in this driver.
 
-I've been keeping this series out of the previous merge because it did
-not raise any comments and we are touching the sysfs.
+Are you planning to send the non-regmap version?
 
-For this release, I still don't know what to do with it.
-
-Anyone a comment on this series? Rui ?
-
-> Lukasz Luba (3):
->   docs: thermal: Add bind, unbind information together with trip point
->   thermal: Make cooling device trip point writable from sysfs
->   thermal: Add sysfs binding for cooling device and thermal zone
-> 
->  .../driver-api/thermal/sysfs-api.rst          | 30 +++++++-
->  drivers/thermal/thermal_core.c                |  3 +-
->  drivers/thermal/thermal_core.h                |  2 +
->  drivers/thermal/thermal_sysfs.c               | 77 +++++++++++++++++++
->  4 files changed, 109 insertions(+), 3 deletions(-)
-> 
 
 
 -- 
