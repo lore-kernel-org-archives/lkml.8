@@ -2,107 +2,85 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF952C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF8CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8470C2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LIDwwXgd"
+	by mail.kernel.org (Postfix) with ESMTP id 6AA1020746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCMPr0 (ORCPT
+        id S1727460AbgCMPr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43916 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgCMPrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:47:25 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DFlBG7111230;
-        Fri, 13 Mar 2020 10:47:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584114431;
-        bh=GnZ7KDQS7cPZq4ozExi+Vuo0RhZW3XYPSnf979ZlcBE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LIDwwXgdA04PxCL15uKNfXakpK/V+mu4/4Fdui2akqAnecnbUrrPBl2bQ6Wlvp/KP
-         npgEWX7f48uhh5HE/JDCiPN7zeloB35DlpXpphQVBe2Mi7tpHWyASqbR+mGexIMdw8
-         ierWbv7r1twf+ZZFTVydQLaLoV7EYGE0xpwMqhwc=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFlBjB127158;
-        Fri, 13 Mar 2020 10:47:11 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 10:47:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 10:47:11 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DFkkSJ034352;
-        Fri, 13 Mar 2020 10:47:07 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v3 05/12] mtd: spi-nor: default to address width of 3 for configurable widths
-Date:   Fri, 13 Mar 2020 21:16:38 +0530
-Message-ID: <20200313154645.29293-6-p.yadav@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200313154645.29293-1-p.yadav@ti.com>
-References: <20200313154645.29293-1-p.yadav@ti.com>
+        Fri, 13 Mar 2020 11:47:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:59352 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbgCMPr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:47:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6A8931B;
+        Fri, 13 Mar 2020 08:47:26 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 710933F6CF;
+        Fri, 13 Mar 2020 08:47:25 -0700 (PDT)
+References: <20200312165429.990-1-vincent.guittot@linaro.org> <jhjr1xwjz96.mognet@arm.com> <CAKfTPtCQZMOz9HzdiWg5g9O+W=hC5E-fiG8YVHWCcODjFRfefQ@mail.gmail.com> <jhjpndgjxxk.mognet@arm.com> <jhj4kuspgse.mognet@arm.com> <CAKfTPtD67EKA46i12FHpJQT4gTzaH=ASAyb2dhv4=owPHBRSdQ@mail.gmail.com> <CAKfTPtBZgvTBYR+kYjj9dHq8_25mG19CZmYzY5s33ijSHdLGyQ@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched/fair: improve spreading of utilization
+In-reply-to: <CAKfTPtBZgvTBYR+kYjj9dHq8_25mG19CZmYzY5s33ijSHdLGyQ@mail.gmail.com>
+Date:   Fri, 13 Mar 2020 15:47:17 +0000
+Message-ID: <jhj36acp88q.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JESD216D.01 says that when the address width can be 3 or 4, it defaults
-to 3 and enters 4-byte mode when given the appropriate command. So, when
-we see a configurable width, default to 3 and let flash that default to
-4 change it in a post-bfpt fixup.
 
-This fixes SMPT parsing for flashes with configurable address width. If
-the SMPT descriptor advertises variable address width, we use
-nor->addr_width as the address width. But since it was not set to any
-value from the SFDP table, the read command uses an address width of 0,
-resulting in an incorrect read being issued.
+On Fri, Mar 13 2020, Vincent Guittot wrote:
+>> > And with more coffee that's another Doh, ASYM_PACKING would end up as
+>> > migrate_task. So this only affects the reduced capacity migration, which
+>>
+>> yes  ASYM_PACKING uses migrate_task and the case of reduced capacity
+>> would use it too and would not be impacted by this patch. I say
+>> "would" because the original rework of load balance got rid of this
+>> case. I'm going to prepare a separate fix  for this
+>
+> After more thought, I think that we are safe for reduced capacity too
+> because this is handled in the migrate_load case. In my previous
+> reply, I was thinking of  the case where rq is not overloaded but cpu
+> has reduced capacity which is not handled. But in such case, we don't
+> have to force the migration of the task because there is still enough
+> capacity otherwise rq would be overloaded and we are back to the case
+> already handled
+>
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 1 +
- 1 file changed, 1 insertion(+)
+Good point on the capacity reduction vs group_is_overloaded.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 9e0724f2a825..9335692e9bcb 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -3772,6 +3772,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 	/* Number of address bytes. */
- 	switch (bfpt.dwords[BFPT_DWORD(1)] & BFPT_DWORD1_ADDRESS_BYTES_MASK) {
- 	case BFPT_DWORD1_ADDRESS_BYTES_3_ONLY:
-+	case BFPT_DWORD1_ADDRESS_BYTES_3_OR_4:
- 		nor->addr_width = 3;
- 		break;
- 
--- 
-2.25.0
+That said, can't we also reach this with migrate_task? Say the local
+group is entirely idle, and the busiest group has a few non-idle CPUs
+but they all have at most 1 running task. AFAICT we would still go to
+calculate_imbalance(), and try to balance out the number of idle CPUs.
 
+If the migration_type is migrate_util, that can't happen because of this
+change. Since we have this progressive balancing strategy (tasks -> util
+-> load), it's a bit odd to have this "gap" in the middle where we get
+one less possibility to trigger active balance, don't you think? That
+is, providing I didn't say nonsense again :)
+
+It's not a super big deal, but I think it's nice if we can maintain a
+consistent / gradual migration policy.
+
+>>
+>> > might be hard to notice in benchmarks.
