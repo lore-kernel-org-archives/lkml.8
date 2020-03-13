@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF3CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE113C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145C02074C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7612074C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YslUW2pf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ed+q42Ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCMXHI (ORCPT
+        id S1727553AbgCMXH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:07:08 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34906 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgCMXHI (ORCPT
+        Fri, 13 Mar 2020 19:07:58 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43123 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgCMXH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:07:08 -0400
-Received: by mail-pj1-f67.google.com with SMTP id mq3so5159169pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 16:07:08 -0700 (PDT)
+        Fri, 13 Mar 2020 19:07:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so5855992pgb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 16:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=YjbeAASRxVOPMkN7/k08zahcNwyqWMrHIMLC8DbMIpM=;
-        b=YslUW2pfVMnfg1Z7vDx7kVxYX7M8lA3l4iX8R/tJALOvRGhfxMpSgqh9M8lDsJxNqe
-         V9kfWy3gw7ciHNeZVKFvSAxfmIkXhs74LtvdU9OF7EXCBnmmPYorlpfXFP3mE7FsutK4
-         +U3C8q3UhMA3xOgGnTvDMh4Ggx3Quw6NUPvwU=
+        bh=hRom7Sc1NCqF1xeeIsXbNTOQ/R2yiGgq1/0XkCiCX70=;
+        b=ed+q42Wsbm/vD3d97MteFRiRkHh53VmH4DbR2F/ihY2kzSFA2EmAE9xYzeUIuLUk1v
+         4qJwQ2hR1Znw6uuO422aqYdC8z1z8xdmTXzFUmhQooyo+BYKkynF3wlgmgvyYrYXJ3Yn
+         hENkVRWggk2OjAEIy9XXOP2s48kr2x8fYJ0UA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YjbeAASRxVOPMkN7/k08zahcNwyqWMrHIMLC8DbMIpM=;
-        b=hRXXAXmuvzvRw/Ofb4Dalg5d/g386pJPzpK3uLP9/UIb7mLA2YviDI5+XLAs8P8ecD
-         vdIijRKEbPANv2hXpYJPFx7zRzl6IkvASUwgOzN4v9kW9MjsGO8dg5tNS+WP1szzsd7S
-         dFu4LQnp8HjGV/27orfQCZsKULKlqzAqJ7I48RHj20bXgt7RoOahutYhYbSUY4w23hLz
-         IN2qQbuVfG2rkXTCNXPcZ0c/QdyNXqX1z5B+0SUy4tnhxdi3fh23SToiL4rAsQzcr8ic
-         48c04TOZP5hKvCJOTQzX67WTzVPh57mIyH1usvNSUqOX9AKf4V7lTSu0raY5SzY3AS85
-         /wAw==
-X-Gm-Message-State: ANhLgQ1b07p7gXuU3dik4rA0FMvhyKXn6nzN2lk26H0k+v5h97Mo9Tw8
-        hYf7CDGEhU3JY0c3edoi1iioXw==
-X-Google-Smtp-Source: ADFU+vsjpJFbDTmP2Mj6kKU9HPiCTTc9F4IfGANT420mBIsMskEl9ufDcLy386Y8WDgYY6BqxsKbQg==
-X-Received: by 2002:a17:902:6ac7:: with SMTP id i7mr15101905plt.66.1584140827565;
-        Fri, 13 Mar 2020 16:07:07 -0700 (PDT)
+        bh=hRom7Sc1NCqF1xeeIsXbNTOQ/R2yiGgq1/0XkCiCX70=;
+        b=GdNoL1NamR62WlN4FUjs+WawaPNIzM9+Kk3/TfEhAEhPHcAl8pp8rxWq+efn0ONBdQ
+         cH0+qlnrvwO2uxCCRa1JppQ/khyB/yUmXDkSIujiuFvD3UvTURMFTKS51JaG122iFs7X
+         hBoXJ3KgPeEiUqq93f4SQxKU+R6d5h4+gg4rMtYVAIn4o+i8gyE8YIHA+9N1x8z+ITo/
+         JQAJhbRFspVWgS3i/0Tp/2yXIZKeHeVV2nKtYJbGITd7u+drfBnksaf+JEw2yyMTbBNU
+         d7CIaf+wFEHYfFQsPw7NSW9FURtO7AfXZhA3UgrKQ9N2iIvQzL/L0M+H4wB6rzhLVDIo
+         z2/A==
+X-Gm-Message-State: ANhLgQ2bvXd04xGLqlgG9MOV/eJhYpIWOrZzBhwIhXgPPHd2mYVn+q/4
+        D6BKPfudRuczIxFslmSecOrD4w==
+X-Google-Smtp-Source: ADFU+vuLRXbo8KsJYUAnmHdWopZo1j5qDf1NEn16zxm0uM4zLaOgEWqTRdvJL1vH9ayOgX9IyqPczQ==
+X-Received: by 2002:a65:494f:: with SMTP id q15mr15281897pgs.383.1584140874788;
+        Fri, 13 Mar 2020 16:07:54 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t142sm48696399pgb.31.2020.03.13.16.07.05
+        by smtp.gmail.com with ESMTPSA id q30sm13377505pjh.5.2020.03.13.16.07.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 16:07:06 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 16:07:05 -0700
+        Fri, 13 Mar 2020 16:07:54 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:07:53 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Christian Brauner <christian.brauner@ubuntu.com>
 Cc:     gregkh@linuxfoundation.org, tkjos@android.com,
@@ -62,22 +62,24 @@ Cc:     gregkh@linuxfoundation.org, tkjos@android.com,
         joel@joelfernandes.org, john.stultz@linaro.org,
         kernel-team@android.com, linux-kselftest@vger.kernel.org,
         maco@android.com, naresh.kamboju@linaro.org, shuah@kernel.org
-Subject: Re: [PATCH v2 1/3] binderfs: port tests to test harness
- infrastructure
-Message-ID: <202003131607.BA18A88D2F@keescook>
+Subject: Re: [PATCH v2 2/3] binderfs_test: switch from /dev to a unique
+ per-test mountpoint
+Message-ID: <202003131607.10FDF99191@keescook>
 References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
  <20200313152420.138777-1-christian.brauner@ubuntu.com>
+ <20200313152420.138777-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313152420.138777-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20200313152420.138777-2-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 04:24:18PM +0100, Christian Brauner wrote:
-> Makes for nicer output and prepares for additional tests.
+On Fri, Mar 13, 2020 at 04:24:19PM +0100, Christian Brauner wrote:
+> Unprivileged users will be able to create directories in there. The
+> unprivileged test for /dev wouldn't have worked on most systems.
 > 
 > Cc: Kees Cook <keescook@chromium.org>:
 > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
@@ -89,96 +91,134 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 > ---
 > /* v2 */
 > - Kees Cook <keescook@chromium.org>:
->   - Switch to XFAIL() to skip tests.
+>   - Switch to unique mountpoint through mkdtemp().
 > ---
->  .../selftests/filesystems/binderfs/Makefile   |  2 ++
->  .../filesystems/binderfs/binderfs_test.c      | 31 +++++++++----------
->  2 files changed, 17 insertions(+), 16 deletions(-)
+>  .../filesystems/binderfs/binderfs_test.c      | 47 +++++++++----------
+>  1 file changed, 23 insertions(+), 24 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/filesystems/binderfs/Makefile b/tools/testing/selftests/filesystems/binderfs/Makefile
-> index 58cb659b56b4..75315d9ba7a9 100644
-> --- a/tools/testing/selftests/filesystems/binderfs/Makefile
-> +++ b/tools/testing/selftests/filesystems/binderfs/Makefile
-> @@ -3,4 +3,6 @@
->  CFLAGS += -I../../../../../usr/include/
->  TEST_GEN_PROGS := binderfs_test
->  
-> +binderfs_test: binderfs_test.c ../../kselftest.h ../../kselftest_harness.h
-> +
->  include ../../lib.mk
 > diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> index 8c2ed962e1c7..0cfca65e095a 100644
+> index 0cfca65e095a..818eb49f8125 100644
 > --- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
 > +++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-> @@ -15,7 +15,9 @@
->  #include <unistd.h>
->  #include <linux/android/binder.h>
->  #include <linux/android/binderfs.h>
-> +
->  #include "../../kselftest.h"
-> +#include "../../kselftest_harness.h"
->  
->  static ssize_t write_nointr(int fd, const void *buf, size_t count)
->  {
-> @@ -132,7 +134,7 @@ static void rmdir_protect_errno(const char *dir)
->  	errno = saved_errno;
->  }
->  
-> -static void __do_binderfs_test(void)
-> +static int __do_binderfs_test(void)
->  {
+> @@ -139,29 +139,25 @@ static int __do_binderfs_test(void)
 >  	int fd, ret, saved_errno;
 >  	size_t len;
-> @@ -160,8 +162,7 @@ static void __do_binderfs_test(void)
+>  	ssize_t wret;
+> -	bool keep = false;
+>  	struct binderfs_device device = { 0 };
+>  	struct binder_version version = { 0 };
+> +	char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
+> +		device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
+>  
+>  	change_to_mountns();
+>  
+> -	ret = mkdir("/dev/binderfs", 0755);
+> -	if (ret < 0) {
+> -		if (errno != EEXIST)
+> -			ksft_exit_fail_msg(
+> -				"%s - Failed to create binderfs mountpoint\n",
+> -				strerror(errno));
+> -
+> -		keep = true;
+> -	}
+> +	if (!mkdtemp(binderfs_mntpt))
+> +		ksft_exit_fail_msg(
+> +			"%s - Failed to create binderfs mountpoint\n",
+> +			strerror(errno));
+>  
+> -	ret = mount(NULL, "/dev/binderfs", "binder", 0, 0);
+> +	ret = mount(NULL, binderfs_mntpt, "binder", 0, 0);
+>  	if (ret < 0) {
+>  		if (errno != ENODEV)
+>  			ksft_exit_fail_msg("%s - Failed to mount binderfs\n",
 >  					   strerror(errno));
 >  
->  		keep ? : rmdir_protect_errno("/dev/binderfs");
-> -		ksft_exit_skip(
-> -			"The Android binderfs filesystem is not available\n");
-> +		return 1;
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		return 1;
 >  	}
 >  
->  	/* binderfs mount test passed */
-> @@ -250,26 +251,24 @@ static void __do_binderfs_test(void)
+> @@ -170,7 +166,8 @@ static int __do_binderfs_test(void)
 >  
->  	/* binderfs unmount test passed */
+>  	memcpy(device.name, "my-binder", strlen("my-binder"));
+>  
+> -	fd = open("/dev/binderfs/binder-control", O_RDONLY | O_CLOEXEC);
+> +	snprintf(device_path, sizeof(device_path), "%s/binder-control", binderfs_mntpt);
+> +	fd = open(device_path, O_RDONLY | O_CLOEXEC);
+>  	if (fd < 0)
+>  		ksft_exit_fail_msg(
+>  			"%s - Failed to open binder-control device\n",
+> @@ -181,7 +178,7 @@ static int __do_binderfs_test(void)
+>  	close(fd);
+>  	errno = saved_errno;
+>  	if (ret < 0) {
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		ksft_exit_fail_msg(
+>  			"%s - Failed to allocate new binder device\n",
+>  			strerror(errno));
+> @@ -194,9 +191,10 @@ static int __do_binderfs_test(void)
+>  	/* binder device allocation test passed */
 >  	ksft_inc_pass_cnt();
-> +	return 0;
->  }
 >  
-> -static void binderfs_test_privileged()
-> +TEST(binderfs_test_privileged)
->  {
->  	if (geteuid() != 0)
-> -		ksft_print_msg(
-> -			"Tests are not run as root. Skipping privileged tests\n");
-> -	else
-> -		__do_binderfs_test();
-> +		XFAIL(return, "Tests are not run as root. Skipping privileged tests");
-> +
-> +	if (__do_binderfs_test() == 1)
-> +		XFAIL(return, "The Android binderfs filesystem is not available");
->  }
+> -	fd = open("/dev/binderfs/my-binder", O_CLOEXEC | O_RDONLY);
+> +	snprintf(device_path, sizeof(device_path), "%s/my-binder", binderfs_mntpt);
+> +	fd = open(device_path, O_CLOEXEC | O_RDONLY);
+>  	if (fd < 0) {
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		ksft_exit_fail_msg("%s - Failed to open my-binder device\n",
+>  				   strerror(errno));
+>  	}
+> @@ -206,7 +204,7 @@ static int __do_binderfs_test(void)
+>  	close(fd);
+>  	errno = saved_errno;
+>  	if (ret < 0) {
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		ksft_exit_fail_msg(
+>  			"%s - Failed to open perform BINDER_VERSION request\n",
+>  			strerror(errno));
+> @@ -218,9 +216,9 @@ static int __do_binderfs_test(void)
+>  	/* binder transaction with binderfs binder device passed */
+>  	ksft_inc_pass_cnt();
 >  
-> -static void binderfs_test_unprivileged()
-> +TEST(binderfs_test_unprivileged)
->  {
->  	change_to_userns();
-> -	__do_binderfs_test();
-> -}
+> -	ret = unlink("/dev/binderfs/my-binder");
+> +	ret = unlink(device_path);
+>  	if (ret < 0) {
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		ksft_exit_fail_msg("%s - Failed to delete binder device\n",
+>  				   strerror(errno));
+>  	}
+> @@ -228,12 +226,13 @@ static int __do_binderfs_test(void)
+>  	/* binder device removal passed */
+>  	ksft_inc_pass_cnt();
 >  
-> -int main(int argc, char *argv[])
-> -{
-> -	binderfs_test_privileged();
-> -	binderfs_test_unprivileged();
-> -	ksft_exit_pass();
-> +	if (__do_binderfs_test() == 1)
-> +		XFAIL(return, "The Android binderfs filesystem is not available");
->  }
-> +
-> +TEST_HARNESS_MAIN
-> 
-> base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
+> -	ret = unlink("/dev/binderfs/binder-control");
+> +	snprintf(device_path, sizeof(device_path), "%s/binder-control", binderfs_mntpt);
+> +	ret = unlink(device_path);
+>  	if (!ret) {
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		ksft_exit_fail_msg("Managed to delete binder-control device\n");
+>  	} else if (errno != EPERM) {
+> -		keep ? : rmdir_protect_errno("/dev/binderfs");
+> +		rmdir_protect_errno(binderfs_mntpt);
+>  		ksft_exit_fail_msg(
+>  			"%s - Failed to delete binder-control device but exited with unexpected error code\n",
+>  			strerror(errno));
+> @@ -243,8 +242,8 @@ static int __do_binderfs_test(void)
+>  	ksft_inc_xfail_cnt();
+>  
+>  on_error:
+> -	ret = umount2("/dev/binderfs", MNT_DETACH);
+> -	keep ?: rmdir_protect_errno("/dev/binderfs");
+> +	ret = umount2(binderfs_mntpt, MNT_DETACH);
+> +	rmdir_protect_errno(binderfs_mntpt);
+>  	if (ret < 0)
+>  		ksft_exit_fail_msg("%s - Failed to unmount binderfs\n",
+>  				   strerror(errno));
 > -- 
 > 2.25.1
 > 
