@@ -2,173 +2,100 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC446C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D62C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB339206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F81A206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZ3qLAVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgCMMo4 (ORCPT
+        id S1726741AbgCMMp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:44:56 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:34186 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726652AbgCMMo4 (ORCPT
+        Fri, 13 Mar 2020 08:45:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44953 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMMpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:44:56 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id F3C2F634C89;
-        Fri, 13 Mar 2020 14:43:53 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jCjfO-0001it-7j; Fri, 13 Mar 2020 14:43:54 +0200
-Date:   Fri, 13 Mar 2020 14:43:54 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [v2 3/3] media: ov8856: Implement sensor module revision
- identification
-Message-ID: <20200313124354.GE5730@valkosipuli.retiisi.org.uk>
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-4-robert.foss@linaro.org>
+        Fri, 13 Mar 2020 08:45:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b72so5164220pfb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 05:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ucxAtWg1LHrjjOIs0T3dvmXxXT2OEZyobDAYu1RrNzU=;
+        b=eZ3qLAVi8gGl5YnMPhHn+O6+PevTmKJau7EZHlIPRsyUjt/5Xl276DwOflkssGVj3I
+         H5AbWhs2oesXUlyhzYv8G4iqwPhEtMCWU9Db4Kq0WzvCJLY0hGGlyq9/cKWt1Meb/294
+         WVRAv+xSva8a2KYZQOqCfdqnek1z0MkrMWc8AQsr6xwp1dfOMGqu1zz5soyNyDOyV3GW
+         Eaj1q6iSql980j9bJF9rH2JqlaDT040bYRvuDxVSSaIpSkB/9Gxfhlw2oN3kDDe2hVtj
+         +MaQ1EIvh4w8HCvZhWO8+1/2GB1A9Fu+1ZEx6Ixy0dIhXLYxNeJoI8XCBAeN+r/msC5e
+         Qbyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ucxAtWg1LHrjjOIs0T3dvmXxXT2OEZyobDAYu1RrNzU=;
+        b=ef4YSPTPQ8LsXOa1topMIhCkwFbJGuOYC1rV2N6vI6P/N6TDPBJbA76Oy/Dc7A1bcD
+         Mm/UIN5DnPYEDOEFx8sBIgzMDwQDkq8UanCtCf+GAbGCxpn85PaJjRe/htECKHKQaVSX
+         3o6/bB8uyAJYr089dHbiVvHmVF3uIuLaqJnjId0SDJiDbHq56nl6qQoWVL++zI5uenXB
+         pYD6gxHSX0EkiITqGX9NSPid3XLb3B/OePMGrtYsoEtXjU0NmyOyBDk0b/D3wnaL1oyw
+         0xVhVKm6zdNC1O0MFsbymqIsw6cfDb4YuwmZXhxT7ww63/OwFMG7chFRp3jrS98gw45q
+         sjuQ==
+X-Gm-Message-State: ANhLgQ0bIVYkxCIJsQsASNdlJp4KajNBI5sVrf1fxTRa7GKChDOkKx58
+        RlQ0jvObMI5pLRiwJC1stXOFe0TB
+X-Google-Smtp-Source: ADFU+vsN3WR8L6C8d0YcnwHDKxxGPYbK1eLMVhY1C4QpUGqLpiIbOVemWQ6wKp2Mal+JNjVNwc/dDg==
+X-Received: by 2002:a62:17d1:: with SMTP id 200mr13170106pfx.227.1584103524820;
+        Fri, 13 Mar 2020 05:45:24 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id x18sm47265859pfo.148.2020.03.13.05.45.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 05:45:24 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 18:15:22 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Guan Xuetao <gxt@pku.edu.cn>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] unicore32: replace setup_irq() by request_irq()
+Message-ID: <20200313124522.GC7225@afzalpc>
+References: <20200304005137.5523-1-afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313110350.10864-4-robert.foss@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200304005137.5523-1-afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+Hi Guan Xuetao, 
 
-On Fri, Mar 13, 2020 at 12:03:50PM +0100, Robert Foss wrote:
-> Query the sensor for its module revision, and compare it
-> to known revisions.
-> Currently only the '1B' revision has been added.
+On Wed, Mar 04, 2020 at 06:21:37AM +0530, afzal mohammed wrote:
+> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> occur after memory allocators are ready.
 > 
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
+> 
+> Hence replace setup_irq() by request_irq().
+> 
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 > ---
->  drivers/media/i2c/ov8856.c | 54 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 48 insertions(+), 6 deletions(-)
+> Hi unicorn maintainers,
 > 
-> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> index db61eed223e8..39662d3d86dd 100644
-> --- a/drivers/media/i2c/ov8856.c
-> +++ b/drivers/media/i2c/ov8856.c
-> @@ -34,6 +34,18 @@
->  #define OV8856_MODE_STANDBY		0x00
->  #define OV8856_MODE_STREAMING		0x01
->  
-> +/* define 1B module revision */
-> +#define OV8856_1B_MODULE		0x02
-> +
-> +/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
-> + * of the byte in the OTP that means the module revision
-> + */
-> +#define OV8856_MODULE_REVISION		0x700f
-> +#define OV8856_OTP_MODE_CTRL		0x3d84
-> +#define OV8856_OTP_LOAD_CTRL		0x3d81
-> +#define OV8856_OTP_MODE_AUTO		0x00
-> +#define OV8856_OTP_LOAD_CTRL_ENABLE	BIT(0)
-> +
->  /* vertical-timings from sensor */
->  #define OV8856_REG_VTS			0x380e
->  #define OV8856_VTS_MAX			0x7fff
-> @@ -711,6 +723,25 @@ static int ov8856_test_pattern(struct ov8856 *ov8856, u32 pattern)
->  				OV8856_REG_VALUE_08BIT, pattern);
->  }
->  
-> +static int ov8856_check_revision(struct ov8856 *ov8856)
+> if okay w/ this change, please consider taking it thr' your tree, else please
+> let me know.
 
-There are no version checks being done here, nor apparently the version is
-read by this function. 
+i have not seen any recent pull request from you for unicore32, if
+this patch is okay, please consider ack-ing this so as to take via
+tglx.
 
-> +{
-> +	int ret;
-> +
-> +	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
-> +			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
-> +			       OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
-> +				OV8856_REG_VALUE_08BIT,
-> +				OV8856_OTP_LOAD_CTRL_ENABLE);
-
-If streaming is started to read the EEPROM, shouldn't it be stopped after
-reading it as well?
-
-> +}
-> +
->  static int ov8856_set_ctrl(struct v4l2_ctrl *ctrl)
->  {
->  	struct ov8856 *ov8856 = container_of(ctrl->handler,
-> @@ -1144,6 +1175,23 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
->  		return -ENXIO;
->  	}
->  
-> +	/* check sensor hardware revision */
-> +	ret = ov8856_check_revision(ov8856);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to check sensor revision");
-> +		return ret;
-> +	}
-> +
-> +	ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
-> +			      OV8856_REG_VALUE_08BIT, &val);
-> +	if (ret)
-> +		return ret;
-
-How about moving this inside the check_revision function above? It looks as
-if it's dependent on that.
-
-> +
-> +	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
-> +		val,
-> +		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
-> +		client->addr);
-> +
->  	return 0;
->  }
->  
-> @@ -1254,12 +1302,6 @@ static int ov8856_probe(struct i2c_client *client)
->  		return PTR_ERR(ov8856->xvclk);
->  	}
->  
-> -	ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
-
-This seems like an unrelated change.
-
-> -	if (ret < 0) {
-> -		dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
-> -		return ret;
-> -	}
-> -
->  	ov8856->reset_gpio = devm_gpiod_get(&client->dev, "reset",
->  					       GPIOD_OUT_HIGH);
->  	if (IS_ERR(ov8856->reset_gpio)) {
-
--- 
-Regards,
-
-Sakari Ailus
+Regards
+afzal
