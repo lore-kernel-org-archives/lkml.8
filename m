@@ -2,127 +2,184 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49C2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8540C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE22206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84714206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:30:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vN6DUncR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgCMP36 (ORCPT
+        id S1727015AbgCMPaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:29:58 -0400
-Received: from mga12.intel.com ([192.55.52.136]:59583 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgCMP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:29:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:29:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="278261684"
-Received: from mlitka-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.155.148])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Mar 2020 08:29:52 -0700
-Date:   Fri, 13 Mar 2020 17:29:50 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [PATCH v7 2/3] tpm: ibmvtpm: Wait for buffer to be set before
- proceeding
-Message-ID: <20200313152950.GC142269@linux.intel.com>
-References: <20200312155332.671464-1-stefanb@linux.vnet.ibm.com>
- <20200312155332.671464-3-stefanb@linux.vnet.ibm.com>
+        Fri, 13 Mar 2020 11:30:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50208 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCMPaH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:30:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a5so10444155wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aOo6dLQRbGtNVZizUX8MQehDOjSxcCEmz/shUdkGfFQ=;
+        b=vN6DUncRWVA+2RqDTHBwkgrspGJ+Z4aEKegksvD7vBizwLG6NK8c2VpIKVsrYyIyli
+         RVDAjvPpXiXIvu5rOMh0q0IlRArnfvde6Wf0+5NDs6oMJjuM79QqkIB6wwa8AWSr5IUL
+         JTW889zogP0mKlTqznnfjHmyT7djHuCOA8wERWA0wFUP9nyZ+w1kpTxTjTfPrdRupAVk
+         yt7KBnaZoG7CQj4res9AeeVAEpygWPfi+DH8QLSmaCNSBP2NpUQ6iMfjp0Gfjl1m5FHY
+         u/kNzUhzO3G7KQsqaq42Tm55lWln1Ojv16IDOMMfHdiq9i0HP2o/G9utyIN88TIDqqt5
+         2HDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=aOo6dLQRbGtNVZizUX8MQehDOjSxcCEmz/shUdkGfFQ=;
+        b=kCewQ7cmJ22P7OoBs1KtZLCNb+ka0Q8S2v4NNDbeTQpdhcFOZugRbedMIe2OK6Mg1C
+         xiKUAMRsdll1Wl9PbAMfHYr0td6SXrSacHwwU1PftXakHvPXlctTTEeKi9EsJgflrzhu
+         7v2PioX32l96q3e7a59Ktl0GZjjWSzRrKX/0H6ksMhx+/Yq8CUf/mhOAalx0tRlbgJx4
+         SfWyEuZpRaGNlN45Nd7iJazHUubHig6wgGe7rIEBM8bI+JP+j7u0HsMuN2BTpcFANwdx
+         DVWwOAtExJcAIJkCPCEWdtsuefAj3FIlcqNUDx3Py+Z0wljsrN3J7nUuN3icdg8VLWrd
+         TIUw==
+X-Gm-Message-State: ANhLgQ0osXhORECVgnawf9kc/karTP0+b2PAElkYSHdsBd9mIKg1vE67
+        FT8WL81756iPsM2K94hGJXuUlr0weh6HMw==
+X-Google-Smtp-Source: ADFU+vsfyKK37HfPo8ugfQibWInzVKb+sZXPd6q7TB0cd23sRHPhLjNClmVA1kiqiMHODraULQbjnA==
+X-Received: by 2002:a1c:b7d7:: with SMTP id h206mr6844189wmf.143.1584113401358;
+        Fri, 13 Mar 2020 08:30:01 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
+        by smtp.gmail.com with ESMTPSA id o26sm16385696wmc.33.2020.03.13.08.29.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 08:30:00 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: add it66121 bindings
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Phong LE <ple@baylibre.com>, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, sam@ravnborg.org,
+        mripard@kernel.org, heiko.stuebner@theobroma-systems.com,
+        linus.walleij@linaro.org, stephan@gerhold.net, icenowy@aosc.io,
+        broonie@kernel.org, mchehab+samsung@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200311125135.30832-1-ple@baylibre.com>
+ <20200311125135.30832-3-ple@baylibre.com>
+ <20200313134013.GC4751@pendragon.ideasonboard.com>
+ <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
+ <20200313141713.GG4751@pendragon.ideasonboard.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <87a0d129-163b-18ae-eb09-cf7df4048dad@baylibre.com>
+Date:   Fri, 13 Mar 2020 16:29:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312155332.671464-3-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200313141713.GG4751@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:53:31AM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On 13/03/2020 15:17, Laurent Pinchart wrote:
+> Hi Neil,
 > 
-> Synchronize with the results from the CRQs before continuing with
-> the initialization. This avoids trying to send TPM commands while
-> the rtce buffer has not been allocated, yet.
-> 
-> This patch fixes an existing race condition that may occurr if the
-> hypervisor does not quickly respond to the VTPM_GET_RTCE_BUFFER_SIZE
-> request sent during initialization and therefore the ibmvtpm->rtce_buf
-> has not been allocated at the time the first TPM command is sent.
-> 
-> Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Acked-by: Nayna Jain <nayna@linux.ibm.com>
-> Tested-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  drivers/char/tpm/tpm_ibmvtpm.c | 9 +++++++++
->  drivers/char/tpm/tpm_ibmvtpm.h | 1 +
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-> index 78cc52690177..cfe40e7b1ba4 100644
-> --- a/drivers/char/tpm/tpm_ibmvtpm.c
-> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
-> @@ -571,6 +571,7 @@ static irqreturn_t ibmvtpm_interrupt(int irq, void *vtpm_instance)
->  	 */
->  	while ((crq = ibmvtpm_crq_get_next(ibmvtpm)) != NULL) {
->  		ibmvtpm_crq_process(crq, ibmvtpm);
-> +		wake_up_interruptible(&ibmvtpm->crq_queue.wq);
->  		crq->valid = 0;
->  		smp_wmb();
->  	}
-> @@ -618,6 +619,7 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
->  	}
->  
->  	crq_q->num_entry = CRQ_RES_BUF_SIZE / sizeof(*crq_q->crq_addr);
-> +	init_waitqueue_head(&crq_q->wq);
->  	ibmvtpm->crq_dma_handle = dma_map_single(dev, crq_q->crq_addr,
->  						 CRQ_RES_BUF_SIZE,
->  						 DMA_BIDIRECTIONAL);
-> @@ -670,6 +672,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
->  	if (rc)
->  		goto init_irq_cleanup;
->  
-> +	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
-> +				ibmvtpm->rtce_buf != NULL,
-> +				HZ)) {
-> +		dev_err(dev, "CRQ response timed out\n");
-> +		goto init_irq_cleanup;
-> +	}
-> +
->  	return tpm_chip_register(chip);
->  init_irq_cleanup:
->  	do {
-> diff --git a/drivers/char/tpm/tpm_ibmvtpm.h b/drivers/char/tpm/tpm_ibmvtpm.h
-> index 7983f1a33267..b92aa7d3e93e 100644
-> --- a/drivers/char/tpm/tpm_ibmvtpm.h
-> +++ b/drivers/char/tpm/tpm_ibmvtpm.h
-> @@ -26,6 +26,7 @@ struct ibmvtpm_crq_queue {
->  	struct ibmvtpm_crq *crq_addr;
->  	u32 index;
->  	u32 num_entry;
-> +	wait_queue_head_t wq;
->  };
->  
->  struct ibmvtpm_dev {
-> -- 
-> 2.23.0
-> 
+> On Fri, Mar 13, 2020 at 03:12:13PM +0100, Neil Armstrong wrote:
+>> On 13/03/2020 14:40, Laurent Pinchart wrote:
+>>> On Wed, Mar 11, 2020 at 01:51:33PM +0100, Phong LE wrote:
+>>>> Add the ITE bridge HDMI it66121 bindings.
+>>>>
+>>>> Signed-off-by: Phong LE <ple@baylibre.com>
+>>>> ---
+>>>>  .../bindings/display/bridge/ite,it66121.yaml  | 98 +++++++++++++++++++
+>>>>  1 file changed, 98 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
+>>>>
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+[...]
 
-/Jarkko
+>>>> +
+>>>> +  pclk-dual-edge:
+>>>> +    maxItems: 1
+>>>> +    description: enable pclk dual edge mode.
+>>>
+>>> I'm having a bit of trouble understanding how this operates. Looking at
+>>> the driver code the property is only taken into account to calculate the
+>>> maximum allowed frequency. How is the IT66121 configured for single vs.
+>>> dual pixel clock edge mode ?
+>>
+>> Dual edge mode is Dual-Data-Rate mode, the normal mode is MEDIA_BUS_FMT_RGB888_1X24 and dual edge is
+>> MEDIA_BUS_FMT_RGB888_2X12_LE (or MEDIA_BUS_FMT_RGB888_2X12_BE, not sure) on a single clock period.
+>>
+>> This should be negociated at runtime, but the bus width should be specified somewhere to select
+>> one of the modes.
+> 
+> How about replacing this property by bus-width to report the connected
+> bus width ? It should then become an endpoint property.
+
+It was my thought.
+
+The mediatek dpi also uses this property, which is also very wrong in the same way.
+
+Neil
+
+[...]
