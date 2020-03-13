@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7DFC5ACC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20B2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8469C2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFD020724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgCMPpE (ORCPT
+        id S1727283AbgCMPou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:45:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:58836 "EHLO foss.arm.com"
+        Fri, 13 Mar 2020 11:44:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:58690 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727356AbgCMPpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:45:00 -0400
+        id S1726851AbgCMPor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:44:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D2771045;
-        Fri, 13 Mar 2020 08:45:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 262EB1063;
+        Fri, 13 Mar 2020 08:44:47 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 476B93F67D;
-        Fri, 13 Mar 2020 08:44:57 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FEEF3F67D;
+        Fri, 13 Mar 2020 08:44:44 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -47,9 +48,9 @@ Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Marc Zyngier <maz@kernel.org>,
         Mark Rutland <Mark.Rutland@arm.com>
-Subject: [PATCH v3 17/26] linux/elfnote.h: Replace elf.h with UAPI equivalent
-Date:   Fri, 13 Mar 2020 15:43:36 +0000
-Message-Id: <20200313154345.56760-18-vincenzo.frascino@arm.com>
+Subject: [PATCH v3 13/26] linux/jiffies.h: Extract common header for vDSO
+Date:   Fri, 13 Mar 2020 15:43:32 +0000
+Message-Id: <20200313154345.56760-14-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200313154345.56760-1-vincenzo.frascino@arm.com>
 References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
@@ -65,27 +66,55 @@ a userspace library (UAPI and a minimal set of kernel headers). To make
 this possible it is necessary to isolate from the kernel headers the
 common parts that are strictly necessary to build the library.
 
-Replace linux/elf.h with UAPI equivalent in elfnote.h to make the header
-suitable for vDSO inclusion.
+Split jiffies.h into linux and common headers to make the latter suitable
+for inclusion in the vDSO library.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- include/linux/elfnote.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/jiffies.h |  4 +---
+ include/vdso/jiffies.h  | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+ create mode 100644 include/vdso/jiffies.h
 
-diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
-index f236f5b931b2..594d4e78654f 100644
---- a/include/linux/elfnote.h
-+++ b/include/linux/elfnote.h
-@@ -59,7 +59,7 @@
- 	ELFNOTE_END
+diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+index e3279ef24d28..fed6ba96c527 100644
+--- a/include/linux/jiffies.h
++++ b/include/linux/jiffies.h
+@@ -8,6 +8,7 @@
+ #include <linux/types.h>
+ #include <linux/time.h>
+ #include <linux/timex.h>
++#include <vdso/jiffies.h>
+ #include <asm/param.h>			/* for HZ */
+ #include <generated/timeconst.h>
  
- #else	/* !__ASSEMBLER__ */
--#include <linux/elf.h>
-+#include <uapi/linux/elf.h>
- /*
-  * Use an anonymous structure which matches the shape of
-  * Elf{32,64}_Nhdr, but includes the name and desc data.  The size and
+@@ -59,9 +60,6 @@
+ 
+ extern int register_refined_jiffies(long clock_tick_rate);
+ 
+-/* TICK_NSEC is the time between ticks in nsec assuming SHIFTED_HZ */
+-#define TICK_NSEC ((NSEC_PER_SEC+HZ/2)/HZ)
+-
+ /* TICK_USEC is the time between ticks in usec assuming SHIFTED_HZ */
+ #define TICK_USEC ((USEC_PER_SEC + HZ/2) / HZ)
+ 
+diff --git a/include/vdso/jiffies.h b/include/vdso/jiffies.h
+new file mode 100644
+index 000000000000..2f9d596c8b29
+--- /dev/null
++++ b/include/vdso/jiffies.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_JIFFIES_H
++#define __VDSO_JIFFIES_H
++
++#include <asm/param.h>			/* for HZ */
++#include <vdso/time64.h>
++
++/* TICK_NSEC is the time between ticks in nsec assuming SHIFTED_HZ */
++#define TICK_NSEC ((NSEC_PER_SEC+HZ/2)/HZ)
++
++#endif /* __VDSO_JIFFIES_H */
 -- 
 2.25.1
 
