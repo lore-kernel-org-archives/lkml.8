@@ -3,143 +3,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C047C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E861EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0040920770
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17D0206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pc7WgZK6"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="oKeqfizF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgCMRMn (ORCPT
+        id S1726838AbgCMROy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:12:43 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32994 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCMRMm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:12:42 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f13so11390594ljp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9i1VcIGQBKvOT9Yd/IZFWMay3cd+gMILpeCF5u9rNvc=;
-        b=pc7WgZK64lZOBYMpH2huzgvQuSv/xXu5TaxoHrzHo8o4Zu0s/Lw4cUh4rAVRMz2GCG
-         fSo60DMjZCe4GHi59hv7tDNUYWWVoZhx+mrNVLCw4VL+F+4vQurXyb+oY4/H2AtI5JUY
-         7hlRETqxdxpmDDd6bfpTYYZ/dlQlDWspIaqsmhJ67YvEEPZvSNYNoCF6CodTYpCw5J5s
-         Ok3yl9a3t+9yD+3E9LqBmGzLuTThxR7DJN3Dw3JPtWR2iyWxVkxIB0BdWDCB1iv0T05U
-         iTimEy8E9rwHRilHpum4z2fkh26yNEyxSzqYuVXnzCKL8bh49FOGl67S/o8tcydwDzUI
-         Yxvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9i1VcIGQBKvOT9Yd/IZFWMay3cd+gMILpeCF5u9rNvc=;
-        b=HqBO4CIc0Io4MfLeJ3mF1xALwfJj77SCqyyOLEdDUBNajmm3PDjLJ2sbcKDftle/nV
-         okY45MTumkdn1wGsKzq+TWUv3tEpPOcth7/z0eFugKtAsmlildr7oWVRStsoSUxRJuch
-         3TMt7bPJu8HzpYRKSajcm4s2I295vI+uYwTAQ8PUr5vQS2Bibh4fqSa+P6LpKjeD3UBe
-         VLfrhUPe1ekN7Xp0enH3c7FC3nEnlqlf+5PCLa8TaTLzNnnthOO5N6nplgR5lSf5x8TH
-         cdUumP9usN3dxS7cFEGhbK0lwC7Ih4o9aaEScE1PYk4BPvQPdX4GCJEgXJ7sh8WG7H/Z
-         SsAg==
-X-Gm-Message-State: ANhLgQ3jD0rPRLkwIb/acHsyO4TqLCpZDQmPJD6HddC458laMa32WZPv
-        BZW0SBVmvjffIOs3+L1K6PzN36vc/2yBhHVvGMLg3Q==
-X-Google-Smtp-Source: ADFU+vvMkdn/Z6SXWMnRn56lxVUJvBZUPPixAsWHVkhD1jAz5V377OSR/2/BHS7iv73Koti454bE2jiGB5leiBwqPrs=
-X-Received: by 2002:a2e:b5c3:: with SMTP id g3mr8650818ljn.151.1584119560282;
- Fri, 13 Mar 2020 10:12:40 -0700 (PDT)
+        Fri, 13 Mar 2020 13:14:54 -0400
+Received: from mail-dm6nam10on2128.outbound.protection.outlook.com ([40.107.93.128]:64449
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726414AbgCMROy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:14:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FkjF8ZhxvU9rdNiu35ieEJM0/rJBfaY+7eiqylTU3MGPXNrPkLZyjxMTrVJ79XpeOkWADq0bxQazvkDncwwmWEWmZpFkdWCALgAMP5qjzpkihVIIeFvPpJHhlHgfda8RtHt14o1IKLrEleW+V6ulPHeFkGLZZ3UqD1fN9wcpMPMgSNVU+1Gq1jiVyUwRP+rKayFPUM0CXSxom4X70wGeyR4wm9NcUeu4SgXE86MC++5X8mVyOiqIpEKvAsV0STGS5ZZDn3ycEE0BBnCeaBcnd4mrx//9VfZvdKxx1rJTMRbQYfaRIJw+Ek4/jRpn31XEBvVbbuMd33460ygG7Uuldg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W/OrH4sDDy59TTgSUtKQVIIKzF6OruIe159jg/0wQbg=;
+ b=bIxmpPVJ4Mo0/1kIoI6eiNtQMfHh+MRcsdVtZyOHeFTN9bN1ugjfy7wyxfKJE+G+6d8fRcFcUM5Mbo5g/R8mCXSJLQsePcoithWcFqnHTYvf8ebS63Cwn4Wz1vRB8UVmUEoWj0LpoeIMoWXNUPt9+QNxJPy5OsxNhIMlJYLOib9xGQlDArRbsJQtq73ExUKb2iYfR76v+j8ZyzrRETJ4hN0Qz+AsQFVJBgLlR0iA6BE+SIhBlabIaFxRWrFpabb22AJSLOWXMHsl7bLlUH4D7xCQHXoPvO3hL5XM1846ZlD7WA9ZBv++1Ol5r/a+eG4ngJvkMejaIPG/P7kfJokJow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W/OrH4sDDy59TTgSUtKQVIIKzF6OruIe159jg/0wQbg=;
+ b=oKeqfizFNtLxDbqtm8RDrrQGSy3m+6exrFMrx4VnAQ5nt5ZHln7V9QD4qYR/Ld3QYEIe4PBJOIRmg7SJ/h7VrLeJSOgV8oUOGANsZ40mVHfOj5rbeY7QeKco8uWiU06Qm3n2c/bn7nLTXmYFya/X7fnAz0bp3ZnR5+3QpnNMKj0=
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com (2603:10b6:300:2::27)
+ by MWHPR13MB1309.namprd13.prod.outlook.com (2603:10b6:300:a0::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.9; Fri, 13 Mar
+ 2020 17:14:51 +0000
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::308b:ce00:680a:333e]) by MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::308b:ce00:680a:333e%6]) with mapi id 15.20.2835.003; Fri, 13 Mar 2020
+ 17:14:51 +0000
+From:   "Bird, Tim" <Tim.Bird@sony.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+CC:     Vlastimil Babka <vbabka@suse.cz>,
+        "tech-board-discuss@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ksummit-discuss@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>
+Subject: RE: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation Technical
+ Advisory Board Elections -- Change to charter
+Thread-Topic: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
+ Technical Advisory Board Elections -- Change to charter
+Thread-Index: AQHV+Uv0ZLfY3Fh6mEGHSGNqs9wC6ahGv/AQ
+Date:   Fri, 13 Mar 2020 17:14:51 +0000
+Message-ID: <MWHPR13MB089537C8E2D61AD441672E86FDFA0@MWHPR13MB0895.namprd13.prod.outlook.com>
+References: <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com>
+ <20200313093548.GA2089143@kroah.com>
+ <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
+ <20200313100755.GA2161605@kroah.com>
+ <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
+ <20200313103720.GA2215823@kroah.com>
+ <CAMuHMdW6Br+x+_9xP+X4xr6FP_uNpZ6q6065RJH-9yFy_8fiZA@mail.gmail.com>
+ <20200313081216.627c5bdf@gandalf.local.home> <874kusl50q.fsf@intel.com>
+ <20200313145206.GE225435@mit.edu> <87wo7ojnrl.fsf@intel.com>
+ <1584113200.3391.16.camel@HansenPartnership.com>
+In-Reply-To: <1584113200.3391.16.camel@HansenPartnership.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tim.Bird@sony.com; 
+x-originating-ip: [160.33.66.122]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1cd7dd3e-0099-4e4d-19b9-08d7c7720a80
+x-ms-traffictypediagnostic: MWHPR13MB1309:
+x-microsoft-antispam-prvs: <MWHPR13MB13093461D0ED2CCB6A2742ECFDFA0@MWHPR13MB1309.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 034119E4F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(52536014)(26005)(81156014)(33656002)(55016002)(5660300002)(86362001)(71200400001)(81166006)(2906002)(9686003)(186003)(8936002)(4326008)(8676002)(64756008)(6506007)(7696005)(66476007)(66556008)(66946007)(76116006)(110136005)(66446008)(316002)(478600001)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR13MB1309;H:MWHPR13MB0895.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: sony.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vnYgXh7I+L5gy6vmBKTijtjdDZvptjnXlJHQEKzIL1tQqGVsuyT9QlhweJy/H4XvAvyorycfrmlmYg9HlfsiNeGyzW/2bwHjbIh1EKeZeZscGbLPAl89ixfIYh0TQbyqhJjxlpIVu0+Svs6i6vbbuj+fpfvKlyIOrvMb4t2FTsuSUCgVmrTeGjNePABEDRd9caDTbO5v0LvFEMlCj2ZHPwBv9/n5thQOo3+n8Sd538WFo/j7SI15mfwg7GaebYq0VGNtmPRDo48x90BbRIUFc0DosAz3U0ftn0xMhKAMD1qCIDBI9MIYCpRR+7hGJ+I9YoeXULTLLt2PgKHZ9/P7EpM7WNK5+SnXPJVXIu51rVexlvdm6JGn8aq6FXldF5vj2naMJaBX9Lz8Dnz3oLJClIhOpF3k3D+vWwy9sixPExPNM6kwoZJiwARPvwO8UPaD
+x-ms-exchange-antispam-messagedata: 3YrGpA2bX1Ve9nd3W7RQfjjr6qyJIDO41Ns83F18ctzW6TdEIHHMU2+lQn452KdI5Ebef3k/h4yjJLoO/CRt0HDHacSRrSSYfbP5lYMimSH6sgF4ZbU1uAkTOzGbKpXiWzmYOh/qpjUVGdvMc5eFUg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200312165429.990-1-vincent.guittot@linaro.org>
- <jhjr1xwjz96.mognet@arm.com> <CAKfTPtCQZMOz9HzdiWg5g9O+W=hC5E-fiG8YVHWCcODjFRfefQ@mail.gmail.com>
- <jhjpndgjxxk.mognet@arm.com> <jhj4kuspgse.mognet@arm.com> <CAKfTPtD67EKA46i12FHpJQT4gTzaH=ASAyb2dhv4=owPHBRSdQ@mail.gmail.com>
- <CAKfTPtBZgvTBYR+kYjj9dHq8_25mG19CZmYzY5s33ijSHdLGyQ@mail.gmail.com>
- <jhj36acp88q.mognet@arm.com> <CAKfTPtAMmYONX+qxp1Awj+XpqkWU3ootcyv7iar7e6z5nSczpw@mail.gmail.com>
- <jhj1rpwp4z1.mognet@arm.com>
-In-Reply-To: <jhj1rpwp4z1.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 13 Mar 2020 18:12:28 +0100
-Message-ID: <CAKfTPtCopLDoUsC+Mt6k99Hdn52pcKkrNYQsYNRW5LdgyMg4Nw@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: improve spreading of utilization
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd7dd3e-0099-4e4d-19b9-08d7c7720a80
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 17:14:51.0981
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: i3zczZ6/9ohOA3DYqbT2WQnbNMrYw0fbb/PJROppcauqX1lS2hlmVpe5tcNv+LYElCKoIfvD7XVSj2fu0japOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 at 17:57, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On Fri, Mar 13 2020, Vincent Guittot wrote:
->
-> >> Good point on the capacity reduction vs group_is_overloaded.
-> >>
-> >> That said, can't we also reach this with migrate_task? Say the local
-> >
-> > The test has only been added for migrate_util so migrate_task is not impacted
-> >
-> >> group is entirely idle, and the busiest group has a few non-idle CPUs
-> >> but they all have at most 1 running task. AFAICT we would still go to
-> >> calculate_imbalance(), and try to balance out the number of idle CPUs.
-> >
-> > such case is handled by migrate_task when we try to even the number of
-> > tasks between groups
-> >
-> >>
-> >> If the migration_type is migrate_util, that can't happen because of this
-> >> change. Since we have this progressive balancing strategy (tasks -> util
-> >> -> load), it's a bit odd to have this "gap" in the middle where we get
-> >> one less possibility to trigger active balance, don't you think? That
-> >> is, providing I didn't say nonsense again :)
-> >
-> > Right now, I can't think of a use case that could trigger such
-> > situation because we use migrate_util when source is overloaded which
-> > means that there is at least one waiting task and we favor this task
-> > in priority
-> >
->
-> Right, what I was trying to say is that AIUI migration_type ==
-> migrate_task with <= 1 running task per CPU in the busiest group can
-> *currently* lead to a balance attempt, and thus a potential active
-> balance.
->
-> Consider a local group of 4 idle CPUs, and a busiest group of 3 busy 1
-> idle CPUs, each busy having only 1 running task. That busiest group
-> would be group_has_spare, so we would compute an imbalance of
-> (4-1) / 2 == 1 task to move. We'll proceed with the load balance, but
-> we'll only move things if we go through an active_balance.
 
-yes because we want to even as much as possible the number of tasks per group
 
->
-> My point is that if we prevent this for migrate_util, it would make
-> sense to prevent it for migrate_task, but it's not straightforward since
+> -----Original Message-----
+> From:  James Bottomley
+>=20
+> On Fri, 2020-03-13 at 17:08 +0200, Jani Nikula wrote:
+> > On Fri, 13 Mar 2020, "Theodore Y. Ts'o" <tytso@mit.edu> wrote:
+> > > On Fri, Mar 13, 2020 at 04:10:29PM +0200, Jani Nikula wrote:
+> > > >
+> > > > Have you considered whether the eligibility for running and
+> > > > voting should be made the same? As it is, absolutely anyone can
+> > > > self-nominate and run.
+> > >
+> > > That's always been the case.  However, at least historically,
+> > > people who weren't physically present has never been successful.
+> >
+> > Oh? May I ask for that to be clarified in the TAB charter, please.
+>=20
+> It's a historical observation, not a rule.  In fact, it does have an
+> exception: GregKH was elected in Edinburgh in 2012 without being
+> physically present at the voting (although he was in Edinburgh at the
+> time).
 
-hmm but we don't want to prevent this active balance for migrate_task
-because of cases like the one you mentioned above.
+I was elected in Prague in 2017.  I was onsite, but had a conflict so
+was not present for the vote.  So it's happened, but it has been rare
+for someone to be elected while not present at the vote.  I'll be honest.
+The fact that ELC was co-located with the kernel summit that year=20
+probably had a lot to do with my win.  IMHO it would be nice
+to reduce the effect of the event pairing on the elections, so I really
+welcome the movement to absentee voting (even though it helped
+me once :-) ).
 
-we might consider to finally select a CPU with only 1 running task
-with migrate_util if there is no other CPU with more than 1 task. But
-this would complexify the code and I don't think it's possible because
-migrate_util is used to pull some utilizations from an overloaded
-group which must have a CPU with a waiting task to be overloaded.
+With regard to clarifying it for transparency, I think that would be good.
+We have customarily sent out a request for nominations by e-mail
+prior to the kernel summit.  I don't recall the wording, but I think=20
+the nomination instructions included the information that you didn't
+need to be present to run.  If I'm mis-remembering this and it's not
+there, it would be good to add it.
+ -- Tim
 
-> we have things like ASYM_PACKING.
->
-> >>
-> >> It's not a super big deal, but I think it's nice if we can maintain a
-> >> consistent / gradual migration policy.
-> >>
-> >> >>
-> >> >> > might be hard to notice in benchmarks.
