@@ -2,117 +2,91 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C881C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9784C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042CE2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584131605;
-	bh=Z5/ANwaJRsxTperPsOjqXDHSTFsjsliL0uw9pV+2bT8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=J6jDSbAO/hPeyTTxXIWofZWFiuIIIlkur+l1uxaRmm0mexsYbFrIT9WiLEvpWyYRm
-	 t+tg9T9xrEnWSa1KF//d2KsNbhp1QU582Atpxe+1P5gX+oB2hl9javqPUmw62dpptR
-	 /7YNLgollSLSmRs/xWyeigLLezaFogotqEOvH8ns=
+	by mail.kernel.org (Postfix) with ESMTP id 918242074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCMUdX (ORCPT
+        id S1727430AbgCMUfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:33:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727433AbgCMUdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:33:22 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C08D52073E;
-        Fri, 13 Mar 2020 20:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584131601;
-        bh=Z5/ANwaJRsxTperPsOjqXDHSTFsjsliL0uw9pV+2bT8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=y4AuYnGVGvKRDjAaHcCc8XFtWkUoE/v5dSJEAHS2HnBZ/tBJxvsdm8np2CZv9+DLB
-         kdG8YrUwsM8ADfSTj4erJMmm9NsDDr26zY8wMsY/GNDN/lohaBoud6qLBnGWHZXKtC
-         IzcK6TVHZgciRdEV21NZO+3SbDQv40SQ3W9RtreA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 943A53522891; Fri, 13 Mar 2020 13:33:21 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 13:33:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jens Axboe <axboe@fb.com>, Tejun Heo <tj@kernel.org>,
-        io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc
-Message-ID: <20200313203321.GD3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <00e5ab7d-f0ad-bc94-204a-d2b7fb88f594@fb.com>
- <CAHk-=wgGN-9dmso4L+6RWdouEg4zQfd74m23K6c9E_=Qua+H1Q@mail.gmail.com>
+        Fri, 13 Mar 2020 16:35:31 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:40789 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgCMUfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 16:35:31 -0400
+X-Originating-IP: 87.231.134.186
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 3A460240009;
+        Fri, 13 Mar 2020 20:35:27 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] arm64: dts: marvell: fix non-existed cpu referrence in armada-ap806-dual.dtsi
+In-Reply-To: <20200209212016.27062-1-vadym.kochan@plvision.eu>
+References: <20200209212016.27062-1-vadym.kochan@plvision.eu>
+Date:   Fri, 13 Mar 2020 21:35:26 +0100
+Message-ID: <87v9n8xab5.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgGN-9dmso4L+6RWdouEg4zQfd74m23K6c9E_=Qua+H1Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 01:18:30PM -0700, Linus Torvalds wrote:
-> On Fri, Mar 13, 2020 at 10:50 AM Jens Axboe <axboe@fb.com> wrote:
-> >
-> > Just a single fix here, improving the RCU callback ordering from last
-> > week. After a bit more perusing by Paul, he poked a hole in the
-> > original.
-> 
-> Ouch.
-> 
-> If I read this patch correctly, you're now adding a rcu_barrier() onto
-> the system workqueue for each io_uring context freeing op.
-> 
-> This makes me worry:
-> 
->  - I think system_wq is unordered, so does it even guarantee that the
-> rcu_barrier happens after whatever work you're expecting it to be
-> after?
-> 
-> Or is it using a workqueue not because it wants to serialize with any
-> other work, but because it needs to use rcu_barrier in a context where
-> it can't sleep?
-> 
-> But the commit message does seem to imply that ordering is important..
-> 
->  - doesn't this have the potential to flood the system_wq be full of
-> flushing things that all could take a while..
-> 
-> I've pulled it, and it may all be correct, just chalk this message up
-> to "Linus got nervous looking at it".
-> 
-> Added Paul and Tejun to the participants explicitly.
+Hi Vadym,
 
-The idea is that rcu_barrier() waits for callbacks from all earlier
-call_rcu()s to be invoked.  So as long as you know that the call_rcu()
-happened earlier than the rcu_barrier(), the rcu_barrier() is guaranteed
-to wait for that call_rcu()'s callback.
+> armada-ap806-dual.dtsi includes armada-ap806.dtsi which describes
+> thermal zones for 4 cpus but only cpu0 and cpu1 only exists for dual
+> configuration, this makes dtb compilation fail. Fix it by removing
+> thermal zone nodes for non-existed cpus for dual configuration.
+>
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
 
-In this case (and Jens will correct me in the sadly likely event that
-I get the story confused), we have a call_rcu() followed by scheduling
-work on that same task.  The work has to start executing after it was
-scheduled, so if that work does an rcu_barrier(), then that rcu_barrier()
-will wait on the call_rcu()'s callback to be invoked.
+Applied on mvebu/dt64
 
-Jens could invoke the rcu_barrier() just before scheduling the work,
-but the synchronous delay from the rcu_barrier() is a problem.
+Thanks,
 
-Jens, what did I mess up in the above story?  ;-)
+Gregory
 
-I defer to Jens and Tejun on the possibility of ending up with all
-workqueue kthreads waiting on rcu_barrier().  If that is a problem,
-there are some ways of dealing with it, though none that I can think of
-that come for free.
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> index 09849558a776..fcab5173fe67 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> @@ -53,4 +53,9 @@
+>  			cache-sets = <512>;
+>  		};
+>  	};
+> +
+> +	thermal-zones {
+> +		/delete-node/ ap-thermal-cpu2;
+> +		/delete-node/ ap-thermal-cpu3;
+> +	};
+>  };
+> -- 
+> 2.17.1
+>
 
-							Thanx, Paul
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
