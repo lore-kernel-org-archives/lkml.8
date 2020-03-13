@@ -2,69 +2,92 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EBBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9E1C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EDD2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8963C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgCMI0D (ORCPT
+        id S1726546AbgCMI1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:26:03 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40022 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726406AbgCMI0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:26:03 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 31DAA4712341C184D5EE;
-        Fri, 13 Mar 2020 16:25:53 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 13 Mar 2020
- 16:25:46 +0800
-Subject: Re: [PATCH net-next 0/2] net: hns3: add two optimizations for mailbox
- handling
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>
-References: <1584087823-61800-1-git-send-email-tanhuazhong@huawei.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <bb37412b-c4a1-bc19-d784-a7693e4d5b0e@huawei.com>
-Date:   Fri, 13 Mar 2020 16:25:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Fri, 13 Mar 2020 04:27:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47248 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgCMI1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 04:27:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 01184B22E;
+        Fri, 13 Mar 2020 08:26:59 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/2] x86/xen: Make the secondary CPU idle tasks
+ reliable
+To:     Miroslav Benes <mbenes@suse.cz>, boris.ostrovsky@oracle.com,
+        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com
+Cc:     x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        jslaby@suse.cz
+References: <20200312142007.11488-1-mbenes@suse.cz>
+ <20200312142007.11488-3-mbenes@suse.cz>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com>
+Date:   Fri, 13 Mar 2020 09:26:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1584087823-61800-1-git-send-email-tanhuazhong@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200312142007.11488-3-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, please ignore this patchset, will resend it later :)
+On 12.03.20 15:20, Miroslav Benes wrote:
+> The unwinder reports the secondary CPU idle tasks' stack on XEN PV as
+> unreliable, which affects at least live patching.
+> cpu_initialize_context() sets up the context of the CPU through
+> VCPUOP_initialise hypercall. After it is woken up, the idle task starts
+> in cpu_bringup_and_idle() function and its stack starts at the offset
+> right below pt_regs. The unwinder correctly detects the end of stack
+> there but it is confused by NULL return address in the last frame.
+> 
+> RFC: I haven't found the way to teach the unwinder about the state of
+> the stack there. Thus the ugly hack using assembly. Similar to what
+> startup_xen() has got for boot CPU.
+> 
+> It introduces objtool "unreachable instruction" warning just right after
+> the jump to cpu_bringup_and_idle(). It should show the idea what needs
+> to be done though, I think. Ideas welcome.
+> 
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> ---
+>   arch/x86/xen/smp_pv.c   |  3 ++-
+>   arch/x86/xen/xen-head.S | 10 ++++++++++
+>   2 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+> index 802ee5bba66c..6b88cdcbef8f 100644
+> --- a/arch/x86/xen/smp_pv.c
+> +++ b/arch/x86/xen/smp_pv.c
+> @@ -53,6 +53,7 @@ static DEFINE_PER_CPU(struct xen_common_irq, xen_irq_work) = { .irq = -1 };
+>   static DEFINE_PER_CPU(struct xen_common_irq, xen_pmu_irq) = { .irq = -1 };
+>   
+>   static irqreturn_t xen_irq_work_interrupt(int irq, void *dev_id);
+> +extern unsigned char asm_cpu_bringup_and_idle[];
+>   
+>   static void cpu_bringup(void)
+>   {
 
-On 2020/3/13 16:23, Huazhong Tan wrote:
-> This patchset includes two code optimizations for mailbox handling.
-> 
-> Jian Shen (1):
->    net: hns3: add a conversion for mailbox's response code
-> 
-> Yufeng Mo (1):
->    net: hns3: optimize the message response between pf and vf
-> 
->   drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  54 ++-
->   .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 386 ++++++++++-----------
->   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 306 ++++++++--------
->   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   4 +-
->   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  50 +--
->   5 files changed, 414 insertions(+), 386 deletions(-)
-> 
+Would adding this here work?
 
++	asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
+
+
+Juergen
