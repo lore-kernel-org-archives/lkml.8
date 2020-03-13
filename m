@@ -2,101 +2,186 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8D1C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E288720724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B23206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YR6QRrnO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/J4nlTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgCMIbi (ORCPT
+        id S1726512AbgCMIcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:31:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57026 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgCMIbh (ORCPT
+        Fri, 13 Mar 2020 04:32:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34360 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgCMIcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:31:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MAsAcM05mXkzCsPvayDcJZuYQVlAkvzdedkH1NlOMWc=; b=YR6QRrnO3fKBbY/PgCXjSBYL/i
-        YFGw13odm0+qWLyhzR1u8l265TNuHgGhITEyT0bhvgbBK7bQTo1TfxZMt088AWymnNkSL6YQE2BnJ
-        jk8gfR5ZC2CpEYpmf5N2D5pM8ZtawQO9LZL0rYjyJJX3VK5+Ali96Cg0pDeHKFRaUlJCFw6csHEdm
-        dxdeo4abnRmhummAouzwAGbQPlApHpn8zWmtnwkZHWKPIGrKFDjU48/gA35hDyosCH6G0crLkD5MA
-        DTSqTZrsHnEnDUC6FpVbffEji/uDTytVF8H7uDR9rzsUOEGZI2CQmv7IitOIY0uZQ+EJbzFRoI8Iz
-        zX7TITsw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCfip-0005FL-C7; Fri, 13 Mar 2020 08:31:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0BEC330275A;
-        Fri, 13 Mar 2020 09:31:08 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E7C162BA3D056; Fri, 13 Mar 2020 09:31:07 +0100 (CET)
-Date:   Fri, 13 Mar 2020 09:31:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Add kernel config option for fuzz testing.
-Message-ID: <20200313083107.GV12561@hirez.programming.kicks-ass.net>
-References: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <6f2e27de-c820-7de3-447d-cd9f7c650add@suse.com>
- <20200308065258.GE3983392@kroah.com>
- <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
- <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
- <20200311101115.53139149@gandalf.local.home>
- <CACT4Y+Z5co4HyQBj6-uUdqT2Vk=6jgT-aQXuPtjx3qV4C_pZ7g@mail.gmail.com>
- <7e0d2bbf-71c2-395c-9a42-d3d6d3ee4fa4@i-love.sakura.ne.jp>
- <20200312182935.70ed6516@gandalf.local.home>
+        Fri, 13 Mar 2020 04:32:32 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x3so7284367wmj.1;
+        Fri, 13 Mar 2020 01:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YOjRw+C/n7E7oX+y3x4aSohu3eoOKr98HtVKwmdSAa4=;
+        b=h/J4nlTWt0nrIB0e5vOXjzg4dei8f3MbKT7FrmAgrJ17CJ2JgoLp7E5jP9iyeB7/TK
+         8j+vk99Yi4sSnia6lKaFs2yZd7kN3BJUzA3ibmGJizd9MybjhPCpM1DQxml1f+UckGaa
+         bLVCTNz00BwGw1kbYepy0UllCfMMZxdXSqoWILxrPgCFTYB4LuM/8xPnmEU9pR8Rm8Nm
+         RItxLPXcWUE97QScsbsj3G7VvB+fJVCZj/xbAZaoOiSxpernmqx2D23bDdohKMLQYK0t
+         axQ90bnZNUy8KVEpLLLkhNBg9MyO/8DBz/ME1wT3dUdIfHtVC/l7PhL8ifz67tHK/G/T
+         75sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YOjRw+C/n7E7oX+y3x4aSohu3eoOKr98HtVKwmdSAa4=;
+        b=WBIn4tYpTOfLQwMrcaihVmnwdRtrUp05Us1feW/Ubeyqcpt1Yxz9kYQk4InbCdwaRq
+         h7Oa0oU4VDG6j789HQKkzxRwHjeE+EJj/XgW9PP7bianBFmrxwqzwEgTM3Yj+PAGyMkj
+         vKElH2B0OzfvOFhOSBCS9jiJULTder68gchHFzGNOgkmYU35vbwgnqu0InkbqzWdcega
+         enY2ZnT6/esemi2MRMMq4Z7EzAYzdfUxqNiM2/97mlx1UcIJ05P4HHpHTkfyquT1gIVA
+         +fHuKe3vZO96xQ55UYxlkOQgXZdbLasiWyLq8v9EcpT0Pq9g63+SYpc8QgZ0TI6R+EIm
+         Sb1g==
+X-Gm-Message-State: ANhLgQ1Jy3rh5CaRIKDe4UiZ9Zd5XDcCb6VON5gyuVfyJR6SUECzpfYR
+        Wh7l3ofYGeXTXdLrpkcEViD+BvEg
+X-Google-Smtp-Source: ADFU+vs1FL/6bDgN+NsmfFq6d3hMjZ5VBsz8S+087YMkOLZhXOVbxR4B1049/l8ONxxTnnk72txSGA==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr9351116wmi.140.1584088349511;
+        Fri, 13 Mar 2020 01:32:29 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id h10sm4144167wrb.24.2020.03.13.01.32.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 01:32:29 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: rockchip: Add Hugsun X99 IR receiver and
+ power led
+To:     Vivek Unune <npcomplete13@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, heiko@sntech.de, ezequiel@collabora.com,
+        akash@openedev.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200313000112.19419-1-npcomplete13@gmail.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <7f294dd5-3188-e2d6-dd49-4b2afb04455a@gmail.com>
+Date:   Fri, 13 Mar 2020 09:32:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312182935.70ed6516@gandalf.local.home>
+In-Reply-To: <20200313000112.19419-1-npcomplete13@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:29:35PM -0400, Steven Rostedt wrote:
-> > @@ -705,10 +706,12 @@ static void lockdep_print_held_locks(struct task_struct *p)
-> >  	 * It's not reliable to print a task's held locks if it's not sleeping
-> >  	 * and it's not the current task.
-> >  	 */
-> > -	if (p->state == TASK_RUNNING && p != current)
-> > -		return;
-> > +	unreliable = p->state == TASK_RUNNING && p != current;
-> >  	for (i = 0; i < depth; i++) {
-> > -		printk(" #%d: ", i);
-> > +		if (unreliable)
-> > +			printk(" #%d?: ", i);
-> > +		else
-> > +			printk(" #%d: ", i);
+Hi Vivek,
+
+The 'power-led' need some changes.
+
+From leds-gpio.yaml:
+
+patternProperties:
+  # The first form is preferred, but fall back to just 'led' anywhere in the
+  # node name to at least catch some child nodes.
+  "(^led-[0-9a-f]$|led)":
+    type: object
+
+Test with:
+make -k ARCH=arm64 dtbs_check
+
+arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dt.yaml: leds:
+power-led:linux,default-trigger:0: 'none' is not one of ['backlight',
+'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
+
+On 3/13/20 1:01 AM, Vivek Unune wrote:
+>  - Add Hugsun X99 IR receiver and power led
+>  - Remove pwm0 node as it interferes with pwer LED gpio
+
+pwer => power
+
+>    Also, it's not used in factory firmware
+>    
+
+> Tested with Libreelec kernel v5.6
+
+Test with linux-next.
+
+git clone -- depth 1
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
 > 
-> Have you tried submitting this? Has Peter nacked it?
+> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> ---
+>  .../boot/dts/rockchip/rk3399-hugsun-x99.dts   | 37 +++++++++++++++++--
+>  1 file changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> index d69a613fb65a..df425e164a2e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> @@ -29,6 +29,26 @@
+>  		regulator-max-microvolt = <5000000>;
+>  	};
+>  
+> +	ir-receiver {
+> +		compatible = "gpio-ir-receiver";
+> +		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&ir_rx>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&power_led_gpio>;
+> +
+> +		power-led {
+> +			label = "blue:power";
+> +			gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +			linux,default-trigger = "none";
+> +		};
+> +	};
+> +
+>  	vcc_sys: vcc-sys {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "vcc_sys";
+> @@ -483,6 +503,18 @@
+>  		};
+>  	};
+>  
+> +	ir {
+> +		ir_rx: ir-rx {
+> +			rockchip,pins = <0 RK_PA6 1 &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		power_led_gpio: power-led-gpio {
+> +			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+>  	pmic {
+>  		pmic_int_l: pmic-int-l {
+>  			rockchip,pins =
+> @@ -539,10 +572,6 @@
+>  	};
+>  };
+>  
+> -&pwm0 {
+> -	status = "okay";
+> -};
+> -
+>  &pwm2 {
+>  	status = "okay";
+>  	pinctrl-0 = <&pwm2_pin_pull_down>;
+> 
 
-It has definite UaF potential... do we have a boot parameter that
-signals the willingness to trade safetly for more debug output?
-
-Over all, the risk of this going *bang* is quite low I think.
