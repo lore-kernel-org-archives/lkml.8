@@ -2,220 +2,158 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A67C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D94C5ACC1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99BE206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CEB206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="LGYXmthH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZC5iuQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCMQrs (ORCPT
+        id S1727138AbgCMQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:47:48 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43687 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMQrs (ORCPT
+        Fri, 13 Mar 2020 12:47:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40931 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMQrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:47:48 -0400
-Received: by mail-ed1-f67.google.com with SMTP id dc19so12649671edb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:47:46 -0700 (PDT)
+        Fri, 13 Mar 2020 12:47:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t24so5301841pgj.7;
+        Fri, 13 Mar 2020 09:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CgoM3beKoYI/5+BkvNF0e0zNF8rAhCT7BQOep064wDk=;
-        b=LGYXmthHZQmVeL3ORXAKlyXPn1vaS3e9UjtSB+15SH4QeWbUDxHZTA0wy6LXXSzU/y
-         AReDf/yNrW9KPOCuIFvFj8Lfr3Di/5qM1MMnxAfvmosg3+zMlQ0sG1h+tbIuzRJZnPGO
-         swdDQJLr7xPNoDTfBhEVjMDfsrwKTQJV4bSWXD9bugamcRKUt7zf8ITOeN7sc3ZoTK9J
-         32u0WLMxZ0xZ9QOW0Ub2cm8b85Yb1sMclPYCpKfHE8DO4V6pq5xMAVki0Yt1ISvmXyI7
-         iokKMBnrf8sn27LHEqKQc/RQ9QkZnxS3FLoraxrwV596hqsYFM7i92OTGeE+0NDjlzoO
-         dEow==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KV6MXizQl2EQtb2GS7sc4PeNvf+1aSQqTf3SkUL8FCs=;
+        b=FZC5iuQBEjOOouPc7R4fBUJh/Vyuhen8RnJnZDyJTxNAxIHvMlCB9DGm9Q1te7ElLk
+         E7Y4XK+19BxYhEhL3hcfKGhkGd+4DxGVrxpXNBb0bRxEwbtqISwK/oQ59vsGs9gEhaFN
+         VpikV7y82/akhBkyhIc2R/3CL94yT60HY1pGeFhrpTsYrFl7CM/czaE8qndB7tFi0xtK
+         A4tf6XDok9PKYgqfTjKg/EfPg9buqIX7DCL3xiBmavdRAAp3n1SdqZiCf3FsWEjBns9o
+         xLmZnIMwtaZlY+Hjg3d/OELWSZ8Lc3R8WRNr0JdP5a0WiEToA5GWSlDn2Yy2Q7xwDQ4e
+         QVHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CgoM3beKoYI/5+BkvNF0e0zNF8rAhCT7BQOep064wDk=;
-        b=WxXz9Es/wxnBomMfhmDI1iutnDSdqORa1g5itQ4KYBzgl4OJYKTLV3CBoI9loxmdi+
-         dDKMNRB0B3cEipVY3KEM5vTBGg2Yq1yUxmEuqylBwobuDkOnSp6AkeqCrguTNURhZoDU
-         823Z2c2tn98II6IefOtP1pT1pWVttHUZpETvU6WO3Fq2IXch59OOXLd3OHMpaNlelUMv
-         Ovfwv/VdjDRuEVJ9D2RSO/8K98VWit8JRZJhzLNnTyvaN3xA/ks5H5Nbo3+52gK5EGm+
-         WevexLGDdWhp6yQri4reCEGJ0ezEQBezm/o3Rgkal+seBBhZlHySPw6p4Cz7mt18q5ne
-         wiMg==
-X-Gm-Message-State: ANhLgQ1LRE5pkC0pQB0plMUpud9A4Rzxf4WNRhBQ2Ew6uAJRi6ihecZr
-        fVPptxNVjvJR8tXBO3+zTucOS2SmyBh1URxFBMdX
-X-Google-Smtp-Source: ADFU+vs1EpKcsGEO9GGNfp34//T93kL6R9Gi6RqejfY1jY1yluK7L7lRWoiZjwp6ZdPwGaa0kzHD5f4noecjshH23Kg=
-X-Received: by 2002:a17:907:271a:: with SMTP id w26mr130507ejk.271.1584118065825;
- Fri, 13 Mar 2020 09:47:45 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KV6MXizQl2EQtb2GS7sc4PeNvf+1aSQqTf3SkUL8FCs=;
+        b=ikRQVOCamAAucs6DjaQCscGK+MI/k35dTHy14artNbR2qSeboZuo9Uixjq1/B6jl6w
+         5zB+yn2wzbLDhkoaCH1BcTswMXA0zE8eIav3cGjoHBJFgORwjPYB60WquPDTbl8Zae4h
+         Vn6X/WBjPjkU7sTP2x+PyCQ6uysZ3SWaj+yOrZ9XM9EGrri9L6/Eer7Lpn24Cvz6z7k/
+         toLMEGrD4v20Zb9vwb6eatQEC308tKXA21/pDduvD0TnHcGjn6vqWWGDCz3Nso2X44FS
+         FjHn8JGo6q3ik92F/ldnKZRovqkcDRq101GPlD3UFNnYcTNauC+CITIJNHb6URN9kyCw
+         BdJQ==
+X-Gm-Message-State: ANhLgQ0f3pU88vQOZeGzwTsqi2pYkyBVrrvKBRYhZHdqklVVqYSuj21s
+        NZvk/heGaOBFJGgk9usjpsG6GNV+
+X-Google-Smtp-Source: ADFU+vuPO3GHP9BVqhQV8CoSMSeBWz+CnESs00u/cLxaePjAv/lamoVNtFMUduN+GLB/NM/UHIzEVA==
+X-Received: by 2002:a63:112:: with SMTP id 18mr13704404pgb.116.1584118073221;
+        Fri, 13 Mar 2020 09:47:53 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l11sm12279036pjy.44.2020.03.13.09.47.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 09:47:52 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 09:47:51 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v4] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200313164751.GA30134@roeck-us.net>
+References: <20200304203144.GA4323@alpha.franken.de>
+ <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
- <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
- <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca> <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
- <20200205235056.e5365xtgz7rbese2@madcap2.tricolour.ca> <CAHC9VhTM6MDHLcBfwJ_9DCroG0VA-meO770ihjn1sVy6=0JrHw@mail.gmail.com>
- <20200312205147.plxs4czjeuu4davj@madcap2.tricolour.ca>
-In-Reply-To: <20200312205147.plxs4czjeuu4davj@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 13 Mar 2020 12:47:34 -0400
-Message-ID: <CAHC9VhTqWdXMsbSbsWJzRRvVbSaaFBmnFFsVutM7XSx5NT_FJA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305115759.3186-1-afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 4:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-02-13 16:49, Paul Moore wrote:
-> > On Wed, Feb 5, 2020 at 6:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-02-05 18:05, Paul Moore wrote:
-> > > > On Thu, Jan 30, 2020 at 2:28 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > On 2020-01-22 16:29, Paul Moore wrote:
-> > > > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > >
-> > > > > > > Track the parent container of a container to be able to filter and
-> > > > > > > report nesting.
-> > > > > > >
-> > > > > > > Now that we have a way to track and check the parent container of a
-> > > > > > > container, modify the contid field format to be able to report that
-> > > > > > > nesting using a carrat ("^") separator to indicate nesting.  The
-> > > > > > > original field format was "contid=<contid>" for task-associated records
-> > > > > > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
-> > > > > > > records.  The new field format is
-> > > > > > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
-> > > > > >
-> > > > > > Let's make sure we always use a comma as a separator, even when
-> > > > > > recording the parent information, for example:
-> > > > > > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
-> > > > >
-> > > > > The intent here is to clearly indicate and separate nesting from
-> > > > > parallel use of several containers by one netns.  If we do away with
-> > > > > that distinction, then we lose that inheritance accountability and
-> > > > > should really run the list through a "uniq" function to remove the
-> > > > > produced redundancies.  This clear inheritance is something Steve was
-> > > > > looking for since tracking down individual events/records to show that
-> > > > > inheritance was not aways feasible due to rolled logs or search effort.
-> > > >
-> > > > Perhaps my example wasn't clear.  I'm not opposed to the little
-> > > > carat/hat character indicating a container's parent, I just think it
-> > > > would be good to also include a comma *in*addition* to the carat/hat.
-> > >
-> > > Ah, ok.  Well, I'd offer that it would be slightly shorter, slightly
-> > > less cluttered and having already written the parser in userspace, I
-> > > think the parser would be slightly simpler.
-> > >
-> > > I must admit, I was a bit puzzled by your snippet of code that was used
-> > > as a prefix to the next item rather than as a postfix to the given item.
-> > >
-> > > Can you say why you prefer the comma in addition?
-> >
-> > Generally speaking, I believe that a single delimiter is both easier
-> > for the eyes to parse, and easier/safer for machines to parse as well.
-> > In this particular case I think of the comma as a delimiter and the
-> > carat as a modifier, reusing the carat as a delimiter seems like a bad
-> > idea to me.
->
-> I'm not crazy about this idea, but I'll have a look at how much work it
-> is to recode the userspace search tools.  It also adds extra characters
-> and noise into the string format that seems counterproductive.
+On Thu, Mar 05, 2020 at 05:27:53PM +0530, afzal mohammed wrote:
+> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> occur after memory allocators are ready.
+> 
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
+> 
+> Hence replace setup_irq() by request_irq().
+> 
+> remove_irq() has been replaced by free_irq() as well.
+> 
+> There were build error's during previous version, couple of which was
+> reported by kbuild test robot <lkp@intel.com> of which one was reported
+> by Thomas Bogendoerfer <tsbogend@alpha.franken.de> as well. There were a
+> few more issues including build errors, those also have been fixed.
+> 
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-If anything the parser should be *easier* (although both parsers
-should fall into the "trivial" category).  The comma is the one and
-only delimiter, and if the ACID starts with a carat then it is a
-parent of the preceding ACID.
+This patch causes all my mips qemu emulations to hang during boot. This affects
+all mips, mips64, mipsel, and mipsel64 emulations.
 
-> > > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > > > index ef8e07524c46..68be59d1a89b 100644
-> > > > > > > --- a/kernel/audit.c
-> > > > > > > +++ b/kernel/audit.c
-> > > > > >
-> > > > > > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-> > > > > > >                 audit_netns_contid_add(new->net_ns, contid);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
-> > > > > >
-> > > > > > If we need a forward declaration, might as well just move it up near
-> > > > > > the top of the file with the rest of the declarations.
-> > > > >
-> > > > > Ok.
-> > > > >
-> > > > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
-> > > > > > > +{
-> > > > > > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
-> > > > > > > +       int h;
-> > > > > >
-> > > > > > It seems safer to pass the audit container ID object and not the u64.
-> > > > >
-> > > > > It would also be faster, but in some places it isn't available such as
-> > > > > for ptrace and signal targets.  This also links back to the drop record
-> > > > > refcounts to hold onto the contobj until process exit, or signal
-> > > > > delivery.
-> > > > >
-> > > > > What we could do is to supply two potential parameters, a contobj and/or
-> > > > > a contid, and have it use the contobj if it is valid, otherwise, use the
-> > > > > contid, as is done for names and paths supplied to audit_log_name().
-> > > >
-> > > > Let's not do multiple parameters, that begs for misuse, let's take the
-> > > > wrapper function route:
-> > > >
-> > > >  func a(int id) {
-> > > >    // important stuff
-> > > >  }
-> > > >
-> > > >  func ao(struct obj) {
-> > > >    a(obj.id);
-> > > >  }
-> > > >
-> > > > ... and we can add a comment that you *really* should be using the
-> > > > variant that passes an object.
-> > >
-> > > I was already doing that where it available, and dereferencing the id
-> > > for the call.  But I see an advantage to having both parameters supplied
-> > > to the function, since it saves us the trouble of dereferencing it,
-> > > searching for the id in the hash list and re-locating the object if the
-> > > object is already available.
-> >
-> > I strongly prefer we not do multiple parameters for the same "thing";
->
-> So do I, ideally.  However...
->
-> > I would much rather do the wrapper approach as described above.  I
-> > would also like to see us use the audit container ID object as much as
-> > possible, using a bare integer should be a last resort.
->
-> It is not clear to me that you understood what I wrote above.  I can't
-> use the object pointer where preferable because there are a few cases
-> where only the ID is available.  If only the ID is available, I would
-> have to make a best effort to look up the object pointer and am not
-> guaranteed to find it (invalid, stale, signal info...).  If I am forced
-> to use only one, it becomes the ID that is used, and I no longer have
-> the benefit of already having the object pointer for certainty and
-> saving work.  For all cases where I have the object pointer, which is
-> most cases, and most frequently used cases, I will have to dereference
-> the object pointer to an ID, then go through the work again to re-locate
-> the object pointer.  This is less certain, and more work.  Reluctantly,
-> the only practical solution I see here is to supply both, favouring the
-> object pointer if it is valid, then falling back on the ID from the next
-> parameter.
+Reverting this patch fixes the problem.
 
-It has been a while since I last looked at the patchset, but my
-concern over the prefered use of the ACID number vs the ACID object is
-that the number offers no reuse protection where the object does.  I
-really would like us to use the object everywhere it is possible.
+Example log:
 
--- 
-paul moore
-www.paul-moore.com
+...
+Failed to request irq 23 (timer)
+clocksource: MIPS: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112584971 ns
+sched_clock: 32 bits at 100MHz, resolution 9ns, wraps every 21474814971ns
+Console: colour dummy device 80x25
+printk: console [tty0] enabled
+printk: bootconsole [uart8250] disabled
+
+[ silence ]
+
+Bisect log attached.
+
+Guenter
+
+---
+# bad: [2e602db729948ce577bf07e2b113f2aa806b62c7] Add linux-next specific files for 20200313
+# good: [2c523b344dfa65a3738e7039832044aa133c75fb] Linux 5.6-rc5
+git bisect start 'HEAD' 'v5.6-rc5'
+# bad: [acfda12b3a9b7b8d8cb4ff5f6ff0e48f688e254c] Merge remote-tracking branch 'spi-nor/spi-nor/next'
+git bisect bad acfda12b3a9b7b8d8cb4ff5f6ff0e48f688e254c
+# bad: [bfd143114215b2c553277ee8ae4a8b8a6201de2e] Merge remote-tracking branch 'pstore/for-next/pstore'
+git bisect bad bfd143114215b2c553277ee8ae4a8b8a6201de2e
+# good: [9e771e47962b731c28d1b0a12967f711bf5cc281] Merge remote-tracking branch 'scmi/for-linux-next'
+git bisect good 9e771e47962b731c28d1b0a12967f711bf5cc281
+# bad: [cee36340e05bf662d19cb845708fa881369ed583] Merge remote-tracking branch 'xtensa/xtensa-for-next'
+git bisect bad cee36340e05bf662d19cb845708fa881369ed583
+# bad: [95c7851a03071bd2374b84b4f0079b3dcae30614] Merge remote-tracking branch 'nds32/next'
+git bisect bad 95c7851a03071bd2374b84b4f0079b3dcae30614
+# good: [43a3834a7d0fbb9116649185ff0926968cc553d5] Merge remote-tracking branch 'tegra/for-next'
+git bisect good 43a3834a7d0fbb9116649185ff0926968cc553d5
+# good: [8fae22fc750017fdf998ec3aa1315741fd3de857] Merge remote-tracking branch 'h8300/h8300-next'
+git bisect good 8fae22fc750017fdf998ec3aa1315741fd3de857
+# good: [e798861fd7b297370a8dd7b8dad2e139c1d08446] Merge remote-tracking branch 'm68knommu/for-next'
+git bisect good e798861fd7b297370a8dd7b8dad2e139c1d08446
+# bad: [ac8fd122e070ce0e60c608d4f085f7af77290844] MIPS: Replace setup_irq() by request_irq()
+git bisect bad ac8fd122e070ce0e60c608d4f085f7af77290844
+# good: [f6541f347bba6edbcbb1c930f802bb80b0c56468] MIPS: configs: Cleanup old Kconfig options
+git bisect good f6541f347bba6edbcbb1c930f802bb80b0c56468
+# good: [e5096625bc6bd9e3a0d5f7f9d7ecebda0383c7f5] MIPS: pic32mzda: Drop pointless static qualifier
+git bisect good e5096625bc6bd9e3a0d5f7f9d7ecebda0383c7f5
+# good: [172a37e9d011510aee37f62cc5ac4e53e49d17bb] arch/mips: change duplicated word in NUMA help text
+git bisect good 172a37e9d011510aee37f62cc5ac4e53e49d17bb
+# good: [792a402c2840054533ef56279c212ef6da87d811] MIPS: OCTEON: irq: Fix potential NULL pointer dereference
+git bisect good 792a402c2840054533ef56279c212ef6da87d811
+# first bad commit: [ac8fd122e070ce0e60c608d4f085f7af77290844] MIPS: Replace setup_irq() by request_irq()
