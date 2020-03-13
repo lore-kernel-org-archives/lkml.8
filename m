@@ -2,135 +2,145 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448CDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8690CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6B0206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81266206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bPutInDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCMKaD (ORCPT
+        id S1726669AbgCMKaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:30:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20815 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbgCMKaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 06:30:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 03:30:02 -0700
-X-IronPort-AV: E=Sophos;i="5.70,548,1574150400"; 
-   d="scan'208";a="237179068"
-Received: from unknown (HELO localhost) ([10.252.52.87])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 03:29:59 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Bird\, Tim" <Tim.Bird@sony.com>,
-        "ksummit-discuss\@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "tech-board-discuss\@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Tech-board-discuss] [Ksummit-discuss] Linux Foundation Technical Advisory Board Elections -- Change to charter
-In-Reply-To: <20200313093548.GA2089143@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name> <20200312003436.GF1639@pendragon.ideasonboard.com> <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com> <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com> <20200313093548.GA2089143@kroah.com>
-Date:   Fri, 13 Mar 2020 12:30:20 +0200
-Message-ID: <877dzolf7n.fsf@intel.com>
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59629 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbgCMKaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:30:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48f2531Yv2z9sPF;
+        Fri, 13 Mar 2020 21:29:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584095400;
+        bh=ennX8Om0QSmahoMa7c4vE0YoL0FkwJ9Ez20dcvWxNck=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bPutInDY0Yvo5NvIeS90Ri92Wk3oJLBT58/IKabBPDbeyDatP9vTcOsuAPL1TYlBR
+         xyzKD76C9QDbU9b4mojQZQlhJ5qx4yJksL15dLXjBpuVrP9AslHvQR33icU7nlC9vJ
+         6IsyyUJXpxL6UoDVeP57qxLXt9ncC6aULzs9zRfRI+8pvpjRtzs65T8dC5/HTGEBET
+         +kNriPabv+WcmugXM99bL5vl2p7I23py3bTf3n4/bGTewoOSpsWRReYL2Es1HsMY10
+         p7i1Xub0JsjNx3Yv+roXnjeiThfRlzJMW0FiHxQdtGc91rLkGL+jTNucXU21L1TBiI
+         kf4Xqi0w/NQug==
+Date:   Fri, 13 Mar 2020 21:29:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg KH <greg@kroah.com>
+Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
+Message-ID: <20200313212955.753f3cd2@canb.auug.org.au>
+In-Reply-To: <20200313080209.0c36c2b7@coco.lan>
+References: <20200313131903.3975cdd2@canb.auug.org.au>
+        <20200313080209.0c36c2b7@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/.tCE97I2PM4KWCvibytdaN+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020, Greg KH <greg@kroah.com> wrote:
-> On Fri, Mar 13, 2020 at 10:58:00AM +0200, Jani Nikula wrote:
->> On Thu, 12 Mar 2020, "Theodore Y. Ts'o" <tytso@mit.edu> wrote:
->> > So that means we need to be smart about how we pick the criteria.
->> > Using a kernel.org account might be a good approach, since it would be
->> > a lot harder for a huge number of sock puppet accounts to meet that
->> > criteria.
->> 
->> Per [1] and [2], kernel.org accounts "are usually reserved for subsystem
->> maintainers or high-profile developers", but apparently it's at the
->> kernel.org admins discretion to decide whether one is ultimately
->> eligible or not. Do we want the kernel.org admin to have the final say
->> on who gets to vote? Do we want to encourage people to have kernel.org
->> accounts for no other reason than to vote?
+--Sig_/.tCE97I2PM4KWCvibytdaN+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Mauro,
+
+On Fri, 13 Mar 2020 08:07:35 +0100 Mauro Carvalho Chehab <mchehab@kernel.or=
+g> wrote:
 >
-> We are using the "kernel.org account" as a way to verify that you really
-> are part of our developer/maintainer community and that you are part of
-> the "web of trust" and an actual person.
->
-> That is the goal here, if you know of some other way to determine this,
-> please let us know.  We went through many iterations of this and at the
-> moment, it is the best we can come up with.
+> Em Fri, 13 Mar 2020 13:19:03 +1100
+> Stephen Rothwell <sfr@canb.auug.org.au> escreveu:
+>=20
+> > After merging the v4l-dvb tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >=20
+> > ERROR: modpost: "fwnode_get_name" [drivers/media/v4l2-core/v4l2-fwnode.=
+ko] undefined!
+> >=20
+> > Caused by commit
+> >=20
+> >   dfc22c073b78 ("media: v4l2-fwnode: add initial connector parsing supp=
+ort")
+> >=20
+> > I have used the v4l-dvb tree from next-20200312 for today. =20
+> =20
+> Hmm... I double-checked at next-20200312. This function is defined
+> at linux/property.h header:
+>=20
+> 	include/linux/property.h:const char *fwnode_get_name(const struct fwnode=
+_handle *fwnode);
+>=20
+> Its implementation is at drivers/base/property.c, and this is always
+> built, according with drivers/base/Makefile:
+>=20
+> 	obj-y			:=3D component.o core.o bus.o dd.o syscore.o \
+> 				   driver.o class.o platform.o \
+> 				   cpu.o firmware.o init.o map.o devres.o \
+> 				   attribute_container.o transport_class.o \
+> 				   topology.o container.o property.o cacheinfo.o \
+> 				   devcon.o swnode.o
+>=20
+> The v4l2-fwnode.c properly includes include/linux/property.h.
+>=20
+> So, at least up to next-20200312, everything looks fine on my eyes.
+>=20
+> The header is probably there, as the error happened at link stage.
+>=20
+> Maybe there is some merge conflict caused by merging a patch from
+> some other tree that might have renamed or removed its implementation
+> after next-20200312, or changed from obj-y target?
+>=20
+> Or maybe this changeset got reverted?
+>=20
+> 	a7914d1072fb ("device property: Export fwnode_get_name()")
 
-Ted's mail seemed like it was thrown around as an idea, not something
-you're settling on.
+Unfortunately, that commit is in the usb tree which I merge much later
+than the v4l-dvb tree.  You should not develop against linux-next, and
+you should test your tree standalone as you do not know in which order
+the trees will be merged by Linus (or me).  The solutions here include
+cherry-picking the commit into the v4l-dvb tree (since it is such a
+simple commit and should not cause any complex conflicts) or merge part
+of the usb tree into the v4l-dvb tree (which is possible since Greg
+never rebases his tree).
 
-> Also, note that the "kernel.org admin" is really a team of people who
-> have been doing this for 9 years, it's not a single person responsible
-> for giving out new accounts to people that do not meet the obvious
-> requirement levels as published on kernel.org
->
->> Furthermore, having a kernel.org account imposes the additional
->> requirement that you're part of the kernel developers web of trust,
->
-> That is exactly what we want.
+--=20
+Cheers,
+Stephen Rothwell
 
-Fair enough.
+--Sig_/.tCE97I2PM4KWCvibytdaN+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
->> i.e. that you've met other kernel developers in person. Which is a kind
->> of awkward requirement for enabling electronic voting to be inclusive to
->> people who can't attend in person.
->
-> Yes, we know that, but it does mean that you are "known" to someone
-> else, which is the key here.
->
->> Seems like having a kernel.org account is just a proxy for the criteria,
->> and one that also lacks transparency, and has problems of its own.
->
-> What is not transparent about how to get a kernel.org account?
+-----BEGIN PGP SIGNATURE-----
 
-There is no way of knowing whether you're eligible to vote until you
-apply for a kernel.org account and either get approved or rejected.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5rYKMACgkQAVBC80lX
+0Gz54ggAgX1HuNYJU8Av84cn0X2podcQTzCWZM8NxDNx1nh85AEGwut6s9Omq9N/
+z4XcP9u6H4XLVze/as6kocU40cbxxBZY2TNcZfeseLWDvsOW0hIR8zdGUeqnLNUb
+vwHFGfCYiVq1FcLyQX+KA31/wE0vRgw6XGaIQPJ0JYtp2eJrxB82yVu+kI71bj3F
+CSJBfaycSM+GgtNyQM5RSodjUdFnF8v93GaVswsuVnhobUwD4xLHjitvs7H98Bht
+mVXhEsfMRdOKU9b8FzOgqLKXV1dCkgZZCCQJUWj/QON4IGRvaeyvECVeZqLnO3tM
+YJRQFEsxTuMg+u1FL1DcPVdsvrMsVw==
+=DsFi
+-----END PGP SIGNATURE-----
 
-The current "obvious" requirement levels are not obvious to me. How many
-contributions is enough? Is everyone in MAINTAINERS eligible, or do you
-have to be a high-profile maintainer/developer? What is a high-profile
-developer? How many people in the web of trust must you have met in
-person?
-
-And it actually seems like you think it's a good thing the admin team
-can make a subjective decision on the above.
-
-It may seem completely transparent and fair and objective on the
-*inside*, but it does not look that way on the *outside*. Which is kind
-of the definition of transparent. Or lack of.
-
->> Not that I'm saying there's an easy solution, but obviously kernel.org
->> account is not as problem free as you might think.
->
-> We are not saying it is "problem free", but what really is the problem
-> with it?
-
-Seems that some of what I thought was a bug is a feature for you, so I
-suppose it's better to focus on the transparency.
-
-On that note, and since this relates to the charter, how's the "The TAB
-shall provide transparent and timely reporting (through any mechanism it
-deems appropriate) to the Community at large on all of its activities"
-coming along...?
-
-BR,
-Jani.
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+--Sig_/.tCE97I2PM4KWCvibytdaN+--
