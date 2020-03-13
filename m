@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFACFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1756C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08BF20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFEA20746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCMPoW (ORCPT
+        id S1727113AbgCMPoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:44:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:58354 "EHLO foss.arm.com"
+        Fri, 13 Mar 2020 11:44:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:58386 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgCMPoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:44:18 -0400
+        id S1727079AbgCMPoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:44:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44F9DFEC;
-        Fri, 13 Mar 2020 08:44:18 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7078C1045;
+        Fri, 13 Mar 2020 08:44:21 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FAC73F67D;
-        Fri, 13 Mar 2020 08:44:15 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AE683F67D;
+        Fri, 13 Mar 2020 08:44:18 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Marc Zyngier <maz@kernel.org>,
         Mark Rutland <Mark.Rutland@arm.com>
-Subject: [PATCH v3 04/26] x86:Introduce asm/vdso/clocksource.h
-Date:   Fri, 13 Mar 2020 15:43:23 +0000
-Message-Id: <20200313154345.56760-5-vincenzo.frascino@arm.com>
+Subject: [PATCH v3 05/26] arm: Introduce asm/vdso/clocksource.h
+Date:   Fri, 13 Mar 2020 15:43:24 +0000
+Message-Id: <20200313154345.56760-6-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200313154345.56760-1-vincenzo.frascino@arm.com>
 References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
@@ -71,49 +71,43 @@ functions that are suitable for vDSO inclusion.
 This header will be required by a future patch that will generalize
 vdso/clocksource.h.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Cc: Russell King <linux@armlinux.org.uk>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/x86/include/asm/clocksource.h      |  5 +----
- arch/x86/include/asm/vdso/clocksource.h | 10 ++++++++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
- create mode 100644 arch/x86/include/asm/vdso/clocksource.h
+ arch/arm/include/asm/clocksource.h      | 6 +++---
+ arch/arm/include/asm/vdso/clocksource.h | 8 ++++++++
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/include/asm/vdso/clocksource.h
 
-diff --git a/arch/x86/include/asm/clocksource.h b/arch/x86/include/asm/clocksource.h
-index d561db67f96d..dc9dc7b3911a 100644
---- a/arch/x86/include/asm/clocksource.h
-+++ b/arch/x86/include/asm/clocksource.h
-@@ -4,10 +4,7 @@
- #ifndef _ASM_X86_CLOCKSOURCE_H
- #define _ASM_X86_CLOCKSOURCE_H
+diff --git a/arch/arm/include/asm/clocksource.h b/arch/arm/include/asm/clocksource.h
+index 73beb7f131de..13651c731a81 100644
+--- a/arch/arm/include/asm/clocksource.h
++++ b/arch/arm/include/asm/clocksource.h
+@@ -1,7 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _ASM_CLOCKSOURCE_H
+ #define _ASM_CLOCKSOURCE_H
  
 -#define VDSO_ARCH_CLOCKMODES	\
--	VDSO_CLOCKMODE_TSC,	\
--	VDSO_CLOCKMODE_PVCLOCK,	\
--	VDSO_CLOCKMODE_HVCLOCK
+-	VDSO_CLOCKMODE_ARCHTIMER
 +#include <asm/vdso/clocksource.h>
  
- extern unsigned int vclocks_used;
- 
-diff --git a/arch/x86/include/asm/vdso/clocksource.h b/arch/x86/include/asm/vdso/clocksource.h
+-#endif
++#endif /* _ASM_CLOCKSOURCE_H */
+diff --git a/arch/arm/include/asm/vdso/clocksource.h b/arch/arm/include/asm/vdso/clocksource.h
 new file mode 100644
-index 000000000000..119ac8612d89
+index 000000000000..50c0b19fb755
 --- /dev/null
-+++ b/arch/x86/include/asm/vdso/clocksource.h
-@@ -0,0 +1,10 @@
++++ b/arch/arm/include/asm/vdso/clocksource.h
+@@ -0,0 +1,8 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_VDSO_CLOCKSOURCE_H
-+#define __ASM_VDSO_CLOCKSOURCE_H
++#ifndef __ASM_VDSOCLOCKSOURCE_H
++#define __ASM_VDSOCLOCKSOURCE_H
 +
 +#define VDSO_ARCH_CLOCKMODES	\
-+	VDSO_CLOCKMODE_TSC,	\
-+	VDSO_CLOCKMODE_PVCLOCK,	\
-+	VDSO_CLOCKMODE_HVCLOCK
++	VDSO_CLOCKMODE_ARCHTIMER
 +
-+#endif /* __ASM_VDSO_CLOCKSOURCE_H */
++#endif /* __ASM_VDSOCLOCKSOURCE_H */
 -- 
 2.25.1
 
