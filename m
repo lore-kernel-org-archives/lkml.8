@@ -2,561 +2,378 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4496CC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E4EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4E42072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038322072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgCMPYo (ORCPT
+        id S1726836AbgCMPZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:24:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34447 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgCMPYl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:24:41 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jCmAv-0000Tg-8X; Fri, 13 Mar 2020 15:24:37 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     gregkh@linuxfoundation.org, tkjos@android.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org
-Cc:     christian.brauner@ubuntu.com, ard.biesheuvel@linaro.org,
-        ardb@kernel.org, arve@android.com, hridya@google.com,
-        joel@joelfernandes.org, john.stultz@linaro.org,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        maco@android.com, naresh.kamboju@linaro.org, shuah@kernel.org
-Subject: [PATCH v2 3/3] binderfs: add stress test for binderfs binder devices
-Date:   Fri, 13 Mar 2020 16:24:20 +0100
-Message-Id: <20200313152420.138777-3-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200313152420.138777-1-christian.brauner@ubuntu.com>
-References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
- <20200313152420.138777-1-christian.brauner@ubuntu.com>
+        Fri, 13 Mar 2020 11:25:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6953 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgCMPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:25:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:25:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="389949014"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 13 Mar 2020 08:25:34 -0700
+Received: from [10.251.25.17] (kliang2-mobl.ccr.corp.intel.com [10.251.25.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 376EC5805EA;
+        Fri, 13 Mar 2020 08:25:33 -0700 (PDT)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v7_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
+ =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
+To:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com
+Cc:     alexander.antonov@intel.com
+References: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
+ <20200303135418.9621-4-roman.sudarikov@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <1b3cb8a6-1eb0-120a-3382-55abe7918612@linux.intel.com>
+Date:   Fri, 13 Mar 2020 11:25:31 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200303135418.9621-4-roman.sudarikov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a stress test that should hopefully help us catch regressions
-for [1], [2], and [3].
 
-[1]: 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
-[2]: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-[3]: 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
-Cc: Kees Cook <keescook@chromium.org>:
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Kees Cook <keescook@chromium.org>:
-  - Switch to unique mountpoint through mkdtemp().
----
- .../selftests/filesystems/binderfs/Makefile   |   2 +-
- .../filesystems/binderfs/binderfs_test.c      | 426 ++++++++++++++----
- 2 files changed, 334 insertions(+), 94 deletions(-)
 
-diff --git a/tools/testing/selftests/filesystems/binderfs/Makefile b/tools/testing/selftests/filesystems/binderfs/Makefile
-index 75315d9ba7a9..8af25ae96049 100644
---- a/tools/testing/selftests/filesystems/binderfs/Makefile
-+++ b/tools/testing/selftests/filesystems/binderfs/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--CFLAGS += -I../../../../../usr/include/
-+CFLAGS += -I../../../../../usr/include/ -pthread
- TEST_GEN_PROGS := binderfs_test
- 
- binderfs_test: binderfs_test.c ../../kselftest.h ../../kselftest_harness.h
-diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-index 818eb49f8125..8a6b507e34a8 100644
---- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-+++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-@@ -3,15 +3,20 @@
- #define _GNU_SOURCE
- #include <errno.h>
- #include <fcntl.h>
-+#include <pthread.h>
- #include <sched.h>
- #include <stdbool.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <sys/fsuid.h>
- #include <sys/ioctl.h>
- #include <sys/mount.h>
-+#include <sys/socket.h>
- #include <sys/stat.h>
-+#include <sys/sysinfo.h>
- #include <sys/types.h>
-+#include <sys/wait.h>
- #include <unistd.h>
- #include <linux/android/binder.h>
- #include <linux/android/binderfs.h>
-@@ -19,100 +24,26 @@
- #include "../../kselftest.h"
- #include "../../kselftest_harness.h"
- 
--static ssize_t write_nointr(int fd, const void *buf, size_t count)
--{
--	ssize_t ret;
--again:
--	ret = write(fd, buf, count);
--	if (ret < 0 && errno == EINTR)
--		goto again;
--
--	return ret;
--}
--
--static void write_to_file(const char *filename, const void *buf, size_t count,
--			  int allowed_errno)
--{
--	int fd, saved_errno;
--	ssize_t ret;
--
--	fd = open(filename, O_WRONLY | O_CLOEXEC);
--	if (fd < 0)
--		ksft_exit_fail_msg("%s - Failed to open file %s\n",
--				   strerror(errno), filename);
-+#define DEFAULT_THREADS 4
- 
--	ret = write_nointr(fd, buf, count);
--	if (ret < 0) {
--		if (allowed_errno && (errno == allowed_errno)) {
--			close(fd);
--			return;
--		}
-+#define PTR_TO_INT(p) ((int)((intptr_t)(p)))
-+#define INT_TO_PTR(u) ((void *)((intptr_t)(u)))
- 
--		goto on_error;
-+#define close_prot_errno_disarm(fd) \
-+	if (fd >= 0) {              \
-+		int _e_ = errno;    \
-+		close(fd);          \
-+		errno = _e_;        \
-+		fd = -EBADF;        \
- 	}
- 
--	if ((size_t)ret != count)
--		goto on_error;
--
--	close(fd);
--	return;
--
--on_error:
--	saved_errno = errno;
--	close(fd);
--	errno = saved_errno;
--
--	if (ret < 0)
--		ksft_exit_fail_msg("%s - Failed to write to file %s\n",
--				   strerror(errno), filename);
--
--	ksft_exit_fail_msg("Failed to write to file %s\n", filename);
--}
--
--static void change_to_userns(void)
--{
--	int ret;
--	uid_t uid;
--	gid_t gid;
--	/* {g,u}id_map files only allow a max of 4096 bytes written to them */
--	char idmap[4096];
--
--	uid = getuid();
--	gid = getgid();
--
--	ret = unshare(CLONE_NEWUSER);
--	if (ret < 0)
--		ksft_exit_fail_msg("%s - Failed to unshare user namespace\n",
--				   strerror(errno));
--
--	write_to_file("/proc/self/setgroups", "deny", strlen("deny"), ENOENT);
--
--	ret = snprintf(idmap, sizeof(idmap), "0 %d 1", uid);
--	if (ret < 0 || (size_t)ret >= sizeof(idmap))
--		ksft_exit_fail_msg("%s - Failed to prepare uid mapping\n",
--				   strerror(errno));
--
--	write_to_file("/proc/self/uid_map", idmap, strlen(idmap), 0);
--
--	ret = snprintf(idmap, sizeof(idmap), "0 %d 1", gid);
--	if (ret < 0 || (size_t)ret >= sizeof(idmap))
--		ksft_exit_fail_msg("%s - Failed to prepare uid mapping\n",
--				   strerror(errno));
--
--	write_to_file("/proc/self/gid_map", idmap, strlen(idmap), 0);
--
--	ret = setgid(0);
--	if (ret)
--		ksft_exit_fail_msg("%s - Failed to setgid(0)\n",
--				   strerror(errno));
-+#define log_exit(format, ...)                                                  \
-+	({                                                                     \
-+		fprintf(stderr, format "\n", ##__VA_ARGS__);                   \
-+		exit(EXIT_FAILURE);                                            \
-+	})
- 
--	ret = setuid(0);
--	if (ret)
--		ksft_exit_fail_msg("%s - Failed to setgid(0)\n",
--				   strerror(errno));
--}
--
--static void change_to_mountns(void)
-+static void change_mountns(void)
- {
- 	int ret;
- 
-@@ -144,7 +75,7 @@ static int __do_binderfs_test(void)
- 	char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
- 		device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
- 
--	change_to_mountns();
-+	change_mountns();
- 
- 	if (!mkdtemp(binderfs_mntpt))
- 		ksft_exit_fail_msg(
-@@ -253,6 +184,288 @@ static int __do_binderfs_test(void)
- 	return 0;
- }
- 
-+static int wait_for_pid(pid_t pid)
-+{
-+	int status, ret;
-+
-+again:
-+	ret = waitpid(pid, &status, 0);
-+	if (ret == -1) {
-+		if (errno == EINTR)
-+			goto again;
-+
-+		return -1;
-+	}
-+
-+	if (!WIFEXITED(status))
-+		return -1;
-+
-+	return WEXITSTATUS(status);
-+}
-+
-+static int setid_userns_root(void)
-+{
-+	if (setuid(0))
-+		return -1;
-+	if (setgid(0))
-+		return -1;
-+
-+	setfsuid(0);
-+	setfsgid(0);
-+
-+	return 0;
-+}
-+
-+enum idmap_type {
-+	UID_MAP,
-+	GID_MAP,
-+};
-+
-+static ssize_t read_nointr(int fd, void *buf, size_t count)
-+{
-+	ssize_t ret;
-+again:
-+	ret = read(fd, buf, count);
-+	if (ret < 0 && errno == EINTR)
-+		goto again;
-+
-+	return ret;
-+}
-+
-+static ssize_t write_nointr(int fd, const void *buf, size_t count)
-+{
-+	ssize_t ret;
-+again:
-+	ret = write(fd, buf, count);
-+	if (ret < 0 && errno == EINTR)
-+		goto again;
-+
-+	return ret;
-+}
-+
-+static int write_id_mapping(enum idmap_type type, pid_t pid, const char *buf,
-+			    size_t buf_size)
-+{
-+	int fd;
-+	int ret;
-+	char path[4096];
-+
-+	if (type == GID_MAP) {
-+		int setgroups_fd;
-+
-+		snprintf(path, sizeof(path), "/proc/%d/setgroups", pid);
-+		setgroups_fd = open(path, O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
-+		if (setgroups_fd < 0 && errno != ENOENT)
-+			return -1;
-+
-+		if (setgroups_fd >= 0) {
-+			ret = write_nointr(setgroups_fd, "deny", sizeof("deny") - 1);
-+			close_prot_errno_disarm(setgroups_fd);
-+			if (ret != sizeof("deny") - 1)
-+				return -1;
-+		}
-+	}
-+
-+	switch (type) {
-+	case UID_MAP:
-+		ret = snprintf(path, sizeof(path), "/proc/%d/uid_map", pid);
-+		break;
-+	case GID_MAP:
-+		ret = snprintf(path, sizeof(path), "/proc/%d/gid_map", pid);
-+		break;
-+	default:
-+		return -1;
-+	}
-+	if (ret < 0 || ret >= sizeof(path))
-+		return -E2BIG;
-+
-+	fd = open(path, O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
-+	if (fd < 0)
-+		return -1;
-+
-+	ret = write_nointr(fd, buf, buf_size);
-+	close_prot_errno_disarm(fd);
-+	if (ret != buf_size)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static void change_userns(int syncfds[2])
-+{
-+	int ret;
-+	char buf;
-+
-+	close_prot_errno_disarm(syncfds[1]);
-+
-+	ret = unshare(CLONE_NEWUSER);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s - Failed to unshare user namespace\n",
-+				   strerror(errno));
-+
-+	ret = write_nointr(syncfds[0], "1", 1);
-+	if (ret != 1)
-+		ksft_exit_fail_msg("write_nointr() failed\n");
-+
-+	ret = read_nointr(syncfds[0], &buf, 1);
-+	if (ret != 1)
-+		ksft_exit_fail_msg("read_nointr() failed\n");
-+
-+	close_prot_errno_disarm(syncfds[0]);
-+
-+	if (setid_userns_root())
-+		ksft_exit_fail_msg("setid_userns_root() failed");
-+}
-+
-+static void change_idmaps(int syncfds[2], pid_t pid)
-+{
-+	int ret;
-+	char buf;
-+	char id_map[4096];
-+
-+	close_prot_errno_disarm(syncfds[0]);
-+
-+	ret = read_nointr(syncfds[1], &buf, 1);
-+	if (ret != 1)
-+		ksft_exit_fail_msg("read_nointr() failed\n");
-+
-+	snprintf(id_map, sizeof(id_map), "0 %d 1\n", getuid());
-+	ret = write_id_mapping(UID_MAP, pid, id_map, strlen(id_map));
-+	if (ret)
-+		ksft_exit_fail_msg("write_id_mapping(UID_MAP) failed");
-+
-+	snprintf(id_map, sizeof(id_map), "0 %d 1\n", getgid());
-+	ret = write_id_mapping(GID_MAP, pid, id_map, strlen(id_map));
-+	if (ret)
-+		ksft_exit_fail_msg("write_id_mapping(GID_MAP) failed");
-+
-+	ret = write_nointr(syncfds[1], "1", 1);
-+	if (ret != 1)
-+		ksft_exit_fail_msg("write_nointr() failed");
-+
-+	close_prot_errno_disarm(syncfds[1]);
-+}
-+
-+static void *binder_version_thread(void *data)
-+{
-+	int fd = PTR_TO_INT(data);
-+	struct binder_version version = { 0 };
-+	int ret;
-+
-+	ret = ioctl(fd, BINDER_VERSION, &version);
-+	if (ret < 0)
-+		ksft_print_msg("%s - Failed to open perform BINDER_VERSION request\n", strerror(errno));
-+
-+	pthread_exit(data);
-+}
-+
-+/*
-+ * Regression test:
-+ * 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
-+ * f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-+ * 211b64e4b5b6 ("binderfs: use refcount for binder control devices too")
-+ */
-+TEST(binderfs_stress)
-+{
-+	int fds[1000];
-+	int syncfds[2];
-+	pid_t pid;
-+	int fd, ret;
-+	size_t len;
-+	struct binderfs_device device = { 0 };
-+	char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
-+		device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
-+
-+	ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s - Failed to create socket pair", strerror(errno));
-+
-+	pid = fork();
-+	if (pid < 0) {
-+		close_prot_errno_disarm(syncfds[0]);
-+		close_prot_errno_disarm(syncfds[1]);
-+		ksft_exit_fail_msg("%s - Failed to fork", strerror(errno));
-+	}
-+
-+	if (pid == 0) {
-+		int i, j, k, nthreads;
-+		pthread_attr_t attr;
-+		pthread_t threads[DEFAULT_THREADS];
-+		change_userns(syncfds);
-+		change_mountns();
-+
-+		if (!mkdtemp(binderfs_mntpt))
-+			log_exit("%s - Failed to create binderfs mountpoint\n",
-+				 strerror(errno));
-+
-+		ret = mount(NULL, binderfs_mntpt, "binder", 0, 0);
-+		if (ret < 0)
-+			log_exit("%s - Failed to mount binderfs\n", strerror(errno));
-+
-+		for (int i = 0; i < ARRAY_SIZE(fds); i++) {
-+
-+			snprintf(device_path, sizeof(device_path),
-+				 "%s/binder-control", binderfs_mntpt);
-+			fd = open(device_path, O_RDONLY | O_CLOEXEC);
-+			if (fd < 0)
-+				log_exit("%s - Failed to open binder-control device\n", strerror(errno));
-+
-+			memset(&device, 0, sizeof(device));
-+			snprintf(device.name, sizeof(device.name), "%d", i);
-+			ret = ioctl(fd, BINDER_CTL_ADD, &device);
-+			close_prot_errno_disarm(fd);
-+			if (ret < 0)
-+				log_exit("%s - Failed to allocate new binder device\n", strerror(errno));
-+
-+			snprintf(device_path, sizeof(device_path), "%s/%d",
-+				 binderfs_mntpt, i);
-+			fds[i] = open(device_path, O_RDONLY | O_CLOEXEC);
-+			if (fds[i] < 0)
-+				log_exit("%s - Failed to open binder device\n", strerror(errno));
-+		}
-+
-+		ret = umount2(binderfs_mntpt, MNT_DETACH);
-+		rmdir_protect_errno(binderfs_mntpt);
-+		if (ret < 0)
-+			log_exit("%s - Failed to unmount binderfs\n", strerror(errno));
-+
-+		nthreads = get_nprocs_conf();
-+		if (nthreads > DEFAULT_THREADS)
-+			nthreads = DEFAULT_THREADS;
-+
-+		pthread_attr_init(&attr);
-+		for (k = 0; k < ARRAY_SIZE(fds); k++) {
-+			for (i = 0; i < nthreads; i++) {
-+				ret = pthread_create(&threads[i], &attr, binder_version_thread, INT_TO_PTR(fds[k]));
-+				if (ret) {
-+					ksft_print_msg("%s - Failed to create thread %d\n", strerror(errno), i);
-+					break;
-+				}
-+			}
-+
-+			for (j = 0; j < i; j++) {
-+				void *fdptr = NULL;
-+
-+				ret = pthread_join(threads[j], &fdptr);
-+				if (ret)
-+					ksft_print_msg("%s - Failed to join thread %d for fd %d\n", strerror(errno), j, PTR_TO_INT(fdptr));
-+			}
-+		}
-+		pthread_attr_destroy(&attr);
-+
-+		for (k = 0; k < ARRAY_SIZE(fds); k++)
-+			close(fds[k]);
-+
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	change_idmaps(syncfds, pid);
-+
-+	ret = wait_for_pid(pid);
-+	if (ret)
-+		ksft_exit_fail_msg("wait_for_pid() failed");
-+}
-+
- TEST(binderfs_test_privileged)
- {
- 	if (geteuid() != 0)
-@@ -264,10 +477,37 @@ TEST(binderfs_test_privileged)
- 
- TEST(binderfs_test_unprivileged)
- {
--	change_to_userns();
-+	int ret;
-+	int syncfds[2];
-+	pid_t pid;
- 
--	if (__do_binderfs_test() == 1)
--		XFAIL(return, "The Android binderfs filesystem is not available");
-+	ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s - Failed to create socket pair", strerror(errno));
-+
-+	pid = fork();
-+	if (pid < 0) {
-+		close_prot_errno_disarm(syncfds[0]);
-+		close_prot_errno_disarm(syncfds[1]);
-+		ksft_exit_fail_msg("%s - Failed to fork", strerror(errno));
-+	}
-+
-+	if (pid == 0) {
-+		change_userns(syncfds);
-+		if (__do_binderfs_test() == 1)
-+			exit(2);
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	change_idmaps(syncfds, pid);
-+
-+	ret = wait_for_pid(pid);
-+	if (ret) {
-+		if (ret == 2)
-+			XFAIL(return, "The Android binderfs filesystem is not available");
-+		else
-+			ksft_exit_fail_msg("wait_for_pid() failed");
-+	}
- }
- 
- TEST_HARNESS_MAIN
--- 
-2.25.1
+On 3/3/2020 8:54 AM, roman.sudarikov@linux.intel.com wrote:
+> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> 
+> Current version supports a server line starting Intel® Xeon® Processor
+> Scalable Family and introduces mapping for IIO Uncore units only.
+> Other units can be added on demand.
+> 
+> IIO stack to PMON mapping is exposed through:
+>      /sys/devices/uncore_iio_<pmu_idx>/dieX
+>      where dieX is file which holds "Segment:Root Bus" for PCIe root port,
+>      which can be monitored by that IIO PMON block.
+> 
+> Details are explained in Documentation/ABI/testing/sysfs-devices-mapping
+> 
+> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
+> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
+> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> ---
+>   .../ABI/testing/sysfs-devices-mapping         |  33 +++
+>   arch/x86/events/intel/uncore.h                |   9 +
+>   arch/x86/events/intel/uncore_snbep.c          | 193 ++++++++++++++++++
+>   3 files changed, 235 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-mapping b/Documentation/ABI/testing/sysfs-devices-mapping
+> new file mode 100644
+> index 000000000000..16f4e900be7b
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-devices-mapping
+> @@ -0,0 +1,33 @@
+> +What:           /sys/devices/uncore_iio_x/dieX
+> +Date:           February 2020
+> +Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> +Description:
+> +                Each IIO stack (PCIe root port) has its own IIO PMON block, so
+> +                each dieX file (where X is die number) holds "Segment:Root Bus"
+> +                for PCIe root port, which can be monitored by that IIO PMON
+> +                block.
+> +                For example, on 4-die Xeon platform with up to 6 IIO stacks per
+> +                die and, therefore, 6 IIO PMON blocks per die, the mapping of
+> +                IIO PMON block 0 exposes as the following:
+> +
+> +                $ ls /sys/devices/uncore_iio_0/die*
+> +                -r--r--r-- /sys/devices/uncore_iio_0/die0
+> +                -r--r--r-- /sys/devices/uncore_iio_0/die1
+> +                -r--r--r-- /sys/devices/uncore_iio_0/die2
+> +                -r--r--r-- /sys/devices/uncore_iio_0/die3
+> +
+> +                $ tail /sys/devices/uncore_iio_0/die*
+> +                ==> /sys/devices/uncore_iio_0/die0 <==
+> +                0000:00
+> +                ==> /sys/devices/uncore_iio_0/die1 <==
+> +                0000:40
+> +                ==> /sys/devices/uncore_iio_0/die2 <==
+> +                0000:80
+> +                ==> /sys/devices/uncore_iio_0/die3 <==
+> +                0000:c0
+> +
+> +                Which means:
+> +                IIO PMU 0 on die 0 belongs to PCI RP on bus 0x00, domain 0x0000
+> +                IIO PMU 0 on die 1 belongs to PCI RP on bus 0x40, domain 0x0000
+> +                IIO PMU 0 on die 2 belongs to PCI RP on bus 0x80, domain 0x0000
+> +                IIO PMU 0 on die 3 belongs to PCI RP on bus 0xc0, domain 0x0000
+> \ No newline at end of file
+> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+> index c1da2b8218cd..eb93b8676f34 100644
+> --- a/arch/x86/events/intel/uncore.h
+> +++ b/arch/x86/events/intel/uncore.h
+> @@ -174,6 +174,15 @@ int uncore_pcibus_to_physid(struct pci_bus *bus);
+>   ssize_t uncore_event_show(struct kobject *kobj,
+>   			  struct kobj_attribute *attr, char *buf);
+>   
+> +static inline struct intel_uncore_pmu *dev_to_uncore_pmu(struct device *dev)
+> +{
+> +	return container_of(dev_get_drvdata(dev), struct intel_uncore_pmu, pmu);
+> +}
+> +
+> +#define to_device_attribute(n)	container_of(n, struct device_attribute, attr)
+> +#define to_dev_ext_attribute(n)	container_of(n, struct dev_ext_attribute, attr)
+> +#define attr_to_ext_attr(n)	to_dev_ext_attribute(to_device_attribute(n))
+> +
+>   extern int __uncore_max_dies;
+>   #define uncore_max_dies()	(__uncore_max_dies)
+>   
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index ad20220af303..5e15425c5133 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -273,6 +273,30 @@
+>   #define SKX_CPUNODEID			0xc0
+>   #define SKX_GIDNIDMAP			0xd4
+>   
+> +/*
+> + * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
+> + * that BIOS programmed. MSR has package scope.
+> + * |  Bit  |  Default  |  Description
+> + * | [63]  |    00h    | VALID - When set, indicates the CPU bus
+> + *                       numbers have been initialized. (RO)
+> + * |[62:48]|    ---    | Reserved
+> + * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(5). (RO)
+> + * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(4). (RO)
+> + * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(3). (RO)
+> + * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(2). (RO)
+> + * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(1). (RO)
+> + * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(0). (RO)
+> + */
+> +#define SKX_MSR_CPU_BUS_NUMBER		0x300
+> +#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
+> +#define BUS_NUM_STRIDE			8
+> +
+>   /* SKX CHA */
+>   #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
+>   #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
+> @@ -3575,6 +3599,172 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
+>   	.read_counter		= uncore_msr_read_counter,
+>   };
+>   
+> +static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
+> +{
+> +	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
+> +}
+> +
+> +static umode_t
+> +skx_iio_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
+> +{
+> +	struct intel_uncore_pmu *pmu = dev_to_uncore_pmu(kobj_to_dev(kobj));
+> +
+> +	// Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
 
+Could you please use /**/ for the comments?
+
+> +	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx) ? 0 : attr->mode;
+> +}
+> +
+> +static ssize_t skx_iio_mapping_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_bus *bus = pci_find_next_bus(NULL);
+> +	struct intel_uncore_pmu *uncore_pmu = dev_to_uncore_pmu(dev);
+> +	struct dev_ext_attribute *ea = to_dev_ext_attribute(attr);
+> +	long die = (long)ea->var;
+> +
+> +	/*
+> +	 * Current implementation is for single segment configuration hence it's
+> +	 * safe to take the segment value from the first available root bus.
+> +	 */
+> +	return sprintf(buf, "%04x:%02x\n", pci_domain_nr(bus),
+> +					   skx_iio_stack(uncore_pmu, die));
+> +}
+> +
+> +static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
+> +{
+> +	u64 msr_value;
+> +
+> +	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
+> +			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
+> +		return -ENXIO;
+> +
+> +	*topology = msr_value;
+> +
+> +	return 0;
+> +}
+> +
+> +static int die_to_cpu(int die)
+> +{
+> +	int res = 0, cpu, current_die;
+> +	/*
+> +	 * Using cpus_read_lock() to ensure cpu is not going down between
+> +	 * looking at cpu_online_mask.
+> +	 */
+> +	cpus_read_lock();
+> +	for_each_online_cpu(cpu) {
+> +		current_die = topology_logical_die_id(cpu);
+> +		if (current_die == die) {
+> +			res = cpu;
+> +			break;
+> +		}
+> +	}
+> +	cpus_read_unlock();
+> +	return res;
+> +}
+> +
+> +static int skx_iio_get_topology(struct intel_uncore_type *type)
+> +{
+> +	int i, ret;
+> +	struct pci_bus *bus = NULL;
+> +
+> +	/*
+> +	 * Verified single-segment environments only; disabled for multiple
+> +	 * segment topologies for now except VMD domains.
+> +	 * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
+> +	 */
+> +	while ((bus = pci_find_next_bus(bus))
+> +		&& (!pci_domain_nr(bus) || pci_domain_nr(bus) > 0xffff))
+> +		;
+> +	if (bus)
+> +		return -EPERM;
+> +
+> +	type->topology = kcalloc(uncore_max_dies(), sizeof(u64), GFP_KERNEL);
+> +	if (!type->topology)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < uncore_max_dies(); i++) {
+> +		ret = skx_msr_cpu_bus_read(die_to_cpu(i), &type->topology[i]);
+> +		if (ret) {
+> +			kfree(type->topology);
+> +			type->topology = NULL;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute_group skx_iio_mapping_group = {
+> +	.is_visible	= skx_iio_mapping_visible,
+> +};
+> +
+> +const static struct attribute_group *skx_iio_attr_update[] = {
+> +	&skx_iio_mapping_group,
+> +	NULL,
+> +};
+> +
+> +static int skx_iio_set_mapping(struct intel_uncore_type *type)
+> +{
+> +	char buf[64];
+> +	int ret;
+> +	long die = -1;
+> +	struct attribute **attrs = NULL;
+> +	struct dev_ext_attribute *eas = NULL;
+> +
+> +	ret = skx_iio_get_topology(type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	// One more for NULL.
+> +	attrs = kzalloc((uncore_max_dies() + 1) * sizeof(*attrs), GFP_KERNEL);
+> +	if (!attrs) {
+> +		kfree(type->topology);
+> +		return -ENOMEM;
+
+Please use goto here as well to avoid the duplicate kfree.
+
+
+Only some minor comments. The rest of codes look good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> +	}
+> +
+> +	eas = kzalloc(sizeof(*eas) * uncore_max_dies(), GFP_KERNEL);
+> +	if (!eas)
+> +		goto err;
+> +
+> +	for (die = 0; die < uncore_max_dies(); die++) {
+> +		sprintf(buf, "die%ld", die);
+> +		sysfs_attr_init(&eas[die].attr.attr);
+> +		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
+> +		if (!eas[die].attr.attr.name)
+> +			goto err;
+> +		eas[die].attr.attr.mode = 0444;
+> +		eas[die].attr.show = skx_iio_mapping_show;
+> +		eas[die].attr.store = NULL;
+> +		eas[die].var = (void *)die;
+> +		attrs[die] = &eas[die].attr.attr;
+> +	}
+> +	skx_iio_mapping_group.attrs = attrs;
+> +
+> +	return 0;
+> +err:
+> +	for (; die >= 0; die--)
+> +		kfree(eas[die].attr.attr.name);
+> +	kfree(eas);
+> +	kfree(attrs);
+> +	kfree(type->topology);
+> +	type->attr_update = NULL;
+> +	return -ENOMEM;
+> +}
+> +
+> +static void skx_iio_cleanup_mapping(struct intel_uncore_type *type)
+> +{
+> +	struct attribute **attr = skx_iio_mapping_group.attrs;
+> +
+> +	if (!attr)
+> +		return;
+> +
+> +	for (; *attr; attr++)
+> +		kfree((*attr)->name);
+> +	kfree(attr_to_ext_attr(*skx_iio_mapping_group.attrs));
+> +	kfree(skx_iio_mapping_group.attrs);
+> +	skx_iio_mapping_group.attrs = NULL;
+> +	kfree(type->topology);
+> +}
+> +
+>   static struct intel_uncore_type skx_uncore_iio = {
+>   	.name			= "iio",
+>   	.num_counters		= 4,
+> @@ -3589,6 +3779,9 @@ static struct intel_uncore_type skx_uncore_iio = {
+>   	.constraints		= skx_uncore_iio_constraints,
+>   	.ops			= &skx_uncore_iio_ops,
+>   	.format_group		= &skx_uncore_iio_format_group,
+> +	.attr_update		= skx_iio_attr_update,
+> +	.set_mapping		= skx_iio_set_mapping,
+> +	.cleanup_mapping	= skx_iio_cleanup_mapping,
+>   };
+>   
+>   enum perf_uncore_iio_freerunning_type_id {
+> 
