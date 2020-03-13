@@ -2,96 +2,100 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9A0C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C56BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC48920724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dI9nuEyi"
+	by mail.kernel.org (Postfix) with ESMTP id 25D022074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgCMLiQ (ORCPT
+        id S1726598AbgCMLit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:38:16 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42359 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgCMLiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:38:16 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t3so4120378plz.9;
-        Fri, 13 Mar 2020 04:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ACCT/yAEbIU04yqe8VXHom7r1pDUJ/Q1TtIR8BaFHv0=;
-        b=dI9nuEyiKfwXRX2jC48koOIuRspfd95Nqgzu/6b9h5lCDmc46xPFM98pK0R3Yp35iO
-         y9tLJDh7zlBpOJ0hr8VrnJZ+wdM13bDNH053cUTjG5pdkDWX/ikoFVjnv2ochrNtHZRL
-         XMc1Ei8Ejj5AsvZeDhiSkx5B6nVqD1pnlPqQzYxKFO+CpWuLe/Bl4qutXBqr1yDYrhnB
-         kEoyPNHGkDMT4fxylCIvLbXX9ER3CVhhq/9B4jeM8fIcQRkEyl3LytsdOJV7dLFZ3vpI
-         9Ad6JmarxShP6Almiwb3FWKusWCRE9CThAIByChY4CsdMbxjBNIpKKjB62UjrmC8PKAn
-         j22g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ACCT/yAEbIU04yqe8VXHom7r1pDUJ/Q1TtIR8BaFHv0=;
-        b=dc1aT8FOodeILj4/lmbBeUjFgUpzfHjVvUrJT1xZaSY8QKtb8LQ5dNbybNWGpiODfW
-         HQ+920s9hFn/HZXzLujOdmY7jOGiofu0453G22frWWgk38/rXMEu/EGZoVlURfkXRsNb
-         m+dMI8+ILZEgCRvieFAk35wwX8UocmQ4JYIPOE0KY88AI2E0l5jDv3HcqL9m4T9lDxBC
-         0fdYXFu2AyGvIZiZBWajRVYmiRH8IeuGcRn4koWhB845FNGe+E7GpRFmRMTMQt52qY0c
-         4mzDGLHJlvIKgxDwfG2ni48QvP1qpzhqPu5TokxQOCPLp7jP9xmUlteUejO1S+TSnvvk
-         ezpg==
-X-Gm-Message-State: ANhLgQ22K5sxQuKlbL3dcJtAnrPZr3xzvDHQ35GN9oT8sYXu6efZ1Sil
-        Xw1XT83VWsR6kQN6ODfJ5xA=
-X-Google-Smtp-Source: ADFU+vvrLiPqnJkhF6yo+wd94RHACkXtF/siGFZBBQfGZsb/fysa8j0bFtndSvprcCXTx+k8XKKlfg==
-X-Received: by 2002:a17:902:868d:: with SMTP id g13mr13154575plo.36.1584099494918;
-        Fri, 13 Mar 2020 04:38:14 -0700 (PDT)
-Received: from localhost ([161.117.239.120])
-        by smtp.gmail.com with ESMTPSA id v133sm47423715pfc.68.2020.03.13.04.38.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 04:38:14 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH -next] rcu-tasks: fix a modpost warning for rcu_tasks_rude_wait_gp
-Date:   Fri, 13 Mar 2020 19:38:10 +0800
-Message-Id: <20200313113810.3840-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 13 Mar 2020 07:38:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47470 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbgCMLis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 07:38:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B13BBABEF;
+        Fri, 13 Mar 2020 11:38:46 +0000 (UTC)
+Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Joonsoo Kim <js1304@gmail.com>
+Cc:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christopher Lameter <cl@linux.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
+ <20200311115735.GM23944@dhcp22.suse.cz>
+ <20200312052707.GA3277@linux.vnet.ibm.com>
+ <C5560C71-483A-41FB-BDE9-526F1E0CFA36@linux.vnet.ibm.com>
+ <5e5c736a-a88c-7c76-fc3d-7bc765e8dcba@suse.cz>
+ <20200312131438.GB3277@linux.vnet.ibm.com>
+ <61437352-8b54-38fa-4471-044a65c9d05a@suse.cz>
+ <20200312161310.GC3277@linux.vnet.ibm.com>
+ <e115048c-be38-c298-b8d1-d4b513e7d2fb@suse.cz>
+ <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
+ <20200313110440.GA25144@linux.vnet.ibm.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <06be5908-9af6-2892-0333-e9558b2cf474@suse.cz>
+Date:   Fri, 13 Mar 2020 12:38:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200313110440.GA25144@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Found by gcc:
-WARNING: modpost: "rcu_tasks_rude_wait_gp" [vmlinux] is a static
-EXPORT_SYMBOL_GPL
+On 3/13/20 12:04 PM, Srikar Dronamraju wrote:
+>> I lost all the memory about it. :)
+>> Anyway, how about this?
+>> 
+>> 1. make node_present_pages() safer
+>> static inline node_present_pages(nid)
+>> {
+>> if (!node_online(nid)) return 0;
+>> return (NODE_DATA(nid)->node_present_pages);
+>> }
+>> 
+> 
+> Yes this would help.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- kernel/rcu/tasks.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks good, yeah.
 
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index cd071b5d4274..04d3c583a9fc 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -447,7 +447,7 @@ static void rcu_tasks_be_rude(struct work_struct *work)
- }
- 
- // Wait for one rude RCU-tasks grace period.
--static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
-+void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
- {
- 	schedule_on_each_cpu(rcu_tasks_be_rude);
- }
--- 
-2.17.1
+>> 2. make node_to_mem_node() safer for all cases
+>> In ppc arch's mem_topology_setup(void)
+>> for_each_present_cpu(cpu) {
+>>  numa_setup_cpu(cpu);
+>>  mem_node = node_to_mem_node(numa_mem_id());
+>>  if (!node_present_pages(mem_node)) {
+>>   _node_numa_mem_[numa_mem_id()] = first_online_node;
+>>  }
+>> }
+>> 
+> 
+> But here as discussed above, we miss the case of possible but not present nodes.
+> For such nodes, the above change may not update, resulting in they still
+> having 0. And node 0 can be only possible but not present.
+
+So is there other way to do the setup so that node_to_mem_node() returns an
+online+present node when called for any possible node?
 
