@@ -2,200 +2,139 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ECC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50592C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EA4206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254E2206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584121799;
+	bh=7f3thBfEynN8Kb15/c88ViQSGjrO0ZDJtS4JzsLaoTA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i7peTK6GjcuXwLxtnOObvxorA1ONnUb8l4QFD/Zqx6lyG0i6YAoY/6Ca22Rzyl11n
+	 TzSMIamGB/WLwAgWuhPzrIcREFlQ/innou8+IgBUqUqo4H3bCAsetpvCCjMCLOamMe
+	 UtG3BR9gI6RjZaN+Rv7vXg1eApZlpKfZlDO87HG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgCMRtt (ORCPT
+        id S1727193AbgCMRt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:49:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39241 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCMRtt (ORCPT
+        Fri, 13 Mar 2020 13:49:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36186 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgCMRt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:49:49 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jCoRO-00020u-Lp; Fri, 13 Mar 2020 17:49:46 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/spelling.txt: add more spellings to spelling.txt
-Date:   Fri, 13 Mar 2020 17:49:46 +0000
-Message-Id: <20200313174946.228216-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 13 Mar 2020 13:49:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j14so11021780otq.3;
+        Fri, 13 Mar 2020 10:49:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ikJY8jL+WwN9m0h/0ly8EPxlXvIn8mr2TN/3Ad+1Sjw=;
+        b=so5fYZSoCwaFwWyqYnzVHGf7R/BRTOLM0pxs/dR3qdTZ6zLyvss4/5eIoDD+FTJNin
+         9y0AnkjYIoZb+chMW7BbRXnVfr9Z2ca1NP30yrHHAtbTXAgk9dNOoKzW63lQc4yeI5WQ
+         zSs7Pmgq8NoKeneJPe1rSMv9j3oImG4Z/lEskFJpRChMmb3oqZ1GU+JAYFnzcKcwtoq5
+         bjkQSt6g/nZyyDEVnDx9C1XDmcQOJJqYHWFXFOuUArR5xWPIcMi5egEvCD//IVrH/EbG
+         9UqcLjpK63Q173FzarBGGR1Hs2ZpqkNqILmCMN9BjIUbeh0nQi+CxyIlJi5VYwVJSgRH
+         lSsw==
+X-Gm-Message-State: ANhLgQ0XrmWrh2NkhUjAVUv6E7z5iHQBiAjaHHK1bJT15f9AMOsts64G
+        Ecb1pmiAlwj5u/ricw7X6Blh/tDVIUyi6Cmi09U=
+X-Google-Smtp-Source: ADFU+vscUcNl0XqoPtGNKufJ6d5QVPnoK1rJaGUBAwvppGXXEvwIKjNWZWqU+cwx4LdvkSpguWD67ibiRm73DRPkOAE=
+X-Received: by 2002:a9d:67d7:: with SMTP id c23mr12349631otn.262.1584121796924;
+ Fri, 13 Mar 2020 10:49:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200304113248.1143057-1-mail@maciej.szmigiero.name> <20200312161751.GA5245@fuller.cnet>
+In-Reply-To: <20200312161751.GA5245@fuller.cnet>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 13 Mar 2020 18:49:45 +0100
+Message-ID: <CAJZ5v0jLOKj5LN5Kmredixomer4BKdBPNwP7gOf7A0tS_WMbDQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle-haltpoll: allow force loading on hosts without
+ the REALTIME hint
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        kvm-devel <kvm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, Mar 12, 2020 at 5:36 PM Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Wed, Mar 04, 2020 at 12:32:48PM +0100, Maciej S. Szmigiero wrote:
+> > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+> >
+> > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
+> > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
+> > could also be used in scenarios when the host does not advertise the
+> > KVM_HINTS_REALTIME hint.
+> >
+> > While the behavior introduced by the aforementioned commit makes sense as
+> > the default there are cases where the old behavior is desired, for example,
+> > when other kernel changes triggered by presence by this hint are unwanted,
+> > for some workloads where the latency benefit from polling overweights the
+> > loss from idle CPU capacity that otherwise would be available, or just when
+> > running under older Qemu versions that lack this hint.
+> >
+> > Let's provide a typical "force" module parameter that allows restoring the
+> > old behavior.
+> >
+> > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+> > ---
+> >  drivers/cpuidle/cpuidle-haltpoll.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> >
+> > Changes from v1:
+> > Make the module parameter description more general, don't unnecessarily
+> > break a line in haltpoll_init().
+> >
+> > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+> > index b0ce9bc78113..db124bc1ca2c 100644
+> > --- a/drivers/cpuidle/cpuidle-haltpoll.c
+> > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
+> > @@ -18,6 +18,10 @@
+> >  #include <linux/kvm_para.h>
+> >  #include <linux/cpuidle_haltpoll.h>
+> >
+> > +static bool force __read_mostly;
+> > +module_param(force, bool, 0444);
+> > +MODULE_PARM_DESC(force, "Load unconditionally");
+> > +
+> >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+> >  static enum cpuhp_state haltpoll_hp_state;
+> >
+> > @@ -90,6 +94,11 @@ static void haltpoll_uninit(void)
+> >       haltpoll_cpuidle_devices = NULL;
+> >  }
+> >
+> > +static bool haltpool_want(void)
+> > +{
+> > +     return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
+> > +}
+> > +
+> >  static int __init haltpoll_init(void)
+> >  {
+> >       int ret;
+> > @@ -101,8 +110,7 @@ static int __init haltpoll_init(void)
+> >
+> >       cpuidle_poll_state_init(drv);
+> >
+> > -     if (!kvm_para_available() ||
+> > -             !kvm_para_has_hint(KVM_HINTS_REALTIME))
+> > +     if (!kvm_para_available() || !haltpool_want())
+> >               return -ENODEV;
+> >
+> >       ret = cpuidle_register_driver(drv);
+>
+> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
-Here are some of the more common spelling mistakes and typos that I've
-found while fixing up spelling mistakes in the kernel since November 2019
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- scripts/spelling.txt | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index 6d5243904e76..d9cd24cf0d40 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -177,7 +177,9 @@ atomatically||automatically
- atomicly||atomically
- atempt||attempt
- attachement||attachment
-+attatch||attach
- attched||attached
-+attemp||attempt
- attemps||attempts
- attemping||attempting
- attepmpt||attempt
-@@ -235,11 +237,13 @@ brievely||briefly
- brigde||bridge
- broadcase||broadcast
- broadcat||broadcast
-+bufer||buffer
- bufufer||buffer
- cacluated||calculated
- caculate||calculate
- caculation||calculation
- cadidate||candidate
-+cahces||caches
- calender||calendar
- calescing||coalescing
- calle||called
-@@ -338,7 +342,6 @@ conditon||condition
- condtion||condition
- conected||connected
- conector||connector
--connecetd||connected
- configration||configuration
- configuartion||configuration
- configuation||configuration
-@@ -349,7 +352,9 @@ configuretion||configuration
- configutation||configuration
- conider||consider
- conjuction||conjunction
-+connecetd||connected
- connectinos||connections
-+connetor||connector
- connnection||connection
- connnections||connections
- consistancy||consistency
-@@ -469,6 +474,7 @@ difinition||definition
- digial||digital
- dimention||dimension
- dimesions||dimensions
-+disgest||digest
- dispalying||displaying
- diplay||display
- directon||direction
-@@ -553,6 +559,7 @@ etsablishment||establishment
- etsbalishment||establishment
- excecutable||executable
- exceded||exceeded
-+exceeed||exceed
- excellant||excellent
- execeeded||exceeded
- execeeds||exceeds
-@@ -742,6 +749,7 @@ initialzing||initializing
- initilization||initialization
- initilize||initialize
- initliaze||initialize
-+initilized||initialized
- inofficial||unofficial
- inrerface||interface
- insititute||institute
-@@ -802,6 +810,7 @@ irrelevent||irrelevant
- isnt||isn't
- isssue||issue
- issus||issues
-+iteraions||iterations
- iternations||iterations
- itertation||iteration
- itslef||itself
-@@ -828,6 +837,7 @@ libary||library
- librairies||libraries
- libraris||libraries
- licenceing||licencing
-+limted||limited
- logaritmic||logarithmic
- loggging||logging
- loggin||login
-@@ -924,6 +934,7 @@ nerver||never
- nescessary||necessary
- nessessary||necessary
- noticable||noticeable
-+notication||notification
- notications||notifications
- notifcations||notifications
- notifed||notified
-@@ -1007,6 +1018,7 @@ pendantic||pedantic
- peprocessor||preprocessor
- perfoming||performing
- perfomring||performing
-+periperal||peripheral
- peripherial||peripheral
- permissons||permissions
- peroid||period
-@@ -1043,6 +1055,7 @@ prefferably||preferably
- premption||preemption
- prepaired||prepared
- preperation||preparation
-+preprare||prepare
- pressre||pressure
- primative||primitive
- princliple||principle
-@@ -1064,6 +1077,7 @@ processsed||processed
- processsing||processing
- procteted||protected
- prodecure||procedure
-+progamming||programming
- progams||programs
- progess||progress
- programers||programmers
-@@ -1151,12 +1165,14 @@ replys||replies
- reponse||response
- representaion||representation
- reqeust||request
-+reqister||register
- requestied||requested
- requiere||require
- requirment||requirement
- requred||required
- requried||required
- requst||request
-+requsted||requested
- reregisteration||reregistration
- reseting||resetting
- reseved||reserved
-@@ -1227,10 +1243,12 @@ seqeuncer||sequencer
- seqeuencer||sequencer
- sequece||sequence
- sequencial||sequential
-+serivce||service
- serveral||several
- servive||service
- setts||sets
- settting||setting
-+shapshot||snapshot
- shotdown||shutdown
- shoud||should
- shouldnt||shouldn't
--- 
-2.25.1
-
+I'm taking this as a Reviewed-by, thanks!
