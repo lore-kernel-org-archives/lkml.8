@@ -2,114 +2,104 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11D7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F45206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65E6206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzAls5VP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdP/QA25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgCMNPq (ORCPT
+        id S1726710AbgCMNQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:15:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40962 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgCMNPq (ORCPT
+        Fri, 13 Mar 2020 09:16:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54975 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726426AbgCMNQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:15:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q10so7822168lfo.8;
-        Fri, 13 Mar 2020 06:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KIlDjbCvX/lL3/UnPy9wEqymHeVXohWQ8Y8B1yC6PRM=;
-        b=KzAls5VPN5rgeewhLttE0V+ho/T3Ym0N8W6508ZiquWU0EYsOUdidva2DssKJ4lYxn
-         uHXqUJDkB86E2t5r/eB9iGlGisYdIMLmBQiH9MPnfYOmEDVnllOVfQLj9HF709kiHpnp
-         cwU1mUkswFKeNpF3GtRHEYFOlpNkR2g1mgkD2dORECKUvUHKGYiLIRo6j++y873uepg7
-         jaerNMJFJshhCNfgPdd2sD5V+MMOfB4oM7iQax4TYMZN9TQHwN9KxGIUJHtaOGJEmqTg
-         oipHY3FV1tu/xMXCFIhIZ57QRrzeaB7TMzVGFXmdex3iWpZ6c3VDdxKiIXzNYMUC+Ad3
-         q5lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KIlDjbCvX/lL3/UnPy9wEqymHeVXohWQ8Y8B1yC6PRM=;
-        b=SnjqDp86+FZAmAp0xTcYDN+BUZWqFba29Oc8MOxb31udC4pYRAQo1eKPq/Irt9hSdM
-         ourFXHZ/0jQR0xhg1GJZVrZPa3xE95SXeT+uKCpYD/qXAN0KJcrySfWE2dA0weNJnSzP
-         jB2k73IhpoIcQowKyQ7tVuoSB9rxjHBnJTuuznEK4xOAbukhXyPxlCouGUkPCdwW7XnA
-         6VG/JRuhUhSHSzobGCIwzzIQoNDyV0YkpqOQz+qmVX8tc7CPWGrPXRq0pI1p3UYdBDm9
-         CfNzEoaZxUYcWEJ8H8x5AlZ4qyBVP8PE/sK1BHgJ3prKY90dgOU07MTEVdk2MQabwnXr
-         eUkw==
-X-Gm-Message-State: ANhLgQ3JA3o0VINVtw5bIqmu82Ib+y/10n4geJb/zgWSN9IS0JLNw0VP
-        H3OAg3fbIgP9HTSuS4OEiG0LsA+Q2is+2LjnMHE=
-X-Google-Smtp-Source: ADFU+vu3syumX09pf4wOKGU3FAmPDFh1VT9bOFZcHAgG0CF2SaVacKKBMemJsFE1v+otRGv8dY21fvqrZd57AKGk+4w=
-X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr8394251lfb.69.1584105343706;
- Fri, 13 Mar 2020 06:15:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200313110350.10864-1-robert.foss@linaro.org> <20200313110350.10864-3-robert.foss@linaro.org>
-In-Reply-To: <20200313110350.10864-3-robert.foss@linaro.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 13 Mar 2020 10:15:31 -0300
-Message-ID: <CAOMZO5D9bmXt9_qGTXw+qUG6JDHfuNtx++fJPJtn+mj1Dzsbag@mail.gmail.com>
-Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 13 Mar 2020 09:16:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584105392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=7LrEVfZqSzW5l9b4ZSlHX3dnPgc63h+ofdKggf3vssA=;
+        b=OdP/QA25McLc9wy1q4vKWQpLn4vKENsFxeNKWYTqkS01/Wx7/lfVlVSxI8Z/JK28OsuYDC
+        Ep0/7L72u2ZOQLDI8MSlx86KNLRIOAOi5aFeaPSqglOd3JHa3h2nvdZfOZc/8EPngS5bla
+        VlYzOLmAGliLlJ2yAYJfaPn+q478Pes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-464-T1yMoNLHMxSWIvn3GkXIxw-1; Fri, 13 Mar 2020 09:16:30 -0400
+X-MC-Unique: T1yMoNLHMxSWIvn3GkXIxw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37BFD8017CC;
+        Fri, 13 Mar 2020 13:16:29 +0000 (UTC)
+Received: from virtlab512.virt.lab.eng.bos.redhat.com (virtlab512.virt.lab.eng.bos.redhat.com [10.19.152.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C96B492D47;
+        Fri, 13 Mar 2020 13:16:24 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mtosatti@redhat.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, pbonzini@redhat.com,
+        peterx@redhat.com
+Subject: [Patch v2] KVM: x86: Initializing all kvm_lapic_irq fields in ioapic_write_indirect
+Date:   Fri, 13 Mar 2020 09:16:24 -0400
+Message-Id: <1584105384-4864-1-git-send-email-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+Previously all fields of structure kvm_lapic_irq were not initialized
+before it was passed to kvm_bitmap_or_dest_vcpus(). Which will cause
+an issue when any of those fields are used for processing a request.
+For example not initializing the msi_redir_hint field before passing
+to the kvm_bitmap_or_dest_vcpus(), may lead to a misbehavior of
+kvm_apic_map_get_dest_lapic(). This will specifically happen when the
+kvm_lowest_prio_delivery() returns TRUE due to a non-zero garbage
+value of msi_redir_hint, which should not happen as the request belongs
+to APIC fixed delivery mode and we do not want to deliver the
+interrupt only to the lowest priority candidate.
 
-On Fri, Mar 13, 2020 at 8:04 AM Robert Foss <robert.foss@linaro.org> wrote:
+This patch initializes all the fields of kvm_lapic_irq based on the
+values of ioapic redirect_entry object before passing it on to
+kvm_bitmap_or_dest_vcpus().
 
-> +static int __ov8856_power_on(struct ov8856 *ov8856)
-> +{
-> +       struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(ov8856->xvclk);
-> +       if (ret < 0) {
-> +               dev_err(&client->dev, "failed to enable xvclk\n");
-> +               return ret;
-> +       }
-> +
-> +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+Fixes: 7ee30bc132c6("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
+Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+---
+ arch/x86/kvm/ioapic.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-The parameter of gpiod_set_value_cansleep() is typically 0 (inactive
-state) or 1 (active state), so:
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index 7668fed..3a8467d 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
+ 		if (e->fields.delivery_mode == APIC_DM_FIXED) {
+ 			struct kvm_lapic_irq irq;
+ 
+-			irq.shorthand = APIC_DEST_NOSHORT;
+ 			irq.vector = e->fields.vector;
+ 			irq.delivery_mode = e->fields.delivery_mode << 8;
+-			irq.dest_id = e->fields.dest_id;
+ 			irq.dest_mode =
+ 			    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
++			irq.level = 1;
++			irq.trig_mode = e->fields.trig_mode;
++			irq.shorthand = APIC_DEST_NOSHORT;
++			irq.dest_id = e->fields.dest_id;
++			irq.msi_redir_hint = false;
+ 			bitmap_zero(&vcpu_bitmap, 16);
+ 			kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
+ 						 &vcpu_bitmap);
+-- 
+1.8.3.1
 
- gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-
-> +
-> +       ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> +                                   ov8856->supplies);
-> +       if (ret < 0) {
-> +               dev_err(&client->dev, "failed to enable regulators\n");
-> +               goto disable_clk;
-> +       }
-> +
-> +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
-
-and here it should be:
-
-gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-
-Also, don't you need a reset period between the two?
