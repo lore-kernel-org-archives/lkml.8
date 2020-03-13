@@ -2,121 +2,175 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73E9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C66C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F0920749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABA420749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8qn0HXz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XRoPckVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCMMbp (ORCPT
+        id S1726705AbgCMMcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:31:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33583 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgCMMbo (ORCPT
+        Fri, 13 Mar 2020 08:32:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46551 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgCMMcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:31:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n7so5174872pfn.0;
-        Fri, 13 Mar 2020 05:31:43 -0700 (PDT)
+        Fri, 13 Mar 2020 08:32:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so11842239wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 05:31:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=my1mJMBjpAuaeGSvw0SxMND06S47n3/Oc+SHOgjITE0=;
-        b=t8qn0HXzdWqkby4uskVv47cSnhlPXSwmzZXiMjoZ+Gm7BU0Xt5RHSf/bC/cu1Yo2Ry
-         5SN1Ipr3Wrj5+25iLlB9lhO/GV1ZwLTSI/jNBmYNyDPW0wUGMKaqcNNIqU0bPFtvMM7N
-         tx8TLI0eJmEYL38MtaarAT7lT0L9QWvep6JSXSXfpJYRPwiVjvqff8Fu3iYLjLGaRaxy
-         3vb87qQ0ZYOtxnk5z/5Aa3foVVySfKwG5gmWFK3ErK0gf0jxocQ1OQPXBb0IsU1J3PhY
-         vbTqcIgWfNOc3y3emNoKypaKtc2AU+dTMtVOsAt/ldyQc+521r9CAJoZd1DLo6AELq7e
-         yjng==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nkJTLjWp/ZvPZWaJtzZTNn9m69bxqKBFlhfJaMFnbMw=;
+        b=XRoPckVuNUtZmv/Cb5MFur3Ea3UulvDP2g99TSXf953Gh1SPRQeT6DFpIvMwpVIDG4
+         Z67R0VLBop2l4TRE/KPlXu8Dt+h8F8utzDIxjg7RoyBaLXqtMEfwBFKZL3BS4nbr+5ib
+         Ipob4oSPQH8YJgNdZlSfSt0QGiwZE6xoltIYLGYMDFj389MTRXLisq/3VhqlaY9PMoEK
+         8BRCmv9FTouaqkmW/dBshkW3dKtDilkTTVno5u05RKCWUd9Wsh22b9jmJeE3+SRzNi/U
+         Xi8eYMUb8bWyNQ0m61si5daI2CpoEuU2SYeCnkVr5lJKYVgemsijdbGK3yo3cwZSxh0Q
+         DwzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=my1mJMBjpAuaeGSvw0SxMND06S47n3/Oc+SHOgjITE0=;
-        b=Om6tVW59/dqYmc0OpuJ+JU3137aCNP3Ebvafu4zwhWh6WshVjb85xoV00L5Nwdn1jc
-         JOk8srhVFQqe+BCnTxFFIJR+aYxQ23dfFFKQl4Lbge+ItmBeCKQnwuhS7iG01pkfUG45
-         N/FvoVdDho5BRrIxi1LlW3HERy7CxBPhmt+BHU87+IH/0AH2J6RZMfcG/05uQRYFAQuQ
-         3uHpU9Kw3Pb4IfGyIZNPajEWhAL6c/PbJoN5WH3AJnGBHcWC6hxV7YT6dY9UlnEYR1zW
-         bTQNHqK8Sffyhbm21ifzXqTN6Ys83TffKhgT0MXU6U/QxLLXGSbuK5IzO1KXMnQbQIR0
-         K7Mg==
-X-Gm-Message-State: ANhLgQ3Orm3dU4FjV/52NwBjKXg0z4VHy3xuD3gMByrWCwqVAzsvcj22
-        YOA6PY0FgNlZC5+DPtKFD4d+cSnB
-X-Google-Smtp-Source: ADFU+vsbOyAL+G1lTCTWBv7v2qzzHSK3F7e6gScJM4Koy0MlzUIc30wvRynV8GMVChz9ETO7ajZjyQ==
-X-Received: by 2002:a63:257:: with SMTP id 84mr12623548pgc.304.1584102703406;
-        Fri, 13 Mar 2020 05:31:43 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id 184sm24898646pfe.11.2020.03.13.05.31.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 05:31:42 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 18:01:41 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
-Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] ia64: replace setup_irq() by request_irq()
-Message-ID: <20200313123141.GA7155@afzalpc>
-References: <20200304004936.4955-1-afzal.mohd.ma@gmail.com>
- <20200308120350.19117-1-afzal.mohd.ma@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nkJTLjWp/ZvPZWaJtzZTNn9m69bxqKBFlhfJaMFnbMw=;
+        b=cEjFpEnvA7kqwmbxHUPR1wn2iwkIaTFK3bGGcWNRZBdJ9/+q60kyhsIYQP7Qd1ethY
+         qobwYNM8InyXUjsEmUqGU7fZQWG+eq2oMv0oxR7pMwcRzED2LiDVmzMADN1x7EFuQ2r/
+         DURHhQbxHK0m7LXKK0usFJazdQG6PQ7sW0pbnr4XKeg0WMz5r5qNWMjhXU00yjHLyrac
+         IXVasSxW3+mb15ZJIlhvUoFhhFZVHh0bFh6PEug/kBKNOuyfHMFDEnTSKb7zqOusB6kb
+         XDMm21Sn0f59t5B7p3jts6AwAOvbSNgKW9wXmq4JiQzbO+Sf3xtZhjuIkp6+7XfMVx7u
+         2xkQ==
+X-Gm-Message-State: ANhLgQ33nOSIjyhSRNOHkOYn/6xeUGH0W0UY2+t4K2UCm0MA5+EvjOZ5
+        TBHcoFlgMKsqMKIyvuKj7yUAG8W8NZA=
+X-Google-Smtp-Source: ADFU+vu6dcTKKhIsRtRu5AWKMxBh+Il5Nx3NH3Yy5uCwJJN9lazkuBAfHWNFO7rkGaVzqBqjRA27Yw==
+X-Received: by 2002:adf:9364:: with SMTP id 91mr17174282wro.223.1584102717997;
+        Fri, 13 Mar 2020 05:31:57 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:40fb:3990:3519:cc26? ([2a01:e34:ed2f:f020:40fb:3990:3519:cc26])
+        by smtp.googlemail.com with ESMTPSA id l83sm17191214wmf.43.2020.03.13.05.31.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 05:31:57 -0700 (PDT)
+Subject: Re: [PATCH] thermal: imx: Calling
+ imx_thermal_unregister_legacy_cooling() in .remove
+To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1584088094-24857-1-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <58ad76cb-5187-cb59-87cb-e6b75051b46a@linaro.org>
+Date:   Fri, 13 Mar 2020 13:31:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200308120350.19117-1-afzal.mohd.ma@gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <1584088094-24857-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony Luck,
+On 13/03/2020 09:28, Anson Huang wrote:
+> imx_thermal_unregister_legacy_cooling() should be used for handling
+> legacy cpufreq cooling cleanups in .remove callback instead of
+> calling cpufreq_cooling_unregister() and cpufreq_cpu_put() directly,
+> especially for !CONFIG_CPU_FREQ scenario, no operation needed for
+> handling legacy cpufreq cooling cleanups at all.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On Sun, Mar 08, 2020 at 05:33:49PM +0530, afzal mohammed wrote:
+Applied, thanks
 
-> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-> occur after memory allocators are ready.
+> ---
+>  drivers/thermal/imx_thermal.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index d2fa301..e761c9b 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -865,8 +865,7 @@ static int imx_thermal_remove(struct platform_device *pdev)
+>  		clk_disable_unprepare(data->thermal_clk);
+>  
+>  	thermal_zone_device_unregister(data->tz);
+> -	cpufreq_cooling_unregister(data->cdev);
+> -	cpufreq_cpu_put(data->policy);
+> +	imx_thermal_unregister_legacy_cooling(data);
+>  
+>  	return 0;
+>  }
 > 
-> Hence replace setup_irq() by request_irq().
-> 
-> Changing 'ia64_native_register_percpu_irq' decleration to include
-> 'irq_handler_t' as an argument type in arch/ia64/include/asm/hw_irq.h
-> was causing build error - 'unknown type name 'irq_handler_t''
-> 
-> This was due to below header file sequence,
-> + include/interrupt.h
->  + include/hardirq.h
->   + asm/hardirq.h
->    + include/irq.h
->     + asm/hw_irq.h
->        [ 'ia64_native_register_percpu_irq' declared w/ 'irq_handler_t']
->  [ 'irq_handler_t' typedef'ed here in 'include/interrupt.h']
-> 
-> 'register_percpu_irq' defined to 'ia64_native_register_percpu_irq' is
-> the one invoked by the caller, not the latter directly. This was done
-> to support paravirtualization which was removed around 4 years back.
-> And 'register_percpu_irq' is invoked only inside 'arch/ia64/kernel'.
-> 
-> So 'register_percpu_irq' define to 'ia64_native_register_percpu_irq' is
-> removed, instead 'ia64_native_register_percpu_irq' is renamed to
-> 'register_precpu_irq()' & it is directly invoked. Also,
-> 'register_precpu_irq()' is declared in a new header file 'irq.h' inside
-> 'arch/ia64/kernel/', this header file is included by C files invoking
-> 'register_percpu_irq()'.
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-Seems you handle pull requests for ia64, if this change is okay, can
-please consider taking this thr' your tree ?
 
-Regards
-afzal
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
