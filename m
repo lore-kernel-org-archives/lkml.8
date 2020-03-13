@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0130C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FE6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914AA20751
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0E020751
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCMSf1 (ORCPT
+        id S1727558AbgCMSf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:35:27 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28644 "EHLO mga06.intel.com"
+        Fri, 13 Mar 2020 14:35:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28623 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbgCMSej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:34:39 -0400
+        id S1727326AbgCMSeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:34:37 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 11:34:39 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 11:34:36 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="442506100"
+   d="scan'208";a="442506089"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Mar 2020 11:34:38 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 13 Mar 2020 11:34:36 -0700
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
         mingo@redhat.com, linux-kernel@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
         alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
         ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 09/17] perf thread: Add a knob for LBR stitch approach
-Date:   Fri, 13 Mar 2020 11:33:11 -0700
-Message-Id: <20200313183319.17739-10-kan.liang@linux.intel.com>
+Subject: [PATCH V3 07/17] perf machine: Factor out lbr_callchain_add_kernel_ip()
+Date:   Fri, 13 Mar 2020 11:33:09 -0700
+Message-Id: <20200313183319.17739-8-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200313183319.17739-1-kan.liang@linux.intel.com>
 References: <20200313183319.17739-1-kan.liang@linux.intel.com>
@@ -49,53 +49,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The LBR stitch approach should be disabled by default. Because
-- The stitching approach base on LBR call stack technology. The known
-limitations of LBR call stack technology still apply to the approach,
-e.g. Exception handing such as setjmp/longjmp will have calls/returns
-not match.
-- This approach is not full proof. There can be cases where it creates
-incorrect call stacks from incorrect matches. There is no attempt to
-validate any matches in another way.
-
-The 'lbr_stitch_enable' is used to indicate whether enable LBR stitch
-approach, which is disabled by default. The following patch will
-introduce a new option for each tools to enable the LBR stitch
-approach.
+Both caller and callee needs to add kernel ip to callchain.
+Factor out lbr_callchain_add_kernel_ip() to improve code readability.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/thread.c | 1 +
- tools/perf/util/thread.h | 3 +++
- 2 files changed, 4 insertions(+)
+ tools/perf/util/machine.c | 67 ++++++++++++++++++++++++++-------------
+ 1 file changed, 45 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 28b719388028..1f080db23615 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -47,6 +47,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
- 		thread->tid = tid;
- 		thread->ppid = -1;
- 		thread->cpu = -1;
-+		thread->lbr_stitch_enable = false;
- 		INIT_LIST_HEAD(&thread->namespaces_list);
- 		INIT_LIST_HEAD(&thread->comm_list);
- 		init_rwsem(&thread->namespaces_lock);
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 20b96b5d1f15..95294050cff2 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -46,6 +46,9 @@ struct thread {
- 	struct srccode_state	srccode_state;
- 	bool			filter;
- 	int			filter_entry_depth;
-+
-+	/* LBR call stack stitch */
-+	bool			lbr_stitch_enable;
- };
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index cf2c97a6ef81..ef26f28eacea 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2159,6 +2159,40 @@ static int remove_loops(struct branch_entry *l, int nr,
+ 	return nr;
+ }
  
- struct machine;
++static int lbr_callchain_add_kernel_ip(struct thread *thread,
++				       struct callchain_cursor *cursor,
++				       struct perf_sample *sample,
++				       struct symbol **parent,
++				       struct addr_location *root_al,
++				       u64 branch_from,
++				       bool callee, int end)
++{
++	struct ip_callchain *chain = sample->callchain;
++	u8 cpumode = PERF_RECORD_MISC_USER;
++	int err, i;
++
++	if (callee) {
++		for (i = 0; i < end + 1; i++) {
++			err = add_callchain_ip(thread, cursor, parent,
++					       root_al, &cpumode, chain->ips[i],
++					       false, NULL, NULL, branch_from);
++			if (err)
++				return err;
++		}
++		return 0;
++	}
++
++	for (i = end; i >= 0; i--) {
++		err = add_callchain_ip(thread, cursor, parent,
++				       root_al, &cpumode, chain->ips[i],
++				       false, NULL, NULL, branch_from);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
+ /*
+  * Recolve LBR callstack chain sample
+  * Return:
+@@ -2211,17 +2245,12 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 
+ 	if (callchain_param.order == ORDER_CALLEE) {
+ 		/* Add kernel ip */
+-		for (j = 0; j < i + 1; j++) {
+-			ip = chain->ips[j];
+-			branch = false;
+-			flags = NULL;
+-			err = add_callchain_ip(thread, cursor, parent,
+-					       root_al, &cpumode, ip,
+-					       branch, flags, NULL,
+-					       branch_from);
+-			if (err)
+-				goto error;
+-		}
++		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
++						  parent, root_al, branch_from,
++						  true, i);
++		if (err)
++			goto error;
++
+ 		/* Add LBR ip from first entries.to */
+ 		ip = entries[0].to;
+ 		branch = true;
+@@ -2277,17 +2306,11 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 			goto error;
+ 
+ 		/* Add kernel ip */
+-		for (j = lbr_nr + 1; j < mix_chain_nr; j++) {
+-			ip = chain->ips[i + 1 - (j - lbr_nr)];
+-			branch = false;
+-			flags = NULL;
+-			err = add_callchain_ip(thread, cursor, parent,
+-					       root_al, &cpumode, ip,
+-					       branch, flags, NULL,
+-					       branch_from);
+-			if (err)
+-				goto error;
+-		}
++		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
++						  parent, root_al, branch_from,
++						  false, i);
++		if (err)
++			goto error;
+ 	}
+ 	return 1;
+ 
 -- 
 2.17.1
 
