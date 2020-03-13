@@ -2,117 +2,79 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE68C1975A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0711C1975A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424ED206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bkjZUC84"
+	by mail.kernel.org (Postfix) with ESMTP id C9ECF2072F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584067209;
+	bh=6V5034ysnLgvvbSebr5dC4ZNWLB0UT9n3wnteW3uwVg=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=pPr/3EDwUhB69RAwOaLdzFNDXt8hNPTbpUFWly6/7ilo0Ovlus1J6kiNYviRhsxHe
+	 rjUdQ/HgGuarxr3Wk9/sBbibm79Xy1wRTyLBU1U6sqPV6QHPrskd5DZ28wuMoupKIa
+	 IgewdvnnLjATdgJKv9A7Ve/1RP2ka2ulc+3KtNZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCMChm (ORCPT
+        id S1726483AbgCMCkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:37:42 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28026 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726393AbgCMChl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:37:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584067061; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=8+Fp02besIsFwZ5qqgYlxtsBb8MnCynSCHmXef2Td1g=;
- b=bkjZUC8433QzzqJ0v2iAJJmbtpByCQ+CpHmCSgnQ1mSk6k7/JvJZA/o2L9zKPGh7/BgRu1Og
- n0AxkhfpK/T3Zc87+n/GvdjWHpVPE/IAZjIiL+uByIqEzI3RUot/sguA8FAu66hcs2OybKc6
- J7jjSLAXrZ05x8Ub14ak2LSB21g=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6af1f4.7f0d07e552d0-smtp-out-n01;
- Fri, 13 Mar 2020 02:37:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 627C9C433BA; Fri, 13 Mar 2020 02:37:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 12 Mar 2020 22:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726246AbgCMCkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 22:40:07 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C57FBC433D2;
-        Fri, 13 Mar 2020 02:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D92720724;
+        Fri, 13 Mar 2020 02:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584067207;
+        bh=6V5034ysnLgvvbSebr5dC4ZNWLB0UT9n3wnteW3uwVg=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=bFp9D0vhlP+/Nd+KFmxl+82cn0PsqhUEpxB5XwFyHQiV77McJLVnJRe1WVjA178F7
+         hqJb18K8x5AEblp+Bua24KMYvCqDp6UuV7KduvZ4oOQrZAa/yQj7Nn/Fwn9bzcAJLZ
+         aPsc5XgLPxRq/Eu7sVyrDroDksuBijPXwHu/JHrQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2A3EF35226F6; Thu, 12 Mar 2020 19:40:07 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 19:40:07 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH RFC tip/core/rcu 0/2] Fix RCU idle-exit problem and comment
+Message-ID: <20200313024007.GA27492@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Mar 2020 08:07:39 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
- firmware
-In-Reply-To: <20200302020757.551483-1-bjorn.andersson@linaro.org>
-References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
-Message-ID: <05311a9c9899a13c6479f6628d506f08@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-02 07:37, Bjorn Andersson wrote:
-> Update the firmware-name of the remoteproc nodes to mimic the firmware
-> structure on other 845 devices.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 09ad37b0dd71..fa7f4373a668 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -50,6 +50,7 @@ vreg_s4a_1p8: pm8998-smps4 {
-> 
->  &adsp_pas {
->  	status = "okay";
-> +	firmware-name = "qcom/sdm845/adsp.mdt";
->  };
-> 
->  &apps_rsc {
-> @@ -350,6 +351,7 @@ vreg_s3c_0p6: smps3 {
-> 
->  &cdsp_pas {
->  	status = "okay";
-> +	firmware-name = "qcom/sdm845/cdsp.mdt";
->  };
-> 
->  &gcc {
-> @@ -372,6 +374,11 @@ &i2c10 {
->  	clock-frequency = <400000>;
->  };
-> 
-> +&mss_pil {
-> +	status = "okay";
+Hello!
 
-status okay isn't really needed...
+This series fixes a brown-paper-bag NMI self-deadlock bug located by
+Thomas Gleixner and adds comments:
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+1.	Don't acquire lock in NMI handler in rcu_nmi_enter_common().
 
-> +	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
-> +};
-> +
->  &qupv3_id_1 {
->  	status = "okay";
->  };
+2.	Add comments marking transitions between RCU watching and not.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+These pass light rcutorture testing, and seem like v5.8 material.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ tree.c |   31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
