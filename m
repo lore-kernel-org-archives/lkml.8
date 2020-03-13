@@ -2,285 +2,260 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE52C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D492C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48105206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377F5206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjzmjBSE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCp9VZGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCMQhy (ORCPT
+        id S1726997AbgCMQi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:37:54 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41818 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgCMQhx (ORCPT
+        Fri, 13 Mar 2020 12:38:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53357 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726861AbgCMQi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:37:53 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m25so12609225edq.8;
-        Fri, 13 Mar 2020 09:37:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ug47PEEkURrWYS4cuqEj7hzz31EJ8yvl86Hv/BuIrmY=;
-        b=SjzmjBSEyZhk7pXH+/HhQn1zjaWSNLKMbo0GSmYcYFJi2HN12sUJhH2QePQmw/jZ2E
-         ntrskaMhjBqsRBkuCSR3EEokFfATE99fs4Z1gxzMZ26H9yR0F2tXdTRQgxp7FB7RVaVU
-         q6x9eCGAdPIka0gR1+hi0r6CShXGLINozhuiunPut2g7eUyh7aIzSsLeCm3GQAmugmP7
-         gPryE+22DGyg/a15Kbm6YVuMetcO0mj6OQLg5copv5DdV+3BVzXmrMMGtOINrWzNyISj
-         t5GxzY+oc2vBwI6ye93gdUkH3Mxon5VZuRlEpKUF3QNaG/hz6RrNI0F/wEaXTbCnBEmi
-         KRRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ug47PEEkURrWYS4cuqEj7hzz31EJ8yvl86Hv/BuIrmY=;
-        b=VrO5HhxvJDGWFz+itiCKcGv8MrR8PnKwWt+YArky3MKaoiLVck7cX2TWGADXJ1UEoR
-         lLmDBzom/7tee5nD1O0awknUPyIeNElsYNweKqpZ9e4BEoQ72BVzYhtX4ZUolQUZqiCz
-         zwnW0094EYCKsvRIp6mtFD8Jis8xvbIhujxOCKN5Nsl9bDsGY+HDfymcvYXu1SK5K7ZN
-         CqiqmmgVkobc5boQzfXRrtY2T5pnKix1OAswAmZ96H5UdcPyan1kjboFdVx9vlX+jCGE
-         osBjJVX8zgpIwMK99rgSvBBnTqHABP8NHXVArR4CAK7oengBN/H+lO5KzIOwTvSQaz+U
-         rBwg==
-X-Gm-Message-State: ANhLgQ1Fml5Fd0X9weFGnHJuntzBFWsmLPz5SZ2/scjLW4qU2hAgBMxV
-        8ZhnA2237ZJKxw5GHobTSpQgRFO/5rima06f1ws=
-X-Google-Smtp-Source: ADFU+vvzuNqHEtlSJQWiF/MSD0uhQphIrFgqseKL1hLdMrG0M30AEFfgN/bOSm5pPk3vwaVXAqE1PaAxxCXRT5Q41jI=
-X-Received: by 2002:a50:9b07:: with SMTP id o7mr14635673edi.139.1584117471141;
- Fri, 13 Mar 2020 09:37:51 -0700 (PDT)
+        Fri, 13 Mar 2020 12:38:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584117506;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=LrJ9XowPy9aYY8HNGJzq1TnNm0SxtNZ6yvwC8KOmeCo=;
+        b=XCp9VZGR2GqgavkGuEnWzhX4pZOrtkzW5L2Fh+BlkZVFNXoMIhjSBxz2qxHmFpSX/HRJ5a
+        +kqHgBYXVc9Ke5r9ctfDoEQET4RANZibngRtRzGn4udrzIOKxK0P3Ngr6xiBwwSDeHHf8J
+        6MmUlI+BC+bWbPHYuesjmcNNw1VddIM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-NTSR0f0UPOuezzz409HNtg-1; Fri, 13 Mar 2020 12:38:21 -0400
+X-MC-Unique: NTSR0f0UPOuezzz409HNtg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0228800D5A;
+        Fri, 13 Mar 2020 16:38:19 +0000 (UTC)
+Received: from [10.10.121.252] (ovpn-121-252.rdu2.redhat.com [10.10.121.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7983660BEE;
+        Fri, 13 Mar 2020 16:38:14 +0000 (UTC)
+Subject: Re: [Patch v2] KVM: x86: Initializing all kvm_lapic_irq fields in
+ ioapic_write_indirect
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mtosatti@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pbonzini@redhat.com, peterx@redhat.com
+References: <1584105384-4864-1-git-send-email-nitesh@redhat.com>
+ <871rpwpesg.fsf@vitty.brq.redhat.com>
+ <29c41f43-a8c6-3d72-8647-d46782094524@redhat.com>
+ <e20e4fb5-247c-a029-e09f-49f83f2f9d1a@redhat.com>
+ <87v9n8mdn0.fsf@vitty.brq.redhat.com>
+ <66c57868-52dd-94cc-e9ef-7bceb54a65e3@redhat.com>
+ <87r1xwmct1.fsf@vitty.brq.redhat.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <6052eb34-3b70-35c1-2622-440bdfc43f16@redhat.com>
+Date:   Fri, 13 Mar 2020 12:38:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200310125542.5939-1-olteanv@gmail.com> <615284875b709f602d57e4a4621a83c1@walle.cc>
- <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
- <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc> <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
-In-Reply-To: <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 13 Mar 2020 18:37:39 +0200
-Message-ID: <CA+h21hqk+pVrGgHx4iTshfE3i4WF7VANPfMf2ykPFpL3=ragag@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87r1xwmct1.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="fpb92n7WBK5nDiLAS3OKzwaHLlI0Mvg0u"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--fpb92n7WBK5nDiLAS3OKzwaHLlI0Mvg0u
+Content-Type: multipart/mixed; boundary="oqbaniGLbbOr8DiXzb5gOEA3jk5TXgNn8"
 
-On Fri, 13 Mar 2020 at 18:07, Michael Walle <michael@walle.cc> wrote:
->
-> Am 2020-03-10 16:22, schrieb Michael Walle:
-> > Hi Vladimir,
-> >
-> > Am 2020-03-10 15:56, schrieb Vladimir Oltean:
-> >>> (2) Also, reading the flash, every second time there is
-> >>> (reproducibly)
-> >>> an
-> >>> IO error:
-> >>>
-> >>> # hexdump -C /dev/mtd0
-> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |huhu............|
-> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |................|
-> >>> *
-> >>> 01000000
-> >>> # hexdump -C /dev/mtd0
-> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |huhu............|
-> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |................|
-> >>> *
-> >>> hexdump: /dev/mtd0: Input/output error
-> >>> 00dc0000
-> >>> # hexdump -C /dev/mtd0
-> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |huhu............|
-> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |................|
-> >>> *
-> >>> 01000000
-> >>> # hexdump -C /dev/mtd0
-> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |huhu............|
-> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> >>> |................|
-> >>> *
-> >>> hexdump: /dev/mtd0: Input/output error
-> >>> 00e6a000
-> >>>
-> >>
-> >> Just to be clear, issue 2 is seen only after you abort another
-> >> transaction, right?
-> >
-> > No, just normal uninterrupted reading. Just tried it right after
-> > reboot. Doesn't seem to be every second time though, just random
-> > which makes me wonder if that is another problem now. Also the
-> > last successful reading is random.
->
->
-> Ok I guess I know what the root cause is. This is an extract of
-> the current code:
->
-> > static int dspi_transfer_one_message(struct spi_controller *ctlr,
-> >                                    struct spi_message *message)
-> > {
-> > ..
-> >       /* Kick off the interrupt train */
-> >       dspi_fifo_write(dspi);
-> >
-> >       status = wait_event_interruptible(dspi->waitq,
-> >                                         dspi->waitflags);
-> >       dspi->waitflags = 0;
-> > ..
-> > }
-> >
-> > static int dspi_rxtx(struct fsl_dspi *dspi)
-> > {
-> >       dspi_fifo_read(dspi);
-> >
-> >       if (!dspi->len)
-> >               /* Success! */
-> >               return 0;
-> >
-> >       dspi_fifo_write(dspi);
-> >
-> >       return -EINPROGRESS;
-> > }
->
-> dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
-> access shared data like, dspi->words_in_flight. In the EIO error case
-> the following bytes_sent is -1, because dspi->words_in_flight is -1.
->
-> > /* Update total number of bytes that were transferred */
-> > bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
->
-> words_in_flight is always -1 after dspi_fifo_read() was called. In
-> the error case, the ISR kicks in right in the middle of the execution
-> of dspi_fifo_write() in dspi_transfer_one_message().
->
-> > static void dspi_fifo_write(struct fsl_dspi *dspi)
-> > {
-> > ..
-> >       if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
-> >               dspi_eoq_fifo_write(dspi);
-> >        else
-> >               dspi_xspi_fifo_write(dspi);
->
-> Now if the ISR is executed right here..
->
-> >
-> >       /* Update total number of bytes that were transferred */
-> >       bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
->
-> .. words_in_flight might be -1.
->
-> >       msg->actual_length += bytes_sent;
->
-> and bytes_sent is negative. And this causes an IO error because
-> the returned overall message length doesn't match.
->
-> >       dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
-> > ..
-> > }
->
-> I could not reproduce the issue with the following patch. I don't
-> know if I got the locking correct though or if there is a better
-> way to go.
->
->
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 8b16de9ed382..578fedeb16a0 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -224,6 +224,7 @@ struct fsl_dspi {
->          u16                                     tx_cmd;
->          const struct fsl_dspi_devtype_data      *devtype_data;
->
-> +       spinlock_t lock;
->          wait_queue_head_t                       waitq;
->          u32                                     waitflags;
->
-> @@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
->
->   static int dspi_rxtx(struct fsl_dspi *dspi)
->   {
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&dspi->lock, flags);
->          dspi_fifo_read(dspi);
->
-> -       if (!dspi->len)
-> +       if (!dspi->len) {
->                  /* Success! */
-> +               spin_unlock_irqrestore(&dspi->lock, flags);
->                  return 0;
-> +       }
->
->          dspi_fifo_write(dspi);
->
-> +       spin_unlock_irqrestore(&dspi->lock, flags);
->          return -EINPROGRESS;
->   }
->
-> @@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct
-> spi_controller *ctlr,
->          struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
->          struct spi_device *spi = message->spi;
->          struct spi_transfer *transfer;
-> +       unsigned long flags;
->          int status = 0;
-> +       int i = 0;
->
->          if (dspi->irq)
->                  dspi_enable_interrupts(dspi, true);
-> @@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct
-> spi_controller *ctlr,
->                                  goto out;
->                  } else if (dspi->irq) {
->                          /* Kick off the interrupt train */
-> +                       spin_lock_irqsave(&dspi->lock, flags);
->                          dspi_fifo_write(dspi);
-> +                       spin_unlock_irqrestore(&dspi->lock, flags);
->
->                          status = wait_event_interruptible(dspi->waitq,
->
-> dspi->waitflags);
-> @@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device
-> *pdev)
->          ctlr->cleanup = dspi_cleanup;
->          ctlr->slave_abort = dspi_slave_abort;
->          ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
-> +       spin_lock_init(&dspi->lock);
->
->          pdata = dev_get_platdata(&pdev->dev);
->          if (pdata) {
->
->
->
-> -michael
+--oqbaniGLbbOr8DiXzb5gOEA3jk5TXgNn8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-Thanks for taking such a close look. I haven't had the time to follow up.
-Indeed, the ISR, and therefore dspi_fifo_read, can execute before
-dspi->words_in_flight was populated correctly. And bad things will
-happen in that case.
-But I wouldn't introduce a spin lock that disables interrupts on the
-local CPU just for that - it's too complicated for this driver.
-I would just keep the SPI interrupt quiesced via SPI_RSER and enable
-it only once it's safe, aka after updating dspi->words_in_flight.
 
-Thanks,
--Vladimir
+On 3/13/20 12:36 PM, Vitaly Kuznetsov wrote:
+> Nitesh Narayan Lal <nitesh@redhat.com> writes:
+>
+>> On 3/13/20 12:18 PM, Vitaly Kuznetsov wrote:
+>>> Nitesh Narayan Lal <nitesh@redhat.com> writes:
+>>>
+>>>> On 3/13/20 9:38 AM, Nitesh Narayan Lal wrote:
+>>>>> On 3/13/20 9:25 AM, Vitaly Kuznetsov wrote:
+>>>>>> Nitesh Narayan Lal <nitesh@redhat.com> writes:
+>>>>>>
+>>>>>>> Previously all fields of structure kvm_lapic_irq were not initializ=
+ed
+>>>>>>> before it was passed to kvm_bitmap_or_dest_vcpus(). Which will caus=
+e
+>>>>>>> an issue when any of those fields are used for processing a request=
+.
+>>>>>>> For example not initializing the msi_redir_hint field before passin=
+g
+>>>>>>> to the kvm_bitmap_or_dest_vcpus(), may lead to a misbehavior of
+>>>>>>> kvm_apic_map_get_dest_lapic(). This will specifically happen when t=
+he
+>>>>>>> kvm_lowest_prio_delivery() returns TRUE due to a non-zero garbage
+>>>>>>> value of msi_redir_hint, which should not happen as the request bel=
+ongs
+>>>>>>> to APIC fixed delivery mode and we do not want to deliver the
+>>>>>>> interrupt only to the lowest priority candidate.
+>>>>>>>
+>>>>>>> This patch initializes all the fields of kvm_lapic_irq based on the
+>>>>>>> values of ioapic redirect_entry object before passing it on to
+>>>>>>> kvm_bitmap_or_dest_vcpus().
+>>>>>>>
+>>>>>>> Fixes: 7ee30bc132c6("KVM: x86: deliver KVM IOAPIC scan request to t=
+arget vCPUs")
+>>>>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>>>>>>> ---
+>>>>>>>  arch/x86/kvm/ioapic.c | 7 +++++--
+>>>>>>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+>>>>>>> index 7668fed..3a8467d 100644
+>>>>>>> --- a/arch/x86/kvm/ioapic.c
+>>>>>>> +++ b/arch/x86/kvm/ioapic.c
+>>>>>>> @@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct kvm_=
+ioapic *ioapic, u32 val)
+>>>>>>>  =09=09if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
+>>>>>>>  =09=09=09struct kvm_lapic_irq irq;
+>>>>>>> =20
+>>>>>>> -=09=09=09irq.shorthand =3D APIC_DEST_NOSHORT;
+>>>>>>>  =09=09=09irq.vector =3D e->fields.vector;
+>>>>>>>  =09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
+>>>>>>> -=09=09=09irq.dest_id =3D e->fields.dest_id;
+>>>>>>>  =09=09=09irq.dest_mode =3D
+>>>>>>>  =09=09=09    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
+>>>>>>> +=09=09=09irq.level =3D 1;
+>>>>>> 'level' is bool in struct kvm_lapic_irq but other than that, is ther=
+e a
+>>>>>> reason we set it to 'true' here? I understand that any particular
+>>>>>> setting is likely better than random
+>>>>> Yes, that is the only reason which I had in my mind while doing this =
+change.
+>>>>> I was not particularly sure about the value, so I copied what ioapic_=
+serivce()
+>>>>> is doing.
+>>>> Do you think I should skip setting this here?
+>>>>
+>>> Personally, i'd initialize it to 'false': usualy, if something is not
+>>> properly initialized it's either 0 or garbage)
+>> I think that's true, initializing it to 'false' might make more sense.
+>> Any other concerns or comments that I can improve?
+>>
+> Please add the missing space to the 'Fixes' tag:
+>
+> Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target=
+ vCPUs")
+
+My bad.
+
+>
+> and with that and irq.level initialized to 'false' feel free to add
+>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>
+> tag. Thanks!
+
+Sure, thank you.
+
+>
+>
+>>>>>>  and it should actually not be used
+>>>>>> without setting it first but still?
+>>>>>>
+>>>>>>> +=09=09=09irq.trig_mode =3D e->fields.trig_mode;
+>>>>>>> +=09=09=09irq.shorthand =3D APIC_DEST_NOSHORT;
+>>>>>>> +=09=09=09irq.dest_id =3D e->fields.dest_id;
+>>>>>>> +=09=09=09irq.msi_redir_hint =3D false;
+>>>>>>>  =09=09=09bitmap_zero(&vcpu_bitmap, 16);
+>>>>>>>  =09=09=09kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
+>>>>>>>  =09=09=09=09=09=09 &vcpu_bitmap);
+--=20
+Nitesh
+My
+
+
+--oqbaniGLbbOr8DiXzb5gOEA3jk5TXgNn8--
+
+--fpb92n7WBK5nDiLAS3OKzwaHLlI0Mvg0u
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl5rtvUACgkQo4ZA3AYy
+ozmsjw//aq9VdHKr2TZf6324U8pmDb/5RZjpeD9szuIPo63V4POYln9mqcvOsitT
+gAM2NqwobsqFjpfo+YOef/d+P31ZEWC19qHTDUJQ03oRxnx1VK/aCGjj4S0lEkXp
+t84i1X9TZIY7kxde0OZzt5JKGDgs/5nbjhsKzJobgDcotBXkIT1353L7ouvfvqz7
+p4yMvNAiAClYLKuqlBERvW2lfdNNFHbtekjjDrXIxTiCbZYQoHXnKNPkNZ2IRUnw
+bzQDh7wd8AOvc8P18i97dygW5vj0FGgNaWkg9YTgWrscs9xFLRpRXKpwcJ382YjS
+0jay9s2f2z1++A9c742nvPOsWbLG5TlWC/agQLzQBbpomkIU0g/Wt0Y+3zwHkoaj
+PRkHfvCdMBMrOCy5pVvhrn37p1oxQo3XtO07CURY1HGRQZr/hjTD73stJ6v1/qfl
+NiTV1gCBq3xUqwn5j+FhpTtmCJBml8u3N458P1rGnksubl+MiUMPLsVGv/WlaEjD
+4WFAZydsThpf3lGcWQ2FIcamUshzjDQuKoSMYc3ifahc6TGx9z9GHLw7DI2zuMDf
+IC+m8xKxvZsI2x3ACLsjdPK1iNxsvlpMO/0HLRh0JYTx+jq4RHMVEyFmnNi79ybk
+i1DMvoSUX6ha/wPbARtpPO3OuUQs2UffN2owUpnf/Wb6lB+pSU0=
+=s8Ok
+-----END PGP SIGNATURE-----
+
+--fpb92n7WBK5nDiLAS3OKzwaHLlI0Mvg0u--
+
