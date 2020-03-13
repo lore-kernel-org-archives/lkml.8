@@ -2,90 +2,79 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A6CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB1FC5ACBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3968620746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:12:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584112338;
-	bh=FZ8yTerpUOgwUw5O66SMbr6zAH38c4GmF1VmN0/QOu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V5r/OynErndRIzLKO6Y22NLUspcbViCqzhCyMkBtm9RfFvenM084dl/8gJa4G9kOn
-	 XFWA6rXtLYXlXgw35fVPPQNZExbrktxpEsstXPgJs0pLzQZU2ukut8DzAxyOWLGF+U
-	 6kKmSZOGT8FlBUFT7E5L6zDGM7a4ZFqC/sQS0bDY=
+	by mail.kernel.org (Postfix) with ESMTP id 0E57920724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgCMPMR (ORCPT
+        id S1726802AbgCMPPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Fri, 13 Mar 2020 11:15:21 -0400
+Received: from muru.com ([72.249.23.125]:60028 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgCMPMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:12:17 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0452B20724;
-        Fri, 13 Mar 2020 15:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584112336;
-        bh=FZ8yTerpUOgwUw5O66SMbr6zAH38c4GmF1VmN0/QOu0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OayoPXPwYIQef1mldvV53lJWl+ZZjy3yJCHqcRDjGBZxqeu3zc6oHRUe7u9yox8Pw
-         umrcT3CB5dL4sUymaPe5M4RW6i2SwpXcGKX9XQMeZ3MU6ULScvTj3DqeTvVs/k42QN
-         nf2wkldPgVrsqcDKID3xU9u1qxBhl/5ljgQJy1ys=
-Date:   Fri, 13 Mar 2020 16:12:14 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: Re: [patch part-II V2 06/13] x86/entry/common: Mark syscall entry
- points notrace and NOKPROBE
-Message-ID: <20200313151213.GA32144@lenoir>
-References: <20200308222359.370649591@linutronix.de>
- <20200308222609.522613084@linutronix.de>
+        id S1726534AbgCMPPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:15:20 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id F35F48087;
+        Fri, 13 Mar 2020 15:16:05 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 08:15:16 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Roger Quadros <rogerq@ti.com>, hch@lst.de, robh+dt@kernel.org,
+        nm@ti.com, t-kristo@ti.com, nsekhar@ti.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v2] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Message-ID: <20200313151516.GB37466@atomide.com>
+References: <20200313094717.6671-1-rogerq@ti.com>
+ <fb916d06-1521-25a5-2eae-94244a3f9d06@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200308222609.522613084@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <fb916d06-1521-25a5-2eae-94244a3f9d06@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 11:24:05PM +0100, Thomas Gleixner wrote:
-> The entry code has some limitations for instrumentation. Anything before
-> invoking enter_from_user_mode() cannot be probed because kprobes depend on
-> RCU and with NOHZ_FULL user mode can be accounted similar to idle from a
-> RCU point of view. enter_from_user_mode() calls into context tracking which
-> adjusts the RCU state.
+* Robin Murphy <robin.murphy@arm.com> [200313 15:06]:
+> On 2020-03-13 9:47 am, Roger Quadros wrote:
+> > The L3 interconnect's memory map is from 0x0 to
+> > 0xffffffff. Out of this, System memory (SDRAM) can be
+> > accessed from 0x80000000 to 0xffffffff (2GB)
+> > 
+> > DRA7 does support 4GB of SDRAM but upper 2GB can only be
+> > accessed by the MPU subsystem.
+> > 
+> > Add the dma-ranges property to reflect the physical address limit
+> > of the L3 bus.
+> > 
+> > Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
+> > and CONFIG_ARM_LPAE enabled. This is because the controller
+> > supports 64-bit DMA and its driver sets the dma_mask to 64-bit
+> > thus resulting in DMA accesses beyond L3 limit of 2G.
+> > 
+> > Setting the correct bus_dma_limit fixes the issue.
 > 
-> A similar problem exists vs. function tracing. The function entry/exit
-> points can be used by BPF which again is not safe before CONTEXT_KERNEL has
-> been reached.
-> 
-> Mark the C-entry points for the various syscalls with notrace and
-> NOKPROBE_SYMBOL().
-> 
-> Note, that this still leaves the ASM invocations of trace_hardirqs_off()
-> unprotected. While this is safe vs. RCU at least from the ftrace POV, these
-> are trace points which can be utilized by BPF... This will be addressed in
-> later patches.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> ---
-> V2: Amend changelog
+> Neat! In principle you should no longer need the specific dma-ranges on the
+> PCIe nodes, since AIUI those really only represent a subset of this general
+> limitation, but given the other inheritance issue you saw it's probably
+> safer to leave them as-is for now.
 
-Thanks for the detailed explanations!
+Also, Roger, I think omap5 needs a similar patch too, right?
+At least pyra has omap5 with 4GB and SATA connector.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+> FWIW,
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+Sorry missed that as I just pushed out the fix.
+
+Regards,
+
+Tony
