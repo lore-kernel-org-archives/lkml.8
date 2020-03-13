@@ -1,88 +1,107 @@
 Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825D8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D949C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52435206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rByIursS"
+	by mail.kernel.org (Postfix) with ESMTP id 493E4206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCMQRz (ORCPT
+        id S1727126AbgCMQSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:17:55 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46235 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgCMQRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:17:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r9so2845245lff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GGKTLdP7NysMTjq7A/r6ibsN/jqrKxZ94DgLRwdxBUU=;
-        b=rByIursShxrvJL8x7QUC8Ki6XMcvcoLltmEqaT1zaJzjg/ldGQ85qCtWChh3yi2sha
-         XBRpP4/6FVsBNUAiH4b4VO6q85dWLJPVXycc1J97pT/KFfmqu+MBo4cZCFV6GHqOlB5q
-         BrIIrIVFiSlB+HFKuCzrn3YM4AVtNWSKf0XsMzCAtwDVGrnAtlas3YS8NwwlXI5Y8BoB
-         y8RFRCQ+q7yC3f/+cyMTqTRaWJUpda8IvD/9p1LpSHgRdywz9AJNDsapHW6poAwZQkOF
-         aeDggx/IBtDr/w9XwwEj9Yx13onMnTE2VboIsbVBb95Tr4+j9yoTf0Nyoz3oXMvhblsK
-         bWjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GGKTLdP7NysMTjq7A/r6ibsN/jqrKxZ94DgLRwdxBUU=;
-        b=U+IAJnCrEPIfCdi4QGyT4oL3bvVi8blFhVxsdBjfC5/+Pj+LEwp2mV3VNCm94jgsSs
-         fLXl2pz8kpaf6/+S5sOwFwNroi9uKkwavYcvNJ0Gzv/Seq6IFiVQHWz0mfXQ02WEuqhI
-         PYYvlCh61arxn7j57hGb9o6wZ+3q/ojox1T7w4QlZsYCy28Yw3quhsqfsuvFiz+wTved
-         TT5KrjRRpQwK9boCsev7VRcTRolTjzBrQnMqreaMxNyhK1k/7NzmDAWKRmEEGbI3xoWZ
-         nGzCmE3sLcU6cSvJY8YJ889WgagLyaxuAtm4jkIr+ypGQ+S5oygsbw+WIBmAnnjVcmzy
-         wLrg==
-X-Gm-Message-State: ANhLgQ2WtyglJjla5rXjDCFmx76qvFFj8nZEniDN6xp9XI7xuQa/X6Zj
-        Pe7LF7T/5NkTh6JQ9eQUd6pH066OXs1wVNjJ/IUC4w==
-X-Google-Smtp-Source: ADFU+vtValKojWuh4Y5Xd2oyg0PROdnQd5jtfAmUywOUtPoRIjgVc6sIaJFcF6i+ykZj2N1GZzMbUMeIxPPBc8t2pwI=
-X-Received: by 2002:a19:f601:: with SMTP id x1mr7277713lfe.55.1584116272680;
- Fri, 13 Mar 2020 09:17:52 -0700 (PDT)
+        Fri, 13 Mar 2020 12:18:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11114 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbgCMQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:18:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:18:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="261935961"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 13 Mar 2020 09:18:35 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jCn1A-009IkE-Vj; Fri, 13 Mar 2020 18:18:36 +0200
+Date:   Fri, 13 Mar 2020 18:18:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB
+ SoS's
+Message-ID: <20200313161836.GX1922688@smile.fi.intel.com>
+References: <20200313141545.31943-1-alcooperx@gmail.com>
 MIME-Version: 1.0
-References: <20200310124203.704193207@linuxfoundation.org> <0074ed5d-1c87-4e0c-7d3f-bb5cc4e80366@kernel.org>
-In-Reply-To: <0074ed5d-1c87-4e0c-7d3f-bb5cc4e80366@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 13 Mar 2020 21:47:41 +0530
-Message-ID: <CA+G9fYvx8q9+VrweEZx4t+-XFEOQLaUJed2ooRUPG8NxjKkkeA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/126] 4.14.173-stable review
-To:     shuah <shuah@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313141545.31943-1-alcooperx@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah
+On Fri, Mar 13, 2020 at 10:15:41AM -0400, Al Cooper wrote:
+> This adds support for the XHCI, EHCI and OHCI host controllers found
+> in Broadcom STB SoC's. These drivers depend on getting access to the
+> new Broadcom STB USB PHY driver through a device-tree phandle and
+> will fail if the driver is not available.
 
->
-> Compiled and booted on my test system. I have a new alert on my system:
->
-> RIP: kvm_mmu_set_mmio_spte_mask+0x34/0x40 [kvm] RSP: ffffb4f7415b7be8
+Hint to the future:
 
-Our system did not catch this alert.
-Please share your kernel config file and
-steps to reproduce and any extra kernel boot args ?
+	scripts/get_maintainer.pl --git --git-min-percent=67 ...
 
-- Naresh
+> 
+> Al Cooper (4):
+>   dt-bindings: Add Broadcom STB USB support
+>   usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+>   usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+>   usb: host: Add ability to build new Broadcom STB USB drivers
+> 
+>  .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
+>  .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+>  MAINTAINERS                                   |   9 +
+>  drivers/usb/host/Kconfig                      |  20 ++
+>  drivers/usb/host/Makefile                     |  20 +-
+>  drivers/usb/host/ehci-brcm.c                  | 288 ++++++++++++++++++
+>  drivers/usb/host/xhci-brcm.c                  |  16 +
+>  drivers/usb/host/xhci-brcm.h                  |  16 +
+>  drivers/usb/host/xhci-plat.c                  |  11 +
+>  9 files changed, 435 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+>  create mode 100644 drivers/usb/host/ehci-brcm.c
+>  create mode 100644 drivers/usb/host/xhci-brcm.c
+>  create mode 100644 drivers/usb/host/xhci-brcm.h
+> 
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
