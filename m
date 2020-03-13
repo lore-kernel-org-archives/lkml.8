@@ -2,116 +2,105 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE84EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8AFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6C620749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418FB20749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mo+6Uwjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCMSdv (ORCPT
+        id S1727196AbgCMSdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:33:51 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45386 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgCMSdv (ORCPT
+        Fri, 13 Mar 2020 14:33:55 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:44620 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgCMSdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:33:51 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCp36-00AyVa-Sz; Fri, 13 Mar 2020 18:28:45 +0000
-Date:   Fri, 13 Mar 2020 18:28:44 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Stefan Metzmacher <metze@samba.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, jlayton@redhat.com,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeremy Allison <jra@samba.org>,
-        Ralph =?iso-8859-1?Q?B=F6hme?= <slow@samba.org>,
-        Volker Lendecke <vl@sernet.de>
-Subject: Re: [PATCH 01/14] VFS: Add additional RESOLVE_* flags [ver #18]
-Message-ID: <20200313182844.GO23230@ZenIV.linux.org.uk>
-References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
- <158376245699.344135.7522994074747336376.stgit@warthog.procyon.org.uk>
- <20200310005549.adrn3yf4mbljc5f6@yavin>
- <CAHk-=wiEBNFJ0_riJnpuUXTO7+_HByVo-R3pGoB_84qv3LzHxA@mail.gmail.com>
- <580352.1583825105@warthog.procyon.org.uk>
- <CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com>
- <3d209e29-e73d-23a6-5c6f-0267b1e669b6@samba.org>
- <CAHk-=wgu3Wo_xcjXnwski7JZTwQFaMmKD0hoTZ=hqQv3-YojSg@mail.gmail.com>
- <8d24e9f6-8e90-96bb-6e98-035127af0327@samba.org>
- <20200313095901.tdv4vl7envypgqfz@yavin>
+        Fri, 13 Mar 2020 14:33:54 -0400
+Received: by mail-qv1-f67.google.com with SMTP id w5so5124256qvp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 11:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IatxmkA0MPPH/jxsQO3JS1Cap5XHBwRG57sBC+1NLQ0=;
+        b=Mo+6UwjpfLDeIQqUqahaBvF3Qki4vOpHA3enGGY+JrV4bpihJ1ZZXHdQOctDeqMbZI
+         HuX7MabUSyaedE/pcCGyk1r4RMC4LLAYVYy2YzLs5sl7tKolLMOvir9jVJ1f5Rc7p8Ty
+         1qp7LmO3VAuHEZPDSAo+ylMkISEuMpOCMjtbC9vjiexEaAvE855JiFnM6It6oJbMr5t9
+         nrOiagHAV+IFcqkPRgjGKnSmFvMRqREZg0nfsVnwgqlOqLsPRYorkal/cD6DukGEXvhR
+         en3VgFnUN+FHjWG2VdC0RPDp1c2gaKK0uNPm5d7Zrm4A7nVXpaxMRUSXZEyvHtEbEWKQ
+         ALYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IatxmkA0MPPH/jxsQO3JS1Cap5XHBwRG57sBC+1NLQ0=;
+        b=ZPaSegcoxFoipbkD2TUY1VEa7V8VGyRWvz7QYEJwJuM3rGglp+5DZ6QcG8EWeWbEVJ
+         G2uyz/KpzeXxBxdHuuRFyVtGb9y/3WsLXCbG4sa58j2MlfavAm2/2UHbqKFEq00pOmZ1
+         cImXgsWACztqZHQYeYMMLTv1Eyou9mld4EsW8C3woK7EfZKnOM1faub1k/h3/3kEQhwQ
+         1nZRdrturBPEIt/CSI5qavJSK6SecIlF+V0B7vUqaKyhgG9gvcWL7aBvqtn1bqYiSK7R
+         /Vv1SqXMneVP0/DQxwa19bKkLmzpOyL7ch3bPGLqpjmIxw8pjrhXjXVvCW9Eg2SZh0I/
+         aSKw==
+X-Gm-Message-State: ANhLgQ08dd9adw7qpFqKmUC9n47havaCPHsMXE31gW2hUnGt3ZEu3je5
+        QZEkrnvxKdi/YU28FOSBqBo=
+X-Google-Smtp-Source: ADFU+vvvDSLHNVDbCO01PMMfpsU4J2V32lm/IjBkopPYn4j7c7wkv8rmCR3bc5lS7HEHc1yCa6k90Q==
+X-Received: by 2002:ad4:5642:: with SMTP id bl2mr14091018qvb.11.1584124433196;
+        Fri, 13 Mar 2020 11:33:53 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l92sm3917781qte.25.2020.03.13.11.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 11:33:52 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 13 Mar 2020 14:33:50 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, "H.J. Lu" <hjl.tools@gmail.com>
+Subject: Re: [PATCH v2] x86/boot: Correct relocation destination on old
+ linkers
+Message-ID: <20200313183349.GA1544820@rani.riverdale.lan>
+References: <20200111190015.3257863-1-nivedita@alum.mit.edu>
+ <20200207214926.3564079-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200313095901.tdv4vl7envypgqfz@yavin>
+In-Reply-To: <20200207214926.3564079-1-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 08:59:01PM +1100, Aleksa Sarai wrote:
-> On 2020-03-12, Stefan Metzmacher <metze@samba.org> wrote:
-> > Am 12.03.20 um 17:24 schrieb Linus Torvalds:
-> > > But yes, if we have a major package like samba use it, then by all
-> > > means let's add linkat2(). How many things are we talking about? We
-> > > have a number of system calls that do *not* take flags, but do do
-> > > pathname walking. I'm thinking things like "mkdirat()"?)
-> > 
-> > I haven't looked them up in detail yet.
-> > Jeremy can you provide a list?
-> > 
-> > Do you think we could route some of them like mkdirat() and mknodat()
-> > via openat2() instead of creating new syscalls?
+On Fri, Feb 07, 2020 at 04:49:26PM -0500, Arvind Sankar wrote:
+> For the 32-bit kernel, as described in commit 6d92bc9d483a ("x86/build:
+> Build compressed x86 kernels as PIE"), pre-2.26 binutils generates
+> R_386_32 relocations in PIE mode.  Since the startup code does not
+> perform relocation, any reloc entry with R_386_32 will remain as 0 in
+> the executing code.
 > 
-> I have heard some folks asking for a way to create a directory and get a
-> handle to it atomically -- so arguably this is something that could be
-> inside openat2()'s feature set (O_MKDIR?). But I'm not sure how popular
-> of an idea this is.
+> Commit 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
+> decompression buffer") added a new symbol _end but did not mark it
+> hidden, which doesn't give the correct offset on older linkers. This
+> causes the compressed kernel to be copied beyond the end of the
+> decompression buffer, rather than flush against it. This region of
+> memory may be reserved or already allocated for other purposes by the
+> bootloader.
+> 
+> Mark _end as hidden to fix. This changes the relocation from R_386_32 to
+> R_386_RELATIVE even on the pre-2.26 binutils.
+> 
+> For 64-bit, this is not strictly necessary, as the 64-bit kernel is only
+> built as PIE if the linker supports -z noreloc-overflow, which implies
+> binutils-2.27+, but for consistency, mark _end as hidden here too.
+> 
 
-For fuck sake, *NO*!
+Gentle reminder.
 
-We don't need any more multiplexors from hell.  mkdir() and open() have
-deeply different interpretation of pathnames (and anyone who asks for
-e.g. traversals of dangling symlinks on mkdir() is insane).  Don't try to
-mix those; even O_TMPFILE had been a mistake.
-
-Folks, we'd paid very dearly for the atomic_open() merge.  We are _still_
-paying for it - and keep finding bugs induced by the convoluted horrors
-in that thing (see yesterday pull from vfs.git#fixes for the latest crop).
-I hope to get into more or less sane shape (part - this cycle, with
-followups in the next one), but the last thing we need is more complexity
-in the area.
-
-Keep the semantics simple and regular; corner cases _suck_.  "Infinitely
-extensible (without review)" is no virtue.  And having nowhere to hide
-very special flags for very special kludges is a bloody good thing.
-
-Every fucking time we had a multiplexed syscall, it had been a massive
-source of trouble.  IF it has a uniform semantics - fine; we don't need
-arseloads of read_this(2)/read_that(2).  But when you need pages upon
-pages to describe the subtle differences in the interpretation of
-its arguments, you have already lost.  It will be full of corner
-cases, they will get zero testing and they will rot.  Inevitably.  All
-the faster for the lack of people who would be able to keep all of that
-in head.
-
-We do have a mechanism for multiplexing; on amd64 it lives in do_syscall_64().
-We really don't need openat2() turning into another one.  Syscall table
-slots are not in a short supply, and the level of review one gets from
-"new syscall added" is higher than from "make fubar(2) recognize a new
-member in options->union_full_of_crap if it has RESOLVE_TO_WANK_WITH_RIGHT_HAND
-set in options->flags, affecting its behaviour in some odd ways".
-Which is a good thing, damnit.
+https://lore.kernel.org/lkml/20200207214926.3564079-1-nivedita@alum.mit.edu/
