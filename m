@@ -2,114 +2,83 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30EEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF5AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D562072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:25:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ds12Pbz5"
+	by mail.kernel.org (Postfix) with ESMTP id 72A402072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgCMLZF (ORCPT
+        id S1726642AbgCMLZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:25:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37226 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCMLZF (ORCPT
+        Fri, 13 Mar 2020 07:25:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53021 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgCMLZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:25:05 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a32so3968185pga.4;
-        Fri, 13 Mar 2020 04:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=YSkGa2UvwX+1eAP/7tt1QNSs+cG/P3JEIi8YH4DrwtI=;
-        b=ds12Pbz56P3HtbbsNiP4zu8oLtv3DjT0vb9zDsJp975Z7iWT+UKql7Bn1CkRWx/e+Z
-         lhHdDYzzewJ0hOIL29hwJcGLYEwZXnsQQ7j/8DWWJiZ0fq3dt7T5IFczsndvW2IAKj56
-         6wVOm9bWVjGqxkNIZGRpKm4PXbyb9TyJxux37s3ASVI2BmtOMyvWRtqFSgnRbJZK4xW5
-         lpGgT5PBTw0HyO559MN+VBkV+5rIvXlP91pA4yLTkQESr8+XQ0zIVB6nhjvlzO9UQ3Wh
-         7Gjt4KQnntaCUkE/cQ/e0nDuF3SPxxKH0T9EZ5QQhrzMXqJs1JFaJJpz0uJoN+P4YEWM
-         fxjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=YSkGa2UvwX+1eAP/7tt1QNSs+cG/P3JEIi8YH4DrwtI=;
-        b=IhqYapwg6JelL28qmSDpA0pI9LzaMXLk/bSgZlwofNyWYnsmWis942iGbX+OR8J9i+
-         zOxSf3oMU5zW0ppBe0s7I+IEZYsv7pdL81aIf4FrWYcV/niaZLENwRK7NVFsbWBGB2y0
-         8lmXgOcTi+Vi5GCX+lUdzJ0q8QyWRHGsPFt6espW39h/nY6eYmx/9erQN2roEAxIx9uN
-         jP20x0ECWxovmd79+H0DXurPjwQ14bjRAjgON0NMUneQITCZfEGvZLL6zhCz0yZ5FDP2
-         LPs0/bTp/WTqcyMjVxezKfcKxrZ6weABBXYSdxNdzD3ddcUPlKTgXfwYNmxaqBLXEc9O
-         73bg==
-X-Gm-Message-State: ANhLgQ0KS/kgwad1CxCWwwkG0Oyn5op6ayuiivU+eigYkiNFnumrfskM
-        HZcJ1M7aRzBfeIn5poorYog=
-X-Google-Smtp-Source: ADFU+vuDSMMAXyFa/6NoReYrOXDHvyFMKXE0MIjwd9O6n1fxC41XyWu8IW+yEakpYStTxRY16K73tQ==
-X-Received: by 2002:a63:6944:: with SMTP id e65mr13251443pgc.406.1584098704226;
-        Fri, 13 Mar 2020 04:25:04 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:22f:d418:f8a5:7ca8:f99b:fa30])
-        by smtp.gmail.com with ESMTPSA id q26sm2094820pff.63.2020.03.13.04.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 04:25:03 -0700 (PDT)
-From:   Shreeya Patel <shreeya.patel23498@gmail.com>
-To:     adham.abozaeid@microchip.com, ajay.kathat@microchip.com,
-        linux-wireless@vger.kernel.org, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
-        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
-        hverkuil@xs4all.nl, shreeya.patel23498@gmail.com
-Subject: [Outreachy kernel] [PATCH] Staging: wilc1000: cfg80211: Use kmemdup instead of kmalloc and memcpy
-Date:   Fri, 13 Mar 2020 16:54:51 +0530
-Message-Id: <20200313112451.25610-1-shreeya.patel23498@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 13 Mar 2020 07:25:40 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jCiRb-0005Ri-4h; Fri, 13 Mar 2020 11:25:35 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ethtool: fix spelling mistake "exceeeds" -> "exceeds"
+Date:   Fri, 13 Mar 2020 11:25:34 +0000
+Message-Id: <20200313112534.76626-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace calls to kmalloc followed by a memcpy with a direct call to
-kmemdup.
+From: Colin Ian King <colin.king@canonical.com>
 
-The Coccinelle semantic patch used to make this change is as follows:
-@@
-expression from,to,size,flag;
-statement S;
-@@
+There are a couple of spelling mistakes in NL_SET_ERR_MSG_ATTR messages.
+Fix these.
 
--  to = \(kmalloc\|kzalloc\)(size,flag);
-+  to = kmemdup(from,size,flag);
-   if (to==NULL || ...) S
--  memcpy(to, from, size);
-
-Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/staging/wilc1000/cfg80211.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/ethtool/channels.c | 2 +-
+ net/ethtool/rings.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/cfg80211.c b/drivers/staging/wilc1000/cfg80211.c
-index 54e02807cebf..4bdcbc5fd2fd 100644
---- a/drivers/staging/wilc1000/cfg80211.c
-+++ b/drivers/staging/wilc1000/cfg80211.c
-@@ -1142,14 +1142,13 @@ static int mgmt_tx(struct wiphy *wiphy,
- 		goto out;
+diff --git a/net/ethtool/channels.c b/net/ethtool/channels.c
+index 8dc5485333a4..389924b65d05 100644
+--- a/net/ethtool/channels.c
++++ b/net/ethtool/channels.c
+@@ -189,7 +189,7 @@ int ethnl_set_channels(struct sk_buff *skb, struct genl_info *info)
+ 	if (err_attr) {
+ 		ret = -EINVAL;
+ 		NL_SET_ERR_MSG_ATTR(info->extack, err_attr,
+-				    "requested channel count exceeeds maximum");
++				    "requested channel count exceeds maximum");
+ 		goto out_ops;
  	}
  
--	mgmt_tx->buff = kmalloc(len, GFP_KERNEL);
-+	mgmt_tx->buff = kmemdup(buf, len, GFP_KERNEL);
- 	if (!mgmt_tx->buff) {
- 		ret = -ENOMEM;
- 		kfree(mgmt_tx);
- 		goto out;
+diff --git a/net/ethtool/rings.c b/net/ethtool/rings.c
+index c2ebf72be217..5422526f4eef 100644
+--- a/net/ethtool/rings.c
++++ b/net/ethtool/rings.c
+@@ -181,7 +181,7 @@ int ethnl_set_rings(struct sk_buff *skb, struct genl_info *info)
+ 	if (err_attr) {
+ 		ret = -EINVAL;
+ 		NL_SET_ERR_MSG_ATTR(info->extack, err_attr,
+-				    "requested ring size exceeeds maximum");
++				    "requested ring size exceeds maximum");
+ 		goto out_ops;
  	}
  
--	memcpy(mgmt_tx->buff, buf, len);
- 	mgmt_tx->size = len;
- 
- 	if (ieee80211_is_probe_resp(mgmt->frame_control)) {
 -- 
-2.17.1
+2.25.1
 
