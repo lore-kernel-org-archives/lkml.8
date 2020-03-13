@@ -2,173 +2,281 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69944C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0B7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE68206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB70206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYdPIASj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idV80ylM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgCMJsB (ORCPT
+        id S1726636AbgCMJsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:48:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43598 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgCMJsB (ORCPT
+        Fri, 13 Mar 2020 05:48:05 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43225 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgCMJsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:48:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b2so4975737wrj.10;
-        Fri, 13 Mar 2020 02:47:58 -0700 (PDT)
+        Fri, 13 Mar 2020 05:48:02 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l13so6922286qtv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 02:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XQL/ya+7buqNZWgLcV53EPIchP1Jf2XAfvnaPJGA1KA=;
-        b=pYdPIASjYoqpQoZ+d0D1BtbpFxOaL31zy7s2vppMa61ioYUMdqnfucab9xSLprGaDe
-         KGicwSl2z64hVgJwPPxeOtKJSWJRP0vq189Vy1BPL+jTmMa+VMOWe/NXV//VrMWJCkUy
-         5m9fX3NLEGm86NabuYrtSJ5drAQItP1zom27YjfmHKtnXn03WFVN39BlGaUpr3OKh/pW
-         useVs+j1RAHP31DeNOzwEI0F8RdbySDuG9ZwxP0fv0m+LSQJyq6zpF54I/BNiIJyB5d9
-         rkMCgtLU6AMeSCqrgPTrLvm1L6c3kAt+8Ak/s+CyalMgFapywFDRN8dOqKsEWuSOeWRt
-         3qew==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8ype9a2Pgy0TDkVr+jjtxMr6KTyOlymmisvMN8Riefk=;
+        b=idV80ylMvEIMsvllcp2OWlep7Wg7lp0Ru/uKDyRC6qmc69JFzVeRgtSHUhR+D59WlM
+         AoU7d3uKDNnIU1L8At21wB0rJIG17hd5BoXi5lLqgMBGnmwOMs8blHzdVC04jvi6xYui
+         VIoMUsD22lhwAoWHU8w/iRpsazyrL77UIBOQZ7O0YewBF3lH5V3AYjrSvFPWYyu6I4Dz
+         lmIpRCuLy0T/8xJY2bLzVqt7BVGuMqfPhBVGymY4PMzaxnf3FAOI9ltIzrUHPQFGt6xC
+         foq4mOfumN0EfS2Z3VkXuD11EFgNuPjWhxsAjPbmAMIGuFGisI46U2A4qBu9rYkKJwnb
+         bZ6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XQL/ya+7buqNZWgLcV53EPIchP1Jf2XAfvnaPJGA1KA=;
-        b=r+fCloiLMutgB2s9NtcLvX3XC+urR5oQJNA3Y7xfoig4DV4yezMhii8k6v8CdXp4sK
-         Bz41nOo5OVDtcn7ZZ/KSS49QphnxwIF2Wkxfzjd6JlKsl1ltB8boeQJhbSWzTEUvneRe
-         6vLlzQRH5naz6Wwv+z+jT+hu4jgphOZRonKvXEd1SXhFQ72u1ydYeQ6gLijfjP/u+rtg
-         L7TYFzbESftkr3xpsVWu5qMWbQEvcVTZAlbBeeScSHt9lVotqyOAmuJ3xrStZ/Vxyod6
-         O0+o0VD0CEaMLZvvhpp8vwLNRchver0D9tBKZveA7XGXUFcPAP2H0VmIjRbkyVh4Wqyp
-         hyOQ==
-X-Gm-Message-State: ANhLgQ2DmiIa82AryWt8I+VlVc7DvHtuCjfQN8ml04BQGFW/YJJ3GRLT
-        kzRGp/HBBzx8yNjkgVmRipInR7nO
-X-Google-Smtp-Source: ADFU+vtaxHOPeIyS6PgzifyQThwGs16+e+1vFL082dvhCXY95j+M8YBn6L+ANelNhAcd5SM3g8oOtQ==
-X-Received: by 2002:adf:94c2:: with SMTP id 60mr16813347wrr.396.1584092877688;
-        Fri, 13 Mar 2020 02:47:57 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u7sm8109776wme.43.2020.03.13.02.47.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 02:47:57 -0700 (PDT)
-Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory
- nodenames
-To:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200304074051.8742-1-jbx6244@gmail.com>
- <1784340.9KJLpVao5L@phil> <2a5ef6fc-2487-91ef-24ce-97dd47b0a137@gmail.com>
- <7869677.iSBujUIW6u@phil>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <5af5bdfd-3522-9066-8bde-84a5e468be32@gmail.com>
-Date:   Fri, 13 Mar 2020 10:47:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8ype9a2Pgy0TDkVr+jjtxMr6KTyOlymmisvMN8Riefk=;
+        b=ZewLMj73eFierun+idORHVHh7UvbRl6wkze2xjs00NZ4vRiodGTYKZm3frsQloRKRm
+         z96a8nxh3q3s2DAhNQAhrotgzdjVd+SbOc30ZIN3ZzN5g+KmQtUrU5nyJ2jjJAdMez/q
+         Sjqd1m6BrKkdKTIUD8xmqZoJffHgTH1osC5/7/1AyD/uyWkSSrPia4RkgzygWQcYT2Mu
+         zxpDrooNbJ9t4PMEkcgtGQ54d6qoQWAiO4LON7bIMVBIZvbTxcgc75VnLPsojQ15Ysd7
+         wJZqMW6THmRVVH/blmoZDV7aiHBf+f27GYKVkN8eK5QWj5fq+VexeTPRF6mcm4zzj6ER
+         f0Bg==
+X-Gm-Message-State: ANhLgQ2v9GjBcqPuZt6r8u09mpjPPRZXwjWwk8SmXw3lEZ8grfON/Q+b
+        Mz36T1oLbYrGYE8Wq/oHXumKFUs1OyRFULN+8jM=
+X-Google-Smtp-Source: ADFU+vtE7WMgh4Gv9w102cDFerGRE1K1vCLoXgu1/Vg4RBcxs88YSkurvuT2VTjzFld7v8QADYo+l0oWYGQvFcjPMK8=
+X-Received: by 2002:aed:3346:: with SMTP id u64mr4634827qtd.333.1584092880504;
+ Fri, 13 Mar 2020 02:48:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7869677.iSBujUIW6u@phil>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
+ <20200311110237.5731-2-srikar@linux.vnet.ibm.com> <20200311115735.GM23944@dhcp22.suse.cz>
+ <20200312052707.GA3277@linux.vnet.ibm.com> <C5560C71-483A-41FB-BDE9-526F1E0CFA36@linux.vnet.ibm.com>
+ <5e5c736a-a88c-7c76-fc3d-7bc765e8dcba@suse.cz> <20200312131438.GB3277@linux.vnet.ibm.com>
+ <61437352-8b54-38fa-4471-044a65c9d05a@suse.cz> <20200312161310.GC3277@linux.vnet.ibm.com>
+ <e115048c-be38-c298-b8d1-d4b513e7d2fb@suse.cz>
+In-Reply-To: <e115048c-be38-c298-b8d1-d4b513e7d2fb@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 13 Mar 2020 18:47:49 +0900
+Message-ID: <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christopher Lameter <cl@linux.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko, Rob,
+2020=EB=85=84 3=EC=9B=94 13=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 1:42, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 3/12/20 5:13 PM, Srikar Dronamraju wrote:
+> > * Vlastimil Babka <vbabka@suse.cz> [2020-03-12 14:51:38]:
+> >
+> >> > * Vlastimil Babka <vbabka@suse.cz> [2020-03-12 10:30:50]:
+> >> >
+> >> >> On 3/12/20 9:23 AM, Sachin Sant wrote:
+> >> >> >> On 12-Mar-2020, at 10:57 AM, Srikar Dronamraju <srikar@linux.vne=
+t.ibm.com> wrote:
+> >> >> >> * Michal Hocko <mhocko@kernel.org> [2020-03-11 12:57:35]:
+> >> >> >>> On Wed 11-03-20 16:32:35, Srikar Dronamraju wrote:
+> >> >> >>>> To ensure a cpuless, memoryless dummy node is not online, powe=
+rpc need
+> >> >> >>>> to make sure all possible but not present cpu_to_node are set =
+to a
+> >> >> >>>> proper node.
+> >> >> >>>
+> >> >> >>> Just curious, is this somehow related to
+> >> >> >>> http://lkml.kernel.org/r/20200227182650.GG3771@dhcp22.suse.cz?
+> >> >> >>>
+> >> >> >>
+> >> >> >> The issue I am trying to fix is a known issue in Powerpc since m=
+any years.
+> >> >> >> So this surely not a problem after a75056fc1e7c (mm/memcontrol.c=
+: allocate
+> >> >> >> shrinker_map on appropriate NUMA node").
+> >> >> >>
+> >> >
+> >> > While I am not an expert in the slub area, I looked at the patch
+> >> > a75056fc1e7c and had some thoughts on why this could be causing this=
+ issue.
+> >> >
+> >> > On the system where the crash happens, the possible number of nodes =
+is much
+> >> > greater than the number of onlined nodes. The pdgat or the NODE_DATA=
+ is only
+> >> > available for onlined nodes.
+> >> >
+> >> > With a75056fc1e7c memcg_alloc_shrinker_maps, we end up calling kzall=
+oc_node
+> >> > for all possible nodes and in ___slab_alloc we end up looking at the
+> >> > node_present_pages which is NODE_DATA(nid)->node_present_pages.
+> >> > i.e for a node whose pdgat struct is not allocated, we are trying to
+> >> > dereference.
+> >>
+> >> From what we saw, the pgdat does exist, the problem is that slab's per=
+-node data
+> >> doesn't exist for a node that doesn't have present pages, as it would =
+be a waste
+> >> of memory.
+> >
+> > Just to be clear
+> > Before my 3 patches to fix dummy node:
+> > srikar@ltc-zzci-2 /sys/devices/system/node $ cat $PWD/possible
+> > 0-31
+> > srikar@ltc-zzci-2 /sys/devices/system/node $ cat $PWD/online
+> > 0-1
+>
+> OK
+>
+> >>
+> >> Uh actually you are probably right, the NODE_DATA doesn't exist anymor=
+e? In
+> >> Sachin's first report [1] we have
+> >>
+> >> [    0.000000] numa:   NODE_DATA [mem 0x8bfedc900-0x8bfee3fff]
+> >> [    0.000000] numa:     NODE_DATA(0) on node 1
+> >> [    0.000000] numa:   NODE_DATA [mem 0x8bfed5200-0x8bfedc8ff]
+> >>
+> >
+> > So even if pgdat would exist for nodes 0 and 1, there is no pgdat for t=
+he
+> > rest 30 nodes.
+>
+> I see. Perhaps node_present_pages(node) is not safe in SLUB then and it s=
+hould
+> check online first, as you suggested.
+>
+> >> But in this thread, with your patches Sachin reports:
+> >
+> > and with my patches
+> > srikar@ltc-zzci-2 /sys/devices/system/node $ cat $PWD/possible
+> > 0-31
+> > srikar@ltc-zzci-2 /sys/devices/system/node $ cat $PWD/online
+> > 1
+> >
+> >>
+> >> [    0.000000] numa:   NODE_DATA [mem 0x8bfedc900-0x8bfee3fff]
+> >>
+> >
+> > so we only see one pgdat.
+> >
+> >> So I assume it's just node 1. In that case, node_present_pages is real=
+ly dangerous.
+> >>
+> >> [1]
+> >> https://lore.kernel.org/linux-next/3381CD91-AB3D-4773-BA04-E7A072A6396=
+8@linux.vnet.ibm.com/
+> >>
+> >> > Also for a memoryless/cpuless node or possible but not present nodes=
+,
+> >> > node_to_mem_node(node) will still end up as node (atleast on powerpc=
+).
+> >>
+> >> I think that's the place where this would be best to fix.
+> >>
+> >
+> > Maybe. I thought about it but the current set_numa_mem semantics are ap=
+t
+> > for memoryless cpu node and not for possible nodes.  We could have upto=
+ 256
+> > possible nodes and only 2 nodes (1,2) with cpu and 1 node (1) with memo=
+ry.
+> > node_to_mem_node seems to return what is set in set_numa_mem().
+> > set_numa_mem() seems to say set my numa_mem node for the current memory=
+less
+> > node to the param passed.
+> >
+> > But how do we set numa_mem for all the other 253 possible nodes, which
+> > probably will have 0 as default?
+> >
+> > Should we introduce another API such that we could update for all possi=
+ble
+> > nodes?
+>
+> If we want to rely on node_to_mem_node() to give us something safe for ea=
+ch
+> possible node, then probably it would have to be like that, yeah.
+>
+> >> > I tried with this hunk below and it works.
+> >> >
+> >> > But I am not sure if we need to check at other places were
+> >> > node_present_pages is being called.
+> >>
+> >> I think this seems to defeat the purpose of node_to_mem_node()? Should=
+n't it
+> >> return only nodes that are online with present memory?
+> >> CCing Joonsoo who seems to have introduced this in ad2c8144418c ("topo=
+logy: add
+> >> support for node_to_mem_node() to determine the fallback node")
+> >>
+> >
+> > Agree
 
-From https://coreboot.org/status/board-status.html
+I lost all the memory about it. :)
+Anyway, how about this?
 
-The only supported boards listed are:
+1. make node_present_pages() safer
+static inline node_present_pages(nid)
+{
+if (!node_online(nid)) return 0;
+return (NODE_DATA(nid)->node_present_pages);
+}
 
-Veyron Rockchip RK3288 boards
-Veyron Mickey Rockchip RK3288 board
-Veyron Rialto Rockchip RK3288 board
-Gru Rockchip RK3399 reference board
+2. make node_to_mem_node() safer for all cases
+In ppc arch's mem_topology_setup(void)
+for_each_present_cpu(cpu) {
+ numa_setup_cpu(cpu);
+ mem_node =3D node_to_mem_node(numa_mem_id());
+ if (!node_present_pages(mem_node)) {
+  _node_numa_mem_[numa_mem_id()] =3D first_online_node;
+ }
+}
 
-Fixed with:
-ARM: dts: rockchip: Remove @0 from the veyron memory node
-https://patchwork.kernel.org/patch/10688081/
+With these two changes, we can uses node_present_pages() and node_to_mem_no=
+de()
+as intended.
 
-The problem is rk3288-veyron only I think.
-Else fix coreboot to comply with DT rules, not the other way around.
-Will make v2.
+Thanks.
 
-Can robh give advice here?
-
-Thanks
-
-On 3/6/20 12:58 AM, Heiko Stuebner wrote:
-> Hi Johan, Rob,
-> 
-> Am Donnerstag, 5. März 2020, 23:21:52 CET schrieb Johan Jonker:
->> Goal was to reduce the error output of existing code a little bit,
->> so that we can use it for the review of new patches.
->> Some questions:
->> As I don't have the hardware, where else is coreboot used?
->> Is this a rk3288-veyron.dtsi problem only?
->> ie. Is it a option to produce a patch serie v2 without veyron?
->> Can someone help testing?
-> 
-> I believe that is more question for @Rob :
-> 
-> In the past we said that it would be ok to have "memory" nodes without
-> address, so "memory {}" instead of "memory@0 {}", simply because
-> bootloaders mess up sometimes.
-> 
-> Question now would be how to make the yaml bindings happy.
-> 
-> Thanks
-> Heiko
-> 
-> 
->>
->> Johan
->>
->> On 3/5/20 10:31 PM, Heiko Stuebner wrote:
->>> Hi Johan,
->>>
->>> Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
->>>> A test with the command below gives for example this error:
->>>>
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
->>>> False schema does not allow
->>>> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
->>>>
->>>> The memory nodes all have a reg property that requires '@' in
->>>> the nodename. Fix this error by adding the missing '@0' to
->>>> the involved memory nodenames.
->>>>
->>>> make ARCH=arm dtbs_check
->>>> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
->>>> schemas/root-node.yaml
->>>
->>> changes to memory nodes you sadly cannot do in such an automated fashion.
->>> If you read the comment in rk3288-veyron.dtsi you'll see that a previous
->>> similar iteration broke all of those machines as their coreboot doesn't
->>> copy with memory@0 and would insert another memory node without @0
->>>
->>> In the past iteration the consensus then was that memory without @0
->>> is also ok (as it isn't changeable anyway).
->>>
->>
->>> As I don't really want to repeat that, I'd like actual hardware tests
->>> before touching memory nodes.
->>
->> Any suggestion/feedback rapport welcome.
->>
->>>
->>> Heiko
->>>
->>>
->>
-> 
-> 
-> 
-> 
-
+> >> I think we do need well defined and documented rules around node_to_me=
+m_node(),
+> >> cpu_to_node(), existence of NODE_DATA, various node_states bitmaps etc=
+ so
+> >> everyone handles it the same, safe way.
+>
+> So let's try to brainstorm how this would look like? What I mean are some=
+ rules
+> like below, even if some details in my current understanding are most lik=
+ely
+> incorrect:
+>
+> with nid present in:
+> N_POSSIBLE - pgdat might not exist, node_to_mem_node() must return some o=
+nline
+> node with memory so that we don't require everyone to search for it in sl=
+ightly
+> different ways
+> N_ONLINE - pgdat must exist, there doesn't have to be present memory,
+> node_to_mem_node() still has to return something else (?)
+> N_NORMAL_MEMORY - there is present memory, node_to_mem_node() returns its=
+elf
+> N_HIGH_MEMORY - node has present high memory
