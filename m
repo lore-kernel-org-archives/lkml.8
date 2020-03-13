@@ -2,131 +2,114 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3755C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD0AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3152074E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24372074E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+TIiwsK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3DKp8Qs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgCMWeM (ORCPT
+        id S1726874AbgCMWje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:34:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35807 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgCMWeM (ORCPT
+        Fri, 13 Mar 2020 18:39:34 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:35635 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgCMWjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 18:34:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d5so13725609wrc.2;
-        Fri, 13 Mar 2020 15:34:10 -0700 (PDT)
+        Fri, 13 Mar 2020 18:39:33 -0400
+Received: by mail-pf1-f202.google.com with SMTP id h12so7519380pfr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 15:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=u2/KsbMRst5bOqjjozeqv6hTnglC4BshRp2rjl0jtkE=;
-        b=J+TIiwsKperfrX263SHYpVChqgx2ehGPtuTPCxNhG61/OgzX0SeZROV+/dZCwtr0UL
-         iQZm5u345orMAsMTyYca+AHmpt7gL8VOm7ijkJKezhhW/iUqOwWa64hZfI2TT4M+OQ5w
-         +GNCtW/wxOyQAEP2qsJog8CdrpPRNg8NAN2Qv4h9vPcNJgbKNbdwWvNY/9ujuPLNB29t
-         O3y2tzPrHhfQ9oojPZ2C3mNhtXjGydVi7kdkJ4joFq1S9GhS+YbzFMUZ6c+3K9hRNk5U
-         OhFRXx35CcfyIkEDhJDiTyyHkrJVSoCFtRnXy6C32sR3x4QRvhHrASLMB6ls3CaG6MCE
-         tXjQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:cc;
+        bh=k5Th5oxzja32CITvsP8bvPqYgNLWg942G74ndA2m4k0=;
+        b=O3DKp8Qsv519WV/tqDln4JX2s0hw+20b1URD4K35HEuGs+5LAqimZb8UaFqOn6MhrR
+         mSe9frZxpsvauQVmA+31s/3/ak+V2LLBs1B6zotCjy98VWLOhWRL8Mgl7VQhtWQ0Z958
+         fyryzDnSDeKmUeElekMPjtz0Y0kg5/OX1TMd50ysdUYN6FRlgRAJ1IrFEp5iAsWrlAxs
+         7g1/cjr5CmPf1zFwiBBTB2fnZALddvE1y/+4uVoAxYDsF2ajqvlArLg3XLyA/qek0mrX
+         6Ix3yoCFAsD0l60WoBi8Ot4COCkewGtLUZxJR98mzyL3OahAG3BTQuOplFSr4jLKk0ha
+         yO1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=u2/KsbMRst5bOqjjozeqv6hTnglC4BshRp2rjl0jtkE=;
-        b=cjaLJ530orLqSUMw+uLGJSdQY8KkzXU9oqP+g1mOtPvzi2LZsw87K4ZdslmHdipVvg
-         BfY3Qc8O1GU9ki2bv1g7BKYRy+YLI7yhnuJpFD1DEYmBzV6LGWvCnwIGOPk9Mf3Qu8ti
-         Y78vebQkv3N76vTMLJ0rWMxuAl6aMLny8BEcVIoG1KI67nbs9h1QHzzAjeQflJ3+iVU8
-         uAnShiBl8eUo1bLFHqj+cmUMU7vxU8CPRi3JFuQIGNnTEZhaCnM2E8X34QQT9wITrLhT
-         P0T9p/qEIfWFT+837doki3J5DNocTcIDF3T1kiq621Q5mJ02aj8GF95cXAiqyLVJLBsa
-         5p3w==
-X-Gm-Message-State: ANhLgQ0CcOhQnjuCK0BTRCH10RGPkf23n2K1Mf+jjkvXY3GMRnIfTCM2
-        i/Ve68pENr/xNqSPlBYjHkw=
-X-Google-Smtp-Source: ADFU+vuwl9wZQqUu+AK3esARk//0MO9KcaK6BM7g9CGUYNYklmt4SgOYLGnFRB6MFLNXN1F+2JzSiQ==
-X-Received: by 2002:adf:e98c:: with SMTP id h12mr20476792wrm.345.1584138849748;
-        Fri, 13 Mar 2020 15:34:09 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:44af:5966:96b9:9aa4])
-        by smtp.gmail.com with ESMTPSA id t1sm36023991wrq.36.2020.03.13.15.34.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 15:34:09 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Boyd'" <sboyd@kernel.org>, <agross@kernel.org>
-Cc:     "'Mathieu Olivari'" <mathieu@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20200313195816.12435-1-ansuelsmth@gmail.com> <158413179776.164562.8295974225127853050@swboyd.mtv.corp.google.com>
-In-Reply-To: <158413179776.164562.8295974225127853050@swboyd.mtv.corp.google.com>
-Subject: R: [PATCH] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-Date:   Fri, 13 Mar 2020 23:34:05 +0100
-Message-ID: <014101d5f987$82790c90$876b25b0$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFhpnVMu9aClkJmE4H4ViqLWFkkBwJI+//GqR16BZA=
-Content-Language: it
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
+        bh=k5Th5oxzja32CITvsP8bvPqYgNLWg942G74ndA2m4k0=;
+        b=eH6uLbgdPfIDJ9NhA13N5U9vYs264vPsbRcc0Swmx4LRC4P8NTT8/OKSA8A59bX/hW
+         CUuKY73uNcklRKNEHAB5CsbitG1AReiYyoIT4xiuyod6E51OWfawba6fGjyQ/5aRNbjo
+         YpZ/Kiun+DQlhGvmkJHTip6nLmXj9PN9t/ZjMDmtWLEIJ8Ls7aKR9RzYGkdABOjy7Xl2
+         VB/S0/X6wks41BW+75MeGM1o7n0fCSE8XV/GG5XacYJasn7uPz5LLltAOHuwEDlNtsKr
+         KF8TlePueH41q9unbUiIJd+Fw4CD/12aCApTMq82iXGUKzXVXOMB+FOXgj80ct6Y89Os
+         P1+Q==
+X-Gm-Message-State: ANhLgQ0TebJXLr6wgm12cRG9ds+w0DuULcEOhyEYErYBQiVbMlN9Vblo
+        szRQT26uUT/F4mBIVoTcDHS7bdf7yLTP6X2MLA==
+X-Google-Smtp-Source: ADFU+vvI64pl/GDQ5FTOUMsfshjKMu6JoRvfa2sz4J7N5BTtHp+LsnvTNnevAHQLtfPe+LqgUhtwMSeKQMWYJqKPqw==
+X-Received: by 2002:a17:90b:1b01:: with SMTP id nu1mr5402015pjb.129.1584139172402;
+ Fri, 13 Mar 2020 15:39:32 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 15:39:20 -0700
+Message-Id: <20200313223920.124230-1-almasrymina@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH -next] hugetlb_cgroup: fix illegal access to memory
+From:   Mina Almasry <almasrymina@google.com>
+Cc:     Mina Almasry <almasrymina@google.com>,
+        syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Tejun Heo <tj@kernel.org>, mike.kravetz@oracle.com,
+        rientjes@google.com
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Quoting Ansuel Smith (2020-03-13 12:58:16)
-> > diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> > index 554c65e7aa0e..580aec63030d 100644
-> > --- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> > +++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> > @@ -21,14 +21,5 @@ mux {
-> >                                 };
-> >                         };
-> >                 };
-> > -
-> > -               gsbi@16300000 {
-> > -                       i2c@16380000 {
-> > -                               status = "ok";
-> > -                               clock-frequency = <200000>;
-> > -                               pinctrl-0 = <&i2c4_pins>;
-> > -                               pinctrl-names = "default";
-> > -                       };
-> > -               };
-> >         };
-> >  };
-> > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
-> ipq806x.c
-> > index b0eee0903807..75706807e6cf 100644
-> > --- a/drivers/clk/qcom/gcc-ipq806x.c
-> > +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> > @@ -782,7 +782,7 @@ static struct clk_rcg gsbi4_qup_src = {
-> >                         .parent_names = gcc_pxo_pll8,
-> >                         .num_parents = 2,
-> >                         .ops = &clk_rcg_ops,
-> > -                       .flags = CLK_SET_PARENT_GATE,
-> > +                       .flags = CLK_SET_PARENT_GATE | CLK_IGNORE_UNUSED,
-> 
-> A better solution is to use the protected-clocks property so we don't
-> try to touch these clks at all on this device. So this whole patch can
-> be routed through arm-soc and remove the i2c node and add some dt
-> property to the gcc node.
-> 
+This appears to be a mistake in commit faced7e0806cf ("mm: hugetlb
+controller for cgroups v2"). Essentially that commit does
+a hugetlb_cgroup_from_counter assuming that page_counter_try_charge has
+initialized counter, but if page_counter_try_charge has failed then it
+seems it does not initialize counter, so
+hugetlb_cgroup_from_counter(counter) ends up pointing to random memory,
+causing kasan to complain.
 
-Should I add a comment where the i2c is removed or I can remove it
-directly?
+Solution, simply use h_cg, instead of
+hugetlb_cgroup_from_counter(counter), since that is a reference to the
+hugetlb_cgroup anyway. After this change kasan ceases to complain.
 
-> >                 },
-> >         },
-> >  };
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+Reported-by: syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com
+Fixes: commit faced7e0806cf ("mm: hugetlb controller for cgroups v2")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Giuseppe Scrivano <gscrivan@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: mike.kravetz@oracle.com
+Cc: rientjes@google.com
 
+---
+ mm/hugetlb_cgroup.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index 7994eb8a2a0b4..aabf65d4d91ba 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -259,8 +259,7 @@ static int __hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+ 		    __hugetlb_cgroup_counter_from_cgroup(h_cg, idx, rsvd),
+ 		    nr_pages, &counter)) {
+ 		ret = -ENOMEM;
+-		hugetlb_event(hugetlb_cgroup_from_counter(counter, idx), idx,
+-			      HUGETLB_MAX);
++		hugetlb_event(h_cg, idx, HUGETLB_MAX);
+ 		css_put(&h_cg->css);
+ 		goto done;
+ 	}
+--
+2.25.1.481.gfbce0eb801-goog
