@@ -2,399 +2,281 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D38C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5990C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE682072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b+CM0tdC"
+	by mail.kernel.org (Postfix) with ESMTP id C037C20691
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgCMGKQ (ORCPT
+        id S1726377AbgCMGQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:10:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49844 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgCMGKP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:10:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D68FsQ036412;
-        Fri, 13 Mar 2020 01:08:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584079695;
-        bh=7hMhQU6W5PizIodHl1k5zdVR6Ov/YWaMnAHEZuZ14wg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=b+CM0tdCtny7NjFpwamCeKHuqXv+KlTF+1tFAMmDT5cct4OMc8fwZ1ySq1IiRKVQe
-         sH1EK7k0tUGl/oqR5aCWvr2Z1jCILvnJuv0Q6lMtAQLm7PankjeqrcHFo83avJyofU
-         pNWKYoooSa6TDc3BZ2uCdnUM1Xct3SCPpl+BvK9I=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02D68Fbg123665
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 01:08:15 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 01:08:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 01:08:14 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02D685dR123842;
-        Fri, 13 Mar 2020 01:08:06 -0500
-Subject: Re: [PATCH 02/23] mtd: spi-nor: Prepare core / manufacturer code
- split
-To:     <Tudor.Ambarus@microchip.com>, <bbrezillon@kernel.org>,
-        <linux-mtd@lists.infradead.org>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <joel@jms.id.au>,
-        <andrew@aj.id.au>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <matthias.bgg@gmail.com>, <vz@mleia.com>,
-        <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
-        <john.garry@huawei.com>, <tglx@linutronix.de>,
-        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
-        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
-        <swboyd@chromium.org>, <opensource@jilayne.com>,
-        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
-        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
- <20200302180730.1886678-3-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <c5ef3581-e589-1206-3856-dc4000c0b511@ti.com>
-Date:   Fri, 13 Mar 2020 11:38:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200302180730.1886678-3-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 13 Mar 2020 02:16:44 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:54086 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbgCMGQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:16:44 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL94uJWteyRIaAA--.11S2;
+        Fri, 13 Mar 2020 14:16:14 +0800 (CST)
+From:   bibo mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Allison Randal <allison@lohutok.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Add header files reference with path prefix
+Date:   Fri, 13 Mar 2020 02:16:14 -0400
+Message-Id: <1584080174-11257-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: AQAAf9DxL94uJWteyRIaAA--.11S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF17JF1fJFW8CF4rtw48tFb_yoW3CFyxpa
+        nrAa4kXFZ8urW7CFyFyrn29r43tws8Kr4YkayYg3W2y3Z7X3WUXan3Krn8Jr18XF4DKa48
+        WryfW3W5Xan2vw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
+        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7CJmUUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are some common header files which are referenced locally
+with #includenext method, includenext is tricky method and only
+used on mips platform.
 
+This patech removes includenext method, replace it with defailed
+pathname prefix for header files.
 
-On 02/03/20 11:37 pm, Tudor.Ambarus@microchip.com wrote:
-> From: Boris Brezillon <bbrezillon@kernel.org>
-> 
-> Move all SPI NOR controller drivers to a controllers/ sub-directory
-> so that we only have SPI NOR related source files under
-> drivers/mtd/spi-nor/.
-> 
-> Rename spi-nor.c into core.c, we are about to split this file in multiple
-> source files (one per manufacturer, plus one for the SFDP parsing logic).
-> 
-> Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: bibo mao <maobibo@loongson.cn>
+---
+ arch/mips/include/asm/mach-ar7/irq.h           | 2 +-
+ arch/mips/include/asm/mach-ath79/irq.h         | 2 +-
+ arch/mips/include/asm/mach-emma2rh/irq.h       | 2 +-
+ arch/mips/include/asm/mach-ip27/irq.h          | 2 +-
+ arch/mips/include/asm/mach-ip30/irq.h          | 2 +-
+ arch/mips/include/asm/mach-lantiq/falcon/irq.h | 2 +-
+ arch/mips/include/asm/mach-lantiq/xway/irq.h   | 2 +-
+ arch/mips/include/asm/mach-lasat/irq.h         | 2 +-
+ arch/mips/include/asm/mach-loongson64/irq.h    | 2 +-
+ arch/mips/include/asm/mach-malta/irq.h         | 2 +-
+ arch/mips/include/asm/mach-pic32/irq.h         | 2 +-
+ arch/mips/include/asm/mach-pistachio/irq.h     | 2 +-
+ arch/mips/include/asm/mach-ralink/irq.h        | 2 +-
+ arch/mips/include/asm/mach-rm/mc146818rtc.h    | 2 +-
+ arch/mips/include/asm/mach-vr41xx/irq.h        | 2 +-
+ arch/mips/include/asm/mach-xilfpga/irq.h       | 2 +-
+ 16 files changed, 16 insertions(+), 16 deletions(-)
 
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-
-But there are at least two drivers being moved from spi-nor to spi/
-which would conflict with this change.
-
-Regards
-Vignesh
-
-> ---
->  drivers/mtd/spi-nor/Kconfig                   | 83 +------------------
->  drivers/mtd/spi-nor/Makefile                  | 10 +--
->  drivers/mtd/spi-nor/controllers/Kconfig       | 83 +++++++++++++++++++
->  drivers/mtd/spi-nor/controllers/Makefile      |  9 ++
->  .../spi-nor/{ => controllers}/aspeed-smc.c    |  0
->  .../{ => controllers}/cadence-quadspi.c       |  0
->  .../mtd/spi-nor/{ => controllers}/hisi-sfc.c  |  0
->  .../spi-nor/{ => controllers}/intel-spi-pci.c |  0
->  .../{ => controllers}/intel-spi-platform.c    |  0
->  .../mtd/spi-nor/{ => controllers}/intel-spi.c |  0
->  .../mtd/spi-nor/{ => controllers}/intel-spi.h |  0
->  .../spi-nor/{ => controllers}/mtk-quadspi.c   |  0
->  .../mtd/spi-nor/{ => controllers}/nxp-spifi.c |  0
->  drivers/mtd/spi-nor/{spi-nor.c => core.c}     |  0
->  14 files changed, 95 insertions(+), 90 deletions(-)
->  create mode 100644 drivers/mtd/spi-nor/controllers/Kconfig
->  create mode 100644 drivers/mtd/spi-nor/controllers/Makefile
->  rename drivers/mtd/spi-nor/{ => controllers}/aspeed-smc.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/cadence-quadspi.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/hisi-sfc.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/intel-spi-pci.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/intel-spi-platform.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/intel-spi.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/intel-spi.h (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/mtk-quadspi.c (100%)
->  rename drivers/mtd/spi-nor/{ => controllers}/nxp-spifi.c (100%)
->  rename drivers/mtd/spi-nor/{spi-nor.c => core.c} (100%)
-> 
-> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-> index c1eda67d1ad2..6e816eafb312 100644
-> --- a/drivers/mtd/spi-nor/Kconfig
-> +++ b/drivers/mtd/spi-nor/Kconfig
-> @@ -24,87 +24,6 @@ config MTD_SPI_NOR_USE_4K_SECTORS
->  	  Please note that some tools/drivers/filesystems may not work with
->  	  4096 B erase size (e.g. UBIFS requires 15 KiB as a minimum).
->  
-> -config SPI_ASPEED_SMC
-> -	tristate "Aspeed flash controllers in SPI mode"
-> -	depends on ARCH_ASPEED || COMPILE_TEST
-> -	depends on HAS_IOMEM && OF
-> -	help
-> -	  This enables support for the Firmware Memory controller (FMC)
-> -	  in the Aspeed AST2500/AST2400 SoCs when attached to SPI NOR chips,
-> -	  and support for the SPI flash memory controller (SPI) for
-> -	  the host firmware. The implementation only supports SPI NOR.
-> -
-> -config SPI_CADENCE_QUADSPI
-> -	tristate "Cadence Quad SPI controller"
-> -	depends on OF && (ARM || ARM64 || COMPILE_TEST)
-> -	help
-> -	  Enable support for the Cadence Quad SPI Flash controller.
-> -
-> -	  Cadence QSPI is a specialized controller for connecting an SPI
-> -	  Flash over 1/2/4-bit wide bus. Enable this option if you have a
-> -	  device with a Cadence QSPI controller and want to access the
-> -	  Flash as an MTD device.
-> -
-> -config SPI_HISI_SFC
-> -	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
-> -	depends on ARCH_HISI || COMPILE_TEST
-> -	depends on HAS_IOMEM
-> -	help
-> -	  This enables support for HiSilicon FMC SPI-NOR flash controller.
-> -
-> -config SPI_MTK_QUADSPI
-> -	tristate "MediaTek Quad SPI controller"
-> -	depends on HAS_IOMEM
-> -	help
-> -	  This enables support for the Quad SPI controller in master mode.
-> -	  This controller does not support generic SPI. It only supports
-> -	  SPI NOR.
-> -
-> -config SPI_NXP_SPIFI
-> -	tristate "NXP SPI Flash Interface (SPIFI)"
-> -	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-> -	depends on HAS_IOMEM
-> -	help
-> -	  Enable support for the NXP LPC SPI Flash Interface controller.
-> -
-> -	  SPIFI is a specialized controller for connecting serial SPI
-> -	  Flash. Enable this option if you have a device with a SPIFI
-> -	  controller and want to access the Flash as a mtd device.
-> -
-> -config SPI_INTEL_SPI
-> -	tristate
-> -
-> -config SPI_INTEL_SPI_PCI
-> -	tristate "Intel PCH/PCU SPI flash PCI driver (DANGEROUS)"
-> -	depends on X86 && PCI
-> -	select SPI_INTEL_SPI
-> -	help
-> -	  This enables PCI support for the Intel PCH/PCU SPI controller in
-> -	  master mode. This controller is present in modern Intel hardware
-> -	  and is used to hold BIOS and other persistent settings. Using
-> -	  this driver it is possible to upgrade BIOS directly from Linux.
-> -
-> -	  Say N here unless you know what you are doing. Overwriting the
-> -	  SPI flash may render the system unbootable.
-> -
-> -	  To compile this driver as a module, choose M here: the module
-> -	  will be called intel-spi-pci.
-> -
-> -config SPI_INTEL_SPI_PLATFORM
-> -	tristate "Intel PCH/PCU SPI flash platform driver (DANGEROUS)"
-> -	depends on X86
-> -	select SPI_INTEL_SPI
-> -	help
-> -	  This enables platform support for the Intel PCH/PCU SPI
-> -	  controller in master mode. This controller is present in modern
-> -	  Intel hardware and is used to hold BIOS and other persistent
-> -	  settings. Using this driver it is possible to upgrade BIOS
-> -	  directly from Linux.
-> -
-> -	  Say N here unless you know what you are doing. Overwriting the
-> -	  SPI flash may render the system unbootable.
-> -
-> -	  To compile this driver as a module, choose M here: the module
-> -	  will be called intel-spi-platform.
-> +source "drivers/mtd/spi-nor/controllers/Kconfig"
->  
->  endif # MTD_SPI_NOR
-> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-> index 9c5ed03cdc19..d6fc70ab4a32 100644
-> --- a/drivers/mtd/spi-nor/Makefile
-> +++ b/drivers/mtd/spi-nor/Makefile
-> @@ -1,10 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +
-> +spi-nor-objs			:= core.o
->  obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
-> -obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
-> -obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
-> -obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
-> -obj-$(CONFIG_SPI_MTK_QUADSPI)    += mtk-quadspi.o
-> -obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
-> -obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
-> -obj-$(CONFIG_SPI_INTEL_SPI_PCI)	+= intel-spi-pci.o
-> -obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
-> diff --git a/drivers/mtd/spi-nor/controllers/Kconfig b/drivers/mtd/spi-nor/controllers/Kconfig
-> new file mode 100644
-> index 000000000000..a02feb201a5b
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/controllers/Kconfig
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config SPI_ASPEED_SMC
-> +	tristate "Aspeed flash controllers in SPI mode"
-> +	depends on ARCH_ASPEED || COMPILE_TEST
-> +	depends on HAS_IOMEM && OF
-> +	help
-> +	  This enables support for the Firmware Memory controller (FMC)
-> +	  in the Aspeed AST2500/AST2400 SoCs when attached to SPI NOR chips,
-> +	  and support for the SPI flash memory controller (SPI) for
-> +	  the host firmware. The implementation only supports SPI NOR.
-> +
-> +config SPI_CADENCE_QUADSPI
-> +	tristate "Cadence Quad SPI controller"
-> +	depends on OF && (ARM || ARM64 || COMPILE_TEST)
-> +	help
-> +	  Enable support for the Cadence Quad SPI Flash controller.
-> +
-> +	  Cadence QSPI is a specialized controller for connecting an SPI
-> +	  Flash over 1/2/4-bit wide bus. Enable this option if you have a
-> +	  device with a Cadence QSPI controller and want to access the
-> +	  Flash as an MTD device.
-> +
-> +config SPI_HISI_SFC
-> +	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
-> +	depends on ARCH_HISI || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	help
-> +	  This enables support for HiSilicon FMC SPI-NOR flash controller.
-> +
-> +config SPI_MTK_QUADSPI
-> +	tristate "MediaTek Quad SPI controller"
-> +	depends on HAS_IOMEM
-> +	help
-> +	  This enables support for the Quad SPI controller in master mode.
-> +	  This controller does not support generic SPI. It only supports
-> +	  SPI NOR.
-> +
-> +config SPI_NXP_SPIFI
-> +	tristate "NXP SPI Flash Interface (SPIFI)"
-> +	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-> +	depends on HAS_IOMEM
-> +	help
-> +	  Enable support for the NXP LPC SPI Flash Interface controller.
-> +
-> +	  SPIFI is a specialized controller for connecting serial SPI
-> +	  Flash. Enable this option if you have a device with a SPIFI
-> +	  controller and want to access the Flash as a mtd device.
-> +
-> +config SPI_INTEL_SPI
-> +	tristate
-> +
-> +config SPI_INTEL_SPI_PCI
-> +	tristate "Intel PCH/PCU SPI flash PCI driver (DANGEROUS)"
-> +	depends on X86 && PCI
-> +	select SPI_INTEL_SPI
-> +	help
-> +	  This enables PCI support for the Intel PCH/PCU SPI controller in
-> +	  master mode. This controller is present in modern Intel hardware
-> +	  and is used to hold BIOS and other persistent settings. Using
-> +	  this driver it is possible to upgrade BIOS directly from Linux.
-> +
-> +	  Say N here unless you know what you are doing. Overwriting the
-> +	  SPI flash may render the system unbootable.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called intel-spi-pci.
-> +
-> +config SPI_INTEL_SPI_PLATFORM
-> +	tristate "Intel PCH/PCU SPI flash platform driver (DANGEROUS)"
-> +	depends on X86
-> +	select SPI_INTEL_SPI
-> +	help
-> +	  This enables platform support for the Intel PCH/PCU SPI
-> +	  controller in master mode. This controller is present in modern
-> +	  Intel hardware and is used to hold BIOS and other persistent
-> +	  settings. Using this driver it is possible to upgrade BIOS
-> +	  directly from Linux.
-> +
-> +	  Say N here unless you know what you are doing. Overwriting the
-> +	  SPI flash may render the system unbootable.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called intel-spi-platform.
-> diff --git a/drivers/mtd/spi-nor/controllers/Makefile b/drivers/mtd/spi-nor/controllers/Makefile
-> new file mode 100644
-> index 000000000000..c9a39992d63d
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/controllers/Makefile
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
-> +obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
-> +obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
-> +obj-$(CONFIG_SPI_MTK_QUADSPI)    += mtk-quadspi.o
-> +obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
-> +obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
-> +obj-$(CONFIG_SPI_INTEL_SPI_PCI)	+= intel-spi-pci.o
-> +obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
-> diff --git a/drivers/mtd/spi-nor/aspeed-smc.c b/drivers/mtd/spi-nor/controllers/aspeed-smc.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/aspeed-smc.c
-> rename to drivers/mtd/spi-nor/controllers/aspeed-smc.c
-> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/cadence-quadspi.c
-> rename to drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/controllers/hisi-sfc.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/hisi-sfc.c
-> rename to drivers/mtd/spi-nor/controllers/hisi-sfc.c
-> diff --git a/drivers/mtd/spi-nor/intel-spi-pci.c b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/intel-spi-pci.c
-> rename to drivers/mtd/spi-nor/controllers/intel-spi-pci.c
-> diff --git a/drivers/mtd/spi-nor/intel-spi-platform.c b/drivers/mtd/spi-nor/controllers/intel-spi-platform.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/intel-spi-platform.c
-> rename to drivers/mtd/spi-nor/controllers/intel-spi-platform.c
-> diff --git a/drivers/mtd/spi-nor/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/intel-spi.c
-> rename to drivers/mtd/spi-nor/controllers/intel-spi.c
-> diff --git a/drivers/mtd/spi-nor/intel-spi.h b/drivers/mtd/spi-nor/controllers/intel-spi.h
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/intel-spi.h
-> rename to drivers/mtd/spi-nor/controllers/intel-spi.h
-> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/controllers/mtk-quadspi.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/mtk-quadspi.c
-> rename to drivers/mtd/spi-nor/controllers/mtk-quadspi.c
-> diff --git a/drivers/mtd/spi-nor/nxp-spifi.c b/drivers/mtd/spi-nor/controllers/nxp-spifi.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/nxp-spifi.c
-> rename to drivers/mtd/spi-nor/controllers/nxp-spifi.c
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/core.c
-> similarity index 100%
-> rename from drivers/mtd/spi-nor/spi-nor.c
-> rename to drivers/mtd/spi-nor/core.c
-> 
-
+diff --git a/arch/mips/include/asm/mach-ar7/irq.h b/arch/mips/include/asm/mach-ar7/irq.h
+index 7ad10e3..46bb730 100644
+--- a/arch/mips/include/asm/mach-ar7/irq.h
++++ b/arch/mips/include/asm/mach-ar7/irq.h
+@@ -11,6 +11,6 @@
+ 
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __ASM_AR7_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-ath79/irq.h b/arch/mips/include/asm/mach-ath79/irq.h
+index 2df1abf..882534b 100644
+--- a/arch/mips/include/asm/mach-ath79/irq.h
++++ b/arch/mips/include/asm/mach-ath79/irq.h
+@@ -27,6 +27,6 @@
+ #define ATH79_IP3_IRQ_COUNT     3
+ #define ATH79_IP3_IRQ(_x)       (ATH79_IP3_IRQ_BASE + (_x))
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __ASM_MACH_ATH79_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-emma2rh/irq.h b/arch/mips/include/asm/mach-emma2rh/irq.h
+index 2f7155d..d327367 100644
+--- a/arch/mips/include/asm/mach-emma2rh/irq.h
++++ b/arch/mips/include/asm/mach-emma2rh/irq.h
+@@ -10,6 +10,6 @@
+ 
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __ASM_MACH_EMMA2RH_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-ip27/irq.h b/arch/mips/include/asm/mach-ip27/irq.h
+index fd91c58..f45d799 100644
+--- a/arch/mips/include/asm/mach-ip27/irq.h
++++ b/arch/mips/include/asm/mach-ip27/irq.h
+@@ -12,7 +12,7 @@
+ 
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #define IP27_HUB_PEND0_IRQ	(MIPS_CPU_IRQ_BASE + 2)
+ #define IP27_HUB_PEND1_IRQ	(MIPS_CPU_IRQ_BASE + 3)
+diff --git a/arch/mips/include/asm/mach-ip30/irq.h b/arch/mips/include/asm/mach-ip30/irq.h
+index e5c3dd9..27ba899 100644
+--- a/arch/mips/include/asm/mach-ip30/irq.h
++++ b/arch/mips/include/asm/mach-ip30/irq.h
+@@ -76,7 +76,7 @@
+  */
+ #define IP30_POWER_IRQ		HEART_L2_INT_POWER_BTN
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #define IP30_HEART_L0_IRQ	(MIPS_CPU_IRQ_BASE + 2)
+ #define IP30_HEART_L1_IRQ	(MIPS_CPU_IRQ_BASE + 3)
+diff --git a/arch/mips/include/asm/mach-lantiq/falcon/irq.h b/arch/mips/include/asm/mach-lantiq/falcon/irq.h
+index 91d2bc0..c14312f 100644
+--- a/arch/mips/include/asm/mach-lantiq/falcon/irq.h
++++ b/arch/mips/include/asm/mach-lantiq/falcon/irq.h
+@@ -11,6 +11,6 @@
+ 
+ #define NR_IRQS 328
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif
+diff --git a/arch/mips/include/asm/mach-lantiq/xway/irq.h b/arch/mips/include/asm/mach-lantiq/xway/irq.h
+index 76ebbf6..2980e77 100644
+--- a/arch/mips/include/asm/mach-lantiq/xway/irq.h
++++ b/arch/mips/include/asm/mach-lantiq/xway/irq.h
+@@ -11,6 +11,6 @@
+ 
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif
+diff --git a/arch/mips/include/asm/mach-lasat/irq.h b/arch/mips/include/asm/mach-lasat/irq.h
+index d79cbe0..e899492 100644
+--- a/arch/mips/include/asm/mach-lasat/irq.h
++++ b/arch/mips/include/asm/mach-lasat/irq.h
+@@ -9,6 +9,6 @@
+ 
+ #define NR_IRQS			24
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* _ASM_MACH_LASAT_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/include/asm/mach-loongson64/irq.h
+index 73a8991..0d39556 100644
+--- a/arch/mips/include/asm/mach-loongson64/irq.h
++++ b/arch/mips/include/asm/mach-loongson64/irq.h
+@@ -36,5 +36,5 @@
+ extern void fixup_irqs(void);
+ extern void loongson3_ipi_interrupt(struct pt_regs *regs);
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
+diff --git a/arch/mips/include/asm/mach-malta/irq.h b/arch/mips/include/asm/mach-malta/irq.h
+index af9eeea..344e61a 100644
+--- a/arch/mips/include/asm/mach-malta/irq.h
++++ b/arch/mips/include/asm/mach-malta/irq.h
+@@ -5,6 +5,6 @@
+ 
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <mach/mach-generic/irq.h>
+ 
+ #endif /* __ASM_MACH_MIPS_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-pic32/irq.h b/arch/mips/include/asm/mach-pic32/irq.h
+index d239694..ddaf999 100644
+--- a/arch/mips/include/asm/mach-pic32/irq.h
++++ b/arch/mips/include/asm/mach-pic32/irq.h
+@@ -9,6 +9,6 @@
+ #define NR_IRQS	256
+ #define MIPS_CPU_IRQ_BASE 0
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __ASM_MACH_PIC32_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-pistachio/irq.h b/arch/mips/include/asm/mach-pistachio/irq.h
+index 93bc380..74ac016 100644
+--- a/arch/mips/include/asm/mach-pistachio/irq.h
++++ b/arch/mips/include/asm/mach-pistachio/irq.h
+@@ -10,6 +10,6 @@
+ 
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __ASM_MACH_PISTACHIO_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-ralink/irq.h b/arch/mips/include/asm/mach-ralink/irq.h
+index 86473e3..2262243 100644
+--- a/arch/mips/include/asm/mach-ralink/irq.h
++++ b/arch/mips/include/asm/mach-ralink/irq.h
+@@ -5,6 +5,6 @@
+ #define GIC_NUM_INTRS	64
+ #define NR_IRQS 256
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif
+diff --git a/arch/mips/include/asm/mach-rm/mc146818rtc.h b/arch/mips/include/asm/mach-rm/mc146818rtc.h
+index 145bce0..a074f4f 100644
+--- a/arch/mips/include/asm/mach-rm/mc146818rtc.h
++++ b/arch/mips/include/asm/mach-rm/mc146818rtc.h
+@@ -16,6 +16,6 @@
+ #define mc146818_decode_year(year) ((year) + 1980)
+ #endif
+ 
+-#include_next <mc146818rtc.h>
++#include <asm/mach-generic/mc146818rtc.h>
+ 
+ #endif /* __ASM_MACH_RM_MC146818RTC_H */
+diff --git a/arch/mips/include/asm/mach-vr41xx/irq.h b/arch/mips/include/asm/mach-vr41xx/irq.h
+index 3d63afa..4281b2b 100644
+--- a/arch/mips/include/asm/mach-vr41xx/irq.h
++++ b/arch/mips/include/asm/mach-vr41xx/irq.h
+@@ -4,6 +4,6 @@
+ 
+ #include <asm/vr41xx/irq.h> /* for MIPS_CPU_IRQ_BASE */
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __ASM_MACH_VR41XX_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-xilfpga/irq.h b/arch/mips/include/asm/mach-xilfpga/irq.h
+index b8e93fa..15ad29e 100644
+--- a/arch/mips/include/asm/mach-xilfpga/irq.h
++++ b/arch/mips/include/asm/mach-xilfpga/irq.h
+@@ -9,6 +9,6 @@
+ 
+ #define NR_IRQS 32
+ 
+-#include_next <irq.h>
++#include <asm/mach-generic/irq.h>
+ 
+ #endif /* __MIPS_ASM_MACH_XILFPGA_IRQ_H__ */
 -- 
-Regards
-Vignesh
+1.8.3.1
+
