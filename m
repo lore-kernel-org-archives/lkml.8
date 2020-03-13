@@ -2,176 +2,115 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B75C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F74C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D12B20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584094080;
-	bh=BuUb/c0+4onGSfyZ9OCkHBiMcWyw5nfX9t+EgI1mNqo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxPf4d+VGlxCaVktnrF1IdpqR1jtr1py3gIcOGuOUsT2xGAtOi0G589wNR63NNY0d
-	 E3YFe5mQ++z/PbQcaWB+WoxclhRag0j9Mxt19LpQCLonW40kaz/0q1bY2+BbH9/prE
-	 NtYwCSDhCZwQ5/FiGmL6ctkCBJLT5y5kneXfja68=
+	by mail.kernel.org (Postfix) with ESMTP id D40562076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="oKzyYuG0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U507xCj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgCMKH6 (ORCPT
+        id S1726720AbgCMKIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbgCMKH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:07:57 -0400
-Received: from localhost.localdomain (unknown [171.76.107.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33DA020767;
-        Fri, 13 Mar 2020 10:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584094076;
-        bh=BuUb/c0+4onGSfyZ9OCkHBiMcWyw5nfX9t+EgI1mNqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZxBagRVYp5N2W+LsrBYsWyxcg++oIR4qyKmDJu1eqBBIVodESQ30ZissoSCOO1lW
-         RVXRETtdzTmVYKl8jPVjdSn75plBsOOjZeX/t6R+4U9yVnoiWcUcu8bLkWMDAUeLOA
-         68XX5YfAO57p1GLv7ZRcBbkeZw/kd+JqZoFswdXI=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/9] ASoC: qcom: q6asm-dai: add support for ALAC and APE decoders
-Date:   Fri, 13 Mar 2020 15:37:07 +0530
-Message-Id: <20200313100708.1558658-9-vkoul@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200313095318.1555163-2-vkoul@kernel.org>
-References: <20200313095318.1555163-2-vkoul@kernel.org>
+        Fri, 13 Mar 2020 06:08:00 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:34883 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726651AbgCMKH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:07:59 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id AB0A02267C;
+        Fri, 13 Mar 2020 06:07:58 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 13 Mar 2020 06:07:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=1CNs5YOEikvzf5Ve+M+whn5X2VE
+        UXw/yeljzd20doog=; b=oKzyYuG0nE5rQApCstTP3rrsOhRLi6g2BAzOcv2GbUt
+        6nJQziROsDjz/u2k8KwFdAQGhNodSP0nXoJ0M/9JfwkGbBKFX7PezinBdVD3lnk+
+        H0jSVrSLLFS+IuhiPT3rbz4DtSwAHKw3vrx44txOrhb2/AnmwbTkz/wM/0afymJd
+        mRgooQR8/Z4DO7I+cXftXd/X9dVWTD64pfrAB5ZHKaEBXOdT2DotZpghcEmSXc44
+        n6eXfGXVs7h49zpfcLtH8bjpGqfv7gaofHg7Nlcz8Xf3eutSsIBkqBBQpG11X1j6
+        V5M7BlzvFVlBMOk4MvLSQys8qV2pBFD4p+US/uItayA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=1CNs5Y
+        OEikvzf5Ve+M+whn5X2VEUXw/yeljzd20doog=; b=U507xCj43LbXREWkBgtvAE
+        K/N9PAKkHfCjSgInWeTEiz9zfZY6pchrc1UaOtZTWe5qsD8nVaX5uZhMG3mnkOJF
+        dm3bh+kzkN/BPYmbQqzdznwivrtC77S8DgQft2Scf103x3dol9WQZvD1VXSludKP
+        JHJReKk4EC8edLEvFDucFJon215OiWocs9ECBFCNUspsGdrvnpsrM+0TZpzV7pNQ
+        S+lMCH+9WF4/KXzMuWLV9rsGjq+bxKxJzidia3Sh4CEiN5cR6JYLd/yOi5wGe91L
+        wBVRg4MG983JJw5tCxDPinVN9B2+NwWauidJDqn0LHtCtBVCoTu+ZDb+hw+RJEWA
+        ==
+X-ME-Sender: <xms:fVtrXmmIdaGsVuDHtiHGJ1IrjbxilhL5iJIpXCkP2TI87h83ozCzuQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvjedguddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
+    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:fVtrXlXCXN4IYT-OQN6zTAOlzrK0ozQEpTjN8h3Pc7rO5PYZ3_uhWA>
+    <xmx:fVtrXqsyF2oaW8LL8Qk0b8Dy0Xfyx9n_jUV_AEd-KXMt5O6s6-8j5A>
+    <xmx:fVtrXoo-u1Jxf9iIAGLB3YYhdmSJIGrHKA-pjGBZITsJ7hcdlI3W7Q>
+    <xmx:fltrXqVPbU5sFuR30KFOlIJLS1yttH_Gp8oDZQGu2jdTafKhPYac-g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 72D343280059;
+        Fri, 13 Mar 2020 06:07:57 -0400 (EDT)
+Date:   Fri, 13 Mar 2020 11:07:55 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        "Bird, Tim" <Tim.Bird@sony.com>,
+        "tech-board-discuss@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        "ksummit-discuss@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
+ Technical Advisory Board Elections -- Change to charter
+Message-ID: <20200313100755.GA2161605@kroah.com>
+References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
+ <20200312003436.GF1639@pendragon.ideasonboard.com>
+ <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
+ <20200313031947.GC225435@mit.edu>
+ <87d09gljhj.fsf@intel.com>
+ <20200313093548.GA2089143@kroah.com>
+ <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm DSPs also supports the ALAC and APE decoders, so add support
-for these and convert the snd_codec_params to qdsp format.
+On Fri, Mar 13, 2020 at 10:41:57AM +0100, Vlastimil Babka wrote:
+> On 3/13/20 10:35 AM, Greg KH wrote:
+> >> Not that I'm saying there's an easy solution, but obviously kernel.org
+> >> account is not as problem free as you might think.
+> > 
+> > We are not saying it is "problem free", but what really is the problem
+> > with it?
+> 
+> IIUC there is no problem for its current use, but it would be rather restrictive
+> if it was used as the only criterion for being able to vote for TAB remotely.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- sound/soc/qcom/qdsp6/q6asm-dai.c | 67 +++++++++++++++++++++++++++++++-
- 1 file changed, 66 insertions(+), 1 deletion(-)
+Given that before now, there has not be any way to vote for the TAB
+remotely, it's less restrictive :)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 53c250778eea..948710759824 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -628,12 +628,16 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 	struct q6asm_dai_data *pdata;
- 	struct q6asm_flac_cfg flac_cfg;
- 	struct q6asm_wma_cfg wma_cfg;
-+	struct q6asm_alac_cfg alac_cfg;
-+	struct q6asm_ape_cfg ape_cfg;
- 	unsigned int wma_v9 = 0;
- 	struct device *dev = c->dev;
- 	int ret;
- 	union snd_codec_options *codec_options;
- 	struct snd_dec_flac *flac;
- 	struct snd_dec_wma *wma;
-+	struct snd_dec_alac *alac;
-+	struct snd_dec_ape *ape;
- 
- 	codec_options = &(prtd->codec_param.codec.options);
- 
-@@ -756,6 +760,65 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
- 			return -EIO;
- 		}
-+		break;
-+
-+	case SND_AUDIOCODEC_ALAC:
-+		memset(&alac_cfg, 0x0, sizeof(alac_cfg));
-+		alac = &codec_options->alac_d;
-+
-+		alac_cfg.sample_rate = params->codec.sample_rate;
-+		alac_cfg.avg_bit_rate = params->codec.bit_rate;
-+		alac_cfg.bit_depth = prtd->bits_per_sample;
-+		alac_cfg.num_channels = params->codec.ch_in;
-+
-+		alac_cfg.frame_length = alac->frame_length;
-+		alac_cfg.pb = alac->pb;
-+		alac_cfg.mb = alac->mb;
-+		alac_cfg.kb = alac->kb;
-+		alac_cfg.max_run = alac->max_run;
-+		alac_cfg.compatible_version = alac->compatible_version;
-+		alac_cfg.max_frame_bytes = alac->max_frame_bytes;
-+
-+		switch (params->codec.ch_in) {
-+		case 1:
-+			alac_cfg.channel_layout_tag = (100 << 16) | 1;
-+			break;
-+		case 2:
-+			alac_cfg.channel_layout_tag = (101 << 16) | 2;
-+			break;
-+		}
-+		ret = q6asm_stream_media_format_block_alac(prtd->audio_client,
-+							   &alac_cfg);
-+		if (ret < 0) {
-+			dev_err(dev, "ALAC CMD Format block failed:%d\n", ret);
-+			return -EIO;
-+		}
-+		break;
-+
-+	case SND_AUDIOCODEC_APE:
-+		memset(&ape_cfg, 0x0, sizeof(ape_cfg));
-+		ape = &codec_options->ape_d;
-+
-+		ape_cfg.sample_rate = params->codec.sample_rate;
-+		ape_cfg.num_channels = params->codec.ch_in;
-+		ape_cfg.bits_per_sample = prtd->bits_per_sample;
-+
-+		ape_cfg.compatible_version = ape->compatible_version;
-+		ape_cfg.compression_level = ape->compression_level;
-+		ape_cfg.format_flags = ape->format_flags;
-+		ape_cfg.blocks_per_frame = ape->blocks_per_frame;
-+		ape_cfg.final_frame_blocks = ape->final_frame_blocks;
-+		ape_cfg.total_frames = ape->total_frames;
-+		ape_cfg.seek_table_present = ape->seek_table_present;
-+
-+		ret = q6asm_stream_media_format_block_ape(prtd->audio_client,
-+							  &ape_cfg);
-+		if (ret < 0) {
-+			dev_err(dev, "APE CMD Format block failed:%d\n", ret);
-+			return -EIO;
-+		}
-+		break;
-+
- 	default:
- 		break;
- 	}
-@@ -855,10 +918,12 @@ static int q6asm_dai_compr_get_caps(struct snd_compr_stream *stream,
- 	caps->max_fragment_size = COMPR_PLAYBACK_MAX_FRAGMENT_SIZE;
- 	caps->min_fragments = COMPR_PLAYBACK_MIN_NUM_FRAGMENTS;
- 	caps->max_fragments = COMPR_PLAYBACK_MAX_NUM_FRAGMENTS;
--	caps->num_codecs = 3;
-+	caps->num_codecs = 5;
- 	caps->codecs[0] = SND_AUDIOCODEC_MP3;
- 	caps->codecs[1] = SND_AUDIOCODEC_FLAC;
- 	caps->codecs[2] = SND_AUDIOCODEC_WMA;
-+	caps->codecs[3] = SND_AUDIOCODEC_ALAC;
-+	caps->codecs[4] = SND_AUDIOCODEC_APE;
- 
- 	return 0;
- }
--- 
-2.24.1
+These are "baby steps" we are taking here, to try to allow for remote
+voting.  We are not saying this is the end-all-be-all solution, but you
+have to give Laura credit for coming up with this as "better than
+nothing" which is what has been the case for the past decade or so.
 
+thanks,
+
+greg k-h
