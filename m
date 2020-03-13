@@ -2,94 +2,77 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C28C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A65AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7460206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xcv1Kr+8"
+	by mail.kernel.org (Postfix) with ESMTP id 1AB7E206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgCMQcv (ORCPT
+        id S1726921AbgCMQd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:32:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34740 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgCMQcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:32:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id i19so8397849lfl.1;
-        Fri, 13 Mar 2020 09:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dyWHs35Zg2C+2jMgWyB6ZqLQON5LgYusa6mcsNSwpOs=;
-        b=Xcv1Kr+8IFwzuD6hNma9cvqU70N6nUjy6f8SZmAp2FfPzMUaJ6fqlTTDsKOLXRcR0S
-         xXp/8jazrBQbQMyITDTbtKZgOsD8ZLUTP/LL+ZBJsglA2J3R3PLLnG/KmwnpxE1yYjg4
-         Ob3NjrD5/kyRZHIJqtrXOpoph5Pxl63S3KAj1XCqD+PNF5L3mKcabF1ifOAwZdbLa87j
-         wo6GpZNYUWDy02LSYJrteCvZWpUnKxSQByRK/Ct1BAK2rpC2AEDmcl7AMIu9k8yGm7yF
-         oHzZ4Vyf4teoiPh1t4sC3kO2Xj4CTTgfzK10UAIiKbbWj6vC1QvT1w/ZX+ZJmQeCuutP
-         MpHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dyWHs35Zg2C+2jMgWyB6ZqLQON5LgYusa6mcsNSwpOs=;
-        b=gflOL8Nrr46/DRjooe5T7M2t5k+6nQdl453oG7p94K/MNNB0bNnKZiemG5AjsXVVmY
-         UsJ2lhKdRDP0s/tD8bmaky8nKgdtNo9/f/AXa4HN5v4ZvQUtjHpvTJjeq6H0bvCkpVRl
-         f8jWAu04POgJxPkXyeisYQaBnVM4EqZIcZJhTLlhmcdwlCKxfWGaAHYcshh2+uucmIKJ
-         fPGU0avvr5MOO39oQvqHElganD/YlnVcY0F2SuZ9j5bCfr++7QwKp9h98AJQjBxT0beJ
-         j0ludxKgU/l/s9pnWI6TdMVFUDvNe59Js6GTodnADJQkGvXpbdZeZ3sVbe1l4y/SJede
-         DVKA==
-X-Gm-Message-State: ANhLgQ21AoVp8EPSrKj9ize4ZDY9prebc4EaFMIczI3V3b0s9ds2o5Qu
-        goeaz+lB7rbZ8l5/FOC/cRS30WilGshEvi93t5w=
-X-Google-Smtp-Source: ADFU+vuiG+I/daEBy3iVb2g5dsQ6DmHXLJUJbOmeFdpRT4K641xxd/jzOZblQxR+z5Zm9BaEgWmC+ODAoVQQzYMaYyY=
-X-Received: by 2002:a05:6512:30f:: with SMTP id t15mr1937812lfp.7.1584117168302;
- Fri, 13 Mar 2020 09:32:48 -0700 (PDT)
+        Fri, 13 Mar 2020 12:33:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:20734 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgCMQd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:33:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:33:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="278284491"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Mar 2020 09:33:26 -0700
+Date:   Fri, 13 Mar 2020 09:33:26 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200313163326.GB5181@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
+ <20200313005252.GA1292@linux.intel.com>
+ <CAOASepMN1fmDaPjJJ-rpbLNPGUzE2LNB69s3X5mDBEhXziZ_UQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200306104219.6434-1-alifer.wsdm@gmail.com>
-In-Reply-To: <20200306104219.6434-1-alifer.wsdm@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 13 Mar 2020 13:32:37 -0300
-Message-ID: <CAOMZO5BjAN8rJ25n2n3i=gVQ_noo-X8CTsFDZWBQB88SyZ-SNg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq-phanbell: Fix Ethernet PHY post-reset duration
-To:     Alifer Moraes <alifer.wsdm@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Marco Franchi <marco.franchi@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepMN1fmDaPjJJ-rpbLNPGUzE2LNB69s3X5mDBEhXziZ_UQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alifer,
+On Fri, Mar 13, 2020 at 12:07:55PM -0400, Nathaniel McCallum wrote:
+> On Thu, Mar 12, 2020 at 8:52 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> > FWIW, if the handler reaaaly wanted to pop off the stack, it could do so,
+> > fixup the stack, and then re-call __vdso_sgx_enter_enclave() instead of
+> > returning (to the original __vdso_sgx_enter_enclave()).
+> 
+> My understanding from the documentation issue above was that *if* you
+> wanted to push parameters back on the stack during enclave exit, you
+> would *have* to supply a handler so it could pop the parameters and
+> reset the stack. Which is why restoring %rsp from %rbx didn't make
+> sense to me.
 
-On Fri, Mar 6, 2020 at 7:41 AM Alifer Moraes <alifer.wsdm@gmail.com> wrote:
->
-> i.MX8MQ Phanbell board uses Realtek RTL8211FD as Ethernet PHY.
-> Its datasheet states that the proper post reset duration should be at least 50 ms.
-
-The datasheet I found in the web states:
-
-"The RTL8211F(I)/RTL8211FD(I) has a PHYRSTB pin to reset the chip. For
-a complete PHY reset, this pin must be asserted low for at least 10ms
-(Tgap in Figure 9) for the internal regulator. Wait for a further 30ms
-(for internal circuits settling time) before accessing the PHY
-register"
-
-Where does the 50ms requirement come from? Do you have an updated
-datasheet that says 50ms instead?
-
-Please clarify.
-
-Thanks
+Yep.
