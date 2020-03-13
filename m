@@ -2,142 +2,107 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88568C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08324C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F80C20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D040620746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+VQkJt4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DJ4tjzzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgCMKhi (ORCPT
+        id S1726483AbgCMKmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:37:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42782 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbgCMKhg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:37:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v11so11413596wrm.9;
-        Fri, 13 Mar 2020 03:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=k4BHlmlIIly19yAcT+U9SlSGDpikfNDuftvz1GG3NyI=;
-        b=n+VQkJt4keLrX9Z1cmab2rKVIEKUzaRGvqgCHicwB+TzWWb5sc/zEKZvz0m2BFBtYY
-         2VfKrgvos4hhjRRo0Lig266Xz4lUDFlz0+LWVKUa42psEC3f5hWh6veiR84uBFMKuSWL
-         MKTsF0XdvTidRIbMHj1jEl5I+pK2xg7chztbVijEKZMNFzrJvT1KlcPd17Bq8QUtIYQ/
-         3/ktCL+6KVRPqV18k3mAf5q+3wzF2sw8GuTnE9SMeZdrJpXsH5W/RtNXsGNBll9I0a6u
-         ScfrJyaHFuO36hRHZeXmlB7kheCnmgP0rirvPSvk2hiuMkLJ3e3Wxxu4WQqno5EXcjsC
-         pN4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=k4BHlmlIIly19yAcT+U9SlSGDpikfNDuftvz1GG3NyI=;
-        b=Ol8rrHGK901ge8ULntvO3NoPkeaBVCsFImTELjZu5INcVxMrO+RwJ8uPVvKt9gYzSR
-         cbPxZF+w8hSV7BLimDAm9vjpk7/fbEphVz4SKBSyTdhQtO8AENzmd8CmFmgz+Lt3zSjC
-         Fx7hPG3Tm9zYqaUOEoLfVjoLhyVstmRoBXXudmt2s78Ys1SCSEvI9tYXsTjT7zTRM9VE
-         +9t/nqjs275YT8BFJtScmSbWtPXy6KwnWS6EE5CqlkDgxnx3Zr3RjjE6mByXLK1E9uAC
-         k/2y2mUtG+DDuN9WeZs5405G35fd1wA2cqe7Pkic7EhIah4SZ1zawLXW4eNcCaPhFKT7
-         o4Bw==
-X-Gm-Message-State: ANhLgQ1xcBVREOuF6D29Lf/klXbqhcryB9HE79a2JEtASxXDCrBp+mtx
-        gkPvvbF4Bz2pywhLaDByWjVftaoD
-X-Google-Smtp-Source: ADFU+vsCE/NjGMEqAImu3YZBGZWMwPRv2f7D0Xn0qVCk5kqumgbi15H0AYaphrhjWzVuCayVI52zQA==
-X-Received: by 2002:adf:fc0d:: with SMTP id i13mr16858848wrr.364.1584095854238;
-        Fri, 13 Mar 2020 03:37:34 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o3sm17688551wme.36.2020.03.13.03.37.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: add missing @0 to memory nodenames
-Date:   Fri, 13 Mar 2020 11:37:26 +0100
-Message-Id: <20200313103726.1678-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200313103726.1678-1-jbx6244@gmail.com>
-References: <20200313103726.1678-1-jbx6244@gmail.com>
+        Fri, 13 Mar 2020 06:42:18 -0400
+Received: from ozlabs.org ([203.11.71.1]:48533 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgCMKmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:42:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48f2MD26tzz9sRN;
+        Fri, 13 Mar 2020 21:42:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584096136;
+        bh=jrmjeEbuq1HfpbJL7+QclLvRYJFhIEMsgxdq99kwO58=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DJ4tjzzkVx3SH1GDRlAsIZUXZklai9Cns36OY3pDkwlgmls3MowQWjcXCNfYEX3+F
+         f6KKlSP2h+bbgeoltLu1pWPJiB4hUS+gSgtx5G4igXROxbpq6auRVqAwHXET5645xm
+         TDK7HTLJcjWN59qRBnatX1+RvhXNIWYHFop4Rw+ZetgczcwB74v5WbkLhYc7/M6F6n
+         KTDU+GhWS0LwDKd3/6v1LYdSQGAgHlTPs4GPA/qSS+m63bbyJqxQl2q+kinD2VdpEp
+         o6KXTtqPmdhxSWmH+eNVxONAlAn9vD66EA6p9OhQMkuW+3QlxY+agXDjEyhteiz6RC
+         BhVGo/kPoRg5w==
+Date:   Fri, 13 Mar 2020 21:42:14 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200313214214.4d2e2af6@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives these errors:
+--Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dt.yaml: /: memory:
-False schema does not allow
-{'reg': [[0, 0, 0, 1073741824]], 'device_type': ['memory']}
-arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dt.yaml: /: memory:
-False schema does not allow
-{'reg': [[0, 0, 0, 2147483648]], 'device_type': ['memory']}
-arch/arm64/boot/dts/rockchip/rk3368-r88.dt.yaml: /: memory:
-False schema does not allow
-{'reg': [[0, 0, 0, 1073741824]], 'device_type': ['memory']}
+Hi all,
 
-The memory nodes all have a reg property that requires '@' in
-the nodename. Fix this error by adding the missing '@0' to
-the involved memory nodenames.
+After merging the akpm-current tree, today's linux-next build (x86_64
+allnoconfig) produced this warning:
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
-schemas/root-node.yaml
+mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-W=
+unused-function]
+  311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_=
+pages)
+      |            ^~~~~~~~~~~~~~~~~~~
+mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used=
+ [-Wunused-function]
+  306 | static bool is_subsection_map_empty(struct mem_section *ms)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~
+mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-=
+Wunused-function]
+  301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr=
+_pages)
+      |            ^~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi           | 2 +-
- arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts | 2 +-
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts            | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Introduced by commits
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-index 1c52f47c4..b9e2e4bc0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-@@ -12,7 +12,7 @@
- 		stdout-path = "serial2:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x40000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
-index 6cc310255..9435008d5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
-@@ -15,7 +15,7 @@
- 		stdout-path = "serial2:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-index 006a1fb6a..cf11175ec 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-@@ -15,7 +15,7 @@
- 		stdout-path = "serial2:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x40000000>;
- 	};
--- 
-2.11.0
+  38eb09ac7c29 ("mm/sparse.c: introduce new function fill_subsection_map()")
+  334411156ba6 ("mm/sparse.c: introduce a new function clear_subsection_map=
+()")
 
+Or maybe laster patches.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5rY4YACgkQAVBC80lX
+0GzQkwf/fKaM7N7Pnn7CKZuxu5GHmKRZupcDK7DvViaR9hRJXB7sAbd045M3ig05
+k19uEYFPPzarlAn/gEomOJLS4miFMFTsojvC58oJqMTh/LN/FPzOLrPmcUijdVC0
+fp0FrUaKfZnf0XSppQ67lsyQJt8Ib03cQbqDmXWP19/LguXqy+VztplYPpGeZS5Z
+FRDh5/Y+mPaXMpusxKcljwgpId9F4Cmrb/yZktEiCEmeOr2CEdJ+6Rvzv/5mbdqv
+zF26v/byzR/7r9Zt+A2VhAXBPgfR3WyQYi5CIy2xXk+X+9GGLfIebD9Ix38FzFKX
+JQiIHSewNFPyT7zvhc5zhzTkPbn7qA==
+=/a8l
+-----END PGP SIGNATURE-----
+
+--Sig_/J3tAiRt.Pe=QlTWt2Tz1i0w--
