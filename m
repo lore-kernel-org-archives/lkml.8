@@ -2,146 +2,79 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F65CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E511D206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:01:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmPJ1XnT"
+	by mail.kernel.org (Postfix) with ESMTP id E5FE6206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCMMBn (ORCPT
+        id S1726718AbgCMMCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:01:43 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53476 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgCMMBm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:01:42 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l36so4058806pjb.3;
-        Fri, 13 Mar 2020 05:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=QJI0Bdftwo0kfKfBxvcXSd5Z7Cf8rsBckFWxQ/WB9Js=;
-        b=AmPJ1XnT7a0Axk4GYGnIeAg10a2x9h24rjUCCpz765a17lXYcocZrtxC97DjaMLEPj
-         GA9Q9QaJTfZRM3CoP9lORv+K5P7TPRitYQ9E3FmYaqwoLFWASiASX/LWFjlvZGGw0eHg
-         z0lSJalNrMiR+7Rv+zga/c725y06dcDtjgSTqLhFZPMzWgC9Oh1mD+Ytjl6wurOc8Is8
-         XVy9lwyjHMMTa/1s+OL9zQOnqGP4+FCcsovyAqs4U2uuZg4lxsyz2J4m5UJguH5iQM7W
-         yeoEw0/SekGPXP1tsmGPkP3LblXCZSwwILd+V/lVNapiJ1UUUPolJ6gEc50tFyOpm2yf
-         P3ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QJI0Bdftwo0kfKfBxvcXSd5Z7Cf8rsBckFWxQ/WB9Js=;
-        b=CaK5fbRK+KLmmOp4Be5G33XRiFKWV/EZxbK2Y2QvG52LuomIIMK2wN4daG78duy6L6
-         TIAfNUP7t5J5h7daxjn92UR03bx7rdJXL1uwTTdarg5iZoFUwLY5LgrwkDP487d+SiYo
-         EpyYoEQy+hWE97Hw1X092HLvefBjR8z5odJdRgLLHb4pKiBSufVi+f1pVKWZI7nlzk1c
-         yy6qvGrQDD6ujw8dpXUHoVgmzTQYm3N5B5U/8b5QBBTjh1llFBG6D7j+SCAC1LmoSy6w
-         no7akR3iR0N4EeMlMBEK2nz8dRPDTXsEIoyPvil4KhY3ee8or87HTj5lYOnnnYGe/Nyh
-         RK9A==
-X-Gm-Message-State: ANhLgQ2E4mT0R2yT24DCgR2lKEjKqJwSq8w/7SHVTXj5xABaCUugVpcT
-        Ukoe9uy6/68pC4p/0uozHR4=
-X-Google-Smtp-Source: ADFU+vvfdobXfVncHmVaft5t2AMCmMWORH4rqZtx4/fBFSxLc0eqw/CukXmlJygEWIUeaOKIc8lvyQ==
-X-Received: by 2002:a17:902:9b95:: with SMTP id y21mr12961971plp.101.1584100899951;
-        Fri, 13 Mar 2020 05:01:39 -0700 (PDT)
-Received: from syed ([117.97.245.141])
-        by smtp.gmail.com with ESMTPSA id k14sm12006265pje.3.2020.03.13.05.01.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 05:01:39 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 17:31:33 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     vilhelm.gray@gmail.com
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/3] counter: 104-quad-8: Add lock guards - differential
- encoder cable
-Message-ID: <20200313120133.GA17830@syed>
+        Fri, 13 Mar 2020 08:02:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:53780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgCMMCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:02:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E127930E;
+        Fri, 13 Mar 2020 05:02:12 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77EA03F534;
+        Fri, 13 Mar 2020 05:02:11 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 12:02:09 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        bjorn.andersson@linaro.org, shawnguo@kernel.org, olof@lixom.net,
+        vkoul@kernel.org, leonard.crestez@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: Re: [PATCH] arm64: defconfig: buildin FSL DDR PMU
+Message-ID: <20200313120209.GF42546@lakrids.cambridge.arm.com>
+References: <1584090348-28910-1-git-send-email-qiangqing.zhang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1584090348-28910-1-git-send-email-qiangqing.zhang@nxp.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add lock protection from race conditions in the 104-quad-8 counter
-driver for differential encoder cable status changes. There is no IRQ
-handling so use spin_lock calls for protection.
+On Fri, Mar 13, 2020 at 05:05:48PM +0800, Joakim Zhang wrote:
+> Buildin FSL DDR PMU since it is used quite often.
 
-Fixes: bbef69e088c3 ("counter: 104-quad-8: Support Differential Encoder Cable Status")
+Generally. we should only build in stuff that's critical to getting a
+system up-and-running, or cannot be built as a module. I don't think
+that applies here.
 
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
----
-Changes in v4:
- - Shift review-comments section so that it is not saved in commit message.
- - Add spin_unlock calls for deadlock avoidance.
- - Few changes related to casting.
+Thanks,
+Mark.
 
- drivers/counter/104-quad-8.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 9dab190..c9e227f 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -1151,18 +1151,26 @@ static ssize_t quad8_signal_cable_fault_read(struct counter_device *counter,
- 					     struct counter_signal *signal,
- 					     void *private, char *buf)
- {
--	const struct quad8_iio *const priv = counter->priv;
-+	struct quad8_iio *const priv = counter->priv;
- 	const size_t channel_id = signal->id / 2;
--	const bool disabled = !(priv->cable_fault_enable & BIT(channel_id));
-+	bool disabled;
- 	unsigned int status;
- 	unsigned int fault;
- 
--	if (disabled)
-+	spin_lock(&priv->lock);
-+
-+	disabled = !(priv->cable_fault_enable & BIT(channel_id));
-+
-+	if (disabled) {
-+		spin_unlock(&priv->lock);
- 		return -EINVAL;
-+	}
- 
- 	/* Logic 0 = cable fault */
- 	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
- 
-+	spin_unlock(&priv->lock);
-+
- 	/* Mask respective channel and invert logic */
- 	fault = !(status & BIT(channel_id));
- 
-@@ -1194,6 +1202,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
- 	if (ret)
- 		return ret;
- 
-+	spin_lock(&priv->lock);
-+
- 	if (enable)
- 		priv->cable_fault_enable |= BIT(channel_id);
- 	else
-@@ -1204,6 +1214,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
- 
- 	outb(cable_fault_enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
- 
-+	spin_unlock(&priv->lock);
-+
- 	return len;
- }
- 
--- 
-2.7.4
-
+> 
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  arch/arm64/configs/defconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 0f212889c931..9a84ef613c7d 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -833,7 +833,7 @@ CONFIG_PHY_UNIPHIER_USB2=y
+>  CONFIG_PHY_UNIPHIER_USB3=y
+>  CONFIG_PHY_TEGRA_XUSB=y
+>  CONFIG_ARM_SMMU_V3_PMU=m
+> -CONFIG_FSL_IMX8_DDR_PMU=m
+> +CONFIG_FSL_IMX8_DDR_PMU=y
+>  CONFIG_HISI_PMU=y
+>  CONFIG_QCOM_L2_PMU=y
+>  CONFIG_QCOM_L3_PMU=y
+> -- 
+> 2.17.1
+> 
