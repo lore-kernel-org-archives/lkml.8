@@ -6,36 +6,37 @@ X-Spam-Status: No, score=0.3 required=3.0 tests=DATE_IN_PAST_96_XX,
 	ENCRYPTED_MESSAGE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C283BC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4CEC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28DE2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE192072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCSIJM (ORCPT
+        id S1727003AbgCSIJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:09:12 -0400
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:58196 "EHLO
+        Thu, 19 Mar 2020 04:09:15 -0400
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:58200 "EHLO
         mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgCSIJL (ORCPT
+        with ESMTP id S1726603AbgCSIJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:09:11 -0400
+        Thu, 19 Mar 2020 04:09:13 -0400
 Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48hc9k6DQKzQlF0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 16:12:58 +0100 (CET)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48hc911MSCzQlF1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 16:12:21 +0100 (CET)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id SPcfIbQ_n371 for <linux-kernel@vger.kernel.org>;
-        Tue, 17 Mar 2020 16:12:55 +0100 (CET)
-Date:   Fri, 13 Mar 2020 21:00:42 +1100
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id ea_laj_n9BJm for <linux-kernel@vger.kernel.org>;
+        Tue, 17 Mar 2020 16:12:18 +0100 (CET)
+Date:   Fri, 13 Mar 2020 20:50:16 +1100
 From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Stefan Metzmacher <metze@samba.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Stefan Metzmacher <metze@samba.org>,
+        Ian Kent <raven@themaw.net>,
         Miklos Szeredi <mszeredi@redhat.com>,
         Christian Brauner <christian@brauner.io>,
         Jann Horn <jannh@google.com>,
@@ -44,28 +45,21 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Linux API <linux-api@vger.kernel.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeremy Allison <jra@samba.org>,
-        Ralph =?utf-8?B?QsO2aG1l?= <slow@samba.org>,
-        Volker Lendecke <vl@sernet.de>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH 01/14] VFS: Add additional RESOLVE_* flags [ver #18]
-Message-ID: <20200313100029.x7y3atg6opbxv4bh@yavin>
+Message-ID: <20200313095003.aqchjfnu2rzefes6@yavin>
 References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
  <158376245699.344135.7522994074747336376.stgit@warthog.procyon.org.uk>
  <20200310005549.adrn3yf4mbljc5f6@yavin>
  <CAHk-=wiEBNFJ0_riJnpuUXTO7+_HByVo-R3pGoB_84qv3LzHxA@mail.gmail.com>
  <580352.1583825105@warthog.procyon.org.uk>
  <CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com>
- <3d209e29-e73d-23a6-5c6f-0267b1e669b6@samba.org>
- <CAHk-=wgu3Wo_xcjXnwski7JZTwQFaMmKD0hoTZ=hqQv3-YojSg@mail.gmail.com>
- <8d24e9f6-8e90-96bb-6e98-035127af0327@samba.org>
- <20200313095901.tdv4vl7envypgqfz@yavin>
 MIME-Version: 1.0
-In-Reply-To: <20200313095901.tdv4vl7envypgqfz@yavin>
-X-TUID: 9JCVK7rviGFk
+In-Reply-To: <CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com>
+X-TUID: gZo3XffoHgFt
 Content-Type: multipart/encrypted;
         protocol="application/pgp-encrypted";
-        boundary="1584094181/570733/95642/localhost"
+        boundary="1584093273/901764/120428/localhost"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,46 +67,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is a MIME-encapsulated message.
 
---1584094181/570733/95642/localhost
+--1584093273/901764/120428/localhost
 Content-Type: application/pgp-encrypted
 Content-Disposition: attachment
 
 Version: 1
 
---1584094181/570733/95642/localhost
+--1584093273/901764/120428/localhost
 Content-Type: application/octet-stream
 Content-Disposition: inline; filename="msg.asc"
 
 -----BEGIN PGP MESSAGE-----
 
-hF4DKxGIDJuAmzUSAQdAmVvIB2FuP5R9tS0nT/A3OzIwO98t9YvwPHsG5Z4d7VIw
-088d7qpc6jwngun1T+xkELrxkhVhgnFg2bQlBpO1LNQITlnlcfZ2itZTrW1kBCF3
-hF4Da9o3/MenwwcSAQdA3dMPDNYbnIfXOb7YS/mJ0u2LA/xLn3SEmGgWdCR8pk8w
-cGMLm06QefIHaiS7Z3huaLgN/4v1bZ0JqatErfj5rm/Of8iElRUFafFXZmvJhDj+
-0uoBa6AYnhbJSkcOvR9P66d8spYoEGSg5qVDSXjRz1tUHubdwImGpfSIKRCdjcyZ
-36igUvHlJMTOeQqOwSPICyIyFMmjryDIsIHrLWC5cp0fuoxfaz1kcZG65DLgerRG
-WqdaTY2XddcsIylHWb3BI7kKH8Sg7OfCoOU/+3bMQpBMfkzBaGtc4+pBcBPfTapv
-YjBot2lMddhrMZiDtiez4cj9SBfcPNSToRmLT4oO1dHZNNrJZDG3puPpBBz2rYd7
-S1ds6CVHGKF25JZyHkNMHfHm9/0tDVXWfB5NX547ZTfq0mSNELXmxohc5JFiYGZ/
-mJvY7skeFNlbOYhdmKGUamUPne7M93qJX8XVaZQV5r6qkDORYwVs3lSrlImLog+q
-HlSwaicdw0MSR7yJMrBtnV553egigdCHduTgZAT0xkA2RkVEaOvGUoq8UlRk8vgC
-w0mHFhEGRWiThv8aACJ3n1iZH4BTFRZAfNMGAUd5cWHxlm7aBA52W8JRd7G6klZn
-JFt+WvIDgNYwAraJFKa3bGw6Yha4McYtHSFw9i7k92jOE/SagTmm85okPWrY7vkL
-lTdDjNcvAhGO4zMDxFpDqKdzXoD6Z7L5tnlqCd+5/51v3mp1aQ4X0Nek72Tsslw/
-IwiMti2f/aXSQYqH7AVjxLY+FxS9YcCkOs3GRf9lEZf+FLLf2BbjUkvrmkpKlfQq
-/mStnukYJP/4CPcYYXS8IweN/RblMtRxpuBqBj0hrO3pbWd8UNqPBMa66HbkVogD
-JoZqa0bOFRiu6/JRaJVHxQCP+8FbqORaYwpn8tz08l7mLxmXrUMoyqA4cDKYF4Gz
-SX8JQaNj8Hx9vZ6x3CMgzAdOtIZOnxk9/BLVlercHVexUY8d8dFlqa+BvEYxPmnY
-6KzmQ4BNSmDHDj94ramcMNNhlSRV6OBV29fRtbMuKrymKRIzEE3zAlSMAssR5cRE
-AtUfVMRtMk2Zv76flW7M9mJ6SNKMX7k9V4YYLfppupDPaX+YwYYQiLVRJ70DQTDP
-5vfK7nqLyKXJGzXauLe3QOFeL7kaCTOLIjNpACLq1XJPsug5aJswDePEq2Nt6nVv
-58cRbQpeufi6XzddcZo9yYkK3T5YocP/U48cjI8Oyu8h0oqjgN3v4xTT/A3DNm/F
-Y/hxg8NnYhQEQ8t0ACF9yi6KYrC4ff5icRIOyr/LPDWZhZRz+eJ4aUAkV5WjuA05
-EjC1cqmsLKnN9lDd+MXhzG0Zzk0V749vUySZnqdddqzufTf3rmf26RXVB2nn3wXA
-kbcI0+GquBZpZboX78jgiTqjQffl/6oVV+g8VTucaCpudBE//Ire5SSNYl7Fa38q
-4Jg/KW+oU8Y4xispqVTeXnY0PZqkllL06fcySlWaozUtxcsXeNgJKUgX0LCzNEGc
-ox8ScJfwkCa55VMfDHqQph4lIao2ZZpponAxYci7m1g=
-=gkj7
+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
+4ADqPBmctK1qKBqb
+=9mAc
 -----END PGP MESSAGE-----
 
---1584094181/570733/95642/localhost--
+--1584093273/901764/120428/localhost--
