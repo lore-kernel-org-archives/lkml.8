@@ -2,209 +2,208 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52CDC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C2AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C94320637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QRCyIDgE"
+	by mail.kernel.org (Postfix) with ESMTP id C623220637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584061651;
+	bh=kBdTHY8uCmTDU6PKBfOIsuKt752pO51gB3elyC0uR4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ftpdoaHJiv1uG9FEhMK1jiDLslHpIubEsl8cJBg2UhyxF+Jib/EmbGhKPwYvkc3Ay
+	 RwoXb5z9mANVTTRP01stxoSjWXZrJlSy7ZwFotKPE+TNpH0ZVZ+MEKXEMfxMTbWyJk
+	 JVpwHyjCPVFaCIyL+SJM9Zm9n36ugsXN0aAcjzHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgCMBHK (ORCPT
+        id S1727099AbgCMBHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:07:10 -0400
-Received: from mail-eopbgr140041.outbound.protection.outlook.com ([40.107.14.41]:15511
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726647AbgCMBHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:07:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UOPp6+en2SP3fcX2YeNA6KdNLGOsAuXxVcSBLDqCylZ1SxuSmjAWXwXcD38H1FJ3vgeEyhO5MGItqmztXDzqdUN1hd1PXt9LFFeWidpAy45ddue7EmakiYh1MmS3JxwqWcotkdVt02oiFX/QUMO+X+VCks6nEdERYln9WNGJo/n0+EVWGACrFylp9jzgQmk1/US2N9cFEsi08Q5DGOSo9DDBP2bW9qS5INzvwreT0w1pREFtdxu2QtvN2FF6sGE0QocmN3mptPoIOdfuag1VH/dOt3eppg0XXOOlHwRDp8LtyyLuvqlK1xRe7OtwaANzMsBhDEOW5OaeZZRaAh1teg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y5niwCAsrxLTwgaXbUvUZX5n1KE9z0NUD17qbohRrZ8=;
- b=iFXHaMtpWM7HRWhgYm/K82neL+poSrzFRlcftI6FiUYb6zsXfbVUGnE6EEsJymgthj7zQra3mtROvMr7UMhmwTCXpJHx1ScjvY84y4YzXUDr/SC/Wl/HcVjYqxL7yaVkB7cbQH2jbi6KlI4FFDjpbFniQVsE5l9rRCcUC9LmK+w2acLXAUSFcLm8E2nYUiStf8cTPrFqSThdIoOr8pyxLTJl1EY3UkZ3zsb2EFt1sF4XipMPiTkjf5O+iOLO9BZHR0NEE6D1qCfjJh6hZmkuuu34/cpDe1LfkW2HhdFh13aZET152D8XJz/EpeogaXIf/T4jc1lmCiAA7K2ayFfQSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y5niwCAsrxLTwgaXbUvUZX5n1KE9z0NUD17qbohRrZ8=;
- b=QRCyIDgEpuMS1YkvWIgHQzAMMwVrBtSfdjEMF+DX/jzcvkYa51avb814SJEXR8QQ6rn3g2o8HRbcNTLY79L8ckp0ml03LLfl/CQv+KlGBXPSSXHvHgy+SA83cc93UMG/zYfWE/hBLnhtQ25uJYHyGCpuAf3OIGjCjR71p/LSV2E=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5986.eurprd04.prod.outlook.com (20.178.116.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Fri, 13 Mar 2020 01:07:05 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 01:07:05 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel type
-Thread-Topic: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel type
-Thread-Index: AQHV8emRGg+Z0s59ZUi7vGFwjsJP+qhFwwug
-Date:   Fri, 13 Mar 2020 01:07:05 +0000
-Message-ID: <AM0PR04MB448123609B2FE8F5ECAF1F4388FA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1583300977-2327-1-git-send-email-peng.fan@nxp.com>
- <VI1PR04MB7023455D0FE9766FFBE1EE5EEEFD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB7023455D0FE9766FFBE1EE5EEEFD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cdbedf90-873d-41d4-03f1-08d7c6ead8c7
-x-ms-traffictypediagnostic: AM0PR04MB5986:|AM0PR04MB5986:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB59862449CF87B73670A2452588FA0@AM0PR04MB5986.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(199004)(8936002)(81156014)(81166006)(66556008)(44832011)(316002)(33656002)(186003)(86362001)(26005)(966005)(66476007)(76116006)(6506007)(53546011)(66446008)(64756008)(7696005)(54906003)(66946007)(110136005)(71200400001)(52536014)(15650500001)(5660300002)(9686003)(478600001)(8676002)(4326008)(55016002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5986;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 63cYTHs4W7nyoR4T8VXkEcNT2ar2aY6amDo+xbb5CoCAAy3sWMMSz4REz1Rodk90n8uuS1KtsH1JKa6HWt6Pul5ROE6X27rVNXXl7ux9BHM8kgcAsoNDBH0H1WE6qmCAQr3SfQmqip/O5INrkPfh+++WmWpSSY89m/3/XwhPfR/egQbCGrxl2HEASmFBWLE1MFU0IgS9SFHki2z867wzWSF0cvukT6PWab/TgEjsW//r2Nax/d5LUYIcQa0c74Yd5eYz2AOK2lP8id4/UJzgeiBaLpIc8rw/c5x+HbYYehDBAxDvxgoysOYSZUKCXAtmLZFDUPfcZ/3X63x+KxNmBp9hnTiLnKsJ4Eo2Tc0ObOc6edKybAnfvfir/ZvQaU6OPdu4SC20bXcog1rxeKbsMNK6WNqxxuzM1legKALPu3Fr8JJ5aJyZa5WzyO4mVqQ0fL+kuwtYrSKPLMk7c2kn8GdzDZzUkCqhO7zaDbSZ5mlrXmGmc7OGS2O9OVA4iA54yPiqskUBwRWVM5vAPAa3LQ==
-x-ms-exchange-antispam-messagedata: mZ3MFL3+CSaxjVvbk3RDE+XNWgS1E28Jlwf+ppBJ3Rvq9jlukQF2xHkqj1YoEIaBZt+1MlGWDGBGKajEuhF+fiUaVdkymI6UPKDLX/39058pYxo7Y99134U8J+hpsiPhneehhX7drQbMfwfN0E0YdA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Mar 2020 21:07:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41680 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCMBHa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:07:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z65so4161942pfz.8;
+        Thu, 12 Mar 2020 18:07:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p1y55cnlFR5XIWnQzxqAJ77CuRfysEOntt316s397dE=;
+        b=tYPjoAxWpUvTByRIrpV3+ZBaSj85zKl6daSyvjUdTpth+1b76YQDPF7yONc6kXab3Q
+         oHoW1kqGQ/rYv0YacjJsHsS1ORNLiiNqvGW036ICnNjaabIN6mpOOo3iWKcb34P8oOoD
+         2tGG6f8MJkXfhZfVF3idh0poGismbfjUUuZp/B+2BFaloClGViDLrBhmY+jlQ/fakCWC
+         DmmIu3gxOul7mfDf9Uofx5nOK63/mpm0Pr1V9pJHq1cF/GQuVOj/xVm0bIb74Dhn0TVv
+         ZWC+OLDom9sEB8XS0aW725ZG2y2LHhlhwOsffGUe/rvWTySJawenZLVT8x5LvRMvKxTl
+         KCiA==
+X-Gm-Message-State: ANhLgQ05iBA7luvBTCN9IzvzuU502NmvcFe/QufT/Yg8H23VVyp1r5z/
+        NQ/PkjSDMhzLatGbdbGttY8=
+X-Google-Smtp-Source: ADFU+vu+tQSISN41gD4tRdARFAEGoS3/lePcq8JnLRSye7+UdmfV6TEHHOWfLLbEW3/et9gxyN/r+Q==
+X-Received: by 2002:a63:b21b:: with SMTP id x27mr10599525pge.310.1584061649053;
+        Thu, 12 Mar 2020 18:07:29 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v133sm45358821pfc.68.2020.03.12.18.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 18:07:27 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 240364028E; Fri, 13 Mar 2020 01:07:27 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 01:07:27 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>
+Subject: Re: [PATCH v2 3/4] docs: admin-guide: document the kernel.modprobe
+ sysctl
+Message-ID: <20200313010727.GT11244@42.do-not-panic.com>
+References: <20200312202552.241885-1-ebiggers@kernel.org>
+ <20200312202552.241885-4-ebiggers@kernel.org>
+ <87lfo5telq.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdbedf90-873d-41d4-03f1-08d7c6ead8c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 01:07:05.6333
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XnEjNKtpOtd4hTaUVYDTjfy+SEV458dOCLKBg2FX7WmQ6K5FSgTxLfa9CrBB7CfTFSyN+BjKG4pL2Ya7WoPRmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5986
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
+Content-Disposition: inline
+In-Reply-To: <87lfo5telq.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leonard,
 
-> Subject: Re: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel
-> type
+--YD3LsXFS42OYHhNZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Mar 13, 2020 at 09:04:01AM +1100, NeilBrown wrote:
+> On Thu, Mar 12 2020, Eric Biggers wrote:
 >=20
-> On 2020-03-04 7:55 AM, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
+> > From: Eric Biggers <ebiggers@google.com>
 > >
-> > V6:
-> >   Add Oleksij's R-b tag
-> >   Patch 3/4, per
-> https://www.kernel.org/doc/Documentation/printk-formats.txt
-> >   should use %zu for printk sizeof
+> > Document the kernel.modprobe sysctl in the same place that all the other
+> > kernel.* sysctls are documented.  Make sure to mention how to use this
+> > sysctl to completely disable module autoloading, and how this sysctl
+> > relates to CONFIG_STATIC_USERMODEHELPER.
 > >
-> > V5:
-> >   Move imx_mu_dcfg below imx_mu_priv
-> >   Add init hooks to imx_mu_dcfg
-> >   drop __packed __aligned
-> >   Add more debug msg
-> >   code style cleanup
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Jeff Vander Stoep <jeffv@google.com>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Luis Chamberlain <mcgrof@kernel.org>
+> > Cc: NeilBrown <neilb@suse.com>
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > ---
+> >  Documentation/admin-guide/sysctl/kernel.rst | 25 ++++++++++++++++++++-
+> >  1 file changed, 24 insertions(+), 1 deletion(-)
 > >
-> > V4:
-> >   Drop IMX_MU_TYPE_[GENERIC, SCU]
-> >   Pack MU chans init to separate function
-> >   Add separate function for SCU chans init and xlate
-> >   Add santity check to msg hdr.size
-> >   Limit SCU MU chans to 6, TX0/RX0/RXDB[0-3]
-> >
-> > V3:
-> >   Rebase to Shawn's for-next
-> >   Include fsl,imx8-mu-scu compatible
-> >   Per Oleksij's comments, introduce generic tx/rx and added scu mu type
-> >   Check fsl,imx8-mu-scu in firmware driver for fast_ipc
-> >
-> > V2:
-> >   Drop patch 1/3 which added fsl,scu property
-> >   Force to use scu channel type when machine has node compatible
-> "fsl,imx-scu"
-> >   Force imx-scu to use fast_ipc
-> >
-> >   I not found a generic method to make SCFW message generic enough,
-> SCFW
-> >   message is not fixed length including TX and RX. And it use TR0/RR0
-> >   interrupt.
-> >
-> > V1:
-> > Sorry to bind the mailbox/firmware patch together. This is make it to
-> > understand what changed to support using 1 TX and 1 RX channel for
-> > SCFW message.
-> >
-> > Per i.MX8QXP Reference mannual, there are several message using
-> > examples. One of them is:
-> > Passing short messages: Transmit register(s) can be used to pass short
-> > messages from one to four words in length. For example, when a
-> > four-word message is desired, only one of the registers needs to have
-> > its corresponding interrupt enable bit set at the receiver side.
-> >
-> > This patchset is to using this for SCFW message to replace four TX and
-> > four RX method.
+> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentatio=
+n/admin-guide/sysctl/kernel.rst
+> > index def074807cee9..454f3402ed321 100644
+> > --- a/Documentation/admin-guide/sysctl/kernel.rst
+> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> > @@ -49,7 +49,7 @@ show up in /proc/sys/kernel:
+> >  - kexec_load_disabled
+> >  - kptr_restrict
+> >  - l2cr                        [ PPC only ]
+> > -- modprobe                    =3D=3D> Documentation/debugging-modules.=
+txt
+> > +- modprobe
+> >  - modules_disabled
+> >  - msg_next_id		      [ sysv ipc ]
+> >  - msgmax
+> > @@ -444,6 +444,29 @@ l2cr: (PPC only)
+> >  This flag controls the L2 cache of G3 processor boards. If
+> >  0, the cache is disabled. Enabled if nonzero.
+> > =20
+> > +modprobe:
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +The path to the usermode helper for autoloading kernel modules, by
+> > +default "/sbin/modprobe".  This binary is executed when the kernel
+> > +requests a module.  For example, if userspace passes an unknown
+> > +filesystem type "foo" to mount(), then the kernel will automatically
+> > +request the module "fs-foo.ko" by executing this usermode helper.
 >=20
-> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
+> I don't think it is right to add the ".ko" there.  The string "fs-foo"
+> is what is passed to the named executable, and it make well end up
+> loading "bar.ko", depending what aliases are set up.
+> I would probably write  '... request the module named 'fs-foo" by executi=
+ng..'
+
+And that is just because filesystems, in this case a mount call, will
+use the fs- prefix for aliases. This is tribal knowledge in the context
+above, and so someone not familiar with this won't easily grasp this.
+
+Is there an easier autoloading example other than filesystems we can use th=
+at
+doesn't require you to explain the aliasing thing?
+
+What is module autoloading? Where is this documented ? If that
+can be slightly clarified this would be even easier to understand as
+well.
+
+  Luis
+
+> (The "name" for a module can come from the file that stores it, and
+> alias inside it, or configuration in modprobe.d).
 >=20
-
-Thanks for the test.
-
-> My stress tests pass on imx8qxp with this patcheset, however performance =
-is
-> not greatly improved. My guess is that this happens because of too many
-> interrupts.
-
-Might be. Could you share your testcase?
-
+> Thanks,
+> NeilBrown
 >=20
-> Is there really a reason to enable TIE? Spinning on TE bits without any
-> interrupts should be just plain faster.
-
-I could try to disable TIE and give a try. If performance improves lot, I c=
-ould
-change to non TX interrupt.
-
-Oleksij, do you agree?
-
-Thanks,
-Peng.
-
 >=20
-> >
-> > Peng Fan (4):
-> >    dt-bindings: mailbox: imx-mu: add SCU MU support
-> >    mailbox: imx: restructure code to make easy for new MU
-> >    mailbox: imx: add SCU MU support
-> >    firmware: imx-scu: Support one TX and one RX
-> >
-> >   .../devicetree/bindings/mailbox/fsl,mu.txt         |   2 +
-> >   drivers/firmware/imx/imx-scu.c                     |  54 ++++-
-> >   drivers/mailbox/imx-mailbox.c                      | 267
-> +++++++++++++++++----
-> >   3 files changed, 260 insertions(+), 63 deletions(-)
-> >
-> >
-> > base-commit: 770fbb32d34e5d6298cc2be590c9d2fd6069aa17
-> >
+> > +This usermode helper should insert the needed module into the kernel.
+> > +
+> > +This sysctl only affects module autoloading.  It has no effect on the
+> > +ability to explicitly insert modules.
+> > +
+> > +If this sysctl is set to the empty string, then module autoloading is
+> > +completely disabled.  The kernel will not try to execute a usermode
+> > +helper at all, nor will it call the kernel_module_request LSM hook.
+> > +
+> > +If CONFIG_STATIC_USERMODEHELPER=3Dy is set in the kernel configuration,
+> > +then the configured static usermode helper overrides this sysctl,
+> > +except that the empty string is still accepted to completely disable
+> > +module autoloading as described above.
+> > +
+> > +Also see Documentation/debugging-modules.txt.
+> > =20
+> >  modules_disabled:
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --=20
+> > 2.25.1
 
+
+
+--YD3LsXFS42OYHhNZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEENnNq2KuOejlQLZofziMdCjCSiKcFAl5q3M4ACgkQziMdCjCS
+iKdvtA//fmhoJkZ3Et5nHDbpWXGMr6uHdxlQqkt7Ai7fvX/IDYHHqDhdKadWyftD
+jXEgyOIxfuicMFFY3cjRQL4wqpG7fTnY8ZLLLSZHd26fFqLMQxgQRPVJsW4WLeR/
+G2yhcnzcnlLsRVczxUP7vZRwTpTCZHxH2W/SiyXIb8LRp1obEwYUlklc8L9+IX68
+h7z/0f8KEJJTO8DEWCD2wKOBi9LkSmI1m4pMLalJ9AOTvyWDSxQWFQpj+kvcC6yG
+WjTdkTiIlGIrFUcg9fNN5HumbFo8LU4+121p3jA3BtdBRG+sS0s6sZTN0BpHZdGe
+tjhuq44cq6xgMsxZb5mfwSnmHptGgmCqda1wzmgNTdc9WUDNNHHlehjdXhyqVIYZ
+wl1NgMDggZ2iqq1p+B2iw5eON9h4e1Nkx46ZGB0D9maqMXby7vV3SduZick8M5pK
+IQYYNeILufSCqz2d8HMFE+PCUk0jwGObzxxcwLE6seK4G+5+syptX4NDVbw/KTtf
+HxYw+F2B1CRjZrUxnqtTOqxyd0eRTArWeoWI6VWiYupMvwsTw1m88GPR6Tv/j9fz
+cAgvzZ7xv5dlOchWH8XXhfpz2ON8DZT/9puhoNMcoWXMdT+R7VSXl6c8OG6HMJ7k
+qpH4P9khGasEjyi7XWJe/B6RVJRTE9y8jcB6cmMvWHIGLOOKM+k=
+=Kxfs
+-----END PGP SIGNATURE-----
+
+--YD3LsXFS42OYHhNZ--
