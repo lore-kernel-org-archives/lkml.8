@@ -2,77 +2,125 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A65AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A81EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB7E206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D39206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584117253;
+	bh=xYnFlH4nZnuXIqF3xDVzseie3Dj5DOU8L0rrx6clFSU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=kNayS/Ok40u2TeVYvTCaQyEuV/MtOIGg2jvXM7tfcIvwvUW825W1J879t/MyPMHEA
+	 HNqcKoR8kb0Abe4y2wdaXwCWa1M3A97Kh639FMVRPU6xOH680yUdw6PZIe+F/4W0Nb
+	 aqhcbUQvdoCoMeJ43bnnfVPsIL/SrbywMTD5ukCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgCMQd2 (ORCPT
+        id S1726990AbgCMQeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:33:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20734 "EHLO mga09.intel.com"
+        Fri, 13 Mar 2020 12:34:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:60874 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgCMQd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:33:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:33:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="278284491"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Mar 2020 09:33:26 -0700
-Date:   Fri, 13 Mar 2020 09:33:26 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200313163326.GB5181@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
- <20200313005252.GA1292@linux.intel.com>
- <CAOASepMN1fmDaPjJJ-rpbLNPGUzE2LNB69s3X5mDBEhXziZ_UQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepMN1fmDaPjJJ-rpbLNPGUzE2LNB69s3X5mDBEhXziZ_UQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726528AbgCMQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:34:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A7B231B;
+        Fri, 13 Mar 2020 09:34:11 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F22D53F6CF;
+        Fri, 13 Mar 2020 09:34:10 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:34:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     broonie@kernel.org, gregkh@linuxfoundation.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        rafael@kernel.org
+Subject: Applied "regmap: debugfs: check count when read regmap file" to the regmap tree
+In-Reply-To:  <1584064687-12964-1-git-send-email-peng.fan@nxp.com>
+Message-Id:  <applied-1584064687-12964-1-git-send-email-peng.fan@nxp.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 12:07:55PM -0400, Nathaniel McCallum wrote:
-> On Thu, Mar 12, 2020 at 8:52 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> > FWIW, if the handler reaaaly wanted to pop off the stack, it could do so,
-> > fixup the stack, and then re-call __vdso_sgx_enter_enclave() instead of
-> > returning (to the original __vdso_sgx_enter_enclave()).
-> 
-> My understanding from the documentation issue above was that *if* you
-> wanted to push parameters back on the stack during enclave exit, you
-> would *have* to supply a handler so it could pop the parameters and
-> reset the stack. Which is why restoring %rsp from %rbx didn't make
-> sense to me.
+The patch
 
-Yep.
+   regmap: debugfs: check count when read regmap file
+
+has been applied to the regmap tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 74edd08a4fbf51d65fd8f4c7d8289cd0f392bd91 Mon Sep 17 00:00:00 2001
+From: Peng Fan <peng.fan@nxp.com>
+Date: Fri, 13 Mar 2020 09:58:07 +0800
+Subject: [PATCH] regmap: debugfs: check count when read regmap file
+
+When executing the following command, we met kernel dump.
+dmesg -c > /dev/null; cd /sys;
+for i in `ls /sys/kernel/debug/regmap/* -d`; do
+	echo "Checking regmap in $i";
+	cat $i/registers;
+done && grep -ri "0x02d0" *;
+
+It is because the count value is too big, and kmalloc fails. So add an
+upper bound check to allow max size `PAGE_SIZE << (MAX_ORDER - 1)`.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1584064687-12964-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap-debugfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index e72843fe41df..089e5dc7144a 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -227,6 +227,9 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 	if (*ppos < 0 || !count)
+ 		return -EINVAL;
+ 
++	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
++		count = PAGE_SIZE << (MAX_ORDER - 1);
++
+ 	buf = kmalloc(count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -371,6 +374,9 @@ static ssize_t regmap_reg_ranges_read_file(struct file *file,
+ 	if (*ppos < 0 || !count)
+ 		return -EINVAL;
+ 
++	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
++		count = PAGE_SIZE << (MAX_ORDER - 1);
++
+ 	buf = kmalloc(count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+-- 
+2.20.1
+
