@@ -2,158 +2,389 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD01C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25B9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6FE2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780E82073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sh9MXIhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgCMJaO (ORCPT
+        id S1726512AbgCMJdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:30:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51204 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgCMJaN (ORCPT
+        Fri, 13 Mar 2020 05:33:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35922 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgCMJda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:30:13 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Fri, 13 Mar 2020 05:33:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8pIGnk90C/eQbLnJ8p/15sfKmAvXSjOcwPwug3juja8=; b=sh9MXIhMbMo/jyATdPSOXudhHQ
+        RAfYggc+QFxGmSCG2DbiXet21j7htLbmuakEwuPEsVTrSWNMYhaGSrcoj5Gh8nUzspgVTa98SicQE
+        XrAh1FHucHldANEXZEBGVBcjaZ4V0k0BxPhJIrxY/LEzXu2QtCdS9ubYgedFZZPkAvfvazWmagsZD
+        o4yMRmLzCdzVEvMW+yA08A+Ax85RnlHOEdwKaocMuWVvTWZ3s53c1CtKfxMwEo9bCqAOcCHnpQ3Vj
+        jKU/B0Yj1ZS2obQDcjp4cTEqsZwhq4hAVyfNLzZPbG6DkhpbVf/jKE+Sn5JLB4N+VVosLcINBIkMZ
+        7bbuTV0Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCgh6-0005WP-67; Fri, 13 Mar 2020 09:33:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 83AF0295CF8;
-        Fri, 13 Mar 2020 09:30:11 +0000 (GMT)
-Date:   Fri, 13 Mar 2020 10:30:07 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     <Tudor.Ambarus@microchip.com>, <bbrezillon@kernel.org>,
-        <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <joel@jms.id.au>, <andrew@aj.id.au>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
-        <vz@mleia.com>, <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
-        <john.garry@huawei.com>, <tglx@linutronix.de>,
-        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
-        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
-        <swboyd@chromium.org>, <opensource@jilayne.com>,
-        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
-        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 01/23] mtd: spi-nor: Stop prefixing generic functions
- with a manufacturer name
-Message-ID: <20200313103007.7d7ea6af@collabora.com>
-In-Reply-To: <91394111-cbd6-c24e-485d-88fcd6825dc7@ti.com>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
-        <20200302180730.1886678-2-tudor.ambarus@microchip.com>
-        <91394111-cbd6-c24e-485d-88fcd6825dc7@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D01153011E0;
+        Fri, 13 Mar 2020 10:33:25 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9759A214344F4; Fri, 13 Mar 2020 10:33:25 +0100 (CET)
+Date:   Fri, 13 Mar 2020 10:33:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] locking/lockdep: Avoid recursion in
+ lockdep_count_{for,back}ward_deps()
+Message-ID: <20200313093325.GW12561@hirez.programming.kicks-ass.net>
+References: <20200312151258.128036-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312151258.128036-1-boqun.feng@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 11:34:55 +0530
-Vignesh Raghavendra <vigneshr@ti.com> wrote:
+On Thu, Mar 12, 2020 at 11:12:55PM +0800, Boqun Feng wrote:
 
-> On 02/03/20 11:37 pm, Tudor.Ambarus@microchip.com wrote:
-> > From: Boris Brezillon <bbrezillon@kernel.org>
-> > 
-> > Replace the manufacturer prefix by something describing more precisely
-> > what those functions do.
-> > 
-> > Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-> > [tudor.ambarus@microchip.com: prepend spi_nor_ to all modified methods.]
-> > Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> > ---
-> >  drivers/mtd/spi-nor/spi-nor.c | 88 ++++++++++++++++++-----------------
-> >  1 file changed, 45 insertions(+), 43 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> > index caf0c109cca0..b15e262765e1 100644
-> > --- a/drivers/mtd/spi-nor/spi-nor.c
-> > +++ b/drivers/mtd/spi-nor/spi-nor.c
-> > @@ -568,14 +568,15 @@ static int spi_nor_read_cr(struct spi_nor *nor, u8 *cr)
-> >  }
-> >  
-> >  /**
-> > - * macronix_set_4byte() - Set 4-byte address mode for Macronix flashes.
-> > + * spi_nor_en4_ex4_set_4byte() - Enter/Exit 4-byte mode for Macronix like
-> > + * flashes.
-> >   * @nor:	pointer to 'struct spi_nor'.
-> >   * @enable:	true to enter the 4-byte address mode, false to exit the 4-byte
-> >   *		address mode.
-> >   *
-> >   * Return: 0 on success, -errno otherwise.
-> >   */
-> > -static int macronix_set_4byte(struct spi_nor *nor, bool enable)
-> > +static int spi_nor_en4_ex4_set_4byte(struct spi_nor *nor, bool enable)  
-> 
-> 
-> Sounds a bit weird, how about simplifying this to:
-> 
-> 	spi_nor_set_4byte_addr_mode()
-> 
-> Or if you want to be specific:
-> 
-> 	spi_nor_en_ex_4byte_addr_mode()
+Thanks!
 
-You're right. Maybe we can simplify things by having a single function
-that does optional steps based on new flags
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 32406ef0d6a2..5142a6b11bf5 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -1719,9 +1719,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+>  	this.class = class;
+>  
+>  	raw_local_irq_save(flags);
+> +	current->lockdep_recursion = 1;
+>  	arch_spin_lock(&lockdep_lock);
+>  	ret = __lockdep_count_forward_deps(&this);
+>  	arch_spin_unlock(&lockdep_lock);
+> +	current->lockdep_recursion = 0;
+>  	raw_local_irq_restore(flags);
+>  
+>  	return ret;
+> @@ -1746,9 +1748,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+>  	this.class = class;
+>  
+>  	raw_local_irq_save(flags);
+> +	current->lockdep_recursion = 1;
+>  	arch_spin_lock(&lockdep_lock);
+>  	ret = __lockdep_count_backward_deps(&this);
+>  	arch_spin_unlock(&lockdep_lock);
+> +	current->lockdep_recursion = 0;
+>  	raw_local_irq_restore(flags);
+>  
+>  	return ret;
 
-SPI_NOR_EN_EX_4B_NEEDS_WEN
-SPI_NOR_CLEAR_EAR_ON_4B_EXIT
+This copies a bad pattern though; all the sites that do not check
+lockdep_recursion_count first really should be using ++/-- instead. But
+I just found there are indeed already a few sites that violate this.
 
-This should probably be done in a separate patch though, so ack on the
-spi_nor_en_ex_4byte_addr_mode() rename, assuming we also change the
-bool argument name to enter.
+I've taken this patch and done a general fixup on top.
 
-> 
-> >  {
-> >  	int ret;
-> >  
-> > @@ -604,14 +605,15 @@ static int macronix_set_4byte(struct spi_nor *nor, bool enable)
-> >  }
-> >  
-> >  /**
-> > - * st_micron_set_4byte() - Set 4-byte address mode for ST and Micron flashes.
-> > + * spi_nor_en4_ex4_wen_set_4byte() - Set 4-byte address mode for ST and Micron
-> > + * flashes.
-> >   * @nor:	pointer to 'struct spi_nor'.
-> >   * @enable:	true to enter the 4-byte address mode, false to exit the 4-byte
-> >   *		address mode.
-> >   *
-> >   * Return: 0 on success, -errno otherwise.
-> >   */
-> > -static int st_micron_set_4byte(struct spi_nor *nor, bool enable)
-> > +static int spi_nor_en4_ex4_wen_set_4byte(struct spi_nor *nor, bool enable)  
-> 
-> 
-> Unrelated to this patch itself, but can we just have one set_4byte
-> variant that uses WREN and drop the other one?
+---
+Subject: locking/lockdep: Fix bad recursion pattern
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri Mar 13 09:56:38 CET 2020
 
-Hm, not sure that's a good idea to insert WEN instructions for
-everyone, sounds like a recipe for regressions.
+There were two patterns for lockdep_recursion:
 
-> I expect sending WREN should be harmless even for cmds that don't expect
-> one.
+Pattern-A:
+	if (current->lockdep_recursion)
+		return
 
-In theory yes, but you know flash chips are capricious, so let's not
-take the risk of breaking things :-).
+	current->lockdep_recursion = 1;
+	/* do stuff */
+	current->lockdep_recursion = 0;
 
-> 
-> Rest looks good to me.
-> 
-> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-> 
+Pattern-B:
+	current->lockdep_recursion++;
+	/* do stuff */
+	current->lockdep_recursion--;
 
+But a third pattern has emerged:
+
+Pattern-C:
+	current->lockdep_recursion = 1;
+	/* do stuff */
+	current->lockdep_recursion = 0;
+
+And while this isn't broken per-se, it is highly dangerous because it
+doesn't nest properly.
+
+Get rid of all Pattern-C instances and shore up Pattern-A with a
+warning.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/locking/lockdep.c |   74 +++++++++++++++++++++++++----------------------
+ 1 file changed, 40 insertions(+), 34 deletions(-)
+
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -389,6 +389,12 @@ void lockdep_on(void)
+ }
+ EXPORT_SYMBOL(lockdep_on);
+ 
++static inline void lockdep_recursion_finish(void)
++{
++	if (WARN_ON_ONCE(--current->lockdep_recursion))
++		current->lockdep_recursion = 0;
++}
++
+ void lockdep_set_selftest_task(struct task_struct *task)
+ {
+ 	lockdep_selftest_task_struct = task;
+@@ -1719,11 +1725,11 @@ unsigned long lockdep_count_forward_deps
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
+-	current->lockdep_recursion = 0;
++	current->lockdep_recursion--;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+@@ -1748,11 +1754,11 @@ unsigned long lockdep_count_backward_dep
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
+-	current->lockdep_recursion = 0;
++	current->lockdep_recursion--;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+@@ -3433,9 +3439,9 @@ void lockdep_hardirqs_on(unsigned long i
+ 	if (DEBUG_LOCKS_WARN_ON(current->hardirq_context))
+ 		return;
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	__trace_hardirqs_on_caller(ip);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ }
+ NOKPROBE_SYMBOL(lockdep_hardirqs_on);
+ 
+@@ -3491,7 +3497,7 @@ void trace_softirqs_on(unsigned long ip)
+ 		return;
+ 	}
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	/*
+ 	 * We'll do an OFF -> ON transition:
+ 	 */
+@@ -3506,7 +3512,7 @@ void trace_softirqs_on(unsigned long ip)
+ 	 */
+ 	if (curr->hardirqs_enabled)
+ 		mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ }
+ 
+ /*
+@@ -3759,9 +3765,9 @@ void lockdep_init_map(struct lockdep_map
+ 			return;
+ 
+ 		raw_local_irq_save(flags);
+-		current->lockdep_recursion = 1;
++		current->lockdep_recursion++;
+ 		register_lock_class(lock, subclass, 1);
+-		current->lockdep_recursion = 0;
++		lockdep_recursion_finish();
+ 		raw_local_irq_restore(flags);
+ 	}
+ }
+@@ -4441,11 +4447,11 @@ void lock_set_class(struct lockdep_map *
+ 		return;
+ 
+ 	raw_local_irq_save(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	check_flags(flags);
+ 	if (__lock_set_class(lock, name, key, subclass, ip))
+ 		check_chain_key(current);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_set_class);
+@@ -4458,11 +4464,11 @@ void lock_downgrade(struct lockdep_map *
+ 		return;
+ 
+ 	raw_local_irq_save(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	check_flags(flags);
+ 	if (__lock_downgrade(lock, ip))
+ 		check_chain_key(current);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_downgrade);
+@@ -4483,11 +4489,11 @@ void lock_acquire(struct lockdep_map *lo
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	trace_lock_acquire(lock, subclass, trylock, read, check, nest_lock, ip);
+ 	__lock_acquire(lock, subclass, trylock, read, check,
+ 		       irqs_disabled_flags(flags), nest_lock, ip, 0, 0);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_acquire);
+@@ -4501,11 +4507,11 @@ void lock_release(struct lockdep_map *lo
+ 
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	trace_lock_release(lock, ip);
+ 	if (__lock_release(lock, ip))
+ 		check_chain_key(current);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_release);
+@@ -4521,9 +4527,9 @@ int lock_is_held_type(const struct lockd
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	ret = __lock_is_held(lock, read);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+@@ -4542,9 +4548,9 @@ struct pin_cookie lock_pin_lock(struct l
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	cookie = __lock_pin_lock(lock);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ 
+ 	return cookie;
+@@ -4561,9 +4567,9 @@ void lock_repin_lock(struct lockdep_map
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	__lock_repin_lock(lock, cookie);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_repin_lock);
+@@ -4578,9 +4584,9 @@ void lock_unpin_lock(struct lockdep_map
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	__lock_unpin_lock(lock, cookie);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_unpin_lock);
+@@ -4716,10 +4722,10 @@ void lock_contended(struct lockdep_map *
+ 
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	trace_lock_contended(lock, ip);
+ 	__lock_contended(lock, ip);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_contended);
+@@ -4736,9 +4742,9 @@ void lock_acquired(struct lockdep_map *l
+ 
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	__lock_acquired(lock, ip);
+-	current->lockdep_recursion = 0;
++	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_acquired);
+@@ -4963,7 +4969,7 @@ static void free_zapped_rcu(struct rcu_h
+ 
+ 	raw_local_irq_save(flags);
+ 	arch_spin_lock(&lockdep_lock);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 
+ 	/* closed head */
+ 	pf = delayed_free.pf + (delayed_free.index ^ 1);
+@@ -4975,7 +4981,7 @@ static void free_zapped_rcu(struct rcu_h
+ 	 */
+ 	call_rcu_zapped(delayed_free.pf + delayed_free.index);
+ 
+-	current->lockdep_recursion = 0;
++	current->lockdep_recursion--;
+ 	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
+ }
+@@ -5022,11 +5028,11 @@ static void lockdep_free_key_range_reg(v
+ 
+ 	raw_local_irq_save(flags);
+ 	arch_spin_lock(&lockdep_lock);
+-	current->lockdep_recursion = 1;
++	current->lockdep_recursion++;
+ 	pf = get_pending_free();
+ 	__lockdep_free_key_range(pf, start, size);
+ 	call_rcu_zapped(pf);
+-	current->lockdep_recursion = 0;
++	current->lockdep_recursion--;
+ 	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
+ 
