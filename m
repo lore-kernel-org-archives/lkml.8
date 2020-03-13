@@ -2,115 +2,95 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B9AC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFE3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A68206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:55:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QgwHFrUh"
+	by mail.kernel.org (Postfix) with ESMTP id 81AE9206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584071864;
+	bh=w+ZZsFzaN02z4LjftM7wNgCAMWF+UZWUmlO2OdveGgo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Q6WZevb0yuDO1d8rCklAUd84HuWtQbPmH4vVo3eCvxZ6ALD/DGPNfGLjE/Mb9JAFK
+	 WRUMOtQAdsLPIdgz41xZ9Te0nnQdPTHNCus+4Oiq69D5b8KYvLu0HzIstJv+Ym5Nc5
+	 1dTwVPwzyl0KqubS9T5pMimYuqZ1EMkUOGrxqJj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCMDzg (ORCPT
+        id S1726464AbgCMD5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:55:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41281 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCMDzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:55:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z65so4375727pfz.8;
-        Thu, 12 Mar 2020 20:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=bFy5BGqYIsvQcigpiL/tId818nkLJ5jSEKOHxLuc+ho=;
-        b=QgwHFrUhzfSofz5itbllISH4EH2+ljgNI0x0fmR9HiOZV4NjCYt/vTQbrXlzxCPC5F
-         MHh3ReUBkwcO0DLIi/hkvWskaBT5bvfN0E/WlU9vEe5t8/J4R6lEincGPn3vjreyOx72
-         WYcWN0GicThi/G8roCHyJxoEnEYyO1OtMIrvN/e7rFDI82u8EzZ5xjV63MdCmmAQZkxM
-         C6icuyKtJYwwKZtuNgJJH8vElDDaJdW0iZNKQHNHZ9Uk+ThyQPPnO4fv7dvKblejMiti
-         yVge5r/xFHBn+/j5BCaJKdi8LBuytjogaEPlMyqb8Q7Y/KWcK81k523QSQH7wgdQm+cF
-         MBlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bFy5BGqYIsvQcigpiL/tId818nkLJ5jSEKOHxLuc+ho=;
-        b=lyk4ysriDYHO5uvbczT9vj9mtV20afKO34FMMHBkQneH51zmxkJqoUWC88S3Bb7Clj
-         HgihdPI7lcDbnFxSJUxv8A1cpMpQfwU039i9kCOwSfOehMtoEQzY5fDDYZv15uXrWLdS
-         qzfh+iV5o4iKzLNQbK1T+hvV0PR4ifsjtj4c03cs8FERNntiNCBbePXL6wwfUAnmok81
-         dAoVg4nvrGfnKvp5ScFvTsNUoEaMXgOGkAk/H2zFru9+2z875ea8nQcouL/BVmBJO2Xh
-         zwWTPkv8/OWkcnT3hP8A8t+BZy9bLTvnm2nKW50rZ75ueM19+Nh4pnSLqSkZlLZ8ROjj
-         D31w==
-X-Gm-Message-State: ANhLgQ1R33xTGn+S6wAstaNX6f0BMJehSN2XVPgWOkzc+IqdLs47Toak
-        uhRBO8icDpYD03wo3qnSMlc7ndZY
-X-Google-Smtp-Source: ADFU+vvEtxyIaqDqKWJgBRMV5ZSjK/QVfAp+w8TpRpMiFUcvCI6x5N0FZQO4poCsbcMd98aWIX1BrQ==
-X-Received: by 2002:aa7:850b:: with SMTP id v11mr8012798pfn.64.1584071734727;
-        Thu, 12 Mar 2020 20:55:34 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id y9sm19625326pgo.80.2020.03.12.20.55.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 12 Mar 2020 20:55:34 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v2] KVM: VMX: Micro-optimize vmexit time when not exposing PMU
-Date:   Fri, 13 Mar 2020 11:55:18 +0800
-Message-Id: <1584071718-17163-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 12 Mar 2020 23:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbgCMD5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:57:43 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A9B72072F;
+        Fri, 13 Mar 2020 03:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584071862;
+        bh=w+ZZsFzaN02z4LjftM7wNgCAMWF+UZWUmlO2OdveGgo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=igO6WyhXDpgdYdsk1Lro4MZ9Kz09lJRzqTA9EBGjn+aZktwUnpRiZ9PNyUYo98e65
+         ymzJ0f1po2wfMTl+Xp4p7XbDObPJ8SO5dXdTZEk3Ss9M+2rWfMhSb5TX9LZ+4jOZet
+         WA2j+tJuJdOcvRRUh/seQTOBB1Smmxy5aLYSDRMg=
+Date:   Thu, 12 Mar 2020 20:57:41 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/hmm.c : Remove additional check for
+ lockdep_assert_held()
+Message-Id: <20200312205741.e97a201037103bbf51e1df40@linux-foundation.org>
+In-Reply-To: <CAFqt6zZ4ceum_SHmQgub8EKJxNQ26_-UfzvK-kcejqH67QHHtA@mail.gmail.com>
+References: <1584065460-22205-1-git-send-email-jrdr.linux@gmail.com>
+        <20200312195850.29693d4e55ec27ae11443c0f@linux-foundation.org>
+        <CAFqt6zZ4ceum_SHmQgub8EKJxNQ26_-UfzvK-kcejqH67QHHtA@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Fri, 13 Mar 2020 09:17:22 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
 
-PMU is not exposed to guest by most of products from cloud providers since the 
-bad performance of PMU emulation and security concern. However, it calls 
-perf_guest_switch_get_msrs() and clear_atomic_switch_msr() unconditionally 
-even if PMU is not exposed to the guest before each vmentry. 
+> On Fri, Mar 13, 2020 at 8:28 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Fri, 13 Mar 2020 07:41:00 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> >
+> > > walk_page_range() already has a check for lockdep_assert_held().
+> > > So additional check for lockdep_assert_held() can be removed from
+> > > hmm_range_fault().
+> > >
+> > > ...
+> > >
+> > > --- a/mm/hmm.c
+> > > +++ b/mm/hmm.c
+> > > @@ -681,7 +681,6 @@ long hmm_range_fault(struct hmm_range *range, unsigned int flags)
+> > >       struct mm_struct *mm = range->notifier->mm;
+> > >       int ret;
+> > >
+> > > -     lockdep_assert_held(&mm->mmap_sem);
+> > >
+> > >       do {
+> > >               /* If range is no longer valid force retry. */
+> >
+> > It isn't very obvious that hmm_range_fault() is and will only be called
+> > from walk_page_range() (is it?)
+> >
+> 
+> Sorry Andrew, didn't get this part ?
+> * hmm_range_fault() is and will only be called
+>  from walk_page_range() (is it?) *
 
-~2% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my 
-SKX server.
-
-Before patch:
-vmcall 1559
-
-After patch:
-vmcall 1529
-
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-v1 -> v2:
- * move the check before atomic_switch_perf_msrs
-
- arch/x86/kvm/vmx/vmx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 40b1e61..b20423c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6567,7 +6567,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	pt_guest_enter(vmx);
- 
--	atomic_switch_perf_msrs(vmx);
-+	if (vcpu_to_pmu(vcpu)->version)
-+		atomic_switch_perf_msrs(vmx);
- 	atomic_switch_umwait_control_msr(vmx);
- 
- 	if (enable_preemption_timer)
--- 
-2.7.4
+The patch assumes that hmm_range_fault() will only ever be called via
+walk_page_range().  How do we know this is the case?  And that it
+always will be the case?
 
