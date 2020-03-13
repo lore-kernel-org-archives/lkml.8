@@ -2,109 +2,58 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1C7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B64C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52254206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Dbl5JwBj"
+	by mail.kernel.org (Postfix) with ESMTP id AD7D82074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgCMRph (ORCPT
+        id S1726965AbgCMRrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:45:37 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:45278 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgCMRpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:45:36 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48fClf0NDqz9vBKD;
-        Fri, 13 Mar 2020 18:45:34 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Dbl5JwBj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id W8z7nJP6HoHj; Fri, 13 Mar 2020 18:45:33 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48fCld6Ksnz9vBK9;
-        Fri, 13 Mar 2020 18:45:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584121533; bh=1nnYMqV+aFWDUjZlBjvP/V7b77hSbc506QLsfMci+8Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Dbl5JwBj8r6q6vEsg8fMF5tmhL2kXlWu+A7dlp30E6bgN5nLYTuWYC4P8dWQZMbKr
-         6ywh2J/Q2wRA/dx7Z7OALnU1vK6GAis09YvON/mOGp5YaNzVk36Np+h+dauPGtt2uQ
-         +EwXJFW69TujEKpXXkqdXE7Tz6SwRGrxLWXZzoy0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 986888B8D3;
-        Fri, 13 Mar 2020 18:45:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id yk10owCl4XFs; Fri, 13 Mar 2020 18:45:35 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4CCED8B8CE;
-        Fri, 13 Mar 2020 18:45:34 +0100 (CET)
-Subject: Re: [PATCH v2] powerpc/fsl-85xx: fix compile error
-To:     WANG Wenhu <wenhu.wang@vivo.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, trivial@kernel.org
-References: <20200313171953.63205-1-wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <320843ad-32d5-8799-7c4a-150fa5fd7ef8@c-s.fr>
-Date:   Fri, 13 Mar 2020 18:45:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 13:47:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47697 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMRrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:47:14 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jCoOt-00017r-DB; Fri, 13 Mar 2020 18:47:11 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 0/9] Lock ordering documentation and annotation for lockdep
+Date:   Fri, 13 Mar 2020 18:46:52 +0100
+Message-Id: <20200313174701.148376-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200313171953.63205-1-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The first patch introduces the long asked locking documentation
+regarding spinlock_t vs raw_spinlock_t (and other locking primitives).
+Followed by updates to obey the rules including a change to completions
+to use struct swait_queue_head instead of wait_queue_head_t.
+
+It ends with lockdep updates to recognize the "bad" lock nesting. This
+new lockdep feature is activated by CONFIG_PROVE_RAW_LOCK_NESTING. Once
+enabled it will report for instance printk, the memory allocator or the
+workqueue implementation. This is known and it is worked on.
+
+Sebastian
 
 
-Le 13/03/2020 à 18:19, WANG Wenhu a écrit :
-> Include "linux/of_address.h" to fix the compile error for
-> mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
-> 
->    CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function ‘mpc85xx_l2ctlr_of_probe’:
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration of function ‘of_iomap’; did you mean ‘pci_iomap’? [-Werror=implicit-function-declaration]
->    l2ctlr = of_iomap(dev->dev.of_node, 0);
->             ^~~~~~~~
->             pci_iomap
-> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
->    l2ctlr = of_iomap(dev->dev.of_node, 0);
->           ^
-> cc1: all warnings being treated as errors
-> scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85xx_l2ctlr.o' failed
-> make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
-> 
-> Fixes: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-
-Shouldn't you Cc stable as well ?
-
-> Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
-> ---
-
-What's the difference between v1 and v2 ?
-
-Christophe
