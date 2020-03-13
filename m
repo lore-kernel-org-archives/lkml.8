@@ -2,99 +2,73 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A4CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6E3C5ACC0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846252074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584115824;
-	bh=B47v85trEWvjV/lzKS2P3e07BiG8jYMtvyGlf1skrfw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=L4hQ4uSSkEBotRNBFf2zCKtK/Z6KKZdUglZqL8T7adPQhyVKHqQ5LcPgTCbZ1dIsy
-	 HCOXiLw+AVkdXoTVs7cDG0lkXEKWAFV2hhsdYHz/vTVy3VpqrVs4yQh1GbAEYtfLp+
-	 sHE6BY1KsD+L0R6iZc/sWdeXUS6XtAStnW8G/rWs=
+	by mail.kernel.org (Postfix) with ESMTP id 8F05220749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCMQKX (ORCPT
+        id S1727088AbgCMQKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57136 "EHLO mail.kernel.org"
+        Fri, 13 Mar 2020 12:10:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54962 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgCMQKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726442AbgCMQKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 12:10:23 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B8CD2072C;
-        Fri, 13 Mar 2020 16:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584115822;
-        bh=B47v85trEWvjV/lzKS2P3e07BiG8jYMtvyGlf1skrfw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=seaW/ZYd0aXN5SgqyFlnl4kSLtqoDKP8TliSQ3i0Q53m4sCK1YU8bJ1a6qlGaHr4X
-         BrZee8SEmHmW8x9xOjqxZVr0dfAmp4VOxRChmKuYj1Khu6nkenoj1K0KEWcFg15I3P
-         lcd/h45POIXuc49iOEqu8SdveQ9M50HQzZUsJeOU=
-Subject: Re: [PATCH] dma-buf: heaps: bugfix for selftest failure
-To:     Leon He <hexiaolong2008@gmail.com>, sumit.semwal@linaro.org
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, Leon He <leon.he@unisoc.com>,
-        shuah <shuah@kernel.org>
-References: <1583300076-28392-1-git-send-email-leon.he@unisoc.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <9be2873c-79c2-2d02-f15a-1e6e0ff7e898@kernel.org>
-Date:   Fri, 13 Mar 2020 10:10:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1583300076-28392-1-git-send-email-leon.he@unisoc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 376221A14F2;
+        Fri, 13 Mar 2020 17:10:22 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2AD011A14E2;
+        Fri, 13 Mar 2020 17:10:22 +0100 (CET)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C78220465;
+        Fri, 13 Mar 2020 17:10:21 +0100 (CET)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] clk: imx: clk-gate2: Pass the device to the register function
+Date:   Fri, 13 Mar 2020 18:10:19 +0200
+Message-Id: <1584115819-17778-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 10:34 PM, Leon He wrote:
-> If the 'name' array in check_vgem() was not initialized to null, the
-> value of name[4] may be random. Which will cause strcmp(name, "vgem")
-> failed.
+The device needs to be passed on to the clk_hw_register.
 
-Nit: "to fail" instead of "failed"
+Fixes: 1f9aec9662566189 ("clk: imx: clk-gate2: Switch to clk_hw based API")
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ drivers/clk/imx/clk-gate2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> 
-> Signed-off-by: Leon He <leon.he@unisoc.com>
-> ---
->   tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> index cd5e1f6..21f3d19 100644
-> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -22,7 +22,7 @@
->   static int check_vgem(int fd)
->   {
->   	drm_version_t version = { 0 };
-> -	char name[5];
-> +	char name[5] = { 0 };
->   	int ret;
->   
->   	version.name_len = 4;
-> 
-
-return !strcmp(name, "vgem");
-
-While you are at it, why not change strcmp() to strncmp()?
-
-thanks,
--- Shuah
-
+diff --git a/drivers/clk/imx/clk-gate2.c b/drivers/clk/imx/clk-gate2.c
+index 72a7698..ce0060e 100644
+--- a/drivers/clk/imx/clk-gate2.c
++++ b/drivers/clk/imx/clk-gate2.c
+@@ -154,7 +154,7 @@ struct clk_hw *clk_hw_register_gate2(struct device *dev, const char *name,
+ 	gate->hw.init = &init;
+ 	hw = &gate->hw;
+ 
+-	ret = clk_hw_register(NULL, hw);
++	ret = clk_hw_register(dev, hw);
+ 	if (ret) {
+ 		kfree(gate);
+ 		return ERR_PTR(ret);
+-- 
+2.7.4
 
