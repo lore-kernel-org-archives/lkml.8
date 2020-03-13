@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F65AC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746EBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D4B20752
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458CE2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhJNuSGh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPJ8MjMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCMOQ1 (ORCPT
+        id S1726982AbgCMOQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:16:27 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33615 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgCMOQ0 (ORCPT
+        Fri, 13 Mar 2020 10:16:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33632 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgCMOQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:16:26 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a25so12323246wrd.0;
-        Fri, 13 Mar 2020 07:16:24 -0700 (PDT)
+        Fri, 13 Mar 2020 10:16:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a25so12323504wrd.0;
+        Fri, 13 Mar 2020 07:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0geItnR1hP77wUFBV2Yc0AfuV9aOuFucx1z+d3zMZmA=;
-        b=NhJNuSGh3aeUVHWb8I5+1v8F6hpJ820KgXzZRWXUkyFhdPaskoGMldtvlGR0Ob6qTS
-         NEmrVMV+RYx8FFiLoE9i4n71jDeUefLr/d9RKqKQbJkRk12YoKmKRDsROv/BLWYq5ljM
-         kMkvyhzm10Ll4muq6YKBIvVcNESK1s0aERipIKLGamoIMVPASeHQVO3/veCl3x+Xgm4e
-         Np1/VL8EYmVQU3zX0sXV/wv7giAnNTYQYc8DKjDwIEMbewBfGDDDKdwd2J0kahRJLoDh
-         j3AlELAXdArbY897E4d/cVqokpTLtNnA1fCCVhKMqI53MFEPVaTyYZw+UFUdmnJpBsKC
-         H84g==
+        bh=bSpghWAMwr8Q+uEFRygw1e/iYUietdP6cX8XvjepZ+U=;
+        b=EPJ8MjMjDnDTgKA2OhGgCSXfsmAgm76W53Tnwy+u1uWTTDZH9zPuJk2ktTkbQpRuIs
+         YyFkcdmmYOlUPj/t9VsUIAxs7e1rOw0dKSJrcsRpNZLtcLXDP4+eVc7KnrwbylpWLI1F
+         gfTKn0aRhAv4o45b0qbrpm7PEeQ9dKIZdGKMHOGSsBCVprijy3O35vE7wemVldA3+MC0
+         dISFBR21knHcNnTMcbu/WeoXuSimCySQlkvaq67H2l4gyeb40M5FY9CuDN3hq5k9Frab
+         eDtXeUprWtAvJJe8zLcVSWVod3Ff/WaXWYuMoIICXS7QbNRzbvQLz/X2sH0OQO3MHTkw
+         MVBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0geItnR1hP77wUFBV2Yc0AfuV9aOuFucx1z+d3zMZmA=;
-        b=HQM/KGP4LlGjjGcWI2wSnDH+r+EdySouzyAtYwy3nGJfvJlw6tL/QHSRPRf4vm9s9h
-         lG9yyEk88OgUYrNnKDAcSYUkL9lGGLeFvE/pzG+TUEW3GBzvBKuMiIflaTAfI2JpJmsP
-         tywtAcgopmFipu/ZPuC6yvKfxUol4SxQhBl6RAoF94eXUcAHmToKfeXN/YgWFmDDVL4G
-         55J0DAPa7ZWUg1aCD/YJQn4EdK5bFg2z1EaKJbtljA1KMkUU4d7s3Ux1r7kFkI9NjFn9
-         WQBjdvqb5ykyyhj7rpXpow85K6AHPlXaFgy7FwUSfHPmfhK8P+IFWPygt3yipotY4dNd
-         X1qQ==
-X-Gm-Message-State: ANhLgQ3WEtLPmERWqkeaXAnp/lmZmWoZ2/K03PbFoQQNv2Wlt819FwwP
-        hxTCOYXrUjkaLvxSmmhD4R0Q5idvPSc=
-X-Google-Smtp-Source: ADFU+vttxcsLA1395SwhltsZMXRdZLBZdeW5S0lXEEqmoBV8/b61sqNbDZFP2BZQupHpawQhmENmMw==
-X-Received: by 2002:a5d:4406:: with SMTP id z6mr18164979wrq.68.1584108983406;
-        Fri, 13 Mar 2020 07:16:23 -0700 (PDT)
+        bh=bSpghWAMwr8Q+uEFRygw1e/iYUietdP6cX8XvjepZ+U=;
+        b=gN4fzcwAGePP3bsdbe20Bp14ISP4IaNDtiKo5dLq/IBLE9p54xFnkrb9ULckzvoKbh
+         c//l4NhaGlNiWhDNpjLqRAQICPVL7PJy1vosHAfNEIwWz3V/da1qGMiZKyP/jzDCAhVa
+         8vVsfRmynRmO4JEhnH0YHH3dhFM8K7Tx7rxcLWe1FGA0WgrueaBvXv9TsAiVfqr5kM62
+         c6mUozfW0bHaX5/uRAyl4shwcYzg1TLnc+URj5QJQUvX4bT7XxhZXhMZ43mdFmwZszWq
+         y5fzXdQ43DthBUOj6k3n3lAsC32vZs4R933lQVyZKKi+epAoDb+JvcBJKMN+VMNafD/y
+         zbXg==
+X-Gm-Message-State: ANhLgQ0y18DeXPxZgpZ6A/5n9z1Tbo/n1TTr+VKn1iSvtfQ18na59p75
+        52W0LAoSAVMtm5EoZy5cT5aCU+zNnrE=
+X-Google-Smtp-Source: ADFU+vtbfqar6i4PqR8gi5ztuonO7jZmi9+FQlxWumWKx0m2H9MUmcanCn3YizpEN5I9Nivd+WrF+w==
+X-Received: by 2002:a5d:528e:: with SMTP id c14mr18297940wrv.308.1584108986387;
+        Fri, 13 Mar 2020 07:16:26 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id l83sm17561422wmf.43.2020.03.13.07.16.20
+        by smtp.gmail.com with ESMTPSA id l83sm17561422wmf.43.2020.03.13.07.16.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 07:16:22 -0700 (PDT)
+        Fri, 13 Mar 2020 07:16:25 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -74,9 +74,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         Mathias Nyman <mathias.nyman@intel.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/4] dt-bindings: Add Broadcom STB USB support
-Date:   Fri, 13 Mar 2020 10:15:42 -0400
-Message-Id: <20200313141545.31943-2-alcooperx@gmail.com>
+Subject: [PATCH 2/4] usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+Date:   Fri, 13 Mar 2020 10:15:43 -0400
+Message-Id: <20200313141545.31943-3-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200313141545.31943-1-alcooperx@gmail.com>
 References: <20200313141545.31943-1-alcooperx@gmail.com>
@@ -85,96 +85,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
-
-NOTE: The OHCI driver is not included because it uses the generic
-      platform driver.
+Add support for Broadcom STB SoC's to the xhci platform driver
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
- .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
- 2 files changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+ drivers/usb/host/xhci-brcm.c | 16 ++++++++++++++++
+ drivers/usb/host/xhci-brcm.h | 16 ++++++++++++++++
+ drivers/usb/host/xhci-plat.c | 11 +++++++++++
+ 3 files changed, 43 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-brcm.c
+ create mode 100644 drivers/usb/host/xhci-brcm.h
 
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+diff --git a/drivers/usb/host/xhci-brcm.c b/drivers/usb/host/xhci-brcm.c
 new file mode 100644
-index 000000000000..ad570ca4ca6d
+index 000000000000..bf8c0bfd1780
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/brcm,bcm7445-ehci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/usb/host/xhci-brcm.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2018, Broadcom */
 +
-+title: Broadcom STB USB EHCI Controller Device Tree Bindings
++#include <linux/usb.h>
++#include <linux/usb/hcd.h>
 +
-+allOf:
-+  - $ref: "usb-hcd.yaml"
++#include "xhci.h"
 +
-+maintainers:
-+  - Al Cooper <alcooperx@gmail.com>
++int xhci_plat_brcm_init_quirk(struct usb_hcd *hcd)
++{
++	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
 +
-+properties:
-+  compatible:
-+    contains:
-+      const: brcm,bcm7445-ehci
++	xhci->quirks |= XHCI_RESET_ON_RESUME;
++	return 0;
++}
 +
-+  reg:
-+    maxItems: 1
+diff --git a/drivers/usb/host/xhci-brcm.h b/drivers/usb/host/xhci-brcm.h
+new file mode 100644
+index 000000000000..e64800fae4d5
+--- /dev/null
++++ b/drivers/usb/host/xhci-brcm.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2018, Broadcom */
 +
-+  interrupts:
-+    maxItems: 1
++#ifndef _XHCI_BRCM_H
++#define _XHCI_BRCM_H
 +
-+  clocks:
-+    maxItems: 1
-+    description: Clock specifier for the EHCI clock
++#if IS_ENABLED(CONFIG_USB_XHCI_BRCM)
++int xhci_plat_brcm_init_quirk(struct usb_hcd *hcd);
++#else
++static inline int xhci_plat_brcm_init_quirk(struct usb_hcd *hcd)
++{
++	return 0;
++}
++#endif
++#endif /* _XHCI_BRCM_H */
 +
-+  clock-names:
-+    const: sw_usb
-+
-+  phys:
-+    description: PHY specifier for the USB PHY
-+
-+  phy-names:
-+    const: usbphy
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - phys
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ehci@f0b00300 {
-+        compatible = "brcm,bcm7445-ehci";
-+        reg = <0xf0b00300 0xa8>;
-+        interrupts = <0x0 0x5a 0x0>;
-+        interrupt-names = "usb0_ehci_0";
-+        phys = <&usbphy_0 0x0>;
-+        phy-names = "usbphy"
-+        clocks = <&usb20>;
-+        clock-names = "sw_usb"
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 3f378951d624..aafc316b5a8e 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -23,6 +23,7 @@ Required properties:
-       device
-     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
-       device
-+    - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
-     - "xhci-platform" (deprecated)
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index d90cd5ec09cf..9314620b8fad 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -24,6 +24,7 @@
+ #include "xhci-plat.h"
+ #include "xhci-mvebu.h"
+ #include "xhci-rcar.h"
++#include "xhci-brcm.h"
  
-     When compatible with the generic version, nodes must list the
+ static struct hc_driver __read_mostly xhci_plat_hc_driver;
+ 
+@@ -112,6 +113,10 @@ static const struct xhci_plat_priv xhci_plat_renesas_rcar_gen3 = {
+ 	SET_XHCI_PLAT_PRIV_FOR_RCAR(XHCI_RCAR_FIRMWARE_NAME_V3)
+ };
+ 
++static const struct xhci_plat_priv xhci_plat_brcm = {
++	.init_quirk = xhci_plat_brcm_init_quirk
++};
++
+ static const struct of_device_id usb_xhci_of_match[] = {
+ 	{
+ 		.compatible = "generic-xhci",
+@@ -147,6 +152,12 @@ static const struct of_device_id usb_xhci_of_match[] = {
+ 	}, {
+ 		.compatible = "renesas,rcar-gen3-xhci",
+ 		.data = &xhci_plat_renesas_rcar_gen3,
++	}, {
++		.compatible = "brcm,xhci-brcm-v2",
++		.data = &xhci_plat_brcm,
++	}, {
++		.compatible = "brcm,bcm7445-xhci",
++		.data = &xhci_plat_brcm,
+ 	},
+ 	{},
+ };
 -- 
 2.17.1
 
