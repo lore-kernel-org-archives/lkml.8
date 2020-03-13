@@ -2,128 +2,123 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C1FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDEFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC35206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661AE206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NrCxGDlG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgCMDRb (ORCPT
+        id S1726535AbgCMDRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:17:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6435 "EHLO mga09.intel.com"
+        Thu, 12 Mar 2020 23:17:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:52195 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgCMDRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:17:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 20:17:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
-   d="scan'208";a="278064811"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Mar 2020 20:17:27 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     alex.williamson@redhat.com, zhenyuw@linux.intel.com,
-        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v4 1/7] vfio: allow external user to get vfio group from device
-Date:   Thu, 12 Mar 2020 23:07:55 -0400
-Message-Id: <20200313030755.7767-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313030548.7705-1-yan.y.zhao@intel.com>
-References: <20200313030548.7705-1-yan.y.zhao@intel.com>
+        id S1726491AbgCMDRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:17:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48drV62x7Xz9sST;
+        Fri, 13 Mar 2020 14:17:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584069454;
+        bh=ldxHFAXKQE97+v1SRtxLJNZc/rbeWkm1Dkdkyk2tJGw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NrCxGDlGZnqSGhfVBIpGSup6ql+N1ixG6op5fbmtLRMO/+iQqm1lkYNg9Hqkgzztm
+         ZG/hCZ5AGw7btp7XWNm7hBosg7kI1PQQRf1t47SdnEpMtIgRkj6aEmBS+SNmEFvK4O
+         0DBs8Qu4XD8JSmGYWfMmhf42s0qCFKNDVOmWF0oChX2nQpi7su/91XVSA2Jpe430ZN
+         njceYnp67GR/HfF/gOAcnOjLE3FNpGpwEt1OUNn4yJO/qdWj9wy7hNcmlxsFCzhZdW
+         nRk/W7CfqzdAmILUUQt9vsHc0whYws9ljGHfy2A2SZ/IPdlogpcfH6hHvY4nwwb2dX
+         k2Tmv6Qu9VR6Q==
+Date:   Fri, 13 Mar 2020 14:17:32 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Blakey <paulb@mellanox.com>
+Subject: linux-next: manual merge of the netfilter-next tree with the
+ net-next tree
+Message-ID: <20200313141732.14b6e3e1@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/yf=nCwDlLhONyVinAjC8vTL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-external user calls vfio_group_get_external_user_from_dev() with a device
-pointer to get the VFIO group associated with this device.
-The VFIO group is checked to be vialbe and have IOMMU set. Then
-container user counter is increased and VFIO group reference is hold
-to prevent the VFIO group from disposal before external user exits.
+--Sig_/yf=nCwDlLhONyVinAjC8vTL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-when the external user finishes using of the VFIO group, it calls
-vfio_group_put_external_user() to dereference the VFIO group and the
-container user counter.
+Hi all,
 
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- drivers/vfio/vfio.c  | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/vfio.h |  2 ++
- 2 files changed, 40 insertions(+)
+Today's linux-next merge of the netfilter-next tree got a conflict in:
 
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index c8482624ca34..97b972bfb735 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -1720,6 +1720,44 @@ struct vfio_group *vfio_group_get_external_user(struct file *filep)
- }
- EXPORT_SYMBOL_GPL(vfio_group_get_external_user);
- 
-+/**
-+ * External user API, exported by symbols to be linked dynamically.
-+ * The external user passes in a device pointer
-+ * to verify that:
-+ *	- A VFIO group is assiciated with the device;
-+ *	- IOMMU is set for the group.
-+ * If both checks passed, vfio_group_get_external_user_from_dev()
-+ * increments the container user counter to prevent the VFIO group
-+ * from disposal before external user exits and returns the pointer
-+ * to the VFIO group.
-+ *
-+ * When the external user finishes using the VFIO group, it calls
-+ * vfio_group_put_external_user() to release the VFIO group and
-+ * decrement the container user counter.
-+ *
-+ * @dev [in]	: device
-+ * Return error PTR or pointer to VFIO group.
-+ */
-+
-+struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev)
-+{
-+	struct vfio_group *group;
-+	int ret;
-+
-+	group = vfio_group_get_from_dev(dev);
-+	if (!group)
-+		return ERR_PTR(-ENODEV);
-+
-+	ret = vfio_group_add_container_user(group);
-+	if (ret) {
-+		vfio_group_put(group);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return group;
-+}
-+EXPORT_SYMBOL_GPL(vfio_group_get_external_user_from_dev);
-+
- void vfio_group_put_external_user(struct vfio_group *group)
- {
- 	vfio_group_try_dissolve_container(group);
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index e42a711a2800..fb71e0ac0e76 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -94,6 +94,8 @@ extern void vfio_unregister_iommu_driver(
-  */
- extern struct vfio_group *vfio_group_get_external_user(struct file *filep);
- extern void vfio_group_put_external_user(struct vfio_group *group);
-+extern struct vfio_group *vfio_group_get_external_user_from_dev(struct device
-+								*dev);
- extern bool vfio_external_group_match_file(struct vfio_group *group,
- 					   struct file *filep);
- extern int vfio_external_user_iommu_id(struct vfio_group *group);
--- 
-2.17.1
+  net/netfilter/nf_flow_table_offload.c
 
+between commit:
+
+  978703f42549 ("netfilter: flowtable: Add API for registering to flow tabl=
+e events")
+
+from the net-next tree and commit:
+
+  1f412791407b ("netfilter: flowtable: Use nf_flow_offload_tuple for stats =
+as well")
+
+from the netfilter-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/netfilter/nf_flow_table_offload.c
+index 42b73a084a63,482a7284e122..000000000000
+--- a/net/netfilter/nf_flow_table_offload.c
++++ b/net/netfilter/nf_flow_table_offload.c
+@@@ -596,8 -619,10 +597,11 @@@ static int nf_flow_offload_tuple(struc
+ =20
+  		i++;
+  	}
+ +	mutex_unlock(&flowtable->flow_block_lock);
+ =20
++ 	if (cmd =3D=3D FLOW_CLS_STATS)
++ 		memcpy(stats, &cls_flow.stats, sizeof(*stats));
++=20
+  	return i;
+  }
+ =20
+
+--Sig_/yf=nCwDlLhONyVinAjC8vTL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5q+0wACgkQAVBC80lX
+0Gyuhwf5AcyfzBo6V1kPBWRFg5gxSwxV14m/StoUCnvLa6DY0vipL3gHKIDIuPVZ
+wBxB2HyB+qRBeVMbZedriIoYMYc5aSIkaW8OdSs7D+9gCck8VN5S+mlglRLIcYHl
+TbmpjGeoPJjQtit5embRdgDUOchLyOfl/i0FJRBkh30/Gzjqy4uHNRJjUnyWMh4R
+8KwV4yKmhDK3idrhcFwjjwz9gpmg+iuQB4pN5aX3/jXPs/Fw6MeaDfaFV/AkNSbT
+lruA8Bx0WKdZ5XAJMnu1V6fukwHejdaXeq0Ek/Q3WiG/9IxiKfp6ebsKT5zfdUuE
+BuJ0RYJ5A0Y21z9hLKhJ89xLAEYqnw==
+=mBn8
+-----END PGP SIGNATURE-----
+
+--Sig_/yf=nCwDlLhONyVinAjC8vTL--
