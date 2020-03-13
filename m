@@ -2,116 +2,182 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA21C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 04:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDA5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 04:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD5720737
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 04:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584075220;
-	bh=wvz9uvyc21UQew4+JG8ovh/2BCTI/jwbb7swMievMpI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t6CUfLGodwTAbUJKPf2vFqkxSdOzZP7dZH1tIzrwZUFKQEJvYdKkKLYliBA3wGsjE
-	 KaG76BG6jaLZyVrnVI8ogS4ekaJd4yApI/cu2Hgn7/2gq4K+r6lLVQNQn7HE/TXR+0
-	 HRwmwoNxuDe/xEgMQQrOfpX3K08BUWXlj9zN305E=
+	by mail.kernel.org (Postfix) with ESMTP id 4543B206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 04:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgCMExj (ORCPT
+        id S1726406AbgCME6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 00:53:39 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:20752 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCMExi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 00:53:38 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 02D4rNx3024834;
-        Fri, 13 Mar 2020 13:53:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02D4rNx3024834
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584075204;
-        bh=w3Y1PyEPxiBVRuK/A0Q7y3Dyq4APs/2kQeU8OKCr8ZA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1qbYSOTgDX4Vgx5faAXlOdhiqgn8tPaNi0xwFJsuOFnT4BLAWTiK3CZJmA3YjgRfz
-         vyGTQpfSMRynbM6aqYEOjHc7CxQ+lbb8YufLNjhi4t38klppChvz9JP+V8XTbiIFUP
-         5pTz+otNvR6HGM1QC37YTNKQ0vAUwB/kTXjWTu75106a+XtDrFiJKO4uf4FbXMLpNq
-         T41aOe2KIWiZZSSLRQR/DISiswtiCzk192xhd5v5aQX31dmV68iAvDZyvsuIO+nmt9
-         BZmKxJ2821C3miI56kSQC2LkBBtoe9ej/p+krgV340LKS//8zuAKesgotob+NafjtI
-         2iEU6JlZvKTaA==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id p7so3070212vso.6;
-        Thu, 12 Mar 2020 21:53:23 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ36P4o1pMBIh4BkFEZ41wAcOIkMlHqKnhDENQ+EJC0yA6/WWx9y
-        pwrVPG2XXhveo0fJJnWvzJIfPpIRJ8dpvC8Tq0E=
-X-Google-Smtp-Source: ADFU+vuj8oh8CmqdPfS+e+blxWFNJKVra9+A1Sx+9bsoEaPEfI9I+52/E35yuOeItildQOuicmCENQ6ligLyO/1nQsQ=
-X-Received: by 2002:a67:33cb:: with SMTP id z194mr8322970vsz.155.1584075202592;
- Thu, 12 Mar 2020 21:53:22 -0700 (PDT)
+        Fri, 13 Mar 2020 00:58:06 -0400
+Received: from mga18.intel.com ([134.134.136.126]:42565 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCME6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 00:58:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 21:58:03 -0700
+X-IronPort-AV: E=Sophos;i="5.70,547,1574150400"; 
+   d="scan'208";a="246595174"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.82]) ([10.238.4.82])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 12 Mar 2020 21:57:51 -0700
+Subject: Re: [PATCH] KVM: VMX: Micro-optimize vmexit time when not exposing
+ PMU
+To:     Wanpeng Li <kernellwp@gmail.com>, like.xu@intel.com
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1584007547-4802-1-git-send-email-wanpengli@tencent.com>
+ <87r1xxrhb0.fsf@vitty.brq.redhat.com>
+ <CANRm+Cwawew=Xygxmzr2jmgPAKqDxvkqxxzjvoxnRRjC_Jx9Xw@mail.gmail.com>
+ <79141339-3506-1fe4-2e69-8430f4c202bd@intel.com>
+ <CANRm+Cw-t2GXnHjOTPEV6BjwZPDZpwvK4QrUNz+AU21UL4rEww@mail.gmail.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <cf873f0b-8f80-29d4-fce6-9b0380934356@linux.intel.com>
+Date:   Fri, 13 Mar 2020 12:57:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200312041232.wBVu2sBcq%akpm@linux-foundation.org>
- <c6c4e6fb-30f3-60a1-6bc0-25daa84d479d@infradead.org> <a8343b1f-7e87-d34d-a71b-86d20a8a3aff@linaro.org>
-In-Reply-To: <a8343b1f-7e87-d34d-a71b-86d20a8a3aff@linaro.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 13 Mar 2020 13:52:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARaR9_GPE+uU9Fh73850dwJXKETyF4gJxats_hrhgwzAg@mail.gmail.com>
-Message-ID: <CAK7LNARaR9_GPE+uU9Fh73850dwJXKETyF4gJxats_hrhgwzAg@mail.gmail.com>
-Subject: Re: mmotm 2020-03-11-21-11 uploaded (sound/soc/codecs/wcd9335.c)
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        mhocko@suse.cz, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANRm+Cw-t2GXnHjOTPEV6BjwZPDZpwvK4QrUNz+AU21UL4rEww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 1:59 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> Adding+ Masahiro Yamada for more inputs w.r.t kconfig.
->
->
-> Kconfig side we have:
->
-> config SND_SOC_ALL_CODECS
->          tristate "Build all ASoC CODEC drivers"
->          imply SND_SOC_WCD9335
->
-> config SND_SOC_WCD9335
->          tristate "WCD9335 Codec"
->          depends on SLIMBUS
->         ...
->
-> The implied symbol SND_SOC_WCD9335 should be set based on direct
-> dependency, However in this case, direct dependency SLIMBUS=m where as
-> SND_SOC_WCD9335=y. I would have expected to be SND_SOC_WCD9335=m in this
-> case.
->
-> Is this a valid possible case or a bug in Kconfig?
->
+On 2020/3/13 11:39, Wanpeng Li wrote:
+> On Fri, 13 Mar 2020 at 11:23, Xu, Like <like.xu@intel.com> wrote:
+>>
+>> Hi Wanpeng,
+>>
+>> On 2020/3/12 19:05, Wanpeng Li wrote:
+>>> On Thu, 12 Mar 2020 at 18:36, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>>> Wanpeng Li <kernellwp@gmail.com> writes:
+>>>>
+>>>>> From: Wanpeng Li <wanpengli@tencent.com>
+>>>>>
+>>>>> PMU is not exposed to guest by most of cloud providers since the bad performance
+>>>>> of PMU emulation and security concern. However, it calls perf_guest_switch_get_msrs()
+>>>>> and clear_atomic_switch_msr() unconditionally even if PMU is not exposed to the
+>>>>> guest before each vmentry.
+>>>>>
+>>>>> ~1.28% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my
+>>>>> SKX server.
+>>>>>
+>>>>> Before patch:
+>>>>> vmcall 1559
+>>>>>
+>>>>> After patch:
+>>>>> vmcall 1539
+>>>>>
+>>>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>>>>> ---
+>>>>>    arch/x86/kvm/vmx/vmx.c | 3 +++
+>>>>>    1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>>>> index 40b1e61..fd526c8 100644
+>>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>>> @@ -6441,6 +6441,9 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+>>>>>         int i, nr_msrs;
+>>>>>         struct perf_guest_switch_msr *msrs;
+>>>>>
+>>>>> +     if (!vcpu_to_pmu(&vmx->vcpu)->version)
+>>>>> +             return;
+>>>>> +
+>>>>>         msrs = perf_guest_get_msrs(&nr_msrs);
+>>>>>
+>>>>>         if (!msrs)
+>>>> Personally, I'd prefer this to be expressed as
+>>>>
+>>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>>> index 40b1e6138cd5..ace92076c90f 100644
+>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>> @@ -6567,7 +6567,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>>>
+>>>>           pt_guest_enter(vmx);
+>>>>
+>>>> -       atomic_switch_perf_msrs(vmx);
+>>>> +       if (vcpu_to_pmu(&vmx->vcpu)->version)
+>> We may use 'vmx->vcpu.arch.pmu.version'.
+> 
+> Thanks for confirm this. Maybe this is better:
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 40b1e61..b20423c 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6567,7 +6567,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> 
+>          pt_guest_enter(vmx);
+> 
+> -       atomic_switch_perf_msrs(vmx);
+> +       if (vcpu_to_pmu(vcpu)->version)
+> +               atomic_switch_perf_msrs(vmx);
 
-The patch exist:
-https://patchwork.kernel.org/patch/11414795/
+>          atomic_switch_umwait_control_msr(vmx);
+> 
+>          if (enable_preemption_timer)
+> 
+>>
+>> I would vote in favor of adding the "unlikely (vmx->vcpu.arch.pmu.version)"
+>> check to the atomic_switch_perf_msrs(), which follows pt_guest_enter(vmx).
+> 
+> This is hotpath, let's save the cost of function call.
 
+You're right, I measured both.
+We may fix pt_guest_enter() with static_branch_unlikely
+for a little bit more micro-optimize as well.
 
-However, this caused another problem, then
-got reverted in linux-next.
+Thanks,
+Like Xu
 
-It fixed it too, so hopefully
-this will be solved soon.
+> 
+>      Wanpeng
+> 
+>>
+>>>> +               atomic_switch_perf_msrs(vmx);
+>>>> +
+>>> I just hope the beautiful codes before, I testing this version before
+>>> sending out the patch, ~30 cycles can be saved which means that ~2%
+>>> vmexit time, will update in next version. Let's wait Paolo for other
+>>> opinions below.
+>>
+>> You may factor the cost of the "pmu-> version check' itself (~10 cycles)
+>> into your overall 'micro-optimize' revenue.
+>>
+>> Thanks,
+>> Like Xu
+>>>
+>>>       Wanpeng
+>>>
+>>>> Also, (not knowing much about PMU), is
+>>>> "vcpu_to_pmu(&vmx->vcpu)->version" check correct?
+>>>>
+>>>> E.g. in intel_is_valid_msr() correct for Intel PMU or is it stated
+>>>> somewhere that it is generic rule?
+>>>>
+>>>> Also, speaking about cloud providers and the 'micro' nature of this
+>>>> optimization, would it rather make sense to introduce a static branch
+>>>> (the policy to disable vPMU is likely to be host wide, right)?
+>>>>
+>>>> --
+>>>> Vitaly
+>>>>
+>>
 
-
-
--- 
-Best Regards
-Masahiro Yamada
