@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066C8C2BB1D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFB3C4CECE
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC69B20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4ABB2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BOVKBU0U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VeEpgcp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgCMJHX (ORCPT
+        id S1726578AbgCMJHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:07:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46396 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbgCMJHW (ORCPT
+        Fri, 13 Mar 2020 05:07:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34538 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgCMJHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:07:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n15so11024709wrw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 02:07:21 -0700 (PDT)
+        Fri, 13 Mar 2020 05:07:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z15so11052447wrl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 02:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KrJf+EGLXE8nvYgZtr6atvulE/NcTou2lZGP+D+d2qw=;
-        b=BOVKBU0Ujuzg0xDGWTs/W1y0roYbWeUvMBriY4xI3p+BCY48nGP4y+J7KmoYc6mhYP
-         cThTepp8+g70rWRbmqNvc1ofqIv7gOpAdSUT15RROZDKtVgDGycvvVc9rvEI2zMdZw1W
-         ZC9opbu8pF43mYmDBythnQVVQh/AS0FHU6sC431mSosuX4Pn9wloX4IH4/Kc7ousft3H
-         sbe+51tKPQydX1ojL3RPgC2B4QiiKzZ2Vx1SntQktZexGrz+lWHygUAdYMXdMifLTS7c
-         gj34RDmRDa/JzjiZAPJGm+j2uOrLuLj23zsAQwy4EfJ7U9B3rNFVJS/J+IV4TVPaW4Hg
-         nHNw==
+        bh=2HPMaT81MXCeebofnnf7zx0HVEbfvu9bFZLYLQmZDe4=;
+        b=VeEpgcp6B7SCz97YksAWPlVAixQ9a1T2llnI8xmaAIqQWVuisecj1ExtzzyvhDYKNM
+         zONGsxO4cTO0O891qd52BsaYjV8Tmc7P9OohTp3ZwOgF6r7cNP30MDODqLy7LYxXv+fU
+         7WXw1rNmICnU4w1n4D6DQehhwBxR1iY5opur9vb4TsE4EDo/6CdWZJC/SAGZouNj+sco
+         pKnfvceozF9c3esMmpUoPEZ1pJd65YVC4NUPxt1AxCX38ntIT/cSckmi5bALe3qluDxI
+         TWRhDZH1lW5Hvh/aOwYr0xFdxxcVXyBIxu2ds74vHim4/9hR/vYZri672YWGRfqKZ1jj
+         WU2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KrJf+EGLXE8nvYgZtr6atvulE/NcTou2lZGP+D+d2qw=;
-        b=JP/PkHVX3Fr5iOedegewv1SNrp3WJ2r/Tt/8i8PJeJEFFDpxMfN8toqy/yTySAUnch
-         1YBkYXTHU9qlmP4cKKOUpCN8VHFCk+atf67ekMql2EdKWr96w30pXAS7ke4QnXH3cPdk
-         6stg7uRPZWgLRkBTjIlPO/3XHrqYXMNH0fb3GxSkI0pT3fPGwTrZXvUzIpkCqc2YkVe4
-         gDol+bfqwNYBb4/iYrdF4R8oe9gMfXi5a1BUnmRGpAi7dHhZ+QUSpnaA1rI6NUYlJSi4
-         QdbPpPCti5PBOsC2AXLTbvUm4/nOzj/DpHY/TyN/FqUdJ3OT9AGWxm+AjMyx6+AdHmvK
-         nbzg==
-X-Gm-Message-State: ANhLgQ0WAJ6gRRZGVzsZemt2fbXAa4tjvE4DavUMR4HIqfzQQgcUGv9q
-        FtdDoVivPl733c76Fumj2R17yA==
-X-Google-Smtp-Source: ADFU+vu0BdY5m1oq1hZ64fBK3Lt0+33tWgB3mGxdT6gg9HNBrGg14nro/t4yX9kgtHUi01cFFBaogQ==
-X-Received: by 2002:a5d:4004:: with SMTP id n4mr15867133wrp.48.1584090440564;
-        Fri, 13 Mar 2020 02:07:20 -0700 (PDT)
+        bh=2HPMaT81MXCeebofnnf7zx0HVEbfvu9bFZLYLQmZDe4=;
+        b=GWrDEnHsFoZKAC/ZKaRWUy5VX3CuOzLeHdpKKgWYdsbyGGHefsidDT/N4ZK35DOObp
+         5kjRU4IJ8Gd8DGnIm4w9sUibyEfu5cG/JT/0hys6fKJ7DpcFrvfuy7RkS7xaJPorpcm+
+         25qefHsgBkOvqqykN39h3s69pdfCCnPCs+t0Iq43bz4x+UzqHrSAlNoCN2Tyv3PuxAeB
+         g6SoZ+Ja0ZDQT11BQF/buGAha7AuyeiT/tbidVYooMeydKYkvbwKYe+QV8nBOOYVUmWS
+         F7gI5tOJ9JfegLzsx7x4gyvj5z7Sftl4RtZjc5UczPqT2HT/+ZIJK6pY9TtjcF93B2dr
+         5q4Q==
+X-Gm-Message-State: ANhLgQ0tTrza1BnPcodDes05igvLW+wKl/2P32dbqd122v6ilVEoSgP6
+        x6CGmC8+UcOS8iTtO2wKX010uQ==
+X-Google-Smtp-Source: ADFU+vtCUP2jexc1cRHOBRmdco0djB5phQgI4eSon4Q+TxQ5jXY0QSBxqsTqU+wd5RHjgAaSyI3+6A==
+X-Received: by 2002:adf:9f48:: with SMTP id f8mr16528447wrg.199.1584090439399;
+        Fri, 13 Mar 2020 02:07:19 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id i1sm61872399wrs.18.2020.03.13.02.07.19
+        by smtp.gmail.com with ESMTPSA id i1sm61872399wrs.18.2020.03.13.02.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 02:07:20 -0700 (PDT)
+        Fri, 13 Mar 2020 02:07:18 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 3/4] arm64: dts: khadas-vim3: add SPIFC controller node
-Date:   Fri, 13 Mar 2020 10:07:12 +0100
-Message-Id: <20200313090713.15147-4-narmstrong@baylibre.com>
+Subject: [PATCH 2/4] arm64: dts: meson-g12: add the SPIFC nodes
+Date:   Fri, 13 Mar 2020 10:07:11 +0100
+Message-Id: <20200313090713.15147-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200313090713.15147-1-narmstrong@baylibre.com>
 References: <20200313090713.15147-1-narmstrong@baylibre.com>
@@ -74,47 +74,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add disabled SPIFC controller node with instruction on how to enable
-it while lowering capabilities of the eMMC controller from 8bits bus
-width to 4bits bus width, it's data pins 4 to 7 being shared with
-the SPI NOR controller pins.
+Add the controller and pinctrl nodes to enable the SPI Flash Controller
+on the Amlogic G12A and compatible SoCs.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 20 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 20 +++++++++++++++++++
  1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index b6f22a0bd318..f09854560938 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -328,6 +328,26 @@
- 	vqmmc-supply = <&emmc_1v8>;
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index d09efb86ec33..56a9f8eadf01 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -593,6 +593,17 @@
+ 						};
+ 					};
  
-+/*
-+ * EMMC_D4, EMMC_D5, EMMC_D6 and EMMC_D7 pins are shared between SPI NOR CS
-+ * and eMMC Data 4 to 7 pins.
-+ * Replace emmc_data_8b_pins to emmc_data_4b_pins from sd_emmc_c pinctrl-0,
-+ * and change bus-width to 4 then spifc can be enabled.
-+ */
-+&spifc {
-+	status = "disabled";
-+	pinctrl-0 = <&nor_pins>;
-+	pinctrl-names = "default";
++					nor_pins: nor {
++						mux {
++							groups = "nor_d",
++							       "nor_q",
++							       "nor_c",
++							       "nor_cs";
++							function = "nor";
++							bias-disable;
++						};
++					};
 +
-+	w25q32: spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128fw", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <104000000>;
-+	};
-+};
+ 					pdm_din0_a_pins: pdm-din0-a {
+ 						mux {
+ 							groups = "pdm_din0_a";
+@@ -2071,6 +2082,15 @@
+ 				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
+ 			};
+ 
++			spifc: spi@14000 {
++				compatible = "amlogic,meson-gxbb-spifc";
++				status = "disabled";
++				reg = <0x0 0x14000 0x0 0x80>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc CLKID_CLK81>;
++			};
 +
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+ 			pwm_ef: pwm@19000 {
+ 				compatible = "amlogic,meson-g12a-ee-pwm";
+ 				reg = <0x0 0x19000 0x0 0x20>;
 -- 
 2.22.0
 
