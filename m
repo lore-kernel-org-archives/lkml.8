@@ -2,95 +2,131 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326DFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771BCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D2D2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB582072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CtTyW0QW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgCMS0N (ORCPT
+        id S1726992AbgCMS2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:26:13 -0400
-Received: from m176151.mail.qiye.163.com ([59.111.176.151]:15134 "EHLO
-        m176151.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgCMS0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:26:13 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Mar 2020 14:24:52 EDT
-Received: from vivo.com (wm-11.qy.internal [127.0.0.1])
-        by m176151.mail.qiye.163.com (Hmail) with ESMTP id 915D0482052;
-        Sat, 14 Mar 2020 02:17:38 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AIkAvQC8CBiKb1HKth-6ZqrH.3.1584123458318.Hmail.wenhu.wang@vivo.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kernel@vivo.com, trivial@kernel.org
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCB2Ml0gcG93ZXJwYy9mc2wtODV4eDogZml4IGNvbXBpbGUgZXJyb3I=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <320843ad-32d5-8799-7c4a-150fa5fd7ef8@c-s.fr>
+        Fri, 13 Mar 2020 14:28:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:51062 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgCMS2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:28:14 -0400
+Received: from zn.tnic (p200300EC2F0E1E007CE2C412F47CBB57.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:1e00:7ce2:c412:f47c:bb57])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A39751EC0CFA;
+        Fri, 13 Mar 2020 19:28:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584124091;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=af9vjc4SquL5k1ASGpNOj3EgxDCubcDdq9ji+QbhQt8=;
+        b=CtTyW0QWLBk9PH5U05eB/gbz26N5Km1JMuXqil5w11lS+K/n2AUvagxumMPHyeRE7UU54k
+        +P31fVn6rZ3fG/GD7YqR12zjfVFXPdcICphsaNYMnMOFqAma+VMHvIZPWh/NVnhR2QbnHs
+        EgrK8qc6K3cKHG1Gagyk5uKFb1JvcSM=
+Date:   Fri, 13 Mar 2020 19:28:15 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] x86/purgatory: Disable various profiling and
+ sanitizing options
+Message-ID: <20200313182815.GF8142@zn.tnic>
+References: <20200312114951.56009-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Sat, 14 Mar 2020 02:17:38 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Sat, 14 Mar 2020 02:17:38 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VJSUtCQkJMSkxMSklPWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTUNJT0NLS05IN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6MhA6DSo4Qzg5EjAZSjMwDxNWTSEKCTNVSFVKTkNPSklIT01KTU5NVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQU5JSU43Bg++
-X-HM-Tid: 0a70d51db42c93b5kuws915d0482052
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200312114951.56009-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5Y+R5Lu25Lq677yaQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+CuWP
-kemAgeaXpeacn++8mjIwMjAtMDMtMTQgMDE6NDU6MTEK5pS25Lu25Lq677yaV0FORyBXZW5odSA8
-d2VuaHUud2FuZ0B2aXZvLmNvbT4sQmVuamFtaW4gSGVycmVuc2NobWlkdCA8YmVuaEBrZXJuZWwu
-Y3Jhc2hpbmcub3JnPixQYXVsIE1hY2tlcnJhcyA8cGF1bHVzQHNhbWJhLm9yZz4sTWljaGFlbCBF
-bGxlcm1hbiA8bXBlQGVsbGVybWFuLmlkLmF1PixSaWNoYXJkIEZvbnRhbmEgPHJmb250YW5hQHJl
-ZGhhdC5jb20+LEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz4sQWxs
-aXNvbiBSYW5kYWwgPGFsbGlzb25AbG9odXRvay5uZXQ+LFRob21hcyBHbGVpeG5lciA8dGdseEBs
-aW51dHJvbml4LmRlPixsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZyxsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnCuaKhOmAgeS6uu+8mmtlcm5lbEB2aXZvLmNvbSx0cml2aWFsQGtlcm5l
-bC5vcmcK5Li76aKY77yaUmU6IFtQQVRDSCB2Ml0gcG93ZXJwYy9mc2wtODV4eDogZml4IGNvbXBp
-bGUgZXJyb3I+Cj4KPkxlIDEzLzAzLzIwMjAgw6AgMTg6MTksIFdBTkcgV2VuaHUgYSDDqWNyaXTC
-oDoKPj4gSW5jbHVkZSAibGludXgvb2ZfYWRkcmVzcy5oIiB0byBmaXggdGhlIGNvbXBpbGUgZXJy
-b3IgZm9yCj4+IG1wYzg1eHhfbDJjdGxyX29mX3Byb2JlKCkgd2hlbiBjb21waWxpbmcgZnNsXzg1
-eHhfY2FjaGVfc3JhbS5jLgo+PiAKPj4gICAgQ0MgICAgICBhcmNoL3Bvd2VycGMvc3lzZGV2L2Zz
-bF84NXh4X2wyY3Rsci5vCj4+IGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfbDJjdGxyLmM6
-IEluIGZ1bmN0aW9uIOKAmG1wYzg1eHhfbDJjdGxyX29mX3Byb2Jl4oCZOgo+PiBhcmNoL3Bvd2Vy
-cGMvc3lzZGV2L2ZzbF84NXh4X2wyY3Rsci5jOjkwOjExOiBlcnJvcjogaW1wbGljaXQgZGVjbGFy
-YXRpb24gb2YgZnVuY3Rpb24g4oCYb2ZfaW9tYXDigJk7IGRpZCB5b3UgbWVhbiDigJhwY2lfaW9t
-YXDigJk/IFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQo+PiAgICBsMmN0
-bHIgPSBvZl9pb21hcChkZXYtPmRldi5vZl9ub2RlLCAwKTsKPj4gICAgICAgICAgICAgXn5+fn5+
-fn4KPj4gICAgICAgICAgICAgcGNpX2lvbWFwCj4+IGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1
-eHhfbDJjdGxyLmM6OTA6OTogZXJyb3I6IGFzc2lnbm1lbnQgbWFrZXMgcG9pbnRlciBmcm9tIGlu
-dGVnZXIgd2l0aG91dCBhIGNhc3QgWy1XZXJyb3I9aW50LWNvbnZlcnNpb25dCj4+ICAgIGwyY3Rs
-ciA9IG9mX2lvbWFwKGRldi0+ZGV2Lm9mX25vZGUsIDApOwo+PiAgICAgICAgICAgXgo+PiBjYzE6
-IGFsbCB3YXJuaW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwo+PiBzY3JpcHRzL01ha2VmaWxl
-LmJ1aWxkOjI2NzogcmVjaXBlIGZvciB0YXJnZXQgJ2FyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1
-eHhfbDJjdGxyLm8nIGZhaWxlZAo+PiBtYWtlWzJdOiAqKiogW2FyY2gvcG93ZXJwYy9zeXNkZXYv
-ZnNsXzg1eHhfbDJjdGxyLm9dIEVycm9yIDEKPj4gCj4+IEZpeGVzOiBjb21taXQgNmRiOTJjYzlk
-MDdkICgicG93ZXJwYy84NXh4OiBhZGQgY2FjaGUtc3JhbSBzdXBwb3J0IikKPgo+U2hvdWxkbid0
-IHlvdSBDYyBzdGFibGUgYXMgd2VsbCA/ClByZXR0eSBzdXJlIGlmIGl0IG1ha2VzIGEgZGlmZmVy
-ZW5jZSh0aGF0IEkgZGlkIG5vdCByZWNvZ25pemUpLiAKRG9lcyB0aGUgaW5jb25zaXN0ZW5jeSBv
-ZiBDYyBsZWFkIHRvIGEgZmFpbHVyZSBvbiBjbGFzc2lmaWNhdGlvbgpvciBzb21ldGhpbmcgZWxz
-ZSB3aGljaCBtYXkgY29uZnVzZSB5b3U/Cj4KPj4gU2lnbmVkLW9mZi1ieTogV0FORyBXZW5odSA8
-d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gLS0tCj4KPldoYXQncyB0aGUgZGlmZmVyZW5jZSBiZXR3
-ZWVuIHYxIGFuZCB2MiA/ClRoZSBsYWJlbCBmaWVsZCBtb2RpZmljYXRpb246ICJGaXhlZCIgLT4g
-IkZpeGVzIiwgd2hpY2ggbm93IGlzCmlkZW50aWZpZWQgc3VjY2Vzc2Z1bGx5LiBSZWFsbHkgc29y
-cnkgZm9yIHRoZSBmYXVsdCBvbiB2MS4KPgo+Q2hyaXN0b3BoZQoNCg0K
+On Thu, Mar 12, 2020 at 12:49:50PM +0100, Hans de Goede wrote:
+> Since the purgatory is a special stand-alone binary, we need to disable
+
+Pls use passive voice in your commit message: no "we" or "I", etc, and
+describe your changes in imperative mood.
+
+Also, pls read section "2) Describe your changes" in
+Documentation/process/submitting-patches.rst for more details.
+
+> various profiling and sanitizing options. Having these options enabled
+> typically will cause dependency on various special symbols exported by
+> special libs / stubs used by these frameworks. Since the purgatory is
+> special we do not link against these stubs causing missing symbols in
+> the purgatory if we do not disable these options.
+> 
+> This commit syncs the set of disabled profiling and sanitizing options
+
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
+
+Also, do
+
+$ git grep 'This patch' Documentation/process
+
+for more details.
+
+Those two review comments apply to patch 2's commit message too, pls fix
+them there too.
+
+> with that from drivers/firmware/efi/libstub/Makefile, adding
+> -DDISABLE_BRANCH_PROFILING to the CFLAGS and setting:
+> 
+> GCOV_PROFILE                    := n
+> UBSAN_SANITIZE                  := n
+> 
+> This fixes broken references to ftrace_likely_update when
+> CONFIG_TRACE_BRANCH_PROFILING is enabled and to __gcov_init and
+> __gcov_exit when CONFIG_GCOV_KERNEL is enabled.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v5:
+> -Not only add -DDISABLE_BRANCH_PROFILING to the CFLAGS but also set:
+>  GCOV_PROFILE                    := n
+>  UBSAN_SANITIZE                  := n
+> 
+> Changes in v4:
+> -This is a new patch in v4 of this series
+> ---
+>  arch/x86/purgatory/Makefile | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+
+$ test-apply.sh -g /tmp/01-x86-purgatory-disable_various_profiling_and_sanitizing_options.patch
+checking file arch/x86/purgatory/Makefile
+Hunk #1 FAILED at 17.
+Hunk #2 succeeded at 27 (offset 2 lines).
+1 out of 2 hunks FAILED
+
+This happens because tip/master already has KCSAN merged in and it adds
+
+KCSAN_SANITIZE  := n
+
+there.
+
+Please redo the patches against current tip/master.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
