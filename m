@@ -4,32 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5940EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43ACC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB2C20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A0020637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgCMX4U (ORCPT
+        id S1727797AbgCMXyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:56:20 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50106 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbgCMXyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 19:54:03 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49978 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727681AbgCMXx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 19:53:59 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7u-00B6cD-HN; Fri, 13 Mar 2020 23:54:02 +0000
+        id 1jCu7q-00B6Z0-6W; Fri, 13 Mar 2020 23:53:58 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 41/69] path_connected(): pass mount and dentry separately
-Date:   Fri, 13 Mar 2020 23:53:29 +0000
-Message-Id: <20200313235357.2646756-41-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 09/69] do_last(): collapse the call of path_to_nameidata()
+Date:   Fri, 13 Mar 2020 23:52:57 +0000
+Message-Id: <20200313235357.2646756-9-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -43,62 +42,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-eventually we'll want to do that check *before* mangling
-nd->path.dentry...
+... and shift filling struct path to just before the call of
+handle_mounts().  All callers of handle_mounts() are
+immediately preceded by path->mnt = nd->path.mnt now.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ fs/namei.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 6530e3cbd486..2bf9f605c46f 100644
+index b350e1e2b46f..79029a1048be 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -550,22 +550,20 @@ static int __nd_alloc_stack(struct nameidata *nd)
- }
+@@ -3362,8 +3362,6 @@ static int do_last(struct nameidata *nd,
+ 		error = PTR_ERR(dentry);
+ 		goto out;
+ 	}
+-	path.mnt = nd->path.mnt;
+-	path.dentry = dentry;
  
- /**
-- * path_connected - Verify that a path->dentry is below path->mnt.mnt_root
-- * @path: nameidate to verify
-+ * path_connected - Verify that a dentry is below mnt.mnt_root
-  *
-  * Rename can sometimes move a file or directory outside of a bind
-  * mount, path_connected allows those cases to be detected.
-  */
--static bool path_connected(const struct path *path)
-+static bool path_connected(struct vfsmount *mnt, struct dentry *dentry)
- {
--	struct vfsmount *mnt = path->mnt;
- 	struct super_block *sb = mnt->mnt_sb;
+ 	if (file->f_mode & FMODE_OPENED) {
+ 		if ((file->f_mode & FMODE_CREATED) ||
+@@ -3380,7 +3378,8 @@ static int do_last(struct nameidata *nd,
+ 		open_flag &= ~O_TRUNC;
+ 		will_truncate = false;
+ 		acc_mode = 0;
+-		path_to_nameidata(&path, nd);
++		dput(nd->path.dentry);
++		nd->path.dentry = dentry;
+ 		goto finish_open_created;
+ 	}
  
- 	/* Bind mounts and multi-root filesystems can have disconnected paths */
- 	if (!(sb->s_iflags & SB_I_MULTIROOT) && (mnt->mnt_root == sb->s_root))
- 		return true;
+@@ -3394,6 +3393,8 @@ static int do_last(struct nameidata *nd,
+ 		got_write = false;
+ 	}
  
--	return is_subdir(path->dentry, mnt->mnt_root);
-+	return is_subdir(dentry, mnt->mnt_root);
- }
- 
- static inline int nd_alloc_stack(struct nameidata *nd)
-@@ -1386,7 +1384,7 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 				return -ECHILD;
- 			nd->path.dentry = parent;
- 			nd->seq = seq;
--			if (unlikely(!path_connected(&nd->path)))
-+			if (unlikely(!path_connected(nd->path.mnt, parent)))
- 				return -ECHILD;
- 			break;
- 		} else {
-@@ -1448,7 +1446,7 @@ static int path_parent_directory(struct path *path)
- 	/* rare case of legitimate dget_parent()... */
- 	path->dentry = dget_parent(path->dentry);
- 	dput(old);
--	if (unlikely(!path_connected(path)))
-+	if (unlikely(!path_connected(path->mnt, path->dentry)))
- 		return -ENOENT;
- 	return 0;
- }
++	path.mnt = nd->path.mnt;
++	path.dentry = dentry;
+ 	error = handle_mounts(&path, nd, &inode, &seq);
+ 	if (unlikely(error < 0))
+ 		return error;
 -- 
 2.11.0
 
