@@ -2,75 +2,144 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B5DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19CBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A27D20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80538206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QJPcmg8l"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XoexBphl";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="csBHYAZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgCMRus (ORCPT
+        id S1727252AbgCMRur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:50:48 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34086 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbgCMRur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 13:50:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nD3n3nGUFD/pHjTY+G4h6EltxeSMd4aqjlspJlueiZc=; b=QJPcmg8lwKnxZTlFKNf/f5oRY0
-        ZB6Bj4phk1s6tqn+pF/fHgaG7taE/juW1XktSjXb9BMmKv61juAkTfewq+0jTfoAnwbX0uNQGtPfb
-        Cni5bgQakDp2+otFPqayeIHCRN+OvezG4g887Rco3YXXiYfpyLoGaQlgwyhq67H8+ja8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jCoSE-0007Gl-Ew; Fri, 13 Mar 2020 18:50:38 +0100
-Date:   Fri, 13 Mar 2020 18:50:38 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 2/2] ARM: dts: imx6q-marsboard: properly define rgmii
- PHY
-Message-ID: <20200313175038.GA27841@lunn.ch>
-References: <20200313102534.5438-1-o.rempel@pengutronix.de>
- <20200313102534.5438-3-o.rempel@pengutronix.de>
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58172 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726550AbgCMRur (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:50:47 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DHiMY9024970;
+        Fri, 13 Mar 2020 10:50:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=to : cc : from : subject
+ : message-id : date : content-type : content-transfer-encoding :
+ mime-version; s=facebook; bh=iRcpjrzDc3v/vN2xSmBuyAkBjtFRg1Y6d8Vl4t8tbAk=;
+ b=XoexBphlBJVDug7ij5J7BicjVBFYKXXrtnwNpMmNHjAgKX6B+KddQeuwMl4vZlqTRQGs
+ okDeBWruyurgLKaJqldWH3stm/UJIaclH0pt0E2Aiq7fUHnbf9Um/U/UgTpNBioNsWuP
+ 5OtnvDL0rcKce2VfSVRLrXSjTKljeL8EdOw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yqt7fneta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 13 Mar 2020 10:50:45 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 13 Mar 2020 10:50:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QHqWCZBSSeKX1stCcPbBtOn4JyE04enkr6kiE/XnlQuOzN6gGFVXVTeb7SbjS9EU9c03zM5OXq0oXof0A4UUaYUaV9y059xSvIUFuY8ZXja0PNmvTEiG1ITgumPlqXzrfV5Lnow734H1+wrT724/Tkjbpr6aFQelS3vE8HIG3PM2yzLaubgxwAaMmg9RlZFY8JvbuJJeM7KT6tsQPifR1BJ+Zl4d6XgPOCHnxg7jyRuA3IArfwPdX20pI0t9ej3vbKxgedXaYhU2XF1iPSdEpbpo+OPafaFZX4mWeL74gMKIj3s64q/YNX+kp6qU6LyZYATfgb8LmIrHFARmVtRqvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iRcpjrzDc3v/vN2xSmBuyAkBjtFRg1Y6d8Vl4t8tbAk=;
+ b=aJ+hDRM29cb2+C8hNhpEU9PSUmP4UU9ZkP8cBHYrGZzCAfhgS5sNSrEnS0haygGPtF0ue/6CStelfu2yx2+vGiCqgGWTaWuGQrVZdfD/uCNqcNwLRYdql1sgsvj9cig5QpbxA4Vn4eWcFMys5GbT+8MvSKGTVMVmtL4FzjW4TTF0EBlPB27XempzbQ9coXSBItRcDnGt47R2hFREEXNvRYdQkpSQp/EgcSG86Jz9ucW+o+MjwvY2KpzBrt11S+ZkFLGpHhUWrxVhk//Dk6qgiZWogqsyxWpYPgOkjAnqRAMXLp86pFz0KRRy5YMx0M5Z0GvAi+9c7uX24zbzQgcTyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iRcpjrzDc3v/vN2xSmBuyAkBjtFRg1Y6d8Vl4t8tbAk=;
+ b=csBHYAZl2YfkUwNryEswtagAXRpWFN85x4mmPMlJVEhe1JuM0P/UFvDet9utBkxPzPX/vcGroE4uNbRd1sJvxwKdW+gp5CoL9Fx22UVrFaXTI4v+bVTYRwUVRWKmKQDALDrtdxa725bGgI9WeEh+9xw4m34mbPL0VEIpbFQ61yQ=
+Received: from BYAPR15MB2790.namprd15.prod.outlook.com (2603:10b6:a03:15a::31)
+ by BYAPR15MB3032.namprd15.prod.outlook.com (2603:10b6:a03:ff::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18; Fri, 13 Mar
+ 2020 17:50:44 +0000
+Received: from BYAPR15MB2790.namprd15.prod.outlook.com
+ ([fe80::4c56:ea:2fa5:88f5]) by BYAPR15MB2790.namprd15.prod.outlook.com
+ ([fe80::4c56:ea:2fa5:88f5%2]) with mapi id 15.20.2814.007; Fri, 13 Mar 2020
+ 17:50:44 +0000
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@fb.com>
+Subject: [GIT PULL] io_uring fixes for 5.6-rc
+Message-ID: <00e5ab7d-f0ad-bc94-204a-d2b7fb88f594@fb.com>
+Date:   Fri, 13 Mar 2020 11:50:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0073.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::14) To BYAPR15MB2790.namprd15.prod.outlook.com
+ (2603:10b6:a03:15a::31)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313102534.5438-3-o.rempel@pengutronix.de>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.188] (66.219.217.145) by BYAPR05CA0073.namprd05.prod.outlook.com (2603:10b6:a03:e0::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.6 via Frontend Transport; Fri, 13 Mar 2020 17:50:43 +0000
+X-Originating-IP: [66.219.217.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e7630b94-8de4-4c5c-12ee-08d7c7770da1
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3032:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3032887B7D1A9B598FF63CA9C0FA0@BYAPR15MB3032.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 034119E4F6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(396003)(39860400002)(366004)(199004)(16576012)(316002)(4326008)(2616005)(81166006)(81156014)(8676002)(956004)(478600001)(4744005)(54906003)(5660300002)(8936002)(52116002)(31696002)(6486002)(31686004)(66556008)(36756003)(66476007)(66946007)(186003)(86362001)(16526019)(2906002)(6916009)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3032;H:BYAPR15MB2790.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: O7u0Ye4Wwb5/9sIpiOzZYO12tbJlnfqr6TzyRi+yCDpx+Wk5IHl/pEGSX+8Rw8SfASJORAReFr0NZS8APOlvD5nRx699e3jF95T0yrZRKR8+fhfjqjr6qX0LKf//RH4Pd4/dVZxKN55kGjV9lXDiEq2RfG2IDXG/btpz6p4PvVGOOfl0/mmySVTiAK2aV30lm0IWU6DRHSZ7T6CGS7f/Lnfc8L1OWP9WKcCdP0qNTMcnrGXBfJfPxSmNMcMXIyKqzhCoYwOlfvyeLY5yBtT/SqaUSQcgevWLJHFBys6NudLNoIwJkCQtCUDQWmP7e4R/9d49gQM2H1mLrBfY9QAIQF92dZ71N5pRz2DnQLXsGlq/Z9FIBRJffRolyMEOUG5OHbkcHk5AeHr7Jh6APgk74/w1fzun2AVx6RF85FPUgt7F1DzYLkDGEl3wwBbgf7wi
+X-MS-Exchange-AntiSpam-MessageData: aW3AorgV9IFNjyzlyURwz342Y9aBmC1wkhp4VAXqIMoCixfuu3M49/z6aXshPGSIcOSNruRIq7dVopg2C4ec1b+3DJEw5L73XNma8XsQyPtVcVVqi8VIiLruHJBeZnxW/KB3R+Ywi99MvdA9mRs9xA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7630b94-8de4-4c5c-12ee-08d7c7770da1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 17:50:44.1839
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R7PHDbdCH2MmSofXgoIwgzcbpm4JcwgwtLaVFw4aZWOwg35QjfZ9xlB+CIYiI1LW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3032
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_06:2020-03-12,2020-03-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=705
+ clxscore=1011 malwarescore=0 adultscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003130087
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 11:25:34AM +0100, Oleksij Rempel wrote:
-> The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> support provided on this board. Define MDIO bus and the PHY node to make
-> it work properly.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Hi Linus,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Just a single fix here, improving the RCU callback ordering from last
+week. After a bit more perusing by Paul, he poked a hole in the
+original.
 
-    Andrew
+Please pull!
+
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-03-13
+
+
+----------------------------------------------------------------
+Jens Axboe (1):
+      io_uring: ensure RCU callback ordering with rcu_barrier()
+
+ fs/io_uring.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+
+-- 
+Jens Axboe
+
