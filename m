@@ -2,198 +2,87 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765BCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4964206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411C6206B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jmMDqFmz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fft2c0p2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCMRVz (ORCPT
+        id S1726881AbgCMRXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:21:55 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:44690 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMRVy (ORCPT
+        Fri, 13 Mar 2020 13:23:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37162 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbgCMRXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:21:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584120112; x=1615656112;
-  h=date:from:to:cc:message-id:references:mime-version:
-   content-transfer-encoding:in-reply-to:subject;
-  bh=bTuPsH7AF4MczqLCOh4ZEWM4t7cj+3gohQ8SR0U6ZXw=;
-  b=jmMDqFmzm+9YbQBvvRNiBZyu7RwggOAuhrmoh+aZWV0rXlndnI5aMUfl
-   +n/csb4gO+gAR45HAG9h836XaPznUFmUwRTcqOcH4jrWweGQPsSqu8c2/
-   ryrA45btubCNtL2ALgh7MzoBYkme4oULhm8eTDwqGPikxenntFIS9jhvN
-   U=;
-IronPort-SDR: JW0cZ6rA9C70JpjTu+PtridNwuuUyQx4+YAlmckpbYjwnpZvKgcj3PB0wM5zdrP6sQS5NG8AAW
- DPJzO9ciY+lw==
-X-IronPort-AV: E=Sophos;i="5.70,549,1574121600"; 
-   d="scan'208";a="31080865"
-Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend and
- hibernation
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 13 Mar 2020 17:21:48 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 6BED5A24C5;
-        Fri, 13 Mar 2020 17:21:41 +0000 (UTC)
-Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 13 Mar 2020 17:21:25 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 13 Mar 2020 17:21:25 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Fri, 13 Mar 2020 17:21:24 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 9ECD140348; Fri, 13 Mar 2020 17:21:24 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 17:21:24 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <fllinden@amaozn.com>, <benh@kernel.crashing.org>
-Message-ID: <20200313172124.GB8513@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1581721799.git.anchalag@amazon.com>
- <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
- <20200221142445.GZ4679@Air-de-Roger>
- <20200306184033.GA25358@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200309095245.GY24458@Air-de-Roger.citrite.net>
- <FA688A68-5372-4757-B075-A69A45671CB9@amazon.com>
- <20200312090435.GK24449@Air-de-Roger.citrite.net>
+        Fri, 13 Mar 2020 13:23:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ih+nG2Kiw8hT76L/vmQQGrhSjnKlvJyhcVO353Dkwk8=; b=fft2c0p2/PiiLEOjg+q4csveQL
+        HdaNCQ88a2DRCpddJW8217lXe47Gfz+RkrPHQugjHG3TVz0d4vz+sM3aKc8awh1GCAQwGlk8X22LA
+        m9FfoGi5uZS93fR0QSHP2U+LY/QtoRnOhB9HigJRqe6fr3tEYZy9AcjTZQbQ6DCWfBNc5aC8H4nDQ
+        fNt/yFAz4fNRI7frO5my3/LGKd8YsB6PKORs67HHxn8xNXZf3RIQR1nBNePiki2jKc54jLiUYZNvX
+        +8YG0VjC8c5iuQfox+VykKymQkHB6S+NsN7iXfAynzFou3dymyYIEWNRxeaJZOfbVOfYVqt20fY1k
+        +oRnEkmw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCo1U-0002dd-AZ; Fri, 13 Mar 2020 17:23:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC47A305F2E;
+        Fri, 13 Mar 2020 18:22:57 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A18A92BE08CBC; Fri, 13 Mar 2020 18:22:57 +0100 (CET)
+Date:   Fri, 13 Mar 2020 18:22:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [RFC][PATCH 04/16] objtool: Annotate identity_mapped()
+Message-ID: <20200313172257.GC12521@hirez.programming.kicks-ass.net>
+References: <20200312134107.700205216@infradead.org>
+ <20200312135041.641079164@infradead.org>
+ <CAMzpN2gkRGEYEzgO55rBhkTdQO3XhEEfHrq6+j1dy5kzn-C5AA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200312090435.GK24449@Air-de-Roger.citrite.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAMzpN2gkRGEYEzgO55rBhkTdQO3XhEEfHrq6+j1dy5kzn-C5AA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:04:35AM +0100, Roger Pau Monné wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> On Wed, Mar 11, 2020 at 10:25:15PM +0000, Agarwal, Anchal wrote:
-> > Hi Roger,
-> > I am trying to understand your comments on indirect descriptors specially without polluting the mailing list hence emailing you personally.
-> 
-> IMO it's better to send to the mailing list. The issues or questions
-> you have about indirect descriptors can be helpful to others in the
-> future. If there's no confidential information please send to the
-> list next time.
-> 
-> Feel free to forward this reply to the list also.
->
-Sure no problem at all.
-> > Hope that's ok by you.  Please see my response inline.
+On Fri, Mar 13, 2020 at 12:46:05PM -0400, Brian Gerst wrote:
+> On Thu, Mar 12, 2020 at 9:53 AM Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> >     On Fri, Mar 06, 2020 at 06:40:33PM +0000, Anchal Agarwal wrote:
-> >     > On Fri, Feb 21, 2020 at 03:24:45PM +0100, Roger Pau Monné wrote:
-> >     > > On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
-> >     > > >   blkfront_gather_backend_features(info);
-> >     > > >   /* Reset limits changed by blk_mq_update_nr_hw_queues(). */
-> >     > > >   blkif_set_queue_limits(info);
-> >     > > > @@ -2046,6 +2063,9 @@ static int blkif_recover(struct blkfront_info *info)
-> >     > > >           kick_pending_request_queues(rinfo);
-> >     > > >   }
-> >     > > >
-> >     > > > + if (frozen)
-> >     > > > +         return 0;
-> >     > >
-> >     > > I have to admit my memory is fuzzy here, but don't you need to
-> >     > > re-queue requests in case the backend has different limits of indirect
-> >     > > descriptors per request for example?
-> >     > >
-> >     > > Or do we expect that the frontend is always going to be resumed on the
-> >     > > same backend, and thus features won't change?
-> >     > >
-> >     > So to understand your question better here, AFAIU the  maximum number of indirect
-> >     > grefs is fixed by the backend, but the frontend can issue requests with any
-> >     > number of indirect segments as long as it's less than the number provided by
-> >     > the backend. So by your question you mean this max number of MAX_INDIRECT_SEGMENTS
-> >     > 256 on backend can change ?
+> > Normally identity_mapped is not visible to objtool, due to:
 > >
-> >     Yes, number of indirect descriptors supported by the backend can
-> >     change, because you moved to a different backend, or because the
-> >     maximum supported by the backend has changed. It's also possible to
-> >     resume on a backend that has no indirect descriptors support at all.
+> >   arch/x86/kernel/Makefile:OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o := y
 > >
-> > AFAIU, the code for requeuing the requests is only for xen suspend/resume. These request in the queue are
-> > same that gets added to queuelist in blkfront_resume. Also, even if indirect descriptors change on resume,
-> > they just need to be broadcasted to frontend and which means we could just mean that a request can process
-> > more data.
-> 
-> Or less data. You could legitimately migrate from a host that has
-> indirect descriptors to one without, in which case requests would need
-> to be smaller to fit the ring slots.
-> 
-> > We do setup indirect descriptors on front end on blkif_recover before returning and queue limits are
-> > setup accordingly.
-> > Am I missing anything here?
-> 
-> Calling blkif_recover should take care of it AFAICT. As it resets the
-> queue limits according to the data announced on xenstore.
-> 
-> I think I got confused, using blkif_recover should be fine, sorry.
-> 
-Ok. Thanks for confirming. I will fixup other suggestions in the patch and send
-out a v4.
+> > However, when we want to run objtool on vmlinux.o there is no hiding
+> > it. Without the annotation we'll get complaints about the:
 > >
-> >     > > > @@ -2625,6 +2671,62 @@ static void blkif_release(struct gendisk *disk, fmode_t mode)
-> >     > > >   mutex_unlock(&blkfront_mutex);
-> >     > > >  }
-> >     > > >
-> >     > > > +static int blkfront_freeze(struct xenbus_device *dev)
-> >     > > > +{
-> >     > > > + unsigned int i;
-> >     > > > + struct blkfront_info *info = dev_get_drvdata(&dev->dev);
-> >     > > > + struct blkfront_ring_info *rinfo;
-> >     > > > + /* This would be reasonable timeout as used in xenbus_dev_shutdown() */
-> >     > > > + unsigned int timeout = 5 * HZ;
-> >     > > > + int err = 0;
-> >     > > > +
-> >     > > > + info->connected = BLKIF_STATE_FREEZING;
-> >     > > > +
-> >     > > > + blk_mq_freeze_queue(info->rq);
-> >     > > > + blk_mq_quiesce_queue(info->rq);
-> >     > >
-> >     > > Don't you need to also drain the queue and make sure it's empty?
-> >     > >
-> >     > blk_mq_freeze_queue and blk_mq_quiesce_queue should take care of running HW queues synchronously
-> >     > and making sure all the ongoing dispatches have finished. Did I understand your question right?
-> >
-> >     Can you please add some check to that end? (ie: that there are no
-> >     pending requests on any queue?)
-> >
-> > Well a check to see if there are any unconsumed responses could be done.
-> > I haven't come across use case in my testing where this failed but maybe there are other
-> > setups that may cause issue here.
+>          call 1f
+> 1:      popq %r8
+>         subq $(1b - relocate_kernel), %r8
 > 
-> Thanks! It's mostly to be on the safe side if we expect the queues and
-> rings to be fully drained.
-> 
-ACK.
-> Roger.
-Thanks,
-Anchal
+> It looks to me that this code is simply trying to get the virtual
+> address of relocate_kernel using the old 32-bit method of PIC address
+> calculation.  On 64-bit can be done with leaq relocate_kernel(%rip),
+> %r8.
+
+Indeed. Objtool would be happy with that. And it seems I can still kexec
+a kernel too.
+
+Thanks!
