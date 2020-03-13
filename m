@@ -2,132 +2,132 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA577C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA133C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822B320724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8102320724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eVCIKuOZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gZF2Cv2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCMKoy (ORCPT
+        id S1726593AbgCMKpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:44:54 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59514 "EHLO
+        Fri, 13 Mar 2020 06:45:20 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27465 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726414AbgCMKoy (ORCPT
+        by vger.kernel.org with ESMTP id S1726414AbgCMKpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:44:54 -0400
+        Fri, 13 Mar 2020 06:45:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584096293;
+        s=mimecast20190719; t=1584096318;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aT9q9UJeOule/4yraFsE371e6/2YUeu5VbTUE9ggi9s=;
-        b=eVCIKuOZwqITMe5I14a3kLCGLJMI1fteZpuqgZ81awkJRziwBB6VZghaWynu8EJKgtekY6
-        6gifWTLowjB+vPkt+8YDB0LULh+oBAkM5WUSfT+Q5+r7Ou8HEw8FKGv1JL0fMASkBtkXkW
-        HO/JyVL1OiXkspWezpZ9WR+ryfYbEKA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-S5-3PBs7MFO5Vu_zwLOsXg-1; Fri, 13 Mar 2020 06:44:48 -0400
-X-MC-Unique: S5-3PBs7MFO5Vu_zwLOsXg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E29310CE79E;
-        Fri, 13 Mar 2020 10:44:47 +0000 (UTC)
-Received: from localhost (ovpn-121-102.rdu2.redhat.com [10.10.121.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E63860C63;
-        Fri, 13 Mar 2020 10:44:46 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 07:44:45 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        pmladek@suse.com, sergey.senozhatsky@gmail.com, rostedt@goodmis.org
-Subject: Re: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
-Message-ID: <20200313104445.GH13406@glitch>
-References: <20200313003533.2203429-1-bmeneg@redhat.com>
- <20200313072254.GA1960396@kroah.com>
+        bh=zctn6k2f5mixNGrxrLzyiam0TKHGTxDS/k1jN+OYlZ8=;
+        b=gZF2Cv2m8VhflK0wpDOtLc182kXjTeKi1Urdk1c4yhuXq/FYGu4pKPJ6H/tv9n+UZXv1Lq
+        WAZv/J7IPetJsYkxQIZCDLym5TTLMPWaV8xjZ7/XW3HhGGq+ZGRJ14PPBTSQIaHjbIrycK
+        pIbSocl4w4fZwl3bCZQxtc4i4D8WMXk=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-oewnxbT6N0iM-5oIhaf0rg-1; Fri, 13 Mar 2020 06:45:17 -0400
+X-MC-Unique: oewnxbT6N0iM-5oIhaf0rg-1
+Received: by mail-wm1-f69.google.com with SMTP id 20so2778466wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:45:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zctn6k2f5mixNGrxrLzyiam0TKHGTxDS/k1jN+OYlZ8=;
+        b=MoNvrltS6KGMJKgIHyosOOefzTDfiNmm16Q/3cjioZGk0kb0MHWAOuICzGG+bPxLH2
+         A7tJEOcri3Xtpz2Xphm0XeYP6nqCugPg0FsIfPrXeyTipvWr5JjkXitEDVx3h/+bT8+y
+         E1nuBLBBFCcj49to3bM81Xtb30DI0vS6+phbjp2dCZhl3OoxJATg7GnP44mgn1zTtHGk
+         bUMoivyxOFRIN0wOW+GrPUqPkyso71Fx9ki8DX9m8Ef43HeKrP+/Qn/vU0KwnlSxu+wa
+         5XuWY2EhQObzmd9tAvyRAFv+oJOJDUhcfvLLkMJ5mk8d14UwW8D74udZMJ4s7Bqevggd
+         dSlg==
+X-Gm-Message-State: ANhLgQ3/8+cQ4/NGrjsgaLZddSRCC9OVeGfTEUD9Ncv/ZcRtoEVkSxPc
+        KLAzprIY1QhPg9zpN85FiD04yaZZgx68RBZ1UbuMTjfBRil8ksvbk20vH9nMNe9t8Ld0l94VD3N
+        eiy9NKdSPBvyopDm3zBJa3zLm
+X-Received: by 2002:a1c:9a45:: with SMTP id c66mr9834649wme.115.1584096316103;
+        Fri, 13 Mar 2020 03:45:16 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vviKBLP6HiMs9SO8RNyYOgApRUQbugrPMiXiR6xqFNcz8q1Uphz7JwEuPG86DI5+Afewd8XZg==
+X-Received: by 2002:a1c:9a45:: with SMTP id c66mr9834631wme.115.1584096315904;
+        Fri, 13 Mar 2020 03:45:15 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id o10sm5209579wrs.65.2020.03.13.03.45.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 03:45:15 -0700 (PDT)
+Subject: Re: [PATCH] fs: Fix missing 'bit' in comment
+To:     Chucheng Luo <luochucheng@vivo.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     wenhu.wang@vivo.com, trivial@kernel.org
+References: <20200313014655.28967-1-luochucheng@vivo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <dfd44b01-3d90-3923-2971-d8d5bce5db08@redhat.com>
+Date:   Fri, 13 Mar 2020 11:45:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200313072254.GA1960396@kroah.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AzNpbZlgThVzWita"
-Content-Disposition: inline
+In-Reply-To: <20200313014655.28967-1-luochucheng@vivo.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---AzNpbZlgThVzWita
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Fri, Mar 13, 2020 at 08:22:54AM +0100, Greg KH wrote:
-> On Thu, Mar 12, 2020 at 09:35:33PM -0300, Bruno Meneguele wrote:
-> > Userspace libraries, e.g. glibc's dprintf(), expect the default return =
-value
-> > for invalid seek situations: -ESPIPE, but when the IO was over /dev/kms=
-g the
-> > current state of kernel code was returning the generic case of an -EINV=
-AL.
-> > Hence, userspace programs were not behaving as expected or documented.
-> >=20
-> > With this patch we add SEEK_CUR case returning the expected value and a=
-lso a
-> > simple mention of it in kernel's documentation for those relying on tha=
-t for
-> > guidance.
-> >=20
-> > Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
-> > ---
-> >  Documentation/ABI/testing/dev-kmsg | 2 ++
-> >  kernel/printk/printk.c             | 4 ++++
-> >  2 files changed, 6 insertions(+)
->=20
-> <formletter>
->=20
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.ht=
-ml
-> for how to do this properly.
->=20
-> </formletter>
->=20
+On 3/13/20 2:46 AM, Chucheng Luo wrote:
+> The missing word may make it hard for other developers to
+> understand it.
+> 
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
 
-ouch, yes of course. Sorry for the noise. =20
-Will repost it once the concerns with the patch are solved.
+This new version also looks good to me:
 
-Thanks Greg.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
+Regards,
 
---AzNpbZlgThVzWita
-Content-Type: application/pgp-signature; name="signature.asc"
+Hans
 
------BEGIN PGP SIGNATURE-----
+p.s.
 
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl5rZB0ACgkQYdRkFR+R
-okNb7ggAxbkwFdSoQBgH0xZI1DmgLTjKi+ZL+j7MtBdujIL2f6vbCfhnK8G4nocx
-SvCAk//UCsAqAkib7vCdJTwPm3QT7TmtUAtZ2dgQkooytWEKyLY5h2p/WZwg9RGV
-LwA7GU66oYsCzkFIy+TSHa6DL2wsesdef1tDapiDhFKFV/tnFumx9U7JnnyZCV+m
-xuUfLKAojOEYGN2T1vJTv4Phy+ru4Rw8ZRWToMHnw0lYNd2V0xnFbzoFYd76JCE9
-IT4yW3eJWrngU7f/+IUUkE2MLPot3jToatuJCumKz8CzTa6lxjgX1Pzbm+wVCNBR
-BffqOOOwAQyaHpiXziOW/5QCgZPikg==
-=bQvY
------END PGP SIGNATURE-----
+In the future please mark new versions as such by using e.g.:
 
---AzNpbZlgThVzWita--
+git send-email --subject-prefix="PATCH v2" ...
+
+Actually, it would be good to resend this patch (with my
+Acked-by added to the commit msg) this way because now there
+is no way for the fs maintainers to figure out which one
+of the 2 patches you've send out to apply.
+
+
+
+> ---
+>   fs/vboxsf/dir.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/vboxsf/dir.c b/fs/vboxsf/dir.c
+> index dd147b490982..4d569f14a8d8 100644
+> --- a/fs/vboxsf/dir.c
+> +++ b/fs/vboxsf/dir.c
+> @@ -134,7 +134,7 @@ static bool vboxsf_dir_emit(struct file *dir, struct dir_context *ctx)
+>   		d_type = vboxsf_get_d_type(info->info.attr.mode);
+>   
+>   		/*
+> -		 * On 32 bit systems pos is 64 signed, while ino is 32 bit
+> +		 * On 32-bit systems pos is 64-bit signed, while ino is 32-bit
+>   		 * unsigned so fake_ino may overflow, check for this.
+>   		 */
+>   		if ((ino_t)(ctx->pos + 1) != (u64)(ctx->pos + 1)) {
+> 
 
