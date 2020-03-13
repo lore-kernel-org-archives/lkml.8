@@ -2,123 +2,82 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDEFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83658C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661AE206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NrCxGDlG"
+	by mail.kernel.org (Postfix) with ESMTP id 4FC1020736
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584069481;
+	bh=ILsiPrMpW6mU90mqVPtgUQTlUdPd/plHtmWNc9Q6XIU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yPwgbXKwwold887yW/C3bt/5xE6Pq7T93u2GBrREKmSnkiN87EF5J9gtBCOhoaiU2
+	 0NG4zoLgNkhRN9fhFj1srTWWlKiWhb1o5X1LpMlqu5MqRVA1SRhdMqmeacPSglfKuM
+	 AAR1Vvm618naGNCYRXFN9y2PEDtgN/3KT2JQo+w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgCMDRh (ORCPT
+        id S1726591AbgCMDSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:17:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:52195 "EHLO ozlabs.org"
+        Thu, 12 Mar 2020 23:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgCMDRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:17:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726377AbgCMDR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:17:59 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48drV62x7Xz9sST;
-        Fri, 13 Mar 2020 14:17:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584069454;
-        bh=ldxHFAXKQE97+v1SRtxLJNZc/rbeWkm1Dkdkyk2tJGw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NrCxGDlGZnqSGhfVBIpGSup6ql+N1ixG6op5fbmtLRMO/+iQqm1lkYNg9Hqkgzztm
-         ZG/hCZ5AGw7btp7XWNm7hBosg7kI1PQQRf1t47SdnEpMtIgRkj6aEmBS+SNmEFvK4O
-         0DBs8Qu4XD8JSmGYWfMmhf42s0qCFKNDVOmWF0oChX2nQpi7su/91XVSA2Jpe430ZN
-         njceYnp67GR/HfF/gOAcnOjLE3FNpGpwEt1OUNn4yJO/qdWj9wy7hNcmlxsFCzhZdW
-         nRk/W7CfqzdAmILUUQt9vsHc0whYws9ljGHfy2A2SZ/IPdlogpcfH6hHvY4nwwb2dX
-         k2Tmv6Qu9VR6Q==
-Date:   Fri, 13 Mar 2020 14:17:32 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Blakey <paulb@mellanox.com>
-Subject: linux-next: manual merge of the netfilter-next tree with the
- net-next tree
-Message-ID: <20200313141732.14b6e3e1@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id A2948206F1;
+        Fri, 13 Mar 2020 03:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584069479;
+        bh=ILsiPrMpW6mU90mqVPtgUQTlUdPd/plHtmWNc9Q6XIU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QLRNG/I7Fa5eDgBsuvaqvSZ0khZ8IMKgY/sCwP6iR2j6dPHFFS52WQQBg10wKJHoR
+         5B7BRqjsSZkg/UtIviFo27RVvj3YdZFrzUgt8Ihw9H0cDwJN1qDPQQtnJuK7Whualu
+         z+3p3lTXTP3otQEMTuHyjzQKbV26mQpJhOcBVYJU=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     shuah@kernel.org
+Cc:     keescook@chromium.org, luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 0/5] kselftest: add fixture parameters
+Date:   Thu, 12 Mar 2020 20:17:47 -0700
+Message-Id: <20200313031752.2332565-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yf=nCwDlLhONyVinAjC8vTL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yf=nCwDlLhONyVinAjC8vTL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
-Hi all,
+This set is an attempt to make running tests for different
+sets of data easier. The direct motivation is the tls
+test which we'd like to run for TLS 1.2 and TLS 1.3,
+but currently there is no easy way to invoke the same
+tests with different parameters.
 
-Today's linux-next merge of the netfilter-next tree got a conflict in:
+Tested all users of kselftest_harness.h.
 
-  net/netfilter/nf_flow_table_offload.c
+Jakub Kicinski (5):
+  selftests/seccomp: use correct FIXTURE macro
+  kselftest: create fixture objects
+  kselftest: run tests by fixture
+  kselftest: add fixture parameters
+  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
 
-between commit:
+ Documentation/dev-tools/kselftest.rst         |   3 +-
+ tools/testing/selftests/kselftest_harness.h   | 228 +++++++++++++++---
+ tools/testing/selftests/net/tls.c             |  93 ++-----
+ tools/testing/selftests/seccomp/seccomp_bpf.c |  10 +-
+ 4 files changed, 213 insertions(+), 121 deletions(-)
 
-  978703f42549 ("netfilter: flowtable: Add API for registering to flow tabl=
-e events")
+-- 
+2.24.1
 
-from the net-next tree and commit:
-
-  1f412791407b ("netfilter: flowtable: Use nf_flow_offload_tuple for stats =
-as well")
-
-from the netfilter-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/netfilter/nf_flow_table_offload.c
-index 42b73a084a63,482a7284e122..000000000000
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@@ -596,8 -619,10 +597,11 @@@ static int nf_flow_offload_tuple(struc
- =20
-  		i++;
-  	}
- +	mutex_unlock(&flowtable->flow_block_lock);
- =20
-+ 	if (cmd =3D=3D FLOW_CLS_STATS)
-+ 		memcpy(stats, &cls_flow.stats, sizeof(*stats));
-+=20
-  	return i;
-  }
- =20
-
---Sig_/yf=nCwDlLhONyVinAjC8vTL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5q+0wACgkQAVBC80lX
-0Gyuhwf5AcyfzBo6V1kPBWRFg5gxSwxV14m/StoUCnvLa6DY0vipL3gHKIDIuPVZ
-wBxB2HyB+qRBeVMbZedriIoYMYc5aSIkaW8OdSs7D+9gCck8VN5S+mlglRLIcYHl
-TbmpjGeoPJjQtit5embRdgDUOchLyOfl/i0FJRBkh30/Gzjqy4uHNRJjUnyWMh4R
-8KwV4yKmhDK3idrhcFwjjwz9gpmg+iuQB4pN5aX3/jXPs/Fw6MeaDfaFV/AkNSbT
-lruA8Bx0WKdZ5XAJMnu1V6fukwHejdaXeq0Ek/Q3WiG/9IxiKfp6ebsKT5zfdUuE
-BuJ0RYJ5A0Y21z9hLKhJ89xLAEYqnw==
-=mBn8
------END PGP SIGNATURE-----
-
---Sig_/yf=nCwDlLhONyVinAjC8vTL--
