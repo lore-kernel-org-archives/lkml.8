@@ -2,321 +2,112 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F875C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D336C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AA7206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71A12071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584126332;
+	bh=vuYul+KNbe7S1RciqI4G1/q/1GISg3EqPissVTD72I8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d8GM5XT0Y+5jQBmGX44136czYm9ZP35A5cmUg5RbuoOz++/+TztH0rohnLMpV2RZO
+	 UHe8UOYvtfu0j+DYn/LxwscG+3k6imPF6it+Zki7t/B6zCxWdjYc8LyPI5xj6mRZO/
+	 sKKbanc+nPPtopyLpZ8NbG7Fim7faEZPAYsoOeMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCMTBQ convert rfc822-to-8bit (ORCPT
+        id S1726853AbgCMTFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:01:16 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:41544 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgCMTBP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:01:15 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 429C8CED08;
-        Fri, 13 Mar 2020 20:10:42 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH 1/1] Bluetooth: Prioritize SCO traffic on slow interfaces
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200312111036.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
-Date:   Fri, 13 Mar 2020 20:01:12 +0100
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <A79B48D3-D342-473C-B94A-A2E0AA83B505@holtmann.org>
-References: <20200312181055.94038-1-abhishekpandit@chromium.org>
- <20200312111036.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Fri, 13 Mar 2020 15:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgCMTFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 15:05:31 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF63206B7;
+        Fri, 13 Mar 2020 19:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584126331;
+        bh=vuYul+KNbe7S1RciqI4G1/q/1GISg3EqPissVTD72I8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VQ4CPUlWY3TDyXZr15FC+AB9KXttXeaQJdd7wPkBgHIQWZowL5sV2bVRW+YbNbfDZ
+         yZZO2HFj0Y7K17wa0EzDEiGqgXcmfR8YNueYpshapexkG57KFbM3gCynW8hSzETi91
+         Sq1nSNEROeqnhMJFhCwWOEco8Gc3mD9JzXzkI5TY=
+Date:   Fri, 13 Mar 2020 12:05:29 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     NeilBrown <neilb@suse.de>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>
+Subject: Re: [PATCH v2 3/4] docs: admin-guide: document the kernel.modprobe
+ sysctl
+Message-ID: <20200313190529.GB55327@gmail.com>
+References: <20200312202552.241885-1-ebiggers@kernel.org>
+ <20200312202552.241885-4-ebiggers@kernel.org>
+ <87lfo5telq.fsf@notabene.neil.brown.name>
+ <20200313010727.GT11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313010727.GT11244@42.do-not-panic.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+On Fri, Mar 13, 2020 at 01:07:27AM +0000, Luis Chamberlain wrote:
+> > > +modprobe:
+> > > +=========
+> > > +
+> > > +The path to the usermode helper for autoloading kernel modules, by
+> > > +default "/sbin/modprobe".  This binary is executed when the kernel
+> > > +requests a module.  For example, if userspace passes an unknown
+> > > +filesystem type "foo" to mount(), then the kernel will automatically
+> > > +request the module "fs-foo.ko" by executing this usermode helper.
+> > 
+> > I don't think it is right to add the ".ko" there.  The string "fs-foo"
+> > is what is passed to the named executable, and it make well end up
+> > loading "bar.ko", depending what aliases are set up.
+> > I would probably write  '... request the module named 'fs-foo" by executing..'
+> 
+> And that is just because filesystems, in this case a mount call, will
+> use the fs- prefix for aliases. This is tribal knowledge in the context
+> above, and so someone not familiar with this won't easily grasp this.
+> 
+> Is there an easier autoloading example other than filesystems we can use that
+> doesn't require you to explain the aliasing thing?
+> 
+> What is module autoloading? Where is this documented ? If that
+> can be slightly clarified this would be even easier to understand as
+> well.
+> 
 
-> When scheduling TX packets, send all SCO/eSCO packets first and then
-> send only 1 ACL/LE packet in a loop while checking that there are no SCO
-> packets pending. This is done to make sure that we can meet SCO
-> deadlines on slow interfaces like UART. If we were to queue up multiple
-> ACL packets without checking for a SCO packet, we might miss the SCO
-> timing. For example:
-> 
-> The time it takes to send a maximum size ACL packet (1024 bytes):
-> t = 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
->        where 10/8 is uart overhead due to start/stop bits per byte
-> 
-> Replace t = 3.75ms (SCO deadline), which gives us a baudrate of 2730666
-> and is pretty close to a common baudrate of 3000000 used for BT. At this
-> baudrate, if we sent two 1024 byte ACL packets, we would miss the 3.75ms
-> timing window.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> include/net/bluetooth/hci_core.h |  1 +
-> net/bluetooth/hci_core.c         | 91 +++++++++++++++++++++++++-------
-> 2 files changed, 73 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index d4e28773d378..f636c89f1fe1 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -315,6 +315,7 @@ struct hci_dev {
-> 	__u8		ssp_debug_mode;
-> 	__u8		hw_error_code;
-> 	__u32		clock;
-> +	__u8		sched_limit;
+I think we're getting too down into the weeds here.  The purpose of this patch
+is just to document the modprobe sysctl, not to to give a full explanation of
+how module autoloading works including modaliases and everything.  And this
+sysctl isn't needed to enable module autoloading; it's enabled by default.
+Most users already use module autoloading without ever touching this sysctl.
 
-why do you need this parameter?
+Let's just write instead:
 
-> 
-> 	__u16		devid_source;
-> 	__u16		devid_vendor;
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index dbd2ad3a26ed..00a72265cd96 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -4239,18 +4239,32 @@ static void __check_timeout(struct hci_dev *hdev, unsigned int cnt)
-> 	}
-> }
-> 
-> -static void hci_sched_acl_pkt(struct hci_dev *hdev)
-> +/* Limit packets in flight when SCO/eSCO links are active. */
-> +static bool hci_sched_limit(struct hci_dev *hdev)
-> +{
-> +	return hdev->sched_limit && hci_conn_num(hdev, SCO_LINK);
-> +}
-> +
-> +static bool hci_sched_acl_pkt(struct hci_dev *hdev)
-> {
-> 	unsigned int cnt = hdev->acl_cnt;
-> 	struct hci_chan *chan;
-> 	struct sk_buff *skb;
-> 	int quote;
-> +	bool sched_limit = hci_sched_limit(hdev);
-> +	bool resched = false;
-> 
-> 	__check_timeout(hdev, cnt);
-> 
-> 	while (hdev->acl_cnt &&
-> 	       (chan = hci_chan_sent(hdev, ACL_LINK, &quote))) {
-> 		u32 priority = (skb_peek(&chan->data_q))->priority;
-> +
-> +		if (sched_limit && quote > 0) {
-> +			resched = true;
-> +			quote = 1;
-> +		}
-> +
-> 		while (quote-- && (skb = skb_peek(&chan->data_q))) {
-> 			BT_DBG("chan %p skb %p len %d priority %u", chan, skb,
-> 			       skb->len, skb->priority);
-> @@ -4271,19 +4285,26 @@ static void hci_sched_acl_pkt(struct hci_dev *hdev)
-> 			chan->sent++;
-> 			chan->conn->sent++;
-> 		}
-> +
-> +		if (resched && cnt != hdev->acl_cnt)
-> +			break;
-> 	}
-> 
-> -	if (cnt != hdev->acl_cnt)
-> +	if (hdev->acl_cnt == 0 && cnt != hdev->acl_cnt)
-> 		hci_prio_recalculate(hdev, ACL_LINK);
-> +
-> +	return resched;
-> }
-> 
-> -static void hci_sched_acl_blk(struct hci_dev *hdev)
-> +static bool hci_sched_acl_blk(struct hci_dev *hdev)
-> {
-> 	unsigned int cnt = hdev->block_cnt;
-> 	struct hci_chan *chan;
-> 	struct sk_buff *skb;
-> 	int quote;
-> 	u8 type;
-> +	bool sched_limit = hci_sched_limit(hdev);
-> +	bool resched = false;
-> 
-> 	__check_timeout(hdev, cnt);
-> 
-> @@ -4297,6 +4318,12 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
-> 	while (hdev->block_cnt > 0 &&
-> 	       (chan = hci_chan_sent(hdev, type, &quote))) {
-> 		u32 priority = (skb_peek(&chan->data_q))->priority;
-> +
-> +		if (sched_limit && quote > 0) {
-> +			resched = true;
-> +			quote = 1;
-> +		}
-> +
-> 		while (quote > 0 && (skb = skb_peek(&chan->data_q))) {
-> 			int blocks;
-> 
-> @@ -4311,7 +4338,7 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
-> 
-> 			blocks = __get_blocks(hdev, skb);
-> 			if (blocks > hdev->block_cnt)
-> -				return;
-> +				return false;
-> 
-> 			hci_conn_enter_active_mode(chan->conn,
-> 						   bt_cb(skb)->force_active);
-> @@ -4325,33 +4352,39 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
-> 			chan->sent += blocks;
-> 			chan->conn->sent += blocks;
-> 		}
-> +
-> +		if (resched && cnt != hdev->block_cnt)
-> +			break;
-> 	}
-> 
-> -	if (cnt != hdev->block_cnt)
-> +	if (hdev->block_cnt == 0 && cnt != hdev->block_cnt)
-> 		hci_prio_recalculate(hdev, type);
-> +
-> +	return resched;
-> }
-> 
-> -static void hci_sched_acl(struct hci_dev *hdev)
-> +static bool hci_sched_acl(struct hci_dev *hdev)
-> {
-> 	BT_DBG("%s", hdev->name);
-> 
-> 	/* No ACL link over BR/EDR controller */
-> 	if (!hci_conn_num(hdev, ACL_LINK) && hdev->dev_type == HCI_PRIMARY)
-> -		return;
-> +		goto done;
+	For example, if userspace passes an unknown filesystem type to mount(),
+	then the kernel will automatically request the corresponding filesystem
+	module by executing this usermode helper.  This usermode helper should
+	insert the needed module into the kernel.
 
-Style wise the goto done is overkill. Just return false.
+If someone wants to write a new documentation file that fully explains kernel
+modules (I don't see any yet), they should should certainly do so.  It's more
+than I set out to do, though.  IMO, just documenting this sysctl is already a
+nice improvement by itself.
 
-> 
-> 	/* No AMP link over AMP controller */
-> 	if (!hci_conn_num(hdev, AMP_LINK) && hdev->dev_type == HCI_AMP)
-> -		return;
-> +		goto done;
-> 
-> 	switch (hdev->flow_ctl_mode) {
-> 	case HCI_FLOW_CTL_MODE_PACKET_BASED:
-> -		hci_sched_acl_pkt(hdev);
-> -		break;
-> +		return hci_sched_acl_pkt(hdev);
-> 
-> 	case HCI_FLOW_CTL_MODE_BLOCK_BASED:
-> -		hci_sched_acl_blk(hdev);
-> -		break;
-> +		return hci_sched_acl_blk(hdev);
-
-So the block based mode is for AMP controllers and not used on BR/EDR controllers. Since AMP controllers only transport ACL packet and no SCO/eSCO packets, we can ignore this here.
-
-> 	}
-> +
-> +done:
-> +	return false;
-> }
-> 
-> /* Schedule SCO */
-> @@ -4402,16 +4435,18 @@ static void hci_sched_esco(struct hci_dev *hdev)
-> 	}
-> }
-> 
-> -static void hci_sched_le(struct hci_dev *hdev)
-> +static bool hci_sched_le(struct hci_dev *hdev)
-> {
-> 	struct hci_chan *chan;
-> 	struct sk_buff *skb;
-> 	int quote, cnt, tmp;
-> +	bool sched_limit = hci_sched_limit(hdev);
-> +	bool resched = false;
-> 
-> 	BT_DBG("%s", hdev->name);
-> 
-> 	if (!hci_conn_num(hdev, LE_LINK))
-> -		return;
-> +		return resched;
-> 
-> 	cnt = hdev->le_pkts ? hdev->le_cnt : hdev->acl_cnt;
-> 
-> @@ -4420,6 +4455,12 @@ static void hci_sched_le(struct hci_dev *hdev)
-> 	tmp = cnt;
-> 	while (cnt && (chan = hci_chan_sent(hdev, LE_LINK, &quote))) {
-> 		u32 priority = (skb_peek(&chan->data_q))->priority;
-> +
-> +		if (sched_limit && quote > 0) {
-> +			resched = true;
-> +			quote = 1;
-> +		}
-> +
-> 		while (quote-- && (skb = skb_peek(&chan->data_q))) {
-> 			BT_DBG("chan %p skb %p len %d priority %u", chan, skb,
-> 			       skb->len, skb->priority);
-> @@ -4437,6 +4478,9 @@ static void hci_sched_le(struct hci_dev *hdev)
-> 			chan->sent++;
-> 			chan->conn->sent++;
-> 		}
-> +
-> +		if (resched && cnt != tmp)
-> +			break;
-> 	}
-> 
-> 	if (hdev->le_pkts)
-> @@ -4444,24 +4488,33 @@ static void hci_sched_le(struct hci_dev *hdev)
-> 	else
-> 		hdev->acl_cnt = cnt;
-> 
-> -	if (cnt != tmp)
-> +	if (cnt == 0 && cnt != tmp)
-> 		hci_prio_recalculate(hdev, LE_LINK);
-> +
-> +	return resched;
-> }
-> 
-> static void hci_tx_work(struct work_struct *work)
-> {
-> 	struct hci_dev *hdev = container_of(work, struct hci_dev, tx_work);
-> 	struct sk_buff *skb;
-> +	bool resched;
-> 
-> 	BT_DBG("%s acl %d sco %d le %d", hdev->name, hdev->acl_cnt,
-> 	       hdev->sco_cnt, hdev->le_cnt);
-> 
-> 	if (!hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-> 		/* Schedule queues and send stuff to HCI driver */
-> -		hci_sched_acl(hdev);
-> -		hci_sched_sco(hdev);
-> -		hci_sched_esco(hdev);
-> -		hci_sched_le(hdev);
-> +		do {
-> +			/* SCO and eSCO send all packets until emptied */
-> +			hci_sched_sco(hdev);
-> +			hci_sched_esco(hdev);
-> +
-> +			/* Acl and Le send based on quota (priority on ACL per
-> +			 * loop)
-> +			 */
-> +			resched = hci_sched_acl(hdev) || hci_sched_le(hdev);
-> +		} while (resched);
-> 	}
-
-I am not in favor of this busy loop. We might want to re-think the whole scheduling by connection type and really only focus on scheduling ACL (BR/EDR and LE) and audio packets (SCO/eSCO and ISO).
-
-In addition, we also need to check that SCO scheduling and A2DP media channel ACL packets do work together. I think that generally it would be best to have a clear rate at which SCO packets are require to pushed down to the hardware. So you really reserve bandwidth and not blindly prioritize them via a busy loop.
-
-Regards
-
-Marcel
-
+- Eric
