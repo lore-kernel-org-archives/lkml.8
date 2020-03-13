@@ -2,153 +2,189 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF20EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E631CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7DA206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FC120723
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BQ2MAY7/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/kUJ8XE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgCMDj2 (ORCPT
+        id S1726485AbgCMDkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:39:28 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:41370 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726254AbgCMDj1 (ORCPT
+        Thu, 12 Mar 2020 23:40:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38193 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCMDkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:39:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584070767; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=SLp1RSSJXXFi0aM9dH+otJ/jiCUrThG79PUgGB7bTWM=; b=BQ2MAY7/bsRVeZq2I7P9xmyQxQBpu4ygotX1Ugu379hR6f/Y87VAC9usfSoO3G73mCsjiCCa
- VRjN7v5fBQgt0r9ydXI6iIPdZ5uOGUWztXK0l74GbdtWmULrYQJXtzw6w98jz0GcN3+Sldfo
- Si+huZr8TVe0LngkXlGFOOYFukA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6b0066.7f0d0537d688-smtp-out-n01;
- Fri, 13 Mar 2020 03:39:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7B5ECC433CB; Fri, 13 Mar 2020 03:39:18 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D33FC433BA;
-        Fri, 13 Mar 2020 03:39:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D33FC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Fri, 13 Mar 2020 09:09:12 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-Message-ID: <20200313033912.GJ20234@codeaurora.org>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
- <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
+        Thu, 12 Mar 2020 23:40:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t28so6060819ott.5;
+        Thu, 12 Mar 2020 20:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WIRkI2CYvoKsq9itPKuwu+XPusfRhrw6nx2JHGpkf1E=;
+        b=s/kUJ8XE8j1XYaR6BBWpebhMtpPzhdQckJ3Ju30W08kJ2xQx9Cxz+Mco9AXgXuBrHC
+         Waz4rIBxwEm3In3P7F0tM1c636ASFlUfrTQqmNEQEOlyWbj1GZq8pQnzofLnbuXCPzy3
+         PyUfQ3gpDZxw0x7BDGGKY4kq6J3xJMkOC4aZ9FypuP4xnhCdibYeGVLaBURAT1EmJGcK
+         1Q0q1q8spcrO01cZc1ZPTay39onJ3b2R8XHN8HYO7f5BJjbUDH/nBKnQT3FaleZzkC0y
+         ztHqqF7TdsNuh+/iJLHEi1Mq6oAFDqtoTC4U1JNCOTG+UkFEU/Q46IBKrRdDwdINQZFT
+         nsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WIRkI2CYvoKsq9itPKuwu+XPusfRhrw6nx2JHGpkf1E=;
+        b=ESGsxrYsYr0tvUxG+c8Y5r+v6rB3Q4g2TQca8u0i7hxj5M+SYaV9O1tl2fqNVWUNJK
+         ffbLy3+4gEf2iBi6CU0/CJYRd56kmbauIytvYzi8bZT4t2RcTVuy8yAKEpM7XBHG43t9
+         iIvBo7PFW8GljZ7xQTMI7sVjz9tKqQgANXTvUG4/UKMs6J9R2WPxpdHfeb+FKmCWog8v
+         SmrpMYoWBU7I2Q+CktJ5q8xGNgflC8qeryPQbgoVRKkMjK1xb4UxxNZFXWQYwDNeMxQs
+         5c1U3T0DmqKpdXYsRI3Y3qj88KHVt5v+pChHZxOGVCxrFjhe3O7NowYlrLYqmp47B+tQ
+         Rx7A==
+X-Gm-Message-State: ANhLgQ29FKA5/625A+gsG+Oi2VgzO6vrdsSPXZjb/t79XBRQS5ik3h2Y
+        +R9bMzcrrBNAdFNp/gSM7Zeqq0qERqcZ2PSDcoLQhlzM
+X-Google-Smtp-Source: ADFU+vt6hs8lhOGWw8jufq1I9KHJ+9mX0sD06x1fgIeR72ObclEhhEE5yw//2AdtH0SykZpfNjftQQmalg9itST0Y+A=
+X-Received: by 2002:a9d:3a62:: with SMTP id j89mr2922525otc.45.1584070809078;
+ Thu, 12 Mar 2020 20:40:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <1584007547-4802-1-git-send-email-wanpengli@tencent.com>
+ <87r1xxrhb0.fsf@vitty.brq.redhat.com> <CANRm+Cwawew=Xygxmzr2jmgPAKqDxvkqxxzjvoxnRRjC_Jx9Xw@mail.gmail.com>
+ <79141339-3506-1fe4-2e69-8430f4c202bd@intel.com>
+In-Reply-To: <79141339-3506-1fe4-2e69-8430f4c202bd@intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 13 Mar 2020 11:39:58 +0800
+Message-ID: <CANRm+Cw-t2GXnHjOTPEV6BjwZPDZpwvK4QrUNz+AU21UL4rEww@mail.gmail.com>
+Subject: Re: [PATCH] KVM: VMX: Micro-optimize vmexit time when not exposing PMU
+To:     like.xu@intel.com
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 10:20:04AM +0800, Chao Yu wrote:
-> On 2020/3/12 19:14, Sahitya Tummala wrote:
-> > F2FS already has a default timeout of 5 secs for discards that
-> > can be issued during umount, but it can take more than the 5 sec
-> > timeout if the underlying UFS device queue is already full and there
-> > are no more available free tags to be used. In that case, submit_bio()
-> > will wait for the already queued discard requests to complete to get
-> > a free tag, which can potentially take way more than 5 sec.
-> > 
-> > Fix this by submitting the discard requests with REQ_NOWAIT
-> > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > scenario without waiting in the context of submit_bio(). The FS can
-> > then handle these requests by retrying again within the stipulated
-> > discard timeout period to avoid long latencies.
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> >  fs/f2fs/segment.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index fb3e531..a06bbac 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > +	int flag;
-> >  	block_t lstart, start, len, total_len;
-> >  	int err = 0;
-> >  
-> > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > +
-> >  	if (dc->state != D_PREP)
-> >  		return 0;
-> >  
-> > @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> >  		bio->bi_opf |= flag;
-> >  		submit_bio(bio);
-> > +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
-> 
-> If we want to update dc->state, we need to cover it with dc->lock.
+On Fri, 13 Mar 2020 at 11:23, Xu, Like <like.xu@intel.com> wrote:
+>
+> Hi Wanpeng,
+>
+> On 2020/3/12 19:05, Wanpeng Li wrote:
+> > On Thu, 12 Mar 2020 at 18:36, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> >> Wanpeng Li <kernellwp@gmail.com> writes:
+> >>
+> >>> From: Wanpeng Li <wanpengli@tencent.com>
+> >>>
+> >>> PMU is not exposed to guest by most of cloud providers since the bad performance
+> >>> of PMU emulation and security concern. However, it calls perf_guest_switch_get_msrs()
+> >>> and clear_atomic_switch_msr() unconditionally even if PMU is not exposed to the
+> >>> guest before each vmentry.
+> >>>
+> >>> ~1.28% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my
+> >>> SKX server.
+> >>>
+> >>> Before patch:
+> >>> vmcall 1559
+> >>>
+> >>> After patch:
+> >>> vmcall 1539
+> >>>
+> >>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> >>> ---
+> >>>   arch/x86/kvm/vmx/vmx.c | 3 +++
+> >>>   1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> >>> index 40b1e61..fd526c8 100644
+> >>> --- a/arch/x86/kvm/vmx/vmx.c
+> >>> +++ b/arch/x86/kvm/vmx/vmx.c
+> >>> @@ -6441,6 +6441,9 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+> >>>        int i, nr_msrs;
+> >>>        struct perf_guest_switch_msr *msrs;
+> >>>
+> >>> +     if (!vcpu_to_pmu(&vmx->vcpu)->version)
+> >>> +             return;
+> >>> +
+> >>>        msrs = perf_guest_get_msrs(&nr_msrs);
+> >>>
+> >>>        if (!msrs)
+> >> Personally, I'd prefer this to be expressed as
+> >>
+> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> >> index 40b1e6138cd5..ace92076c90f 100644
+> >> --- a/arch/x86/kvm/vmx/vmx.c
+> >> +++ b/arch/x86/kvm/vmx/vmx.c
+> >> @@ -6567,7 +6567,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >>
+> >>          pt_guest_enter(vmx);
+> >>
+> >> -       atomic_switch_perf_msrs(vmx);
+> >> +       if (vcpu_to_pmu(&vmx->vcpu)->version)
+> We may use 'vmx->vcpu.arch.pmu.version'.
 
-Sure, will update it.
+Thanks for confirm this. Maybe this is better:
 
-> 
-> > +			dc->state = D_PREP;
-> 
-> BTW, one dc can be referenced by multiple bios, so dc->state could be updated to
-> D_DONE later by f2fs_submit_discard_endio(), however we just relocate it to
-> pending list... which is inconsistent status.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 40b1e61..b20423c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6567,7 +6567,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
 
-In that case dc->bio_ref will reflect it and until it becomes 0, the dc->state
-will not be updated to D_DONE in f2fs_submit_discard_endio()?
+        pt_guest_enter(vmx);
 
-Thanks,
+-       atomic_switch_perf_msrs(vmx);
++       if (vcpu_to_pmu(vcpu)->version)
++               atomic_switch_perf_msrs(vmx);
+        atomic_switch_umwait_control_msr(vmx);
 
-> 
+        if (enable_preemption_timer)
+
+>
+> I would vote in favor of adding the "unlikely (vmx->vcpu.arch.pmu.version)"
+> check to the atomic_switch_perf_msrs(), which follows pt_guest_enter(vmx).
+
+This is hotpath, let's save the cost of function call.
+
+    Wanpeng
+
+>
+> >> +               atomic_switch_perf_msrs(vmx);
+> >> +
+> > I just hope the beautiful codes before, I testing this version before
+> > sending out the patch, ~30 cycles can be saved which means that ~2%
+> > vmexit time, will update in next version. Let's wait Paolo for other
+> > opinions below.
+>
+> You may factor the cost of the "pmu-> version check' itself (~10 cycles)
+> into your overall 'micro-optimize' revenue.
+>
 > Thanks,
-> 
-> > +			err = dc->error;
-> > +			break;
-> > +		}
-> >  
-> >  		atomic_inc(&dcc->issued_discard);
-> >  
-> > @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> >  			}
-> >  
-> >  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > +			if (dc->error == -EAGAIN) {
-> > +				congestion_wait(BLK_RW_ASYNC, HZ/50);
-> > +				__relocate_discard_cmd(dcc, dc);
-> > +			}
-> >  
-> >  			if (issued >= dpolicy->max_requests)
-> >  				break;
-> > 
-
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> Like Xu
+> >
+> >      Wanpeng
+> >
+> >> Also, (not knowing much about PMU), is
+> >> "vcpu_to_pmu(&vmx->vcpu)->version" check correct?
+> >>
+> >> E.g. in intel_is_valid_msr() correct for Intel PMU or is it stated
+> >> somewhere that it is generic rule?
+> >>
+> >> Also, speaking about cloud providers and the 'micro' nature of this
+> >> optimization, would it rather make sense to introduce a static branch
+> >> (the policy to disable vPMU is likely to be host wide, right)?
+> >>
+> >> --
+> >> Vitaly
+> >>
+>
