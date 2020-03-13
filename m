@@ -2,457 +2,220 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38829C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B382BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05811206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7087A206B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEznxUDy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dx6M4V1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCMTe7 (ORCPT
+        id S1726814AbgCMTlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:34:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40773 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMTe6 (ORCPT
+        Fri, 13 Mar 2020 15:41:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38811 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMTlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:34:58 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j17so8802002lfe.7;
-        Fri, 13 Mar 2020 12:34:53 -0700 (PDT)
+        Fri, 13 Mar 2020 15:41:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x11so8847914wrv.5;
+        Fri, 13 Mar 2020 12:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l/mRv62X0XaIBhtgVxHbjqxj2E9e8KiIBDhSyDykOU8=;
-        b=vEznxUDyFq8Lr/0vdqlxPjATUeuGRpdO0OXx6eB3a+WT3UnG1oh3GDPuFUa+BV+RuY
-         v6wEMjPQe2PJKghmU9N5+feQleT14v/keHpvJ0gVALkBK6dlhHpLIZ76Frr4PTy6yOKk
-         Y5xKOPm2QxiQLYaIzao6m79N8C3rxPg9AxxDkP9CBU8wN6kbRBAV3XWYq1XGvKtNrNaU
-         Qmu7Pbj5KHWW0wU1Bw0O6+vF7KkyO9ANdxeFcIc+q6xnwWH1Mb0kt1VGa38dDYTEqsbl
-         J7rUE5c6LBNa/FestQ0Sx0XYzJr8sJJVrmrFM77JthRoHIWXG87FGq71NcVMlv0mcWYE
-         pqQQ==
+        h=subject:from:to:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=oFgDWqJLcIt8LRMfp2CtIFo918FXysndJI98quJZeeY=;
+        b=dx6M4V1vlrUKaOFHHn0QxpCB4MiAxjfI89YkiisX3qLYFDm7n9o5MHirRDmaEhTkmx
+         FAoqD1ioBsDjFHjNtnKQD5qYUwBQUcPiE5JVMkkZi7e52RPG2xlLEMz1NXPEi0pAY5NK
+         dSVPJnsHAoStO2S0CXuVwkcRZkRJFWrUmWuNpVj5OK4ostUiG8Q/DXziZwX4OTFczdTu
+         wEgQRhQWSXbINe6/3vWwJH05J1fGAYg19v+u2SUSznoQhZNqce1lQmMbMqbpwOPZk/J2
+         5kPutHmXRB05i5jgH6ojV70qrx9Ei2+qqT6NJMtz8OcJ4gNBjAFXcTLRIioG59W0s7vf
+         LTxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l/mRv62X0XaIBhtgVxHbjqxj2E9e8KiIBDhSyDykOU8=;
-        b=OCWbpa2jTfeebIIfFKJA5/PvJTnvKCX+y2jnEfyhKJcqm1btQiRMTSbMye819k5xpy
-         ER+IVfVa/e8fc57K7Fkn0MbrpCCyNHqYxr82IUHGe4lgxzIDKbmEQOWQpimkaDjQTJwT
-         cI/wCW/OXvcsQG8MRKedjCopzxAvmH/bCOsFg5BnADEvOJIV8bFv9M7gccQADO0WXkew
-         C7OZsAYwa7V3e+Uxv6QI0iJKuEGoWhvi6gUBg9z7TetNtE31NnOywbEDh+wltIuvlhaX
-         xeRogNJOeruNw99LYmNVAyrGcD+h8uNcvq3gIUgOn6fcyTHHZVgo6OEuVKVlzw/sNJPI
-         hpVQ==
-X-Gm-Message-State: ANhLgQ38TaaFVfFAh3YGt9mRqAIZvXqyL1AmkdkoK6Xvx5g9l7FvumHh
-        dusnZ6d5lJs+HeMSw6I2s4oppGEQaVASVhr4dpg=
-X-Google-Smtp-Source: ADFU+vuNNbRf7UsKESIe+ZISnm+21+iEa/4l2p9GbRhfct05mfb9xSbpUgLASXM8XnRWB0vAYE0usF96k2AOEJ39Wt0=
-X-Received: by 2002:a05:6512:15e:: with SMTP id m30mr9061753lfo.120.1584128092611;
- Fri, 13 Mar 2020 12:34:52 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=oFgDWqJLcIt8LRMfp2CtIFo918FXysndJI98quJZeeY=;
+        b=VYZjLHtI/RxjTf3Mpj3/o9M4byAFlnyubJ4oCYqwwQtMq21sNFAqzthFE8bI/nKPsc
+         CxRUKO1zMsPZoTgx59soICNb2hfqkUiqu/5q45IhH7q6rAG2nloyuqZyEHoEd1xT5O5I
+         i1gD8c20a+HY2s4Sl4AnQJKVTqiSAgwuT6aQ2pZQ7Kq5IPnkXd+oVFrY+OFc9bfh7mdC
+         i4K2H5UMsd1cAFGF2dH1RYI/1ggBo2dLko+ou4E+/mdQ00JGGzKBvBCtpl35ZF83C994
+         YYdMwqebP0lqfhcQ2pLiGNRYb/s0x9n5XBMeHcS4C7dolg8IJ8nNrhFltq3WnRivEpXi
+         9Vrw==
+X-Gm-Message-State: ANhLgQ1U4ge+wvLjPbRJcXefDvNjXx29XOHrGvNmAXDMN0gNy0GMK5PY
+        Qy1pOk8hDNmJaGt/U6ifZKejj9A/
+X-Google-Smtp-Source: ADFU+vvF5s61/rR0nF2XeFYs70jr90V3p5nnrevnEAM5O6tZZY4E2/g/FKcUz+/Qnrkd62Brb3EtPg==
+X-Received: by 2002:adf:de8b:: with SMTP id w11mr15086490wrl.258.1584128468316;
+        Fri, 13 Mar 2020 12:41:08 -0700 (PDT)
+Received: from [192.168.43.52] ([109.126.140.227])
+        by smtp.gmail.com with ESMTPSA id f207sm19825794wme.9.2020.03.13.12.41.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 12:41:07 -0700 (PDT)
+Subject: Re: [PATCH 5.6] io_uring: NULL-deref for IOSQE_{ASYNC,DRAIN}
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <cffb0da4-bb52-8e42-c8ab-a09d0b678426@gmail.com>
+Date:   Fri, 13 Mar 2020 22:40:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <ilia.lin@kernel.org> <20200313175213.8654-1-ansuelsmth@gmail.com>
-In-Reply-To: <20200313175213.8654-1-ansuelsmth@gmail.com>
-From:   Ilia Lin <ilia.lin@gmail.com>
-Date:   Fri, 13 Mar 2020 21:34:41 +0200
-Message-ID: <CA+5LGR3WJkwFGPWNM2XAqdhaNZ2yXreB8Ni36BKswx0G=i_5fg@mail.gmail.com>
-Subject: Re: [PATCH v2] cpufreq: qcom: Add support for krait based socs
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ilia Lin <ilia.lin@kernel.org>,
-        Sricharan R <sricharan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        "open list:QUALCOMM CPUFREQ DRIVER MSM8996/APQ8096" 
-        <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="cCA3GJdAKQEr0LutJdLQgksPPGILFBrIc"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Ilia Lin <ilia.lin@kernel.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--cCA3GJdAKQEr0LutJdLQgksPPGILFBrIc
+Content-Type: multipart/mixed; boundary="D0TMx2328THvUEcSx0ZZ8Mu6TKzxxN1cu";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <cffb0da4-bb52-8e42-c8ab-a09d0b678426@gmail.com>
+Subject: Re: [PATCH 5.6] io_uring: NULL-deref for IOSQE_{ASYNC,DRAIN}
+References: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
+In-Reply-To: <3fff749b19ae1c3c2d59e88462a8a5bfc9e6689f.1584127615.git.asml.silence@gmail.com>
 
-On Fri, Mar 13, 2020 at 7:52 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->
-> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
-> that has KRAIT processors the voltage/current value of each OPP
-> varies based on the silicon variant in use.
->
-> The required OPP related data is determined based on
-> the efuse value. This is similar to the existing code for
-> kryo cores. So adding support for krait cores here.
->
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+--D0TMx2328THvUEcSx0ZZ8Mu6TKzxxN1cu
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 13/03/2020 22:29, Pavel Begunkov wrote:
+> Processing links, io_submit_sqe() prepares requests, drops sqes, and
+> passes them with sqe=3DNULL to io_queue_sqe(). There IOSQE_DRAIN and/or=
+
+> IOSQE_ASYNC requests will go through the same prep, which doesn't expec=
+t
+> sqe=3DNULL and fail with NULL pointer deference.
+>=20
+> Always do full prepare including io_alloc_async_ctx() for linked
+> requests, and then it can skip the second preparation.
+
+BTW, linked_timeout test fails for a good reason. The test passes NULL bu=
+ffer to
+writev and expects it to -EFAULT in io_req_defer_prep(). However,
+io_submit_sqe() catches this case (see head of a link case), sets
+REQ_F_FAIL_LINK and allows it to fail with -ECANCELED in io_queue_link_he=
+ad().
+
+
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 > ---
-> v2:
-> * Use switch when possible
-> * Change free_opp1 to free_opp_names
-> * Check if nvmem_cell_read fails
->
->  .../bindings/opp/qcom-nvmem-cpufreq.txt       |   3 +-
->  drivers/cpufreq/Kconfig.arm                   |   2 +-
->  drivers/cpufreq/cpufreq-dt-platdev.c          |   5 +
->  drivers/cpufreq/qcom-cpufreq-nvmem.c          | 191 ++++++++++++++++--
->  4 files changed, 183 insertions(+), 18 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-> index 4751029b9b74..64f07417ecfb 100644
-> --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-> @@ -19,7 +19,8 @@ In 'cpu' nodes:
->
->  In 'operating-points-v2' table:
->  - compatible: Should be
-> -       - 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
-> +       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
-> +                                            apq8064, ipq8064, msm8960 and ipq8074.
->
->  Optional properties:
->  --------------------
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 3858d86cf409..15c1a1231516 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -128,7 +128,7 @@ config ARM_OMAP2PLUS_CPUFREQ
->
->  config ARM_QCOM_CPUFREQ_NVMEM
->         tristate "Qualcomm nvmem based CPUFreq"
-> -       depends on ARM64
-> +       depends on ARCH_QCOM
->         depends on QCOM_QFPROM
->         depends on QCOM_SMEM
->         select PM_OPP
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index f2ae9cd455c1..cb9db16bea61 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -141,6 +141,11 @@ static const struct of_device_id blacklist[] __initconst = {
->         { .compatible = "ti,dra7", },
->         { .compatible = "ti,omap3", },
->
-> +       { .compatible = "qcom,ipq8064", },
-> +       { .compatible = "qcom,apq8064", },
-> +       { .compatible = "qcom,msm8974", },
-> +       { .compatible = "qcom,msm8960", },
-> +
->         { }
->  };
->
-> diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-> index f0d2d5035413..a1b8238872a2 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-> @@ -49,12 +49,14 @@ struct qcom_cpufreq_drv;
->  struct qcom_cpufreq_match_data {
->         int (*get_version)(struct device *cpu_dev,
->                            struct nvmem_cell *speedbin_nvmem,
-> +                          char **pvs_name,
->                            struct qcom_cpufreq_drv *drv);
->         const char **genpd_names;
->  };
->
->  struct qcom_cpufreq_drv {
-> -       struct opp_table **opp_tables;
-> +       struct opp_table **names_opp_tables;
-> +       struct opp_table **hw_opp_tables;
->         struct opp_table **genpd_opp_tables;
->         u32 versions;
->         const struct qcom_cpufreq_match_data *data;
-> @@ -62,6 +64,84 @@ struct qcom_cpufreq_drv {
->
->  static struct platform_device *cpufreq_dt_pdev, *cpufreq_pdev;
->
-> +static void get_krait_bin_format_a(struct device *cpu_dev,
-> +                                         int *speed, int *pvs, int *pvs_ver,
-> +                                         struct nvmem_cell *pvs_nvmem, u8 *buf)
-> +{
-> +       u32 pte_efuse;
-> +
-> +       pte_efuse = *((u32 *)buf);
-> +
-> +       *speed = pte_efuse & 0xf;
-> +       if (*speed == 0xf)
-> +               *speed = (pte_efuse >> 4) & 0xf;
-> +
-> +       if (*speed == 0xf) {
-> +               *speed = 0;
-> +               dev_warn(cpu_dev, "Speed bin: Defaulting to %d\n", *speed);
-> +       } else {
-> +               dev_dbg(cpu_dev, "Speed bin: %d\n", *speed);
-> +       }
-> +
-> +       *pvs = (pte_efuse >> 10) & 0x7;
-> +       if (*pvs == 0x7)
-> +               *pvs = (pte_efuse >> 13) & 0x7;
-> +
-> +       if (*pvs == 0x7) {
-> +               *pvs = 0;
-> +               dev_warn(cpu_dev, "PVS bin: Defaulting to %d\n", *pvs);
-> +       } else {
-> +               dev_dbg(cpu_dev, "PVS bin: %d\n", *pvs);
-> +       }
-> +}
-> +
-> +static void get_krait_bin_format_b(struct device *cpu_dev,
-> +                                         int *speed, int *pvs, int *pvs_ver,
-> +                                         struct nvmem_cell *pvs_nvmem, u8 *buf)
-> +{
-> +       u32 pte_efuse, redundant_sel;
-> +
-> +       pte_efuse = *((u32 *)buf);
-> +       redundant_sel = (pte_efuse >> 24) & 0x7;
-> +
-> +       *pvs_ver = (pte_efuse >> 4) & 0x3;
-> +
-> +       switch (redundant_sel) {
-> +       case 1:
-> +               *pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
-> +               *speed = (pte_efuse >> 27) & 0xf;
-> +               break;
-> +       case 2:
-> +               *pvs = (pte_efuse >> 27) & 0xf;
-> +               *speed = pte_efuse & 0x7;
-> +               break;
-> +       default:
-> +               /* 4 bits of PVS are in efuse register bits 31, 8-6. */
-> +               *pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
-> +               *speed = pte_efuse & 0x7;
-> +       }
-> +
-> +       /* Check SPEED_BIN_BLOW_STATUS */
-> +       if (pte_efuse & BIT(3)) {
-> +               dev_dbg(cpu_dev, "Speed bin: %d\n", *speed);
-> +       } else {
-> +               dev_warn(cpu_dev, "Speed bin not set. Defaulting to 0!\n");
-> +               *speed = 0;
-> +       }
-> +
-> +       /* Check PVS_BLOW_STATUS */
-> +       pte_efuse = *(((u32 *)buf) + 4);
-> +       pte_efuse &= BIT(21);
-> +       if (pte_efuse) {
-> +               dev_dbg(cpu_dev, "PVS bin: %d\n", *pvs);
-> +       } else {
-> +               dev_warn(cpu_dev, "PVS bin not set. Defaulting to 0!\n");
-> +               *pvs = 0;
-> +       }
-> +
-> +       dev_dbg(cpu_dev, "PVS version: %d\n", *pvs_ver);
-> +}
-> +
->  static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
+>  fs/io_uring.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 55afae6f0cf4..9d43efbec960 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -4813,6 +4813,9 @@ static int io_req_defer_prep(struct io_kiocb *req=
+,
 >  {
->         size_t len;
-> @@ -93,11 +173,13 @@ static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
->
->  static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
->                                           struct nvmem_cell *speedbin_nvmem,
-> +                                         char **pvs_name,
->                                           struct qcom_cpufreq_drv *drv)
->  {
->         size_t len;
->         u8 *speedbin;
->         enum _msm8996_version msm8996_version;
-> +       *pvs_name = NULL;
->
->         msm8996_version = qcom_cpufreq_get_msm_id();
->         if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
-> @@ -125,10 +207,51 @@ static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
->         return 0;
->  }
->
-> +static int qcom_cpufreq_krait_name_version(struct device *cpu_dev,
-> +                                          struct nvmem_cell *speedbin_nvmem,
-> +                                          char **pvs_name,
-> +                                          struct qcom_cpufreq_drv *drv)
-> +{
-> +       int speed = 0, pvs = 0, pvs_ver = 0;
-> +       u8 *speedbin;
-> +       size_t len;
+>  	ssize_t ret =3D 0;
+> =20
+> +	if (!sqe)
+> +		return 0;
 > +
-> +       speedbin = nvmem_cell_read(speedbin_nvmem, &len);
+>  	if (io_op_defs[req->opcode].file_table) {
+>  		ret =3D io_grab_files(req);
+>  		if (unlikely(ret))
+> @@ -5655,6 +5658,11 @@ static bool io_submit_sqe(struct io_kiocb *req, =
+const struct io_uring_sqe *sqe,
+>  		if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
+>  			req->flags |=3D REQ_F_LINK;
+>  			INIT_LIST_HEAD(&req->link_list);
 > +
-> +       if (IS_ERR(speedbin))
-> +               return PTR_ERR(speedbin);
-> +
-> +       switch (len) {
-> +       case 4:
-> +               get_krait_bin_format_a(cpu_dev, &speed, &pvs, &pvs_ver,
-> +                                      speedbin_nvmem, speedbin);
-> +               break;
-> +       case 8:
-> +               get_krait_bin_format_b(cpu_dev, &speed, &pvs, &pvs_ver,
-> +                                      speedbin_nvmem, speedbin);
-> +               break;
-> +       default:
-> +               dev_err(cpu_dev, "Unable to read nvmem data. Defaulting to 0!\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       snprintf(*pvs_name, sizeof("speedXX-pvsXX-vXX"), "speed%d-pvs%d-v%d",
-> +                speed, pvs, pvs_ver);
-> +
-> +       drv->versions = (1 << speed);
-> +
-> +       kfree(speedbin);
-> +       return 0;
-> +}
-> +
->  static const struct qcom_cpufreq_match_data match_data_kryo = {
->         .get_version = qcom_cpufreq_kryo_name_version,
->  };
->
-> +static const struct qcom_cpufreq_match_data match_data_krait = {
-> +       .get_version = qcom_cpufreq_krait_name_version,
-> +};
-> +
->  static const char *qcs404_genpd_names[] = { "cpr", NULL };
->
->  static const struct qcom_cpufreq_match_data match_data_qcs404 = {
-> @@ -141,6 +264,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->         struct nvmem_cell *speedbin_nvmem;
->         struct device_node *np;
->         struct device *cpu_dev;
-> +       char *pvs_name = "speedXX-pvsXX-vXX";
->         unsigned cpu;
->         const struct of_device_id *match;
->         int ret;
-> @@ -153,7 +277,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->         if (!np)
->                 return -ENOENT;
->
-> -       ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
-> +       ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
->         if (!ret) {
->                 of_node_put(np);
->                 return -ENOENT;
-> @@ -181,7 +305,8 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->                         goto free_drv;
->                 }
->
-> -               ret = drv->data->get_version(cpu_dev, speedbin_nvmem, drv);
-> +               ret = drv->data->get_version(cpu_dev,
-> +                                                       speedbin_nvmem, &pvs_name, drv);
->                 if (ret) {
->                         nvmem_cell_put(speedbin_nvmem);
->                         goto free_drv;
-> @@ -190,12 +315,20 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->         }
->         of_node_put(np);
->
-> -       drv->opp_tables = kcalloc(num_possible_cpus(), sizeof(*drv->opp_tables),
-> +       drv->names_opp_tables = kcalloc(num_possible_cpus(),
-> +                                 sizeof(*drv->names_opp_tables),
->                                   GFP_KERNEL);
-> -       if (!drv->opp_tables) {
-> +       if (!drv->names_opp_tables) {
->                 ret = -ENOMEM;
->                 goto free_drv;
->         }
-> +       drv->hw_opp_tables = kcalloc(num_possible_cpus(),
-> +                                 sizeof(*drv->hw_opp_tables),
-> +                                 GFP_KERNEL);
-> +       if (!drv->hw_opp_tables) {
-> +               ret = -ENOMEM;
-> +               goto free_opp_names;
-> +       }
->
->         drv->genpd_opp_tables = kcalloc(num_possible_cpus(),
->                                         sizeof(*drv->genpd_opp_tables),
-> @@ -213,11 +346,23 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->                 }
->
->                 if (drv->data->get_version) {
-> -                       drv->opp_tables[cpu] =
-> -                               dev_pm_opp_set_supported_hw(cpu_dev,
-> -                                                           &drv->versions, 1);
-> -                       if (IS_ERR(drv->opp_tables[cpu])) {
-> -                               ret = PTR_ERR(drv->opp_tables[cpu]);
-> +
-> +                       if (pvs_name) {
-> +                               drv->names_opp_tables[cpu] = dev_pm_opp_set_prop_name(
-> +                                                                    cpu_dev,
-> +                                                                    pvs_name);
-> +                               if (IS_ERR(drv->names_opp_tables[cpu])) {
-> +                                       ret = PTR_ERR(drv->names_opp_tables[cpu]);
-> +                                       dev_err(cpu_dev, "Failed to add OPP name %s\n",
-> +                                               pvs_name);
-> +                                       goto free_opp;
-> +                               }
-> +                       }
-> +
-> +                       drv->hw_opp_tables[cpu] = dev_pm_opp_set_supported_hw(
-> +                                                                        cpu_dev, &drv->versions, 1);
-> +                       if (IS_ERR(drv->hw_opp_tables[cpu])) {
-> +                               ret = PTR_ERR(drv->hw_opp_tables[cpu]);
->                                 dev_err(cpu_dev,
->                                         "Failed to set supported hardware\n");
->                                 goto free_genpd_opp;
-> @@ -259,11 +404,18 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
->         kfree(drv->genpd_opp_tables);
->  free_opp:
->         for_each_possible_cpu(cpu) {
-> -               if (IS_ERR_OR_NULL(drv->opp_tables[cpu]))
-> +               if (IS_ERR_OR_NULL(drv->names_opp_tables[cpu]))
-> +                       break;
-> +               dev_pm_opp_put_prop_name(drv->names_opp_tables[cpu]);
-> +       }
-> +       for_each_possible_cpu(cpu) {
-> +               if (IS_ERR_OR_NULL(drv->hw_opp_tables[cpu]))
->                         break;
-> -               dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
-> +               dev_pm_opp_put_supported_hw(drv->hw_opp_tables[cpu]);
->         }
-> -       kfree(drv->opp_tables);
-> +       kfree(drv->hw_opp_tables);
-> +free_opp_names:
-> +       kfree(drv->names_opp_tables);
->  free_drv:
->         kfree(drv);
->
-> @@ -278,13 +430,16 @@ static int qcom_cpufreq_remove(struct platform_device *pdev)
->         platform_device_unregister(cpufreq_dt_pdev);
->
->         for_each_possible_cpu(cpu) {
-> -               if (drv->opp_tables[cpu])
-> -                       dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
-> +               if (drv->names_opp_tables[cpu])
-> +                       dev_pm_opp_put_supported_hw(drv->names_opp_tables[cpu]);
-> +               if (drv->hw_opp_tables[cpu])
-> +                       dev_pm_opp_put_supported_hw(drv->hw_opp_tables[cpu]);
->                 if (drv->genpd_opp_tables[cpu])
->                         dev_pm_opp_detach_genpd(drv->genpd_opp_tables[cpu]);
->         }
->
-> -       kfree(drv->opp_tables);
-> +       kfree(drv->names_opp_tables);
-> +       kfree(drv->hw_opp_tables);
->         kfree(drv->genpd_opp_tables);
->         kfree(drv);
->
-> @@ -303,6 +458,10 @@ static const struct of_device_id qcom_cpufreq_match_list[] __initconst = {
->         { .compatible = "qcom,apq8096", .data = &match_data_kryo },
->         { .compatible = "qcom,msm8996", .data = &match_data_kryo },
->         { .compatible = "qcom,qcs404", .data = &match_data_qcs404 },
-> +       { .compatible = "qcom,ipq8064", .data = &match_data_krait },
-> +       { .compatible = "qcom,apq8064", .data = &match_data_krait },
-> +       { .compatible = "qcom,msm8974", .data = &match_data_krait },
-> +       { .compatible = "qcom,msm8960", .data = &match_data_krait },
->         {},
->  };
->
-> --
-> 2.25.0
->
+> +			if (io_alloc_async_ctx(req)) {
+> +				ret =3D -EAGAIN;
+> +				goto err_req;
+> +			}
+>  			ret =3D io_req_defer_prep(req, sqe);
+>  			if (ret)
+>  				req->flags |=3D REQ_F_FAIL_LINK;
+>=20
+
+--=20
+Pavel Begunkov
+
+
+--D0TMx2328THvUEcSx0ZZ8Mu6TKzxxN1cu--
+
+--cCA3GJdAKQEr0LutJdLQgksPPGILFBrIc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl5r4aAACgkQWt5b1Glr
++6Wm+A//aKpCUcBSZcsjq2n/tBNz7BxOkTDViGlZer1feq+qPFICwUceghpDWE4S
+uRAm+gOGN8ud/RpQPcKVzhyOY0J+tJh4IK/Si3BHlCceh8MO1vVY+WfiKbzx8/TZ
+qE5ZL94qH4cWWCI/f+Rzkuf6ZbHjmkh7KNcJf9lghsb1ei/DU0aMn6KEYDa2aqwN
+5z0qyLVqiXltj9sSmL6I3F3BJAC5caFOk/K9DudoX2SfmYoR9EVxpbzVjEcfbahU
+RSTFA8YopkZ9fa8s8wTHd1BqLfOCZC5CubUEl8n8BXlCQj8iqQYK3mZ+I/nIrT+b
+/JhN3FOlkOxDbKqNWanA5+x8KJAuQJN5FcdgigtI4laFKyYSPOT7YXLpuCewnEac
+9SUpJu1xpOPiJbRX112RkyD0raOf7yGpwXLCUC0H6IJHbbzQf/T5oOq4OzRg1JH7
+bGAVwM209pW9CUtXZkBpz182NRuxcsoMF+W/bE52zt3n43jercRRG3mt5DzyEZxP
+KJwEZLWIF/FQIWsr1PYC6AAgRG8e77ITYNf0moaAibhXjwYKbuTciIbLq58bnKBs
+HnqcEpo5uHymy3H1oLhzqK/hhafbCb1LbLf8AtpBlsCiPS4YsdI6rlZc/aeC/VF7
+hAIJSsYEHkZ8UkqpN2CTdeZx3wmcOUab5dH+fXrTanoVkDfz6s4=
+=+VzN
+-----END PGP SIGNATURE-----
+
+--cCA3GJdAKQEr0LutJdLQgksPPGILFBrIc--
