@@ -2,133 +2,101 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0C4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF12EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FCA20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92D520724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HEtJLVNw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cM5801L0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgCMKwK (ORCPT
+        id S1726480AbgCMKzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:52:10 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:56073 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbgCMKwK (ORCPT
+        Fri, 13 Mar 2020 06:55:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58810 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726364AbgCMKzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:52:10 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Chv9j1v5yhVf8ChvDjOTmd; Fri, 13 Mar 2020 11:52:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1584096728; bh=XgNQEpf17BQrRrtbwqWNWDVbPQDeyw/hevpZ0P7tT2Q=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=HEtJLVNwTfTp+Xt4zdLoxkqbbk42Vot59L4pqGVceHa5gQn0FKimkgQYS4+p03kBo
-         AFTgw6BCCJ3C4Fs+RagzsYkef03tWeKWqCMLxKyO4SxwnoHLc+ZbGIc73eit7/4OlJ
-         3RJf/2MaY2eaUReeNxe23sSTSFvL/1TOnvHUJ0A+0OeYiD6VChqwMFBxi/zcOUChwF
-         FEL7SXBAghggW0RzmE9y2D/UQeEwiV/aTleP0MGZsxKRlwSLj6zl8IBBQ0AU6xEjSG
-         XGJvrqY85vrAW171lAI7gyjLGUkhjMfG1NwHiLQHWUDSLnIUDz4XyxHMLGiDyb+mrp
-         8i4gpkIe8Yq/Q==
-Subject: Re: [PATCH 2/8] media: adv748x: add audio mute control and output
- selection ioctls
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141521.GC3606@pflmari>
- <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
- <20200313102600.GF3832@pflmari>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <c260defe-bb3c-0dc2-476f-5cf8ff27b915@xs4all.nl>
-Date:   Fri, 13 Mar 2020 11:52:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 06:55:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584096935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OKE4vw7Aq1hkeMcRey40fPC/eJbamV54hF6NTYtSkDU=;
+        b=cM5801L0zlIE2JURaVX7C/h4w88RhYNHQu4LQH6ZQ+v4Z/ePsRa+2bcBaXyeO2aKY6jD0C
+        75pOuqD6Wckz+YfyuSL1E45ySwgnrSwONUEaZ9AJNdWBIX62v91IuH9GcfEaXUzdt/eiQ2
+        tmqcdTVXPceOeVpkK5KIepP+R6T323c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-xiJ0T0aOOeuAPdCscmJDng-1; Fri, 13 Mar 2020 06:55:31 -0400
+X-MC-Unique: xiJ0T0aOOeuAPdCscmJDng-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAF8B801E6C;
+        Fri, 13 Mar 2020 10:55:30 +0000 (UTC)
+Received: from localhost (ovpn-12-51.pek2.redhat.com [10.72.12.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B087C19C6A;
+        Fri, 13 Mar 2020 10:55:29 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 18:55:26 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200313105526.GM27711@MiWiFi-R3L-srv>
+References: <20200313214214.4d2e2af6@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200313102600.GF3832@pflmari>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEKRLqenygj6TEyXEiRcxy9HK3lxscJw3t3rlNCf90vl9x7Qy/dyNnY5TO60y8eB+miEY/CLUsiqnyR1ljHOd/oyWxwV3aot+7NoT973WtnujiMPYPyN
- aDnPTaJRDv+ewpgOSqFkUpt5JacbF38ctyDMSLx9dKkGz09HK5LX8G34Xqs1rAeOsyQMsAYWUy8S9bSyRA7tvnJ2ygeL7bEQgFwkJGBNQc7J1898AnTn/xuU
- yQG4fZS7ExOJNh60XuLqJHtFscxO/ETq5H2xqYJl7w1K9RGm18FCpR8BVu3OHXwfVU/C0ZSj5qoYeVh3QpEvLUm6kSXHYJrzR+Zla1drE2BeB4UD/L+d/GjS
- +BjEbtiIF/Dw8hrP35sYD++1NbzFFKqCjyrhtbnFiZ5lvJF2YGLl7do8rq6RJW8jaaxYKBe5XVFrB073oQNwpCjmrIQXGqN/SHzwbt9EFLss3Q6ndhDfGOc1
- dY3x1H5ULrq9ydbCbR4jwoZmT2gRKIfAiaYfdv0QHs3HZYjTC3+QtTWjY039CL91wysydPbgQ3eKZJ/dU2gu/IICfeeI3J1/g3EeDS8Xe4afMoB+ttnhFPtm
- 5Og=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313214214.4d2e2af6@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 11:26 AM, Alex Riesen wrote:
-> Hi Hans,
+On 03/13/20 at 09:42pm, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Hans Verkuil, Fri, Mar 13, 2020 09:16:11 +0100:
->> On 1/13/20 3:15 PM, Alex Riesen wrote:
->>> This change implements audio-related V4L2 ioctls for the HDMI subdevice.
->>
->> This is really where things go wrong. These V4L2 audio ioctls are meant for
->> old PCI TV tuner devices where the audio was implemented as audio jack outputs
->> that are typically looped back to audio inputs on a (PCI) soundcard. And when
->> these ioctls were designed ALSA didn't even exist.
-> 
-> I see. That was before my time :)
-> 
->> Generally an hdmi driver will configure the i2s audio automatically, which is
->> typically connected to the SoC and controlled by the ALSA driver of the SoC,
->> but there may well be missing features (audio never got a lot of attention in
->> hdmi receivers). So what I would like to know is: what features are missing?
-> 
-> Well, the audio is missing. The current adv748x driver does not export the
-> audio features of the device at all. There is no code to enable the I2S audio
-> output and it is disabled (all clock and the data lines) by default.
+> After merging the akpm-current tree, today's linux-next build (x86_64
+> allnoconfig) produced this warning:
 
-Sorry, I was vague in my question. Obviously that needs to be added, but besides
-adding the low-level i2s support I was wondering if there are additional things
-that need to be exposed to userspace in order for audio to fully work.
+I tried with allnoconfig on x86_64, make doesn't trigger below warnings.
+
+Hi Andrew,
+
+Should we fix this kind of warning? If have to, I'll try to make several 
+macro functions like subsection_map_init does for !CONFIG_SPARSEMEM.
 
 > 
-> But, by now it seems to be clear that implementation of ALSA SoC DAI
-> interfaces is the way to support the audio.
+> mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-Wunused-function]
+>   311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>       |            ^~~~~~~~~~~~~~~~~~~
+> mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used [-Wunused-function]
+>   306 | static bool is_subsection_map_empty(struct mem_section *ms)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~
+> mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-Wunused-function]
+>   301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>       |            ^~~~~~~~~~~~~~~~~~~~
 > 
-> And I am already slowly working on it.
+> Introduced by commits
 > 
->> Anything missing can likely be resolved by adding HDMI audio specific V4L2 controls,
->> which would be the right approach for this.
->>
->> So I would expect to see a proposal for V4L2_CID_DV_RX_AUDIO_ controls to be
->> added here:
->>
->> https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-dv.html
+>   38eb09ac7c29 ("mm/sparse.c: introduce new function fill_subsection_map()")
+>   334411156ba6 ("mm/sparse.c: introduce a new function clear_subsection_map()")
 > 
-> This seems to be an explicitly "digital video" control class. And it has no
-> control option for mute. Or did you mean a similarly structured new class for
-> "digital audio"?
+> Or maybe laster patches.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-There are no DV_ audio controls at all today. So any new audio controls would be
-added to the DV class. But if there is nothing that needs to be exposed, then
-nothing needs to be added :-)
-
-Regards,
-
-	Hans
-
-> 
-> This feels like an overkill for this particular driver...
-> 
-> Regards,
-> Alex
-> 
 
