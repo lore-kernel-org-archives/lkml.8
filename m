@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C23C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F0F20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7ED20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgCMXyp (ORCPT
+        id S1728016AbgCMXyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:54:45 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50218 "EHLO
+        Fri, 13 Mar 2020 19:54:55 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50190 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgCMXyI (ORCPT
+        with ESMTP id S1727847AbgCMXyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:54:08 -0400
+        Fri, 13 Mar 2020 19:54:07 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7y-00B6f9-Qe; Fri, 13 Mar 2020 23:54:06 +0000
+        id 1jCu7x-00B6eS-QB; Fri, 13 Mar 2020 23:54:05 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 69/69] lookup_open(): don't bother with fallbacks to lookup+create
-Date:   Fri, 13 Mar 2020 23:53:57 +0000
-Message-Id: <20200313235357.2646756-69-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 62/69] link_path_walk(): sample parent's i_uid and i_mode for the last component
+Date:   Fri, 13 Mar 2020 23:53:50 +0000
+Message-Id: <20200313235357.2646756-62-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,101 +42,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-We fall back to lookup+create (instead of atomic_open) in several cases:
-	1) we don't have write access to filesystem and O_TRUNC is
-present in the flags.  It's not something we want ->atomic_open() to
-see - it just might go ahead and truncate the file.  However, we can
-pass it the flags sans O_TRUNC - eventually do_open() will call
-handle_truncate() anyway.
-	2) we have O_CREAT | O_EXCL and we can't write to parent.
-That's going to be an error, of course, but we want to know _which_
-error should that be - might be EEXIST (if file exists), might be
-EACCES or EROFS.  Simply stripping O_CREAT (and checking if we see
-ENOENT) would suffice, if not for O_EXCL.  However, we used to have
-->atomic_open() fully responsible for rejecting O_CREAT | O_EXCL
-on existing file and just stripping O_CREAT would've disarmed
-those checks.  With nothing downstream to catch the problem -
-FMODE_OPENED used to be "don't bother with EEXIST checks,
-->atomic_open() has done those".  Now EEXIST checks downstream
-are skipped only if FMODE_CREATED is set - FMODE_OPENED alone
-is not enough.  That has eliminated the need to fall back onto
-lookup+create path in this case.
-	3) O_WRONLY or O_RDWR when we have no write access to
-filesystem, with nothing else objectionable.  Fallback is
-(and had always been) pointless.
-
-IOW, we don't really need that fallback; all we need in such
-cases is to trim O_TRUNC and O_CREAT properly.
-
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 34 +++++++++-------------------------
- 1 file changed, 9 insertions(+), 25 deletions(-)
+ fs/namei.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 36b15f5b09bd..f4ac81b60a95 100644
+index c4b6e3c969b7..aa1a74c5f52d 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -2938,9 +2938,6 @@ static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
- 	struct inode *dir =  nd->path.dentry->d_inode;
- 	int error;
+@@ -505,6 +505,8 @@ struct nameidata {
+ 	struct nameidata *saved;
+ 	unsigned	root_seq;
+ 	int		dfd;
++	kuid_t		dir_uid;
++	umode_t		dir_mode;
+ } __randomize_layout;
  
--	if (!(~open_flag & (O_EXCL | O_CREAT)))	/* both O_EXCL and O_CREAT */
--		open_flag &= ~O_TRUNC;
+ static void set_nameidata(struct nameidata *p, int dfd, struct filename *name)
+@@ -938,9 +940,6 @@ int sysctl_protected_regular __read_mostly;
+  */
+ static inline int may_follow_link(struct nameidata *nd, const struct inode *inode)
+ {
+-	const struct inode *parent;
+-	kuid_t puid;
 -
- 	if (nd->flags & LOOKUP_DIRECTORY)
- 		open_flag |= O_DIRECTORY;
+ 	if (!sysctl_protected_symlinks)
+ 		return 0;
  
-@@ -3037,32 +3034,20 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
- 	 * Another problem is returing the "right" error value (e.g. for an
- 	 * O_EXCL open we want to return EEXIST not EROFS).
- 	 */
-+	if (unlikely(!got_write))
-+		open_flag &= ~O_TRUNC;
+@@ -949,13 +948,11 @@ static inline int may_follow_link(struct nameidata *nd, const struct inode *inod
+ 		return 0;
+ 
+ 	/* Allowed if parent directory not sticky and world-writable. */
+-	parent = nd->inode;
+-	if ((parent->i_mode & (S_ISVTX|S_IWOTH)) != (S_ISVTX|S_IWOTH))
++	if ((nd->dir_mode & (S_ISVTX|S_IWOTH)) != (S_ISVTX|S_IWOTH))
+ 		return 0;
+ 
+ 	/* Allowed if parent directory and link owner match. */
+-	puid = parent->i_uid;
+-	if (uid_valid(puid) && uid_eq(puid, inode->i_uid))
++	if (uid_valid(nd->dir_uid) && uid_eq(nd->dir_uid, inode->i_uid))
+ 		return 0;
+ 
+ 	if (nd->flags & LOOKUP_RCU)
+@@ -2158,6 +2155,8 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ OK:
+ 			/* pathname or trailing symlink, done */
+ 			if (!depth) {
++				nd->dir_uid = nd->inode->i_uid;
++				nd->dir_mode = nd->inode->i_mode;
+ 				nd->flags &= ~LOOKUP_PARENT;
+ 				return 0;
+ 			}
+@@ -3223,8 +3222,6 @@ static const char *open_last_lookups(struct nameidata *nd,
+ static const char *do_last(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
+-	kuid_t dir_uid = nd->inode->i_uid;
+-	umode_t dir_mode = nd->inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool do_truncate;
+ 	int acc_mode;
+@@ -3240,7 +3237,7 @@ static const char *do_last(struct nameidata *nd,
  	if (open_flag & O_CREAT) {
-+		if (open_flag & O_EXCL)
-+			open_flag &= ~O_TRUNC;
- 		if (!IS_POSIXACL(dir->d_inode))
- 			mode &= ~current_umask();
--		if (unlikely(!got_write)) {
--			create_error = -EROFS;
--			open_flag &= ~O_CREAT;
--			if (open_flag & (O_EXCL | O_TRUNC))
--				goto no_open;
--			/* No side effects, safe to clear O_CREAT */
--		} else {
-+		if (likely(got_write))
- 			create_error = may_o_create(&nd->path, dentry, mode);
--			if (create_error) {
--				open_flag &= ~O_CREAT;
--				if (open_flag & O_EXCL)
--					goto no_open;
--			}
--		}
--	} else if ((open_flag & (O_TRUNC|O_WRONLY|O_RDWR)) &&
--		   unlikely(!got_write)) {
--		/*
--		 * No O_CREATE -> atomicity not a requirement -> fall
--		 * back to lookup + open
--		 */
--		goto no_open;
-+		else
-+			create_error = -EROFS;
- 	}
--
-+	if (create_error)
-+		open_flag &= ~O_CREAT;
- 	if (dir_inode->i_op->atomic_open) {
- 		dentry = atomic_open(nd, dentry, file, open_flag, mode);
- 		if (unlikely(create_error) && dentry == ERR_PTR(-ENOENT))
-@@ -3070,7 +3055,6 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
- 		return dentry;
- 	}
- 
--no_open:
- 	if (d_in_lookup(dentry)) {
- 		struct dentry *res = dir_inode->i_op->lookup(dir_inode, dentry,
- 							     nd->flags);
+ 		if (d_is_dir(nd->path.dentry))
+ 			return ERR_PTR(-EISDIR);
+-		error = may_create_in_sticky(dir_mode, dir_uid,
++		error = may_create_in_sticky(nd->dir_mode, nd->dir_uid,
+ 					     d_backing_inode(nd->path.dentry));
+ 		if (unlikely(error))
+ 			return ERR_PTR(error);
 -- 
 2.11.0
 
