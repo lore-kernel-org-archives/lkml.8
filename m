@@ -2,173 +2,193 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55AEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1F1C1975A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3C620736
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584065337;
-	bh=wg5KqU2C89V9sg161ELK0XjctmpbtMv04NWPVqqLNgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mDXDaB4pBPBf3hnvraoPuegIswA5yv4LTTCZyrGITLYdy/NsFFeQRJ0mIbkiMhzl+
-	 O8Hc9tyTk5Y1jk2EqAFq2RXx+NOZzCLYrYjLUzrUtWrmuSBkUIVb/H5WelBMhrVVPh
-	 Sl3cy8rmbM/NDWFJqLsl13Di7QDKUvhYwVjukpcE=
+	by mail.kernel.org (Postfix) with ESMTP id 74B96206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgCMCI4 (ORCPT
+        id S1726437AbgCMCSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:08:56 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52623 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgCMCI4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:08:56 -0400
-Received: by mail-pj1-f67.google.com with SMTP id f15so3346004pjq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 19:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6UIHhrii+PcyoxAnOQshJ7x6jz3aQd0Zby/DnhIzfq0=;
-        b=CLo7Mw1jrvzDulQDPztJ+80D+fkpsgE9fgeAlZToS71hqAFmlUB2sMLuTZpIjRUHkF
-         qK4kmVqlBe/kk0lgE/0sCQFKRzMO6Jdop/e9tKZt4PvMZK2etnPssklgsHxOmy4fQig6
-         A7HrO0sNttqTddmNTsA+XxDYe57quskTKvBzhDGy8jlkSgZe3R8S8tFpXTFNUYYwGzdI
-         Kr+U6dB7YrUY6eVdNKg2yNJyGNgAYYTmeP6/NibTHLvkOXynIhpyyX8pWH7mnEbi3QoC
-         9EoCwBcLvovwnfpAMdFENFMeM5la+R39m2I+t2vV9uucaY+aqPDg1/ZrSa7HKwM1gm7T
-         tjpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6UIHhrii+PcyoxAnOQshJ7x6jz3aQd0Zby/DnhIzfq0=;
-        b=sRIwSSzsS+ryl8WCEvjZ8+3Pka5sEW9QOr/VrGMBbmZB0jgY1jv5ki5ItXdzOyMno7
-         /b5kIhOcGPMqzrAEv2bjPnEMfsrOc1VuKuVubhSBhQ1b29laJGqYxd1+U1RyVYuh//DM
-         a7B4bOSwkuuT2rQU4rmQKir0LE+/EhGaB0zFnbMhuCaTbrCqWGAasRDLc2boVF09WeAB
-         au2jUKIBECFSe3ymJFvxQ6S2cmt/7fsAPaWagmrltVuE+qJTvTKdJoS++KqPTS64Hxum
-         i9dP2YvI1ZX9hfD9saLGZRMY4J8JJMkO+lDwZr5Fzi1l9OWRNAnv/gRxaleH0DfCVsxv
-         Rj/w==
-X-Gm-Message-State: ANhLgQ0JsjC4syLsTDp5SeT7OWT0pXK9yaaYCtX/G95Bk1pnpFewLdoU
-        iJIFCBAsrSGdhbNHoF0OjOQ=
-X-Google-Smtp-Source: ADFU+vuutzwBmcIdOCi8oQVsDTjhXluTb57K0NN9SVwUs1eLvmIYsApAiIHBj/rV/kBV+HB5FJcjJg==
-X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr11018356plo.45.1584065334674;
-        Thu, 12 Mar 2020 19:08:54 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id o126sm9027476pfb.140.2020.03.12.19.08.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 19:08:53 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 19:08:51 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200313020851.GD68817@google.com>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200312082248.GS23944@dhcp22.suse.cz>
- <20200312201602.GA68817@google.com>
- <20200312204155.GE23944@dhcp22.suse.cz>
+        Thu, 12 Mar 2020 22:18:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25868 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgCMCSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 22:18:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 19:18:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
+   d="scan'208";a="261743728"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by orsmga002.jf.intel.com with ESMTP; 12 Mar 2020 19:18:42 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Like Xu <like.xu@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 00/10] Guest Last Branch Recording Enabling
+Date:   Fri, 13 Mar 2020 10:16:06 +0800
+Message-Id: <20200313021616.112322-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312204155.GE23944@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:41:55PM +0100, Michal Hocko wrote:
-> On Thu 12-03-20 13:16:02, Minchan Kim wrote:
-> > On Thu, Mar 12, 2020 at 09:22:48AM +0100, Michal Hocko wrote:
-> [...]
-> > > From eca97990372679c097a88164ff4b3d7879b0e127 Mon Sep 17 00:00:00 2001
-> > > From: Michal Hocko <mhocko@suse.com>
-> > > Date: Thu, 12 Mar 2020 09:04:35 +0100
-> > > Subject: [PATCH] mm: do not allow MADV_PAGEOUT for CoW pages
-> > > 
-> > > Jann has brought up a very interesting point [1]. While shared pages are
-> > > excluded from MADV_PAGEOUT normally, CoW pages can be easily reclaimed
-> > > that way. This can lead to all sorts of hard to debug problems. E.g.
-> > > performance problems outlined by Daniel [2]. There are runtime
-> > > environments where there is a substantial memory shared among security
-> > > domains via CoW memory and a easy to reclaim way of that memory, which
-> > > MADV_{COLD,PAGEOUT} offers, can lead to either performance degradation
-> > > in for the parent process which might be more privileged or even open
-> > > side channel attacks. The feasibility of the later is not really clear
-> > 
-> > I am not sure it's a good idea to mention performance stuff because
-> > it's rather arguble. You and Johannes already pointed it out when I sbumit
-> > early draft which had shared page filtering out logic due to performance
-> > reason. You guys suggested the shared pages has higher chance to be touched
-> > so that if it's really hot pages, that whould keep in the memory. I agree.
-> 
-> Yes, the hot memory is likely to be referenced but the point was an
-> unexpected latency because of the major fault. I have to say that I have
+Hi all,
 
-I don't understand your point here. If it's likely to be referenced
-among several processes, it doesn't have the major fault latency.
-What's your point here?
+Please help review your interesting parts in this stable version,
+e.g. the first four patches involve the perf event subsystem
+and the fifth patch concerns the KVM userspace interface.
 
-> underestimated the issue because I was not aware of runtimes mentioned
-> in the referenced links. Essentially a lot of CoW memory shared over
-> security domains.
+---
 
-I tend to agree about security part in the description, but still don't
-agree with performance concern in the description so I'd like to remove
-it in the description. Current situation is caused by security concern
-unfortunately, not performance reason.
+The last branch recording (LBR) is a performance monitor unit (PMU)
+feature on Intel processors that records a running trace of the most
+recent branches taken by the processor in the LBR stack. This patch
+series is going to enable this feature for plenty of KVM guests.
 
-> 
-> > I think the only reason at this moment is just vulnerability.
-> > 
-> > > to me TBH but there is no real reason for exposure at this stage. It
-> > > seems there is no real use case to depend on reclaiming CoW memory via
-> > > madvise at this stage so it is much easier to simply disallow it and
-> > > this is what this patch does. Put it simply MADV_{PAGEOUT,COLD} can
-> > > operate only on the exclusively owned memory which is a straightforward
-> > > semantic.
-> > > 
-> > > [1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
-> > > [2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
-> > > 
-> > > Signed-off-by: Michal Hocko <mhocko@suse.com>
-> > > ---
-> > >  mm/madvise.c | 12 +++++++++---
-> > >  1 file changed, 9 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > index 43b47d3fae02..4bb30ed6c8d2 100644
-> > > --- a/mm/madvise.c
-> > > +++ b/mm/madvise.c
-> > > @@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
-> > >  		}
-> > >  
-> > >  		page = pmd_page(orig_pmd);
-> > > +
-> > > +		/* Do not interfere with other mappings of this page */
-> > 
-> > 
-> > How about this?
-> > /*
-> >  * paging out only single mapped private pages for anonymous mapping,
-> >  * otherwise, it opens a side channel.
-> >  */
-> 
-> I am not sure this is much more helpful without a larger context. I
-> would stick with the wording unless you insist.
+The userspace could configure whether it's enabled or not for each
+guest via vm_ioctl KVM_CAP_X86_GUEST_LBR. As a first step, a guest
+could only enable LBR feature if its cpu model is the same as the
+host since the LBR feature is still one of model specific features.
+The record format defined in bits [0,5] of IA32_PERF_CAPABILITIES
+and cpuid PDCM bit is also exposed to the guest when it's enabled.
 
-The comment you provides explain what code does, not *why*.
-Comment is always lack of explaining the whole story but we try to
-demonstrate a certain context to make reader careful.
-Havind said, I will not insist on it.
+If it's enabled on the guest, the guest LBR driver would accesses the
+LBR MSR (including IA32_DEBUGCTLMSR and stack MSRs) as host does.
+The first guest access on the LBR related MSRs is always interceptible.
+The KVM trap would create a special LBR event (called guest LBR event)
+which enables the callstack mode and none of hardware counter is bound.
+The host perf would enable and schedule this event as usual. 
 
-Thanks.
+Guest's first access to a LBR-related msr gets trapped to KVM, which
+creates a guest LBR perf event. It's a regular LBR perf event which gets
+the LBR facility assigned from the perf subsystem. Once that succeeds,
+the LBR stack msrs are passed through to the guest for efficient accesses.
+However, if another host LBR event comes in and takes over the LBR
+facility, the LBR msrs will be made interceptible, and guest following
+accesses to the LBR msrs will be trapped and meaningless. 
+
+Because saving/restoring tens of LBR MSRs (e.g. 32 LBR stack entries) in
+VMX transition brings too excessive overhead to frequent vmx transition
+itself, the guest LBR event would help save/restore the LBR stack msrs
+during the context switching with the help of native LBR event callstack
+mechanism, including LBR_SELECT msr.
+
+If the guest no longer accesses the LBR-related MSRs within a scheduling
+time slice and the LBR enable bit is unset, vPMU would release its guest
+LBR event as a normal event of a unused vPMC and the pass-through
+state of the LBR stack msrs would be canceled.
+
+You may check more details in each commit message.
+
+---
+
+LBR testcase:
+echo 1 > /proc/sys/kernel/watchdog
+echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
+echo 5000 > /proc/sys/kernel/perf_event_max_sample_rate
+echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
+./perf record -b ./br_instr a
+
+- Perf report on the host:
+Samples: 72K of event 'cycles', Event count (approx.): 72512
+Overhead  Command   Source Shared Object           Source Symbol                           Target Symbol                           Basic Block Cycles
+  12.12%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           1
+  11.05%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             5
+   8.81%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             4
+   5.04%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           20
+   4.92%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             6
+   4.88%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           6
+   4.58%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           5
+
+- Perf report on the guest:
+Samples: 92K of event 'cycles', Event count (approx.): 92544
+Overhead  Command   Source Shared Object  Source Symbol                                   Target Symbol                                   Basic Block Cycles
+  12.03%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   1
+  11.09%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     5
+   8.57%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     4
+   5.08%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     6
+   5.06%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   20
+   4.87%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   6
+   4.70%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   5
+
+Conclusion: the profiling results on the guest are similar to that on the host.
+
+---
+
+v8->v9 Changelog:
+- using guest_lbr_constraint to create guest LBR event without hw counter;
+  (please check perf changes in patch 0003)
+- rename 'cpuc->vcpu_lbr' to 'cpuc->guest_lbr_enabled';
+  (please check host LBR changes in patch 0004)
+- replace 'pmu->lbr_used' mechanism with lazy release kvm_pmu_lbr_cleanup();
+- refactor IA32_PERF_CAPABILITIES trap via get_perf_capabilities();
+- refactor kvm_pmu_lbr_enable() with kvm_pmu_lbr_setup();
+- simplify model-specific LBR functionality check;
+- rename x86_perf_get_lbr_stack to x86_perf_get_lbr;
+- rename intel_pmu_lbr_confirm() to kvm_pmu_availability_check(); 
+
+Previous:
+https://lore.kernel.org/lkml/1565075774-26671-1-git-send-email-wei.w.wang@intel.com/
+
+Like Xu (7):
+  perf/x86/lbr: Add interface to get basic information about LBR stack
+  perf/x86: Add constraint to create guest LBR event without hw counter
+  perf/x86: Keep LBR stack unchanged on the host for guest LBR event
+  KVM: x86: Add KVM_CAP_X86_GUEST_LBR interface to dis/enable LBR
+    feature
+  KVM: x86/pmu: Add LBR feature emulation via guest LBR event
+  KVM: x86/pmu: Release guest LBR event via vPMU lazy release mechanism
+  KVM: x86: Expose MSR_IA32_PERF_CAPABILITIES to guest for LBR record
+    format
+
+Wei Wang (3):
+  perf/x86: Fix msr variable type for the LBR msrs
+  KVM: x86/pmu: Tweak kvm_pmu_get_msr to pass 'struct msr_data' in
+  KVM: x86: Remove the common trap handler of the MSR_IA32_DEBUGCTLMSR
+
+ Documentation/virt/kvm/api.rst    |  28 +++
+ arch/x86/events/core.c            |   9 +-
+ arch/x86/events/intel/core.c      |  29 +++
+ arch/x86/events/intel/lbr.c       |  55 +++++-
+ arch/x86/events/perf_event.h      |  21 ++-
+ arch/x86/include/asm/kvm_host.h   |   7 +
+ arch/x86/include/asm/perf_event.h |  24 ++-
+ arch/x86/kvm/cpuid.c              |   3 +-
+ arch/x86/kvm/pmu.c                |  28 ++-
+ arch/x86/kvm/pmu.h                |  26 ++-
+ arch/x86/kvm/pmu_amd.c            |   7 +-
+ arch/x86/kvm/vmx/pmu_intel.c      | 291 ++++++++++++++++++++++++++++--
+ arch/x86/kvm/vmx/vmx.c            |   4 +-
+ arch/x86/kvm/vmx/vmx.h            |   2 +
+ arch/x86/kvm/x86.c                |  42 +++--
+ include/linux/perf_event.h        |   7 +
+ include/uapi/linux/kvm.h          |   1 +
+ kernel/events/core.c              |   7 -
+ tools/include/uapi/linux/kvm.h    |   1 +
+ 19 files changed, 540 insertions(+), 52 deletions(-)
+
+-- 
+2.21.1
+
