@@ -2,123 +2,117 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389F0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8479EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB71206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FCD206B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GfpGJJf8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQ6RGERd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCMRQp (ORCPT
+        id S1726692AbgCMRTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:16:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36211 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCMRQo (ORCPT
+        Fri, 13 Mar 2020 13:19:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40178 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCMRTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:16:44 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g62so11156353wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:16:43 -0700 (PDT)
+        Fri, 13 Mar 2020 13:19:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so4551991plk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Eqg2D57NGypJeQM7MhiMjBD9eTQ+XWnQ6tOgh9VYzPg=;
-        b=GfpGJJf8jdD5hvEZ9qPjhmJSoxo3e4jgo5CXvygHAM+2QJPUnQGxgH3uES2Kynkpd4
-         T6ATW927TaBZFCRVrNO170pUUV2oW1VQbb+Pexs0ZoOzJkDFAd5UyC6AZMYRUVFm095y
-         IkcVD4f+FvTY8CtYEgV2DY2o1mbRUANwOHxkBIP37vtgNzFrkkQDbvXS+mWOsrsn5DGP
-         gEO8LlEKRjsHdzu32a8Zv2sKCjnNA9JMK1m96aENNsalwtpPCqB7Vq/otY1b4E8n+Q21
-         glAgkPcq3G2Hd8vv/mEHOpfMtESQYAYkl9W6BYLtnfQ1hAid0M6CcWidFLKlq36v9zAc
-         LL0w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jbvuozHk8y+q351yVVn9ofgID8rZuIssOUzCjloZS0A=;
+        b=EQ6RGERdLF5OZVju2pIkk4ygbpP/d73Uu4SPD0qS/ccY5sI64yybbPTkCIxSSfIHSG
+         UWWUwmAVCWMzS4Wsyutj115Ox1cKDU9ZSfOP8ST1IseYcANIYIj9omxYml6vNEi21zoE
+         LVT3OncX94RqmGTIBOdAUaAEoELUQ1FTC/y09nj4cO2jNOXhPw8gBUoNZPCNggQgUeAv
+         RI30IRlXy/zC3ZAmFdzBgT28uvRWnm30MaXm+ugkSr2o95BeGHXjlf8fqeiQW54uTavQ
+         aU8GDrqtnRGa87ERPtf0SA18VIslNEvK6rwnpkmafMFt4Q/BtXzJM5O3GbDE/BFJNoa+
+         S22w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eqg2D57NGypJeQM7MhiMjBD9eTQ+XWnQ6tOgh9VYzPg=;
-        b=SwVq/RTCj85Drtx3WCLv4qXypR1Zs91TjYSRo7qpzSVdJ5uEstOjE30z7YBwQGu7nV
-         WosgVd/qmzWGR+dIL/O2U66PeZVcb8NzgUjr7zVflGNYc0QohsCft4k7haAq/cHMVkaG
-         GSUiHkI+XIVdbdetoOPoqLZpyMEcRpmc5I8iAiePeDlk75BN6Ry9NZ2uw8/qB56hMTn4
-         BBlk2KNjzoXvhAnDEirdhraDXZ3AHwNNdGklpwWrZfNh4GizL1nsJcojbj/Sxom+hNOg
-         fpdboRrOTxLR7PSd2dNwfiXP8RgP1s4C/7MXedDEKlctNmmH7afPvnMPhHHeKy1RLndE
-         rFrw==
-X-Gm-Message-State: ANhLgQ3wExE9RGpkJ+ue0T5Pe7O2AKfAFiJlra6zOHrxVAF8iEDmimba
-        idwpCXU9Rd2EwgRnOL3VG8eI/A==
-X-Google-Smtp-Source: ADFU+vumzHSTSx0NnmOYLAmGcl4NJn5zSn0aH51pn2PnfTIecwwRlYBGAj9fxcb0ea7+lXVvBBbhJA==
-X-Received: by 2002:a1c:7c08:: with SMTP id x8mr11581854wmc.84.1584119802734;
-        Fri, 13 Mar 2020 10:16:42 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id b187sm14223421wmb.42.2020.03.13.10.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 10:16:42 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 17:16:38 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
-        Dietmar.Eggemann@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org
-Subject: Re: [PATCH v4 2/4] OPP: change parameter to device pointer in
- dev_pm_opp_of_register_em()
-Message-ID: <20200313171638.GB236432@google.com>
-References: <20200309134117.2331-1-lukasz.luba@arm.com>
- <20200309134117.2331-3-lukasz.luba@arm.com>
- <20200313101524.GA150397@google.com>
- <3ac8ebf8-9db0-d168-8b80-f7f5ba345f86@arm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jbvuozHk8y+q351yVVn9ofgID8rZuIssOUzCjloZS0A=;
+        b=ju4e9A7LhbaWoFmv016x1nsp3oIfOIvgWCXCcok/JvK5Dah7sZUz2NcBzjUwvNP6Qp
+         ScKi8o1A6CpIb5s1zVzffYJxmlRguSCm2n82ECsyllPDVvmMIKRYro41EHUaBoo+dhS/
+         hgLZO2aDEWFtwajX8iC9HLdrKqIP+mAyKti7GITUZtwAIU7IHZb4p3GJXa0oKBlr6y2o
+         D0feFW9hAv/+5KLetMaA5xIWjngbKZcE9wG7Yil/B6SIvx7JyYFzFYwadduIes8Cs66g
+         u4cFuyDCFAxagv22BYqCDZHykxsAwYAIpfZVWxsTt2w8Xa9zY1fRJny6B6cNThXi4e3v
+         GPdg==
+X-Gm-Message-State: ANhLgQ2/QntYSbd+4AoWHtTZRaEu8yQB4zaaq5WlR1siycglNtmVpTZD
+        rlnVQKBuTy2IfanZ0AYQkYE=
+X-Google-Smtp-Source: ADFU+vsmkG9qXVwn38qeUW8n7zOocOM6ctyp+7tOtFbtqPtmPKI0vdolNwFBU//RmuRw/ey6pw7oWA==
+X-Received: by 2002:a17:90a:21ac:: with SMTP id q41mr11049937pjc.41.1584119954866;
+        Fri, 13 Mar 2020 10:19:14 -0700 (PDT)
+Received: from localhost ([216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id g6sm9196327pjv.13.2020.03.13.10.19.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 10:19:14 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH] drivers: provide devm_platform_ioremap_and_get_resource()
+Date:   Sat, 14 Mar 2020 01:19:02 +0800
+Message-Id: <20200313171902.31836-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ac8ebf8-9db0-d168-8b80-f7f5ba345f86@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 13 Mar 2020 at 17:11:45 (+0000), Lukasz Luba wrote:
-> --------------------------------->8----------------
-> dev_pm_opp_of_register_em
-> ...
-> 	nr_opp = dev_pm_opp_get_opp_count(dev);
-> 	if (nr_opp <= 0) {
-> 		ret = -EINVAL;
-> 		goto fail;
-> 	}
-> 
-> ...
-> 	ret = em_register_perf_domain()
-> 	if (ret)
-> 		goto fail;
-> 
-> 	return 0;
-> 
-> fail:
-> 	dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
-> 	return ret
-> ------------------------8<-----------------
+Since commit "drivers: provide devm_platform_ioremap_resource()",
+It was wrap platform_get_resource() and devm_ioremap_resource() as
+single helper devm_platform_ioremap_resource(). but now, many drivers
+still used platform_get_resource() and devm_ioremap_resource()
+together in the kernel tree. The reason can not be replaced is they
+still need use the resource variables obtained by platform_get_resource().
+so provide this helper.
 
-That works for me.
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/base/platform.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Thanks,
-Quentin
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 7fa654f1288b..b3e2409effae 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -62,6 +62,24 @@ struct resource *platform_get_resource(struct platform_device *dev,
+ EXPORT_SYMBOL_GPL(platform_get_resource);
+ 
+ #ifdef CONFIG_HAS_IOMEM
++/**
++ * devm_platform_ioremap_and_get_resource - call devm_ioremap_resource() for a
++ *					    platform device and get resource
++ *
++ * @pdev: platform device to use both for memory resource lookup as well as
++ *        resource management
++ * @index: resource index
++ * @res: get the resource
++ */
++void __iomem *
++devm_platform_ioremap_and_get_resource(struct platform_device *pdev,
++				unsigned int index, struct resource **res)
++{
++	*res = platform_get_resource(pdev, IORESOURCE_MEM, index);
++	return devm_ioremap_resource(&pdev->dev, *res);
++}
++EXPORT_SYMBOL_GPL(devm_platform_ioremap_and_get_resource);
++
+ /**
+  * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
+  *				    device
+-- 
+2.25.0
+
