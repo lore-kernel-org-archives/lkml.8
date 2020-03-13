@@ -2,66 +2,69 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55008C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EBBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB042073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h0nC3b0l"
+	by mail.kernel.org (Postfix) with ESMTP id 41EDD2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgCMIZP (ORCPT
+        id S1726582AbgCMI0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:25:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34010 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgCMIZO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:25:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/ZdDlbLqNOvakJ4NWfeKFrm2xJH0FxuVXIiomBTeWY0=; b=h0nC3b0lys4AAFlklVuzX011mM
-        aHVnRucRLsffajpU6AVN5ImOUq9DYUQk/8gBFO80Sg/fTAjqTJ0XiqmWvPve7tuqVDjJEqyAmYuUZ
-        bqQ/GWEiKM8bO0yKpKacYY2OQJClYNWda3Wf4EyMniDg4/SLt23w5bwyeHZu2x52xijyMGx23TdqG
-        T83ispvqZvSbDr2cgRfJPZ4jpDnloh/lNDY7Vdho5o+etQWEpjKmccgwP0uzeCdHBOnDLLv68D5vd
-        B6GTSlbxQfeBfIwAJxva6gGs6+dJtEAhcXMLMzVmW7AQktEp5K2Clsb0pU1yj3qpp0rNK3viZRG0l
-        WR2idzGg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCfch-0005OI-Ce; Fri, 13 Mar 2020 08:24:51 +0000
-Date:   Fri, 13 Mar 2020 01:24:51 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 4/6] MIPS: Loongson: Add DMA support for 7A1000
-Message-ID: <20200313082451.GA20331@infradead.org>
-References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
- <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
+        Fri, 13 Mar 2020 04:26:03 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40022 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726406AbgCMI0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 04:26:03 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 31DAA4712341C184D5EE;
+        Fri, 13 Mar 2020 16:25:53 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 13 Mar 2020
+ 16:25:46 +0800
+Subject: Re: [PATCH net-next 0/2] net: hns3: add two optimizations for mailbox
+ handling
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <kuba@kernel.org>
+References: <1584087823-61800-1-git-send-email-tanhuazhong@huawei.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <bb37412b-c4a1-bc19-d784-a7693e4d5b0e@huawei.com>
+Date:   Fri, 13 Mar 2020 16:25:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1584087823-61800-1-git-send-email-tanhuazhong@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 04:23:24PM +0800, Tiezhu Yang wrote:
-> Implement __phys_to_dma() and __dma_to_phys() according to the
-> node id offset in 7A1000 DMA route config register.
+Sorry, please ignore this patchset, will resend it later :)
 
-Can you just switch Loongson over to use the dma_pfn_offset field in
-struct device?  I'd love to kill the __phys_to_dma and __dma_to_phys
-hooks wherever possible.
+On 2020/3/13 16:23, Huazhong Tan wrote:
+> This patchset includes two code optimizations for mailbox handling.
+> 
+> Jian Shen (1):
+>    net: hns3: add a conversion for mailbox's response code
+> 
+> Yufeng Mo (1):
+>    net: hns3: optimize the message response between pf and vf
+> 
+>   drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  54 ++-
+>   .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 386 ++++++++++-----------
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 306 ++++++++--------
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   4 +-
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  50 +--
+>   5 files changed, 414 insertions(+), 386 deletions(-)
+> 
+
