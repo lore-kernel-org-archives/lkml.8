@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0599C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44C7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D1820637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A4D20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgCMX5K (ORCPT
+        id S1727763AbgCMXyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:57:10 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50030 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbgCMXyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 19:54:01 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49950 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727668AbgCMXx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 19:53:59 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7s-00B6aI-0v; Fri, 13 Mar 2020 23:54:00 +0000
+        id 1jCu7p-00B6YK-EE; Fri, 13 Mar 2020 23:53:57 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 22/69] merging pick_link() with get_link(), part 4
-Date:   Fri, 13 Mar 2020 23:53:10 +0000
-Message-Id: <20200313235357.2646756-22-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 02/69] fix automount/automount race properly
+Date:   Fri, 13 Mar 2020 23:52:50 +0000
+Message-Id: <20200313235357.2646756-2-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,130 +42,169 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Move the call of get_link() into walk_component().  Change the
-calling conventions for walk_component() to returning the link
-body to follow (if any).
+Protection against automount/automount races (two threads hitting the same
+referral point at the same time) is based upon do_add_mount() prevention of
+identical overmounts - trying to overmount the root of mounted tree with
+the same tree fails with -EBUSY.  It's unreliable (the other thread might've
+mounted something on top of the automount it has triggered) *and* causes
+no end of headache for follow_automount() and its caller, since
+finish_automount() behaves like do_new_mount() - if the mountpoint to be is
+overmounted, it mounts on top what's overmounting it.  It's not only wrong
+(we want to go into what's overmounting the automount point and quietly
+discard what we planned to mount there), it introduces the possibility of
+original parent mount getting dropped.  That's what 8aef18845266 (VFS: Fix
+vfsmount overput on simultaneous automount) deals with, but it can't do
+anything about the reliability of conflict detection - if something had
+been overmounted the other thread's automount (e.g. that other thread
+having stepped into automount in mount(2)), we don't get that -EBUSY and
+the result is
+	 referral point under automounted NFS under explicit overmount
+under another copy of automounted NFS
 
+What we need is finish_automount() *NOT* digging into overmounts - if it
+finds one, it should just quietly discard the thing it was asked to mount.
+And don't bother with actually crossing into the results of finish_automount() -
+the same loop that calls follow_automount() will do that just fine on the
+next iteration.
+
+IOW, instead of calling lock_mount() have finish_automount() do it manually,
+_without_ the "move into overmount and retry" part.  And leave crossing into
+the results to the caller of follow_automount(), which simplifies it a lot.
+
+Moral: if you end up with a lot of glue working around the calling conventions
+of something, perhaps these calling conventions are simply wrong...
+
+Fixes: 8aef18845266 (VFS: Fix vfsmount overput on simultaneous automount)
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 59 ++++++++++++++++++++++++++---------------------------------
- 1 file changed, 26 insertions(+), 33 deletions(-)
+ fs/namei.c     | 29 ++++-------------------------
+ fs/namespace.c | 40 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 37 insertions(+), 32 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index edb37272f2cc..a05de97e6893 100644
+index db6565c99825..626eddb33508 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1866,7 +1866,7 @@ static int step_into(struct nameidata *nd, int flags,
- 	return pick_link(nd, &path, inode, seq);
- }
- 
--static int walk_component(struct nameidata *nd, int flags)
-+static const char *walk_component(struct nameidata *nd, int flags)
+@@ -1208,11 +1208,9 @@ EXPORT_SYMBOL(follow_up);
+  * - return -EISDIR to tell follow_managed() to stop and return the path we
+  *   were called with.
+  */
+-static int follow_automount(struct path *path, struct nameidata *nd,
+-			    bool *need_mntput)
++static int follow_automount(struct path *path, struct nameidata *nd)
  {
- 	struct dentry *dentry;
- 	struct inode *inode;
-@@ -1881,19 +1881,24 @@ static int walk_component(struct nameidata *nd, int flags)
- 		if (!(flags & WALK_MORE) && nd->depth)
- 			put_link(nd);
- 		err = handle_dots(nd, nd->last_type);
+ 	struct vfsmount *mnt;
+-	int err;
+ 
+ 	if (!path->dentry->d_op || !path->dentry->d_op->d_automount)
+ 		return -EREMOTE;
+@@ -1253,29 +1251,10 @@ static int follow_automount(struct path *path, struct nameidata *nd,
+ 		return PTR_ERR(mnt);
+ 	}
+ 
+-	if (!mnt) /* mount collision */
+-		return 0;
+-
+-	if (!*need_mntput) {
+-		/* lock_mount() may release path->mnt on error */
+-		mntget(path->mnt);
+-		*need_mntput = true;
+-	}
+-	err = finish_automount(mnt, path);
+-
+-	switch (err) {
+-	case -EBUSY:
+-		/* Someone else made a mount here whilst we were busy */
++	if (!mnt)
+ 		return 0;
+-	case 0:
+-		path_put(path);
+-		path->mnt = mnt;
+-		path->dentry = dget(mnt->mnt_root);
+-		return 0;
+-	default:
 -		return err;
-+		return ERR_PTR(err);
- 	}
- 	dentry = lookup_fast(nd, &inode, &seq);
- 	if (IS_ERR(dentry))
--		return PTR_ERR(dentry);
-+		return ERR_CAST(dentry);
- 	if (unlikely(!dentry)) {
- 		dentry = lookup_slow(&nd->last, nd->path.dentry, nd->flags);
- 		if (IS_ERR(dentry))
--			return PTR_ERR(dentry);
-+			return ERR_CAST(dentry);
- 	}
- 	if (!(flags & WALK_MORE) && nd->depth)
- 		put_link(nd);
--	return step_into(nd, flags, dentry, inode, seq);
-+	err = step_into(nd, flags, dentry, inode, seq);
-+	if (!err)
-+		return NULL;
-+	if (err > 0)
-+		return get_link(nd);
-+	return ERR_PTR(err);
+-	}
+ 
++	return finish_automount(mnt, path);
  }
  
  /*
-@@ -2145,6 +2150,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+@@ -1333,7 +1312,7 @@ static int follow_managed(struct path *path, struct nameidata *nd)
  
- 	/* At this point we know we have a real path component. */
- 	for(;;) {
-+		const char *link;
- 		u64 hash_len;
- 		int type;
+ 		/* Handle an automount point */
+ 		if (flags & DCACHE_NEED_AUTOMOUNT) {
+-			ret = follow_automount(path, nd, &need_mntput);
++			ret = follow_automount(path, nd);
+ 			if (ret < 0)
+ 				break;
+ 			continue;
+diff --git a/fs/namespace.c b/fs/namespace.c
+index dcd015fafe01..777c3116e62e 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2823,6 +2823,7 @@ static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
  
-@@ -2202,24 +2208,18 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 			if (!name)
- 				return 0;
- 			/* last component of nested symlink */
--			err = walk_component(nd, WALK_FOLLOW);
-+			link = walk_component(nd, WALK_FOLLOW);
- 		} else {
- 			/* not the last component */
--			err = walk_component(nd, WALK_FOLLOW | WALK_MORE);
-+			link = walk_component(nd, WALK_FOLLOW | WALK_MORE);
- 		}
--		if (err < 0)
--			return err;
--
--		if (err) {
--			const char *s = get_link(nd);
--
--			if (IS_ERR(s))
--				return PTR_ERR(s);
--			if (likely(s)) {
--				nd->stack[nd->depth - 1].name = name;
--				name = s;
--				continue;
--			}
-+		if (unlikely(link)) {
-+			if (IS_ERR(link))
-+				return PTR_ERR(link);
-+			/* a symlink to follow */
-+			nd->stack[nd->depth - 1].name = name;
-+			name = link;
-+			continue;
- 		}
- 		if (unlikely(!d_can_lookup(nd->path.dentry))) {
- 			if (nd->flags & LOOKUP_RCU) {
-@@ -2335,24 +2335,17 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 
- static inline const char *lookup_last(struct nameidata *nd)
+ int finish_automount(struct vfsmount *m, struct path *path)
  {
--	int err;
-+	const char *link;
- 	if (nd->last_type == LAST_NORM && nd->last.name[nd->last.len])
- 		nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
++	struct dentry *dentry = path->dentry;
+ 	struct mount *mnt = real_mount(m);
+ 	struct mountpoint *mp;
+ 	int err;
+@@ -2832,21 +2833,46 @@ int finish_automount(struct vfsmount *m, struct path *path)
+ 	BUG_ON(mnt_get_count(mnt) < 2);
  
- 	nd->flags &= ~LOOKUP_PARENT;
--	err = walk_component(nd, 0);
--	if (unlikely(err)) {
--		const char *s;
--		if (err < 0)
--			return PTR_ERR(err);
--		s = get_link(nd);
--		if (s) {
--			nd->flags |= LOOKUP_PARENT;
--			nd->stack[0].name = NULL;
--			return s;
--		}
-+	link = walk_component(nd, 0);
-+	if (link) {
-+		nd->flags |= LOOKUP_PARENT;
-+		nd->stack[0].name = NULL;
+ 	if (m->mnt_sb == path->mnt->mnt_sb &&
+-	    m->mnt_root == path->dentry) {
++	    m->mnt_root == dentry) {
+ 		err = -ELOOP;
+-		goto fail;
++		goto discard;
  	}
--	return NULL;
-+	return link;
- }
  
- static int handle_lookup_down(struct nameidata *nd)
+-	mp = lock_mount(path);
++	/*
++	 * we don't want to use lock_mount() - in this case finding something
++	 * that overmounts our mountpoint to be means "quitely drop what we've
++	 * got", not "try to mount it on top".
++	 */
++	inode_lock(dentry->d_inode);
++	namespace_lock();
++	if (unlikely(cant_mount(dentry))) {
++		err = -ENOENT;
++		goto discard_locked;
++	}
++	rcu_read_lock();
++	if (unlikely(__lookup_mnt(path->mnt, dentry))) {
++		rcu_read_unlock();
++		err = 0;
++		goto discard_locked;
++	}
++	rcu_read_unlock();
++	mp = get_mountpoint(dentry);
+ 	if (IS_ERR(mp)) {
+ 		err = PTR_ERR(mp);
+-		goto fail;
++		goto discard_locked;
+ 	}
++
+ 	err = do_add_mount(mnt, mp, path, path->mnt->mnt_flags | MNT_SHRINKABLE);
+ 	unlock_mount(mp);
+-	if (!err)
+-		return 0;
+-fail:
++	if (unlikely(err))
++		goto discard;
++	mntput(m);
++	return 0;
++
++discard_locked:
++	namespace_unlock();
++	inode_unlock(dentry->d_inode);
++discard:
+ 	/* remove m from any expiration list it may be on */
+ 	if (!list_empty(&mnt->mnt_expire)) {
+ 		namespace_lock();
 -- 
 2.11.0
 
