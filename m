@@ -2,97 +2,278 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6533DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DAAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41485206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513B0206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Sbm3XzXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgCMQGb (ORCPT
+        id S1727036AbgCMQHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:06:31 -0400
-Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:45204
-        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgCMQGa (ORCPT
+        Fri, 13 Mar 2020 12:07:13 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34791 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCMQHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:06:30 -0400
-Received: from localhost (localhost [IPv6:::1])
-        by www.teo-en-ming.com (Postfix) with ESMTPA id F3855426B9B;
-        Sat, 14 Mar 2020 00:06:29 +0800 (+08)
+        Fri, 13 Mar 2020 12:07:12 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CA5DF23EC2;
+        Fri, 13 Mar 2020 17:07:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584115630;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EdJOEklCGNc4MOP7NsgRfesvmIzFSxGDZJkVUdK2A1g=;
+        b=Sbm3XzXtHK4jjR8MLIql6/oOrZb4dyCI6UiH8NYVS/daIn/crTPuvHn2VBpoGdsCkb/2sJ
+        q5DE6ywjfxnN5mQsWgopjnwSuIoAUMwxhk+IzY71OzNnDs+u5eZsDFsNOTC3oRq6gdyPc5
+        MTxr+ixZH8Jzp0Lxj0lDbLcsIzERa84=
 MIME-Version: 1.0
-Date:   Sat, 14 Mar 2020 00:06:29 +0800
-From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ceo@teo-en-ming.com
-Subject: Does Linux Kernel 5.5.7 Have Automatic Built-in Support for aufs and
- unionfs Filesystems?
-Message-ID: <1c77c006df55f4562a91a9fb5efedd47@teo-en-ming.com>
-X-Sender: ceo@teo-en-ming.com
-User-Agent: Roundcube Webmail/1.2.3
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Mar 2020 17:07:07 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
+In-Reply-To: <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
+References: <20200310125542.5939-1-olteanv@gmail.com>
+ <615284875b709f602d57e4a4621a83c1@walle.cc>
+ <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
+ <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
+Message-ID: <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: CA5DF23EC2
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good morning from Singapore,
+Am 2020-03-10 16:22, schrieb Michael Walle:
+> Hi Vladimir,
+> 
+> Am 2020-03-10 15:56, schrieb Vladimir Oltean:
+>>> (2) Also, reading the flash, every second time there is 
+>>> (reproducibly)
+>>> an
+>>> IO error:
+>>> 
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> 01000000
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> hexdump: /dev/mtd0: Input/output error
+>>> 00dc0000
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> 01000000
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> hexdump: /dev/mtd0: Input/output error
+>>> 00e6a000
+>>> 
+>> 
+>> Just to be clear, issue 2 is seen only after you abort another
+>> transaction, right?
+> 
+> No, just normal uninterrupted reading. Just tried it right after
+> reboot. Doesn't seem to be every second time though, just random
+> which makes me wonder if that is another problem now. Also the
+> last successful reading is random.
 
-Does Linux Kernel 5.5.7 have automatic built-in support for aufs and 
-unionfs filesystems? Or do I need to apply the aufs and unionfs patches 
-as outlined in the following year 2013 guide?
 
-Guide: "New hint submission: Build your own LFS livecd."
+Ok I guess I know what the root cause is. This is an extract of
+the current code:
 
-Link: 
-http://lists.linuxfromscratch.org/pipermail/hints/2013-March/003307.html
+> static int dspi_transfer_one_message(struct spi_controller *ctlr,
+> 				     struct spi_message *message)
+> {
+> ..
+> 	/* Kick off the interrupt train */
+> 	dspi_fifo_write(dspi);
+> 
+> 	status = wait_event_interruptible(dspi->waitq,
+> 					  dspi->waitflags);
+> 	dspi->waitflags = 0;
+> ..
+> }
+> 
+> static int dspi_rxtx(struct fsl_dspi *dspi)
+> {
+> 	dspi_fifo_read(dspi);
+> 
+> 	if (!dspi->len)
+> 		/* Success! */
+> 		return 0;
+> 
+> 	dspi_fifo_write(dspi);
+> 
+> 	return -EINPROGRESS;
+> }
 
-I have just created my own custom Linux distribution called Teo En Ming 
-Linux 2020.03 (FINAL), which is based on Linux From Scratch 
-20200302-systemd and Linux Kernel 5.5.7. I am trying to create a 
-bootable Live CD/DVD iso of Teo En Ming Linux 2020.03 (FINAL).
+dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
+access shared data like, dspi->words_in_flight. In the EIO error case
+the following bytes_sent is -1, because dspi->words_in_flight is -1.
 
-Hopefully I do not have to patch Linux Kernel 5.5.7 to enable support 
-for aufs and unionfs filesystems.
+> /* Update total number of bytes that were transferred */
+> bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
 
-Nonetheless, compiling Linux Kernel 5.5.7 took only a mere 19 minutes on 
-my latest state-of-the-art AMD Ryzen 3 3200G processor with Radeon Vega 
-8 Graphics and Gigabyte B450M DS3H Socket AM4 motherboard with 32 GB 
-Transcend DDR4-2666 RAM.
+words_in_flight is always -1 after dspi_fifo_read() was called. In
+the error case, the ISR kicks in right in the middle of the execution
+of dspi_fifo_write() in dspi_transfer_one_message().
 
-Please advise.
+> static void dspi_fifo_write(struct fsl_dspi *dspi)
+> {
+> ..
+> 	if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
+> 		dspi_eoq_fifo_write(dspi);
+> 	 else
+> 		dspi_xspi_fifo_write(dspi);
 
-Thank you.
+Now if the ISR is executed right here..
+
+> 
+> 	/* Update total number of bytes that were transferred */
+> 	bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+
+.. words_in_flight might be -1.
+
+> 	msg->actual_length += bytes_sent;
+
+and bytes_sent is negative. And this causes an IO error because
+the returned overall message length doesn't match.
+
+> 	dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
+> ..
+> }
+
+I could not reproduce the issue with the following patch. I don't
+know if I got the locking correct though or if there is a better
+way to go.
+
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 8b16de9ed382..578fedeb16a0 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -224,6 +224,7 @@ struct fsl_dspi {
+         u16                                     tx_cmd;
+         const struct fsl_dspi_devtype_data      *devtype_data;
+
++       spinlock_t lock;
+         wait_queue_head_t                       waitq;
+         u32                                     waitflags;
+
+@@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
+
+  static int dspi_rxtx(struct fsl_dspi *dspi)
+  {
++       unsigned long flags;
++
++       spin_lock_irqsave(&dspi->lock, flags);
+         dspi_fifo_read(dspi);
+
+-       if (!dspi->len)
++       if (!dspi->len) {
+                 /* Success! */
++               spin_unlock_irqrestore(&dspi->lock, flags);
+                 return 0;
++       }
+
+         dspi_fifo_write(dspi);
+
++       spin_unlock_irqrestore(&dspi->lock, flags);
+         return -EINPROGRESS;
+  }
+
+@@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct 
+spi_controller *ctlr,
+         struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+         struct spi_device *spi = message->spi;
+         struct spi_transfer *transfer;
++       unsigned long flags;
+         int status = 0;
++       int i = 0;
+
+         if (dspi->irq)
+                 dspi_enable_interrupts(dspi, true);
+@@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct 
+spi_controller *ctlr,
+                                 goto out;
+                 } else if (dspi->irq) {
+                         /* Kick off the interrupt train */
++                       spin_lock_irqsave(&dspi->lock, flags);
+                         dspi_fifo_write(dspi);
++                       spin_unlock_irqrestore(&dspi->lock, flags);
+
+                         status = wait_event_interruptible(dspi->waitq,
+                                                           
+dspi->waitflags);
+@@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device 
+*pdev)
+         ctlr->cleanup = dspi_cleanup;
+         ctlr->slave_abort = dspi_slave_abort;
+         ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
++       spin_lock_init(&dspi->lock);
+
+         pdata = dev_get_platdata(&pdev->dev);
+         if (pdata) {
 
 
 
-
------BEGIN EMAIL SIGNATURE-----
-
-The Gospel for all Targeted Individuals (TIs):
-
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
-
-Link: 
-https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
-
-********************************************************************************************
-
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
-Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
-United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
-2019) and Australia (25 Dec 2019 to 9 Jan 2020):
-
-[1] https://tdtemcerts.wordpress.com/
-
-[2] https://tdtemcerts.blogspot.sg/
-
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
-
------END EMAIL SIGNATURE-----
+-michael
