@@ -2,97 +2,79 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE33C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB563C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7925206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:55:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X2aAWYCl"
+	by mail.kernel.org (Postfix) with ESMTP id B3EF7206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgCMQzi (ORCPT
+        id S1726859AbgCMQ40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:55:38 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50983 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgCMQzi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:55:38 -0400
-Received: by mail-pj1-f67.google.com with SMTP id u10so4442389pjy.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xbZ4dSo0yJ+mEzE8KOiBQP+F7VWDBbmSG3yIbewX/cU=;
-        b=X2aAWYClYrEic+m4wO6Rkp+ungpARsa8Cf6E72AE5uVtHEG8VXD+e+sI9HFiOH4URs
-         vdNbBdO5fLjIQi5PwoKMQdiP6uxq8R0n9v18dPUHM6obDIj+xXn6MO+4jDPo4FWyliqZ
-         6nvZ6jY4ff4RRv5GHGGbeiLpQGBj7Wpa7LRkk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xbZ4dSo0yJ+mEzE8KOiBQP+F7VWDBbmSG3yIbewX/cU=;
-        b=JxRfYj6DrE5O1iK9PfHjhIEBREhFkesnhHdUb+VrOFq6qzZ+qkpGxUOv0Rtil7tr0V
-         ut+iZO2QFQomGB691bzgBYU0Rom7c86HSf0ssoTiNtOL3rulWtLcn9N+v2LA7Qaz4RhL
-         akYkIS0rbc4p/aEJWiPvHU404AnUStoBBeYDSKWMnOGHYU1s+yDwOOwiJayhJP+U24gB
-         iaMbhRBw+vm2CPhOoLGXvGx5ereTpflU25HQrWLUfXMOc7d/HTAftpS0/GQ4RC4NRxyl
-         fiBzdfaH9M5wWNM7c32sDYV3J34ng+pLDadl6Z0IOhPk4WS22iH4MuN2dDIrw0cjmPqF
-         0q+g==
-X-Gm-Message-State: ANhLgQ1FcijIub8xjNp4dX/SaHYeOf8r2iSh4m8KWXNREcLr/gjmNW/+
-        vztdl3QBKahXqIu05n/64YZ2lA==
-X-Google-Smtp-Source: ADFU+vsZXLGxVNcXxugjf7JZA+Vtpnh9QLR8E+B5WWdPb/xHZ7USp/t0BvIAE6rb8ObhgtQilCHFWQ==
-X-Received: by 2002:a17:90a:8:: with SMTP id 8mr10779352pja.130.1584118537308;
-        Fri, 13 Mar 2020 09:55:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id j24sm29314647pfi.55.2020.03.13.09.55.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 09:55:36 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 09:55:35 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3] thermal: devfreq_cooling: Use PM QoS to set frequency
- limits
-Message-ID: <20200313165535.GI144492@google.com>
-References: <20200312113416.v3.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+        Fri, 13 Mar 2020 12:56:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:33064 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgCMQ40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:56:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07D9F31B;
+        Fri, 13 Mar 2020 09:56:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E16A43F534;
+        Fri, 13 Mar 2020 09:56:24 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:56:13 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Alan Mikhak <alan.mikhak@sifive.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
+Message-ID: <20200313165613.GA26992@e121166-lin.cambridge.arm.com>
+References: <20200303103752.13076-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312113416.v3.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200303103752.13076-1-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:34:20AM -0700, Matthias Kaehlcke wrote:
-> Now that devfreq supports limiting the frequency range of a device
-> through PM QoS make use of it instead of disabling OPPs that should
-> not be used.
+On Tue, Mar 03, 2020 at 04:07:47PM +0530, Kishon Vijay Abraham I wrote:
+> Patch series uses dma engine APIs in pci-epf-test to transfer data using
+> DMA. It also adds an option "-d" in pcitest for the user to indicate
+> whether DMA has to be used for data transfer. This also prints
+> throughput information for data transfer.
 > 
-> The switch from disabling OPPs to PM QoS introduces a subtle behavioral
-> change in case of conflicting requests (min > max): PM QoS gives
-> precedence to the MIN_FREQUENCY request, while higher OPPs disabled
-> with dev_pm_opp_disable() would override MIN_FREQUENCY.
+> Changes from v1:
+> *) Fixed some of the function names from pci_epf_* to pci_epf_test_*
+> since the DMA support is now been moved to pci-epf-test.c
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> Kishon Vijay Abraham I (5):
+>   PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer
+>     data
+>   PCI: endpoint: functions/pci-epf-test: Print throughput information
+>   misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
+>   tools: PCI: Add 'd' command line option to support DMA
+>   misc: pci_endpoint_test: Add support to get DMA option from userspace
+> 
+>  drivers/misc/pci_endpoint_test.c              | 165 ++++++++++--
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 253 +++++++++++++++++-
+>  include/uapi/linux/pcitest.h                  |   5 +
+>  tools/pci/pcitest.c                           |  20 +-
+>  4 files changed, 412 insertions(+), 31 deletions(-)
 
-I just noticed that I forgot to add Chanwoo's 'Reviewed-by' tag from v2.
-Dunno if patchwork will allow this, but I can try:
+Hi Kishon,
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+I had to drop this series - waiting for you to send an updated one
+to fix the x86 build breakage - force pushed pci/endpoint out.
+
+Thanks,
+Lorenzo
