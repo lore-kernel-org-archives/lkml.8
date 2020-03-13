@@ -2,195 +2,185 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE39AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23CBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970E4206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE72206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EkroZexS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZ3Xxqbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCMNRx (ORCPT
+        id S1726834AbgCMNSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:17:53 -0400
-Received: from mout.web.de ([212.227.17.12]:43835 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgCMNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:17:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1584105458;
-        bh=s17YN6zBvUkf8m+IR4qkLbONDJ8Rl5iogNahwfY04L0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=EkroZexSqNRhgu/n7QEI7Qb3xRC9C1nnKzEUwMq4CASb5XasHgRZK3O16owX+G86E
-         qaRKlkFwMQvGkX/tl/pYkfCztvOFqhK4kVhGOIXlouy05da2BLzOwnskQAklX6CbxH
-         NyxkRZ2T+ZZdxZfXAYrUjjYq57zwriTChnC6uCNs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.23] ([77.191.109.216]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MRUBA-1ikG0g1dv6-00SjQl; Fri, 13
- Mar 2020 14:17:38 +0100
-Subject: Re: [PATCH v2 0/9] brcmfmac: add support for BCM4359 SDIO chipset
-To:     chi-hsien.lin@cypress.com,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191211235253.2539-1-smoch@web.de>
- <1daadfe0-5964-db9b-818c-6e4c75ac6a69@web.de>
- <22526722-1ae8-a018-0e24-81d7ad7512dd@web.de> <2685733.IzV8dBlDb2@diego>
- <d7b05a6c-dfba-c8e0-b5fb-f6f7f5a6c1b7@cypress.com>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <09d6c2d7-b632-3dd1-2c9d-736ccc18d4a9@web.de>
-Date:   Fri, 13 Mar 2020 14:17:37 +0100
+        Fri, 13 Mar 2020 09:18:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39435 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCMNSA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 09:18:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f7so10254552wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 06:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bn2pqN9HAbTuXHAcJrMLYx5FETW6CRvh/btqMt6sCqw=;
+        b=PZ3XxqbvI2O9zAROHDyha6gd4E8+S9IRJxdKlQOIj9oqkq5KB+3+zDwb0hzFxxntbT
+         nzu/nragqVsECxjkwdJdhecJNm1HqTBGhGG1BU9mdrPcYqnFxddWRbbgv/plWL6o7uWT
+         kn6OMe3NZDIDqMy31C2x85VgzJpShDIWg1mIxu9xB4GrxFt7da/Y9Qmapkaq6s9puOTA
+         EUpxoteoz3e44CP5XoQjQ6IzIGKepusNdO5C1YOMy7hpygQ9iLTzM6dCOAnm3H0ZPZ9q
+         DgEnQFPE2wDGsQTMQrGcMWQUrus/lZw50y2bMflrXxSFHUnG4QNwhxVI5+bvdQIJpuUV
+         rPJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bn2pqN9HAbTuXHAcJrMLYx5FETW6CRvh/btqMt6sCqw=;
+        b=Q8zunVhNr7Aj67BENCt8c7NWCm/oLnfU6e4prIh/cjxeZqMtE7rGrRuqHWtaRGTwWG
+         f2pipPzbiumxYDxpOnSWmPS+3CCJIqqHKLCcJOgXWej8hUrgWHtWwuNgOusN1MX6p1AJ
+         oBj/zMxMHiaC8kgrG/7Ev7OaDN++3LcrCi77p4cIZaC+IAZgELyNQdMl8YHHjF8XgfpH
+         3pl2HHGx3zaj01SGd4WVUOPHicoj6wro+zXwFMG/lxvbsqF6/eBOsIO3KpJlyX8ekz87
+         930/dyoejgMojdCrezFdCgyNWLjgC06r9oLtxUfmOkFZvi+G9iGbZX6P+xrihX8zxRfS
+         Xr8w==
+X-Gm-Message-State: ANhLgQ1GLNBwahB3VgprQFifCas6TCV6SVivSG+sa40bIN6C9dr7rqxu
+        zIIv3vWZqv7wA89LyKX8a6THVg==
+X-Google-Smtp-Source: ADFU+vu9/4dR3r1To/9sQCDTFSgwnJNZAVk/FFHmneU8hNgkQZ44gaPPpzfCSvHselSjqpJLadL86g==
+X-Received: by 2002:a05:600c:4107:: with SMTP id j7mr10811271wmi.169.1584105477560;
+        Fri, 13 Mar 2020 06:17:57 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:40fb:3990:3519:cc26? ([2a01:e34:ed2f:f020:40fb:3990:3519:cc26])
+        by smtp.googlemail.com with ESMTPSA id l64sm17204064wmf.30.2020.03.13.06.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 06:17:56 -0700 (PDT)
+Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
+ <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
+ <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
+ <CAKfTPtBU1fyxWhR04QTCbvn07KgTqAHRVOt18D3TxmZSeiHQQQ@mail.gmail.com>
+ <ee3bbfeb-ddd5-e4dc-3999-39370e7a6c73@linaro.org>
+ <CAKfTPtDUmqYB1i7UcYXxcNjnQOoGufsB9do-9NxTMeWdJAfP2w@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c652094b-83bf-1f4c-4b9a-ff911864125f@linaro.org>
+Date:   Fri, 13 Mar 2020 14:17:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d7b05a6c-dfba-c8e0-b5fb-f6f7f5a6c1b7@cypress.com>
+In-Reply-To: <CAKfTPtDUmqYB1i7UcYXxcNjnQOoGufsB9do-9NxTMeWdJAfP2w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-X-Provags-ID: V03:K1:BnRPO9/yoBVzD9397yrzsC8frrT9NO6N1rg6fxEL1s/TpY8gBJs
- T9I7UAKzTjLELxaKIyjGe4GEWi8ZkMmTnESd2jeac7rlL2ZyPKZ02neSX55SjVbwuo6WZYg
- uue+4wWpOcKLpRTUf1vrqytHX5qZ7ikSaSBkHWE8K0Dn1QdvlCt/InOde3CWsVhw0ll2H4Q
- 0punPCQeAhK0y2UZ5p8ow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cF3WspyrK0M=:BijzAxOqvZo5FBsY8cbBzu
- a9X5D3QrhmpNrUWUmjpCUCyFBXDwC+zY/LMJtVlbMaqzBphnWmw8WQvOJ3GzwtnSPB7xOnQLg
- Nr6LZhF4y+o4mryN5gJiYkLLlRQYCgF6IUMRlufYfT6NZCjTlEmpR0e07oiH3NCYViB+HLj/W
- qeSaMlsVIFLwAumQrWH5ZjLX3+Bo2nzT+GiplMlyXd21Z9AzW1A7q5aMJLjPpwI/zNloCCD2C
- c+I7khkLyH8lAoYYG16MfMpmkzgEvVqnHOnccExVO43dsSNAxPuMCypRZxjUfhV2F5I3q5nEV
- Yqoq8tbxzXWKDHglQeZs26m/UVHzUn2Yunnzzy3LlHXKA5KnlB9dkiYlQfa6DTbFfGqPTjTW0
- /LNfPfslrrKgp/EI3kupTNu/qlc1tlMmqXXkJOYDRn3sewSQy95UefK5S8s65xM5qqa1gf79C
- MegkN5FQy1Xnuv2KIX8jrxErcBYzJjBicevZxyMtZE+IAhm+sxijzQahlBl8SD3rgKwoJZCzk
- OAMN1N5xyRQ7QOmlMlfn06UMS5s4wHFSDvDbcXpZE0b1nqIxC+CQHvdAVLfAZABsi1JItZdx6
- gZIxoVmJKMul/nzAE3vIodRcVlAX92BvW5k591I6juSFQGW/SDnHndPK0Svp6jc4eJOfcJo4D
- 3Wy3GC9oh5UUXG0dRz4U6SToxK6eksE1F8YH4//Qav6ikGVrK1XbENms0c5biat/xL32hmAMq
- hUg3/fLQpp+dwU9mdtsPfrVGjQrd3RPoKDA8mKpHQZJFgnauU81px2MHSEP+bQwr7Bp4nOp7M
- wY5Wytbfga3y/p66R0ypwIsQB56u7AyJ6mpjI7BrKQ4dR9CdpfhuQmB+mavsn+8eukBhXf2E9
- GH48TUquQya1jShqcWnIhwhBNEl8WXo0mTjeFNZvECDBN3NYb138fScLh6lV9n3CK0aM6NSkY
- qwsp8jzWe35yVdZOYJWjCYrpg3vTpyba0o0tYVevRyUB2OBRBAFL+MTBzs1zpLJn0FZVgBsZg
- WLl06i7fmBD24hFbJVGLeiU00OD78uS3Wq3B+V0Gj4eFEOJlREoPCwTDiGnhwv9iEn8D1fMsG
- XmM8fG1qeZfGh3edCLl8RofIkFvhvRAFVCxNO7NJD/6iBYXmSSq3Rb/PYsXbEBW/LwXhtyYDB
- B0labZIm6rEcYDGPl5Ijx3JZqLQGwaJvc/J+AqCnkX5RRoESOR08F/Wi8T9+X+zYoAFc3k/LH
- uybn9eMmp2+5GIPBU
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13/03/2020 14:15, Vincent Guittot wrote:
+> On Fri, 13 Mar 2020 at 13:15, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 
-On 13.03.20 12:03, Chi-Hsien Lin wrote:
-> On 12/16/2019 7:43, Heiko St=C3=BCbner wrote:
->> Hi Soeren,
->>
->> Am Sonntag, 15. Dezember 2019, 22:24:10 CET schrieb Soeren Moch:
->>> On 12.12.19 11:59, Soeren Moch wrote:
->>>> On 12.12.19 10:42, Kalle Valo wrote:
->>>>> Soeren Moch <smoch@web.de> writes:
+[ ... ]
+
+>>>>>> +
+>>>>>> +       if (idle_state)
+>>>>>> +               idle_set_break_even(rq, ktime_get_ns() +
 >>>>>
->>>>>> Add support for the BCM4359 chipset with SDIO interface and RSDB
->>>>>> support
->>>>>> to the brcmfmac wireless network driver in patches 1-7.
->>>>>>
->>>>>> Enhance devicetree of the RockPro64 arm64/rockchip board to use an
->>>>>> AP6359SA based wifi/bt combo module with this chipset in patches
->>>>>> 8-9.
->>>>>>
->>>>>>
->>>>>> Chung-Hsien Hsu (1):
->>>>>> =C2=A0=C2=A0 brcmfmac: set F2 blocksize and watermark for 4359
->>>>>>
->>>>>> Soeren Moch (5):
->>>>>> =C2=A0=C2=A0 brcmfmac: fix rambase for 4359/9
->>>>>> =C2=A0=C2=A0 brcmfmac: make errors when setting roaming parameters =
-non-fatal
->>>>>> =C2=A0=C2=A0 brcmfmac: add support for BCM4359 SDIO chipset
->>>>>> =C2=A0=C2=A0 arm64: dts: rockchip: RockPro64: enable wifi module at=
- sdio0
->>>>>> =C2=A0=C2=A0 arm64: dts: rockchip: RockPro64: hook up bluetooth at =
-uart0
->>>>>>
->>>>>> Wright Feng (3):
->>>>>> =C2=A0=C2=A0 brcmfmac: reset two D11 cores if chip has two D11 core=
-s
->>>>>> =C2=A0=C2=A0 brcmfmac: add RSDB condition when setting interface co=
-mbinations
->>>>>> =C2=A0=C2=A0 brcmfmac: not set mbss in vif if firmware does not sup=
-port MBSS
->>>>>>
->>>>>> =C2=A0 .../boot/dts/rockchip/rk3399-rockpro64.dts=C2=A0=C2=A0=C2=A0=
- | 50 +++++++++++---
->>>>>> =C2=A0 .../broadcom/brcm80211/brcmfmac/bcmsdh.c=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 8 ++-
->>>>>> =C2=A0 .../broadcom/brcm80211/brcmfmac/cfg80211.c=C2=A0=C2=A0=C2=A0=
- | 68
->>>>>> +++++++++++++++----
->>>>>> =C2=A0 .../broadcom/brcm80211/brcmfmac/chip.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 54 ++++++++++++++-
->>>>>> =C2=A0 .../broadcom/brcm80211/brcmfmac/chip.h=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
->>>>>> =C2=A0 .../broadcom/brcm80211/brcmfmac/pcie.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
->>>>>> =C2=A0 .../broadcom/brcm80211/brcmfmac/sdio.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 17 +++++
->>>>>> =C2=A0 include/linux/mmc/sdio_ids.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 2 +
->>>>>> =C2=A0 8 files changed, 176 insertions(+), 26 deletions(-)
->>>>> Just to make sure we are on the same page, I will apply patches
->>>>> 1-7 to
->>>>> wireless-drivers-next and patches 8-9 go to some other tree? And
->>>>> there
->>>>> are no dependencies between the brcmfmac patches and dts patches?
->>>>>
->>>> Yes, this also is my understanding. I'm glad if you are fine with
->>>> patches 1-7.
->>>> Heiko will pick up patches 8-9 later for linux-rockchip independently=
-.
->>>> And if we need another round of review for patches 8-9, I think we
->>>> don't
->>>> need to bother linux-wireless with this.
+>>>>> What worries me a bit is that it adds one ktime_get call each time a
+>>>>> cpu enters idle
+>>>>
+>>>> Right, we can improve this in the future by folding the local_clock() in
+>>>> cpuidle when entering idle with this ktime_get.
 >>>
->>> Heiko,
->>>
->>> is this OK for you when patches 1-7 are merged now in wireless-drivers=
-,
->>> and then I send a v3 for patches 8-9 only for you to merge in
->>> linux-rockchip later? Or do you prefer a full v3 for the whole series
->>> with only this pending clock name update in patch 9?
+>>> Using local_clock() would be more latency friendly
 >>
->> Nope, merging 1-7 from this v2 and then getting a v3 with only the dts
->> stuff is perfectly fine :-)
->
-> Soeren,
->
-> I suppose patch 1-7 from this serious are all good for merging. Is
-> that right? If so, could you please create a rebased V3?
-Chi-hsien,
+>> Unfortunately we are comparing the deadline across CPUs, so the
+>> local_clock() can not be used here.
+>>
+>> But if we have one ktime_get() instead of a local_clock() + ktime_get(),
+>> that should be fine, no?
+> 
+> Can't this computation of break_even be done in cpuidle framework
+> while computing other statistics for selecting the idle state instead
+> ? cpuidle already uses ktime_get for next hrtimer as an example.
+> So cpuidle compute break_even and make it available to scheduler like
+> exit_latency. And I can imagine that system wide time value will also
+> be needed when looking at next wakeup event of cluster/group of CPUs
 
-Thanks for asking, but these patches are already merged in
-torvalds/v5.6-rc1 as commits
-1b8d2e0a9e42..2635853ce4ab
+Ok, so you suggest to revisit and consolidate the whole time capture in
+cpuidle? I think that makes sense.
 
-So everything already fine with this.
 
-Thanks,
-Soeren
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
->
->
-> Regards,
-> Chi-hsien Lin
->
->>
->> Heiko
->>
->>
->> .
->>
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
