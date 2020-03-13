@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57184C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BEDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0772074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2102074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584094626;
-	bh=vB1MiwmBoyGSX0x8BuDgWTS9/c0waXFmI2PTwKKTNcQ=;
+	s=default; t=1584094630;
+	bh=Xcm3VCGWPDSjzjBWP/2DDPJCVTGZoHkn7ClLV4hpJZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afvT5Eqqk/ftIYmnMp36+OGGcFD5f+86nf4EXXTjH+tAAZ2UfVt2HiEdKzL7c9NKi
-	 HwMu28q4QKJNXcxtVOLPpITEQ7HI3T9bYFBh9xnwyoG4aJOYUB+b+K3mn4IPpwNVF+
-	 lCVR2YXRTbcRcQW6XgxJ5GHRqZ1SQZw514jslbLw=
+	b=uw3CaXf269boqtGhqdZaAlkuNHVw8jHk+5IJYgZ8o4b+KyCa4wY907aXJbzDC1nqZ
+	 2KB1t4uSwUvzyefEh+LKHtD6U9Z4c9BaLGy1QW6sDYUHqX24lGl8/LGd1IsFOQsIf1
+	 P1b9mcIlrX9GMJLXzLCOiYq4iWy2uIuXslCRPiKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgCMKRF (ORCPT
+        id S1726678AbgCMKRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
+        Fri, 13 Mar 2020 06:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgCMKRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:17:03 -0400
+        id S1726664AbgCMKRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:17:07 -0400
 Received: from localhost.localdomain (unknown [171.76.107.175])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9367F20753;
-        Fri, 13 Mar 2020 10:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22F720754;
+        Fri, 13 Mar 2020 10:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584094622;
-        bh=vB1MiwmBoyGSX0x8BuDgWTS9/c0waXFmI2PTwKKTNcQ=;
+        s=default; t=1584094626;
+        bh=Xcm3VCGWPDSjzjBWP/2DDPJCVTGZoHkn7ClLV4hpJZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EZbfbqmNLyOC3WKcoQqE4PgzNjXbH6S5Qv9SQk/HNKOZqp0dPwyV46jsET2FRqCSP
-         aWo60z0K1v2Ikabteh85tJx8XGvZDOL1MFKtYTDHKJpCjJ3sCO63h17aZyiiWbqSq/
-         /HYLmvKvaLhgi7YYhEJQTuADGGNS/84V8x9/T1yQ=
+        b=Sci7lw5YOOXIGRc1mBAjja8GdP9/hZK1COIn5aa6nVHOXNS37CXk16SprAIjQGSU3
+         BpQwJVpoFyLeuR2xhqm8foRthQKla/1FoSJMkPuXS+FO8AxYSTlVXeOoAyQiWgnmAI
+         XDa/oks3LiV1/o9nZ+6+ECIUEIR1bVXNa9dTRVOQ=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Jaroslav Kysela <perex@perex.cz>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2 5/9] ASoC: qcom: q6asm-dai: add support to wma decoder
-Date:   Fri, 13 Mar 2020 15:46:23 +0530
-Message-Id: <20200313101627.1561365-6-vkoul@kernel.org>
+Subject: [RESEND PATCH v2 6/9] ALSA: compress: add alac & ape decoder params
+Date:   Fri, 13 Mar 2020 15:46:24 +0530
+Message-Id: <20200313101627.1561365-7-vkoul@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313101627.1561365-1-vkoul@kernel.org>
 References: <20200313101627.1561365-1-vkoul@kernel.org>
@@ -63,112 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm DSPs also supports the wma decoder, so add support for wma
-decoder and convert the snd_codec_params to qdsp format.
+Add ALAC (Apple Lossless Audio Codec) and APE (Monkey's Lossless Audio
+Codec) defines and parameters required to configure these.
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 67 +++++++++++++++++++++++++++++++-
- 1 file changed, 66 insertions(+), 1 deletion(-)
+ include/uapi/sound/compress_params.h | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 8f245d03b6f5..53c250778eea 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -627,10 +627,13 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 	int dir = stream->direction;
- 	struct q6asm_dai_data *pdata;
- 	struct q6asm_flac_cfg flac_cfg;
-+	struct q6asm_wma_cfg wma_cfg;
-+	unsigned int wma_v9 = 0;
- 	struct device *dev = c->dev;
- 	int ret;
- 	union snd_codec_options *codec_options;
- 	struct snd_dec_flac *flac;
-+	struct snd_dec_wma *wma;
+diff --git a/include/uapi/sound/compress_params.h b/include/uapi/sound/compress_params.h
+index bf6f7155e775..79b14389ae41 100644
+--- a/include/uapi/sound/compress_params.h
++++ b/include/uapi/sound/compress_params.h
+@@ -75,7 +75,9 @@
+ #define SND_AUDIOCODEC_G723_1                ((__u32) 0x0000000C)
+ #define SND_AUDIOCODEC_G729                  ((__u32) 0x0000000D)
+ #define SND_AUDIOCODEC_BESPOKE               ((__u32) 0x0000000E)
+-#define SND_AUDIOCODEC_MAX                   SND_AUDIOCODEC_BESPOKE
++#define SND_AUDIOCODEC_ALAC                  ((__u32) 0x0000000F)
++#define SND_AUDIOCODEC_APE                   ((__u32) 0x00000010)
++#define SND_AUDIOCODEC_MAX                   SND_AUDIOCODEC_APE
  
- 	codec_options = &(prtd->codec_param.codec.options);
+ /*
+  * Profile and modes are listed with bit masks. This allows for a
+@@ -336,6 +338,26 @@ struct snd_dec_wma {
+ 	__u32 reserved;
+ } __attribute__((packed, aligned(4)));
  
-@@ -692,6 +695,67 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 			return -EIO;
- 		}
- 		break;
++struct snd_dec_alac {
++	__u32 frame_length;
++	__u8 compatible_version;
++	__u8 pb;
++	__u8 mb;
++	__u8 kb;
++	__u32 max_run;
++	__u32 max_frame_bytes;
++} __attribute__((packed, aligned(4)));
 +
-+	case SND_AUDIOCODEC_WMA:
-+		wma = &codec_options->wma_d;
++struct snd_dec_ape {
++	__u16 compatible_version;
++	__u16 compression_level;
++	__u32 format_flags;
++	__u32 blocks_per_frame;
++	__u32 final_frame_blocks;
++	__u32 total_frames;
++	__u32 seek_table_present;
++} __attribute__((packed, aligned(4)));
 +
-+		memset(&wma_cfg, 0x0, sizeof(struct q6asm_wma_cfg));
-+
-+		wma_cfg.sample_rate =  params->codec.sample_rate;
-+		wma_cfg.num_channels = params->codec.ch_in;
-+		wma_cfg.bytes_per_sec = params->codec.bit_rate / 8;
-+		wma_cfg.block_align = params->codec.align;
-+		wma_cfg.bits_per_sample = prtd->bits_per_sample;
-+		wma_cfg.enc_options = wma->encoder_option;
-+		wma_cfg.adv_enc_options = wma->adv_encoder_option;
-+		wma_cfg.adv_enc_options2 = wma->adv_encoder_option2;
-+
-+		if (wma_cfg.num_channels == 1)
-+			wma_cfg.channel_mask = 4; /* Mono Center */
-+		else if (wma_cfg.num_channels == 2)
-+			wma_cfg.channel_mask = 3; /* Stereo FL/FR */
-+		else
-+			return -EINVAL;
-+
-+		/* check the codec profile */
-+		switch (params->codec.profile) {
-+		case SND_AUDIOPROFILE_WMA9:
-+			wma_cfg.fmtag = 0x161;
-+			wma_v9 = 1;
-+			break;
-+
-+		case SND_AUDIOPROFILE_WMA10:
-+			wma_cfg.fmtag = 0x166;
-+			break;
-+
-+		case SND_AUDIOPROFILE_WMA9_PRO:
-+			wma_cfg.fmtag = 0x162;
-+			break;
-+
-+		case SND_AUDIOPROFILE_WMA9_LOSSLESS:
-+			wma_cfg.fmtag = 0x163;
-+			break;
-+
-+		case SND_AUDIOPROFILE_WMA10_LOSSLESS:
-+			wma_cfg.fmtag = 0x167;
-+			break;
-+
-+		default:
-+			dev_err(dev, "Unknown WMA profile:%x\n",
-+				params->codec.profile);
-+			return -EIO;
-+		}
-+
-+		if (wma_v9)
-+			ret = q6asm_stream_media_format_block_wma_v9(
-+					prtd->audio_client, &wma_cfg);
-+		else
-+			ret = q6asm_stream_media_format_block_wma_v10(
-+					prtd->audio_client, &wma_cfg);
-+		if (ret < 0) {
-+			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
-+			return -EIO;
-+		}
- 	default:
- 		break;
- 	}
-@@ -791,9 +855,10 @@ static int q6asm_dai_compr_get_caps(struct snd_compr_stream *stream,
- 	caps->max_fragment_size = COMPR_PLAYBACK_MAX_FRAGMENT_SIZE;
- 	caps->min_fragments = COMPR_PLAYBACK_MIN_NUM_FRAGMENTS;
- 	caps->max_fragments = COMPR_PLAYBACK_MAX_NUM_FRAGMENTS;
--	caps->num_codecs = 2;
-+	caps->num_codecs = 3;
- 	caps->codecs[0] = SND_AUDIOCODEC_MP3;
- 	caps->codecs[1] = SND_AUDIOCODEC_FLAC;
-+	caps->codecs[2] = SND_AUDIOCODEC_WMA;
+ union snd_codec_options {
+ 	struct snd_enc_wma wma;
+ 	struct snd_enc_vorbis vorbis;
+@@ -344,6 +366,8 @@ union snd_codec_options {
+ 	struct snd_enc_generic generic;
+ 	struct snd_dec_flac flac_d;
+ 	struct snd_dec_wma wma_d;
++	struct snd_dec_alac alac_d;
++	struct snd_dec_ape ape_d;
+ } __attribute__((packed, aligned(4)));
  
- 	return 0;
- }
+ /** struct snd_codec_desc - description of codec capabilities
 -- 
 2.24.1
 
