@@ -2,156 +2,137 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A065FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23CCC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C21206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584077304;
-	bh=pHql+SpQj+MeG6rVjnuPXcHw2IQyb23EWIepG0+cruQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0TvpJIZUk794aIWueB2S+QDM1lV/15LF8oDfgvSJPL85wbNR5ODUQnjrXmlS/X9Ud
-	 4BImsQ9BNSzrX1k2GhtbxMnk7h8pkkPEqU5WFTSkJ43uzDkXMU3/gZGPwp4B9odoxb
-	 wGuxytERcqtukcYPHs7PCWDwCBfyrkkyIZTl7KgY=
+	by mail.kernel.org (Postfix) with ESMTP id 7A891206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Co3158PT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgCMF2X (ORCPT
+        id S1726437AbgCMFaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 01:28:23 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:22933 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgCMF2W (ORCPT
+        Fri, 13 Mar 2020 01:30:24 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:65343 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgCMFaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 01:28:22 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 02D5S6Tc009503;
-        Fri, 13 Mar 2020 14:28:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02D5S6Tc009503
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584077287;
-        bh=+fsxH5XCWbBHArJVq6PwCJOxwCgrqHwu1xWOKzYD9s4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WGcK+Ad+LcKCDBzc3BTnZ38CAE4grHKYXZAbUw4BvvrFkO4jlmXSkE7JTSyHufKBo
-         891e8rtqCpTB4hS/ti8G9iKKoeCfLDVkdKnVxOh9ew4yxRVgpIU09BAXnD8ITRjd47
-         taGFqz1c6MpipTafWreHKDH23/jpj+y5bnpEQJ5QVreGzH7MTdaIxyg4azrnseWTe+
-         L6GQyR6pyWRlcvMygvIf8pptOKV4IfNuIPiXc5jjd+WaBU+QHBs/JnjIv1dH12BBXU
-         6Cbok2qOe9h/R2EVCv59wIA4pTKjw+L/HKGAZdkxDYbXFw9rGi6wknaTHaifMRSUTX
-         dbIbMGAYwywvA==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id 8so3088994uar.3;
-        Thu, 12 Mar 2020 22:28:06 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ172rQD9E8xGJR0PsV1J2JLxoxc/CI3jXHD8ckdy4gdSrRrhp+n
-        0Q3FCnmRXsjH/ZwypXs6q0U4B6W6kXqHwoIj2WI=
-X-Google-Smtp-Source: ADFU+vsZEBleM1Gp0y7XLL9hrFgCCN2x/Ky0AHliMll5vkmuNcXmF013bVP+YJVefVldqZItqYBJLw2pR+LYXJ1SDlQ=
-X-Received: by 2002:a9f:2828:: with SMTP id c37mr7074803uac.25.1584077285731;
- Thu, 12 Mar 2020 22:28:05 -0700 (PDT)
+        Fri, 13 Mar 2020 01:30:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1584077423; x=1615613423;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=88Zx2T7WCBJVENwjrv8btKUmZjU2WnlNsWj7L+qkaVc=;
+  b=Co3158PT34Ol4s7cWJ5JA5Zp5T1Uw31COR1ePlC5Xik48a1jUcaDAxYV
+   PHu13qu7Xy3jpMdcLwT+RrGjciY16+jxrbr/Kx62elEqT3dFiu7WKMxuA
+   cA5UlLv8TyIYg7hL+A9yQH352JaxQWHSJqo+CIf2pSRt7LRkW9dwZ2zXB
+   U=;
+IronPort-SDR: g32NOkjyZPrHE+l6ytQQqlK1Lm2zjoAu14ly/4ojSH4IYga6i3V+2BWs5y6AZoe7rXTxYAuHjX
+ lzVS0Wubks4A==
+X-IronPort-AV: E=Sophos;i="5.70,547,1574121600"; 
+   d="scan'208";a="32358031"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 13 Mar 2020 05:30:21 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 07FF8A28FA;
+        Fri, 13 Mar 2020 05:30:18 +0000 (UTC)
+Received: from EX13D01UWA004.ant.amazon.com (10.43.160.99) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 13 Mar 2020 05:30:18 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13d01UWA004.ant.amazon.com (10.43.160.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 13 Mar 2020 05:30:18 +0000
+Received: from localhost (10.2.75.237) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Fri, 13 Mar 2020 05:30:18 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>
+CC:     <axboe@kernel.dk>, <Chaitanya.Kulkarni@wdc.com>, <hch@lst.de>,
+        "Balbir Singh" <sblbir@amazon.com>,
+        Someswarudu Sangaraju <ssomesh@amazon.com>
+Subject: [PATCH v3 1/5] block/genhd: Notify udev about capacity change
+Date:   Fri, 13 Mar 2020 05:30:05 +0000
+Message-ID: <20200313053009.19866-2-sblbir@amazon.com>
+X-Mailer: git-send-email 2.16.6
+In-Reply-To: <20200313053009.19866-1-sblbir@amazon.com>
+References: <20200313053009.19866-1-sblbir@amazon.com>
 MIME-Version: 1.0
-References: <20190916084901.GA20338@gondor.apana.org.au> <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au> <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au> <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200224060042.GA26184@gondor.apana.org.au> <20200312115714.GA21470@gondor.apana.org.au>
- <CAHk-=wjbTF2iw3EbKgfiRRq_keb4fHwLO8xJyRXbfK3Q7cscuQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wjbTF2iw3EbKgfiRRq_keb4fHwLO8xJyRXbfK3Q7cscuQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 13 Mar 2020 14:27:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS2Ev8h=W_6V9DJc7-1Hz3J6O79ADUULrnOG5vTMWfSpw@mail.gmail.com>
-Message-ID: <CAK7LNAS2Ev8h=W_6V9DJc7-1Hz3J6O79ADUULrnOG5vTMWfSpw@mail.gmail.com>
-Subject: Re: [GIT PULL] Crypto Fixes for 5.6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Allow block/genhd to notify user space (via udev) about disk size changes
+using a new helper set_capacity_revalidate_and_notify(), which is a wrapper
+on top of set_capacity(). set_capacity_revalidate_and_notify() will only
+notify via udev if the current capacity or the target capacity is not zero
+and iff the capacity changes.
 
-On Fri, Mar 13, 2020 at 1:41 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, Mar 12, 2020 at 4:57 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> >
-> > This push fixes a build problem with x86/curve25519.
->
-> Pulled.
->
-> I do have a comment, though: this fix matches the existing pattern of
-> checking for assembler support, but that existing pattern is
-> absolutely horrible.
->
-> Would some enterprising individual please look at making the
-> CONFIG_AS_xyz flags use the _real_ config subsystem rather than ad-hoc
-> Makefile rules?
->
-> IOW, instead of having
->
->   adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
->   ..
->   adx_supported := $(call as-instr,adox %r10$(comma)%r10,yes,no)
->
-> in the makefiles, and silently changing how the Kconfig variables work
-> depending on those flags, make that DCONFIG_AS_ADX be a real config
-> variable:
->
->    config AS_ADX
->            def_bool $(success,$(srctree)/scripts/as-instr.sh "adox %r10,%r10")
->
-> or something like that?
->
-> And then we can make that CRYPTO_CURVE25519_X86 config variable simply have a
->
->         depends on AS_ADX
->
-> in it, and the Kconfig system just takes care of these dependencies on its own.
->
-> Anyway, the crypto change isn't _wrong_, but it does point out an ugly
-> little horror in how the crypto layer silently basically changes the
-> configuration depending on other things.
->
-> For an example of why this is problematic: it means that if somebody
-> sends you their config file, the actual configuration you get may be
-> *completely* different from what they actually had, depending on
-> tools.
->
-> Added Masahiro to the cc, since he's used to the 'def_bool' model, and
-> also is familiar with our existing 'as-instr' Makefile macro.
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Someswarudu Sangaraju <ssomesh@amazon.com>
+Signed-off-by: Balbir Singh <sblbir@amazon.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+---
+ block/genhd.c         | 24 ++++++++++++++++++++++++
+ include/linux/genhd.h |  2 ++
+ 2 files changed, 26 insertions(+)
 
-
-Thanks for the heads-up.
-
-In fact, as-instr is already used in Kconfig.
-arch/arm64/Kconfig: line 1396
-
-
-arm / arm64 are simple cases because
-32, 64-bit is separated by directory.
-
-There is one thing we need to be careful about.
-The x86 GCC is usually biarch.
-So, when evaluating 64-bit assembly code
-with a default 32-bit compiler,
--m64 must be passed.
-
-I will keep this conversion in my mind.
-
-Thanks.
-
-> So this is basically me throwing out a "I wish somebody would look at
-> this". Not meant as a criticism of the commit in question.
->
->             Linus
-
-
-
+diff --git a/block/genhd.c b/block/genhd.c
+index ff6268970ddc..6a60131baffa 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -46,6 +46,30 @@ static void disk_add_events(struct gendisk *disk);
+ static void disk_del_events(struct gendisk *disk);
+ static void disk_release_events(struct gendisk *disk);
+ 
++/*
++ * Set disk capacity and notify if the size is not currently
++ * zero and will not be set to zero
++ */
++void set_capacity_revalidate_and_notify(struct gendisk *disk, sector_t size,
++					bool revalidate)
++{
++	sector_t capacity = get_capacity(disk);
++
++	set_capacity(disk, size);
++
++	if (revalidate)
++		revalidate_disk(disk);
++
++	if (capacity != size && capacity != 0 && size != 0) {
++		char *envp[] = { "RESIZE=1", NULL };
++
++		kobject_uevent_env(&disk_to_dev(disk)->kobj, KOBJ_CHANGE, envp);
++	}
++}
++
++EXPORT_SYMBOL_GPL(set_capacity_revalidate_and_notify);
++
++
+ void part_inc_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
+ {
+ 	if (queue_is_mq(q))
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 6fbe58538ad6..f77f5095f20b 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -461,6 +461,8 @@ static inline int get_disk_ro(struct gendisk *disk)
+ extern void disk_block_events(struct gendisk *disk);
+ extern void disk_unblock_events(struct gendisk *disk);
+ extern void disk_flush_events(struct gendisk *disk, unsigned int mask);
++extern void set_capacity_revalidate_and_notify(struct gendisk *disk,
++			sector_t size, bool revalidate);
+ extern unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask);
+ 
+ /* drivers/char/random.c */
 -- 
-Best Regards
-Masahiro Yamada
+2.16.6
+
