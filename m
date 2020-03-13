@@ -2,76 +2,139 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFB1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FE82074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41BF2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ba9ga6dt"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D7pb2p+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgCMV0k (ORCPT
+        id S1727464AbgCMV1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:26:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52798 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMV0j (ORCPT
+        Fri, 13 Mar 2020 17:27:24 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58454 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMV1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:26:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=6G8s1T+GZ3P8r3F6F1F/EpnEULgc6g/30mc+g7rqZr4=; b=Ba9ga6dttaNNgbz+Sr5soV2Ykr
-        RueY7hooO5ZKBSibZK2CL1EkMwUHTFU3rE9DCCNrITWjH3eB42Rf76AFanuK5uHe11ov4EEpivTmK
-        KCDFZ9pla/p21BZxZpuOkUoe6rdM7Xh5w6x6HH91cru7jMLX9e1Du7PdO6R89hDdk0wtZGdONguiT
-        Q+ExgRY804XZKESZFyuO1i4twz/7kNSwsYWslC1xWQqFyB5Yykr0yj5Oumx8Ato1pj3gyi2HdgdPY
-        j6DrQeHQlQzvBjdt4kj3hVWMaiOjJr1mhunoLQjivT1Qg2xijTOivBDHghjYKp7vc5dFwoZYO6Pay
-        dyTsFVBg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCrp1-00072l-6x; Fri, 13 Mar 2020 21:26:23 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 241CE98112D; Fri, 13 Mar 2020 22:26:20 +0100 (CET)
-Date:   Fri, 13 Mar 2020 22:26:20 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        rostedt@goodmis.org, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH] timer: silenct a lockdep splat with debugobjects
-Message-ID: <20200313212620.GA2452@worktop.programming.kicks-ass.net>
-References: <20200313154221.1566-1-cai@lca.pw>
- <20200313180811.GD12521@hirez.programming.kicks-ass.net>
- <4FFD109D-EAC1-486F-8548-AA1F5E024120@lca.pw>
- <20200313201314.GE5086@worktop.programming.kicks-ass.net>
- <D3115315-12A9-43A9-9209-09553CF2C71C@lca.pw>
+        Fri, 13 Mar 2020 17:27:24 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7D6F32D6;
+        Fri, 13 Mar 2020 22:27:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584134841;
+        bh=8poZMY3yZ6/FoJSTyQeb76xDXBHs9PcDxedIYUmrXTk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D7pb2p+JuF9dSBS2cwX4W3N474YB7Twx9kegIH4Ym5JpP9XzqN5qQyiEbaAmis1IF
+         MnkiNLtwbAfhiXLOgQbpEah0Xg9MsCDmOMdF+lAvIJVo+wyQoidkxCQE4/jOqKESP+
+         tiVwAhxLtbTfG+CPWMTYFLQSJzhw4dHhlyCeCK1w=
+Date:   Fri, 13 Mar 2020 23:27:17 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to
+ assigned-clock-rates
+Message-ID: <20200313212717.GO4751@pendragon.ideasonboard.com>
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200313212012.GL4751@pendragon.ideasonboard.com>
+ <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D3115315-12A9-43A9-9209-09553CF2C71C@lca.pw>
+In-Reply-To: <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 05:00:41PM -0400, Qian Cai wrote:
-> > On Mar 13, 2020, at 4:13 PM, Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Prabhakar,
 
-> > 
-> > Or, fix that random crud to do the wakeup outside of the lock.
+On Fri, Mar 13, 2020 at 09:25:01PM +0000, Prabhakar Mahadev Lad wrote:
+> On Sent: 13 March 2020 21:20, Laurent Pinchart wrote:
+> > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
+> > > Use assigned-clock-rates to specify the clock rate. Also mark
+> > > clock-frequency property as deprecated.
+> >
+> > I would phrase it the other way around, this patch mainly deprecates clock-
+> > frequency, and as a side effect recommends usage of assigned-clock-rates.
+> >
+> > "Deprecate usage of the clock-frequency propertly. The preferred method
+> > to set clock rates is to use assigned-clock-rates."
+>
+> Agreed will do that.
 > 
-> That is likely to be difficult until we can find a creative way to not “uglifying" the
-> random code by dropping locks in the middle etc just because of debugojects.
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > index 72ad992..e62fe82 100644
+> > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > @@ -8,7 +8,7 @@ Required Properties:
+> > >  - compatible: Value should be "ovti,ov5645".
+> > >  - clocks: Reference to the xclk clock.
+> > >  - clock-names: Should be "xclk".
+> > > -- clock-frequency: Frequency of the xclk clock.
+> > > +- clock-frequency (deprecated): Frequency of the xclk clock.
+> >
+> > I would drop this completely. Drivers need to ensure backward compatibility,
+> > but DT bindings should only document the latest version, the history is
+> > available in git.
+> >
+> Sure will drop it.
+> 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > While at it, can I enlist you to convert these bindings to yaml ? :-)
+> >
+> Sure will do the honours 😊, will make sure yaml patch is ontop of this patch too.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=random/fast
+Thank you :-)
 
-Doesn't look difficult at all.
+> > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > >    to the hardware pin PWDNB which is physically active low.
+> > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > > @@ -37,7 +37,8 @@ Example:
+> > >
+> > >  clocks = <&clks 200>;
+> > >  clock-names = "xclk";
+> > > -clock-frequency = <24000000>;
+> > > +assigned-clocks = <&clks 200>;
+> > > +assigned-clock-rates = <24000000>;
+> > >
+> > >  vdddo-supply = <&camera_dovdd_1v8>;
+> > >  vdda-supply = <&camera_avdd_2v8>;
+
+-- 
+Regards,
+
+Laurent Pinchart
