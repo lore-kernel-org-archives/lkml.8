@@ -2,103 +2,90 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C95AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137EAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62E0206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0900206B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZyaC46HF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sV3fgjNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgCMHbL (ORCPT
+        id S1726393AbgCMHe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:31:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41140 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgCMHbL (ORCPT
+        Fri, 13 Mar 2020 03:34:29 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40029 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgCMHe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:31:11 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l21so6707257qtr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 00:31:10 -0700 (PDT)
+        Fri, 13 Mar 2020 03:34:29 -0400
+Received: by mail-pl1-f196.google.com with SMTP id h11so3826014plk.7;
+        Fri, 13 Mar 2020 00:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=otjCA0qUOdrbDfCxjamOr2JfsohGEgJgplUkLsbNr4E=;
-        b=ZyaC46HF44G9D3UVtFVFnr1FvCuUAuDuU6fdUNcNPX/xO05FUwGz11D7mK5B+T0WJL
-         cJizWGQUGrSIovoj0XOopxczBCSNjbrIRi89l9uw26i8Lvt6CgEo45yR7hmJg7OI4e24
-         f35T8f6Q1HzUqRmjtzGbnUlp08Km19leQ+RpfkKrpRiCOGUOO3xs3YzZKMr2zQbyhxaV
-         BuhZO6rniiH6gZdR8aDRjy2pR8NApcQ0aS7FiJw7M5xkzCJEYtvpBoAvrtATeAtVRqSy
-         4J0E5zZewUXfqiPwSY4EgshTl8aZwKYT1K8FGdjdJRYwBTklP16RGnH+FSAzJgdk8ae7
-         0mVA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iqIrEWPHtK36KHL97scoySA1zOUO14/T0uQX8yO3Kk4=;
+        b=sV3fgjNCxZa0NMDNX/eEDrLKybxnbFPT9ahm32wdl+TFAc79eudak0fkV/AKFyVMRK
+         P5TaBgoZogmiAbxPUktzbaUZhrx8EAPNBjccwhvMxwKy+1g4Kk0npunlc4CjacaX34oj
+         gtcK0uxZKjD8VMkA2Pi8s95+su1IwX4Z/3Gb30Vbu/nDu4rauGMf5po6aY/5v+2LrSEw
+         wsC7TTAFZEVoyfFbqE2UEqbUyh+9VR02yTk+fOt7rbP+Jjt7HXbHqov2oyAaO6qo+ZX2
+         j8Ff3u6/i/TLJKw9AptcLT6l6lYnM3AM/rk3DFD9DUdphRcybMEKEQyzDzXzm/zoEmup
+         Jdvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=otjCA0qUOdrbDfCxjamOr2JfsohGEgJgplUkLsbNr4E=;
-        b=m5fYSwEQu2sj4Na8aeMteyY/WV9tRdutk0p+8U8RbySeHwntNguc9Z9lmJyHyLnU8v
-         YvCBkTvqV4H8Nd5689AiZ69f96HPZLu0RhGzNvgiS3xnIkhpjNOFw/+tYkPxsTElntf+
-         a3OSKRghWwOvrBXbvr+KWlGCBukA+czGqF0e13FO7ObxLSAqq+y5+8HqyVe/IcpSNQ8E
-         ZoCjU4RQp4/JL6rwtafHClmsCkagu6uEN30ZTRwYxORNsvWKuPl9y5Ke3Pi81kYSr0Se
-         +uLUZJ8Ax8ZZNw5xUTtcGhTB8pCzmZz6Mh2eGFP9v7MokMzILQo07/kXtOMfOz5G+HUP
-         TUBQ==
-X-Gm-Message-State: ANhLgQ0n5wMfajK5MB41oa93UwEtCQMsxx1HuFHEg0xtLEgOkG8QRYtX
-        178AaYKa0PfWDlBZdRACNe4mMZEZ49qo69CKzaLadQ==
-X-Google-Smtp-Source: ADFU+vuv3HwZeTF5PsruoeS+N8rIruzo+vgdaAkOxSLbvfRlYHD1x0nqc8BJf9m+C9//uMqVnG1egWzVQBf8UmOQInY=
-X-Received: by 2002:ac8:f85:: with SMTP id b5mr10932879qtk.158.1584084669617;
- Fri, 13 Mar 2020 00:31:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iqIrEWPHtK36KHL97scoySA1zOUO14/T0uQX8yO3Kk4=;
+        b=EDJ6k7DLQlJZDNiKk9JYIFuRMdNdCnKsyA7YIystKS3RJ4QgN/6oW8g0GbDbAffdRW
+         o1cV68o++y0tgTqwyZjJxLbjd0sTqRhHwrwDHe+37asp0b6RRy+a9CVqPjIqSGKVtxQ0
+         SfYE1XTjbFr5aTfzehMALuQNDe0xjODelxSCgOSA4hSjhYNW/mPzjT7ybQi246niqDsw
+         ifN/mwjwpldwe4cKSn9XlQvyIkSco/zAhmp3zZXXzmEdTWquXZwWVaEM7WHS1WXJXJXb
+         IVdOAjKJwoNsktBdlD+mbkR2V+0T4Nsn7tMm01ommJ7JCRWZL1ScPNyabF/ZwZ+zmd8W
+         NmtQ==
+X-Gm-Message-State: ANhLgQ2fqIj/7t+1u/0lIOcytMKNKg0+R2dzfYu2jAd0VwLpQ2aKO/VT
+        0juH/BKNhbOL1DK5nki0pF4=
+X-Google-Smtp-Source: ADFU+vvt5Yz6wpzYZKQnDeW9SKZ45i0fLG+ULFfNUkt+9fPbu7uWpM9sM6imSkYH1mxkGqS/YrK5TA==
+X-Received: by 2002:a17:90b:1954:: with SMTP id nk20mr8418374pjb.69.1584084868541;
+        Fri, 13 Mar 2020 00:34:28 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id u11sm10965653pjn.2.2020.03.13.00.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 00:34:27 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:34:25 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Bruno Meneguele <bmeneg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com, rostedt@goodmis.org
+Subject: Re: [PATCH] kernel/printk: add kmsg SEEK_CUR handling
+Message-ID: <20200313073425.GA219881@google.com>
+References: <20200313003533.2203429-1-bmeneg@redhat.com>
 MIME-Version: 1.0
-References: <0000000000000ea4b4059fb33201@google.com> <000000000000c7979105a0a311f6@google.com>
- <20200313014435.GY979@breakpoint.cc>
-In-Reply-To: <20200313014435.GY979@breakpoint.cc>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 13 Mar 2020 08:30:58 +0100
-Message-ID: <CACT4Y+aPA8byGU=rt5P9tt3wWHL8Wr3t_uiXZ5fJBzAtcc=+AA@mail.gmail.com>
-Subject: Re: WARNING in geneve_exit_batch_net (2)
-To:     Florian Westphal <fw@strlen.de>
-Cc:     syzbot <syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com>,
-        coreteam@netfilter.org, David Miller <davem@davemloft.net>,
-        Hillf Danton <hdanton@sina.com>, Jiri Benc <jbenc@redhat.com>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        LKML <linux-kernel@vger.kernel.org>, moshe@mellanox.com,
-        netdev <netdev@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313003533.2203429-1-bmeneg@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 2:45 AM Florian Westphal <fw@strlen.de> wrote:
->
-> syzbot <syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com> wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit 4e645b47c4f000a503b9c90163ad905786b9bc1d
-> > Author: Florian Westphal <fw@strlen.de>
-> > Date:   Thu Nov 30 23:21:02 2017 +0000
-> >
-> >     netfilter: core: make nf_unregister_net_hooks simple wrapper again
->
-> No idea why this turns up, the reproducer doesn't hit any of these code
-> paths.
+On (20/03/12 21:35), Bruno Meneguele wrote:
+> 
+> Userspace libraries, e.g. glibc's dprintf(), expect the default return value
+> for invalid seek situations: -ESPIPE, but when the IO was over /dev/kmsg the
+> current state of kernel code was returning the generic case of an -EINVAL.
+> Hence, userspace programs were not behaving as expected or documented.
+> 
 
-The attached bisection log usually makes this reasonably transparent.
-It seems that in this case another kernel bug gets in the way of bisection.
+Hmm. I don't think I see ESPIPE in documentation [0], [1], [2]
 
-> The debug splat is a false-positive; ndo_stop/list_del hasn't run yet.
-> I will send a fix for net tree.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200313014435.GY979%40breakpoint.cc.
+[0] https://pubs.opengroup.org/onlinepubs/9699919799/functions/fprintf.html
+[1] http://man7.org/linux/man-pages/man3/dprintf.3p.html
+[2] http://man7.org/linux/man-pages/man3/fprintf.3p.html
+
+	-ss
