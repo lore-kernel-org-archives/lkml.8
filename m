@@ -2,146 +2,89 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88946C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C83C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695D8206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CFF206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="dBdEuzW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCMAwy (ORCPT
+        id S1727064AbgCMAzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:52:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:16259 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgCMAwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:52:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 17:52:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
-   d="scan'208";a="243215849"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2020 17:52:53 -0700
-Date:   Thu, 12 Mar 2020 17:52:53 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200313005252.GA1292@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
+        Thu, 12 Mar 2020 20:55:03 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38759 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgCMAzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 20:55:03 -0400
+Received: by mail-pj1-f68.google.com with SMTP id m15so2695389pje.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KukQCqFuQ52iEK7w5avP5xTjmDq5q5jmKUrg/HJnFFA=;
+        b=dBdEuzW4dXmH1//0aac/JzhJiPT/Jv6GgevIgxkCudRIIbGZ+PrZ0mGhYKid2dLDs1
+         5vD8jsk43pBEcmLDcYXADKomszFsjabrjmqo0Io6kP9tuP28QeU8d/tO5Y2iMDpCB5yG
+         bIOghGnbhbFbfmq+yYy8jSa35I3EEsQJnLZ4BmOq6ex+LQY5GdbVIZjN56poUwFKuNjK
+         q9mFBEdgKW+lFyv9eqLAGTkQHlItXCwKO8FgRJ8itTFFhat50M2SRQ05u3buz10uU0q5
+         3RtgXV7V7MtA6oiJH8Vp9IibKjnCPM8uamzKoWQi7kQi0oc8Ha4QjNP66KveXpEkFO1h
+         XAng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KukQCqFuQ52iEK7w5avP5xTjmDq5q5jmKUrg/HJnFFA=;
+        b=IhZKpIMMkvvJwfUCkijUbHzkTi3MlClseSdXgL7uq0w/OWEEbzw3BiOG9SoPAR8/zw
+         g6HYNFzaExo29l9+mNm9uv331FDn+QAFNbVe8xjUfhOkJECyQfffYUL29nyQIdnYGKE0
+         ve5xuhGx2LckYfUk23uv0lQYN2dCJvgZj5KOuneBTqNBLZZKcz70Xdozuo7MrsnZ5Scs
+         I0+1bW/yw8kcs19lXZlvfJWQtDfb8Ou/n2kjBZFrID+ehkYgClpjC3NVIjx+hX6YAmDm
+         5WKha8F1SoeJeF2X1K52coXj0wwwN6UiCJh9EQxZVCn1j0frVLVUcRSVCez3fCE2/4I3
+         x2pg==
+X-Gm-Message-State: ANhLgQ2Hv2EwBrpSXcBU3qNf+Bfb1j4npyeeYSPQpMAEIub8vX1fkckH
+        WviiptlfIcIpp5Rw32PrF9GiWaiI+yWDmw==
+X-Google-Smtp-Source: ADFU+vtriuTwZMI7JXVCGxL/TV/G9dsfdzB1UhBFu3cGl6VpfY3w8Pf1oXpu+vw4qJPCoAfm4Pt0Jg==
+X-Received: by 2002:a17:90a:198b:: with SMTP id 11mr7256074pji.23.1584060900474;
+        Thu, 12 Mar 2020 17:55:00 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id p7sm10138453pjp.1.2020.03.12.17.54.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 17:54:59 -0700 (PDT)
+Subject: Re: [PATCH for-5.7/drivers v2 1/1] null_blk: describe the usage of
+ fault injection param
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200312220140.12233-1-dongli.zhang@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3937ffef-5b24-6b11-fac7-172a7e654374@kernel.dk>
+Date:   Thu, 12 Mar 2020 18:54:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200312220140.12233-1-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 03:30:44PM -0400, Nathaniel McCallum wrote:
-> On Tue, Mar 3, 2020 at 6:40 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > + * The exit handler's return value is interpreted as follows:
-> > + *  >0:                continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
-> > + *   0:                success, return @ret to the caller
-> > + *  <0:                error, return @ret to the caller
-> > + *
-> > + * The userspace exit handler is responsible for unwinding the stack, e.g. to
-> > + * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
+On 3/12/20 4:01 PM, Dongli Zhang wrote:
+> As null_blk is a very good start point to test block layer, this patch
+> adds description and comments to 'timeout', 'requeue' and 'init_hctx' to
+> explain how to use fault injection with null_blk.
 > 
-> Unless I misunderstand, this documentation...
+> The nvme has similar with nvme_core.fail_request in the form of comment.
 
-Hrm, that does appear wrong.  I'm guessing that was leftover from a previous
-incarnation of the code.  Or I botched the description, which is just as
-likely.
+Applied, thanks.
 
-> > + * The exit handler may also transfer control, e.g. via longjmp() or a C++
-> > + * exception, without returning to __vdso_sgx_enter_enclave().
-> > + *
-> > + * Return:
-> > + *  0 on success,
-> > + *  -EINVAL if ENCLU leaf is not allowed,
-> > + *  -EFAULT if an exception occurs on ENCLU or within the enclave
-> > + *  -errno for all other negative values returned by the userspace exit handler
-> > + */
+-- 
+Jens Axboe
 
-...
-
-> > +       /* Load the callback pointer to %rax and invoke it via retpoline. */
-> > +       mov     0x20(%rbp), %rax
-> > +       call    .Lretpoline
-> > +
-> > +       /* Restore %rsp to its post-exit value. */
-> > +       mov     %rbx, %rsp
-> 
-> ... doesn't seem to match this code.
-> 
-> If the handler pops from the stack and then we restore the stack here,
-> the handler had no effect.
-> 
-> Also, one difference between this interface and a raw ENCLU[EENTER] is
-> that we can't pass arguments on the untrusted stack during EEXIT. If
-> we want to support that workflow, then we need to allow the ability
-> for the handler to pop "additional" values without restoring the stack
-> pointer to the exact value here.
-
-> Also, one difference between this interface and a raw ENCLU[EENTER] is
-> that we can't pass arguments on the untrusted stack during EEXIT. If
-> we want to support that workflow, then we need to allow the ability
-> for the handler to pop "additional" values without restoring the stack
-> pointer to the exact value here.
-
-The callback shenanigans exist precisely to allow passing arguments on the
-untrusted stack.  The vDSO is very careful to preserve the stack memory
-above RSP, and to snapshot RSP at the time of exit, e.g. the arguments in
-memory and their addresses relative to u_rsp live across EEXIT.  It's the
-same basic concept as regular function calls, e.g. the callee doesn't pop
-params off the stack, it just knows what addresses relative to RSP hold
-the data it wants.  The enclave, being the caller, is responsible for
-cleaning up u_rsp.
-
-FWIW, if the handler reaaaly wanted to pop off the stack, it could do so,
-fixup the stack, and then re-call __vdso_sgx_enter_enclave() instead of
-returning (to the original __vdso_sgx_enter_enclave()).
-
-> > +       /*
-> > +        * If the return from callback is zero or negative, return immediately,
-> > +        * else re-execute ENCLU with the postive return value interpreted as
-> > +        * the requested ENCLU leaf.
-> > +        */
-> > +       cmp     $0, %eax
-> > +       jle     .Lout
-> > +       jmp     .Lenter_enclave
-> > +
-> > +.Lretpoline:
-> > +       call    2f
-> > +1:     pause
-> > +       lfence
-> > +       jmp     1b
-> > +2:     mov     %rax, (%rsp)
-> > +       ret
-> > +       .cfi_endproc
-> > +
-> > +_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
