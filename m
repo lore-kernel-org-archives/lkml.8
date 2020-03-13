@@ -2,204 +2,178 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5390C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902C72073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB814206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 05:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oZCvMVNJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi9Tr9pE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgCMFNO (ORCPT
+        id S1726442AbgCMFP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 01:13:14 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28090 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726365AbgCMFNO (ORCPT
+        Fri, 13 Mar 2020 01:15:27 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34820 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgCMFP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 01:13:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584076393; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=EvnTMH+qZB325+j+Mam9+Ki9mILaWC3EQ/KKtvEmMkM=; b=oZCvMVNJT0yUzR2z+1Lx2OAAzx8A8IP+Lau1DBSOqC4fGoECvQOtcNPHWyyk17b9nvmZdGdm
- /WBEQQGDPiw3DRkdq7kycjew/1Omks+uxr2PZ6KunZRc07+qw/lzSEhYADwLYcgK3NhSpupk
- gX23bYrVKtTxpV9RrJkc5fVOF7g=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6b1655.7f870ac0e110-smtp-out-n03;
- Fri, 13 Mar 2020 05:12:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B0D10C43636; Fri, 13 Mar 2020 05:12:52 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EFD02C433D2;
-        Fri, 13 Mar 2020 05:12:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EFD02C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Fri, 13 Mar 2020 10:42:46 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-Message-ID: <20200313051245.GK20234@codeaurora.org>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
- <20200312170242.GA185506@google.com>
- <20200313012604.GI20234@codeaurora.org>
- <20200313014535.GA72547@google.com>
+        Fri, 13 Mar 2020 01:15:27 -0400
+Received: by mail-qt1-f193.google.com with SMTP id v15so6578903qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 22:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bOaIANfcFIltH2ZraJZwMCEBbnf6PS30AO1gqgKPpzE=;
+        b=Wi9Tr9pEoD60E7cuCxTfcbsMKLnS3OplDUH6FujkZGlU6s4CuBe5Z2x0uob74c2VaC
+         wLpYlW22+5WFeHXd+Acnm9MDtQ5541u/Jlt7kkJ3yFLycUyPTr0yQwDopTR98Rl8glsd
+         NCZ9KpQVvYpZzdRihGas7fXwpuYTnP26dUc1FtWH5ywtZFNnkhElX+viQ77cdJ5tKedr
+         ZwX+LhJ04jYaFBr6V/hwiP9X+kA/hblZhd+0uZhcdRRxMbZDEXggVByec84C25rYw6BQ
+         onzQnmNWefS0u8s1MfVfA/JsbTgOm6H01Rk7ewNSg9nku3KUwFTkikeasv7xAk1kDiNZ
+         jCiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bOaIANfcFIltH2ZraJZwMCEBbnf6PS30AO1gqgKPpzE=;
+        b=Exm72ujYQhN+KsWbupgCbmekGZPiAlghVI/wkLAVJzyI88Vo/mZKs7dAiThQEzAujP
+         U1u/pkvKf4YnFlloBR7cDFu7MfggNqLGFOzsfMtpxLUCyvxqZ2+sb0Z0DFzMYHgk+H1A
+         RD0X5B/LzY18AaJau2a51HiqSRvSOBv8exjoi+DxlM8ExYchMUzpnGNm2xRChNR6TJp1
+         AqMf/p4tZ4z1bLx4hMW9bUZerPJRta7dyXed7IBLejkCWCe7SDkV6+kuJTZVUMc3NKR3
+         iOqk1EoPW3riH9Ca9IkpX8OfBl65H/ALwaacaX7za5njDIpwMyNJVK32v/mptGXctotC
+         fjZg==
+X-Gm-Message-State: ANhLgQ2FGJLem8Q9bGEshuwKu/8b83kTnzNR2n5BJpKBPExbOuLTxxIL
+        YzFSo5gRk1I0jI4sgE+XZcA=
+X-Google-Smtp-Source: ADFU+vs5JNbLujw3IScsYOjz7BzzXWpU76OPeQNCoNbQDKRcqycJ85NAW0Wt5wvO/HkQ8BTgpCEpWQ==
+X-Received: by 2002:ac8:7319:: with SMTP id x25mr3125265qto.96.1584076525253;
+        Thu, 12 Mar 2020 22:15:25 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d22sm9434074qte.93.2020.03.12.22.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 22:15:24 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 13 Mar 2020 01:15:23 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v4 2/2] x86/purgatory: Make sure we fail the build if
+ purgatory.ro has missing symbols
+Message-ID: <20200313051522.GA1177634@rani.riverdale.lan>
+References: <20200311214601.18141-1-hdegoede@redhat.com>
+ <20200311214601.18141-3-hdegoede@redhat.com>
+ <20200312001006.GA170175@rani.riverdale.lan>
+ <3d58e77d-41e5-7927-fe84-4c058015e469@redhat.com>
+ <20200312114225.GB15619@zn.tnic>
+ <899f366e-385d-bafa-9051-4e93dc9ba321@redhat.com>
+ <20200312125032.GC15619@zn.tnic>
+ <20200313044235.GA1159234@rani.riverdale.lan>
+ <20200313045853.GA1172167@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200313014535.GA72547@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200313045853.GA1172167@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:45:35PM -0700, Jaegeuk Kim wrote:
-> On 03/13, Sahitya Tummala wrote:
-> > On Thu, Mar 12, 2020 at 10:02:42AM -0700, Jaegeuk Kim wrote:
-> > > On 03/12, Sahitya Tummala wrote:
-> > > > F2FS already has a default timeout of 5 secs for discards that
-> > > > can be issued during umount, but it can take more than the 5 sec
-> > > > timeout if the underlying UFS device queue is already full and there
-> > > > are no more available free tags to be used. In that case, submit_bio()
-> > > > will wait for the already queued discard requests to complete to get
-> > > > a free tag, which can potentially take way more than 5 sec.
-> > > > 
-> > > > Fix this by submitting the discard requests with REQ_NOWAIT
-> > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > > > scenario without waiting in the context of submit_bio(). The FS can
-> > > > then handle these requests by retrying again within the stipulated
-> > > > discard timeout period to avoid long latencies.
-> > > > 
-> > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > > > ---
-> > > >  fs/f2fs/segment.c | 14 +++++++++++++-
-> > > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > > index fb3e531..a06bbac 100644
-> > > > --- a/fs/f2fs/segment.c
-> > > > +++ b/fs/f2fs/segment.c
-> > > > @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > +	int flag;
-> > > >  	block_t lstart, start, len, total_len;
-> > > >  	int err = 0;
-> > > >  
-> > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > > > +
-> > > >  	if (dc->state != D_PREP)
-> > > >  		return 0;
-> > > >  
-> > > > @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> > > >  		bio->bi_opf |= flag;
-> > > >  		submit_bio(bio);
-> > > > +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
-> > > > +			dc->state = D_PREP;
-> > > > +			err = dc->error;
-> > > > +			break;
-> > > > +		}
-> > > >  
-> > > >  		atomic_inc(&dcc->issued_discard);
-> > > >  
-> > > > @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > >  			}
-> > > >  
-> > > >  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > > +			if (dc->error == -EAGAIN) {
-> > > > +				congestion_wait(BLK_RW_ASYNC, HZ/50);
+On Fri, Mar 13, 2020 at 12:58:54AM -0400, Arvind Sankar wrote:
+> On Fri, Mar 13, 2020 at 12:42:36AM -0400, Arvind Sankar wrote:
+> > On Thu, Mar 12, 2020 at 01:50:39PM +0100, Borislav Petkov wrote:
+> > > On Thu, Mar 12, 2020 at 12:58:24PM +0100, Hans de Goede wrote:
+> > > > My version of this patch has already been tested this way. It is
 > > > 
-> > > 						--> need to be DEFAULT_IO_TIMEOUT
-> > 
-> > Yes, i will update it.
-> > 
+> > > Tested with kexec maybe but if the 0day bot keeps finding breakage, that
+> > > ain't good enough.
 > > > 
-> > > > +				__relocate_discard_cmd(dcc, dc);
+> > > > 1. Things are already broken, my patch just exposes the brokenness
+> > > > of some configs, it is not actually breaking things (well it breaks
+> > > > the build, changing a silent brokenness into an obvious one).
 > > > 
-> > > It seems we need to submit bio first, and then move dc to wait_list, if there's
-> > > no error, in __submit_discard_cmd().
+> > > As I already explained, that is not good enough.
+> > > 
+> > > > 2. I send out the first version of this patch on 7 October 2019, it
+> > > > has not seen any reaction until now. So I'm sending out new versions
+> > > > quickly now that this issue is finally getting some attention...
+> > > 
+> > > And that is never the right approach.
+> > > 
+> > > Maintainers are busy as hell so !urgent stuff gets to wait. Spamming
+> > > them with more patchsets does not help - fixing stuff properly does.
+> > > 
+> > > So, to sum up: if Arvind's approach is the better one, then we should do
+> > > that and s390 should be fixed this way too. And all tested. And we will
+> > > remove the hurry element from it all since it has not been noticed so
+> > > far so it is not urgent and we can take our time and fix it properly.
+> > > 
+> > > Ok?
+> > > 
+> > > Thx.
+> > > 
+> > > -- 
+> > > Regards/Gruss,
+> > >     Boris.
+> > > 
+> > > https://people.kernel.org/tglx/notes-about-netiquette
 > > 
-> > Yes, that is not changed and it still happens for the failed request
-> > that is re-queued here too when it gets submitted again later.
+> > If I could try to summarize the situation here:
+> > - the purgatory requires filtering out certain CFLAGS/other settings set
+> >   for the generic kernel in order to work correctly
+> > - the patch proposed by Hans de Goede will detect missing filters at
+> >   build time rather than when kexec is executed
+> > - the filtering is currently not perfect as demonstrated by issues that
+> >   0day bot is finding -- but the patchset will find these problems at
+> >   build time rather than runtime
+> > - there might be a slight optimization as proposed by me [1] but it
+> >   might have problems as in [2] even if it seems to work
 > > 
-> > I am requeuing the discard request failed with -EAGAIN error back to 
-> > dcc->pend_list[] from wait_list. It will call submit_bio() for this request
-> > and also move to wait_list when it calls __submit_discard_cmd() again next
-> > time. Please let me know if I am missing anything?
+> > I think the patch as of v5 [0] is useful right now, to catch CFLAGS
+> > additions that aren't currently being filtered correctly. The real
+> > problem is that there exist CFLAGS that should be used for all source
+> > files in the kernel, and there are CFLAGS (eg tracing, stack check etc)
+> > that should only be used for the kernel proper. For special
+> > compilations, such as boot stubs, vdso's, purgatory we should have the
+> > generic CFLAGS but not the kernel-proper CFLAGS. The issue currently is
+> > that these special compilations need to filter out all the flags added
+> > for kernel-proper, and this is a moving target as more tracing/sanity
+> > flags get added.  Neither the solution of simply re-initializing CFLAGS
+> > (which will miss generic CFLAGS) nor trying to filter out CFLAGS (which
+> > will miss new kernel-proper CFLAGS) works very well. I think ideally
+> > splitting these into independent variables, i.e. BASE_FLAGS that can be
+> > used for everything, and KERNEL_FLAGS only to be used for the kernel
+> > proper is likely eventually the better solution, rather than conflating
+> > both into KBUILD_CFLAGS.
+> > 
+> > But to move forward incrementally, patch v5 is probably the cleanest. My
+> > suggestion in [1] I'm thinking is changing things significantly for
+> > kexec, by changing the purgatory from a relocatable object file into an
+> > actual executable, and might have knock-on implications that need to be
+> > reviewed and tested carefully before it can be merged, as shown by [2].
+> > 
+> > [0] https://lore.kernel.org/lkml/20200312114951.56009-1-hdegoede@redhat.com/
+> > [1] https://lore.kernel.org/lkml/20200312001006.GA170175@rani.riverdale.lan/
+> > [2] https://lore.kernel.org/lkml/20200312182322.GA506594@rani.riverdale.lan/
 > 
-> This patch has no problem, but I'm thinking that __submit_discard_cmd() needs
-> to return with any values by assumption where the waiting list should have
-> submitted commands.
+> Cc Nick Desaulniers, Nathan Chancellor, Ard Biesheuvel, who've all been
+> involved in these issue of trying to decide whether to filter out CFLAGS
+> or recreate them from scratch in various places.
 
-I think dc->queued will indicated that dc is moved to wait_list. This can be
-used along with return value to take right action. Can you check if this
-works?
+And just to add, I've personally been involved in two patches to unbreak
+the purgatory because of changes that broke it only at runtime, not
+build time, which would both have been caught by Hans's patchset.
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index a06bbac..91df060 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1478,7 +1478,7 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-        struct list_head *pend_list;
-        struct discard_cmd *dc, *tmp;
-        struct blk_plug plug;
--       int i, issued = 0;
-+       int i, err, issued = 0;
-        bool io_interrupted = false;
-
-        if (dpolicy->timeout != 0)
-@@ -1517,8 +1517,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-                                break;
-                        }
-
--                       __submit_discard_cmd(sbi, dpolicy, dc, &issued);
--                       if (dc->error == -EAGAIN) {
-+                       err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-+                       if (err && err != -EAGAIN) {
-+                               __remove_discard_cmd(sbi, dc);
-+                       } else if (err == -EAGAIN && dc->queued) {
-                                congestion_wait(BLK_RW_ASYNC, HZ/50);
-                                __relocate_discard_cmd(dcc, dc);
-                        }
-
-thanks,
-> 
-> > 
-> > Thanks,
-> > 
-> > > 
-> > > > +			}
-> > > >  
-> > > >  			if (issued >= dpolicy->max_requests)
-> > > >  				break;
-> > > > -- 
-> > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-> > 
-> > -- 
-> > --
-> > Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+[1] ca14c996afe7 ("x86/purgatory: Disable the stackleak GCC plugin for the purgatory")
+[2] bec500777089 ("lib/string: Make memzero_explicit() inline instead of external")
