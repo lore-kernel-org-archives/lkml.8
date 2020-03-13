@@ -2,159 +2,192 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E70C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD211C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9837206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8186E206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vIyx8zVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgCMLIy (ORCPT
+        id S1726569AbgCMLJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:08:54 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2557 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726414AbgCMLIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:08:54 -0400
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 6141CF2CCE4FF1646C0B;
-        Fri, 13 Mar 2020 11:08:52 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Mar 2020 11:08:51 +0000
-Received: from [127.0.0.1] (10.47.7.187) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Mar
- 2020 11:08:50 +0000
-Subject: Re: [PATCH 6/6] perf test: Add pmu-events test
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <james.clark@arm.com>, <qiangqing.zhang@nxp.com>
-References: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
- <1583406486-154841-7-git-send-email-john.garry@huawei.com>
- <20200309084924.GA65888@krava>
- <82c3fbfe-4ddc-db7d-c17f-29ca6f11e60c@huawei.com>
- <20200309152635.GD67774@krava>
- <6691dd26-7c53-26f0-b583-131707ede608@huawei.com>
- <20200313103259.GC389625@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f9f35a45-1793-889a-8d9e-014f4aaf5fa3@huawei.com>
-Date:   Fri, 13 Mar 2020 11:08:48 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 13 Mar 2020 07:09:09 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26660 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726414AbgCMLJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 07:09:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584097748; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=4CqveVje8eZtIec9/f8lDvI9y7a9yJdcnoX9VxusUoU=; b=vIyx8zVpemwBTmMox6NyLWjzOzppEd8mQXeO0sTwAp5Rnh7KcOe4+TWkq+fehlDVmj6GVxjw
+ UV8ECGP5Sm9UMRv0gwf9Qy9nnWomxN5kEYc6CWED2ImcJ0dK5f2LTA0i8bhGlUrLbDqWjDuo
+ c5TRaoXItSzil0M3bNZEz1tqlJ4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6b69c5.7f8b3ef91688-smtp-out-n05;
+ Fri, 13 Mar 2020 11:08:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 87E14C44788; Fri, 13 Mar 2020 11:08:52 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D12A8C433D2;
+        Fri, 13 Mar 2020 11:08:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D12A8C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Fri, 13 Mar 2020 16:38:46 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+Message-ID: <20200313110846.GL20234@codeaurora.org>
+References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
+ <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
+ <20200313033912.GJ20234@codeaurora.org>
+ <a8f01157-0b1b-d83a-488d-bb48cf8954ab@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200313103259.GC389625@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.7.187]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8f01157-0b1b-d83a-488d-bb48cf8954ab@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi jirka,
-
->>>
->>>     - so we actualy have the parsed json events in C structs and we can go
->>>       through them and check it contains fields with strings that we expect
->>
->> No, we use pme_test_cpu[] to generate the event aliases for a PMU, and
->> verify that the aliases are as expected.
->>
->>>
->>>     - you go through all detected pmus and check if the tests events we
->>>       generated are matching some of the events from these pmus,
->>
->> Not exactly.
->>
->>>       and that's where I'm lost ;-) why?
->>
->> So consider the "cpu" HW PMU. During normal operation, we create the event
->> aliases for this PMU in pmu_lookup()->pmu_add_cpu_aliases(). This step looks
->> up a map of cpu events for that CPUID, and then creates the event aliases
->> for that PMU from that map.
->>
->> I want the test to recreate this and verify that the events from the test
->> JSONs will have event aliases created properly.
+On Fri, Mar 13, 2020 at 02:30:55PM +0800, Chao Yu wrote:
+> On 2020/3/13 11:39, Sahitya Tummala wrote:
+> > On Fri, Mar 13, 2020 at 10:20:04AM +0800, Chao Yu wrote:
+> >> On 2020/3/12 19:14, Sahitya Tummala wrote:
+> >>> F2FS already has a default timeout of 5 secs for discards that
+> >>> can be issued during umount, but it can take more than the 5 sec
+> >>> timeout if the underlying UFS device queue is already full and there
+> >>> are no more available free tags to be used. In that case, submit_bio()
+> >>> will wait for the already queued discard requests to complete to get
+> >>> a free tag, which can potentially take way more than 5 sec.
+> >>>
+> >>> Fix this by submitting the discard requests with REQ_NOWAIT
+> >>> flags during umount. This will return -EAGAIN for UFS queue/tag full
+> >>> scenario without waiting in the context of submit_bio(). The FS can
+> >>> then handle these requests by retrying again within the stipulated
+> >>> discard timeout period to avoid long latencies.
+> >>>
+> >>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> >>> ---
+> >>>  fs/f2fs/segment.c | 14 +++++++++++++-
+> >>>  1 file changed, 13 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> >>> index fb3e531..a06bbac 100644
+> >>> --- a/fs/f2fs/segment.c
+> >>> +++ b/fs/f2fs/segment.c
+> >>> @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> >>>  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> >>>  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+> >>>  					&(dcc->fstrim_list) : &(dcc->wait_list);
+> >>> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+> >>> +	int flag;
+> >>>  	block_t lstart, start, len, total_len;
+> >>>  	int err = 0;
+> >>>  
+> >>> +	flag = dpolicy->sync ? REQ_SYNC : 0;
+> >>> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> >>> +
+> >>>  	if (dc->state != D_PREP)
+> >>>  		return 0;
+> >>>  
+> >>> @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> >>>  		bio->bi_end_io = f2fs_submit_discard_endio;
+> >>>  		bio->bi_opf |= flag;
+> >>>  		submit_bio(bio);
+> >>> +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
+> >>
+> >> If we want to update dc->state, we need to cover it with dc->lock.
+> > 
+> > Sure, will update it.
+> > 
+> >>
+> >>> +			dc->state = D_PREP;
+> >>
+> >> BTW, one dc can be referenced by multiple bios, so dc->state could be updated to
+> >> D_DONE later by f2fs_submit_discard_endio(), however we just relocate it to
+> >> pending list... which is inconsistent status.
+> > 
+> > In that case dc->bio_ref will reflect it and until it becomes 0, the dc->state
+> > will not be updated to D_DONE in f2fs_submit_discard_endio()?
 > 
-> aah ok, my first objective was to have some way to test pmu-events
-> changes we plan to do and their affect to generated pmu-event.c
-
-Since the format of the test events table is slightly different to 
-regular event tables, I wasn't sure on the value there. But I could add it.
-
-For that, I could modify how we generate pmu-events.c as to not have a 
-separate special test table, but add the test events as a special entry 
-in pmu_events_map[], with some fake test cpuid. That could be better if 
-we want to verify the generated test event table.
-
+> __submit_discard_cmd()
+>  lock()
+>  dc->state = D_SUBMIT;
+>  dc->bio_ref++;
+>  unlock()
+> ...
+>  submit_bio()
+> 				f2fs_submit_discard_endio()
+> 				 dc->error = -EAGAIN;
+> 				 lock()
+> 				 dc->bio_ref--;
 > 
-> you want to test the code paths after that.. perfect
+>  dc->state = D_PREP;
 > 
->>
->> So in the test when we scan the PMUs and find "cpu" HW PMU, we create a test
->> PMU with the same name, create the event aliases from pme_test_cpu[] for
->> that test PMU, and then verify that the event aliases created are as
->> expected. Then the test PMU is deleted.
->>
->> So overall the test covers:
->> a. jevents code to generate the struct pmu_event []
->> b. util/pmu.c code to create the event aliases for a given PMU
->>
->> Note: the test does not (yet) cover matching of events declared in the HW
->> PMU sysfs folder. I'm talking about these, for example:
+> 				 dc->state = D_DONE;
+> 				 unlock()
 > 
-> ok
-> 
+> So finally, dc's state is D_DONE, and it's in wait list, then will be relocated
+> to pending list.
 
-I'm going to look at what I can do here. I just worry it will make 
-things more arch specific and make the test brittle.
+In case of queue full, f2fs_submit_discard_endio() will not be called
+asynchronously. It will be called in the context of submit_bio() itself.
+So by the time, submit_bio returns dc->error will be -EAGAIN and dc->state
+will be D_DONE. 
 
->>
->> $ ls /sys/bus/event_source/devices/cpu/events/
->> branch-instructions  cache-references  el-abort     el-start ref-cycles
->> ...
->>
->>>
->>>>
->>>>>
->>>>> or as I'm thinking about that now, would it be enough
->>>>> to check pme_test_cpu array to have string that we
->>>>> expect?
->>>>
->>>> Right, I might change this.
->>>>
->>>> So currently we iterate the PMU aliases to ensure that we have a matching
->>>> event in pme_test_cpu[]. It may be better to iterate the events in
->>>> pme_test_cpu[] to ensure that we have an alias.
->>>
->>> that's what I described above.. I dont understand the connection/value
->>> of this tests
->>>
->>>>
->>>> The problem here is uncore PMUs. They have the "Unit" field, which is used
->>>> for matching the PMU. So we cannot ensure test events from uncore.json will
->>>> always have an event alias created per PMU. But maybe I could use
->>>> pmu_uncore_alias_match() to check if the test event matches in this case.
->>>
->>> hum I guess I don't follow all the details.. but some more explanation
->>> of the test would be great
->>
->> Let's just concentrate on core PMU ATM :)
-
-So just going back to the uncore events now, since they have the "Unit" 
-property to match to specific uncore PMUs, we need to test them slightly 
-differently to core PMUs. But I have improved the testing for that now.
-
+submit_bio()
+->blk_mq_make_request
+->blk_mq_get_request()
+  ->bio_wouldblock_error() (called due to queue full)
+    ->bio_endio()
+    
 Thanks,
-John
+> 
+> > 
+> > Thanks,
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>> +			err = dc->error;
+> >>> +			break;
+> >>> +		}
+> >>>  
+> >>>  		atomic_inc(&dcc->issued_discard);
+> >>>  
+> >>> @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> >>>  			}
+> >>>  
+> >>>  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> >>> +			if (dc->error == -EAGAIN) {
+> >>> +				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> >>> +				__relocate_discard_cmd(dcc, dc);
+> >>> +			}
+> >>>  
+> >>>  			if (issued >= dpolicy->max_requests)
+> >>>  				break;
+> >>>
+> > 
+
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
