@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C82C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2909EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 624A22073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2982C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgCMKZx (ORCPT
+        id S1726599AbgCMK0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:25:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43285 "EHLO
+        Fri, 13 Mar 2020 06:26:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35827 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCMKZw (ORCPT
+        with ESMTP id S1726520AbgCMKZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:25:52 -0400
+        Fri, 13 Mar 2020 06:25:53 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jChVg-0006nR-4j; Fri, 13 Mar 2020 11:25:44 +0100
+        id 1jChVg-0006o9-Mf; Fri, 13 Mar 2020 11:25:44 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jChVf-0001Qz-OA; Fri, 13 Mar 2020 11:25:43 +0100
+        id 1jChVg-0001R9-BL; Fri, 13 Mar 2020 11:25:44 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -46,9 +46,9 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v3 1/2] ARM: dts: imx6dl-riotboard: properly define rgmii PHY
-Date:   Fri, 13 Mar 2020 11:25:33 +0100
-Message-Id: <20200313102534.5438-2-o.rempel@pengutronix.de>
+Subject: [PATCH v3 2/2] ARM: dts: imx6q-marsboard: properly define rgmii PHY
+Date:   Fri, 13 Mar 2020 11:25:34 +0100
+Message-Id: <20200313102534.5438-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200313102534.5438-1-o.rempel@pengutronix.de>
 References: <20200313102534.5438-1-o.rempel@pengutronix.de>
@@ -67,25 +67,21 @@ The Atheros AR8035 PHY can be autodetected but can't use interrupt
 support provided on this board. Define MDIO bus and the PHY node to make
 it work properly.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6dl-riotboard.dts | 16 +++++++++++++++-
+ arch/arm/boot/dts/imx6q-marsboard.dts | 16 +++++++++++++++-
  1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-index 829654e1835a..065d3ab0f50a 100644
---- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-@@ -89,11 +89,25 @@ &fec {
+diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+index 84b30bd6908f..05ee28388229 100644
+--- a/arch/arm/boot/dts/imx6q-marsboard.dts
++++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+@@ -111,8 +111,22 @@ &fec {
  	pinctrl-names = "default";
  	pinctrl-0 = <&pinctrl_enet>;
  	phy-mode = "rgmii-id";
 -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
 +	phy-handle = <&rgmii_phy>;
- 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
- 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
- 	fsl,err006687-workaround-present;
  	status = "okay";
 +
 +	mdio {
@@ -103,7 +99,7 @@ index 829654e1835a..065d3ab0f50a 100644
 +	};
  };
  
- &gpio1 {
+ &hdmi {
 -- 
 2.25.1
 
