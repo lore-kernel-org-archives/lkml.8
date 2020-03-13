@@ -2,125 +2,114 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190F7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A81C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD0A206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED492206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T3nJ0/V8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgCMJyP (ORCPT
+        id S1726670AbgCMJyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:54:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40866 "EHLO mx2.suse.de"
+        Fri, 13 Mar 2020 05:54:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57499 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgCMJyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:54:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6A096ABEA;
-        Fri, 13 Mar 2020 09:54:13 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 10:54:12 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     =?ISO-8859-15?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-cc:     boris.ostrovsky@oracle.com, sstabellini@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        jpoimboe@redhat.com, x86@kernel.org,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, jslaby@suse.cz
-Subject: Re: [RFC PATCH 2/2] x86/xen: Make the secondary CPU idle tasks
- reliable
-In-Reply-To: <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com>
-Message-ID: <alpine.LSU.2.21.2003131048110.30076@pobox.suse.cz>
-References: <20200312142007.11488-1-mbenes@suse.cz> <20200312142007.11488-3-mbenes@suse.cz> <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726055AbgCMJyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 05:54:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48f1Ht6Vddz9sRN;
+        Fri, 13 Mar 2020 20:54:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584093260;
+        bh=F5IlTkk39IWDGQXRHNm9wo5PIlgf3hecyR/kHVYijRo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=T3nJ0/V8OTTViHqS0mLFA9PYluXBlprdrRZjsFRq7yG6mkjXeQS20NxUw5MC7R+fL
+         C7JKgiD+UF2Egc7f58QFaGXKoUR4j9d5h0ZRpivIIrXMBjKhAwSLg3DGKpGxiG/23+
+         imLYgV/sf4HTG3uraT/qPTY9Z3c2+gGGpQ+hXIa0WVkyZzLgSQFQ7J05pnJsmkI7w3
+         7EvDn8pBte+cBbr8I1McqvXXntjv+TrS6RWUfCKnw7HfNvNx+n4jT9RghsfsZfNmag
+         vlbQnz+HJPlgPPS9hjPiGxhwGfkvNcdTCx73+tTenElvrBu5xilr/S+NSSa8vroij8
+         5q763xQ4laBLA==
+Date:   Fri, 13 Mar 2020 20:54:15 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Bersenev <bay@hackerdom.ru>
+Subject: linux-next: build warning after merge of the net-next tree
+Message-ID: <20200313205415.021b7875@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="1678380546-951734477-1584093253=:30076"
+Content-Type: multipart/signed; boundary="Sig_/3KNBiHufKXAROnO8L5EJBeW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+--Sig_/3KNBiHufKXAROnO8L5EJBeW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---1678380546-951734477-1584093253=:30076
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Hi all,
 
-On Fri, 13 Mar 2020, Jürgen Groß wrote:
+After merging the net-next tree, today's linux-next build (powerpc
+allyesconfig) produced this warning:
 
-> On 12.03.20 15:20, Miroslav Benes wrote:
-> > The unwinder reports the secondary CPU idle tasks' stack on XEN PV as
-> > unreliable, which affects at least live patching.
-> > cpu_initialize_context() sets up the context of the CPU through
-> > VCPUOP_initialise hypercall. After it is woken up, the idle task starts
-> > in cpu_bringup_and_idle() function and its stack starts at the offset
-> > right below pt_regs. The unwinder correctly detects the end of stack
-> > there but it is confused by NULL return address in the last frame.
-> > 
-> > RFC: I haven't found the way to teach the unwinder about the state of
-> > the stack there. Thus the ugly hack using assembly. Similar to what
-> > startup_xen() has got for boot CPU.
-> > 
-> > It introduces objtool "unreachable instruction" warning just right after
-> > the jump to cpu_bringup_and_idle(). It should show the idea what needs
-> > to be done though, I think. Ideas welcome.
-> > 
-> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> > ---
-> >   arch/x86/xen/smp_pv.c   |  3 ++-
-> >   arch/x86/xen/xen-head.S | 10 ++++++++++
-> >   2 files changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-> > index 802ee5bba66c..6b88cdcbef8f 100644
-> > --- a/arch/x86/xen/smp_pv.c
-> > +++ b/arch/x86/xen/smp_pv.c
-> > @@ -53,6 +53,7 @@ static DEFINE_PER_CPU(struct xen_common_irq, xen_irq_work)
-> > = { .irq = -1 };
-> >   static DEFINE_PER_CPU(struct xen_common_irq, xen_pmu_irq) = { .irq = -1 };
-> >   
-> >   static irqreturn_t xen_irq_work_interrupt(int irq, void *dev_id);
-> > +extern unsigned char asm_cpu_bringup_and_idle[];
-> >   
-> >   static void cpu_bringup(void)
-> >   {
-> 
-> Would adding this here work?
-> 
-> +	asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
+In file included from include/linux/byteorder/big_endian.h:5,
+                 from arch/powerpc/include/uapi/asm/byteorder.h:14,
+                 from include/asm-generic/bitops/le.h:6,
+                 from arch/powerpc/include/asm/bitops.h:250,
+                 from include/linux/bitops.h:29,
+                 from include/linux/kernel.h:12,
+                 from include/linux/list.h:9,
+                 from include/linux/module.h:12,
+                 from drivers/net/usb/cdc_ncm.c:41:
+drivers/net/usb/cdc_ncm.c: In function 'cdc_ncm_ndp32':
+include/uapi/linux/byteorder/big_endian.h:33:26: warning: conversion from '=
+unsigned int' to '__le16' {aka 'short unsigned int'} changes value from '40=
+2653184' to '0' [-Woverflow]
+   33 | #define __cpu_to_le32(x) ((__force __le32)__swab32((x)))
+      |                          ^
+include/linux/byteorder/generic.h:88:21: note: in expansion of macro '__cpu=
+_to_le32'
+   88 | #define cpu_to_le32 __cpu_to_le32
+      |                     ^~~~~~~~~~~~~
+drivers/net/usb/cdc_ncm.c:1175:19: note: in expansion of macro 'cpu_to_le32'
+ 1175 |  ndp32->wLength =3D cpu_to_le32(sizeof(struct usb_cdc_ncm_ndp32) + =
+sizeof(struct usb_cdc_ncm_dpe32));
+      |                   ^~~~~~~~~~~
 
-I tried something similar. It did not work, because than the hint is 
-"bound" to the closest next call in the function which is cr4_init() in 
-this case. The unwinder would not take it into account.
+Introduced by commit
 
-In my case, I placed it at the beginning of cpu_bringup_and_idle(). I also 
-open coded it and played with the offset in the orc entry, but that did 
-not work for some other reason.
+  0fa81b304a79 ("cdc_ncm: Implement the 32-bit version of NCM Transfer Bloc=
+k")
 
-However, now I tried this
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index 6b88cdcbef8f..39afd88309cb 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -92,6 +92,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
- {
-        cpu_bringup();
-        boot_init_stack_canary();
-+       asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
-        cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
- }
+--Sig_/3KNBiHufKXAROnO8L5EJBeW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-and that seems to work. I need to properly verify and test, but the 
-explanation is that as opposed to the above, cpu_startup_entry() is on the 
-idle task's stack and the hint is then taken into account. The unwound 
-stack seems to be complete, so it could indeed be the fix.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
-Miroslav
---1678380546-951734477-1584093253=:30076--
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5rWEcACgkQAVBC80lX
+0GzATAf+JG6bIEFdkQXTzmfqkIiSFrbGZKNZgOnrKWxp9PIWUhk/fVl3L1ikJwD9
+yYfw303c1qBkdBaHolIdVk5hpWhXO4L9TspaIukZ7sGCS6pE/LItUpnz+iaEPq01
+XGrZt1hjTbiGsebrhUV99zSowk4JJuGAu5aL6fiqYG7ShjRwrrpmAcCTeSW/ZevN
+PRbvOidkpc+S7KIBNprE7Wd9fp031mIsTTIMx22mq445vS+lJUP1aZox4s5x8NHL
+kay2z8m+dgB+LiOYgh4PyI4bsdeZTRs312yrJ1IMqv7jR4GsYAQx+cAvO+ZszxvY
+aJSJE4egr1eWxNmwM4Mcquxj3Tuixw==
+=K044
+-----END PGP SIGNATURE-----
+
+--Sig_/3KNBiHufKXAROnO8L5EJBeW--
