@@ -2,120 +2,86 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFEBC5ACC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72356C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513512074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4038E2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li6ryXbs"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="EApjgvHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCMVUm (ORCPT
+        id S1727195AbgCMVW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:20:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44099 "EHLO
+        Fri, 13 Mar 2020 17:22:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46479 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgCMVUl (ORCPT
+        with ESMTP id S1726526AbgCMVW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:20:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l18so13824152wru.11;
-        Fri, 13 Mar 2020 14:20:40 -0700 (PDT)
+        Fri, 13 Mar 2020 17:22:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n15so13859653wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 14:22:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=gHe0Jr3HHrqFSICLL6R/jKSDOkoJC7KnN5A4sHFyiB8=;
-        b=Li6ryXbsDCxLw1jPemU5VFLcp1LNm0D0/N8RhaEzW5zkXtPC/DkbfXkY2x8dOdXGKb
-         tvQZg3alfE1LKV2ZzENp4XUHk7Ej8wvtQx8u4bDgCoazTiXHUChzpxHboNp5BiqRy1u4
-         0ol6piCk0zcJoqdTgaZC1eHp3Q2Sk0LVpeaE8pBI0CD/YroC5F0I6QOzBQNePHuUmr3K
-         /HrDSupsomnIzpS5YNzFO4MaXrgbA+LYuxvq71/excaFBXolJvp70ToZwNKBC7cO1C12
-         V9c1xMZzxdYGQGiyjeeHRfXQaYgmPQ/f+bNnmnXyEqb7rtB84FdzUmVsUPzCqlosbJk1
-         RpAA==
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=u/As81EyZrntuNgJKlbKQgyjl02SHiQYq3mu31UtGaM=;
+        b=EApjgvHkraPqTujXYIeIs7uddFGQHVktFG9/9WMHetJkGfd65z0Ej4D33C8XwxQm7i
+         oEcauFIN3G42Iq/jdr3vgB9ZGYdBjIHfxzuB1uU49LwZfu2lZSVmFXrnuJQJEREAJsDN
+         WLjuWjTw9XocO9tfm/LqsWCWBaOWTG+4uHS70=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=gHe0Jr3HHrqFSICLL6R/jKSDOkoJC7KnN5A4sHFyiB8=;
-        b=hAZy7oefAoBKtdriOBhhynzc9foSqLfKrQIPI+4WVAVZkLpfduR7ZZzQ4YU1wcir93
-         36ObEyTfMD4UAaRwyzoWOe+XS6x6NpWB0zjiGvwTY4udTYWs/H8Sv9iL5mwOr9tqiIbG
-         28pr4m2iVesoPp2trPIyAdPrDvooMlY2a8qtJsHJi8B6wagO3nmASysmC3a4ioJD6MUu
-         mDt35UKTcIY+vDQTXB4tYh06VYa8vMXyfCCfA+AUWOmGKUo5BNMqIDXa+C9+JGyjN9ai
-         bZIzFQa76bJ1JlqMTRpDHeLgxXly0y8JMF3gHAYrPjSDs+ze+XLrIF4a/1hPTG5rmR3V
-         /jgg==
-X-Gm-Message-State: ANhLgQ2Hm4cmEQ6Xaa8WtZFnTPb70xegtTWEAw96MWj9qR/LKVxcbmNx
-        Y+FdJ12IEGJXM4P+xuxl+jI=
-X-Google-Smtp-Source: ADFU+vuQ9gKOmA8OfdL5F/xdisstDpTQKTtu4YS8f9MRoHfC6gjqinz0F5xszMLlyow+1EZ2NDjG+g==
-X-Received: by 2002:a5d:440a:: with SMTP id z10mr4590724wrq.177.1584134439897;
-        Fri, 13 Mar 2020 14:20:39 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:44af:5966:96b9:9aa4])
-        by smtp.gmail.com with ESMTPSA id p10sm17533703wru.4.2020.03.13.14.20.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 14:20:39 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Boyd'" <sboyd@kernel.org>, <agross@kernel.org>
-Cc:     "'Abhishek Sahu'" <absahu@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200313185406.10029-1-ansuelsmth@gmail.com> <158413140244.164562.11497203149584037524@swboyd.mtv.corp.google.com>
-In-Reply-To: <158413140244.164562.11497203149584037524@swboyd.mtv.corp.google.com>
-Subject: R: [PATCH] ipq806x: gcc: Added the enable regs and mask for PRNG
-Date:   Fri, 13 Mar 2020 22:20:36 +0100
-Message-ID: <00e201d5f97d$3e76a9d0$bb63fd70$@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=u/As81EyZrntuNgJKlbKQgyjl02SHiQYq3mu31UtGaM=;
+        b=OdmInvdKfo6N+9tFzmL+Il/9tg7jVnHuKU/iFKDHR4ReOrzbJjk/SM7sz0rGYeKl/E
+         YUs9jqBwVXzD8/wULEvqUzla91GVhOvxn7P/Xol3X6/Yuq51TbTVxqv0dRf0kasWW7bJ
+         vRSPLVx937MQdAhZD4e3H+OudEow0bvUEgo/NoDUKM36xtxaV1ySxlPpBAso+BYoVYzR
+         h+VK86wZgxIHCL0rXg963EpLGkedUiD+0TR2FPyJPqAmdXGQ85QiPqyrW2wPRjRwpGsW
+         tVYphByJ/Zcnlw2VWTrupggmHgWkY0x9o7mPVc2IwtHZln34hF2xeucNpoSBzSVXo2gt
+         vEGg==
+X-Gm-Message-State: ANhLgQ2Ryvn/S4Bss45Ww1hdJxHOKNfj/JBNO9iPftbvBZUjNNKR9glH
+        /vID3KSLAo5u3cvAJ/qv0VmhG3zLf4w=
+X-Google-Smtp-Source: ADFU+vs2LTPEPBmNY4UbQfY1yiOeCJumZuSexjeMELStR2bv6c3DS8UBgz737MqbwVjhuEF0q568cg==
+X-Received: by 2002:adf:f289:: with SMTP id k9mr13459520wro.220.1584134545757;
+        Fri, 13 Mar 2020 14:22:25 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id q13sm30222861wrs.91.2020.03.13.14.22.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 14:22:25 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 22:22:22 +0100
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [GIT PULL] fuse fixes for 5.6-rc6
+Message-ID: <20200313212222.GD28467@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHIdlTVZX/WdQxRzReDjkwhjOOSdAGrUdrmqFSxueA=
-Content-Language: it
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+Please pull from:
 
-> -----Messaggio originale-----
-> Da: Stephen Boyd <sboyd@kernel.org>
-> Inviato: venerd=C3=AC 13 marzo 2020 21:30
-> A: Ansuel Smith <ansuelsmth@gmail.com>; agross@kernel.org
-> Cc: Ansuel Smith <ansuelsmth@gmail.com>; Abhishek Sahu
-> <absahu@codeaurora.org>; Bjorn Andersson
-> <bjorn.andersson@linaro.org>; Michael Turquette
-> <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org; linux-
-> clk@vger.kernel.org; linux-kernel@vger.kernel.org
-> Oggetto: Re: [PATCH] ipq806x: gcc: Added the enable regs and mask for
-> PRNG
->=20
-> Quoting Ansuel Smith (2020-03-13 11:54:06)
-> > kernel got hanged while reading from /dev/hwrng at the
-> > time of PRNG clock enable
-> >
-> > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->=20
-> Is Abhishek the author? Otherwise the tag chain here looks wrong.
->=20
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-fixes-5.6-rc6
 
-Yes Abhishek is the author.
+Fix an Oops introduced in v5.4.
 
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
->=20
-> Is there some Fixes: tag we can get here too?
->=20
+Thanks,
+Miklos
 
-Think  I should put the commit that added the gcc. Right?
+----------------------------------------------------------------
+Miklos Szeredi (1):
+      fuse: fix stack use after return
 
-> > ---
-> >  drivers/clk/qcom/gcc-ipq806x.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-
+---
+ fs/fuse/dev.c    | 6 +++---
+ fs/fuse/fuse_i.h | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
