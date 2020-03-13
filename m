@@ -2,305 +2,97 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9138BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE33C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689A02072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7925206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BRd65QOj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X2aAWYCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCMQx2 (ORCPT
+        id S1726741AbgCMQzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:53:28 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:56853 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMQx2 (ORCPT
+        Fri, 13 Mar 2020 12:55:38 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:50983 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgCMQzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:53:28 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5143823EC2;
-        Fri, 13 Mar 2020 17:53:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584118404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o/s4NtXKYsxA4RgfwWhA3zpVJzNOf9dpb3C9XBdpNbg=;
-        b=BRd65QOjqf7cKLLcB24LvuK7LUkR5xgsbHrFHLM3TuWylZ9xIxOujPPIK19DqbvhY3px2/
-        Sggp/yOfW6Ia7UX05KEXyIuqiP7a6dlGek0KDpQqKQTH6OkCkyTlbUPXONWCHcB4pW+d+y
-        Ew/y71urxnX0ui2oWJJlD1DTqSMOJ00=
+        Fri, 13 Mar 2020 12:55:38 -0400
+Received: by mail-pj1-f67.google.com with SMTP id u10so4442389pjy.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xbZ4dSo0yJ+mEzE8KOiBQP+F7VWDBbmSG3yIbewX/cU=;
+        b=X2aAWYClYrEic+m4wO6Rkp+ungpARsa8Cf6E72AE5uVtHEG8VXD+e+sI9HFiOH4URs
+         vdNbBdO5fLjIQi5PwoKMQdiP6uxq8R0n9v18dPUHM6obDIj+xXn6MO+4jDPo4FWyliqZ
+         6nvZ6jY4ff4RRv5GHGGbeiLpQGBj7Wpa7LRkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xbZ4dSo0yJ+mEzE8KOiBQP+F7VWDBbmSG3yIbewX/cU=;
+        b=JxRfYj6DrE5O1iK9PfHjhIEBREhFkesnhHdUb+VrOFq6qzZ+qkpGxUOv0Rtil7tr0V
+         ut+iZO2QFQomGB691bzgBYU0Rom7c86HSf0ssoTiNtOL3rulWtLcn9N+v2LA7Qaz4RhL
+         akYkIS0rbc4p/aEJWiPvHU404AnUStoBBeYDSKWMnOGHYU1s+yDwOOwiJayhJP+U24gB
+         iaMbhRBw+vm2CPhOoLGXvGx5ereTpflU25HQrWLUfXMOc7d/HTAftpS0/GQ4RC4NRxyl
+         fiBzdfaH9M5wWNM7c32sDYV3J34ng+pLDadl6Z0IOhPk4WS22iH4MuN2dDIrw0cjmPqF
+         0q+g==
+X-Gm-Message-State: ANhLgQ1FcijIub8xjNp4dX/SaHYeOf8r2iSh4m8KWXNREcLr/gjmNW/+
+        vztdl3QBKahXqIu05n/64YZ2lA==
+X-Google-Smtp-Source: ADFU+vsZXLGxVNcXxugjf7JZA+Vtpnh9QLR8E+B5WWdPb/xHZ7USp/t0BvIAE6rb8ObhgtQilCHFWQ==
+X-Received: by 2002:a17:90a:8:: with SMTP id 8mr10779352pja.130.1584118537308;
+        Fri, 13 Mar 2020 09:55:37 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id j24sm29314647pfi.55.2020.03.13.09.55.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 09:55:36 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 09:55:35 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3] thermal: devfreq_cooling: Use PM QoS to set frequency
+ limits
+Message-ID: <20200313165535.GI144492@google.com>
+References: <20200312113416.v3.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Mar 2020 17:53:24 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <CA+h21hqk+pVrGgHx4iTshfE3i4WF7VANPfMf2ykPFpL3=ragag@mail.gmail.com>
-References: <20200310125542.5939-1-olteanv@gmail.com>
- <615284875b709f602d57e4a4621a83c1@walle.cc>
- <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
- <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
- <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
- <CA+h21hqk+pVrGgHx4iTshfE3i4WF7VANPfMf2ykPFpL3=ragag@mail.gmail.com>
-Message-ID: <4b77ccec9d0de0615985ebf60db9cf67@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5143823EC2
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200312113416.v3.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-13 17:37, schrieb Vladimir Oltean:
-> Hi Michael,
+On Thu, Mar 12, 2020 at 11:34:20AM -0700, Matthias Kaehlcke wrote:
+> Now that devfreq supports limiting the frequency range of a device
+> through PM QoS make use of it instead of disabling OPPs that should
+> not be used.
 > 
-> On Fri, 13 Mar 2020 at 18:07, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-03-10 16:22, schrieb Michael Walle:
->> > Hi Vladimir,
->> >
->> > Am 2020-03-10 15:56, schrieb Vladimir Oltean:
->> >>> (2) Also, reading the flash, every second time there is
->> >>> (reproducibly)
->> >>> an
->> >>> IO error:
->> >>>
->> >>> # hexdump -C /dev/mtd0
->> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |huhu............|
->> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |................|
->> >>> *
->> >>> 01000000
->> >>> # hexdump -C /dev/mtd0
->> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |huhu............|
->> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |................|
->> >>> *
->> >>> hexdump: /dev/mtd0: Input/output error
->> >>> 00dc0000
->> >>> # hexdump -C /dev/mtd0
->> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |huhu............|
->> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |................|
->> >>> *
->> >>> 01000000
->> >>> # hexdump -C /dev/mtd0
->> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |huhu............|
->> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->> >>> |................|
->> >>> *
->> >>> hexdump: /dev/mtd0: Input/output error
->> >>> 00e6a000
->> >>>
->> >>
->> >> Just to be clear, issue 2 is seen only after you abort another
->> >> transaction, right?
->> >
->> > No, just normal uninterrupted reading. Just tried it right after
->> > reboot. Doesn't seem to be every second time though, just random
->> > which makes me wonder if that is another problem now. Also the
->> > last successful reading is random.
->> 
->> 
->> Ok I guess I know what the root cause is. This is an extract of
->> the current code:
->> 
->> > static int dspi_transfer_one_message(struct spi_controller *ctlr,
->> >                                    struct spi_message *message)
->> > {
->> > ..
->> >       /* Kick off the interrupt train */
->> >       dspi_fifo_write(dspi);
->> >
->> >       status = wait_event_interruptible(dspi->waitq,
->> >                                         dspi->waitflags);
->> >       dspi->waitflags = 0;
->> > ..
->> > }
->> >
->> > static int dspi_rxtx(struct fsl_dspi *dspi)
->> > {
->> >       dspi_fifo_read(dspi);
->> >
->> >       if (!dspi->len)
->> >               /* Success! */
->> >               return 0;
->> >
->> >       dspi_fifo_write(dspi);
->> >
->> >       return -EINPROGRESS;
->> > }
->> 
->> dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
->> access shared data like, dspi->words_in_flight. In the EIO error case
->> the following bytes_sent is -1, because dspi->words_in_flight is -1.
->> 
->> > /* Update total number of bytes that were transferred */
->> > bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
->> 
->> words_in_flight is always -1 after dspi_fifo_read() was called. In
->> the error case, the ISR kicks in right in the middle of the execution
->> of dspi_fifo_write() in dspi_transfer_one_message().
->> 
->> > static void dspi_fifo_write(struct fsl_dspi *dspi)
->> > {
->> > ..
->> >       if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
->> >               dspi_eoq_fifo_write(dspi);
->> >        else
->> >               dspi_xspi_fifo_write(dspi);
->> 
->> Now if the ISR is executed right here..
->> 
->> >
->> >       /* Update total number of bytes that were transferred */
->> >       bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
->> 
->> .. words_in_flight might be -1.
->> 
->> >       msg->actual_length += bytes_sent;
->> 
->> and bytes_sent is negative. And this causes an IO error because
->> the returned overall message length doesn't match.
->> 
->> >       dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
->> > ..
->> > }
->> 
->> I could not reproduce the issue with the following patch. I don't
->> know if I got the locking correct though or if there is a better
->> way to go.
->> 
->> 
->> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->> index 8b16de9ed382..578fedeb16a0 100644
->> --- a/drivers/spi/spi-fsl-dspi.c
->> +++ b/drivers/spi/spi-fsl-dspi.c
->> @@ -224,6 +224,7 @@ struct fsl_dspi {
->>          u16                                     tx_cmd;
->>          const struct fsl_dspi_devtype_data      *devtype_data;
->> 
->> +       spinlock_t lock;
->>          wait_queue_head_t                       waitq;
->>          u32                                     waitflags;
->> 
->> @@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi 
->> *dspi)
->> 
->>   static int dspi_rxtx(struct fsl_dspi *dspi)
->>   {
->> +       unsigned long flags;
->> +
->> +       spin_lock_irqsave(&dspi->lock, flags);
->>          dspi_fifo_read(dspi);
->> 
->> -       if (!dspi->len)
->> +       if (!dspi->len) {
->>                  /* Success! */
->> +               spin_unlock_irqrestore(&dspi->lock, flags);
->>                  return 0;
->> +       }
->> 
->>          dspi_fifo_write(dspi);
->> 
->> +       spin_unlock_irqrestore(&dspi->lock, flags);
->>          return -EINPROGRESS;
->>   }
->> 
->> @@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct
->> spi_controller *ctlr,
->>          struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
->>          struct spi_device *spi = message->spi;
->>          struct spi_transfer *transfer;
->> +       unsigned long flags;
->>          int status = 0;
->> +       int i = 0;
->> 
->>          if (dspi->irq)
->>                  dspi_enable_interrupts(dspi, true);
->> @@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct
->> spi_controller *ctlr,
->>                                  goto out;
->>                  } else if (dspi->irq) {
->>                          /* Kick off the interrupt train */
->> +                       spin_lock_irqsave(&dspi->lock, flags);
->>                          dspi_fifo_write(dspi);
->> +                       spin_unlock_irqrestore(&dspi->lock, flags);
->> 
->>                          status = 
->> wait_event_interruptible(dspi->waitq,
->> 
->> dspi->waitflags);
->> @@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device
->> *pdev)
->>          ctlr->cleanup = dspi_cleanup;
->>          ctlr->slave_abort = dspi_slave_abort;
->>          ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
->> +       spin_lock_init(&dspi->lock);
->> 
->>          pdata = dev_get_platdata(&pdev->dev);
->>          if (pdata) {
->> 
->> 
->> 
->> -michael
+> The switch from disabling OPPs to PM QoS introduces a subtle behavioral
+> change in case of conflicting requests (min > max): PM QoS gives
+> precedence to the MIN_FREQUENCY request, while higher OPPs disabled
+> with dev_pm_opp_disable() would override MIN_FREQUENCY.
 > 
-> Thanks for taking such a close look. I haven't had the time to follow 
-> up.
-> Indeed, the ISR, and therefore dspi_fifo_read, can execute before
-> dspi->words_in_flight was populated correctly. And bad things will
-> happen in that case.
-> But I wouldn't introduce a spin lock that disables interrupts on the
-> local CPU just for that - it's too complicated for this driver.
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-Sure. It was just a quick test whether the problem actually goes away.
+I just noticed that I forgot to add Chanwoo's 'Reviewed-by' tag from v2.
+Dunno if patchwork will allow this, but I can try:
 
-> I would just keep the SPI interrupt quiesced via SPI_RSER and enable
-> it only once it's safe, aka after updating dspi->words_in_flight.
-
-I didn't want to move the interrupt_enable() around. I leave this up to
-you ;)
-
--michael
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
