@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB8CC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C63C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD9020724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374B62074E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CM//KSRP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3dXwa5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCMTwj (ORCPT
+        id S1727569AbgCMTwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:52:39 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37135 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbgCMTwe (ORCPT
+        Fri, 13 Mar 2020 15:52:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34788 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgCMTwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:52:34 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l20so8649341qtp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 12:52:33 -0700 (PDT)
+        Fri, 13 Mar 2020 15:52:35 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 59so8645107qtb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 12:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=asHgh1PP/dXumDoerrsVIvym6uaLF0Cebu4CCENRqXo=;
-        b=CM//KSRP1iDlug/0eKM7vRGHM5t55OL5pO4IWR1efQLEmYSAJPUZhNZobYux0UfzVb
-         S/7pfdk0oQxK7ZnBEF3eXK05B1+qxO6F1w9QmwE6ybz89+0Y30HnmluxKYZH306yq/Vt
-         k9u7BP25BplbiAn+DTw/79CbMBT77QiEjzOMa+U2orEpTi/WLXnJb6frwa44leaVpkus
-         E8FWA6s4zBXH/tXcERWgEvwA5cCA/06Oa6bpd7zX8lCHKUUPy0ANaQC/1HjeTzX1cQOC
-         CY73X84KcboLVeElC70a3PPENH7/QbrO8p9KNI6i7Xvo40JwiA6t1rAFP6xLWE0769I7
-         eh1g==
+        bh=+4MuynrCluq7yH2fUxvvPhT+426Ye/ItTPShbrN6qL0=;
+        b=W3dXwa5ADh6VzY0PENH/6FlCz/HOXIuFEHLN91rUNQ3Z50RoOM3r88OUj43tOuRp3k
+         dWWhtWapd4w9kG/mP7CfZjFPDLJ/Z2VVii8r3NN6FNMHf7zQwFf39Ak3QNvtVrKSHyX3
+         6ZLNzWkN51gDh4CopFasWbk+OsP5wrmajboNfoRrpJ+sv2PdLu7PAjK1TSLTzYsC4khN
+         Wd4r/+wQH6wY8MYbJkZAC1/q74p7vKLF1+G1GlEn1+4fqSpCx6QdJPK/sITU9Rwp2vaj
+         +toXLL5R/8D+izJpe72/0J6ZIYXTN59U30D8z3Z1xRXm+hCLtO/2a/xcLK6wzOJHj6uN
+         5Exg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=asHgh1PP/dXumDoerrsVIvym6uaLF0Cebu4CCENRqXo=;
-        b=txqWj18EgKjU/zrTLYmRsvStGq1Im95iWxLTK4t9jnO+oQ63k3F5uksfLgQ/W9p3MW
-         A4ynJyajkUXO+Mo19bh45iQf6DFzayyW6UV/qUlml0H20wNymvhExWZhYH1T1biHvM18
-         E0U6+s0rF1av+V1meGVJP1vqfCxkV7Fug5lSCJ3qX91iV1dISkJzqp1nqDcMxBtNbQCV
-         NAWJG/DgJuBjOk+1DIkrl3nXiSPQwO2ArNugoM9l740jEAxHGmv8UXKFGpI+luI1hSRy
-         JKC7vW/7GGy6HrZ7g2rNkntgChjGbM3e8R4GYn4jfUHagBo6liPGBJmhM8RkJgymogc7
-         NiCQ==
-X-Gm-Message-State: ANhLgQ1m/mAYHJ6aUJtcXOgwFwk75vpG8A+Alk/HMQY+/pQDaFWRupWT
-        My6OIfmIpPRcunWccuAq8PvpWpg=
-X-Google-Smtp-Source: ADFU+vsas33/T1wls90LzJe/jnlvuo7MSv76eqsmkBQ9+WYGCIXlVM8QKM+2HWiSJZMleCmzUxSkcA==
-X-Received: by 2002:aed:30ce:: with SMTP id 72mr13731312qtf.89.1584129152724;
-        Fri, 13 Mar 2020 12:52:32 -0700 (PDT)
+        bh=+4MuynrCluq7yH2fUxvvPhT+426Ye/ItTPShbrN6qL0=;
+        b=MD1uqin6QXakWxTP55OhaKDPhHduHxiOHVCz3KSeU+HL56hFxqri67xgNTsctS+Daa
+         yumD83SPeadgihUSboWbQfKBy8pZzJILN5Lg0nT9pWvxdkz+Es7nK7Ov9/Qnv+xix0n7
+         zJ1s2SLO+pWO24X8Uy7Po6Cfhz/GMyJ1n7biDE+MBqWBe25Y3cdzMl4b1BOSbbTChkGK
+         lTOZJyoWnUnCyKS9Vk/3ua+4I9m/mqawMs1wbAqWLOMhl7dsUvT8yD9cpdiFQsfXivnn
+         j8VpFzXc0WRaeA/hKKs28fLaKitdf04YMRwPC3UKM4m9Zxth85asQPu+WdBJdnK8+1F+
+         QpfQ==
+X-Gm-Message-State: ANhLgQ1s58yQJzPFpMXKWlKqowI8z1ul9WlaZxnmMP0uflY5NiDcXeb3
+        hObOLjwi2e4QR85m/JDbQ1S7aR8=
+X-Google-Smtp-Source: ADFU+vvNLguUcLNsHSAfIbypaQIIG7oNEQxOO5y92DQGVbq5pRE7YC8PoloexXz+qOZ+K84DZ63P0g==
+X-Received: by 2002:ac8:71d7:: with SMTP id i23mr14308607qtp.250.1584129154199;
+        Fri, 13 Mar 2020 12:52:34 -0700 (PDT)
 Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
-        by smtp.gmail.com with ESMTPSA id i28sm31475599qtc.57.2020.03.13.12.52.31
+        by smtp.gmail.com with ESMTPSA id i28sm31475599qtc.57.2020.03.13.12.52.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 12:52:32 -0700 (PDT)
+        Fri, 13 Mar 2020 12:52:33 -0700 (PDT)
 From:   Brian Gerst <brgerst@gmail.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -65,9 +65,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Andy Lutomirski <luto@kernel.org>,
         Dominik Brodowski <linux@dominikbrodowski.net>,
         Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v4 17/18] x86: Drop asmlinkage from syscalls
-Date:   Fri, 13 Mar 2020 15:51:43 -0400
-Message-Id: <20200313195144.164260-18-brgerst@gmail.com>
+Subject: [PATCH v4 18/18] x86: Remove unneeded includes
+Date:   Fri, 13 Mar 2020 15:51:44 -0400
+Message-Id: <20200313195144.164260-19-brgerst@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313195144.164260-1-brgerst@gmail.com>
 References: <20200313195144.164260-1-brgerst@gmail.com>
@@ -78,159 +78,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asmlinkage is no longer required since the syscall ABI is now fully under
-x86 architecture control.  This makes the 32-bit native syscalls a bit more
-effecient by passing in regs via EAX instead of on the stack.
+Clean up includes of and in <asm/syscalls.h>
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
-Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/entry/syscall_32.c            |  2 +-
- arch/x86/entry/syscall_64.c            |  2 +-
- arch/x86/entry/syscall_x32.c           |  4 ++--
- arch/x86/include/asm/syscall.h         |  2 +-
- arch/x86/include/asm/syscall_wrapper.h | 31 ++++++++++++--------------
- 5 files changed, 19 insertions(+), 22 deletions(-)
+ arch/x86/include/asm/syscalls.h | 5 -----
+ arch/x86/kernel/ldt.c           | 1 -
+ arch/x86/kernel/process.c       | 1 -
+ arch/x86/kernel/process_32.c    | 1 -
+ arch/x86/kernel/process_64.c    | 1 -
+ arch/x86/kernel/signal.c        | 2 --
+ arch/x86/kernel/sys_x86_64.c    | 1 -
+ 7 files changed, 12 deletions(-)
 
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index 097413c705ad..86eb0d89d46f 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -8,7 +8,7 @@
- #include <asm/unistd.h>
+diff --git a/arch/x86/include/asm/syscalls.h b/arch/x86/include/asm/syscalls.h
+index 06cbdca634d6..6714a358235d 100644
+--- a/arch/x86/include/asm/syscalls.h
++++ b/arch/x86/include/asm/syscalls.h
+@@ -8,11 +8,6 @@
+ #ifndef _ASM_X86_SYSCALLS_H
+ #define _ASM_X86_SYSCALLS_H
+ 
+-#include <linux/compiler.h>
+-#include <linux/linkage.h>
+-#include <linux/signal.h>
+-#include <linux/types.h>
+-
+ /* Common in X86_32 and X86_64 */
+ /* kernel/ioport.c */
+ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on);
+diff --git a/arch/x86/kernel/ldt.c b/arch/x86/kernel/ldt.c
+index c57e1ca70fd1..84c3ba32f211 100644
+--- a/arch/x86/kernel/ldt.c
++++ b/arch/x86/kernel/ldt.c
+@@ -27,7 +27,6 @@
+ #include <asm/tlb.h>
+ #include <asm/desc.h>
+ #include <asm/mmu_context.h>
+-#include <asm/syscalls.h>
+ #include <asm/pgtable_areas.h>
+ 
+ /* This is a multiple of PAGE_SIZE. */
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 070a2af7ce3d..9da70b279dad 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -28,7 +28,6 @@
+ #include <linux/hw_breakpoint.h>
+ #include <asm/cpu.h>
+ #include <asm/apic.h>
+-#include <asm/syscalls.h>
+ #include <linux/uaccess.h>
+ #include <asm/mwait.h>
+ #include <asm/fpu/internal.h>
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index 5052ced43373..954b013cc585 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -49,7 +49,6 @@
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/cpu.h>
+-#include <asm/syscalls.h>
+ #include <asm/debugreg.h>
+ #include <asm/switch_to.h>
+ #include <asm/vm86.h>
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index ffd497804dbc..5ef9d8f25b0e 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -48,7 +48,6 @@
+ #include <asm/desc.h>
+ #include <asm/proto.h>
+ #include <asm/ia32.h>
+-#include <asm/syscalls.h>
+ #include <asm/debugreg.h>
+ #include <asm/switch_to.h>
+ #include <asm/xen/hypervisor.h>
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 860904990b26..0364f8c3bee3 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -42,8 +42,6 @@
+ #endif /* CONFIG_X86_64 */
+ 
  #include <asm/syscall.h>
+-#include <asm/syscalls.h>
+-
+ #include <asm/sigframe.h>
+ #include <asm/signal.h>
  
--#define __SYSCALL_I386(nr, sym) extern asmlinkage long __ia32_##sym(const struct pt_regs *);
-+#define __SYSCALL_I386(nr, sym) extern long __ia32_##sym(const struct pt_regs *);
+diff --git a/arch/x86/kernel/sys_x86_64.c b/arch/x86/kernel/sys_x86_64.c
+index ca3c11a17b5a..504fa5425bce 100644
+--- a/arch/x86/kernel/sys_x86_64.c
++++ b/arch/x86/kernel/sys_x86_64.c
+@@ -21,7 +21,6 @@
  
- #include <asm/syscalls_32.h>
- #undef __SYSCALL_I386
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index 66d3e65e3b6b..1594ec72bcbb 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -11,7 +11,7 @@
- #define __SYSCALL_X32(nr, sym)
- #define __SYSCALL_COMMON(nr, sym) __SYSCALL_64(nr, sym)
- 
--#define __SYSCALL_64(nr, sym) extern asmlinkage long __x64_##sym(const struct pt_regs *);
-+#define __SYSCALL_64(nr, sym) extern long __x64_##sym(const struct pt_regs *);
- #include <asm/syscalls_64.h>
- #undef __SYSCALL_64
- 
-diff --git a/arch/x86/entry/syscall_x32.c b/arch/x86/entry/syscall_x32.c
-index 2fb09efd7b40..3d8d70d3896c 100644
---- a/arch/x86/entry/syscall_x32.c
-+++ b/arch/x86/entry/syscall_x32.c
-@@ -10,8 +10,8 @@
- 
- #define __SYSCALL_64(nr, sym)
- 
--#define __SYSCALL_X32(nr, sym) extern asmlinkage long __x32_##sym(const struct pt_regs *);
--#define __SYSCALL_COMMON(nr, sym) extern asmlinkage long __x64_##sym(const struct pt_regs *);
-+#define __SYSCALL_X32(nr, sym) extern long __x32_##sym(const struct pt_regs *);
-+#define __SYSCALL_COMMON(nr, sym) extern long __x64_##sym(const struct pt_regs *);
- #include <asm/syscalls_64.h>
- #undef __SYSCALL_X32
- #undef __SYSCALL_COMMON
-diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-index bb427d8cb1ef..7cbf733d11af 100644
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -16,7 +16,7 @@
- #include <asm/thread_info.h>	/* for TS_COMPAT */
- #include <asm/unistd.h>
- 
--typedef asmlinkage long (*sys_call_ptr_t)(const struct pt_regs *);
-+typedef long (*sys_call_ptr_t)(const struct pt_regs *);
- extern const sys_call_ptr_t sys_call_table[];
- 
- #if defined(CONFIG_X86_32)
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index 5e13e2caf2e4..e10efa1454bc 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -8,8 +8,8 @@
- 
- struct pt_regs;
- 
--extern asmlinkage long __x64_sys_ni_syscall(const struct pt_regs *regs);
--extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-+extern long __x64_sys_ni_syscall(const struct pt_regs *regs);
-+extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
+ #include <asm/elf.h>
+ #include <asm/ia32.h>
+-#include <asm/syscalls.h>
  
  /*
-  * Instead of the generic __SYSCALL_DEFINEx() definition, the x86 version takes
-@@ -66,22 +66,21 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 	      ,,(unsigned int)regs->di,,(unsigned int)regs->bp)
- 
- #define __SYS_STUB0(abi, name)						\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs);	\
-+	long __##abi##_##name(const struct pt_regs *regs);		\
- 	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs)	\
-+	long __##abi##_##name(const struct pt_regs *regs)		\
- 		__alias(__do_##name);
- 
- #define __SYS_STUBx(abi, name, ...)					\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs);	\
-+	long __##abi##_##name(const struct pt_regs *regs);		\
- 	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs)	\
-+	long __##abi##_##name(const struct pt_regs *regs)		\
- 	{								\
- 		return __se_##name(__VA_ARGS__);			\
- 	}
- 
- #define __COND_SYSCALL(abi, name)					\
--	asmlinkage __weak long						\
--	__##abi##_##name(const struct pt_regs *__unused)		\
-+	__weak long __##abi##_##name(const struct pt_regs *__unused)	\
- 	{								\
- 		return sys_ni_syscall();				\
- 	}
-@@ -192,11 +191,11 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-  * of them.
-  */
- #define COMPAT_SYSCALL_DEFINE0(name)					\
--	static asmlinkage long						\
-+	static long							\
- 	__do_compat_sys_##name(const struct pt_regs *__unused);		\
- 	__IA32_COMPAT_SYS_STUB0(name)					\
- 	__X32_COMPAT_SYS_STUB0(name)					\
--	static asmlinkage long						\
-+	static long							\
- 	__do_compat_sys_##name(const struct pt_regs *__unused)
- 
- #define COMPAT_SYSCALL_DEFINEx(x, name, ...)					\
-@@ -248,12 +247,10 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-  */
- #define SYSCALL_DEFINE0(sname)						\
- 	SYSCALL_METADATA(_##sname, 0);					\
--	static asmlinkage long						\
--	__do_sys_##sname(const struct pt_regs *__unused);		\
-+	static long __do_sys_##sname(const struct pt_regs *__unused);	\
- 	__X64_SYS_STUB0(sname)						\
- 	__IA32_SYS_STUB0(sname)						\
--	static asmlinkage long						\
--	__do_sys_##sname(const struct pt_regs *__unused)
-+	static long __do_sys_##sname(const struct pt_regs *__unused)
- 
- #define COND_SYSCALL(name)						\
- 	__X64_COND_SYSCALL(name)					\
-@@ -268,8 +265,8 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-  * For VSYSCALLS, we need to declare these three syscalls with the new
-  * pt_regs-based calling convention for in-kernel use.
-  */
--asmlinkage long __x64_sys_getcpu(const struct pt_regs *regs);
--asmlinkage long __x64_sys_gettimeofday(const struct pt_regs *regs);
--asmlinkage long __x64_sys_time(const struct pt_regs *regs);
-+long __x64_sys_getcpu(const struct pt_regs *regs);
-+long __x64_sys_gettimeofday(const struct pt_regs *regs);
-+long __x64_sys_time(const struct pt_regs *regs);
- 
- #endif /* _ASM_X86_SYSCALL_WRAPPER_H */
+  * Align a virtual address to avoid aliasing in the I$ on AMD F15h.
 -- 
 2.24.1
 
