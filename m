@@ -2,99 +2,137 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8F2C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F87C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BC220724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584088186;
-	bh=nPkjhRlGn3/QFGlNtF8R0gwKJufqY0bmep/HG1GCvYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lqFHtj/u38w06l25qGl9ncuQjVhQidtdZTOG9qlYzT3Kb3+KktEGZghyPnDIi/CF5
-	 iKZCT2EBxCtLeeDVjI3g5OFbrabcovFK6POoMS/KKIszh6CU1EHzMXK+Dd3ERHIPGt
-	 IcHW3FAoHFHjsQUrqMDzkRtraQLahRcaxzP536/c=
+	by mail.kernel.org (Postfix) with ESMTP id 8B49820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="es0oC2DC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCMI3p (ORCPT
+        id S1726488AbgCMIbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:29:45 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38304 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCMI3p (ORCPT
+        Fri, 13 Mar 2020 04:31:17 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22807 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726230AbgCMIbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:29:45 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h5so10892560edn.5;
-        Fri, 13 Mar 2020 01:29:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rn0gcyx6GxxQcRaqlCHT4v4uNwnWkXjytoiFfyP58zE=;
-        b=sp9Ae66gud6Mpn8OubuXwObnsX3ioBavEWf98fOFJzSifsDvMMfTAEhRsfrIKCrB5S
-         EvPJuVS/cfgrcRg6tyjyJDBkwynFjLJlfxfWaFMP4KW7Gb82F+YV/BEtYiTiFOKG0hyR
-         l1bgOMP6w+TNdhnatXNFZAW/ZCzJGY1udpuMVHtKYMKcjacIEvOuOiTjwjNAdR/s0Ef4
-         PD2ll/a9r7hKjvkV+7kPbTPygfkbTG2FV7hkc7hKd6S111wFZ6kjF6CJ5zOmPQ+cZr2x
-         SpLQ1E6foAmF2NAYQAGiYt689kwqwsbLlZNYuW+HHtid/tHVeenxOHeoMjtC7BfXXgTX
-         DXNw==
-X-Gm-Message-State: ANhLgQ2a36GXWh7/Mr5Y+DGVYTSkM+j4y9P74qW91EHUVSt+rjFyRWyP
-        q2kBnIb0YNH4v2yr5prR24Q=
-X-Google-Smtp-Source: ADFU+vv4w/B2tIP4ZNexQetJ7DqtBBVkc+MfyuEZQrVPiWjDli5bZ4ZKT55RJiuDDBmhlGBoX8nTxA==
-X-Received: by 2002:a17:906:b80f:: with SMTP id dv15mr10653207ejb.28.1584088180143;
-        Fri, 13 Mar 2020 01:29:40 -0700 (PDT)
-Received: from pi3 ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id n10sm442215edf.3.2020.03.13.01.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 01:29:39 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 09:29:37 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Fri, 13 Mar 2020 04:31:17 -0400
+X-UUID: 2120b3acc30d47e49fd3bd8032cb54b2-20200313
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uadq0m8B7fzPLQ9yivfxpszXKt2Y0MnLJJvhYfcT86c=;
+        b=es0oC2DCWpi85tLVMMHXqJvn/N1ZThUznfcSkUMgTN8ELZGSUIDP8XHC33nRQ2Yr0NV1AOSOxyCSNCgVZJfBB4t659oeI7GO7AmU4p1HRnLY51XK5VGhJmrDipIobldNRjZ5lYzgQNzxyikbUdEAKA1xEU8Wp12eULFVaCRs1kM=;
+X-UUID: 2120b3acc30d47e49fd3bd8032cb54b2-20200313
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2122994655; Fri, 13 Mar 2020 16:31:11 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
+ (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 13 Mar
+ 2020 16:30:04 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 13 Mar 2020 16:31:01 +0800
+Message-ID: <1584088256.16960.9.camel@mhfsdcap03>
+Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek
+ MT6358 RTC
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm/samsung: Add compatible string for
- the Galaxy S2
-Message-ID: <20200313082937.GA7416@pi3>
-References: <20200312153411.13535-1-paul@crapouillou.net>
+        Sean Wang <sean.wang@mediatek.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>
+Date:   Fri, 13 Mar 2020 16:30:56 +0800
+In-Reply-To: <20200313072230.GC3142@dell>
+References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <20200312074407.GA3142@dell> <1584003477.6269.8.camel@mhfsdcap03>
+         <20200313072230.GC3142@dell>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200312153411.13535-1-paul@crapouillou.net>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:34:10PM +0100, Paul Cercueil wrote:
-> Add compatible string for the Samsung Galaxy S2 (i9100 version), which
-> is an Exynos 4210 based device.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../devicetree/bindings/arm/samsung/samsung-boards.yaml          | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-> index 63acd57c4799..e2b19caac795 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-> @@ -55,6 +55,7 @@ properties:
->                - samsung,smdkv310                # Samsung SMDKV310 eval
->                - samsung,trats                   # Samsung Tizen Reference
->                - samsung,universal_c210          # Samsung C210
-> +              - samsung,i9100                   # Samsung Galaxy S2
+T24gRnJpLCAyMDIwLTAzLTEzIGF0IDA3OjIyICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
+IFRodSwgMTIgTWFyIDIwMjAsIFJhbiBCaSB3cm90ZToNCj4gDQo+ID4gT24gVGh1LCAyMDIwLTAz
+LTEyIGF0IDA3OjQ0ICswMDAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gPiBPbiBXZWQsIDExIE1h
+ciAyMDIwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZyb206IFJh
+biBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgYWRkIHN1
+cHBvcnQgZm9yIHRoZSBNZWRpYVRlayBNVDYzNTggUlRDLiBEcml2ZXIgdXNpbmcNCj4gPiA+ID4g
+Y29tcGF0aWJsZSBkYXRhIHRvIHN0b3JlIGRpZmZlcmVudCBSVENfV1JUR1IgYWRkcmVzcyBvZmZz
+ZXQuDQo+ID4gPiA+IFRoaXMgcmVwbGFjZSBSVENfV1JUR1IgdG8gUlRDX1dSVEdSX01UNjMyMyBp
+biBtdDYzMjMtcG93ZXJvZmYNCj4gPiA+ID4gZHJpdmVyIHdoaWNoIG9ubHkgbmVlZGVkIGJ5IGFy
+bXY3IENQVSB3aXRob3V0IEFURi4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJh
+biBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSHNpbi1I
+c2l1bmcgV2FuZyA8aHNpbi1oc2l1bmcud2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gPiA+IC0tLQ0K
+PiA+ID4gPiAgZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYyB8ICAyICstDQo+
+ID4gPiA+ICBkcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgICAgICAgIHwgMzIgKysrKysr
+KysrKysrKysrKysrKysrKysrLS0tLS0tLS0NCj4gPiA+ID4gIGluY2x1ZGUvbGludXgvbWZkL210
+NjM5Ny9ydGMuaCAgICAgICAgfCAgOSArKysrKysrKy0NCj4gPiA+ID4gIDMgZmlsZXMgY2hhbmdl
+ZCwgMzMgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+ID4gPiA+IA0KPiA+IA0KPiA+
+IDwuLi4+DQo+ID4gDQo+ID4gPiA+ICANCj4gPiA+ID4gICNkZWZpbmUgUlRDX0lSUV9TVEEgICAg
+ICAgICAgICAweDAwMDINCj4gPiA+ID4gICNkZWZpbmUgUlRDX0lSUV9TVEFfQUwgICAgICAgICBC
+SVQoMCkNCj4gPiA+ID4gQEAgLTY1LDYgKzY3LDEwIEBADQo+ID4gPiA+ICAjZGVmaW5lIE1US19S
+VENfUE9MTF9ERUxBWV9VUyAgMTANCj4gPiA+ID4gICNkZWZpbmUgTVRLX1JUQ19QT0xMX1RJTUVP
+VVQgICAoamlmZmllc190b191c2VjcyhIWikpDQo+ID4gPiA+ICANCj4gPiA+ID4gK3N0cnVjdCBt
+dGtfcnRjX2RhdGEgew0KPiA+ID4gPiArCXUzMgkJCXdydGdyOw0KPiA+ID4gPiArfTsNCj4gPiA+
+IA0KPiA+ID4gRG8geW91IGV4cGVjdCB0byBhZGQgbW9yZSBwcm9wZXJ0aWVzIHRvIHRoaXMgc3Ry
+dWN0Pw0KPiA+ID4gDQo+ID4gPiBJZiBub3QsIGl0IHNlZW1zIGEgYml0IG92ZXJraWxsLg0KPiA+
+ID4gDQo+ID4gDQo+ID4gWWVzLCB3ZSB3b3VsZCBhZGQgbW9yZSBwcm9wZXJ0aWVzIGhlcmUgaW4g
+ZnV0dXJlIHBhdGNoZXMuDQo+ID4gDQo+ID4gPiA+ICBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7DQo+ID4g
+PiA+ICAJc3RydWN0IGRldmljZSAgICAgICAgICAgKmRldjsNCj4gPiA+ID4gIAlzdHJ1Y3QgcnRj
+X2RldmljZSAgICAgICAqcnRjX2RldjsNCj4gPiA+ID4gQEAgLTc0LDYgKzgwLDcgQEAgc3RydWN0
+IG10NjM5N19ydGMgew0KPiA+ID4gPiAgCXN0cnVjdCByZWdtYXAgICAgICAgICAgICpyZWdtYXA7
+DQo+ID4gPiA+ICAJaW50ICAgICAgICAgICAgICAgICAgICAgaXJxOw0KPiA+ID4gPiAgCXUzMiAg
+ICAgICAgICAgICAgICAgICAgIGFkZHJfYmFzZTsNCj4gPiA+ID4gKwljb25zdCBzdHJ1Y3QgbXRr
+X3J0Y19kYXRhICpkYXRhOw0KPiA+ID4gDQo+ID4gPiAnZGF0YScgaXMgYSB0ZXJyaWJsZSB2YXJp
+YWJsZSBuYW1lLg0KPiA+ID4gDQo+ID4gPiBXaHkgZG8geW91IG5lZWQgdG8gc3RvcmUgdGhpcz8N
+Cj4gPiA+IA0KPiA+ID4gSXQncyBvbmUgdmFyaWFibGUgd2hpY2ggaXMgdXNlZCBvbmNlIEFGQUlD
+VC4NCj4gPiANCj4gPiBJIHdvdWxkIHJlbmFtZSAnZGF0YScgdG8gJ2NvbmZpZycuDQo+ID4gDQo+
+ID4gVGhpcyBzdHJ1Y3Qgd2lsbCBiZSBleHRlbmRlZCBpbiBmdXR1cmUgcGF0Y2hlcyB0byBhY2hp
+ZXZlIG1vcmUgUE1JQyBjaGlwDQo+ID4gY29tcGF0aWJpbGl0eS4NCj4gDQo+IE9uIGNsb3NlciBp
+bnNwZWN0aW9uLCBpdCBsb29rcyBsaWtlIHdydGdyIChhbHNvIG5vdCBhIGdyZWF0IG5hbWUgZm9y
+IGENCj4gdmFyaWFibGUgYnkgdGhlIHdheSkgaXMgYSByZWdpc3RlciBhZGRyZXNzLiAgSXMgdGhh
+dCBjb3JyZWN0Pw0KPiBJbml0aWFsbHkgSSB0aG91Z2h0IGl0IHdhcyBhIG1vZGVsIG51bWJlciwg
+d2hpY2ggd291bGQgaGF2ZSBiZWVuIGENCj4gc3VpdGFibGUgY2FuZGlkYXRlIGZvciBlbnRyeSBp
+bnRvIE9GIC5kYXRhLg0KPiANCj4gSG93ZXZlciwgZGVzY3JpYmluZyByZWdpc3RlciBhZGRyZXNz
+ZXMgaW4gT0YgLmRhdGEgZG9lcyBub3Qgc291bmQgbGlrZQ0KPiBnb29kIHByYWN0aWNlLiAgSXQg
+aXMgdXN1YWxseSB1c2VkIHRvIGlkZW50aWZ5IGEgcGxhdGZvcm0gaW4gdGhlIGNhc2VzDQo+IHdo
+ZXJlIHBsYXRmb3JtcyBjYW5ub3QgYmUgb3RoZXJ3aXNlIGR5bmFtaWNhbGx5IGludGVycm9nYXRl
+ZCBmb3IgbW9kZWwNCj4gbnVtYmVyIHZpYSBhIHJlZ2lzdGVyIHJlYWQuDQo+IA0KPiBEZXNjcmli
+aW5nIHJlZ2lzdGVyIG1hcHMgdmlhICdjb25maWcnIGRhdGEgaXMgYSBzbGlwcGVyeSBzbG9wZS4N
+Cj4gDQoNCndydGdyIGlzIGEgc3BlY2lhbCByZWdpc3RlciBjYWxsZWQgIndyaXRlIHRyaWdnZXIi
+IHdoaWNoIGNvdWxkIGFwcGx5IFJUQw0KcmVnaXN0ZXIgY2hhbmdlIGFmdGVyIHdyaXRlIDEgdG8g
+dGhpcyByZWdpc3Rlci4gSSBzdXBwb3NlIEkgY291bGQgcmVuYW1lDQppdCB0byAidHJpZ2dlciIu
+DQoNCk1vc3QgUlRDIHJlZ2lzdGVyIG9mZnNldCB3YXMgc2FtZSBiZXR3ZWVuIDYzOTcgYW5kIDYz
+NTggUE1JQyBjaGlwIGV4Y2VwdA0KdGhpcyB0cmlnZ2VyIHJlZ2lzdGVyLiBTbyBJIHdvdWxkIGxp
+a2UgdG8gc3RvcmUgdGhpcyBkaWZmZXJlbmNlIGludG8gT0YNCmRhdGEuIE90aGVyd2lzZSwgSSBu
+ZWVkIGEgbG9uZyBpZi1lbHNlIGNvbmRpdGlvbiBiYXNlZCBvbiBtb2RlbCBudW1iZXINCm9yIHJl
+Z2lzdGVyIHJlYWQuDQogDQo=
 
-Put it in alphabetical order please so with this change:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-(Optionally I can take it through samsung-soc tree)
-
-Best regards,
-Krzysztof
