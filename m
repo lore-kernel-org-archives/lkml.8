@@ -2,128 +2,115 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD352C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B9AC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90870206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A68206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="e+obtGsM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QgwHFrUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCMDwE (ORCPT
+        id S1726426AbgCMDzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:52:04 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34069 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgCMDwE (ORCPT
+        Thu, 12 Mar 2020 23:55:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41281 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCMDzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:52:04 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f3so10354119qkh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 20:52:03 -0700 (PDT)
+        Thu, 12 Mar 2020 23:55:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z65so4375727pfz.8;
+        Thu, 12 Mar 2020 20:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ER4yQwvRL6bFJRFz9hkOSe0+qiSsIHfISgRhaLCNYXM=;
-        b=e+obtGsMJrNM8VC93u6iDKH6pQiUVW0J+QmWSLfLGxex6nuLo6NkDpCubzWzmHBPzK
-         a6TDmhdQpog/5B1h7Wp7OlnvTG1AIxbxkmiFzL2zYN0oUa4y5fYmZWTkdlQUH+8OW+9J
-         c/ajjNujOlO0zF617cS5W4r8rDENWu+4SmAp0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bFy5BGqYIsvQcigpiL/tId818nkLJ5jSEKOHxLuc+ho=;
+        b=QgwHFrUhzfSofz5itbllISH4EH2+ljgNI0x0fmR9HiOZV4NjCYt/vTQbrXlzxCPC5F
+         MHh3ReUBkwcO0DLIi/hkvWskaBT5bvfN0E/WlU9vEe5t8/J4R6lEincGPn3vjreyOx72
+         WYcWN0GicThi/G8roCHyJxoEnEYyO1OtMIrvN/e7rFDI82u8EzZ5xjV63MdCmmAQZkxM
+         C6icuyKtJYwwKZtuNgJJH8vElDDaJdW0iZNKQHNHZ9Uk+ThyQPPnO4fv7dvKblejMiti
+         yVge5r/xFHBn+/j5BCaJKdi8LBuytjogaEPlMyqb8Q7Y/KWcK81k523QSQH7wgdQm+cF
+         MBlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ER4yQwvRL6bFJRFz9hkOSe0+qiSsIHfISgRhaLCNYXM=;
-        b=MUiR5PqAskCjXv60SfEZ3KEK2nwq9meH0LK1RQAMYSltKhCwvuglzHaAq9h025wKi4
-         bmMpbJ486ZqqBVqw6MEXQn+bi2TDkUE9hB+fa8CN6V3YtSJ7/h3B6FNzl7wJuw9Z4Swy
-         9ZOic3ELu9V0tuLtQ7uMYwATxBDSFYvAAwI0/NFclXD1cXjzgELL8lKB1zaO9byrV7ao
-         I9tFU08JY7J7xzRy1AZQ41OWOYouak522f/Y+MGjZO2p//2eV2zU5RB2RIUM0vDRLp1g
-         prEqSJLlB5MqEqk2XwBBQ3zsZM3wb14O4BJ8tyqyMK1wv5PWGqLlnrUd/VmVMjwgU1CP
-         Rb3w==
-X-Gm-Message-State: ANhLgQ1U+KVnBXKeZpHqt+1TDSL568FJEZAOhYocMPcGDaxnZa/8fBLJ
-        lxpQZiSF2C+A5LEcdWb+NIaiIg==
-X-Google-Smtp-Source: ADFU+vv/2QzBA+A05d6GNkRKznzI55wUVWpJfeZUpugFkkQpSNLqAzNrGDsZ29ruZPq0GJrQvyyahw==
-X-Received: by 2002:a37:a6d4:: with SMTP id p203mr11452462qke.184.1584071522866;
-        Thu, 12 Mar 2020 20:52:02 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 131sm28733662qkl.86.2020.03.12.20.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 20:52:02 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 23:52:01 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, "# 5 . 5 . x" <stable@vger.kernel.org>
-Subject: Re: [PATCH RFC tip/core/rcu 1/2] rcu: Don't acquire lock in NMI
- handler in rcu_nmi_enter_common()
-Message-ID: <20200313035201.GB190951@google.com>
-References: <20200313024007.GA27492@paulmck-ThinkPad-P72>
- <20200313024046.27622-1-paulmck@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313024046.27622-1-paulmck@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bFy5BGqYIsvQcigpiL/tId818nkLJ5jSEKOHxLuc+ho=;
+        b=lyk4ysriDYHO5uvbczT9vj9mtV20afKO34FMMHBkQneH51zmxkJqoUWC88S3Bb7Clj
+         HgihdPI7lcDbnFxSJUxv8A1cpMpQfwU039i9kCOwSfOehMtoEQzY5fDDYZv15uXrWLdS
+         qzfh+iV5o4iKzLNQbK1T+hvV0PR4ifsjtj4c03cs8FERNntiNCBbePXL6wwfUAnmok81
+         dAoVg4nvrGfnKvp5ScFvTsNUoEaMXgOGkAk/H2zFru9+2z875ea8nQcouL/BVmBJO2Xh
+         zwWTPkv8/OWkcnT3hP8A8t+BZy9bLTvnm2nKW50rZ75ueM19+Nh4pnSLqSkZlLZ8ROjj
+         D31w==
+X-Gm-Message-State: ANhLgQ1R33xTGn+S6wAstaNX6f0BMJehSN2XVPgWOkzc+IqdLs47Toak
+        uhRBO8icDpYD03wo3qnSMlc7ndZY
+X-Google-Smtp-Source: ADFU+vvEtxyIaqDqKWJgBRMV5ZSjK/QVfAp+w8TpRpMiFUcvCI6x5N0FZQO4poCsbcMd98aWIX1BrQ==
+X-Received: by 2002:aa7:850b:: with SMTP id v11mr8012798pfn.64.1584071734727;
+        Thu, 12 Mar 2020 20:55:34 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id y9sm19625326pgo.80.2020.03.12.20.55.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 12 Mar 2020 20:55:34 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v2] KVM: VMX: Micro-optimize vmexit time when not exposing PMU
+Date:   Fri, 13 Mar 2020 11:55:18 +0800
+Message-Id: <1584071718-17163-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 07:40:45PM -0700, paulmck@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
-> 
-> The rcu_nmi_enter_common() function can be invoked both in interrupt
-> and NMI handlers.  If it is invoked from process context (as opposed
-> to userspace or idle context) on a nohz_full CPU, it might acquire the
-> CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
-> with interrupts disabled, this is safe from an interrupt handler, but
-> doing so from an NMI handler can result in self-deadlock.
-> 
-> This commit therefore adds "irq" to the "if" condition so as to only
-> acquire the ->lock from irq handlers or process context, never from
-> an NMI handler.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-I think Peter's new lockdep changes for NMI would also catch this issue.
+PMU is not exposed to guest by most of products from cloud providers since the 
+bad performance of PMU emulation and security concern. However, it calls 
+perf_guest_switch_get_msrs() and clear_atomic_switch_msr() unconditionally 
+even if PMU is not exposed to the guest before each vmentry. 
 
-> 
-> Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
+~2% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my 
+SKX server.
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Before patch:
+vmcall 1559
 
-thanks,
+After patch:
+vmcall 1529
 
- - Joel
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * move the check before atomic_switch_perf_msrs
 
+ arch/x86/kvm/vmx/vmx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: <stable@vger.kernel.org> # 5.5.x
-> ---
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index d3f52c3..f7d3e48 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -825,7 +825,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
->  			rcu_cleanup_after_idle();
->  
->  		incby = 1;
-> -	} else if (tick_nohz_full_cpu(rdp->cpu) &&
-> +	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
->  		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
->  		   READ_ONCE(rdp->rcu_urgent_qs) &&
->  		   !READ_ONCE(rdp->rcu_forced_tick)) {
-> -- 
-> 2.9.5
-> 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 40b1e61..b20423c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6567,7 +6567,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	pt_guest_enter(vmx);
+ 
+-	atomic_switch_perf_msrs(vmx);
++	if (vcpu_to_pmu(vcpu)->version)
++		atomic_switch_perf_msrs(vmx);
+ 	atomic_switch_umwait_control_msr(vmx);
+ 
+ 	if (enable_preemption_timer)
+-- 
+2.7.4
+
