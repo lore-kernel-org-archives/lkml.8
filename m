@@ -2,109 +2,155 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F5FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60BEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE31206E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3EC206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584104371;
+	bh=Vs6xzFTJ0T6qHlcEX+RKO61w1O9btpCDc9QckW5WfxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cdqPseoXAjqeFnDh4pcXMfEqHAC1mTufzHWcZBudZ8n+2hZ88Rka+nhLe4RUSsAvd
+	 HMYz7FgKdlepRgfhAoKJeLvOm9ypJENOUlIlpSfd3tnKpWJrC6LMnpmjZTCEXHe9vm
+	 xYIpWzUCp/E7mSk254x+tnvpZ7R/fWeUNA/4ypWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCMM7X (ORCPT
+        id S1726702AbgCMM7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:59:23 -0400
-Received: from smtprelay0116.hostedemail.com ([216.40.44.116]:51554 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726216AbgCMM7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:59:23 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id CFC0318010A45;
-        Fri, 13 Mar 2020 12:59:21 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: idea77_3485785e1df18
-X-Filterd-Recvd-Size: 3039
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 13 Mar 2020 12:59:20 +0000 (UTC)
-Message-ID: <d67ed65313f3a1579c1cf88348e8853c5cca4598.camel@perches.com>
-Subject: [PATCH] drm/amd/powerplay: Move fallthrough; into containing
- #ifdef/#endif
-From:   Joe Perches <joe@perches.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 13 Mar 2020 05:57:37 -0700
-In-Reply-To: <20200313205748.03d30145@canb.auug.org.au>
-References: <20200313205748.03d30145@canb.auug.org.au>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 13 Mar 2020 08:59:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:54754 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMM7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:59:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1981730E;
+        Fri, 13 Mar 2020 05:59:29 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 905A13F67D;
+        Fri, 13 Mar 2020 05:59:28 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 12:59:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v8 00/11] arm64: Branch Target Identification support
+Message-ID: <20200313125927.GE5528@sirena.org.uk>
+References: <20200227174417.23722-1-broonie@kernel.org>
+ <20200306102729.GC2503422@arrakis.emea.arm.com>
+ <20200309210505.GM4101@sirena.org.uk>
+ <20200310124226.GC4106@sirena.org.uk>
+ <20200311162858.GK3216816@arrakis.emea.arm.com>
+ <20200311172556.GJ5411@sirena.org.uk>
+ <20200312184211.GA3849205@arrakis.emea.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
+Content-Disposition: inline
+In-Reply-To: <20200312184211.GA3849205@arrakis.emea.arm.com>
+X-Cookie: This page intentionally left blank.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The automated conversion of /* fallthrough */ comments converted
-a comment outside of an #ifdef/#endif case block that should be
-inside the block.
 
-Move the fallthrough inside the block to silence the warning.
+--u5E4XgoOPWr4PD9E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
+On Thu, Mar 12, 2020 at 06:42:11PM +0000, Catalin Marinas wrote:
+> On Wed, Mar 11, 2020 at 05:25:56PM +0000, Mark Brown wrote:
+> > On Wed, Mar 11, 2020 at 04:28:58PM +0000, Catalin Marinas wrote:
 
-On Fri, 2020-03-13 at 20:57 +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the amdgpu tree, today's linux-next build (powerpc
-> allyesconfig) produced this warning:
-> 
-> In file included from include/linux/compiler_types.h:59,
->                  from <command-line>:
-> drivers/gpu/drm/amd/amdgpu/../powerplay/hwmgr/smu7_hwmgr.c: In function 'smu7_request_link_speed_change_before_state_change':
-> include/linux/compiler_attributes.h:200:41: warning: statement will never be executed [-Wswitch-unreachable]
->   200 | # define fallthrough                    __attribute__((__fallthrough__))
->       |                                         ^~~~~~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/../powerplay/hwmgr/smu7_hwmgr.c:3706:4: note: in expansion of macro 'fallthrough'
->  3706 |    fallthrough;
->       |    ^~~~~~~~~~~
-> 
-> Introduced by commit
-> 
->   e86efa063cd1 ("AMD POWERPLAY: Use fallthrough;")
+> > > Can we not change aarch64_insn_is_nop() to actually return true only for
+> > > NOP and ignore everything else in the hint space? We tend to re-use the
 
-This is also one of the #ifdef/#endif pairs
-where the fallthrough is outside of the #endif.
+> > ignored. This isn't extensive userspace testing though.  Adding
+> > whitelisting of the BTI and PAC hints would definitely be a safer as a
+> > first step though.  I can post either version?
 
-https://lore.kernel.org/lkml/cover.1584040050.git.joe@perches.com/
+> I thought BTI and PAC are already whitelisted in mainline as they fall
+> into the hint space (by whitelisting I mean you can probe them).
 
-Here is a delta patch for this.
-Let me know if another form is needed.
+This was in the context of your comment above about modifying
+aarch64_insn_is_nop() - if we do that and nothing else then we'd remove
+the current whitelisting.
 
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I'm trying to understand how the BTI patches affect the current uprobes
+> support and what is needed. Executing BTI or PCI?SP out of line should
+> be fine as they don't generate a BTI exception (the BRK doesn't either,
+> just the normal debug exception).
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index fc5236c..774048 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -3702,8 +3702,8 @@ static int smu7_request_link_speed_change_before_state_change(
- 		case PP_PCIEGen2:
- 			if (0 == amdgpu_acpi_pcie_performance_request(hwmgr->adev, PCIE_PERF_REQ_GEN2, false))
- 				break;
--#endif
- 			fallthrough;
-+#endif
- 		default:
- 			data->force_pcie_gen = smu7_get_current_pcie_speed(hwmgr);
- 			break;
--- 
-2.24.0
+Right.
 
+> I think (it needs checking) that BRK preserves the PSTATE.BTYPE in SPSR.
 
+Yes, Exception_SoftwareBreakpoint preserves PSTATE.BTYPE.
+
+> If we probe an instruction in a guarded page and then we single-step it
+> in a non-guarded page, we'll miss a potential BTI fault. Is this an
+> issue?
+
+Obviously the main thing here is that if we miss faults then that's
+potentially opening something that could be used as part of an exploit
+chain.  I'm not aware of any sensible applications that would generate
+the exceptions in normal operation.
+
+> If we are to keep the BTI faulting behaviour, we'd need an additional
+> xol page, guarded, and to find a way to report the original probed
+> address of the fault rather than the xol page.
+
+Yes, or just accept the inaccurate fault address which isn't good but
+might be the least worst thing if there's issues with reporting the
+original address.
+
+> So, IIUC, we don't have an issue with the actual BTI or PACI?SP
+> instructions but rather the other instructions that would not fault with
+> the BTI support. While we should try to address this, I think the
+> important bit now is not to break the existing uprobes support when
+> running a binary with BTI enabled.
+
+I think so, and as far as my ability to tell goes the worst consequence
+would be missing exceptions like you say.  That's not great but it's at
+least an extra hoop people have to jump through.
+
+--u5E4XgoOPWr4PD9E
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5rg64ACgkQJNaLcl1U
+h9DWnQgAhUxlaicd2a+MBwTWiCVEJTRRFVsRGhEykHrb5hzLpkJjryEGiVCRyRQu
+oVmbnqJvqq7rPvgU9m5hjzCRHisdgwfusfAHEeh5wb2Mj4PDLjy5eZqVDiA070Qk
+kTw4qZuayRbkD/k3axQ3/DT8+Etp7R7diCsLNp9VXMuc8E54XYtUv7lEreciqiJR
+MSagKFj37vUFHTJIXAzynd1W+b4QyPA3FGKi1U90CijwuWGRu5HY8XKguW/7jLIp
+5FsUaW+Qz45aPeQF9g5Ka85iNrTKuaj49BpvK4vsM7TjjKJ2Br7k1fmxqceWessd
+5gP9y4bcPEjW+7sf40ALa+SsaPmVTw==
+=g2Tj
+-----END PGP SIGNATURE-----
+
+--u5E4XgoOPWr4PD9E--
