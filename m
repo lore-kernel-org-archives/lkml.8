@@ -2,107 +2,214 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136F5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11269C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE746206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584106171;
-	bh=Yk7j8SGTHpI98xhCrvImzIZgEyhQTKp3t8s3+e2xBWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BZCHU0k4wprh3dA/YPc7TvLdRQD3WtWPBowiVybGx9E1YGUcuEl2K2Oityvy4W5lD
-	 9ELjw6YXmkwY/hWG/Rh5x4h+pEwJxM8D3Q2KJgiQmaGVA4acMEMTQDjoT8iwo6mcwD
-	 9FIwy8yZ9n/dnV7HBQSWJL0VFGaK4VzIDr8tW5Bg=
+	by mail.kernel.org (Postfix) with ESMTP id D4F9720746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 13:29:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgLZJy0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgCMN3a (ORCPT
+        id S1726715AbgCMN3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:29:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:55308 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgCMN3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:29:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3D3530E;
-        Fri, 13 Mar 2020 06:29:29 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34DE53F67D;
-        Fri, 13 Mar 2020 06:29:29 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 13:29:27 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/1] regulator: fixed: add system pm routines for pinctrl
-Message-ID: <20200313132927.GH5528@sirena.org.uk>
-References: <20200312103804.24174-1-peter.chen@nxp.com>
- <20200312114712.GA4038@sirena.org.uk>
- <20200312130037.GG14625@b29397-desktop>
- <20200312143723.GF4038@sirena.org.uk>
- <20200312150330.GH14625@b29397-desktop>
- <20200312150710.GG4038@sirena.org.uk>
- <20200313030851.GI14625@b29397-desktop>
- <20200313121103.GD5528@sirena.org.uk>
- <20200313131635.GA28281@b29397-desktop>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="U3BNvdZEnlJXqmh+"
-Content-Disposition: inline
-In-Reply-To: <20200313131635.GA28281@b29397-desktop>
-X-Cookie: This page intentionally left blank.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Mar 2020 09:29:36 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54923 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgCMN3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 09:29:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n8so9945476wmc.4;
+        Fri, 13 Mar 2020 06:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lEkfce6ps+UhmXb+c5fNG4aKtiEwyEYC75rMDl9C7ik=;
+        b=lgLZJy0utG5SoquafA2HUHEAEzHi6MbriJ8r9wAgdDRgVB2UtbAZqIS9doBFyBn3qu
+         Q2bNE2bCyi7HWDSFqYn8JmXEjvphB0AqR1ZNHDbsufLASftuPV69RiuqYldlc6/WN7Ha
+         zR5lmfpQ7nri6Bca+EYYbwZ5kKoQhFK4gp95yK+5hWrYljn5dtHXRw0sAedWmvk/fGXX
+         2tRzWrz68bGvC0eIpVNS8fkhSIiGMkNhXRDVw8IoG6JWL8vNqt2WKRdw6qeOwDtpEcVC
+         ixNbQEOScjAkEd0eBflSBkhNSc/7DDrBk60Lniac6tGbGmJ0OjLgDfdN9w42I5//RhQl
+         bsbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lEkfce6ps+UhmXb+c5fNG4aKtiEwyEYC75rMDl9C7ik=;
+        b=VGFb7jX9zITq7B2H23XeFWGTZIYA4G26AfIa45JEGW26MwOrVYrZIfMWqnVcj3FzEm
+         h5xQCTVmyBfuv9/69U8kETQwstpYHcRXwS8tlw/BnVdXdtL3VsTGEXENOnzXT35izw3O
+         T2uViDgJZkz4f3BiudubxlGcoJCa4qK0HzWwcd9r9bt+HfVICWs5oaGWLosPfjn5DSYD
+         Yo+SLYlwTV1u5Te13L+ncALGV9yaM86Rd3+raO0yF79pIBr1/ZA82l2L9N86vQkhg+M5
+         JqbJThnhCxYL0EILREDVyCc5fss31/4eLz8+/srwmTIC2M7lMj6ycAaRfhkydmJ8asYe
+         jGbg==
+X-Gm-Message-State: ANhLgQ1UiLiAQtT9dlAmiXANg5R8egK2Sy8/PpkzG3FLKA8gMN6+SXk0
+        ib0dr+Gfm7wYHU8aoPgOzps=
+X-Google-Smtp-Source: ADFU+vuwLQmmZnIs6S6VI+FSvk9wQ+gnswe4ErfBUUselxUc9eSD+2hTZU+er34sHCdtoP1Bo4k4Mg==
+X-Received: by 2002:a1c:68d5:: with SMTP id d204mr10866750wmc.15.1584106173975;
+        Fri, 13 Mar 2020 06:29:33 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z19sm17576705wma.41.2020.03.13.06.29.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Mar 2020 06:29:33 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc bindings to yaml
+Date:   Fri, 13 Mar 2020 14:29:24 +0100
+Message-Id: <20200313132926.10543-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Current dts files with 'saradc' nodes are manually verified.
+In order to automate this process rockchip-saradc.txt
+has to be converted to yaml.
 
---U3BNvdZEnlJXqmh+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
+ .../bindings/iio/adc/rockchip-saradc.yaml          | 79 ++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
 
-On Fri, Mar 13, 2020 at 01:16:31PM +0000, Peter Chen wrote:
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+deleted file mode 100644
+index c2c50b598..000000000
+--- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-Rockchip Successive Approximation Register (SAR) A/D Converter bindings
+-
+-Required properties:
+-- compatible: should be "rockchip,<name>-saradc" or "rockchip,rk3066-tsadc"
+-   - "rockchip,saradc": for rk3188, rk3288
+-   - "rockchip,rk3066-tsadc": for rk3036
+-   - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
+-   - "rockchip,rk3399-saradc": for rk3399
+-   - "rockchip,rv1108-saradc", "rockchip,rk3399-saradc": for rv1108
+-
+-- reg: physical base address of the controller and length of memory mapped
+-       region.
+-- interrupts: The interrupt number to the cpu. The interrupt specifier format
+-              depends on the interrupt controller.
+-- clocks: Must contain an entry for each entry in clock-names.
+-- clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk" for
+-               the peripheral clock.
+-- vref-supply: The regulator supply ADC reference voltage.
+-- #io-channel-cells: Should be 1, see ../iio-bindings.txt
+-
+-Optional properties:
+-- resets: Must contain an entry for each entry in reset-names if need support
+-	  this option. See ../reset/reset.txt for details.
+-- reset-names: Must include the name "saradc-apb".
+-
+-Example:
+-	saradc: saradc@2006c000 {
+-		compatible = "rockchip,saradc";
+-		reg = <0x2006c000 0x100>;
+-		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+-		clock-names = "saradc", "apb_pclk";
+-		resets = <&cru SRST_SARADC>;
+-		reset-names = "saradc-apb";
+-		#io-channel-cells = <1>;
+-		vref-supply = <&vcc18>;
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+new file mode 100644
+index 000000000..2908788b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip Successive Approximation Register (SAR) A/D Converter
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,saradc
++      - const: rockchip,rk3066-tsadc
++      - const: rockchip,rk3399-saradc
++      - items:
++          - enum:
++            - rockchip,rk3328-saradc
++            - rockchip,rv1108-saradc
++          - const: rockchip,rk3399-saradc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: converter clock
++      - description: peripheral clock
++
++  clock-names:
++    items:
++      - const: saradc
++      - const: apb_pclk
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: saradc-apb
++
++  vref-supply:
++    description:
++      The regulator supply for the ADC reference voltage.
++
++  "#io-channel-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - vref-supply
++  - "#io-channel-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3288-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    saradc: saradc@2006c000 {
++      compatible = "rockchip,saradc";
++      reg = <0x2006c000 0x100>;
++      interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
++      clock-names = "saradc", "apb_pclk";
++      resets = <&cru SRST_SARADC>;
++      reset-names = "saradc-apb";
++      vref-supply = <&vcc18>;
++      #io-channel-cells = <1>;
++    };
+-- 
+2.11.0
 
-> Most of pins for controlling fixed regulator on or off is GPIO, but how
-> GPIO driver handles this? We usually configure pin as GPIO function at
-> its user's node (Eg, reset pin for most drivers), but not GPIO node,
-
-The GPIO driver knows what signals it's supposed to be generating, it
-should be able to configure pins for this.  Setting the pinctrl stuff on
-the consumer seems like for example setting the pinctrl for a SPI
-controller on the SPI device rather than the controller device which
-would be a bit weird.
-
-> GPIO node is usually per SoC, not per board level.
-
-Sure, and it's totally normal for boards to add configuration to nodes
-that are part of the SoC.  Again I'm a bit confused about why GPIOs are
-expected to be different here.
-
-> So, I am wondering why fixed regulator can't have a pin in pinctrl.
-> If you grep the dts, there are already several fixed regulator has
-> pinctrl.
-
-Obviously those pinctrl settings currently don't actually do anything...
-
---U3BNvdZEnlJXqmh+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5rirYACgkQJNaLcl1U
-h9BWMgf+KO8LRDX1+oCXN2eOj1Pe7eWX9uuZQ/JLPi2Vyrv1xIsMXcHbf3p+ZjMT
-Mm8e0a7B2ohAGHBBRWY76qRRoWsuSGqMHl9NkezUQr1XQdSUiFJ4XTdzBIU/auC8
-Cb3xsnDn7XOqgft3aCBv9nNP/sNxesWDMwjXaytgytnFtBwW1NZLvckk7PS95KpQ
-gXfGCPT68VEJwXEHzomCRx8BwmgEXN8Yxe9H1IfZ8Au28Hl6BUk10PSkoiyI7SPi
-MlOGy/dZQ1mc0B3MCeS86/xINpEewq27tuYYDuxIsatmPclYIrfQjgGdBaTR88pM
-AyxZ/JpAWWjLr6fG+vfVZ2Zhd6fSng==
-=o51x
------END PGP SIGNATURE-----
-
---U3BNvdZEnlJXqmh+--
