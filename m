@@ -2,95 +2,84 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFE3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E169CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 04:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81AE9206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584071864;
-	bh=w+ZZsFzaN02z4LjftM7wNgCAMWF+UZWUmlO2OdveGgo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Q6WZevb0yuDO1d8rCklAUd84HuWtQbPmH4vVo3eCvxZ6ALD/DGPNfGLjE/Mb9JAFK
-	 WRUMOtQAdsLPIdgz41xZ9Te0nnQdPTHNCus+4Oiq69D5b8KYvLu0HzIstJv+Ym5Nc5
-	 1dTwVPwzyl0KqubS9T5pMimYuqZ1EMkUOGrxqJj8=
+	by mail.kernel.org (Postfix) with ESMTP id ACE0A206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 04:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o44ARPs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCMD5n (ORCPT
+        id S1726420AbgCMEHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgCMD5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:57:43 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9B72072F;
-        Fri, 13 Mar 2020 03:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584071862;
-        bh=w+ZZsFzaN02z4LjftM7wNgCAMWF+UZWUmlO2OdveGgo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=igO6WyhXDpgdYdsk1Lro4MZ9Kz09lJRzqTA9EBGjn+aZktwUnpRiZ9PNyUYo98e65
-         ymzJ0f1po2wfMTl+Xp4p7XbDObPJ8SO5dXdTZEk3Ss9M+2rWfMhSb5TX9LZ+4jOZet
-         WA2j+tJuJdOcvRRUh/seQTOBB1Smmxy5aLYSDRMg=
-Date:   Thu, 12 Mar 2020 20:57:41 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hmm.c : Remove additional check for
- lockdep_assert_held()
-Message-Id: <20200312205741.e97a201037103bbf51e1df40@linux-foundation.org>
-In-Reply-To: <CAFqt6zZ4ceum_SHmQgub8EKJxNQ26_-UfzvK-kcejqH67QHHtA@mail.gmail.com>
-References: <1584065460-22205-1-git-send-email-jrdr.linux@gmail.com>
-        <20200312195850.29693d4e55ec27ae11443c0f@linux-foundation.org>
-        <CAFqt6zZ4ceum_SHmQgub8EKJxNQ26_-UfzvK-kcejqH67QHHtA@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Mar 2020 00:07:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38548 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgCMEHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 00:07:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z5so4398627pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 21:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xCr+Q6LivgZR20qx8kOsB6UAnaHNoihWEMbA4zbV/sc=;
+        b=o44ARPs3a5lAysD620elxUxaHOCesUxdpX8boR7uvoOs0r8H1s9mRvOpdot+O1GMy7
+         4H229iHxVuzLPYUB2vXN2HWQ2b2MMjQ/TJzf8WARRKHyuC9Av9KA8xAvOqNNrChnGsbu
+         KM7I5BCrZD84Tk3kkzydCl9/z12Kq7LaOC0xes0l2v9abJ0b+RiFd9KETUlqOE6PKs3H
+         9FKiJd1AR0UveRpIcQYf0CuiLZADzN+qGr8i4h7AO6EG7/raq82Et46d4vG2b05jORsa
+         WXz3IQtbN0JwPb8ZSV4HrEaanr9Kj17PRdtchUBcMDdU9b8xMtU4xSInEm32yehMUPkA
+         n37A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xCr+Q6LivgZR20qx8kOsB6UAnaHNoihWEMbA4zbV/sc=;
+        b=jdewkiYXi6+4EppO27tXYsGxA3LT0ubvpzsMs94lo6jvgN6N2wiQvZYX0OBdPYRkDZ
+         EPZ4jI1EBXT4sxuC/2qLrnSnGyR8oJynDmXB33VYsGE4HlHwIfZV+Yrou6EFwmRNJD9z
+         TaKXuZv7/9q6aoH6l0z7kM0j818CcxekYru6HG/bzxLe6mi17JEC0ikbyoVQ2dYfVnvC
+         cvZ6m9rKen694Pvtkl/8CVSNIjhUm31Wpp8DV9yvOmxBflr6KuIseuDErpHE65ZLl7XA
+         LtoLzRIPEP26PukLbYZu3/Ygg+W+/A8qD9M9ljlGcX6Y7g7QHLiwVliC/5UEnNPNQGFX
+         kwLg==
+X-Gm-Message-State: ANhLgQ3tBA5VvX3/UmJTk0JfV9P+QuSfctUuCJW1oxPDYD49huiASrmH
+        7FJMuw+6cxvNzBOYHhkov/c=
+X-Google-Smtp-Source: ADFU+vuI2hd93dCzVyio0Z87mZmKT3RPzZAsCTYS15iNhC91EuDTOYCCnBU1u1L69cUptR9GeiSGGw==
+X-Received: by 2002:a62:5c07:: with SMTP id q7mr11739705pfb.200.1584072441968;
+        Thu, 12 Mar 2020 21:07:21 -0700 (PDT)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 6sm15576661pfx.69.2020.03.12.21.07.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 12 Mar 2020 21:07:21 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     srinivas.kandagatla@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, freeman.liu@unisoc.com,
+        baolin.wang7@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Optimize the Spreadtrum eFuse controller
+Date:   Fri, 13 Mar 2020 12:07:06 +0800
+Message-Id: <cover.1584072223.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Mar 2020 09:17:22 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
+This patch set optimizes the block lock operation and set the double
+data flag from device data.
 
-> On Fri, Mar 13, 2020 at 8:28 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Fri, 13 Mar 2020 07:41:00 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
-> >
-> > > walk_page_range() already has a check for lockdep_assert_held().
-> > > So additional check for lockdep_assert_held() can be removed from
-> > > hmm_range_fault().
-> > >
-> > > ...
-> > >
-> > > --- a/mm/hmm.c
-> > > +++ b/mm/hmm.c
-> > > @@ -681,7 +681,6 @@ long hmm_range_fault(struct hmm_range *range, unsigned int flags)
-> > >       struct mm_struct *mm = range->notifier->mm;
-> > >       int ret;
-> > >
-> > > -     lockdep_assert_held(&mm->mmap_sem);
-> > >
-> > >       do {
-> > >               /* If range is no longer valid force retry. */
-> >
-> > It isn't very obvious that hmm_range_fault() is and will only be called
-> > from walk_page_range() (is it?)
-> >
-> 
-> Sorry Andrew, didn't get this part ?
-> * hmm_range_fault() is and will only be called
->  from walk_page_range() (is it?) *
+Baolin Wang (1):
+  nvmem: sprd: Determine double data programming from device data
 
-The patch assumes that hmm_range_fault() will only ever be called via
-walk_page_range().  How do we know this is the case?  And that it
-always will be the case?
+Freeman Liu (2):
+  nvmem: sprd: Fix the block lock operation
+  nvmem: sprd: Optimize the block lock operation
+
+ drivers/nvmem/sprd-efuse.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
+
+-- 
+1.9.1
 
