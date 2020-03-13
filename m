@@ -2,119 +2,110 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F41C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC72C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8281B2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178DF2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584083267;
+	bh=UOzQxvJGJZZ8wnferIWCaTIk80qXzYcP1TO/a/i3Ju8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=X3fyVnHpq4uN096XVEDeNubaSZ83LWfAp53mYPvxOPzIHtimWNkD6RjH7YlIQqsIi
+	 tKG2R38UYDiCnQgGNPottBrb2EgVd3Y6jg7ZMxm76IzSIGvVlPhgI2juDqfnr+/l8A
+	 uRiCDfNKFU4m8EoS8diJyVr2Zz1r8KeQBPYQaUZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCMHFu (ORCPT
+        id S1726406AbgCMHHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:05:50 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:36290 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgCMHFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:05:50 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A2ED1A1282;
-        Fri, 13 Mar 2020 08:05:48 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B7461A132F;
-        Fri, 13 Mar 2020 08:05:43 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 340FF40245;
-        Fri, 13 Mar 2020 15:05:37 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     dmitry.torokhov@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        robh@kernel.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] input: keyboard: imx_sc_key: Use devm_add_action_or_reset() to handle all cleanups
-Date:   Fri, 13 Mar 2020 14:59:11 +0800
-Message-Id: <1584082751-17047-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 13 Mar 2020 03:07:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59158 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgCMHHp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 03:07:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=hTZKtE22TdpyZUE6k61swZnNwB9Kz0BlD6wfZDOZcAA=; b=UBo9N5AmiIGkUST8w0tgyjaj5y
+        G44UxxHYexW+Kcb3SoDXZEjomILnZW/SbYjpEfNyUfDcDKmLBIxG5icUc8T07vOPHiN3KtJ+atK4F
+        qqic1xL3Dt/B3s2kk5g1tW/8Wwj+yVNOElZS+PUqEwEJ0Vb4/hOuU+D+PXz7Vdkk8cypaIf79uSIA
+        vvgzcEwry0u6Nn0P8ck/5d4ZfGmrRnN9OwhFni8hdy/dST8vmwCxiFZvK1bKEXqJUHIuX4kiz7SvE
+        p+9mxfFt2uWK1yxSGd4kOnE4/bRgDZj7oy307SL9agoxbS5bGE/blIeJUoTPFtPr2NYLulVTPcun2
+        ah7qA66g==;
+Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCeQ4-0000H4-PP; Fri, 13 Mar 2020 07:07:45 +0000
+Date:   Fri, 13 Mar 2020 08:07:35 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
+Message-ID: <20200313080209.0c36c2b7@coco.lan>
+In-Reply-To: <20200313131903.3975cdd2@canb.auug.org.au>
+References: <20200313131903.3975cdd2@canb.auug.org.au>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_add_action_or_reset() to handle all cleanups of failure in
-.probe and .remove, then .remove callback can be dropped.
+Em Fri, 13 Mar 2020 13:19:03 +1100
+Stephen Rothwell <sfr@canb.auug.org.au> escreveu:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/input/keyboard/imx_sc_key.c | 33 +++++++++++++++------------------
- 1 file changed, 15 insertions(+), 18 deletions(-)
+> Hi all,
+> 
+> After merging the v4l-dvb tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> ERROR: modpost: "fwnode_get_name" [drivers/media/v4l2-core/v4l2-fwnode.ko] undefined!
+> 
+> Caused by commit
+> 
+>   dfc22c073b78 ("media: v4l2-fwnode: add initial connector parsing support")
+> 
+> I have used the v4l-dvb tree from next-20200312 for today.
+ 
+Hmm... I double-checked at next-20200312. This function is defined
+at linux/property.h header:
 
-diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
-index 2672fd4..eab5dfb 100644
---- a/drivers/input/keyboard/imx_sc_key.c
-+++ b/drivers/input/keyboard/imx_sc_key.c
-@@ -96,6 +96,15 @@ static void imx_sc_check_for_events(struct work_struct *work)
- 				      msecs_to_jiffies(REPEAT_INTERVAL));
- }
- 
-+static void imx_sc_key_action(void *data)
-+{
-+	struct imx_key_drv_data *priv = data;
-+
-+	imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
-+	imx_scu_irq_unregister_notifier(&priv->key_notifier);
-+	cancel_delayed_work_sync(&priv->check_work);
-+}
-+
- static int imx_sc_key_probe(struct platform_device *pdev)
- {
- 	struct imx_key_drv_data *priv;
-@@ -146,27 +155,16 @@ static int imx_sc_key_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
-+	error = devm_add_action_or_reset(&pdev->dev, imx_sc_key_action, &priv);
-+	if (error)
-+		return error;
-+
- 	priv->key_notifier.notifier_call = imx_sc_key_notify;
- 	error = imx_scu_irq_register_notifier(&priv->key_notifier);
--	if (error) {
--		imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON,
--					 false);
-+	if (error)
- 		dev_err(&pdev->dev, "failed to register scu notifier\n");
--		return error;
--	}
--
--	return 0;
--}
--
--static int imx_sc_key_remove(struct platform_device *pdev)
--{
--	struct imx_key_drv_data *priv = platform_get_drvdata(pdev);
--
--	imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
--	imx_scu_irq_unregister_notifier(&priv->key_notifier);
--	cancel_delayed_work_sync(&priv->check_work);
- 
--	return 0;
-+	return error;
- }
- 
- static const struct of_device_id imx_sc_key_ids[] = {
-@@ -181,7 +179,6 @@ static struct platform_driver imx_sc_key_driver = {
- 		.of_match_table = imx_sc_key_ids,
- 	},
- 	.probe = imx_sc_key_probe,
--	.remove = imx_sc_key_remove,
- };
- module_platform_driver(imx_sc_key_driver);
- 
--- 
-2.7.4
+	include/linux/property.h:const char *fwnode_get_name(const struct fwnode_handle *fwnode);
 
+Its implementation is at drivers/base/property.c, and this is always
+built, according with drivers/base/Makefile:
+
+	obj-y			:= component.o core.o bus.o dd.o syscore.o \
+				   driver.o class.o platform.o \
+				   cpu.o firmware.o init.o map.o devres.o \
+				   attribute_container.o transport_class.o \
+				   topology.o container.o property.o cacheinfo.o \
+				   devcon.o swnode.o
+
+The v4l2-fwnode.c properly includes include/linux/property.h.
+
+So, at least up to next-20200312, everything looks fine on my eyes.
+
+The header is probably there, as the error happened at link stage.
+
+Maybe there is some merge conflict caused by merging a patch from
+some other tree that might have renamed or removed its implementation
+after next-20200312, or changed from obj-y target?
+
+Or maybe this changeset got reverted?
+
+	a7914d1072fb ("device property: Export fwnode_get_name()")
+
+
+Thanks,
+Mauro
