@@ -2,197 +2,182 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94541C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D301C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D2820658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2762C20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584125631;
+	bh=gnpxFQ6kyuv8cFJo/3Zkqq3inKgjgPxdNfOajCalHP4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ANSaL0A2tXq7zcyUOQVK2k5kTbKGJtU7W8BemhTfs8l2wDZD/Xrm0/y9Mjs7aR3+h
+	 zhE1Hoi0USSKyh8+/Au94Dw12XvoQ4X2wkS00mNSLjwFCEt8e0ry2X687APwZ68QkS
+	 MHLjGi5cFJ6LilIbHt+3rq+yoo9zED9+bFCE/Yd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgCMSxf (ORCPT
+        id S1727244AbgCMSxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:53:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37705 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMSxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:53:34 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jCpR4-0002TT-It; Fri, 13 Mar 2020 19:53:30 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jCpR1-0003M7-7O; Fri, 13 Mar 2020 19:53:27 +0100
-Date:   Fri, 13 Mar 2020 19:53:27 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>,
-        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
-Message-ID: <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
-References: <20200313052252.25389-1-o.rempel@pengutronix.de>
- <20200313052252.25389-2-o.rempel@pengutronix.de>
- <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
- <20200313181056.GA29732@lunn.ch>
- <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
- <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
+        Fri, 13 Mar 2020 14:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbgCMSxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:53:49 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F9C20746;
+        Fri, 13 Mar 2020 18:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584125628;
+        bh=gnpxFQ6kyuv8cFJo/3Zkqq3inKgjgPxdNfOajCalHP4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0078zKpvvUv1c+PsA9vCK/xKx8XXEJInBx9+MguxNTCWmLdfMvwFJHrS2kObDs4Ya
+         HBHit0+PgmsC2scop4Tj7zRrPezAm8Y5xrIFaBjiaiZEumS70afq/118mW+ZCD5WWY
+         LrZpXqXkhgU62aXogfxtjv27UQvUhjq/oXpKEstI=
+Received: by mail-qk1-f170.google.com with SMTP id p62so14366596qkb.0;
+        Fri, 13 Mar 2020 11:53:48 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3mbNpRzwdC2lOUs0nfdC2dzjYN7K355c+crPuwDRj0HdOhAUbs
+        qjoepMy9fG5XobDdtVEhtA6zW4Ssn0oSC6g7UQ==
+X-Google-Smtp-Source: ADFU+vtIQWQ1iyBd9Hq/goh29DIW1Lm+8rr9b55lPBnrLwCB1yi/G66Yu2tNriWzEW+xFzAkAZJDQpZngvLu/4FVld8=
+X-Received: by 2002:a37:2cc6:: with SMTP id s189mr15023829qkh.223.1584125627547;
+ Fri, 13 Mar 2020 11:53:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yrnswsmuwla7326n"
-Content-Disposition: inline
-In-Reply-To: <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 19:46:17 up 119 days, 10:04, 137 users,  load average: 0.20, 0.09,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132510.AC2108030794@mail.baikalelectronics.ru> <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
+ <20200313184005.gtlwzyak3sp6gier@ubsrv2.baikal.int>
+In-Reply-To: <20200313184005.gtlwzyak3sp6gier@ubsrv2.baikal.int>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 13 Mar 2020 13:53:35 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLFdjRkmtahBMTNhG3Vss2eL61MfucCb5KcnW9PX_PLHQ@mail.gmail.com>
+Message-ID: <CAL_JsqLFdjRkmtahBMTNhG3Vss2eL61MfucCb5KcnW9PX_PLHQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: gpio: Replace DW APB GPIO legacy
+ bindings with YAML-based one
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---yrnswsmuwla7326n
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 13, 2020 at 11:20:35AM -0700, Florian Fainelli wrote:
->=20
->=20
-> On 3/13/2020 11:16 AM, Oleksij Rempel wrote:
-> > On Fri, Mar 13, 2020 at 07:10:56PM +0100, Andrew Lunn wrote:
-> >>>> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml =
-b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..42be0255512b
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> >>>> @@ -0,0 +1,61 @@
-> >>>> +# SPDX-License-Identifier: GPL-2.0+
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: NXP TJA11xx PHY
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Andrew Lunn <andrew@lunn.ch>
-> >>>> +  - Florian Fainelli <f.fainelli@gmail.com>
-> >>>> +  - Heiner Kallweit <hkallweit1@gmail.com>
-> >>>> +
-> >>>> +description:
-> >>>> +  Bindings for NXP TJA11xx automotive PHYs
-> >>>> +
-> >>>> +allOf:
-> >>>> +  - $ref: ethernet-phy.yaml#
-> >>>> +
-> >>>> +patternProperties:
-> >>>> +  "^ethernet-phy@[0-9a-f]+$":
-> >>>> +    type: object
-> >>>> +    description: |
-> >>>> +      Some packages have multiple PHYs. Secondary PHY should be def=
-ines as
-> >>>> +      subnode of the first (parent) PHY.
-> >>>
-> >>>
-> >>> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
-> >>> defined as 4 separate Ethernet PHY nodes and this would not be quite a
-> >>> big stretch to represent them that way compared to how they are.
-> >>>
-> >>> I would recommend doing the same thing and not bend the MDIO framework
-> >>> to support the registration of "nested" Ethernet PHY nodes.
-> >>
-> >> Hi Florian
-> >>
-> >> The issue here is the missing PHY ID in the secondary PHY. Because of
-> >> that, the secondary does not probe in the normal way. We need the
-> >> primary to be involved to some degree. It needs to register it. What
-> >> i'm not so clear on is if it just needs to register it, or if these
-> >> sub nodes are actually needed, given the current code.
-> >=20
-> > There are a bit more dependencies:
-> > - PHY0 is responsible for health monitoring. If some thing wrong, it may
-> >   shut down complete chip.
-> > - We have shared reset. It make no sense to probe PHY1 before PHY0 with
-> >   more controlling options will be probed
-> > - It is possible bat dangerous to use PHY1 without PHY0.
->=20
-> probing is a software problem though. If we want to describe the PHY
-> package more correctly, we should be using a container node, something
-> like this maybe:
+On Fri, Mar 13, 2020 at 1:40 PM Sergey Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 >
-> phy-package {
-> 	compatible =3D "nxp,tja1102";
->=20
-> 	ethernet-phy@4 {
-> 		reg =3D <4>;
-> 	};
->=20
-> 	ethernet-phy@5 {
-> 		reg =3D <5>;
-> 	};
-> };
+> On Thu, Mar 12, 2020 at 08:47:56AM -0500, Rob Herring wrote:
+> > On Fri, Mar 6, 2020 at 7:25 AM <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> >
+> > Subject is kind of long and wordy. Perhaps:
+> >
+> > dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
+> >
+>
+> Ok. I'll also do this for all similar patches in another patchsets.
+>
+> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > >
+> > > Modern device tree bindings are supposed to be created as YAML-files
+> > > in accordance with dt-schema. This commit replaces Synopsys DW GPIO
+> > > legacy bare text bindings with YAML file. As before the bindings file
+> > > states that the corresponding dts node is supposed to be compatible
+> > > with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
+> > > compatible string and provide a mandatory registers memory range.
+> > > It may also have an optional clocks and resets phandle references.
+> > >
+> > > There must be specified at least one subnode with
+> > > "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
+> > > which would actually export the GPIO controller functionality. Such
+> > > nodes should have traditional GPIO controller properties together
+> > > with optional interrupt-controller attributes if the corresponding
+> > > controller was synthesized to detected and report the input values
+> > > change to the parental IRQ controller.
+> > >
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > Cc: Paul Burton <paulburton@kernel.org>
+> > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > >
+> > > ---
+> > >
+> > > Synopsis DesignWare APB SSI controller has a bindings property
+> > > "snps,nr-gpios" of numeric type, which means the number of GPIO pins
+> > > exported by the corresponding controller port. There is also a generic
+> > > pattern-property "*-gpios", which corresponds to a GPIOs array. As you
+> > > can see the GPIOs array property wildcard matches the vendor-specific
+> > > property "snps,nr-gpios" property while having an incompatible type.
+> > > Due to this the DW APB GPIO dts-nodes evaluation will report the
+> > > following error:
+> > >
+> > > snps,nr-gpios:0:0: 8 is not valid under any of the given schemas (Possible causes of the failure):
+> > > snps,nr-gpios:0:0: missing phandle tag in 8
+> > >
+> > > I didn't manage to fix the problem by redefining the property schema (this
+> > > might be impossible anyway). In my opinion the best way to solve it would be
+> > > to change the DW APB SSI Controller bindings so the driver would accept the
+> > > standard "ngpios" property for the same purpose. But in this case we would have
+> > > to alter all the dts files currently having the "snps,dw-apb-ssi" compatible
+> > > nodes (it's a lot). I know the bindings modifications aren't that much welcome
+> > > in the kernel community and there are good reasons why. So what do you think
+> > > would be the better way to fix the problem with the property types collision?
+> >
+> > Does this change (to dt-schema) work for you?
+> >
+> > diff --git a/schemas/gpio/gpio.yaml b/schemas/gpio/gpio.yaml
+> > index 1d9c109f9791..d1c08ccfdc1a 100644
+> > --- a/schemas/gpio/gpio.yaml
+> > +++ b/schemas/gpio/gpio.yaml
+> > @@ -34,7 +34,7 @@ properties:
+> >        - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> >
+> >  patternProperties:
+> > -  ".*-gpios?$":
+> > +  "(?<!,nr)-gpios?$":
+> >      $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> >    "^gpios$":
+> >      $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> >
+>
+> It partly fixes the problem. There is meta-schems/gpios.yaml ,
+> which also has a rule for the properties with "-gpios" suffix. So yours
+> alteration together with the next one shall fix the problem completely:
 
-Yes, this is almost the same as it is currently done:
+Oh right. I'll commit a fix for both.
 
-phy-package {
-	reg =3D <4>;
-=20
- 	ethernet-phy@5 {
- 		reg =3D <5>;
- 	};
-};
+>
+> --- a/meta-schemas/gpios.yaml   2020-03-13 20:20:10.072900019 +0300
+> +++ b/meta-schemas/gpios.yaml   2020-03-13 20:20:16.000953216 +0300
+> @@ -19,9 +19,7 @@
+>      $ref: "cell.yaml#array"
+>
+>  patternProperties:
+> -  '.*-gpio$':
+> -    $ref: "cell.yaml#array"
+> -  '.*-gpios$':
+> +  '(?<!,nr)-gpios?$':
+>      $ref: "cell.yaml#array"
+>
+>  dependencies:
+>
+> Regarding the generic schemas/gpio/gpio.yaml . Do you think I should be
+> also allOf-ing it in my DT schema?
 
-Because the primary PHY0 can be autodetected by the bus scan.
-But I have nothing against your suggestions. Please, some one should say the
-last word here, how exactly it should be implemented?
+Only if you want to check everything twice. Most of the core schemas
+always get applied. The exception is generally bus controllers like
+SPI, I2C, etc.
 
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---yrnswsmuwla7326n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5r1qMACgkQ4omh9DUa
-UbOGdRAAmDhBqloB1t+KikfgqS6pVFUKUz5Jizm+mm7mEVGA/O7i42ZyW68QDm6m
-ZUqN7a8ZHqnqKH0Qs94ZroMwmcVyfYOnX3Wpryh71s3maHvyow/c03t2cJByiFal
-OvvE0eE9fOBH3ZZEmqUEA4yAlr62Q1zsJH9SgY5ZKn+4rJfIvHboKokynKejvQkX
-1QrZa9bMqVu6odPjpwkTO6aCesUN2ThtltoEC4jOxAbMm/Su9jIY5jnw+Cs88m2t
-G1QQAvneSlRzBd2WBpydUa5rvCvDW4vMmzB5ZGcTJYxVQCfrdDA73n1GTWkqLf0F
-NDwgazuU7zEd7ed+f3A6CwyocyJjbF1Dty24saK4Z7BZfbVUxKZDD0W6ALvDV3Yu
-tcpIq9u4eAYNJJCKF+MnDlkfMkHDOKcGLpgHHs3drB8qUlYLlKq41ltpkO5LuMCj
-T8et0XQ/FTnXS/hho9X6c7YFzmZTwNhkbvrJvy9YyU9L942YX7kpqeytSNvLGJTI
-P8pzutpMR9E/2qPgYx57ujRWjxrwFVze13LDKCStMXwfXfpTfJDFQE3zvuy1t+MK
-qZ1bmJ0K2x7nEVHGzrmiIdemsLDYBPc2WW4s3P8+5hqgU9FpNnv9f9DXFPP3/fGk
-zIaZN08rxT+Cpu2LguR695vYAEJEVoQMXqKj+6GxUxk1Oed4zko=
-=Cgfa
------END PGP SIGNATURE-----
-
---yrnswsmuwla7326n--
+Rob
