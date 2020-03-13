@@ -2,77 +2,120 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB93EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40FEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C5A2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E52420746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:46:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MQ8zVt1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCMGpR (ORCPT
+        id S1726488AbgCMGqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:45:17 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41521 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgCMGpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:45:16 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jCe4D-00078K-5C; Fri, 13 Mar 2020 07:45:09 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jCe45-0002pC-Ep; Fri, 13 Mar 2020 07:45:01 +0100
-Date:   Fri, 13 Mar 2020 07:45:01 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     thierry.reding@gmail.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: mvebu: avoid error message for optional IRQ
-Message-ID: <20200313064501.43h5htrebbgceudj@pengutronix.de>
-References: <20200313034244.26336-1-chris.packham@alliedtelesis.co.nz>
+        Fri, 13 Mar 2020 02:46:10 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:55942 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMGqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:46:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=yQkfOLNuqw0s/C4iIr73jm/g+t03fJKekg1eS9M/yZg=; b=MQ8zVt1jf+3E8VFEr9vHXAwzRP
+        EEpNOjG0j9PXkkpwioOIl1s3ss5UcmCWbUmkf3Lu2/xhN0+0ruZHagfHuVB+NaQVla6w5oLLiutBU
+        QIbBfQv1x+4Q5mzzzwC1GAgSEtF9O3syxxI/jfsgzlEy8/kSht1I7X3a1yCv0EclzO9k=;
+Received: from p200300ccff096400e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:6400:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jCe4u-0002p9-GB; Fri, 13 Mar 2020 07:45:52 +0100
+Received: from andi by eeepc with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jCe4t-0008Cq-SM; Fri, 13 Mar 2020 07:45:51 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        jic23@kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH RESEND v6 0/7] mfd: rn5t618: Add RTC/ADC support
+Date:   Fri, 13 Mar 2020 07:45:27 +0100
+Message-Id: <20200313064535.31503-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200313034244.26336-1-chris.packham@alliedtelesis.co.nz>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In the variant RC5T619 the mfd has an RTC. This patchset adds
+support for it. To do so it adds the missing register defines in 
+rn5t618.h and general irq handling for that.
+It seems that the IRQ definitions are the same except missing RTC
+for the RN5T618 but due to missing ability to test that they are
+not added here.
+It also adds support for the ADC, it is available in both the
+RN5T618 and RC5T619 but due to missing ability to test that,
+the subdevice is only added for the RN5T618.
 
-On Fri, Mar 13, 2020 at 04:42:44PM +1300, Chris Packham wrote:
-> platform_get_irq() will generate an error message if the requested irq
-> is not present
-> 
->   mvebu-gpio f1010140.gpio: IRQ index 3 not found
-> 
-> use platform_get_irq_optional() to avoid the error message being
-> generated.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+It was tested on the Kobo Clara HD.
 
-LGTM
+Changes in v6:
+- put together with ADC series
+- also added cleanup i2_device_id patch to avoid merge
+  conflicts
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Changes in v5:
+- static rn5t618_irq_init
+- PLATFORM_DEVID_NONE
+- added some Acked-Bys
 
-Best regards
-Uwe
+Changes in v4:
+- use macros for IRQ definitions
+- merge rn5t618-core.c and rn5t618-irq.c
+
+Changes in v3:
+- alignment cleanup
+- output cleanup, remove useless toggling of alarm flag in rtc probe
+- updated bindings description, so patch 1/5 becomes 2/6 and so on
+
+Changes in v2:
+- no dead code in irq code
+- various improvements and cleanups in rtc driver itself
+ 
+Andreas Kemnade (7):
+  dt-bindings: mfd: rn5t618: Document optional property interrupts
+  mfd: rn5t618: add IRQ support
+  mfd: rn5t618: add RTC related registers
+  mfd: rn5t618: add more subdevices
+  rtc: rc5t619: add Ricoh RC5T619 RTC driver
+  iio: adc: rn5t618: Add ADC driver for RN5T618/RC5T619
+  mfd: rn5t618: cleanup i2c_device_id
+
+ .../devicetree/bindings/mfd/rn5t618.txt       |   4 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/rn5t618-adc.c                 | 256 ++++++++++
+ drivers/mfd/Kconfig                           |   1 +
+ drivers/mfd/rn5t618.c                         | 119 ++++-
+ drivers/rtc/Kconfig                           |  10 +
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-rc5t619.c                     | 444 ++++++++++++++++++
+ include/linux/mfd/rn5t618.h                   |  26 +
+ 10 files changed, 862 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/iio/adc/rn5t618-adc.c
+ create mode 100644 drivers/rtc/rtc-rc5t619.c
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
