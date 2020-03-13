@@ -2,219 +2,991 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE90FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D320CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFEF206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87938206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="bWVIs5/8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="REQQf0F5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgCMICP (ORCPT
+        id S1726480AbgCMIDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:02:15 -0400
-Received: from mail-eopbgr1400115.outbound.protection.outlook.com ([40.107.140.115]:7371
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726310AbgCMICP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:02:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GDgIAkwYgZN3k2yo8r2LO5wDn/jEK0gVvOintNc+hLiSw5GkFaoT80GDvRyJlWGyWNPowfitKig2MiiWIzFT5QiBcPkME7OuCMbgpnxLW5Puhqi9yJ4Xpvdrt/GFSxSW38/5zvwRxzRgI+5wVQJ+3HCp4dAsmTj9ypIBSh99/BvfrppZY8EE/nZ5IcUShhk5MWWQTkzTlgbOBtT2c4VTHFafQMdsKzCyZWH3THHBiRLE4kWq9tarAmGV2qPcbHIXaHTCTCai4EYsiZsa56AN9eTIBst5plBJmE5lxI+2eEeHlSxpZrzXuoKVq1cCfD9uZbCbyhqSFwoEEBcXTxK20Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SGC+YQ1cGl513boYqKKNwTKXD3SHCT91/ImlBTTYeOU=;
- b=Th4+FLI1WRiCAmOT0TMWN29Vl+HwKbvzGIbG+N8mNQkJwvc7XRCrMp/gyV6/NazUauG79wmfNqYRg2zG1UfY5bjH5rvdiPwyS7qpmIywOCb3D2Fd3xniMECFNuzAzvlquYCvGsQiEvbRTwGE+3BM1wFPA/UX9WTIIpjrtF6yqJqJ0q66oNeNs6CNvAYNBOE7RpYb//y4mByyppuNcSTY1ZdjfrJJPJHUin7DVNwndkyK57rIWqcJiXwUXpzrmHemQ+l4ALuO/tI5uT/+KwFQ5xUWPR6l9i0DYo2p2SR01GfuQ638iFWcqwlF2qLTSeIUjf/xOMaztQUXnSyH+IkYAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SGC+YQ1cGl513boYqKKNwTKXD3SHCT91/ImlBTTYeOU=;
- b=bWVIs5/8H3LQKgmkiQCwdaYLBfCwov/uWvh3oI+RCuP72mcpKAVoxmVsdKz4ufBQ57/MhAg3rnpONy+H8OSdQFe2G12GvQDD0qtQJ+XEaYYVrPv8S8z4EXBc4NMrgZEjIRN43YgFDwIXwr7QiOvltrOXsM/lJmcRKXdhQ3O+eRo=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB3030.jpnprd01.prod.outlook.com (52.134.252.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Fri, 13 Mar 2020 08:02:08 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::6df0:eb47:a259:b94b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::6df0:eb47:a259:b94b%7]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 08:02:08 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fri, 13 Mar 2020 04:03:55 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47394 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgCMIDy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 04:03:54 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200313080352euoutp0200d8d8ac8200a8c89d4de9c7ae11f831~7zmYwvV3O1943419434euoutp02N
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:03:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200313080352euoutp0200d8d8ac8200a8c89d4de9c7ae11f831~7zmYwvV3O1943419434euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584086632;
+        bh=l+xFSYzab9qcwUJNCs+hKgqLCxBff1J2xXqYnlDNlGU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=REQQf0F55aDEvBbX9APO8oSKw/dQhuyh8WQ1x04Kg2cP9rczzbY+4aljbChBijT7n
+         jqbYxJpBUKwOaMLNDeS5i7YWZjerc1Kyj/tc8ngOl+yFzZX31hFAQF5OhjQs1VBNPG
+         RhyNIKo2GiAg7So5MyiaJsyAA4JISmE/j7CqEFK0=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200313080352eucas1p2c6e14bf9136bfa8806c2fabb2469f374~7zmYknL5y3141831418eucas1p2t;
+        Fri, 13 Mar 2020 08:03:52 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id DF.28.61286.76E3B6E5; Fri, 13
+        Mar 2020 08:03:51 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200313080351eucas1p117b78e3237bbdf027928a61f9fb99f4f~7zmYJGxF-2251222512eucas1p1y;
+        Fri, 13 Mar 2020 08:03:51 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200313080351eusmtrp294fd7bd264e15fbda99eaa724078a26e~7zmYIZy392832928329eusmtrp2S;
+        Fri, 13 Mar 2020 08:03:51 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-cc-5e6b3e67f584
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E3.6D.07950.76E3B6E5; Fri, 13
+        Mar 2020 08:03:51 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200313080350eusmtip2a3350f0bbefa20ac1dbb0f5f62714d44~7zmXljotl1828318283eusmtip2b;
+        Fri, 13 Mar 2020 08:03:50 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Subject: RE: [PATCH v2 2/3] media: i2c: ov5645: Switch to assigned-clock-rates
-Thread-Topic: [PATCH v2 2/3] media: i2c: ov5645: Switch to
- assigned-clock-rates
-Thread-Index: AQHV+LMHriTg1O9fLki5YHCWHclgDahFfJwAgAABE5CAABWjgIAAldMw
-Date:   Fri, 13 Mar 2020 08:02:08 +0000
-Message-ID: <OSBPR01MB35902AAC382503C40DEF929BAAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdUgMHjU_ZANzJbxQji6K7Pdc-jD4C7JatQc-OtN=jJt_w@mail.gmail.com>
- <OSBPR01MB3590906C6121D1DFFF4ABF0DAAFD0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <20200312230253.GB30932@pendragon.ideasonboard.com>
-In-Reply-To: <20200312230253.GB30932@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a83edc62-e307-419b-2e97-08d7c724d410
-x-ms-traffictypediagnostic: OSBPR01MB3030:
-x-microsoft-antispam-prvs: <OSBPR01MB303015D3EC32A7729D085277AAFA0@OSBPR01MB3030.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(199004)(186003)(54906003)(81156014)(81166006)(52536014)(8676002)(86362001)(6506007)(8936002)(4326008)(316002)(76116006)(9686003)(53546011)(26005)(478600001)(33656002)(5660300002)(7696005)(64756008)(2906002)(66946007)(66556008)(55016002)(66476007)(66446008)(71200400001)(7416002)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB3030;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ncvwFHQ5TQSRUaroFJON4z6cKvqNTenY7XTuorh6WA3p8W7GzQ9ZkJHewufZ3wjcJzqDKfhkLP36C7oz7YymU+Ihh49JgwtQaUJl5XLfqtEeSlpMzgOnH6clGeNCW2PMnttY0Ll19W6skOtNRfZO5BMg3QxY4cAgqlben6bFMfoHMyXcSdvh1sPI/2xoFFv3Fsu6NbDzMaiQRRV5dVPVN67Wrl0IFjTYaw9/rvMrb9kWhCe0p+t/EXvJ38BmgnWGv9PZf6Dkql5l7MU0NpedPmMg+e40bKsqVZCmu8tTR5ZC7yJfjelPJImlxx+Oho+BRU3Vij7HNv30SE/PSoCzZW9CcIt2sDRG4mUTtVE/yIPkMd7ERIX9xK5Arj35PL+SmEO/bK58CQqPVl8+2eF+0eccn6RtBVxYxm7mh6dn1HGmG/5v4TGzRfgdnWD/b6tC
-x-ms-exchange-antispam-messagedata: qboE3iUMMH77kFz6r/WJhjlGlE2t2WKFbwtumd7qn+OSgzCkbuBIhrFYCrQ97z/zdZgLke6kfIyEvuqmm76lIMmrmnP0bxRmngLuIqBNw2lN/P6KnHI6bLYs6PugZlE+cbsznYuH70l9dPLRkIkD0w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <222f90d6-effa-6ddd-f525-34516314b0e2@samsung.com>
+Date:   Fri, 13 Mar 2020 09:03:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a83edc62-e307-419b-2e97-08d7c724d410
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 08:02:08.5385
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nxvYeIKEhjNZ+4FKeHQldQpO8syyHEQiBhIHVdWHWVMttoJXXRkMZZs26w/6Jvg6+TaR4U0psbQbLvMrI22Pf6nNJ4U18QVM2G7Y6TMvmhaI5m9SH9ffgTUZzLLpbRaL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB3030
+In-Reply-To: <20200312153411.13535-2-paul@crapouillou.net>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2zk7O44mn/P2olY00rTIS/XjkKUGBSuIohBK8LL0pDZvbGo6
+        qETTagSKROoULS/YvN9NScWpmUabzmtmgmhJ5f6kIsasnEfLf8/7PO/7Pc/78tGEuJvvREfH
+        JbKKOFmMhBKSbW83DMcj/eQh3oONvkxJv57PZC/8IBiDoUHANC1M8pmxziKKyTd085iKqVEe
+        k11mJJnMrn4B86y8QBAglNYU1yBptfERJe3QfBZIm6qeUNLm8gfSlaYDV6kg4ZkINiY6mVV4
+        +YUJo9qzFAlVdSjly2YmlYaGHyI1sqIBn4L5jFzKgsX4FYJC82U1Em7hVQTvdGYeV6wgaNP1
+        8HYncvvKCE6oRKCfHqW4woRgOLt9S6FpWyyFnqVwy4Ad7kAwYg619BC4FcFcfjphESjsA2qT
+        ettbhP0gb+bjdiYSu8Lo1Nw2tsfBUKjtI7keGxgqWCQt71vh09Dctd9CE/ggtJuKCA47wsxi
+        yXZqwHoBvGmbFXCpz8PmJy3JYVv4Ptiyw7vAn47dgQwE8/paAVc8RTCWnr9zJV+Y1f+iLM4E
+        9oD6Ti+OPge54808Cw3YGqZNNlwIa8htyyM4WgSPs8RctxtoBuv+2faOGIkcJNHs2UyzZx3N
+        nnU0/31fILIKObJJythIVukTx971VMpilUlxkZ7h8bFNaOtXvf89+PM1WjPe0iFMI8k+kbfD
+        nRAxX5asTI3VIaAJiZ3I214eIhZFyFJVrCI+VJEUwyp1yJkmJY6ik6XfgsU4UpbIylk2gVXs
+        qjzayikNuVeoVEsBy+7Xq0p9c4IMVHF1/UtX84cRudtzpF3z6Nhcap7IamwdTylbvbiefMjG
+        u9fEv+k6HHi2V+vgny5ZzzrcE2pWVx6BpQ1GdaKg9f7tC9Xy1KHa6pTGY/e+ykWTLlqvRVmL
+        Ew87XxsYqL2yPCq+IWoIDGMG/Gsm9JfiJaQySuZzlFAoZX8BTYuY9FEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7rpdtlxBiu3KVrMP3KO1aL/8Wtm
+        i/PnN7BbbHp8jdXi8q45bBYzzu9jslh6/SKTRf/iSywWrXuPsFtMWTKT3YHLY828NYweqy+1
+        s3nsnHWX3WPTqk42j81L6j0+b5ILYIvSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
+        tTIyVdK3s0lJzcksSy3St0vQy9jeVlSwah1jxdO/rWwNjKdaGLsYOTkkBEwkJh1ezAxiCwks
+        ZZQ4dN0SIi4jcXJaAyuELSzx51oXWxcjF1DNa0aJTwcnAjVwcAgLeEjsf54MEhcR2MkoceH+
+        SXaQBmaBrUCDeishGvYyStyfc5sNJMEmYCjR9bYLzOYVsJOYfusm2BUsAqoSF6/fA7NFBWIl
+        bszsYIKoEZQ4OfMJC8gyTgEric17ZSHmm0nM2/yQGcKWl9j+dg6ULS5x68l8pgmMQrOQdM9C
+        0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbmtmM/t+xg7HoXfIhRgINR
+        iYfXQCwrTog1say4MvcQowQHs5IIr4FodpwQb0piZVVqUX58UWlOavEhRlOg3yYyS4km5wPT
+        Rl5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsaEH5sMLQJjGXee
+        VKxc8viSi5yoYPsk/8Wnjp8Pa3yy08imiftc7bx14X6f1WO8hY82LLONiF2775jvdEaT1dMX
+        1P2U7Y6PkXgUdP/Jee+2iqnO13aunPNbUFBHSE1s4tynXyU61h5kCOzuDuQV7F8dfqTi0UIb
+        W3GvOS2nZ//1YuwIvr9oR7kSS3FGoqEWc1FxIgDeRBqb4wIAAA==
+X-CMS-MailID: 20200313080351eucas1p117b78e3237bbdf027928a61f9fb99f4f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200312153430eucas1p21948620c871efdc5edbff18a0e075d07
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200312153430eucas1p21948620c871efdc5edbff18a0e075d07
+References: <20200312153411.13535-1-paul@crapouillou.net>
+        <CGME20200312153430eucas1p21948620c871efdc5edbff18a0e075d07@eucas1p2.samsung.com>
+        <20200312153411.13535-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB0aGUgcmV2aWV3Lg0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
-cnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2VudDogMTIgTWFyY2ggMjAyMCAyMzowMw0KPiBUbzog
-UHJhYmhha2FyIE1haGFkZXYgTGFkIDxwcmFiaGFrYXIubWFoYWRldi1sYWQucmpAYnAucmVuZXNh
-cy5jb20+DQo+IENjOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPjsg
-TWF1cm8gQ2FydmFsaG8gQ2hlaGFiDQo+IDxtY2hlaGFiQGtlcm5lbC5vcmc+OyBTaGF3biBHdW8g
-PHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBTYXNjaGENCj4gSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9u
-aXguZGU+OyBQZW5ndXRyb25peCBLZXJuZWwgVGVhbQ0KPiA8a2VybmVsQHBlbmd1dHJvbml4LmRl
-PjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsNCj4gUnV0bGFuZCA8bWFy
-ay5ydXRsYW5kQGFybS5jb20+OyBTYWthcmkgQWlsdXMNCj4gPHNha2FyaS5haWx1c0BsaW51eC5p
-bnRlbC5jb20+OyBOWFAgTGludXggVGVhbSA8bGludXgtaW14QG54cC5jb20+Ow0KPiBNYWdudXMg
-RGFtbSA8bWFnbnVzLmRhbW1AZ21haWwuY29tPjsgRXplcXVpZWwgR2FyY2lhDQo+IDxlemVxdWll
-bEBjb2xsYWJvcmEuY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRA0K
-PiBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51
-eCBLZXJuZWwgTWFpbGluZw0KPiBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsg
-TGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0NCj4gc29jQHZnZXIua2VybmVsLm9yZz47IEZh
-YmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT47IExpbnV4IEFSTQ0KPiA8bGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggTWVkaWEgTWFpbGluZyBMaXN0IDxs
-aW51eC0NCj4gbWVkaWFAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYy
-IDIvM10gbWVkaWE6IGkyYzogb3Y1NjQ1OiBTd2l0Y2ggdG8gYXNzaWduZWQtY2xvY2stDQo+IHJh
-dGVzDQo+DQo+IEhpIFByYWJoYWthciwNCj4NCj4gT24gVGh1LCBNYXIgMTIsIDIwMjAgYXQgMDk6
-NTI6MzhQTSArMDAwMCwgUHJhYmhha2FyIE1haGFkZXYgTGFkIHdyb3RlOg0KPiA+IE9uIDEyIE1h
-cmNoIDIwMjAgMjE6NDIsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gPiA+IE9uIFRodSwg
-TWFyIDEyLCAyMDIwIGF0IDEwOjEzIFBNIExhZCBQcmFiaGFrYXIgd3JvdGU6DQo+ID4gPiA+IFRo
-aXMgcGF0Y2ggc3dpdGNoZXMgdG8gYXNzaWduZWQtY2xvY2stcmF0ZXMgZm9yIHNwZWNpZnlpbmcg
-dGhlIGNsb2NrIHJhdGUuDQo+ID4gPiA+IFRoZSBjbGstY29uZi5jIGludGVybmFsbHkgaGFuZGxl
-cyBzZXR0aW5nIHRoZSBjbG9jayByYXRlIHdoZW4NCj4gPiA+ID4gYXNzaWduZWQtY2xvY2stcmF0
-ZXMgaXMgcGFzc2VkLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgZHJpdmVyIG5vdyBzZXRzIHRoZSBj
-bG9jayBmcmVxdWVuY3kgb25seSBpZiB0aGUgZGVwcmVjYXRlZA0KPiA+ID4gPiBwcm9wZXJ0eSBj
-bG9jay1mcmVxdWVuY3kgaXMgZGVmaW5lZCBpbnN0ZWFkIGFzc2lnbmVkLWNsb2NrLXJhdGVzLA0K
-PiA+ID4gPiB0aGlzIGlzIHRvIGF2b2lkIGJyZWFrYWdlIHdpdGggZXhpc3RpbmcgRFQgYmluYXJp
-ZXMuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IExhZCBQcmFiaGFrYXINCj4gPiA+
-ID4gPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4NCj4gPiA+DQo+ID4g
-PiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+ID4gPg0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL21l
-ZGlhL2kyYy9vdjU2NDUuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9vdjU2NDUu
-Yw0KPiA+ID4gPiBAQCAtMTA1NSw2ICsxMDU1LDcgQEAgc3RhdGljIGludCBvdjU2NDVfcHJvYmUo
-c3RydWN0IGkyY19jbGllbnQNCj4gKmNsaWVudCkNCj4gPiA+ID4gICAgICAgICBzdHJ1Y3QgZGV2
-aWNlX25vZGUgKmVuZHBvaW50Ow0KPiA+ID4gPiAgICAgICAgIHN0cnVjdCBvdjU2NDUgKm92NTY0
-NTsNCj4gPiA+ID4gICAgICAgICB1OCBjaGlwX2lkX2hpZ2gsIGNoaXBfaWRfbG93Ow0KPiA+ID4g
-PiArICAgICAgIGJvb2wgc2V0X2NsayA9IGZhbHNlOw0KPiA+ID4gPiAgICAgICAgIHVuc2lnbmVk
-IGludCBpOw0KPiA+ID4gPiAgICAgICAgIHUzMiB4Y2xrX2ZyZXE7DQo+ID4gPiA+ICAgICAgICAg
-aW50IHJldDsNCj4gPiA+ID4gQEAgLTEwOTQsMTAgKzEwOTUsMTcgQEAgc3RhdGljIGludCBvdjU2
-NDVfcHJvYmUoc3RydWN0IGkyY19jbGllbnQNCj4gPiA+ICpjbGllbnQpDQo+ID4gPiA+ICAgICAg
-ICAgICAgICAgICByZXR1cm4gUFRSX0VSUihvdjU2NDUtPnhjbGspOw0KPiA+ID4gPiAgICAgICAg
-IH0NCj4gPiA+ID4NCj4gPiA+ID4gLSAgICAgICByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihk
-ZXYtPm9mX25vZGUsICJjbG9jay1mcmVxdWVuY3kiLA0KPiA+ID4gJnhjbGtfZnJlcSk7DQo+ID4g
-PiA+ICsgICAgICAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAiYXNz
-aWduZWQtY2xvY2stDQo+IHJhdGVzIiwNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAmeGNsa19mcmVxKTsNCj4gPiA+ID4gICAgICAgICBpZiAocmV0KSB7DQo+ID4g
-Pg0KPiA+ID4gSSB0aGluayB5b3UgY2FuIGp1c3QgbGVhdmUgb3V0IHRoZSBhYm92ZSBjaGVjay4u
-Lg0KPiA+ID4NCj4gPiA+ID4gLSAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiY291bGQgbm90
-IGdldCB4Y2xrIGZyZXF1ZW5jeVxuIik7DQo+ID4gPiA+IC0gICAgICAgICAgICAgICByZXR1cm4g
-cmV0Ow0KPiA+ID4gPiArICAgICAgICAgICAgICAgLyogY2hlY2sgaWYgZGVwcmVjYXRlZCBwcm9w
-ZXJ0eSBjbG9jay1mcmVxdWVuY3kgaXMgZGVmaW5lZCAqLw0KPiA+ID4gPiArICAgICAgICAgICAg
-ICAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAiY2xvY2stDQo+IGZy
-ZXF1ZW5jeSIsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAmeGNsa19mcmVxKTsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQpIHsNCj4g
-PiA+DQo+ID4gPiAuLi4gYW5kIGlnbm9yZSB0aGUgYWJzZW5jZSBvZiB0aGUgZGVwcmVjYXRlZCBw
-cm9wZXJ0eS4NCj4gPiA+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIo
-ZGV2LCAiY291bGQgbm90IGdldCB4Y2xrIGZyZXF1ZW5jeVxuIik7DQo+ID4gPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICB9DQo+
-ID4gPiA+ICsgICAgICAgICAgICAgICBzZXRfY2xrID0gdHJ1ZTsNCj4gPiA+DQo+ID4gPiBJLmUu
-IGp1c3QNCj4gPiA+DQo+ID4gPiAgICAgICAgIC8qIGNoZWNrIGlmIGRlcHJlY2F0ZWQgcHJvcGVy
-dHkgY2xvY2stZnJlcXVlbmN5IGlzIGRlZmluZWQgKi8NCj4gPiA+ICAgICAgICAgeGNsa19mcmVx
-ID0gMDsNCj4gPiA+ICAgICAgICAgb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAi
-Y2xvY2stZnJlcXVlbmN5IiwNCj4gJnhjbGtfZnJlcSk7DQo+ID4gPiAgICAgICAgIGlmICh4Y2xr
-X2ZyZXEpIHsNCj4gPiA+ICAgICAgICAgICAgICAgICByZXQgPSBjbGtfc2V0X3JhdGUob3Y1NjQ1
-LT54Y2xrLCB4Y2xrX2ZyZXEpOw0KPiA+ID4gICAgICAgICAgICAgICAgIGlmIChyZXQpIHsNCj4g
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiY291bGQgbm90IHNldCB4
-Y2xrIGZyZXF1ZW5jeVxuIik7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4g
-cmV0Ow0KPiA+ID4gICAgICAgICAgICAgICAgIH0NCj4gPiA+ICAgICAgICAgfSBlbHNlIHsNCj4g
-PiA+ICAgICAgICAgICAgICAgICB4Y2xrX2ZyZXEgPSBjbGtfZ2V0X3JhdGUob3Y1NjQ1LT54Y2xr
-LCB4Y2xrX2ZyZXEpOw0KPiA+ID4gICAgICAgICB9DQo+ID4gPg0KPiA+IEkgZGlkIHRoaW5rIGFi
-b3V0IGl0IGluaXRpYWxseSwgYnV0IHJlYWxpemVkIHRoZSBjbGtfZ2V0X3JhdGUgbWF5IHZhcnkN
-Cj4gPiBwbGF0Zm9ybSB0byBwbGF0Zm9ybSBmb3IgZXhhbXBsZSBpbiBHMkUgY2xrX2dldF9yYXRl
-KCkgcmV0dXJucyBhDQo+ID4gZnJlcXVlbmN5IG9mIDI0MjQyNDI0IHdpdGggYXNzaWduZWQtY2xv
-Y2stcmF0ZXMgc2V0IHRvICAyNDAwMDAwMCBhbmQNCj4gPiBwcm9iZSB3b3VsZCBmYWlsIGR1ZSB0
-byBhIGNoZWNrIGZvciBleHRlcm5hbCBjbG9jayBtdXN0IGJlIDI0TUh6LCB3aXRoIDElDQo+IHRv
-bGVyYW5jZS4NCj4NCj4gVGhlbiB5b3UgbmVlZCB0byBoYW5kbGUgdGhlIHRvbGVyYW5jZSBpbiB0
-aGlzIGRyaXZlciA6LSkNCj4NClN1cmUgSSB3aWxsIGluY3JlYXNlIHRoZSB0b2xlcmFuY2UgaGVy
-ZS4NCg0KQ2hlZXJzLA0KLS1QcmFiaGFrYXINCg0KPiA+ID4gPiAgICAgICAgIH0NCj4gPiA+ID4N
-Cj4gPiA+ID4gICAgICAgICAvKiBleHRlcm5hbCBjbG9jayBtdXN0IGJlIDI0TUh6LCBhbGxvdyAx
-JSB0b2xlcmFuY2UgKi8gQEANCj4gPiA+ID4gLTExMDcsMTAgKzExMTUsMTIgQEAgc3RhdGljIGlu
-dCBvdjU2NDVfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPiA+ID4gICAgICAg
-ICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+ID4gPiAgICAgICAgIH0NCj4gPiA+ID4NCj4g
-PiA+ID4gLSAgICAgICByZXQgPSBjbGtfc2V0X3JhdGUob3Y1NjQ1LT54Y2xrLCB4Y2xrX2ZyZXEp
-Ow0KPiA+ID4gPiAtICAgICAgIGlmIChyZXQpIHsNCj4gPiA+ID4gLSAgICAgICAgICAgICAgIGRl
-dl9lcnIoZGV2LCAiY291bGQgbm90IHNldCB4Y2xrIGZyZXF1ZW5jeVxuIik7DQo+ID4gPiA+IC0g
-ICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ID4gPiArICAgICAgIGlmIChzZXRfY2xrKSB7
-DQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXQgPSBjbGtfc2V0X3JhdGUob3Y1NjQ1LT54Y2xr
-LCB4Y2xrX2ZyZXEpOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgaWYgKHJldCkgew0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImNvdWxkIG5vdCBzZXQgeGNs
-ayBmcmVxdWVuY3lcbiIpOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4g
-cmV0Ow0KPiA+ID4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ID4gPg0KPiA+ID4gPiAgICAgICAg
-IH0NCj4gPiA+ID4NCj4gPiA+ID4gICAgICAgICBmb3IgKGkgPSAwOyBpIDwgT1Y1NjQ1X05VTV9T
-VVBQTElFUzsgaSsrKQ0KPg0KPiAtLQ0KPiBSZWdhcmRzLA0KPg0KPiBMYXVyZW50IFBpbmNoYXJ0
-DQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgR21iSCwgR2VzY2hhZWZ0c2Z1ZWhyZXIv
-UHJlc2lkZW50OiBDYXJzdGVuIEphdWNoLCBTaXR6IGRlciBHZXNlbGxzY2hhZnQvUmVnaXN0ZXJl
-ZCBvZmZpY2U6IER1ZXNzZWxkb3JmLCBBcmNhZGlhc3RyYXNzZSAxMCwgNDA0NzIgRHVlc3NlbGRv
-cmYsIEdlcm1hbnksIEhhbmRlbHNyZWdpc3Rlci9Db21tZXJjaWFsIFJlZ2lzdGVyOiBEdWVzc2Vs
-ZG9yZiwgSFJCIDM3MDggVVN0LUlETnIuL1RheCBpZGVudGlmaWNhdGlvbiBuby46IERFIDExOTM1
-MzQwNiBXRUVFLVJlZy4tTnIuL1dFRUUgcmVnLiBuby46IERFIDE0OTc4NjQ3DQo=
+
+On 12.03.2020 16:34, Paul Cercueil wrote:
+> From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+>
+> Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100 version).
+>
+> Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>   arch/arm/boot/dts/Makefile             |   1 +
+>   arch/arm/boot/dts/exynos4210-i9100.dts | 816 +++++++++++++++++++++++++
+>   2 files changed, 817 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/exynos4210-i9100.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index d6546d2676b9..522436d30690 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -181,6 +181,7 @@ dtb-$(CONFIG_ARCH_EXYNOS3) += \
+>   	exynos3250-monk.dtb \
+>   	exynos3250-rinato.dtb
+>   dtb-$(CONFIG_ARCH_EXYNOS4) += \
+> +	exynos4210-i9100.dtb \
+>   	exynos4210-origen.dtb \
+>   	exynos4210-smdkv310.dtb \
+>   	exynos4210-trats.dtb \
+> diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
+> new file mode 100644
+> index 000000000000..c218e34959be
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos4210-i9100.dts
+> @@ -0,0 +1,816 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Samsung's Exynos4210 based Galaxy S2 (i9100 version) device tree
+> + *
+> + * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + * Copyright (c) 2020 Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+> + * Copyright (c) 2020 Paul Cercueil <paul@crapouillou.net>
+> + *
+> + * Device tree source file for Samsung's Galaxy S2 smartphone (i9100 version),
+> + * which is based on Samsung's Exynos4210 SoC.
+> + */
+> +
+> +/dts-v1/;
+> +#include "exynos4210.dtsi"
+> +#include "exynos4412-ppmu-common.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/linux-event-codes.h>
+> +
+> +/ {
+> +	model = "Samsung Galaxy S2 (i9100)";
+> +	compatible = "samsung,i9100", "samsung,exynos4210", "samsung,exynos4";
+> +
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0x40000000 0x40000000>;
+> +	};
+> +
+> +	vemmc_reg: regulator-0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VMEM_VDD_2.8V";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	tsp_reg: regulator-1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "TSP_FIXED_VOLTAGES";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <70000>;
+> +		enable-active-high;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	cam_af_28v_reg: regulator-3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "8M_AF_2.8V_EN";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		gpio = <&gpk1 1 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	cam_io_en_reg: regulator-4 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "CAM_IO_EN";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		gpio = <&gpe2 1 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	cam_io_12v_reg: regulator-5 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "8M_1.2V_EN";
+> +		regulator-min-microvolt = <1200000>;
+> +		regulator-max-microvolt = <1200000>;
+> +		gpio = <&gpe2 5 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vt_core_15v_reg: regulator-6 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VT_CORE_1.5V";
+> +		regulator-min-microvolt = <1500000>;
+> +		regulator-max-microvolt = <1500000>;
+> +		gpio = <&gpe2 2 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		vol-down {
+> +			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +			label = "volume down";
+> +			debounce-interval = <10>;
+> +		};
+> +
+> +		vol-up {
+> +			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			label = "volume up";
+> +			debounce-interval = <10>;
+> +		};
+> +
+> +		power {
+> +			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_POWER>;
+> +			label = "power";
+> +			debounce-interval = <10>;
+> +			wakeup-source;
+> +		};
+> +
+> +		ok {
+> +			gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_OK>;
+> +			label = "ok";
+> +			debounce-interval = <10>;
+> +		};
+> +	};
+> +
+> +	wlan_pwrseq: sdhci3-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpl1 2 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	i2c_max17042_fuel: i2c-gpio-3 {
+> +		compatible = "i2c-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		sda-gpios = <&gpy4 0 GPIO_ACTIVE_HIGH>;
+> +		scl-gpios = <&gpy4 1 GPIO_ACTIVE_HIGH>;
+> +		i2c-gpio,delay-us = <5>;
+> +
+> +		battery@36 {
+> +			compatible = "maxim,max17042";
+> +
+> +			interrupt-parent = <&gpx2>;
+> +			interrupts = <3 2>;
+> +
+> +			pinctrl-0 = <&max17042_fuel_irq>;
+> +			pinctrl-names = "default";
+> +
+> +			reg = <0x36>;
+> +			maxim,over-heat-temp = <700>;
+> +			maxim,over-volt = <4500>;
+> +
+> +		};
+> +	};
+> +
+> +	spi-lcd {
+> +		compatible = "spi-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		num-chipselects = <1>;
+> +		cs-gpios = <&gpy4 3 GPIO_ACTIVE_HIGH>;
+LD9040 CS is active low, so this board needs probably the same fix a 
+Universal C210 board: https://patchwork.kernel.org/patch/11420231/ Are 
+you sure it really works now with v5.6-rcX kernels? Or you just got the 
+panel working only because the bootloader enabled it?
+> +		sck-gpios = <&gpy3 1 GPIO_ACTIVE_HIGH>;
+> +		mosi-gpios = <&gpy3 3 GPIO_ACTIVE_HIGH>;
+> +
+> +		lcd@0 {
+> +			compatible = "samsung,ld9040";
+> +			reg = <0>;
+> +
+> +			spi-max-frequency = <1200000>;
+> +			spi-cpol;
+> +			spi-cpha;
+> +
+> +			vdd3-supply = <&vmipi_reg>;
+> +			vci-supply = <&vcclcd_reg>;
+> +
+> +			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
+> +			power-on-delay = <10>;
+> +			reset-delay = <10>;
+> +
+> +			panel-width-mm = <90>;
+> +			panel-height-mm = <154>;
+> +
+> +			display-timings {
+> +				timing {
+> +					clock-frequency = <23492370>;
+> +					hactive = <480>;
+> +					vactive = <800>;
+> +					hback-porch = <16>;
+> +					hfront-porch = <16>;
+> +					vback-porch = <2>;
+> +					vfront-porch = <28>;
+> +					hsync-len = <2>;
+> +					vsync-len = <1>;
+> +					hsync-active = <0>;
+> +					vsync-active = <0>;
+> +					de-active = <0>;
+> +					pixelclk-active = <0>;
+> +				};
+> +			};
+> +
+> +			port {
+> +				lcd_ep: endpoint {
+> +					remote-endpoint = <&fimd_dpi_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	fixed-rate-clocks {
+> +		xxti {
+> +			compatible = "samsung,clock-xxti";
+> +			clock-frequency = <0>;
+> +		};
+> +
+> +		xusbxti {
+> +			compatible = "samsung,clock-xusbxti";
+> +			clock-frequency = <24000000>;
+> +		};
+> +	};
+> +
+> +	thermal-zones {
+> +		cpu_thermal: cpu-thermal {
+> +			cooling-maps {
+> +				map0 {
+> +					/* Corresponds to 800MHz */
+> +					cooling-device = <&cpu0 2 2>;
+> +				};
+> +				map1 {
+> +					/* Corresponds to 200MHz */
+> +					cooling-device = <&cpu0 4 4>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +};
+> +
+> +&camera {
+> +	status = "okay";
+> +};
+> +
+> +&cpu0 {
+> +	cpu0-supply = <&varm_breg>;
+> +};
+> +
+> +&exynos_usbphy {
+> +	status = "okay";
+> +
+> +	vbus-supply = <&safe1_sreg>;
+> +};
+> +
+> +&fimc_0 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC0>, <&clock CLK_SCLK_FIMC0>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimc_1 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC1>, <&clock CLK_SCLK_FIMC1>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimc_2 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC2>, <&clock CLK_SCLK_FIMC2>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimc_3 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC3>, <&clock CLK_SCLK_FIMC3>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimd {
+> +	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	samsung,invert-vden;
+> +	samsung,invert-vclk;
+> +
+> +	pinctrl-0 = <&lcd_clk>, <&lcd_data24>;
+> +	pinctrl-names = "default";
+> +
+> +	port@3 {
+> +		reg = <3>;
+> +
+> +		fimd_dpi_ep: endpoint {
+> +			remote-endpoint = <&lcd_ep>;
+> +		};
+> +	};
+> +};
+> +
+> +&hsotg {
+> +	status = "okay";
+> +
+> +	dr_mode = "otg";
+The the host mode really works with DWC2? Afair the host mode worked 
+only when it was rerouted by PHY to the EHCI (at least on UniversalC210 
+board, which is very similar to GS2).
+> +	vusb_d-supply = <&vusb_reg>;
+> +	vusb_a-supply = <&vusbdac_reg>;
+> +};
+> +
+> +&ehci {
+> +	status = "okay";
+> +
+> +	port@0 {
+> +		status = "okay";
+> +	};
+> +
+> +	port@1 {
+> +		status = "okay";
+> +	};
+> +
+> +	port@2 {
+> +		status = "okay";
+> +	};
+> +};
+
+This is the old, obsolete exynos-ehci binding. Please remove 'port' 
+nodes and use standard USB phy bindings like it has been done in the 
+following patch: https://patchwork.kernel.org/patch/11060465/
+
+BTW, do you really need all 3 phys/ports?
+
+> +
+> +
+> +&i2c_3 {
+> +	status = "okay";
+> +
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-slave-addr = <0x10>;
+> +	samsung,i2c-max-bus-freq = <100000>;
+> +
+> +	pinctrl-0 = <&i2c3_bus>;
+> +	pinctrl-names = "default";
+> +
+> +	mxt224-touchscreen@4a {
+> +		compatible = "atmel,maxtouch";
+> +		reg = <0x4a>;
+> +
+> +		interrupt-parent = <&gpx0>;
+> +		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		avdd-supply = <&tsp_reg>;
+> +		vdd-supply = <&tsp_reg>;
+> +	};
+> +};
+> +
+> +&i2c_7 {
+> +	status = "okay";
+> +
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-slave-addr = <0x10>;
+> +	samsung,i2c-max-bus-freq = <400000>;
+> +
+> +	pinctrl-0 = <&i2c7_bus>;
+> +	pinctrl-names = "default";
+> +
+> +	ak8975@c {
+> +		compatible = "asahi-kasei,ak8975";
+> +		reg = <0x0c>;
+> +
+> +		gpios = <&gpx2 2 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +
+> +&i2c_5 {
+> +	status = "okay";
+> +
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-slave-addr = <0x10>;
+> +	samsung,i2c-max-bus-freq = <100000>;
+> +
+> +	pinctrl-0 = <&i2c5_bus>;
+> +	pinctrl-names = "default";
+> +
+> +	max8997_pmic@66 {
+> +		compatible = "maxim,max8997-pmic";
+> +		reg = <0x66>;
+> +
+> +		interrupts-extended = <&gpx0 7 0>, <&gpx2 3 2>;
+> +		interrupt-parent = <&gpx0>;
+> +		interrupts = <7 IRQ_TYPE_NONE>;
+> +
+> +		otg_en-gpios = <&gpx3 3 0>;
+> +		usb_sel-gpios = <&gpl0 6 0>;
+> +
+> +		max8997,pmic-buck1-uses-gpio-dvs;
+> +		max8997,pmic-buck2-uses-gpio-dvs;
+> +		max8997,pmic-buck5-uses-gpio-dvs;
+> +
+> +		max8997,pmic-ignore-gpiodvs-side-effect;
+> +		max8997,pmic-buck125-default-dvs-idx = <0>;
+> +
+> +		max8997,pmic-buck125-dvs-gpios = <&gpx0 5 GPIO_ACTIVE_HIGH>,
+> +						 <&gpx0 6 GPIO_ACTIVE_HIGH>,
+> +						 <&gpl0 0 GPIO_ACTIVE_HIGH>;
+> +
+> +		max8997,pmic-buck1-dvs-voltage = <1350000>, <1300000>,
+> +						 <1250000>, <1200000>,
+> +						 <1150000>, <1100000>,
+> +						 <1000000>, <950000>;
+> +
+> +		max8997,pmic-buck2-dvs-voltage = <1100000>, <1000000>,
+> +						 <950000>,  <900000>,
+> +						 <1100000>, <1000000>,
+> +						 <950000>,  <900000>;
+> +
+> +		max8997,pmic-buck5-dvs-voltage = <1200000>, <1200000>,
+> +						 <1200000>, <1200000>,
+> +						 <1200000>, <1200000>,
+> +						 <1200000>, <1200000>;
+> +
+> +		pinctrl-0 = <&max8997_irq>, <&otg_gp>, <&usb_sel>;
+> +		pinctrl-names = "default";
+> +
+> +		regulators {
+> +			vadc_reg: LDO1 {
+> +				regulator-name = "VADC_3.3V_C210";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +
+> +			};
+> +			valive_reg: LDO2 {
+> +				regulator-name = "VALIVE_1.1V_C210";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +				regulator-always-on;
+> +
+> +			};
+> +
+> +			vusb_reg: LDO3 {
+> +				regulator-name = "VUSB_1.1V_C210";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +			};
+> +
+> +			vmipi_reg: LDO4 {
+> +				regulator-name = "VMIPI_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vhsic_reg: LDO5 {
+> +				regulator-name = "VHSIC_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vpda_reg: LDO6 {
+> +				regulator-name = "VCC_1.8V_PDA";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcam_reg: LDO7 {
+> +				regulator-name = "CAM_ISP_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			vusbdac_reg: LDO8 {
+> +				regulator-name = "VUSB+VDAC_3.3V_C210";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			vccpda_reg: LDO9 {
+> +				regulator-name = "VCC_2.8V_PDA";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vtouch_reg: LDO11 {
+> +				regulator-name = "TOUCH_2.8V";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vpll_reg: LDO10 {
+> +				regulator-name = "VPLL_1.1V";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vtcam_reg: LDO12 {
+> +				regulator-name = "VT_CAM_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			vcclcd_reg: LDO13 {
+> +				regulator-name = "VCC_3.0V_LCD";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +
+> +			vmotor_reg: LDO14 {
+> +				regulator-name = "VCC_2.8V_MOTOR";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +			};
+> +
+> +			vled_reg: LDO15 {
+> +				regulator-name = "LED_A_2.8V";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +			};
+> +
+> +			camsensor_reg: LDO16 {
+> +				regulator-name = "CAM_SENSOR_IO_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			vtf_reg: LDO17 {
+> +				regulator-name = "VTF_2.8V";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +			};
+> +
+> +			vtouchled_reg: LDO18 {
+> +				regulator-name = "TOUCH_LED_3.3V";
+> +				regulator-min-microvolt = <2500000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			vddq_reg: LDO21 {
+> +				regulator-name = "VDDQ_M1M2_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			varm_breg: BUCK1 {
+> +				//regulator-name = "VARM_1.2V_C210";
+> +				regulator-name = "vdd_arm";
+> +				regulator-min-microvolt = <65000>;
+> +				regulator-max-microvolt = <2225000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vint_breg: BUCK2 {
+> +				regulator-name = "VINT_1.1V_C210";
+> +				regulator-min-microvolt = <65000>;
+> +				regulator-max-microvolt = <2225000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vg3d_breg: BUCK3 {
+> +				regulator-name = "G3D_1.1V";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			camisp_breg: BUCK4 {
+> +				regulator-name = "CAM_ISP_CORE_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +			};
+> +
+> +			vmem_breg: BUCK5 {
+> +				regulator-name = "VMEM_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vccsub_breg: BUCK7 {
+> +				regulator-name = "VCC_SUB_2.0V";
+> +				regulator-min-microvolt = <2000000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			safe1_sreg: ESAFEOUT1 {
+> +				regulator-name = "SAFEOUT1";
+> +			};
+> +
+> +			safe2_sreg: ESAFEOUT2 {
+> +				regulator-name = "SAFEOUT2";
+> +				regulator-boot-on;
+> +			};
+> +
+> +			charger_reg: CHARGER {
+> +				regulator-name = "CHARGER";
+> +				regulator-min-microamp = <60000>;
+> +				regulator-max-microamp = <2580000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			chargercv_reg: CHARGER_CV {
+> +				regulator-name = "CHARGER_CV";
+> +				regulator-min-microvolt = <3800000>;
+> +				regulator-max-microvolt = <4100000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +		};
+> +
+> +	};
+> +};
+> +
+> +
+> +&gpu {
+> +	status = "okay";
+> +
+> +	mali-supply = <&vg3d_breg>;
+> +	regulator-microvolt-offset = <50000>;
+> +	regulator-microsecs-delay = <50>;
+> +};
+> +
+> +
+> +&sdhci_0 {
+> +	status = "okay";
+> +
+> +	bus-width = <8>;
+> +	non-removable;
+> +	vmmc-supply = <&vemmc_reg>;
+> +
+> +	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_bus8>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&sdhci_2 {
+> +	status = "okay";
+> +
+> +	bus-width = <4>;
+> +	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&vtf_reg>;
+> +
+> +	pinctrl-0 = <&sd2_clk>, <&sd2_cmd>, <&sd2_bus4>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&ehci {
+> +	port@0 {
+> +		status = "okay";
+> +	};
+> +
+> +	port@1 {
+> +		status = "okay";
+> +	};
+> +
+> +	port@2 {
+> +		status = "okay";
+> +	};
+> +
+> +};
+
+This is duplicated 'ehci' node, probable an artifact from the earlier 
+rebase. Please remove it.
+
+> +
+> +
+> +&sdhci_3 {
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	non-removable;
+> +	bus-width = <4>;
+> +	mmc-pwrseq = <&wlan_pwrseq>;
+> +	vmmc-supply = <&vtf_reg>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd3_clk>, <&sd3_cmd>, <&sd3_bus4>;
+> +
+> +	brcmf: wifi@1 {
+> +		compatible = "brcm,bcm4330-fmac";
+> +		reg = <1>;
+> +
+> +		interrupt-parent = <&gpx2>;
+> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "host-wake";
+> +	};
+> +};
+> +
+> +
+> +&serial_0 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&bt_en>, <&bt_res>, <&uart0_data>, <&uart0_fctl>;
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm4330-bt";
+> +
+> +		shutdown-gpios = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&gpl1 0 GPIO_ACTIVE_HIGH>;
+> +		device-wakeup-gpios = <&gpx3 1 GPIO_ACTIVE_HIGH>;
+> +		host-wakeup-gpios = <&gpx2 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&serial_1 {
+> +	status = "okay";
+> +};
+> +
+> +&serial_2 {
+> +	status = "okay";
+> +};
+> +
+> +&serial_3 {
+> +	status = "okay";
+> +};
+> +
+> +&tmu {
+> +	status = "okay";
+> +};
+> +
+> +
+> +&pinctrl_0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sleep0>;
+> +
+> +
+> +	sleep0: sleep-states {
+> +		gpa0-0 {
+> +			samsung,pins = "gpa0-0";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +
+> +		gpa0-1 {
+> +			samsung,pins = "gpa0-1";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT0>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +
+> +		gpa0-2 {
+> +			samsung,pins = "gpa0-2";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +
+> +		gpa0-3 {
+> +			samsung,pins = "gpa0-3";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT1>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +	};
+> +};
+> +
+> +&pinctrl_1 {
+> +	mhl_int: mhl-int {
+> +		samsung,pins = "gpf3-5";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	i2c_mhl_bus: i2c-mhl-bus {
+> +		samsung,pins = "gpf0-4", "gpf0-6";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	usb_sel: usb-sel {
+> +		samsung,pins = "gpl0-6";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	bt_en: bt-en {
+> +		samsung,pins = "gpl0-4";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	bt_res: bt-res {
+> +		samsung,pins = "gpl1-0";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +
+> +	otg_gp: otg-gp {
+> +		samsung,pins = "gpx3-3";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	mag_mhl_gpio: mag-mhl-gpio {
+> +		samsung,pins = "gpd0-2";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +
+> +	max8997_irq: max8997-irq {
+> +		samsung,pins = "gpx0-7";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	max17042_fuel_irq: max17042-fuel-irq {
+> +		samsung,pins = "gpx2-3";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	tsp224_irq: tsp224-irq {
+> +		samsung,pins = "gpx0-4";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> +	};
+> +};
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
