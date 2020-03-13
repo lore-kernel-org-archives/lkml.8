@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AA1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77ECC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D2620409
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93D0206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgCMHL6 (ORCPT
+        id S1726622AbgCMHMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:11:58 -0400
+        Fri, 13 Mar 2020 03:12:01 -0400
 Received: from mga02.intel.com ([134.134.136.20]:7782 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgCMHL4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:11:56 -0400
+        id S1726535AbgCMHL6 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 03:11:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 00:11:56 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 00:11:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,547,1574150400"; 
-   d="scan'208";a="266642215"
+   d="scan'208";a="266642225"
 Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Mar 2020 00:11:53 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 13 Mar 2020 00:11:56 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 02/14] perf util: Create streams for managing top N hottest callchains
-Date:   Fri, 13 Mar 2020 15:11:06 +0800
-Message-Id: <20200313071118.11983-3-yao.jin@linux.intel.com>
+Subject: [PATCH v2 03/14] perf util: Return per-event callchain streams
+Date:   Fri, 13 Mar 2020 15:11:07 +0800
+Message-Id: <20200313071118.11983-4-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200313071118.11983-1-yao.jin@linux.intel.com>
 References: <20200313071118.11983-1-yao.jin@linux.intel.com>
@@ -45,207 +45,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We think the stream is a callchain which is aggregated by the LBR
-records from samples. By browsing the stream, we can understand
-the code flow.
+In previous patch, we have created a 'struct callchain_streams'
+array and each array entry contains per-event callchain streams.
 
-The struct callchain_node represents one callchain and we use the
-callchain_node->hit to measure the hot level of this callchain.
-Higher is hotter.
-
-Since in perf data file, there may be many callchains so we just
-need to focus on the top N hottest callchains. N is a user defined
-parameter or just a predefined default value.
-
-This patch saves the top N hottest callchains in 'struct stream_node'
-type array, which is defined in a per event 'struct callchain_streams'.
-
-So now we can get the per-event top N hottest callchains.
-
- v2:
- ---
- Use zfree in free_evsel_streams().
+This patch returns the pointer of per-event callchain streams
+according to the evsel_idx.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/util/callchain.c | 122 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/callchain.h |  16 +++++
- 2 files changed, 138 insertions(+)
+ tools/perf/util/callchain.c | 12 ++++++++++++
+ tools/perf/util/callchain.h |  4 ++++
+ 2 files changed, 16 insertions(+)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 818aa4efd386..0c028caaeb19 100644
+index 0c028caaeb19..bf66f33debd4 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -31,6 +31,7 @@
- #include "callchain.h"
- #include "branch.h"
- #include "symbol.h"
-+#include "evlist.h"
- #include "../perf.h"
- 
- #define CALLCHAIN_PARAM_DEFAULT			\
-@@ -1599,3 +1600,124 @@ void callchain_cursor_reset(struct callchain_cursor *cursor)
- 	for (node = cursor->first; node != NULL; node = node->next)
- 		map__zput(node->ms.map);
+@@ -1721,3 +1721,15 @@ struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
+ 	*nr_evsel_streams = nr_evsel;
+ 	return callchain_streams;
  }
 +
-+static void free_evsel_streams(struct callchain_streams *callchain_streams,
-+			       int nr_evsel)
++struct callchain_streams *callchain_evsel_streams_get(struct callchain_streams *cs,
++						      int nr_streams_max,
++						      int evsel_idx)
 +{
-+	for (int i = 0; i < nr_evsel; i++)
-+		zfree(&callchain_streams[i].streams);
-+
-+	free(callchain_streams);
-+}
-+
-+static struct callchain_streams *create_evsel_streams(int nr_evsel,
-+						      int nr_streams_max)
-+{
-+	struct callchain_streams *callchain_streams;
-+
-+	callchain_streams = calloc(nr_evsel, sizeof(struct callchain_streams));
-+	if (!callchain_streams)
-+		return NULL;
-+
-+	for (int i = 0; i < nr_evsel; i++) {
-+		struct callchain_streams *s = &callchain_streams[i];
-+
-+		s->streams = calloc(nr_streams_max, sizeof(struct stream_node));
-+		if (!s->streams)
-+			goto err;
-+
-+		s->nr_streams_max = nr_streams_max;
-+		s->evsel_idx = -1;
++	for (int i = 0; i < nr_streams_max; i++) {
++		if (cs[i].evsel_idx == evsel_idx)
++			return &cs[i];
 +	}
 +
-+	return callchain_streams;
-+
-+err:
-+	free_evsel_streams(callchain_streams, nr_evsel);
 +	return NULL;
 +}
-+
-+/*
-+ * The cnodes with high hit number are hot callchains.
-+ */
-+static void set_hot_cnode(struct callchain_streams *s,
-+			  struct callchain_node *cnode)
-+{
-+	int i, idx = 0;
-+	u64 hit;
-+
-+	if (s->nr_streams < s->nr_streams_max) {
-+		i = s->nr_streams;
-+		s->streams[i].cnode = cnode;
-+		s->nr_streams++;
-+		return;
-+	}
-+
-+	/*
-+	 * Since only a few number of hot streams, so only use simple
-+	 * way to find the cnode with smallest hit number and replace.
-+	 */
-+	hit = (s->streams[0].cnode)->hit;
-+	for (i = 1; i < s->nr_streams; i++) {
-+		if ((s->streams[i].cnode)->hit < hit) {
-+			hit = (s->streams[i].cnode)->hit;
-+			idx = i;
-+		}
-+	}
-+
-+	if (cnode->hit > hit)
-+		s->streams[idx].cnode = cnode;
-+}
-+
-+static void update_hot_streams(struct hist_entry *he,
-+			       struct callchain_streams *s)
-+{
-+	struct rb_root *root = &he->sorted_chain;
-+	struct rb_node *rb_node = rb_first(root);
-+	struct callchain_node *node;
-+
-+	while (rb_node) {
-+		node = rb_entry(rb_node, struct callchain_node, rb_node);
-+		set_hot_cnode(s, node);
-+		rb_node = rb_next(rb_node);
-+	}
-+}
-+
-+static void get_hot_streams(struct hists *hists,
-+			    struct callchain_streams *s)
-+{
-+	struct rb_node *next = rb_first_cached(&hists->entries);
-+
-+	while (next) {
-+		struct hist_entry *he;
-+
-+		he = rb_entry(next, struct hist_entry, rb_node);
-+		update_hot_streams(he, s);
-+		next = rb_next(&he->rb_node);
-+	}
-+}
-+
-+struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
-+							 int nr_streams_max,
-+							 int *nr_evsel_streams)
-+{
-+	int nr_evsel = evlist->core.nr_entries, i = 0;
-+	struct callchain_streams *callchain_streams;
-+	struct evsel *pos;
-+
-+	callchain_streams = create_evsel_streams(nr_evsel, nr_streams_max);
-+	if (!callchain_streams)
-+		return NULL;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		struct hists *hists = evsel__hists(pos);
-+
-+		hists__output_resort(hists, NULL);
-+		get_hot_streams(hists, &callchain_streams[i]);
-+		callchain_streams[i].evsel_idx = pos->idx;
-+		i++;
-+	}
-+
-+	*nr_evsel_streams = nr_evsel;
-+	return callchain_streams;
-+}
 diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 706bb7bbe1e1..5852990cdf60 100644
+index 5852990cdf60..4e881361e154 100644
 --- a/tools/perf/util/callchain.h
 +++ b/tools/perf/util/callchain.h
-@@ -13,6 +13,7 @@ struct ip_callchain;
- struct map;
- struct perf_sample;
- struct thread;
-+struct evlist;
+@@ -305,4 +305,8 @@ struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
+ 							 int nr_streams_max,
+ 							 int *nr_evsel_streams);
  
- #define HELP_PAD "\t\t\t\t"
- 
-@@ -159,6 +160,17 @@ struct callchain_cursor {
- 	struct callchain_cursor_node	*curr;
- };
- 
-+struct stream_node {
-+	struct callchain_node	*cnode;
-+};
-+
-+struct callchain_streams {
-+	struct stream_node	*streams;
-+	int			nr_streams_max;
-+	int			nr_streams;
-+	int			evsel_idx;
-+};
-+
- extern __thread struct callchain_cursor callchain_cursor;
- 
- static inline void callchain_init(struct callchain_root *root)
-@@ -289,4 +301,8 @@ int callchain_branch_counts(struct callchain_root *root,
- 			    u64 *branch_count, u64 *predicted_count,
- 			    u64 *abort_count, u64 *cycles_count);
- 
-+struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
-+							 int nr_streams_max,
-+							 int *nr_evsel_streams);
++struct callchain_streams *callchain_evsel_streams_get(struct callchain_streams *cs,
++						      int nr_streams_max,
++						      int evsel_idx);
 +
  #endif	/* __PERF_CALLCHAIN_H */
 -- 
