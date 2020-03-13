@@ -2,104 +2,123 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4EBC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389F0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D399206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584119749;
-	bh=DKVElybsjLDvAU1zHyX3rQlN2QwCuWEYTxh2dGG82oY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=a2o4zhMhi9XiscsdfPBLv6Qm267esfghOk6d1fxQGC9L7nW9EYNXDCKiymJ4kvc71
-	 T9FrF7bmOAJ6HY2LB27ur8iPA4b4aUv/3kg2ntW2EdrNkysAOqTJNaRmLONlZYnMvm
-	 PtkGxsPfb5rAlnMhXYh/n4CVg/TIpS5p810i3pKU=
+	by mail.kernel.org (Postfix) with ESMTP id 0EB71206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GfpGJJf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCMRPs (ORCPT
+        id S1727046AbgCMRQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54160 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726706AbgCMRPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:15:47 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F2C206B7;
-        Fri, 13 Mar 2020 17:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584119746;
-        bh=DKVElybsjLDvAU1zHyX3rQlN2QwCuWEYTxh2dGG82oY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S3EXNcORNhvHYil3IrQUOmh+G4aQjFVNfj+/5coCCPOZEAGFzPS/ZRFQtcmPh9AH6
-         ynJBLiSZCIa2l3dgeCF4mXngPhlgzBNz19kAm/2djRuSFgJwG5NdTBG31wdtT76qV4
-         J6zZH4XMtE6cskhNhzI1lTgIKRWz8zn39au6Nj3E=
-Subject: Re: [v2] dma-buf: heaps: bugfix for selftest failure
-To:     Leon He <hexiaolong2008@gmail.com>, sumit.semwal@linaro.org
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, Leon He <leon.he@unisoc.com>,
-        shuah <shuah@kernel.org>
-References: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8613a6fb-1f3f-81e9-54c9-7356ce99cf87@kernel.org>
-Date:   Fri, 13 Mar 2020 11:15:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 13:16:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36211 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCMRQo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:16:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g62so11156353wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 10:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Eqg2D57NGypJeQM7MhiMjBD9eTQ+XWnQ6tOgh9VYzPg=;
+        b=GfpGJJf8jdD5hvEZ9qPjhmJSoxo3e4jgo5CXvygHAM+2QJPUnQGxgH3uES2Kynkpd4
+         T6ATW927TaBZFCRVrNO170pUUV2oW1VQbb+Pexs0ZoOzJkDFAd5UyC6AZMYRUVFm095y
+         IkcVD4f+FvTY8CtYEgV2DY2o1mbRUANwOHxkBIP37vtgNzFrkkQDbvXS+mWOsrsn5DGP
+         gEO8LlEKRjsHdzu32a8Zv2sKCjnNA9JMK1m96aENNsalwtpPCqB7Vq/otY1b4E8n+Q21
+         glAgkPcq3G2Hd8vv/mEHOpfMtESQYAYkl9W6BYLtnfQ1hAid0M6CcWidFLKlq36v9zAc
+         LL0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Eqg2D57NGypJeQM7MhiMjBD9eTQ+XWnQ6tOgh9VYzPg=;
+        b=SwVq/RTCj85Drtx3WCLv4qXypR1Zs91TjYSRo7qpzSVdJ5uEstOjE30z7YBwQGu7nV
+         WosgVd/qmzWGR+dIL/O2U66PeZVcb8NzgUjr7zVflGNYc0QohsCft4k7haAq/cHMVkaG
+         GSUiHkI+XIVdbdetoOPoqLZpyMEcRpmc5I8iAiePeDlk75BN6Ry9NZ2uw8/qB56hMTn4
+         BBlk2KNjzoXvhAnDEirdhraDXZ3AHwNNdGklpwWrZfNh4GizL1nsJcojbj/Sxom+hNOg
+         fpdboRrOTxLR7PSd2dNwfiXP8RgP1s4C/7MXedDEKlctNmmH7afPvnMPhHHeKy1RLndE
+         rFrw==
+X-Gm-Message-State: ANhLgQ3wExE9RGpkJ+ue0T5Pe7O2AKfAFiJlra6zOHrxVAF8iEDmimba
+        idwpCXU9Rd2EwgRnOL3VG8eI/A==
+X-Google-Smtp-Source: ADFU+vumzHSTSx0NnmOYLAmGcl4NJn5zSn0aH51pn2PnfTIecwwRlYBGAj9fxcb0ea7+lXVvBBbhJA==
+X-Received: by 2002:a1c:7c08:: with SMTP id x8mr11581854wmc.84.1584119802734;
+        Fri, 13 Mar 2020 10:16:42 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id b187sm14223421wmb.42.2020.03.13.10.16.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 10:16:42 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 17:16:38 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
+        Dietmar.Eggemann@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org
+Subject: Re: [PATCH v4 2/4] OPP: change parameter to device pointer in
+ dev_pm_opp_of_register_em()
+Message-ID: <20200313171638.GB236432@google.com>
+References: <20200309134117.2331-1-lukasz.luba@arm.com>
+ <20200309134117.2331-3-lukasz.luba@arm.com>
+ <20200313101524.GA150397@google.com>
+ <3ac8ebf8-9db0-d168-8b80-f7f5ba345f86@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ac8ebf8-9db0-d168-8b80-f7f5ba345f86@arm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/7/20 7:02 AM, Leon He wrote:
-> From: Leon He <leon.he@unisoc.com>
+On Friday 13 Mar 2020 at 17:11:45 (+0000), Lukasz Luba wrote:
+> --------------------------------->8----------------
+> dev_pm_opp_of_register_em
+> ...
+> 	nr_opp = dev_pm_opp_get_opp_count(dev);
+> 	if (nr_opp <= 0) {
+> 		ret = -EINVAL;
+> 		goto fail;
+> 	}
 > 
-> There are two errors in the dmabuf-heap selftest:
-> 1. The 'char name[5]' was not initialized to zero, which will cause
->     strcmp(name, "vgem") failed in check_vgem().
-> 2. The return value of test_alloc_errors() should be reversed, other-
->     wise the while loop in main() will be broken.
+> ...
+> 	ret = em_register_perf_domain()
+> 	if (ret)
+> 		goto fail;
 > 
-> Signed-off-by: Leon He <leon.he@unisoc.com>
-> ---
->   tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> 	return 0;
 > 
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> index cd5e1f6..836b185 100644
-> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -22,7 +22,7 @@
->   static int check_vgem(int fd)
->   {
->   	drm_version_t version = { 0 };
-> -	char name[5];
-> +	char name[5] = { 0 };
->   	int ret;
->   
->   	version.name_len = 4;
+> fail:
+> 	dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
+> 	return ret
+> ------------------------8<-----------------
 
-Please see my comment on v1 for this.
+That works for me.
 
-> @@ -357,7 +357,7 @@ static int test_alloc_errors(char *heap_name)
->   	if (heap_fd >= 0)
->   		close(heap_fd);
->   
-> -	return ret;
-> +	return !ret;
-
-This change doesn't make sense. Initializing ret to 0 is a better
-way to go.
-
-thanks,
--- Shuah
+Thanks,
+Quentin
