@@ -2,105 +2,112 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B5CC1975A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26EEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450DA2071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D1B206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584061780;
-	bh=UYPz1qlE+Zrh/CUYv1EYC2BXtJL9mTAshrMUYOFb/20=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=DNqxihCAovmYlE19rcusQCI8xKAlERQy90594BLO1ACcST/xAzbQQ4uhSMP0xmoqX
-	 kXTzSIGfYryPQK06hXfaKa7BMrIZwdohBK0/r9LhSaJJkNz4SPWUyLmr2duZOAToBe
-	 2GfPcnyip8J2CcrY7KX3OqBZRZImhrRo5+u6IagY=
+	s=default; t=1584061805;
+	bh=YeL0KIl+9onz5w2ICw8sMgzZxGpjkJTKhHRvGWYmiRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uP1wCrFdh/YcKiaeCA+4vIGz8dr/6PT6TUsmypE5egNXzX1I1s7KaDhKHBVwBfEMN
+	 m0JBQxu23jS20ssPjKsYsK4rwNJdfl3YWZFPxQpPbnB2zOOWIr9vxvp4PlKZcUi8eA
+	 4QASzjIfXvbNj8MueUYvGzpiHISfYox+B99NPkHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCMBJj (ORCPT
+        id S1727186AbgCMBKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgCMBJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:09:38 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641AA20637;
-        Fri, 13 Mar 2020 01:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584061778;
-        bh=UYPz1qlE+Zrh/CUYv1EYC2BXtJL9mTAshrMUYOFb/20=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=cchNDvcp5xxo+4kktYIBl1aqjS0gJMnOJdEn09uE/82+DBNyz/X+RrSZl8jq0lPZP
-         r9l0+uvv43KujDYCuDIIy/Gj9Kal/SYN6PFHv2j+siPAqv4/S3bn01YeBUYwCBH5aL
-         XtueSHO0lPPwNI7yQWREmyFbDeAqdarMEvLibcKE=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Mar 2020 21:10:04 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37751 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCMBKD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:10:03 -0400
+Received: by mail-pj1-f65.google.com with SMTP id ca13so3411306pjb.2;
+        Thu, 12 Mar 2020 18:10:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JoS9gKP72CxM9wL/8rqap0rRd7oEMG26UJbDZ6ej9mo=;
+        b=KqmYdOKXjvDhXHHXbusj9Xg64lAkRzcxICwiJNytvsA5uvgGGMJTcZlGmR6JY0nxyM
+         ct/cBWcojS9O++hECwYqE+pRcyFi8HkUwP2L9C/HsfzThcO9mlwXWzJYYjJMpZd7Qqel
+         /AfkrUJ3PSIepByfREAYT64UnkVYntSohGqxirSPa6hkCyYlVVrw967fQPMQO9UKVBEQ
+         MlaIXIYwrLW9cAWdg8tax4d2B4cNZitP4+9lu4TtaWQmSQvkGwdbyAsplXYsbIQPkWQf
+         D8s85nu/R0bT8bDuam8lVWejYwpJjNMs+6e4Ylz8v764d5JBbVDzq0FHgRB0wej1ZOhu
+         FC6A==
+X-Gm-Message-State: ANhLgQ3crDRqJ8j6td0QOcvkXGnL3bTQSl1CB2VYSEDrOuDi2xddwmFP
+        QJTofA3eW9gTi4EYYJx6iyU=
+X-Google-Smtp-Source: ADFU+vtC3CFe+9QrqzySXKbbNCl05Fk+gDPOapW1z0IeEoOULkqqvJDnUzbx3iRiBn+k5DrEOnMQOQ==
+X-Received: by 2002:a17:902:7007:: with SMTP id y7mr10431072plk.208.1584061800891;
+        Thu, 12 Mar 2020 18:10:00 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id w9sm2577359pfd.94.2020.03.12.18.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 18:09:59 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id E7ED64028E; Fri, 13 Mar 2020 01:09:58 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 01:09:58 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>
+Subject: Re: [PATCH v2 4/4] selftests: kmod: test disabling module autoloading
+Message-ID: <20200313010958.GU11244@42.do-not-panic.com>
+References: <20200312202552.241885-1-ebiggers@kernel.org>
+ <20200312202552.241885-5-ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5a02a46e899abfca7257a725678f1131490e6b11.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech> <5a02a46e899abfca7257a725678f1131490e6b11.1582533919.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH 17/89] clk: bcm: rpi: Pass the clocks data to the firmware function
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Thu, 12 Mar 2020 18:09:37 -0700
-Message-ID: <158406177763.149997.8595594316904810473@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312202552.241885-5-ebiggers@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maxime Ripard (2020-02-24 01:06:19)
-> The raspberry_clock_property only takes the clock ID as an argument, but
-> now that we have a clock data structure it makes more sense to just pass
-> that structure instead.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/clk/bcm/clk-raspberrypi.c | 29 ++++++++++++++---------------
->  1 file changed, 14 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-rasp=
-berrypi.c
-> index e796dabbc641..3b2da62a72f5 100644
-> --- a/drivers/clk/bcm/clk-raspberrypi.c
-> +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> @@ -67,11 +67,12 @@ struct raspberrypi_firmware_prop {
->         __le32 disable_turbo;
->  } __packed;
-> =20
-> -static int raspberrypi_clock_property(struct rpi_firmware *firmware, u32=
- tag,
-> -                                     u32 clk, u32 *val)
-> +static int raspberrypi_clock_property(struct rpi_firmware *firmware,
-> +                                     struct raspberrypi_clk_data *data,
+On Thu, Mar 12, 2020 at 01:25:52PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Test that request_module() fails with -ENOENT when
+> /proc/sys/kernel/modprobe contains (a) a nonexistent path, and (b) an
+> empty path.
+> 
+> Case (b) is a regression test for the patch "kmod: make request_module()
+> return an error when autoloading is disabled".
+> 
+> Tested with 'kmod.sh -t 0010 && kmod.sh -t 0011', and also simply with
+> 'kmod.sh' to run all kmod tests.
+> 
+> Note: get_test_count() and get_test_enabled() were broken for test
+> numbers above 9 due to awk interpreting a field specification like
+> '$0010' as octal rather than decimal.  So I fixed that too.
+> 
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jeff Vander Stoep <jeffv@google.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: NeilBrown <neilb@suse.com>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-Can data be const?
+Thanks!
 
-> +                                     u32 tag, u32 *val)
->  {
->         struct raspberrypi_firmware_prop msg =3D {
-> -               .id =3D cpu_to_le32(clk),
-> +               .id =3D cpu_to_le32(data->id),
->                 .val =3D cpu_to_le32(*val),
->                 .disable_turbo =3D cpu_to_le32(1),
->         };
+Can you split up the get_test_count()/get_test_enabled() fix into
+another patch though? 
+
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+
+  Luis
