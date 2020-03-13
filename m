@@ -2,139 +2,149 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9C5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209AAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB2A20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065EF20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCMMlZ (ORCPT
+        id S1726776AbgCMMmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:41:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53264 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgCMMlZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:41:25 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 905C727E99E
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH 1/3] platform/chrome: notify: Add driver data struct
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     furquan@chromium.org, Benson Leung <bleung@chromium.org>
-References: <20200312100809.21153-1-pmalani@chromium.org>
- <20200312100809.21153-2-pmalani@chromium.org>
-Message-ID: <06d90fc3-c792-b85f-c4aa-923c5a7f5eea@collabora.com>
-Date:   Fri, 13 Mar 2020 13:41:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 08:42:22 -0400
+Received: from sauhun.de ([88.99.104.3]:51458 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbgCMMmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:42:21 -0400
+Received: from localhost (p54B3314F.dip0.t-ipconnect.de [84.179.49.79])
+        by pokefinder.org (Postfix) with ESMTPSA id ED39D2C1ED4;
+        Fri, 13 Mar 2020 13:42:17 +0100 (CET)
+Date:   Fri, 13 Mar 2020 13:42:14 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
+ requesting ancillary addresses
+Message-ID: <20200313124214.GA1299@ninjato>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+ <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
+ <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200312100809.21153-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
 
-On 12/3/20 11:08, Prashant Malani wrote:
-> Introduce a device driver data structure, cros_usbpd_notify_data, in
-> which we can store the notifier block object and pointers to the struct
-> cros_ec_device and struct device objects.
-> 
-> This will make it more convenient to access these pointers when
-> executing both platform and ACPI callbacks.
-> 
-> While we are here, also add a dev_info print declaring successful device
-> registration at the end of the platform probe function.
-> 
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This info can be obtained by other means, i.e function tracing or
-initcall_debug. There is no need to repeat the same explicitly in the driver.
 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
->  drivers/platform/chrome/cros_usbpd_notify.c | 30 ++++++++++++++-------
->  1 file changed, 21 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-> index 3851bbd6e9a39..edcb346024b07 100644
-> --- a/drivers/platform/chrome/cros_usbpd_notify.c
-> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
-> @@ -16,6 +16,12 @@
->  
->  static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
->  
-> +struct cros_usbpd_notify_data {
-> +	struct device *dev;
-> +	struct cros_ec_device *ec;
-> +	struct notifier_block nb;
-> +};
-> +
->  /**
->   * cros_usbpd_register_notify - Register a notifier callback for PD events.
->   * @nb: Notifier block pointer to register
-> @@ -98,23 +104,28 @@ static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> -	struct notifier_block *nb;
-> +	struct cros_usbpd_notify_data *pdnotify;
->  	int ret;
->  
-> -	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
-> -	if (!nb)
-> +	pdnotify = devm_kzalloc(dev, sizeof(*pdnotify), GFP_KERNEL);
-> +	if (!pdnotify)
->  		return -ENOMEM;
->  
-> -	nb->notifier_call = cros_usbpd_notify_plat;
-> -	dev_set_drvdata(dev, nb);
-> +	pdnotify->dev = dev;
-> +	pdnotify->ec = ecdev->ec_dev;
-> +	pdnotify->nb.notifier_call = cros_usbpd_notify_plat;
-> +
-> +	dev_set_drvdata(dev, pdnotify);
->  
->  	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
-> -					       nb);
-> +					       &pdnotify->nb);
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to register notifier\n");
->  		return ret;
->  	}
->  
-> +	dev_info(dev, "Chrome EC PD notify device registered.\n");
-> +
+> > @@ -984,7 +986,21 @@ struct i2c_client *i2c_new_ancillary_device(struct=
+ i2c_client *client,
+> >                         of_property_read_u32_index(np, "reg", i, &addr);
+> >         }
+> >
+> > -       dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name,=
+ addr);
+> > +       dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
+> > +
+> > +       /* No need to scan muxes, siblings must sit on the same adapter=
+ */
+> > +       reserved_dev =3D device_find_child(adapter_dev, &addr, __i2c_ch=
+eck_addr_busy);
+> > +       reserved_client =3D i2c_verify_client(reserved_dev);
+> > +
+> > +       if (reserved_client) {
+> > +               if (reserved_client->dev.of_node !=3D np ||
+> > +                   strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME=
+) !=3D 0)
+> > +                       return ERR_PTR(-EBUSY);
+>=20
+> Missing put_device(reserved_dev).
 
-This is only noise to the kernel log, remove it.
+Actually, I think the code could even be like this:
 
->  	return 0;
->  }
->  
-> @@ -122,10 +133,11 @@ static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> -	struct notifier_block *nb =
-> -		(struct notifier_block *)dev_get_drvdata(dev);
-> +	struct cros_usbpd_notify_data *pdnotify =
-> +		(struct cros_usbpd_notify_data *)dev_get_drvdata(dev);
->  
-> -	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier, nb);
-> +	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-> +					   &pdnotify->nb);
->  
->  	return 0;
->  }
-> 
+	struct i2c_client *reserved_client =3D NULL;
+
+	...
+
+	reserved_dev =3D device_find_child(adapter_dev, &addr, __i2c_check_addr_bu=
+sy);
+	if (reserved_dev) {
+		reserved_np =3D reserved_dev->of_node;
+		reserved_client =3D i2c_verify_client(reserved_dev);
+		put_device(reserved_dev);
+	}
+
+	if (reserved_client) {
+		if (reserved_np !=3D np ||
+		    strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME) !=3D 0)
+			return ERR_PTR(-EBUSY);
+
+		strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, sizeof(client->name));
+		return reserved_client;
+	}
+
+	return i2c_new_dummy_device(client->adapter, addr);
+
+We put the device early - as soon we don't access the struct anymore. I
+think we don't need the refcnt any further because what we are doing
+here is to hand over the initial refcnt from the core to the requesting
+driver. We turn the device from "reserved" (internally managed) to
+"dummy" (managed by the driver). So, I think the code is okay regarding
+the struct device. I will have a second look when it comes to
+concurrency problems regarding the struct i2c_client, though.
+
+> (perhaps i2c_verify_client() checking dev was not such a great idea, as
+>  callers need to act on dev && !verified anyway?)
+
+Yeah, since I refactored the ACPI code as well, patch 1 from this series
+can probably go.
+
+Thanks again for your review, Geert!
+
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5rf6IACgkQFA3kzBSg
+KbbLIw/+MOFwZSkWXt3ikwM+7rKei/WFEDfa/TZK7lKKvujaNfalPdxSx8w7M5dc
+V5uUDpEeCiJAn+TO+vOv+i5McITg+GDMiUQvbIqAtzVh+2jqNEkJIaMz+5wlefWG
+hcpujZdvPfrQNPf1FM77HO0WI9oChGBJkMb9tLbzm5yHLYh4zMq0aK+Z+oZQ7441
+Lz2t2Yp+u4ikEHCvZWQVzOfyGRb2r/4nI5VuLbk8BhnlctKB3ALytdGws0QSctjH
+qPz0ePJQ4kXQ/Ch1oVOh9LfTGRGlk3hA2Sa1G0Kk9t42e+C2DmFWh8AYV16kZ8n7
+8MF/mUVBrebEzijOyDcUbBt9LYJwr+lsuej94/afVqk68b+s/cal2ZTYjNrX5QM3
+/FNYqVV/tvmzmxPoO93IxFBPYethKY7i0jFgflmkzFhWGZv2H6UyU9U0UbH0dDlC
+Cw8hjC1de2zxLP2xezv2vv5DH7Py1SFDfAU4xc9Xh/7HQFE9kLYbESG9cEh7mWLU
+FC6T9KRrrzkkFNn0cCo0wqmqn+yrA5a9YGkTfQg733bxB0DQINcfo7m7FQPiS1OY
+7ZxNfj9IVIpOShOi+/26bTkj8AemRPnRCy9MAHREFza55LU+7GGDkHQJKDqKZI2q
+6oI1uERpxeyZoQMTEhRiR8IM2CGy9LtL3ZGe11+NI6aXGe+hdL4=
+=VJ9d
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
