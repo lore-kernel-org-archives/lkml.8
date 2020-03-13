@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548A6C10DCE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E6C4CECE
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB6E2074B
+	by mail.kernel.org (Postfix) with ESMTP id 5539320749
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:46:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ALqDg+ay"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="bqcD0aWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgCMGqM (ORCPT
+        id S1726605AbgCMGqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:46:12 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:55976 "EHLO mail.andi.de1.cc"
+        Fri, 13 Mar 2020 02:46:15 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:56088 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbgCMGqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:46:10 -0400
+        id S1726559AbgCMGqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:46:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3Bz2vR2Tg5c+O+QNTGdqbIUhPXuM0m6WC7tdqcFYb6M=; b=ALqDg+ayCRBaYNP9MkESeD7VsK
-        ZNrAE2fQJs3bFQnQ7+xjEqHhy/mVgJxS65akxejk4v6M4Cja0Ny8txbp1xSbVdi3cnT7ODLNVq8MQ
-        6a+a8O6AyWkREURrW4kLsLNEugEGQeFoxAcB/mXsnoqu3Q9DL0k9Sg48kAw8RoFADKNw=;
+        bh=8SjkA7IjCSGUMcfzL6sRgrvmSd1UEQES9jRtvIHJjUo=; b=bqcD0aWWWQNEdTjDdCr84C7Llq
+        DBI64Xdpy+figcHl1WbVCNQaFMFy6ZFNOSSrMqkCfEDrsCd02n21vMqpM836FVXjmGPUiLIK8iCn3
+        7JPyGYUxe7PQ7XMLRVg9L6ZRJzt3eqqmIXzO/1ypBGpu52mKX78k8W0iHmhfgHsURdFg=;
 Received: from p200300ccff096400e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:6400:e2ce:c3ff:fe93:fc31] helo=eeepc)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1jCe4w-0002pn-Im; Fri, 13 Mar 2020 07:45:55 +0100
+        id 1jCe4v-0002pJ-TH; Fri, 13 Mar 2020 07:45:57 +0100
 Received: from andi by eeepc with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1jCe4w-0008DB-2U; Fri, 13 Mar 2020 07:45:54 +0100
+        id 1jCe4v-0008D2-Bn; Fri, 13 Mar 2020 07:45:53 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         a.zummo@towertech.it, alexandre.belloni@bootlin.com,
@@ -48,9 +48,9 @@ To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
         jic23@kernel.org
 Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH RESEND v6 7/7] mfd: rn5t618: cleanup i2c_device_id
-Date:   Fri, 13 Mar 2020 07:45:34 +0100
-Message-Id: <20200313064535.31503-8-andreas@kemnade.info>
+Subject: [PATCH RESEND v6 4/7] mfd: rn5t618: add more subdevices
+Date:   Fri, 13 Mar 2020 07:45:31 +0100
+Message-Id: <20200313064535.31503-5-andreas@kemnade.info>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200313064535.31503-1-andreas@kemnade.info>
 References: <20200313064535.31503-1-andreas@kemnade.info>
@@ -61,54 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That list was just empty, so it can be removed if .probe_new
-instead of .probe is used
+Since the RC5T619 has a RTC, use a separate subdevice list for that.
+The ADC should be the same as in the RN5T618, according to drivers
+in the wild, but since it is not tested, the ADC is only added for
+the RC5T619.
 
-Suggested-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
-Functional independent from the other patches, but since they are
-touching similar areas, commit/merge conflicts would occur.
- drivers/mfd/rn5t618.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+Changes in v6:
+- squashed with patch from former ADC patchset
+
+Changes in v3:
+- alignment cleanup
+ drivers/mfd/rn5t618.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 321836f78120..b8033e2d650f 100644
+index 30fed9ab3d04..321836f78120 100644
 --- a/drivers/mfd/rn5t618.c
 +++ b/drivers/mfd/rn5t618.c
-@@ -153,8 +153,7 @@ static const struct of_device_id rn5t618_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rn5t618_of_match);
+@@ -14,6 +14,7 @@
+ #include <linux/mfd/rn5t618.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/platform_device.h>
+ #include <linux/reboot.h>
+ #include <linux/regmap.h>
  
--static int rn5t618_i2c_probe(struct i2c_client *i2c,
--			     const struct i2c_device_id *id)
-+static int rn5t618_i2c_probe(struct i2c_client *i2c)
+@@ -22,6 +23,13 @@ static const struct mfd_cell rn5t618_cells[] = {
+ 	{ .name = "rn5t618-wdt" },
+ };
+ 
++static const struct mfd_cell rc5t619_cells[] = {
++	{ .name = "rn5t618-adc" },
++	{ .name = "rn5t618-regulator" },
++	{ .name = "rc5t619-rtc" },
++	{ .name = "rn5t618-wdt" },
++};
++
+ static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
  {
- 	const struct of_device_id *of_id;
- 	struct rn5t618 *priv;
-@@ -256,11 +255,6 @@ static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
- 	return 0;
- }
+ 	switch (reg) {
+@@ -174,8 +182,16 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
  
--static const struct i2c_device_id rn5t618_i2c_id[] = {
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
--
- static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
- 			rn5t618_i2c_suspend,
- 			rn5t618_i2c_resume);
-@@ -271,9 +265,8 @@ static struct i2c_driver rn5t618_i2c_driver = {
- 		.of_match_table = of_match_ptr(rn5t618_of_match),
- 		.pm = &rn5t618_i2c_dev_pm_ops,
- 	},
--	.probe = rn5t618_i2c_probe,
-+	.probe_new = rn5t618_i2c_probe,
- 	.remove = rn5t618_i2c_remove,
--	.id_table = rn5t618_i2c_id,
- };
- 
- module_i2c_driver(rn5t618_i2c_driver);
+-	ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
+-				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
++	if (priv->variant == RC5T619)
++		ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE,
++					   rc5t619_cells,
++					   ARRAY_SIZE(rc5t619_cells),
++					   NULL, 0, NULL);
++	else
++		ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE,
++					   rn5t618_cells,
++					   ARRAY_SIZE(rn5t618_cells),
++					   NULL, 0, NULL);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
+ 		return ret;
 -- 
 2.20.1
 
