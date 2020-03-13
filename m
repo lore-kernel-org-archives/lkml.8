@@ -2,103 +2,274 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7AEC4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60B3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63ED2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584111669;
-	bh=go0P9fgXXPo35byt8AV+LGj/xg18Op3eY2CFhsORJbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h5/kBeIMTuZAjry8vSG06Jd78Vbs0NN9kfEo2HSGy4KsNT6jy7K3Ovs2que7v0NYm
-	 9wgI0pq0eetAt2I9ilG2fyJlB93RvbCv+k1PoJ6WskVKOZWXTEwJU7JCRp4RpsOtyo
-	 GYNBNMXsfiPXjvnt6tP9R2g3RU3OmOAz/fkZjpys=
+	by mail.kernel.org (Postfix) with ESMTP id 74D25206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:03:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J7UnUbl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgCMPBH (ORCPT
+        id S1726741AbgCMPDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgCMPBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:01:07 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE9A206FA;
-        Fri, 13 Mar 2020 15:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584111666;
-        bh=go0P9fgXXPo35byt8AV+LGj/xg18Op3eY2CFhsORJbE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K8rHC7e/bxxQzKqrId1m+K6LiZKbq8lWuCi+yqYhcaquiz7IwFvkE+RyrH5wmKj+K
-         3PM2wJT/oiPPYgA904Uke6d4R4y/gv9hly5h282sNqtwBzQ8k2YwnM1AHtyuC1vInn
-         5AA/nxabwg1lwVt/qWLsvpxMKNnkjPhdQ1La/phw=
-Date:   Fri, 13 Mar 2020 11:01:05 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, stable@vger.kernel.org,
-        Robert Richter <rrichter@marvell.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
-Message-ID: <20200313150105.GF1349@sasha-vm>
-References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
- <CACRpkdb3VzOFmnZkXXopsbKAAiQ9nzsqm6fMpcsCfmuvmaeOmg@mail.gmail.com>
- <CAJ+vNU0U9jKDoZLBdC2aRrCCQkKmWATk6G6XAzQcF03tQY9r8g@mail.gmail.com>
+        Fri, 13 Mar 2020 11:03:04 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36547 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCMPDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:03:04 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u25so12998778qkk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 08:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eFNXLKStv2hg6vAmjDX147WvWuSgMNwcWrKlrLIyNJU=;
+        b=J7UnUbl9ctijkZvETuhF2hc0OMJeFQjsVukcnWBIivUe52Pao9vewDvONPsWAupqgx
+         UM0886uf9mLGKQkU8VQB185wQS4WwmPkjWc7UHdAyV94aSuWySlHmE3FGcedek/oV3U8
+         HKuw+IesrCpz8oNHIrjywlWJk1IgKlgmy9pBlwC+sm1avY33ghWFsISK6hhcW5V5s6Yh
+         O0ZYROVcAEk9yUOiEisjBzVgwaDiWEj+s148o4pQ5oseaCe6ZhdmWpYGEpRcRIc2b5W7
+         VjBfh6G3zbf2sZkbnpjF2exFmkcBBJpqPStIdF/dPabjVf+fPz/sESjzTqqWyafLKhzT
+         UeGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eFNXLKStv2hg6vAmjDX147WvWuSgMNwcWrKlrLIyNJU=;
+        b=aCud6op19ZhJNVrsXGLgcJbFQ60ffJjgODxxHcOVPmFmIhkpSo8T+eKu9tnDCsUoJl
+         M9S8FmhAkaTT7WlAeUp1t7pCa6VDeZXNS9QD+pNZ4/W10LZ6q/6qyg+KxkkmeKGsP+5O
+         IaB6bQ1y1BRCEeH762IwQ/5bhV3FvkoaMhWk67kjfpLXJjZRZ2UKcsBYbq8qGAShRufy
+         vFdYIp0VAjQlQVlaVI7v5TJ432K//p1sYJj1rEpzPlSrLxIuSxx3t2SMzJayz2DPFQo6
+         JiRRn/fCbZEAfa7oo7gvkQQTb9bFPeYU019NVSnPap0UdHA87natXf7qGb5dVmGkaq+W
+         YwHg==
+X-Gm-Message-State: ANhLgQ1UIT5JgSMHgK6VHGy6TSFfJrrrLBhvEh1i6MffM+DRQNNh7b07
+        XvUggw6LvATG4t8CW9mNeTadCMSSH8E=
+X-Google-Smtp-Source: ADFU+vtMY8vpGBVV4atpZVS6vYpJnjsti9wnuTPA/iC6ha2U+5xIxJbMXzcrP5RaohNt9EtiDO2P1g==
+X-Received: by 2002:a37:7d2:: with SMTP id 201mr13919655qkh.146.1584111781830;
+        Fri, 13 Mar 2020 08:03:01 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id c190sm8142895qkb.80.2020.03.13.08.02.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 08:03:00 -0700 (PDT)
+Subject: Re: [Patch v4 4/7] thermal: Add generic power domain warming device
+ driver.
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
+ <1574254593-16078-5-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFqBusMHWNHBCMXx6TxFO=8B6ytoyvvSfi14Z=-ahBDV5A@mail.gmail.com>
+ <ac341c33-003a-587a-7078-84a7f0c01a3a@linaro.org>
+ <CAPDyKFotwoiDkF6Ru39rOv+GxF7dgXG6tc0oQHMim8yKB2hRvQ@mail.gmail.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <decacd00-9c41-a664-6329-dca494fd7302@linaro.org>
+Date:   Fri, 13 Mar 2020 11:02:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU0U9jKDoZLBdC2aRrCCQkKmWATk6G6XAzQcF03tQY9r8g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFotwoiDkF6Ru39rOv+GxF7dgXG6tc0oQHMim8yKB2hRvQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:16:40AM -0700, Tim Harvey wrote:
->On Thu, Mar 12, 2020 at 6:42 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->> On Wed, Mar 11, 2020 at 4:43 PM Tim Harvey <tharvey@gateworks.com> wrote:
->>
->> > If there are no parent resources do not call irq_chip_request_resources_parent
->> > at all as this will return an error.
->> >
->> > This resolves a regression where devices using a thunderx gpio as an interrupt
->> > would fail probing.
->> >
->> > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
->> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->>
->> This patch does not apply to the mainline kernel or v5.6-rc1.
->>
->> Please verify:
->> 1. If the problem is still in v5.6 (we refactored the driver to
->>    use GPIOLIB_IRQCHIP)
->
->Linus,
->
->Sorry, another issue was keeping me from being able to boot 5.6-rc but
->that's now understood and I can confirm the issue is not present in
->v5.6-rc5
->
->>
->> 2. If not, only propose it for linux-stable v5.5 etc.
->>
->
->Yes, needs to be applied to v5.2, v5.3, v5.4, v5.5. I cc'd stable. If
->I need to re-submit please let me know.
->
->Cc: stable@vger.kernel.org
+Hi Ulf,
 
-Linus, could you ack this patch for stable?
+Thanks for the reviews. Will send out v5 soon.
+
+On 3/13/20 9:13 AM, Ulf Hansson wrote:
+> [...]
+> 
+>>>> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
+>>>> +       .get_max_state  = ::pd_wdev_get_max_state,
+>>>> +       .get_cur_state  = pd_wdev_get_cur_state,
+>>>> +       .set_cur_state  = pd_wdev_set_cur_state,
+>>>> +};
+>>>> +
+>>>> +struct thermal_cooling_device *
+>>>> +pwr_domain_warming_register(struct device *parent, char *pd_name, int pd_id)
+>>>
+>>> Maybe rename this to: thermal_of_pd_warming_register()
+>>
+>> How about pd_of_warming_register? It is consistent with other cooling
+>> device register like cpuidle_of_cooling_register and
+>> cpufreq_of_cooling_register.
+> 
+> Well, we actually have the following:
+> of_devfreq_cooling_register()
+> of_cpufreq_cooling_register()
+> cpuidle_of_cooling_register()
+> 
+> So maybe this is the most consistent. :-)
+> of_pd_warming_register()
+
+Sure!
+
+> 
+>>
+>>> Moreover, I think you could replace the "struct device *parent", with
+>>> a "struct device_node *node" as in-parameter. That's all you need,
+>>> right?
+>>
+>> You mean pd_wdev->dev.parent need not be populated ? The device
+>> in this case will be created under /sys/devices which I do not think
+>> is the correct.
+> 
+> Good point!
+> 
+>> With a parent device specified, the power controller that resides the
+>> power domain that can act as the warming dev, becomes the parent of the
+>> warming dev. In case of this patch series, for the mx warming dev,
+>> 179c0000.rsc/179c0000.rsc\:power-controller/ becomes the parent.(The
+>> device will be created under
+>> /sys/devices/platform/soc\@0/179c0000.rsc/179c0000.rsc\:power-controller/)
+>>
+>> Other way might be to register the warming device under virtual devices
+>> as a new category of devices.
+> 
+> No, that sounds wrong.
+> 
+> Another option is to create a specific bus type for these new
+> pd_warming devices. But I admit that sounds a bit too much, let's
+> assign a parent.
+> 
+>>
+>> I prefer to keep it as a child of the power controller device, but I am
+>> open to explore other options and to re-do this bit. What do you think?
+> 
+> Sure, sorry for the noise.
+
+No issues!
+
+> 
+>>
+>>>
+>>>> +{
+>>>> +       struct pd_warming_device *pd_wdev;
+>>>> +       struct of_phandle_args pd_args;
+>>>> +       int ret;
+>>>> +
+>>>> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
+>>>> +       if (!pd_wdev)
+>>>> +               return ERR_PTR(-ENOMEM);
+>>>> +
+>>>> +       dev_set_name(&pd_wdev->dev, "%s_warming_dev", pd_name);
+>>>
+>>> Perhaps skip the in-param *pd_name and make use of the suggested
+>>> "struct device_node *node", the index and something with "warming...",
+>>> when setting the name.
+>>
+>> Won't the index have to be in-param in this case ?
+> 
+> Isn't that already the case?
+> 
+> Huh, long time since I reviewed this.
+> 
+>>
+>>>
+>>> Just an idea, as to simplify for the caller.
+>>>
+>>>> +       pd_wdev->dev.parent = parent;
+>>>
+>>> This isn't needed, I think.
+> 
+> So ignore this comment, as discussed above.
+> 
+>>>
+>>>> +
+>>>> +       ret = device_register(&pd_wdev->dev);
+>>>> +       if (ret)
+>>>> +               goto error;
+>>>> +
+>>>> +       pd_args.np = parent->of_node;
+>>>> +       pd_args.args[0] = pd_id;
+>>>> +       pd_args.args_count = 1;
+>>>> +
+>>>> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
+>>>> +
+>>>
+>>> White space.
+>>
+>> Will fix it.
+>>
+>>>
+>>>> +       if (ret)
+>>>> +               goto error;
+>>>> +
+>>>> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
+>>>> +       if (ret < 0)
+>>>> +               goto error;
+>>>> +
+>>>> +       pd_wdev->max_state = ret - 1;
+>>>> +       pm_runtime_enable(&pd_wdev->dev);
+>>>> +       pd_wdev->runtime_resumed = false;
+>>>> +
+>>>> +       pd_wdev->cdev = thermal_of_cooling_device_parent_register
+>>>> +                                       (NULL, parent, pd_name, pd_wdev,
+>>>> +                                        &pd_warming_device_ops);
+>>>
+>>> As stated in patch3, I don't get it why you need to use this new API
+>>> for "parents".
+>>
+>> I agree with you. I cannot re-collect my thought process for this API.
+>> I compiled and tested using the regular API and everything works fine.
+>> I will drop patch 3 and use the thermal_of_cooling_device_register here.
+> 
+> Great, one confusing piece seems to go away then. :-)
+> 
+>>
+>>>
+>>>> +       if (IS_ERR(pd_wdev->cdev)) {
+>>>> +               pr_err("unable to register %s cooling device\n", pd_name);
+>>>> +               pm_runtime_disable(&pd_wdev->dev);
+>>>> +               ret = PTR_ERR(pd_wdev->cdev);
+>>>> +               goto error;
+>>>> +       }
+>>>> +
+>>>> +       return pd_wdev->cdev;
+>>>> +error:
+>>>> +       put_device(&pd_wdev->dev);
+>>>
+>>> If device_register() succeeds you need to call device_unregister(),
+>>> rather than put_device() as a part of the error handling.
+>>
+>> Will fix this.
+>>
+>>>
+>>>> +       kfree(pd_wdev);
+>>>
+>>> You need a ->release() callback to manage kfree(), after you called
+>>> device_register().
+>>
+>> mm?? I did not get this. What release callback? You mean for power
+>> controller driver to call ?
+> 
+> No, this how life cycle management of devices should be implemented.
+> 
+> Have a look at genpd_release_dev() - and see how that is being used
+> for genpd's virtual devices, that should explain more.
+
+Ah yes. I get it now. Will fix this.
 
 -- 
-Thanks,
-Sasha
+Warm Regards
+Thara
