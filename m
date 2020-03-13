@@ -2,157 +2,132 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC5FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C2EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A942072F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1811F2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgCMGbv (ORCPT
+        id S1726437AbgCMGby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:31:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11670 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726001AbgCMGbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:31:51 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0ED352C1F36F6B23641E;
-        Fri, 13 Mar 2020 14:31:01 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 13 Mar
- 2020 14:30:56 +0800
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-To:     Sahitya Tummala <stummala@codeaurora.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
- <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
- <20200313033912.GJ20234@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a8f01157-0b1b-d83a-488d-bb48cf8954ab@huawei.com>
-Date:   Fri, 13 Mar 2020 14:30:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 13 Mar 2020 02:31:54 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36323 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgCMGby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:31:54 -0400
+Received: by mail-io1-f67.google.com with SMTP id d15so8261697iog.3;
+        Thu, 12 Mar 2020 23:31:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gwo18I+qhDyK0f9CRK6fxLCdLThMsDTks/uef8gm4kY=;
+        b=arC548UFw58zPiZMTGpKSTA6C6cShe4/2dw/ERpegDkNqAfCg04TZN4DNuXAGiPlWr
+         wpIlPtGJ8GPVxD37ww0/w34k112uvnTr9PsHbgyAiKqDeKaTewKk4XNcZL3L1tLv/2Ty
+         zhQaCGOfFI4vhmKGlFgoFBweHPRg9V4g50Cg4rmKpBG1oULr/u58nB5rowQucqVdBFDC
+         taW9/oROrxRrnjSpEKQiok8fJOJ9zvNbuhGz9A+i/aAJOr4VSfxZSZb2aS4P5uMEe/F6
+         9Q/rIiQfE5+nL17Egz0+euMGpKMeuYP5t2KK/XV6aDHDZVyI+pT+jdTTsK+Bl2C+vh78
+         JTHA==
+X-Gm-Message-State: ANhLgQ0vLxbb7Qf1CtK3POF+QhCCMG9wEy8KvB0KkXthXDXKSdlgNBJf
+        kmxekXZfdla1cQouxOd53WTgJoMlPyH+Z8GESaAVT+cW
+X-Google-Smtp-Source: ADFU+vsYn7olWjR5ZdnVzmHpadFtCBryj55XjQULGF5Jf4ExDfr1NLEO1VzBnFywsf13xgwymPRjhRkizQCmf4VjPIo=
+X-Received: by 2002:a6b:8ec2:: with SMTP id q185mr10907291iod.180.1584081112766;
+ Thu, 12 Mar 2020 23:31:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200313033912.GJ20234@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <1584069257-30896-1-git-send-email-lixing@loongson.cn> <1584069257-30896-3-git-send-email-lixing@loongson.cn>
+In-Reply-To: <1584069257-30896-3-git-send-email-lixing@loongson.cn>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Fri, 13 Mar 2020 14:38:20 +0800
+Message-ID: <CAAhV-H6_eouq_i9RRntTVk2kwEDf62zSoy1Xz9rD30cVjKcRyg@mail.gmail.com>
+Subject: Re: [PATCH v2 Resend 3/3] KVM: MIPS: Support kvm modules autoprobed
+ when startup system
+To:     Xing Li <lixing@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>, kvm@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, maobibo@loongson.cn,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/13 11:39, Sahitya Tummala wrote:
-> On Fri, Mar 13, 2020 at 10:20:04AM +0800, Chao Yu wrote:
->> On 2020/3/12 19:14, Sahitya Tummala wrote:
->>> F2FS already has a default timeout of 5 secs for discards that
->>> can be issued during umount, but it can take more than the 5 sec
->>> timeout if the underlying UFS device queue is already full and there
->>> are no more available free tags to be used. In that case, submit_bio()
->>> will wait for the already queued discard requests to complete to get
->>> a free tag, which can potentially take way more than 5 sec.
->>>
->>> Fix this by submitting the discard requests with REQ_NOWAIT
->>> flags during umount. This will return -EAGAIN for UFS queue/tag full
->>> scenario without waiting in the context of submit_bio(). The FS can
->>> then handle these requests by retrying again within the stipulated
->>> discard timeout period to avoid long latencies.
->>>
->>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->>> ---
->>>  fs/f2fs/segment.c | 14 +++++++++++++-
->>>  1 file changed, 13 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->>> index fb3e531..a06bbac 100644
->>> --- a/fs/f2fs/segment.c
->>> +++ b/fs/f2fs/segment.c
->>> @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->>>  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
->>>  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
->>>  					&(dcc->fstrim_list) : &(dcc->wait_list);
->>> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
->>> +	int flag;
->>>  	block_t lstart, start, len, total_len;
->>>  	int err = 0;
->>>  
->>> +	flag = dpolicy->sync ? REQ_SYNC : 0;
->>> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
->>> +
->>>  	if (dc->state != D_PREP)
->>>  		return 0;
->>>  
->>> @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->>>  		bio->bi_end_io = f2fs_submit_discard_endio;
->>>  		bio->bi_opf |= flag;
->>>  		submit_bio(bio);
->>> +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
->>
->> If we want to update dc->state, we need to cover it with dc->lock.
-> 
-> Sure, will update it.
-> 
->>
->>> +			dc->state = D_PREP;
->>
->> BTW, one dc can be referenced by multiple bios, so dc->state could be updated to
->> D_DONE later by f2fs_submit_discard_endio(), however we just relocate it to
->> pending list... which is inconsistent status.
-> 
-> In that case dc->bio_ref will reflect it and until it becomes 0, the dc->state
-> will not be updated to D_DONE in f2fs_submit_discard_endio()?
+Hi, Lixing,
 
-__submit_discard_cmd()
- lock()
- dc->state = D_SUBMIT;
- dc->bio_ref++;
- unlock()
-...
- submit_bio()
-				f2fs_submit_discard_endio()
-				 dc->error = -EAGAIN;
-				 lock()
-				 dc->bio_ref--;
+On Fri, Mar 13, 2020 at 11:14 AM Xing Li <lixing@loongson.cn> wrote:
+>
+> Currently, the module_init of kvm_mips_init cannot force the kvm
+> modules insmod when startup system.
+>
+> Add new feature CPU_MIPS_VZ in elf_hwcap to support KVM auto probe
+> when hardware virtualization supported.
+I think this patch is not suitable, because:
+1, KVM has VZ mode and TE mode, you only consider VZ mode?
+2, As X86 does, you can use udev or modprobe.conf to autoprobe kvm module.
 
- dc->state = D_PREP;
-
-				 dc->state = D_DONE;
-				 unlock()
-
-So finally, dc's state is D_DONE, and it's in wait list, then will be relocated
-to pending list.
-
-> 
-> Thanks,
-> 
->>
->> Thanks,
->>
->>> +			err = dc->error;
->>> +			break;
->>> +		}
->>>  
->>>  		atomic_inc(&dcc->issued_discard);
->>>  
->>> @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>  			}
->>>  
->>>  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>> +			if (dc->error == -EAGAIN) {
->>> +				congestion_wait(BLK_RW_ASYNC, HZ/50);
->>> +				__relocate_discard_cmd(dcc, dc);
->>> +			}
->>>  
->>>  			if (issued >= dpolicy->max_requests)
->>>  				break;
->>>
-> 
+Regards,
+Huacai
+>
+> Signed-off-by: Xing Li <lixing@loongson.cn>
+> ---
+>  arch/mips/include/uapi/asm/hwcap.h | 1 +
+>  arch/mips/kernel/cpu-probe.c       | 4 +++-
+>  arch/mips/kvm/mips.c               | 3 ++-
+>  3 files changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
+> index 1ade1da..9e66509 100644
+> --- a/arch/mips/include/uapi/asm/hwcap.h
+> +++ b/arch/mips/include/uapi/asm/hwcap.h
+> @@ -17,5 +17,6 @@
+>  #define HWCAP_LOONGSON_MMI  (1 << 11)
+>  #define HWCAP_LOONGSON_EXT  (1 << 12)
+>  #define HWCAP_LOONGSON_EXT2 (1 << 13)
+> +#define HWCAP_MIPS_VZ       (1 << 14)
+>
+>  #endif /* _UAPI_ASM_HWCAP_H */
+> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+> index c543326..b305269 100644
+> --- a/arch/mips/kernel/cpu-probe.c
+> +++ b/arch/mips/kernel/cpu-probe.c
+> @@ -2242,8 +2242,10 @@ void cpu_probe(void)
+>         if (cpu_has_loongson_ext2)
+>                 elf_hwcap |= HWCAP_LOONGSON_EXT2;
+>
+> -       if (cpu_has_vz)
+> +       if (cpu_has_vz) {
+>                 cpu_probe_vz(c);
+> +               elf_hwcap |= HWCAP_MIPS_VZ;
+> +       }
+>
+>         cpu_probe_vmbits(c);
+>
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 1109924..1da5df3 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/fs.h>
+>  #include <linux/memblock.h>
+> +#include <linux/cpufeature.h>
+>
+>  #include <asm/fpu.h>
+>  #include <asm/page.h>
+> @@ -1742,7 +1743,7 @@ static void __exit kvm_mips_exit(void)
+>         unregister_die_notifier(&kvm_mips_csr_die_notifier);
+>  }
+>
+> -module_init(kvm_mips_init);
+> +module_cpu_feature_match(MIPS_VZ, kvm_mips_init);
+>  module_exit(kvm_mips_exit);
+>
+>  EXPORT_TRACEPOINT_SYMBOL(kvm_exit);
+> --
+> 2.1.0
+>
