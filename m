@@ -2,371 +2,190 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB16C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D838CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD2D20691
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC86C20746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="pj7xN08K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+DAYhG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgCMKeL (ORCPT
+        id S1726514AbgCMKfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:34:11 -0400
-Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:61408
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726055AbgCMKeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:34:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TUmKXATo2meED87xdJvOG/sIv1VhDW25H4Kq0/oFHiQBuakit1eEYe6hNcbpQkUcFdDWIaMYwOMJFQbLvlG28H6VakmhLcOAZBXYGIFbHFpZB3BSPoUNZZYAYmA2aZoKEmJ7uaLBmXopCzzpJ2Gekmg7rJI8pUJl/WkWy3mR3GruHVAsUMW2hPFAEpQs1G/3Y4nkh+7H0Q+11FizR9Xd8WYPmRb0KVu/lAPtcEd7iPqJBByDYyRx+LixWzQhJaDXrPa6RvS2m3nc4JxFvgxue5wM/4VeoZhhmmeovDsdCQShaIghyCXGFBxfwTXIWqNGp6Hp5+An/hyCTTQbygA9zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Fhj/64Oxej/3BzoUi1ZhAPegzsmL3S+aiHhAGmkCvw=;
- b=QCGs9PJb5tZMXisr+PIqrxFBOoLDz4Qf85MA2bA6uHzxFwTk5cKbEI3f1jNWH15V+cdoQ+aHfyGVYfJCB5KrJbUn25NaKoFNgrDYT1fkjN9oHBgHb758agREFtaWwO7k56nqx3pA7Wf9NG+SozW1LXxWXVYhLS+EfG/DmP+G7vTUWjAoMRRz0LlYzvDR3cIMv0roYvStAdNtH1a2tyZdvK7xxiYRxP4TprpjREwFQoC3saJdxzT6yGxOmEsQQc6UTOE89ohIhai+lVSQkD66Gvdofm39t9wAojpa8jO5TpjMem6Xol2HySC19URb5l6HMLGWtUevX6pxk7Mdxv0l6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 13 Mar 2020 06:35:37 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43862 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgCMKfh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:35:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r7so9913754ljp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Fhj/64Oxej/3BzoUi1ZhAPegzsmL3S+aiHhAGmkCvw=;
- b=pj7xN08KxZ0LZCYNKDJCYQxEJ38wyU29dts1einV39fuXfYIvj2dWLV/B0ES/ymZbYIS2v6pC1Ud0qOZcOJ3TSnwomVd7d/P/oJAA0Vpw7eNzhRTgaano+Y9xnvTtzQ4dXSqUx0dtUKhem0HRv6+yrM4YobbQzChZYyybWsYZ+Y=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1578.namprd12.prod.outlook.com (2603:10b6:4:e::7) by
- DM5PR12MB2533.namprd12.prod.outlook.com (2603:10b6:4:b0::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.14; Fri, 13 Mar 2020 10:34:03 +0000
-Received: from DM5PR12MB1578.namprd12.prod.outlook.com
- ([fe80::113e:3059:1470:c73c]) by DM5PR12MB1578.namprd12.prod.outlook.com
- ([fe80::113e:3059:1470:c73c%7]) with mapi id 15.20.2793.021; Fri, 13 Mar 2020
- 10:34:03 +0000
-Subject: Re: [PATCH 3/3] RFC: dma-buf: Add an API for importing and exporting
- sync files (v4)
-To:     Jason Ekstrand <jason@jlekstrand.net>
-Cc:     Dave Airlie <airlied@redhat.com>,
-        Jesse Hall <jessehall@google.com>,
-        James Jones <jajones@nvidia.com>,
-        Daniel Stone <daniels@collabora.com>,
-        =?UTF-8?Q?Kristian_H=c3=b8gsberg?= <hoegsberg@google.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Greg Hackmann <ghackmann@google.com>,
-        Chenbo Feng <fengc@google.com>, linux-media@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-References: <20200303190318.522103-1-jason@jlekstrand.net>
- <20200311034351.1275197-1-jason@jlekstrand.net>
- <20200311034351.1275197-3-jason@jlekstrand.net>
- <bcd22ed3-c1fe-c018-5cb2-a077562eb1ff@amd.com>
- <CAOFGe96gbU03odF2OoLMnA7t7UgM6XrscogOD75dk62=hVFRmA@mail.gmail.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <d986c1d5-b46c-0ed1-be65-eb2756ddb91d@amd.com>
-Date:   Fri, 13 Mar 2020 11:33:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <CAOFGe96gbU03odF2OoLMnA7t7UgM6XrscogOD75dk62=hVFRmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: FR2P281CA0004.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::14) To DM5PR12MB1578.namprd12.prod.outlook.com
- (2603:10b6:4:e::7)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version;
+        bh=Yu1F07KiJM4zIMHBA/pTlCdX8C+5JeBe8NdK0WwqpMw=;
+        b=t+DAYhG7qZya+mMgPgPjsh25iLsJVCgbs+G4lIpa+jQ/t+gwC0XyKU9111l5Ud5ggW
+         lvM8s2jbJGjk+4kF4IidIE84LiwApQuL/y3Mt3d/vLpyaO7TLfdWOXMbdpOe71sPUd9y
+         6o3HiXTc4TAINGsjZebsAug10a591bEG17xVACJQsnjeS/t9F79rtps6uM2mJyHBE/CL
+         7PEqOwW6lJw0X3sAGl/nqDKHVctgdGPStxW2OERM1jfrn/22y03rtXtRs0b3ZNd2VQB3
+         chXAYtm/hmjt9DZbVaIzBLEFEh1uA03LTSISDBrTijxybRbLwXzt+PEMCpZMptQkcdXi
+         CEdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version;
+        bh=Yu1F07KiJM4zIMHBA/pTlCdX8C+5JeBe8NdK0WwqpMw=;
+        b=T/J2fyUuKO6h2d556/n9VD6d9qwThTcivM+xQJGLEDU0Q5tTzh3HEZcYCkE6orstvf
+         iiXpvV/Xsq61APet86n6s79ga4ArqKjX/08rzgegcpXWPLfVRRwMKbAtoPqyZk+Eyw6q
+         9PuFhwyRDSZA4IXaeRwXBT1hagxnc/pLAhrR5jEZAXcvq6skci0e1h2sKGWj9nxnHyUa
+         6ehBt1+AdyL2iG3EPtM5/l/GOF7jkciuoPRza+SjpNmv/9FNJNPFa75WeSMUgOSZjm2t
+         DsibxsxWg9Tqnz/y9rc486aUxuIo3nDZHAVC2YzjooABvuvnZamRq5UP/6Qmy/1bhiES
+         HcvA==
+X-Gm-Message-State: ANhLgQ2uBPL1mQRv3lgXj1EP8m4YKdGiGjelAJzin2LFXjZ0yWRgsJJ/
+        IOGW3zOgq0dl3ORpG/KkPbQ=
+X-Google-Smtp-Source: ADFU+vto44cpoVqc4nWPUxh+obdJN6ABIsMjrXCuH3BwP5Yhu+r3lWqTufRf5vf4Olqo4LnXNcLrjg==
+X-Received: by 2002:a2e:860e:: with SMTP id a14mr5458220lji.218.1584095733534;
+        Fri, 13 Mar 2020 03:35:33 -0700 (PDT)
+Received: from eldfell.localdomain ([194.136.85.206])
+        by smtp.gmail.com with ESMTPSA id m15sm2389533ljo.8.2020.03.13.03.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 03:35:33 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 12:35:21 +0200
+From:   Pekka Paalanen <ppaalanen@gmail.com>
+To:     Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     "Laxminarayan Bharadiya, Pankaj" 
+        <pankaj.laxminarayan.bharadiya@intel.com>,
+        "Lattannavar, Sameer" <sameer.lattannavar@intel.com>,
+        "tzimmermann@suse.de" <tzimmermann@suse.de>,
+        "Kunche, Kishore" <kishore.kunche@intel.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>,
+        "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>
+Subject: Re: [RFC][PATCH 0/5] Introduce drm scaling filter property
+Message-ID: <20200313123521.6de3ce48@eldfell.localdomain>
+In-Reply-To: <20200312160112.GH13686@intel.com>
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+        <20200312140434.GG13686@intel.com>
+        <E92BA18FDE0A5B43B7B3DA7FCA031286057B3798@BGSMSX107.gar.corp.intel.com>
+        <20200312160112.GH13686@intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0004.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13 via Frontend Transport; Fri, 13 Mar 2020 10:34:00 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e9c1a043-09ec-4a32-80c8-08d7c73a0c47
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2533:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2533FFCF53984DEFE737074B83FA0@DM5PR12MB2533.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(199004)(6486002)(6916009)(8936002)(316002)(5660300002)(54906003)(4326008)(7416002)(31696002)(36756003)(16526019)(86362001)(2616005)(31686004)(8676002)(66574012)(478600001)(2906002)(186003)(66946007)(66476007)(66556008)(6666004)(81156014)(52116002)(81166006)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB2533;H:DM5PR12MB1578.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6uv+R/7HRStyKQ3FW8khaqoBz61aGMyATgRKlkUPdZDIDDhUJIyt/c6OctyxORgUH38NxlHlOunMYPA/MvIfJLpHEyYvbq6vqj37SMVAZhkI1X0Njn1l0JTdW1pBrRI6e4UCugFdHe1Z6f8+i89vEbcUCbS7jjpeXxLM00+Ra4zetzBv47A7lBWN7WlWrkLUVkX8cPBT4Vn8/Mmfn6H5biNH7S1FGLiO+5l6771kytpnjHtU3W4KU9/6idf2XJq8PfNqdqErW+G5xhE/bqUhLxob3AkBUvA5bBT8XPIiu906UNyXTrUI4ThmyKM8pV+HjYFxHQ/R0n+JzAKQQZ5kBz4FLWd1lMXtyF+wQx9i1IZOKcd6cjrZe/U5zXOX8t+0VQ+M0haBH5HODWu5VCyAL5IOP/e/9O3zHbgq1TDTyJyRvzhyJ7THzpXfyGtm0Ps+
-X-MS-Exchange-AntiSpam-MessageData: yJxSjHcJ1ZleNJ70CRsemPvAYi506BB0xdVlk5CuvMGVi6jUgTxgJUnkb3oPDfb7rHjACTMQxRi6D99VRpjF/rEYWR1PYpbcFBorbM9wLwBA9FifxMawTsYjKr52S73vOirbx5wkldmjDazhejpDXs30H5WOqnARasaQjFK3FDKFpAt9OxLZ+sjGN1W0oT/lZuMYuTXnQhpkcsNok3pVWA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9c1a043-09ec-4a32-80c8-08d7c73a0c47
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 10:34:03.0804
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yxfyBra7teVVUC6lwbvIPuFxi5doVlvZIYy+iX+INZx+W6HFS7BQK0qwXNGc1CJN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2533
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/vMWhQLKRKGPaem0p/lu3FKo"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 12.03.20 um 16:57 schrieb Jason Ekstrand:
-> On Wed, Mar 11, 2020 at 8:18 AM Christian König
-> <christian.koenig@amd.com> wrote:
->> Am 11.03.20 um 04:43 schrieb Jason Ekstrand:
->>> Explicit synchronization is the future.  At least, that seems to be what
->>> most userspace APIs are agreeing on at this point.  However, most of our
->>> Linux APIs (both userspace and kernel UAPI) are currently built around
->>> implicit synchronization with dma-buf.  While work is ongoing to change
->>> many of the userspace APIs and protocols to an explicit synchronization
->>> model, switching over piecemeal is difficult due to the number of
->>> potential components involved.  On the kernel side, many drivers use
->>> dma-buf including GPU (3D/compute), display, v4l, and others.  In
->>> userspace, we have X11, several Wayland compositors, 3D drivers, compute
->>> drivers (OpenCL etc.), media encode/decode, and the list goes on.
->>>
->>> This patch provides a path forward by allowing userspace to manually
->>> manage the fences attached to a dma-buf.  Alternatively, one can think
->>> of this as making dma-buf's implicit synchronization simply a carrier
->>> for an explicit fence.  This is accomplished by adding two IOCTLs to
->>> dma-buf for importing and exporting a sync file to/from the dma-buf.
->>> This way a userspace component which is uses explicit synchronization,
->>> such as a Vulkan driver, can manually set the write fence on a buffer
->>> before handing it off to an implicitly synchronized component such as a
->>> Wayland compositor or video encoder.  In this way, each of the different
->>> components can be upgraded to an explicit synchronization model one at a
->>> time as long as the userspace pieces connecting them are aware of it and
->>> import/export fences at the right times.
->>>
->>> There is a potential race condition with this API if userspace is not
->>> careful.  A typical use case for implicit synchronization is to wait for
->>> the dma-buf to be ready, use it, and then signal it for some other
->>> component.  Because a sync_file cannot be created until it is guaranteed
->>> to complete in finite time, userspace can only signal the dma-buf after
->>> it has already submitted the work which uses it to the kernel and has
->>> received a sync_file back.  There is no way to atomically submit a
->>> wait-use-signal operation.  This is not, however, really a problem with
->>> this API so much as it is a problem with explicit synchronization
->>> itself.  The way this is typically handled is to have very explicit
->>> ownership transfer points in the API or protocol which ensure that only
->>> one component is using it at any given time.  Both X11 (via the PRESENT
->>> extension) and Wayland provide such ownership transfer points via
->>> explicit present and idle messages.
->>>
->>> The decision was intentionally made in this patch to make the import and
->>> export operations IOCTLs on the dma-buf itself rather than as a DRM
->>> IOCTL.  This makes it the import/export operation universal across all
->>> components which use dma-buf including GPU, display, v4l, and others.
->>> It also means that a userspace component can do the import/export
->>> without access to the DRM fd which may be tricky to get in cases where
->>> the client communicates with DRM via a userspace API such as OpenGL or
->>> Vulkan.  At a future date we may choose to add direct import/export APIs
->>> to components such as drm_syncobj to avoid allocating a file descriptor
->>> and going through two ioctls.  However, that seems to be something of a
->>> micro-optimization as import/export operations are likely to happen at a
->>> rate of a few per frame of rendered or decoded video.
->>>
->>> v2 (Jason Ekstrand):
->>>    - Use a wrapper dma_fence_array of all fences including the new one
->>>      when importing an exclusive fence.
->>>
->>> v3 (Jason Ekstrand):
->>>    - Lock around setting shared fences as well as exclusive
->>>    - Mark SIGNAL_SYNC_FILE as a read-write ioctl.
->>>    - Initialize ret to 0 in dma_buf_wait_sync_file
->>>
->>> v4 (Jason Ekstrand):
->>>    - Use the new dma_resv_get_singleton helper
->>>
->>> Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
->>> ---
->>>    drivers/dma-buf/dma-buf.c    | 96 ++++++++++++++++++++++++++++++++++++
->>>    include/uapi/linux/dma-buf.h | 13 ++++-
->>>    2 files changed, 107 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->>> index d4097856c86b..09973c689866 100644
->>> --- a/drivers/dma-buf/dma-buf.c
->>> +++ b/drivers/dma-buf/dma-buf.c
->>> @@ -20,6 +20,7 @@
->>>    #include <linux/debugfs.h>
->>>    #include <linux/module.h>
->>>    #include <linux/seq_file.h>
->>> +#include <linux/sync_file.h>
->>>    #include <linux/poll.h>
->>>    #include <linux/dma-resv.h>
->>>    #include <linux/mm.h>
->>> @@ -348,6 +349,95 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
->>>        return ret;
->>>    }
->>>
->>> +static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
->>> +                                const void __user *user_data)
->>> +{
->>> +     struct dma_buf_sync_file arg;
->>> +     struct dma_fence *fence;
->>> +     int ret = 0;
->>> +
->>> +     if (copy_from_user(&arg, user_data, sizeof(arg)))
->>> +             return -EFAULT;
->>> +
->>> +     if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
->>> +             return -EINVAL;
->>> +
->>> +     fence = sync_file_get_fence(arg.fd);
->>> +     if (!fence)
->>> +             return -EINVAL;
->>> +
->>> +     dma_resv_lock(dmabuf->resv, NULL);
->>> +
->>> +     if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
->>> +             struct dma_fence *singleton = NULL;
->>> +             ret = dma_resv_get_singleton(dmabuf->resv, fence, &singleton);
->>> +             if (!ret && singleton)
->>> +                     dma_resv_add_excl_fence(dmabuf->resv, singleton);
->>> +     } else {
->>> +             dma_resv_add_shared_fence(dmabuf->resv, fence);
->>> +     }
->> You also need to create a singleton when adding a shared fences.
->>
->> The problem is that shared fences must always signal after exclusive
->> ones and you can't guarantee that for the fence you add here.
-> I'm beginning to think that I should just drop the flags and always
-> wait on all fences and always take what's currently the "write" path.
-> Otherwise, something's going to get it wrong somewhere.  Thoughts?
+--Sig_/vMWhQLKRKGPaem0p/lu3FKo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-If that is sufficient for your use case then that is certainly the more 
-defensive (e.g. less dangerous) approach.
+On Thu, 12 Mar 2020 18:01:12 +0200
+Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com> wrote:
 
-> Also, Michelle (added to CC) commented on IRC today that amdgpu does
-> something with implicit sync fences where it sorts out the fences
-> which affect one queue vs. others.  He thought that stuffing fences in
-> the dma-buf in this way might cause that to not work.  Thoughts?
+> On Thu, Mar 12, 2020 at 03:37:03PM +0000, Laxminarayan Bharadiya, Pankaj =
+wrote:
+> >=20
+> >  =20
+> > > -----Original Message-----
+> > > From: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+> > > Sent: 12 March 2020 19:35
+> > > To: Laxminarayan Bharadiya, Pankaj
+> > > <pankaj.laxminarayan.bharadiya@intel.com>
+> > > Cc: jani.nikula@linux.intel.com; daniel@ffwll.ch; intel-
+> > > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; airlied@l=
+inux.ie;
+> > > maarten.lankhorst@linux.intel.com; tzimmermann@suse.de;
+> > > mripard@kernel.org; mihail.atanassov@arm.com; linux-
+> > > kernel@vger.kernel.org; Nautiyal, Ankit K <ankit.k.nautiyal@intel.com>
+> > > Subject: Re: [RFC][PATCH 0/5] Introduce drm scaling filter property
+> > >=20
+> > > On Tue, Feb 25, 2020 at 12:35:40PM +0530, Pankaj Bharadiya wrote: =20
+> > > > Integer scaling (IS) is a nearest-neighbor upscaling technique that
+> > > > simply scales up the existing pixels by an integer (i.e., whole
+> > > > number) multiplier. Nearest-neighbor (NN) interpolation works by
+> > > > filling in the missing color values in the upscaled image with that=
+ of
+> > > > the coordinate-mapped nearest source pixel value.
+> > > >
+> > > > Both IS and NN preserve the clarity of the original image. In
+> > > > contrast, traditional upscaling algorithms, such as bilinear or
+> > > > bicubic interpolation, result in blurry upscaled images because they
+> > > > employ interpolation techniques that smooth out the transition from
+> > > > one pixel to another.  Therefore, integer scaling is particularly
+> > > > useful for pixel art games that rely on sharp, blocky images to
+> > > > deliver their distinctive look.
+> > > >
+> > > > Many gaming communities have been asking for integer-mode scaling
+> > > > support, some links and background:
+> > > >
+> > > > https://software.intel.com/en-us/articles/integer-scaling-support-o=
+n-i
+> > > > ntel-graphics http://tanalin.com/en/articles/lossless-scaling/
+> > > > https://community.amd.com/thread/209107
+> > > > https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1=
+002
+> > > > /feature-request-nonblurry-upscaling-at-integer-rat/
+> > > >
+> > > > This patch series -
+> > > >   - Introduces new scaling filter property to allow userspace to
+> > > >     select  the driver's default scaling filter or Nearest-neighbor=
+(NN)
+> > > >     filter for scaling operations on crtc/plane.
+> > > >   - Implements and enable integer scaling for i915
+> > > >
+> > > > Userspace patch series link: TBD. =20
+> > >=20
+> > > That needs to be done or this will go nowhere. =20
+> >=20
+> > Yes, Sameer is working on enabling this feature in Kodi.=20
+> > Sameer, please share link here once you post patches. =20
+>=20
+> And who is doing it for other stuff? I think this would be most useful
+> for games/emulators and such so IMO we should find a way to get it to
+> the hands of users doing those things.
+>=20
 
-Yes that is correct. What amdgpu does is it ignores all fences from the 
-same process.
+Hi,
 
-E.g. when A submits IBs 1, 2 and 3 and then B submits IB 4 then 4 waits 
-for 1,2,3, but 1,2,3 can run parallel to each other.
-
-And yes adding anything as explicit sync would break that, but I don't 
-think that this is much of a problem.
-
-Regards,
-Christian.
+FWIW, being able to tell KMS to use nearest-neighbor filtering could be
+useful for
+https://gitlab.freedesktop.org/wayland/weston/-/merge_requests/394
+as a follow-up.
 
 
->
-> --Jason
->
->
->> Regards,
->> Christian.
->>
->>> +
->>> +     dma_resv_unlock(dmabuf->resv);
->>> +
->>> +     dma_fence_put(fence);
->>> +
->>> +     return ret;
->>> +}
->>> +
->>> +static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
->>> +                                  void __user *user_data)
->>> +{
->>> +     struct dma_buf_sync_file arg;
->>> +     struct dma_fence *fence = NULL;
->>> +     struct sync_file *sync_file;
->>> +     int fd, ret;
->>> +
->>> +     if (copy_from_user(&arg, user_data, sizeof(arg)))
->>> +             return -EFAULT;
->>> +
->>> +     if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
->>> +             return -EINVAL;
->>> +
->>> +     fd = get_unused_fd_flags(O_CLOEXEC);
->>> +     if (fd < 0)
->>> +             return fd;
->>> +
->>> +     if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
->>> +             /* We need to include both the exclusive fence and all of
->>> +              * the shared fences in our fence.
->>> +              */
->>> +             ret = dma_resv_get_singleton(dmabuf->resv, NULL, &fence);
->>> +             if (ret)
->>> +                     goto err_put_fd;
->>> +     } else {
->>> +             fence = dma_resv_get_excl_rcu(dmabuf->resv);
->>> +     }
->>> +
->>> +     if (!fence)
->>> +             fence = dma_fence_get_stub();
->>> +
->>> +     sync_file = sync_file_create(fence);
->>> +
->>> +     dma_fence_put(fence);
->>> +
->>> +     if (!sync_file) {
->>> +             ret = -EINVAL;
->>> +             goto err_put_fd;
->>> +     }
->>> +
->>> +     fd_install(fd, sync_file->file);
->>> +
->>> +     arg.fd = fd;
->>> +     if (copy_to_user(user_data, &arg, sizeof(arg)))
->>> +             return -EFAULT;
->>> +
->>> +     return 0;
->>> +
->>> +err_put_fd:
->>> +     put_unused_fd(fd);
->>> +     return ret;
->>> +}
->>> +
->>>    static long dma_buf_ioctl(struct file *file,
->>>                          unsigned int cmd, unsigned long arg)
->>>    {
->>> @@ -390,6 +480,12 @@ static long dma_buf_ioctl(struct file *file,
->>>        case DMA_BUF_SET_NAME:
->>>                return dma_buf_set_name(dmabuf, (const char __user *)arg);
->>>
->>> +     case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
->>> +             return dma_buf_wait_sync_file(dmabuf, (const void __user *)arg);
->>> +
->>> +     case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
->>> +             return dma_buf_signal_sync_file(dmabuf, (void __user *)arg);
->>> +
->>>        default:
->>>                return -ENOTTY;
->>>        }
->>> diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
->>> index dbc7092e04b5..86e07acca90c 100644
->>> --- a/include/uapi/linux/dma-buf.h
->>> +++ b/include/uapi/linux/dma-buf.h
->>> @@ -37,8 +37,17 @@ struct dma_buf_sync {
->>>
->>>    #define DMA_BUF_NAME_LEN    32
->>>
->>> +struct dma_buf_sync_file {
->>> +     __u32 flags;
->>> +     __s32 fd;
->>> +};
->>> +
->>> +#define DMA_BUF_SYNC_FILE_SYNC_WRITE (1 << 0)
->>> +
->>>    #define DMA_BUF_BASE                'b'
->>> -#define DMA_BUF_IOCTL_SYNC   _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
->>> -#define DMA_BUF_SET_NAME     _IOW(DMA_BUF_BASE, 1, const char *)
->>> +#define DMA_BUF_IOCTL_SYNC       _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
->>> +#define DMA_BUF_SET_NAME         _IOW(DMA_BUF_BASE, 1, const char *)
->>> +#define DMA_BUF_IOCTL_WAIT_SYNC_FILE _IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
->>> +#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE       _IOWR(DMA_BUF_BASE, 3, struct dma_buf_sync)
->>>
->>>    #endif
+Thanks,
+pq
 
+--Sig_/vMWhQLKRKGPaem0p/lu3FKo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl5rYekACgkQI1/ltBGq
+qqfTpQ//W/9o7NNQ0qIjJ0FzcNtolpUfAaokRetxnFtvjd2lG4v3D5wrTvXVfctR
+Dtl709DyxtciqtUnE527NbCbW4qbAVhbhamgMHkweMRhw2WyxtzUmLTAbIRd63Z8
+0Wd/RpHUaZrlqnzPkuOJC61cK/8vzWO1+p++1pzCI6EnvQvx38QGFaQRq5MEEICp
+RQC+zBx8A+n1dbWorM4Fc31ZD4AUL2IFFIztLWSd2XMrZfFUH3QwqPM9HYnjpjDy
+Qm/tKnFUp7WsfBnK92xG8y3kSNFu4fumU1U/EMybspbhU1L1w3AtkadWExDU6xmS
+i5w237YKaaYZxNvMMwmzMSXKpDrfIQLWAlNg1RLU+GVjwXWxUZsCOsU9IQD9fGxC
+wKp2yVUJnCh7h/5XdlEEjBcnmUz2weusORX+yp00MLc9ujgleZxm1qqnUPR04AWD
+LHV7wP9qmaNYW+1qxEZyAfBRszqhDIvzkRv4zWynqGrRvOfyvb2kgt7MoHpfK+EY
+OuDPJtSSPhMvYuJFlFTM6P88WrFdOMF2quhKHLfoNpAbJYp7dHFAZty9D4ouf+Rn
+0vdMsOkPm9Cp/4T4N49An9jguyozTaqax1tFlbkuRwBK47V6KGUWhiSir0x/OYYK
+XIJjZ6PY3+MDKpfVT1RlnVcSJfO8rt++VnNymrJBO/vHZnt2Uuo=
+=3GVp
+-----END PGP SIGNATURE-----
+
+--Sig_/vMWhQLKRKGPaem0p/lu3FKo--
