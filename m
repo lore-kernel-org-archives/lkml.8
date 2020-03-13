@@ -2,207 +2,131 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3526C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3755C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC742074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3152074E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TxRKfk2B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+TIiwsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgCMWaN (ORCPT
+        id S1726922AbgCMWeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:30:13 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25220 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727561AbgCMWaJ (ORCPT
+        Fri, 13 Mar 2020 18:34:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35807 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMWeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 18:30:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584138607;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bJRqmbszSA1oTVb3wgjwQJD7tdcXqWuFXrwdcjYeYK0=;
-        b=TxRKfk2BChSDvXQx89glPN8S9Wf/OnZ6y+gBCVeMYjNRIGsYKuvbYch3OA1zXW68OQfNVL
-        /R5zNofG9Df3BtJ/r+p0yZi6fP4B0mY1E6ggWJFQQ80SiDC8Q9RQbShb57CYh8JC3OOfS+
-        cJcZmaST1J/+JcyOtywfAFkh6s9XQIA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-teosRALzMJGa4azdSSx5Aw-1; Fri, 13 Mar 2020 18:30:04 -0400
-X-MC-Unique: teosRALzMJGa4azdSSx5Aw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83B7D1060DB1;
-        Fri, 13 Mar 2020 22:30:02 +0000 (UTC)
-Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCB5094940;
-        Fri, 13 Mar 2020 22:29:58 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 16:29:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhenyuw@linux.intel.com,
-        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "Neo Jia (cjia@nvidia.com)" <cjia@nvidia.com>
-Subject: Re: [PATCH v4 0/7] use vfio_dma_rw to read/write IOVAs from CPU
- side
-Message-ID: <20200313162958.5bfb5b82@x1.home>
-In-Reply-To: <20200313030548.7705-1-yan.y.zhao@intel.com>
-References: <20200313030548.7705-1-yan.y.zhao@intel.com>
-Organization: Red Hat
+        Fri, 13 Mar 2020 18:34:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d5so13725609wrc.2;
+        Fri, 13 Mar 2020 15:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=u2/KsbMRst5bOqjjozeqv6hTnglC4BshRp2rjl0jtkE=;
+        b=J+TIiwsKperfrX263SHYpVChqgx2ehGPtuTPCxNhG61/OgzX0SeZROV+/dZCwtr0UL
+         iQZm5u345orMAsMTyYca+AHmpt7gL8VOm7ijkJKezhhW/iUqOwWa64hZfI2TT4M+OQ5w
+         +GNCtW/wxOyQAEP2qsJog8CdrpPRNg8NAN2Qv4h9vPcNJgbKNbdwWvNY/9ujuPLNB29t
+         O3y2tzPrHhfQ9oojPZ2C3mNhtXjGydVi7kdkJ4joFq1S9GhS+YbzFMUZ6c+3K9hRNk5U
+         OhFRXx35CcfyIkEDhJDiTyyHkrJVSoCFtRnXy6C32sR3x4QRvhHrASLMB6ls3CaG6MCE
+         tXjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=u2/KsbMRst5bOqjjozeqv6hTnglC4BshRp2rjl0jtkE=;
+        b=cjaLJ530orLqSUMw+uLGJSdQY8KkzXU9oqP+g1mOtPvzi2LZsw87K4ZdslmHdipVvg
+         BfY3Qc8O1GU9ki2bv1g7BKYRy+YLI7yhnuJpFD1DEYmBzV6LGWvCnwIGOPk9Mf3Qu8ti
+         Y78vebQkv3N76vTMLJ0rWMxuAl6aMLny8BEcVIoG1KI67nbs9h1QHzzAjeQflJ3+iVU8
+         uAnShiBl8eUo1bLFHqj+cmUMU7vxU8CPRi3JFuQIGNnTEZhaCnM2E8X34QQT9wITrLhT
+         P0T9p/qEIfWFT+837doki3J5DNocTcIDF3T1kiq621Q5mJ02aj8GF95cXAiqyLVJLBsa
+         5p3w==
+X-Gm-Message-State: ANhLgQ0CcOhQnjuCK0BTRCH10RGPkf23n2K1Mf+jjkvXY3GMRnIfTCM2
+        i/Ve68pENr/xNqSPlBYjHkw=
+X-Google-Smtp-Source: ADFU+vuwl9wZQqUu+AK3esARk//0MO9KcaK6BM7g9CGUYNYklmt4SgOYLGnFRB6MFLNXN1F+2JzSiQ==
+X-Received: by 2002:adf:e98c:: with SMTP id h12mr20476792wrm.345.1584138849748;
+        Fri, 13 Mar 2020 15:34:09 -0700 (PDT)
+Received: from AnsuelXPS ([2001:470:b467:1:44af:5966:96b9:9aa4])
+        by smtp.gmail.com with ESMTPSA id t1sm36023991wrq.36.2020.03.13.15.34.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Mar 2020 15:34:09 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Stephen Boyd'" <sboyd@kernel.org>, <agross@kernel.org>
+Cc:     "'Mathieu Olivari'" <mathieu@codeaurora.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Michael Turquette'" <mturquette@baylibre.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
+References: <20200313195816.12435-1-ansuelsmth@gmail.com> <158413179776.164562.8295974225127853050@swboyd.mtv.corp.google.com>
+In-Reply-To: <158413179776.164562.8295974225127853050@swboyd.mtv.corp.google.com>
+Subject: R: [PATCH] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+Date:   Fri, 13 Mar 2020 23:34:05 +0100
+Message-ID: <014101d5f987$82790c90$876b25b0$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+        charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFhpnVMu9aClkJmE4H4ViqLWFkkBwJI+//GqR16BZA=
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc +NVIDIA]
+> Quoting Ansuel Smith (2020-03-13 12:58:16)
+> > diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> > index 554c65e7aa0e..580aec63030d 100644
+> > --- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> > +++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> > @@ -21,14 +21,5 @@ mux {
+> >                                 };
+> >                         };
+> >                 };
+> > -
+> > -               gsbi@16300000 {
+> > -                       i2c@16380000 {
+> > -                               status = "ok";
+> > -                               clock-frequency = <200000>;
+> > -                               pinctrl-0 = <&i2c4_pins>;
+> > -                               pinctrl-names = "default";
+> > -                       };
+> > -               };
+> >         };
+> >  };
+> > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
+> ipq806x.c
+> > index b0eee0903807..75706807e6cf 100644
+> > --- a/drivers/clk/qcom/gcc-ipq806x.c
+> > +++ b/drivers/clk/qcom/gcc-ipq806x.c
+> > @@ -782,7 +782,7 @@ static struct clk_rcg gsbi4_qup_src = {
+> >                         .parent_names = gcc_pxo_pll8,
+> >                         .num_parents = 2,
+> >                         .ops = &clk_rcg_ops,
+> > -                       .flags = CLK_SET_PARENT_GATE,
+> > +                       .flags = CLK_SET_PARENT_GATE | CLK_IGNORE_UNUSED,
+> 
+> A better solution is to use the protected-clocks property so we don't
+> try to touch these clks at all on this device. So this whole patch can
+> be routed through arm-soc and remove the i2c node and add some dt
+> property to the gcc node.
+> 
 
-On Thu, 12 Mar 2020 23:05:48 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+Should I add a comment where the i2c is removed or I can remove it
+directly?
 
-> It is better for a device model to use IOVAs to read/write memory to
-> perform some sort of virtual DMA on behalf of the device.
-> 
-> patch 1 exports VFIO group to external user so that it can hold the group
-> reference until finishing using of it. It saves ~500 cycles that are spent
-> on VFIO group looking up, referencing and dereferencing. (this data is
-> measured with 1 VFIO user).
-> 
-> patch 2 introduces interface vfio_dma_rw().
-> 
-> patch 3 introduces interfaces vfio_group_pin_pages() and
-> vfio_group_unpin_pages() to get rid of VFIO group looking-up in
-> vfio_pin_pages() and vfio_unpin_pages().
-> 
-> patch 4-5 let kvmgt switch from calling kvm_read/write_guest() to calling
-> vfio_dma_rw to rw IOVAs.
-> 
-> patch 6 let kvmgt switch to use lighter version of vfio_pin/unpin_pages(),
-> i.e. vfio_group_pin/unpin_pages()
-> 
-> patch 7 enables kvmgt to read/write IOVAs of size larger than PAGE_SIZE.
-
-This looks pretty good to me, hopefully Kirti and Neo can find some
-advantage with this series as well.  Given that we're also trying to
-get the migration interface and dirty page tracking integrated for
-v5.7, would it make sense to merge the first 3 patches via my next
-branch?  This is probably the easiest way to update the dirty tracking.
-Thanks,
-
-Alex
-
-> Performance:
-> 
-> Comparison between vfio_dma_rw() and kvm_read/write_guest():
-> 
-> 1. avergage CPU cycles of each interface measured with 1 running VM:
->  --------------------------------------------------
-> |  rw       |          avg cycles of               |
-> |  size     | (vfio_dma_rw - kvm_read/write_guest) |
-> |---------- ---------------------------------------|
-> | <= 1 page |            +155 ~ +195               |        
-> |--------------------------------------------------|
-> | 5 pages   |                -530                  |
-> |--------------------------------------------------|
-> | 20 pages  |           -2005 ~ -2533              |
->  --------------------------------------------------
-> 
-> 2. average scores
-> 
-> base: base code before applying code in this series. use
-> kvm_read/write_pages() to rw IOVAs
-> 
-> base + this series: use vfio_dma_rw() to read IOVAs and use
-> vfio_group_pin/unpin_pages(), and kvmgt is able to rw several pages
-> at a time.
-> 
-> Scores of benchmarks running in 1 VM each:
->  -----------------------------------------------------------------
-> |                    | glmark2 | lightsmark | openarena | heavens |
-> |-----------------------------------------------------------------|
-> |       base         |  1248   |  219.70    |  114.9    |   560   |
-> |-----------------------------------------------------------------|
-> |base + this series  |  1248   |  225.8     |   115     |   559   |
->  -----------------------------------------------------------------
-> 
-> Sum of scores of two benchmark instances running in 2 VMs each:
->  -------------------------------------------------------
-> |                    | glmark2 | lightsmark | openarena |
-> |-------------------------------------------------------|
-> |       base         |  812    |  211.46    |  115.3    |
-> |-------------------------------------------------------|
-> |base + this series  |  814    |  214.69    |  115.9    |
->  -------------------------------------------------------
-> 
-> 
-> Changelogs:
-> v3 --> v4:
-> - rebased to 5.6.0-rc4+
-> - adjust wrap position for vfio_group_get_external_user_from_dev() in
->   header file.(Alex)
-> - updated function description of vfio_group_get_external_user_from_dev()
->   (Alex)
-> - fixed Error path group reference leaking in
->   vfio_group_get_external_user_from_dev()  (Alex)
-> - reurn 0 for success or errno in vfio_dma_rw_chunk(). (Alex)
-> - renamed iova to user_iova in interface vfio_dam_rw().
-> - renamed vfio_pin_pages_from_group() and vfio_unpin_pages_from_group() to
->   vfio_group_pin_pages() and vfio_group_unpin_pages()
-> - renamed user_pfn to user_iova_pfn in vfio_group_pin_pages() and
->   vfio_group_unpin_pages()
-> 
-> v2 --> v3:
-> - add vfio_group_get_external_user_from_dev() to improve performance (Alex)
-> - add vfio_pin/unpin_pages_from_group() to avoid repeated looking up of
->   VFIO group in vfio_pin/unpin_pages() (Alex)
-> - add a check for IOMMU_READ permission. (Alex)
-> - rename vfio_iommu_type1_rw_dma_nopin() to
->   vfio_iommu_type1_dma_rw_chunk(). (Alex)
-> - in kvmgt, change "write ? vfio_dma_rw(...,true) :
->   vfio_dma_rw(...,false)" to vfio_dma_rw(dev, gpa, buf, len, write)
->   (Alex and Paolo)
-> - in kvmgt, instead of read/write context pages 1:1, combining the
->   reads/writes of continuous IOVAs to take advantage of vfio_dma_rw() for
->   faster crossing page boundary accesses.
-> 
-> v1 --> v2:
-> - rename vfio_iova_rw to vfio_dma_rw, vfio iommu driver ops .iova_rw
-> to .dma_rw. (Alex).
-> - change iova and len from unsigned long to dma_addr_t and size_t,
-> respectively. (Alex)
-> - fix possible overflow in dma->vaddr + iova - dma->iova + offset (Alex)
-> - split DMAs from on page boundary to on max available size to eliminate
->   redundant searching of vfio_dma and switching mm. (Alex)
-> - add a check for IOMMU_WRITE permission.
-> 
-> 
-> Yan Zhao (7):
->   vfio: allow external user to get vfio group from device
->   vfio: introduce vfio_dma_rw to read/write a range of IOVAs
->   vfio: avoid inefficient operations on VFIO group in
->     vfio_pin/unpin_pages
->   drm/i915/gvt: hold reference of VFIO group during opening of vgpu
->   drm/i915/gvt: subsitute kvm_read/write_guest with vfio_dma_rw
->   drm/i915/gvt: switch to user vfio_group_pin/upin_pages
->   drm/i915/gvt: rw more pages a time for shadow context
-> 
->  drivers/gpu/drm/i915/gvt/kvmgt.c     |  46 ++++---
->  drivers/gpu/drm/i915/gvt/scheduler.c |  97 ++++++++++-----
->  drivers/vfio/vfio.c                  | 180 +++++++++++++++++++++++++++
->  drivers/vfio/vfio_iommu_type1.c      |  76 +++++++++++
->  include/linux/vfio.h                 |  13 ++
->  5 files changed, 360 insertions(+), 52 deletions(-)
-> 
+> >                 },
+> >         },
+> >  };
 
