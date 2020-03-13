@@ -2,168 +2,421 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D543C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA747C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FDD206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="J8ELpBbT";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="VG20MWQT"
+	by mail.kernel.org (Postfix) with ESMTP id 73EDE206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgCMPcM (ORCPT
+        id S1726777AbgCMPej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:32:12 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:45068 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726446AbgCMPcM (ORCPT
+        Fri, 13 Mar 2020 11:34:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34848 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCMPej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:32:12 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DFK55R015678;
-        Fri, 13 Mar 2020 08:32:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pfpt0818; bh=udmZpi1C1nGqn4+q7sy3ttPlG22RzjpngONAdnY0xaY=;
- b=J8ELpBbTFG4+8Qcj21QRXhdjhx5PHqQl62j3oeh2d6ZDIaLwwNdwUxvRROgrnn6YflHQ
- wPdMQwWuT3YywXkFsxeJdA7FXsrA1FoP1gj6UeNCtc+mt6YMbRJgbnjFsLyWHBf+wXW8
- YBjEHYJMJMI9HgNwAysSFQyTAG1pu4dmFyIbllvLKsc8qdgTkooV5Cg9QH0ty+YbRsuV
- wJDfAAxTwF768/pwxxId0wC+puM5/NjhmqSWenWGy3BgcHGpx0xfPA/M3wPBa80JErjG
- vCt9LAF393JmeNtpq0cCYNAps8m+KS9DO63ZMkElMhXm/snA+C0DA2JMBybbO0eUvKrA yA== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2yqt7f4egv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 08:32:08 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 13 Mar
- 2020 08:32:07 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.56) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Fri, 13 Mar 2020 08:32:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QHWMAOXD4tVIvfor1ADoOIkfT1/IvKb4wJ1QZ53rL1ZxB9hzyTEE0nZ/lBMaewcHN80tEr/HcnkSJxRktqISIwh3tXD8ByF+T0QVwYeX5jGW8ziEO7xTrJcX+c8aRCemuxNSPNQ3f51fEG1lReNCBFzDw/tCKBJTZ+yBP+ReKZ4bHbW23tWHzMINAiVWUGTiYQ7REFb9JnHkUlQDYdUSM8vaUAXhK0WeKmOJXbkooqgV/ypbKg9cUpqPAvSqL+jip2rLQ1krwt3nEPw7ahYZDsmn9XdtSBl12+lCuBBIoxkfmet+mHElguJ/NU6KFnlWvB+/CcfTcKpO5paRHJ/SMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=udmZpi1C1nGqn4+q7sy3ttPlG22RzjpngONAdnY0xaY=;
- b=XcdUbdeAFUBFNFrS4HJTkHmNInHWGbysJnoy4pVupCRqtalbzUxiYVzV7k3F1poykuplajeV0SpoUeJKT3p3skBitvFFwwHWH6kZ3XaZSSEc/k72nPbegiD2PFCFLcT6RXwn6D70YT9613oHyZj5hEF6r+0gSF17ghiwyWfRInpqwbZ9NQPXg9d34++3WSUKV4H1nux6GfYaE8yGvCyNmYPaYfDArG5U3Hhb6kNiP/Zvw/cKz70VeySGUSNTUgVhCN4PygyjECBFbkCob07AIqQFbhCrFqNYQnBZcAubK7StJuDxXNkzz+WaG3lFAuQCYtgjIzvenByebGndVneSJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=udmZpi1C1nGqn4+q7sy3ttPlG22RzjpngONAdnY0xaY=;
- b=VG20MWQTJ4Furs/HNxXB61+c71iy2pLiqJJz5Yg1tqDfRcKNHfJwR8ZkuimWG4HN4DyQy40es7MZw2/GSHiokFuBw4Y3HKH/UzADhcAtrXjHamgaHJ6MxfxSk+Bnvri9PE2HN2HpSoGmvf16r+k9VkQHFktp3F3q7N4fELHU4bA=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
- by MN2PR18MB3640.namprd18.prod.outlook.com (2603:10b6:208:265::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Fri, 13 Mar
- 2020 15:32:05 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2814.018; Fri, 13 Mar 2020
- 15:32:05 +0000
-Date:   Fri, 13 Mar 2020 16:31:52 +0100
-From:   Robert Richter <rrichter@marvell.com>
-To:     Tim Harvey <tharvey@gateworks.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
-Message-ID: <20200313153151.e5nmsbr6yrzchdxi@rric.localdomain>
-References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR0502CA0024.eurprd05.prod.outlook.com
- (2603:10a6:3:e3::34) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
+        Fri, 13 Mar 2020 11:34:39 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jCmKZ-0001Aa-Fc; Fri, 13 Mar 2020 15:34:35 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     gregkh@linuxfoundation.org, tkjos@android.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org
+Cc:     christian.brauner@ubuntu.com, ard.biesheuvel@linaro.org,
+        ardb@kernel.org, arve@android.com, hridya@google.com,
+        joel@joelfernandes.org, john.stultz@linaro.org,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        maco@android.com, naresh.kamboju@linaro.org, shuah@kernel.org,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH v2] binderfs: port to new mount api
+Date:   Fri, 13 Mar 2020 16:34:27 +0100
+Message-Id: <20200313153427.141789-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
+References: <20200312131531.3615556-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR0502CA0024.eurprd05.prod.outlook.com (2603:10a6:3:e3::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Fri, 13 Mar 2020 15:32:04 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2732214-2acd-4e39-7783-08d7c763af6a
-X-MS-TrafficTypeDiagnostic: MN2PR18MB3640:
-X-Microsoft-Antispam-PRVS: <MN2PR18MB364023519FCD419BBCC384C7D9FA0@MN2PR18MB3640.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(376002)(39860400002)(346002)(199004)(7696005)(52116002)(26005)(66946007)(316002)(53546011)(86362001)(8936002)(186003)(16526019)(66556008)(66476007)(81166006)(81156014)(8676002)(6666004)(956004)(6916009)(6506007)(5660300002)(4326008)(2906002)(55016002)(9686003)(478600001)(54906003)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3640;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: D6r3TLRDUgHN4WJL5wA4VVpcaW8ZR9LXdH43Z03KoQ/k4NxxaxIsYTpRV5OdH/RYlbbSrzYd4VEBqAWRSHSYrgSGEqlM1iQ8jNTjIyr0yw+ZvfjpKwI3MggCS+/rpNKHQBh4o0FvDORyp34WTkGlkbI8awQGQlrHL8Wjy22Hd6OHJMrHDWSCJNfdJ9qfpT6A332tJMGujUiG2OrW1mYO2pDc3YYKZ44KGEyqItCoCaNaVBXf75LumR+XI8dKb9eBaYHHp90mv3mua1TCWOt/KMeNDQRnOMPJltoYDHSAvI9Juoh1Gn+6a3qXi0bghmV4PyeiTaUxkpJ6YlWMB0//wiQ99FCHii1fUPA2pYXeSWrmhTtaz7/O+aWu6VY5mnEdqyuKVDG2ojvPkgU17SwCnUvlwzPBXY4AjmEntuh3uAbo8rZaBiSAw7vd7ms80gBQ
-X-MS-Exchange-AntiSpam-MessageData: avT6EIrMmqYRP/2RyP5gH+nxZK87sCbMoDNsDuQ7wp5OCd7kkDcr3rUIGH4aEr6LOImgsNpc97Y2qabiCA6oN45FkEaKT4qqS90DoT3M3MCF23zWfDFaCfSFR3VQgLsQr5zmyqNGs9wrK+ajSLPGkQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2732214-2acd-4e39-7783-08d7c763af6a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 15:32:05.6533
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nxeQtluK95asE/S9G2qWvq0zESL7mbUJ5guw8ZEQNqNqVpZC5fxzU8mVfsXYLFqzJYnPlnZRZnNMCXPV8E6taA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3640
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_06:2020-03-12,2020-03-13 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.20 08:43:53, Tim Harvey wrote:
-> If there are no parent resources do not call irq_chip_request_resources_parent
-> at all as this will return an error.
-> 
-> This resolves a regression where devices using a thunderx gpio as an interrupt
-> would fail probing.
-> 
-> Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
->  drivers/gpio/gpio-thunderx.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-> index 4627704..f84b9b1 100644
-> --- a/drivers/gpio/gpio-thunderx.c
-> +++ b/drivers/gpio/gpio-thunderx.c
-> @@ -366,15 +366,18 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
->  {
->  	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
->  	struct thunderx_gpio *txgpio = txline->txgpio;
-> +	struct irq_data *parent_data = data->parent_data;
->  	int r;
->  
->  	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
->  	if (r)
->  		return r;
->  
-> -	r = irq_chip_request_resources_parent(data);
-> -	if (r)
-> -		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-> +	if (parent_data && parent_data->chip->irq_request_resources) {
-> +		r = irq_chip_request_resources_parent(data);
-> +		if (r)
-> +			gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-> +	}
+When I first wrote binderfs the new mount api had not yet landed. Now
+that it has been around for a little while and a bunch of filesystems
+have already been ported we should do so too. When Al sent his
+mount-api-conversion pr he requested that binderfs (and a few others) be
+ported separately. It's time we port binderfs. We can make use of the
+new option parser, get nicer infrastructure and it will be easier if we
+ever add any new mount options.
 
-There is no unlocking for the else case. I would assume the
-parent_data should be checked before grabbing the lock, or is this
-intended?
+This survives testing with the binderfs selftests:
 
--Robert
+for i in `seq 1 1000`; do ./binderfs_test; done
 
->  
->  	return r;
->  }
-> -- 
-> 2.7.4
-> 
+including the new stress tests I sent out for review today:
+
+ TAP version 13
+ 1..1
+ # selftests: filesystems/binderfs: binderfs_test
+ # [==========] Running 3 tests from 1 test cases.
+ # [ RUN      ] global.binderfs_stress
+ # [  XFAIL!  ] Tests are not run as root. Skipping privileged tests
+ # [==========] Running 3 tests from 1 test cases.
+ # [ RUN      ] global.binderfs_stress
+ # [       OK ] global.binderfs_stress
+ # [ RUN      ] global.binderfs_test_privileged
+ # [       OK ] global.binderfs_test_privileged
+ # [ RUN      ] global.binderfs_test_unprivileged
+ # # Allocated new binder device with major 243, minor 4, and name my-binder
+ # # Detected binder version: 8
+ # [==========] Running 3 tests from 1 test cases.
+ # [ RUN      ] global.binderfs_stress
+ # [       OK ] global.binderfs_stress
+ # [ RUN      ] global.binderfs_test_privileged
+ # [       OK ] global.binderfs_test_privileged
+ # [ RUN      ] global.binderfs_test_unprivileged
+ # [       OK ] global.binderfs_test_unprivileged
+ # [==========] 3 / 3 tests passed.
+ # [  PASSED  ]
+ ok 1 selftests: filesystems/binderfs: binderfs_test
+
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Commit message adapted to new stresstest output after porting to
+    XFAIL infrastructure.
+    For the stresstest patchset see:
+    https://lore.kernel.org/r/20200313152420.138777-1-christian.brauner@ubuntu.com
+---
+ drivers/android/binderfs.c | 200 +++++++++++++++++++------------------
+ 1 file changed, 104 insertions(+), 96 deletions(-)
+
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index f303106b3362..9ecad74183a3 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -18,7 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/mount.h>
+-#include <linux/parser.h>
++#include <linux/fs_parser.h>
+ #include <linux/radix-tree.h>
+ #include <linux/sched.h>
+ #include <linux/seq_file.h>
+@@ -48,26 +48,30 @@ static dev_t binderfs_dev;
+ static DEFINE_MUTEX(binderfs_minors_mutex);
+ static DEFINE_IDA(binderfs_minors);
+ 
+-enum {
++enum binderfs_param {
+ 	Opt_max,
+ 	Opt_stats_mode,
+-	Opt_err
+ };
+ 
+ enum binderfs_stats_mode {
+-	STATS_NONE,
+-	STATS_GLOBAL,
++	binderfs_stats_mode_unset,
++	binderfs_stats_mode_global,
+ };
+ 
+-static const match_table_t tokens = {
+-	{ Opt_max, "max=%d" },
+-	{ Opt_stats_mode, "stats=%s" },
+-	{ Opt_err, NULL     }
++static const struct constant_table binderfs_param_stats[] = {
++	{ "global", binderfs_stats_mode_global },
++	{}
+ };
+ 
+-static inline struct binderfs_info *BINDERFS_I(const struct inode *inode)
++const struct fs_parameter_spec binderfs_fs_parameters[] = {
++	fsparam_u32("max",	Opt_max),
++	fsparam_enum("stats",	Opt_stats_mode, binderfs_param_stats),
++	{}
++};
++
++static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
+ {
+-	return inode->i_sb->s_fs_info;
++	return sb->s_fs_info;
+ }
+ 
+ bool is_binderfs_device(const struct inode *inode)
+@@ -246,7 +250,7 @@ static long binder_ctl_ioctl(struct file *file, unsigned int cmd,
+ static void binderfs_evict_inode(struct inode *inode)
+ {
+ 	struct binder_device *device = inode->i_private;
+-	struct binderfs_info *info = BINDERFS_I(inode);
++	struct binderfs_info *info = BINDERFS_SB(inode->i_sb);
+ 
+ 	clear_inode(inode);
+ 
+@@ -264,97 +268,84 @@ static void binderfs_evict_inode(struct inode *inode)
+ 	}
+ }
+ 
+-/**
+- * binderfs_parse_mount_opts - parse binderfs mount options
+- * @data: options to set (can be NULL in which case defaults are used)
+- */
+-static int binderfs_parse_mount_opts(char *data,
+-				     struct binderfs_mount_opts *opts)
++static int binderfs_fs_context_parse_param(struct fs_context *fc,
++					   struct fs_parameter *param)
+ {
+-	char *p, *stats;
+-	opts->max = BINDERFS_MAX_MINOR;
+-	opts->stats_mode = STATS_NONE;
+-
+-	while ((p = strsep(&data, ",")) != NULL) {
+-		substring_t args[MAX_OPT_ARGS];
+-		int token;
+-		int max_devices;
+-
+-		if (!*p)
+-			continue;
+-
+-		token = match_token(p, tokens, args);
+-		switch (token) {
+-		case Opt_max:
+-			if (match_int(&args[0], &max_devices) ||
+-			    (max_devices < 0 ||
+-			     (max_devices > BINDERFS_MAX_MINOR)))
+-				return -EINVAL;
+-
+-			opts->max = max_devices;
+-			break;
+-		case Opt_stats_mode:
+-			if (!capable(CAP_SYS_ADMIN))
+-				return -EINVAL;
++	int opt;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
++	struct fs_parse_result result;
+ 
+-			stats = match_strdup(&args[0]);
+-			if (!stats)
+-				return -ENOMEM;
++	opt = fs_parse(fc, binderfs_fs_parameters, param, &result);
++	if (opt < 0)
++		return opt;
+ 
+-			if (strcmp(stats, "global") != 0) {
+-				kfree(stats);
+-				return -EINVAL;
+-			}
++	switch (opt) {
++	case Opt_max:
++		if (result.uint_32 > BINDERFS_MAX_MINOR)
++			return invalfc(fc, "Bad value for '%s'", param->key);
+ 
+-			opts->stats_mode = STATS_GLOBAL;
+-			kfree(stats);
+-			break;
+-		default:
+-			pr_err("Invalid mount options\n");
+-			return -EINVAL;
+-		}
++		ctx->max = result.uint_32;
++		break;
++	case Opt_stats_mode:
++		if (!capable(CAP_SYS_ADMIN))
++			return -EPERM;
++
++		ctx->stats_mode = result.uint_32;
++		break;
++	default:
++		return invalfc(fc, "Unsupported parameter '%s'", param->key);
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int binderfs_remount(struct super_block *sb, int *flags, char *data)
++static int binderfs_fs_context_reconfigure(struct fs_context *fc)
+ {
+-	int prev_stats_mode, ret;
+-	struct binderfs_info *info = sb->s_fs_info;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
++	struct binderfs_info *info = BINDERFS_SB(fc->root->d_sb);
+ 
+-	prev_stats_mode = info->mount_opts.stats_mode;
+-	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
+-	if (ret)
+-		return ret;
+-
+-	if (prev_stats_mode != info->mount_opts.stats_mode) {
+-		pr_err("Binderfs stats mode cannot be changed during a remount\n");
+-		info->mount_opts.stats_mode = prev_stats_mode;
+-		return -EINVAL;
+-	}
++	if (info->mount_opts.stats_mode != ctx->stats_mode)
++		return invalfc(fc, "Binderfs stats mode cannot be changed during a remount");
+ 
++	info->mount_opts.stats_mode = ctx->stats_mode;
++	info->mount_opts.max = ctx->max;
+ 	return 0;
+ }
+ 
+-static int binderfs_show_mount_opts(struct seq_file *seq, struct dentry *root)
++static int binderfs_show_options(struct seq_file *seq, struct dentry *root)
+ {
+-	struct binderfs_info *info;
++	struct binderfs_info *info = BINDERFS_SB(root->d_sb);
+ 
+-	info = root->d_sb->s_fs_info;
+ 	if (info->mount_opts.max <= BINDERFS_MAX_MINOR)
+ 		seq_printf(seq, ",max=%d", info->mount_opts.max);
+-	if (info->mount_opts.stats_mode == STATS_GLOBAL)
++
++	switch (info->mount_opts.stats_mode) {
++	case binderfs_stats_mode_unset:
++		break;
++	case binderfs_stats_mode_global:
+ 		seq_printf(seq, ",stats=global");
++		break;
++	}
+ 
+ 	return 0;
+ }
+ 
++static void binderfs_put_super(struct super_block *sb)
++{
++	struct binderfs_info *info = sb->s_fs_info;
++
++	if (info && info->ipc_ns)
++		put_ipc_ns(info->ipc_ns);
++
++	kfree(info);
++	sb->s_fs_info = NULL;
++}
++
+ static const struct super_operations binderfs_super_ops = {
+ 	.evict_inode    = binderfs_evict_inode,
+-	.remount_fs	= binderfs_remount,
+-	.show_options	= binderfs_show_mount_opts,
++	.show_options	= binderfs_show_options,
+ 	.statfs         = simple_statfs,
++	.put_super	= binderfs_put_super,
+ };
+ 
+ static inline bool is_binderfs_control_device(const struct dentry *dentry)
+@@ -653,10 +644,11 @@ static int init_binder_logs(struct super_block *sb)
+ 	return ret;
+ }
+ 
+-static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
++static int binderfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	int ret;
+ 	struct binderfs_info *info;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
+ 	struct inode *inode = NULL;
+ 	struct binderfs_device device_info = { 0 };
+ 	const char *name;
+@@ -689,16 +681,14 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	info->ipc_ns = get_ipc_ns(current->nsproxy->ipc_ns);
+ 
+-	ret = binderfs_parse_mount_opts(data, &info->mount_opts);
+-	if (ret)
+-		return ret;
+-
+ 	info->root_gid = make_kgid(sb->s_user_ns, 0);
+ 	if (!gid_valid(info->root_gid))
+ 		info->root_gid = GLOBAL_ROOT_GID;
+ 	info->root_uid = make_kuid(sb->s_user_ns, 0);
+ 	if (!uid_valid(info->root_uid))
+ 		info->root_uid = GLOBAL_ROOT_UID;
++	info->mount_opts.max = ctx->max;
++	info->mount_opts.stats_mode = ctx->stats_mode;
+ 
+ 	inode = new_inode(sb);
+ 	if (!inode)
+@@ -730,36 +720,54 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+ 			name++;
+ 	}
+ 
+-	if (info->mount_opts.stats_mode == STATS_GLOBAL)
++	if (info->mount_opts.stats_mode == binderfs_stats_mode_global)
+ 		return init_binder_logs(sb);
+ 
+ 	return 0;
+ }
+ 
+-static struct dentry *binderfs_mount(struct file_system_type *fs_type,
+-				     int flags, const char *dev_name,
+-				     void *data)
++static int binderfs_fs_context_get_tree(struct fs_context *fc)
+ {
+-	return mount_nodev(fs_type, flags, data, binderfs_fill_super);
++	return get_tree_nodev(fc, binderfs_fill_super);
+ }
+ 
+-static void binderfs_kill_super(struct super_block *sb)
++static void binderfs_fs_context_free(struct fs_context *fc)
+ {
+-	struct binderfs_info *info = sb->s_fs_info;
++	struct binderfs_mount_opts *ctx = fc->fs_private;
+ 
+-	kill_litter_super(sb);
++	kfree(ctx);
++}
+ 
+-	if (info && info->ipc_ns)
+-		put_ipc_ns(info->ipc_ns);
++static const struct fs_context_operations binderfs_fs_context_ops = {
++	.free		= binderfs_fs_context_free,
++	.get_tree	= binderfs_fs_context_get_tree,
++	.parse_param	= binderfs_fs_context_parse_param,
++	.reconfigure	= binderfs_fs_context_reconfigure,
++};
+ 
+-	kfree(info);
++static int binderfs_init_fs_context(struct fs_context *fc)
++{
++	struct binderfs_mount_opts *ctx = fc->fs_private;
++
++	ctx = kzalloc(sizeof(struct binderfs_mount_opts), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->max = BINDERFS_MAX_MINOR;
++	ctx->stats_mode = binderfs_stats_mode_unset;
++
++	fc->fs_private = ctx;
++	fc->ops = &binderfs_fs_context_ops;
++
++	return 0;
+ }
+ 
+ static struct file_system_type binder_fs_type = {
+-	.name		= "binder",
+-	.mount		= binderfs_mount,
+-	.kill_sb	= binderfs_kill_super,
+-	.fs_flags	= FS_USERNS_MOUNT,
++	.name			= "binder",
++	.init_fs_context	= binderfs_init_fs_context,
++	.parameters		= binderfs_fs_parameters,
++	.kill_sb		= kill_litter_super,
++	.fs_flags		= FS_USERNS_MOUNT,
+ };
+ 
+ int __init init_binderfs(void)
+
+base-commit: f17f06a0c7794d3a7c2425663738823354447472
+-- 
+2.25.1
+
