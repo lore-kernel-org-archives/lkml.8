@@ -2,369 +2,171 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D4C5ACC0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB267C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9872E20752
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F192074C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pNjce3pT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="khnySYO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgCMWuO (ORCPT
+        id S1727131AbgCMW7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:50:14 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35566 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbgCMWuL (ORCPT
+        Fri, 13 Mar 2020 18:59:52 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33952 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgCMW7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 18:50:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DMo55q066111;
-        Fri, 13 Mar 2020 17:50:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584139805;
-        bh=Ap1wbP9Yro6m4GwNz6sgCmUmSSxitzqx2d/1IhoQstE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pNjce3pTRcuGsgZbM7Hyonh5knENDKHwrpfJmFUxysLDS/CKRdRl4YMxrdPPlF/Pl
-         zUIHX2n1r2iAXpyLG5szryJ9M3uFU1iVw5008nL1BqsEvAQy2iqcnJ2EcejK7gZy71
-         qoTjMepIeOnIbBjfLSm3W0CUwbmPHirWDUM0gJt0=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DMo5Lc049357;
-        Fri, 13 Mar 2020 17:50:05 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 17:50:05 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 17:50:05 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DMo3eU009689;
-        Fri, 13 Mar 2020 17:50:04 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 08/11] net: ethernet: ti: cpts: move rx timestamp processing to ptp worker only
-Date:   Sat, 14 Mar 2020 00:49:11 +0200
-Message-ID: <20200313224914.5997-9-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313224914.5997-1-grygorii.strashko@ti.com>
-References: <20200313224914.5997-1-grygorii.strashko@ti.com>
+        Fri, 13 Mar 2020 18:59:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id i19so9218026lfl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 15:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HWS5+OO45KCQA5QZcdbsnGmNQp6lkquwGjGiNv3JKdc=;
+        b=khnySYO5WT1cMupKaoHzf9IZWc4QaM2lpqEdF+qwWmzriNscqK+yj6geYC3zyZz1yX
+         eYvcxPyIqm2CkjaMV0npdrtMNaGmMxppzqrHlBhWBGqOn8jvhj6QcLe640EKzAeKCKy6
+         QUMRttpypFL1KkKTr+zJkUsennbvBepBwtSTCt5nyVus4AF0Do/3rpuf/L74ypfeMXeP
+         AOVKJVPkUATBwAWlR41/YBv+WGrGtuE9alu1Lsgc2zQh+ThPiO6RiM+tVQtRkgGQHB5w
+         ZGDXYle2IcDAzxoHToMj//L1/yGQCqCYmOtRkTLYXJNG1g1cppIL/9bZvID4RqBWIFXv
+         TemA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HWS5+OO45KCQA5QZcdbsnGmNQp6lkquwGjGiNv3JKdc=;
+        b=tXDfxigUSw/gV4Pn0fcyfPmX70KGH8Mpwne0xwkyuyomYjl6/8NynyMmYV0GVTDzgo
+         9dHy0jH+FcFFJZbqOm+FGlI4TtmS5DAvuaTtYcbWzimTjDIE2WlUUT+yqyTY6AEmbyn8
+         TpEuWsV76qIr+zUdEYH0TAPVjIKB864g1VO+whkp1mI3/Ga9oCnECF2aeVRSYjTQwpPq
+         PrlA3KUJI2GMEGVq+hMlgNWGk/r8Pqh8iw30hBllTrObj2aV9xFe8gQvg+knj7LI/yXj
+         rIBekGeIXiBhIsS6UHgjCPX1T/IAn0UAvoLFPnjhcM9I0G+xPKnTTFVIgLb5cpG2tf8i
+         /miQ==
+X-Gm-Message-State: ANhLgQ1kxSMDPC95bYiCMFQF90sBEdY5h5py3ibgkBWqxkKZM19P7pMF
+        ZSTWl0DFQL0xzyRdsa6qJgoxOgjRYwEw52rIblaD
+X-Google-Smtp-Source: ADFU+vv8q3Bmu7rpYOUbo3wmyVU8hXCXnpf62lwEBTwRg1ToKZ1AfJqrXdIt/3KcZpky7g7yjeEsJ1m2/Jrl9SGeIz4=
+X-Received: by 2002:ac2:43ce:: with SMTP id u14mr9872354lfl.100.1584140388874;
+ Fri, 13 Mar 2020 15:59:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
+ <20200302235044.59163-1-zzyiwei@google.com> <20200303090703.32b2ad68@gandalf.local.home>
+ <20200303141505.GA3405@kroah.com> <20200303093104.260b1946@gandalf.local.home>
+ <20200303155639.GA437469@kroah.com>
+In-Reply-To: <20200303155639.GA437469@kroah.com>
+From:   Yiwei Zhang <zzyiwei@google.com>
+Date:   Fri, 13 Mar 2020 15:59:37 -0700
+Message-ID: <CAKT=dDnT_d-C2jfcgD+OFvJ=vkqxvQDmg3nAErvs9tXS6iifpw@mail.gmail.com>
+Subject: Re: [PATCH v4] gpu/trace: add a gpu total memory usage tracepoint
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     mingo@redhat.com, elder@kernel.org, federico.vaga@cern.ch,
+        tony.luck@intel.com, vilhelm.gray@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>, tglx@linutronix.de,
+        yamada.masahiro@socionext.com, paul.walmsley@sifive.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dariusz Marcinkiewicz <darekm@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        linux-kernel@vger.kernel.org,
+        Prahlad Kilambi <prahladk@google.com>,
+        android-kernel <android-kernel@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once CPTS IRQ will be enabled the CPTS irq handler may compete with netif
-RX sofirq path and so RX timestamp might not be ready at the moment packet
-is processed. As result, packet has to be deferred and processed later.
+On Tue, Mar 3, 2020 at 7:56 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 03, 2020 at 09:31:04AM -0500, Steven Rostedt wrote:
+> > On Tue, 3 Mar 2020 15:15:05 +0100
+> > Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > > On Tue, Mar 03, 2020 at 09:07:03AM -0500, Steven Rostedt wrote:
+> > > >
+> > > > Greg,
+> > > >
+> > > > You acked this patch before, did you want to ack it again, and I'll take it
+> > > > in my tree?
+> > >
+> > > Sure, but where did my ack go?  What changed from previous versions???
+> > >
+> > > Anyway, the patch seems sane enough to me:
+> > >
+> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > Your previous ack was was here:
+> >
+> >   https://lore.kernel.org/lkml/20200213004029.GA2500609@kroah.com/
+>
+> Yeah, I remember that.
+>
+> > And the patch changed since then (although, only cosmetically), so your ack
+> > was removed. The diff between this patch and the patch you acked is this:
+> >
+> > -- Steve
+> >
+> > diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
+> > index 3b632a2b5100..1897822a9150 100644
+> > --- a/include/trace/events/gpu_mem.h
+> > +++ b/include/trace/events/gpu_mem.h
+> > @@ -28,34 +28,27 @@
+> >   *
+> >   */
+> >  TRACE_EVENT(gpu_mem_total,
+> > -     TP_PROTO(
+> > -             uint32_t gpu_id,
+> > -             uint32_t pid,
+> > -             uint64_t size
+> > -     ),
+> > -     TP_ARGS(
+> > -             gpu_id,
+> > -             pid,
+> > -             size
+> > -     ),
+> > +
+> > +     TP_PROTO(uint32_t gpu_id, uint32_t pid, uint64_t size),
+> > +
+> > +     TP_ARGS(gpu_id, pid, size),
+> > +
+> >       TP_STRUCT__entry(
+> >               __field(uint32_t, gpu_id)
+> >               __field(uint32_t, pid)
+> >               __field(uint64_t, size)
+> >       ),
+> > +
+> >       TP_fast_assign(
+> >               __entry->gpu_id = gpu_id;
+> >               __entry->pid = pid;
+> >               __entry->size = size;
+> >       ),
+> > -     TP_printk(
+> > -             "gpu_id=%u "
+> > -             "pid=%u "
+> > -             "size=%llu",
+> > +
+> > +     TP_printk("gpu_id=%u pid=%u size=%llu",
+> >               __entry->gpu_id,
+> >               __entry->pid,
+> > -             __entry->size
+> > -     )
+> > +             __entry->size)
+> >  );
+> >
+> >  #endif /* _TRACE_GPU_MEM_H */
+>
+> thanks for the diff, my ack still stands.
+>
+> greg k-h
 
-This patch moves RX timestamp processing tx timestamp processing to PTP
-worker always the same way as it's been done for TX timestamps.
+Hi guys, thanks for all the help throughout this. After struggling a
+while, I failed to figure out when the next merge window is. Could you
+help point me to the release calendar or something?  Thanks again!
 
-  napi_rx->cpts_rx_timestamp
-   if ptp_packet then
-      push to rxq
-      ptp_schedule_worker()
-
-  do_aux_work->cpts_overflow_check
-    cpts_process_events()
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c     |  14 +--
- drivers/net/ethernet/ti/cpsw_new.c |  13 ++-
- drivers/net/ethernet/ti/cpts.c     | 132 ++++++++++++++++++-----------
- drivers/net/ethernet/ti/cpts.h     |   3 +-
- 4 files changed, 104 insertions(+), 58 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 6ae4a72e6f43..a27cb1b2190f 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -433,17 +433,21 @@ static void cpsw_rx_handler(void *token, int len, int status)
- 	skb->dev = ndev;
- 	if (status & CPDMA_RX_VLAN_ENCAP)
- 		cpsw_rx_vlan_encap(skb);
--	if (priv->rx_ts_enabled)
--		cpts_rx_timestamp(cpsw->cpts, skb);
--	skb->protocol = eth_type_trans(skb, ndev);
- 
- 	/* unmap page as no netstack skb page recycling */
- 	page_pool_release_page(pool, page);
--	netif_receive_skb(skb);
--
- 	ndev->stats.rx_bytes += len;
- 	ndev->stats.rx_packets++;
- 
-+	ret = 0;
-+	if (priv->rx_ts_enabled)
-+		ret = cpts_rx_timestamp(cpsw->cpts, skb);
-+
-+	if (!ret) {
-+		skb->protocol = eth_type_trans(skb, ndev);
-+		netif_receive_skb(skb);
-+	}
-+
- requeue:
- 	xmeta = page_address(new_page) + CPSW_XMETA_OFFSET;
- 	xmeta->ndev = ndev;
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 71215db7934b..2ee685493147 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -375,17 +375,22 @@ static void cpsw_rx_handler(void *token, int len, int status)
- 	skb->dev = ndev;
- 	if (status & CPDMA_RX_VLAN_ENCAP)
- 		cpsw_rx_vlan_encap(skb);
--	if (priv->rx_ts_enabled)
--		cpts_rx_timestamp(cpsw->cpts, skb);
--	skb->protocol = eth_type_trans(skb, ndev);
- 
- 	/* unmap page as no netstack skb page recycling */
- 	page_pool_release_page(pool, page);
--	netif_receive_skb(skb);
- 
- 	ndev->stats.rx_bytes += len;
- 	ndev->stats.rx_packets++;
- 
-+	ret = 0;
-+	if (priv->rx_ts_enabled)
-+		ret = cpts_rx_timestamp(cpsw->cpts, skb);
-+
-+	if (!ret) {
-+		skb->protocol = eth_type_trans(skb, ndev);
-+		netif_receive_skb(skb);
-+	}
-+
- requeue:
- 	xmeta = page_address(new_page) + CPSW_XMETA_OFFSET;
- 	xmeta->ndev = ndev;
-diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index 71f9bd410e4a..fcfd578b81ed 100644
---- a/drivers/net/ethernet/ti/cpts.c
-+++ b/drivers/net/ethernet/ti/cpts.c
-@@ -311,6 +311,66 @@ static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
- 	return found;
- }
- 
-+static bool cpts_match_rx_ts(struct cpts *cpts, struct cpts_event *event)
-+{
-+	struct sk_buff_head rxq_list;
-+	struct sk_buff_head tempq;
-+	struct sk_buff *skb, *tmp;
-+	unsigned long flags;
-+	bool found = false;
-+	u32 mtype_seqid;
-+
-+	mtype_seqid = event->high &
-+		      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
-+		       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
-+		       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
-+
-+	__skb_queue_head_init(&rxq_list);
-+	__skb_queue_head_init(&tempq);
-+
-+	spin_lock_irqsave(&cpts->rxq.lock, flags);
-+	skb_queue_splice_init(&cpts->rxq, &rxq_list);
-+	spin_unlock_irqrestore(&cpts->rxq.lock, flags);
-+
-+	skb_queue_walk_safe(&rxq_list, skb, tmp) {
-+		struct skb_shared_hwtstamps *ssh;
-+		struct cpts_skb_cb_data *skb_cb =
-+					(struct cpts_skb_cb_data *)skb->cb;
-+
-+		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
-+			__skb_unlink(skb, &rxq_list);
-+			ssh = skb_hwtstamps(skb);
-+			memset(ssh, 0, sizeof(*ssh));
-+			ssh->hwtstamp = ns_to_ktime(event->timestamp);
-+			found = true;
-+			dev_dbg(cpts->dev, "match rx timestamp mtype_seqid %08x\n",
-+				mtype_seqid);
-+			__skb_queue_tail(&tempq, skb);
-+			break;
-+		}
-+
-+		if (time_after(jiffies, skb_cb->tmo)) {
-+			/* timeout any expired skbs */
-+			dev_dbg(cpts->dev, "expiring rx timestamp\n");
-+			__skb_unlink(skb, &rxq_list);
-+			__skb_queue_tail(&tempq, skb);
-+		}
-+	}
-+
-+	spin_lock_irqsave(&cpts->rxq.lock, flags);
-+	skb_queue_splice(&rxq_list, &cpts->rxq);
-+	spin_unlock_irqrestore(&cpts->rxq.lock, flags);
-+
-+	local_bh_disable();
-+	while ((skb = __skb_dequeue(&tempq))) {
-+		skb->protocol = eth_type_trans(skb, skb->dev);
-+		netif_receive_skb(skb);
-+	}
-+	local_bh_enable();
-+
-+	return found;
-+}
-+
- static void cpts_process_events(struct cpts *cpts)
- {
- 	struct list_head *this, *next;
-@@ -318,6 +378,7 @@ static void cpts_process_events(struct cpts *cpts)
- 	unsigned long flags;
- 	LIST_HEAD(events);
- 	LIST_HEAD(events_free);
-+	int type;
- 
- 	spin_lock_irqsave(&cpts->lock, flags);
- 	list_splice_init(&cpts->events, &events);
-@@ -325,8 +386,18 @@ static void cpts_process_events(struct cpts *cpts)
- 
- 	list_for_each_safe(this, next, &events) {
- 		event = list_entry(this, struct cpts_event, list);
--		if (cpts_match_tx_ts(cpts, event) ||
--		    time_after(jiffies, event->tmo)) {
-+		type = event_type(event);
-+
-+		if (type == CPTS_EV_TX &&
-+		    (cpts_match_tx_ts(cpts, event) ||
-+		     time_after(jiffies, event->tmo))) {
-+			list_del_init(&event->list);
-+			list_add(&event->list, &events_free);
-+		}
-+
-+		if (type == CPTS_EV_RX &&
-+		    (cpts_match_rx_ts(cpts, event) ||
-+		     time_after(jiffies, event->tmo))) {
- 			list_del_init(&event->list);
- 			list_add(&event->list, &events_free);
- 		}
-@@ -422,64 +493,27 @@ static int cpts_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
- 	return 1;
- }
- 
--static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb,
--			int ev_type, u32 skb_mtype_seqid)
--{
--	struct list_head *this, *next;
--	struct cpts_event *event;
--	unsigned long flags;
--	u32 mtype_seqid;
--	u64 ns = 0;
--
--	cpts_fifo_read(cpts, -1);
--	spin_lock_irqsave(&cpts->lock, flags);
--	list_for_each_safe(this, next, &cpts->events) {
--		event = list_entry(this, struct cpts_event, list);
--		if (event_expired(event)) {
--			list_del_init(&event->list);
--			list_add(&event->list, &cpts->pool);
--			continue;
--		}
--
--		mtype_seqid = event->high &
--			      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
--			       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
--			       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
--
--		if (mtype_seqid == skb_mtype_seqid) {
--			ns = event->timestamp;
--			list_del_init(&event->list);
--			list_add(&event->list, &cpts->pool);
--			break;
--		}
--	}
--	spin_unlock_irqrestore(&cpts->lock, flags);
--
--	return ns;
--}
--
--void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb)
-+int cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb)
- {
- 	struct cpts_skb_cb_data *skb_cb = (struct cpts_skb_cb_data *)skb->cb;
--	struct skb_shared_hwtstamps *ssh;
- 	int ret;
--	u64 ns;
- 
- 	ret = cpts_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
- 	if (!ret)
--		return;
-+		return 0;
- 
- 	skb_cb->skb_mtype_seqid |= (CPTS_EV_RX << EVENT_TYPE_SHIFT);
- 
- 	dev_dbg(cpts->dev, "%s mtype seqid %08x\n",
- 		__func__, skb_cb->skb_mtype_seqid);
- 
--	ns = cpts_find_ts(cpts, skb, CPTS_EV_RX, skb_cb->skb_mtype_seqid);
--	if (!ns)
--		return;
--	ssh = skb_hwtstamps(skb);
--	memset(ssh, 0, sizeof(*ssh));
--	ssh->hwtstamp = ns_to_ktime(ns);
-+	/* Always defer RX TS processing to PTP worker */
-+	/* get the timestamp for timeouts */
-+	skb_cb->tmo = jiffies + msecs_to_jiffies(CPTS_SKB_RX_TX_TMO);
-+	skb_queue_tail(&cpts->rxq, skb);
-+	ptp_schedule_worker(cpts->clock, 0);
-+
-+	return 1;
- }
- EXPORT_SYMBOL_GPL(cpts_rx_timestamp);
- 
-@@ -514,6 +548,7 @@ int cpts_register(struct cpts *cpts)
- 	int err, i;
- 
- 	skb_queue_head_init(&cpts->txq);
-+	skb_queue_head_init(&cpts->rxq);
- 	INIT_LIST_HEAD(&cpts->events);
- 	INIT_LIST_HEAD(&cpts->pool);
- 	for (i = 0; i < CPTS_MAX_EVENTS; i++)
-@@ -556,6 +591,7 @@ void cpts_unregister(struct cpts *cpts)
- 
- 	/* Drop all packet */
- 	skb_queue_purge(&cpts->txq);
-+	skb_queue_purge(&cpts->rxq);
- 
- 	clk_disable(cpts->refclk);
- }
-diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
-index f16e14d67f5f..993b4cfa4e86 100644
---- a/drivers/net/ethernet/ti/cpts.h
-+++ b/drivers/net/ethernet/ti/cpts.h
-@@ -115,12 +115,13 @@ struct cpts {
- 	struct cpts_event pool_data[CPTS_MAX_EVENTS];
- 	unsigned long ov_check_period;
- 	struct sk_buff_head txq;
-+	struct sk_buff_head rxq;
- 	u64 cur_timestamp;
- 	u32 mult_new;
- 	struct mutex ptp_clk_mutex; /* sync PTP interface and worker */
- };
- 
--void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
-+int cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
- void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb);
- int cpts_register(struct cpts *cpts);
- void cpts_unregister(struct cpts *cpts);
--- 
-2.17.1
-
+Best,
+Yiwei
