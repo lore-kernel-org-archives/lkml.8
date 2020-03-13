@@ -2,73 +2,121 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A02C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39108C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58A7206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0683A20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:50:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L46dV9k/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCMTtH (ORCPT
+        id S1727256AbgCMTuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:49:07 -0400
-Received: from www62.your-server.de ([213.133.104.62]:43112 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgCMTtH (ORCPT
+        Fri, 13 Mar 2020 15:50:17 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42691 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMTuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:49:07 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jCqIr-0005FL-2P; Fri, 13 Mar 2020 20:49:05 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jCqIq-000FUP-NU; Fri, 13 Mar 2020 20:49:04 +0100
-Subject: Re: [PATCH 1/8] bpf: Add missing annotations for __bpf_prog_enter()
- and __bpf_prog_exit()
-To:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-References: <0/8> <20200311010908.42366-1-jbi.octave@gmail.com>
- <20200311010908.42366-2-jbi.octave@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <f0d5133d-91af-19fd-19c5-aa0b879c1db8@iogearbox.net>
-Date:   Fri, 13 Mar 2020 20:49:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 13 Mar 2020 15:50:17 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 13so1769396oiy.9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 12:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OccFZlfpxWSnstsDfX/t5uC4ktJwbst7Ql+mBPW6PVU=;
+        b=L46dV9k/PzM9QibypV4eC4knKS0FospEIgjO0pKLmL165/ljUyO1wMUpMarNZMSC0L
+         DFLjnQTReeU4uRUinvMYBZKAvzuO5MS7vAiSrMDO6bnlnkunbTzqXVl407N0L2OsHPV5
+         ReXdVu7++HhTBhMlqfLP+Xq1corIFcIt2I6cVXmVUnRmr22xwa0RNLQs4sXymJxNwJS/
+         J00GoDl61Vc139H+EDhsYtgQ9KZgNmCDKXFi1ozNo0nmG+Fen/RZf59UG3dH1/3031AV
+         xkoFy2+8AddbRkZVnrP2Egjeo7/JRe+NuUJTjSoX2eyNGLab2W1sTS8rYgYeqAeOldyC
+         /pUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OccFZlfpxWSnstsDfX/t5uC4ktJwbst7Ql+mBPW6PVU=;
+        b=Y7JxK9QPPNCLKdTCDRdG7mZ39S5AJVXOZCPfmGPuC+1RfZOhH2iBuky7Ea0orA010h
+         PIp1HbyTvlFWgpxy+t7S6fPBI8EcqWd7LD6YqiUUK956/z6yGizNoPYWQP48lGe8aJKO
+         sZB1IBvetH0RNzKSGmy14o0S5moOBUKfZj233NKTOSSOYYDb3SjSgSsv8mVShMRQarvq
+         hYulL3dzlIAUa/Xz/905PS/vugnEPoeIyt6QnSQNvOha8cNEtczEDrDwWuNbEr0ksFiE
+         P/AuONWLyvXwkKyK4xrF3DY/fo5wqXYjN7dS4/3h32K+ZpP95iwE7bv/nMWQJx3y4CAE
+         lb5w==
+X-Gm-Message-State: ANhLgQ0EN5j6rZ2toxyi1l29dAd+7ox/hnw7sqSbRr7fbufAL6dUaE4m
+        WaXHICWlFi1rmhUAvCpulDaLR7JrBXP/1lVKSeG/7w==
+X-Google-Smtp-Source: ADFU+vuK5rsLC27IKgedSMZOd3/7MdVEra22iRgF8H1TVNIMVjy3OhlzxllzrbKh/L8EAM3AjLpbkW+q10p4CfDXGys=
+X-Received: by 2002:aca:ed54:: with SMTP id l81mr8669490oih.69.1584129015069;
+ Fri, 13 Mar 2020 12:50:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200311010908.42366-2-jbi.octave@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25750/Fri Mar 13 14:03:09 2020)
+References: <1584124476-76534-1-git-send-email-yang.shi@linux.alibaba.com>
+ <CALvZod4W9kkh578Kix7+M9Jkwm1sxx2zvvPG+0Us3R8bEkpEpg@mail.gmail.com> <520b3295-9fb8-04a7-6215-9bfda4f1a268@linux.alibaba.com>
+In-Reply-To: <520b3295-9fb8-04a7-6215-9bfda4f1a268@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 13 Mar 2020 12:50:04 -0700
+Message-ID: <CALvZod6VQ4PWNh=LKifx-8CfUMeeafE0ZoEswG3x2pXxKbRAxA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm: swap: make page_evictable() inline
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 2:09 AM, Jules Irenge wrote:
-> Sparse reports a warning at __bpf_prog_enter() and __bpf_prog_exit()
-> 
-> warning: context imbalance in __bpf_prog_enter() - wrong count at exit
-> warning: context imbalance in __bpf_prog_exit() - unexpected unlock
-> 
-> The root cause is the missing annotation at __bpf_prog_enter()
-> and __bpf_prog_exit()
-> 
-> Add the missing __acquires(RCU) annotation
-> Add the missing __releases(RCU) annotation
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+On Fri, Mar 13, 2020 at 12:46 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>
+>
+>
+> On 3/13/20 12:33 PM, Shakeel Butt wrote:
+> > On Fri, Mar 13, 2020 at 11:34 AM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+> >> When backporting commit 9c4e6b1a7027 ("mm, mlock, vmscan: no more
+> >> skipping pagevecs") to our 4.9 kernel, our test bench noticed around 10%
+> >> down with a couple of vm-scalability's test cases (lru-file-readonce,
+> >> lru-file-readtwice and lru-file-mmap-read).  I didn't see that much down
+> >> on my VM (32c-64g-2nodes).  It might be caused by the test configuration,
+> >> which is 32c-256g with NUMA disabled and the tests were run in root memcg,
+> >> so the tests actually stress only one inactive and active lru.  It
+> >> sounds not very usual in mordern production environment.
+> >>
+> >> That commit did two major changes:
+> >> 1. Call page_evictable()
+> >> 2. Use smp_mb to force the PG_lru set visible
+> >>
+> >> It looks they contribute the most overhead.  The page_evictable() is a
+> >> function which does function prologue and epilogue, and that was used by
+> >> page reclaim path only.  However, lru add is a very hot path, so it
+> >> sounds better to make it inline.  However, it calls page_mapping() which
+> >> is not inlined either, but the disassemble shows it doesn't do push and
+> >> pop operations and it sounds not very straightforward to inline it.
+> >>
+> >> Other than this, it sounds smp_mb() is not necessary for x86 since
+> >> SetPageLRU is atomic which enforces memory barrier already, replace it
+> >> with smp_mb__after_atomic() in the following patch.
+> >>
+> >> With the two fixes applied, the tests can get back around 5% on that
+> >> test bench and get back normal on my VM.  Since the test bench
+> >> configuration is not that usual and I also saw around 6% up on the
+> >> latest upstream, so it sounds good enough IMHO.
+> >>
+> >> The below is test data (lru-file-readtwice throughput) against the v5.6-rc4:
+> >>          mainline        w/ inline fix
+> >>            150MB            154MB
+> >>
+> > What is the test setup for the above experiment? I would like to get a repro.
+>
+> Just startup a VM with two nodes, then run case-lru-file-readtwice or
+> case-lru-file-readonce in vm-scalability in root memcg or with memcg
+> disabled.  Then get the average throughput (dd result) from the test.
+> Our test bench uses the script from lkp, but I just ran it manually.
+> Single node VM should be more obvious showed in my test.
+>
 
-Applied this one to bpf-next, thanks!
+Thanks, I will try this on a real machine.
