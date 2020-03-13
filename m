@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49FFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5BEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C5A2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F802074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgCMX5P (ORCPT
+        id S1727837AbgCMX5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:57:15 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50006 "EHLO
+        Fri, 13 Mar 2020 19:57:20 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50026 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgCMXyB (ORCPT
+        with ESMTP id S1727735AbgCMXyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Mar 2020 19:54:01 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7r-00B6Zh-7S; Fri, 13 Mar 2020 23:53:59 +0000
+        id 1jCu7r-00B6aC-S8; Fri, 13 Mar 2020 23:53:59 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 16/69] fold handle_mounts() into step_into()
-Date:   Fri, 13 Mar 2020 23:53:04 +0000
-Message-Id: <20200313235357.2646756-16-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 21/69] merging pick_link() with get_link(), part 3
+Date:   Fri, 13 Mar 2020 23:53:09 +0000
+Message-Id: <20200313235357.2646756-21-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
@@ -42,123 +42,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-The following is true:
-	* calls of handle_mounts() and step_into() are always
-paired in sequences like
-	err = handle_mounts(nd, dentry, &path, &inode, &seq);
-	if (unlikely(err < 0))
-		return err;
-	err = step_into(nd, &path, flags, inode, seq);
-	* in all such sequences path is uninitialized before and
-unused after this pair of calls
-	* in all such sequences inode and seq are unused afterwards.
+After a pure jump ("/" or procfs-style symlink) we don't need to
+hold the link anymore.  link_path_walk() dropped it if such case
+had been detected, lookup_last/do_last() (i.e. old trailing_symlink())
+left it on the stack - it ended up calling terminate_walk() shortly
+anyway, which would've purged the entire stack.
 
-So the call of handle_mounts() can be shifted inside step_into(),
-turning 'path' into a local variable in the combined function.
+Do it in get_link() itself instead.  Simpler logics that way...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 41 +++++++++++++++--------------------------
- 1 file changed, 15 insertions(+), 26 deletions(-)
+ fs/namei.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index e47b376cf442..8f0dea52e9dc 100644
+index c4678f81113a..edb37272f2cc 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1835,29 +1835,33 @@ enum {WALK_FOLLOW = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
-  * so we keep a cache of "no, this doesn't need follow_link"
-  * for the common case.
-  */
--static inline int step_into(struct nameidata *nd, struct path *path,
--			    int flags, struct inode *inode, unsigned seq)
-+static int step_into(struct nameidata *nd, int flags,
-+		     struct dentry *dentry, struct inode *inode, unsigned seq)
- {
--	if (likely(!d_is_symlink(path->dentry)) ||
-+	struct path path;
-+	int err = handle_mounts(nd, dentry, &path, &inode, &seq);
-+
-+	if (err < 0)
-+		return err;
-+	if (likely(!d_is_symlink(path.dentry)) ||
- 	   !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
- 	   flags & WALK_NOFOLLOW) {
- 		/* not a symlink or should not follow */
--		path_to_nameidata(path, nd);
-+		path_to_nameidata(&path, nd);
- 		nd->inode = inode;
- 		nd->seq = seq;
- 		return 0;
+@@ -1154,7 +1154,9 @@ const char *get_link(struct nameidata *nd)
+ 		} else {
+ 			res = get(dentry, inode, &last->done);
+ 		}
+-		if (IS_ERR_OR_NULL(res))
++		if (!res)
++			goto all_done;
++		if (IS_ERR(res))
+ 			return res;
  	}
- 	/* make sure that d_is_symlink above matches inode */
- 	if (nd->flags & LOOKUP_RCU) {
--		if (read_seqcount_retry(&path->dentry->d_seq, seq))
-+		if (read_seqcount_retry(&path.dentry->d_seq, seq))
- 			return -ECHILD;
+ 	if (*res == '/') {
+@@ -1164,9 +1166,11 @@ const char *get_link(struct nameidata *nd)
+ 		while (unlikely(*++res == '/'))
+ 			;
  	}
--	return pick_link(nd, path, inode, seq);
-+	return pick_link(nd, &path, inode, seq);
- }
- 
- static int walk_component(struct nameidata *nd, int flags)
- {
--	struct path path;
- 	struct dentry *dentry;
- 	struct inode *inode;
- 	unsigned seq;
-@@ -1883,11 +1887,7 @@ static int walk_component(struct nameidata *nd, int flags)
- 	}
- 	if (!(flags & WALK_MORE) && nd->depth)
- 		put_link(nd);
--
--	err = handle_mounts(nd, dentry, &path, &inode, &seq);
--	if (unlikely(err < 0))
--			return err;
--	return step_into(nd, &path, flags, inode, seq);
-+	return step_into(nd, flags, dentry, inode, seq);
+-	if (!*res)
+-		res = NULL;
+-	return res;
++	if (*res)
++		return res;
++all_done: // pure jump
++	put_link(nd);
++	return NULL;
  }
  
  /*
-@@ -2354,17 +2354,10 @@ static inline int lookup_last(struct nameidata *nd)
+@@ -2211,11 +2215,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
  
- static int handle_lookup_down(struct nameidata *nd)
- {
--	struct path path;
--	struct inode *inode = nd->inode;
--	unsigned seq = nd->seq;
--	int err;
--
- 	if (!(nd->flags & LOOKUP_RCU))
- 		dget(nd->path.dentry);
--	err = handle_mounts(nd, nd->path.dentry, &path, &inode, &seq);
--	if (unlikely(err < 0))
--		return err;
--	return step_into(nd, &path, WALK_NOFOLLOW, inode, seq);
-+	return step_into(nd, WALK_NOFOLLOW,
-+			nd->path.dentry, nd->inode, nd->seq);
- }
- 
- /* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
-@@ -3281,7 +3274,6 @@ static int do_last(struct nameidata *nd,
- 	int acc_mode = op->acc_mode;
- 	unsigned seq;
- 	struct inode *inode;
--	struct path path;
- 	struct dentry *dentry;
- 	int error;
- 
-@@ -3384,10 +3376,7 @@ static int do_last(struct nameidata *nd,
- finish_lookup:
- 	if (nd->depth)
- 		put_link(nd);
--	error = handle_mounts(nd, dentry, &path, &inode, &seq);
--	if (unlikely(error < 0))
--		return error;
--	error = step_into(nd, &path, 0, inode, seq);
-+	error = step_into(nd, 0, dentry, inode, seq);
- 	if (unlikely(error))
- 		return error;
- 
+ 			if (IS_ERR(s))
+ 				return PTR_ERR(s);
+-			err = 0;
+-			if (unlikely(!s)) {
+-				/* jumped */
+-				put_link(nd);
+-			} else {
++			if (likely(s)) {
+ 				nd->stack[nd->depth - 1].name = name;
+ 				name = s;
+ 				continue;
 -- 
 2.11.0
 
