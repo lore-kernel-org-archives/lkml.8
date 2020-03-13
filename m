@@ -2,217 +2,100 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6CEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B20C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8F520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1E120724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSWidas2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCMMmc (ORCPT
+        id S1726814AbgCMMmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:42:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53284 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgCMMmb (ORCPT
+        Fri, 13 Mar 2020 08:42:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45582 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgCMMmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:42:31 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D97262970C5
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH 2/3] platform/chrome: notify: Amend ACPI driver to plat
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     furquan@chromium.org, Benson Leung <bleung@chromium.org>
-References: <20200312100809.21153-1-pmalani@chromium.org>
- <20200312100809.21153-3-pmalani@chromium.org>
-Message-ID: <5f873d6f-5d30-758f-48e4-513b86b39378@collabora.com>
-Date:   Fri, 13 Mar 2020 13:42:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 08:42:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 2so5155219pfg.12;
+        Fri, 13 Mar 2020 05:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K7BMALHz5cMte+OkN45e7QyNpK4gOvBQVmtB+1UqSOM=;
+        b=DSWidas2yl2Aa/zcpiVFcKh6gcrKC4Uwdym2iRWyTUoKJKvdWN/zMvJQSQjZ2Wn9dV
+         RjYWeEx7DVNMO8qvpb6VWEbMlnOYEv3mrdinxYuKB/TDTvOlQDL6jfTS5JDhQEDnpPwn
+         /m9pGQFPrVk9cW/SPomAacb2tjSAMa9NLNXr624w9ORx/V/4ABg20ItONNuXoOLEwgmL
+         XUzpC3U7n4d9XcI+pVih2wrGQHBsvaCedWytA4aYjrQwY+wmIry9jX5YJguhRqR5NQkj
+         Zg7MjxPQLfilwOpNy96BHStzrux1LpxyhaSNkpK4HI9gFUosRZwCJUC/MJXtDmTPg0fy
+         Vvcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K7BMALHz5cMte+OkN45e7QyNpK4gOvBQVmtB+1UqSOM=;
+        b=p8aQlUjFPJ5L6kIGZq6Bz/aByAG0KGG294k6sNO3M+fdhJctOK6wugzO+7h5RzeN3Z
+         N3ug9eWT7jNJVvNOftR25crtmn8e3voUs6WZSwNElYQDEAvCuZn9KCUUdapFhpPFNAxu
+         Z5O36qE1dDzuy0kO5VdCpdvxPclR5r5mBscssT6PL4YdovPjpVsXRbkJLuda2EAk3a7j
+         /ACWbltslJvhAopJoRA6GC3KvGPlsfvFzhVeXx8SEC3BL9BHS7Ld+/STFpzhdO9QRhz7
+         1I8YSOELpjs9N21KJDWE9i9UziA6KnkWYS1GJTCfSIN4WtakBUBtzS78Lole7w4J0bEr
+         4Big==
+X-Gm-Message-State: ANhLgQ0ydzCNZU8kfw3jAnH3gdQ2HJeD2TKojHQ432d72+F5oZNMxBmF
+        tvMzR2YiaKDkV6nd8hb3xD1AfdTw
+X-Google-Smtp-Source: ADFU+vvxh9DtGmJ8zX1+fVCJlBfjuHRLzXae9X/UuabKFaeKW/2AfhDkbgS5Akgfl6UjBskMDhedHg==
+X-Received: by 2002:a63:4c0b:: with SMTP id z11mr12947291pga.385.1584103363087;
+        Fri, 13 Mar 2020 05:42:43 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id w124sm8090098pfd.71.2020.03.13.05.42.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 05:42:42 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 18:12:40 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] sh: replace setup_irq() by request_irq()
+Message-ID: <20200313124240.GB7225@afzalpc>
+References: <20200304005120.5403-1-afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200312100809.21153-3-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304005120.5403-1-afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+Hi Yoshinori Sato,
 
-On 12/3/20 11:08, Prashant Malani wrote:
-> Convert the ACPI driver into the equivalent platform driver, with the
-> same ACPI match table as before. This allows the device driver to access
-> the parent platform EC device and its cros_ec_device struct, which will
-> be required to communicate with the EC to pull PD Host event information
-> from it.
+On Wed, Mar 04, 2020 at 06:21:19AM +0530, afzal mohammed wrote:
+> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> occur after memory allocators are ready.
 > 
-> Also change the ACPI driver name to "cros-usbpd-notify-acpi" so that
-> there is no confusion between it and the "regular" platform driver on
-> platforms that have both CONFIG_ACPI and CONFIG_OF enabled.
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Hence replace setup_irq() by request_irq().
+> 
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 > ---
->  drivers/platform/chrome/cros_usbpd_notify.c | 82 ++++++++++++++++++---
->  1 file changed, 70 insertions(+), 12 deletions(-)
+> Hi sh maintainers,
 > 
-> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-> index edcb346024b07..d2dbf7017e29c 100644
-> --- a/drivers/platform/chrome/cros_usbpd_notify.c
-> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
-> @@ -12,6 +12,7 @@
->  #include <linux/platform_device.h>
->  
->  #define DRV_NAME "cros-usbpd-notify"
-> +#define DRV_NAME_PLAT_ACPI "cros-usbpd-notify-acpi"
->  #define ACPI_DRV_NAME "GOOG0003"
->  
->  static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
-> @@ -54,14 +55,72 @@ EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
->  
->  #ifdef CONFIG_ACPI
->  
-> -static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
-> +static void cros_usbpd_notify_acpi(acpi_handle device, u32 event, void *data)
->  {
-> +	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-> +}
-> +
-> +static int cros_usbpd_notify_probe_acpi(struct platform_device *pdev)
-> +{
-> +	struct cros_usbpd_notify_data *pdnotify;
-> +	struct device *dev = &pdev->dev;
-> +	struct acpi_device *adev;
-> +	struct cros_ec_device *ec_dev;
-> +	acpi_status status;
-> +
-> +	adev = ACPI_COMPANION(dev);
-> +	if (!adev) {
+> if okay w/ this change, please consider taking it thr' your tree, else please
+> let me know.
 
-I still missing some bits of the ACPI devices but is this possible?
+Seems you handle pull requests for sh, if this patch is okay, please
+consider it for inclusion in your tree.
 
-The ACPI probe only will be called if there is a match so an ACPI device, I guess.
-
-> +		dev_err(dev, "No ACPI device found.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	pdnotify = devm_kzalloc(dev, sizeof(*pdnotify), GFP_KERNEL);
-> +	if (!pdnotify)
-> +		return -ENOMEM;
-> +
-> +	/* Get the EC device pointer needed to talk to the EC. */
-> +	ec_dev = dev_get_drvdata(dev->parent);
-> +	if (!ec_dev) {
-> +		/*
-> +		 * We continue even for older devices which don't have the
-> +		 * correct device heirarchy, namely, GOOG0003 is a child
-> +		 * of GOOG0004.
-> +		 */
-> +		dev_warn(dev, "Couldn't get Chrome EC device pointer.\n");
-
-I'm not sure this is correctly handled, see below ...
-
-
-> +	}
-> +
-> +	pdnotify->dev = dev;
-> +	pdnotify->ec = ec_dev;
-
-If !ec_dev you'll assign a NULL pointer to pdnotify->ec. On the cases that
-GOOG0003 is not a child of GOOG0004 I suspect you will get a NULL dereference
-later in some other part of the code?
-
-> +
-> +	status = acpi_install_notify_handler(adev->handle,
-> +					     ACPI_ALL_NOTIFY,
-> +					     cros_usbpd_notify_acpi,
-> +					     pdnotify);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_warn(dev, "Failed to register notify handler %08x\n",
-> +			 status);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_info(dev, "Chrome EC PD notify device registered.\n");
-> +
-
-This is only noise to the kernel log, remove it.
-
->  	return 0;
->  }
->  
-> -static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
-> +static int cros_usbpd_notify_remove_acpi(struct platform_device *pdev)
->  {
-> -	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-> +	struct device *dev = &pdev->dev;
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (!adev) {
-> +		dev_err(dev, "No ACPI device found.\n");
-
-Is this possible?
-
-> +		return -ENODEV;
-> +	}
-> +
-> +	acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
-> +				   cros_usbpd_notify_acpi);
-> +
-> +	return 0;
->  }
->  
->  static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
-> @@ -70,14 +129,13 @@ static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, cros_usbpd_notify_acpi_device_ids);
->  
-> -static struct acpi_driver cros_usbpd_notify_acpi_driver = {
-> -	.name = DRV_NAME,
-> -	.class = DRV_NAME,
-> -	.ids = cros_usbpd_notify_acpi_device_ids,
-> -	.ops = {
-> -		.add = cros_usbpd_notify_add_acpi,
-> -		.notify = cros_usbpd_notify_acpi,
-> +static struct platform_driver cros_usbpd_notify_acpi_driver = {
-
-Nice, so it is converted to a platform_driver, now. This makes me think again if
-we could just use a single platform_driver and register the acpi notifier in the
-ACPI match case and use the non-acpi notifier on the OF case.
-
-> +	.driver = {
-> +		.name = DRV_NAME_PLAT_ACPI,
-> +		.acpi_match_table = cros_usbpd_notify_acpi_device_ids,
->  	},
-> +	.probe = cros_usbpd_notify_probe_acpi,
-> +	.remove = cros_usbpd_notify_remove_acpi,
->  };
->  
->  #endif /* CONFIG_ACPI */
-> @@ -159,7 +217,7 @@ static int __init cros_usbpd_notify_init(void)
->  		return ret;
->  
->  #ifdef CONFIG_ACPI
-> -	acpi_bus_register_driver(&cros_usbpd_notify_acpi_driver);
-> +	platform_driver_register(&cros_usbpd_notify_acpi_driver);
->  #endif
->  	return 0;
->  }
-> @@ -167,7 +225,7 @@ static int __init cros_usbpd_notify_init(void)
->  static void __exit cros_usbpd_notify_exit(void)
->  {
->  #ifdef CONFIG_ACPI
-> -	acpi_bus_unregister_driver(&cros_usbpd_notify_acpi_driver);
-> +	platform_driver_unregister(&cros_usbpd_notify_acpi_driver);
->  #endif
->  	platform_driver_unregister(&cros_usbpd_notify_plat_driver);
->  }
-> 
+Regards
+afzal
