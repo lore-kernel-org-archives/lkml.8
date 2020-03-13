@@ -2,127 +2,121 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6A8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83753C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219A3206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FE420746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="lzQ/lS1q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MP0TEiCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgCMKge (ORCPT
+        id S1726533AbgCMKhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:36:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44586 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgCMKge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:36:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 425BEAC53;
-        Fri, 13 Mar 2020 10:36:32 +0000 (UTC)
-Subject: Re: [PATCH v2 1/2] mmap: remove inline of vm_unmapped_area
-To:     Jaewon Kim <jaewon31.kim@samsung.com>, willy@infradead.org,
-        walken@google.com, bp@suse.de, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com
-References: <20200313011420.15995-1-jaewon31.kim@samsung.com>
- <CGME20200313011430epcas1p129e4033f12b9c02f71443e0b359a26e5@epcas1p1.samsung.com>
- <20200313011420.15995-2-jaewon31.kim@samsung.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <30e2d9c4-33fd-3e13-ce3d-de5099d48b18@suse.cz>
-Date:   Fri, 13 Mar 2020 11:36:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 06:37:24 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45967 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726365AbgCMKhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:37:23 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 239A022337;
+        Fri, 13 Mar 2020 06:37:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 13 Mar 2020 06:37:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=iQRh4eWM++JNjavkQy3NxO8uOXQ
+        yom1KZ3YZTJwPkxI=; b=lzQ/lS1qe7uZPnrF5YWmsnvju776pv12bynxDRMiheA
+        OzN3R99YwGEqWLpTYj0ORsxhIJgdD3YFoIxNHUSgicn+EUSNe8ECGI2GFBD1457R
+        2bV7EtiLfMAgMk0Cu9nMevpX6n8ZESSX7I5CBF9ZDVXmd0q/8db6+gSwN6D8WAEM
+        bP+qJtyF1OG4QmVW+vP5L87UWTIlDGDcVQd0Vbd5KlaeKXXHGCbAFYPOCa8Bwg+p
+        QHIovt5LDfWthmWEmNvJc7DzwhV5uW+HpWjFhq3uESNtVC7klUdIFQlHJh7UXcyV
+        f4Jf2Wg2CX7DMf6/u85hAfUAYRjt8g59bRoBej5+S3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=iQRh4e
+        WM++JNjavkQy3NxO8uOXQyom1KZ3YZTJwPkxI=; b=MP0TEiCh7GrMo2MvtbLpOV
+        sOkaoxgO3Dx+ZmY5EroCz8w9BZjqAIPbQ8g8T2Ol47eURkCSAbEK3xemNC10pQQg
+        yFJOMTnHxqePhTM/6dKCqcXOzPCx6Gc8yHjZ009LfOvnjcd5cDIbxr/W8Giuhx+a
+        ycQscjQmokbY1O+uBQYC+5CaTn5fQKIOcpGNzglEpBeHcto0a6searLilgTb60a5
+        fXm72hk5Dc71o2rd8NE+uDEOHHd/RcBNSLNJ/sS6kWOajkhdEuPGz1zxeooAZDLo
+        0EJc3EuQZPy+cu2WQ/0W0N7A7TuSaIC7hw/3miZLoWLW5bRYBMlNmCD1O7BbZJTA
+        ==
+X-ME-Sender: <xms:YmJrXqmnV7dgTQ7NExCZLT7VR-pBRj5r_cPduE69p4nnGNolPZbVBw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvjedgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
+    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:YmJrXueEXCsnkO7KMjjjngO7hpL45J6dPVQGiDgmeGRNgsHduDPKNg>
+    <xmx:YmJrXvCF4BAB6uPoYt1qsQQCZbjhatVQlDWH3e3GK77nvJNJqtofOA>
+    <xmx:YmJrXoc9vF6T3jf2SCSo5Mtmzo2z4_nNp7tg6PcKThQmmD82YiMUlQ>
+    <xmx:Y2JrXif5p_Bo6PedF2Avo_yRN8u1Ec4FOh6bi3_aOLM9LXhILI33IA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 581BF328005E;
+        Fri, 13 Mar 2020 06:37:22 -0400 (EDT)
+Date:   Fri, 13 Mar 2020 11:37:20 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, "Bird, Tim" <Tim.Bird@sony.com>,
+        "ksummit-discuss@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        "tech-board-discuss@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
+ Technical Advisory Board Elections -- Change to charter
+Message-ID: <20200313103720.GA2215823@kroah.com>
+References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
+ <20200312003436.GF1639@pendragon.ideasonboard.com>
+ <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
+ <20200313031947.GC225435@mit.edu>
+ <87d09gljhj.fsf@intel.com>
+ <20200313093548.GA2089143@kroah.com>
+ <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
+ <20200313100755.GA2161605@kroah.com>
+ <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200313011420.15995-2-jaewon31.kim@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 2:14 AM, Jaewon Kim wrote:
-> In prepration for next patch remove inline of vm_unmapped_area and move
-> code to mmap.c. There is no logical change.
+On Fri, Mar 13, 2020 at 11:16:36AM +0100, Geert Uytterhoeven wrote:
+> Hi Greg,
 > 
-> Also remove unmapped_area[_topdown] out of mm.h, there is no code
-> calling to them.
+> On Fri, Mar 13, 2020 at 11:08 AM Greg KH <greg@kroah.com> wrote:
+> > On Fri, Mar 13, 2020 at 10:41:57AM +0100, Vlastimil Babka wrote:
+> > > On 3/13/20 10:35 AM, Greg KH wrote:
+> > > >> Not that I'm saying there's an easy solution, but obviously kernel.org
+> > > >> account is not as problem free as you might think.
+> > > >
+> > > > We are not saying it is "problem free", but what really is the problem
+> > > > with it?
+> > >
+> > > IIUC there is no problem for its current use, but it would be rather restrictive
+> > > if it was used as the only criterion for being able to vote for TAB remotely.
+> >
+> > Given that before now, there has not be any way to vote for the TAB
+> > remotely, it's less restrictive :)
 > 
-> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+> But people without kernel.org accounts could still vote in person before,
+> right?
 
-Assuming the 'static' is added as Andrew pointed out,
+Yes, and they still can today, this is expanding the pool, not
+restricting it.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+thanks,
 
-
-> ---
->  include/linux/mm.h | 21 +--------------------
->  mm/mmap.c          | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 52269e56c514..1cb01f4a83c9 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2364,26 +2364,7 @@ struct vm_unmapped_area_info {
->  	unsigned long align_offset;
->  };
->  
-> -extern unsigned long unmapped_area(struct vm_unmapped_area_info *info);
-> -extern unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info);
-> -
-> -/*
-> - * Search for an unmapped address range.
-> - *
-> - * We are looking for a range that:
-> - * - does not intersect with any VMA;
-> - * - is contained within the [low_limit, high_limit) interval;
-> - * - is at least the desired size.
-> - * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
-> - */
-> -static inline unsigned long
-> -vm_unmapped_area(struct vm_unmapped_area_info *info)
-> -{
-> -	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
-> -		return unmapped_area_topdown(info);
-> -	else
-> -		return unmapped_area(info);
-> -}
-> +extern unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info);
->  
->  /* truncate.c */
->  extern void truncate_inode_pages(struct address_space *, loff_t);
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index d681a20eb4ea..eeaddb76286c 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -2050,6 +2050,22 @@ unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info)
->  	return gap_end;
->  }
->  
-> +/*
-> + * Search for an unmapped address range.
-> + *
-> + * We are looking for a range that:
-> + * - does not intersect with any VMA;
-> + * - is contained within the [low_limit, high_limit) interval;
-> + * - is at least the desired size.
-> + * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
-> + */
-> +unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info)
-> +{
-> +	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
-> +		return unmapped_area_topdown(info);
-> +	else
-> +		return unmapped_area(info);
-> +}
->  
->  #ifndef arch_get_mmap_end
->  #define arch_get_mmap_end(addr)	(TASK_SIZE)
-> 
-
+greg k-h
