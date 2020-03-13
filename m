@@ -2,114 +2,118 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD0AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB286C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24372074E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA722074E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 22:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3DKp8Qs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hXcW2YUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCMWje (ORCPT
+        id S1726973AbgCMWnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:39:34 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:35635 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgCMWjd (ORCPT
+        Fri, 13 Mar 2020 18:43:22 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39538 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCMWnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 18:39:33 -0400
-Received: by mail-pf1-f202.google.com with SMTP id h12so7519380pfr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 15:39:33 -0700 (PDT)
+        Fri, 13 Mar 2020 18:43:22 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d63so11202664oig.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 15:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=k5Th5oxzja32CITvsP8bvPqYgNLWg942G74ndA2m4k0=;
-        b=O3DKp8Qsv519WV/tqDln4JX2s0hw+20b1URD4K35HEuGs+5LAqimZb8UaFqOn6MhrR
-         mSe9frZxpsvauQVmA+31s/3/ak+V2LLBs1B6zotCjy98VWLOhWRL8Mgl7VQhtWQ0Z958
-         fyryzDnSDeKmUeElekMPjtz0Y0kg5/OX1TMd50ysdUYN6FRlgRAJ1IrFEp5iAsWrlAxs
-         7g1/cjr5CmPf1zFwiBBTB2fnZALddvE1y/+4uVoAxYDsF2ajqvlArLg3XLyA/qek0mrX
-         6Ix3yoCFAsD0l60WoBi8Ot4COCkewGtLUZxJR98mzyL3OahAG3BTQuOplFSr4jLKk0ha
-         yO1w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MFjCvufz4qYwDEr+hp+Lr4gi77q6/a3rGxqdBQ0RGh0=;
+        b=hXcW2YUeO7771pgMZQkpwWmDZERH1p2Fm3PKienj099vaUMe3Qcl+GfrrGnyRTugmy
+         hOnPmmf61cOuY/9YM1n1YJDgIF/bzZkQ/SKe2ooZAlXOFVBwIbdf8NnqTwiRIUPwuyDu
+         gq3dsr7QjFlNCbKk0FVRt2dnIYW73J+gylAUjLTdaMQSAQ/34Wi3jetakzQOmExGLLbw
+         8OEa3IZy8OX7Im6ZIDSkOYCwptISjIO0eg7A4GLNypa3yVBcCLvJb7t8YlEPeGHfRL5j
+         ldPvDbHUiWlCrcDekAFVZa0WqguFkec5Hxe/880sV0TtxrYvDnRso7ck3UIuBr42iaBG
+         4qsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=k5Th5oxzja32CITvsP8bvPqYgNLWg942G74ndA2m4k0=;
-        b=eH6uLbgdPfIDJ9NhA13N5U9vYs264vPsbRcc0Swmx4LRC4P8NTT8/OKSA8A59bX/hW
-         CUuKY73uNcklRKNEHAB5CsbitG1AReiYyoIT4xiuyod6E51OWfawba6fGjyQ/5aRNbjo
-         YpZ/Kiun+DQlhGvmkJHTip6nLmXj9PN9t/ZjMDmtWLEIJ8Ls7aKR9RzYGkdABOjy7Xl2
-         VB/S0/X6wks41BW+75MeGM1o7n0fCSE8XV/GG5XacYJasn7uPz5LLltAOHuwEDlNtsKr
-         KF8TlePueH41q9unbUiIJd+Fw4CD/12aCApTMq82iXGUKzXVXOMB+FOXgj80ct6Y89Os
-         P1+Q==
-X-Gm-Message-State: ANhLgQ0TebJXLr6wgm12cRG9ds+w0DuULcEOhyEYErYBQiVbMlN9Vblo
-        szRQT26uUT/F4mBIVoTcDHS7bdf7yLTP6X2MLA==
-X-Google-Smtp-Source: ADFU+vvI64pl/GDQ5FTOUMsfshjKMu6JoRvfa2sz4J7N5BTtHp+LsnvTNnevAHQLtfPe+LqgUhtwMSeKQMWYJqKPqw==
-X-Received: by 2002:a17:90b:1b01:: with SMTP id nu1mr5402015pjb.129.1584139172402;
- Fri, 13 Mar 2020 15:39:32 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 15:39:20 -0700
-Message-Id: <20200313223920.124230-1-almasrymina@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH -next] hugetlb_cgroup: fix illegal access to memory
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MFjCvufz4qYwDEr+hp+Lr4gi77q6/a3rGxqdBQ0RGh0=;
+        b=OjTTxW60Qx9e+wexYcn41Q53LG7IVgSk/3hDisGrilCcOYLEvTrZdmOD7pVw4vyYWm
+         7EhQ/6eym84F1x+vTU4hhL1BJV+4Plwo0T3RNoA+TSX/eEyqd1EWEu5IG6TefBsn5XWb
+         RYyJj8avIXDWnR94fYFJ/cHqhypXQo/nj8LYPXaXMMnPLZlxvoYxNQ7pB73PJ1FV7XkE
+         SQd7JOSfbaAAkddBSZicOiuYX+NDZL4ktSXMFeajCjw/ojdO6aRaP3Lx87Lt1OPyYJZR
+         CAbjjKs+Orr68WSgEPDcRNvlN4CjyynYnWeZ8PuET7alOF64D2vWoe7Q3SPtEp+QxjXz
+         AqUw==
+X-Gm-Message-State: ANhLgQ1QEi4XjOFNttD5aR1E+RMw8vHvZgG70fcYNYC7SPr8ItYDyrLf
+        uoXmEXI+TrMHYDN1NQLh84n2RZFTGOB59YButTNuqw==
+X-Google-Smtp-Source: ADFU+vu+OfEsMq89LMh75rmdjIo6Q7EXHa3Lgmr7926DPHs9q0A+YwV4vMORWl7jzo+TXKve5DGWJy0n+ni2SxD6TA0=
+X-Received: by 2002:aca:5155:: with SMTP id f82mr9178692oib.103.1584139399757;
+ Fri, 13 Mar 2020 15:43:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <00000000000041c6c205a08225dc@google.com> <20200312182826.GG79873@mtj.duckdns.org>
+ <CAHS8izPySSO07dHi3OZ_1uXjmMCGnNMWey+o-qwFM7GnD7oSHw@mail.gmail.com>
+In-Reply-To: <CAHS8izPySSO07dHi3OZ_1uXjmMCGnNMWey+o-qwFM7GnD7oSHw@mail.gmail.com>
 From:   Mina Almasry <almasrymina@google.com>
-Cc:     Mina Almasry <almasrymina@google.com>,
-        syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Tejun Heo <tj@kernel.org>, mike.kravetz@oracle.com,
-        rientjes@google.com
+Date:   Fri, 13 Mar 2020 15:43:08 -0700
+Message-ID: <CAHS8izMpBXsv_fvy5Qw8CcjBivpfgec+r39+aFScgNDtUTdSqA@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in cgroup_file_notify
+To:     Tejun Heo <tj@kernel.org>, Giuseppe Scrivano <gscrivan@redhat.com>
+Cc:     syzbot <syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, andriin@fb.com,
+        ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
+        christian@brauner.io, daniel@iogearbox.net,
+        Johannes Weiner <hannes@cmpxchg.org>, kafai@fb.com,
+        open list <linux-kernel@vger.kernel.org>,
+        Li Zefan <lizefan@huawei.com>, netdev@vger.kernel.org,
+        sfr@canb.auug.org.au, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This appears to be a mistake in commit faced7e0806cf ("mm: hugetlb
-controller for cgroups v2"). Essentially that commit does
-a hugetlb_cgroup_from_counter assuming that page_counter_try_charge has
-initialized counter, but if page_counter_try_charge has failed then it
-seems it does not initialize counter, so
-hugetlb_cgroup_from_counter(counter) ends up pointing to random memory,
-causing kasan to complain.
+On Thu, Mar 12, 2020 at 2:06 PM Mina Almasry <almasrymina@google.com> wrote:
+>
+> On Thu, Mar 12, 2020 at 11:28 AM Tejun Heo <tj@kernel.org> wrote:
+> >
+> > On Tue, Mar 10, 2020 at 08:55:14AM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    c99b17ac Add linux-next specific files for 20200225
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1610d70de00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=6b7ebe4bd0931c45
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=cac0c4e204952cf449b1
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1242e1fde00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1110d70de00000
+> > >
+> > > The bug was bisected to:
+> > >
+> > > commit 6863de00e5400b534cd4e3869ffbc8f94da41dfc
+> > > Author: Mina Almasry <almasrymina@google.com>
+> > > Date:   Thu Feb 20 03:55:30 2020 +0000
+> > >
+> > >     hugetlb_cgroup: add accounting for shared mappings
+> >
+> > Mina, can you please take a look at this?
+> >
+>
+> Gah, I missed the original syzbot email but I just saw this. I'll take a look.
+>
 
-Solution, simply use h_cg, instead of
-hugetlb_cgroup_from_counter(counter), since that is a reference to the
-hugetlb_cgroup anyway. After this change kasan ceases to complain.
+This was easy enough to track down, I just sent out a fix:
+https://lore.kernel.org/linux-mm/20200313223920.124230-1-almasrymina@google.com
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Reported-by: syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com
-Fixes: commit faced7e0806cf ("mm: hugetlb controller for cgroups v2")
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Giuseppe Scrivano <gscrivan@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: mike.kravetz@oracle.com
-Cc: rientjes@google.com
-
----
- mm/hugetlb_cgroup.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 7994eb8a2a0b4..aabf65d4d91ba 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -259,8 +259,7 @@ static int __hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
- 		    __hugetlb_cgroup_counter_from_cgroup(h_cg, idx, rsvd),
- 		    nr_pages, &counter)) {
- 		ret = -ENOMEM;
--		hugetlb_event(hugetlb_cgroup_from_counter(counter, idx), idx,
--			      HUGETLB_MAX);
-+		hugetlb_event(h_cg, idx, HUGETLB_MAX);
- 		css_put(&h_cg->css);
- 		goto done;
- 	}
---
-2.25.1.481.gfbce0eb801-goog
+BTW, even though this was bisected to my patch, the root cause seems
+to be a mistake in commit faced7e0806cf ("mm: hugetlb controller for
+cgroups v2"), which is not only in linux-next but also in linus's tree
+(I did not check if it's in stable). If my fix is reviewed, the patch
+should be sent there as well. I'll make the same comment on the above
+thread as well.
