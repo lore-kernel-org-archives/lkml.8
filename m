@@ -3,98 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C7AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DBCC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 087BC206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C726206F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6zu35EC"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zYw0NoNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgCMDKC (ORCPT
+        id S1726426AbgCMDNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:10:02 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38984 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgCMDKC (ORCPT
+        Thu, 12 Mar 2020 23:13:19 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36899 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgCMDNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:10:02 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d63so7886951oig.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 20:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hbgniz1KICHBiyzs7HbcZAYxLQx9yaTRfc0Ur6qyrFA=;
-        b=l6zu35EC5jZiSfiq/F2OiEI3o+cXYB3vRgVYlzUUW38s2rRFBgCbMoX2dURMXnz1O2
-         bjQYfFrwHKL+Q1YDqnLGN+q/UWu+HiNdg9rea1Ror1O2EUWpBJjyTwgEWFw/YRBVe9jz
-         sibZCw8AfomDGgwi8Muqr2bIaUYa1R8hGck3BtsURH70MTLpHNr0VGBYyCZ3jgDH6gx/
-         PbYzvj7HOk8ClVcY6+nGuHswmzc6fnnl6wcKz9f149IQB9xQVe9IytyZ9VMvPGmgKjf1
-         KvuL0amDV7YQnFNBSB8rHDd32dLBGpDlj7pLpXoS221kPK5b96LP7vfYlaRS5UrGoD7+
-         VNFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hbgniz1KICHBiyzs7HbcZAYxLQx9yaTRfc0Ur6qyrFA=;
-        b=HRxgDDCxxFs3gw46SrC8LwaqkdNcVyEGoMTHwQ5cQnoDyHWLo4A+pa7Ne0t11w6KYN
-         /3HqArLBVtfK7poKPuf2HuxUrJdQykRBViwZcNDlUW1qqpwd8BEOT3EqaibTtxAYpE4U
-         46LRykzCpApVkRu0u8JMBx6KrkSVvZNi6o7WXiSsSO/bCfuEMjX08YfEbjR7R/WJD38G
-         4FN5L+IgNfeXgU7ts+ATRtmyt/NMeZA93MPQ7yTw2U3VdLg+7f+8igjZE3Gv60L9kqzl
-         h/HS34mei/9ofKGMg2s8ofqnhF0CcUETobO1ljXYK+KZFcPemkmfpXCIo/qZJ3uTHJXz
-         2uOA==
-X-Gm-Message-State: ANhLgQ218SHMjZUlFIm1hOM52qFc5whtS5e40ph6HuoJtPcRBgLHFTDq
-        HMNnuP9jLck/PqoYqE3kwYpu0QiC
-X-Google-Smtp-Source: ADFU+vusI0iP6ekgedOIv+1cpqQPYli+tad0czpVJcz1FWXl5A2DC9qnqyY120IKaK3SNUgrs3J+sg==
-X-Received: by 2002:aca:5f87:: with SMTP id t129mr5460231oib.36.1584068997580;
-        Thu, 12 Mar 2020 20:09:57 -0700 (PDT)
-Received: from localhost.localdomain ([205.204.117.32])
-        by smtp.gmail.com with ESMTPSA id k21sm5794812otn.58.2020.03.12.20.09.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 12 Mar 2020 20:09:57 -0700 (PDT)
-From:   ling.ma.program@gmail.com
-To:     linux-kernel@vger.kernel.org
-Cc:     ling.ml@antfin.com
-Subject: [RFC PATCH] locks:Remove spinlock in unshare_files
-Date:   Fri, 13 Mar 2020 11:10:17 +0800
-Message-Id: <20200313031017.71090-1-ling.ma.program@gmail.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Thu, 12 Mar 2020 23:13:18 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6BC0D8365A;
+        Fri, 13 Mar 2020 16:13:15 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1584069195;
+        bh=n96UwtAtVOCVHqBXD70o6APPLnkWO/O45cJLkbbT0Zk=;
+        h=From:To:Cc:Subject:Date;
+        b=zYw0NoNs3KaMnK/wxPgSGom2mI5TlMYTNANDEORO8JqI5TuPFN7tOtWdjhXTpTPco
+         0KIb7U8dRwpdXPAfFJMYCsq/Cl3NXnt6Oxba0k50Ate5QcGBYET1ZqNZzEKqejCO+c
+         fEBBELYKvHTzRrKErf3Cd+CzTrjFCt02swvv1xnDEsgqPZvSnDDr63IQ1vETkmft3z
+         T9qbtXNup04e96UX/o09EnnD097e+j0f3M6zEf8qFVfjgsVkbXKDbe5XXIPIlvOnbR
+         UuHIfy6mVrf8G4KUUO5hmAArBVi+PuOF6XDEgx2SfhD5A5V2Uq61Ld+EKi6ce9c/bw
+         FIfQ2I4TQnvdQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e6afa4b0000>; Fri, 13 Mar 2020 16:13:15 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 2640013EED5;
+        Fri, 13 Mar 2020 16:13:15 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 3498E28006E; Fri, 13 Mar 2020 16:13:15 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] watchdog: orion: use 0 for unset heartbeat
+Date:   Fri, 13 Mar 2020 16:13:12 +1300
+Message-Id: <20200313031312.1485-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ma Ling <ling.ml@antfin.com>
+If the heartbeat module param is not specified we would get an error
+message
 
-Processor support atomic operation for long/int/short/char type,
-we use the feature to avoid spinlock, which cost hundreds cycles.
+  watchdog: f1020300.watchdog: driver supplied timeout (4294967295) out o=
+f range
+  watchdog: f1020300.watchdog: falling back to default timeout (171)
 
-Appreciate your comments
-Ling
+This is because we were initialising heartbeat to -1. By removing the
+initialisation (thus letting the C run time initialise it to 0) we
+silence the warning message and the default timeout is still used.
 
-Signed-off-by: Ma Ling <ling.ml@antfin.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- kernel/fork.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/watchdog/orion_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 60a1295..fe54600 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -3041,9 +3041,7 @@ int unshare_files(struct files_struct **displaced)
- 		return error;
- 	}
- 	*displaced = task->files;
--	task_lock(task);
--	task->files = copy;
--	task_unlock(task);
-+	WRITE_ONCE(task->files, copy);
- 	return 0;
- }
- 
--- 
-1.8.3.1
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index 8e6dfe76f9c9..4ddb4ea2e4a3 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -52,7 +52,7 @@
+ #define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
+=20
+ static bool nowayout =3D WATCHDOG_NOWAYOUT;
+-static int heartbeat =3D -1;		/* module parameter (seconds) */
++static int heartbeat;		/* module parameter (seconds) */
+=20
+ struct orion_watchdog;
+=20
+--=20
+2.25.1
 
