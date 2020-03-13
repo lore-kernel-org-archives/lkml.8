@@ -2,97 +2,125 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5A3C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190F7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A510220749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584093215;
-	bh=z1iZVotNAOWCisMVcM+WLnU3UU7EMAgPrrJlT1osn1M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Fh86MVQQLEYDquO8ZuOeLOk6dsGZ0jKvCtOEaofTfDj28ctYqu7hhnOT03lOFjylJ
-	 QAVPJKfnu6CUcCFDgccjICeHu6dun0yCpiZ72TlVD1WM7ZXidIj1ES6Es3JsGR8oZZ
-	 rkYoMwwkAcrsNrmmJMs6d+Zs0Lh+Zz8Z3jEqQ4NY=
+	by mail.kernel.org (Postfix) with ESMTP id ECD0A206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgCMJxe (ORCPT
+        id S1726594AbgCMJyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57650 "EHLO mail.kernel.org"
+        Fri, 13 Mar 2020 05:54:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40866 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgCMJxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:53:34 -0400
-Received: from localhost.localdomain (unknown [171.76.107.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4728206EB;
-        Fri, 13 Mar 2020 09:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584093213;
-        bh=z1iZVotNAOWCisMVcM+WLnU3UU7EMAgPrrJlT1osn1M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HpYUZq4DtTwWWSKP5w6latBtv/mPcm79tQllGS4+pMB/b8/cdR6Qv8rXTvG0inb38
-         aZBcR9uygN69iZajdGlWNwGMHpxFM2C7iqH8fem+M3qX6cucca40xbMVzTkdkC6Fw1
-         tqOMRqwCKJ77zbdWk0QvTohXx/4oYlyP60AhJzWg=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/9] ALSA: compress: Add wma, alac and ape support
-Date:   Fri, 13 Mar 2020 15:23:09 +0530
-Message-Id: <20200313095318.1555163-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        id S1726055AbgCMJyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 05:54:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6A096ABEA;
+        Fri, 13 Mar 2020 09:54:13 +0000 (UTC)
+Date:   Fri, 13 Mar 2020 10:54:12 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     =?ISO-8859-15?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+cc:     boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        jpoimboe@redhat.com, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, jslaby@suse.cz
+Subject: Re: [RFC PATCH 2/2] x86/xen: Make the secondary CPU idle tasks
+ reliable
+In-Reply-To: <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com>
+Message-ID: <alpine.LSU.2.21.2003131048110.30076@pobox.suse.cz>
+References: <20200312142007.11488-1-mbenes@suse.cz> <20200312142007.11488-3-mbenes@suse.cz> <75224ad1-f160-802a-9d72-b092ba864fb7@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="1678380546-951734477-1584093253=:30076"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds more WMA profiles and WMA decoder parameters to UAPI and
-then support for these in qcom driver. It also adds FLAC and APE IDs and
-decoder parameters to UAPI and then support in qcom driver
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-This was tested on Dragon board RB3.
+--1678380546-951734477-1584093253=:30076
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Last, bump up the compressed version so that userspace can check for the
-support.
+On Fri, 13 Mar 2020, Jürgen Groß wrote:
 
-Since the series touches compress uapi and asoc, it would make sense to go
-thru asoc tree with acks.
+> On 12.03.20 15:20, Miroslav Benes wrote:
+> > The unwinder reports the secondary CPU idle tasks' stack on XEN PV as
+> > unreliable, which affects at least live patching.
+> > cpu_initialize_context() sets up the context of the CPU through
+> > VCPUOP_initialise hypercall. After it is woken up, the idle task starts
+> > in cpu_bringup_and_idle() function and its stack starts at the offset
+> > right below pt_regs. The unwinder correctly detects the end of stack
+> > there but it is confused by NULL return address in the last frame.
+> > 
+> > RFC: I haven't found the way to teach the unwinder about the state of
+> > the stack there. Thus the ugly hack using assembly. Similar to what
+> > startup_xen() has got for boot CPU.
+> > 
+> > It introduces objtool "unreachable instruction" warning just right after
+> > the jump to cpu_bringup_and_idle(). It should show the idea what needs
+> > to be done though, I think. Ideas welcome.
+> > 
+> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > ---
+> >   arch/x86/xen/smp_pv.c   |  3 ++-
+> >   arch/x86/xen/xen-head.S | 10 ++++++++++
+> >   2 files changed, 12 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+> > index 802ee5bba66c..6b88cdcbef8f 100644
+> > --- a/arch/x86/xen/smp_pv.c
+> > +++ b/arch/x86/xen/smp_pv.c
+> > @@ -53,6 +53,7 @@ static DEFINE_PER_CPU(struct xen_common_irq, xen_irq_work)
+> > = { .irq = -1 };
+> >   static DEFINE_PER_CPU(struct xen_common_irq, xen_pmu_irq) = { .irq = -1 };
+> >   
+> >   static irqreturn_t xen_irq_work_interrupt(int irq, void *dev_id);
+> > +extern unsigned char asm_cpu_bringup_and_idle[];
+> >   
+> >   static void cpu_bringup(void)
+> >   {
+> 
+> Would adding this here work?
+> 
+> +	asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
 
-Changes in v2:
- - use bitflags for wma profiles
+I tried something similar. It did not work, because than the hint is 
+"bound" to the closest next call in the function which is cr4_init() in 
+this case. The unwinder would not take it into account.
 
-Vinod Koul (9):
-  ALSA: compress: add wma codec profiles
-  ALSA: compress: Add wma decoder params
-  ASoC: qcom: q6asm: pass codec profile to q6asm_open_write
-  ASoC: qcom: q6asm: add support to wma config
-  ASoC: qcom: q6asm-dai: add support to wma decoder
-  ALSA: compress: add alac & ape decoder params
-  ASoC: qcom: q6asm: add support for alac and ape configs
-  ASoC: qcom: q6asm-dai: add support for ALAC and APE decoders
-  ALSA: compress: bump the version
+In my case, I placed it at the beginning of cpu_bringup_and_idle(). I also 
+open coded it and played with the offset in the orc entry, but that did 
+not work for some other reason.
 
- include/uapi/sound/compress_offload.h |   2 +-
- include/uapi/sound/compress_params.h  |  37 +++-
- sound/soc/qcom/qdsp6/q6asm-dai.c      | 136 +++++++++++++-
- sound/soc/qcom/qdsp6/q6asm.c          | 243 +++++++++++++++++++++++++-
- sound/soc/qcom/qdsp6/q6asm.h          |  51 +++++-
- 5 files changed, 462 insertions(+), 7 deletions(-)
+However, now I tried this
 
--- 
-2.24.1
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 6b88cdcbef8f..39afd88309cb 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -92,6 +92,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
+ {
+        cpu_bringup();
+        boot_init_stack_canary();
++       asm volatile (UNWIND_HINT(ORC_REG_UNDEFINED, 0, ORC_TYPE_CALL, 1));
+        cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+ }
 
+and that seems to work. I need to properly verify and test, but the 
+explanation is that as opposed to the above, cpu_startup_entry() is on the 
+idle task's stack and the hint is then taken into account. The unwound 
+stack seems to be complete, so it could indeed be the fix.
+
+Thanks
+Miroslav
+--1678380546-951734477-1584093253=:30076--
