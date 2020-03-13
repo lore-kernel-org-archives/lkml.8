@@ -2,208 +2,217 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C2AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8397DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C623220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A36520637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584061651;
-	bh=kBdTHY8uCmTDU6PKBfOIsuKt752pO51gB3elyC0uR4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ftpdoaHJiv1uG9FEhMK1jiDLslHpIubEsl8cJBg2UhyxF+Jib/EmbGhKPwYvkc3Ay
-	 RwoXb5z9mANVTTRP01stxoSjWXZrJlSy7ZwFotKPE+TNpH0ZVZ+MEKXEMfxMTbWyJk
-	 JVpwHyjCPVFaCIyL+SJM9Zm9n36ugsXN0aAcjzHQ=
+	s=default; t=1584061689;
+	bh=huEXu4fEaR36Ih1ki6oSbyO2Ljqw/b2nps3dQae6quM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Jr+GcvZpT/Rv0tMwEL3feIXFy/Mdp4nyjS/FdvJGalc9ofHm5ch4EOUZpP8HM5F1u
+	 zN6I1kQzadEhQMGArewZeCjiCmGZJxLxZ43xOzvjvBs7NpuuTQZYfL7iWtePZVdLcf
+	 LbD3HbGNCs6UzdGIPuoHIKEo29C+7BtbJ3fVbxIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgCMBHa (ORCPT
+        id S1727137AbgCMBII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:07:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41680 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCMBHa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:07:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z65so4161942pfz.8;
-        Thu, 12 Mar 2020 18:07:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p1y55cnlFR5XIWnQzxqAJ77CuRfysEOntt316s397dE=;
-        b=tYPjoAxWpUvTByRIrpV3+ZBaSj85zKl6daSyvjUdTpth+1b76YQDPF7yONc6kXab3Q
-         oHoW1kqGQ/rYv0YacjJsHsS1ORNLiiNqvGW036ICnNjaabIN6mpOOo3iWKcb34P8oOoD
-         2tGG6f8MJkXfhZfVF3idh0poGismbfjUUuZp/B+2BFaloClGViDLrBhmY+jlQ/fakCWC
-         DmmIu3gxOul7mfDf9Uofx5nOK63/mpm0Pr1V9pJHq1cF/GQuVOj/xVm0bIb74Dhn0TVv
-         ZWC+OLDom9sEB8XS0aW725ZG2y2LHhlhwOsffGUe/rvWTySJawenZLVT8x5LvRMvKxTl
-         KCiA==
-X-Gm-Message-State: ANhLgQ05iBA7luvBTCN9IzvzuU502NmvcFe/QufT/Yg8H23VVyp1r5z/
-        NQ/PkjSDMhzLatGbdbGttY8=
-X-Google-Smtp-Source: ADFU+vu+tQSISN41gD4tRdARFAEGoS3/lePcq8JnLRSye7+UdmfV6TEHHOWfLLbEW3/et9gxyN/r+Q==
-X-Received: by 2002:a63:b21b:: with SMTP id x27mr10599525pge.310.1584061649053;
-        Thu, 12 Mar 2020 18:07:29 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v133sm45358821pfc.68.2020.03.12.18.07.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 18:07:27 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 240364028E; Fri, 13 Mar 2020 01:07:27 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 01:07:27 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>
-Subject: Re: [PATCH v2 3/4] docs: admin-guide: document the kernel.modprobe
- sysctl
-Message-ID: <20200313010727.GT11244@42.do-not-panic.com>
-References: <20200312202552.241885-1-ebiggers@kernel.org>
- <20200312202552.241885-4-ebiggers@kernel.org>
- <87lfo5telq.fsf@notabene.neil.brown.name>
+        Thu, 12 Mar 2020 21:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCMBIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:08:07 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68DC020637;
+        Fri, 13 Mar 2020 01:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584061686;
+        bh=huEXu4fEaR36Ih1ki6oSbyO2Ljqw/b2nps3dQae6quM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=tcCm+pFo0bI3PzNwHW1FNS0Y4pKCzoj7LBVNj6HrlHelXTg7D6IZqc8jxUhJmwh2Z
+         cFo+kCWxnMVnulnTe8GdD1iMtzYLCkSq/hpA+Dwj5UvPHQRbU1NM1RyOgKdu9xH/3H
+         ntfuyLUKfrnARLfjankKgWRjOnCfUozAQ5zUaToI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
-Content-Disposition: inline
-In-Reply-To: <87lfo5telq.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d197ab836d84b89b94ff1927872126767d921e94.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech> <d197ab836d84b89b94ff1927872126767d921e94.1582533919.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH 22/89] clk: bcm: rpi: Discover the firmware clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org
+To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Thu, 12 Mar 2020 18:08:05 -0700
+Message-ID: <158406168552.149997.10601766692457449295@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---YD3LsXFS42OYHhNZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 13, 2020 at 09:04:01AM +1100, NeilBrown wrote:
-> On Thu, Mar 12 2020, Eric Biggers wrote:
+Quoting Maxime Ripard (2020-02-24 01:06:24)
+> The firmware has an interface to discover the clocks it exposes.
 >=20
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > Document the kernel.modprobe sysctl in the same place that all the other
-> > kernel.* sysctls are documented.  Make sure to mention how to use this
-> > sysctl to completely disable module autoloading, and how this sysctl
-> > relates to CONFIG_STATIC_USERMODEHELPER.
-> >
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Jeff Vander Stoep <jeffv@google.com>
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Luis Chamberlain <mcgrof@kernel.org>
-> > Cc: NeilBrown <neilb@suse.com>
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > ---
-> >  Documentation/admin-guide/sysctl/kernel.rst | 25 ++++++++++++++++++++-
-> >  1 file changed, 24 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentatio=
-n/admin-guide/sysctl/kernel.rst
-> > index def074807cee9..454f3402ed321 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -49,7 +49,7 @@ show up in /proc/sys/kernel:
-> >  - kexec_load_disabled
-> >  - kptr_restrict
-> >  - l2cr                        [ PPC only ]
-> > -- modprobe                    =3D=3D> Documentation/debugging-modules.=
-txt
-> > +- modprobe
-> >  - modules_disabled
-> >  - msg_next_id		      [ sysv ipc ]
-> >  - msgmax
-> > @@ -444,6 +444,29 @@ l2cr: (PPC only)
-> >  This flag controls the L2 cache of G3 processor boards. If
-> >  0, the cache is disabled. Enabled if nonzero.
-> > =20
-> > +modprobe:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +The path to the usermode helper for autoloading kernel modules, by
-> > +default "/sbin/modprobe".  This binary is executed when the kernel
-> > +requests a module.  For example, if userspace passes an unknown
-> > +filesystem type "foo" to mount(), then the kernel will automatically
-> > +request the module "fs-foo.ko" by executing this usermode helper.
->=20
-> I don't think it is right to add the ".ko" there.  The string "fs-foo"
-> is what is passed to the named executable, and it make well end up
-> loading "bar.ko", depending what aliases are set up.
-> I would probably write  '... request the module named 'fs-foo" by executi=
-ng..'
+> Let's use it to discover, register the clocks in the clocks framework and
+> then expose them through the device tree for consumers to use them.
 
-And that is just because filesystems, in this case a mount call, will
-use the fs- prefix for aliases. This is tribal knowledge in the context
-above, and so someone not familiar with this won't easily grasp this.
+Everyone's doing it! :)
 
-Is there an easier autoloading example other than filesystems we can use th=
-at
-doesn't require you to explain the aliasing thing?
+> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-rasp=
+berrypi.c
+> index 3f21888a3e3e..bf6a1e2dc099 100644
+> --- a/drivers/clk/bcm/clk-raspberrypi.c
+> +++ b/drivers/clk/bcm/clk-raspberrypi.c
+> @@ -285,6 +285,95 @@ static struct clk_hw *raspberrypi_register_pllb_arm(=
+struct raspberrypi_clk *rpi)
+>         return &raspberrypi_clk_pllb_arm.hw;
+>  }
+> =20
+> +static long raspberrypi_fw_dumb_round_rate(struct clk_hw *hw,
+> +                                          unsigned long rate,
+> +                                          unsigned long *parent_rate)
+> +{
+> +       return rate;
 
-What is module autoloading? Where is this documented ? If that
-can be slightly clarified this would be even easier to understand as
-well.
+Can we get a comment here like "The firmware does the rounding but
+doesn't tell us so we have to assume anything goes!"
 
-  Luis
+> +}
+> +
+> +static const struct clk_ops raspberrypi_firmware_clk_ops =3D {
+> +       .is_prepared    =3D raspberrypi_fw_is_prepared,
+> +       .recalc_rate    =3D raspberrypi_fw_get_rate,
+> +       .round_rate     =3D raspberrypi_fw_dumb_round_rate,
+> +       .set_rate       =3D raspberrypi_fw_set_rate,
+> +};
+> +
+> +static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *r=
+pi,
+> +                                              unsigned int parent,
+> +                                              unsigned int id)
+> +{
+> +       struct raspberrypi_clk_data *data;
+> +       struct clk_init_data init =3D {};
+> +       int ret;
+> +
+> +       if (id =3D=3D RPI_FIRMWARE_ARM_CLK_ID) {
+> +               struct clk_hw *hw;
+> +
+> +               hw =3D raspberrypi_register_pllb(rpi);
+> +               if (IS_ERR(hw)) {
+> +                       dev_err(rpi->dev, "Failed to initialize pllb, %ld=
+\n",
+> +                               PTR_ERR(hw));
+> +                       return hw;
+> +               }
+> +
+> +               hw =3D raspberrypi_register_pllb_arm(rpi);
+> +               if (IS_ERR(hw))
+> +                       return hw;
+> +
+> +               return hw;
 
-> (The "name" for a module can come from the file that stores it, and
-> alias inside it, or configuration in modprobe.d).
->=20
-> Thanks,
-> NeilBrown
->=20
->=20
-> > +This usermode helper should insert the needed module into the kernel.
-> > +
-> > +This sysctl only affects module autoloading.  It has no effect on the
-> > +ability to explicitly insert modules.
-> > +
-> > +If this sysctl is set to the empty string, then module autoloading is
-> > +completely disabled.  The kernel will not try to execute a usermode
-> > +helper at all, nor will it call the kernel_module_request LSM hook.
-> > +
-> > +If CONFIG_STATIC_USERMODEHELPER=3Dy is set in the kernel configuration,
-> > +then the configured static usermode helper overrides this sysctl,
-> > +except that the empty string is still accepted to completely disable
-> > +module autoloading as described above.
-> > +
-> > +Also see Documentation/debugging-modules.txt.
-> > =20
-> >  modules_disabled:
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --=20
-> > 2.25.1
+Why the double return? Not just
 
+	return raspberrypi_register_pllb_arm(rpi);
 
+> +       }
+> +
+> +       data =3D devm_kzalloc(rpi->dev, sizeof(data), GFP_KERNEL);
+> +       if (!data)
+> +               return ERR_PTR(-ENOMEM);
+> +       data->rpi =3D rpi;
+> +       data->id =3D id;
+> +
+> +       init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL, "fw-clk-%u", i=
+d);
+> +       init.ops =3D &raspberrypi_firmware_clk_ops;
+> +       init.flags =3D CLK_GET_RATE_NOCACHE | CLK_IGNORE_UNUSED;
 
---YD3LsXFS42OYHhNZ
-Content-Type: application/pgp-signature; name="signature.asc"
+Why ignore unused? Doesn't seem to support enable/disable anyway so not
+sure this flag adds any value.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +       data->hw.init =3D &init;
+> +
+> +       ret =3D devm_clk_hw_register(rpi->dev, &data->hw);
+> +       if (ret)
+> +               return ERR_PTR(ret);
+> +
+> +       return &data->hw;
+> +}
+> +
+> +static int raspberrypi_discover_clocks(struct raspberrypi_clk *rpi,
+> +                                      struct clk_hw_onecell_data *data)
+> +{
+> +       struct rpi_firmware_get_clocks_response *clks;
+> +       size_t clks_size =3D NUM_FW_CLKS * sizeof(*clks);
+> +       int ret;
+> +
+> +       clks =3D devm_kzalloc(rpi->dev, clks_size, GFP_KERNEL);
 
-iQIzBAABCgAdFiEENnNq2KuOejlQLZofziMdCjCSiKcFAl5q3M4ACgkQziMdCjCS
-iKdvtA//fmhoJkZ3Et5nHDbpWXGMr6uHdxlQqkt7Ai7fvX/IDYHHqDhdKadWyftD
-jXEgyOIxfuicMFFY3cjRQL4wqpG7fTnY8ZLLLSZHd26fFqLMQxgQRPVJsW4WLeR/
-G2yhcnzcnlLsRVczxUP7vZRwTpTCZHxH2W/SiyXIb8LRp1obEwYUlklc8L9+IX68
-h7z/0f8KEJJTO8DEWCD2wKOBi9LkSmI1m4pMLalJ9AOTvyWDSxQWFQpj+kvcC6yG
-WjTdkTiIlGIrFUcg9fNN5HumbFo8LU4+121p3jA3BtdBRG+sS0s6sZTN0BpHZdGe
-tjhuq44cq6xgMsxZb5mfwSnmHptGgmCqda1wzmgNTdc9WUDNNHHlehjdXhyqVIYZ
-wl1NgMDggZ2iqq1p+B2iw5eON9h4e1Nkx46ZGB0D9maqMXby7vV3SduZick8M5pK
-IQYYNeILufSCqz2d8HMFE+PCUk0jwGObzxxcwLE6seK4G+5+syptX4NDVbw/KTtf
-HxYw+F2B1CRjZrUxnqtTOqxyd0eRTArWeoWI6VWiYupMvwsTw1m88GPR6Tv/j9fz
-cAgvzZ7xv5dlOchWH8XXhfpz2ON8DZT/9puhoNMcoWXMdT+R7VSXl6c8OG6HMJ7k
-qpH4P9khGasEjyi7XWJe/B6RVJRTE9y8jcB6cmMvWHIGLOOKM+k=
-=Kxfs
------END PGP SIGNATURE-----
+Use devm_kcalloc to avoid overflow and indicate it's an array.
 
---YD3LsXFS42OYHhNZ--
+> +       if (!clks)
+> +               return -ENOMEM;
+> +
+> +       ret =3D rpi_firmware_property(rpi->firmware, RPI_FIRMWARE_GET_CLO=
+CKS,
+> +                                   clks, clks_size);
+> +       if (ret)
+> +               return ret;
+> +
+> +       while (clks->id) {
+> +               struct clk_hw *hw;
+> +
+> +               hw =3D raspberrypi_clk_register(rpi, clks->parent, clks->=
+id);
+> +               if (IS_ERR(hw))
+> +                       return PTR_ERR(hw);
+> +
+> +               data->hws[clks->id] =3D hw;
+> +               data->num =3D clks->id + 1;
+> +               clks++;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int raspberrypi_clk_probe(struct platform_device *pdev)
+>  {
+>         struct clk_hw_onecell_data *clk_data;
+> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm=
+2835/raspberrypi-firmware.h
+> index 7800e12ee042..e5b7a41bba6b 100644
+> --- a/include/soc/bcm2835/raspberrypi-firmware.h
+> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
+> @@ -135,6 +135,11 @@ enum rpi_firmware_property_tag {
+>         RPI_FIRMWARE_GET_DMA_CHANNELS =3D                       0x0006000=
+1,
+>  };
+> =20
+> +struct rpi_firmware_get_clocks_response {
+> +       __le32  parent;
+> +       __le32  id;
+
+Why double spaced or tabbed out?
+
+> +};
+> +
+>  #if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
+>  int rpi_firmware_property(struct rpi_firmware *fw,
