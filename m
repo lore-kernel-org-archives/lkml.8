@@ -2,113 +2,137 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7ABC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96913C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3372620751
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7047C2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584130733;
-	bh=ERHRBrzqXjcmCtGTu50joCb4hODTGLT8HRlF6C0NBn8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BHDKu3ROSodMP0xljwCNL1j64sxez+nsYGM9WSiu7amvPShQ4x9g3CaXWRCpmMc94
-	 klP/OhttBs7IABkiHX/hbEpodAlAEwRHZIV7/ExLFHbHv9NxU5WJsE2b2PfEUs6n61
-	 3Ew1sX2xJk9babZnef3VXITg/pTPzEm5d0BT1qeY=
+	s=default; t=1584130934;
+	bh=H+FHiu5LeQLomYOQnyUDjawefKb1s84kHWofbZe/vO8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=U7rEZlMoh4l0yGw/UES0+W+3EhCqyMEIZ6s4BRnqGqqX0937Egeo7naSeyss1rQ+p
+	 5Pj/raaahrI/b9ZmKDYFhpTqRIQicAcj2nMzjLeMntEfB4+q9+X/XqWHJ8GdCK7W0j
+	 sHCAL6F9YCTk3PqhYTCv6b5Y+lsINocnj0W9zGlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCMUSw (ORCPT
+        id S1727320AbgCMUWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:18:52 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46214 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCMUSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:18:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d23so11908220ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 13:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1dyaDXD6kKcsjU3cdaN9tJMCmO/tIPHlkK3dbzeZyfg=;
-        b=IyxmDZ+MInB7hJJiSvQ8M6SvkLSa6alEsIj47Hf+qqZ5CYMCROkdK8r49X48qyOGZZ
-         DvHajJVv4/N9Xt+1+F5wfePvt104x04McIxOVjzj8DY7AvoCiMni8wf4vkLGHwgkAqKb
-         NXkS+J6hgxY+A06g0a4K+hKEe7gxItoNaFqjc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1dyaDXD6kKcsjU3cdaN9tJMCmO/tIPHlkK3dbzeZyfg=;
-        b=cBbDI6Gxf32SddJXQn+XGCwSZSTKFnm/lvo7f3R3A30VQsSGGoh6bybU2kQFYFBIMZ
-         eAQCY/5XaTKvm+caOP+U8aq53eMcK5taq4/Wi8+8PhnNubkQSN+uTrm/usyyjZmZD5fM
-         uxJtFGuVFQHiNg0mpYG6cXWvUGCTA0WnDpWx6l1uBojJKel1OQxZsf6UZagkCAHG9wC/
-         qHYJmI8bO+Gbn00bQ4SXX6Ox5At3ZniL+rRU6EhLxRm4ZGLJfsLCWhu+6yX+3z0otEiO
-         +F93Be/PZuqPUSqMqKxjw04/Y7Y7DO7t0vPjbIKJWGMC/bk5Fbm781sRF6bXEjQMSiA/
-         0vew==
-X-Gm-Message-State: ANhLgQ29BLyxSnHJxaPJ695ie8IF47lqoCv69hlLci0/20yP8P/YxbDA
-        m5lRXGgt+4ss2X3nT2OxRTkNrsjsgY0=
-X-Google-Smtp-Source: ADFU+vs37sVJW9aTdhjWOL+R3RXkiI2rIbdRoal2WhsuE2zAJVsYW4QmJPQ39dx7oLJKX1WQ/Fpxsw==
-X-Received: by 2002:a2e:9cc1:: with SMTP id g1mr9459574ljj.152.1584130728095;
-        Fri, 13 Mar 2020 13:18:48 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id b23sm9282494lfi.55.2020.03.13.13.18.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 13:18:47 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id 5so1811910lfr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 13:18:46 -0700 (PDT)
-X-Received: by 2002:ac2:5508:: with SMTP id j8mr9590741lfk.31.1584130726499;
- Fri, 13 Mar 2020 13:18:46 -0700 (PDT)
+        Fri, 13 Mar 2020 16:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgCMUWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 16:22:13 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 851472074D;
+        Fri, 13 Mar 2020 20:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584130932;
+        bh=H+FHiu5LeQLomYOQnyUDjawefKb1s84kHWofbZe/vO8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=A/GfMUp5yVhkxaqCnB4roSCiMSzNGIeviJvl81OxxvITqnF5NB8vv2fYIZ+1/gd73
+         qcyTruHofRExTtWou6mfRmzviF+3DXRGuvpcYMdjgB7IYcf8I0LfPcwNkVomB/k8p+
+         unwTQAqlziKurwjBO1+seHDied5ozItFZTW8KVJk=
+Subject: Re: [PATCH v2 1/2] kunit: kunit_parser: make parser more robust
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Heidi Fahim <heidifahim@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        shuah <shuah@kernel.org>
+References: <20200305200409.239406-1-heidifahim@google.com>
+ <CAFd5g45HSuxcP8_-yaJY4M=Acy14L=FTwY3GT_m-eTVtP6NJhQ@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <b8777872-189b-b361-6ff4-c7cd51772dfd@kernel.org>
+Date:   Fri, 13 Mar 2020 14:22:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <00e5ab7d-f0ad-bc94-204a-d2b7fb88f594@fb.com>
-In-Reply-To: <00e5ab7d-f0ad-bc94-204a-d2b7fb88f594@fb.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 13 Mar 2020 13:18:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgGN-9dmso4L+6RWdouEg4zQfd74m23K6c9E_=Qua+H1Q@mail.gmail.com>
-Message-ID: <CAHk-=wgGN-9dmso4L+6RWdouEg4zQfd74m23K6c9E_=Qua+H1Q@mail.gmail.com>
-Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc
-To:     Jens Axboe <axboe@fb.com>, "Paul E. McKenney" <paulmck@kernel.org>,
-        Tejun Heo <tj@kernel.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFd5g45HSuxcP8_-yaJY4M=Acy14L=FTwY3GT_m-eTVtP6NJhQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 10:50 AM Jens Axboe <axboe@fb.com> wrote:
->
-> Just a single fix here, improving the RCU callback ordering from last
-> week. After a bit more perusing by Paul, he poked a hole in the
-> original.
+On 3/5/20 2:25 PM, Brendan Higgins wrote:
+> On Thu, Mar 5, 2020 at 12:04 PM Heidi Fahim <heidifahim@google.com> wrote:
+>>
+>> Previously, kunit_parser did not properly handle kunit TAP output that
+>> - had any prefixes (generated from different configs e.g.
+>> CONFIG_PRINTK_TIME)
+>> - had unrelated kernel output mixed in the middle of
+>> it, which has shown up when testing with allyesconfig
+>> To remove prefixes, the parser looks for the first line that includes
+>> TAP output, "TAP version 14".  It then determines the length of the
+>> string before this sequence, and strips that number of characters off
+>> the beginning of the following lines until the last KUnit output line is
+>> reached.
+>> These fixes have been tested with additional tests in the
+>> KUnitParseTest and their associated logs have also been added.
+>>
+>> Signed-off-by: Heidi Fahim <heidifahim@google.com>
+> 
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> 
 
-Ouch.
+Heidi and Brendan,
 
-If I read this patch correctly, you're now adding a rcu_barrier() onto
-the system workqueue for each io_uring context freeing op.
+git apply is throwing away formatting in
 
-This makes me worry:
+tools/testing/kunit/test_data/test_config_printk_time.log
 
- - I think system_wq is unordered, so does it even guarantee that the
-rcu_barrier happens after whatever work you're expecting it to be
-after?
 
-Or is it using a workqueue not because it wants to serialize with any
-other work, but because it needs to use rcu_barrier in a context where
-it can't sleep?
+Applying: kunit: kunit_parser: make parser more robust
+.git/rebase-apply/patch:396: space before tab in indent.
+  	# Subtest: kunit-resource-test
+.git/rebase-apply/patch:397: space before tab in indent.
+  	1..5
+.git/rebase-apply/patch:398: space before tab in indent.
+  	ok 1 - kunit_resource_test_init_resources
+.git/rebase-apply/patch:399: space before tab in indent.
+  	ok 2 - kunit_resource_test_alloc_resource
+.git/rebase-apply/patch:400: space before tab in indent.
+  	ok 3 - kunit_resource_test_destroy_resource
+warning: squelched 11 whitespace errors
+warning: 16 lines add whitespace errors.
 
-But the commit message does seem to imply that ordering is important..
+Can you fix this and resend patches. If apply this as is,
+all the formatting you have in there goes away.
 
- - doesn't this have the potential to flood the system_wq be full of
-flushing things that all could take a while..
+This is what gets applied.
 
-I've pulled it, and it may all be correct, just chalk this message up
-to "Linus got nervous looking at it".
+[    0.060000] TAP version 14
+[    0.060000] 	# Subtest: kunit-resource-test
+[    0.060000] 	1..5
+[    0.060000] 	ok 1 - kunit_resource_test_init_resources
+[    0.060000] 	ok 2 - kunit_resource_test_alloc_resource
+[    0.060000] 	ok 3 - kunit_resource_test_destroy_resource
+[    0.060000] 	ok 4 - kunit_resource_test_cleanup_resources
+[    0.060000] 	ok 5 - kunit_resource_test_proper_free_ordering
+[    0.060000] ok 1 - kunit-resource-test
+[    0.060000] 	# Subtest: kunit-try-catch-test
+[    0.060000] 	1..2
+[    0.060000] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
+[    0.060000] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
+[    0.060000] ok 2 - kunit-try-catch-test
+[    0.060000] 	# Subtest: string-stream-test
+[    0.060000] 	1..3
+[    0.060000] 	ok 1 - string_stream_test_empty_on_creation
+[    0.060000] 	ok 2 - string_stream_test_not_empty_after_add
+[    0.060000] 	ok 3 - string_stream_test_get_string
+[    0.060000] ok 3 - string-stream-test
+[    0.060000] List of all partitions:
+[    0.060000] No filesystem could mount root, tried:
 
-Added Paul and Tejun to the participants explicitly.
-
-             Linus
+thanks,
+-- Shuah
