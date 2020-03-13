@@ -2,93 +2,145 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3594C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208EBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE992074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EAF2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Vs5qpx/x"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jrkQANpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgCMVQa (ORCPT
+        id S1727323AbgCMVQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:16:30 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42432 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgCMVQ3 (ORCPT
+        Fri, 13 Mar 2020 17:16:51 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58190 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMVQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:16:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v11so13875682wrm.9
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 14:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=RybIaAfwi42rMEkdDuMaPC6Ik8KsuIdgCBAZyLZRGtI=;
-        b=Vs5qpx/x/9mxLreknEJDK/qKbsOrTJnfTgQMWs2P519evhcjsoxm6sZfYuVJpipmUA
-         4AerZDGhlbpAhGYH6xqVpGrh4FHUIzbYKo6GAcPVF3HqSo2cLUmgWtn9z+RcKOhtabYn
-         a93iwjsQXRR7ABmZs/2E/86fNrgPA2Wb+ptqY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=RybIaAfwi42rMEkdDuMaPC6Ik8KsuIdgCBAZyLZRGtI=;
-        b=N1cZLCYqZYekiAfh28xpMk4qeJVq4Ei7RGWqg5qnaAqJYTrorB0lLxbXuwDsDnRIYo
-         8dx7Z8FGgOFy+WCWkhqpkb4lZ92LkMoIlNR7+6jUQstWZ2sJHMha9cfHRaKfRh+JuQqw
-         I8/HKjIn0w+tNBubWtI8hpi1qa6p7IAzer8qWhfPzgS7Oglg7VzyYjbYgErteYCSbHA0
-         XXkjxcgAH6vSP6fB4Eze/4OkW+GURUQrMiUOMnxMepr+VPX6rLNaAvkfCYq/XadTAfKm
-         z3ACLMiAKtp9yyNYLWjUlIbBeOyYn2Xwy5/nP73hGOwLP/ltTaeeyXTfdrnoMo+I6hJh
-         LbcQ==
-X-Gm-Message-State: ANhLgQ12o7xEojpSkdbIOsupcEeuEXhzz/1XkEIEB6OswLYKwwC6lbz6
-        BGP4FhWiIPLPu0UnaE2dN5wPIoNFd1A=
-X-Google-Smtp-Source: ADFU+vugL6WKsIhIgeibrHLUO8PqfqQCSSG+PKiEL3An3Gd+kXB7lBjGshynRzcAs7uiEYsYIm0+nw==
-X-Received: by 2002:adf:f285:: with SMTP id k5mr5319352wro.175.1584134187646;
-        Fri, 13 Mar 2020 14:16:27 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id f17sm73907565wrj.28.2020.03.13.14.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 14:16:27 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 22:16:24 +0100
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
-Subject: [GIT PULL] overlayfs fixes for 5.6-rc6
-Message-ID: <20200313211624.GC28467@miu.piliscsaba.redhat.com>
+        Fri, 13 Mar 2020 17:16:51 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8F4B52D6;
+        Fri, 13 Mar 2020 22:16:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584134208;
+        bh=fxHorn7UuM1fDLI8Lt271tTqm19pZ50gn9WZ1vomREk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jrkQANpqeapfaL9IR9Njcr1VtSfnoFE2jelP11Ih3QgxWSSROriCC9L2GLM4YSzEq
+         uMwmqth3Dz5ezP297vQaVogADiGPFXbsjFGLMEjgp6JJrt9fwiiUYgQK7KQThkriPu
+         4O9OE75PAOWovQfBEyDkNvQY5m9REWdC9USeBQaY=
+Date:   Fri, 13 Mar 2020 23:16:44 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/4] media: i2c: ov5645: Switch to assigned-clock-rates
+Message-ID: <20200313211644.GK4751@pendragon.ideasonboard.com>
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <1584133954-6953-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Prabakhar,
 
-Please pull from:
+Thank you for the patch.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-fixes-5.6-rc6
+On Fri, Mar 13, 2020 at 09:12:32PM +0000, Lad Prabhakar wrote:
+> This patch switches to assigned-clock-rates for specifying the clock rate.
+> The clk-conf.c internally handles setting the clock rate when
+> assigned-clock-rates is passed.
+> 
+> The driver now sets the clock frequency only if the deprecated property
+> clock-frequency is defined instead assigned-clock-rates, this is to avoid
+> breakage with existing DT binaries.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/media/i2c/ov5645.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> index a6c17d1..4fbabf3 100644
+> --- a/drivers/media/i2c/ov5645.c
+> +++ b/drivers/media/i2c/ov5645.c
+> @@ -1055,6 +1055,7 @@ static int ov5645_probe(struct i2c_client *client)
+>  	struct device_node *endpoint;
+>  	struct ov5645 *ov5645;
+>  	u8 chip_id_high, chip_id_low;
+> +	bool set_clk = false;
 
-Fix three bugs introduced in this cycle.
+This isn't used.
 
-Thanks,
-Miklos
+>  	unsigned int i;
+>  	u32 xclk_freq;
+>  	int ret;
+> @@ -1094,12 +1095,18 @@ static int ov5645_probe(struct i2c_client *client)
+>  		return PTR_ERR(ov5645->xclk);
+>  	}
+>  
+> -	ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+> -	if (ret) {
+> -		dev_err(dev, "could not get xclk frequency\n");
+> -		return ret;
+> +	/* check if deprecated property clock-frequency is defined */
+> +	ret = of_property_read_u32(dev->of_node, "clock-frequency",
+> +				   &xclk_freq);
+> +	if (!ret) {
+> +		ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> +		if (ret) {
+> +			dev_err(dev, "could not set xclk frequency\n");
+> +			return ret;
+> +		}
+>  	}
+>  
+> +	xclk_freq = clk_get_rate(ov5645->xclk);
 
-----------------------------------------------------------------
-Amir Goldstein (2):
-      ovl: fix lock in ovl_llseek()
-      ovl: fix some xino configurations
+I would move this line below the comment.
 
-Miklos Szeredi (1):
-      ovl: fix lockdep warning for async write
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
----
- fs/overlayfs/Kconfig     | 1 +
- fs/overlayfs/file.c      | 6 ++++++
- fs/overlayfs/overlayfs.h | 7 ++++++-
- fs/overlayfs/super.c     | 9 ++++++++-
- fs/overlayfs/util.c      | 4 ++--
- 5 files changed, 23 insertions(+), 4 deletions(-)
+>  	/* external clock must be 24MHz, allow 1% tolerance */
+>  	if (xclk_freq < 23760000 || xclk_freq > 24240000) {
+>  		dev_err(dev, "external clock frequency %u is not supported\n",
+> @@ -1107,12 +1114,6 @@ static int ov5645_probe(struct i2c_client *client)
+>  		return -EINVAL;
+>  	}
+>  
+> -	ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> -	if (ret) {
+> -		dev_err(dev, "could not set xclk frequency\n");
+> -		return ret;
+> -	}
+> -
+>  	for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
+>  		ov5645->supplies[i].supply = ov5645_supply_name[i];
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
