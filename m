@@ -2,339 +2,162 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA5CC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF920C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02966206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4873206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:45:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0SODmnzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgCMOnN (ORCPT
+        id S1726683AbgCMOpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:43:13 -0400
-Received: from smtp2.ustc.edu.cn ([202.38.64.46]:56142 "EHLO ustc.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgCMOnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:43:13 -0400
-Received: from xhacker (unknown [101.86.20.80])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygBXX9_8m2tewcI8AA--.11132S2;
-        Fri, 13 Mar 2020 22:43:08 +0800 (CST)
-Date:   Fri, 13 Mar 2020 22:41:19 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/4] regulator: add support for MP8869 regulator
-Message-ID: <20200313224119.5ff15265@xhacker>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygBXX9_8m2tewcI8AA--.11132S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XryUuFW5GryrJr4kAry5urg_yoW3Zr4DpF
-        45GFy3Ar48ZFWfGFWxCF9Fk3WYqan2gw1xAryfGw4avanxtFyfZF1DZryavF95Gr95CF1j
-        yayUCayxuF47XFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E
-        4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-        WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-        Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-        W3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HGQDUUUUU==
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
+        Fri, 13 Mar 2020 10:45:06 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:32874 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgCMOpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:45:06 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEf90K043459;
+        Fri, 13 Mar 2020 14:44:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=2bYGbHKQiCujE7eTENg61jJv56inJcLz71K5/wejO7s=;
+ b=0SODmnzDpyhHGABLe/wttFYJee2Ivt8Vtjws6qQ57PlYcOdIetPOZ9mi5oMP4Tb7IrJZ
+ b4puuikREjkIvbIvkdlyU+ZGMJhlHSkSqgdUXKsyoP4ysq56uXwtx6653zAyOyJagKTM
+ ggformcYpGt/GH2nCFcREF6M0IURRBwVf+lV0Od0276atq6H70al9zRO2HHlL4l0JkFX
+ /IILAswaMQgLsDGwd4MMyAe8YuJNnAazzVoijzYL/u/bRvFuZ0Ve8cpyszDyHNVUO7Xp
+ k8P4ey0xbQdKT6T2ODmjVaY1yeXLNPOsFqFlEDSJ2ABKGksL+csHcBkc9Kne1eSG/P60 Cg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2yqtaev721-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 14:44:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEcMR2011141;
+        Fri, 13 Mar 2020 14:44:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2yqtact4ba-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 14:44:57 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02DEitmJ019360;
+        Fri, 13 Mar 2020 14:44:55 GMT
+Received: from dhcp-10-175-173-225.vpn.oracle.com (/10.175.173.225)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Mar 2020 07:44:55 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, frowand.list@gmail.com,
+        gregkh@linuxfoundation.org, shuah@kernel.org
+Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v7 kunit-next 0/4] kunit: add debugfs representation to show results
+Date:   Fri, 13 Mar 2020 14:44:38 +0000
+Message-Id: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=4
+ malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=4
+ mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+When kunit tests are run on native (i.e. non-UML) environments, the results
+of test execution are often intermixed with dmesg output.  This patch
+series attempts to solve this by providing a debugfs representation
+of the results of the last test run, available as
 
-The MP8869 from Monolithic Power Systems is a single output DC/DC
-converter. The voltage can be controlled via I2C.
+/sys/kernel/debug/kunit/<testsuite>/results
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/regulator/Kconfig  |   7 ++
- drivers/regulator/Makefile |   1 +
- drivers/regulator/mp886x.c | 229 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 237 insertions(+)
- create mode 100644 drivers/regulator/mp886x.c
+Changes since v6:
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 074a2ef..2f73eee 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -624,6 +624,13 @@ config REGULATOR_MP8859
- 	  Say M here if you want to include support for the regulator as a
- 	  module. The module will be named "mp8859".
- 
-+config REGULATOR_MP886X
-+	tristate "MPS MP8869 regulator driver"
-+	depends on I2C && (OF || COMPILE_TEST)
-+	select REGMAP_I2C
-+	help
-+	  This driver supports the MP8869 voltage regulator.
-+
- config REGULATOR_MPQ7920
- 	tristate "Monolithic MPQ7920 PMIC"
- 	depends on I2C && OF
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index c0d6b96..39611df 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -79,6 +79,7 @@ obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
- obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
- obj-$(CONFIG_REGULATOR_MCP16502) += mcp16502.o
- obj-$(CONFIG_REGULATOR_MP8859) += mp8859.o
-+obj-$(CONFIG_REGULATOR_MP886X) += mp886x.o
- obj-$(CONFIG_REGULATOR_MPQ7920) += mpq7920.o
- obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
- obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
-diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
-new file mode 100644
-index 00000000..2f0f54b
---- /dev/null
-+++ b/drivers/regulator/mp886x.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// MP8869 regulator driver
-+//
-+// Copyright (C) 2020 Synaptics Incorporated
-+//
-+// Author: Jisheng Zhang <jszhang@kernel.org>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+#define MP886X_VSEL		0x00
-+#define  MP886X_V_BOOT		(1 << 7)
-+#define MP886X_SYSCNTLREG1	0x01
-+#define  MP886X_MODE		(1 << 0)
-+#define  MP886X_GO		(1 << 6)
-+#define  MP886X_EN		(1 << 7)
-+
-+struct mp886x_device_info {
-+	struct device *dev;
-+	struct regulator_desc desc;
-+	struct regulator_init_data *regulator;
-+	struct gpio_desc *en_gpio;
-+	u32 r[2];
-+	unsigned sel;
-+};
-+
-+static int mp886x_set_mode(struct regulator_dev *rdev, unsigned int mode)
-+{
-+	switch (mode) {
-+	case REGULATOR_MODE_FAST:
-+		regmap_update_bits(rdev->regmap, MP886X_SYSCNTLREG1,
-+				   MP886X_MODE, MP886X_MODE);
-+		break;
-+	case REGULATOR_MODE_NORMAL:
-+		regmap_update_bits(rdev->regmap, MP886X_SYSCNTLREG1,
-+				   MP886X_MODE, 0);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static unsigned int mp886x_get_mode(struct regulator_dev *rdev)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read(rdev->regmap, MP886X_SYSCNTLREG1, &val);
-+	if (ret < 0)
-+		return ret;
-+	if (val & MP886X_MODE)
-+		return REGULATOR_MODE_FAST;
-+	else
-+		return REGULATOR_MODE_NORMAL;
-+}
-+
-+static int mp8869_set_voltage_sel(struct regulator_dev *rdev, unsigned sel)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(rdev->regmap, MP886X_SYSCNTLREG1,
-+				 MP886X_GO, MP886X_GO);
-+	if (ret < 0)
-+		return ret;
-+
-+	sel <<= ffs(rdev->desc->vsel_mask) - 1;
-+	return regmap_update_bits(rdev->regmap, rdev->desc->vsel_reg,
-+				  MP886X_V_BOOT | rdev->desc->vsel_mask, sel);
-+}
-+
-+static inline unsigned int mp8869_scale(unsigned int uv, u32 r1, u32 r2)
-+{
-+	u32 tmp = uv * r1 / r2;
-+	return uv + tmp;
-+}
-+
-+static int mp8869_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, uv;
-+	unsigned int val;
-+	bool fbloop;
-+
-+	ret = regmap_read(rdev->regmap, rdev->desc->vsel_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	fbloop = val & MP886X_V_BOOT;
-+	if (fbloop) {
-+		uv = rdev->desc->min_uV;
-+		uv = mp8869_scale(uv, di->r[0], di->r[1]);
-+		return regulator_map_voltage_linear(rdev, uv, uv);
-+	}
-+
-+	val &= rdev->desc->vsel_mask;
-+	val >>= ffs(rdev->desc->vsel_mask) - 1;
-+
-+	return val;
-+}
-+
-+static const struct regulator_ops mp8869_regulator_ops = {
-+	.set_voltage_sel = mp8869_set_voltage_sel,
-+	.get_voltage_sel = mp8869_get_voltage_sel,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.map_voltage = regulator_map_voltage_linear,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.set_mode = mp886x_set_mode,
-+	.get_mode = mp886x_get_mode,
-+};
-+
-+static int mp886x_regulator_register(struct mp886x_device_info *di,
-+				     struct regulator_config *config)
-+{
-+	struct regulator_desc *rdesc = &di->desc;
-+	struct regulator_dev *rdev;
-+
-+	rdesc->name = "mp886x-reg";
-+	rdesc->supply_name = "vin";
-+	rdesc->ops = of_device_get_match_data(di->dev);
-+	rdesc->type = REGULATOR_VOLTAGE;
-+	rdesc->n_voltages = 128;
-+	rdesc->enable_reg = MP886X_SYSCNTLREG1;
-+	rdesc->enable_mask = MP886X_EN;
-+	rdesc->min_uV = 600000;
-+	rdesc->uV_step = 10000;
-+	rdesc->vsel_reg = MP886X_VSEL;
-+	rdesc->vsel_mask = 0x3f;
-+	rdesc->owner = THIS_MODULE;
-+
-+	rdev = devm_regulator_register(di->dev, &di->desc, config);
-+	if (IS_ERR(rdev))
-+		return PTR_ERR(rdev);
-+	di->sel = rdesc->ops->get_voltage_sel(rdev);
-+	return 0;
-+}
-+
-+static const struct regmap_config mp886x_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int mp886x_i2c_probe(struct i2c_client *client,
-+			    const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct device_node *np = dev->of_node;
-+	struct mp886x_device_info *di;
-+	struct regulator_config config = { };
-+	struct regmap *regmap;
-+	int ret;
-+
-+	di = devm_kzalloc(dev, sizeof(struct mp886x_device_info), GFP_KERNEL);
-+	if (!di)
-+		return -ENOMEM;
-+
-+	di->regulator = of_get_regulator_init_data(dev, np, &di->desc);
-+	if (!di->regulator) {
-+		dev_err(dev, "Platform data not found!\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32_array(np, "mps,fb-voltage-divider",
-+					 di->r, 2);
-+	if (ret)
-+		return ret;
-+
-+	di->en_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
-+	if (IS_ERR(di->en_gpio))
-+		return PTR_ERR(di->en_gpio);
-+
-+	di->dev = dev;
-+
-+	regmap = devm_regmap_init_i2c(client, &mp886x_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to allocate regmap!\n");
-+		return PTR_ERR(regmap);
-+	}
-+	i2c_set_clientdata(client, di);
-+
-+	config.dev = di->dev;
-+	config.init_data = di->regulator;
-+	config.regmap = regmap;
-+	config.driver_data = di;
-+	config.of_node = np;
-+
-+	ret = mp886x_regulator_register(di, &config);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to register regulator!\n");
-+	return ret;
-+}
-+
-+static const struct of_device_id mp886x_dt_ids[] = {
-+	{
-+		.compatible = "mps,mp8869",
-+		.data = &mp8869_regulator_ops
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mp886x_dt_ids);
-+
-+static const struct i2c_device_id mp886x_id[] = {
-+	{ "mp886x", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, mp886x_id);
-+
-+static struct i2c_driver mp886x_regulator_driver = {
-+	.driver = {
-+		.name = "mp886x-regulator",
-+		.of_match_table = of_match_ptr(mp886x_dt_ids),
-+	},
-+	.probe = mp886x_i2c_probe,
-+	.id_table = mp886x_id,
-+};
-+module_i2c_driver(mp886x_regulator_driver);
-+
-+MODULE_AUTHOR("Jisheng Zhang <jszhang@kernel.org>");
-+MODULE_DESCRIPTION("MP886x regulator driver");
-+MODULE_LICENSE("GPL v2");
+- fixed regexp parsing in kunit_parser.py to ensure test results are read
+  successfully with 4-space indentation (Brendan, patch 3)
+
+Changes since v5:
+
+- replaced undefined behaviour use of snprintf(buf, ..., buf) in
+  kunit_log() with a function to append string to existing log
+  (Frank, patch 1)
+- added clarification on log size limitations to documentation
+  (Frank, patch 4)
+
+Changes since v4:
+
+- added suite-level log expectations to kunit log test (Brendan, patch 2)
+- added log expectations (of it being NULL) for case where
+  CONFIG_KUNIT_DEBUGFS=n to kunit log test (patch 2)
+- added patch 3 which replaces subtest tab indentation with 4 space
+  indentation as per TAP 14 spec (Frank, patch 3)
+
+Changes since v3:
+
+- added CONFIG_KUNIT_DEBUGFS to support conditional compilation of debugfs
+  representation, including string logging (Frank, patch 1)
+- removed unneeded NULL check for test_case in
+  kunit_suite_for_each_test_case() (Frank, patch 1)
+- added kunit log test to verify logging multiple strings works
+  (Frank, patch 2)
+- rephrased description of results file (Frank, patch 3)
+
+Changes since v2:
+
+- updated kunit_status2str() to kunit_status_to_string() and made it
+  static inline in include/kunit/test.h (Brendan)
+- added log string to struct kunit_suite and kunit_case, with log
+  pointer in struct kunit pointing at the case log.  This allows us
+  to collect kunit_[err|info|warning]() messages at the same time
+  as we printk() them.  This solves for the most part the sharing
+  of log messages between test execution and debugfs since we
+  just print the suite log (which contains the test suite preamble)
+  and the individual test logs.  The only exception is the suite-level
+  status, which we cannot store in the suite log as it would mean
+  we'd print the suite and its status prior to the suite's results.
+  (Brendan, patch 1)
+- dropped debugfs-based kunit run patch for now so as not to cause
+  problems with tests currently under development (Brendan)
+- fixed doc issues with code block (Brendan, patch 3)
+
+Changes since v1:
+ - trimmed unneeded include files in lib/kunit/debugfs.c (Greg)
+ - renamed global debugfs functions to be prefixed with kunit_ (Greg)
+ - removed error checking for debugfs operations (Greg)
+
+Alan Maguire (4):
+  kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
+  kunit: add log test
+  kunit: subtests should be indented 4 spaces according to TAP
+  kunit: update documentation to describe debugfs representation
+
+ Documentation/dev-tools/kunit/usage.rst |  14 +++
+ include/kunit/test.h                    |  59 +++++++++++--
+ lib/kunit/Kconfig                       |   8 ++
+ lib/kunit/Makefile                      |   4 +
+ lib/kunit/assert.c                      |  79 ++++++++---------
+ lib/kunit/debugfs.c                     | 116 +++++++++++++++++++++++++
+ lib/kunit/debugfs.h                     |  30 +++++++
+ lib/kunit/kunit-test.c                  |  45 +++++++++-
+ lib/kunit/test.c                        | 147 +++++++++++++++++++++++++-------
+ tools/testing/kunit/kunit_parser.py     |  10 +--
+ 10 files changed, 426 insertions(+), 86 deletions(-)
+ create mode 100644 lib/kunit/debugfs.c
+ create mode 100644 lib/kunit/debugfs.h
+
 -- 
-2.7.4
-
+1.8.3.1
 
