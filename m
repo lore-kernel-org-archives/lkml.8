@@ -2,164 +2,204 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1ECC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75437C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443E7206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="hhG9YDXA"
+	by mail.kernel.org (Postfix) with ESMTP id 3E513206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584113930;
+	bh=SRcprPq3VbUw28EYa7ZTMQ0PDgqkWwXJE4sUUr+6mak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vpvIjLSSfO2VFgpcurkdWWeCFQQBKmGbCebyJUWn5PT+QSCuniGRd1EqcuFpjyAT9
+	 4/P4qZIZjyDwQ60adleEcA9uZ5PUTnVKpNfn1UpcCxV09A8E/3SmarHaOIcRkcHQG/
+	 jSPfjTOsI6zNZVe8jZaWDoqJWCUwtkrvtyyqEt4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCMPfA (ORCPT
+        id S1726684AbgCMPit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:35:00 -0400
-Received: from mail-co1nam11on2040.outbound.protection.outlook.com ([40.107.220.40]:6132
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726446AbgCMPe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:34:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LBpUja6u9YtOEpIogQu36NBpoRZFCqToRoLdDCdMC+oHr/dcRfnwEyV0/23YSAKVYRBKVx7KoB9A0uaPWLaAKTLVYsLvXq0mFZvYhzpAcqFWqzAlY1MpicJZoh6kTAaxHUS5iV/x2SP+wlr6rmejZ168d5Um0epafGj3iWQVuPsjzJkh7Du8MlYObsQEDiWxx+pzXYhlDE/XxQG1lAO+rAybH2vvz/j/mdthpGG3remmOXl/90t4iJj2BoTWYfU0ISMSjnPH9mBraxJ/IOFD2xYFjFo6kCcIM+m3LiI69Jq8pUg4J4kvas/xuwQW+ztZjGl3IVuSIi9PGSfCQUD7bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1QrJXH34Af3wy3eOaPZ8mFRizX/izUQ397oGXnT4LNc=;
- b=AoLkyIDOBUP47bi/60h6ou6ySxQVPTxhP1qHPSp6EevqvyJl5smFHkV5Dlmp2Gp/tPKMMaYOw9p1Dufq0fCc/pXt6xUJJGw5h6r/OPkHyjZ6VUvKMkJyf9lG0qDnAf0s86Z7T/Wp77v0AiXgVPY0N7SWjFdordakt/9eHdbqVnOLJ+Y87Dma3K1fw2NPp0cdbIBrnnALzSxK1FFGuhaTuHUSHvB075x3+3gF3KfTE7ledla6woVho362FQabd2xXFQ0rNFKpepFpA00kfg5VKeZ1EaxsH0Kf8ZWnmLVGeX32Yo0uVSP6JfCDBlaxvzQcqSeXPSIAYcpaSLfqS0Icqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1QrJXH34Af3wy3eOaPZ8mFRizX/izUQ397oGXnT4LNc=;
- b=hhG9YDXAhCx9iWmRGbE6g46Dxwz5C/+4pRZXwwWZ5DkaPZSdm3b0x0V7+b3JKsV2FRGGbApo3hxT3yw+xAE1xlKf34LpIYUDrPhFt+7T5Qwg+FCcV0PxtcBjPhwR1sTULuio0+4jBQ9wv9/xqL4tTqwcq8nZf3f6rdW2eUShSl0=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB3550.namprd11.prod.outlook.com (2603:10b6:208:ee::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Fri, 13 Mar
- 2020 15:34:43 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2814.018; Fri, 13 Mar 2020
- 15:34:43 +0000
-From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 3/5] staging: wfx: make warning about pending frame less
- scary
-Thread-Topic: [PATCH 3/5] staging: wfx: make warning about pending frame less
- scary
-Thread-Index: AQHV9sSohBK2XnsHaUKZ+zJWfUL/nqhFB/mAgAGkUgA=
-Date:   Fri, 13 Mar 2020 15:34:43 +0000
-Message-ID: <6287924.ghGFUMk3OD@pc-42>
-References: <20200310101356.182818-1-Jerome.Pouiller@silabs.com>
- <20200310101356.182818-4-Jerome.Pouiller@silabs.com>
- <20200312143019.GN11561@kadam>
-In-Reply-To: <20200312143019.GN11561@kadam>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7b3fa763-bf0c-469d-3911-08d7c7640dce
-x-ms-traffictypediagnostic: MN2PR11MB3550:
-x-microsoft-antispam-prvs: <MN2PR11MB35508EA16C5337AEFC184BA993FA0@MN2PR11MB3550.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:206;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(396003)(39850400004)(136003)(346002)(376002)(199004)(186003)(81166006)(8936002)(71200400001)(26005)(54906003)(316002)(2906002)(8676002)(4326008)(478600001)(81156014)(64756008)(6916009)(6506007)(6486002)(91956017)(76116006)(66446008)(66476007)(6512007)(66574012)(33716001)(9686003)(66946007)(5660300002)(66556008)(86362001)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3550;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KeC1LVAD8/qlYhyNhaOUUhCqk0Qc0pmYWhiXpyGAGS7wkE2/ykWOmfNqMQv7ofFF+3ZT5PjWd4b+LBaQ5jwJx6Rmp+AyAy9ChJAcWJafvc4sBdIHD622aSnxb+U5hAdcO5gi77reTkmIFZz2C0BXqP35wnADOBW8/InXqeR1c0y09LnGycH38cmzi1v9eUA0J4V4dD8GdI/LescuIy14SE5hxhuRD4qUntQUgutCojLtNbO/vwXX1tgaA5wQz47C9+MYcggltJ+d0X71CB+X4Y8+AEESxqB9Vm3W/mjdducLnCKIlksU/o6Q0Yns4UgdnOgPiyhzXZpy+l8e1mxkYpLMoQuzQ73IrUvwXvRXErqYmJUrJbHt6dqpVa/VX3nQuBS//PCKUeAJXPOqhza5MvSIpJO4w9GeKdWDkd7C0SpRpCI50Ia6CpFZrHUXmd0tJdPbtg0SNGGgTq0HUGsNnWgo4PUCYhIC/O6OqLK5IztGkQWhICNZ8qjXpHY+5W3E
-x-ms-exchange-antispam-messagedata: HAJtEkw55bCDqxWPYO8URB915Y2BB5R6hkTGiMViiMBjXh+xymQyqu6yKuNe8s+Yy1GtjruX5LZbs3AuMrGt99Axvp/lc873tP4zJemSKH/aLE2xnrm4IojEtkRCP1rKNMAHIEKMexV9HawCz0fV5w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <6C67A06F0BF48A49A32F1DC4F83F5FCB@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 13 Mar 2020 11:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgCMPis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:38:48 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F1E206B7;
+        Fri, 13 Mar 2020 15:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584113927;
+        bh=SRcprPq3VbUw28EYa7ZTMQ0PDgqkWwXJE4sUUr+6mak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AK9IQ7fafeWpV/b8ZdLGtNbLAeXPqMoyNVnWkSl9ctJv6P00D6o7eDydetcG5jnNQ
+         KaXRui8AwelxVhb8R1mU5D6RGmQEi9FsaUjNr1v/T50U9Qsmmc2iVveRVq6TCCNqUa
+         ygaJLjogAYUY+6cKRK9vhCCUiZJyvYjOfI9ZRV4c=
+Date:   Fri, 13 Mar 2020 08:38:47 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Sahitya Tummala <stummala@codeaurora.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+Message-ID: <20200313153847.GA185439@google.com>
+References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
+ <20200312170242.GA185506@google.com>
+ <20200313012604.GI20234@codeaurora.org>
+ <20200313014535.GA72547@google.com>
+ <20200313051245.GK20234@codeaurora.org>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b3fa763-bf0c-469d-3911-08d7c7640dce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 15:34:43.6451
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Cg0qYDQrOFu3VX4FyV//cEciTGTtF4voQG5B3NxdK99t1nOPuZX1JLrT79t+0b/FsCiso/sHCZPe2/mf4fGeAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3550
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313051245.GK20234@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 12 March 2020 15:30:19 CET Dan Carpenter wrote:
-> On Tue, Mar 10, 2020 at 11:13:54AM +0100, Jerome Pouiller wrote:
-[...]
-> So it really helps me if the commit message restates the subject.  The
-> truth is that I don't really even like the advice that Josh wrote in
-> the howto about patch descriptions.  I normally start by explaining the
-> problem then how I solved it.  But I try not to be a pedant, so long as
-> I can understand the problem and the patch that's fine.  So how I would
-> write this commit message is:
->=20
->     The warning message about releasing a station while Tx is in
->     progress will trigger a stack trace, possibly a reboot depending
->     on the configuration, and a syzbot email.  It's not necessarily
->     a big deal that transmission is still in process so let's make the
->     warning less scary.
+On 03/13, Sahitya Tummala wrote:
+> On Thu, Mar 12, 2020 at 06:45:35PM -0700, Jaegeuk Kim wrote:
+> > On 03/13, Sahitya Tummala wrote:
+> > > On Thu, Mar 12, 2020 at 10:02:42AM -0700, Jaegeuk Kim wrote:
+> > > > On 03/12, Sahitya Tummala wrote:
+> > > > > F2FS already has a default timeout of 5 secs for discards that
+> > > > > can be issued during umount, but it can take more than the 5 sec
+> > > > > timeout if the underlying UFS device queue is already full and there
+> > > > > are no more available free tags to be used. In that case, submit_bio()
+> > > > > will wait for the already queued discard requests to complete to get
+> > > > > a free tag, which can potentially take way more than 5 sec.
+> > > > > 
+> > > > > Fix this by submitting the discard requests with REQ_NOWAIT
+> > > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
+> > > > > scenario without waiting in the context of submit_bio(). The FS can
+> > > > > then handle these requests by retrying again within the stipulated
+> > > > > discard timeout period to avoid long latencies.
+> > > > > 
+> > > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > > > > ---
+> > > > >  fs/f2fs/segment.c | 14 +++++++++++++-
+> > > > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > > > index fb3e531..a06bbac 100644
+> > > > > --- a/fs/f2fs/segment.c
+> > > > > +++ b/fs/f2fs/segment.c
+> > > > > @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> > > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+> > > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
+> > > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > > > +	int flag;
+> > > > >  	block_t lstart, start, len, total_len;
+> > > > >  	int err = 0;
+> > > > >  
+> > > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> > > > > +
+> > > > >  	if (dc->state != D_PREP)
+> > > > >  		return 0;
+> > > > >  
+> > > > > @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
+> > > > >  		bio->bi_opf |= flag;
+> > > > >  		submit_bio(bio);
+> > > > > +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
+> > > > > +			dc->state = D_PREP;
+> > > > > +			err = dc->error;
+> > > > > +			break;
+> > > > > +		}
+> > > > >  
+> > > > >  		atomic_inc(&dcc->issued_discard);
+> > > > >  
+> > > > > @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > > > >  			}
+> > > > >  
+> > > > >  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > > > > +			if (dc->error == -EAGAIN) {
+> > > > > +				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> > > > 
+> > > > 						--> need to be DEFAULT_IO_TIMEOUT
+> > > 
+> > > Yes, i will update it.
+> > > 
+> > > > 
+> > > > > +				__relocate_discard_cmd(dcc, dc);
+> > > > 
+> > > > It seems we need to submit bio first, and then move dc to wait_list, if there's
+> > > > no error, in __submit_discard_cmd().
+> > > 
+> > > Yes, that is not changed and it still happens for the failed request
+> > > that is re-queued here too when it gets submitted again later.
+> > > 
+> > > I am requeuing the discard request failed with -EAGAIN error back to 
+> > > dcc->pend_list[] from wait_list. It will call submit_bio() for this request
+> > > and also move to wait_list when it calls __submit_discard_cmd() again next
+> > > time. Please let me know if I am missing anything?
+> > 
+> > This patch has no problem, but I'm thinking that __submit_discard_cmd() needs
+> > to return with any values by assumption where the waiting list should have
+> > submitted commands.
+> 
+> I think dc->queued will indicated that dc is moved to wait_list. This can be
+> used along with return value to take right action. Can you check if this
+> works?
 
-Indeed, my idea was the reviewers start by reading subjects and then read
-the body of the commit. I will care now.
+I mean why can't do this *in* __submit_discard_cmd()? Otherwise, existing and
+future callers should consider to handle the errors everytime.
 
-
-> > Signed-off-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
-> > ---
-> >  drivers/staging/wfx/sta.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-> > index 03d0f224ffdb..010e13bcd33e 100644
-> > --- a/drivers/staging/wfx/sta.c
-> > +++ b/drivers/staging/wfx/sta.c
-> > @@ -605,7 +605,9 @@ int wfx_sta_remove(struct ieee80211_hw *hw, struct =
-ieee80211_vif *vif,
-> >       int i;
-> >
-> >       for (i =3D 0; i < ARRAY_SIZE(sta_priv->buffered); i++)
-> > -             WARN(sta_priv->buffered[i], "release station while Tx is =
-in progress");
-> > +             if (sta_priv->buffered[i])
-> > +                     dev_warn(wvif->wdev->dev, "release station while =
-%d pending frame on queue %d",
-> > +                              sta_priv->buffered[i], i);
->=20
-> Why print a warning message at all if this is a normal situation?  Just
-> delete the whole thing.
-
-I saw cases where it happened and it seems harmless. In add, this code
-is going to be released with 5.6. So, the WARN have to be removed.
-
-However, I think it is not normal. Even if it is harmless, it is the
-symptom of something unclean.
-
-So, I think that dev_warn() is the correct level of notification.
-
-(I should have included that in the commit log)
-
---=20
-J=E9r=F4me Pouiller
-
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index a06bbac..91df060 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -1478,7 +1478,7 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>         struct list_head *pend_list;
+>         struct discard_cmd *dc, *tmp;
+>         struct blk_plug plug;
+> -       int i, issued = 0;
+> +       int i, err, issued = 0;
+>         bool io_interrupted = false;
+> 
+>         if (dpolicy->timeout != 0)
+> @@ -1517,8 +1517,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>                                 break;
+>                         }
+> 
+> -                       __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> -                       if (dc->error == -EAGAIN) {
+> +                       err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> +                       if (err && err != -EAGAIN) {
+> +                               __remove_discard_cmd(sbi, dc);
+> +                       } else if (err == -EAGAIN && dc->queued) {
+>                                 congestion_wait(BLK_RW_ASYNC, HZ/50);
+>                                 __relocate_discard_cmd(dcc, dc);
+>                         }
+> 
+> thanks,
+> > 
+> > > 
+> > > Thanks,
+> > > 
+> > > > 
+> > > > > +			}
+> > > > >  
+> > > > >  			if (issued >= dpolicy->max_requests)
+> > > > >  				break;
+> > > > > -- 
+> > > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> > > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > > 
+> > > -- 
+> > > --
+> > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> 
+> -- 
+> --
+> Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
