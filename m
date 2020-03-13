@@ -2,257 +2,117 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBABC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE68C1975A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D6620637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424ED206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sammserver.com header.i=@sammserver.com header.b="ieoQhbKA";
-	dkim=pass (1024-bit key) header.d=sammserver.com header.i=@sammserver.com header.b="ieoQhbKA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bkjZUC84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgCMCUo (ORCPT
+        id S1726467AbgCMChm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:20:44 -0400
-Received: from 109-230-57-163.dynamic.orange.sk ([109.230.57.163]:43320 "EHLO
-        mail.sammserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgCMCUo (ORCPT
+        Thu, 12 Mar 2020 22:37:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28026 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726393AbgCMChl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:20:44 -0400
-X-Greylist: delayed 414 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 22:20:44 EDT
-Received: by mail.sammserver.com (Postfix, from userid 5011)
-        id 606E79680EF; Fri, 13 Mar 2020 03:13:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sammserver.com;
-        s=email; t=1584065629;
-        bh=zfV5kJe2jcMw5pkT2Q5C36ebJ7s9UW+ZS2hPtNF64T0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ieoQhbKAWyD162lQ9DwIU2NAxjTQOvuw2n6WvJ6+nSd8r6crV4BARL8iC/Ihq0JwO
-         A8y9kkkw94fmylfHJt7cHoRxd/6Yb21ic0kfr+rAEwEj5gyQ9+aF//oCbKMHkAS8DC
-         /aIBCJuc2gAbbbxOdFYgXrHci/SLFzL6Eflmu5Kk=
-Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
-        by mail.sammserver.com (Postfix) with ESMTP id 117679680EC;
-        Fri, 13 Mar 2020 03:13:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sammserver.com;
-        s=email; t=1584065629;
-        bh=zfV5kJe2jcMw5pkT2Q5C36ebJ7s9UW+ZS2hPtNF64T0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ieoQhbKAWyD162lQ9DwIU2NAxjTQOvuw2n6WvJ6+nSd8r6crV4BARL8iC/Ihq0JwO
-         A8y9kkkw94fmylfHJt7cHoRxd/6Yb21ic0kfr+rAEwEj5gyQ9+aF//oCbKMHkAS8DC
-         /aIBCJuc2gAbbbxOdFYgXrHci/SLFzL6Eflmu5Kk=
-Received: by fastboi.localdomain (Postfix, from userid 1000)
-        id ECD9E14226FB; Fri, 13 Mar 2020 03:13:48 +0100 (CET)
-From:   =?UTF-8?q?Samuel=20=C4=8Cavoj?= <sammko@sammserver.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     =?UTF-8?q?Samuel=20=C4=8Cavoj?= <sammko@sammserver.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Silvan Jegen <s.jegen@gmail.com>
-Subject: [PATCH v2] HID: Add driver fixing Glorious PC Gaming Race mouse report descriptor
-Date:   Fri, 13 Mar 2020 03:12:38 +0100
-Message-Id: <20200313021236.1069863-1-sammko@sammserver.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200308212729.51336-1-sammko@sammserver.com>
-References: <20200308212729.51336-1-sammko@sammserver.com>
+        Thu, 12 Mar 2020 22:37:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584067061; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8+Fp02besIsFwZ5qqgYlxtsBb8MnCynSCHmXef2Td1g=;
+ b=bkjZUC8433QzzqJ0v2iAJJmbtpByCQ+CpHmCSgnQ1mSk6k7/JvJZA/o2L9zKPGh7/BgRu1Og
+ n0AxkhfpK/T3Zc87+n/GvdjWHpVPE/IAZjIiL+uByIqEzI3RUot/sguA8FAu66hcs2OybKc6
+ J7jjSLAXrZ05x8Ub14ak2LSB21g=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6af1f4.7f0d07e552d0-smtp-out-n01;
+ Fri, 13 Mar 2020 02:37:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 627C9C433BA; Fri, 13 Mar 2020 02:37:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C57FBC433D2;
+        Fri, 13 Mar 2020 02:37:39 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Mar 2020 08:07:39 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
+ firmware
+In-Reply-To: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+Message-ID: <05311a9c9899a13c6479f6628d506f08@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Glorious Model O mice (and also at least the Model O-, which is
-driver-wise the same mouse) have a bug in the descriptor of HID
-Report with ID 2. This report is used for Consumer Control buttons,
-which can be mapped using the provided Windows only software.
+On 2020-03-02 07:37, Bjorn Andersson wrote:
+> Update the firmware-name of the remoteproc nodes to mimic the firmware
+> structure on other 845 devices.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index 09ad37b0dd71..fa7f4373a668 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -50,6 +50,7 @@ vreg_s4a_1p8: pm8998-smps4 {
+> 
+>  &adsp_pas {
+>  	status = "okay";
+> +	firmware-name = "qcom/sdm845/adsp.mdt";
+>  };
+> 
+>  &apps_rsc {
+> @@ -350,6 +351,7 @@ vreg_s3c_0p6: smps3 {
+> 
+>  &cdsp_pas {
+>  	status = "okay";
+> +	firmware-name = "qcom/sdm845/cdsp.mdt";
+>  };
+> 
+>  &gcc {
+> @@ -372,6 +374,11 @@ &i2c10 {
+>  	clock-frequency = <400000>;
+>  };
+> 
+> +&mss_pil {
+> +	status = "okay";
 
-Here is an excerpt from the original descriptor:
+status okay isn't really needed...
 
-  INPUT(2)[INPUT]
-    Field(0)
-      Flags( Constant Variable Absolute )
-    Field(1)
-      Flags( Constant Variable Absolute )
-    Field(2)
-      Flags( Constant Variable Absolute )
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-The issue is the Constant flag specified on all 3 fields, which
-causes the hid driver to ignore changes in these fields and
-essentialy causes the buttons to not work at all. The submitted driver
-patches the descriptor to end up with the following:
+> +	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
+> +};
+> +
+>  &qupv3_id_1 {
+>  	status = "okay";
+>  };
 
-  INPUT(2)[INPUT]
-    Field(0)
-      Flags( Variable Relative )
-    Field(1)
-      Flags( Variable Relative )
-    Field(2)
-      Flags( Variable Relative )
-
-The Constant bit is reset and the Relative bit has been set in
-order to prevent repeat events when holding down the button.
-
-Additionally, the device name is changed from the hardware-reported
-"SINOWEALTH Wired Gaming Mouse" to "Glorious Model O" or "Glorious
-Model D".
-
-Signed-off-by: Samuel Čavoj <sammko@sammserver.com>
----
-Changes v1 -> v2:
-* Revert accidental removal of unrelated whitespace.
-* Use HID_MAIN_ITEM_* constants instead of a magic number.
-* Add support for the Glorious Model D mouse.
-
----
- drivers/hid/Kconfig        |  7 ++++
- drivers/hid/Makefile       |  1 +
- drivers/hid/hid-glorious.c | 86 ++++++++++++++++++++++++++++++++++++++
- drivers/hid/hid-ids.h      |  4 ++
- 4 files changed, 98 insertions(+)
- create mode 100644 drivers/hid/hid-glorious.c
-
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index 494a39e74939..945533b36010 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -362,6 +362,13 @@ config HID_GFRM
- 	---help---
- 	Support for Google Fiber TV Box remote controls
- 
-+config HID_GLORIOUS
-+	tristate "Glorious PC Gaming Race mice"
-+	depends on HID
-+	help
-+	  Support for Glorious PC Gaming Race mice such as
-+	  the Glorious Model O, O- and D.
-+
- config HID_HOLTEK
- 	tristate "Holtek HID devices"
- 	depends on USB_HID
-diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index bfefa365b1ce..be0f38dcf942 100644
---- a/drivers/hid/Makefile
-+++ b/drivers/hid/Makefile
-@@ -48,6 +48,7 @@ obj-$(CONFIG_HID_ELO)		+= hid-elo.o
- obj-$(CONFIG_HID_EZKEY)		+= hid-ezkey.o
- obj-$(CONFIG_HID_GEMBIRD)	+= hid-gembird.o
- obj-$(CONFIG_HID_GFRM)		+= hid-gfrm.o
-+obj-$(CONFIG_HID_GLORIOUS)  += hid-glorious.o
- obj-$(CONFIG_HID_GOOGLE_HAMMER)	+= hid-google-hammer.o
- obj-$(CONFIG_HID_GT683R)	+= hid-gt683r.o
- obj-$(CONFIG_HID_GYRATION)	+= hid-gyration.o
-diff --git a/drivers/hid/hid-glorious.c b/drivers/hid/hid-glorious.c
-new file mode 100644
-index 000000000000..558eb08c19ef
---- /dev/null
-+++ b/drivers/hid/hid-glorious.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  USB HID driver for Glorious PC Gaming Race
-+ *  Glorious Model O, O- and D mice.
-+ *
-+ *  Copyright (c) 2020 Samuel Čavoj <sammko@sammserver.com>
-+ */
-+
-+/*
-+ */
-+
-+#include <linux/hid.h>
-+#include <linux/module.h>
-+
-+#include "hid-ids.h"
-+
-+MODULE_AUTHOR("Samuel Čavoj <sammko@sammserver.com>");
-+MODULE_DESCRIPTION("HID driver for Glorious PC Gaming Race mice");
-+
-+/*
-+ * Glorious Model O and O- specify the const flag in the consumer input
-+ * report descriptor, which leads to inputs being ignored. Fix this
-+ * by patching the descriptor.
-+ */
-+static __u8 *glorious_report_fixup(struct hid_device *hdev, __u8 *rdesc,
-+		unsigned int *rsize)
-+{
-+	if (*rsize == 213 &&
-+		rdesc[84] == 129 && rdesc[112] == 129 && rdesc[140] == 129 &&
-+		rdesc[85] == 3   && rdesc[113] == 3   && rdesc[141] == 3) {
-+		hid_info(hdev, "patching Glorious Model O consumer control report descriptor\n");
-+		rdesc[85] = rdesc[113] = rdesc[141] = \
-+			HID_MAIN_ITEM_VARIABLE | HID_MAIN_ITEM_RELATIVE;
-+	}
-+	return rdesc;
-+}
-+
-+static void glorious_update_name(struct hid_device *hdev)
-+{
-+	const char *model = "Device";
-+
-+	switch (hdev->product) {
-+	case USB_DEVICE_ID_GLORIOUS_MODEL_O:
-+		model = "Model O"; break;
-+	case USB_DEVICE_ID_GLORIOUS_MODEL_D:
-+		model = "Model D"; break;
-+	}
-+
-+	snprintf(hdev->name, sizeof(hdev->name), "%s %s", "Glorious", model);
-+}
-+
-+static int glorious_probe(struct hid_device *hdev,
-+		const struct hid_device_id *id)
-+{
-+	int ret;
-+
-+	hdev->quirks |= HID_QUIRK_INPUT_PER_APP;
-+
-+	ret = hid_parse(hdev);
-+	if (ret)
-+		return ret;
-+
-+	glorious_update_name(hdev);
-+
-+	return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
-+}
-+
-+static const struct hid_device_id glorious_devices[] = {
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_GLORIOUS,
-+		USB_DEVICE_ID_GLORIOUS_MODEL_O) },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_GLORIOUS,
-+		USB_DEVICE_ID_GLORIOUS_MODEL_D) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(hid, glorious_devices);
-+
-+static struct hid_driver glorious_driver = {
-+	.name = "glorious",
-+	.id_table = glorious_devices,
-+	.probe = glorious_probe,
-+	.report_fixup = glorious_report_fixup
-+};
-+
-+module_hid_driver(glorious_driver);
-+
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 3a400ce603c4..ba3fb2117257 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -464,6 +464,10 @@
- #define USB_DEVICE_ID_GENERAL_TOUCH_WIN8_PIT_010A 0x010a
- #define USB_DEVICE_ID_GENERAL_TOUCH_WIN8_PIT_E100 0xe100
- 
-+#define USB_VENDOR_ID_GLORIOUS  0x258a
-+#define USB_DEVICE_ID_GLORIOUS_MODEL_D 0x0033
-+#define USB_DEVICE_ID_GLORIOUS_MODEL_O 0x0036
-+
- #define I2C_VENDOR_ID_GOODIX		0x27c6
- #define I2C_DEVICE_ID_GOODIX_01F0	0x01f0
- 
 -- 
-2.25.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
