@@ -2,130 +2,200 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE244C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ECC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E16206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584121717;
-	bh=RTV73rV9tbgZdgxhjVpHf5cbOgrjF4jkzZeN0BW3HjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LQabSvD8EJJkZThtXZHfo1Ums/OZWLVVmRG08kbS8tMXeR5ZRfZyQYwCpR5AFSeHW
-	 0hmp6uoT5sXhGYVpRXTb/e8uaoX6jpSFYZbfgcl2Iq8v1PqJF/kjcblchRa9tFJ0oF
-	 1qwDrrZncw4492VXMmpduSoIdNiuKOLg/pdP/3ZA=
+	by mail.kernel.org (Postfix) with ESMTP id E6EA4206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgCMRsg (ORCPT
+        id S1727133AbgCMRtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbgCMRsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:48:35 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD81D206E9;
-        Fri, 13 Mar 2020 17:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584121714;
-        bh=RTV73rV9tbgZdgxhjVpHf5cbOgrjF4jkzZeN0BW3HjQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rTBDRlbNcvDK/M91AaxB/KKnHxKNQs5wEAymm0R3zmKwmKgdJygpE4ZsGPQ9coL9N
-         OYVFjHI3f6jp625auhfZc1YBPcOjdbUwuqBfrp6tAIUn89ZPdKMAFrRhzWScGBrRKX
-         LQ2mB2q61tTaRHFX3muuqAdvw4OuG3GM3e94uy3U=
-Date:   Fri, 13 Mar 2020 19:48:27 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Jaewon Kim <jaewon31.kim@samsung.com>, adobriyan@gmail.com,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
-Message-ID: <20200313174827.GA67638@unreal>
-References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
- <20200311034441.23243-1-jaewon31.kim@samsung.com>
- <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
+        Fri, 13 Mar 2020 13:49:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39241 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgCMRtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:49:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jCoRO-00020u-Lp; Fri, 13 Mar 2020 17:49:46 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts/spelling.txt: add more spellings to spelling.txt
+Date:   Fri, 13 Mar 2020 17:49:46 +0000
+Message-Id: <20200313174946.228216-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
-> +CC linux-api, please include in future versions as well
->
-> On 3/11/20 4:44 AM, Jaewon Kim wrote:
-> > /proc/meminfo or show_free_areas does not show full system wide memory
-> > usage status. There seems to be huge hidden memory especially on
-> > embedded Android system. Because it usually have some HW IP which do not
-> > have internal memory and use common DRAM memory.
-> >
-> > In Android system, most of those hidden memory seems to be vmalloc pages
-> > , ion system heap memory, graphics memory, and memory for DRAM based
-> > compressed swap storage. They may be shown in other node but it seems to
-> > useful if /proc/meminfo shows all those extra memory information. And
-> > show_mem also need to print the info in oom situation.
-> >
-> > Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
-> > ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
-> > memory using zsmalloc can be seen through vmstat by commit 91537fee0013
-> > ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
-> >
-> > Memory usage of specific driver can be various so that showing the usage
-> > through upstream meminfo.c is not easy. To print the extra memory usage
-> > of a driver, introduce following APIs. Each driver needs to count as
-> > atomic_long_t.
-> >
-> > int register_extra_meminfo(atomic_long_t *val, int shift,
-> > 			   const char *name);
-> > int unregister_extra_meminfo(atomic_long_t *val);
-> >
-> > Currently register ION system heap allocator and zsmalloc pages.
-> > Additionally tested on local graphics driver.
-> >
-> > i.e) cat /proc/meminfo | tail -3
-> > IonSystemHeap:    242620 kB
-> > ZsPages:          203860 kB
-> > GraphicDriver:    196576 kB
-> >
-> > i.e.) show_mem on oom
-> > <6>[  420.856428]  Mem-Info:
-> > <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
-> > <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
->
-> I like the idea and the dynamic nature of this, so that drivers not present
-> wouldn't add lots of useless zeroes to the output.
-> It also makes simpler the decisions of "what is important enough to need its own
-> meminfo entry".
->
-> The suggestion for hunting per-driver /sys files would only work if there was a
-> common name to such files so once can find(1) them easily.
-> It also doesn't work for the oom/failed alloc warning output.
+From: Colin Ian King <colin.king@canonical.com>
 
-Of course there is a need to have a stable name for such an output, this
-is why driver/core should be responsible for that and not drivers authors.
+Here are some of the more common spelling mistakes and typos that I've
+found while fixing up spelling mistakes in the kernel since November 2019
 
-The use case which I had in mind slightly different than to look after OOM.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ scripts/spelling.txt | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-I'm interested to optimize our drivers in their memory footprint to
-allow better scale in SR-IOV mode where one device creates many separate
-copies of itself. Those copies easily can take gigabytes of RAM due to
-the need to optimize for high-performance networking. Sometimes the
-amount of memory and not HW is actually limits the scale factor.
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index 6d5243904e76..d9cd24cf0d40 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -177,7 +177,9 @@ atomatically||automatically
+ atomicly||atomically
+ atempt||attempt
+ attachement||attachment
++attatch||attach
+ attched||attached
++attemp||attempt
+ attemps||attempts
+ attemping||attempting
+ attepmpt||attempt
+@@ -235,11 +237,13 @@ brievely||briefly
+ brigde||bridge
+ broadcase||broadcast
+ broadcat||broadcast
++bufer||buffer
+ bufufer||buffer
+ cacluated||calculated
+ caculate||calculate
+ caculation||calculation
+ cadidate||candidate
++cahces||caches
+ calender||calendar
+ calescing||coalescing
+ calle||called
+@@ -338,7 +342,6 @@ conditon||condition
+ condtion||condition
+ conected||connected
+ conector||connector
+-connecetd||connected
+ configration||configuration
+ configuartion||configuration
+ configuation||configuration
+@@ -349,7 +352,9 @@ configuretion||configuration
+ configutation||configuration
+ conider||consider
+ conjuction||conjunction
++connecetd||connected
+ connectinos||connections
++connetor||connector
+ connnection||connection
+ connnections||connections
+ consistancy||consistency
+@@ -469,6 +474,7 @@ difinition||definition
+ digial||digital
+ dimention||dimension
+ dimesions||dimensions
++disgest||digest
+ dispalying||displaying
+ diplay||display
+ directon||direction
+@@ -553,6 +559,7 @@ etsablishment||establishment
+ etsbalishment||establishment
+ excecutable||executable
+ exceded||exceeded
++exceeed||exceed
+ excellant||excellent
+ execeeded||exceeded
+ execeeds||exceeds
+@@ -742,6 +749,7 @@ initialzing||initializing
+ initilization||initialization
+ initilize||initialize
+ initliaze||initialize
++initilized||initialized
+ inofficial||unofficial
+ inrerface||interface
+ insititute||institute
+@@ -802,6 +810,7 @@ irrelevent||irrelevant
+ isnt||isn't
+ isssue||issue
+ issus||issues
++iteraions||iterations
+ iternations||iterations
+ itertation||iteration
+ itslef||itself
+@@ -828,6 +837,7 @@ libary||library
+ librairies||libraries
+ libraris||libraries
+ licenceing||licencing
++limted||limited
+ logaritmic||logarithmic
+ loggging||logging
+ loggin||login
+@@ -924,6 +934,7 @@ nerver||never
+ nescessary||necessary
+ nessessary||necessary
+ noticable||noticeable
++notication||notification
+ notications||notifications
+ notifcations||notifications
+ notifed||notified
+@@ -1007,6 +1018,7 @@ pendantic||pedantic
+ peprocessor||preprocessor
+ perfoming||performing
+ perfomring||performing
++periperal||peripheral
+ peripherial||peripheral
+ permissons||permissions
+ peroid||period
+@@ -1043,6 +1055,7 @@ prefferably||preferably
+ premption||preemption
+ prepaired||prepared
+ preperation||preparation
++preprare||prepare
+ pressre||pressure
+ primative||primitive
+ princliple||principle
+@@ -1064,6 +1077,7 @@ processsed||processed
+ processsing||processing
+ procteted||protected
+ prodecure||procedure
++progamming||programming
+ progams||programs
+ progess||progress
+ programers||programmers
+@@ -1151,12 +1165,14 @@ replys||replies
+ reponse||response
+ representaion||representation
+ reqeust||request
++reqister||register
+ requestied||requested
+ requiere||require
+ requirment||requirement
+ requred||required
+ requried||required
+ requst||request
++requsted||requested
+ reregisteration||reregistration
+ reseting||resetting
+ reseved||reserved
+@@ -1227,10 +1243,12 @@ seqeuncer||sequencer
+ seqeuencer||sequencer
+ sequece||sequence
+ sequencial||sequential
++serivce||service
+ serveral||several
+ servive||service
+ setts||sets
+ settting||setting
++shapshot||snapshot
+ shotdown||shutdown
+ shoud||should
+ shouldnt||shouldn't
+-- 
+2.25.1
 
-So I would imagine this feature being used as an aid for the driver
-developers and not for the runtime decisions.
-
-My 2-cents.
-
-Thanks
