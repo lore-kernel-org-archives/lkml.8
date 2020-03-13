@@ -2,100 +2,140 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D46C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45577C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2B920724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCaYXyky"
+	by mail.kernel.org (Postfix) with ESMTP id 2068520749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584103256;
+	bh=tgITx3udnkEgR1xuM2wgsUOQN1rzYgIiMUlHDX0dYaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wJnjdfURJEzEHr1Y4Iaks5hFY3tUrPQSI+aNoTRGFwMA2LshoC++mLwszjQVcePL0
+	 +U1Da0qY6c1lwdSDcEBKilFvW/eR8RM1vynWeS8ZT6GYMjoQnZ7tgK2hJtrefIsxji
+	 iITJYO8RKT/eiB+4oN4wiGt8GUFE6TxMRyadxgpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgCMMj2 (ORCPT
+        id S1726716AbgCMMkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:39:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40649 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgCMMj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:39:27 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t24so4934871pgj.7;
-        Fri, 13 Mar 2020 05:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=82fh5ikZzwKUrDyxKdkrVpEoXp45d69vwfzZrK4OB9Y=;
-        b=pCaYXykyMMfYJbyQ038KVkMaZj5sVhcE1wI9n+DIITZBD1COymiWYDlC2+vi3BkDe5
-         i7kQH6pmbvgu8eANJjGjeZlLUrWXum7PjEX4DjLSqgLEctKva8qM21NXiDYAf/DDQQQE
-         L8rxZMTefdgs00WF8xnVu/Y2y8Mwji2lTJixln5E6Q0Vu8eaUMKHQUSworyvlNbGMb4w
-         IHqkVBWBsEsO6tOsMRMy+L9MW6A5kxdx//5JLo7nnCLfITirV2XeXYXFuyW/ULCzklY1
-         3TmT73s3kFSu496C7jyF5KB3W39w/czyDIczygu6zBAEbcnfy6NyYVEfe8Q2rCDwcn7K
-         XoiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=82fh5ikZzwKUrDyxKdkrVpEoXp45d69vwfzZrK4OB9Y=;
-        b=lrrAXZ/ySUvrtMzKrk//L5Kt30ErUfhJjKOnPz2rypAQmYXQcp35oN6vb0ZvBTpEXi
-         uU4iblh2d89b2cCIm8IHxKFEk76G76ii6E7tWXD0jwhC9OqjiVk++fhTgM5tETx6eGni
-         R/JNvHiixn3SttHRK3JKn73dnGO7DMY4FLxIQJTQzeJd+aMVMcuYoK8AVyNT76vmnFNn
-         eQyPhLA2lUDXQp19vQgY1FebMsDcGDKjQ1tlCzBQZDo57xuEnLS2Y3HArSUmcQW4kCRR
-         B4y9leaOulBKnKGcsGW0d6F1i17qvtu+b8EkTs8LFoWA0L3yk4tt+ZFYmw9JcCzdbi8j
-         1/0Q==
-X-Gm-Message-State: ANhLgQ1CWs0+y+J2J/aRdq+/j/q2VulJHbTz4wfmSsppfzZrBRhpLGDH
-        E4GkIgfzfPkWIIkThVuxLTwPX+AZ
-X-Google-Smtp-Source: ADFU+vuImrtM0XybOBDGHeqm5s5eZa/2ofaKmPkRzVsqKSc+epZy8Mo8eq/uT1r3tLISxjO+lRdp6w==
-X-Received: by 2002:aa7:81d6:: with SMTP id c22mr5822084pfn.147.1584103166804;
-        Fri, 13 Mar 2020 05:39:26 -0700 (PDT)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id t17sm57522622pgn.94.2020.03.13.05.39.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 05:39:26 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 18:09:24 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>
-Cc:     linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] parisc: Replace setup_irq() by request_irq()
-Message-ID: <20200313123924.GA7225@afzalpc>
-References: <20200304005025.5179-1-afzal.mohd.ma@gmail.com>
+        Fri, 13 Mar 2020 08:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbgCMMky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:40:54 -0400
+Received: from localhost (unknown [171.76.107.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11DE520724;
+        Fri, 13 Mar 2020 12:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584103254;
+        bh=tgITx3udnkEgR1xuM2wgsUOQN1rzYgIiMUlHDX0dYaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g+gYR2LvtvlA8v0hrbnFWvTCbNSX+vqRry14M3Uuzpmxt6rk3WQ17iARExRk3loUu
+         /wv5tuKoZZG+9F2ADNlpQUpQL3QvpXf3XRRO/WZWYTz7k9TYO0dmFaevu/XiM3Ocih
+         fgS4UxHUWklz/tB0U6Nqc99mbA8f1sIDr9FwlI3E=
+Date:   Fri, 13 Mar 2020 18:10:49 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 8/9] ASoC: qcom: q6asm-dai: add support for
+ ALAC and APE decoders
+Message-ID: <20200313124049.GJ4885@vkoul-mobl>
+References: <20200313101627.1561365-1-vkoul@kernel.org>
+ <20200313101627.1561365-9-vkoul@kernel.org>
+ <fcee2779-fee8-e3d9-590f-e28fc5880ea0@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304005025.5179-1-afzal.mohd.ma@gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <fcee2779-fee8-e3d9-590f-e28fc5880ea0@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helge Deller,
+On 13-03-20, 12:15, Srinivas Kandagatla wrote:
+> 
+> 
+> On 13/03/2020 10:16, Vinod Koul wrote:
+> > Qualcomm DSPs also supports the ALAC and APE decoders, so add support
+> > for these and convert the snd_codec_params to qdsp format.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> One minor nit, other that,
+> 
+> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-On Wed, Mar 04, 2020 at 06:20:24AM +0530, afzal mohammed wrote:
-> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-> occur after memory allocators are ready.
-> 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
-> 
-> Hence replace setup_irq() by request_irq().
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-> ---
-> Hi parisc maintainers,
-> 
-> if okay w/ this change, please consider taking it thr' your tree, else please
-> let me know.
+Thanks Srini for the reviews
 
-Seems you handle the pull requests for parisc, if this patch is okay,
-can you please consider for inclusion in your tree.
+> > ---
+> >   sound/soc/qcom/qdsp6/q6asm-dai.c | 67 +++++++++++++++++++++++++++++++-
+> >   1 file changed, 66 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> > index 53c250778eea..948710759824 100644
+> > --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
+> > +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> > @@ -628,12 +628,16 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
+> >   	struct q6asm_dai_data *pdata;
+> >   	struct q6asm_flac_cfg flac_cfg;
+> >   	struct q6asm_wma_cfg wma_cfg;
+> > +	struct q6asm_alac_cfg alac_cfg;
+> > +	struct q6asm_ape_cfg ape_cfg;
+> >   	unsigned int wma_v9 = 0;
+> >   	struct device *dev = c->dev;
+> >   	int ret;
+> >   	union snd_codec_options *codec_options;
+> >   	struct snd_dec_flac *flac;
+> >   	struct snd_dec_wma *wma;
+> > +	struct snd_dec_alac *alac;
+> > +	struct snd_dec_ape *ape;
+> >   	codec_options = &(prtd->codec_param.codec.options);
+> > @@ -756,6 +760,65 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
+> >   			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
+> >   			return -EIO;
+> >   		}
+> > +		break;
+> > +
+> > +	case SND_AUDIOCODEC_ALAC:
+> > +		memset(&alac_cfg, 0x0, sizeof(alac_cfg));
+> > +		alac = &codec_options->alac_d;
+> > +
+> > +		alac_cfg.sample_rate = params->codec.sample_rate;
+> > +		alac_cfg.avg_bit_rate = params->codec.bit_rate;
+> > +		alac_cfg.bit_depth = prtd->bits_per_sample;
+> > +		alac_cfg.num_channels = params->codec.ch_in;
+> > +
+> > +		alac_cfg.frame_length = alac->frame_length;
+> > +		alac_cfg.pb = alac->pb;
+> > +		alac_cfg.mb = alac->mb;
+> > +		alac_cfg.kb = alac->kb;
+> > +		alac_cfg.max_run = alac->max_run;
+> > +		alac_cfg.compatible_version = alac->compatible_version;
+> > +		alac_cfg.max_frame_bytes = alac->max_frame_bytes;
+> > +
+> > +		switch (params->codec.ch_in) {
+> > +		case 1:
+> > +			alac_cfg.channel_layout_tag = (100 << 16) | 1;
+> 
+> We should probably define this layout tag in asm.h
+> something like:
+> 
+> #define ALAC_CHANNEL_LAYOUT_TAG_Mono (100<<16) | 1
+> #define ALAC_CHANNEL_LAYOUT_TAG_STEREO (100<<16) | 2
 
-Regards
-afzal
+Sure I will add these
+
+-- 
+~Vinod
