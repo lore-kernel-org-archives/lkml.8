@@ -2,273 +2,146 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3AFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C41BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6140620658
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB1120724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgCMDWH (ORCPT
+        id S1726514AbgCMDXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:22:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6766 "EHLO mga09.intel.com"
+        Thu, 12 Mar 2020 23:23:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36154 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgCMDWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:22:07 -0400
+        id S1726246AbgCMDXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:23:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 20:22:04 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 20:23:32 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
-   d="scan'208";a="278066137"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Mar 2020 20:22:02 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     alex.williamson@redhat.com, zhenyuw@linux.intel.com,
-        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v4 7/7] drm/i915/gvt: rw more pages a time for shadow context
-Date:   Thu, 12 Mar 2020 23:12:33 -0400
-Message-Id: <20200313031233.8094-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313030548.7705-1-yan.y.zhao@intel.com>
-References: <20200313030548.7705-1-yan.y.zhao@intel.com>
+   d="scan'208";a="232280339"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.82]) ([10.238.4.82])
+  by orsmga007.jf.intel.com with ESMTP; 12 Mar 2020 20:23:29 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH] KVM: VMX: Micro-optimize vmexit time when not exposing
+ PMU
+To:     Wanpeng Li <kernellwp@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1584007547-4802-1-git-send-email-wanpengli@tencent.com>
+ <87r1xxrhb0.fsf@vitty.brq.redhat.com>
+ <CANRm+Cwawew=Xygxmzr2jmgPAKqDxvkqxxzjvoxnRRjC_Jx9Xw@mail.gmail.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <79141339-3506-1fe4-2e69-8430f4c202bd@intel.com>
+Date:   Fri, 13 Mar 2020 11:23:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CANRm+Cwawew=Xygxmzr2jmgPAKqDxvkqxxzjvoxnRRjC_Jx9Xw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. as shadow context is pinned in intel_vgpu_setup_submission() and
-unpinned in intel_vgpu_clean_submission(), its base virtual address of
-is safely obtained from lrc_reg_state. no need to call kmap()/kunmap()
-repeatedly.
+Hi Wanpeng,
 
-2. IOVA(GPA)s of context pages are checked in this patch and if they are
-consecutive, read/write them together in one
-intel_gvt_hypervisor_read_gpa() / intel_gvt_hypervisor_write_gpa().
+On 2020/3/12 19:05, Wanpeng Li wrote:
+> On Thu, 12 Mar 2020 at 18:36, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>> Wanpeng Li <kernellwp@gmail.com> writes:
+>>
+>>> From: Wanpeng Li <wanpengli@tencent.com>
+>>>
+>>> PMU is not exposed to guest by most of cloud providers since the bad performance
+>>> of PMU emulation and security concern. However, it calls perf_guest_switch_get_msrs()
+>>> and clear_atomic_switch_msr() unconditionally even if PMU is not exposed to the
+>>> guest before each vmentry.
+>>>
+>>> ~1.28% vmexit time reduced can be observed by kvm-unit-tests/vmexit.flat on my
+>>> SKX server.
+>>>
+>>> Before patch:
+>>> vmcall 1559
+>>>
+>>> After patch:
+>>> vmcall 1539
+>>>
+>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>>> ---
+>>>   arch/x86/kvm/vmx/vmx.c | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index 40b1e61..fd526c8 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -6441,6 +6441,9 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+>>>        int i, nr_msrs;
+>>>        struct perf_guest_switch_msr *msrs;
+>>>
+>>> +     if (!vcpu_to_pmu(&vmx->vcpu)->version)
+>>> +             return;
+>>> +
+>>>        msrs = perf_guest_get_msrs(&nr_msrs);
+>>>
+>>>        if (!msrs)
+>> Personally, I'd prefer this to be expressed as
+>>
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index 40b1e6138cd5..ace92076c90f 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -6567,7 +6567,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>
+>>          pt_guest_enter(vmx);
+>>
+>> -       atomic_switch_perf_msrs(vmx);
+>> +       if (vcpu_to_pmu(&vmx->vcpu)->version)
+We may use 'vmx->vcpu.arch.pmu.version'.
 
-after the two changes in this patch,
-average cycles for populate_shadow_context() and update_guest_context()
-are reduced by ~10000-20000 cycles, depending on the average number of
-consecutive pages in each read/write.
+I would vote in favor of adding the "unlikely (vmx->vcpu.arch.pmu.version)"
+check to the atomic_switch_perf_msrs(), which follows pt_guest_enter(vmx).
 
-(1) comparison of cycles of
-populate_shadow_context() + update_guest_context() when executing
-different benchmarks
- -------------------------------------------------------------
-|       cycles      | glmark2     | lightsmark  | openarena   |
-|-------------------------------------------------------------|
-| before this patch | 65968       | 97852       | 61373       |
-|  after this patch | 56017 (85%) | 73862 (75%) | 47463 (77%) |
- -------------------------------------------------------------
+>> +               atomic_switch_perf_msrs(vmx);
+>> +
+> I just hope the beautiful codes before, I testing this version before
+> sending out the patch, ~30 cycles can be saved which means that ~2%
+> vmexit time, will update in next version. Let's wait Paolo for other
+> opinions below.
 
-(2) average count of pages read/written a time in
-populate_shadow_context() and update_guest_context()
-for each benchmark
+You may factor the cost of the "pmu-> version check' itself (~10 cycles)
+into your overall 'micro-optimize' revenue.
 
- -----------------------------------------------------------
-|     page cnt      | glmark2     | lightsmark  | openarena |
-|-----------------------------------------------------------|
-| before this patch |    1        |      1      |    1      |
-|  after this patch |    5.25     |     19.99   |   20      |
- ------------------------------------------------------------
-
-(3) comparison of benchmarks scores
- ---------------------------------------------------------------------
-|      score        | glmark2       | lightsmark     | openarena      |
-|---------------------------------------------------------------------|
-| before this patch | 1244          | 222.18         | 114.4          |
-|  after this patch | 1248 (100.3%) | 225.8 (101.6%) | 115.0 (100.9%) |
- ---------------------------------------------------------------------
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- drivers/gpu/drm/i915/gvt/scheduler.c | 95 ++++++++++++++++++++--------
- 1 file changed, 67 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
-index 1c95bf8cbed0..852d924f6abc 100644
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -128,16 +128,21 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- {
- 	struct intel_vgpu *vgpu = workload->vgpu;
- 	struct intel_gvt *gvt = vgpu->gvt;
--	struct drm_i915_gem_object *ctx_obj =
--		workload->req->context->state->obj;
-+	struct intel_context *ctx = workload->req->context;
- 	struct execlist_ring_context *shadow_ring_context;
--	struct page *page;
- 	void *dst;
-+	void *context_base;
- 	unsigned long context_gpa, context_page_num;
-+	unsigned long gpa_base; /* first gpa of consecutive GPAs */
-+	unsigned long gpa_size; /* size of consecutive GPAs */
- 	int i;
- 
--	page = i915_gem_object_get_page(ctx_obj, LRC_STATE_PN);
--	shadow_ring_context = kmap(page);
-+	GEM_BUG_ON(!intel_context_is_pinned(ctx));
-+
-+	context_base = (void *) ctx->lrc_reg_state -
-+				(LRC_STATE_PN << I915_GTT_PAGE_SHIFT);
-+
-+	shadow_ring_context = (void *) ctx->lrc_reg_state;
- 
- 	sr_oa_regs(workload, (u32 *)shadow_ring_context, true);
- #define COPY_REG(name) \
-@@ -169,7 +174,6 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 			I915_GTT_PAGE_SIZE - sizeof(*shadow_ring_context));
- 
- 	sr_oa_regs(workload, (u32 *)shadow_ring_context, false);
--	kunmap(page);
- 
- 	if (IS_RESTORE_INHIBIT(shadow_ring_context->ctx_ctrl.val))
- 		return 0;
-@@ -184,8 +188,12 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 	if (IS_BROADWELL(gvt->gt->i915) && workload->engine->id == RCS0)
- 		context_page_num = 19;
- 
--	i = 2;
--	while (i < context_page_num) {
-+
-+	/* find consecutive GPAs from gma until the first inconsecutive GPA.
-+	 * read from the continuous GPAs into dst virtual address
-+	 */
-+	gpa_size = 0;
-+	for (i = 2; i < context_page_num; i++) {
- 		context_gpa = intel_vgpu_gma_to_gpa(vgpu->gtt.ggtt_mm,
- 				(u32)((workload->ctx_desc.lrca + i) <<
- 				I915_GTT_PAGE_SHIFT));
-@@ -194,12 +202,24 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 			return -EFAULT;
- 		}
- 
--		page = i915_gem_object_get_page(ctx_obj, i);
--		dst = kmap(page);
--		intel_gvt_hypervisor_read_gpa(vgpu, context_gpa, dst,
--				I915_GTT_PAGE_SIZE);
--		kunmap(page);
--		i++;
-+		if (gpa_size == 0) {
-+			gpa_base = context_gpa;
-+			dst = context_base + (i << I915_GTT_PAGE_SHIFT);
-+		} else if (context_gpa != gpa_base + gpa_size)
-+			goto read;
-+
-+		gpa_size += I915_GTT_PAGE_SIZE;
-+
-+		if (i == context_page_num - 1)
-+			goto read;
-+
-+		continue;
-+
-+read:
-+		intel_gvt_hypervisor_read_gpa(vgpu, gpa_base, dst, gpa_size);
-+		gpa_base = context_gpa;
-+		gpa_size = I915_GTT_PAGE_SIZE;
-+		dst = context_base + (i << I915_GTT_PAGE_SHIFT);
- 	}
- 	return 0;
- }
-@@ -784,19 +804,23 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- {
- 	struct i915_request *rq = workload->req;
- 	struct intel_vgpu *vgpu = workload->vgpu;
--	struct drm_i915_gem_object *ctx_obj = rq->context->state->obj;
-+	struct intel_context *ctx = workload->req->context;
- 	struct execlist_ring_context *shadow_ring_context;
--	struct page *page;
--	void *src;
- 	unsigned long context_gpa, context_page_num;
-+	unsigned long gpa_base; /* first gpa of consecutive GPAs */
-+	unsigned long gpa_size; /* size of consecutive GPAs*/
- 	int i;
- 	u32 ring_base;
- 	u32 head, tail;
- 	u16 wrap_count;
-+	void *src;
-+	void *context_base;
- 
- 	gvt_dbg_sched("ring id %d workload lrca %x\n", rq->engine->id,
- 		      workload->ctx_desc.lrca);
- 
-+	GEM_BUG_ON(!intel_context_is_pinned(ctx));
-+
- 	head = workload->rb_head;
- 	tail = workload->rb_tail;
- 	wrap_count = workload->guest_rb_head >> RB_HEAD_WRAP_CNT_OFF;
-@@ -820,9 +844,14 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 	if (IS_BROADWELL(rq->i915) && rq->engine->id == RCS0)
- 		context_page_num = 19;
- 
--	i = 2;
-+	context_base = (void *) ctx->lrc_reg_state -
-+			(LRC_STATE_PN << I915_GTT_PAGE_SHIFT);
- 
--	while (i < context_page_num) {
-+	/* find consecutive GPAs from gma until the first inconsecutive GPA.
-+	 * write to the consecutive GPAs from src virtual address
-+	 */
-+	gpa_size = 0;
-+	for (i = 2; i < context_page_num; i++) {
- 		context_gpa = intel_vgpu_gma_to_gpa(vgpu->gtt.ggtt_mm,
- 				(u32)((workload->ctx_desc.lrca + i) <<
- 					I915_GTT_PAGE_SHIFT));
-@@ -831,19 +860,30 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 			return;
- 		}
- 
--		page = i915_gem_object_get_page(ctx_obj, i);
--		src = kmap(page);
--		intel_gvt_hypervisor_write_gpa(vgpu, context_gpa, src,
--				I915_GTT_PAGE_SIZE);
--		kunmap(page);
--		i++;
-+		if (gpa_size == 0) {
-+			gpa_base = context_gpa;
-+			src = context_base + (i << I915_GTT_PAGE_SHIFT);
-+		} else if (context_gpa != gpa_base + gpa_size)
-+			goto write;
-+
-+		gpa_size += I915_GTT_PAGE_SIZE;
-+
-+		if (i == context_page_num - 1)
-+			goto write;
-+
-+		continue;
-+
-+write:
-+		intel_gvt_hypervisor_write_gpa(vgpu, gpa_base, src, gpa_size);
-+		gpa_base = context_gpa;
-+		gpa_size = I915_GTT_PAGE_SIZE;
-+		src = context_base + (i << I915_GTT_PAGE_SHIFT);
- 	}
- 
- 	intel_gvt_hypervisor_write_gpa(vgpu, workload->ring_context_gpa +
- 		RING_CTX_OFF(ring_header.val), &workload->rb_tail, 4);
- 
--	page = i915_gem_object_get_page(ctx_obj, LRC_STATE_PN);
--	shadow_ring_context = kmap(page);
-+	shadow_ring_context = (void *) ctx->lrc_reg_state;
- 
- #define COPY_REG(name) \
- 	intel_gvt_hypervisor_write_gpa(vgpu, workload->ring_context_gpa + \
-@@ -861,7 +901,6 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 			sizeof(*shadow_ring_context),
- 			I915_GTT_PAGE_SIZE - sizeof(*shadow_ring_context));
- 
--	kunmap(page);
- }
- 
- void intel_vgpu_clean_workloads(struct intel_vgpu *vgpu,
--- 
-2.17.1
+Thanks,
+Like Xu
+>
+>      Wanpeng
+>
+>> Also, (not knowing much about PMU), is
+>> "vcpu_to_pmu(&vmx->vcpu)->version" check correct?
+>>
+>> E.g. in intel_is_valid_msr() correct for Intel PMU or is it stated
+>> somewhere that it is generic rule?
+>>
+>> Also, speaking about cloud providers and the 'micro' nature of this
+>> optimization, would it rather make sense to introduce a static branch
+>> (the policy to disable vPMU is likely to be host wide, right)?
+>>
+>> --
+>> Vitaly
+>>
 
