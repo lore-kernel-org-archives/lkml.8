@@ -2,117 +2,197 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7959C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E1BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5152074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OsR77xO6"
+	by mail.kernel.org (Postfix) with ESMTP id D11802074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 20:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgCMUrZ (ORCPT
+        id S1727500AbgCMUsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:47:25 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40507 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgCMUrX (ORCPT
+        Fri, 13 Mar 2020 16:48:09 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:64647 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727385AbgCMUsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:47:23 -0400
-Received: by mail-pj1-f66.google.com with SMTP id bo3so3536630pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 13:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WmR0Zy/INv8T8Q5kpQokwP6/VvkYAWeVeStzwjBb3QQ=;
-        b=OsR77xO6S3/Q0dciqM0G3rlzGynb1g8GBeeGYt0oyJ2X9+/Yt1IVFN2292US9JwJ3I
-         m4gWfpLKPMMVfqbtGJzfzOdmZgnRQqxn05Eoc61EAhZQLc44M2ZHEjGuxdb7lXvQIfot
-         YNSbpQjw4kgzI//8hMEzKSiXnvuIlCFUfSj5o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WmR0Zy/INv8T8Q5kpQokwP6/VvkYAWeVeStzwjBb3QQ=;
-        b=CUMrYCbZMYY7a/Yz08xj2R3W+nLV1MfgVmX5hITBz7fqHfGHfj8OwLhJLmDjAcQhqT
-         6sGFWjKoaiG9GOZmEG5tttNnjs+G35M9SPHUC2KnU9R/VinaDm9AanEAaWFCKYTz2xpN
-         2OhFkz/wx2Dq/nHmPI/7xQxDfubU32YNcS0rs5QZHkimobNhsdcfb7C438wfJHzgfcmP
-         ZZElee1zm+fcu9m5eVbT1e6q5q8vRmCNUM0f1xx01ZBy+Qml7ktRHWqTJUls4/YZQSVz
-         GH5q3e17Di1g1DLVz2sckM+p3pCwezOpLOttPP3sJ+teidcIBZijlA+zv0qeKc6Pu60P
-         uJzQ==
-X-Gm-Message-State: ANhLgQ22uixiVBlmqHzRRJoS7z98poCXfdcnVrT0CVFo0jJUNerwRqBT
-        tX+IKsZE5jrTXN/ZViqHixGzOQ==
-X-Google-Smtp-Source: ADFU+vueocNRDiEDaoc5lL0rcsBqaOHG/wMpUZqEnr6mvREDuEKQvFR/4jeFV7cx64SuqEFaTFBMlA==
-X-Received: by 2002:a17:90a:da01:: with SMTP id e1mr12067723pjv.100.1584132442065;
-        Fri, 13 Mar 2020 13:47:22 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id a13sm26532278pfc.24.2020.03.13.13.47.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 13:47:21 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     gregkh@linuxfoundation.org
-Cc:     mka@chromium.org, swboyd@chromium.org, ryandcase@chromium.org,
-        bjorn.andersson@linaro.org, akashast@codeaurora.org,
-        skakit@codeaurora.org, rojay@codeaurora.org,
-        mgautam@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@google.com>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH 2/2] tty: serial: qcom_geni_serial: Don't try to manually disable the console
-Date:   Fri, 13 Mar 2020 13:46:52 -0700
-Message-Id: <20200313134635.2.I3648fac6c98b887742934146ac2729ecb7232eb1@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
-References: <20200313134635.1.Icf54c533065306b02b880c46dfd401d8db34e213@changeid>
+        Fri, 13 Mar 2020 16:48:09 -0400
+X-Originating-IP: 87.231.134.186
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 0C1B140007;
+        Fri, 13 Mar 2020 20:48:06 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Federico Fuga <fuga@studiofuga.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: mv64xxx: Implement I2C_M_RECV_LEN and I2C_FUNC_SMBUS_READ_BLOCK_DATA
+In-Reply-To: <20200222124805.GJ1716@kunai>
+References: <20200118115820.9080-1-fuga@studiofuga.com> <20200222124805.GJ1716@kunai>
+Date:   Fri, 13 Mar 2020 21:48:06 +0100
+Message-ID: <87k13ox9q1.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The geni serial driver's shutdown code had a special case to call
-console_stop().  Grepping through the code, it was the only serial
-driver doing something like this (the only other caller of
-console_stop() was in serial_core.c).
+Hello Wolfram,
 
-As far as I can tell there's no reason to call console_stop() in the
-geni code.  ...and a good reason _not_ to call it.  Specifically if
-you have an agetty running on the same serial port as the console then
-killing the agetty kills your console and if you start the agetty
-again the console doesn't come back.
+> On Sat, Jan 18, 2020 at 12:58:20PM +0100, Federico Fuga wrote:
+>> The i2c_mv64xxx driver doesn't implement the I2C_M_REC_LEN function
+>> essential to allow blocks with variable length to be read from an i2c
+>>  slave.
+>> This is needed to implement the SMBus Read Block Data function.
+>> 
+>> This patch implements the function by changing the bytes_left and
+>> msg len on the fly if the flag is specified.
+>> 
+>> It has been successfully tested on Allwinner A33 with a special
+>> i2c chip that returns variable length blocks on reading.
+>> 
+>> Signed-off-by: Federico Fuga <fuga@studiofuga.com>
+>> ---
+>
+> Gregory, any comment? I can't say much about the implementation. In
+> general, this is a nice feature to have...
 
-Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+I thought I was already sent a reviewed by, as I reviewed this patch
+before Frederico actually sent it.
 
- drivers/tty/serial/qcom_geni_serial.c | 4 ----
- 1 file changed, 4 deletions(-)
+So you can even add a
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 09d8612517aa..69a0072e0c53 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -827,10 +827,6 @@ static void get_tx_fifo_size(struct qcom_geni_serial_port *port)
- 
- static void qcom_geni_serial_shutdown(struct uart_port *uport)
- {
--	/* Stop the console before stopping the current tx */
--	if (uart_console(uport))
--		console_stop(uport->cons);
--
- 	disable_irq(uport->irq);
- }
- 
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+Thanks,
+
+Gregory
+
+
+>
+>>  drivers/i2c/busses/i2c-mv64xxx.c | 67 +++++++++++++++++++++++++-------
+>>  1 file changed, 53 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv64xxx.c
+>> index a5a95ea5b81a..cff9cb20bcc9 100644
+>> --- a/drivers/i2c/busses/i2c-mv64xxx.c
+>> +++ b/drivers/i2c/busses/i2c-mv64xxx.c
+>> @@ -128,6 +128,7 @@ struct mv64xxx_i2c_data {
+>>  	u32			addr1;
+>>  	u32			addr2;
+>>  	u32			bytes_left;
+>> +	u32         effective_length;
+>>  	u32			byte_posn;
+>>  	u32			send_stop;
+>>  	u32			block;
+>> @@ -333,7 +334,18 @@ static void mv64xxx_i2c_send_start(struct mv64xxx_i2c_data *drv_data)
+>>  {
+>>  	drv_data->msg = drv_data->msgs;
+>>  	drv_data->byte_posn = 0;
+>> -	drv_data->bytes_left = drv_data->msg->len;
+>> +
+>> +    /* If we should retrieve the length from the buffer, make sure */
+>> +	/* to read enough bytes to avoid sending the */
+>> +	/* STOP bit after the read if the first byte */
+>> +	if (drv_data->msg->flags & I2C_M_RECV_LEN) {
+>> +		drv_data->effective_length = -1;
+>> +		drv_data->bytes_left = 3;
+>> +	} else {
+>> +		drv_data->effective_length = drv_data->msg->len;
+>> +		drv_data->bytes_left = drv_data->msg->len;
+>> +	}
+>> +
+>>  	drv_data->aborting = 0;
+>>  	drv_data->rc = 0;
+>>  
+>> @@ -342,6 +354,42 @@ static void mv64xxx_i2c_send_start(struct mv64xxx_i2c_data *drv_data)
+>>  	       drv_data->reg_base + drv_data->reg_offsets.control);
+>>  }
+>>  
+>> +static void
+>> +mv64xxx_i2c_do_send_stop(struct mv64xxx_i2c_data *drv_data)
+>> +{
+>> +	drv_data->cntl_bits &= ~MV64XXX_I2C_REG_CONTROL_INTEN;
+>> +	writel(drv_data->cntl_bits | MV64XXX_I2C_REG_CONTROL_STOP,
+>> +		drv_data->reg_base + drv_data->reg_offsets.control);
+>> +	drv_data->block = 0;
+>> +	if (drv_data->errata_delay)
+>> +		udelay(5);
+>> +
+>> +	wake_up(&drv_data->waitq);
+>> +}
+>> +
+>> +static void
+>> +mv64xxx_i2c_do_read_data(struct mv64xxx_i2c_data *drv_data)
+>> +{
+>> +	u8 data;
+>> +
+>> +	data = readl(drv_data->reg_base + drv_data->reg_offsets.data);
+>> +	drv_data->msg->buf[drv_data->byte_posn++] = data;
+>> +
+>> +	if (drv_data->effective_length == -1) {
+>> +		/* length=0 should not be allowed, but is indeed possible.
+>> +		 * To avoid locking the chip, we keep reading at least 2 bytes
+>> +		 */
+>> +		if (data < 1)
+>> +			data = 1;
+>> +		drv_data->effective_length = data+1;
+>> +		drv_data->bytes_left = data+1;
+>> +		drv_data->msg->len = data+1;
+>> +	}
+>> +
+>> +	writel(drv_data->cntl_bits,
+>> +		drv_data->reg_base + drv_data->reg_offsets.control);
+>> +}
+>> +
+>>  static void
+>>  mv64xxx_i2c_do_action(struct mv64xxx_i2c_data *drv_data)
+>>  {
+>> @@ -392,23 +440,13 @@ mv64xxx_i2c_do_action(struct mv64xxx_i2c_data *drv_data)
+>>  		break;
+>>  
+>>  	case MV64XXX_I2C_ACTION_RCV_DATA:
+>> -		drv_data->msg->buf[drv_data->byte_posn++] =
+>> -			readl(drv_data->reg_base + drv_data->reg_offsets.data);
+>> -		writel(drv_data->cntl_bits,
+>> -			drv_data->reg_base + drv_data->reg_offsets.control);
+>> +	    mv64xxx_i2c_do_read_data(drv_data);
+>>  		break;
+>>  
+>>  	case MV64XXX_I2C_ACTION_RCV_DATA_STOP:
+>>  		drv_data->msg->buf[drv_data->byte_posn++] =
+>>  			readl(drv_data->reg_base + drv_data->reg_offsets.data);
+>> -		drv_data->cntl_bits &= ~MV64XXX_I2C_REG_CONTROL_INTEN;
+>> -		writel(drv_data->cntl_bits | MV64XXX_I2C_REG_CONTROL_STOP,
+>> -			drv_data->reg_base + drv_data->reg_offsets.control);
+>> -		drv_data->block = 0;
+>> -		if (drv_data->errata_delay)
+>> -			udelay(5);
+>> -
+>> -		wake_up(&drv_data->waitq);
+>> +	    mv64xxx_i2c_do_send_stop(drv_data);
+>>  		break;
+>>  
+>>  	case MV64XXX_I2C_ACTION_INVALID:
+>> @@ -706,7 +744,8 @@ mv64xxx_i2c_can_offload(struct mv64xxx_i2c_data *drv_data)
+>>  static u32
+>>  mv64xxx_i2c_functionality(struct i2c_adapter *adap)
+>>  {
+>> -	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL;
+>> +	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR |
+>> +		I2C_FUNC_SMBUS_READ_BLOCK_DATA | I2C_FUNC_SMBUS_EMUL;
+>>  }
+>>  
+>>  static int
+>> -- 
+>> 2.17.1
+>> 
+
 -- 
-2.25.1.481.gfbce0eb801-goog
-
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
