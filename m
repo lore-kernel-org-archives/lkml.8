@@ -2,121 +2,257 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CBAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBABC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F99D20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D6620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 02:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sammserver.com header.i=@sammserver.com header.b="ieoQhbKA";
+	dkim=pass (1024-bit key) header.d=sammserver.com header.i=@sammserver.com header.b="ieoQhbKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgCMCUL (ORCPT
+        id S1726514AbgCMCUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:20:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11641 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbgCMCUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 22:20:11 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D61035BC6EF8D275A173;
-        Fri, 13 Mar 2020 10:20:09 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 13 Mar
- 2020 10:20:05 +0800
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-To:     Sahitya Tummala <stummala@codeaurora.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <fa7d88ee-01e2-e82c-6c79-f24b90fbd472@huawei.com>
-Date:   Fri, 13 Mar 2020 10:20:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 12 Mar 2020 22:20:44 -0400
+Received: from 109-230-57-163.dynamic.orange.sk ([109.230.57.163]:43320 "EHLO
+        mail.sammserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgCMCUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 22:20:44 -0400
+X-Greylist: delayed 414 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 22:20:44 EDT
+Received: by mail.sammserver.com (Postfix, from userid 5011)
+        id 606E79680EF; Fri, 13 Mar 2020 03:13:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sammserver.com;
+        s=email; t=1584065629;
+        bh=zfV5kJe2jcMw5pkT2Q5C36ebJ7s9UW+ZS2hPtNF64T0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ieoQhbKAWyD162lQ9DwIU2NAxjTQOvuw2n6WvJ6+nSd8r6crV4BARL8iC/Ihq0JwO
+         A8y9kkkw94fmylfHJt7cHoRxd/6Yb21ic0kfr+rAEwEj5gyQ9+aF//oCbKMHkAS8DC
+         /aIBCJuc2gAbbbxOdFYgXrHci/SLFzL6Eflmu5Kk=
+Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
+        by mail.sammserver.com (Postfix) with ESMTP id 117679680EC;
+        Fri, 13 Mar 2020 03:13:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sammserver.com;
+        s=email; t=1584065629;
+        bh=zfV5kJe2jcMw5pkT2Q5C36ebJ7s9UW+ZS2hPtNF64T0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ieoQhbKAWyD162lQ9DwIU2NAxjTQOvuw2n6WvJ6+nSd8r6crV4BARL8iC/Ihq0JwO
+         A8y9kkkw94fmylfHJt7cHoRxd/6Yb21ic0kfr+rAEwEj5gyQ9+aF//oCbKMHkAS8DC
+         /aIBCJuc2gAbbbxOdFYgXrHci/SLFzL6Eflmu5Kk=
+Received: by fastboi.localdomain (Postfix, from userid 1000)
+        id ECD9E14226FB; Fri, 13 Mar 2020 03:13:48 +0100 (CET)
+From:   =?UTF-8?q?Samuel=20=C4=8Cavoj?= <sammko@sammserver.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     =?UTF-8?q?Samuel=20=C4=8Cavoj?= <sammko@sammserver.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Silvan Jegen <s.jegen@gmail.com>
+Subject: [PATCH v2] HID: Add driver fixing Glorious PC Gaming Race mouse report descriptor
+Date:   Fri, 13 Mar 2020 03:12:38 +0100
+Message-Id: <20200313021236.1069863-1-sammko@sammserver.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200308212729.51336-1-sammko@sammserver.com>
+References: <20200308212729.51336-1-sammko@sammserver.com>
 MIME-Version: 1.0
-In-Reply-To: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/12 19:14, Sahitya Tummala wrote:
-> F2FS already has a default timeout of 5 secs for discards that
-> can be issued during umount, but it can take more than the 5 sec
-> timeout if the underlying UFS device queue is already full and there
-> are no more available free tags to be used. In that case, submit_bio()
-> will wait for the already queued discard requests to complete to get
-> a free tag, which can potentially take way more than 5 sec.
-> 
-> Fix this by submitting the discard requests with REQ_NOWAIT
-> flags during umount. This will return -EAGAIN for UFS queue/tag full
-> scenario without waiting in the context of submit_bio(). The FS can
-> then handle these requests by retrying again within the stipulated
-> discard timeout period to avoid long latencies.
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> ---
->  fs/f2fs/segment.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index fb3e531..a06bbac 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
->  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
->  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> +	int flag;
->  	block_t lstart, start, len, total_len;
->  	int err = 0;
->  
-> +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> +
->  	if (dc->state != D_PREP)
->  		return 0;
->  
-> @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->  		bio->bi_end_io = f2fs_submit_discard_endio;
->  		bio->bi_opf |= flag;
->  		submit_bio(bio);
-> +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
+The Glorious Model O mice (and also at least the Model O-, which is
+driver-wise the same mouse) have a bug in the descriptor of HID
+Report with ID 2. This report is used for Consumer Control buttons,
+which can be mapped using the provided Windows only software.
 
-If we want to update dc->state, we need to cover it with dc->lock.
+Here is an excerpt from the original descriptor:
 
-> +			dc->state = D_PREP;
+  INPUT(2)[INPUT]
+    Field(0)
+      Flags( Constant Variable Absolute )
+    Field(1)
+      Flags( Constant Variable Absolute )
+    Field(2)
+      Flags( Constant Variable Absolute )
 
-BTW, one dc can be referenced by multiple bios, so dc->state could be updated to
-D_DONE later by f2fs_submit_discard_endio(), however we just relocate it to
-pending list... which is inconsistent status.
+The issue is the Constant flag specified on all 3 fields, which
+causes the hid driver to ignore changes in these fields and
+essentialy causes the buttons to not work at all. The submitted driver
+patches the descriptor to end up with the following:
 
-Thanks,
+  INPUT(2)[INPUT]
+    Field(0)
+      Flags( Variable Relative )
+    Field(1)
+      Flags( Variable Relative )
+    Field(2)
+      Flags( Variable Relative )
 
-> +			err = dc->error;
-> +			break;
-> +		}
->  
->  		atomic_inc(&dcc->issued_discard);
->  
-> @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->  			}
->  
->  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> +			if (dc->error == -EAGAIN) {
-> +				congestion_wait(BLK_RW_ASYNC, HZ/50);
-> +				__relocate_discard_cmd(dcc, dc);
-> +			}
->  
->  			if (issued >= dpolicy->max_requests)
->  				break;
-> 
+The Constant bit is reset and the Relative bit has been set in
+order to prevent repeat events when holding down the button.
+
+Additionally, the device name is changed from the hardware-reported
+"SINOWEALTH Wired Gaming Mouse" to "Glorious Model O" or "Glorious
+Model D".
+
+Signed-off-by: Samuel Čavoj <sammko@sammserver.com>
+---
+Changes v1 -> v2:
+* Revert accidental removal of unrelated whitespace.
+* Use HID_MAIN_ITEM_* constants instead of a magic number.
+* Add support for the Glorious Model D mouse.
+
+---
+ drivers/hid/Kconfig        |  7 ++++
+ drivers/hid/Makefile       |  1 +
+ drivers/hid/hid-glorious.c | 86 ++++++++++++++++++++++++++++++++++++++
+ drivers/hid/hid-ids.h      |  4 ++
+ 4 files changed, 98 insertions(+)
+ create mode 100644 drivers/hid/hid-glorious.c
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 494a39e74939..945533b36010 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -362,6 +362,13 @@ config HID_GFRM
+ 	---help---
+ 	Support for Google Fiber TV Box remote controls
+ 
++config HID_GLORIOUS
++	tristate "Glorious PC Gaming Race mice"
++	depends on HID
++	help
++	  Support for Glorious PC Gaming Race mice such as
++	  the Glorious Model O, O- and D.
++
+ config HID_HOLTEK
+ 	tristate "Holtek HID devices"
+ 	depends on USB_HID
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index bfefa365b1ce..be0f38dcf942 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -48,6 +48,7 @@ obj-$(CONFIG_HID_ELO)		+= hid-elo.o
+ obj-$(CONFIG_HID_EZKEY)		+= hid-ezkey.o
+ obj-$(CONFIG_HID_GEMBIRD)	+= hid-gembird.o
+ obj-$(CONFIG_HID_GFRM)		+= hid-gfrm.o
++obj-$(CONFIG_HID_GLORIOUS)  += hid-glorious.o
+ obj-$(CONFIG_HID_GOOGLE_HAMMER)	+= hid-google-hammer.o
+ obj-$(CONFIG_HID_GT683R)	+= hid-gt683r.o
+ obj-$(CONFIG_HID_GYRATION)	+= hid-gyration.o
+diff --git a/drivers/hid/hid-glorious.c b/drivers/hid/hid-glorious.c
+new file mode 100644
+index 000000000000..558eb08c19ef
+--- /dev/null
++++ b/drivers/hid/hid-glorious.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  USB HID driver for Glorious PC Gaming Race
++ *  Glorious Model O, O- and D mice.
++ *
++ *  Copyright (c) 2020 Samuel Čavoj <sammko@sammserver.com>
++ */
++
++/*
++ */
++
++#include <linux/hid.h>
++#include <linux/module.h>
++
++#include "hid-ids.h"
++
++MODULE_AUTHOR("Samuel Čavoj <sammko@sammserver.com>");
++MODULE_DESCRIPTION("HID driver for Glorious PC Gaming Race mice");
++
++/*
++ * Glorious Model O and O- specify the const flag in the consumer input
++ * report descriptor, which leads to inputs being ignored. Fix this
++ * by patching the descriptor.
++ */
++static __u8 *glorious_report_fixup(struct hid_device *hdev, __u8 *rdesc,
++		unsigned int *rsize)
++{
++	if (*rsize == 213 &&
++		rdesc[84] == 129 && rdesc[112] == 129 && rdesc[140] == 129 &&
++		rdesc[85] == 3   && rdesc[113] == 3   && rdesc[141] == 3) {
++		hid_info(hdev, "patching Glorious Model O consumer control report descriptor\n");
++		rdesc[85] = rdesc[113] = rdesc[141] = \
++			HID_MAIN_ITEM_VARIABLE | HID_MAIN_ITEM_RELATIVE;
++	}
++	return rdesc;
++}
++
++static void glorious_update_name(struct hid_device *hdev)
++{
++	const char *model = "Device";
++
++	switch (hdev->product) {
++	case USB_DEVICE_ID_GLORIOUS_MODEL_O:
++		model = "Model O"; break;
++	case USB_DEVICE_ID_GLORIOUS_MODEL_D:
++		model = "Model D"; break;
++	}
++
++	snprintf(hdev->name, sizeof(hdev->name), "%s %s", "Glorious", model);
++}
++
++static int glorious_probe(struct hid_device *hdev,
++		const struct hid_device_id *id)
++{
++	int ret;
++
++	hdev->quirks |= HID_QUIRK_INPUT_PER_APP;
++
++	ret = hid_parse(hdev);
++	if (ret)
++		return ret;
++
++	glorious_update_name(hdev);
++
++	return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++}
++
++static const struct hid_device_id glorious_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_GLORIOUS,
++		USB_DEVICE_ID_GLORIOUS_MODEL_O) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_GLORIOUS,
++		USB_DEVICE_ID_GLORIOUS_MODEL_D) },
++	{ }
++};
++MODULE_DEVICE_TABLE(hid, glorious_devices);
++
++static struct hid_driver glorious_driver = {
++	.name = "glorious",
++	.id_table = glorious_devices,
++	.probe = glorious_probe,
++	.report_fixup = glorious_report_fixup
++};
++
++module_hid_driver(glorious_driver);
++
++MODULE_LICENSE("GPL");
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 3a400ce603c4..ba3fb2117257 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -464,6 +464,10 @@
+ #define USB_DEVICE_ID_GENERAL_TOUCH_WIN8_PIT_010A 0x010a
+ #define USB_DEVICE_ID_GENERAL_TOUCH_WIN8_PIT_E100 0xe100
+ 
++#define USB_VENDOR_ID_GLORIOUS  0x258a
++#define USB_DEVICE_ID_GLORIOUS_MODEL_D 0x0033
++#define USB_DEVICE_ID_GLORIOUS_MODEL_O 0x0036
++
+ #define I2C_VENDOR_ID_GOODIX		0x27c6
+ #define I2C_DEVICE_ID_GOODIX_01F0	0x01f0
+ 
+-- 
+2.25.1
+
