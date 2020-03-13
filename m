@@ -2,183 +2,169 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964A2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1F8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616D9206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="IwGNtYvF"
+	by mail.kernel.org (Postfix) with ESMTP id 9D22A206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCMLEb (ORCPT
+        id S1726736AbgCMLEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:04:31 -0400
-Received: from mail-bn8nam12on2115.outbound.protection.outlook.com ([40.107.237.115]:25793
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726387AbgCMLEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:04:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fLTbJC8MhC6oEGWFL5+j+iteNbC1bqX8Z26N0mybcC6x5dkFxWr/Mstt4moMo6Q7Ta8HT2PSPIWamxE0B4dPmBTpy4jBkMDZR9KEd1+ZL72B3LD+pG/7e1ATX6Rqxhv5HrLgsYH6ontkuO3tcxDLRw1PA94Rs/wGpVoOd0Imi/zcrR3HVBn9RGwtywxDaBXMDvZOaWp6gym9Hgijw+xpTTBOxdUEBk5f+soZKm4Lteii9OWrYlZrfjhyFXD8o5iP6Pz2cdDkSMR4Jvsrz+aMUSA3J7nMc9hGKQ94cc/xZb3ceca0PcRqOeAmp0tswoiRqrgCJ/ePNN95FVr1DFAlWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Od+NrTrql0tkVgx2dHy7tXk6otgJpPhWVCxqjf5FEQ=;
- b=O+dd6lwo+615A2lVNdnkGAj64erhm6kvh0r32G3WE8R4fh2l4zc422vO27kS+2az81kfb4wRmIC9YO+zMk8eHXwjtmj769UgV6duSjVj2EjAGgm4StWJpBb/ET18JCaRt/iaAkbRFSa4XCiDPVGSBBLTd3I5DVzqotL2bSzxZeiuM6F6US8XgrTY0Kqpwft3RXcCkaIcQN/carqhbnC0hr3iAyqehkJCmSmqA8gy2frgNt9AtFBcvMZbkyhuxAKuWfwzPSTOfQc72hAJfNKXAnZs9T59aZpsLi6fodOpLdChNrmtDccrSi60J6EGtqGPhltdewqzi491vV+V3P3D6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
- dkim=pass header.d=cypress.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Od+NrTrql0tkVgx2dHy7tXk6otgJpPhWVCxqjf5FEQ=;
- b=IwGNtYvFiKskGeYIScsNEvv4JP0IpRVCH13kV4/dNS0fO2guZeErcfuDlDDCR3D2ab40Xa6LhPJ3zwDc/pUGqPatQr3Jlva6hOX37CO6jDVTKv+XKQYZRoUIcGTvxEhJXlmhlq52B/Ei6U/mtiXPbfoQ0CtMHuIR1Abe48TNFt8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Chi-Hsien.Lin@cypress.com; 
-Received: from BYAPR06MB4901.namprd06.prod.outlook.com (2603:10b6:a03:7a::30)
- by BYAPR06MB5352.namprd06.prod.outlook.com (2603:10b6:a03:ab::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Fri, 13 Mar
- 2020 11:03:50 +0000
-Received: from BYAPR06MB4901.namprd06.prod.outlook.com
- ([fe80::3cc3:7b1a:bd7b:a0a9]) by BYAPR06MB4901.namprd06.prod.outlook.com
- ([fe80::3cc3:7b1a:bd7b:a0a9%5]) with mapi id 15.20.2793.021; Fri, 13 Mar 2020
- 11:03:50 +0000
-Reply-To: chi-hsien.lin@cypress.com
-Subject: Re: [PATCH v2 0/9] brcmfmac: add support for BCM4359 SDIO chipset
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Soeren Moch <smoch@web.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191211235253.2539-1-smoch@web.de>
- <1daadfe0-5964-db9b-818c-6e4c75ac6a69@web.de>
- <22526722-1ae8-a018-0e24-81d7ad7512dd@web.de> <2685733.IzV8dBlDb2@diego>
-From:   Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Message-ID: <d7b05a6c-dfba-c8e0-b5fb-f6f7f5a6c1b7@cypress.com>
-Date:   Fri, 13 Mar 2020 19:03:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-In-Reply-To: <2685733.IzV8dBlDb2@diego>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR21CA0007.namprd21.prod.outlook.com
- (2603:10b6:a03:114::17) To BYAPR06MB4901.namprd06.prod.outlook.com
- (2603:10b6:a03:7a::30)
+        Fri, 13 Mar 2020 07:04:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50432 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726387AbgCMLEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 07:04:55 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DB35ml076016
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:04:53 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqyhtamg5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:04:52 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Fri, 13 Mar 2020 11:04:49 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Mar 2020 11:04:45 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02DB4ivV40239484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 11:04:44 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02E884204F;
+        Fri, 13 Mar 2020 11:04:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8041D4204D;
+        Fri, 13 Mar 2020 11:04:41 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri, 13 Mar 2020 11:04:41 +0000 (GMT)
+Date:   Fri, 13 Mar 2020 16:34:40 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christopher Lameter <cl@linux.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: Re: [PATCH 1/3] powerpc/numa: Set numa_node for all possible cpus
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200311110237.5731-2-srikar@linux.vnet.ibm.com>
+ <20200311115735.GM23944@dhcp22.suse.cz>
+ <20200312052707.GA3277@linux.vnet.ibm.com>
+ <C5560C71-483A-41FB-BDE9-526F1E0CFA36@linux.vnet.ibm.com>
+ <5e5c736a-a88c-7c76-fc3d-7bc765e8dcba@suse.cz>
+ <20200312131438.GB3277@linux.vnet.ibm.com>
+ <61437352-8b54-38fa-4471-044a65c9d05a@suse.cz>
+ <20200312161310.GC3277@linux.vnet.ibm.com>
+ <e115048c-be38-c298-b8d1-d4b513e7d2fb@suse.cz>
+ <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.9.112.143] (61.222.14.99) by BYAPR21CA0007.namprd21.prod.outlook.com (2603:10b6:a03:114::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.6 via Frontend Transport; Fri, 13 Mar 2020 11:03:48 +0000
-X-Originating-IP: [61.222.14.99]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 62396984-5167-4363-aa3b-08d7c73e35ed
-X-MS-TrafficTypeDiagnostic: BYAPR06MB5352:|BYAPR06MB5352:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR06MB5352298F01774CF10B92EBCFBBFA0@BYAPR06MB5352.namprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(366004)(376002)(39860400002)(346002)(396003)(199004)(5660300002)(86362001)(956004)(81166006)(52116002)(6666004)(31696002)(81156014)(8676002)(53546011)(2616005)(186003)(66574012)(26005)(16526019)(8936002)(3450700001)(36756003)(31686004)(2906002)(4326008)(478600001)(6486002)(66556008)(316002)(66476007)(66946007)(110136005)(16576012)(55004002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR06MB5352;H:BYAPR06MB4901.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: cypress.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eGiO0gzk4t7r6kvIeuU4WEULq2+RBBElmtOciU4hDrWj8PnVoXBrUJJIK4kBYuKuhj30ryX0OwqGnCq8SXCqDE1SDXI6B+TXb+JWSc8o9sJF3MVORyQs9n3S0bPvwXmn+Cc1yq0Es2FCIgS6QFCiVktB9Szsy6P2TLLbFXX/8OOr49CsUdHic7AXA3/yYQtKpliVlqKdZDnIeiaJtuOkJJTzdFU6Rqr23KGwwYQD1m/xmDT5+kE0YtGMMNW2PPLUD9o19FKtlq8T1qBsEIxkojn+N/FS9EVVA6KLApdTd0jJadcu5mBDmVO2RKiAgF9eGcFx8y8RzWLznX9cMlQ6seBZF/9dl0AESX1ewBUjCKO+ga1/Yi9Pb5c9khKZeOlZbj9cOFoyA9rIblK9AVP2+pniSOkqfz1+ibV8gQaZEnBuccFVjgwpXtSeNRCbZ+My2HX8kygrlyLFJzprsGYB2HOkI2IDmyaNbnPPGQNJd5qsAxnU617moKYTvKXnG6LI
-X-MS-Exchange-AntiSpam-MessageData: jS/uIX4ame7sv/RcBvFv51Mbk/N9GufyJlubKi2gXzfNz4brHfHmA3jJufFNe+XRh0H+uQ4J52Pr/e0DAv/z/a9xo8GHiwzOqc+cUS1Z46h5zd7OZt6AZomHDlPj6WL9j9P+pjvfJ6h8HSK7GQ94rQ==
-X-OriginatorOrg: cypress.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62396984-5167-4363-aa3b-08d7c73e35ed
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 11:03:50.7359
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 011addfc-2c09-450d-8938-e0bbc2dd2376
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 538WHKl5SCZhcVyaaHXJ5euGqVJ8NU7PshdF/NjhCFR/ZjGw9Wml+kpWwJT3JN+uPWSeZYGJMQ0XiPiqFpL58w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB5352
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <CAAmzW4OFy51BhAT62tdVQD52NNMWm+UPgoGAX97omY7P+nJ+5w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 20031311-0012-0000-0000-0000039069FE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031311-0013-0000-0000-000021CD3F2C
+Message-Id: <20200313110440.GA25144@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Joonsoo Kim <js1304@gmail.com> [2020-03-13 18:47:49]:
 
-
-On 12/16/2019 7:43, Heiko Stübner wrote:
-> Hi Soeren,
+> > >>
+> > >> > Also for a memoryless/cpuless node or possible but not present nodes,
+> > >> > node_to_mem_node(node) will still end up as node (atleast on powerpc).
+> > >>
+> > >> I think that's the place where this would be best to fix.
+> > >>
+> > >
+> > > Maybe. I thought about it but the current set_numa_mem semantics are apt
+> > > for memoryless cpu node and not for possible nodes.  We could have upto 256
+> > > possible nodes and only 2 nodes (1,2) with cpu and 1 node (1) with memory.
+> > > node_to_mem_node seems to return what is set in set_numa_mem().
+> > > set_numa_mem() seems to say set my numa_mem node for the current memoryless
+> > > node to the param passed.
+> > >
+> > > But how do we set numa_mem for all the other 253 possible nodes, which
+> > > probably will have 0 as default?
+> > >
+> > > Should we introduce another API such that we could update for all possible
+> > > nodes?
+> >
+> > If we want to rely on node_to_mem_node() to give us something safe for each
+> > possible node, then probably it would have to be like that, yeah.
+> >
+> > >> > I tried with this hunk below and it works.
+> > >> >
+> > >> > But I am not sure if we need to check at other places were
+> > >> > node_present_pages is being called.
+> > >>
+> > >> I think this seems to defeat the purpose of node_to_mem_node()? Shouldn't it
+> > >> return only nodes that are online with present memory?
+> > >> CCing Joonsoo who seems to have introduced this in ad2c8144418c ("topology: add
+> > >> support for node_to_mem_node() to determine the fallback node")
+> > >>
+> > >
+> > > Agree
 > 
-> Am Sonntag, 15. Dezember 2019, 22:24:10 CET schrieb Soeren Moch:
->> On 12.12.19 11:59, Soeren Moch wrote:
->>> On 12.12.19 10:42, Kalle Valo wrote:
->>>> Soeren Moch <smoch@web.de> writes:
->>>>
->>>>> Add support for the BCM4359 chipset with SDIO interface and RSDB support
->>>>> to the brcmfmac wireless network driver in patches 1-7.
->>>>>
->>>>> Enhance devicetree of the RockPro64 arm64/rockchip board to use an
->>>>> AP6359SA based wifi/bt combo module with this chipset in patches 8-9.
->>>>>
->>>>>
->>>>> Chung-Hsien Hsu (1):
->>>>>    brcmfmac: set F2 blocksize and watermark for 4359
->>>>>
->>>>> Soeren Moch (5):
->>>>>    brcmfmac: fix rambase for 4359/9
->>>>>    brcmfmac: make errors when setting roaming parameters non-fatal
->>>>>    brcmfmac: add support for BCM4359 SDIO chipset
->>>>>    arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
->>>>>    arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
->>>>>
->>>>> Wright Feng (3):
->>>>>    brcmfmac: reset two D11 cores if chip has two D11 cores
->>>>>    brcmfmac: add RSDB condition when setting interface combinations
->>>>>    brcmfmac: not set mbss in vif if firmware does not support MBSS
->>>>>
->>>>>   .../boot/dts/rockchip/rk3399-rockpro64.dts    | 50 +++++++++++---
->>>>>   .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  8 ++-
->>>>>   .../broadcom/brcm80211/brcmfmac/cfg80211.c    | 68 +++++++++++++++----
->>>>>   .../broadcom/brcm80211/brcmfmac/chip.c        | 54 ++++++++++++++-
->>>>>   .../broadcom/brcm80211/brcmfmac/chip.h        |  1 +
->>>>>   .../broadcom/brcm80211/brcmfmac/pcie.c        |  2 +-
->>>>>   .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 +++++
->>>>>   include/linux/mmc/sdio_ids.h                  |  2 +
->>>>>   8 files changed, 176 insertions(+), 26 deletions(-)
->>>> Just to make sure we are on the same page, I will apply patches 1-7 to
->>>> wireless-drivers-next and patches 8-9 go to some other tree? And there
->>>> are no dependencies between the brcmfmac patches and dts patches?
->>>>
->>> Yes, this also is my understanding. I'm glad if you are fine with
->>> patches 1-7.
->>> Heiko will pick up patches 8-9 later for linux-rockchip independently.
->>> And if we need another round of review for patches 8-9, I think we don't
->>> need to bother linux-wireless with this.
->>
->> Heiko,
->>
->> is this OK for you when patches 1-7 are merged now in wireless-drivers,
->> and then I send a v3 for patches 8-9 only for you to merge in
->> linux-rockchip later? Or do you prefer a full v3 for the whole series
->> with only this pending clock name update in patch 9?
+> I lost all the memory about it. :)
+> Anyway, how about this?
 > 
-> Nope, merging 1-7 from this v2 and then getting a v3 with only the dts
-> stuff is perfectly fine :-)
-
-Soeren,
-
-I suppose patch 1-7 from this serious are all good for merging. Is that 
-right? If so, could you please create a rebased V3?
-
-
-Regards,
-Chi-hsien Lin
-
+> 1. make node_present_pages() safer
+> static inline node_present_pages(nid)
+> {
+> if (!node_online(nid)) return 0;
+> return (NODE_DATA(nid)->node_present_pages);
+> }
 > 
-> Heiko
+
+Yes this would help.
+
+> 2. make node_to_mem_node() safer for all cases
+> In ppc arch's mem_topology_setup(void)
+> for_each_present_cpu(cpu) {
+>  numa_setup_cpu(cpu);
+>  mem_node = node_to_mem_node(numa_mem_id());
+>  if (!node_present_pages(mem_node)) {
+>   _node_numa_mem_[numa_mem_id()] = first_online_node;
+>  }
+> }
 > 
-> 
-> .
-> 
+
+But here as discussed above, we miss the case of possible but not present nodes.
+For such nodes, the above change may not update, resulting in they still
+having 0. And node 0 can be only possible but not present.
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
+
