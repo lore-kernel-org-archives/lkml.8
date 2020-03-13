@@ -2,91 +2,91 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B34C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B10C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D1B206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD595206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcDu4u3k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2dbZzf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCMQpt (ORCPT
+        id S1727069AbgCMQqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:45:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32701 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726526AbgCMQpt (ORCPT
+        Fri, 13 Mar 2020 12:46:17 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46497 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMQqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:45:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584117948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2NGcze98cXWYCmagpEsgCSEsYGqJZVyFshEV55Z7Gjs=;
-        b=XcDu4u3kepWmiOLSEpbzHbnaYcI9eB1At0FVgm6211A3oW0J0HJOEVYYrKU596gaWnaDvm
-        PguZovZCDRl+e9iC1tfSyrjTqZwDT0/XcsPwvO/AoFZwGkwbunne7YhKq43yBZH/CBy8b4
-        fp3nYI+QWGuEjVfAd4g7+EiX76OOL14=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-CzQAHedQM_2jEHV0CsdCFg-1; Fri, 13 Mar 2020 12:45:42 -0400
-X-MC-Unique: CzQAHedQM_2jEHV0CsdCFg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61380101FC68;
-        Fri, 13 Mar 2020 16:45:40 +0000 (UTC)
-Received: from x2.localnet (ovpn-117-60.phx2.redhat.com [10.3.117.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1C565C1BB;
-        Fri, 13 Mar 2020 16:45:30 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling the audit daemon
-Date:   Fri, 13 Mar 2020 12:45:29 -0400
-Message-ID: <2588582.z15pWOfGEt@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
-References: <cover.1577736799.git.rgb@redhat.com> <20200312202733.7kli64zsnqc4mrd2@madcap2.tricolour.ca> <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
+        Fri, 13 Mar 2020 12:46:17 -0400
+Received: by mail-il1-f195.google.com with SMTP id e8so9502350ilc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vLfO+OW4oRiObD1mcWwejLJW0KZ7ehp7OtU4EnfKGnY=;
+        b=K2dbZzf0Nn8BHIO22kvM9U0yfYXu2gWzb0d+PzeEv0ZsYACUferpfjoQysiSoLipXP
+         O6kLUYk1bfULHeyZXR7uRfYuAw5kiNGKuTYcbrklHzW+UDxegCDKW/x+ibmhmp4D3diU
+         yCMrZ81OoBxyoatFMa6cfN4CiTS/cOrb8S5qBN/Cr9wHuJs2S+NxbT+KK/UdOmby1Jg4
+         6/T2C1i2Gjs0/OLYJdKpkb/SoHRbMU1MY/9xGK9HkUPVQG/AdODm5piTppHYZbeNXyTP
+         u9mXEifEdVt2qwn4bBbkXhpx6xMMcwvUea9MatKGuTP5jBDugt9EbneoL1k2mRuSr5rG
+         M2hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vLfO+OW4oRiObD1mcWwejLJW0KZ7ehp7OtU4EnfKGnY=;
+        b=UL/Zu4xKm0KxG7szpa3yjKFVI0WXoRRpidIF5hHfLY2s1BkW6NiJ1nQZEKbfWilJQL
+         mtGW9zfT913GuZpHlnj1AVCT57B++SGhPvlRjX8aHlp5Otz7Yw66cj4svu31MJdlQhJU
+         uMW8KwVVEhloYDhTT5hrR0i2a/3zf32fPHgy83a76CoFurtWuCBZ9H3DxDFKByD3BdW9
+         x/tTI63vu00GrzLtfXMxF1j68Ive+08l+XJ016KoWLb6I3kQs5bbfzI6rQDHh461PHaS
+         ySsgH5QNS8txl41Jvtv5ud8u/E2NMmQ6qZ88Z2OKO6jGtmEU869hb4cI5VSzO9PdKPV1
+         G/Og==
+X-Gm-Message-State: ANhLgQ0JIpsTfz2MkN+gFur5hJS9/A+WT4fP36R65JWXTAmgYZYGlvsp
+        OhYWtJ94epv9GBjs3RDgpBCctUx6ubOY9bqC1w==
+X-Google-Smtp-Source: ADFU+vvTzFYHK/VoLB/yWrhBcpU9JrC3P6+QEoFKclsDoTKWNtbm7VQ9LwqF0C90UVcIxg98hNrTa8/E/9EulluiMWc=
+X-Received: by 2002:a92:dad0:: with SMTP id o16mr13665643ilq.27.1584117976392;
+ Fri, 13 Mar 2020 09:46:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200312134107.700205216@infradead.org> <20200312135041.641079164@infradead.org>
+In-Reply-To: <20200312135041.641079164@infradead.org>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Fri, 13 Mar 2020 12:46:05 -0400
+Message-ID: <CAMzpN2gkRGEYEzgO55rBhkTdQO3XhEEfHrq6+j1dy5kzn-C5AA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 04/16] objtool: Annotate identity_mapped()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, March 13, 2020 12:42:15 PM EDT Paul Moore wrote:
-> > I think more and more, that more complete isolation is being done,
-> > taking advantage of each type of namespace as they become available, but
-> > I know a nuber of them didn't find it important yet to use IPC, PID or
-> > user namespaces which would be the only namespaces I can think of that
-> > would provide that isolation.
-> > 
-> > It isn't entirely clear to me which side you fall on this issue, Paul.
-> 
-> That's mostly because I was hoping for some clarification in the
-> discussion, especially the relevant certification requirements, but it
-> looks like there is still plenty of room for interpretation there (as
-> usual).  I'd much rather us arrive at decisions based on requirements
-> and not gut feelings, which is where I think we are at right now.
+On Thu, Mar 12, 2020 at 9:53 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Normally identity_mapped is not visible to objtool, due to:
+>
+>   arch/x86/kernel/Makefile:OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o := y
+>
+> However, when we want to run objtool on vmlinux.o there is no hiding
+> it. Without the annotation we'll get complaints about the:
+>
+         call 1f
+1:      popq %r8
+        subq $(1b - relocate_kernel), %r8
 
-Certification rquirements are that we need the identity of anyone attempting 
-to modify the audit configuration including shutting it down.
+It looks to me that this code is simply trying to get the virtual
+address of relocate_kernel using the old 32-bit method of PIC address
+calculation.  On 64-bit can be done with leaq relocate_kernel(%rip),
+%r8.
 
--Steve
-
-
+--
+Brian Gerst
