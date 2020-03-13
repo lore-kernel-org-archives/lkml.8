@@ -2,101 +2,83 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2211FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1EEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7632072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="gv8cHf4Z";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dbAK9Q2T"
+	by mail.kernel.org (Postfix) with ESMTP id 523B620724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgCMP0m (ORCPT
+        id S1726801AbgCMP2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:26:42 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59234 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726420AbgCMP0m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:26:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0BFD98EE111;
-        Fri, 13 Mar 2020 08:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1584113202;
-        bh=o2W1sIitaU9EdMMf7U/2e2clLPQy2HbQwjU0rL7X0iQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gv8cHf4ZwR9mcg343YvWSC7ZCFfIMi6lw6evmB3SL3WUHeoAhM9RLYI06LvuAo0bQ
-         Q2IDvKUZ0gq8oTRfsxLz7RHyxjYrMLZlMxNFouhHc/lwbbVJtyvqFqC3Q6J2MaS3h6
-         UwuZrAovNRVNDWwlA5nOPm+WV44/zmgRF5lG4OlI=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GdPuLdhlpgJi; Fri, 13 Mar 2020 08:26:41 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 72C5B8EE10C;
-        Fri, 13 Mar 2020 08:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1584113201;
-        bh=o2W1sIitaU9EdMMf7U/2e2clLPQy2HbQwjU0rL7X0iQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dbAK9Q2TaWRlaousAmgnhiiqT47e1H1BdW24PAEymd/Ql5bZrkYG4e/TY+Zg8789O
-         3b8WUUcONzKrgpvbJJzPG0F8SDUYNNFk4zDmv2WDJK2Z9svFOdsWjm/F7PpxmDEfRs
-         sHYcTix6JgmNblfMxNXFJrSJuNNqYgpaQpm9s6xQ=
-Message-ID: <1584113200.3391.16.camel@HansenPartnership.com>
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
- Technical Advisory Board Elections -- Change to charter
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jani Nikula <jani.nikula@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Date:   Fri, 13 Mar 2020 08:26:40 -0700
-In-Reply-To: <87wo7ojnrl.fsf@intel.com>
-References: <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com>
-         <20200313093548.GA2089143@kroah.com>
-         <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
-         <20200313100755.GA2161605@kroah.com>
-         <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
-         <20200313103720.GA2215823@kroah.com>
-         <CAMuHMdW6Br+x+_9xP+X4xr6FP_uNpZ6q6065RJH-9yFy_8fiZA@mail.gmail.com>
-         <20200313081216.627c5bdf@gandalf.local.home> <874kusl50q.fsf@intel.com>
-         <20200313145206.GE225435@mit.edu> <87wo7ojnrl.fsf@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Fri, 13 Mar 2020 11:28:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:57524 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgCMP2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:28:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75300FEC;
+        Fri, 13 Mar 2020 08:28:04 -0700 (PDT)
+Received: from [10.37.12.40] (unknown [10.37.12.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B81B23F67D;
+        Fri, 13 Mar 2020 08:28:02 -0700 (PDT)
+Subject: Re: [PATCH 0/3] Thermal extensions for flexibility in cooling device
+ bindings
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        linux-pm@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     amit.kucheria@verdurent.com, corbet@lwn.net,
+        dietmar.eggemann@arm.com
+References: <20191216140622.25467-1-lukasz.luba@arm.com>
+ <11b6ccb2-ddd8-39cf-a3c8-4dd53e7e50d8@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <6d5842b0-25a5-785d-d8cc-34b9eb9fca50@arm.com>
+Date:   Fri, 13 Mar 2020 15:28:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <11b6ccb2-ddd8-39cf-a3c8-4dd53e7e50d8@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-13 at 17:08 +0200, Jani Nikula wrote:
-> On Fri, 13 Mar 2020, "Theodore Y. Ts'o" <tytso@mit.edu> wrote:
-> > On Fri, Mar 13, 2020 at 04:10:29PM +0200, Jani Nikula wrote:
-> > > 
-> > > Have you considered whether the eligibility for running and
-> > > voting should be made the same? As it is, absolutely anyone can
-> > > self-nominate and run.
-> > 
-> > That's always been the case.  However, at least historically,
-> > people who weren't physically present has never been successful.
+Hi Daniel,
+
+On 3/13/20 1:33 PM, Daniel Lezcano wrote:
 > 
-> Oh? May I ask for that to be clarified in the TAB charter, please.
+> Hi Lukasz,
+> 
+> On 16/12/2019 15:06, lukasz.luba@arm.com wrote:
+>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Hi all,
+>>
+>> This patch set adds extensions to existing thermal zones and cooling devices
+>> binding. Currently they are pinned using static definitions e.g. DT cooling
+>> maps. These changes enable userspace like trusted middleware to change the
+>> layout of cooling maps unbinding and binding the cooling devices.
+>> It might be helpful for drivers loaded as a modules. They can be added to
+>> existing thermal zones to take part of the power split.
+>> It is based on the current work in thermal branch thermal/linux-next
+>> https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/linux-next
+> 
+> I've been keeping this series out of the previous merge because it did
+> not raise any comments and we are touching the sysfs.
+> 
+> For this release, I still don't know what to do with it.
 
-It's a historical observation, not a rule.  In fact, it does have an
-exception: GregKH was elected in Edinburgh in 2012 without being
-physically present at the voting (although he was in Edinburgh at the
-time).
+Thank you for bringing this back.
 
-James
+> 
+> Anyone a comment on this series? Rui ?
+> 
 
+Regards,
+Lukasz
