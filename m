@@ -2,166 +2,285 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1294C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE52C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84672206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48105206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:37:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D41oIJ+P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjzmjBSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgCMQhF (ORCPT
+        id S1726845AbgCMQhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:37:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25626 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726406AbgCMQhF (ORCPT
+        Fri, 13 Mar 2020 12:37:54 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41818 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCMQhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:37:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584117422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B5vmgPlel0560X00H1BcuksviskLrEXRjpOcciFelUs=;
-        b=D41oIJ+Pz/VXahiVFFowQy0N73xDJoye5E8hm4dnQ1Jzx13z/z0F6qn/ycDqIQxZpFqhWd
-        ZFSlLT7P+UJspFs6q57px6lPh7yETP7W9s5Qyus+obRXBwIvs2YGt3bJ85BUfXAdFs8jj6
-        bP+kA4ELBct3hMXrslBpXovAb2QAGoo=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-a7viAAkJPYObcL6mgFvoew-1; Fri, 13 Mar 2020 12:37:01 -0400
-X-MC-Unique: a7viAAkJPYObcL6mgFvoew-1
-Received: by mail-wr1-f72.google.com with SMTP id b12so4603645wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:37:01 -0700 (PDT)
+        Fri, 13 Mar 2020 12:37:53 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m25so12609225edq.8;
+        Fri, 13 Mar 2020 09:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ug47PEEkURrWYS4cuqEj7hzz31EJ8yvl86Hv/BuIrmY=;
+        b=SjzmjBSEyZhk7pXH+/HhQn1zjaWSNLKMbo0GSmYcYFJi2HN12sUJhH2QePQmw/jZ2E
+         ntrskaMhjBqsRBkuCSR3EEokFfATE99fs4Z1gxzMZ26H9yR0F2tXdTRQgxp7FB7RVaVU
+         q6x9eCGAdPIka0gR1+hi0r6CShXGLINozhuiunPut2g7eUyh7aIzSsLeCm3GQAmugmP7
+         gPryE+22DGyg/a15Kbm6YVuMetcO0mj6OQLg5copv5DdV+3BVzXmrMMGtOINrWzNyISj
+         t5GxzY+oc2vBwI6ye93gdUkH3Mxon5VZuRlEpKUF3QNaG/hz6RrNI0F/wEaXTbCnBEmi
+         KRRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=B5vmgPlel0560X00H1BcuksviskLrEXRjpOcciFelUs=;
-        b=XhQ2PiGq31pK+cQ3BMvDZmCP+L7iGu9aJ8F7q56A4kBm32rBKVDEzJM40uyUP2iyT8
-         H1/FxdylsifbwipQzUkIuJvDsLNtBku0rlanm2OfiInRZ4VrFa6UoKH7PqLWpB9J6K4j
-         aVu4sRaUdiVATBFytY5HRL9aU4+Hge6ElZg117QvH3JURHDTkqBfD87OHScPyr6vji0S
-         j1l4duE8ZOtV0i+Gw2PnaU1lsWnyACtE4tCzeZuRHHcEsvseFdJG1dlm5Q+FXSP4t9Tb
-         LamuUB8tEVqw4sw/Zmj5Hc5PjlxaZNMK/QaRkSum2qsj0dr3zIBeJn/zUQhawKrsCKor
-         vj9Q==
-X-Gm-Message-State: ANhLgQ21ncKbbds7A9dfRhnlpFuYz0HFyfFIfEPYxJEAOvinntdK3lA+
-        uxYp0eaClHTn+rPtTzmo/Pz7p31nYvYqxsW864BDSPJqTJ9C08+cj3yJNiE76gFIaG8cYy8czgX
-        tt1oNr4SUg7hs/2cUpD6rdcyQ
-X-Received: by 2002:a5d:4acc:: with SMTP id y12mr17871357wrs.385.1584117420187;
-        Fri, 13 Mar 2020 09:37:00 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vto0arEsXEHCecWNhCQ2kBMtauh1MVvSAJfLKn1ULrNcH3owl+ZCD6BaC1i4Kj7Oja2MmqBYA==
-X-Received: by 2002:a5d:4acc:: with SMTP id y12mr17871334wrs.385.1584117419955;
-        Fri, 13 Mar 2020 09:36:59 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a1sm40608544wru.75.2020.03.13.09.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 09:36:59 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mtosatti@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pbonzini@redhat.com, peterx@redhat.com
-Subject: Re: [Patch v2] KVM: x86: Initializing all kvm_lapic_irq fields in ioapic_write_indirect
-In-Reply-To: <66c57868-52dd-94cc-e9ef-7bceb54a65e3@redhat.com>
-References: <1584105384-4864-1-git-send-email-nitesh@redhat.com> <871rpwpesg.fsf@vitty.brq.redhat.com> <29c41f43-a8c6-3d72-8647-d46782094524@redhat.com> <e20e4fb5-247c-a029-e09f-49f83f2f9d1a@redhat.com> <87v9n8mdn0.fsf@vitty.brq.redhat.com> <66c57868-52dd-94cc-e9ef-7bceb54a65e3@redhat.com>
-Date:   Fri, 13 Mar 2020 17:36:58 +0100
-Message-ID: <87r1xwmct1.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ug47PEEkURrWYS4cuqEj7hzz31EJ8yvl86Hv/BuIrmY=;
+        b=VrO5HhxvJDGWFz+itiCKcGv8MrR8PnKwWt+YArky3MKaoiLVck7cX2TWGADXJ1UEoR
+         lLmDBzom/7tee5nD1O0awknUPyIeNElsYNweKqpZ9e4BEoQ72BVzYhtX4ZUolQUZqiCz
+         zwnW0094EYCKsvRIp6mtFD8Jis8xvbIhujxOCKN5Nsl9bDsGY+HDfymcvYXu1SK5K7ZN
+         CqiqmmgVkobc5boQzfXRrtY2T5pnKix1OAswAmZ96H5UdcPyan1kjboFdVx9vlX+jCGE
+         osBjJVX8zgpIwMK99rgSvBBnTqHABP8NHXVArR4CAK7oengBN/H+lO5KzIOwTvSQaz+U
+         rBwg==
+X-Gm-Message-State: ANhLgQ1Fml5Fd0X9weFGnHJuntzBFWsmLPz5SZ2/scjLW4qU2hAgBMxV
+        8ZhnA2237ZJKxw5GHobTSpQgRFO/5rima06f1ws=
+X-Google-Smtp-Source: ADFU+vvzuNqHEtlSJQWiF/MSD0uhQphIrFgqseKL1hLdMrG0M30AEFfgN/bOSm5pPk3vwaVXAqE1PaAxxCXRT5Q41jI=
+X-Received: by 2002:a50:9b07:: with SMTP id o7mr14635673edi.139.1584117471141;
+ Fri, 13 Mar 2020 09:37:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200310125542.5939-1-olteanv@gmail.com> <615284875b709f602d57e4a4621a83c1@walle.cc>
+ <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
+ <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc> <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
+In-Reply-To: <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 13 Mar 2020 18:37:39 +0200
+Message-ID: <CA+h21hqk+pVrGgHx4iTshfE3i4WF7VANPfMf2ykPFpL3=ragag@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nitesh Narayan Lal <nitesh@redhat.com> writes:
+Hi Michael,
 
-> On 3/13/20 12:18 PM, Vitaly Kuznetsov wrote:
->> Nitesh Narayan Lal <nitesh@redhat.com> writes:
->>
->>> On 3/13/20 9:38 AM, Nitesh Narayan Lal wrote:
->>>> On 3/13/20 9:25 AM, Vitaly Kuznetsov wrote:
->>>>> Nitesh Narayan Lal <nitesh@redhat.com> writes:
->>>>>
->>>>>> Previously all fields of structure kvm_lapic_irq were not initialized
->>>>>> before it was passed to kvm_bitmap_or_dest_vcpus(). Which will cause
->>>>>> an issue when any of those fields are used for processing a request.
->>>>>> For example not initializing the msi_redir_hint field before passing
->>>>>> to the kvm_bitmap_or_dest_vcpus(), may lead to a misbehavior of
->>>>>> kvm_apic_map_get_dest_lapic(). This will specifically happen when the
->>>>>> kvm_lowest_prio_delivery() returns TRUE due to a non-zero garbage
->>>>>> value of msi_redir_hint, which should not happen as the request belongs
->>>>>> to APIC fixed delivery mode and we do not want to deliver the
->>>>>> interrupt only to the lowest priority candidate.
->>>>>>
->>>>>> This patch initializes all the fields of kvm_lapic_irq based on the
->>>>>> values of ioapic redirect_entry object before passing it on to
->>>>>> kvm_bitmap_or_dest_vcpus().
->>>>>>
->>>>>> Fixes: 7ee30bc132c6("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
->>>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->>>>>> ---
->>>>>>  arch/x86/kvm/ioapic.c | 7 +++++--
->>>>>>  1 file changed, 5 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
->>>>>> index 7668fed..3a8467d 100644
->>>>>> --- a/arch/x86/kvm/ioapic.c
->>>>>> +++ b/arch/x86/kvm/ioapic.c
->>>>>> @@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
->>>>>>  		if (e->fields.delivery_mode == APIC_DM_FIXED) {
->>>>>>  			struct kvm_lapic_irq irq;
->>>>>>  
->>>>>> -			irq.shorthand = APIC_DEST_NOSHORT;
->>>>>>  			irq.vector = e->fields.vector;
->>>>>>  			irq.delivery_mode = e->fields.delivery_mode << 8;
->>>>>> -			irq.dest_id = e->fields.dest_id;
->>>>>>  			irq.dest_mode =
->>>>>>  			    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
->>>>>> +			irq.level = 1;
->>>>> 'level' is bool in struct kvm_lapic_irq but other than that, is there a
->>>>> reason we set it to 'true' here? I understand that any particular
->>>>> setting is likely better than random
->>>> Yes, that is the only reason which I had in my mind while doing this change.
->>>> I was not particularly sure about the value, so I copied what ioapic_serivce()
->>>> is doing.
->>> Do you think I should skip setting this here?
->>>
->> Personally, i'd initialize it to 'false': usualy, if something is not
->> properly initialized it's either 0 or garbage)
+On Fri, 13 Mar 2020 at 18:07, Michael Walle <michael@walle.cc> wrote:
 >
-> I think that's true, initializing it to 'false' might make more sense.
-> Any other concerns or comments that I can improve?
+> Am 2020-03-10 16:22, schrieb Michael Walle:
+> > Hi Vladimir,
+> >
+> > Am 2020-03-10 15:56, schrieb Vladimir Oltean:
+> >>> (2) Also, reading the flash, every second time there is
+> >>> (reproducibly)
+> >>> an
+> >>> IO error:
+> >>>
+> >>> # hexdump -C /dev/mtd0
+> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |huhu............|
+> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |................|
+> >>> *
+> >>> 01000000
+> >>> # hexdump -C /dev/mtd0
+> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |huhu............|
+> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |................|
+> >>> *
+> >>> hexdump: /dev/mtd0: Input/output error
+> >>> 00dc0000
+> >>> # hexdump -C /dev/mtd0
+> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |huhu............|
+> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |................|
+> >>> *
+> >>> 01000000
+> >>> # hexdump -C /dev/mtd0
+> >>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |huhu............|
+> >>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+> >>> |................|
+> >>> *
+> >>> hexdump: /dev/mtd0: Input/output error
+> >>> 00e6a000
+> >>>
+> >>
+> >> Just to be clear, issue 2 is seen only after you abort another
+> >> transaction, right?
+> >
+> > No, just normal uninterrupted reading. Just tried it right after
+> > reboot. Doesn't seem to be every second time though, just random
+> > which makes me wonder if that is another problem now. Also the
+> > last successful reading is random.
 >
+>
+> Ok I guess I know what the root cause is. This is an extract of
+> the current code:
+>
+> > static int dspi_transfer_one_message(struct spi_controller *ctlr,
+> >                                    struct spi_message *message)
+> > {
+> > ..
+> >       /* Kick off the interrupt train */
+> >       dspi_fifo_write(dspi);
+> >
+> >       status = wait_event_interruptible(dspi->waitq,
+> >                                         dspi->waitflags);
+> >       dspi->waitflags = 0;
+> > ..
+> > }
+> >
+> > static int dspi_rxtx(struct fsl_dspi *dspi)
+> > {
+> >       dspi_fifo_read(dspi);
+> >
+> >       if (!dspi->len)
+> >               /* Success! */
+> >               return 0;
+> >
+> >       dspi_fifo_write(dspi);
+> >
+> >       return -EINPROGRESS;
+> > }
+>
+> dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
+> access shared data like, dspi->words_in_flight. In the EIO error case
+> the following bytes_sent is -1, because dspi->words_in_flight is -1.
+>
+> > /* Update total number of bytes that were transferred */
+> > bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+>
+> words_in_flight is always -1 after dspi_fifo_read() was called. In
+> the error case, the ISR kicks in right in the middle of the execution
+> of dspi_fifo_write() in dspi_transfer_one_message().
+>
+> > static void dspi_fifo_write(struct fsl_dspi *dspi)
+> > {
+> > ..
+> >       if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
+> >               dspi_eoq_fifo_write(dspi);
+> >        else
+> >               dspi_xspi_fifo_write(dspi);
+>
+> Now if the ISR is executed right here..
+>
+> >
+> >       /* Update total number of bytes that were transferred */
+> >       bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+>
+> .. words_in_flight might be -1.
+>
+> >       msg->actual_length += bytes_sent;
+>
+> and bytes_sent is negative. And this causes an IO error because
+> the returned overall message length doesn't match.
+>
+> >       dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
+> > ..
+> > }
+>
+> I could not reproduce the issue with the following patch. I don't
+> know if I got the locking correct though or if there is a better
+> way to go.
+>
+>
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 8b16de9ed382..578fedeb16a0 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -224,6 +224,7 @@ struct fsl_dspi {
+>          u16                                     tx_cmd;
+>          const struct fsl_dspi_devtype_data      *devtype_data;
+>
+> +       spinlock_t lock;
+>          wait_queue_head_t                       waitq;
+>          u32                                     waitflags;
+>
+> @@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
+>
+>   static int dspi_rxtx(struct fsl_dspi *dspi)
+>   {
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&dspi->lock, flags);
+>          dspi_fifo_read(dspi);
+>
+> -       if (!dspi->len)
+> +       if (!dspi->len) {
+>                  /* Success! */
+> +               spin_unlock_irqrestore(&dspi->lock, flags);
+>                  return 0;
+> +       }
+>
+>          dspi_fifo_write(dspi);
+>
+> +       spin_unlock_irqrestore(&dspi->lock, flags);
+>          return -EINPROGRESS;
+>   }
+>
+> @@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct
+> spi_controller *ctlr,
+>          struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+>          struct spi_device *spi = message->spi;
+>          struct spi_transfer *transfer;
+> +       unsigned long flags;
+>          int status = 0;
+> +       int i = 0;
+>
+>          if (dspi->irq)
+>                  dspi_enable_interrupts(dspi, true);
+> @@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct
+> spi_controller *ctlr,
+>                                  goto out;
+>                  } else if (dspi->irq) {
+>                          /* Kick off the interrupt train */
+> +                       spin_lock_irqsave(&dspi->lock, flags);
+>                          dspi_fifo_write(dspi);
+> +                       spin_unlock_irqrestore(&dspi->lock, flags);
+>
+>                          status = wait_event_interruptible(dspi->waitq,
+>
+> dspi->waitflags);
+> @@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device
+> *pdev)
+>          ctlr->cleanup = dspi_cleanup;
+>          ctlr->slave_abort = dspi_slave_abort;
+>          ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
+> +       spin_lock_init(&dspi->lock);
+>
+>          pdata = dev_get_platdata(&pdev->dev);
+>          if (pdata) {
+>
+>
+>
+> -michael
 
-Please add the missing space to the 'Fixes' tag:
+Thanks for taking such a close look. I haven't had the time to follow up.
+Indeed, the ISR, and therefore dspi_fifo_read, can execute before
+dspi->words_in_flight was populated correctly. And bad things will
+happen in that case.
+But I wouldn't introduce a spin lock that disables interrupts on the
+local CPU just for that - it's too complicated for this driver.
+I would just keep the SPI interrupt quiesced via SPI_RSER and enable
+it only once it's safe, aka after updating dspi->words_in_flight.
 
-Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
-
-and with that and irq.level initialized to 'false' feel free to add
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
-tag. Thanks!
-
-
->>
->>>>>  and it should actually not be used
->>>>> without setting it first but still?
->>>>>
->>>>>> +			irq.trig_mode = e->fields.trig_mode;
->>>>>> +			irq.shorthand = APIC_DEST_NOSHORT;
->>>>>> +			irq.dest_id = e->fields.dest_id;
->>>>>> +			irq.msi_redir_hint = false;
->>>>>>  			bitmap_zero(&vcpu_bitmap, 16);
->>>>>>  			kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
->>>>>>  						 &vcpu_bitmap);
-
--- 
-Vitaly
-
+Thanks,
+-Vladimir
