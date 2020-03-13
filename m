@@ -2,256 +2,130 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3647C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688B6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE1020409
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE86206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCMHMf (ORCPT
+        id S1726495AbgCMHOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:12:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7824 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgCMHMT (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:12:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 00:12:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,547,1574150400"; 
-   d="scan'208";a="266642301"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Mar 2020 00:12:16 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 11/14] perf diff: support hot blocks comparison
-Date:   Fri, 13 Mar 2020 15:11:15 +0800
-Message-Id: <20200313071118.11983-12-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313071118.11983-1-yao.jin@linux.intel.com>
-References: <20200313071118.11983-1-yao.jin@linux.intel.com>
+        Fri, 13 Mar 2020 03:14:31 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51883 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgCMHOa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 03:14:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jCeWW-0001RC-J0; Fri, 13 Mar 2020 08:14:24 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jCeWW-00042G-26; Fri, 13 Mar 2020 08:14:24 +0100
+Date:   Fri, 13 Mar 2020 08:14:24 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
+Message-ID: <20200313071423.c4t3onkft4r66hav@pengutronix.de>
+References: <20200313131903.3975cdd2@canb.auug.org.au>
+ <20200313064807.op4ghjsc22du3q4e@pengutronix.de>
+ <20200313080514.3f65c8d9@coco.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313080514.3f65c8d9@coco.lan>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:13:26 up 118 days, 22:32, 137 users,  load average: 0.09, 0.07,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reports the results of hot blocks comparison.
+On 20-03-13 08:05, Mauro Carvalho Chehab wrote:
+> Em Fri, 13 Mar 2020 07:48:07 +0100
+> Marco Felsch <m.felsch@pengutronix.de> escreveu:
+> 
+> > Hi Stephen,
+> > 
+> > On 20-03-13 13:19, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > After merging the v4l-dvb tree, today's linux-next build (arm
+> > > multi_v7_defconfig) failed like this:
+> > > 
+> > > ERROR: modpost: "fwnode_get_name" [drivers/media/v4l2-core/v4l2-fwnode.ko] undefined!
+> > > 
+> > > Caused by commit
+> > > 
+> > >   dfc22c073b78 ("media: v4l2-fwnode: add initial connector parsing support")
+> > > 
+> > > I have used the v4l-dvb tree from next-20200312 for today.  
+> > 
+> > I'm sorry for that. I put my branch on our 0day to test most of the
+> > compile configs. Obviously this casae wasn't covered..
+> > 
+> > @Sakari
+> > I will send a patch to fix this by adding:
+> > EXPORT_SYMBOL_GPL(fwnode_get_name).
+> 
+> There is already such patch at next-20200312:
 
-For example, following outputs are added to the end of
-hot streams reports.
+You're right. This answers my question why I got no build errors..
 
-  # Output based on old stream (perf.data.old):
-  #
-  # Sampled Cycles%  Avg Cycles  New Stream Diff(cycles%,cycles)  New Stream Sampled Cycles%  New Stream Avg Cycles
-  # ...............  ..........  ...............................  ..........................  .....................
-  #
-             24.76%          17                     -4.54%,   -7                           -                      -
-             14.72%           7                      0.13%,   -1                           -                      -
-              5.28%           2        [block not in new stream]                           -                      -
-              5.09%           2                      0.52%,    0                           -                      -
-              5.05%           2                     -0.15%,   -1                           -                      -
-              4.18%           1                      0.12%,    0                           -                      -
-              3.16%           1                      0.28%,    0                           -                      -
+Regards,
+  Marco
 
-If we enable the source line comparison, the output might be different.
-
-  # Output based on old stream (perf.data.old):
-  #
-  # Sampled Cycles%  Avg Cycles  New Stream Diff(cycles%,cycles)  New Stream Sampled Cycles%  New Stream Avg Cycles
-  # ...............  ..........  ...............................  ..........................  .....................
-  #
-             24.76%          17    [block changed in new stream]                      20.22%                     10
-             14.72%           7                      0.13%,   -1                           -                      -
-              5.28%           2        [block not in new stream]                           -                      -
-              5.09%           2                      0.52%,    0                           -                      -
-              5.05%           2                     -0.15%,   -1                           -                      -
-              4.18%           1    [block changed in new stream]                       4.31%                      1
-              3.16%           1                      0.28%,    0                           -                      -
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-diff.c | 85 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 84 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index dcbc9bba4e61..566e811054b1 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -49,6 +49,8 @@ struct perf_diff {
- 	bool				 src_cmp;
- 	bool				 stream;
- 	struct srclist			*src_list;
-+	u64				 total_cycles;
-+	float				 min_percent;
- };
- 
- /* Diff command specific HPP columns. */
-@@ -76,8 +78,10 @@ struct diff_hpp_fmt {
- 
- struct data__file {
- 	struct perf_session	*session;
-+	struct block_report	*block_reports;
- 	struct perf_data	 data;
- 	int			 idx;
-+	int			 nr_block_reports;
- 	struct hists		*hists;
- 	struct callchain_streams *evsel_streams;
- 	int			 nr_evsel_streams;
-@@ -445,8 +449,10 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 			pr_debug("problem adding hist entry, skipping event\n");
- 			goto out_put;
- 		}
--		break;
- 
-+		hist__account_cycles(sample->branch_stack, &al, sample, false,
-+				     &pdiff->total_cycles);
-+		break;
- 	default:
- 		if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample,
- 				      true)) {
-@@ -992,6 +998,7 @@ static int process_base_stream(struct data__file *data_base,
- 	struct evlist *evlist_pair = data_pair->session->evlist;
- 	struct evsel *evsel_base, *evsel_pair;
- 	struct callchain_streams *es_base, *es_pair;
-+	struct block_report *rep_base, *rep_pair;
- 
- 	evlist__for_each_entry(evlist_base, evsel_base) {
- 		evsel_pair = evsel_match(evsel_base, evlist_pair);
-@@ -1014,6 +1021,37 @@ static int process_base_stream(struct data__file *data_base,
- 		callchain_stream_report(es_base, es_pair);
- 	}
- 
-+	evlist__for_each_entry(evlist_base, evsel_base) {
-+		rep_base = block_info__get_report(data_base->block_reports,
-+						  data_base->nr_block_reports,
-+						  evsel_base->idx);
-+
-+		if (!rep_base)
-+			return -1;
-+
-+		block_hists_addr2line(&rep_base->hist.block_hists, base_dir);
-+
-+		evlist_pair = data_pair->session->evlist;
-+		evsel_pair = evsel_match(evsel_base, evlist_pair);
-+		if (!evsel_pair)
-+			continue;
-+
-+		rep_pair = block_info__get_report(data_pair->block_reports,
-+						  data_pair->nr_block_reports,
-+						  evsel_pair->idx);
-+
-+		block_hists_addr2line(&rep_pair->hist.block_hists, pair_dir);
-+
-+		block_info__match_report(rep_base, rep_pair,
-+					 pdiff.src_list, NULL);
-+
-+		fprintf(stdout, "%s", title);
-+
-+		use_browser = 0;
-+		report__browse_block_hists(&rep_base->hist, pdiff.min_percent,
-+					   evsel_base, NULL, NULL);
-+	}
-+
- 	return 0;
- }
- 
-@@ -1142,6 +1180,26 @@ static int check_file_brstack(void)
- 	return 0;
- }
- 
-+static struct block_report *create_block_reports(struct evlist *evlist,
-+						 u64 total_cycles,
-+						 int *nr_block_reports)
-+{
-+	struct block_report *reps;
-+	int block_hpps[7] = {
-+		PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
-+		PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
-+		PERF_HPP__BLOCK_NEW_STREAM_DIFF,
-+		PERF_HPP__BLOCK_NEW_STREAM_TOTAL_CYCLES_PCT,
-+		PERF_HPP__BLOCK_NEW_STREAM_AVG_CYCLES,
-+		PERF_HPP_REPORT__BLOCK_RANGE,
-+		PERF_HPP_REPORT__BLOCK_DSO,
-+	};
-+
-+	reps = block_info__create_report(evlist, total_cycles, block_hpps, 7,
-+					 nr_block_reports);
-+	return reps;
-+}
-+
- static struct callchain_streams *create_evsel_streams(struct evlist *evlist,
- 						      int nr_streams_max,
- 						      int *nr_evsel_streams)
-@@ -1197,6 +1255,8 @@ static int __cmd_diff(void)
- 				goto out_delete;
- 		}
- 
-+		pdiff.total_cycles = 0;
-+
- 		ret = perf_session__process_events(d->session);
- 		if (ret) {
- 			pr_err("Failed to process %s\n", d->data.path);
-@@ -1215,6 +1275,12 @@ static int __cmd_diff(void)
- 						&d->nr_evsel_streams);
- 			if (!d->evsel_streams)
- 				goto out_delete;
-+
-+			d->block_reports = create_block_reports(d->session->evlist,
-+								pdiff.total_cycles,
-+								&d->nr_block_reports);
-+			if (!d->block_reports)
-+				goto out_delete;
- 		}
- 	}
- 
-@@ -1225,6 +1291,11 @@ static int __cmd_diff(void)
- 
-  out_delete:
- 	data__for_each_file(i, d) {
-+		if (d->block_reports) {
-+			block_info__free_report(d->block_reports,
-+						d->nr_block_reports);
-+		}
-+
- 		perf_session__delete(d->session);
- 		data__free(d);
- 	}
-@@ -1244,6 +1315,15 @@ static int __cmd_diff(void)
- 	return ret;
- }
- 
-+static int parse_percent_limit(const struct option *opt, const char *arg,
-+			       int unset __maybe_unused)
-+{
-+	struct perf_diff *d = opt->value;
-+
-+	d->min_percent = strtof(arg, NULL);
-+	return 0;
-+}
-+
- static const char * const diff_usage[] = {
- 	"perf diff [<options>] [old_file] [new_file]",
- 	NULL,
-@@ -1307,6 +1387,9 @@ static const struct option options[] = {
- 	OPT_STRING(0, "after", &pdiff.after_dir, "dir",
- 		   "Source code directory corresponding to perf.data. "
- 		   "WARNING: use with --before and --stream"),
-+	OPT_CALLBACK(0, "percent-limit", &pdiff, "percent",
-+		     "Don't show entries under that percent",
-+		     parse_percent_limit),
- 	OPT_END()
- };
- 
--- 
-2.17.1
-
+> $ git show a7914d1072fb8ddeb2ec87bba1d28812483a3565
+> commit a7914d1072fb8ddeb2ec87bba1d28812483a3565
+> Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Date:   Mon Mar 2 16:53:51 2020 +0300
+> 
+>     device property: Export fwnode_get_name()
+>     
+>     This makes it possible to take advantage of the function in
+>     the device drivers.
+>     
+>     Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>     Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>     Link: https://lore.kernel.org/r/20200302135353.56659-8-heikki.krogerus@linux.intel.com
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 511f6d7acdfe..5f35c0ccf5e0 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -566,6 +566,7 @@ const char *fwnode_get_name(const struct fwnode_handle *fwnode)
+>  {
+>         return fwnode_call_ptr_op(fwnode, get_name);
+>  }
+> +EXPORT_SYMBOL_GPL(fwnode_get_name);
+>  
+>  /**
+>   * fwnode_get_name_prefix - Return the prefix of node for printing purposes
+> 
+> 
+> 
+> 
+> Thanks,
+> Mauro
