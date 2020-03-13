@@ -2,101 +2,64 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FF3C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D987C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE5A206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3060A206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgCMPGB (ORCPT
+        id S1726964AbgCMPGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:06:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:56818 "EHLO foss.arm.com"
+        Fri, 13 Mar 2020 11:06:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:5422 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgCMPGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:06:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47ECF31B;
-        Fri, 13 Mar 2020 08:06:00 -0700 (PDT)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BA3D3F67D;
-        Fri, 13 Mar 2020 08:05:58 -0700 (PDT)
-Subject: Re: [PATCH v2] ARM: dts: dra7: Add bus_dma_limit for L3 bus
-To:     Roger Quadros <rogerq@ti.com>, tony@atomide.com
-Cc:     hch@lst.de, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com,
-        nsekhar@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@kernel.org
-References: <20200313094717.6671-1-rogerq@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fb916d06-1521-25a5-2eae-94244a3f9d06@arm.com>
-Date:   Fri, 13 Mar 2020 15:05:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726702AbgCMPGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:06:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:06:47 -0700
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="237247492"
+Received: from unknown (HELO localhost) ([10.252.52.87])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:06:44 -0700
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     Greg KH <greg@kroah.com>, "Bird\, Tim" <Tim.Bird@sony.com>,
+        "tech-board-discuss\@lists.linuxfoundation.org" 
+        <tech-board-discuss@lists.linuxfoundation.org>,
+        "ksummit-discuss\@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation Technical Advisory Board Elections -- Change to charter
+In-Reply-To: <20200313145903.vwdpawgcve73hdmj@chatter.i7.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name> <20200312003436.GF1639@pendragon.ideasonboard.com> <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com> <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com> <20200313093548.GA2089143@kroah.com> <877dzolf7n.fsf@intel.com> <20200313145903.vwdpawgcve73hdmj@chatter.i7.local>
+Date:   Fri, 13 Mar 2020 17:07:05 +0200
+Message-ID: <87zhckjnty.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200313094717.6671-1-rogerq@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-13 9:47 am, Roger Quadros wrote:
-> The L3 interconnect's memory map is from 0x0 to
-> 0xffffffff. Out of this, System memory (SDRAM) can be
-> accessed from 0x80000000 to 0xffffffff (2GB)
-> 
-> DRA7 does support 4GB of SDRAM but upper 2GB can only be
-> accessed by the MPU subsystem.
-> 
-> Add the dma-ranges property to reflect the physical address limit
-> of the L3 bus.
-> 
-> Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
-> and CONFIG_ARM_LPAE enabled. This is because the controller
-> supports 64-bit DMA and its driver sets the dma_mask to 64-bit
-> thus resulting in DMA accesses beyond L3 limit of 2G.
-> 
-> Setting the correct bus_dma_limit fixes the issue.
+On Fri, 13 Mar 2020, Konstantin Ryabitsev <konstantin@linuxfoundation.org> wrote:
+> I hope I helped clarify the procedure.
 
-Neat! In principle you should no longer need the specific dma-ranges on 
-the PCIe nodes, since AIUI those really only represent a subset of this 
-general limitation, but given the other inheritance issue you saw it's 
-probably safer to leave them as-is for now.
+Yes, thank you. May I ask for the clarifications to be made to [1] and
+[2], as well as have them agree on the requirements, please?
 
-FWIW,
+BR,
+Jani.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Cc: stable@kernel.org
-> ---
-> 
-> Changelog:
-> v2:
-> - Revised patch with minimal intrusion. i.e. don't change #size-cells
->    of device node.
-> 
->   arch/arm/boot/dts/dra7.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d78b684e7fca..058b8cbb8ef3 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -148,6 +148,7 @@
->   		#address-cells = <1>;
->   		#size-cells = <1>;
->   		ranges = <0x0 0x0 0x0 0xc0000000>;
-> +		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
->   		ti,hwmods = "l3_main_1", "l3_main_2";
->   		reg = <0x0 0x44000000 0x0 0x1000000>,
->   		      <0x0 0x45000000 0x0 0x1000>;
-> 
+[1] https://www.kernel.org/faq.html
+[2] https://korg.wiki.kernel.org/userdoc/accounts
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
