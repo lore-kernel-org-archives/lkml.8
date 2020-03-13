@@ -2,224 +2,209 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9C5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52CDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F6E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C94320637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QRCyIDgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCMBGA (ORCPT
+        id S1727079AbgCMBHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:06:00 -0400
-Received: from mail-oln040092069038.outbound.protection.outlook.com ([40.92.69.38]:5858
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Thu, 12 Mar 2020 21:07:10 -0400
+Received: from mail-eopbgr140041.outbound.protection.outlook.com ([40.107.14.41]:15511
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726647AbgCMBF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:05:59 -0400
+        id S1726647AbgCMBHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:07:10 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MZe89OJapHEAdTeGcxfMtXNwX/nuYBvq6prjL+Zli0Wwx0qyS7HHNhqUuOLzGi4SVFVg2bK9Ibh+uCJjpT6kJrpnwGKvkxl7bRMJ1RYXngumth6mjMAT5wUBfegjbB3vmMcxWQECNdq066hyFUyLLMnkUxyeCsdoy1gpBLODB+kuzcJP8nPx75jWHUrYTVbTWWSE5UieiwHXC3OY/SBPg1rbxS5ZBh/hg1fpixIkEYxAzuEv0fDyWElF1Q8LEdAX5TFy14y5drhc9H6wuiX2gfE/7muMZR2a7EOV8FNFyvIzYBVQv0ytLG/Shlw2ock2F+4/wD8ZKYn9moeSL5aSAQ==
+ b=UOPp6+en2SP3fcX2YeNA6KdNLGOsAuXxVcSBLDqCylZ1SxuSmjAWXwXcD38H1FJ3vgeEyhO5MGItqmztXDzqdUN1hd1PXt9LFFeWidpAy45ddue7EmakiYh1MmS3JxwqWcotkdVt02oiFX/QUMO+X+VCks6nEdERYln9WNGJo/n0+EVWGACrFylp9jzgQmk1/US2N9cFEsi08Q5DGOSo9DDBP2bW9qS5INzvwreT0w1pREFtdxu2QtvN2FF6sGE0QocmN3mptPoIOdfuag1VH/dOt3eppg0XXOOlHwRDp8LtyyLuvqlK1xRe7OtwaANzMsBhDEOW5OaeZZRaAh1teg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fL/W3fjGvnqMxzdhSAlvMb6Z0AxNsQkzH7VDK/qG6mk=;
- b=eM4a7qlXA0VR8WLGuXPwQhOwyaTtLdhrA5kb9bevpPHttCyskgKm1JcbDiNqKQ2kIYbJblORR48k1HNBbr0afgJCv7kMpOdmjFpmmXTMKnMhBrSEEb9kyFw69/PAz0lmKzXMVPqUk6M0CUg2aS/6utT/B1rgtFmeO+N4nxdRbHA2QufUdpLPphym/LpjpdWwOcLpPK8+1BgfLvk19O8Ba3EBylbaIkhlPEjM7nos2oVa7LTyr7yprh/ttLT+7IvWN7u5nxliFX+2H3v1bj17KlW0ahUQa4VdOtVAe3Dc0RMFlKUykHYjbz1vWy+Rl5+VtYSLtKdkMt1bqgEja7F28w==
+ bh=y5niwCAsrxLTwgaXbUvUZX5n1KE9z0NUD17qbohRrZ8=;
+ b=iFXHaMtpWM7HRWhgYm/K82neL+poSrzFRlcftI6FiUYb6zsXfbVUGnE6EEsJymgthj7zQra3mtROvMr7UMhmwTCXpJHx1ScjvY84y4YzXUDr/SC/Wl/HcVjYqxL7yaVkB7cbQH2jbi6KlI4FFDjpbFniQVsE5l9rRCcUC9LmK+w2acLXAUSFcLm8E2nYUiStf8cTPrFqSThdIoOr8pyxLTJl1EY3UkZ3zsb2EFt1sF4XipMPiTkjf5O+iOLO9BZHR0NEE6D1qCfjJh6hZmkuuu34/cpDe1LfkW2HhdFh13aZET152D8XJz/EpeogaXIf/T4jc1lmCiAA7K2ayFfQSQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR02FT012.eop-EUR02.prod.protection.outlook.com
- (2a01:111:e400:7e1d::36) by
- HE1EUR02HT193.eop-EUR02.prod.protection.outlook.com (2a01:111:e400:7e1d::228)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Fri, 13 Mar
- 2020 01:05:53 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.10.59) by
- HE1EUR02FT012.mail.protection.outlook.com (10.152.10.75) with Microsoft SMTP
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y5niwCAsrxLTwgaXbUvUZX5n1KE9z0NUD17qbohRrZ8=;
+ b=QRCyIDgEpuMS1YkvWIgHQzAMMwVrBtSfdjEMF+DX/jzcvkYa51avb814SJEXR8QQ6rn3g2o8HRbcNTLY79L8ckp0ml03LLfl/CQv+KlGBXPSSXHvHgy+SA83cc93UMG/zYfWE/hBLnhtQ25uJYHyGCpuAf3OIGjCjR71p/LSV2E=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5986.eurprd04.prod.outlook.com (20.178.116.22) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13 via Frontend Transport; Fri, 13 Mar 2020 01:05:53 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:4AF6DC29AC1F232A67D6F997BF52BC4D60B511DC2EAB02B9553BF4FA2ED0C233;UpperCasedChecksum:3A8574BE8248C5135B1F2644B429421251666B497C3C30C74842EF48D5775A6C;SizeAsReceived:10368;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 01:05:53 +0000
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
- cred_guard_mutex
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
- <87d09hn4kt.fsf@x220.int.ebiederm.org>
- <dbce35c7-c060-cfd8-bde1-98fd9a0747a9@virtuozzo.com>
- <87lfo5lju6.fsf@x220.int.ebiederm.org>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170E9E71B9F84330B098BADE4FA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Fri, 13 Mar 2020 02:05:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <87lfo5lju6.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
+ 15.20.2793.17; Fri, 13 Mar 2020 01:07:05 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
+ 01:07:05 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel type
+Thread-Topic: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel type
+Thread-Index: AQHV8emRGg+Z0s59ZUi7vGFwjsJP+qhFwwug
+Date:   Fri, 13 Mar 2020 01:07:05 +0000
+Message-ID: <AM0PR04MB448123609B2FE8F5ECAF1F4388FA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1583300977-2327-1-git-send-email-peng.fan@nxp.com>
+ <VI1PR04MB7023455D0FE9766FFBE1EE5EEEFD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB7023455D0FE9766FFBE1EE5EEEFD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0026.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1c::13) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <d457086c-60c2-3b4d-977b-4c01117d0b6f@hotmail.de>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cdbedf90-873d-41d4-03f1-08d7c6ead8c7
+x-ms-traffictypediagnostic: AM0PR04MB5986:|AM0PR04MB5986:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB59862449CF87B73670A2452588FA0@AM0PR04MB5986.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1775;
+x-forefront-prvs: 034119E4F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(199004)(8936002)(81156014)(81166006)(66556008)(44832011)(316002)(33656002)(186003)(86362001)(26005)(966005)(66476007)(76116006)(6506007)(53546011)(66446008)(64756008)(7696005)(54906003)(66946007)(110136005)(71200400001)(52536014)(15650500001)(5660300002)(9686003)(478600001)(8676002)(4326008)(55016002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5986;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 63cYTHs4W7nyoR4T8VXkEcNT2ar2aY6amDo+xbb5CoCAAy3sWMMSz4REz1Rodk90n8uuS1KtsH1JKa6HWt6Pul5ROE6X27rVNXXl7ux9BHM8kgcAsoNDBH0H1WE6qmCAQr3SfQmqip/O5INrkPfh+++WmWpSSY89m/3/XwhPfR/egQbCGrxl2HEASmFBWLE1MFU0IgS9SFHki2z867wzWSF0cvukT6PWab/TgEjsW//r2Nax/d5LUYIcQa0c74Yd5eYz2AOK2lP8id4/UJzgeiBaLpIc8rw/c5x+HbYYehDBAxDvxgoysOYSZUKCXAtmLZFDUPfcZ/3X63x+KxNmBp9hnTiLnKsJ4Eo2Tc0ObOc6edKybAnfvfir/ZvQaU6OPdu4SC20bXcog1rxeKbsMNK6WNqxxuzM1legKALPu3Fr8JJ5aJyZa5WzyO4mVqQ0fL+kuwtYrSKPLMk7c2kn8GdzDZzUkCqhO7zaDbSZ5mlrXmGmc7OGS2O9OVA4iA54yPiqskUBwRWVM5vAPAa3LQ==
+x-ms-exchange-antispam-messagedata: mZ3MFL3+CSaxjVvbk3RDE+XNWgS1E28Jlwf+ppBJ3Rvq9jlukQF2xHkqj1YoEIaBZt+1MlGWDGBGKajEuhF+fiUaVdkymI6UPKDLX/39058pYxo7Y99134U8J+hpsiPhneehhX7drQbMfwfN0E0YdA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0026.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1c::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.16 via Frontend Transport; Fri, 13 Mar 2020 01:05:50 +0000
-X-Microsoft-Original-Message-ID: <d457086c-60c2-3b4d-977b-4c01117d0b6f@hotmail.de>
-X-TMN:  [ZvoFOvwG9QrKgn2xdjMtVFT3WymZoeXK]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: fc42852e-3fd7-4c54-6b01-08d7c6eaacdd
-X-MS-TrafficTypeDiagnostic: HE1EUR02HT193:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qXuFWBkLnHBhakKb3mJ2bGdWggGeJ4DMkmNmo6dIGuGhIE+hoI5tViLJ26fzQ/VFD5Dv3MQNVyzriUPRsJzmGtvTxUu0q1QrVe+OP/ITj1cWCE/ytu/KmJAcVUSTVR1Ej8qlfQe8OpeMz1gGLApE1EtjfsqvDyP9flQbSTtqaTyixC9D+9zqgct2gD4HGFCX
-X-MS-Exchange-AntiSpam-MessageData: JqX7lRkO1cip5geuEcxVqwUEWhesCLvZBAZLmkrmdRQ12lh3lUuVyrZSLjhnT787yvE5oWbKi+o8jom7WbeYyeJcG7ASfu5+K9mI5kSGeUYcwTbJ4FKbgLWHMup0+69oOk1jHCCGHHl/kmj0lbdNLQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc42852e-3fd7-4c54-6b01-08d7c6eaacdd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 01:05:52.7579
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdbedf90-873d-41d4-03f1-08d7c6ead8c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 01:07:05.6333
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT193
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XnEjNKtpOtd4hTaUVYDTjfy+SEV458dOCLKBg2FX7WmQ6K5FSgTxLfa9CrBB7CfTFSyN+BjKG4pL2Ya7WoPRmQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5986
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/20 3:38 PM, Eric W. Biederman wrote:
-> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
-> 
->> On 12.03.2020 15:24, Eric W. Biederman wrote:
->>>
->>> I actually need to switch the lock ordering here, and I haven't yet
->>> because my son was sick yesterday.
+Hi Leonard,
 
-All the best wishes to you and your son.  I hope he will get well soon.
+> Subject: Re: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel
+> type
+>=20
+> On 2020-03-04 7:55 AM, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > V6:
+> >   Add Oleksij's R-b tag
+> >   Patch 3/4, per
+> https://www.kernel.org/doc/Documentation/printk-formats.txt
+> >   should use %zu for printk sizeof
+> >
+> > V5:
+> >   Move imx_mu_dcfg below imx_mu_priv
+> >   Add init hooks to imx_mu_dcfg
+> >   drop __packed __aligned
+> >   Add more debug msg
+> >   code style cleanup
+> >
+> > V4:
+> >   Drop IMX_MU_TYPE_[GENERIC, SCU]
+> >   Pack MU chans init to separate function
+> >   Add separate function for SCU chans init and xlate
+> >   Add santity check to msg hdr.size
+> >   Limit SCU MU chans to 6, TX0/RX0/RXDB[0-3]
+> >
+> > V3:
+> >   Rebase to Shawn's for-next
+> >   Include fsl,imx8-mu-scu compatible
+> >   Per Oleksij's comments, introduce generic tx/rx and added scu mu type
+> >   Check fsl,imx8-mu-scu in firmware driver for fast_ipc
+> >
+> > V2:
+> >   Drop patch 1/3 which added fsl,scu property
+> >   Force to use scu channel type when machine has node compatible
+> "fsl,imx-scu"
+> >   Force imx-scu to use fast_ipc
+> >
+> >   I not found a generic method to make SCFW message generic enough,
+> SCFW
+> >   message is not fixed length including TX and RX. And it use TR0/RR0
+> >   interrupt.
+> >
+> > V1:
+> > Sorry to bind the mailbox/firmware patch together. This is make it to
+> > understand what changed to support using 1 TX and 1 RX channel for
+> > SCFW message.
+> >
+> > Per i.MX8QXP Reference mannual, there are several message using
+> > examples. One of them is:
+> > Passing short messages: Transmit register(s) can be used to pass short
+> > messages from one to four words in length. For example, when a
+> > four-word message is desired, only one of the registers needs to have
+> > its corresponding interrupt enable bit set at the receiver side.
+> >
+> > This patchset is to using this for SCFW message to replace four TX and
+> > four RX method.
+>=20
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
+>=20
 
-And sorry for not missing the issue in the review.  The reason turns
-out that bprm_mm_init is called after prepare_bprm_creds, but there
-are error pathes between those where free_bprm is called up with
-cred != NULL and mm == NULL, but the mutex not locked.
+Thanks for the test.
 
-I figured out a possible fix for the problem that was pointed out:
+> My stress tests pass on imx8qxp with this patcheset, however performance =
+is
+> not greatly improved. My guess is that this happens because of too many
+> interrupts.
 
+Might be. Could you share your testcase?
 
-From ceb6f65b52b3a7f0280f4f20509a1564a439edf6 Mon Sep 17 00:00:00 2001
-From: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Date: Wed, 11 Mar 2020 15:31:07 +0100
-Subject: [PATCH] Fix issues with exec_update_mutex
+>=20
+> Is there really a reason to enable TIE? Spinning on TE bits without any
+> interrupts should be just plain faster.
 
-Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
----
- fs/exec.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+I could try to disable TIE and give a try. If performance improves lot, I c=
+ould
+change to non TX interrupt.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index ffeebb1..cde4937 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1021,8 +1021,14 @@ static int exec_mmap(struct mm_struct *mm)
- 	old_mm = current->mm;
- 	exec_mm_release(tsk, old_mm);
- 
--	if (old_mm) {
-+	if (old_mm)
- 		sync_mm_rss(old_mm);
-+
-+	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
-+	if (ret)
-+		return ret;
-+
-+	if (old_mm) {
- 		/*
- 		 * Make sure that if there is a core dump in progress
- 		 * for the old mm, we get out and die instead of going
-@@ -1032,14 +1038,11 @@ static int exec_mmap(struct mm_struct *mm)
- 		down_read(&old_mm->mmap_sem);
- 		if (unlikely(old_mm->core_state)) {
- 			up_read(&old_mm->mmap_sem);
-+			mutex_unlock(&tsk->signal->exec_update_mutex);
- 			return -EINTR;
- 		}
- 	}
- 
--	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
--	if (ret)
--		return ret;
--
- 	task_lock(tsk);
- 	active_mm = tsk->active_mm;
- 	membarrier_exec_mmap(mm);
-@@ -1444,8 +1447,6 @@ static void free_bprm(struct linux_binprm *bprm)
- {
- 	free_arg_pages(bprm);
- 	if (bprm->cred) {
--		if (!bprm->mm)
--			mutex_unlock(&current->signal->exec_update_mutex);
- 		mutex_unlock(&current->signal->cred_guard_mutex);
- 		abort_creds(bprm->cred);
- 	}
-@@ -1846,6 +1847,8 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	would_dump(bprm, bprm->file);
- 
- 	retval = exec_binprm(bprm);
-+	if (bprm->cred && !bprm->mm)
-+		mutex_unlock(&current->signal->exec_update_mutex);
- 	if (retval < 0)
- 		goto out;
- 
--- 
-1.9.1
+Oleksij, do you agree?
+
+Thanks,
+Peng.
+
+>=20
+> >
+> > Peng Fan (4):
+> >    dt-bindings: mailbox: imx-mu: add SCU MU support
+> >    mailbox: imx: restructure code to make easy for new MU
+> >    mailbox: imx: add SCU MU support
+> >    firmware: imx-scu: Support one TX and one RX
+> >
+> >   .../devicetree/bindings/mailbox/fsl,mu.txt         |   2 +
+> >   drivers/firmware/imx/imx-scu.c                     |  54 ++++-
+> >   drivers/mailbox/imx-mailbox.c                      | 267
+> +++++++++++++++++----
+> >   3 files changed, 260 insertions(+), 63 deletions(-)
+> >
+> >
+> > base-commit: 770fbb32d34e5d6298cc2be590c9d2fd6069aa17
+> >
+
