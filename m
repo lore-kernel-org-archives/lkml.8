@@ -2,201 +2,128 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8CBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD352C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D49F206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90870206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:52:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="e+obtGsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgCMDtg (ORCPT
+        id S1726414AbgCMDwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:49:36 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9201 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbgCMDtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:49:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 20:49:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
-   d="scan'208";a="235218792"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Mar 2020 20:49:34 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jCbKH-0000zY-To; Fri, 13 Mar 2020 11:49:33 +0800
-Date:   Fri, 13 Mar 2020 11:49:11 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/urgent] BUILD SUCCESS
- f967140dfb7442e2db0868b03b961f9c59418a1b
-Message-ID: <5e6b02b7.JUUUyo5fGcjJSIHZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 12 Mar 2020 23:52:04 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34069 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgCMDwE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:52:04 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f3so10354119qkh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 20:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ER4yQwvRL6bFJRFz9hkOSe0+qiSsIHfISgRhaLCNYXM=;
+        b=e+obtGsMJrNM8VC93u6iDKH6pQiUVW0J+QmWSLfLGxex6nuLo6NkDpCubzWzmHBPzK
+         a6TDmhdQpog/5B1h7Wp7OlnvTG1AIxbxkmiFzL2zYN0oUa4y5fYmZWTkdlQUH+8OW+9J
+         c/ajjNujOlO0zF617cS5W4r8rDENWu+4SmAp0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ER4yQwvRL6bFJRFz9hkOSe0+qiSsIHfISgRhaLCNYXM=;
+        b=MUiR5PqAskCjXv60SfEZ3KEK2nwq9meH0LK1RQAMYSltKhCwvuglzHaAq9h025wKi4
+         bmMpbJ486ZqqBVqw6MEXQn+bi2TDkUE9hB+fa8CN6V3YtSJ7/h3B6FNzl7wJuw9Z4Swy
+         9ZOic3ELu9V0tuLtQ7uMYwATxBDSFYvAAwI0/NFclXD1cXjzgELL8lKB1zaO9byrV7ao
+         I9tFU08JY7J7xzRy1AZQ41OWOYouak522f/Y+MGjZO2p//2eV2zU5RB2RIUM0vDRLp1g
+         prEqSJLlB5MqEqk2XwBBQ3zsZM3wb14O4BJ8tyqyMK1wv5PWGqLlnrUd/VmVMjwgU1CP
+         Rb3w==
+X-Gm-Message-State: ANhLgQ1U+KVnBXKeZpHqt+1TDSL568FJEZAOhYocMPcGDaxnZa/8fBLJ
+        lxpQZiSF2C+A5LEcdWb+NIaiIg==
+X-Google-Smtp-Source: ADFU+vv/2QzBA+A05d6GNkRKznzI55wUVWpJfeZUpugFkkQpSNLqAzNrGDsZ29ruZPq0GJrQvyyahw==
+X-Received: by 2002:a37:a6d4:: with SMTP id p203mr11452462qke.184.1584071522866;
+        Thu, 12 Mar 2020 20:52:02 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 131sm28733662qkl.86.2020.03.12.20.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 20:52:02 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 23:52:01 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, "# 5 . 5 . x" <stable@vger.kernel.org>
+Subject: Re: [PATCH RFC tip/core/rcu 1/2] rcu: Don't acquire lock in NMI
+ handler in rcu_nmi_enter_common()
+Message-ID: <20200313035201.GB190951@google.com>
+References: <20200313024007.GA27492@paulmck-ThinkPad-P72>
+ <20200313024046.27622-1-paulmck@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200313024046.27622-1-paulmck@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
-branch HEAD: f967140dfb7442e2db0868b03b961f9c59418a1b  perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+On Thu, Mar 12, 2020 at 07:40:45PM -0700, paulmck@kernel.org wrote:
+> From: "Paul E. McKenney" <paulmck@kernel.org>
+> 
+> The rcu_nmi_enter_common() function can be invoked both in interrupt
+> and NMI handlers.  If it is invoked from process context (as opposed
+> to userspace or idle context) on a nohz_full CPU, it might acquire the
+> CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
+> with interrupts disabled, this is safe from an interrupt handler, but
+> doing so from an NMI handler can result in self-deadlock.
+> 
+> This commit therefore adds "irq" to the "if" condition so as to only
+> acquire the ->lock from irq handlers or process context, never from
+> an NMI handler.
 
-elapsed time: 874m
+I think Peter's new lockdep changes for NMI would also catch this issue.
 
-configs tested: 138
-configs skipped: 106
+> 
+> Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-mips                      fuloong2e_defconfig
-sparc64                           allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-x86_64               randconfig-a001-20200311
-x86_64               randconfig-a002-20200311
-x86_64               randconfig-a003-20200311
-i386                 randconfig-a001-20200311
-i386                 randconfig-a002-20200311
-i386                 randconfig-a003-20200311
-x86_64               randconfig-a001-20200312
-x86_64               randconfig-a002-20200312
-x86_64               randconfig-a003-20200312
-i386                 randconfig-a001-20200312
-i386                 randconfig-a002-20200312
-i386                 randconfig-a003-20200312
-alpha                randconfig-a001-20200312
-m68k                 randconfig-a001-20200312
-mips                 randconfig-a001-20200312
-nds32                randconfig-a001-20200312
-parisc               randconfig-a001-20200312
-csky                 randconfig-a001-20200312
-openrisc             randconfig-a001-20200312
-s390                 randconfig-a001-20200312
-sh                   randconfig-a001-20200312
-xtensa               randconfig-a001-20200312
-x86_64               randconfig-b001-20200311
-x86_64               randconfig-b002-20200311
-x86_64               randconfig-b003-20200311
-i386                 randconfig-b001-20200311
-i386                 randconfig-b002-20200311
-i386                 randconfig-b003-20200311
-x86_64               randconfig-c001-20200312
-x86_64               randconfig-c002-20200312
-x86_64               randconfig-c003-20200312
-i386                 randconfig-c001-20200312
-i386                 randconfig-c002-20200312
-i386                 randconfig-c003-20200312
-x86_64               randconfig-c001-20200311
-x86_64               randconfig-c002-20200311
-x86_64               randconfig-c003-20200311
-i386                 randconfig-c001-20200311
-i386                 randconfig-c002-20200311
-i386                 randconfig-c003-20200311
-x86_64               randconfig-e001-20200312
-x86_64               randconfig-e002-20200312
-x86_64               randconfig-e003-20200312
-i386                 randconfig-e001-20200312
-i386                 randconfig-e002-20200312
-i386                 randconfig-e003-20200312
-x86_64               randconfig-f001-20200312
-x86_64               randconfig-f002-20200312
-x86_64               randconfig-f003-20200312
-i386                 randconfig-f001-20200312
-i386                 randconfig-f002-20200312
-i386                 randconfig-f003-20200312
-x86_64               randconfig-h001-20200312
-x86_64               randconfig-h002-20200312
-x86_64               randconfig-h003-20200312
-i386                 randconfig-h001-20200312
-i386                 randconfig-h002-20200312
-i386                 randconfig-h003-20200312
-arm                  randconfig-a001-20200312
-arm64                randconfig-a001-20200312
-ia64                 randconfig-a001-20200312
-powerpc              randconfig-a001-20200312
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+thanks,
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ - Joel
+
+
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: <stable@vger.kernel.org> # 5.5.x
+> ---
+>  kernel/rcu/tree.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index d3f52c3..f7d3e48 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -825,7 +825,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+>  			rcu_cleanup_after_idle();
+>  
+>  		incby = 1;
+> -	} else if (tick_nohz_full_cpu(rdp->cpu) &&
+> +	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+>  		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+>  		   READ_ONCE(rdp->rcu_urgent_qs) &&
+>  		   !READ_ONCE(rdp->rcu_forced_tick)) {
+> -- 
+> 2.9.5
+> 
