@@ -2,105 +2,98 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC884C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5850C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02BC206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5BF206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqDmbPKs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ee5U9Uz3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCMRiJ (ORCPT
+        id S1726883AbgCMRic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:38:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55036 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726442AbgCMRiJ (ORCPT
+        Fri, 13 Mar 2020 13:38:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40633 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgCMRic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:38:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584121088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=vyTSjj6dhi7L5i7AP4TVMNcNaJWuuKHcypzi7S8GnSk=;
-        b=ZqDmbPKsz1ulOufRM7Gy/Eb6i76qOsf606nY5dxRDlBDwRiIfxEHpcBiQNg/MhJWRkLhb/
-        jr6KD9KqfEjdcFw7rSQ1gKDtvpgKEmYBfjO2+pppUw9fyh8upwMfxPInEcUjkiN6MA+ipw
-        8NZD42hOS/hYu77TArko+kalI3wqZUE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-baDEUYg9NMq4UH-Z6JMhIw-1; Fri, 13 Mar 2020 13:38:06 -0400
-X-MC-Unique: baDEUYg9NMq4UH-Z6JMhIw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4F7C13FE;
-        Fri, 13 Mar 2020 17:38:04 +0000 (UTC)
-Received: from virtlab512.virt.lab.eng.bos.redhat.com (virtlab512.virt.lab.eng.bos.redhat.com [10.19.152.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7141A60BF7;
-        Fri, 13 Mar 2020 17:37:58 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mtosatti@redhat.com, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, pbonzini@redhat.com,
-        peterx@redhat.com
-Subject: [Patch v3] KVM: x86: Initializing all kvm_lapic_irq fields in ioapic_write_indirect
-Date:   Fri, 13 Mar 2020 13:37:57 -0400
-Message-Id: <1584121077-9753-1-git-send-email-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Fri, 13 Mar 2020 13:38:32 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a24so12879373edy.7;
+        Fri, 13 Mar 2020 10:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R3dyNr4k5uWyS12uYVE6FnBN9I0mOgh5neR4n7Md79s=;
+        b=ee5U9Uz3MBtT6Nz8t621V9cJN5wg3+7ZOmT+cjtjz9yVgKB6xgHYYRybpm0tjQ9QFW
+         UGcjiprG0XDeCfpQbAFG3voJF42p6Tz15VbiqWg1ueGEmyyZ1wRpScmPVSclQ1Wo59Cp
+         ig37pPj54xRLrAg5Ne+sMfrmKMbHCRItjmSra80vHh0cwjoHwx0JF00QJDe5Erhe5Kr1
+         tTLxmCmwU71NpDntU9u6MzMCayInnzI7hiMNZfnfHdJDmESGEqGaMwasHrNoGnvcgC9U
+         EeSrZgB7hscZD4CSfsB8PAdy+S1PbcjEjInySA6+4S0CDDeh7bTQcWiHUb32n41DthI7
+         Px2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R3dyNr4k5uWyS12uYVE6FnBN9I0mOgh5neR4n7Md79s=;
+        b=HYmRA4Tf+fjvicCzGBy7c76+m3SwRNDYqPOOcX7R3MzxMf59eg/Yno/w70PQYPUXH+
+         d0eckgvheyhblmoFe4C/rd/9cpo8atW9dvDCr7bcnPAE7D7m/dpE3DKQayS1rpuGumTb
+         EorfSsMzKgR1ZsfDM3n0rHPc9kF3OEtaIgdYh52WqIefJbk2+IAnIVfyjCntpZK3E9oh
+         PItVbzQm4XYKmoW8KoXG6m3OhhJB+5mrjIAkmGs6n/CiG2ojL9LguUa8qnVC0SmbNR+F
+         bjTh3Uy4ho3cPZHMbInBqop0kJGftwA5dFvoYYYWwcyOG1yOIpT42s5AzN4btXDzey14
+         FQyw==
+X-Gm-Message-State: ANhLgQ3VazZR6RuaImf8PHRbKBdnDzKgpyqRkqYEQ/tHJOYVz6vLtGj2
+        ++EPcO9FAdmLyPr2RuBfH8mvSUDg1qTvR3jisvY=
+X-Google-Smtp-Source: ADFU+vssY/N5sa0mg9a2KokRXIjoibkrN8m75YmXHtI7GyTMSTlWJ7b7VArj6jSyBMrODAOmFom6VKOCGt2GLlpPREw=
+X-Received: by 2002:aa7:de85:: with SMTP id j5mr14292710edv.193.1584121110187;
+ Fri, 13 Mar 2020 10:38:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200304005209.5636-1-afzal.mohd.ma@gmail.com>
+ <20200305130843.17989-1-afzal.mohd.ma@gmail.com> <20200313124821.GD7225@afzalpc>
+In-Reply-To: <20200313124821.GD7225@afzalpc>
+From:   Matt Turner <mattst88@gmail.com>
+Date:   Fri, 13 Mar 2020 10:38:18 -0700
+Message-ID: <CAEdQ38E2VEK=XZySOdm=zPj6dAOf0FuzuS39Y+AYTFVctB6zuw@mail.gmail.com>
+Subject: Re: [PATCH v4] alpha: Replace setup_irq() by request_irq()
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously all fields of structure kvm_lapic_irq were not initialized
-before it was passed to kvm_bitmap_or_dest_vcpus(). Which will cause
-an issue when any of those fields are used for processing a request.
-For example not initializing the msi_redir_hint field before passing
-to the kvm_bitmap_or_dest_vcpus(), may lead to a misbehavior of
-kvm_apic_map_get_dest_lapic(). This will specifically happen when the
-kvm_lowest_prio_delivery() returns TRUE due to a non-zero garbage
-value of msi_redir_hint, which should not happen as the request belongs
-to APIC fixed delivery mode and we do not want to deliver the
-interrupt only to the lowest priority candidate.
+On Fri, Mar 13, 2020 at 5:48 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+>
+> Hi Richard Henderson, Ivan Kokshaysky, Matt Turner,
+>
+> On Thu, Mar 05, 2020 at 06:38:41PM +0530, afzal mohammed wrote:
+> > request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> > occur after memory allocators are ready.
+> >
+> > Per tglx[1], setup_irq() existed in olden days when allocators were not
+> > ready by the time early interrupts were initialized.
+> >
+> > Hence replace setup_irq() by request_irq().
+> >
+> > [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> >
+> > Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+>
+> If this patch is okay, please consider acking it so as to take it via
+> tglx.
+>
+> Regards
+> afzal
 
-This patch initializes all the fields of kvm_lapic_irq based on the
-values of ioapic redirect_entry object before passing it on to
-kvm_bitmap_or_dest_vcpus().
+Thanks afzal,
 
-Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- arch/x86/kvm/ioapic.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 7668fed..750ff0b 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
- 		if (e->fields.delivery_mode == APIC_DM_FIXED) {
- 			struct kvm_lapic_irq irq;
- 
--			irq.shorthand = APIC_DEST_NOSHORT;
- 			irq.vector = e->fields.vector;
- 			irq.delivery_mode = e->fields.delivery_mode << 8;
--			irq.dest_id = e->fields.dest_id;
- 			irq.dest_mode =
- 			    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
-+			irq.level = false;
-+			irq.trig_mode = e->fields.trig_mode;
-+			irq.shorthand = APIC_DEST_NOSHORT;
-+			irq.dest_id = e->fields.dest_id;
-+			irq.msi_redir_hint = false;
- 			bitmap_zero(&vcpu_bitmap, 16);
- 			kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
- 						 &vcpu_bitmap);
--- 
-1.8.3.1
-
+Acked-by: Matt Turner <mattst88@gmail.com>
