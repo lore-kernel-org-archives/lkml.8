@@ -2,164 +2,158 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A15C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD01C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126A5206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6FE2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgCMJTW convert rfc822-to-8bit (ORCPT
+        id S1726483AbgCMJaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:19:22 -0400
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:52576 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCMJTW (ORCPT
+        Fri, 13 Mar 2020 05:30:14 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51204 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgCMJaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:19:22 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 02D9IqOT011465; Fri, 13 Mar 2020 18:18:52 +0900
-X-Iguazu-Qid: 34trcFcTQzdBvyh6cj
-X-Iguazu-QSIG: v=2; s=0; t=1584091132; q=34trcFcTQzdBvyh6cj; m=dvXoewQWhEGI8o+42umGQv7bWI7dxSoWszKalJslMK8=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1510) id 02D9IpPU028396;
-        Fri, 13 Mar 2020 18:18:51 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 02D9Ip9Q019706;
-        Fri, 13 Mar 2020 18:18:51 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 02D9Iok8031529;
-        Fri, 13 Mar 2020 18:18:50 +0900
-From:   <masahiro31.yamada@kioxia.com>
-To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
-        <sagi@grimberg.me>, <linux-nvme@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2] nvme: Add compat_ioctl handler for
- NVME_IOCTL_SUBMIT_IO
-Thread-Topic: [PATCH V2] nvme: Add compat_ioctl handler for
- NVME_IOCTL_SUBMIT_IO
-Thread-Index: AdXy3d6dwSgpOC+0SI6LHpzHuGP6yQGOmZ3g
-Date:   Fri, 13 Mar 2020 09:18:48 +0000
-X-TSB-HOP: ON
-Message-ID: <151e755b6ea841669b1dfeac4a1fe607@TGXML281.toshiba.local>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.167.9.22]
-msscp.transfermailtomossagent: 103
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
+        Fri, 13 Mar 2020 05:30:13 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 83AF0295CF8;
+        Fri, 13 Mar 2020 09:30:11 +0000 (GMT)
+Date:   Fri, 13 Mar 2020 10:30:07 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     <Tudor.Ambarus@microchip.com>, <bbrezillon@kernel.org>,
+        <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <joel@jms.id.au>, <andrew@aj.id.au>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <matthias.bgg@gmail.com>,
+        <vz@mleia.com>, <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
+        <john.garry@huawei.com>, <tglx@linutronix.de>,
+        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
+        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
+        <swboyd@chromium.org>, <opensource@jilayne.com>,
+        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
+        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
+        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 01/23] mtd: spi-nor: Stop prefixing generic functions
+ with a manufacturer name
+Message-ID: <20200313103007.7d7ea6af@collabora.com>
+In-Reply-To: <91394111-cbd6-c24e-485d-88fcd6825dc7@ti.com>
+References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
+        <20200302180730.1886678-2-tudor.ambarus@microchip.com>
+        <91394111-cbd6-c24e-485d-88fcd6825dc7@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping?
+On Fri, 13 Mar 2020 11:34:55 +0530
+Vignesh Raghavendra <vigneshr@ti.com> wrote:
 
->Currently 32 bit application gets ENOTTY when it calls
->compat_ioctl with NVME_IOCTL_SUBMIT_IO in 64 bit kernel.
->
->The cause is that the results of sizeof(struct nvme_user_io),
->which is used to define NVME_IOCTL_SUBMIT_IO,
->are not same between 32 bit compiler and 64 bit compiler.
->
->* 32 bit: the result of sizeof nvme_user_io is 44.
->* 64 bit: the result of sizeof nvme_user_io is 48.
->
->64 bit compiler seems to add 32 bit padding for multiple of 8 bytes.
->
->This patch adds a compat_ioctl handler.
->The handler replaces NVME_IOCTL_SUBMIT_IO32 with NVME_IOCTL_SUBMIT_IO
->in case 32 bit application calls compat_ioctl for submit in 64 bit kernel.
->Then, it calls nvme_ioctl as usual.
->
->Signed-off-by: Masahiro Yamada (KIOXIA) <masahiro31.yamada@kioxia.com>
->---
->v2:
->- Add a comment explaining what is going on in nvme_compat_ioctl()
->- Put nvme_compat_ioctl() under CONFIG_COMPAT and add #else branch
->- Move struct nvme_user_io32 #ifdef CONFIG_COMPAT block in core.c
->- Fix packed pragma warning by checkpatch.pl
->  WARNING: __packed is preferred over __attribute__((packed))
->
-> drivers/nvme/host/core.c | 45 ++++++++++++++++++++++++++++++++++++++--
-> 1 file changed, 43 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->index 641c07347e8d..8c6998920b2a 100644
->--- a/drivers/nvme/host/core.c
->+++ b/drivers/nvme/host/core.c
->@@ -1584,6 +1584,47 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
-> 	return ret;
-> }
+> On 02/03/20 11:37 pm, Tudor.Ambarus@microchip.com wrote:
+> > From: Boris Brezillon <bbrezillon@kernel.org>
+> > 
+> > Replace the manufacturer prefix by something describing more precisely
+> > what those functions do.
+> > 
+> > Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+> > [tudor.ambarus@microchip.com: prepend spi_nor_ to all modified methods.]
+> > Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> > ---
+> >  drivers/mtd/spi-nor/spi-nor.c | 88 ++++++++++++++++++-----------------
+> >  1 file changed, 45 insertions(+), 43 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> > index caf0c109cca0..b15e262765e1 100644
+> > --- a/drivers/mtd/spi-nor/spi-nor.c
+> > +++ b/drivers/mtd/spi-nor/spi-nor.c
+> > @@ -568,14 +568,15 @@ static int spi_nor_read_cr(struct spi_nor *nor, u8 *cr)
+> >  }
+> >  
+> >  /**
+> > - * macronix_set_4byte() - Set 4-byte address mode for Macronix flashes.
+> > + * spi_nor_en4_ex4_set_4byte() - Enter/Exit 4-byte mode for Macronix like
+> > + * flashes.
+> >   * @nor:	pointer to 'struct spi_nor'.
+> >   * @enable:	true to enter the 4-byte address mode, false to exit the 4-byte
+> >   *		address mode.
+> >   *
+> >   * Return: 0 on success, -errno otherwise.
+> >   */
+> > -static int macronix_set_4byte(struct spi_nor *nor, bool enable)
+> > +static int spi_nor_en4_ex4_set_4byte(struct spi_nor *nor, bool enable)  
 > 
->+#ifdef CONFIG_COMPAT
->+struct nvme_user_io32 {
->+	__u8	opcode;
->+	__u8	flags;
->+	__u16	control;
->+	__u16	nblocks;
->+	__u16	rsvd;
->+	__u64	metadata;
->+	__u64	addr;
->+	__u64	slba;
->+	__u32	dsmgmt;
->+	__u32	reftag;
->+	__u16	apptag;
->+	__u16	appmask;
->+} __attribute__((__packed__));
->+
->+#define NVME_IOCTL_SUBMIT_IO32	_IOW('N', 0x42, struct nvme_user_io32)
->+
->+static int nvme_compat_ioctl(struct block_device *bdev, fmode_t mode,
->+		unsigned int cmd, unsigned long arg)
->+{
->+	/*
->+	 * Corresponds to the difference of NVME_IOCTL_SUBMIT_IO
->+	 * between 32 bit programs and 64 bit kernel.
->+	 * The cause is that the results of sizeof(struct nvme_user_io),
->+	 * which is used to define NVME_IOCTL_SUBMIT_IO,
->+	 * are not same between 32 bit compiler and 64 bit compiler.
->+	 * NVME_IOCTL_SUBMIT_IO32 is for 64 bit kernel handling
->+	 * NVME_IOCTL_SUBMIT_IO issued from 32 bit programs.
->+	 * Other IOCTL numbers are same between 32 bit and 64 bit.
->+	 * So there is nothing to do regarding to other IOCTL numbers.
->+	 */
->+	if (cmd == NVME_IOCTL_SUBMIT_IO32)
->+		return nvme_ioctl(bdev, mode, NVME_IOCTL_SUBMIT_IO, arg);
->+
->+	return nvme_ioctl(bdev, mode, cmd, arg);
->+}
->+#else
->+#define nvme_compat_ioctl	NULL
->+#endif /* CONFIG_COMPAT */
->+
-> static int nvme_open(struct block_device *bdev, fmode_t mode)
-> {
-> 	struct nvme_ns *ns = bdev->bd_disk->private_data;
->@@ -2027,7 +2068,7 @@ EXPORT_SYMBOL_GPL(nvme_sec_submit);
-> static const struct block_device_operations nvme_fops = {
-> 	.owner		= THIS_MODULE,
-> 	.ioctl		= nvme_ioctl,
->-	.compat_ioctl	= nvme_ioctl,
->+	.compat_ioctl	= nvme_compat_ioctl,
-> 	.open		= nvme_open,
-> 	.release	= nvme_release,
-> 	.getgeo		= nvme_getgeo,
->@@ -2055,7 +2096,7 @@ const struct block_device_operations nvme_ns_head_ops = {
-> 	.open		= nvme_ns_head_open,
-> 	.release	= nvme_ns_head_release,
-> 	.ioctl		= nvme_ioctl,
->-	.compat_ioctl	= nvme_ioctl,
->+	.compat_ioctl	= nvme_compat_ioctl,
-> 	.getgeo		= nvme_getgeo,
-> 	.pr_ops		= &nvme_pr_ops,
-> };
->-- 
->2.20.1
->
->
->
+> 
+> Sounds a bit weird, how about simplifying this to:
+> 
+> 	spi_nor_set_4byte_addr_mode()
+> 
+> Or if you want to be specific:
+> 
+> 	spi_nor_en_ex_4byte_addr_mode()
+
+You're right. Maybe we can simplify things by having a single function
+that does optional steps based on new flags
+
+SPI_NOR_EN_EX_4B_NEEDS_WEN
+SPI_NOR_CLEAR_EAR_ON_4B_EXIT
+
+This should probably be done in a separate patch though, so ack on the
+spi_nor_en_ex_4byte_addr_mode() rename, assuming we also change the
+bool argument name to enter.
+
+> 
+> >  {
+> >  	int ret;
+> >  
+> > @@ -604,14 +605,15 @@ static int macronix_set_4byte(struct spi_nor *nor, bool enable)
+> >  }
+> >  
+> >  /**
+> > - * st_micron_set_4byte() - Set 4-byte address mode for ST and Micron flashes.
+> > + * spi_nor_en4_ex4_wen_set_4byte() - Set 4-byte address mode for ST and Micron
+> > + * flashes.
+> >   * @nor:	pointer to 'struct spi_nor'.
+> >   * @enable:	true to enter the 4-byte address mode, false to exit the 4-byte
+> >   *		address mode.
+> >   *
+> >   * Return: 0 on success, -errno otherwise.
+> >   */
+> > -static int st_micron_set_4byte(struct spi_nor *nor, bool enable)
+> > +static int spi_nor_en4_ex4_wen_set_4byte(struct spi_nor *nor, bool enable)  
+> 
+> 
+> Unrelated to this patch itself, but can we just have one set_4byte
+> variant that uses WREN and drop the other one?
+
+Hm, not sure that's a good idea to insert WEN instructions for
+everyone, sounds like a recipe for regressions.
+
+> I expect sending WREN should be harmless even for cmds that don't expect
+> one.
+
+In theory yes, but you know flash chips are capricious, so let's not
+take the risk of breaking things :-).
+
+> 
+> Rest looks good to me.
+> 
+> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+> 
+
