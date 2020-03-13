@@ -2,157 +2,111 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4DCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAE6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CCD206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fRIau9xa"
+	by mail.kernel.org (Postfix) with ESMTP id AAE8C206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgCMB0T (ORCPT
+        id S1726681AbgCMBjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:26:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42478 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726620AbgCMB0T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:26:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584062778; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=DMvCcIAMOenOFGODAkqdoJHng9kOVkfWjVR4kCCv2yI=; b=fRIau9xaG4U2N9Jm4cSol2JRk7bQvOEH8gYdboN2eD/3Ey2KCj6q8lo/bHpoTWWEEp6cv4XV
- VaTRCdkzJdVbFk35yvMPcliA2045DzchQnM6qM7AA5YVas4zRRWBoshCXm/x/U2cXw9HSpEy
- kxjOkAFQohz3UvyP4qvTOAuSbNs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6ae134.7f8b3f055bc8-smtp-out-n05;
- Fri, 13 Mar 2020 01:26:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5BF21C433D2; Fri, 13 Mar 2020 01:26:11 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F6F0C433CB;
-        Fri, 13 Mar 2020 01:26:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F6F0C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Fri, 13 Mar 2020 06:56:04 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
-Message-ID: <20200313012604.GI20234@codeaurora.org>
-References: <1584011671-20939-1-git-send-email-stummala@codeaurora.org>
- <20200312170242.GA185506@google.com>
+        Thu, 12 Mar 2020 21:39:21 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11640 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726546AbgCMBjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:39:21 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F35E4EF00CE69FBB0358;
+        Fri, 13 Mar 2020 09:39:17 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 13 Mar 2020
+ 09:39:10 +0800
+Subject: Re: [PATCH v5 01/23] irqchip/gic-v3: Use SGIs without active state if
+ offered
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Robert Richter" <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-2-maz@kernel.org>
+ <63f6530a-9369-31e6-88d0-5337173495b9@huawei.com>
+ <51b2c74fdbcca049cc01be6d78c7c693@kernel.org>
+ <1bff1835ba7d6e22edb836d38cf16a14@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <3e20f3c3-0312-bd29-dcfc-2afee764ef19@huawei.com>
+Date:   Fri, 13 Mar 2020 09:39:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312170242.GA185506@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1bff1835ba7d6e22edb836d38cf16a14@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:02:42AM -0700, Jaegeuk Kim wrote:
-> On 03/12, Sahitya Tummala wrote:
-> > F2FS already has a default timeout of 5 secs for discards that
-> > can be issued during umount, but it can take more than the 5 sec
-> > timeout if the underlying UFS device queue is already full and there
-> > are no more available free tags to be used. In that case, submit_bio()
-> > will wait for the already queued discard requests to complete to get
-> > a free tag, which can potentially take way more than 5 sec.
-> > 
-> > Fix this by submitting the discard requests with REQ_NOWAIT
-> > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > scenario without waiting in the context of submit_bio(). The FS can
-> > then handle these requests by retrying again within the stipulated
-> > discard timeout period to avoid long latencies.
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> >  fs/f2fs/segment.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index fb3e531..a06bbac 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -1124,10 +1124,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > +	int flag;
-> >  	block_t lstart, start, len, total_len;
-> >  	int err = 0;
-> >  
-> > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > +
-> >  	if (dc->state != D_PREP)
-> >  		return 0;
-> >  
-> > @@ -1203,6 +1206,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> >  		bio->bi_opf |= flag;
-> >  		submit_bio(bio);
-> > +		if ((flag & REQ_NOWAIT) && (dc->error == -EAGAIN)) {
-> > +			dc->state = D_PREP;
-> > +			err = dc->error;
-> > +			break;
-> > +		}
-> >  
-> >  		atomic_inc(&dcc->issued_discard);
-> >  
-> > @@ -1510,6 +1518,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> >  			}
-> >  
-> >  			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > +			if (dc->error == -EAGAIN) {
-> > +				congestion_wait(BLK_RW_ASYNC, HZ/50);
+Hi Marc,
+
+On 2020/3/12 20:05, Marc Zyngier wrote:
+> On 2020-03-12 09:28, Marc Zyngier wrote:
+>> Hi Zenghui,
+>>
+>> On 2020-03-12 06:30, Zenghui Yu wrote:
+>>> Hi Marc,
+>>>
+>>> On 2020/3/5 4:33, Marc Zyngier wrote:
+>>>> To allow the direct injection of SGIs into a guest, the GICv4.1
+>>>> architecture has to sacrifice the Active state so that SGIs look
+>>>> a lot like LPIs (they are injected by the same mechanism).
+>>>>
+>>>> In order not to break existing software, the architecture gives
+>>>> offers guests OSs the choice: SGIs with or without an active
+>>>> state. It is the hypervisors duty to honor the guest's choice.
+>>>>
+>>>> For this, the architecture offers a discovery bit indicating whether
+>>>> the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
+>>>> bit indicating whether the guest wants Active-less SGIs or not
+>>>> (controlled by GICD_CTLR.nASSGIreq).
+>>>
+>>> I still can't find the description of these two bits in IHI0069F.
+>>> Are they actually architected and will be available in the future
+>>> version of the spec?  I want to confirm it again since this has a
+>>> great impact on the KVM code, any pointers?
+>>
+>> Damn. The bits *are* in the engineering spec version 19 (unfortunately
+>> not a public document, but I believe you should have access to it).
+>>
+>> If the bits have effectively been removed from the spec, I'll drop the
+>> GICv4.1 code from the 5.7 queue until we find a way to achieve the same
+>> level of support.
+>>
+>> I've emailed people inside ARM to find out.
 > 
-> 						--> need to be DEFAULT_IO_TIMEOUT
-
-Yes, i will update it.
-
+> I've now had written confirmation that the bits are still there.
 > 
-> > +				__relocate_discard_cmd(dcc, dc);
-> 
-> It seems we need to submit bio first, and then move dc to wait_list, if there's
-> no error, in __submit_discard_cmd().
+> It is just that the current revision of the documentation was cut *before*
+> they made it into the architecture (there seem to be a 6 month delay 
+> between
+> the architecture being sampled and the documentation being released).
 
-Yes, that is not changed and it still happens for the failed request
-that is re-queued here too when it gets submitted again later.
+I see. Thanks for the confirmation!
 
-I am requeuing the discard request failed with -EAGAIN error back to 
-dcc->pend_list[] from wait_list. It will call submit_bio() for this request
-and also move to wait_list when it calls __submit_discard_cmd() again next
-time. Please let me know if I am missing anything?
 
-Thanks,
+Zenghui
 
-> 
-> > +			}
-> >  
-> >  			if (issued >= dpolicy->max_requests)
-> >  				break;
-> > -- 
-> > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
