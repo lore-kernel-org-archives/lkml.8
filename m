@@ -2,206 +2,204 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9215DC5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8836CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E40A2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A15C206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDZmG2j2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sq4XHVmj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCMOQi (ORCPT
+        id S1727018AbgCMORT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:16:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41778 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgCMOQe (ORCPT
+        Fri, 13 Mar 2020 10:17:19 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49282 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgCMORT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:16:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s14so12307018wrt.8;
-        Fri, 13 Mar 2020 07:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=suutDYpQ/bEjugHVP9bWCcemianLUbaHZjVOmNlD4S8=;
-        b=VDZmG2j2t962DhcwYUrCKkn/lXu+Th3J+ej/KQy8aEpD41mm+pBGFpmHuWN3uIOdDT
-         u7IAxLKSb3pMTTvyEa3F589teEPJyl9y2nK7Rj2d1cGwuu/Pl2XvKPDL4t87LwhGyaHF
-         Fm0uqrgR19tJ3XVQH/cIJN69MU2pfpo9bbrQjoLNo9u86dAXCsdYHlVxGfrnNwhJEbth
-         UuZlpdd9AAH9fEdNromi1fdCQoTPtuLAWu9OPGcJXkWhzi+8OcO7Z0WikM4w0cCZJbgQ
-         goeJaZEQQgRYLJ8enxkzr+B6W7WPC+xC7tnqKHviyojs7SBFLRbrDG2+tN2A2/kB8glt
-         XPqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=suutDYpQ/bEjugHVP9bWCcemianLUbaHZjVOmNlD4S8=;
-        b=ZCRh85IjwdkgyqydYLw79QqKQPj0SwTPhM918BmLj/sFYQ3N+E28S3xxyPwCJu9Q+q
-         vO4USBbgPWt/Jf+HUK5FdtoqNHt0zOvDVzKjxw6x2JKFRVHD3ay0mdOw6Vj2ncTNRZw6
-         iVbP29P3a+JOlNiSuko3/vCUv5c7xF4uWC54Jkc1TReab74MQi0b8QENRblXcXsfhbUd
-         8T9lkD6sPAC77fxFseAFubzzpyqt1j9qeLNhOAQnrbyaHjLxw7AipshFmefZ9DrRF6YG
-         6rxtjnjMiDRlU8AfZfWTOky0+v83lQNO/1zx4SzmXpgT/pAt7AdVJIQvvBrEzn4neFk4
-         liNQ==
-X-Gm-Message-State: ANhLgQ2CJHdmLQc9V2bVCISm4g3+7mMD7t1EElJ/qMpEuPPf8B/KpmYl
-        UDBjYR5qd1JF9c197nF0aaJO3BdB2Uo=
-X-Google-Smtp-Source: ADFU+vs3TmRsg7cI5A0Y5yxhnvJ0uXk7VL3dYV8q6UE2xtOydnhuEG+EMGk3aRJ9qhsQVfZyERQ/Ww==
-X-Received: by 2002:adf:ef4c:: with SMTP id c12mr19071339wrp.249.1584108992201;
-        Fri, 13 Mar 2020 07:16:32 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id l83sm17561422wmf.43.2020.03.13.07.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 07:16:31 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH 4/4] usb: host: Add ability to build new Broadcom STB USB drivers
-Date:   Fri, 13 Mar 2020 10:15:45 -0400
-Message-Id: <20200313141545.31943-5-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313141545.31943-1-alcooperx@gmail.com>
-References: <20200313141545.31943-1-alcooperx@gmail.com>
+        Fri, 13 Mar 2020 10:17:19 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 548C75F;
+        Fri, 13 Mar 2020 15:17:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584109036;
+        bh=cNWnjF6VI23jiFmMB2Z9kPjXU1GPF9FYUM8c0rkqsfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sq4XHVmjlbnnW+wogjp1YdiXGbDHSx42KHhulBqivBzTCxtqFKJ8mFo0dlzHTI9ar
+         9Cn1ADG+fwz17GazAhlgeNdfuDglKJiKysVreka8tsoddZZ9lLKGEhEGt5OkqwC8RU
+         bPX/VD6oJDBoujSTb8b7SL+xL1BOwc//jiVaDlRg=
+Date:   Fri, 13 Mar 2020 16:17:13 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Phong LE <ple@baylibre.com>, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, sam@ravnborg.org,
+        mripard@kernel.org, heiko.stuebner@theobroma-systems.com,
+        linus.walleij@linaro.org, stephan@gerhold.net, icenowy@aosc.io,
+        broonie@kernel.org, mchehab+samsung@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: add it66121 bindings
+Message-ID: <20200313141713.GG4751@pendragon.ideasonboard.com>
+References: <20200311125135.30832-1-ple@baylibre.com>
+ <20200311125135.30832-3-ple@baylibre.com>
+ <20200313134013.GC4751@pendragon.ideasonboard.com>
+ <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the build system changes needed to get the Broadcom STB XHCI,
-EHCI and OHCI functionality working. The OHCI support does not
-require anything unique to Broadcom so the standard ohci-platform
-driver is being used. The link order for XHCI was changed in the
-Makefile because of the way STB XHCI, EHCI and OHCI controllers
-share a port which requires that the XHCI driver be initialized
-first. Also update MAINTAINERS.
+Hi Neil,
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
----
- MAINTAINERS               |  9 +++++++++
- drivers/usb/host/Kconfig  | 20 ++++++++++++++++++++
- drivers/usb/host/Makefile | 20 ++++++++++++++------
- 3 files changed, 43 insertions(+), 6 deletions(-)
+On Fri, Mar 13, 2020 at 03:12:13PM +0100, Neil Armstrong wrote:
+> On 13/03/2020 14:40, Laurent Pinchart wrote:
+> > On Wed, Mar 11, 2020 at 01:51:33PM +0100, Phong LE wrote:
+> >> Add the ITE bridge HDMI it66121 bindings.
+> >>
+> >> Signed-off-by: Phong LE <ple@baylibre.com>
+> >> ---
+> >>  .../bindings/display/bridge/ite,it66121.yaml  | 98 +++++++++++++++++++
+> >>  1 file changed, 98 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
+> >> new file mode 100644
+> >> index 000000000000..1717e880d130
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
+> >> @@ -0,0 +1,98 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/display/bridge/ite,it66121.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: ITE it66121 HDMI bridge Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Phong LE <ple@baylibre.com>
+> >> +  - Neil Armstrong <narmstrong@baylibre.com>
+> >> +
+> >> +description: |
+> >> +  The IT66121 is a high-performance and low-power single channel HDMI
+> >> +  transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward compatible
+> >> +  to DVI 1.0 specifications.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: ite,it66121
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +    description: base I2C address of the device
+> >> +
+> >> +  reset-gpios:
+> >> +    maxItems: 1
+> >> +    description: GPIO connected to active low reset
+> >> +
+> >> +  vrf12-supply:
+> >> +    maxItems: 1
+> >> +    description: Regulator for 1.2V analog core power.
+> >> +
+> >> +  vcn33-supply:
+> >> +    maxItems: 1
+> >> +    description: Regulator for 3.3V digital core power.
+> >> +
+> >> +  vcn18-supply:
+> >> +    maxItems: 1
+> >> +    description: Regulator for 1.8V IO core power.
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  pclk-dual-edge:
+> >> +    maxItems: 1
+> >> +    description: enable pclk dual edge mode.
+> > 
+> > I'm having a bit of trouble understanding how this operates. Looking at
+> > the driver code the property is only taken into account to calculate the
+> > maximum allowed frequency. How is the IT66121 configured for single vs.
+> > dual pixel clock edge mode ?
+> 
+> Dual edge mode is Dual-Data-Rate mode, the normal mode is MEDIA_BUS_FMT_RGB888_1X24 and dual edge is
+> MEDIA_BUS_FMT_RGB888_2X12_LE (or MEDIA_BUS_FMT_RGB888_2X12_BE, not sure) on a single clock period.
+> 
+> This should be negociated at runtime, but the bus width should be specified somewhere to select
+> one of the modes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..71bf287941c4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3433,6 +3433,15 @@ S:	Supported
- F:	drivers/i2c/busses/i2c-brcmstb.c
- F:	Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
- 
-+BROADCOM BRCMSTB USB XHCI and EHCI DRIVERS
-+M:	Al Cooper <alcooperx@gmail.com>
-+L:	linux-usb@vger.kernel.org
-+L:	bcm-kernel-feedback-list@broadcom.com
-+S:	Maintained
-+F:	drivers/usb/host/ehci-brcm.*
-+F:	drivers/usb/host/xhci-brcm.*
-+F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-+
- BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
- M:	Al Cooper <alcooperx@gmail.com>
- L:	linux-kernel@vger.kernel.org
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 55bdfdf11e4c..bc582ab6c5c8 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -97,6 +97,26 @@ config USB_XHCI_TEGRA
- 
- endif # USB_XHCI_HCD
- 
-+config USB_EHCI_BRCMSTB
-+       tristate
-+
-+config USB_XHCI_BRCMSTB
-+       tristate
-+
-+config USB_BRCMSTB
-+	tristate "Broadcom STB USB support"
-+	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
-+	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-+	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
-+	select USB_XHCI_BRCMSTB if USB_XHCI_HCD
-+	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-+	help
-+	  Say Y to enable support for XHCI, EHCI and OHCI host controllers
-+	  found in Broadcom STB SoC's.
-+
-+	  Disabling this will keep the controllers and corresponding
-+	  PHYs powered down.
-+
- config USB_EHCI_HCD
- 	tristate "EHCI HCD (USB 2.0) support"
- 	depends on HAS_DMA && HAS_IOMEM
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index b191361257cc..2a9a16047684 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -31,12 +31,25 @@ ifneq ($(CONFIG_USB_XHCI_RCAR), )
- 	xhci-plat-hcd-y		+= xhci-rcar.o
- endif
- 
-+ifneq ($(CONFIG_USB_XHCI_BRCMSTB), )
-+	xhci-plat-hcd-y		+= xhci-brcm.o
-+endif
-+
- ifneq ($(CONFIG_DEBUG_FS),)
- 	xhci-hcd-y		+= xhci-debugfs.o
- endif
- 
- obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
- 
-+# NOTE: BRCMSTB systems require that xhci driver be linked before the
-+# ehci/ohci drivers.
-+obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-+obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-+obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
-+obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
-+obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
-+obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
-+
- obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-@@ -49,6 +62,7 @@ obj-$(CONFIG_USB_EHCI_HCD_STI)	+= ehci-st.o
- obj-$(CONFIG_USB_EHCI_EXYNOS)	+= ehci-exynos.o
- obj-$(CONFIG_USB_EHCI_HCD_AT91) += ehci-atmel.o
- obj-$(CONFIG_USB_EHCI_TEGRA)	+= ehci-tegra.o
-+obj-$(CONFIG_USB_EHCI_BRCMSTB)	+= ehci-brcm.o
- 
- obj-$(CONFIG_USB_OXU210HP_HCD)	+= oxu210hp-hcd.o
- obj-$(CONFIG_USB_ISP116X_HCD)	+= isp116x-hcd.o
-@@ -69,12 +83,6 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
- 
- obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
- obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
--obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
--obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
--obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
--obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
--obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
--obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
- obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
- obj-$(CONFIG_USB_SL811_CS)	+= sl811_cs.o
- obj-$(CONFIG_USB_U132_HCD)	+= u132-hcd.o
+How about replacing this property by bus-width to report the connected
+bus width ? It should then become an endpoint property.
+
+> >> +
+> >> +  port:
+> >> +    type: object
+> >> +
+> >> +    properties:
+> >> +      endpoint:
+> >> +        type: object
+> >> +        description: |
+> >> +          Input endpoints of the bridge.
+> >> +
+> >> +    required:
+> >> +      - endpoint
+> > 
+> > You should have two ports, one for the bridge input, and one for the
+> > bridge output.
+> > 
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - reset-gpios
+> >> +  - vrf12-supply
+> >> +  - vcn33-supply
+> >> +  - vcn18-supply
+> >> +  - interrupts
+> >> +  - port
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    i2c6 {
+> >> +      #address-cells = <1>;
+> >> +      #size-cells = <0>;
+> >> +
+> >> +      it66121hdmitx: it66121hdmitx@4c {
+> >> +        compatible = "ite,it66121";
+> >> +        pinctrl-names = "default";
+> >> +        pinctrl-0 = <&ite_pins_default>;
+> >> +        vcn33-supply = <&mt6358_vcn33_wifi_reg>;
+> >> +        vcn18-supply = <&mt6358_vcn18_reg>;
+> >> +        vrf12-supply = <&mt6358_vrf12_reg>;
+> >> +        reset-gpios = <&pio 160 1 /* GPIO_ACTIVE_LOW */>;
+> >> +        interrupt-parent = <&pio>;
+> >> +        interrupts = <4 8 /* IRQ_TYPE_LEVEL_LOW */>;
+> >> +        reg = <0x4c>;
+> >> +        pclk-dual-edge;
+> >> +
+> >> +        port {
+> >> +          it66121_in: endpoint {
+> >> +            remote-endpoint = <&display_out>;
+> >> +          };
+> >> +        };
+> >> +      };
+> >> +    };
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
