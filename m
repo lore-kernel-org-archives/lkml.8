@@ -2,103 +2,139 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DA7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27EB2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED69720724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgCMKLc (ORCPT
+        id S1726569AbgCMKMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:11:32 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:39697 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgCMKLc (ORCPT
+        Fri, 13 Mar 2020 06:12:15 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50413 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgCMKMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:11:32 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MSKly-1ik3X01Xaq-00SiEB; Fri, 13 Mar 2020 11:11:30 +0100
-Received: by mail-qk1-f172.google.com with SMTP id d8so11505071qka.2;
-        Fri, 13 Mar 2020 03:11:30 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2xN5BlUpcZOrwMWPmjubsaakk47riZOIHyfUplu7RS5r9T+Kp3
-        lbPxLOjzhIAqgk7hqaj1nBiEKuKg+oYD+R6F7xY=
-X-Google-Smtp-Source: ADFU+vsCydklHK+9Ar4RDwAxNiVrZxoUVNmbFhA0K7Jp1usDjMuTKVKyrnX8uuq78mby8lyq2MddiuHVgl4hQ5+4glA=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr9621233qkd.394.1584094289099;
- Fri, 13 Mar 2020 03:11:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com> <1584070036-26447-4-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1584070036-26447-4-git-send-email-peng.fan@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Mar 2020 11:11:13 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a14BU5uHEqkVyWkeFVmxA1hJifQE+GkXFgmn59s_TL+Rw@mail.gmail.com>
-Message-ID: <CAK8P3a14BU5uHEqkVyWkeFVmxA1hJifQE+GkXFgmn59s_TL+Rw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Fri, 13 Mar 2020 06:12:15 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jChIV-0005CP-9b; Fri, 13 Mar 2020 11:12:07 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jChIU-000271-00; Fri, 13 Mar 2020 11:12:05 +0100
+Date:   Fri, 13 Mar 2020 11:12:05 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
         NXP Linux Team <linux-imx@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:uvjspBKGh/OQ7ZCu5qAX+JEpwtp/DDl2j2tRGZ8BuC82ySLDPox
- MjmLpfL1rGkst0kB7uY96YNbUJgmmz13vi7GruTwMyJcJVSIQf80AIeHXwfo3BoIjwquyuS
- 9xk4nUq2npNh7BQQJFq908xB/KOEt4WDNIhpWmf+mjvfomE7HK1li9hzz94tpVkFyo9/g9C
- ZNxKlC9/5Dj5qAEEUynkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yvuBIhSD7DY=:1Pze8/1ge8N3gcehyfQ95p
- dE8voLpyeScycF2ItZOrdGIiI+LPMkvEw6sUVdZPv+KWmsxX64GJJyXWvWBNIHUag4GkhPfr0
- JZyaz0CJ6h0YdKSlsqKLD0//s1DJ7q+9B4SWvWYTu+TmtxQnkSFUD7BxQ/kmScjjJpnn0nrvO
- szxFKMunxV6CVuzc++Fa1cFjx1jvTK/7+PM/A9EV4jPlx2bIdaUyKjVKiKrZ3zpKZfzAxqlCz
- tGtxs0bMqvewRParg8nIVQfEzm0qL1bF0UGHSPKF6pvRXPEe5dqtfN/mpxACwrjcA4+Fa6rnU
- hcrMitot+jx9dRQ/7O68GIjXJcd7gN+VuHnSG0XGkDfUzTX/4PIGpq+8kNsS5CFSfPfT4/U/m
- UjEkvoL/L6hmLpsqDxFkmFRLTygs3ATHOIb2qSFfdepu1zWlgiGCVAnojZQ1U02a/VSPfbDlN
- UaHUitDe/CR/ryF94/YPvgBTw0eDDqoqjiOMO5D88UJH5dqknS57JDjGURdbNQr2hzI4ILjJC
- J6zF5YHISRv/h/UFiZ1Eeuhow8WuPIai+29M0JDfwE6TZcOdhS8E2VgK6f64+Q309NDCR8qXF
- XuhBWhfn6uTWoLvEVV2fzLmb1kRm5mHZnMCKNPrJt3l6ZdOIflJGjyYct/YPXcRWVAsBL7YqI
- 7jNN12HWRQIJPqNi9DH9IMqK3tqOFVD/KlDinkRTlkHHoJwqRhPcSWT8I3Il9/n6za8ZuaG4X
- OD5TYEWYoAzWM6A8q+dj6bkajHAnlUUZvD9DMYAWmtpZvPp1+BLMCyGwMxaR5PrHSzIh7Cv9F
- CChPSiIap37YjRfVCH6lzOjXtfcLqCTIfyC0FbddtcpHRJ1fy0=
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx6q-marsboard: properly define rgmii
+ PHY
+Message-ID: <20200313101205.pxctcainreac7a6j@pengutronix.de>
+References: <20200313053224.8172-1-o.rempel@pengutronix.de>
+ <20200313053224.8172-3-o.rempel@pengutronix.de>
+ <20200313095545.GD14553@lunn.ch>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="btk4uzvcft3s7ycb"
+Content-Disposition: inline
+In-Reply-To: <20200313095545.GD14553@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:11:16 up 119 days,  1:29, 146 users,  load average: 0.01, 0.07,
+ 0.06
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 4:34 AM <peng.fan@nxp.com> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Select ARM_GIC_V3, then it is able to use gic v3 driver in aarch32
-> mode linux on aarch64 hardware. For aarch64 mode, it not hurts
-> to select ARM_GIC_V3.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+--btk4uzvcft3s7ycb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-> index 70019cefa617..0b69024296d5 100644
-> --- a/drivers/soc/imx/Kconfig
-> +++ b/drivers/soc/imx/Kconfig
-> @@ -21,6 +21,7 @@ config SOC_IMX8M
->         bool "i.MX8M SoC family support"
->         depends on ARCH_MXC || COMPILE_TEST
->         default ARCH_MXC && ARM64
-> +       select ARM_GIC_V3
+On Fri, Mar 13, 2020 at 10:55:45AM +0100, Andrew Lunn wrote:
+> On Fri, Mar 13, 2020 at 06:32:24AM +0100, Oleksij Rempel wrote:
+> > The Atheros AR8035 PHY can be autodetected but can't use interrupt
+> > support provided on this board. Define MDIO bus and the PHY node to make
+> > it work properly.
+> >=20
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  arch/arm/boot/dts/imx6q-marsboard.dts | 15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/=
+imx6q-marsboard.dts
+> > index 84b30bd6908f..1f31d86a217b 100644
+> > --- a/arch/arm/boot/dts/imx6q-marsboard.dts
+> > +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+> > @@ -111,8 +111,21 @@ &fec {
+> >  	pinctrl-names =3D "default";
+> >  	pinctrl-0 =3D <&pinctrl_enet>;
+> >  	phy-mode =3D "rgmii-id";
+> > -	phy-reset-gpios =3D <&gpio3 31 GPIO_ACTIVE_LOW>;
+> >  	status =3D "okay";
+>=20
+> Hi Oleksij=20
+>=20
+> I don't see a phy-handle here. So is it still using phy_find_first()?
 
-It would seem sensible to also drop the dependency on the 'default'
+Uff... right. Thx for pointing it.
 
-      Arnd
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--btk4uzvcft3s7ycb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5rXHEACgkQ4omh9DUa
+UbPogg//XjGtdb1pUZbPSkZBCCQhrYX8rLqM7CcGPmyDbDMo1EMZycc/B8pUPYir
+Ea/Xipv8Uj0SFZ8Sd3NApY1u+wtotDYyIYFe3oh9QCD9W8RI3o1DyiD6d7w4DjKR
+JqjSuj7pKbpRaFlGz6d724tuf8xImEumliUHJj7Smjhvz2srctfWBK5SODa1gj2x
+CE8Y3fVmSDIbiq9tlJCNgjyUe9rzjgQAOAbKyTaRuUi/WJNOu0SUT3l+Ggh5f6VQ
+OWXFKposcaFJWMVWyeqRttdsE+7396Pyk5T1W14YLKkBOY8CQrmdD7EnvjwYwsKX
+WbGfYU/TTyCjcMI3YbuiachfU6k+uZO/uIihnlYax/tzNIslZg7Pi+8GAGadNpxo
+pgZ6PUUUvAKEmfPNc2w9FJ9EGTHDrG6+KxobutnliGbsOtLSki6anNbbd/9cB3Qg
+4ZCkD5oXOeH340aSzTG19QMdf0ACBKpwoMUHA97KWFMSLgl/7WHi9+ZogAb/bII2
++kb65UNwWsXdEOhtTcDWDk5hVTIRVmiSndJkdjam6LAdidZjEPct7ByXvPmefcHA
+/qWcFUxPP1Wmoy5CJLALzRqIsW5LyonWhxnBwDA+Hl0u9POP28oCU7TY8qRoTCeS
+oRR0ZGXS10zVLRJGC99Di0g5elRP8xyaOcuEK/zPxD0bBVlzGRA=
+=ucl/
+-----END PGP SIGNATURE-----
+
+--btk4uzvcft3s7ycb--
