@@ -2,75 +2,102 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012B8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F33C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C328F206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0139E206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 09:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6XG5MzlO"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jkBwnhJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgCMJ4J (ORCPT
+        id S1726569AbgCMJ5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:56:09 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33208 "EHLO vps0.lunn.ch"
+        Fri, 13 Mar 2020 05:57:52 -0400
+Received: from ozlabs.org ([203.11.71.1]:42371 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgCMJ4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:56:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=vl8CYxpZLJVDwCydW3SUEJKySszv1ZXkhRykMBoOzoU=; b=6XG5MzlOdJETHHDVpQZE7zJCp0
-        jRtMUsSx1AxddQ9NqCTuECxLQBgMDW0dtZe87/bs41L8oYm5TP5N+TgpfmO/99soBox7FgcxH6/l7
-        UgVXlnMLhnfD52rc1gVsshIRyHkreqq786avxZ4QvFJEOybEq7xh21F0lViQDQVRAgss=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jCh2w-00046a-Ih; Fri, 13 Mar 2020 10:56:02 +0100
-Date:   Fri, 13 Mar 2020 10:56:02 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6dl-riotboard: properly define rgmii
- PHY
-Message-ID: <20200313095602.GE14553@lunn.ch>
-References: <20200313053224.8172-1-o.rempel@pengutronix.de>
- <20200313053224.8172-2-o.rempel@pengutronix.de>
+        id S1726216AbgCMJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 05:57:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48f1Mw69v5z9sPF;
+        Fri, 13 Mar 2020 20:57:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584093469;
+        bh=pe1kF012lJcfDdaduHbyryL8XG5t/pVUetl6nXOwlLA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jkBwnhJqXYBYY2DFtN2siMvaX9KSJEH40JeC1M7R4MW+FXmQrc025WT0OgxDGMduc
+         M6Omwyh78A+9NimmLk9GPIC2aUq79GycKA5QwyO/YRARqmKfVBs0JbvxkwG+2QlCR3
+         IxYZxUQ4AAMHlIoRygglrjF2MZ9ViiwO5Vas0VHyzkY6MO/JB1grd7ojmegJlEpwXM
+         GBPgzYBr/KVivdFQ0cGggAzH947c+jYj2r/q+EH5PSSpYVMdMb0cSy1XHMiICUnAiq
+         7s7X91B55uirRvm5SwOFBu9qGShYGrZFwf+k6N6VUCIjVFJZbcO483UgLFs4de7OkV
+         Pbjt8LP9HQVTw==
+Date:   Fri, 13 Mar 2020 20:57:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Subject: linux-next: build warning after merge of the amdgpu tree
+Message-ID: <20200313205748.03d30145@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313053224.8172-2-o.rempel@pengutronix.de>
+Content-Type: multipart/signed; boundary="Sig_/O8Uy58JlLveRERi9.xdDOtx";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 06:32:23AM +0100, Oleksij Rempel wrote:
-> The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> support provided on this board. Define MDIO bus and the PHY node to make
-> it work properly.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+--Sig_/O8Uy58JlLveRERi9.xdDOtx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Hi all,
 
-    Andrew
+After merging the amdgpu tree, today's linux-next build (powerpc
+allyesconfig) produced this warning:
+
+In file included from include/linux/compiler_types.h:59,
+                 from <command-line>:
+drivers/gpu/drm/amd/amdgpu/../powerplay/hwmgr/smu7_hwmgr.c: In function 'sm=
+u7_request_link_speed_change_before_state_change':
+include/linux/compiler_attributes.h:200:41: warning: statement will never b=
+e executed [-Wswitch-unreachable]
+  200 | # define fallthrough                    __attribute__((__fallthroug=
+h__))
+      |                                         ^~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/hwmgr/smu7_hwmgr.c:3706:4: note: in=
+ expansion of macro 'fallthrough'
+ 3706 |    fallthrough;
+      |    ^~~~~~~~~~~
+
+Introduced by commit
+
+  e86efa063cd1 ("AMD POWERPLAY: Use fallthrough;")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/O8Uy58JlLveRERi9.xdDOtx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5rWRwACgkQAVBC80lX
+0GwJiAf+KQoFAS6xFVfJ5xJwdEkRbrjdmhSC0DeBjcu5qXpIsaVty8HfoG9tDV2U
+CIZtHbBvFr7K7B9YC4pVmRPs8JsVPHBPqy2cwdctG1CZaLbsp+RSw8ieldi1MRHB
+RsrES8Zk1R+oaGr8Roj8jDd8GLrLnwx2G8A4a8LlGBJjaN72fbc8cAsqKRPvidft
+qn3+MJ+2fmmGOglw6mcUY1ySh1nYLHk/g9G9hkwonhu4HeWYfpN8ZZ0CJEyR1r41
+46Kd5G73aYI8mBDWiQjVUUV+KZx3OfkxmkkVtzF69lJea2hn8uh7NMJ163iRkapv
+AWQzihrby85HtqpXvMSNmSSBI1wp4w==
+=WkAW
+-----END PGP SIGNATURE-----
+
+--Sig_/O8Uy58JlLveRERi9.xdDOtx--
