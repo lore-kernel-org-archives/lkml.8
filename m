@@ -2,281 +2,182 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5990C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16008C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C037C20691
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D4320691
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 06:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgCMGQo (ORCPT
+        id S1726390AbgCMGWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 02:16:44 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:54086 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgCMGQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:16:44 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL94uJWteyRIaAA--.11S2;
-        Fri, 13 Mar 2020 14:16:14 +0800 (CST)
-From:   bibo mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Allison Randal <allison@lohutok.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Add header files reference with path prefix
-Date:   Fri, 13 Mar 2020 02:16:14 -0400
-Message-Id: <1584080174-11257-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9DxL94uJWteyRIaAA--.11S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AF17JF1fJFW8CF4rtw48tFb_yoW3CFyxpa
-        nrAa4kXFZ8urW7CFyFyrn29r43tws8Kr4YkayYg3W2y3Z7X3WUXan3Krn8Jr18XF4DKa48
-        WryfW3W5Xan2vw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-        vE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7CJmUUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Fri, 13 Mar 2020 02:22:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:23735 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbgCMGWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:22:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 23:22:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,547,1574150400"; 
+   d="scan'208";a="416195912"
+Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.251.228.67]) ([10.251.228.67])
+  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 23:22:14 -0700
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+References: <20200312223222.GA200236@google.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <4d06c72d-7f77-84d5-4163-187bc62b903a@linux.intel.com>
+Date:   Thu, 12 Mar 2020 23:22:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200312223222.GA200236@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some common header files which are referenced locally
-with #includenext method, includenext is tricky method and only
-used on mips platform.
+Hi Bjorn,
 
-This patech removes includenext method, replace it with defailed
-pathname prefix for header files.
+On 3/12/2020 3:32 PM, Bjorn Helgaas wrote:
+> On Thu, Mar 12, 2020 at 02:59:15PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> Hi Bjorn,
+>>
+>> On 3/12/20 12:53 PM, Bjorn Helgaas wrote:
+>>> On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>>>> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
+>>>>> Is any synchronization needed here between the EDR path and the
+>>>>> hotplug/enumeration path?
+>>>> If we want to follow the implementation note step by step (in
+>>>> sequence) then we need some synchronization between EDR path and
+>>>> enumeration path. But if it's OK to achieve the same end result by
+>>>> following steps out of sequence then we don't need to create any
+>>>> dependency between EDR and enumeration paths. Currently we follow
+>>>> the latter approach.
+>>> What would the synchronization look like?
+>> we might need some way to disable the enumeration path till
+>> we get response from firmware.
+>>
+>> In native hot plug case, I think we can do it in two ways.
+>>
+>> 1. Disable hotplug notification in slot ctl registers.
+>>      (pcie_disable_notification())
+>> 2. Some how block hotplug driver from processing the new
+>>      events (not sure how feasible its).
+>>
+>> Following method 1 would be easy, But I am not sure whether
+>> its alright to disable them randomly. I think, unless we
+>> clear the status as well, we might get some issues due to stale
+>> notification history.
+>>
+>> For ACPI event case, I am not sure whether we have some
+>> communication protocol in place to disable receiving ACPI
+>> events temporarily.
+>>
+>> For polling model, we need to disable to the polling
+>> timer thread till we receive _OST response from firmware.
+>>>
+>>> Ideally I think it would be better to follow the order in the
+>>> flowchart if it's not too onerous.
+>> None of the above changes will be pretty and I think it will
+>> not be simple as well.
+>>>    That will make the code easier to
+>>> understand.  The current situation with this dependency on pciehp and
+>>> what it will do leaves a lot of things implicit.
+>>>
+>>> What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+>>>
+>>> IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
+>>> unbinds the drivers and removes the devices.
+>>
+>>>   If that doesn't happen, and Linux clears the DPC trigger to bring
+>>>   the link back up, will those drivers try to operate uninitialized
+>>>   devices?
+>>
+>> I don't think this will happen. In DPC reset_link before we bring up
+>> the device we wait for link to go down first using
+>> pcie_wait_for_link(pdev, false) function.
+> 
+> I understand that, but these child devices were reset when DPC
+> disabled the link.  When the link comes back up, their BARs contain
+> zeros.
+> 
+> If CONFIG_HOTPLUG_PCI_PCIE=y, the DLLSC interrupt will cause pciehp to
+> unbind the driver.  It seems like the unbind races with the EDR notify
+> handler. '
 
-Signed-off-by: bibo mao <maobibo@loongson.cn>
----
- arch/mips/include/asm/mach-ar7/irq.h           | 2 +-
- arch/mips/include/asm/mach-ath79/irq.h         | 2 +-
- arch/mips/include/asm/mach-emma2rh/irq.h       | 2 +-
- arch/mips/include/asm/mach-ip27/irq.h          | 2 +-
- arch/mips/include/asm/mach-ip30/irq.h          | 2 +-
- arch/mips/include/asm/mach-lantiq/falcon/irq.h | 2 +-
- arch/mips/include/asm/mach-lantiq/xway/irq.h   | 2 +-
- arch/mips/include/asm/mach-lasat/irq.h         | 2 +-
- arch/mips/include/asm/mach-loongson64/irq.h    | 2 +-
- arch/mips/include/asm/mach-malta/irq.h         | 2 +-
- arch/mips/include/asm/mach-pic32/irq.h         | 2 +-
- arch/mips/include/asm/mach-pistachio/irq.h     | 2 +-
- arch/mips/include/asm/mach-ralink/irq.h        | 2 +-
- arch/mips/include/asm/mach-rm/mc146818rtc.h    | 2 +-
- arch/mips/include/asm/mach-vr41xx/irq.h        | 2 +-
- arch/mips/include/asm/mach-xilfpga/irq.h       | 2 +-
- 16 files changed, 16 insertions(+), 16 deletions(-)
+Agree. But even if there is a race condition, after clearing DPC trigger
+status, if hotplug driver properly removes/re-enumerates the driver then
+the end result will still be same. There should be no functional impact.
 
-diff --git a/arch/mips/include/asm/mach-ar7/irq.h b/arch/mips/include/asm/mach-ar7/irq.h
-index 7ad10e3..46bb730 100644
---- a/arch/mips/include/asm/mach-ar7/irq.h
-+++ b/arch/mips/include/asm/mach-ar7/irq.h
-@@ -11,6 +11,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_AR7_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-ath79/irq.h b/arch/mips/include/asm/mach-ath79/irq.h
-index 2df1abf..882534b 100644
---- a/arch/mips/include/asm/mach-ath79/irq.h
-+++ b/arch/mips/include/asm/mach-ath79/irq.h
-@@ -27,6 +27,6 @@
- #define ATH79_IP3_IRQ_COUNT     3
- #define ATH79_IP3_IRQ(_x)       (ATH79_IP3_IRQ_BASE + (_x))
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_ATH79_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-emma2rh/irq.h b/arch/mips/include/asm/mach-emma2rh/irq.h
-index 2f7155d..d327367 100644
---- a/arch/mips/include/asm/mach-emma2rh/irq.h
-+++ b/arch/mips/include/asm/mach-emma2rh/irq.h
-@@ -10,6 +10,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_EMMA2RH_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-ip27/irq.h b/arch/mips/include/asm/mach-ip27/irq.h
-index fd91c58..f45d799 100644
---- a/arch/mips/include/asm/mach-ip27/irq.h
-+++ b/arch/mips/include/asm/mach-ip27/irq.h
-@@ -12,7 +12,7 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #define IP27_HUB_PEND0_IRQ	(MIPS_CPU_IRQ_BASE + 2)
- #define IP27_HUB_PEND1_IRQ	(MIPS_CPU_IRQ_BASE + 3)
-diff --git a/arch/mips/include/asm/mach-ip30/irq.h b/arch/mips/include/asm/mach-ip30/irq.h
-index e5c3dd9..27ba899 100644
---- a/arch/mips/include/asm/mach-ip30/irq.h
-+++ b/arch/mips/include/asm/mach-ip30/irq.h
-@@ -76,7 +76,7 @@
-  */
- #define IP30_POWER_IRQ		HEART_L2_INT_POWER_BTN
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #define IP30_HEART_L0_IRQ	(MIPS_CPU_IRQ_BASE + 2)
- #define IP30_HEART_L1_IRQ	(MIPS_CPU_IRQ_BASE + 3)
-diff --git a/arch/mips/include/asm/mach-lantiq/falcon/irq.h b/arch/mips/include/asm/mach-lantiq/falcon/irq.h
-index 91d2bc0..c14312f 100644
---- a/arch/mips/include/asm/mach-lantiq/falcon/irq.h
-+++ b/arch/mips/include/asm/mach-lantiq/falcon/irq.h
-@@ -11,6 +11,6 @@
- 
- #define NR_IRQS 328
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif
-diff --git a/arch/mips/include/asm/mach-lantiq/xway/irq.h b/arch/mips/include/asm/mach-lantiq/xway/irq.h
-index 76ebbf6..2980e77 100644
---- a/arch/mips/include/asm/mach-lantiq/xway/irq.h
-+++ b/arch/mips/include/asm/mach-lantiq/xway/irq.h
-@@ -11,6 +11,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif
-diff --git a/arch/mips/include/asm/mach-lasat/irq.h b/arch/mips/include/asm/mach-lasat/irq.h
-index d79cbe0..e899492 100644
---- a/arch/mips/include/asm/mach-lasat/irq.h
-+++ b/arch/mips/include/asm/mach-lasat/irq.h
-@@ -9,6 +9,6 @@
- 
- #define NR_IRQS			24
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* _ASM_MACH_LASAT_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/include/asm/mach-loongson64/irq.h
-index 73a8991..0d39556 100644
---- a/arch/mips/include/asm/mach-loongson64/irq.h
-+++ b/arch/mips/include/asm/mach-loongson64/irq.h
-@@ -36,5 +36,5 @@
- extern void fixup_irqs(void);
- extern void loongson3_ipi_interrupt(struct pt_regs *regs);
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
-diff --git a/arch/mips/include/asm/mach-malta/irq.h b/arch/mips/include/asm/mach-malta/irq.h
-index af9eeea..344e61a 100644
---- a/arch/mips/include/asm/mach-malta/irq.h
-+++ b/arch/mips/include/asm/mach-malta/irq.h
-@@ -5,6 +5,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <mach/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_MIPS_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-pic32/irq.h b/arch/mips/include/asm/mach-pic32/irq.h
-index d239694..ddaf999 100644
---- a/arch/mips/include/asm/mach-pic32/irq.h
-+++ b/arch/mips/include/asm/mach-pic32/irq.h
-@@ -9,6 +9,6 @@
- #define NR_IRQS	256
- #define MIPS_CPU_IRQ_BASE 0
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_PIC32_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-pistachio/irq.h b/arch/mips/include/asm/mach-pistachio/irq.h
-index 93bc380..74ac016 100644
---- a/arch/mips/include/asm/mach-pistachio/irq.h
-+++ b/arch/mips/include/asm/mach-pistachio/irq.h
-@@ -10,6 +10,6 @@
- 
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_PISTACHIO_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-ralink/irq.h b/arch/mips/include/asm/mach-ralink/irq.h
-index 86473e3..2262243 100644
---- a/arch/mips/include/asm/mach-ralink/irq.h
-+++ b/arch/mips/include/asm/mach-ralink/irq.h
-@@ -5,6 +5,6 @@
- #define GIC_NUM_INTRS	64
- #define NR_IRQS 256
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif
-diff --git a/arch/mips/include/asm/mach-rm/mc146818rtc.h b/arch/mips/include/asm/mach-rm/mc146818rtc.h
-index 145bce0..a074f4f 100644
---- a/arch/mips/include/asm/mach-rm/mc146818rtc.h
-+++ b/arch/mips/include/asm/mach-rm/mc146818rtc.h
-@@ -16,6 +16,6 @@
- #define mc146818_decode_year(year) ((year) + 1980)
- #endif
- 
--#include_next <mc146818rtc.h>
-+#include <asm/mach-generic/mc146818rtc.h>
- 
- #endif /* __ASM_MACH_RM_MC146818RTC_H */
-diff --git a/arch/mips/include/asm/mach-vr41xx/irq.h b/arch/mips/include/asm/mach-vr41xx/irq.h
-index 3d63afa..4281b2b 100644
---- a/arch/mips/include/asm/mach-vr41xx/irq.h
-+++ b/arch/mips/include/asm/mach-vr41xx/irq.h
-@@ -4,6 +4,6 @@
- 
- #include <asm/vr41xx/irq.h> /* for MIPS_CPU_IRQ_BASE */
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __ASM_MACH_VR41XX_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-xilfpga/irq.h b/arch/mips/include/asm/mach-xilfpga/irq.h
-index b8e93fa..15ad29e 100644
---- a/arch/mips/include/asm/mach-xilfpga/irq.h
-+++ b/arch/mips/include/asm/mach-xilfpga/irq.h
-@@ -9,6 +9,6 @@
- 
- #define NR_IRQS 32
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- 
- #endif /* __MIPS_ASM_MACH_XILFPGA_IRQ_H__ */
+  If pciehp unbinds the driver before edr_handle_event() calls
+> pcie_do_recovery(), this seems fine -- we'll call dpc_reset_link(),
+> which brings up the link, we won't call any driver callbacks because
+> there's no driver, and another DLLSC interrupt will cause pciehp to
+> re-enumerate, which will re-initialize the device, then rebind the
+> driver.
+> 
+> If the EDR notify handler runs before pciehp unbinds the driver,
+In the above case, from the kernel perspective device is still 
+accessible and IIUC, it will try to recover it in pcie_do_recovery()
+using one of the callbacks.
+
+int (*mmio_enabled)(struct pci_dev *dev);
+int (*slot_reset)(struct pci_dev *dev);
+void (*resume)(struct pci_dev *dev);
+
+One of these callbacks will do pci_restore_state() to restore the
+device, and IO will not attempted in these callbacks until the device
+is successfully recovered.
+
+> couldn't EDR bring up the link and call driver .mmio_enabled() before
+> the device has been initialized?
+Calling mmio_enabled in this case should not be a problem right ?
+
+Please check the following content from 
+Documentation/PCI/pci-error-recovery.rst. IIUC (following content), IO 
+will not be attempted until
+the device is successfully re-configured.
+
+STEP 2: MMIO Enabled
+--------------------
+This callback is made if all drivers on a segment agree that they can
+try to recover and if no automatic link reset was performed by the HW.
+If the platform can't just re-enable IOs without a slot reset or a link
+reset, it will not call this callback, and instead will have gone
+directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
+
+
+> 
+> If CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=y, I could
+> believe that the situations are similar to the above.
+> 
+> What if CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=n?  Then
+> I assume there's nothing to unbind the driver, so pcie_do_recovery()
+> will call the driver .mmio_enabled() and other recovery callbacks on a
+> device that hasn't been initialized?
+
+probably in .slot_reset() callback device config will be restored and it
+will make the device functional again.
+
+Also since in above case hotplug is not supported, topology change will
+not be supported.
+
+> 
+
 -- 
-1.8.3.1
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
