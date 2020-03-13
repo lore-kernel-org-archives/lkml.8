@@ -2,124 +2,119 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F462C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F41C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ED32073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584083125;
-	bh=tqKsW6Mr4WeKn5Qa2yJbaOvMlWLU8u/M28vVtB9y87c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=P35lnLASRnYOaRe0ERypUv0NThLo+fxGK4Mo1+39VtTkzgq+ezDhHhqGbnnmsgs8K
-	 Ej/epaJkJH86viHSf0E8KBpwbrKkXCniuuwC1CXGOtgQFRNi6ovY2kIwPvzveod3Fr
-	 3hK8Xd7Wz79wGh5wotpR6JwRePdgdS4AXnh4nvY0=
+	by mail.kernel.org (Postfix) with ESMTP id 8281B2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCMHFX (ORCPT
+        id S1726462AbgCMHFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:05:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57750 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgCMHFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:05:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+GIAeKVn6/6mS7zEjp0He9SbnOKS6iiO5n3vZgWytUg=; b=lZQmOUoAaK3wdVVuBwmtNxtSiy
-        oboOZIBjmB5yRXLnwUeC+LV/HKzvVZvCeF2t8XuzwPAU+iHV5RbJKXIyd2+wcbrhX73PES2ujSSyo
-        C38tcZp2WSs0oyVbGFfl1A/Ult/3Bmfu5Iq+qRbYC81pVBbuS7EplLkQ5stIAbG1AMHS4jaWR3P2A
-        GsVAGAwnL2c9kIXb7PHl7motzuNky5BsD8KwRBMsCmFbaRHMzQP8h+sXQ4l+VldTTieKYxxNzb1pF
-        gfDatKwA8z2JcCx+L79iABKfTuyzFF973oqGn9mWNJnDp4ThQNzTjQwCo1uYU7J/U9Zw9tGK6mSjr
-        EmbvzO2Q==;
-Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCeNi-0008CX-OU; Fri, 13 Mar 2020 07:05:19 +0000
-Date:   Fri, 13 Mar 2020 08:05:14 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
-Message-ID: <20200313080514.3f65c8d9@coco.lan>
-In-Reply-To: <20200313064807.op4ghjsc22du3q4e@pengutronix.de>
-References: <20200313131903.3975cdd2@canb.auug.org.au>
-        <20200313064807.op4ghjsc22du3q4e@pengutronix.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 13 Mar 2020 03:05:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:36290 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgCMHFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 03:05:50 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A2ED1A1282;
+        Fri, 13 Mar 2020 08:05:48 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B7461A132F;
+        Fri, 13 Mar 2020 08:05:43 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 340FF40245;
+        Fri, 13 Mar 2020 15:05:37 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     dmitry.torokhov@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        robh@kernel.org, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] input: keyboard: imx_sc_key: Use devm_add_action_or_reset() to handle all cleanups
+Date:   Fri, 13 Mar 2020 14:59:11 +0800
+Message-Id: <1584082751-17047-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 13 Mar 2020 07:48:07 +0100
-Marco Felsch <m.felsch@pengutronix.de> escreveu:
+Use devm_add_action_or_reset() to handle all cleanups of failure in
+.probe and .remove, then .remove callback can be dropped.
 
-> Hi Stephen,
-> 
-> On 20-03-13 13:19, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the v4l-dvb tree, today's linux-next build (arm
-> > multi_v7_defconfig) failed like this:
-> > 
-> > ERROR: modpost: "fwnode_get_name" [drivers/media/v4l2-core/v4l2-fwnode.ko] undefined!
-> > 
-> > Caused by commit
-> > 
-> >   dfc22c073b78 ("media: v4l2-fwnode: add initial connector parsing support")
-> > 
-> > I have used the v4l-dvb tree from next-20200312 for today.  
-> 
-> I'm sorry for that. I put my branch on our 0day to test most of the
-> compile configs. Obviously this casae wasn't covered..
-> 
-> @Sakari
-> I will send a patch to fix this by adding:
-> EXPORT_SYMBOL_GPL(fwnode_get_name).
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/input/keyboard/imx_sc_key.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-There is already such patch at next-20200312:
-
-$ git show a7914d1072fb8ddeb2ec87bba1d28812483a3565
-commit a7914d1072fb8ddeb2ec87bba1d28812483a3565
-Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date:   Mon Mar 2 16:53:51 2020 +0300
-
-    device property: Export fwnode_get_name()
-    
-    This makes it possible to take advantage of the function in
-    the device drivers.
-    
-    Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-    Link: https://lore.kernel.org/r/20200302135353.56659-8-heikki.krogerus@linux.intel.com
-    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 511f6d7acdfe..5f35c0ccf5e0 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -566,6 +566,7 @@ const char *fwnode_get_name(const struct fwnode_handle *fwnode)
- {
-        return fwnode_call_ptr_op(fwnode, get_name);
+diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
+index 2672fd4..eab5dfb 100644
+--- a/drivers/input/keyboard/imx_sc_key.c
++++ b/drivers/input/keyboard/imx_sc_key.c
+@@ -96,6 +96,15 @@ static void imx_sc_check_for_events(struct work_struct *work)
+ 				      msecs_to_jiffies(REPEAT_INTERVAL));
  }
-+EXPORT_SYMBOL_GPL(fwnode_get_name);
  
- /**
-  * fwnode_get_name_prefix - Return the prefix of node for printing purposes
++static void imx_sc_key_action(void *data)
++{
++	struct imx_key_drv_data *priv = data;
++
++	imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
++	imx_scu_irq_unregister_notifier(&priv->key_notifier);
++	cancel_delayed_work_sync(&priv->check_work);
++}
++
+ static int imx_sc_key_probe(struct platform_device *pdev)
+ {
+ 	struct imx_key_drv_data *priv;
+@@ -146,27 +155,16 @@ static int imx_sc_key_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
++	error = devm_add_action_or_reset(&pdev->dev, imx_sc_key_action, &priv);
++	if (error)
++		return error;
++
+ 	priv->key_notifier.notifier_call = imx_sc_key_notify;
+ 	error = imx_scu_irq_register_notifier(&priv->key_notifier);
+-	if (error) {
+-		imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON,
+-					 false);
++	if (error)
+ 		dev_err(&pdev->dev, "failed to register scu notifier\n");
+-		return error;
+-	}
+-
+-	return 0;
+-}
+-
+-static int imx_sc_key_remove(struct platform_device *pdev)
+-{
+-	struct imx_key_drv_data *priv = platform_get_drvdata(pdev);
+-
+-	imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
+-	imx_scu_irq_unregister_notifier(&priv->key_notifier);
+-	cancel_delayed_work_sync(&priv->check_work);
+ 
+-	return 0;
++	return error;
+ }
+ 
+ static const struct of_device_id imx_sc_key_ids[] = {
+@@ -181,7 +179,6 @@ static struct platform_driver imx_sc_key_driver = {
+ 		.of_match_table = imx_sc_key_ids,
+ 	},
+ 	.probe = imx_sc_key_probe,
+-	.remove = imx_sc_key_remove,
+ };
+ module_platform_driver(imx_sc_key_driver);
+ 
+-- 
+2.7.4
 
-
-
-
-Thanks,
-Mauro
