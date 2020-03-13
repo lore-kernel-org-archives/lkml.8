@@ -2,125 +2,313 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F633C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC6DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8B1206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FAB206E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 00:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JiEN0kcC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RZ5BxtaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgCMAGE (ORCPT
+        id S1726982AbgCMAJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:06:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37316 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgCMAGE (ORCPT
+        Thu, 12 Mar 2020 20:09:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37355 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbgCMAJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:06:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a32so3039243pga.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:06:03 -0700 (PDT)
+        Thu, 12 Mar 2020 20:09:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p14so4105149pfn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 17:09:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=MT56InialoA5Gvuu17QFzhKM9mlaqKUsiERx8J8mK8A=;
-        b=JiEN0kcC+FSY9JxDVE0c/Nf+raSXxIfGzQiQhnnpAW2AxKWxl8VwuQzkSN6DGlyY/D
-         eDRiciH0xugCpu0Hh94n501CXjCftR1SK/fbXY07Qli4f+xGd0C7FqiyWqvh4IrwhRRq
-         BU1O23uhLzOqB6dxjuJhz6ZTZ5UjPI4f54crU=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e8JHt8PTJz90sRvXzr54veMVjti2Y1yUGcUK9CCsYQ4=;
+        b=RZ5BxtaEeh7ZllPEFT3iCmhw/c+J/0JAhA2FCN+qOmqUwg/Yvi5kcfa4wE59dMiNgY
+         N4K9BLNSpT0vn3BjUY698y01GVQtzTgvKMqqVSukntHuTcF0TMQDAzUxzxROE1n0ojTW
+         1EVczZuLF1hpyCuBUHmrCXl583MKxUgu4JwItChm7CRztTN2tLuj9WSURz9956Zni5rx
+         AgzLI32g/7rTD5RTNhAGs59iKXodsqW4OG3RJYTzr53wAp/BbDv4cMkN/m6/gQ0LBu0u
+         1nfga8tPG0ilwxRDzDyk7GAkKPnzsjb9f9aQIVKx4D9iCuzpdJS5dkebkDXTb/cylPdl
+         gbTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=MT56InialoA5Gvuu17QFzhKM9mlaqKUsiERx8J8mK8A=;
-        b=NuJbNxBAJn7l8y+SpRTFLRFmAnLOIBUMJQmQ2bLK5CmtEfVtEidQN/UqFbJ0aoDnYn
-         FHsoJJ5LZZGJFIOs6zxp14ByahJfOcj6dZgQpLjV+kf/s9i5/4yNJRaqHvL6WjetE7lN
-         Hewpu9eHvoVgHzerI3La/eV5oB3v/AkxVZbUdBSsh1r3uAa2rhmmM032f0YmZI8OxCQe
-         WZNCo0Fo/87FE6HIK2erpu6hbcbZ/6T7SBJkR3QhXlgZc5qKr3WDgqi2Y/zvpxuDQsDt
-         +UM0hUOoonnldRrdfp2u4EeVGGIvpsoOkDPh33RrQYvShdxwNHyf2FieSnIlhneL8crg
-         Hdhw==
-X-Gm-Message-State: ANhLgQ3Bik9c9asqa8pPwrLOkUGfZZn7e9dK+h8klqA7fd40s+WMDYel
-        HXC83MA+hk94WmqPvcHxCFtr1uVlL34=
-X-Google-Smtp-Source: ADFU+vufqVAMrmsyN2FQR+i0rIhNKJocLKys2LdKmIIuznP6bLJC6/QtdecJYAQsRGo5+9W0tYLH9Q==
-X-Received: by 2002:aa7:8217:: with SMTP id k23mr10886894pfi.257.1584057963010;
-        Thu, 12 Mar 2020 17:06:03 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g18sm56595595pfi.80.2020.03.12.17.06.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 17:06:02 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:06:01 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, Jann Horn <jannh@google.com>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/6] x86/elf: Add table to document READ_IMPLIES_EXEC
-Message-ID: <202003121705.6ABA79D8F0@keescook>
-References: <20200225051307.6401-1-keescook@chromium.org>
- <20200225051307.6401-2-keescook@chromium.org>
- <20200311194446.GL3470@zn.tnic>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e8JHt8PTJz90sRvXzr54veMVjti2Y1yUGcUK9CCsYQ4=;
+        b=tf86Mrx5TwRh8sf3228bGIXqjJc3y5Msqy/ZasGiBOXWtOkMRfFarXxKAhH+pk1vTx
+         uyssbiZtLxIF3xBeSDpOeFyp2LSzNeYxfQRQGjZyajqEtcUG2lPLhHBIi1fQSa0W+hFE
+         A9B3PkyUe7hACdBIFp6qeosQz4LLRNaATezmhQUgIOtkj/uOkBW6a2VP+bBf0WWl3iI4
+         9RmGGLX0mMFPczB8x6HkQ5156bFkPKELG9J/BiSs/EAuHFDoyJi6NqSjb0KfohEehbe/
+         Saum5nShvTvbf5sK3D1PsrjuJt1uQcZ4jXDXCLkP1xTzyBFqKEZaF62L8GiO2JOWFC56
+         uZ6g==
+X-Gm-Message-State: ANhLgQ3P5PGknI9XgvAT/Kd/K04GGYYwJi/XBb/aR73tv0qX48RVBLzJ
+        gY8RjeTbBbQtTfgYD6GyQcDmg11Hy2lS/sb3cjrWZg==
+X-Google-Smtp-Source: ADFU+vvSIF+fAk4jMoHaDVnuH4BleYR+05fUqL20c699GqIt5mD4LPQbx61DyWsIbf+ejhhxAPN58mTlvs1y7K9j4+4=
+X-Received: by 2002:aa7:8283:: with SMTP id s3mr10751804pfm.106.1584058167147;
+ Thu, 12 Mar 2020 17:09:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200311194446.GL3470@zn.tnic>
+References: <1583251361-12748-1-git-send-email-alan.maguire@oracle.com> <1583251361-12748-3-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1583251361-12748-3-git-send-email-alan.maguire@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 12 Mar 2020 17:09:15 -0700
+Message-ID: <CAFd5g45mSdJ8rF2AAfr6BJrBuPrn=6ntz=Z8a+mj4_Ptjg7XLA@mail.gmail.com>
+Subject: Re: [RFC PATCH kunit-next 2/2] kunit: add support for named resources
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 08:44:46PM +0100, Borislav Petkov wrote:
-> Ozenn Mon, Feb 24, 2020 at 09:13:02PM -0800, Kees Cook wrote:
-> > Add a table to document the current behavior of READ_IMPLIES_EXEC in
-> > preparation for changing the behavior.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> > ---
-> >  arch/x86/include/asm/elf.h | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> > index 69c0f892e310..733f69c2b053 100644
-> > --- a/arch/x86/include/asm/elf.h
-> > +++ b/arch/x86/include/asm/elf.h
-> > @@ -281,6 +281,25 @@ extern u32 elf_hwcap2;
-> >  /*
-> >   * An executable for which elf_read_implies_exec() returns TRUE will
-> >   * have the READ_IMPLIES_EXEC personality flag set automatically.
-> > + *
-> > + * The decision process for determining the results are:
-> > + *
-> > + *              CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
-> > + * ELF:              |            |                  |                |
-> > + * -------------------------------|------------------|----------------|
-> > + * missing GNU_STACK | exec-all   | exec-all         | exec-all       |
-> > + * GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
-> > + * GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
-> 
-> In all those tables, you wanna do:
-> 
-> s/GNU_STACK/PT_GNU_STACK/g
-> 
-> so that it is clear what this define is.
+On Tue, Mar 3, 2020 at 8:03 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> The kunit resources API allows for custom initialization and
+> cleanup code (init/fini); here we use the init code to set the
+> new "struct kunit_resource" "name" field, and call an additional
+> init function if needed.  Having a simple way to name resources
+> is useful in cases such as multithreaded tests where a set of
+> resources are shared among threads; a pointer to the
+> "struct kunit *" test state then is all that is needed to
+> retrieve and use named resources.  Support is provided to add,
+> find and destroy named resources; the latter two are simply
+> wrappers that use a "match-by-name" callback.
+>
+> If an attempt to add a resource with a name that already exists
+> is made kunit_add_named_resource() will return NULL.
+>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 
-Fair enough. :) I think I was trying to save 3 characters from earlier
-tables that were wider. I'll send a v5.
+Overall, I think this seems reasonable. I think it needs a use case to
+be justified, so long as Patricia ends up using it.
 
-Thanks!
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
--Kees
+> ---
+>  include/kunit/test.h   | 40 ++++++++++++++++++++++++++++++++++++++-
+>  lib/kunit/kunit-test.c | 37 ++++++++++++++++++++++++++++++++++++
+>  lib/kunit/test.c       | 51 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 127 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 11c80f5..70ee581 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -73,9 +73,14 @@
+>   *                     kunit_kmalloc_free, &params);
+>   *     }
+>   *
+> + * Resources can also be named, with lookup/removal done on a name
+> + * basis also.  kunit_add_named_resource(), kunit_find_named_resource()
+> + * and kunit_destroy_named_resource() below.  Resource names must be
+> + * unique within the test instance.
+>   */
+>  struct kunit_resource {
+>         void *data;
+> +       const char *name;       /* optional name */
+>         kunit_resource_init_t init;
+>         kunit_resource_free_t free;
+>
+> @@ -275,12 +280,27 @@ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+>   * @init: a user-supplied function to initialize the result (if needed).  If
+>   *        none is supplied, the resource data value is simply set to @data.
+>   *       If an init function is supplied, @data is passed to it instead.
+> - * @free: a user-supplied function to free the resource (if needed).
+> + * @free: a user-supplied function to free the resource data (if needed).
+>   * @data: value to pass to init function or set in resource data field.
+>   */
+>  int kunit_add_resource(struct kunit *test, kunit_resource_init_t init,
+>                        kunit_resource_free_t free, struct kunit_resource *res,
+>                        void *data);
+> +
+> +/**
+> + * kunit_add_named_resource() - Add a named *test managed resource*.
+> + * @test: The test context object.
+> + * @init: a user-supplied function to initialize the resource data, if needed.
+> + * @free: a user-supplied function to free the resource data, if needed.
+> + * @name_data: name and data to be set for resource.
+> + */
+> +int kunit_add_named_resource(struct kunit *test,
+> +                            kunit_resource_init_t init,
+> +                            kunit_resource_free_t free,
+> +                            struct kunit_resource *res,
+> +                            const char *name,
+> +                            void *data);
+> +
+>  /**
+>   * kunit_alloc_resource() - Allocates a *test managed resource*.
+>   * @test: The test context object.
+> @@ -336,6 +356,19 @@ static inline bool kunit_resource_instance_match(struct kunit *test,
+>  }
+>
+>  /**
+> + * kunit_resource_name_match() - Match a resource with the same name.
+> + * @test: Test case to which the resource belongs.
+> + * @res: The resource.
+> + * @match_name: The name to match against.
+> + */
+> +static inline bool kunit_resource_name_match(struct kunit *test,
+> +                                            struct kunit_resource *res,
+> +                                            void *match_name)
+> +{
+> +       return res->name && strcmp(res->name, match_name) == 0;
+> +}
+> +
+> +/**
+>   * kunit_find_resource() - Find a resource using match function/data.
+>   * @test: Test case to which the resource belongs.
+>   * @match: match function to be applied to resources/match data.
+> @@ -345,6 +378,9 @@ struct kunit_resource *kunit_find_resource(struct kunit *test,
+>                                            kunit_resource_match_t match,
+>                                            void *match_data);
+>
+> +#define kunit_find_named_resource(test, name)                  \
+> +       kunit_find_resource(test, kunit_resource_name_match, (void *)name)
+> +
+>  /**
+>   * kunit_destroy_resource() - Find a kunit_resource and destroy it.
+>   * @test: Test case to which the resource belongs.
+> @@ -358,6 +394,8 @@ int kunit_destroy_resource(struct kunit *test,
+>                            kunit_resource_match_t match,
+>                            void *match_data);
+>
+> +#define kunit_destroy_named_resource(test, name)               \
+> +       kunit_destroy_resource(test, kunit_resource_name_match, name)
 
--- 
-Kees Cook
+nit: I would prefer a static inline function here instead of a macro.
+
+>  /**
+>   * kunit_remove_resource: remove resource from resource list associated with
+> diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+> index b8bf36d..079c558 100644
+> --- a/lib/kunit/kunit-test.c
+> +++ b/lib/kunit/kunit-test.c
+> @@ -317,6 +317,42 @@ static void kunit_resource_test_static(struct kunit *test)
+>         KUNIT_EXPECT_TRUE(test, list_empty(&test->resources));
+>  }
+>
+> +static void kunit_resource_test_named(struct kunit *test)
+> +{
+> +       struct kunit_resource res1, res2, *found = NULL;
+> +       struct kunit_test_resource_context ctx;
+> +
+> +       KUNIT_EXPECT_EQ(test,
+> +                       kunit_add_named_resource(test, NULL, NULL, &res1,
+> +                                                "resource_1", &ctx),
+> +                       0);
+> +       KUNIT_EXPECT_PTR_EQ(test, res1.data, (void *)&ctx);
+> +
+> +       KUNIT_EXPECT_EQ(test,
+> +                       kunit_add_named_resource(test, NULL, NULL, &res1,
+> +                                                "resource_1", &ctx),
+> +                       -EEXIST);
+> +
+> +       KUNIT_EXPECT_EQ(test,
+> +                       kunit_add_named_resource(test, NULL, NULL, &res2,
+> +                                                "resource_2", &ctx),
+> +                       0);
+> +
+> +       found = kunit_find_named_resource(test, "resource_1");
+> +
+> +       KUNIT_EXPECT_PTR_EQ(test, found, &res1);
+> +
+> +       if (found)
+> +               kunit_put_resource(&res1);
+> +
+> +       KUNIT_EXPECT_EQ(test, kunit_destroy_named_resource(test, "resource_2"),
+> +                       0);
+> +
+> +       kunit_cleanup(test);
+> +
+> +       KUNIT_EXPECT_TRUE(test, list_empty(&test->resources));
+> +}
+> +
+>  static int kunit_resource_test_init(struct kunit *test)
+>  {
+>         struct kunit_test_resource_context *ctx =
+> @@ -346,6 +382,7 @@ static void kunit_resource_test_exit(struct kunit *test)
+>         KUNIT_CASE(kunit_resource_test_cleanup_resources),
+>         KUNIT_CASE(kunit_resource_test_proper_free_ordering),
+>         KUNIT_CASE(kunit_resource_test_static),
+> +       KUNIT_CASE(kunit_resource_test_named),
+>         {}
+>  };
+>
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 132e9bf..86a4d9c 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -380,6 +380,57 @@ int kunit_add_resource(struct kunit *test, kunit_resource_init_t init,
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_add_resource);
+>
+> +/* Used to initialize named resource. */
+> +struct kunit_name_data {
+> +       const char *name;
+> +       kunit_resource_init_t init;
+> +       void *data;
+> +};
+> +
+> +static int kunit_init_named_resource(struct kunit_resource *res, void *data)
+> +{
+> +       struct kunit_name_data *name_data = data;
+> +
+> +       res->name = name_data->name;
+> +       res->data = name_data->data;
+> +       res->init = name_data->init;
+> +
+> +       if (res->init)
+> +               return res->init(res, name_data->data);
+> +
+> +       res->data = name_data->data;
+> +
+> +       return 0;
+> +}
+> +
+> +int kunit_add_named_resource(struct kunit *test,
+> +                            kunit_resource_init_t init,
+> +                            kunit_resource_free_t free,
+> +                            struct kunit_resource *res,
+> +                            const char *name,
+> +                            void *data)
+> +{
+> +       struct kunit_name_data name_data;
+> +       struct kunit_resource *existing;
+> +
+> +       if (!name)
+> +               return -EINVAL;
+> +
+> +       existing = kunit_find_named_resource(test, name);
+> +       if (existing) {
+> +               kunit_put_resource(existing);
+> +               return -EEXIST;
+> +       }
+> +
+> +       name_data.name = name;
+> +       name_data.init = init;
+> +       name_data.data = data;
+> +
+> +       return kunit_add_resource(test, kunit_init_named_resource, free, res,
+> +                                 &name_data);
+> +}
+> +EXPORT_SYMBOL_GPL(kunit_add_named_resource);
+
+Could we maybe combine the above with the non-named variants? Seems
+like there might be some unnecessary code duplication.
+
+>  struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+>                                                     kunit_resource_init_t init,
+>                                                     kunit_resource_free_t free,
+
+Once again, thank you for all your hard work!
