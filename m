@@ -2,103 +2,228 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E8CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D10EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20F120746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA11520724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="taRcVzN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgCMKu5 (ORCPT
+        id S1726636AbgCMKvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:50:57 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:41153 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgCMKu5 (ORCPT
+        Fri, 13 Mar 2020 06:51:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:33711 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726387AbgCMKvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:50:57 -0400
-Received: by mail-ot1-f54.google.com with SMTP id s15so9574294otq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:50:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NdCnD1rhp0kIebtvrPQrBvc9ez8VJIn2F1YZ3NGfymI=;
-        b=jt2sgMtjiQUbfoitzI4S9Ph4Cv1+drdDI36kWHir9pLVdZp4ReXU2byRp5Iag24zI4
-         cgCoTtEVOlOVBMDhPt/Uo7uhiOaptHOzI3xm5GiovNaDSZhOZYbi2q9HvxbViBq/RQ64
-         tVpS10zJ+NcXPbwHLzYM4hMfOKp94miSJ+SSGZZI3pLsjYFqzBhAOdg6XSxmzA3XAkot
-         fmWGioeLLN2d4sJa0O7UXRZEwrI683DQL4izjQU/fBsQ6icaTJkH1dVHi8NS4r/aTa5c
-         5pM66li3B+9GDK+BRmIENWliMBtzdaugIEhum9rI8kfG5+mYDhF0Al51KxJ8Ik6q8aWs
-         y7/Q==
-X-Gm-Message-State: ANhLgQ14/9y7HgtybHsQ00ZKkqhPHp0cyLjeSRZVE9YwsYFK96fpCAUq
-        Op5q8nf2QKF0YeoY13/mm5I9rEL+HtOYwKEoNTk=
-X-Google-Smtp-Source: ADFU+vupQFkPI7y0i6JcQD7lmo4nLgfJAu3D5Ee2TWOOuOx9k2VieHD0iksVrf4wo3dKi6qTpiyJKwyaNjuUn4B1An8=
-X-Received: by 2002:a9d:1708:: with SMTP id i8mr10382578ota.250.1584096656312;
- Fri, 13 Mar 2020 03:50:56 -0700 (PDT)
+        Fri, 13 Mar 2020 06:51:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584096692; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
+ Subject: From: Sender; bh=kBNQDM77aAPD7s08izeo3UtypHJmtrzkhedefworo6c=;
+ b=taRcVzN2vD2o1/gfpx7fMurJjRDj/9xJKMFZfG1NFbWotOgyUwenVuwsHXr+DAoN5VjKAAqE
+ kOy2W+o40zYqXaJA9PWPKngfkFgNSjRt3xsTixjPLMfnp+3JnG8vCDKx2hgNJK5sBaCowfqT
+ v/nj9AagNcf1QWJjLWyGhFXrSXc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6b65b2.7f246bda0fb8-smtp-out-n02;
+ Fri, 13 Mar 2020 10:51:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E9C05C432C2; Fri, 13 Mar 2020 10:51:29 +0000 (UTC)
+Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2900C433D2;
+        Fri, 13 Mar 2020 10:51:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2900C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org
+References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
+ <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
+ <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
+Message-ID: <66c79dcb-4102-e138-cf4f-303f17367175@codeaurora.org>
+Date:   Fri, 13 Mar 2020 16:21:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
- <20200312003436.GF1639@pendragon.ideasonboard.com> <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
- <20200313031947.GC225435@mit.edu> <87d09gljhj.fsf@intel.com>
- <20200313093548.GA2089143@kroah.com> <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
- <20200313100755.GA2161605@kroah.com> <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
- <20200313103720.GA2215823@kroah.com>
-In-Reply-To: <20200313103720.GA2215823@kroah.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 13 Mar 2020 11:50:45 +0100
-Message-ID: <CAMuHMdW6Br+x+_9xP+X4xr6FP_uNpZ6q6065RJH-9yFy_8fiZA@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation Technical
- Advisory Board Elections -- Change to charter
-To:     Greg KH <greg@kroah.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, "Bird, Tim" <Tim.Bird@sony.com>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Stephen,
 
-On Fri, Mar 13, 2020 at 11:37 AM Greg KH <greg@kroah.com> wrote:
-> On Fri, Mar 13, 2020 at 11:16:36AM +0100, Geert Uytterhoeven wrote:
-> > On Fri, Mar 13, 2020 at 11:08 AM Greg KH <greg@kroah.com> wrote:
-> > > On Fri, Mar 13, 2020 at 10:41:57AM +0100, Vlastimil Babka wrote:
-> > > > On 3/13/20 10:35 AM, Greg KH wrote:
-> > > > >> Not that I'm saying there's an easy solution, but obviously kernel.org
-> > > > >> account is not as problem free as you might think.
-> > > > >
-> > > > > We are not saying it is "problem free", but what really is the problem
-> > > > > with it?
-> > > >
-> > > > IIUC there is no problem for its current use, but it would be rather restrictive
-> > > > if it was used as the only criterion for being able to vote for TAB remotely.
-> > >
-> > > Given that before now, there has not be any way to vote for the TAB
-> > > remotely, it's less restrictive :)
-> >
-> > But people without kernel.org accounts could still vote in person before,
-> > right?
+On 2/20/2020 7:59 AM, Stephen Boyd wrote:
+> Quoting Akash Asthana (2020-02-17 01:49:33)
+>> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+>> new file mode 100644
+>> index 0000000..977070a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+>> @@ -0,0 +1,89 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +
+>> +%YAML 1.2
+>> +---
+>> +$id:"http://devicetree.org/schemas/spi/qcom,spi-qcom-qspi.yaml#"
+>> +$schema:"http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Qualcomm Quad Serial Peripheral Interface (QSPI)
+>> +
+>> +maintainers:
+>> + - Mukesh Savaliya<msavaliy@codeaurora.org>
+>> + - Akash Asthana<akashast@codeaurora.org>
+>> +
+>> +description: |
+> Drop the | because it doesn't look like any formatting needs to be
+> maintained in the text for the description.
+ok
+>> + The QSPI controller allows SPI protocol communication in single, dual, or quad
+>> + wire transmission modes for read/write access to slaves such as NOR flash.
+>> +
+>> +allOf:
+>> +  - $ref: /spi/spi-controller.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: qcom,sdm845-qspi
+>> +      - const: qcom,qspi-v1
+>> +
+>> +  reg:
+>> +    description: Base register location and length.
+> Drop description? It doesn't seem useful.
+ok
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: iface
+>> +      - const: core
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: AHB clock
+>> +      - description: QSPI core clock.
+> Please drop the full-stop on core clock.
+ok
+>> +
+>> +  "#address-cells":
+>> +     const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+> Aren't these two unnecessary because they're covered by the
+> spi-controller.yaml binding?
+ok
 >
-> Yes, and they still can today, this is expanding the pool, not
-> restricting it.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clock-names
+>> +  - clocks
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+> These last two are also covered by spi-controller binding.
+ok will remove
+>> +
+>> +
+> Why two newlines instead of one?
+>
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +    soc: soc@0 {
+> Remove this node from example please.
 
-Oh right, assumed we'll still have a conference in person, and unrestricted
-travel.
+If I remove this node I am getting below compilation error.
 
-Gr{oetje,eeting}s,
+Error: 
+Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dts:46.1-2 
+syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:311: recipe for target 
+'Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dt.yaml' 
+failed
+make[1]: *** 
+[Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dt.yaml] 
+Error 1
+Makefile:1264: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-                        Geert
+>
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        qspi: spi@88df000 {
+>> +            compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
+>> +            reg = <0 0x88df000 0 0x600>;
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+>> +            clock-names = "iface", "core";
+>> +            clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+>> +                <&gcc GCC_QSPI_CORE_CLK>;
+> Weird tabbing here. Just use spaces and align it up.
+Ok, I will align it better.
+>
+>> +
+>> +                flash@0 {
+>> +                    compatible = "jedec,spi-nor";
+>> +                    reg = <0>;
+>> +                    spi-max-frequency = <25000000>;
+>> +                    spi-tx-bus-width = <2>;
+>> +                    spi-rx-bus-width = <2>;
+>> +                };
+> Is this flash node necessary for the example?
+
+It's not neccessary.
+
+I just preserved the original example from .txt binding file.
+
+>
+>> +        };
+>> +    };
+>> +
+> Nitpick: Why newline here?
+
+Will remove it.
+
+Thankyou for reviewing the patch.
+
+
+Regards,
+
+Akash
+
+>
+>> +...
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
