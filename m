@@ -2,86 +2,153 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91416C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580F6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592912074C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308982074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kG0PGXBd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fm0aJIBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgCMXQe (ORCPT
+        id S1727542AbgCMXSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:16:34 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43737 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgCMXQe (ORCPT
+        Fri, 13 Mar 2020 19:18:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35730 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMXSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:16:34 -0400
-Received: by mail-il1-f193.google.com with SMTP id d14so10181022ilq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 16:16:33 -0700 (PDT)
+        Fri, 13 Mar 2020 19:18:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 7so5888499pgr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 16:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QCwtT5ys+KXfR/7uONUa0iE5JcoqG50bF3Lvb9+GFSw=;
-        b=kG0PGXBdvJXeekPZGzliI9XRc2vek0lF9e0c9VFr7XFfx38CfsDeYcRBeoE6Q36rUR
-         uJCbkVTB3W6K/SFilJrmBs2+3Z4DQ8O+rpIW2F/Ppid7wIYpvydV7QAb9qlOfPvGlSRt
-         zimv0y2195d6CoQJalkk9DrfwKFXdq7VrLf12yMBO7kC3y77jcx2aEvArUxdNJb18pIF
-         Jj5vgb6wXRo3/+jsMs5aEkhvhL2+/NugD4gMw6nmwGKkmb75n2oHlbBBrC1kv8M5SjBB
-         5HSImzRIZHcVUnAIb2O6LI7toPNs00q7wN4EgB6ZL7eoJI29agk6jJZ/TkOWMXinBDyF
-         Hdgg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5ldfOi5ONLbPwzyRrxGXEvBjlKjPPvku4R0mnSJkLVE=;
+        b=Fm0aJIBLLWT6DaaZbI9PQAulKV6KQqmYdmWI7JjyHtFTMW7gs7aqhkl7b2LuLRtSkd
+         /c+SrNqnS7qp9lST7sRRQDadN8CcZP7cWKn6mU3g2AcEsFWAW1bqtKepu4PDLagnQxnf
+         hAP/FX3UKzzVhJ91P9KaIkl/sAD3QWGy+v6OU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QCwtT5ys+KXfR/7uONUa0iE5JcoqG50bF3Lvb9+GFSw=;
-        b=jvRljFR1ncU2qlc00FqaUNIIpzdmA5cI2jvVSthODf6n4trTGGqIk+3H0vKjQP4SlB
-         Qrp4wqy8AO0WS7Hmkci32G10Ng5Sk8edQ5ov75eWoPBqrZpRm/a6dEsVNdaFKsjQo9AP
-         Fzz7ylBFv+msmAf3ly4wtGqKDujwKEXUJN+qAEn2PcHTJPXUmkj+Gyki7TUOnLJdENrw
-         P54ULtW6uwbAtTpolIfIYREo/F5iTIp5XQ9t7i9Wb4ttSch9YGLLl+uYwgLabVDH7F5K
-         b6tfdPDjeXAfKhrW9aoqMeG1ZIQ/PBKZ7lzl3duFzaZ9pZAEaCCDmQsyDA5xF8rCk19H
-         iatA==
-X-Gm-Message-State: ANhLgQ3CYBuH05bs0r4jaOds5XADYc9Gp+uB0MsokHgPWrc+Ck77w4Ku
-        N00h6YnMG0DJTT7IgZk3Ni5E/nzimMdBnnP19ZnoHw==
-X-Google-Smtp-Source: ADFU+vt40lziG3DKWcTz170Rnx1BN/ZKX5LDvpuy0FQIDh7YqxE3tlAXf+/NESWYuerEg4Kt5qsQYZPZ8haa/q4jdys=
-X-Received: by 2002:a92:83ca:: with SMTP id p71mr15146664ilk.278.1584141393127;
- Fri, 13 Mar 2020 16:16:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5ldfOi5ONLbPwzyRrxGXEvBjlKjPPvku4R0mnSJkLVE=;
+        b=C3ytRi0oz1cryj0jGFSX0sva9zkmp4ipykjBrY7ZiYDTT+SnU19RYg+qQGQcoItn1/
+         84Si2zndAruXy2ZuGSm1EqJU7x0i2b634M5eFlesHZLgMqbYH7Pjz4elJiG0iaAPEbua
+         OmbMscvi8GMOLagwUDc11LAkuIiXvJsLnJN9COUxqXb5hoJ/QdAh7gfcauxX8Mx8XzI8
+         6cvCXs5iQeo6iWcBXc1ybXFA+Df9La1ZEJdmLnTwco+ypnwB+daHN+DU2DsyqliIMS4V
+         pLHueJGhX1fdv5OE49AwoUTvBK9fc/zkEG+2mx/BGfTAvX2f3grsimCVUScW37h/X8z/
+         xeXQ==
+X-Gm-Message-State: ANhLgQ0h3zBRPrKlK3E7jOeDE7GGBAFapswUKC6oao8csApVvnPRbxyj
+        iRbylJD5J5bwWbhQcxQpCdFHoA==
+X-Google-Smtp-Source: ADFU+vs2gW1Jr/RUSgdC70UiRNwBxLRo2xZ2n+fKy8IdDt4Cr7wxF7y0z64FvaehW2RHASU+siQkcg==
+X-Received: by 2002:aa7:86d2:: with SMTP id h18mr13869948pfo.313.1584141485099;
+        Fri, 13 Mar 2020 16:18:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y15sm35693731pfl.149.2020.03.13.16.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 16:18:04 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 16:18:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        khilman@baylibre.com, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3] selftests: Fix seccomp to support relocatable build
+ (O=objdir)
+Message-ID: <202003131615.D132E9E9@keescook>
+References: <20200313212404.24552-1-skhan@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20200313184909.4560-1-hqjagain@gmail.com> <20200313184909.4560-3-hqjagain@gmail.com>
- <20200313191212.GN22433@bombadil.infradead.org>
-In-Reply-To: <20200313191212.GN22433@bombadil.infradead.org>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat, 14 Mar 2020 07:16:22 +0800
-Message-ID: <CAJRQjofwvxUaxg60jWUsKRhK+8pcpsGRUXmOPmdSVPi1Q8bNkQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] radix-tree: fix a typo
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     gregkh@linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313212404.24552-1-skhan@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 3:12 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Sat, Mar 14, 2020 at 02:49:09AM +0800, Qiujun Huang wrote:
-> > "iff" -> "if"
->
-> > - *   This function can be called under rcu_read_lock iff the slot is not
-> > + *   This function can be called under rcu_read_lock if the slot is not
->
-> That's not a typo, it's a mathematician's shorthand for "if and only if".
-> I'm not excited about fixing problems in the radix tree code; better to
-> focus efforts on migrating users to the xarray.
+On Fri, Mar 13, 2020 at 03:24:04PM -0600, Shuah Khan wrote:
+> Fix seccomp relocatable builds. This is a simple fix to use the right
+> lib.mk variable TEST_GEN_PROGS with dependency on kselftest_harness.h
+> header, and defining LDFLAGS for pthread lib.
+> 
+> Removes custom clean rule which is no longer necessary with the use of
+> TEST_GEN_PROGS. 
+> 
+> Uses $(OUTPUT) defined in lib.mk to handle build relocation.
+> 
+> The following use-cases work with this change:
+> 
+> In seccomp directory:
+> make all and make clean
+> 
+> From top level from main Makefile:
+> make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
+>  CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+> 
+> Changes since v2:
+> -- Using TEST_GEN_PROGS is sufficient to generate objects.
+>    Addresses review comments from Kees Cook.
+> 
+>  tools/testing/selftests/seccomp/Makefile | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+> index 1760b3e39730..a0388fd2c3f2 100644
+> --- a/tools/testing/selftests/seccomp/Makefile
+> +++ b/tools/testing/selftests/seccomp/Makefile
+> @@ -1,17 +1,15 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -all:
+> -
+> -include ../lib.mk
+> +CFLAGS += -Wl,-no-as-needed -Wall
+> +LDFLAGS += -lpthread
+>  
+>  .PHONY: all clean
 
-I get that, thanks.
+Isn't this line redundant to ../lib.mk's?
 
->
-> http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/heads/xarray-conv
-> is an out of date effort to do every user.
+>  
+> -BINARIES := seccomp_bpf seccomp_benchmark
+> -CFLAGS += -Wl,-no-as-needed -Wall
+> +include ../lib.mk
+> +
+> +# OUTPUT set by lib.mk
+> +TEST_GEN_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
+>  
+> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
+> +$(TEST_GEN_PROGS): ../kselftest_harness.h
+>  
+> -TEST_PROGS += $(BINARIES)
+> -EXTRA_CLEAN := $(BINARIES)
+> +all: $(TEST_GEN_PROGS)
+
+And isn't this one too?
+
+I think if those are removed it should all still work? Regardless:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+>  
+> -all: $(BINARIES)
+> -- 
+> 2.20.1
+> 
+
+-- 
+Kees Cook
