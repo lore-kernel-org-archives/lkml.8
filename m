@@ -2,210 +2,121 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD8CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58022073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C5B2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZVTyq2h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJJCKJjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgCMOCY (ORCPT
+        id S1726808AbgCMOD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:02:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35879 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726729AbgCMOCY (ORCPT
+        Fri, 13 Mar 2020 10:03:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37045 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgCMOD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:02:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584108143;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3i7hBK/HmnhrILaRr2C1Odzb1IOSSspXK3muq9nJqKM=;
-        b=VZVTyq2hDNqY5rVsUIjQSVMqrQDkX2nO1JdVYjnuGcPR8u1PwTUYWxqzQZtpQ+D5OGoQ40
-        UjsBT+4cCCxs2QAOlhEmgZvT/4q58Os1CZZNvuUPbBP/yP0YkRDzaRmwc62bnaMH0h9vh4
-        0KUJHAz9fei8Opc2p9V+/Zpc9iFilog=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-qBCd1uDPMV6Vk0QLYgzNyQ-1; Fri, 13 Mar 2020 10:02:19 -0400
-X-MC-Unique: qBCd1uDPMV6Vk0QLYgzNyQ-1
-Received: by mail-wm1-f72.google.com with SMTP id e26so2956612wmk.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:02:19 -0700 (PDT)
+        Fri, 13 Mar 2020 10:03:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 6so12239359wre.4;
+        Fri, 13 Mar 2020 07:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H/mwCeCN5j4sHkdzkOsGGfEARJX1vOaTb5UpMNbo2tc=;
+        b=EJJCKJjDYov13lHByDWOWGc4KVUJ2OLaFJSBpxzEliqhXwFjnH+JdHHJV05sch9JPV
+         K0p6UXI1XBnn74Lgq6DN1x09E2rIcT+0ROYjOLbjXzpHUS5v6aJJcAjYn6P9fiWNaTJQ
+         fu/fJ1aB5nME/BHGJB4VjIZACXQ/IPuWX1hfZLtXEgwMJ7Eaht9M0yaNVfQxWfb38CHC
+         v8XWcp5k98EKmC+HIzqhc4q1fNbZLgwaHZFKap26jxAIwx/voaSoHYpIErbWWLi091Ph
+         uMC0R+1Y3TpRTB331P50enxw7trDa2obPw2gvccF0N+3CQq+SQTE/W5X1S/qNAfCR4Eu
+         CgXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=3i7hBK/HmnhrILaRr2C1Odzb1IOSSspXK3muq9nJqKM=;
-        b=Ugrv8uT6lvl4A2hm8yTO60cXj31hiua1PeAZKt2/+mb8BEO5eWxTL4TxtlSRo7A+7W
-         alhPfgmxm0lDnRzGxdraWrjd8t/Wgq4hRZW2G4hZAxAQUiBTXBEzA1lfSuryBnlwygmw
-         594AMxyIguQAkq/7o4W2+katMuy33V/Ngmqz99/THwintqj8mN5krvTgFIGe3Le3QF31
-         wgqYMo0ID1XyKnFlJ4gUhyp73VMVkDZorvf+rJq2cF5qCTwDLoKBTZS5uRCWKQ/SzZUw
-         va3YYeeuUW7bfASgxQC74qIzstDzqhvXYlQHbPc+KC538y7c/P/ONfNW1P0vyuG+WYRW
-         Yk7A==
-X-Gm-Message-State: ANhLgQ2NsiLRzLk6QbBm8KmILU/ZPctgajtzCJQiMvUVTVIbjReECj59
-        2RYHHYgj2SwP2EYzuRC2Q6j+Q0SSlJLWZ8YH3bPUhA7NX8snZAs5SLAoKY5xypzrpeDCxpkgw7o
-        6NVuUvZXbLP/oyq3jR/1wl0TN
-X-Received: by 2002:a7b:c5da:: with SMTP id n26mr10667918wmk.138.1584108138406;
-        Fri, 13 Mar 2020 07:02:18 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs+hDDOrm44+SR+aBz6r8AgrG8mz8l1qzVsX9PfsqZEyl51N/a1cTIyusInSsiP03l9NBZtNA==
-X-Received: by 2002:a7b:c5da:: with SMTP id n26mr10667891wmk.138.1584108138098;
-        Fri, 13 Mar 2020 07:02:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f15sm16977174wmj.25.2020.03.13.07.02.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 07:02:15 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH 08/10] KVM: nVMX: Rename exit_reason to vm_exit_reason for nested VM-Exit
-In-Reply-To: <20200312184521.24579-9-sean.j.christopherson@intel.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com> <20200312184521.24579-9-sean.j.christopherson@intel.com>
-Date:   Fri, 13 Mar 2020 15:01:55 +0100
-Message-ID: <87k13onyjw.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H/mwCeCN5j4sHkdzkOsGGfEARJX1vOaTb5UpMNbo2tc=;
+        b=ggCsMLGjjg8z1XRBnXNNDMXmzEhiKO45GUBpv7vyuhAE/KSRZVbo0yKr8hkXmeE8eD
+         ZBBs+OU/QiX0HnaFXhUuRE3Y/3BjJYEul8DRbbofn7fpgwrNQ2NSlhjB4uviHj3vJnbG
+         fHGJfgB/keA3LK5oGNvJcEWGj85ezwGQ2FHnKvVb8YsszyNEfDSKa7iBMJlCarE9kC3S
+         NFLxYHCPy8OfO7QWooC9OF2le6Mxl4NjVaSLwoJHU94vP9vMdRrGyLnWSdRNwoOqoVOM
+         ChsCOzTzSCJpaKQIoZxp4tW9dcMWaYvB03u8stxlJoaWTNc6TL5dYvcoAHpdaL7CVSzS
+         rO0A==
+X-Gm-Message-State: ANhLgQ24uDb1dzRZzq3PCAFKgOb1n0U2LXAHvlWLvTg4cLHYuMvpNEwe
+        jchvCp1dvwQswLu4AwzI5h7pwYAf4YbZfurp7v4=
+X-Google-Smtp-Source: ADFU+vtEiabhYMCU9TLmkj1psHVHllDAMEJhrEBsiHviseBuVp4EMhF0ZjZ4e6zM5tU855zi/B8DGheUZjAFap3RM3c=
+X-Received: by 2002:adf:b35e:: with SMTP id k30mr10721282wrd.362.1584108236285;
+ Fri, 13 Mar 2020 07:03:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200309204326.27403-1-thirtythreeforty@gmail.com>
+ <20200309204326.27403-3-thirtythreeforty@gmail.com> <CAGb2v64_cWagG54iMmzmOwtUmv91xJchtzKW25M=y9DbfFDzkQ@mail.gmail.com>
+ <CACmrr9hSK1CzDGQ9_v6gNF7TBH65J-QAL_pwQJdKCc4ZxF_-ww@mail.gmail.com> <CAGb2v65RJUVb4fERTi8qM=qWQuhL4QWR5WpBB7kGS4tN67++aw@mail.gmail.com>
+In-Reply-To: <CAGb2v65RJUVb4fERTi8qM=qWQuhL4QWR5WpBB7kGS4tN67++aw@mail.gmail.com>
+From:   George Hilliard <thirtythreeforty@gmail.com>
+Date:   Fri, 13 Mar 2020 09:03:43 -0500
+Message-ID: <CACmrr9i-6LSOsabQuNyJn-s-AtBHc3HxX5oDkD=_LM_0em6=yQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH 2/5] phy: sun4i-usb: add support for the USB PHY on
+ suniv SoC
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> Use "vm_exit_reason" when passing around the full exit reason for nested
-> VM-Exits to make it clear that it's not just the basic exit reason.  The
-> basic exit reason (bits 15:0 of vmcs.VM_EXIT_REASON) is colloquially
-> referred to as simply "exit reason", e.g. vmx_handle_vmexit() tracks the
-> basic exit reason in a local variable named "exit_reason".
+On Thu, Mar 12, 2020, 11:08 PM Chen-Yu Tsai <wens@csie.org> wrote:
 >
-
-Would it make sense to stop using 'exit_reason' without a prefix (full,
-basic,...) completely?
-
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 29 +++++++++++++++--------------
->  arch/x86/kvm/vmx/nested.h |  2 +-
->  2 files changed, 16 insertions(+), 15 deletions(-)
+> On Thu, Mar 12, 2020 at 8:06 PM George Hilliard
+> <thirtythreeforty@gmail.com> wrote:
+> >
+> > Thanks for the review.
+> >
+> > On Thu, Mar 12, 2020 at 1:51 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> > >
+> > > On Tue, Mar 10, 2020 at 4:43 AM George Hilliard
+> > > <thirtythreeforty@gmail.com> wrote:
+> > > >
+> > > > The suniv SoC has one USB OTG port connected to a MUSB controller.
+> > > >
+> > > > Add support for its USB PHY.
+> > > >
+> > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > >
+> > > Not sure why Icenowy's SoB is here. If she was the original author, you
+> > > are supposed to keep her name as the author.
+> >
+> > So, I was unclear on the convention here.  This patch is based on her
+> > patch, but I've modified it and rebased those modifications back into
+> > a single change.  I'm happy to change the author field - does it need
+> > a "Co-authored-by: myself" here?
 >
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 86b12a2918c5..c775feca3eb0 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -328,19 +328,19 @@ static void nested_ept_inject_page_fault(struct kvm_vcpu *vcpu,
->  {
->  	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -	u32 exit_reason;
-> +	u32 vm_exit_reason;
->  	unsigned long exit_qualification = vcpu->arch.exit_qualification;
->  
->  	if (vmx->nested.pml_full) {
-> -		exit_reason = EXIT_REASON_PML_FULL;
-> +		vm_exit_reason = EXIT_REASON_PML_FULL;
->  		vmx->nested.pml_full = false;
->  		exit_qualification &= INTR_INFO_UNBLOCK_NMI;
->  	} else if (fault->error_code & PFERR_RSVD_MASK)
-> -		exit_reason = EXIT_REASON_EPT_MISCONFIG;
-> +		vm_exit_reason = EXIT_REASON_EPT_MISCONFIG;
->  	else
-> -		exit_reason = EXIT_REASON_EPT_VIOLATION;
-> +		vm_exit_reason = EXIT_REASON_EPT_VIOLATION;
->  
-> -	nested_vmx_vmexit(vcpu, exit_reason, 0, exit_qualification);
-> +	nested_vmx_vmexit(vcpu, vm_exit_reason, 0, exit_qualification);
->  	vmcs12->guest_physical_address = fault->address;
->  }
->  
-> @@ -3919,11 +3919,11 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
->   * which already writes to vmcs12 directly.
->   */
->  static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
-> -			   u32 exit_reason, u32 exit_intr_info,
-> +			   u32 vm_exit_reason, u32 exit_intr_info,
->  			   unsigned long exit_qualification)
->  {
->  	/* update exit information fields: */
-> -	vmcs12->vm_exit_reason = exit_reason;
-> +	vmcs12->vm_exit_reason = vm_exit_reason;
->  	vmcs12->exit_qualification = exit_qualification;
->  	vmcs12->vm_exit_intr_info = exit_intr_info;
->  
-> @@ -4252,7 +4252,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
->   * and modify vmcs12 to make it see what it would expect to see there if
->   * L2 was its real guest. Must only be called when in L2 (is_guest_mode())
->   */
-> -void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
-> +void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
->  		       u32 exit_intr_info, unsigned long exit_qualification)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> @@ -4272,9 +4272,9 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
->  	if (likely(!vmx->fail)) {
->  		sync_vmcs02_to_vmcs12(vcpu, vmcs12);
->  
-> -		if (exit_reason != -1)
-> -			prepare_vmcs12(vcpu, vmcs12, exit_reason, exit_intr_info,
-> -				       exit_qualification);
-> +		if (vm_exit_reason != -1)
-> +			prepare_vmcs12(vcpu, vmcs12, vm_exit_reason,
-> +				       exit_intr_info, exit_qualification);
->  
->  		/*
->  		 * Must happen outside of sync_vmcs02_to_vmcs12() as it will
-> @@ -4330,14 +4330,15 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
->  	 */
->  	kvm_make_request(KVM_REQ_APIC_PAGE_RELOAD, vcpu);
->  
-> -	if ((exit_reason != -1) && (enable_shadow_vmcs || vmx->nested.hv_evmcs))
-> +	if ((vm_exit_reason != -1) &&
-> +	    (enable_shadow_vmcs || vmx->nested.hv_evmcs))
->  		vmx->nested.need_vmcs12_to_shadow_sync = true;
->  
->  	/* in case we halted in L2 */
->  	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
->  
->  	if (likely(!vmx->fail)) {
-> -		if ((u16)exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
-> +		if ((u16)vm_exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
->  		    nested_exit_intr_ack_set(vcpu)) {
->  			int irq = kvm_cpu_get_interrupt(vcpu);
->  			WARN_ON(irq < 0);
-> @@ -4345,7 +4346,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
->  				INTR_INFO_VALID_MASK | INTR_TYPE_EXT_INTR;
->  		}
->  
-> -		if (exit_reason != -1)
-> +		if (vm_exit_reason != -1)
->  			trace_kvm_nested_vmexit_inject(vmcs12->vm_exit_reason,
->  						       vmcs12->exit_qualification,
->  						       vmcs12->idt_vectoring_info_field,
-> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-> index 569cb828b6ca..04584bcbcc8d 100644
-> --- a/arch/x86/kvm/vmx/nested.h
-> +++ b/arch/x86/kvm/vmx/nested.h
-> @@ -25,7 +25,7 @@ void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
->  enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
->  						     bool from_vmentry);
->  bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu);
-> -void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
-> +void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
->  		       u32 exit_intr_info, unsigned long exit_qualification);
->  void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu);
->  int vmx_set_vmx_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 data);
+> I suppose that really depends on how much you changed it. If it were just
+> stylistic changes I'd keep the original author. Also you should list any
+> changes you made to the patch by inserting
+>
+>     [<who>: changed foo and bar]
+>
+> before your SoB.
 
-Reviewded-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Ok, this makes sense. Thanks. I'll send another series. The few that
+are stylistic, I believe I retained Icenowy as the author. Where I
+modified them, I put myself (so people email me, not her, with
+problems).  I'll modify the commit messages like you describe and
+double check the authorship.
 
--- 
-Vitaly
+> As for the Co-authored-by, I haven't really seen it used so I don't really
+> know.
 
+Off topic, but I wish Git supported multiple authors natively.
+
+George
