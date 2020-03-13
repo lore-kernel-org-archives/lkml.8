@@ -2,108 +2,95 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA05AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25441C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886E8206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB03F206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dJTaazcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCMHrj (ORCPT
+        id S1726455AbgCMHs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:47:39 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:52643 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgCMHrj (ORCPT
+        Fri, 13 Mar 2020 03:48:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46596 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgCMHs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:47:39 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id CE83E100010;
-        Fri, 13 Mar 2020 07:47:34 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 08:47:34 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Ran Bi <ran.bi@mediatek.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-Message-ID: <20200313074734.GD3384@piout.net>
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
- <20200312074407.GA3142@dell>
- <1584003477.6269.8.camel@mhfsdcap03>
- <20200313072230.GC3142@dell>
+        Fri, 13 Mar 2020 03:48:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02D7dWup151272;
+        Fri, 13 Mar 2020 07:48:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=2SK3WWBLInNfBxx+nDShdd6/aLXO/zK5eUAghcZpK6w=;
+ b=dJTaazcEGYB5t2VvQ8V2QqJYkzxxJTFOcV6K/kLD5gFsJ8XeOzb0XrFF77RBQTJ8o6QV
+ Co2WUAvK7LX+DRMdKSJjjiPVMbWArabCpeK/heebrdRjrckzKyAqMPmsKcmrqELk+P6b
+ JL6uA/R1pcbuuUXFVHKX2TTGDOq/aqrx0BHlQGir1b3nWS9/Glr/Zrp9rgXu71Z1rHK6
+ mnKVV8VNc1ufsBY2N3olqcxoBTFJA0W8aFdENf5TT5sl6ZTukmpZ/UN92qAtTT5Fo9L+
+ jVJaSISWFkBwsbQM8yriTDAsAnye9PkssYn/8r6xyKEyfNygUpBhcpdjJN8bE7rSP+q8 ag== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2yqtavjbg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 07:48:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02D7ljuR109285;
+        Fri, 13 Mar 2020 07:48:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yqtav271y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 07:48:19 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02D7mIYD004387;
+        Fri, 13 Mar 2020 07:48:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Mar 2020 00:48:17 -0700
+Date:   Fri, 13 Mar 2020 10:48:11 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Shreeya Patel <shreeya.patel23498@gmail.com>,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
+        sbrivio@redhat.com, daniel.baluta@gmail.com, hverkuil@xs4all.nl,
+        Larry.Finger@lwfinger.net
+Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8723bs: rtw_mlme: Remove
+ unnecessary conditions
+Message-ID: <20200313074811.GS11561@kadam>
+References: <20200311135859.5626-1-shreeya.patel23498@gmail.com>
+ <61a6c3d7-6592-b57b-6466-995309302cc2@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313072230.GC3142@dell>
+In-Reply-To: <61a6c3d7-6592-b57b-6466-995309302cc2@linux.microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=806 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003130043
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ phishscore=0 priorityscore=1501 clxscore=1031 mlxscore=0 adultscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=883 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003130042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/03/2020 07:22:30+0000, Lee Jones wrote:
-> > > >  struct mt6397_rtc {
-> > > >  	struct device           *dev;
-> > > >  	struct rtc_device       *rtc_dev;
-> > > > @@ -74,6 +80,7 @@ struct mt6397_rtc {
-> > > >  	struct regmap           *regmap;
-> > > >  	int                     irq;
-> > > >  	u32                     addr_base;
-> > > > +	const struct mtk_rtc_data *data;
-> > > 
-> > > 'data' is a terrible variable name.
-> > > 
-> > > Why do you need to store this?
-> > > 
-> > > It's one variable which is used once AFAICT.
-> > 
-> > I would rename 'data' to 'config'.
-> > 
-> > This struct will be extended in future patches to achieve more PMIC chip
-> > compatibility.
-> 
-> On closer inspection, it looks like wrtgr (also not a great name for a
-> variable by the way) is a register address.  Is that correct?
-> Initially I thought it was a model number, which would have been a
-> suitable candidate for entry into OF .data.
-> 
-> However, describing register addresses in OF .data does not sound like
-> good practice.  It is usually used to identify a platform in the cases
-> where platforms cannot be otherwise dynamically interrogated for model
-> number via a register read.
-> 
-> Describing register maps via 'config' data is a slippery slope.
+The original patch description was basically fine.  Outreachy reviews
+tend to be more pedantic about this sort of stuff than most maintainers.
+There are a couple who have very strict rules, but try to avoid those
+maintainers and your life will be happier.
 
-I'm not sure I get what you mean, there are dozens if not hundreds of
-drivers doing it exactly that way. What is the difference between having
-.data pointing to a register map and having .data containing a model
-number and then use that model number to get the register map?
+regards,
+dan carpenter
 
-of_device_id::data definitively isn't config data as the DT describes
-the hardware, not the configuration.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
