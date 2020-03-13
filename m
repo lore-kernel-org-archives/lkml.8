@@ -2,115 +2,88 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F74C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4143C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40562076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="oKzyYuG0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U507xCj4"
+	by mail.kernel.org (Postfix) with ESMTP id DD9C120746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584094086;
+	bh=eOHdzKsuiDRxoSeOKx1T/q3qpP4W3MG5l3YkkamaGsA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=awJ8mBoas8fByHq1R0T3QBkoF4Q1I4t9Kqwrze/PWlUxaOW+RM9sWm0T1WrDlN3K/
+	 8wsi96RIl9XO1qig7U16OtMVgcp3j6QVBlj0bAxf9hbsVZ32QxH8lxO6ZVETMNXTU8
+	 y3Ul1wx9AhU6x6N0Y/0eozcxgXAmDhNLuKeonpt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgCMKIA (ORCPT
+        id S1726365AbgCMKIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:08:00 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:34883 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726651AbgCMKH7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:07:59 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id AB0A02267C;
-        Fri, 13 Mar 2020 06:07:58 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 13 Mar 2020 06:07:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=1CNs5YOEikvzf5Ve+M+whn5X2VE
-        UXw/yeljzd20doog=; b=oKzyYuG0nE5rQApCstTP3rrsOhRLi6g2BAzOcv2GbUt
-        6nJQziROsDjz/u2k8KwFdAQGhNodSP0nXoJ0M/9JfwkGbBKFX7PezinBdVD3lnk+
-        H0jSVrSLLFS+IuhiPT3rbz4DtSwAHKw3vrx44txOrhb2/AnmwbTkz/wM/0afymJd
-        mRgooQR8/Z4DO7I+cXftXd/X9dVWTD64pfrAB5ZHKaEBXOdT2DotZpghcEmSXc44
-        n6eXfGXVs7h49zpfcLtH8bjpGqfv7gaofHg7Nlcz8Xf3eutSsIBkqBBQpG11X1j6
-        V5M7BlzvFVlBMOk4MvLSQys8qV2pBFD4p+US/uItayA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=1CNs5Y
-        OEikvzf5Ve+M+whn5X2VEUXw/yeljzd20doog=; b=U507xCj43LbXREWkBgtvAE
-        K/N9PAKkHfCjSgInWeTEiz9zfZY6pchrc1UaOtZTWe5qsD8nVaX5uZhMG3mnkOJF
-        dm3bh+kzkN/BPYmbQqzdznwivrtC77S8DgQft2Scf103x3dol9WQZvD1VXSludKP
-        JHJReKk4EC8edLEvFDucFJon215OiWocs9ECBFCNUspsGdrvnpsrM+0TZpzV7pNQ
-        S+lMCH+9WF4/KXzMuWLV9rsGjq+bxKxJzidia3Sh4CEiN5cR6JYLd/yOi5wGe91L
-        wBVRg4MG983JJw5tCxDPinVN9B2+NwWauidJDqn0LHtCtBVCoTu+ZDb+hw+RJEWA
-        ==
-X-ME-Sender: <xms:fVtrXmmIdaGsVuDHtiHGJ1IrjbxilhL5iJIpXCkP2TI87h83ozCzuQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvjedguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
-    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:fVtrXlXCXN4IYT-OQN6zTAOlzrK0ozQEpTjN8h3Pc7rO5PYZ3_uhWA>
-    <xmx:fVtrXqsyF2oaW8LL8Qk0b8Dy0Xfyx9n_jUV_AEd-KXMt5O6s6-8j5A>
-    <xmx:fVtrXoo-u1Jxf9iIAGLB3YYhdmSJIGrHKA-pjGBZITsJ7hcdlI3W7Q>
-    <xmx:fltrXqVPbU5sFuR30KFOlIJLS1yttH_Gp8oDZQGu2jdTafKhPYac-g>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 72D343280059;
-        Fri, 13 Mar 2020 06:07:57 -0400 (EDT)
-Date:   Fri, 13 Mar 2020 11:07:55 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        "Bird, Tim" <Tim.Bird@sony.com>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
- Technical Advisory Board Elections -- Change to charter
-Message-ID: <20200313100755.GA2161605@kroah.com>
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
- <20200312003436.GF1639@pendragon.ideasonboard.com>
- <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
- <20200313031947.GC225435@mit.edu>
- <87d09gljhj.fsf@intel.com>
- <20200313093548.GA2089143@kroah.com>
- <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
+        Fri, 13 Mar 2020 06:08:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbgCMKIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:08:01 -0400
+Received: from localhost.localdomain (unknown [171.76.107.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4842074D;
+        Fri, 13 Mar 2020 10:07:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584094081;
+        bh=eOHdzKsuiDRxoSeOKx1T/q3qpP4W3MG5l3YkkamaGsA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bSsgxDNmXiZrw4DKDd+KmQgD7Mgpyg3FDetFtJO6IsqW34smLhVCZK3ICsd1Wdd9c
+         fhb6Qqmvm5ZrRg3Urk8f2gr4LoQRruUovC/BWuvANCIKxMrkFbAwOCjUqWCtD+JmqW
+         7EBwxmyIup0Qr/J7Ux64EwNssBQKtBnB2KH1Hu7o=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 9/9] ALSA: compress: bump the version
+Date:   Fri, 13 Mar 2020 15:37:08 +0530
+Message-Id: <20200313100708.1558658-10-vkoul@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200313095318.1555163-2-vkoul@kernel.org>
+References: <20200313095318.1555163-2-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 10:41:57AM +0100, Vlastimil Babka wrote:
-> On 3/13/20 10:35 AM, Greg KH wrote:
-> >> Not that I'm saying there's an easy solution, but obviously kernel.org
-> >> account is not as problem free as you might think.
-> > 
-> > We are not saying it is "problem free", but what really is the problem
-> > with it?
-> 
-> IIUC there is no problem for its current use, but it would be rather restrictive
-> if it was used as the only criterion for being able to vote for TAB remotely.
+We have added support for bunch of new decoders and parameters for
+decoders. To help users find the support bump the version up to 0,2,0.
 
-Given that before now, there has not be any way to vote for the TAB
-remotely, it's less restrictive :)
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ include/uapi/sound/compress_offload.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-These are "baby steps" we are taking here, to try to allow for remote
-voting.  We are not saying this is the end-all-be-all solution, but you
-have to give Laura credit for coming up with this as "better than
-nothing" which is what has been the case for the past decade or so.
+diff --git a/include/uapi/sound/compress_offload.h b/include/uapi/sound/compress_offload.h
+index 56d95673ce0f..7184265c0b0d 100644
+--- a/include/uapi/sound/compress_offload.h
++++ b/include/uapi/sound/compress_offload.h
+@@ -31,7 +31,7 @@
+ #include <sound/compress_params.h>
+ 
+ 
+-#define SNDRV_COMPRESS_VERSION SNDRV_PROTOCOL_VERSION(0, 1, 2)
++#define SNDRV_COMPRESS_VERSION SNDRV_PROTOCOL_VERSION(0, 2, 0)
+ /**
+  * struct snd_compressed_buffer - compressed buffer
+  * @fragment_size: size of buffer fragment in bytes
+-- 
+2.24.1
 
-thanks,
-
-greg k-h
