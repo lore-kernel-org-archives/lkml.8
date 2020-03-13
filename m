@@ -2,126 +2,132 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1686DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D63BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF262074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D007F20753
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 21:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZQuY4319"
+	dkim=pass (1024-bit key) header.d=studiofuga.com header.i=@studiofuga.com header.b="AHOXe4GV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgCMVAs (ORCPT
+        id S1727076AbgCMVF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:00:48 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:37734 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCMVAs (ORCPT
+        Fri, 13 Mar 2020 17:05:26 -0400
+Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:6330 "EHLO
+        egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726534AbgCMVF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:00:48 -0400
-Received: by mail-qv1-f68.google.com with SMTP id n1so1625452qvz.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 14:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/cckTxrWR8dAC8Hqil6zGHfyy5iVdJbz8EFbOeTTdIA=;
-        b=ZQuY4319vZfZ9kOKsYrCZxcpWMkFubaKzUMdXbHa2rT//vs3IAtg1QpCZBIZ5GFZE7
-         7EzrK4K/4vxPlZNKmaPjEKOR/t225dDuXvm+YybBshbmIOtwoZ569pPXQrDCIXXmXW/0
-         IPhtxZ4PX4nHJCis8oa+z36FHVsNjU7RoCqSrsVFRNzzjZNPgFGqEORWIEpWJ4XMelB/
-         6kQ3+8C0HWp1xqke2LOCUGr08SaL74A+398pQ9RckaQef4EfuDqRDn1ulzq1ETTi9YHU
-         jjwDPo8dUJs+wB9hzKBNvRI9Aonbp7bqx9Lrbmb8NH3ScKY5ATzO7NY73owT8WH6aWYX
-         irvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/cckTxrWR8dAC8Hqil6zGHfyy5iVdJbz8EFbOeTTdIA=;
-        b=Eq2gx6hvPMeYDTDfWAzm5X77oOR+AtiFpnH5+BkFkmBfOm6Qbn+5L7Dl0/Fum7bc9w
-         QnB+X7I4aeFr55YNzGRo5bC4DBAWP4TYErEv1dBOY9os5IC2HJrhnXZAgvB1bgSlUNQB
-         PZwg8Xojk/dkfYwOPQ8jXPcsU4aWdKQb1NHqaQxamN/fWIxg853gn1gCSHci9WdDY8+i
-         vLLDaBGRgJRK6VmFUCdA3QDXkkCBg7q8PthwplJpbQwa2EzBeQGcps7sphDCNwiKjt+f
-         k9R3fOQiO3h8kRIotPupLw5PMVJ+qHrdefwF5YVEKFIdeLeORO24vgHm1FWY4M+wPcO0
-         BFkQ==
-X-Gm-Message-State: ANhLgQ1MLn1AD6nIUAldAC89dRsewU6T9qrNzmGyUSBZoZwxsZAwpd3C
-        8TprA3z/72z6VkWmH/Fmc1kWtg==
-X-Google-Smtp-Source: ADFU+vspAYkMqkpAkFiVGknIaFRalz4WbbMpy9twXUtevX1Pp6V2oAUwXO55GbW/bTusBn3uirwJYg==
-X-Received: by 2002:ad4:5102:: with SMTP id g2mr8228177qvp.6.1584133245139;
-        Fri, 13 Mar 2020 14:00:45 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w30sm6251299qtw.21.2020.03.13.14.00.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 14:00:43 -0700 (PDT)
+        Fri, 13 Mar 2020 17:05:26 -0400
+X-Sender-Id: dreamhost|x-authsender|fuga@studiofuga.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id ACA48920E4B;
+        Fri, 13 Mar 2020 20:58:13 +0000 (UTC)
+Received: from pdx1-sub0-mail-a25.g.dreamhost.com (100-96-42-19.trex.outbound.svc.cluster.local [100.96.42.19])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 03535920E23;
+        Fri, 13 Mar 2020 20:58:13 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|fuga@studiofuga.com
+Received: from pdx1-sub0-mail-a25.g.dreamhost.com ([TEMPUNAVAIL].
+ [64.90.62.162])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+        by 0.0.0.0:2500 (trex/5.18.5);
+        Fri, 13 Mar 2020 20:58:13 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|fuga@studiofuga.com
+X-MailChannels-Auth-Id: dreamhost
+X-Trouble-Turn: 759ed42608d90e84_1584133093442_647394103
+X-MC-Loop-Signature: 1584133093442:1780277765
+X-MC-Ingress-Time: 1584133093441
+Received: from pdx1-sub0-mail-a25.g.dreamhost.com (localhost [127.0.0.1])
+        by pdx1-sub0-mail-a25.g.dreamhost.com (Postfix) with ESMTP id 255C5AC605;
+        Fri, 13 Mar 2020 13:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=studiofuga.com; h=
+        content-type:mime-version:subject:from:in-reply-to:date:cc
+        :content-transfer-encoding:message-id:references:to; s=
+        studiofuga.com; bh=ydfbhmckSPSDI5oE8QKXi+Gh/j4=; b=AHOXe4GV4AoZP
+        4BMILKPlmuGVPX76t0irsROmfEr4gm4BOjSv1uOowXA/p146mPVTukv+I8RfC/bv
+        h9HGFQEDFi5s/7XPdKGvsTtyxPAlSPKbKLW63hYVqIH0uZCVz75OAAoAYgNYa8Lv
+        rt+OXhXrw3gOS4BxhkOuv5cQnMxFiY=
+Received: from [192.168.178.37] (unknown [151.55.183.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: fuga@studiofuga.com)
+        by pdx1-sub0-mail-a25.g.dreamhost.com (Postfix) with ESMTPSA id 15C3CAC623;
+        Fri, 13 Mar 2020 13:58:05 -0700 (PDT)
 Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] timer: silenct a lockdep splat with debugobjects
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200313201314.GE5086@worktop.programming.kicks-ass.net>
-Date:   Fri, 13 Mar 2020 17:00:41 -0400
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        rostedt@goodmis.org, hannes@cmpxchg.org,
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] i2c: mv64xxx: Implement I2C_M_RECV_LEN and
+ I2C_FUNC_SMBUS_READ_BLOCK_DATA
+X-DH-BACKEND: pdx1-sub0-mail-a25
+From:   Federico Fuga <fuga@studiofuga.com>
+In-Reply-To: <87k13ox9q1.fsf@FE-laptop>
+Date:   Fri, 13 Mar 2020 21:58:03 +0100
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <D3115315-12A9-43A9-9209-09553CF2C71C@lca.pw>
-References: <20200313154221.1566-1-cai@lca.pw>
- <20200313180811.GD12521@hirez.programming.kicks-ass.net>
- <4FFD109D-EAC1-486F-8548-AA1F5E024120@lca.pw>
- <20200313201314.GE5086@worktop.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+Message-Id: <D320E497-D240-4821-99F7-D0BE8744D3EF@studiofuga.com>
+References: <20200118115820.9080-1-fuga@studiofuga.com>
+ <20200222124805.GJ1716@kunai> <87k13ox9q1.fsf@FE-laptop>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-VR-OUT-STATUS: OK
+X-VR-OUT-SCORE: -100
+X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvjedgudegfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtggfuhfgjfffgkfhfvffosehtqhhmtdhhtddvnecuhfhrohhmpefhvgguvghrihgtohcuhfhughgruceofhhughgrsehsthhuughiohhfuhhgrgdrtghomheqnecukfhppeduhedurdehhedrudekfedruddtkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludelvddrudeikedrudejkedrfeejngdpihhnvghtpeduhedurdehhedrudekfedruddtkedprhgvthhurhhnqdhprghthhephfgvuggvrhhitghoucfhuhhgrgcuoehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmqedpmhgrihhlfhhrohhmpehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello all,
 
 
-> On Mar 13, 2020, at 4:13 PM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
+
+> Il giorno 13 mar 2020, alle ore 21:48, Gregory CLEMENT =
+<gregory.clement@bootlin.com> ha scritto:
 >=20
-> On Fri, Mar 13, 2020 at 03:32:52PM -0400, Qian Cai wrote:
->> Well, in mm/vmstat.c (init_mm_internals) case for example, it was =
-initialized
->> as a static,
+> Hello Wolfram,
+>=20
+>> On Sat, Jan 18, 2020 at 12:58:20PM +0100, Federico Fuga wrote:
+>>> The i2c_mv64xxx driver doesn't implement the I2C_M_REC_LEN function
+>>> essential to allow blocks with variable length to be read from an =
+i2c
+>>> slave.
+>>> This is needed to implement the SMBus Read Block Data function.
+>>>=20
+>>> This patch implements the function by changing the bytes_left and
+>>> msg len on the fly if the flag is specified.
+>>>=20
+>>> It has been successfully tested on Allwinner A33 with a special
+>>> i2c chip that returns variable length blocks on reading.
+>>>=20
+>>> Signed-off-by: Federico Fuga <fuga@studiofuga.com>
+>>> ---
 >>=20
->> static DECLARE_DEFERRABLE_WORK(shepherd, vmstat_shepherd);
->>=20
->> which will not call __debug_object_init().=20
+>> Gregory, any comment? I can't say much about the implementation. In
+>> general, this is a nice feature to have...
 >=20
-> Then fix that.
+> I thought I was already sent a reviewed by, as I reviewed this patch
+> before Frederico actually sent it.
 >=20
-> That is, all of:
+> So you can even add a
 >=20
->  DECLARE_DEFERRABLE_WORK
->  KTHREAD_DELAYED_WORK_INIT
->  DEFINE_TIMER
+> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 >=20
-> are broken and need to go.
+> Thanks,
 
-This looks invasive with so many callsites...
 
->=20
-> Unless of course, you can frob debugobjects such that we can provide =
-the
-> required storage through is_static_object() and modify the above =
-static
-> declarators to provide the storage.
+For what it worth, I can confirm that after many weeks of use the patch =
+works as expected without any issue.
 
-I=E2=80=99ll explore this which looks more promising.
 
->=20
-> Or, fix that random crud to do the wakeup outside of the lock.
+Federico
 
-That is likely to be difficult until we can find a creative way to not =
-=E2=80=9Cuglifying" the
-random code by dropping locks in the middle etc just because of =
-debugojects.
 
->=20
-> Plenty options..
+
+
 
