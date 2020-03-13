@@ -2,213 +2,167 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A34C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8158720724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D7320724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 11:33:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aExmPbWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgCMLbg (ORCPT
+        id S1726632AbgCMLdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:31:36 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38617 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgCMLbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 07:31:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 04:31:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,548,1574150400"; 
-   d="scan'208";a="354351357"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 13 Mar 2020 04:31:28 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 13 Mar 2020 13:31:28 +0200
-Date:   Fri, 13 Mar 2020 13:31:28 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        "Shih-Yuan Lee (FourDollars)" <sylee@canonical.com>,
-        Tiffany <tiffany.wang@canonical.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: Thunderbolt, direct-complete and long suspend/resume time of
- Suspend-to-idle
-Message-ID: <20200313113128.GB2540@lahna.fi.intel.com>
-References: <02700895-048F-4EA1-9E18-4883E83AE210@canonical.com>
- <20200311103840.GB2540@lahna.fi.intel.com>
- <E3DA71C8-96A7-482E-B41F-8145979F88F4@canonical.com>
- <20200312081509.GI2540@lahna.fi.intel.com>
- <C687BE86-1CCB-417B-8546-77F76127B266@canonical.com>
- <20200312104158.GS2540@lahna.fi.intel.com>
- <452D9D7F-A4D1-4628-8E9B-D88E2C919D7A@canonical.com>
+        Fri, 13 Mar 2020 07:33:33 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36365 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgCMLdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 07:33:32 -0400
+Received: by mail-pj1-f66.google.com with SMTP id nu11so942282pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 04:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oqWkBQ+UQoj3qonw3F8cFJSQqNQ+pWh1jUw1LgUoqD4=;
+        b=aExmPbWUsZEV7sFZwkmnUXHpmKtR7RVepsbHTvtgwOPSj6PaCaaaNGNUEFZP/l+Q5D
+         iMrMyq5aPX5mwF6pZfNF5itieysdHiCD6txAYL0h2aE1sq5tBLjADz99NaxeDVqNF2KT
+         uZOsAvDlo71DJ4tWb/znVK4AgPCdhvQXuhaY2xvOOneY7xDMFPHCvRZ8220iABJWwavF
+         xuxc4Vlzbo0i4A8uefQ5YbKhgaJWcmgum5rj3n1fCoNuS7h9aZ3IYcgIWXtotUAOXjeU
+         V14XdbkUqJ6i4FNNap3KC4i+SV6E4A6eSNU8krUvp9CmnQWnlJ3t1f7DvGNVVVkfGQ3T
+         gwmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oqWkBQ+UQoj3qonw3F8cFJSQqNQ+pWh1jUw1LgUoqD4=;
+        b=nyMOi4VPenc/ew0jtq5cTjf+S8fIuIusNjzAQJjO9YhhDg4//+NEFwtPHCp4Mah43U
+         JzmxBHEjLXhASyk3ghpMcTCECVwvYWi+yT+R1JnWWhiX3bpByMkzJAMnon1XzOlYFFTf
+         8WKDFFSSPR5VjX1GyPC/B3Eucws3vTkNf35faixYwEiUGlt/AYcI3xBWs89BScdXPFSc
+         8/4A/ztEAnd+nXXRLzUFQpF9UpSQ5BPU8fGGoRXopLC9Hu9ZOEAwAX+OQ4X79TJ6W2jQ
+         f09mpoT8ccQ9fDeVbADAQqsNd5Ybk3ULvvsHMnBG3csYxjsssuFs7L/DBxvkvauG93LK
+         uchQ==
+X-Gm-Message-State: ANhLgQ20l1znDj/XZ5bsH3XCMfiBGaI407XfbxMlbfqrPWn1DvHM3Zy5
+        spJKyb+V+TT4sn37yvJUlxeOkA==
+X-Google-Smtp-Source: ADFU+vv8WTv+xIg1ExTl2Wez3rJG869zbTz19yhBWtmKute2nxlgZEWIy1kMVZF5Sqdk+CbnbBIBbw==
+X-Received: by 2002:a17:902:d885:: with SMTP id b5mr12806651plz.109.1584099211290;
+        Fri, 13 Mar 2020 04:33:31 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2400:8902::f03c:91ff:fe3f:ee42])
+        by smtp.gmail.com with ESMTPSA id a24sm8435284pfl.115.2020.03.13.04.33.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Mar 2020 04:33:30 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 19:33:11 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nd@arm.com,
+        Tan Xiaojun <tanxiaojun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Al Grant <al.grant@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v6 3/3] perf report: Add SPE options to --itrace argument
+Message-ID: <20200313113311.GA16574@leoy-ThinkPad-X240s>
+References: <20200228160126.GI36089@lakrids.cambridge.arm.com>
+ <20200306152520.28233-1-james.clark@arm.com>
+ <20200306152520.28233-4-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <452D9D7F-A4D1-4628-8E9B-D88E2C919D7A@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200306152520.28233-4-james.clark@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 01:07:35PM +0800, Kai-Heng Feng wrote:
-> 
-> 
-> > On Mar 12, 2020, at 18:41, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> > 
-> > On Thu, Mar 12, 2020 at 06:10:45PM +0800, Kai-Heng Feng wrote:
-> >> 
-> >> 
-> >>> On Mar 12, 2020, at 16:15, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> >>> 
-> >>> On Thu, Mar 12, 2020 at 12:41:08PM +0800, Kai-Heng Feng wrote:
-> >>>> 
-> >>>> 
-> >>>>> On Mar 11, 2020, at 18:38, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> >>>>> 
-> >>>>> On Wed, Mar 11, 2020 at 01:39:51PM +0800, Kai-Heng Feng wrote:
-> >>>>>> Hi,
-> >>>>>> 
-> >>>>>> I am currently investigating long suspend and resume time of suspend-to-idle.
-> >>>>>> It's because Thunderbolt bridges need to wait for 1100ms [1] for runtime-resume on system suspend, and also for system resume.
-> >>>>>> 
-> >>>>>> I made a quick hack to the USB driver and xHCI driver to support direct-complete, but I failed to do so for the parent PCIe bridge as it always disables the direct-complete [2], since device_may_wakeup() returns true for the device:
-> >>>>>> 
-> >>>>>> 	/* Avoid direct_complete to let wakeup_path propagate. */
-> >>>>>> 		if (device_may_wakeup(dev) || dev->power.wakeup_path)
-> >>>>>> 			dev->power.direct_complete = false;
-> >>>>> 
-> >>>>> You need to be careful here because otherwise you end up situation where
-> >>>>> the link is not properly trained and we tear down the whole tree of
-> >>>>> devices which is worse than waiting bit more for resume.
-> >>>> 
-> >>>> My idea is to direct-complete when there's no PCI or USB device
-> >>>> plugged into the TBT, and use pm_reuqest_resume() in complete() so it
-> >>>> won't block resume() or resume_noirq().
-> >>> 
-> >>> Before doing that..
-> >>> 
-> >>>>>> Once the direct-complete is disabled, system suspend/resume is used hence the delay in [1] is making the resume really slow. 
-> >>>>>> So how do we make suspend-to-idle faster? I have some ideas but I am not sure if they are feasible:
-> >>>>>> - Make PM core know the runtime_suspend() already use the same wakeup as suspend(), so it doesn't need to use device_may_wakeup() check to determine direct-complete.
-> >>>>>> - Remove the DPM_FLAG_NEVER_SKIP flag in pcieport driver, and use pm_request_resume() in its complete() callback to prevent blocking the resume process.
-> >>>>>> - Reduce the 1100ms delay. Maybe someone knows the values used in macOS and Windows...
-> >>>>> 
-> >>>>> Which system this is? ICL?
-> >>>> 
-> >>>> CML-H + Titan Ridge.
-> >>> 
-> >>> .. we should really understand this better because CML-H PCH root ports
-> >>> and Titan/Alpine Ridge downstream ports all support active link
-> >>> reporting so instead of the 1000+100ms you should see something like
-> >>> this:
-> >> 
-> >> Root port for discrete graphics:
-> >> # lspci -vvnn -s 00:01.0                    
-> >> 00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 02) (prog-if 00 [Normal decode])
-> >>        Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
-> >>                LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <256ns, L1 <8us
-> >>                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-> >>                LnkCtl: ASPM L0s L1 Enabled; RCB 64 bytes Disabled- CommClk+
-> >>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > 
-> > Interesting, Titan Ridge is connected to the graphics slot, no? What
-> > system this is?
-> 
-> No, TBT connects to another port, which supports link active reporting.
-> This is just to show not all CML-H ports support that.
+Hi James,
 
-Right.
-
-> >> Thunderbolt ports:
-> >> # lspci -vvvv -s 04:00
-> >> 04:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
-> >>        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
-> >>                LnkCap: Port #0, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
-> >>                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-> >>                LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
-> >>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > 
-> > This one leads to the TBT NHI.
-> > 
-> >> # lspci -vvnn -s 04:01
-> >> 04:01.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
-> >>        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
-> >>                LnkCap: Port #1, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
-> >>                        ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-> >>                LnkCtl: ASPM L1 Enabled; Disabled- CommClk-
-> >>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > 
-> > This one is one of the extension downstream ports and it supports active
-> > link reporting.
-> > 
-> >> # lspci -vvnn -s 04:02 
-> >> 04:02.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
-> >>        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
-> >>                LnkCap: Port #2, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
-> >>                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
-> >>                LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
-> >>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> > 
-> > This one leads to the xHCI.
-> > 
-> >> So both CML-H PCH and TBT ports report "LLActRep-".
-> > 
-> > So in pci_bridge_wait_for_secondary_bus() we only call
-> > pcie_wait_for_link_delay() if the port supports speeds higher than 5
-> > GT/s (gen2). Now if I read the above correct all the ports except the
-> > root port support 2.5 GT/s (gen1) speeds so we should go to the
-> > msleep(delay) branch and not call pcie_wait_for_link_delay() at all:
-> > 
-> >        if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> >                pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-> >                msleep(delay);
-> >        } else {
-> >                pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> >                        delay);
-> >                if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> >                        /* Did not train, no need to wait any further */
-> >                        return;
-> >                }
-> >        }
-> > 
-> > Only explanation I have is that delay itself is set to 1000ms for some
-> > reason. Can you check if that's the case and then maybe check where that
-> > delay is coming from?
-> > 
-> >>> 1. Wait for the link + 100ms for the root port
-> >>> 2. Wait for the link + 100ms for the Titan Ridge downstream ports
-> >>>   (these are run paraller wrt all Titan Ridge downstream ports that have
-> >>>    something connected)
-> >>> 
-> >>> If there is a TBT device connected then 2. is repeated for it and so on.
-> >>> 
-> >>> So the 1000ms+ is really unexpected. Are you running mainline kernel and
-> >>> if so, can you share dmesg with CONFIG_PCI_DEBUG=y so we can see the
-> >>> delays there? Maybe also add some debugging to
-> >>> pcie_wait_for_link_delay() where it checks for the
-> >>> !pdev->link_active_reporting and waits for 1100ms.
-> >> 
-> >> I added the debug log in another thread and it does reach !pdev->link_active_reporting.
-> > 
-> > Hmm, based on the above that should not happen :-(
-> > 
-> >> Let me see if patch link active reporting for the ports in PCI quirks can help.
-> > 
-> > Let's first investigate bit more to understand what is going on.
-> > 
-> > I suggest to create kernel.org bugzilla about this. Please include full
-> > dmesg and 'sudo lspci -vv' output at least and of course the steps you
-> > use to reproduce this.
+On Fri, Mar 06, 2020 at 03:25:20PM +0000, James Clark wrote:
+> From: Tan Xiaojun <tanxiaojun@huawei.com>
 > 
-> https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> The previous patch added support in "perf report" for some arm-spe
+> events(llc-miss, tlb-miss, branch-miss, remote_access). This patch
+> adds their help instructions.
+> 
+> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+> Tested-by: Qi Liu <liuqi115@hisilicon.com>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+> Cc: Al Grant <al.grant@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/itrace.txt | 5 ++++-
+>  tools/perf/util/auxtrace.h          | 5 ++++-
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
+> index 82ff7dad40c2..da3e5ccc039e 100644
+> --- a/tools/perf/Documentation/itrace.txt
+> +++ b/tools/perf/Documentation/itrace.txt
+> @@ -1,5 +1,5 @@
+>  		i	synthesize instructions events
+> -		b	synthesize branches events
+> +		b	synthesize branches events (branch misses on Arm)
 
-Thanks!
+This is not valid for Arm CoreSight actually.  Arm CoreSight can use
+option 'b' to inject branch samples.  For this reason, suggest to
+change as "(branch misses for Arm SPE)".
+
+Thanks,
+Leo
+
+>  		c	synthesize branches events (calls only)
+>  		r	synthesize branches events (returns only)
+>  		x	synthesize transactions events
+> @@ -9,6 +9,9 @@
+>  			of aux-output (refer to perf record)
+>  		e	synthesize error events
+>  		d	create a debug log
+> +		m	synthesize LLC miss events
+> +		t	synthesize TLB miss events
+> +		a	synthesize remote access events
+>  		g	synthesize a call chain (use with i or x)
+>  		l	synthesize last branch entries (use with i or x)
+>  		s       skip initial number of events
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 80617b0d044d..52e148eea7f8 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -587,7 +587,7 @@ void auxtrace__free(struct perf_session *session);
+>  
+>  #define ITRACE_HELP \
+>  "				i:	    		synthesize instructions events\n"		\
+> -"				b:	    		synthesize branches events\n"		\
+> +"				b:	    		synthesize branches events (branch misses on Arm)\n" \
+>  "				c:	    		synthesize branches events (calls only)\n"	\
+>  "				r:	    		synthesize branches events (returns only)\n" \
+>  "				x:	    		synthesize transactions events\n"		\
+> @@ -595,6 +595,9 @@ void auxtrace__free(struct perf_session *session);
+>  "				p:	    		synthesize power events\n"			\
+>  "				e:	    		synthesize error events\n"			\
+>  "				d:	    		create a debug log\n"			\
+> +"				m:	    		synthesize LLC miss events\n" \
+> +"				t:	    		synthesize TLB miss events\n" \
+> +"				a:	    		synthesize remote access events\n" \
+>  "				g[len]:     		synthesize a call chain (use with i or x)\n" \
+>  "				l[len]:     		synthesize last branch entries (use with i or x)\n" \
+>  "				sNUMBER:    		skip initial number of events\n"		\
+> -- 
+> 2.17.1
+> 
