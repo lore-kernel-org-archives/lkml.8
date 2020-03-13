@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B61C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF71C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3615320637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A42520637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgCMXx7 (ORCPT
+        id S1727668AbgCMX6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:53:59 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49954 "EHLO
+        Fri, 13 Mar 2020 19:58:35 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49946 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbgCMXx6 (ORCPT
+        with ESMTP id S1726860AbgCMXx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:53:58 -0400
+        Fri, 13 Mar 2020 19:53:59 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7p-00B6YQ-HO; Fri, 13 Mar 2020 23:53:57 +0000
+        id 1jCu7p-00B6YH-7p; Fri, 13 Mar 2020 23:53:57 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 03/69] follow_automount(): get rid of dead^Wstillborn code
-Date:   Fri, 13 Mar 2020 23:52:51 +0000
-Message-Id: <20200313235357.2646756-3-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v4 01/69] do_add_mount(): lift lock_mount/unlock_mount into callers
+Date:   Fri, 13 Mar 2020 23:52:49 +0000
+Message-Id: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200313235303.GP23230@ZenIV.linux.org.uk>
 References: <20200313235303.GP23230@ZenIV.linux.org.uk>
- <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,96 +41,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-1) no instances of ->d_automount() have ever made use of the "return
-ERR_PTR(-EISDIR) if you don't feel like mounting anything" - that's
-a rudiment of plans that got superseded before the thing went into
-the tree.  Despite the comment in follow_automount(), autofs has
-never done that.
-
-2) if there's no ->d_automount() in dentry_operations, filesystems
-should not set DCACHE_NEED_AUTOMOUNT in the first place.  None have
-ever done so...
+preparation to finish_automount() fix (next commit)
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c     | 28 +++-------------------------
- fs/namespace.c |  9 ++++++++-
- 2 files changed, 11 insertions(+), 26 deletions(-)
+ fs/namespace.c | 47 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 24 insertions(+), 23 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 626eddb33508..39dd56f5171f 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1210,10 +1210,7 @@ EXPORT_SYMBOL(follow_up);
-  */
- static int follow_automount(struct path *path, struct nameidata *nd)
- {
--	struct vfsmount *mnt;
--
--	if (!path->dentry->d_op || !path->dentry->d_op->d_automount)
--		return -EREMOTE;
-+	struct dentry *dentry = path->dentry;
- 
- 	/* We don't want to mount if someone's just doing a stat -
- 	 * unless they're stat'ing a directory and appended a '/' to
-@@ -1228,33 +1225,14 @@ static int follow_automount(struct path *path, struct nameidata *nd)
- 	 */
- 	if (!(nd->flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
- 			   LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_AUTOMOUNT)) &&
--	    path->dentry->d_inode)
-+	    dentry->d_inode)
- 		return -EISDIR;
- 
- 	nd->total_link_count++;
- 	if (nd->total_link_count >= 40)
- 		return -ELOOP;
- 
--	mnt = path->dentry->d_op->d_automount(path);
--	if (IS_ERR(mnt)) {
--		/*
--		 * The filesystem is allowed to return -EISDIR here to indicate
--		 * it doesn't want to automount.  For instance, autofs would do
--		 * this so that its userspace daemon can mount on this dentry.
--		 *
--		 * However, we can only permit this if it's a terminal point in
--		 * the path being looked up; if it wasn't then the remainder of
--		 * the path is inaccessible and we should say so.
--		 */
--		if (PTR_ERR(mnt) == -EISDIR && (nd->flags & LOOKUP_PARENT))
--			return -EREMOTE;
--		return PTR_ERR(mnt);
--	}
--
--	if (!mnt)
--		return 0;
--
--	return finish_automount(mnt, path);
-+	return finish_automount(dentry->d_op->d_automount(path), path);
- }
- 
- /*
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 777c3116e62e..743980380a8f 100644
+index 85b5f7bea82e..dcd015fafe01 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -2824,9 +2824,16 @@ static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
+@@ -2697,45 +2697,32 @@ static int do_move_mount_old(struct path *path, const char *old_name)
+ /*
+  * add a mount into a namespace's mount tree
+  */
+-static int do_add_mount(struct mount *newmnt, struct path *path, int mnt_flags)
++static int do_add_mount(struct mount *newmnt, struct mountpoint *mp,
++			struct path *path, int mnt_flags)
+ {
+-	struct mountpoint *mp;
+-	struct mount *parent;
+-	int err;
++	struct mount *parent = real_mount(path->mnt);
+ 
+ 	mnt_flags &= ~MNT_INTERNAL_FLAGS;
+ 
+-	mp = lock_mount(path);
+-	if (IS_ERR(mp))
+-		return PTR_ERR(mp);
+-
+-	parent = real_mount(path->mnt);
+-	err = -EINVAL;
+ 	if (unlikely(!check_mnt(parent))) {
+ 		/* that's acceptable only for automounts done in private ns */
+ 		if (!(mnt_flags & MNT_SHRINKABLE))
+-			goto unlock;
++			return -EINVAL;
+ 		/* ... and for those we'd better have mountpoint still alive */
+ 		if (!parent->mnt_ns)
+-			goto unlock;
++			return -EINVAL;
+ 	}
+ 
+ 	/* Refuse the same filesystem on the same mount point */
+-	err = -EBUSY;
+ 	if (path->mnt->mnt_sb == newmnt->mnt.mnt_sb &&
+ 	    path->mnt->mnt_root == path->dentry)
+-		goto unlock;
++		return -EBUSY;
+ 
+-	err = -EINVAL;
+ 	if (d_is_symlink(newmnt->mnt.mnt_root))
+-		goto unlock;
++		return -EINVAL;
+ 
+ 	newmnt->mnt.mnt_flags = mnt_flags;
+-	err = graft_tree(newmnt, parent, mp);
+-
+-unlock:
+-	unlock_mount(mp);
+-	return err;
++	return graft_tree(newmnt, parent, mp);
+ }
+ 
+ static bool mount_too_revealing(const struct super_block *sb, int *new_mnt_flags);
+@@ -2748,6 +2735,7 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
+ 			   unsigned int mnt_flags)
+ {
+ 	struct vfsmount *mnt;
++	struct mountpoint *mp;
+ 	struct super_block *sb = fc->root->d_sb;
+ 	int error;
+ 
+@@ -2768,7 +2756,13 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
+ 
+ 	mnt_warn_timestamp_expiry(mountpoint, mnt);
+ 
+-	error = do_add_mount(real_mount(mnt), mountpoint, mnt_flags);
++	mp = lock_mount(mountpoint);
++	if (IS_ERR(mp)) {
++		mntput(mnt);
++		return PTR_ERR(mp);
++	}
++	error = do_add_mount(real_mount(mnt), mp, mountpoint, mnt_flags);
++	unlock_mount(mp);
+ 	if (error < 0)
+ 		mntput(mnt);
+ 	return error;
+@@ -2830,6 +2824,7 @@ static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
  int finish_automount(struct vfsmount *m, struct path *path)
  {
- 	struct dentry *dentry = path->dentry;
--	struct mount *mnt = real_mount(m);
- 	struct mountpoint *mp;
-+	struct mount *mnt;
+ 	struct mount *mnt = real_mount(m);
++	struct mountpoint *mp;
  	int err;
-+
-+	if (!m)
-+		return 0;
-+	if (IS_ERR(m))
-+		return PTR_ERR(m);
-+
-+	mnt = real_mount(m);
  	/* The new mount record should have at least 2 refs to prevent it being
  	 * expired before we get a chance to add it
- 	 */
+@@ -2842,7 +2837,13 @@ int finish_automount(struct vfsmount *m, struct path *path)
+ 		goto fail;
+ 	}
+ 
+-	err = do_add_mount(mnt, path, path->mnt->mnt_flags | MNT_SHRINKABLE);
++	mp = lock_mount(path);
++	if (IS_ERR(mp)) {
++		err = PTR_ERR(mp);
++		goto fail;
++	}
++	err = do_add_mount(mnt, mp, path, path->mnt->mnt_flags | MNT_SHRINKABLE);
++	unlock_mount(mp);
+ 	if (!err)
+ 		return 0;
+ fail:
 -- 
 2.11.0
 
