@@ -2,304 +2,109 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA712C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CDDC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CCA2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736E42074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzcuKmtU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdQfPVjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgCMShH (ORCPT
+        id S1727076AbgCMSi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:37:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43687 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbgCMShH (ORCPT
+        Fri, 13 Mar 2020 14:38:57 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45809 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMSi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:37:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id p125so10444588oif.10;
-        Fri, 13 Mar 2020 11:37:06 -0700 (PDT)
+        Fri, 13 Mar 2020 14:38:57 -0400
+Received: by mail-io1-f68.google.com with SMTP id w9so10508955iob.12;
+        Fri, 13 Mar 2020 11:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z2trbxzJC/FwVJ14wGx3MPfubEaOIzpJQIrh+2wVgFY=;
-        b=mzcuKmtUQZyWH4Pf77Qr0js03KndplB9ELTaUosYTbR+YkMlpJ4m/Jkr7GY09fCYaP
-         triLZawvMDZ63a7oJ1Eab7BhdGKN+Uu0PT9ccrkCVTebkEM5KQmcFDT3smzxjAusjlaQ
-         dhb07csyUj8c74jUdhcL5YzoPQH7J5B2yS5PlRscyJAeLcA7OA31C0c4DsP8rKnUmLoC
-         YGJmYMqqrlMrsjQj8bU6XnJLe/23BS3lUMSWG7oOHvayD3gGsiKLAWvmyKWWUcBTH/FD
-         05SD9iA7/zcUX4Sn+ILHHMFoxI8vPEyb8fWUhpYCXfr12D53xFBVMKZHTpc3GftXovLe
-         VNCQ==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=cUuLSwZPrJiRgANKoLpU4cPUGPy0b1zzEtLmRHixawM=;
+        b=pdQfPVjVSSOD59vLUiszT2k4KPe/kCBMeiZthSOeCrEeeOkRG8ORIuJ1tYwaFCwj7u
+         mXd5jKvuHQ/shmhWkwEj9Fk0eZaWbfn+DzvqSmOOog5LZr/U6DbKJEEj+3Y/IiOHpmvS
+         RtKijyA3OxrinDMGSFixNsJjU5MTktY8LhoUPjYhNpsRBEWp/IOgqdm0054pahtufaBK
+         A8+jD31s69s+r8vC8XtTkqdjQEYSRmUdF0dP2tZeMxQ7dfB6ha/rWpsmmPCsneTN2ABc
+         sP6XarxcnXmSWfkKOoqav5la81uCFB1uFNpM+B09YTSNR5M9LwVh2Nkvf6Lxw7vODIRr
+         UNcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z2trbxzJC/FwVJ14wGx3MPfubEaOIzpJQIrh+2wVgFY=;
-        b=dIwXvgNikPrLn7sv/aqhl4zHVkOYYsl/WI4YpmXnE19Ubur7tRLwXHBkwYcFRwrByh
-         5QSiTbiDYGPMscI/kJ9JUwodmjkZ0WYvqN/3A95kWGkejOsy4mn/uH0Yl9S0bX10fJHH
-         ijXv4brVMJLrJIVIxujWzwBR8T8+RTI7YJ+3e6nl0pi16drrzft7cx6Rvu626s3eIfzV
-         t7n8qzAhCXiQkY9tfvsn3EaQ9nAeXY2zJG6hk+Tq5SuhshtZJo7fWp0Zq7I0j9uVFbri
-         GFdWnrdR251wrgLjKLey/pTQKrUlU5Macir5F151PswkNzOTPXbbBzCMsIn9//+oY6jX
-         7AZw==
-X-Gm-Message-State: ANhLgQ1FplmExJJapZAo6tMRYabfp1UvcekGQUvv7PfFCwV2WThyrQM+
-        Wk2xZxtMlsfX5WgTsBjk+vAoMYT/uIPgrTQxtNU=
-X-Google-Smtp-Source: ADFU+vs7RYmyl77czaL//uHcgbnbdjFxtE/PfPB2JTe7UrcBmbnG/Zw6x3QRUaTwTPDYg9FZgY0m8+9wSKekn3kpzGE=
-X-Received: by 2002:aca:d489:: with SMTP id l131mr8388649oig.5.1584124626176;
- Fri, 13 Mar 2020 11:37:06 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=cUuLSwZPrJiRgANKoLpU4cPUGPy0b1zzEtLmRHixawM=;
+        b=pPMAFPpJCpWGwcZp33QPiqFuPBbF13g0aZLx1SOdsWJp/aUqcDKsw+/l5Zm1HN2+QD
+         22Wmny8sL/sWGwiHQ/f3bxA7tP0lQqUZWvZlgt811WQVG2JXXTfiS0vmiCv8r3ED53zf
+         8GT5xIXsyAwHemAe1F8Gl5FMHBG3D/f+qjNUqqIGUUYOim5ZQsSEm4q2/LXiIPfqWjwb
+         evwZLqJMTUvAFjAVyppD8U1AQggL/0qEm9JDO90Os4u8kUxOiNlAYoIA+o5mrrCLvTre
+         3bLofl6wEjF/+5tGIpo4vxyeJ41oJ+MtrlWuGhADzdU+B0tupc73GQgff+OlaFjYvZkz
+         Qaew==
+X-Gm-Message-State: ANhLgQ1WscTdVIwxigkVsLnyV/3RoO5uyKIBGfThikd7qPEVUBy6sMb1
+        safKwIm/4hSHbWYXQMuCanw=
+X-Google-Smtp-Source: ADFU+vtdsZ5CoLT8VEqVJq5gzOg+u0Z6Cy0SMBjXfTDYMAWxmxvUIJQyio7XZupCGfrbMwfmlLrgyA==
+X-Received: by 2002:a02:5489:: with SMTP id t131mr14297947jaa.134.1584124735873;
+        Fri, 13 Mar 2020 11:38:55 -0700 (PDT)
+Received: from [10.30.196.58] ([204.77.163.55])
+        by smtp.gmail.com with ESMTPSA id i82sm9783468ilf.32.2020.03.13.11.38.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 11:38:54 -0700 (PDT)
+From:   Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: Keep rk3288-tinker SD card IO powered
+ during reboot
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200219204224.34154-1-JPEWhacker@gmail.com>
+Message-ID: <ed50e114-5efd-edcc-a287-3cacc4a28161@gmail.com>
+Date:   Fri, 13 Mar 2020 13:38:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200306125608.11717-1-Po.Liu@nxp.com> <20200306125608.11717-3-Po.Liu@nxp.com>
-In-Reply-To: <20200306125608.11717-3-Po.Liu@nxp.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Fri, 13 Mar 2020 11:36:54 -0700
-Message-ID: <CAM_iQpW-qjM5H00sUbPhrimJ2aPDAiO=bTVuF88bCtPH=qz4gQ@mail.gmail.com>
-Subject: Re: [RFC,net-next 2/9] net: qos: introduce a gate control flow action
-To:     Po Liu <Po.Liu@nxp.com>
-Cc:     David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
-        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
-        leoyang.li@nxp.com, michael.chan@broadcom.com, vishal@chelsio.com,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pieter Jansen van Vuuren 
-        <pieter.jansenvanvuuren@netronome.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>, moshe@mellanox.com,
-        ivan.khoronzhuk@linaro.org, Murali Karicheri <m-karicheri2@ti.com>,
-        andre.guedes@linux.intel.com,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200219204224.34154-1-JPEWhacker@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 5:14 AM Po Liu <Po.Liu@nxp.com> wrote:
-> +static int parse_gate_list(struct nlattr *list,
-> +                          struct tcf_gate_params *sched,
-> +                          struct netlink_ext_ack *extack)
-> +{
-> +       struct nlattr *n;
-> +       int err, rem;
-> +       int i = 0;
-> +
-> +       if (!list)
-> +               return -EINVAL;
-> +
-> +       nla_for_each_nested(n, list, rem) {
-> +               struct tcfg_gate_entry *entry;
-> +
-> +               if (nla_type(n) != TCA_GATE_ONE_ENTRY) {
-> +                       NL_SET_ERR_MSG(extack, "Attribute isn't type 'entry'");
-> +                       continue;
-> +               }
-> +
-> +               entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-> +               if (!entry) {
-> +                       NL_SET_ERR_MSG(extack, "Not enough memory for entry");
-> +                       return -ENOMEM;
-> +               }
 
-You need to free all previous allocated entries on this list
-when an error happens, right?
+On 2/19/20 2:42 PM, Joshua Watt wrote:
+> IO voltage regulator for the SD card must be kept on all the time,
+> otherwise when the board reboots the SD card can't be read by the
+> bootloader.
 
+Ping?
 
-> +
-> +               err = parse_gate_entry(n, entry, i, extack);
-> +               if (err < 0) {
-> +                       kfree(entry);
-> +                       return err;
-> +               }
-> +
-> +               list_add_tail(&entry->list, &sched->entries);
-> +               i++;
-> +       }
-> +
-> +       sched->num_entries = i;
-> +
-> +       return i;
-> +}
-> +
-> +static int tcf_gate_init(struct net *net, struct nlattr *nla,
-> +                        struct nlattr *est, struct tc_action **a,
-> +                        int ovr, int bind, bool rtnl_held,
-> +                        struct tcf_proto *tp, u32 flags,
-> +                        struct netlink_ext_ack *extack)
-> +{
-> +       struct tc_action_net *tn = net_generic(net, gate_net_id);
-> +       enum tk_offsets tk_offset = TK_OFFS_TAI;
-> +       struct nlattr *tb[TCA_GATE_MAX + 1];
-> +       struct tcf_chain *goto_ch = NULL;
-> +       struct tcfg_gate_entry *next;
-> +       struct tcf_gate_params *p;
-> +       struct gate_action *gact;
-> +       s32 clockid = CLOCK_TAI;
-> +       struct tc_gate *parm;
-> +       struct tcf_gate *g;
-> +       int ret = 0, err;
-> +       u64 basetime = 0;
-> +       u32 gflags = 0;
-> +       s32 prio = -1;
-> +       ktime_t start;
-> +       u32 index;
-> +
-> +       if (!nla)
-> +               return -EINVAL;
-> +
-> +       err = nla_parse_nested_deprecated(tb, TCA_GATE_MAX,
-> +                                         nla, gate_policy, NULL);
-> +       if (err < 0)
-> +               return err;
-> +
-> +       if (!tb[TCA_GATE_PARMS])
-> +               return -EINVAL;
-> +       parm = nla_data(tb[TCA_GATE_PARMS]);
-> +       index = parm->index;
-> +       err = tcf_idr_check_alloc(tn, &index, a, bind);
-> +       if (err < 0)
-> +               return err;
-> +
-> +       if (err && bind)
-> +               return 0;
-> +
-> +       if (!err) {
-> +               ret = tcf_idr_create_from_flags(tn, index, est, a,
-> +                                               &act_gate_ops, bind, flags);
-> +               if (ret) {
-> +                       tcf_idr_cleanup(tn, index);
-> +                       return ret;
-> +               }
-> +
-> +               ret = ACT_P_CREATED;
-> +       } else if (!ovr) {
-> +               tcf_idr_release(*a, bind);
-> +               return -EEXIST;
-> +       }
-> +
-> +       if (tb[TCA_GATE_PRIORITY])
-> +               prio = nla_get_s32(tb[TCA_GATE_PRIORITY]);
-> +
-> +       if (tb[TCA_GATE_BASE_TIME])
-> +               basetime = nla_get_u64(tb[TCA_GATE_BASE_TIME]);
-> +
-> +       if (tb[TCA_GATE_FLAGS])
-> +               gflags = nla_get_u32(tb[TCA_GATE_FLAGS]);
-> +
-> +       if (tb[TCA_GATE_CLOCKID]) {
-> +               clockid = nla_get_s32(tb[TCA_GATE_CLOCKID]);
-> +               switch (clockid) {
-> +               case CLOCK_REALTIME:
-> +                       tk_offset = TK_OFFS_REAL;
-> +                       break;
-> +               case CLOCK_MONOTONIC:
-> +                       tk_offset = TK_OFFS_MAX;
-> +                       break;
-> +               case CLOCK_BOOTTIME:
-> +                       tk_offset = TK_OFFS_BOOT;
-> +                       break;
-> +               case CLOCK_TAI:
-> +                       tk_offset = TK_OFFS_TAI;
-> +                       break;
-> +               default:
-> +                       NL_SET_ERR_MSG(extack, "Invalid 'clockid'");
-> +                       goto release_idr;
-> +               }
-> +       }
-> +
-> +       err = tcf_action_check_ctrlact(parm->action, tp, &goto_ch, extack);
-> +       if (err < 0)
-> +               goto release_idr;
-> +
-> +       g = to_gate(*a);
-> +
-> +       gact = kzalloc(sizeof(*gact), GFP_KERNEL);
-> +       if (!gact) {
-> +               err = -ENOMEM;
-> +               goto put_chain;
-> +       }
-> +
-> +       p = get_gate_param(gact);
-> +
-> +       INIT_LIST_HEAD(&p->entries);
-> +       if (tb[TCA_GATE_ENTRY_LIST]) {
-> +               err = parse_gate_list(tb[TCA_GATE_ENTRY_LIST], p, extack);
-> +               if (err < 0)
-> +                       goto release_mem;
-> +       }
-> +
-> +       if (tb[TCA_GATE_CYCLE_TIME]) {
-> +               p->tcfg_cycletime = nla_get_u64(tb[TCA_GATE_CYCLE_TIME]);
-> +       } else {
-> +               struct tcfg_gate_entry *entry;
-> +               ktime_t cycle = 0;
-> +
-> +               list_for_each_entry(entry, &p->entries, list)
-> +                       cycle = ktime_add_ns(cycle, entry->interval);
-> +               p->tcfg_cycletime = cycle;
-> +       }
-> +
-> +       if (tb[TCA_GATE_CYCLE_TIME_EXT])
-> +               p->tcfg_cycletime_ext =
-> +                       nla_get_u64(tb[TCA_GATE_CYCLE_TIME_EXT]);
-> +
-> +       p->tcfg_priority = prio;
-> +       p->tcfg_basetime = basetime;
-> +       p->tcfg_clockid = clockid;
-> +       p->tcfg_flags = gflags;
-> +
-> +       gact->tk_offset = tk_offset;
-> +       spin_lock_init(&gact->entry_lock);
-> +       hrtimer_init(&gact->hitimer, clockid, HRTIMER_MODE_ABS);
-> +       gact->hitimer.function = gate_timer_func;
-> +
-> +       err = gate_get_start_time(gact, &start);
-> +       if (err < 0) {
-> +               NL_SET_ERR_MSG(extack,
-> +                              "Internal error: failed get start time");
-> +               goto release_mem;
-> +       }
-> +
-> +       gact->current_close_time = start;
-> +       gact->current_gate_status = GATE_ACT_GATE_OPEN | GATE_ACT_PENDING;
-> +
-> +       next = list_first_entry(&p->entries, struct tcfg_gate_entry, list);
-> +       rcu_assign_pointer(gact->next_entry, next);
-> +
-> +       gate_start_timer(gact, start);
-> +
-> +       spin_lock_bh(&g->tcf_lock);
-> +       goto_ch = tcf_action_set_ctrlact(*a, parm->action, goto_ch);
-> +       gact = rcu_replace_pointer(g->actg, gact,
-> +                                  lockdep_is_held(&g->tcf_lock));
-> +       spin_unlock_bh(&g->tcf_lock);
-> +
-> +       if (goto_ch)
-> +               tcf_chain_put_by_act(goto_ch);
-> +       if (gact)
-> +               kfree_rcu(gact, rcu);
-> +
-> +       if (ret == ACT_P_CREATED)
-> +               tcf_idr_insert(tn, *a);
-> +       return ret;
-> +
-> +release_mem:
-> +       kfree_rcu(gact, rcu);
-
-No need to bother RCU for an error path, right?
-
-Thanks.
+>
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>   arch/arm/boot/dts/rk3288-tinker.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> index 312582c1bd37..acfaa12ec239 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -276,6 +276,7 @@
+>   			};
+>   
+>   			vccio_sd: LDO_REG5 {
+> +				regulator-always-on;
+>   				regulator-boot-on;
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <3300000>;
