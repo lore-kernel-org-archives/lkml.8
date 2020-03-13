@@ -2,127 +2,76 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8122C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01024C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A4420637
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4D720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 23:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584143677;
+	bh=0P9xgH7QzMeqwIkpaOz8z3Oty6VKgtDzU10MFU8QqIM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lwDxmZYwx7+czxFmPEh5mK5akR3wLQqoBLf6uY9bYoV9McBMm8hHaXtAke/ksqPpq
+	 TsJnIlk0NrxN5VR5Qu4vo2cgcj4ZlG3LF4R1VF+RDpV2Aw9LLyhrWyHOUAHQQYsG1n
+	 0pY1vZGOU2Zy2hNzd6gICYdhsMMWm7LVZ50kZUIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgCMXyQ (ORCPT
+        id S1727978AbgCMXyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 19:54:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50118 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgCMXyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 19:54:04 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCu7v-00B6cV-26; Fri, 13 Mar 2020 23:54:03 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v4 44/69] follow_dotdot{,_rcu}(): lift switching nd->path to parent out of loop
-Date:   Fri, 13 Mar 2020 23:53:32 +0000
-Message-Id: <20200313235357.2646756-44-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
-References: <20200313235303.GP23230@ZenIV.linux.org.uk>
- <20200313235357.2646756-1-viro@ZenIV.linux.org.uk>
+        Fri, 13 Mar 2020 19:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727545AbgCMXyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 19:54:33 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2B7D2074E;
+        Fri, 13 Mar 2020 23:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584143673;
+        bh=0P9xgH7QzMeqwIkpaOz8z3Oty6VKgtDzU10MFU8QqIM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SEsD46NmZwwJSYW3lqbSIEGUWlW+cPCbVN/mwhr4gXYDDrvenNCKGLNmumcSR5hYN
+         2J474AqFGzxoB1ZlpJUGuMyzxJDjQdxni7ScdTgUKCFVNVwNSaS5n1fVxLnn99hhJy
+         KjUDneamQhmJc5it1COWuIwk5FT0RXYsgOrGvw5o=
+Date:   Fri, 13 Mar 2020 16:54:30 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 3/5] kselftest: run tests by fixture
+Message-ID: <20200313165430.7f7e35b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <202003131626.8EF371151@keescook>
+References: <20200313031752.2332565-1-kuba@kernel.org>
+        <20200313031752.2332565-4-kuba@kernel.org>
+        <202003131626.8EF371151@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Fri, 13 Mar 2020 16:27:54 -0700 Kees Cook wrote:
+> On Thu, Mar 12, 2020 at 08:17:50PM -0700, Jakub Kicinski wrote:
+> > Now that all tests have a fixture object move from a global
+> > list of tests to a list of tests per fixture.
+> > 
+> > Order of tests may change as we will now group and run test
+> > fixture by fixture, rather than in declaration order.  
+> 
+> I'm not convinced about this change. Declaration order is a pretty
+> intuitive result that I'd like to keep for the harness.
+> 
+> Can this change be avoided and still keep the final results of a
+> "mutable" fixture?
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/namei.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 88e5d7920540..772d82daf3b4 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1365,7 +1365,9 @@ static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
- 
- static int follow_dotdot_rcu(struct nameidata *nd)
- {
-+	struct dentry *parent = NULL;
- 	struct inode *inode = nd->inode;
-+	unsigned seq;
- 
- 	while (1) {
- 		if (path_equal(&nd->path, &nd->root)) {
-@@ -1375,15 +1377,12 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 		}
- 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
- 			struct dentry *old = nd->path.dentry;
--			struct dentry *parent = old->d_parent;
--			unsigned seq;
- 
-+			parent = old->d_parent;
- 			inode = parent->d_inode;
- 			seq = read_seqcount_begin(&parent->d_seq);
- 			if (unlikely(read_seqcount_retry(&old->d_seq, nd->seq)))
- 				return -ECHILD;
--			nd->path.dentry = parent;
--			nd->seq = seq;
- 			if (unlikely(!path_connected(nd->path.mnt, parent)))
- 				return -ECHILD;
- 			break;
-@@ -1406,6 +1405,10 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 			nd->seq = seq;
- 		}
- 	}
-+	if (likely(parent)) {
-+		nd->path.dentry = parent;
-+		nd->seq = seq;
-+	}
- 	while (unlikely(d_mountpoint(nd->path.dentry))) {
- 		struct mount *mounted;
- 		mounted = __lookup_mnt(nd->path.mnt, nd->path.dentry);
-@@ -1442,7 +1445,7 @@ static void follow_mount(struct path *path)
- 
- static int follow_dotdot(struct nameidata *nd)
- {
--	struct dentry *parent;
-+	struct dentry *parent = NULL;
- 	while (1) {
- 		if (path_equal(&nd->path, &nd->root)) {
- 			if (unlikely(nd->flags & LOOKUP_BENEATH))
-@@ -1452,13 +1455,10 @@ static int follow_dotdot(struct nameidata *nd)
- 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
- 			/* rare case of legitimate dget_parent()... */
- 			parent = dget_parent(nd->path.dentry);
--
- 			if (unlikely(!path_connected(nd->path.mnt, parent))) {
- 				dput(parent);
- 				return -ENOENT;
- 			}
--			dput(nd->path.dentry);
--			nd->path.dentry = parent;
- 			break;
- 		}
- 		if (!follow_up(&nd->path))
-@@ -1466,6 +1466,10 @@ static int follow_dotdot(struct nameidata *nd)
- 		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
- 			return -EXDEV;
- 	}
-+	if (likely(parent)) {
-+		dput(nd->path.dentry);
-+		nd->path.dentry = parent;
-+	}
- 	follow_mount(&nd->path);
- 	nd->inode = nd->path.dentry->d_inode;
- 	return 0;
--- 
-2.11.0
-
+Sure! I will abandon the reorg of the lists then, keep just the list of
+tests, and have each test point to its fixture. Which then may contain
+param sets.
