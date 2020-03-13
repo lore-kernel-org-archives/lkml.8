@@ -2,167 +2,1079 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82382C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51505C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5246A2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 07:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="j8t7tFGf";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="SA5hU7i5"
+	by mail.kernel.org (Postfix) with ESMTP id 0A4D1206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCMH76 (ORCPT
+        id S1726859AbgCMIAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 03:59:58 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:10290 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbgCMH7y (ORCPT
+        Fri, 13 Mar 2020 04:00:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50700 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgCMIAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 03:59:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1584086394; x=1615622394;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=nd/MRjJ/QhaEEZUEZuJJ9RcShOWWT/zGc5tXcTNkZRI=;
-  b=j8t7tFGf6auVA98j03+tFQxnMZdqsj4h7I6utLDn86GorJNtV1D4CJhe
-   TMGHG3ambcnPOweOl6O2qhiO3oD12/Of3ayFOC45s1ymxeq7wKWLJU0X5
-   Ndo783bc2Ie9GSH2fy6GNybXWYw9fnxWlX1EetMO1a1hm1r7k0/4FzQgp
-   g0rdRn0Fmc/ucHQ7KH80GKCp4bvtVQm7/ciYlfJeDEltA4YMgvg+iut35
-   UahUJAWykUjigbFDIBUWQMubcUurTtgs2wJUJWZHaOWb5HXhjNmf+qs7L
-   6VvqIfYZ89OfRUJvp0pLUJx1MDjdoCb/83nEY9yJJuM57LVXvMAg8kAB3
-   Q==;
-IronPort-SDR: +mkfJxqPlDhGF/trQBjO7SizaBsFNGdmiJTUYJ76+l9YupWlX6K6+nunciiaNlVmZy5IPSxZ4g
- osyMefVsY3V8/OvU6Lzma9FHnnMzQVwB8zMWQyR0GqNRHuroS/lwhHU/pIDS4AMhSBg59envMf
- PebZI/ZmP1ium6C+2MrM/n1XEfX1kkJUxdAknf9uJFMsdzXtcQoPElZ4tzPSUWMLYiICusrlmV
- KRXqM8e6HNcZZ7o+Xl0P2K0NhaWHlC5iekBGmM/6wUFJONNaeiIRjoj540WV3QVn/izgKeIT4n
- I9I=
-X-IronPort-AV: E=Sophos;i="5.70,547,1574092800"; 
-   d="scan'208";a="132374966"
-Received: from mail-cys01nam02lp2055.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.55])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Mar 2020 15:59:50 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=arsmVq4yrE8g3a8xnHPVRgko4pSQu40CpJWtKQpouy424B2p7rW2oM5Jef6l/JSX2ZthLQaCcxI/+JEC8N+WmhnpZausIV1tJRmSMNi0R/PgrBNYGFfUuS9bBQBVXN30sszAwYxFILHia5Xl1U23VKt+A4fkwUWsrKba97P9etesHZQm9uqEkpzkXH1IbF351vDj9cLzZob1TReC4Ahg9ZGoWKfkbI3uon1G3ZYieEzlkuOnf0hiIU/AWy6cY82z1ahwFojv1cHfmYajIvpYHxd++xg7TILdtiwd9i9maeVw67ws5c/j0JA9Nr8mpngLEJcYmmq73czA/0wQL/k1AQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4pELhePTPn8l4qp+9EmcVacRzVNBCNI68CwWUhxT8gs=;
- b=aWmeBYQIkqDF3K6p/10yV7/cYUDw/gmDtwy6t9rjKmq+NUhv2RGbEXs7PHWWo0Xn/G331MBTmGyna70vYk9hLOkOfcUFViUpEJ2dwimor1SSk5d41aStJ7OyDYmKBJ0hPvYSIJy4TBF7Q27Gl8swhmMjj/wYGy9ahiwqrF0P4ErkM860Fl6V9VjCIz9dcN4tkmO4SWKuHrNPsWOm8v48oVStmopqvSZ2i5hO1iu+XVc9QMpQryptxi2OY198D3l4SYIrWLZLRIwWYGgLq8CkKV8jb8ttOEXpi2kTJS5rO5p/vF7uBVUgi6Ttl6jgA5C4CTy5JupwNsvFZO5Vu7K6DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4pELhePTPn8l4qp+9EmcVacRzVNBCNI68CwWUhxT8gs=;
- b=SA5hU7i5/tkbW5ImB8E/0TPBqWVvv7xVyryO3ACx8unxQxv2rypZt8YjNVVdZ/LQx1pXqDwvlr2r+8pimUs1paBo/8tc9BZnThY39DFVgdQiaQAjidk1qrufMmWoxIXNZV1BLt+ApyIPLlOZY+aeI7GyHK63Nj0XJ2hIgvs2xAo=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
- by MN2PR04MB6944.namprd04.prod.outlook.com (2603:10b6:208:1ed::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Fri, 13 Mar
- 2020 07:59:49 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::159d:10c9:f6df:64c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::159d:10c9:f6df:64c8%6]) with mapi id 15.20.2814.018; Fri, 13 Mar 2020
- 07:59:49 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v11 20/20] RISC-V: KVM: Add MAINTAINERS entry
-Date:   Fri, 13 Mar 2020 13:21:31 +0530
-Message-Id: <20200313075131.69837-21-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313075131.69837-1-anup.patel@wdc.com>
-References: <20200313075131.69837-1-anup.patel@wdc.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0057.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:20::19) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
+        Fri, 13 Mar 2020 04:00:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 06EF1296CA3
+Subject: Re: [PATCH v2] platform/chrome: Update cros_ec_commands.h to latest
+ ec commands
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200312071949.145300-1-gwendal@chromium.org>
+ <692f5e9e-ff20-fd07-327a-223e254e413a@collabora.com>
+ <CAPUE2uuTa8JS4g7vSZsypv6F6gcJOa7RW_35RcC7QAB6pu32xQ@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <4c58bd89-1929-fbdb-018e-c37c4d16e52d@collabora.com>
+Date:   Fri, 13 Mar 2020 09:00:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from wdc.com (1.39.129.91) by MA1PR0101CA0057.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:20::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14 via Frontend Transport; Fri, 13 Mar 2020 07:59:42 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [1.39.129.91]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ba8a6394-46e9-448b-7bd5-08d7c72480c1
-X-MS-TrafficTypeDiagnostic: MN2PR04MB6944:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR04MB6944B57EFDAF8D633551ABA48DFA0@MN2PR04MB6944.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(199004)(26005)(4326008)(44832011)(55016002)(1076003)(8936002)(478600001)(86362001)(36756003)(66556008)(16526019)(66946007)(956004)(66476007)(186003)(2616005)(316002)(7416002)(6666004)(1006002)(110136005)(8886007)(8676002)(2906002)(81166006)(81156014)(5660300002)(54906003)(52116002)(7696005)(36456003)(42976004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6944;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QuE3js6y19XO5GgEEQYiJha7VIk+yM9UujbuMicW5u/WrDSMu1njtmR9JEtke9d6bAeFyvHyWAnt37Hgti6db64vukRJy058fGwwjgfUK45zzLMS/z077KaPkEqxnKVubHxXBZLdoQwHhIbeSK06gepaodZ7TM/eqrDaZXPl5q+/BR7Gg0BDbaQOix4BJsGvIKB/CD/dPY3ZgFcmQh7ldjvs4gtIQJfXDspHh5a4lxt+SzkqzMYekwRwn460HD28z+59w2w0M0jDW5PuvTfbskNwBzl5nqSXS8WtihQn85BECl/iUWwv4QlgBaqUDhKjT/Whb35VopCbUJQ1LTIcksZdQ2MS+2/iEhMpVdYEsGbzRmjeNbz5BP5SOi5pc/JcR4DNg+CMxUIKD/1ybin5Q1T37Yxw0qwOJfhlqaMeGSksJFuiCZ7YvPvCPwk6IkqEjGZJqMVGQ1p4WvL4gsdqlRPo8J7moNHRzP04ew2P/Yrte/i5MuTxW45zTd4h8Rx3f0GUOI5sBUsX2KjMxeckww==
-X-MS-Exchange-AntiSpam-MessageData: tzHKRZzPrLKsjGG9ONGOcrQ1B/Iw65qEsjG9+D5Gi5lNE9UE4jO+Ra57ZaCu1yMU6e/Fk6bs1tqBfmmLMFSC+WSDUzE3B7hUWdzO6UnxTsnISt4zJKG7CLb1YiiBmmzjDvkdQbdF87pOYUZPTD1kAQ==
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba8a6394-46e9-448b-7bd5-08d7c72480c1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 07:59:49.3885
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BBTx2I0igOPkwwxm6XKz4xOm9nwFZ0PWnOKN5R9VGK3jL+FrtTxwSY6JsQN2bi3IIAjXomGkYHFzksu/SArw0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6944
+In-Reply-To: <CAPUE2uuTa8JS4g7vSZsypv6F6gcJOa7RW_35RcC7QAB6pu32xQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as maintainer for KVM RISC-V and Atish as designated reviewer.
+Hi Gwendal,
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 13/3/20 1:02, Gwendal Grignou wrote:
+> On Thu, Mar 12, 2020 at 2:48 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+>>
+>> Hi Gwendal,
+>>
+>> Many thanks to send this patch upstream.
+>>
+>> On 12/3/20 8:19, Gwendal Grignou wrote:
+>>> Update from EC code base
+>>> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+>>> Formatted to match kernel syntax.
+>>>
+>>
+>> I know that is a bit more of work, but I suspect we will have other patches to
+>> sync the ec_command file, and I wouldn't like to end with a bunch of patches
+>> only saying `Update cros_ec_commands.h to latest ec commands` in our git log
+>> which is meaningless.
+>>
+>> Could we split that patch per command functionality, so it's clear which exact
+>> command we're introducing?
+>>
+>> (If you are fine with this approach but you don't have time, I am volunteer to
+>> split that patch, just let me know ;-) )
+> Thanks.
+> Before we split this CL, let me fix the kenel-doc issues in the
+> original file on the firmware side, as cros_ec_commands.h file is
+> autogenerated.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..c149b5d0f5fe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9201,6 +9201,17 @@ F:	arch/powerpc/include/asm/kvm*
- F:	arch/powerpc/kvm/
- F:	arch/powerpc/kernel/kvm*
- 
-+KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
-+M:	Anup Patel <anup.patel@wdc.com>
-+R:	Atish Patra <atish.patra@wdc.com>
-+L:	kvm@vger.kernel.org
-+L:	kvm-riscv@lists.infradead.org
-+T:	git git://github.com/kvm-riscv/linux.git
-+S:	Maintained
-+F:	arch/riscv/include/uapi/asm/kvm*
-+F:	arch/riscv/include/asm/kvm*
-+F:	arch/riscv/kvm/
-+
- KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- M:	Janosch Frank <frankja@linux.ibm.com>
--- 
-2.17.1
+For next changes, would make sense adding me as a reviewer in the firmware CL,
+so I can give my feedback earlier?
 
+Cheers,
+ Enric
+
+
+>>
+>> The comments below are just minor kernel-doc format issues, but there is a lot
+>> of them. Just make sure that if you use kernel-doc doesn't report a warning when
+>> generate the documentation, or don't use kernel-doc.
+>>
+>>> Add new commands:
+>>> EC_CMD_RAND_NUM : Request random numbers.
+>>> EC_CMD_RWSIG_INFO: Key information
+>>> EC_CMD_MKBP_WAKE_MASK: Define wake up mask for MKBP events.
+>>> EC_CMD_LOCATE_CHIP: For power delivery
+>>> EC_CMD_REBOOT_AP_ON_G3: For testing purposes
+>>> EC_CMD_GET_PD_PORT_CAPS: Get PD device information
+>>> EC_CMD_FP_READ_MATCH_SECRET: Used for Finger print sensor management.
+>>>
+>>
+>> Note that we should also update the cros_ec_trace to match current commands.
+>>
+>>> Update commands:
+>>> EC_CMD_POWER_INFO (v0 was not used in the kernel)
+>>> EC_CMD_MOTION_SENSE_CMD (Add calibration mode, online calibration info).
+>>>
+>>> Add new Mems sensors.
+>>>
+>>> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+>>> ---
+>>> Changes since v1: Include limits.h as U16_MAX is used.
+>>>
+>>>  .../linux/platform_data/cros_ec_commands.h    | 605 ++++++++++++++++--
+>>>  1 file changed, 555 insertions(+), 50 deletions(-)
+>>>
+>>> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+>>> index 69210881ebac8..db23bcc464dc1 100644
+>>> --- a/include/linux/platform_data/cros_ec_commands.h
+>>> +++ b/include/linux/platform_data/cros_ec_commands.h
+>>> @@ -15,9 +15,10 @@
+>>>
+>>>
+>>>
+>>> -
+>>
+>> Please remove that change as is unrelated
+>>
+>>>  #define BUILD_ASSERT(_cond)
+>>>
+>>> +#include <linux/limits.h>
+>>> +
+>>>  /*
+>>>   * Current version of this protocol
+>>>   *
+>>> @@ -400,7 +401,7 @@
+>>>   * parent structure that the alignment will still be true given the packing of
+>>>   * the parent structure.  This is particularly important if the sub-structure
+>>>   * will be passed as a pointer to another function, since that function will
+>>> - * not know about the misaligment caused by the parent structure's packing.
+>>> + * not know about the misalignment caused by the parent structure's packing.
+>>
+>> This is a typo fix.
+>>
+>>>   *
+>>>   * Also be very careful using __packed - particularly when nesting non-packed
+>>>   * structures inside packed ones.  In fact, DO NOT use __packed directly;
+>>> @@ -456,8 +457,7 @@
+>>>       (EC_LPC_STATUS_FROM_HOST | EC_LPC_STATUS_PROCESSING)
+>>>
+>>>  /*
+>>> - * Host command response codes (16-bit).  Note that response codes should be
+>>> - * stored in a uint16_t rather than directly in a value of this type.
+>>> + * Host command response codes (16-bit).
+>>>   */
+>>>  enum ec_status {
+>>>       EC_RES_SUCCESS = 0,
+>>> @@ -481,7 +481,10 @@ enum ec_status {
+>>>       EC_RES_INVALID_HEADER_CRC = 18,      /* Header CRC invalid */
+>>>       EC_RES_INVALID_DATA_CRC = 19,        /* Data CRC invalid */
+>>>       EC_RES_DUP_UNAVAILABLE = 20,         /* Can't resend response */
+>>> -};
+>>> +
+>>> +     EC_RES_MAX = U16_MAX            /**< Force enum to be 16 bits */
+>>
+>> This is not a kernel-doc comment, so should be just:
+>> /* Force enum to be 16 bits */
+>>
+>>> +} __packed;
+>>> +BUILD_ASSERT(sizeof(enum ec_status) == sizeof(uint16_t));
+>>>
+>>>  /*
+>>>   * Host event codes.  Note these are 1-based, not 0-based, because ACPI query
+>>> @@ -550,7 +553,12 @@ enum host_event_code {
+>>>       /* EC desires to change state of host-controlled USB mux */
+>>>       EC_HOST_EVENT_USB_MUX = 28,
+>>>
+>>> -     /* TABLET/LAPTOP mode or detachable base attach/detach event */
+>>> +     /*
+>>> +      * The device has changed "modes". This can be one of the following:
+>>> +      *
+>>> +      * - TABLET/LAPTOP mode
+>>> +      * - detachable base attach/detach event
+>>> +      */
+>>
+>> I don't see a lot more value on this new comment than the old one. Is really
+>> needed to update that comment?
+> To make it clear a given device can only change within 2 sets of modes.
+>>
+>>>       EC_HOST_EVENT_MODE_CHANGE = 29,
+>>>
+>>>       /* Keyboard recovery combo with hardware reinitialization */
+>>> @@ -963,10 +971,14 @@ struct ec_response_hello {
+>>>  /* Get version number */
+>>>  #define EC_CMD_GET_VERSION 0x0002
+>>>
+>>> -enum ec_current_image {
+>>> +
+>>> +enum ec_image {
+>>>       EC_IMAGE_UNKNOWN = 0,
+>>>       EC_IMAGE_RO,
+>>> -     EC_IMAGE_RW
+>>> +     EC_IMAGE_RW,
+>>> +     EC_IMAGE_RW_A = EC_IMAGE_RW,
+>>
+>> That's weird, why define EC_IMAGE_RW_A? Can we just use EC_IMAGE_RW?
+> To make it clear some newer EC have 2 images, while preserving
+> backward compatibility.
+> Coreboot has the same layout: RO, RW_A and RW_B.
+>>
+>>> +     EC_IMAGE_RO_B,
+>>> +     EC_IMAGE_RW_B
+>>
+>> Add a colon at the end so if you add a new enum value the diff will be more clear.
+>>
+>>>  };
+>>>
+>>>  /**
+>>> @@ -974,7 +986,7 @@ enum ec_current_image {
+>>>   * @version_string_ro: Null-terminated RO firmware version string.
+>>>   * @version_string_rw: Null-terminated RW firmware version string.
+>>>   * @reserved: Unused bytes; was previously RW-B firmware version string.
+>>> - * @current_image: One of ec_current_image.
+>>> + * @current_image: One of ec_image.
+>>>   */
+>>>  struct ec_response_get_version {
+>>>       char version_string_ro[32];
+>>> @@ -1679,6 +1691,82 @@ struct ec_params_flash_select {
+>>>  } __ec_align4;
+>>>
+>>>
+>>> +/**
+>>> + * Request random numbers to be generated and returned.
+>>
+>> This will trigger a kernel-doc warning. Fix the warning or just don't use
+>> kernel-doc format (/*)
+>>
+>>> + * Can be used to test the random number generator is truly random.
+>>> + * See https://csrc.nist.gov/publications/detail/sp/800-22/rev-1a/final and
+>>> + * https://webhome.phy.duke.edu/~rgb/General/dieharder.php.
+>>> + */
+>>> +#define EC_CMD_RAND_NUM      0x001A
+>>> +#define EC_VER_RAND_NUM 0
+>>> +
+>>> +struct ec_params_rand_num {
+>>> +     uint16_t num_rand_bytes;        /**< num random bytes to generate */
+>>
+>> Not a proper kernel-doc comment, just (/*)?
+>>
+>>> +} __ec_align4;
+>>> +
+>>> +struct ec_response_rand_num {
+>>> +     uint8_t rand[0];                /**< generated random numbers */
+>>
+>> Not a proper kernel-doc comment, just (/*)?
+>>
+>>> +} __ec_align4;
+>>> +
+>>> +BUILD_ASSERT(sizeof(struct ec_response_rand_num) == 0);
+>>> +
+>>> +/**
+>>
+>> This will trigger a kernel-doc warning. Fix the warning or just don't use
+>> kernel-doc format (/*)
+>>
+>>> + * Get information about the key used to sign the RW firmware.
+>>> + * For more details on the fields, see "struct vb21_packed_key".
+>>> + */
+>>> +#define EC_CMD_RWSIG_INFO 0x001B
+>>> +#define EC_VER_RWSIG_INFO 0
+>>> +
+>>> +#define VBOOT2_KEY_ID_BYTES 20
+>>> +
+>>> +
+>>
+>> Remove the extra line.
+>>
+>>> +struct ec_response_rwsig_info {
+>>> +     /**
+>>> +      * Signature algorithm used by the key
+>>> +      * (enum vb2_signature_algorithm).
+>>> +      */
+>>> +     uint16_t sig_alg;
+>>> +
+>>> +     /**
+>>> +      * Hash digest algorithm used with the key
+>>> +      * (enum vb2_hash_algorithm).
+>>> +      */
+>>> +     uint16_t hash_alg;
+>>> +
+>>> +     /** Key version. */
+>>> +     uint32_t key_version;
+>>> +
+>>> +     /** Key ID (struct vb2_id). */
+>>> +     uint8_t key_id[VBOOT2_KEY_ID_BYTES];
+>>> +
+>>> +     uint8_t key_is_valid;
+>>> +
+>>> +     /** Alignment padding. */
+>>> +     uint8_t reserved[3];
+>>> +} __ec_align4;
+>>> +
+>>
+>> Use proper kernel-doc or remove it.
+>>
+>>> +BUILD_ASSERT(sizeof(struct ec_response_rwsig_info) == 32);
+>>> +
+>>> +/**
+>>
+>> This will trigger a kernel-doc warning. Fix the warning or just don't use
+>> kernel-doc format (/*)
+>>
+>> There are more kernel-doc issues below, but all are the same as above, so I'll
+>> stop commenting those from now.
+>>
+>>
+>>> + * Get information about the system, such as reset flags, locked state, etc.
+>>> + */
+>>> +#define EC_CMD_SYSINFO 0x001C
+>>> +#define EC_VER_SYSINFO 0
+>>> +
+>>> +enum sysinfo_flags {
+>>> +     SYSTEM_IS_LOCKED = BIT(0),
+>>> +     SYSTEM_IS_FORCE_LOCKED = BIT(1),
+>>> +     SYSTEM_JUMP_ENABLED = BIT(2),
+>>> +     SYSTEM_JUMPED_TO_CURRENT_IMAGE = BIT(3),
+>>> +     SYSTEM_REBOOT_AT_SHUTDOWN = BIT(4)
+>>> +};
+>>> +
+>>> +struct ec_response_sysinfo {
+>>> +     uint32_t reset_flags;           /**< EC_RESET_FLAG_* flags */
+>>> +     uint32_t current_image;         /**< enum ec_current_image */
+>>> +     uint32_t flags;                 /**< enum sysinfo_flags */
+>>> +} __ec_align4;
+>>> +
+>>>  /*****************************************************************************/
+>>>  /* PWM commands */
+>>>
+>>> @@ -2283,7 +2371,7 @@ enum motionsense_command {
+>>>
+>>>       /*
+>>>        * Sensor Offset command is a setter/getter command for the offset
+>>> -      * used for calibration.
+>>> +      * used for factory calibration.
+>>>        * The offsets can be calculated by the host, or via
+>>>        * PERFORM_CALIB command.
+>>>        */
+>>> @@ -2328,6 +2416,11 @@ enum motionsense_command {
+>>>        */
+>>>       MOTIONSENSE_CMD_SENSOR_SCALE = 18,
+>>>
+>>> +     /*
+>>> +      * Read the current online calibration values (if available).
+>>> +      */
+>>> +     MOTIONSENSE_CMD_ONLINE_CALIB_READ = 19,
+>>> +
+>>>       /* Number of motionsense sub-commands. */
+>>>       MOTIONSENSE_NUM_CMDS
+>>>  };
+>>> @@ -2342,6 +2435,7 @@ enum motionsensor_type {
+>>>       MOTIONSENSE_TYPE_ACTIVITY = 5,
+>>>       MOTIONSENSE_TYPE_BARO = 6,
+>>>       MOTIONSENSE_TYPE_SYNC = 7,
+>>> +     MOTIONSENSE_TYPE_LIGHT_RGB = 8,
+>>>       MOTIONSENSE_TYPE_MAX,
+>>>  };
+>>>
+>>> @@ -2375,6 +2469,9 @@ enum motionsensor_chip {
+>>>       MOTIONSENSE_CHIP_LSM6DS3 = 17,
+>>>       MOTIONSENSE_CHIP_LSM6DSO = 18,
+>>>       MOTIONSENSE_CHIP_LNG2DM = 19,
+>>> +     MOTIONSENSE_CHIP_TCS3400 = 20,
+>>> +     MOTIONSENSE_CHIP_LIS2DW12 = 21,
+>>> +     MOTIONSENSE_CHIP_LIS2DWL = 22,
+>>>       MOTIONSENSE_CHIP_MAX,
+>>>  };
+>>>
+>>> @@ -2407,6 +2504,12 @@ struct ec_response_motion_sensor_data {
+>>>       };
+>>>  } __ec_todo_packed;
+>>>
+>>> +/* Response to AP reporting calibration data for a given sensor. */
+>>> +struct ec_response_online_calibration_data {
+>>> +     /** The calibration values. */
+>>> +     int16_t data[3];
+>>> +};
+>>> +
+>>>  /* Note: used in ec_response_get_next_data */
+>>>  struct ec_response_motion_sense_fifo_info {
+>>>       /* Size of the fifo */
+>>> @@ -2517,12 +2620,19 @@ struct ec_params_motion_sense {
+>>>
+>>>               /*
+>>>                * Used for MOTIONSENSE_CMD_INFO, MOTIONSENSE_CMD_DATA
+>>> -              * and MOTIONSENSE_CMD_PERFORM_CALIB.
+>>>                */
+>>>               struct __ec_todo_unpacked {
+>>>                       uint8_t sensor_num;
+>>> -             } info, info_3, data, fifo_flush, perform_calib,
+>>> -                             list_activities;
+>>> +             } info, info_3, info_4, data, fifo_flush, list_activities;
+>>> +
+>>> +             /*
+>>> +              * Used for MOTIONSENSE_CMD_PERFORM_CALIB:
+>>> +              * Allow entering/exiting the calibration mode.
+>>> +              */
+>>> +             struct __ec_todo_unpacked {
+>>> +                     uint8_t sensor_num;
+>>> +                     uint8_t enable;
+>>> +             } perform_calib;
+>>>
+>>>               /*
+>>>                * Used for MOTIONSENSE_CMD_EC_RATE, MOTIONSENSE_CMD_SENSOR_ODR
+>>> @@ -2656,9 +2766,23 @@ struct ec_params_motion_sense {
+>>>                        */
+>>>                       int16_t hys_degree;
+>>>               } tablet_mode_threshold;
+>>> +
+>>> +             /*
+>>> +              * Used for MOTIONSENSE_CMD_ONLINE_CALIB_READ:
+>>> +              * Allow reading a single sensor's online calibration value.
+>>> +              */
+>>> +             struct __ec_todo_unpacked {
+>>> +                     uint8_t sensor_num;
+>>> +             } online_calib_read;
+>>> +
+>>>       };
+>>>  } __ec_todo_packed;
+>>>
+>>> +enum motion_sense_cmd_info_flags {
+>>> +     /* The sensor supports online calibration */
+>>> +     MOTION_SENSE_CMD_INFO_FLAG_ONLINE_CALIB = BIT(0),
+>>> +};
+>>> +
+>>>  struct ec_response_motion_sense {
+>>>       union {
+>>>               /* Used for MOTIONSENSE_CMD_DUMP */
+>>> @@ -2709,6 +2833,33 @@ struct ec_response_motion_sense {
+>>>                       uint32_t fifo_max_event_count;
+>>>               } info_3;
+>>>
+>>> +             /* Used for MOTIONSENSE_CMD_INFO version 4 */
+>>> +             struct __ec_align4 {
+>>> +                     /* Should be element of enum motionsensor_type. */
+>>> +                     uint8_t type;
+>>> +
+>>> +                     /* Should be element of enum motionsensor_location. */
+>>> +                     uint8_t location;
+>>> +
+>>> +                     /* Should be element of enum motionsensor_chip. */
+>>> +                     uint8_t chip;
+>>> +
+>>> +                     /* Minimum sensor sampling frequency */
+>>> +                     uint32_t min_frequency;
+>>> +
+>>> +                     /* Maximum sensor sampling frequency */
+>>> +                     uint32_t max_frequency;
+>>> +
+>>> +                     /* Max number of sensor events that could be in fifo */
+>>> +                     uint32_t fifo_max_event_count;
+>>> +
+>>> +                     /*
+>>> +                      * Should be elements of
+>>> +                      * enum motion_sense_cmd_info_flags
+>>> +                      */
+>>> +                     uint32_t flags;
+>>> +             } info_4;
+>>> +
+>>>               /* Used for MOTIONSENSE_CMD_DATA */
+>>>               struct ec_response_motion_sensor_data data;
+>>>
+>>> @@ -2744,6 +2895,8 @@ struct ec_response_motion_sense {
+>>>
+>>>               struct ec_response_motion_sense_fifo_data fifo_read;
+>>>
+>>> +             struct ec_response_online_calibration_data online_calib_read;
+>>> +
+>>>               struct __ec_todo_packed {
+>>>                       uint16_t reserved;
+>>>                       uint32_t enabled;
+>>> @@ -2806,10 +2959,34 @@ struct ec_params_config_power_button {
+>>>  /* Set USB port charging mode */
+>>>  #define EC_CMD_USB_CHARGE_SET_MODE 0x0030
+>>>
+>>> +enum usb_charge_mode {
+>>> +     /* Disable USB port. */
+>>> +     USB_CHARGE_MODE_DISABLED,
+>>> +     /* Set USB port to Standard Downstream Port, USB 2.0 mode. */
+>>> +     USB_CHARGE_MODE_SDP2,
+>>> +     /* Set USB port to Charging Downstream Port, BC 1.2. */
+>>> +     USB_CHARGE_MODE_CDP,
+>>> +     /* Set USB port to Dedicated Charging Port, BC 1.2. */
+>>> +     USB_CHARGE_MODE_DCP_SHORT,
+>>> +     /* Enable USB port (for dumb ports). */
+>>> +     USB_CHARGE_MODE_ENABLED,
+>>> +     /* Set USB port to CONFIG_USB_PORT_POWER_SMART_DEFAULT_MODE. */
+>>> +     USB_CHARGE_MODE_DEFAULT,
+>>> +
+>>> +     USB_CHARGE_MODE_COUNT
+>>> +};
+>>> +
+>>> +enum usb_suspend_charge {
+>>> +     /* Enable charging in suspend */
+>>> +     USB_ALLOW_SUSPEND_CHARGE,
+>>> +     /* Disable charging in suspend */
+>>> +     USB_DISALLOW_SUSPEND_CHARGE
+>>> +};
+>>> +
+>>>  struct ec_params_usb_charge_set_mode {
+>>>       uint8_t usb_port_id;
+>>> -     uint8_t mode:7;
+>>> -     uint8_t inhibit_charge:1;
+>>> +     uint8_t mode:7;              /* enum usb_charge_mode */
+>>> +     uint8_t inhibit_charge:1;    /* enum usb_suspend_charge */
+>>>  } __ec_align1;
+>>>
+>>>  /*****************************************************************************/
+>>> @@ -3374,6 +3551,12 @@ enum ec_mkbp_event {
+>>>       /* Send an incoming CEC message to the AP */
+>>>       EC_MKBP_EVENT_CEC_MESSAGE = 9,
+>>>
+>>> +     /* We have entered DisplayPort Alternate Mode on a Type-C port. */
+>>> +     EC_MKBP_EVENT_DP_ALT_MODE_ENTERED = 10,
+>>> +
+>>> +     /* New online calibration values are available. */
+>>> +     EC_MKBP_EVENT_ONLINE_CALIBRATION = 11,
+>>> +
+>>>       /* Number of MKBP events */
+>>>       EC_MKBP_EVENT_COUNT,
+>>>  };
+>>> @@ -3497,6 +3680,57 @@ struct ec_response_keyboard_factory_test {
+>>>  #define EC_MKBP_FP_ERR_MATCH_YES_UPDATE_FAILED 5
+>>>
+>>>
+>>> +#define EC_CMD_MKBP_WAKE_MASK 0x0069
+>>> +enum ec_mkbp_event_mask_action {
+>>> +     /* Retrieve the value of a wake mask. */
+>>> +     GET_WAKE_MASK = 0,
+>>> +
+>>> +     /* Set the value of a wake mask. */
+>>> +     SET_WAKE_MASK,
+>>> +};
+>>> +
+>>> +enum ec_mkbp_mask_type {
+>>> +     /*
+>>> +      * These are host events sent via MKBP.
+>>> +      *
+>>> +      * Some examples are:
+>>> +      *    EC_HOST_EVENT_MASK(EC_HOST_EVENT_LID_OPEN)
+>>> +      *    EC_HOST_EVENT_MASK(EC_HOST_EVENT_KEY_PRESSED)
+>>> +      *
+>>> +      * The only things that should be in this mask are:
+>>> +      *    EC_HOST_EVENT_MASK(EC_HOST_EVENT_*)
+>>> +      */
+>>> +     EC_MKBP_HOST_EVENT_WAKE_MASK = 0,
+>>> +
+>>> +     /*
+>>> +      * These are MKBP events. Some examples are:
+>>> +      *
+>>> +      *    EC_MKBP_EVENT_KEY_MATRIX
+>>> +      *    EC_MKBP_EVENT_SWITCH
+>>> +      *
+>>> +      * The only things that should be in this mask are EC_MKBP_EVENT_*.
+>>> +      */
+>>> +     EC_MKBP_EVENT_WAKE_MASK,
+>>> +};
+>>> +
+>>> +struct ec_params_mkbp_event_wake_mask {
+>>> +     /* One of enum ec_mkbp_event_mask_action */
+>>> +     uint8_t action;
+>>> +
+>>> +     /*
+>>> +      * Which MKBP mask are you interested in acting upon?  This is one of
+>>> +      * ec_mkbp_mask_type.
+>>> +      */
+>>> +     uint8_t mask_type;
+>>> +
+>>> +     /* If setting a new wake mask, this contains the mask to set. */
+>>> +     uint32_t new_wake_mask;
+>>> +};
+>>> +
+>>> +struct ec_response_mkbp_event_wake_mask {
+>>> +     uint32_t wake_mask;
+>>> +};
+>>> +
+>>>  /*****************************************************************************/
+>>>  /* Temperature sensor commands */
+>>>
+>>> @@ -3879,16 +4113,69 @@ struct ec_response_ldo_get {
+>>>
+>>>  /*
+>>>   * Get power info.
+>>> + *
+>>> + * Note: v0 of this command is deprecated
+>>>   */
+>>>  #define EC_CMD_POWER_INFO 0x009D
+>>>
+>>> -struct ec_response_power_info {
+>>> -     uint32_t usb_dev_type;
+>>> -     uint16_t voltage_ac;
+>>> -     uint16_t voltage_system;
+>>> -     uint16_t current_system;
+>>> -     uint16_t usb_current_limit;
+>>> -} __ec_align4;
+>>> +/*
+>>> + * v1 of EC_CMD_POWER_INFO
+>>> + */
+>>> +enum system_power_source {
+>>> +     /*
+>>> +      * Haven't established which power source is used yet,
+>>> +      * or no presence signals are available
+>>> +      */
+>>> +     POWER_SOURCE_UNKNOWN = 0,
+>>> +     /* System is running on battery alone */
+>>> +     POWER_SOURCE_BATTERY = 1,
+>>> +     /* System is running on A/C alone */
+>>> +     POWER_SOURCE_AC = 2,
+>>> +     /* System is running on A/C and battery */
+>>> +     POWER_SOURCE_AC_BATTERY = 3,
+>>> +};
+>>> +
+>>> +struct ec_response_power_info_v1 {
+>>> +     /* enum system_power_source */
+>>> +     uint8_t system_power_source;
+>>> +     /* Battery state-of-charge, 0-100, 0 if not present */
+>>> +     uint8_t battery_soc;
+>>> +     /* AC Adapter 100% rating, Watts */
+>>> +     uint8_t ac_adapter_100pct;
+>>> +     /* AC Adapter 10ms rating, Watts */
+>>> +     uint8_t ac_adapter_10ms;
+>>> +     /* Battery 1C rating, derated */
+>>> +     uint8_t battery_1cd;
+>>> +     /* Rest of Platform average, Watts */
+>>> +     uint8_t rop_avg;
+>>> +     /* Rest of Platform peak, Watts */
+>>> +     uint8_t rop_peak;
+>>> +     /* Nominal charger efficiency, % */
+>>> +     uint8_t nominal_charger_eff;
+>>> +     /* Rest of Platform VR Average Efficiency, % */
+>>> +     uint8_t rop_avg_eff;
+>>> +     /* Rest of Platform VR Peak Efficiency, % */
+>>> +     uint8_t rop_peak_eff;
+>>> +     /* SoC VR Efficiency at Average level, % */
+>>> +     uint8_t soc_avg_eff;
+>>> +     /* SoC VR Efficiency at Peak level, % */
+>>> +     uint8_t soc_peak_eff;
+>>> +     /* Intel-specific items */
+>>> +     struct {
+>>> +             /* Battery's level of DBPT support: 0, 2 */
+>>> +             uint8_t batt_dbpt_support_level;
+>>> +             /*
+>>> +              * Maximum peak power from battery (10ms), Watts
+>>> +              * If DBPT is not supported, this is 0
+>>> +              */
+>>> +             uint8_t batt_dbpt_max_peak_power;
+>>> +             /*
+>>> +              * Sustained peak power from battery, Watts
+>>> +              * If DBPT is not supported, this is 0
+>>> +              */
+>>> +             uint8_t batt_dbpt_sus_peak_power;
+>>> +     } intel;
+>>> +} __ec_align1;
+>>>
+>>>  /*****************************************************************************/
+>>>  /* I2C passthru command */
+>>> @@ -3908,7 +4195,7 @@ struct ec_response_power_info {
+>>>  #define EC_I2C_STATUS_ERROR  (EC_I2C_STATUS_NAK | EC_I2C_STATUS_TIMEOUT)
+>>>
+>>>  struct ec_params_i2c_passthru_msg {
+>>> -     uint16_t addr_flags;    /* I2C slave address (7 or 10 bits) and flags */
+>>> +     uint16_t addr_flags;    /* I2C slave address and flags */
+>>>       uint16_t len;           /* Number of bytes to read or write */
+>>>  } __ec_align2;
+>>>
+>>> @@ -4360,6 +4647,9 @@ struct ec_response_sb_fw_update {
+>>>   * Entering Verified Boot Mode Command
+>>>   * Default mode is VBOOT_MODE_NORMAL if EC did not receive this command.
+>>>   * Valid Modes are: normal, developer, and recovery.
+>>> + *
+>>> + * EC no longer needs to know what mode vboot has entered,
+>>> + * so this command is deprecated.  (See chromium:1014379.)
+>>>   */
+>>>  #define EC_CMD_ENTERING_MODE 0x00B6
+>>>
+>>> @@ -4379,8 +4669,9 @@ struct ec_params_entering_mode {
+>>>  #define EC_CMD_I2C_PASSTHRU_PROTECT 0x00B7
+>>>
+>>>  enum ec_i2c_passthru_protect_subcmd {
+>>> -     EC_CMD_I2C_PASSTHRU_PROTECT_STATUS = 0x0,
+>>> -     EC_CMD_I2C_PASSTHRU_PROTECT_ENABLE = 0x1,
+>>> +     EC_CMD_I2C_PASSTHRU_PROTECT_STATUS = 0,
+>>> +     EC_CMD_I2C_PASSTHRU_PROTECT_ENABLE = 1,
+>>> +     EC_CMD_I2C_PASSTHRU_PROTECT_ENABLE_TCPCS = 2,
+>>>  };
+>>>
+>>>  struct ec_params_i2c_passthru_protect {
+>>> @@ -4893,7 +5184,7 @@ struct ec_params_usb_pd_control {
+>>>  #define PD_CTRL_RESP_ROLE_DR_POWER      BIT(3) /* Partner is dualrole power */
+>>>  #define PD_CTRL_RESP_ROLE_DR_DATA       BIT(4) /* Partner is dualrole data */
+>>>  #define PD_CTRL_RESP_ROLE_USB_COMM      BIT(5) /* Partner USB comm capable */
+>>> -#define PD_CTRL_RESP_ROLE_EXT_POWERED   BIT(6) /* Partner externally powerd */
+>>> +#define PD_CTRL_RESP_ROLE_UNCONSTRAINED BIT(6) /* Partner unconstrained power */
+>>>
+>>>  struct ec_response_usb_pd_control {
+>>>       uint8_t enabled;
+>>> @@ -4909,23 +5200,45 @@ struct ec_response_usb_pd_control_v1 {
+>>>       char state[32];
+>>>  } __ec_align1;
+>>>
+>>> -/* Values representing usbc PD CC state */
+>>> -#define USBC_PD_CC_NONE              0 /* No accessory connected */
+>>> -#define USBC_PD_CC_NO_UFP    1 /* No UFP accessory connected */
+>>> -#define USBC_PD_CC_AUDIO_ACC 2 /* Audio accessory connected */
+>>> -#define USBC_PD_CC_DEBUG_ACC 3 /* Debug accessory connected */
+>>> -#define USBC_PD_CC_UFP_ATTACHED      4 /* UFP attached to usbc */
+>>> -#define USBC_PD_CC_DFP_ATTACHED      5 /* DPF attached to usbc */
+>>> +/* Possible port partner connections based on CC line states */
+>>> +enum pd_cc_states {
+>>> +     PD_CC_NONE = 0,                 /* No port partner attached */
+>>> +
+>>> +     /* From DFP perspective */
+>>> +     PD_CC_UFP_NONE = 1,             /* No UFP accessory connected */
+>>> +     PD_CC_UFP_AUDIO_ACC = 2,        /* UFP Audio accessory connected */
+>>> +     PD_CC_UFP_DEBUG_ACC = 3,        /* UFP Debug accessory connected */
+>>> +     PD_CC_UFP_ATTACHED = 4,         /* Plain UFP attached */
+>>>
+>>> +     /* From UFP perspective */
+>>> +     PD_CC_DFP_ATTACHED = 5,         /* Plain DFP attached */
+>>> +     PD_CC_DFP_DEBUG_ACC = 6,        /* DFP debug accessory connected */
+>>> +};
+>>> +
+>>> +/* Active/Passive Cable */
+>>> +#define USB_PD_CTRL_ACTIVE_CABLE        BIT(0)
+>>> +/* Optical/Non-optical cable */
+>>> +#define USB_PD_CTRL_OPTICAL_CABLE       BIT(1)
+>>> +/* 3rd Gen TBT device (or AMA)/2nd gen tbt Adapter */
+>>> +#define USB_PD_CTRL_TBT_LEGACY_ADAPTER  BIT(2)
+>>> +/* Active Link Uni-Direction */
+>>> +#define USB_PD_CTRL_ACTIVE_LINK_UNIDIR  BIT(3)
+>>> +
+>>> +/*
+>>> + * Underdevelopement :
+>>> + * Please remove this tag if using _v2 outside platform/ec
+>>> + */
+>>>  struct ec_response_usb_pd_control_v2 {
+>>>       uint8_t enabled;
+>>>       uint8_t role;
+>>>       uint8_t polarity;
+>>>       char state[32];
+>>> -     uint8_t cc_state; /* USBC_PD_CC_*Encoded cc state */
+>>> -     uint8_t dp_mode;  /* Current DP pin mode (MODE_DP_PIN_[A-E]) */
+>>> -     /* CL:1500994 Current cable type */
+>>> -     uint8_t reserved_cable_type;
+>>> +     uint8_t cc_state;       /* enum pd_cc_states representing cc state */
+>>> +     uint8_t dp_mode;        /* Current DP pin mode (MODE_DP_PIN_[A-E]) */
+>>> +     uint8_t reserved;       /* Reserved for future use */
+>>> +     uint8_t control_flags;  /* USB_PD_CTRL_*flags */
+>>> +     uint8_t cable_speed;    /* TBT_SS_* cable speed */
+>>> +     uint8_t cable_gen;      /* TBT_GEN3_* cable rounded support */
+>>>  } __ec_align1;
+>>>
+>>>  #define EC_CMD_USB_PD_PORTS 0x0102
+>>> @@ -5021,7 +5334,7 @@ struct ec_params_usb_pd_rw_hash_entry {
+>>>                                 * TODO(rspangler) but it's not aligned!
+>>>                                 * Should have been reserved[2].
+>>>                                 */
+>>> -     uint32_t current_image;  /* One of ec_current_image */
+>>> +     uint32_t current_image;  /* One of ec_image */
+>>>  } __ec_align1;
+>>>
+>>>  /* Read USB-PD Accessory info */
+>>> @@ -5046,7 +5359,7 @@ struct ec_params_usb_pd_discovery_entry {
+>>>  enum usb_pd_override_ports {
+>>>       OVERRIDE_DONT_CHARGE = -2,
+>>>       OVERRIDE_OFF = -1,
+>>> -     /* [0, CONFIG_USB_PD_PORT_COUNT): Port# */
+>>> +     /* [0, CONFIG_USB_PD_PORT_MAX_COUNT): Port# */
+>>>  };
+>>>
+>>>  struct ec_params_charge_port_override {
+>>> @@ -5207,11 +5520,18 @@ struct ec_params_usb_pd_mux_info {
+>>>  } __ec_align1;
+>>>
+>>>  /* Flags representing mux state */
+>>> -#define USB_PD_MUX_USB_ENABLED       BIT(0) /* USB connected */
+>>> -#define USB_PD_MUX_DP_ENABLED        BIT(1) /* DP connected */
+>>> -#define USB_PD_MUX_POLARITY_INVERTED BIT(2) /* CC line Polarity inverted */
+>>> -#define USB_PD_MUX_HPD_IRQ           BIT(3) /* HPD IRQ is asserted */
+>>> -#define USB_PD_MUX_HPD_LVL           BIT(4) /* HPD level is asserted */
+>>> +#define USB_PD_MUX_NONE               0      /* Open switch */
+>>> +#define USB_PD_MUX_USB_ENABLED        BIT(0) /* USB connected */
+>>> +#define USB_PD_MUX_DP_ENABLED         BIT(1) /* DP connected */
+>>> +#define USB_PD_MUX_POLARITY_INVERTED  BIT(2) /* CC line Polarity inverted */
+>>> +#define USB_PD_MUX_HPD_IRQ            BIT(3) /* HPD IRQ is asserted */
+>>> +#define USB_PD_MUX_HPD_LVL            BIT(4) /* HPD level is asserted */
+>>> +#define USB_PD_MUX_SAFE_MODE          BIT(5) /* DP is in safe mode */
+>>> +#define USB_PD_MUX_TBT_COMPAT_ENABLED BIT(6) /* TBT compat enabled */
+>>> +#define USB_PD_MUX_USB4_ENABLED       BIT(7) /* USB4 enabled */
+>>> +
+>>> +/* USB-C Dock connected */
+>>> +#define USB_PD_MUX_DOCK              (USB_PD_MUX_USB_ENABLED | USB_PD_MUX_DP_ENABLED)
+>>>
+>>>  struct ec_response_usb_pd_mux_info {
+>>>       uint8_t flags; /* USB_PD_MUX_*-encoded USB mux state */
+>>> @@ -5221,7 +5541,12 @@ struct ec_response_usb_pd_mux_info {
+>>>
+>>>  struct ec_params_pd_chip_info {
+>>>       uint8_t port;   /* USB-C port number */
+>>> -     uint8_t renew;  /* Force renewal */
+>>> +     /*
+>>> +      * Fetch the live chip info or hard-coded + cached chip info
+>>> +      * 0: hardcoded value for VID/PID, cached value for FW version
+>>> +      * 1: live chip value for VID/PID/FW Version
+>>> +      */
+>>> +     uint8_t live;
+>>>  } __ec_align1;
+>>>
+>>>  struct ec_response_pd_chip_info {
+>>> @@ -5293,6 +5618,7 @@ enum cbi_data_tag {
+>>>       CBI_TAG_DRAM_PART_NUM = 3, /* variable length ascii, nul terminated. */
+>>>       CBI_TAG_OEM_NAME = 4,      /* variable length ascii, nul terminated. */
+>>>       CBI_TAG_MODEL_ID = 5,      /* uint32_t or smaller */
+>>> +     CBI_TAG_FW_CONFIG = 6,     /* uint32_t bit field */
+>>>       CBI_TAG_COUNT,
+>>>  };
+>>>
+>>> @@ -5332,6 +5658,32 @@ struct ec_params_set_cbi {
+>>>   */
+>>>  #define EC_CMD_GET_UPTIME_INFO 0x0121
+>>>
+>>> +/* Reset causes */
+>>> +#define EC_RESET_FLAG_OTHER       BIT(0)   /* Other known reason */
+>>> +#define EC_RESET_FLAG_RESET_PIN   BIT(1)   /* Reset pin asserted */
+>>> +#define EC_RESET_FLAG_BROWNOUT    BIT(2)   /* Brownout */
+>>> +#define EC_RESET_FLAG_POWER_ON    BIT(3)   /* Power-on reset */
+>>> +#define EC_RESET_FLAG_WATCHDOG    BIT(4)   /* Watchdog timer reset */
+>>> +#define EC_RESET_FLAG_SOFT        BIT(5)   /* Soft reset trigger by core */
+>>> +#define EC_RESET_FLAG_HIBERNATE   BIT(6)   /* Wake from hibernate */
+>>> +#define EC_RESET_FLAG_RTC_ALARM   BIT(7)   /* RTC alarm wake */
+>>> +#define EC_RESET_FLAG_WAKE_PIN    BIT(8)   /* Wake pin triggered wake */
+>>> +#define EC_RESET_FLAG_LOW_BATTERY BIT(9)   /* Low battery triggered wake */
+>>> +#define EC_RESET_FLAG_SYSJUMP     BIT(10)  /* Jumped directly to this image */
+>>> +#define EC_RESET_FLAG_HARD        BIT(11)  /* Hard reset from software */
+>>> +#define EC_RESET_FLAG_AP_OFF      BIT(12)  /* Do not power on AP */
+>>> +#define EC_RESET_FLAG_PRESERVED   BIT(13)  /* Some reset flags preserved from
+>>> +                                         * previous boot
+>>> +                                         */
+>>> +#define EC_RESET_FLAG_USB_RESUME  BIT(14)  /* USB resume triggered wake */
+>>> +#define EC_RESET_FLAG_RDD         BIT(15)  /* USB Type-C debug cable */
+>>> +#define EC_RESET_FLAG_RBOX        BIT(16)  /* Fixed Reset Functionality */
+>>> +#define EC_RESET_FLAG_SECURITY    BIT(17)  /* Security threat */
+>>> +#define EC_RESET_FLAG_AP_WATCHDOG BIT(18)  /* AP experienced a watchdog reset */
+>>> +#define EC_RESET_FLAG_STAY_IN_RO  BIT(19)  /* Do not select RW in EFS. This
+>>> +                                         * enables PD in RO for Chromebox.
+>>> +                                         */
+>>> +
+>>>  struct ec_response_uptime_info {
+>>>       /*
+>>>        * Number of milliseconds since the last EC boot. Sysjump resets
+>>> @@ -5352,8 +5704,8 @@ struct ec_response_uptime_info {
+>>>       uint32_t ap_resets_since_ec_boot;
+>>>
+>>>       /*
+>>> -      * The set of flags which describe the EC's most recent reset.  See
+>>> -      * include/system.h RESET_FLAG_* for details.
+>>> +      * The set of flags which describe the EC's most recent reset.
+>>> +      * See EC_RESET_FLAG_* for details.
+>>>        */
+>>>       uint32_t ec_reset_flags;
+>>>
+>>> @@ -5430,6 +5782,133 @@ struct ec_response_rollback_info {
+>>>  /* Issue AP reset */
+>>>  #define EC_CMD_AP_RESET 0x0125
+>>>
+>>> +/*****************************************************************************/
+>>> +/* Locate peripheral chips
+>>> + *
+>>> + * Return values:
+>>> + * EC_RES_UNAVAILABLE: The chip type is supported but not found on system.
+>>> + * EC_RES_INVALID_PARAM: The chip type was unrecognized.
+>>> + * EC_RES_OVERFLOW: The index number exceeded the number of chip instances.
+>>> + */
+>>> +#define EC_CMD_LOCATE_CHIP 0x0126
+>>> +
+>>> +enum ec_chip_type {
+>>> +     EC_CHIP_TYPE_CBI_EEPROM = 0,
+>>> +     EC_CHIP_TYPE_TCPC = 1,
+>>> +     EC_CHIP_TYPE_COUNT,
+>>> +     EC_CHIP_TYPE_MAX = 0xFF,
+>>> +};
+>>> +
+>>> +enum ec_bus_type {
+>>> +     EC_BUS_TYPE_I2C = 0,
+>>> +     EC_BUS_TYPE_EMBEDDED = 1,
+>>> +     EC_BUS_TYPE_COUNT,
+>>> +     EC_BUS_TYPE_MAX = 0xFF,
+>>> +};
+>>> +
+>>> +struct ec_i2c_info {
+>>> +     uint16_t port;          /* Physical port for device */
+>>> +     uint16_t addr_flags;    /* 7-bit (or 10-bit) address */
+>>> +};
+>>> +
+>>> +struct ec_params_locate_chip {
+>>> +     uint8_t type;           /* enum ec_chip_type */
+>>> +     uint8_t index;          /* Specifies one instance of chip type */
+>>> +     /* Used for type specific parameters in future */
+>>> +     union {
+>>> +             uint16_t reserved;
+>>> +     };
+>>> +} __ec_align2;
+>>> +
+>>> +
+>>> +struct ec_response_locate_chip {
+>>> +     uint8_t bus_type;       /* enum ec_bus_type */
+>>> +     uint8_t reserved;       /* Aligning the following union to 2 bytes */
+>>> +     union {
+>>> +             struct ec_i2c_info i2c_info;
+>>> +     };
+>>> +} __ec_align2;
+>>> +
+>>> +/*
+>>> + * Reboot AP on G3
+>>> + *
+>>> + * This command is used for validation purpose, where the AP needs to be
+>>> + * returned back to S0 state from G3 state without using the servo to trigger
+>>> + * wake events.For this,there is no request or response struct.
+>>> + *
+>>> + * Order of command usage:
+>>> + * ectool reboot_ap_on_g3 && shutdown -h now
+>>> + */
+>>> +#define EC_CMD_REBOOT_AP_ON_G3 0x0127
+>>> +
+>>> +/*****************************************************************************/
+>>> +/* Get PD port capabilities
+>>> + *
+>>> + * Returns the following static *capabilities* of the given port:
+>>> + * 1) Power role: source, sink, or dual. It is not anticipated that
+>>> + *    future CrOS devices would ever be only a source, so the options are
+>>> + *    sink or dual.
+>>> + * 2) Try-power role: source, sink, or none (practically speaking, I don't
+>>> + *    believe any CrOS device would support Try.SNK, so this would be source
+>>> + *    or none).
+>>> + * 3) Data role: dfp, ufp, or dual. This will probably only be DFP or dual
+>>> + *    for CrOS devices.
+>>> + */
+>>> +#define EC_CMD_GET_PD_PORT_CAPS 0x0128
+>>> +
+>>> +enum ec_pd_power_role_caps {
+>>> +     EC_PD_POWER_ROLE_SOURCE = 0,
+>>> +     EC_PD_POWER_ROLE_SINK = 1,
+>>> +     EC_PD_POWER_ROLE_DUAL = 2,
+>>> +};
+>>> +
+>>> +enum ec_pd_try_power_role_caps {
+>>> +     EC_PD_TRY_POWER_ROLE_NONE = 0,
+>>> +     EC_PD_TRY_POWER_ROLE_SINK = 1,
+>>> +     EC_PD_TRY_POWER_ROLE_SOURCE = 2,
+>>> +};
+>>> +
+>>> +enum ec_pd_data_role_caps {
+>>> +     EC_PD_DATA_ROLE_DFP = 0,
+>>> +     EC_PD_DATA_ROLE_UFP = 1,
+>>> +     EC_PD_DATA_ROLE_DUAL = 2,
+>>> +};
+>>> +
+>>> +/* From: power_manager/power_supply_properties.proto */
+>>> +enum ec_pd_port_location {
+>>> +     /* The location of the port is unknown, or there's only one port. */
+>>> +     EC_PD_PORT_LOCATION_UNKNOWN = 0,
+>>> +
+>>> +     /*
+>>> +      * Various positions on the device. The first word describes the side of
+>>> +      * the device where the port is located while the second clarifies the
+>>> +      * position. For example, LEFT_BACK means the farthest-back port on the
+>>> +      * left side, while BACK_LEFT means the leftmost port on the back of the
+>>> +      * device.
+>>> +      */
+>>> +     EC_PD_PORT_LOCATION_LEFT        = 1,
+>>> +     EC_PD_PORT_LOCATION_RIGHT       = 2,
+>>> +     EC_PD_PORT_LOCATION_BACK        = 3,
+>>> +     EC_PD_PORT_LOCATION_FRONT       = 4,
+>>> +     EC_PD_PORT_LOCATION_LEFT_FRONT  = 5,
+>>> +     EC_PD_PORT_LOCATION_LEFT_BACK   = 6,
+>>> +     EC_PD_PORT_LOCATION_RIGHT_FRONT = 7,
+>>> +     EC_PD_PORT_LOCATION_RIGHT_BACK  = 8,
+>>> +     EC_PD_PORT_LOCATION_BACK_LEFT   = 9,
+>>> +     EC_PD_PORT_LOCATION_BACK_RIGHT  = 10,
+>>> +};
+>>> +
+>>> +struct ec_params_get_pd_port_caps {
+>>> +     uint8_t port;           /* Which port to interrogate */
+>>> +} __ec_align1;
+>>> +
+>>> +struct ec_response_get_pd_port_caps {
+>>> +     uint8_t pd_power_role_cap;      /* enum ec_pd_power_role_caps */
+>>> +     uint8_t pd_try_power_role_cap;  /* enum ec_pd_try_power_role_caps */
+>>> +     uint8_t pd_data_role_cap;       /* enum ec_pd_data_role_caps */
+>>> +     uint8_t pd_port_location;       /* enum ec_pd_port_location */
+>>> +} __ec_align1;
+>>> +
+>>>  /*****************************************************************************/
+>>>  /* The command range 0x200-0x2FF is reserved for Rotor. */
+>>>
+>>> @@ -5585,15 +6064,18 @@ struct ec_response_fp_info {
+>>>  #define FP_FRAME_OFFSET_MASK       0x0FFFFFFF
+>>>
+>>>  /* Version of the format of the encrypted templates. */
+>>> -#define FP_TEMPLATE_FORMAT_VERSION 3
+>>> +#define FP_TEMPLATE_FORMAT_VERSION 4
+>>>
+>>>  /* Constants for encryption parameters */
+>>>  #define FP_CONTEXT_NONCE_BYTES 12
+>>>  #define FP_CONTEXT_USERID_WORDS (32 / sizeof(uint32_t))
+>>>  #define FP_CONTEXT_TAG_BYTES 16
+>>> -#define FP_CONTEXT_SALT_BYTES 16
+>>> +#define FP_CONTEXT_ENCRYPTION_SALT_BYTES 16
+>>>  #define FP_CONTEXT_TPM_BYTES 32
+>>>
+>>> +/* Constants for positive match parameters. */
+>>> +#define FP_POSITIVE_MATCH_SALT_BYTES 16
+>>> +
+>>>  struct ec_fp_template_encryption_metadata {
+>>>       /*
+>>>        * Version of the structure format (N=3).
+>>> @@ -5606,7 +6088,7 @@ struct ec_fp_template_encryption_metadata {
+>>>        * a different one is used for every message.
+>>>        */
+>>>       uint8_t nonce[FP_CONTEXT_NONCE_BYTES];
+>>> -     uint8_t salt[FP_CONTEXT_SALT_BYTES];
+>>> +     uint8_t encryption_salt[FP_CONTEXT_ENCRYPTION_SALT_BYTES];
+>>>       uint8_t tag[FP_CONTEXT_TAG_BYTES];
+>>>  };
+>>>
+>>> @@ -5639,6 +6121,18 @@ struct ec_params_fp_context {
+>>>       uint32_t userid[FP_CONTEXT_USERID_WORDS];
+>>>  } __ec_align4;
+>>>
+>>> +enum fp_context_action {
+>>> +     FP_CONTEXT_ASYNC = 0,
+>>> +     FP_CONTEXT_GET_RESULT = 1,
+>>> +};
+>>> +
+>>> +/* Version 1 of the command is "asynchronous". */
+>>> +struct ec_params_fp_context_v1 {
+>>> +     uint8_t action;         /**< enum fp_context_action */
+>>> +     uint8_t reserved[3];    /**< padding for alignment */
+>>> +     uint32_t userid[FP_CONTEXT_USERID_WORDS];
+>>> +} __ec_align4;
+>>> +
+>>>  #define EC_CMD_FP_STATS 0x0407
+>>>
+>>>  #define FPSTATS_CAPTURE_INV  BIT(0)
+>>> @@ -5680,6 +6174,17 @@ struct ec_response_fp_encryption_status {
+>>>       uint32_t status;
+>>>  } __ec_align4;
+>>>
+>>> +#define EC_CMD_FP_READ_MATCH_SECRET 0x040A
+>>
+>> Add an empty line here.
+>>
+>>> +struct ec_params_fp_read_match_secret {
+>>> +     uint16_t fgr;
+>>> +} __ec_align4;
+>>> +
+>>> +/* The positive match secret has the length of the SHA256 digest. */
+>>> +#define FP_POSITIVE_MATCH_SECRET_BYTES 32
+>>
+>> Add an empty line here.
+>>
+>>> +struct ec_response_fp_read_match_secret {
+>>> +     uint8_t positive_match_secret[FP_POSITIVE_MATCH_SECRET_BYTES];
+>>> +} __ec_align4;
+>>> +
+>>>  /*****************************************************************************/
+>>>  /* Touchpad MCU commands: range 0x0500-0x05FF */
+>>>
+>>>
