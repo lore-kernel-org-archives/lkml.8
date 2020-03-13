@@ -2,115 +2,128 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1372C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A48206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0EC206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FhPdlmxI"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UULHVhHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCMOrT (ORCPT
+        id S1726986AbgCMOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:47:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35164 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgCMOrS (ORCPT
+        Fri, 13 Mar 2020 10:47:40 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36479 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbgCMOrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:47:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEeaiT042643;
-        Fri, 13 Mar 2020 14:47:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=FAXjI9acl3BvhqBVLHwTP8ZVKrXH638AdGx3om6kJNQ=;
- b=FhPdlmxIHJvQgls3DVfxUO0C7gZUS4ANPeDN4y7XcZzdaI2Cgt0/cRcXiKIMTn/AyhYi
- Q8iX7/lRGteQgfbGzldQ5ssv0YJZuxHhLqAmdyf645N9wCJlGEuRMiMK0LT62BBicEye
- Z2D5UZNmzW/wg+qZlYF+pKjoC1ICr21nniV59zigMaz9YvQ6iB2q34xiHeLY8DzY/dLF
- wTL7jkj2wd3PKQnOP/bC6BQxueA9hGnJSTQD4c8pqfNvAkSzPzXiQ7nrhaHBIGhyeF5x
- hO3DaWSxR1RNjkOMFvsceUpr7l8Tdslm6DKMNK2hgqFrScvQQ/65kOqhjZivv0zpcAgb jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2yqtaev7fa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:47:10 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DEcCFW070599;
-        Fri, 13 Mar 2020 14:45:10 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2yqtabb577-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Mar 2020 14:45:10 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02DEj8s5015787;
-        Fri, 13 Mar 2020 14:45:09 GMT
-Received: from dhcp-10-175-173-225.vpn.oracle.com (/10.175.173.225)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Mar 2020 07:45:08 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v7 kunit-next 4/4] kunit: update documentation to describe debugfs representation
-Date:   Fri, 13 Mar 2020 14:44:42 +0000
-Message-Id: <1584110682-3837-5-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
-References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=3 adultscore=0
- mlxlogscore=999 bulkscore=0 phishscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003130077
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=3
- mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003130077
+        Fri, 13 Mar 2020 10:47:40 -0400
+Received: by mail-il1-f196.google.com with SMTP id h3so9166058ils.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ro1R5ehcYhRf1s0gupnhw5Q+nbHwvID0ows7ral5AwA=;
+        b=UULHVhHoV9B8wA8pT06k5F7CEKhKPJTemEriB5P4jsfUl+0MFuocFV+cKfEBUwJOZR
+         44SDm19Y7MNYFx7IBYDxU1eeSaW08Y1QdU5wPqJ476lvQgn0/8iH8LZarWTvyzQ8f8Pq
+         /yfiAazoYMLLCZA+WD2VvC0CB+j3dinbmK52mQS15VrJHiRU+hrdzgsvFqZQERc3wsoQ
+         g+ZBlhE9WbwRtM/eaNTiBOiVTrV5D3Y6m0xAntdjTsJR7LHKx3cw/ImN5JlKvRE2sZTY
+         CaoeXluOwsKMbIdEpQHSRSCk8Y3XWPOtb/vcDpCSafXtfOW3R/wFvDbweG9ep+FTXkfs
+         6jCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ro1R5ehcYhRf1s0gupnhw5Q+nbHwvID0ows7ral5AwA=;
+        b=tKqLShk3TTeXMEsyrFFcSd12F1e+Ic3exe1KBb9GCrffy0z3zZV9tVzysClZbiW1UF
+         LfFkcx9Ukasj96SJV4fCHN76xbFHDTYf4WePrfma95jAf/YKsPEaNu8sW481mVF8nOQx
+         Z4JZYLcWcOSZybmNISMc+mM91p4OC+T12es3MRxFbf/bboAPTntHqB1Qe8yikI0PnhIW
+         9ZDNtVOCxW9DQvGNmb7bCwJF5A6RtHVmshlSzvO9VDRh+j/BRP0OvMphUhZG0AotA3vM
+         2VICkswkZXz/vGJO0DmsZcIvG99mtvLFklEiZE7ZPHF8BbbtAFE/OQqPrEUkz1Q4J/TQ
+         9LlA==
+X-Gm-Message-State: ANhLgQ23dMWpZsgpi/njMm2sTsxexaAm38+qr2ptQ9uRwF9ITn7FfkrB
+        gdXKS/ERSP0EcSsBu6cmLuZ/f/WFvUHLz5L6DseoOg==
+X-Google-Smtp-Source: ADFU+vsUQdVDGeuArwH8++3efQ8y7YMk8cNafYrhvyIqxS2kFexBfegk6QvD0SkMs57BFtt65r+sa+KzO6NudDFAdpc=
+X-Received: by 2002:a92:d191:: with SMTP id z17mr14076733ilz.287.1584110859057;
+ Fri, 13 Mar 2020 07:47:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
+ <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
+In-Reply-To: <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 13 Mar 2020 15:47:28 +0100
+Message-ID: <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe debugfs layout and semantics.
+czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> Hi Bartosz,
+>
+> I'm struggling to figure out if this is the right way to count
+> references for gpio descriptors.
+>
+> I cleared up the situation of why we don't want to add kref
+> to gpio_chip in the previous message: I think we got that covered.
+> (If I'm not wrong about it, and I am frequently wrong.)
+>
+> This mail is about contrasting the suggested gpio_desc
+> kref with the existing managed resources, i.e. the
+> devm_* mechanisms.
+>
+> devm_* macros are elusive because they do not use
+> reference counting at all.
+>
+> Instead they put every devm_* requested resource with
+> a destruction function on a list associated with the struct
+> device. Functions get put on that list when we probe a
+> device driver, and the list is iterated and all release functions
+> are called when we exit .probe() with error or after calling the
+> optional .remove() function on the module. (More or less.)
+>
+> This means anything devm_* managed lives and dies
+> with the device driver attaching to the device.
+> Documentation/driver-api/driver-model/devres.rst
+>
+> If the intention of the patch is that this action is associated
+> with the detachment of the driver, then we are reinventing
+> the wheel we already invented.
+>
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
----
- Documentation/dev-tools/kunit/usage.rst | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+In this case I was thinking about a situation where we pass a
+requested descriptor to some other framework (nvmem in this case)
+which internally doesn't know anything about who manages this resource
+externally. Now we can of course simply not do anything about it and
+expect the user (who passed us the descriptor) to handle the resources
+correctly. But what happens if the user releases the descriptor not on
+driver detach but somewhere else for whatever reason while nvmem
+doesn't know about it? It may try to use the descriptor which will now
+be invalid. Reference counting in this case would help IMHO.
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 607758a..473a236 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -591,3 +591,17 @@ able to run one test case per invocation.
- 
- .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
-    dependent KUnit test.
-+
-+KUnit debugfs representation
-+============================
-+When kunit test suites are initialized, they create an associated directory
-+in /sys/kernel/debug/kunit/<test-suite>.  The directory contains one file
-+
-+- results: "cat results" displays results of each test case and the results
-+  of the entire suite for the last test run.
-+
-+The debugfs representation is primarily of use when kunit test suites are
-+run in a native environment, either as modules or builtin.  Having a way
-+to display results like this is valuable as otherwise results can be
-+intermixed with other events in dmesg output.  The maximum size of each
-+results file is KUNIT_LOG_SIZE bytes (defined in include/kunit/test.h).
--- 
-1.8.3.1
+Bart
 
+> E.g. to devm_* it doesn't really matter if someone else is
+> using a struct gpio_desc, or not, but if the current driver
+> is using it, it will be kept around until that driver detaches.
+> No reference counting needed for that.
+>
+> So is this related to your problem or do I just get things
+> wrong?
