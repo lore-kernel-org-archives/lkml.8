@@ -4,67 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0291C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49997C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FC4206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9EA206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCMRTl (ORCPT
+        id S1726952AbgCMRUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:19:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38589 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgCMRTl (ORCPT
+        Fri, 13 Mar 2020 13:20:21 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:49280 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbgCMRUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:19:41 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jCnyD-00007Y-Ot; Fri, 13 Mar 2020 17:19:37 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: lm3532: make bitfield 'enabled' unsigned
-Date:   Fri, 13 Mar 2020 17:19:37 +0000
-Message-Id: <20200313171937.220884-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 13 Mar 2020 13:20:21 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 22AF0261556;
+        Sat, 14 Mar 2020 01:20:03 +0800 (CST)
+From:   WANG Wenhu <wenhu.wang@vivo.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        WANG Wenhu <wenhu.wang@vivo.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     trivial@kernel.org, kernel@vivo.com
+Subject: [PATCH v2] powerpc/fsl-85xx: fix compile error
+Date:   Fri, 13 Mar 2020 10:19:51 -0700
+Message-Id: <20200313171953.63205-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVDTUJCQkJDQ05OTkJLQ1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ngg6MBw4LjgyLDA0IzoQGU4x
+        K0gwClZVSlVKTkNPSklLS0tMQkhLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUlCSEs3Bg++
+X-HM-Tid: 0a70d4e904379375kuws22af0261556
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Include "linux/of_address.h" to fix the compile error for
+mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
 
-The bitfield 'enabled' should bit unsigned, so make it unsigned.
+  CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function ‘mpc85xx_l2ctlr_of_probe’:
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration of function ‘of_iomap’; did you mean ‘pci_iomap’? [-Werror=implicit-function-declaration]
+  l2ctlr = of_iomap(dev->dev.of_node, 0);
+           ^~~~~~~~
+           pci_iomap
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+  l2ctlr = of_iomap(dev->dev.of_node, 0);
+         ^
+cc1: all warnings being treated as errors
+scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85xx_l2ctlr.o' failed
+make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Fixes: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
 ---
- drivers/leds/leds-lm3532.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/sysdev/fsl_85xx_l2ctlr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index 188a57da981a..aa9bf8cda673 100644
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -140,7 +140,7 @@ struct lm3532_led {
- 	int ctrl_brt_pointer;
- 	int num_leds;
- 	int full_scale_current;
--	int enabled:1;
-+	unsigned int enabled:1;
- 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
- 	char label[LED_MAX_NAME_SIZE];
- };
+diff --git a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
+index 2d0af0c517bb..7533572492f0 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
++++ b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
++#include <linux/of_address.h>
+ #include <asm/io.h>
+ 
+ #include "fsl_85xx_cache_ctlr.h"
 -- 
-2.25.1
+2.17.1
 
