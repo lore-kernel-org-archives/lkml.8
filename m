@@ -2,121 +2,136 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83753C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FE420746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7AF420749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="lzQ/lS1q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MP0TEiCh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGBliQoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCMKhY (ORCPT
+        id S1726578AbgCMKhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:37:24 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45967 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726365AbgCMKhX (ORCPT
+        Fri, 13 Mar 2020 06:37:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52362 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgCMKhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:37:23 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 239A022337;
-        Fri, 13 Mar 2020 06:37:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 13 Mar 2020 06:37:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=iQRh4eWM++JNjavkQy3NxO8uOXQ
-        yom1KZ3YZTJwPkxI=; b=lzQ/lS1qe7uZPnrF5YWmsnvju776pv12bynxDRMiheA
-        OzN3R99YwGEqWLpTYj0ORsxhIJgdD3YFoIxNHUSgicn+EUSNe8ECGI2GFBD1457R
-        2bV7EtiLfMAgMk0Cu9nMevpX6n8ZESSX7I5CBF9ZDVXmd0q/8db6+gSwN6D8WAEM
-        bP+qJtyF1OG4QmVW+vP5L87UWTIlDGDcVQd0Vbd5KlaeKXXHGCbAFYPOCa8Bwg+p
-        QHIovt5LDfWthmWEmNvJc7DzwhV5uW+HpWjFhq3uESNtVC7klUdIFQlHJh7UXcyV
-        f4Jf2Wg2CX7DMf6/u85hAfUAYRjt8g59bRoBej5+S3g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=iQRh4e
-        WM++JNjavkQy3NxO8uOXQyom1KZ3YZTJwPkxI=; b=MP0TEiCh7GrMo2MvtbLpOV
-        sOkaoxgO3Dx+ZmY5EroCz8w9BZjqAIPbQ8g8T2Ol47eURkCSAbEK3xemNC10pQQg
-        yFJOMTnHxqePhTM/6dKCqcXOzPCx6Gc8yHjZ009LfOvnjcd5cDIbxr/W8Giuhx+a
-        ycQscjQmokbY1O+uBQYC+5CaTn5fQKIOcpGNzglEpBeHcto0a6searLilgTb60a5
-        fXm72hk5Dc71o2rd8NE+uDEOHHd/RcBNSLNJ/sS6kWOajkhdEuPGz1zxeooAZDLo
-        0EJc3EuQZPy+cu2WQ/0W0N7A7TuSaIC7hw/3miZLoWLW5bRYBMlNmCD1O7BbZJTA
-        ==
-X-ME-Sender: <xms:YmJrXqmnV7dgTQ7NExCZLT7VR-pBRj5r_cPduE69p4nnGNolPZbVBw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvjedgudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
-    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:YmJrXueEXCsnkO7KMjjjngO7hpL45J6dPVQGiDgmeGRNgsHduDPKNg>
-    <xmx:YmJrXvCF4BAB6uPoYt1qsQQCZbjhatVQlDWH3e3GK77nvJNJqtofOA>
-    <xmx:YmJrXoc9vF6T3jf2SCSo5Mtmzo2z4_nNp7tg6PcKThQmmD82YiMUlQ>
-    <xmx:Y2JrXif5p_Bo6PedF2Avo_yRN8u1Ec4FOh6bi3_aOLM9LXhILI33IA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 581BF328005E;
-        Fri, 13 Mar 2020 06:37:22 -0400 (EDT)
-Date:   Fri, 13 Mar 2020 11:37:20 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, "Bird, Tim" <Tim.Bird@sony.com>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Ksummit-discuss] [Tech-board-discuss] Linux Foundation
- Technical Advisory Board Elections -- Change to charter
-Message-ID: <20200313103720.GA2215823@kroah.com>
-References: <6d6dd6fa-880f-01fe-6177-281572aed703@labbott.name>
- <20200312003436.GF1639@pendragon.ideasonboard.com>
- <MWHPR13MB0895E133EC528ECF50A22100FDFD0@MWHPR13MB0895.namprd13.prod.outlook.com>
- <20200313031947.GC225435@mit.edu>
- <87d09gljhj.fsf@intel.com>
- <20200313093548.GA2089143@kroah.com>
- <24c64c56-947b-4267-33b8-49a22f719c81@suse.cz>
- <20200313100755.GA2161605@kroah.com>
- <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVSxS1R2osYJh29aKGaqMw3NkTRgqgRWuhu4euygAAXVg@mail.gmail.com>
+        Fri, 13 Mar 2020 06:37:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 11so9336366wmo.2;
+        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rQjq8uKoRrlLiAy2jC9SVIhkfPttmNZUWXbQLhDZM9k=;
+        b=UGBliQojrFTzcrINN1hj7VaIxQhifS1a+pj8O7CpftaSMpdX/jXa/e2ShvDTKrPtDg
+         /fRJICfUaCPHZHAL/PoJGQZLQbqzlIcyPGAvhNetLxmKmIuVbhuVT/3YC2+sLn6/l/lz
+         YcEuUOumTYQtWC8aSHnVQVQmxI50A+8b/Z1vom5CTboDz/Mr5ZUAmZNTd8D4XkhhACEO
+         2qdHlYmOrqcec5DzyzF0TDDIPkPkJowmXOs3vydQavbqCyfGBQgcpKRnRAiVbOG50JRJ
+         4VXELyeSJOTeO7IQmWQtFWAg96CAYdDzO7cj57V0b5pfjxV5jJWQRlXM66ff9YFUmnVx
+         dDBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rQjq8uKoRrlLiAy2jC9SVIhkfPttmNZUWXbQLhDZM9k=;
+        b=n27B3IQO7RURQVW+annWOAR+hjkzkq4sHop+7Hac/sy/hZT+wzosTBvnPB2DZyZHaM
+         9RSLSHWQ0g+zZEiClrVH639hI5xmaFbE8gcsMXGVa50MNI9SB3kkdf3A+zKIOg4S7HhH
+         6s9fm4486gLcoBjTh1MiDPnuNBhFJgLNmxx695efZt2Aj/hWV7MkFZkpD+YvJ09t7Uxj
+         hg2OwKAL5b7Ld/UJxT6K8PxmtcHo10Abo2wRcy3+m808b+PafH5hrIRyLxWdIlnGa4ut
+         XOKmLlEzR1xQs78Ekk6njsmigwe0x/t5Z1scImYtgy2Sprr4TmMrEf1dHQeenquu0rfj
+         Vuug==
+X-Gm-Message-State: ANhLgQ3MNUVX19FxLbxKjaFyXSHEEmTYA9Tm73NfqyceM1X6rhfq3PV2
+        UQCrPI3/zuG+JxSWYgYRDlvDOiL6
+X-Google-Smtp-Source: ADFU+vsvWMWzKMxNqeNsKtP8NvCy424vINQYoxocmtCUEXMyobJjwyOn9tG53zX72IKMsG6O9hK2aw==
+X-Received: by 2002:a1c:2048:: with SMTP id g69mr10462496wmg.187.1584095853079;
+        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id o3sm17688551wme.36.2020.03.13.03.37.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Mar 2020 03:37:32 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] ARM: dts: rockchip: add missing @0 to memory nodenames
+Date:   Fri, 13 Mar 2020 11:37:25 +0100
+Message-Id: <20200313103726.1678-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 11:16:36AM +0100, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> On Fri, Mar 13, 2020 at 11:08 AM Greg KH <greg@kroah.com> wrote:
-> > On Fri, Mar 13, 2020 at 10:41:57AM +0100, Vlastimil Babka wrote:
-> > > On 3/13/20 10:35 AM, Greg KH wrote:
-> > > >> Not that I'm saying there's an easy solution, but obviously kernel.org
-> > > >> account is not as problem free as you might think.
-> > > >
-> > > > We are not saying it is "problem free", but what really is the problem
-> > > > with it?
-> > >
-> > > IIUC there is no problem for its current use, but it would be rather restrictive
-> > > if it was used as the only criterion for being able to vote for TAB remotely.
-> >
-> > Given that before now, there has not be any way to vote for the TAB
-> > remotely, it's less restrictive :)
-> 
-> But people without kernel.org accounts could still vote in person before,
-> right?
+A test with the command below gives for example this error:
 
-Yes, and they still can today, this is expanding the pool, not
-restricting it.
+arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
+False schema does not allow
+{'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
 
-thanks,
+The memory nodes all have a reg property that requires '@' in
+the nodename. Fix this error by adding the missing '@0' to
+the involved memory nodenames.
 
-greg k-h
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+schemas/root-node.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Changes v2:
+  Skip rk3288-veyron
+---
+ arch/arm/boot/dts/rk3288-phycore-som.dtsi | 2 +-
+ arch/arm/boot/dts/rk3288-tinker.dtsi      | 2 +-
+ arch/arm/boot/dts/rk3288-vyasa.dts        | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+index 77a47b9b7..9e76166c3 100644
+--- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+@@ -16,7 +16,7 @@
+ 	 * Set the minimum memory size here and
+ 	 * let the bootloader set the real size.
+ 	 */
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x8000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 312582c1b..77ae303b0 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -12,7 +12,7 @@
+ 		stdout-path = "serial2:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 		device_type = "memory";
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index ba06e9f97..889b95e95 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -14,7 +14,7 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 		device_type = "memory";
+ 	};
+-- 
+2.11.0
+
