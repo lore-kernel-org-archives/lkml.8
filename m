@@ -2,122 +2,129 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F055C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A17AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6C4206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A77E206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCMPaV (ORCPT
+        id S1727064AbgCMPa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:30:21 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33058 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMPaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:30:20 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0303280307C4;
-        Fri, 13 Mar 2020 15:30:17 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zabMnJuGEewt; Fri, 13 Mar 2020 18:30:16 +0300 (MSK)
-Date:   Fri, 13 Mar 2020 18:29:28 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] gpio: dwapb: Fix reference clocks usage
-Message-ID: <20200313152928.54lk2wi42auh2nat@ubsrv2.baikal.int>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
- <CACRpkdbq9aTkf6-DctXKabyd2=Rr8GPii02_8jQP49SFuTo_SQ@mail.gmail.com>
+        Fri, 13 Mar 2020 11:30:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19575 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgCMPa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:30:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 08:30:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="278261968"
+Received: from mlitka-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.155.148])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Mar 2020 08:30:22 -0700
+Date:   Fri, 13 Mar 2020 17:30:20 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v7 3/3] tpm: ibmvtpm: Add support for TPM2
+Message-ID: <20200313153020.GD142269@linux.intel.com>
+References: <20200312155332.671464-1-stefanb@linux.vnet.ibm.com>
+ <20200312155332.671464-4-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbq9aTkf6-DctXKabyd2=Rr8GPii02_8jQP49SFuTo_SQ@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200312155332.671464-4-stefanb@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 02:58:33PM +0100, Linus Walleij wrote:
-> On Fri, Mar 6, 2020 at 2:25 PM <Sergey.Semin@baikalelectronics.ru> wrote:
+On Thu, Mar 12, 2020 at 11:53:32AM -0400, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
 > 
-> > From: Serge Semin <fancer.lancer@gmail.com>
-> >
-> > There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
-> > supported by the kernel DW APB GPIO driver. It works for them just fine with
-> > no modifications. But still there is a room for optimizations there.
-> >
-> > First of all as it tends to be traditional for all Baikal-T1 SoC related
-> > patchset we replaced the legacy plain text-based dt-binding file with
-> > yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
-> > but in order to use it the corresponding reference clock must be enabled.
-> > We added support of that clock in the driver and made sure the dt-bindings
-> > had its declaration. In addition seeing both APB and debounce reference
-> > clocks are optional, we replaced the standard devm_clk_get() usage with
-> > the function of optional clocks acquisition.
-> >
-> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > commit 98d54f81e36b ("Linux 5.6-rc4").
-> >
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> > Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> > Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Hoan Tran <hoan@os.amperecomputing.com>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-gpio@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
+> Support TPM2 in the IBM vTPM driver. The hypervisor tells us what
+> version of TPM is connected through the vio_device_id.
 > 
-> I like these patches, once Rob is happy with the bindings I'll be
-> happy to merge them. I haven't heard from Hoan Tran in a while,
-> so if we don't hear from him this time either I would suggest you
-> also add yourself as maintainer for this driver, if you don't mind.
+> In case a TPM2 device is found, we set the TPM_CHIP_FLAG_TPM2 flag
+> and get the command codes attributes table. The driver does
+> not need the timeouts and durations, though.
 > 
-> Thanks,
-> Linus Walleij
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Acked-by: Nayna Jain <nayna@linux.ibm.com>
+> Tested-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  drivers/char/tpm/tpm.h         | 1 +
+>  drivers/char/tpm/tpm2-cmd.c    | 2 +-
+>  drivers/char/tpm/tpm_ibmvtpm.c | 8 ++++++++
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+> index 2b2c225e1190..0fbcede241ea 100644
+> --- a/drivers/char/tpm/tpm.h
+> +++ b/drivers/char/tpm/tpm.h
+> @@ -226,6 +226,7 @@ int tpm2_auto_startup(struct tpm_chip *chip);
+>  void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
+>  unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+>  int tpm2_probe(struct tpm_chip *chip);
+> +int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip);
+>  int tpm2_find_cc(struct tpm_chip *chip, u32 cc);
+>  int tpm2_init_space(struct tpm_space *space);
+>  void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space);
+> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> index 760329598b99..76f67b155bd5 100644
+> --- a/drivers/char/tpm/tpm2-cmd.c
+> +++ b/drivers/char/tpm/tpm2-cmd.c
+> @@ -615,7 +615,7 @@ ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
+>  	return rc;
+>  }
+>  
+> -static int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
+> +int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
+>  {
+>  	struct tpm_buf buf;
+>  	u32 nr_commands;
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+> index cfe40e7b1ba4..1a49db9e108e 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.c
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+> @@ -29,6 +29,7 @@ static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
+>  
+>  static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
+>  	{ "IBM,vtpm", "IBM,vtpm"},
+> +	{ "IBM,vtpm", "IBM,vtpm20"},
+>  	{ "", "" }
+>  };
+>  MODULE_DEVICE_TABLE(vio, tpm_ibmvtpm_device_table);
+> @@ -672,6 +673,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>  	if (rc)
+>  		goto init_irq_cleanup;
+>  
+> +	if (!strcmp(id->compat, "IBM,vtpm20")) {
+> +		chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +		rc = tpm2_get_cc_attrs_tbl(chip);
+> +		if (rc)
+> +			goto init_irq_cleanup;
+> +	}
+> +
+>  	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
+>  				ibmvtpm->rtce_buf != NULL,
+>  				HZ)) {
+> -- 
+> 2.23.0
+> 
 
-Hello Linus,
-Thanks for positive response. I'll resend the patchset soon in the
-email-threaded form together with two extra patches, which will
-add me to the MAINTAINERS list and to the dt-schema of the driver.
-If Hoan Tran will show up before you merge them, just drop these two
-new patches.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Regards,
--Sergey
-
+/Jarkko
