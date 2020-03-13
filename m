@@ -2,147 +2,101 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2707C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C5120724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E288720724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 08:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YR6QRrnO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCMIbX (ORCPT
+        id S1726582AbgCMIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:31:23 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:40135 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgCMIbV (ORCPT
+        Fri, 13 Mar 2020 04:31:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57026 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgCMIbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:31:21 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mr9O4-1jiCrb2HEU-00oFj6; Fri, 13 Mar 2020 09:31:09 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id C340E650117;
-        Fri, 13 Mar 2020 08:31:08 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cxOrl4KuroB3; Fri, 13 Mar 2020 09:31:08 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 5C8C964FBDA;
+        Fri, 13 Mar 2020 04:31:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MAsAcM05mXkzCsPvayDcJZuYQVlAkvzdedkH1NlOMWc=; b=YR6QRrnO3fKBbY/PgCXjSBYL/i
+        YFGw13odm0+qWLyhzR1u8l265TNuHgGhITEyT0bhvgbBK7bQTo1TfxZMt088AWymnNkSL6YQE2BnJ
+        jk8gfR5ZC2CpEYpmf5N2D5pM8ZtawQO9LZL0rYjyJJX3VK5+Ali96Cg0pDeHKFRaUlJCFw6csHEdm
+        dxdeo4abnRmhummAouzwAGbQPlApHpn8zWmtnwkZHWKPIGrKFDjU48/gA35hDyosCH6G0crLkD5MA
+        DTSqTZrsHnEnDUC6FpVbffEji/uDTytVF8H7uDR9rzsUOEGZI2CQmv7IitOIY0uZQ+EJbzFRoI8Iz
+        zX7TITsw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCfip-0005FL-C7; Fri, 13 Mar 2020 08:31:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0BEC330275A;
         Fri, 13 Mar 2020 09:31:08 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 13 Mar 2020 09:31:08 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id EB30A804F8; Fri, 13 Mar 2020 09:31:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E7C162BA3D056; Fri, 13 Mar 2020 09:31:07 +0100 (CET)
 Date:   Fri, 13 Mar 2020 09:31:07 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
-Message-ID: <20200313083107.GB3832@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20200113141459.GA3606@pflmari>
- <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Add kernel config option for fuzz testing.
+Message-ID: <20200313083107.GV12561@hirez.programming.kicks-ass.net>
+References: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <6f2e27de-c820-7de3-447d-cd9f7c650add@suse.com>
+ <20200308065258.GE3983392@kroah.com>
+ <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
+ <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
+ <20200311101115.53139149@gandalf.local.home>
+ <CACT4Y+Z5co4HyQBj6-uUdqT2Vk=6jgT-aQXuPtjx3qV4C_pZ7g@mail.gmail.com>
+ <7e0d2bbf-71c2-395c-9a42-d3d6d3ee4fa4@i-love.sakura.ne.jp>
+ <20200312182935.70ed6516@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A627063
-X-Provags-ID: V03:K1:fjYydfuJxQy/H8udIdxXYJOsSL6CEuFrOL2Fk27fHc9ELzJwygD
- tSR2eDKm9wVKROUb22OoSignvMm//2ihBwndyENNAK1vw/GGwbcPzSuRsgCu/zXswPhjrJn
- QsZzGMdofYcDj+izAhTTtYzE5VeqCNqGS4xRBqOAryw0OIO6FHPkMRAt/l4/5JB4YS/HPn4
- kp84HfyyRUDGN8AOVHeUQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nKFlS+QJRi8=:1hjS7oGd246sQU4texx2hz
- 4v7AJxdCoJqx8xpbGKHdB9Pvql+H9DIKCZmGbdhJ61fgZfWZgzxSnlk+ZAEbigmrPk0kKyKrW
- PHPZDGOpXzDeA8Ef2W0HEQjyfAQuCKobDjYHbVMh/nyAglluh2o47IDnbhoxkSZhw7pcafeba
- K2HqgerOeNZAUqNArlqJ1NqQ/3OwMFA9DPEM2qWzQ8fUMBlA9fWoTMrvlWCWd2WcQAYlstWIy
- o70LXvpY+iDiRz+c3WYjesFkIMry8EVlFrXYohAfYxhwQCVTiuLQORvwwvJSZtvU9R01sdamG
- yaY0BJYKO4U1QmMrP9BQV5e7e4CY5urvdeO3Ix4e3um3lS0qmnupPFlw7D/Yep7Dlxmo53mGy
- bjyUacXnvTtr30ea36Q5GDn4qDIt5dehhaSOjQmZpaGXLWI8zRv5mvbGAnkL+AhM4l2GoS6Dz
- K7ofXW9K11lGMcq0xZcT5ZyHg1/7yYqz//H0oyCneSERixHlNZqMaMagyrUvD0vwTUHXzA4zO
- 2i0PaJyzb+1gcT7XIHEvQQbM9wYFO1aCbeVmW/MHE6PM439FQGxZQr8X+LNgjUatujp5nkggt
- 6iDjtuATX6TQ/NjqSTSqkdEpMQVRbJ9Fx6bJal80kQOK+DlABQFHLHWntV2BNNoMyQup653l3
- LofCZS37X6F/5PQRn01zznxopDl2SjoAzAO5NyhlPqYAANlXqzk1Wn8YsdwoBddys6LRWz2WN
- C6nb47Ai2HZ1IYQxf59b00qmuIywIUKxMaFIZKYdl3uxm/p7qByxHkNpBAzdPxQXsXtC5QGho
- /Vegu7uGUml07e2l1aSEQlYklRNoFYobAa7tzF1fnLzLgiuj4TfGQZvwveoH3k1M1jZiZ1a
+In-Reply-To: <20200312182935.70ed6516@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On Thu, Mar 12, 2020 at 06:29:35PM -0400, Steven Rostedt wrote:
+> > @@ -705,10 +706,12 @@ static void lockdep_print_held_locks(struct task_struct *p)
+> >  	 * It's not reliable to print a task's held locks if it's not sleeping
+> >  	 * and it's not the current task.
+> >  	 */
+> > -	if (p->state == TASK_RUNNING && p != current)
+> > -		return;
+> > +	unreliable = p->state == TASK_RUNNING && p != current;
+> >  	for (i = 0; i < depth; i++) {
+> > -		printk(" #%d: ", i);
+> > +		if (unreliable)
+> > +			printk(" #%d?: ", i);
+> > +		else
+> > +			printk(" #%d: ", i);
+> 
+> Have you tried submitting this? Has Peter nacked it?
 
-Hans Verkuil, Fri, Mar 13, 2020 09:21:05 +0100:
-> As a general note for this series: it might be better to have two
-> patch series: one for patches 1 and 3-6 (not sure whether 5 can be included
-> or not), and one where the public API changes (i.e. new V4L2 audio controls)
-> are added. The first can probably be merged fairly quickly, the second will
-> likely require more iterations since public API patches always take much longer
-> before they are mature.
+It has definite UaF potential... do we have a boot parameter that
+signals the willingness to trade safetly for more debug output?
 
-I see. After the discussion started, I started to have suspicions of my own
-regarding the V4L2 ioctls. Except for log-status, which is a practical
-diagnostics feature (even supported by v4l2-ctl), I'm thinking about dropping
-them altogether in favor of audio soc DAI implementation.
-The DAI implementation does all we ever needed from the device. Besides,
-selecting a I2S protocol variant from user space (I2S vs I2S/TDM) never felt
-right.
-
-Shall I submit the log-status separately?
-
-Regards,
-Alex
-
-> On 1/13/20 3:14 PM, Alex Riesen wrote:
-> > This adds minimal support for controlling the audio output I2S port available
-> > on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
-> > signal from the decoded HDMI stream.
-> > 
-> > An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
-> > code.
-> > 
-> > Alex Riesen (8):
-> >  1. media: adv748x: add a device-specific wrapper for register block read
-> >  2. media: adv748x: add audio mute control and output selection ioctls
-> >  3. media: adv748x: add log_status ioctl
-> >  4. media: adv748x: reserve space for the audio (I2S) port in the driver
-> >     structures
-> >  5. media: adv748x: add an ASoC DAI definition to the driver
-> >  6. media: adv748x: reduce amount of code for bitwise modification of
-> >     device registers
-> >  7. dt-bindings: adv748x: add information about serial audio interface
-> >     (I2S/TDM)
-> >  8. arm64: dts: renesas: salvator: add a connection from adv748x codec
-> >     (HDMI input) to the R-Car SoC
-> > 
-> >  .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
-> >  .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
-> >  .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
-> >  drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
-> >  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
-> >  drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
-> >  6 files changed, 523 insertions(+), 11 deletions(-)
-> > 
+Over all, the risk of this going *bang* is quite low I think.
