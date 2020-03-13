@@ -2,194 +2,129 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435A0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE63C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7BC206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C63206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahp/vhh9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WUkPN4Wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgCMQIK (ORCPT
+        id S1726908AbgCMQKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:08:10 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55295 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726406AbgCMQIK (ORCPT
+        Fri, 13 Mar 2020 12:10:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42672 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgCMQKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:08:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584115688;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yBLvGUzHFvIP3IVSZ/c85odnzZRogFcsQVQP2EXP6J4=;
-        b=ahp/vhh9VJARD7R3oY4mkkMCgNdERVNc9ocjIdc/K/mtd6iFvXTWo2Qye/rhsd/xt2vCWw
-        a11EzkFu9HmP9oOBdrzNi9RTheakjPZGNgxuL+ZjeTyjHd6eAhQdWbJ6vfJ+GIDkVInTaH
-        r1u8EpUCJzJZreG/c6pPCfR1SmMPzKc=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-R8YqYZH4PNWL515Mxk00TA-1; Fri, 13 Mar 2020 12:08:07 -0400
-X-MC-Unique: R8YqYZH4PNWL515Mxk00TA-1
-Received: by mail-il1-f198.google.com with SMTP id u9so1475654iln.22
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:08:07 -0700 (PDT)
+        Fri, 13 Mar 2020 12:10:09 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q19so11095101ljp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 09:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lc+TP9X/BI4s1ZOmMJJExFGcSgfoK31/UWMx2IREy7U=;
+        b=WUkPN4Wxp/NqTBgJtvLPZHaL5YWWT4h6el7l/K39lgDGtaleAy/V3UhoGaGubxN3SP
+         1G278PShBfkS38pzHUgZdQZ2LNEeV+MZPVck/R5NKf4R1mhAa8xiO0bbCXZvUDBqcsK7
+         VaXxJPfbe2lQ+9AfTj/6yY8KJGGSI0sgy6kDbm8BO6Nn5STWEUuW9z9wo0nmLFQsWmZr
+         g0+62Db3M8tl5V5/+OBAgUub0X/27PAd+Fb/9kV38l7rr4N4pUODqlWSo5lsls/B8zKL
+         SZ1a9QPc0dWzC7I4ilLGpkqaBwF+DTUvVk4fFoa5k/VC9IbfJZrjWsup7TVNl2yU6Y4N
+         XTcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yBLvGUzHFvIP3IVSZ/c85odnzZRogFcsQVQP2EXP6J4=;
-        b=Gmnb8yVLhP/dynCTZlJXPL8F7wPW7Nchb20xA2vWWpEqTShYCTTCFF3n27PQouObuF
-         fibedJW0bQjNlEVXt0+Qjdwt0cAPtr7N5+81BqjwHU+6WA9kMVNTS6yMLWaIvnUpsmnX
-         avG+zIi6DKU5Kr9S4wVAWCJ6D1whR6bNfMDzRNLCjNaIliexNpaoLqQlXbjlMaJKBI/E
-         lDut0NAFtbbYv6IqnNcwA7fIE/nKOc4KApY0NMSLU7zNHbYE+vocNO6LvAUuWVexAwfW
-         nPQ5Wt2AwNjVF33Co1O2EeQXMgugQkm5FPQk8rxHU6ze6bLhhBWe46gAnEYbtijytcac
-         +QIQ==
-X-Gm-Message-State: ANhLgQ3L+5uXYdwE5p0X62BmC6m13G+Mxzu8CwjY01+w1OilcpMweJKD
-        70XZxjEmy7f+Crq1vN0FAxFdg2BkHOiDjAUh84BC6uGPUiEIw/Z5fBnifH+GJIO4tfDDegKW2p8
-        zN8trS0zSMmwlYE60mFMUqKYQLHRsgWinlUvqhqwr
-X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr14650327ils.86.1584115686327;
-        Fri, 13 Mar 2020 09:08:06 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsRX7xXbdN9pKVmaa7xC0rKq8tThI8Bh2C5Erfi6nuMwFeJvnu5PGc/GZS27u6Ahub/3KQaFmtVV8xgkMODcg4=
-X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr14650290ils.86.1584115685968;
- Fri, 13 Mar 2020 09:08:05 -0700 (PDT)
+        bh=Lc+TP9X/BI4s1ZOmMJJExFGcSgfoK31/UWMx2IREy7U=;
+        b=p0ddYCp4zl0qMDrTKGTi/0RguYGsr23TuRs3jNpV2xY0TmM7gxUvFRunCENEWndGFg
+         caHYPN+o6WX4nGTKlXVr9pL3j1nCkLV62U05vlVgtUZaON4PGlTEZA1a9/QD/ZVfrdv2
+         ApzViu2/3k3WMiLedgUAh56vpZlUtwTxB1vIVSOQumTE+2i4btJ7PfFAq7kz34MvjMyF
+         CnBOHTsUfBruqebXwHPRPmAWOgRQP0bq4HFPiX8RoRGgbJgaXfKGSC+zdZ+e0d45tJTG
+         eaqw8/FPxgSYzlaPxE3Z2MxxbK8kGt4iNwgwfaDL9/tUquFCsMdQ3uOdY5UplYT2uEYt
+         B3hw==
+X-Gm-Message-State: ANhLgQ3/fYc5nIJvTVsf+Cvl+h8hzbuNH1UjICQIaFhuuZfi91Z3tqmq
+        Iwzzp9S7Lk+2Io3AKe5yp+xAIh/esuEjnJW8m5ynsw==
+X-Google-Smtp-Source: ADFU+vsRYQgGwBmyIdQpBHKqIX+xC/FgAeHQZpOpC1IxZt1Zj2kLuD4UfuVbCwMBCq2tDzsoed+Qq/szOEBf8JCPQEA=
+X-Received: by 2002:a2e:8112:: with SMTP id d18mr8498758ljg.137.1584115806555;
+ Fri, 13 Mar 2020 09:10:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepO2=KCzT+wdXWz2tUNvi6NyzNJ3KwvBMtH_P1TO8Yr_mQ@mail.gmail.com> <20200313005252.GA1292@linux.intel.com>
-In-Reply-To: <20200313005252.GA1292@linux.intel.com>
-From:   Nathaniel McCallum <npmccallum@redhat.com>
-Date:   Fri, 13 Mar 2020 12:07:55 -0400
-Message-ID: <CAOASepMN1fmDaPjJJ-rpbLNPGUzE2LNB69s3X5mDBEhXziZ_UQ@mail.gmail.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>
+References: <20200312165429.990-1-vincent.guittot@linaro.org>
+ <jhjr1xwjz96.mognet@arm.com> <CAKfTPtCQZMOz9HzdiWg5g9O+W=hC5E-fiG8YVHWCcODjFRfefQ@mail.gmail.com>
+ <jhjpndgjxxk.mognet@arm.com> <jhj4kuspgse.mognet@arm.com> <CAKfTPtD67EKA46i12FHpJQT4gTzaH=ASAyb2dhv4=owPHBRSdQ@mail.gmail.com>
+ <CAKfTPtBZgvTBYR+kYjj9dHq8_25mG19CZmYzY5s33ijSHdLGyQ@mail.gmail.com> <jhj36acp88q.mognet@arm.com>
+In-Reply-To: <jhj36acp88q.mognet@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 13 Mar 2020 17:09:55 +0100
+Message-ID: <CAKfTPtAMmYONX+qxp1Awj+XpqkWU3ootcyv7iar7e6z5nSczpw@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: improve spreading of utilization
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 8:52 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Fri, 13 Mar 2020 at 16:47, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
 >
-> On Wed, Mar 11, 2020 at 03:30:44PM -0400, Nathaniel McCallum wrote:
-> > On Tue, Mar 3, 2020 at 6:40 PM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > + * The exit handler's return value is interpreted as follows:
-> > > + *  >0:                continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
-> > > + *   0:                success, return @ret to the caller
-> > > + *  <0:                error, return @ret to the caller
-> > > + *
-> > > + * The userspace exit handler is responsible for unwinding the stack, e.g. to
-> > > + * pop @e, u_rsp and @tcs, prior to returning to __vdso_sgx_enter_enclave().
+>
+> On Fri, Mar 13 2020, Vincent Guittot wrote:
+> >> > And with more coffee that's another Doh, ASYM_PACKING would end up as
+> >> > migrate_task. So this only affects the reduced capacity migration, which
+> >>
+> >> yes  ASYM_PACKING uses migrate_task and the case of reduced capacity
+> >> would use it too and would not be impacted by this patch. I say
+> >> "would" because the original rework of load balance got rid of this
+> >> case. I'm going to prepare a separate fix  for this
 > >
-> > Unless I misunderstand, this documentation...
->
-> Hrm, that does appear wrong.  I'm guessing that was leftover from a previous
-> incarnation of the code.  Or I botched the description, which is just as
-> likely.
-
-I figured out what happened on my end. This documentation error led me
-to misread the code. More below.
-
-> > > + * The exit handler may also transfer control, e.g. via longjmp() or a C++
-> > > + * exception, without returning to __vdso_sgx_enter_enclave().
-> > > + *
-> > > + * Return:
-> > > + *  0 on success,
-> > > + *  -EINVAL if ENCLU leaf is not allowed,
-> > > + *  -EFAULT if an exception occurs on ENCLU or within the enclave
-> > > + *  -errno for all other negative values returned by the userspace exit handler
-> > > + */
->
-> ...
->
-> > > +       /* Load the callback pointer to %rax and invoke it via retpoline. */
-> > > +       mov     0x20(%rbp), %rax
-> > > +       call    .Lretpoline
-> > > +
-> > > +       /* Restore %rsp to its post-exit value. */
-> > > +       mov     %rbx, %rsp
+> > After more thought, I think that we are safe for reduced capacity too
+> > because this is handled in the migrate_load case. In my previous
+> > reply, I was thinking of  the case where rq is not overloaded but cpu
+> > has reduced capacity which is not handled. But in such case, we don't
+> > have to force the migration of the task because there is still enough
+> > capacity otherwise rq would be overloaded and we are back to the case
+> > already handled
 > >
-> > ... doesn't seem to match this code.
-> >
-> > If the handler pops from the stack and then we restore the stack here,
-> > the handler had no effect.
-> >
-> > Also, one difference between this interface and a raw ENCLU[EENTER] is
-> > that we can't pass arguments on the untrusted stack during EEXIT. If
-> > we want to support that workflow, then we need to allow the ability
-> > for the handler to pop "additional" values without restoring the stack
-> > pointer to the exact value here.
 >
-> > Also, one difference between this interface and a raw ENCLU[EENTER] is
-> > that we can't pass arguments on the untrusted stack during EEXIT. If
-> > we want to support that workflow, then we need to allow the ability
-> > for the handler to pop "additional" values without restoring the stack
-> > pointer to the exact value here.
+> Good point on the capacity reduction vs group_is_overloaded.
 >
-> The callback shenanigans exist precisely to allow passing arguments on the
-> untrusted stack.  The vDSO is very careful to preserve the stack memory
-> above RSP, and to snapshot RSP at the time of exit, e.g. the arguments in
-> memory and their addresses relative to u_rsp live across EEXIT.  It's the
-> same basic concept as regular function calls, e.g. the callee doesn't pop
-> params off the stack, it just knows what addresses relative to RSP hold
-> the data it wants.  The enclave, being the caller, is responsible for
-> cleaning up u_rsp.
+> That said, can't we also reach this with migrate_task? Say the local
+
+The test has only been added for migrate_util so migrate_task is not impacted
+
+> group is entirely idle, and the busiest group has a few non-idle CPUs
+> but they all have at most 1 running task. AFAICT we would still go to
+> calculate_imbalance(), and try to balance out the number of idle CPUs.
+
+such case is handled by migrate_task when we try to even the number of
+tasks between groups
+
 >
-> FWIW, if the handler reaaaly wanted to pop off the stack, it could do so,
-> fixup the stack, and then re-call __vdso_sgx_enter_enclave() instead of
-> returning (to the original __vdso_sgx_enter_enclave()).
+> If the migration_type is migrate_util, that can't happen because of this
+> change. Since we have this progressive balancing strategy (tasks -> util
+> -> load), it's a bit odd to have this "gap" in the middle where we get
+> one less possibility to trigger active balance, don't you think? That
+> is, providing I didn't say nonsense again :)
 
-My understanding from the documentation issue above was that *if* you
-wanted to push parameters back on the stack during enclave exit, you
-would *have* to supply a handler so it could pop the parameters and
-reset the stack. Which is why restoring %rsp from %rbx didn't make
-sense to me.
+Right now, I can't think of a use case that could trigger such
+situation because we use migrate_util when source is overloaded which
+means that there is at least one waiting task and we favor this task
+in priority
 
-Related to my other message in this thread, if
-__vdso_sgx_enter_enclave() preserved %rbx and took @leaf as a stack
-parameter, you could call __vdso_sgx_enter_enclave() from C so long as
-the enclave didn't push return arguments on the stack. A workaround
-for that case would be to fix up the stack in the handler. It would be
-enough for the handler to simply set %rbx to the desired stack
-location and return (though all of this unclean of course).
-
-> > > +       /*
-> > > +        * If the return from callback is zero or negative, return immediately,
-> > > +        * else re-execute ENCLU with the postive return value interpreted as
-> > > +        * the requested ENCLU leaf.
-> > > +        */
-> > > +       cmp     $0, %eax
-> > > +       jle     .Lout
-> > > +       jmp     .Lenter_enclave
-> > > +
-> > > +.Lretpoline:
-> > > +       call    2f
-> > > +1:     pause
-> > > +       lfence
-> > > +       jmp     1b
-> > > +2:     mov     %rax, (%rsp)
-> > > +       ret
-> > > +       .cfi_endproc
-> > > +
-> > > +_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
 >
-
+> It's not a super big deal, but I think it's nice if we can maintain a
+> consistent / gradual migration policy.
+>
+> >>
+> >> > might be hard to notice in benchmarks.
