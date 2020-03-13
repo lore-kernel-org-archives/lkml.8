@@ -4,99 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF12EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E318C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92D520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D3920724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cM5801L0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zLIUiQhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCMKzg (ORCPT
+        id S1726514AbgCMKzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:55:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58810 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726364AbgCMKzg (ORCPT
+        Fri, 13 Mar 2020 06:55:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45530 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgCMKzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:55:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584096935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OKE4vw7Aq1hkeMcRey40fPC/eJbamV54hF6NTYtSkDU=;
-        b=cM5801L0zlIE2JURaVX7C/h4w88RhYNHQu4LQH6ZQ+v4Z/ePsRa+2bcBaXyeO2aKY6jD0C
-        75pOuqD6Wckz+YfyuSL1E45ySwgnrSwONUEaZ9AJNdWBIX62v91IuH9GcfEaXUzdt/eiQ2
-        tmqcdTVXPceOeVpkK5KIepP+R6T323c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-xiJ0T0aOOeuAPdCscmJDng-1; Fri, 13 Mar 2020 06:55:31 -0400
-X-MC-Unique: xiJ0T0aOOeuAPdCscmJDng-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAF8B801E6C;
-        Fri, 13 Mar 2020 10:55:30 +0000 (UTC)
-Received: from localhost (ovpn-12-51.pek2.redhat.com [10.72.12.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B087C19C6A;
-        Fri, 13 Mar 2020 10:55:29 +0000 (UTC)
-Date:   Fri, 13 Mar 2020 18:55:26 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200313105526.GM27711@MiWiFi-R3L-srv>
-References: <20200313214214.4d2e2af6@canb.auug.org.au>
+        Fri, 13 Mar 2020 06:55:43 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DAqjep037961;
+        Fri, 13 Mar 2020 10:55:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=CTUdE2f8E8NgC8/4KDMI6yvjJ94p2sQr5a2U0IEbmvw=;
+ b=zLIUiQhEyI19lyjn/b2E9lHuqHWqZOdrL/KbpHZLXtaSUDi0BqBpVCAW7xWClAa7k8S7
+ Heq05K470y/1BswSW0DRVTKHg+LsiyDKr3x0YA1wTm07BfYD4+/83TUWeFpLjJsmQUhJ
+ YlR6VtTCJZLL+pJ2+CtACu7FHAZ9pV948qSvEzNIt9UXc4DPUncmqCZ4EkqxBDPyrMHk
+ pj3Blj4vO1+15xoVWVeR7fZlyItHv8aam/89NwVelIaP2sfVCJIbUkj15yQ0KlR+FAWs
+ mpoDttPVvARx4RxoNz2Mlr5SoFZ5ghp1qL+nNbeeq0vVCcL7LpP9ltuJEEuNbhQw9cMg rQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2yqtaeu8du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 10:55:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02DAqFS1154577;
+        Fri, 13 Mar 2020 10:55:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2yqtaccvny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Mar 2020 10:55:31 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02DAtTaB023409;
+        Fri, 13 Mar 2020 10:55:29 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Mar 2020 03:55:28 -0700
+Date:   Fri, 13 Mar 2020 13:55:23 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
+        sbrivio@redhat.com, daniel.baluta@gmail.com,
+        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
+        Larry.Finger@lwfinger.net
+Subject: Re: [Outreachy kernel] [PATCH v2] Staging: rtl8723bs: sdio_halinit:
+ Remove unnecessary conditions
+Message-ID: <20200313105522.GU11561@kadam>
+References: <20200313104920.19974-1-shreeya.patel23498@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313214214.4d2e2af6@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200313104920.19974-1-shreeya.patel23498@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130059
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0 spamscore=0
+ clxscore=1031 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003130059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/13/20 at 09:42pm, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the akpm-current tree, today's linux-next build (x86_64
-> allnoconfig) produced this warning:
+Thanks!
 
-I tried with allnoconfig on x86_64, make doesn't trigger below warnings.
+You sent the same patch twice.  Next time put a note under the ---
+"Resending because I had a typo in Greg's email address".
 
-Hi Andrew,
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Should we fix this kind of warning? If have to, I'll try to make several 
-macro functions like subsection_map_init does for !CONFIG_SPARSEMEM.
-
-> 
-> mm/sparse.c:311:12: warning: 'fill_subsection_map' defined but not used [-Wunused-function]
->   311 | static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
->       |            ^~~~~~~~~~~~~~~~~~~
-> mm/sparse.c:306:13: warning: 'is_subsection_map_empty' defined but not used [-Wunused-function]
->   306 | static bool is_subsection_map_empty(struct mem_section *ms)
->       |             ^~~~~~~~~~~~~~~~~~~~~~~
-> mm/sparse.c:301:12: warning: 'clear_subsection_map' defined but not used [-Wunused-function]
->   301 | static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
->       |            ^~~~~~~~~~~~~~~~~~~~
-> 
-> Introduced by commits
-> 
->   38eb09ac7c29 ("mm/sparse.c: introduce new function fill_subsection_map()")
->   334411156ba6 ("mm/sparse.c: introduce a new function clear_subsection_map()")
-> 
-> Or maybe laster patches.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
+regards,
+dan carpenter
 
