@@ -2,112 +2,122 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3EEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3471CC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08983206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025E12073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cdd3DkLK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TN4a6n7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCMD3W (ORCPT
+        id S1726420AbgCMDd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:29:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42022 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCMD3V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:29:21 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x2so3977120pfn.9;
-        Thu, 12 Mar 2020 20:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
-         :user-agent;
-        bh=vu1mPV5qkLwCnUIC3q92piC5wqu0Lr6m+RWkyhwC2Yc=;
-        b=Cdd3DkLK6UcsCMaFBHgqJwwqXFvibtSujs8UwceTcyohmIWzLVryFfb9v/InGxoS5P
-         1MgO9M/br27LxR5e3eVsZZgUKrjLUjgQ74yBR2otd/bMBY7nQHJEIYWMYsaKQOTBsEyY
-         z1XUSoebQli9lGDEgwKVxpJOnJYG4LevF0+4Pb81cNBMvXvkBOsrgUMBBMYcVga36od8
-         9XJLkwf8c3g0++Zh+kxyK6Z6tXAxacyZgZhEyS3T+Z7LWtARlUDE3VFFPMvskiVfHnXb
-         W+yTTODl+S3Cnc9DCrqAlWyORL/lV1oJJYTwQJnepQFgq/NTliLQ0o83MdIIwC3eSpT7
-         3cDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
-         :content-disposition:user-agent;
-        bh=vu1mPV5qkLwCnUIC3q92piC5wqu0Lr6m+RWkyhwC2Yc=;
-        b=tEjtj34G45hUvbm1xLAPBCAMG3Le+lo55IL+wBFm9O01LcaJGUqAMIYQLQLKZy8RBJ
-         kC1zsNJgk+WWy2DJ1+UgglagwIIh0dQ7NGj7IVN6/oT8M1NbiRTkNwijSYq5KHzSGnzt
-         cINsrQIdijREoV68sr+LH9F/jZ0JOxVpLVS2vIOwbpr2Am8/pcS7vfKQ+7D5FAHdZVqB
-         TW72oBOXU7n4Ktx5CRKyeVO25CWsNBWfB0vils4Zd7bDLee816NP26dy9m+0vVZnivNm
-         lw83pZjWKhnVdOyuyNhSZJ5ryV1VsAJ78GPszODcTC0WWq8Mjkli4aCMAWTvWNf8iqVb
-         Li7w==
-X-Gm-Message-State: ANhLgQ1U5Z3bov3gzJodwbvqwy10vexPvfP1skn8rSFW/9lZrc2Ps550
-        kSmhRDtz5H7UCF+MdTAoveg=
-X-Google-Smtp-Source: ADFU+vvoZ/9VLBpjGCRZTRn32q0wnyM03wQW61IIHlT44brOLEj9kIbI1opDxCPexjrw54elb5kvTQ==
-X-Received: by 2002:a62:e306:: with SMTP id g6mr9298330pfh.312.1584070158478;
-        Thu, 12 Mar 2020 20:29:18 -0700 (PDT)
-Received: from SARKAR ([43.224.157.41])
-        by smtp.gmail.com with ESMTPSA id h24sm15017607pfn.49.2020.03.12.20.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 20:29:17 -0700 (PDT)
-Message-ID: <5e6afe0d.1c69fb81.25912.f2eb@mx.google.com>
-X-Google-Original-Message-ID: <20200313032913.GA28957@rohitsarkar5398@gmail.com>
-Date:   Fri, 13 Mar 2020 08:59:13 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org, alexandru.Ardelean@analog.com,
-        dragos.bogdan@kernel.org
-Subject: [PATCH] iio: health: max30100: use generic property handler
+        Thu, 12 Mar 2020 23:33:59 -0400
+Received: from mail-eopbgr70041.outbound.protection.outlook.com ([40.107.7.41]:10052
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbgCMDd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Mar 2020 23:33:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BQeVSZF1F1NT/7iBP1LKupVTYGtDvJwyHtQFoY3Y26hKl870Bi0b5ieFyvmu/e2ZjHgqE9Bmlo9pUQEHaLDgJjHsAQ9mUiUhQsYCqBwNak7fkw2J/MCf9Di8Ohp791FQ0wyrHqRqGPGLU550iRCzB5PSTcOES4Mf72Y0M/ERGSPgzMu81jOinLkTURiNLHR+ZVCaaljxjuJK9KOheAWtuwyHIIsaJLRb/w6rutu0uX3uwebmNzoDWcZk3r5P9m7Og8Y1Cbon4KCC4zaMoybm9t7vB6+mzvVb8YKiWvOsTpber2johcx9e1EEHIf4YoSDSqcI2IP7wISzz3TGX3Y2ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ESkbsp3iQ8ftsnrvkaXmzzB/wsyf0tNFrkz77dQOMek=;
+ b=Uu6+2MTK1WhDmNW1gXEg+6vnV7dhWcer69pvK/mAzpPLPc1y8/I3+B06N9MH+1G3ktM5cQiZHKQ3IYgRIBQsYonXvg93/9B97GNpQ09W7CjdmASAO+b/3fHr7WpVGzriX7BFhmJvOSvsdkUYGwD+eq9JSPRAC3FZBxnp+5yoRx8BSoXQiZd88rzeEGYcOYgiTutJEnRFM4pjQrR8Jb9Czmv7PApIpsgwpW0fX6o5u+4+smVGAhNJYrdN/6qAyYKSaufH2c3AROhjpajiFlzSDjcNkbq7e3XOiRG+XYlAUOe72becPeWN+dmR0v+gpMJmqVQ4cB6nd9fbxWnTiJBI7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ESkbsp3iQ8ftsnrvkaXmzzB/wsyf0tNFrkz77dQOMek=;
+ b=TN4a6n7A5UQgj7Kn2x3ZhmWU7nuWD4w+6bUgUm7zhzBXuZiaU8BD+w4OEZkzctPC5qBpGhfTyPgHgFx11Xn/h0qNgbMtBy4TXqZAsLnL24Zu0f+/o4wn5XbbZ+kBTX+SioX5UKT37qabhQea6BM6xGvPKuHbCN+iKMgHTSVDbXk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4979.eurprd04.prod.outlook.com (20.177.40.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Fri, 13 Mar 2020 03:33:54 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
+ 03:33:54 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, sboyd@kernel.org, s.hauer@pengutronix.de,
+        linus.walleij@linaro.org, arnd@arndb.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        aisheng.dong@nxp.com, stefan@agner.ch, Anson.Huang@nxp.com,
+        abel.vesa@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 0/3] imx: drop dependency on ARM64
+Date:   Fri, 13 Mar 2020 11:27:13 +0800
+Message-Id: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0178.apcprd06.prod.outlook.com
+ (2603:1096:1:1e::32) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0178.apcprd06.prod.outlook.com (2603:1096:1:1e::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.16 via Frontend Transport; Fri, 13 Mar 2020 03:33:49 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 31c984c1-8f8e-46fe-fc57-08d7c6ff5b1c
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4979:|AM0PR04MB4979:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB49790AC6C66C6ECCA263336788FA0@AM0PR04MB4979.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 034119E4F6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(136003)(346002)(199004)(81156014)(66476007)(478600001)(66556008)(8936002)(956004)(8676002)(52116002)(66946007)(2616005)(81166006)(4744005)(26005)(7416002)(69590400007)(86362001)(6486002)(4326008)(36756003)(6666004)(316002)(6506007)(2906002)(5660300002)(9686003)(6512007)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4979;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: An9/yVWB/pYb0kRVDIU7KnbGIWmITIJ7zM0sybVvy/YiZH5o3Zur/3nYP0ddt7REnQTJWGlJXJqJQjEJVTgAcvFYDTJ4R574Mv05nVsqwdkfb2fSVH0HiWiVnf0+0Gqc8mQni6yKAgpzNbtWayyGCwemJ37bt8Lw1O8HzDnJkbbX+jJK5M3pw0QWTuLL20usy49maPZl9HZrUw9KP768Ipf5aChqpjoxdQfPkRfGSbNDysXrWbf7sbDSdKnto6PiFHVRmueZaUTfm+TTTC6MLUIpeXyvif0XQfVcSVxuY6yqy4WfPggXA96V95HRyu5UXmekCypAyINGULc1+ERy/JtGmzVHNS4rGgLo320kZIPgo63IVBe0agbFTuuqQndbFid7/w29wwbYrs+ISp4ojd/C1IEwMJGGQc1pFlpqmap6WU9odvzG91j+r4IMr5H9OwbKfEwsJ4IYNJFCb8aQ7ra/OCpumBwQkmUS/Wau6tqUKxBZMQe8JI/OeYgDHLcD
+X-MS-Exchange-AntiSpam-MessageData: Hj66Awoan8s3FwLLL3JJ7uuEktji9EJuFTMfqxNHSmVRJ02IYTuvDVwYK/mlQxDjdE3mzG8MyM3jLxMZjWWuLssm9I5nTjxs0fpaqpbjqyhLAzUvaihzbjmFO2Q4xXK2fS0J4JtLuDfzKUmhSJ9zdA==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31c984c1-8f8e-46fe-fc57-08d7c6ff5b1c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 03:33:54.6899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +vycYaJD3a7ShMSqAibo7xOszC3htH1DIbEONUWwmofiplNgrjwIEyhpx4H6bst7dv4qDD1HUBtWmLI0f7i0yQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4979
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of of_property_read_xxx use device_property_read_xxx as it is
-compatible with ACPI too as opposed to only device tree.
+From: Peng Fan <peng.fan@nxp.com>
 
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
----
- drivers/iio/health/max30100.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+It is possible to run aarch32 linux on aarch64 hardware, but
+with the ARM64 dependency, we are not able to build those drivers
+for ARM32.
 
-diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-index 84010501762d..8249c6b36818 100644
---- a/drivers/iio/health/max30100.c
-+++ b/drivers/iio/health/max30100.c
-@@ -16,7 +16,7 @@
- #include <linux/irq.h>
- #include <linux/i2c.h>
- #include <linux/mutex.h>
--#include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/buffer.h>
-@@ -267,11 +267,10 @@ static int max30100_get_current_idx(unsigned int val, int *reg)
- static int max30100_led_init(struct max30100_data *data)
- {
- 	struct device *dev = &data->client->dev;
--	struct device_node *np = dev->of_node;
- 	unsigned int val[2];
- 	int reg, ret;
- 
--	ret = of_property_read_u32_array(np, "maxim,led-current-microamp",
-+	ret = device_property_read_u32_array(dev, "maxim,led-current-microamp",
- 					(unsigned int *) &val, 2);
- 	if (ret) {
- 		/* Default to 24 mA RED LED, 50 mA IR LED */
+Select ARM_GIC_V3 for i.MX8M is to enable the gic-v3 driver for i.MX8M
+
+I did a basic boot test on i.MX8MM EVK board. A few ATF changes
+to make psci smp work still needed.
+
+Peng Fan (3):
+  pinctrl: freescale: drop the dependency on ARM64 for i.MX8M
+  clk: imx: drop the dependency on ARM64 for i.MX8M
+  soc: imx: select ARM_GIC_V3 for i.MX8M
+
+ drivers/clk/imx/Kconfig           | 8 ++++----
+ drivers/pinctrl/freescale/Kconfig | 8 ++++----
+ drivers/soc/imx/Kconfig           | 1 +
+ 3 files changed, 9 insertions(+), 8 deletions(-)
+
 -- 
-2.23.0.385.gbc12974a89
+2.16.4
 
