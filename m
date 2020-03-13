@@ -2,95 +2,116 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06B8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEEDC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B4820746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q6caX3YM"
+	by mail.kernel.org (Postfix) with ESMTP id A1E4820749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgCMM1g (ORCPT
+        id S1726770AbgCMM2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:27:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34278 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgCMM1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:27:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xY8EzI7X1E8hN1FOxDAVneZEH2bSUqBcmp3TlzBpd60=; b=Q6caX3YMsIwxNzme3u2/ZGuMq3
-        RJLpXujvtnUDTkaSroJgFk2QVA8lUuJWDmTO3s3yxRKcjWsKPaxE+WBb6Yg/FAJGwOV828RgEPMrh
-        6Ma85LFcQ0BsMRUhRTIifaq8JkNn30517a64DY2JFdw6EKO7qyI942X27rkNeC6TuYPqNa7fHBI0O
-        5j148hQn4meM2VQnlhZR7PocT+H8aIVrc/x0vFKWIfWO4Rzkp+fsqDRDxXUPiUYld+6b1uBNDpGy1
-        P5VI24mJknWoatprhr/3xzqamQrWJjvG0h0mpPE+8Ql0SNShnkxQgU6tav0OlI/4V4Kd6VtFE01mQ
-        M4bixk/w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCjPV-0004Oh-3N; Fri, 13 Mar 2020 12:27:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 34A8B3011E0;
-        Fri, 13 Mar 2020 13:27:26 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EC6F02BE01201; Fri, 13 Mar 2020 13:27:25 +0100 (CET)
-Date:   Fri, 13 Mar 2020 13:27:25 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Fix reversed NULL check in
- perf_event_groups_less()
-Message-ID: <20200313122725.GZ12561@hirez.programming.kicks-ass.net>
-References: <20200312105637.GA8960@mwanda>
+        Fri, 13 Mar 2020 08:28:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6234 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbgCMM2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:28:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 05:28:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,548,1574150400"; 
+   d="scan'208";a="290013497"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Mar 2020 05:28:04 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jCjQ6-009G8T-69; Fri, 13 Mar 2020 14:28:06 +0200
+Date:   Fri, 13 Mar 2020 14:28:06 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200313122806.GT1922688@smile.fi.intel.com>
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-3-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312105637.GA8960@mwanda>
+In-Reply-To: <20200313110350.10864-3-robert.foss@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:56:37PM +0300, Dan Carpenter wrote:
-> This NULL check is reversed so it leads to a Smatch warning and
-> presumably a NULL dereference.
-> 
->     kernel/events/core.c:1598 perf_event_groups_less()
->     error: we previously assumed 'right->cgrp->css.cgroup' could be null
-> 	(see line 1590)
-> 
-> Fixes: 95ed6c707f26 ("perf/cgroup: Order events in RB tree by cgroup id")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 6a47c3e54fe9..607c04ec7cfa 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1587,7 +1587,7 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
->  			 */
->  			return true;
->  		}
-> -		if (!right->cgrp || right->cgrp->css.cgroup) {
-> +		if (!right->cgrp || !right->cgrp->css.cgroup) {
->  			/*
->  			 * Right has no cgroup but left does, no cgroups come
->  			 * first.
+On Fri, Mar 13, 2020 at 12:03:49PM +0100, Robert Foss wrote:
+> Add devicetree match table, and enable ov8856_probe()
+> to initialize power, clocks and reset pins.
 
-Thanks!
+Thanks for an update.
+My comments below.
+
+...
+
+> +	ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
+
+In many frameworks we have '_optional' variants of API. Please use it instead
+of open coded approach.
+
+> +	if (PTR_ERR(ov8856->xvclk) == -ENOENT) {
+> +		dev_info(&client->dev, "xvclk clock not defined, continuing...\n");
+> +		ov8856->xvclk = NULL;
+> +	} else if (IS_ERR(ov8856->xvclk)) {
+> +		dev_err(&client->dev, "could not get xvclk clock (%ld)\n",
+> +			PTR_ERR(ov8856->xvclk));
+> +		return PTR_ERR(ov8856->xvclk);
+> +	}
+> +
+> +	ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
+> +		return ret;
+> +	}
+> +
+
+> +	ov8856->reset_gpio = devm_gpiod_get(&client->dev, "reset",
+> +					       GPIOD_OUT_HIGH);
+
+Same here.
+
+> +	if (IS_ERR(ov8856->reset_gpio)) {
+> +		dev_err(&client->dev, "failed to get reset-gpios\n");
+> +		return PTR_ERR(ov8856->reset_gpio);
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ov8856_supply_names); i++)
+> +		ov8856->supplies[i].supply = ov8856_supply_names[i];
+> +
+
+> +	ret = devm_regulator_bulk_get(&client->dev,
+> +				      ARRAY_SIZE(ov8856_supply_names),
+> +				      ov8856->supplies);
+
+Luckily regulator framework will create dummy ones if there is none found.
+
+> +	if (ret) {
+> +		dev_warn(&client->dev, "failed to get regulators\n");
+> +		return ret;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
