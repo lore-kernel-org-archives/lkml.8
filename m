@@ -2,155 +2,146 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07719C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1840206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E511D206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:01:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmPJ1XnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgCMMBh (ORCPT
+        id S1726713AbgCMMBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:01:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:53730 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgCMMBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:01:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6AEFFEC;
-        Fri, 13 Mar 2020 05:01:35 -0700 (PDT)
-Received: from [10.37.12.218] (unknown [10.37.12.218])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9F7A3F534;
-        Fri, 13 Mar 2020 05:01:31 -0700 (PDT)
-Subject: Re: [PATCH v2 20/20] arm64: vdso32: Enable Clang Compilation
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>
-References: <20200306133242.26279-1-vincenzo.frascino@arm.com>
- <20200306133242.26279-21-vincenzo.frascino@arm.com>
- <20200310014039.GA12211@ubuntu-m2-xlarge-x86>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <ce62f238-eea9-a0eb-6f72-a3ef5c4a275a@arm.com>
-Date:   Fri, 13 Mar 2020 12:01:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 13 Mar 2020 08:01:43 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53476 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgCMMBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:01:42 -0400
+Received: by mail-pj1-f66.google.com with SMTP id l36so4058806pjb.3;
+        Fri, 13 Mar 2020 05:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=QJI0Bdftwo0kfKfBxvcXSd5Z7Cf8rsBckFWxQ/WB9Js=;
+        b=AmPJ1XnT7a0Axk4GYGnIeAg10a2x9h24rjUCCpz765a17lXYcocZrtxC97DjaMLEPj
+         GA9Q9QaJTfZRM3CoP9lORv+K5P7TPRitYQ9E3FmYaqwoLFWASiASX/LWFjlvZGGw0eHg
+         z0lSJalNrMiR+7Rv+zga/c725y06dcDtjgSTqLhFZPMzWgC9Oh1mD+Ytjl6wurOc8Is8
+         XVy9lwyjHMMTa/1s+OL9zQOnqGP4+FCcsovyAqs4U2uuZg4lxsyz2J4m5UJguH5iQM7W
+         yeoEw0/SekGPXP1tsmGPkP3LblXCZSwwILd+V/lVNapiJ1UUUPolJ6gEc50tFyOpm2yf
+         P3ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QJI0Bdftwo0kfKfBxvcXSd5Z7Cf8rsBckFWxQ/WB9Js=;
+        b=CaK5fbRK+KLmmOp4Be5G33XRiFKWV/EZxbK2Y2QvG52LuomIIMK2wN4daG78duy6L6
+         TIAfNUP7t5J5h7daxjn92UR03bx7rdJXL1uwTTdarg5iZoFUwLY5LgrwkDP487d+SiYo
+         EpyYoEQy+hWE97Hw1X092HLvefBjR8z5odJdRgLLHb4pKiBSufVi+f1pVKWZI7nlzk1c
+         yy6qvGrQDD6ujw8dpXUHoVgmzTQYm3N5B5U/8b5QBBTjh1llFBG6D7j+SCAC1LmoSy6w
+         no7akR3iR0N4EeMlMBEK2nz8dRPDTXsEIoyPvil4KhY3ee8or87HTj5lYOnnnYGe/Nyh
+         RK9A==
+X-Gm-Message-State: ANhLgQ2E4mT0R2yT24DCgR2lKEjKqJwSq8w/7SHVTXj5xABaCUugVpcT
+        Ukoe9uy6/68pC4p/0uozHR4=
+X-Google-Smtp-Source: ADFU+vvfdobXfVncHmVaft5t2AMCmMWORH4rqZtx4/fBFSxLc0eqw/CukXmlJygEWIUeaOKIc8lvyQ==
+X-Received: by 2002:a17:902:9b95:: with SMTP id y21mr12961971plp.101.1584100899951;
+        Fri, 13 Mar 2020 05:01:39 -0700 (PDT)
+Received: from syed ([117.97.245.141])
+        by smtp.gmail.com with ESMTPSA id k14sm12006265pje.3.2020.03.13.05.01.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Mar 2020 05:01:39 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 17:31:33 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     vilhelm.gray@gmail.com
+Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/3] counter: 104-quad-8: Add lock guards - differential
+ encoder cable
+Message-ID: <20200313120133.GA17830@syed>
 MIME-Version: 1.0
-In-Reply-To: <20200310014039.GA12211@ubuntu-m2-xlarge-x86>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 1:40 AM, Nathan Chancellor wrote:
-> On Fri, Mar 06, 2020 at 01:32:42PM +0000, Vincenzo Frascino wrote:
->> Enable Clang Compilation for the vdso32 library.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->> ---
->>  arch/arm64/kernel/vdso32/Makefile | 13 ++++++++++++-
->>  1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
->> index 04df57b43cb1..650cfc5757eb 100644
->> --- a/arch/arm64/kernel/vdso32/Makefile
->> +++ b/arch/arm64/kernel/vdso32/Makefile
->> @@ -10,7 +10,18 @@ include $(srctree)/lib/vdso/Makefile
->>  
->>  # Same as cc-*option, but using CC_COMPAT instead of CC
->>  ifeq ($(CONFIG_CC_IS_CLANG), y)
->> -CC_COMPAT ?= $(CC)
->> +COMPAT_GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE_COMPAT)elfedit))
->> +COMPAT_GCC_TOOLCHAIN := $(realpath $(COMPAT_GCC_TOOLCHAIN_DIR)/..)
->> +
->> +CLANG_CC_COMPAT := $(CC)
->> +CLANG_CC_COMPAT += --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
->> +CLANG_CC_COMPAT += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
->> +CLANG_CC_COMPAT += -no-integrated-as -Qunused-arguments
->> +ifneq ($(COMPAT_GCC_TOOLCHAIN),)
->> +CLANG_CC_COMPAT += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
->> +endif
->> +
->> +CC_COMPAT ?= $(CLANG_CC_COMPAT)
->>  else
->>  CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
->>  endif
->> -- 
->> 2.25.1
->>
-> If CC_COMPAT is ever specified on the command line as clang (maybe by
-> some unsuspecting user), we'd loose all of the above flags. Maybe it
-> would be better to build a set of COMPAT_CLANG_FLAGS and append them to
-> CC_COMPAT, maybe like below?
->
+Add lock protection from race conditions in the 104-quad-8 counter
+driver for differential encoder cable status changes. There is no IRQ
+handling so use spin_lock calls for protection.
 
-Fine by me.
+Fixes: bbef69e088c3 ("counter: 104-quad-8: Support Differential Encoder Cable Status")
 
-> Regardless, the current approach works in my testing with clang 9.0.1
-> and master (clang 11.0.0). This patch specifically is:
-> 
+Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+---
+Changes in v4:
+ - Shift review-comments section so that it is not saved in commit message.
+ - Add spin_unlock calls for deadlock avoidance.
+ - Few changes related to casting.
 
-Good to hear. I will add your tags to the patch.
+ drivers/counter/104-quad-8.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
-> 
-> ==================================================================================
-> 
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-> index 650cfc5757eb..df5145fab287 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -13,15 +13,16 @@ ifeq ($(CONFIG_CC_IS_CLANG), y)
->  COMPAT_GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE_COMPAT)elfedit))
->  COMPAT_GCC_TOOLCHAIN := $(realpath $(COMPAT_GCC_TOOLCHAIN_DIR)/..)
->  
-> -CLANG_CC_COMPAT := $(CC)
-> -CLANG_CC_COMPAT += --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
-> -CLANG_CC_COMPAT += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
-> -CLANG_CC_COMPAT += -no-integrated-as -Qunused-arguments
-> +COMPAT_CLANG_FLAGS := --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
-> +COMPAT_CLANG_FLAGS += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
-> +COMPAT_CLANG_FLAGS += -no-integrated-as -Qunused-arguments
->  ifneq ($(COMPAT_GCC_TOOLCHAIN),)
-> -CLANG_CC_COMPAT += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
-> +COMPAT_CLANG_FLAGS += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
->  endif
->  
-> -CC_COMPAT ?= $(CLANG_CC_COMPAT)
-> +CC_COMPAT ?= $(CC)
-> +CC_COMPAT += $(COMPAT_CLANG_FLAGS)
-> +
->  else
->  CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
->  endif
-> 
-
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index 9dab190..c9e227f 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -1151,18 +1151,26 @@ static ssize_t quad8_signal_cable_fault_read(struct counter_device *counter,
+ 					     struct counter_signal *signal,
+ 					     void *private, char *buf)
+ {
+-	const struct quad8_iio *const priv = counter->priv;
++	struct quad8_iio *const priv = counter->priv;
+ 	const size_t channel_id = signal->id / 2;
+-	const bool disabled = !(priv->cable_fault_enable & BIT(channel_id));
++	bool disabled;
+ 	unsigned int status;
+ 	unsigned int fault;
+ 
+-	if (disabled)
++	spin_lock(&priv->lock);
++
++	disabled = !(priv->cable_fault_enable & BIT(channel_id));
++
++	if (disabled) {
++		spin_unlock(&priv->lock);
+ 		return -EINVAL;
++	}
+ 
+ 	/* Logic 0 = cable fault */
+ 	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+ 
++	spin_unlock(&priv->lock);
++
+ 	/* Mask respective channel and invert logic */
+ 	fault = !(status & BIT(channel_id));
+ 
+@@ -1194,6 +1202,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
+ 	if (ret)
+ 		return ret;
+ 
++	spin_lock(&priv->lock);
++
+ 	if (enable)
+ 		priv->cable_fault_enable |= BIT(channel_id);
+ 	else
+@@ -1204,6 +1214,8 @@ static ssize_t quad8_signal_cable_fault_enable_write(
+ 
+ 	outb(cable_fault_enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+ 
++	spin_unlock(&priv->lock);
++
+ 	return len;
+ }
+ 
 -- 
-Regards,
-Vincenzo
+2.7.4
+
