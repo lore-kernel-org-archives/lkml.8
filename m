@@ -2,197 +2,200 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E07C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBBAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E1F206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 16:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428692076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 17:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCMQ7w (ORCPT
+        id S1726890AbgCMRJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:59:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:13894 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgCMQ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:59:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:59:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="246741156"
-Received: from saurabhd-mobl.amr.corp.intel.com (HELO [10.251.16.241]) ([10.251.16.241])
-  by orsmga006.jf.intel.com with ESMTP; 13 Mar 2020 09:59:50 -0700
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Jann Horn <jannh@google.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200312082248.GS23944@dhcp22.suse.cz> <20200312201602.GA68817@google.com>
- <bd35c17d-8766-cba5-09b3-87970de4c731@intel.com>
- <20200313020018.GC68817@google.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <a3a8a428-17d3-e3cb-913c-b44de12db9e4@intel.com>
-Date:   Fri, 13 Mar 2020 09:59:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200313020018.GC68817@google.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 13 Mar 2020 13:09:05 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2559 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726406AbgCMRJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:09:04 -0400
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 08546B0FE24240643515;
+        Fri, 13 Mar 2020 17:09:02 +0000 (GMT)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Mar 2020 17:08:43 +0000
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 13 Mar 2020 17:08:43 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Fri, 13 Mar 2020 17:08:43 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     James Morse <james.morse@arm.com>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v4 1/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v4 1/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHV3aHpvUUiw2j43UuF7uWUQ9pa06hD2fwAgAADqhCAAvwSAIAACSkg
+Date:   Fri, 13 Mar 2020 17:08:43 +0000
+Message-ID: <0a37fd4508a94a999a3d0fe0d4222052@huawei.com>
+References: <Shiju Jose> <20200207103143.20104-1-shiju.jose@huawei.com>
+ <20200207103143.20104-2-shiju.jose@huawei.com>
+ <4967c0e6-b264-a13a-28c7-5ca497442823@arm.com>
+ <689f0c7cb0fe49d6a9df140cc1b56690@huawei.com>
+ <7c1a20de-746f-8fc2-29a1-6e5d607ebb48@arm.com>
+In-Reply-To: <7c1a20de-746f-8fc2-29a1-6e5d607ebb48@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.88.248]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/20 7:00 PM, Minchan Kim wrote:
-> On Thu, Mar 12, 2020 at 02:41:07PM -0700, Dave Hansen wrote:
->> One other fun thing.  I have a "victim" thread sitting in a loop doing:
->>
->> 	sleep(1)
->> 	memcpy(&garbage, buffer, sz);
->>
->> The "attacker" is doing
->>
->> 	madvise(buffer, sz, MADV_PAGEOUT);
->>
->> in a loop.  That, oddly enough doesn't cause the victim to page fault.
->> But, if I do:
->>
->> 	memcpy(&garbage, buffer, sz);
->> 	madvise(buffer, sz, MADV_PAGEOUT);
->>
->> It *does* cause the memory to get paged out.  The MADV_PAGEOUT code
->> actually has a !pte_present() check.  It will punt on a PTE if it sees
->> it.  In other words, if a page is in the swap cache but not mapped by a
->> pte_present() PTE, MADV_PAGEOUT won't touch it.
->>
->> Shouldn't MADV_PAGEOUT be able to find and reclaim those pages?  Patch
->> attached.
-> 
->>
->>
->> ---
->>
->>  b/mm/madvise.c |   38 +++++++++++++++++++++++++++++++-------
->>  1 file changed, 31 insertions(+), 7 deletions(-)
->>
->> diff -puN mm/madvise.c~madv-pageout-find-swap-cache mm/madvise.c
->> --- a/mm/madvise.c~madv-pageout-find-swap-cache	2020-03-12 14:24:45.178775035 -0700
->> +++ b/mm/madvise.c	2020-03-12 14:35:49.706773378 -0700
->> @@ -248,6 +248,36 @@ static void force_shm_swapin_readahead(s
->>  #endif		/* CONFIG_SWAP */
->>  
->>  /*
->> + * Given a PTE, find the corresponding 'struct page'.  Also handles
->> + * non-present swap PTEs.
->> + */
->> +struct page *pte_to_reclaim_page(struct vm_area_struct *vma,
->> +				 unsigned long addr, pte_t ptent)
->> +{
->> +	swp_entry_t entry;
->> +
->> +	/* Totally empty PTE: */
->> +	if (pte_none(ptent))
->> +		return NULL;
->> +
->> +	/* A normal, present page is mapped: */
->> +	if (pte_present(ptent))
->> +		return vm_normal_page(vma, addr, ptent);
->> +
-> 
-> Please check is_swap_pte first.
-
-Why?
-
-is_swap_pte() duplicates the first two checks.  But, I need an explicit
-pte_present() check somewhere because I need to call vm_normal_page()
-only on present PTEs.
-
-I guess the pte_present() check could be:
-
-	if (!is_swap_pte(ptent))
-		return vm_normal_page(...);
-
-*after* the pte_none() check.
-
->> +	entry = pte_to_swp_entry(vmf->orig_pte);
->> +	/* Is it one of the "swap PTEs" that's not really swap? */
->> +	if (non_swap_entry(entry))
->> +		return false;
->> +
->> +	/*
->> +	 * The PTE was a true swap entry.  The page may be in the
->> +	 * swap cache.  If so, find it and return it so it may be
->> +	 * reclaimed.
->> +	 */
->> +	return lookup_swap_cache(entry, vma, addr);
-> 
-> If we go with handling only exclusived owned page for anon,
-> I think we should apply the rule to swap cache, too.
-
-I'm going back and forth on it.  If we're just trying to avoid causing
-faults in other processes, we could add a mapcount>0 check here in
-addition to the mapcount>1 checks that were added in the other patch.
-
-But, if we want a check for true exclusivity: no other swap entries or
-mappings, we need to check swap_count() too.  It's getting quite a bit
-uglier as I add that it, but I guess we'll see how it looks in the end.
-
-> Do you mind posting it as formal patch?
-
-Yeah, I'll send something out.
+SGkgSmFtZXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEphbWVzIE1v
+cnNlIFttYWlsdG86amFtZXMubW9yc2VAYXJtLmNvbV0NCj5TZW50OiAxMyBNYXJjaCAyMDIwIDE1
+OjE3DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgt
+YWNwaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
+Pmtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5l
+bC5vcmc7DQo+bGVuYkBrZXJuZWwub3JnOyBicEBhbGllbjguZGU7IHRvbnkubHVja0BpbnRlbC5j
+b207DQo+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHpoYW5nbGlndWFuZ0BsaW51eC5hbGli
+YWJhLmNvbTsNCj50Z2x4QGxpbnV0cm9uaXguZGU7IExpbnV4YXJtIDxsaW51eGFybUBodWF3ZWku
+Y29tPjsgSm9uYXRoYW4gQ2FtZXJvbg0KPjxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+OyB0
+YW54aWFvZmVpIDx0YW54aWFvZmVpQGh1YXdlaS5jb20+Ow0KPnlhbmd5aWNvbmcgPHlhbmd5aWNv
+bmdAaHVhd2VpLmNvbT4NCj5TdWJqZWN0OiBSZTogW1BBVENIIHY0IDEvMl0gQUNQSTogQVBFSTog
+QWRkIHN1cHBvcnQgdG8gbm90aWZ5IHRoZSB2ZW5kb3INCj5zcGVjaWZpYyBIVyBlcnJvcnMNCj4N
+Cj5IaSBTaGlqdSwNCj4NCj5PbiAzLzEyLzIwIDEyOjEwIFBNLCBTaGlqdSBKb3NlIHdyb3RlOg0K
+Pj4+IE9uIDA3LzAyLzIwMjAgMTA6MzEsIFNoaWp1IEpvc2Ugd3JvdGU6DQo+Pj4+IFByZXNlbnRs
+eSBBUEVJIGRvZXMgbm90IHN1cHBvcnQgcmVwb3J0aW5nIHRoZSB2ZW5kb3Igc3BlY2lmaWMgSFcN
+Cj4+Pj4gZXJyb3JzLCByZWNlaXZlZCBpbiB0aGUgdmVuZG9yIGRlZmluZWQgdGFibGUgZW50cmll
+cywgdG8gdGhlIHZlbmRvcg0KPj4+PiBkcml2ZXJzIGZvciBhbnkgcmVjb3ZlcnkuDQo+Pj4+DQo+
+Pj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc3VwcG9ydCB0byByZWdpc3RlciBhbmQgdW5yZWdpc3Rl
+ciB0aGUgZXJyb3INCj4+Pj4gaGFuZGxpbmcgZnVuY3Rpb24gZm9yIHRoZSB2ZW5kb3Igc3BlY2lm
+aWMgSFcgZXJyb3JzIGFuZCBub3RpZnkgdGhlDQo+Pj4+IHJlZ2lzdGVyZWQga2VybmVsIGRyaXZl
+ci4NCj4+Pg0KPj4+IElzIGl0IHBvc3NpYmxlIHRvIHVzZSB0aGUga2VybmVsJ3MgZXhpc3RpbmcN
+Cj4+PiBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIoKSBBUEkgZm9yIHRoaXM/DQo+Pj4N
+Cj4+PiBUaGUgb25lIHRoaW5nIHRoYXQgY2FuJ3QgYmUgZG9uZSBpbiB0aGUgc2FtZSB3YXkgaXMg
+dGhlIEdVSUQgZmlsdGVyaW5nIGluDQo+Z2hlcy5jLg0KPj4+IEVhY2ggZHJpdmVyIHdvdWxkIG5l
+ZWQgdG8gY2hlY2sgaWYgdGhlIGNhbGwgbWF0Y2hlZCBhIEdVSUQgdGhleSBrbmV3DQo+Pj4gYWJv
+dXQsIGFuZCByZXR1cm4gTk9USUZZX0RPTkUgaWYgdGhleSAiZG9uJ3QgY2FyZSIuDQo+Pj4NCj4+
+PiBJIHRoaW5rIHRoaXMgcGF0Y2ggd291bGQgYmUgYSBsb3Qgc21hbGxlciBpZiBpdCB3YXMgdHdl
+YWtlZCB0byBiZQ0KPj4+IGFibGUgdG8gdXNlIHRoZSBleGlzdGluZyBBUEkuIElmIHRoZXJlIGlz
+IGEgcmVhc29uIG5vdCB0byB1c2UgaXQsIGl0DQo+Pj4gd291bGQgYmUgZ29vZCB0byBrbm93IHdo
+YXQgaXQgaXMuDQo+DQo+PiBJIHRoaW5rIHdoZW4gdXNpbmcgYXRvbWljX25vdGlmaWVyX2NoYWlu
+X3JlZ2lzdGVyIHdlIGhhdmUgZm9sbG93aW5nDQo+bGltaXRhdGlvbnMsDQo+PiAxLiBBbGwgdGhl
+IHJlZ2lzdGVyZWQgZXJyb3IgaGFuZGxlcnMgd291bGQgZ2V0IGNhbGxlZCwgdGhvdWdoIGFuIGVy
+cm9yIGlzIG5vdA0KPnJlbGF0ZWQgdG8gdGhvc2UgaGFuZGxlcnMuDQo+DQo+VGhlIG5vdGlmaWVy
+IGNoYWluIHByb3ZpZGVzIE5PVElGWV9TVE9QX01BU0ssIHNvIHRoYXQgb25lIG9mIHRoZSBjYWxs
+ZXJzIGNhbg0KPnNheSB0aGUgd29yayBpcyBkb25lLiBXZSBvbmx5IGV4cGVjdCBhIGhhbmRmdWwg
+b2YgdGhlc2UsIHNvIEkgZG9uJ3QgdGhpbmsgdGhlcmUgaXMNCj5nb2luZyB0byBiZSBhIHNjYWxh
+YmlsaXR5IHByb2JsZW0uDQpPay4gSSB3aWxsIGNoZWNrIHRoZSBlcnJvciByZXBvcnRpbmcgYnkg
+dXNpbmcgYXRvbWljX25vdGlmaWVyX2NoYWluIGFuZCB0ZXN0Lg0KDQo+DQo+DQo+PiAgICAgQWxz
+byB0aGlzIG1heSBsZWFkIHRvIG1pc2hhbmRsaW5nIG9mIHRoZSBlcnJvciBpbmZvcm1hdGlvbiBp
+ZiBhIGhhbmRsZXIgZG9lcw0KPm5vdA0KPj4gICAgIGltcGxlbWVudCBHVUlEIGNoZWNraW5nIGV0
+Yy4NCj4NCj5XaGljaCB3b3VsZCBiZSBhIGJ1ZyB3ZSBjYW4gZml4Lg0KPlRoZXJlIGlzIG5vIHBv
+aW50IHdvcnJ5aW5nIGFib3V0IGJ1Z3MgaW4gb3V0IG9mIHRyZWUgY29kZS4NCk9rLg0KDQo+DQo+
+DQo+PiAyLiBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIgKG5vdGlmaWVyX2NoYWluX3Jl
+Z2lzdGVyKSBsb29rcyBsaWtlIGRvZXMgbm90DQo+c3VwcG9ydA0KPj4gICAgIHBhc3MgdGhlIGhh
+bmRsZXIncyBwcml2YXRlIGRhdGEgZHVyaW5nIHRoZSByZWdpc3RyYXRpb24gd2hpY2ggc3VwcG9z
+ZWQgdG8NCj4+ICAgICBwYXNzZWQgbGF0ZXIgaW4gdGhlIGNhbGwgYmFjayBmdW5jdGlvbiAqbm90
+aWZpZXJfZm5fdCguLi4gLHZvaWQgKmRhdGEpIHRvIHRoZQ0KPmhhbmRsZXIuDQo+DQo+VGhlIGNh
+bGxiYWNrIGlzIHByb3ZpZGVkIHdpdGggdGhlIHN0cnVjdCBub3RpZmllcl9ibG9jay4gQSBiaXQg
+b2YNCj5jb250YWluZXJfb2YoKSBtYWdpYyB3aWxsIGdpdmUgeW91IHdoYXRldmVyIHN0cnVjdHVy
+ZSB5b3UgZW1iZWRkZWQgaXQgaW4hDQpPay4gSSB3aWxsIGNoZWNrIHRoaXMuDQogDQo+DQo+DQo+
+PiAzLiBBbHNvIGdvdCBkaWZmaWN1bHR5IGluIHBhc3NpbmcgdGhlIGdoZXMgZXJyb3IgZGF0YShh
+Y3BpX2hlc3RfZ2VuZXJpY19kYXRhKSwNCj5HVUlEDQo+PiAgICAgZm9yIHRoZSBlcnJvciByZWNl
+aXZlZCB0byB0aGUgaGFuZGxlciB0aHJvdWdoIHRoZSBub3RpZmllcl9jaGFpbiAgY2FsbGJhY2sN
+Cj5pbnRlcmZhY2UuDQo+DQo+SGVyZSB5b3UndmUgbG9zdCBtZS4gQmVjYXVzZSB5b3UgbmVlZCB0
+byBwYXNzIG1vcmUgdGhhbiBvbmUgdGhpbmc/IENhbid0IHdlDQo+aGF2ZSBhIHN0cnVjdCBmb3Ig
+dGhhdD8NCj4NCj5CdXQsIGlzbid0IGl0IGFsbCBpbiBzdHJ1Y3QgYWNwaV9oZXN0X2dlbmVyaWNf
+ZGF0YSBhbHJlYWR5PyBUaGF0IGlzIHdoZXJlIHRoZSBndWlkDQo+YW5kIHNldmVyaXR5IGNvbWUg
+ZnJvbS4NCk9rLiAgcmlnaHQuIA0KIA0KPg0KPg0KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9h
+Y3BpL2FwZWkvZ2hlcy5jIGIvZHJpdmVycy9hY3BpL2FwZWkvZ2hlcy5jDQo+Pj4+IGluZGV4DQo+
+Pj4+IDEwM2FjYmIuLjY5ZTE4ZDcgMTAwNjQ0DQo+Pj4+IC0tLSBhL2RyaXZlcnMvYWNwaS9hcGVp
+L2doZXMuYw0KPj4+PiArKysgYi9kcml2ZXJzL2FjcGkvYXBlaS9naGVzLmMNCj4+Pj4gQEAgLTQ5
+MCw2ICs0OTAsMTA5IEBAIHN0YXRpYyB2b2lkIGdoZXNfaGFuZGxlX2FlcihzdHJ1Y3QNCj4+Pj4g
+YWNwaV9oZXN0X2dlbmVyaWNfZGF0YSAqZ2RhdGEpDQo+Pj4NCj4+Pj4gKy8qKg0KPj4+PiArICog
+Z2hlc191bnJlZ2lzdGVyX2V2ZW50X2hhbmRsZXIgLSB1bnJlZ2lzdGVyIHRoZSBwcmV2aW91c2x5
+DQo+Pj4+ICsgKiByZWdpc3RlcmVkIGV2ZW50IGhhbmRsaW5nIGZ1bmN0aW9uLg0KPj4+PiArICog
+QHNlY190eXBlOiBzZWNfdHlwZSBvZiB0aGUgY29ycmVzcG9uZGluZyBDUEVSLg0KPj4+PiArICog
+QGRhdGE6IGRyaXZlciBzcGVjaWZpYyBkYXRhIHRvIGRpc3Rpbmd1aXNoIGRldmljZXMuDQo+Pj4+
+ICsgKi8NCj4+Pj4gK3ZvaWQgZ2hlc191bnJlZ2lzdGVyX2V2ZW50X2hhbmRsZXIoZ3VpZF90IHNl
+Y190eXBlLCB2b2lkICpkYXRhKSB7DQo+Pj4+ICsJc3RydWN0IGdoZXNfZXZlbnRfbm90aWZ5ICpl
+dmVudF9ub3RpZnk7DQo+Pj4+ICsJYm9vbCBmb3VuZCA9IGZhbHNlOw0KPj4+PiArDQo+Pj4+ICsJ
+bXV0ZXhfbG9jaygmZ2hlc19ldmVudF9ub3RpZnlfbXV0ZXgpOw0KPj4+PiArCXJjdV9yZWFkX2xv
+Y2soKTsNCj4+Pj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5X3JjdShldmVudF9ub3RpZnksDQo+Pj4+
+ICsJCQkJJmdoZXNfZXZlbnRfaGFuZGxlcl9saXN0LCBsaXN0KSB7DQo+Pj4+ICsJCWlmIChndWlk
+X2VxdWFsKCZldmVudF9ub3RpZnktPnNlY190eXBlLCAmc2VjX3R5cGUpKSB7DQo+Pj4NCj4+Pj4g
+KwkJCWlmIChkYXRhICE9IGV2ZW50X25vdGlmeS0+ZGF0YSkNCj4+Pg0KPj4+IEl0IGxvb2tzIGxp
+a2UgeW91IG5lZWQgbXVsdGlwbGUgZHJpdmVycyB0byBoYW5kbGUgdGhlIHNhbWUgR1VJRA0KPj4+
+IGJlY2F1c2Ugb2YgbXVsdGlwbGUgcm9vdCBwb3J0cy4gQ2FuJ3QgdGhlIGhhbmRsZXIgbG9va3Vw
+IHRoZSByaWdodCBkZXZpY2U/DQo+DQo+PiBUaGlzIGNoZWNrIHdhcyBiZWNhdXNlIEdVSUQgaXMg
+c2hhcmVkIGFtb25nIG11bHRpcGxlIGRldmljZXMgd2l0aCBvbmUNCj4+IGRyaXZlciBhcyBzZWVu
+IGluIHRoZSBCMjg4OUZDOSBkcml2ZXIgKHBjaWUtaGlzaS1lcnJvci5jKS4NCj4NCj4od2Ugc2hv
+dWxkIHN0b3AgY2FsbGluZyBpdCBieSBpdHMgZ3VpZCAuLi4gZG9lcyBpdCBoYXZlIGEgbmFtZT8h
+KQ0KPg0KPg0KPlRoaXMgbXVzdCBiZSBzb21lIGtpbmQgb2YgZXJyb3IgY29sbGVjdG9yIGZvciBh
+IGJ1cyByaWdodD8NCj4NCj5JIGFncmVlIHdlIG1heSBuZWVkIHRvIGhhdmUgbXVsdGlwbGUgZHJp
+dmVycyByZWdpc3RlciB0byBoYW5kbGUgdmVuZG9yIGV2ZW50cywNCj5idXQgaXQgbG9va3MgbGlr
+ZSB5b3UgYXJlIHJlZ2lzdGVyaW5nIHRoZSBzYW1lIGhhbmRsZXIgbXVsdGlwbGUgdGltZXMsIHdp
+dGgNCj5kaWZmZXJlbnQgcHJpdmF0ZSBzdHJ1Y3R1cmVzLg0KPg0KPkNhbid0IGl0IGZpbmQgdGhl
+IGFmZmVjdGVkIGRldmljZSBmcm9tIHRoZSBlcnJvciBkZXNjcmlwdGlvbj8NClllcy4gV2UgYWxy
+ZWFkeSBoYXZlIHRoZSBjb2RlIGluIHRoZSBQQ0llIGVycm9yIGhhbmRsaW5nIGRyaXZlciB0byBp
+ZGVudGlmeSB0aGUgcmlnaHQgZGV2aWNlDQpmcm9tIHRoZSBlcnJvciBpbmZvcm1hdGlvbi4NCg0K
+Pg0KPg0KPj4+PiBAQCAtNTI1LDExICs2MjgsMTQgQEAgc3RhdGljIHZvaWQgZ2hlc19kb19wcm9j
+KHN0cnVjdCBnaGVzICpnaGVzLA0KPj4+Pg0KPj4+PiAgCQkJbG9nX2FybV9od19lcnJvcihlcnIp
+Ow0KPj4+PiAgCQl9IGVsc2Ugew0KPj4+PiAtCQkJdm9pZCAqZXJyID0gYWNwaV9oZXN0X2dldF9w
+YXlsb2FkKGdkYXRhKTsNCj4+Pj4gLQ0KPj4+PiAtCQkJbG9nX25vbl9zdGFuZGFyZF9ldmVudChz
+ZWNfdHlwZSwgZnJ1X2lkLCBmcnVfdGV4dCwNCj4+Pj4gLQkJCQkJICAgICAgIHNlY19zZXYsIGVy
+ciwNCj4+Pj4gLQkJCQkJICAgICAgIGdkYXRhLT5lcnJvcl9kYXRhX2xlbmd0aCk7DQo+Pj4+ICsJ
+CQlpZiAoIWdoZXNfaGFuZGxlX25vbl9zdGFuZGFyZF9ldmVudChzZWNfdHlwZSwgZ2RhdGEsDQo+
+Pj4+ICsJCQkJCQkJICAgIHNldikpIHsNCj4+Pj4gKwkJCQl2b2lkICplcnIgPSBhY3BpX2hlc3Rf
+Z2V0X3BheWxvYWQoZ2RhdGEpOw0KPj4+PiArDQo+Pj4+ICsJCQkJbG9nX25vbl9zdGFuZGFyZF9l
+dmVudChzZWNfdHlwZSwgZnJ1X2lkLA0KPj4+PiArCQkJCQkJICAgICAgIGZydV90ZXh0LCBzZWNf
+c2V2LCBlcnIsDQo+Pj4+ICsJCQkJCQkgICAgICAgZ2RhdGEtPmVycm9yX2RhdGFfbGVuZ3RoKTsN
+Cj4+Pj4gKwkJCX0NCj4+Pg0KPj4+IFNvLCBhIHNpZGUgZWZmZWN0IG9mIHRoZSBrZXJuZWwgaGFu
+ZGxpbmcgdGhlc2UgaXMgdGhleSBubyBsb25nZXIgZ2V0DQo+Pj4gbG9nZ2VkIG91dCBvZiB0cmFj
+ZSBwb2ludHM/DQo+Pj4NCj4+PiBJIGd1ZXNzIHRoZSBkcml2ZXIgdGhlIGNsYWltcyB0aGlzIGxv
+Z3Mgc29tZSBtb3JlIGFjY3VyYXRlDQo+Pj4gaW5mb3JtYXRpb24uIEFyZSB0aGVyZSBleHBlY3Rl
+ZCB0byBiZSBhbnkgdXNlci1zcGFjZSBwcm9ncmFtcyBkb2luZw0KPj4+IHNvbWV0aGluZyB1c2Vm
+dWwgd2l0aCBCMjg4OUZDOS4uLiB0b2RheT8NCj4NCj4+IFRoZSBCMjg4OUZDOSBkcml2ZXIgZG9l
+cyBub3QgZXhwZWN0IGFueSBjb3JyZXNwb25kaW5nIHVzZXIgc3BhY2UNCj5wcm9ncmFtcy4NCj4+
+IFRoZSBkcml2ZXIgbWFpbmx5IGZvciB0aGUgZXJyb3IgcmVjb3ZlcnkgYW5kIGJhc2ljIGVycm9y
+IGRlY29kaW5nIGFuZCBsb2dnaW5nLg0KPg0KPj4gUHJldmlvdXNseSB3ZSBhZGRlZCB0aGUgZXJy
+b3IgbG9nZ2luZyBmb3IgdGhlIEIyODg5RkM5IGluIHRoZSByYXNkYWVtb24uDQo+DQo+U28gdGhp
+cyBzZXJpZXMgd291bGQgYnJlYWsgdGhlIGVycm9yIGxvZ2dpbmcgaW4gcmFzZGFlbW9uLg0KSXQg
+ZG9lcyBub3QgYWZmZWN0IHRoZSBsb2dnaW5nIGluZm9ybWF0aW9uIHRvIHRoZSB1c2VyIGZvciB0
+aGUgSGlTaWxpY29uIFBDSWUgY29udHJvbGxlciBlcnJvcnMNCmJlY2F1c2UgdGhlIGxldmVsIG9m
+IGxvZ2dpbmcgaW5mb3JtYXRpb24gaXMgdGhlIHNhbWUgYm90aCBpbiB0aGUgcmFzZGFlbW9uIGFu
+ZCBpbiB0aGUNCm5ld2x5IGFkZGluZyBIaVNpbGljb24gUENJZSBjb250cm9sbGVyIGVycm9yIGhh
+bmRsaW5nIGRyaXZlci4NCj4NCj5Vc2VyLXNwYWNlIHdvdWxkIG5lZWQgdG8gYmUgdXBncmFkZWQg
+dG8gcmVjZWl2ZSB0aGUgdHJhY2UgaW5mb3JtYXRpb24gZnJvbQ0KPnRoZSBzcGVjaWZpYyBkcml2
+ZXIgaW5zdGVhZC4gKGhvdyBkb2VzIGl0IGtub3c/ISkNCj4NCj5Db3VsZCB3ZSBsb2dfbm9uX3N0
+YW5kYXJkX2V2ZW50KCkgdW5jb25kaXRpb25hbGx5LCBtYXliZSBhZGRpbmcgYSBmaWVsZCB0bw0K
+PmluZGljYXRlIHRoYXQgYSBkcml2ZXIgY2xhaW1lZCBpdCwgc28gdGhlcmUgbWF5IGJlIG1vcmUg
+ZGF0YSBzb21ld2hlcmUgZWxzZS4uLg0Kc3VyZSwgSSB3aWxsIGNoZWNrIHRoZSBwb3NzaWJpbGl0
+eSBvZiBhZGRpbmcgdGhlIGZpZWxkIHRvIGluZGljYXRlIGRyaXZlciBjbGFpbWVkIGl0IGFuZA0K
+Y2FsbGluZyBsb2dfbm9uX3N0YW5kYXJkX2V2ZW50KCkgYWx3YXlzLg0KPg0KPg0KPlRoYW5rcywN
+Cj4NCj5KYW1lcw0KDQpUaGFua3MsDQpTaGlqdQ0K
