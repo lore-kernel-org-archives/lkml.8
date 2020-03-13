@@ -2,145 +2,114 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD6EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38037C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E8020724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E28A20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 10:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XSViPTWS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rB/JrxX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgCMKqI (ORCPT
+        id S1726528AbgCMKqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:46:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40365 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726387AbgCMKqI (ORCPT
+        Fri, 13 Mar 2020 06:46:51 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51386 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgCMKqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:46:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584096367;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vtV+aJw4Dht29bLGuz4fZ76FC7NknKrBd/VUbbOd/EA=;
-        b=XSViPTWSYkJTFU7n8+OkNU/ppOw7PTphWN4IcJ742KeTyL++MuqzFQ0hQ+VEd8L9ZkGSK9
-        edpwecOU1mCKDltwVwl0YsImDt5UPQpQ10hE3LokNc0nSQ/rtds+u9/DarLTJml2JYkEq2
-        64sLw0fnQpxoL2+XmwnYNIeG0KOpyCQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-UuTwfVhEPRioskYUGmKWAw-1; Fri, 13 Mar 2020 06:46:01 -0400
-X-MC-Unique: UuTwfVhEPRioskYUGmKWAw-1
-Received: by mail-wr1-f71.google.com with SMTP id b12so4121382wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:46:00 -0700 (PDT)
+        Fri, 13 Mar 2020 06:46:51 -0400
+Received: by mail-pj1-f68.google.com with SMTP id hg10so17511pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 03:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=o6afTbf7/yCeF+VeaZhhomT+KkYIZitsMbrfbHYx5jo=;
+        b=rB/JrxX0L7LaAtUV00dCdFiedhiTR681/8tixC3LeFg+mmm/oXg1UoXM5C8wHRbfnZ
+         fhZ2bENDyBia9zKeDoain0e20+dVQldHc4w+6WHRXveP9NpqXpKJAfyXWEaUOHVWb9cF
+         0fYHTuY9ZYI6bh8h4rwiiaPGCV4lqZsKOoIPDisRmUTiQAlmo1fJdz/PHZ76ep+qDac2
+         hGGZ33A4d3LhU9ZGvvurTqRgkJsr3kZn7a+BHs6Cqyg2oQ0Jlt6V0QF3w4SdSPbU9NTZ
+         /YPCNnoDIfm54kn3HrYFONeqKy8RbdGFDdtHcNRof1B9P+zh9H8ObS8EBDVKmlMWxGBC
+         0JCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vtV+aJw4Dht29bLGuz4fZ76FC7NknKrBd/VUbbOd/EA=;
-        b=pydO/J44ZT+sJWUFdy2wIhT0gqoUk+KC5EpLhkJ9KyCfkuAm7rp/iRQJkXoGDEoyzl
-         47VxTCvh2RCUV4HHuafEJsQZApWdcQNQkAYrRGdEHQmdkHAOJboRm1cu1JHlC3fHHoJ6
-         Ax0zohFhcD/p29kj3BzJ9xddzh0WbXcuizWoLwWT4wwNAqy2My50C2QMBR0l2FK4SMDC
-         dZwiOirnE0j2EJF+nP532EsQwfBh+1sT0lQvsgiOSPB0lQkEs8fKPDEyb5By/BuwuciG
-         FmRrmqQlrMzHCAxkdYGMiPcsOSCcNbW6uXSb5gZVuauOywQ7Mcc5HoBCpfBvanm+9tS7
-         Gnbw==
-X-Gm-Message-State: ANhLgQ1Kr4tbcuiNv9BvecKU/AzQrwzMFhnS5gyB8XpYH94lcB70sT+k
-        aaC9TS22wlljM1p1KvAY6X31d1hp1N0mvUl+/qSF27RjyAkPTQSXKyCTfFbgO62SnsB2s3IXwim
-        uU9Xn0gl1wztIhU8+zznY6ebA
-X-Received: by 2002:adf:fc81:: with SMTP id g1mr17843739wrr.410.1584096359295;
-        Fri, 13 Mar 2020 03:45:59 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuzspxaIg4ghBUUcSHVHPnTFJA0Yp/blTTVub08BhvaSdIutNqejUAg2LVy4eICj5ERM9ZoLA==
-X-Received: by 2002:adf:fc81:: with SMTP id g1mr17843722wrr.410.1584096359101;
-        Fri, 13 Mar 2020 03:45:59 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id m2sm16647724wml.24.2020.03.13.03.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 03:45:58 -0700 (PDT)
-Subject: Re: [PATCH 3/3] virt: vbox: Use fallthrough;
-To:     Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <cover.1584040050.git.joe@perches.com>
- <68773b4cd82288b78ca6fcde8c43e249a025378a.1584040050.git.joe@perches.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <eb4b9c3d-23c4-7b93-9a5d-6686947a818d@redhat.com>
-Date:   Fri, 13 Mar 2020 11:45:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <68773b4cd82288b78ca6fcde8c43e249a025378a.1584040050.git.joe@perches.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=o6afTbf7/yCeF+VeaZhhomT+KkYIZitsMbrfbHYx5jo=;
+        b=CPKa1h7CKGR6i7TOEeOpdv14rFYniAwfquXno/w4Fs+69WliknY/iO5rH7bJTJd29B
+         IsRhCUg6/+e/efwEWUS8h7yb5VZ+smJtyHyB+EAsS3yCuGz6XC0gtQeNPeB49lJmVXt9
+         mgafWtTEPb+TVFDhk/mxW2EbPGWQVaJ1P2LXh8NFgDUUqAadN2+1Z+CPsFz2fCz6QlNG
+         o1zTep+GWKPS09qNZQD9miosfOm5cF/MiRrcEnnGBAgixEpZXpHApxm4MJA2mTiMcBNY
+         unyx99VMoM/iGJ7O7dIO0ivMbQ94jxHIKZUDj43MBXweL++iDtoe+FL/i0xGxzulHJMN
+         RaWA==
+X-Gm-Message-State: ANhLgQ2QD9Vogc8TIRzJhrNdTdz8q8LxdDVX/g1sB9Ufg1Jg/QXx4QYU
+        HxaUcC9xs/j/c3DStS6DRlo=
+X-Google-Smtp-Source: ADFU+vsBKShzUZkSlbgiH+IFdbb9Pnz5biKuJqGZx7Od9k3U6Ftq7+V5D8q4+UaAnGA7aLhmxhpf3Q==
+X-Received: by 2002:a17:90a:2042:: with SMTP id n60mr1625659pjc.0.1584096410372;
+        Fri, 13 Mar 2020 03:46:50 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:22f:d418:f8a5:7ca8:f99b:fa30])
+        by smtp.gmail.com with ESMTPSA id p70sm1709171pjp.47.2020.03.13.03.46.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 03:46:49 -0700 (PDT)
+From:   Shreeya Patel <shreeya.patel23498@gmail.com>
+To:     regkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
+        sbrivio@redhat.com, daniel.baluta@gmail.com,
+        nramas@linux.microsoft.com, hverkuil@xs4all.nl,
+        shreeya.patel23498@gmail.com, Larry.Finger@lwfinger.net
+Subject: [Outreachy kernel] [PATCH v2] Staging: rtl8723bs: sdio_halinit: Remove unnecessary conditions
+Date:   Fri, 13 Mar 2020 16:16:40 +0530
+Message-Id: <20200313104640.19787-1-shreeya.patel23498@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Remove if and else conditions since both are leading to the
+initialization of "valueDMATimeout" and "valueDMAPageCount" with
+the same value.
 
-On 3/12/20 8:17 PM, Joe Perches wrote:
-> Convert the various uses of fallthrough comments to fallthrough;
-> 
-> Done via script
-> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
-> 
-> And by hand:
-> 
-> drivers/virt/vboxguest/vboxguest_core.c has a fallthrough comment outside
-> of an #ifdef block that causes gcc to emit a warning if converted in-place.
-> 
-> So move the new fallthrough; inside the containing #ifdef/#endif too.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+Found using coccinelle script.
 
-Patch looks good to me:
+Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+---
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Changes in v2
+  - Remove unnecessary comments.
 
-Regards,
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-Hans
-
-
-> ---
->   drivers/virt/vboxguest/vboxguest_core.c  | 2 +-
->   drivers/virt/vboxguest/vboxguest_utils.c | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
-> index d823d5..b690a8 100644
-> --- a/drivers/virt/vboxguest/vboxguest_core.c
-> +++ b/drivers/virt/vboxguest/vboxguest_core.c
-> @@ -1553,8 +1553,8 @@ int vbg_core_ioctl(struct vbg_session *session, unsigned int req, void *data)
->   #ifdef CONFIG_COMPAT
->   	case VBG_IOCTL_HGCM_CALL_32(0):
->   		f32bit = true;
-> +		fallthrough;
->   #endif
-> -		/* Fall through */
->   	case VBG_IOCTL_HGCM_CALL(0):
->   		return vbg_ioctl_hgcm_call(gdev, session, f32bit, data);
->   	case VBG_IOCTL_LOG(0):
-> diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
-> index 50920b..739618 100644
-> --- a/drivers/virt/vboxguest/vboxguest_utils.c
-> +++ b/drivers/virt/vboxguest/vboxguest_utils.c
-> @@ -311,7 +311,7 @@ static u32 hgcm_call_linear_addr_type_to_pagelist_flags(
->   	switch (type) {
->   	default:
->   		WARN_ON(1);
-> -		/* Fall through */
-> +		fallthrough;
->   	case VMMDEV_HGCM_PARM_TYPE_LINADDR:
->   	case VMMDEV_HGCM_PARM_TYPE_LINADDR_KERNEL:
->   		return VMMDEV_HGCM_F_PARM_DIRECTION_BOTH;
-> 
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index e813382e78a6..4894f7d9a1d4 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -551,18 +551,8 @@ static void HalRxAggr8723BSdio(struct adapter *padapter)
+ 
+ 	pregistrypriv = &padapter->registrypriv;
+ 
+-	if (pregistrypriv->wifi_spec) {
+-		/*  2010.04.27 hpfan */
+-		/*  Adjust RxAggrTimeout to close to zero disable RxAggr, suggested by designer */
+-		/*  Timeout value is calculated by 34 / (2^n) */
+-		valueDMATimeout = 0x06;
+-		valueDMAPageCount = 0x06;
+-	} else {
+-		/*  20130530, Isaac@SD1 suggest 3 kinds of parameter */
+-		/*  TX/RX Balance */
+-		valueDMATimeout = 0x06;
+-		valueDMAPageCount = 0x06;
+-	}
++	valueDMATimeout = 0x06;
++	valueDMAPageCount = 0x06;
+ 
+ 	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH + 1, valueDMATimeout);
+ 	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH, valueDMAPageCount);
+-- 
+2.17.1
 
