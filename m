@@ -2,162 +2,306 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E37C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29372C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8CD20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:16:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uyl+0f2v"
+	by mail.kernel.org (Postfix) with ESMTP id 04E4120749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgCMMQE (ORCPT
+        id S1726659AbgCMMSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:16:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54376 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgCMMQE (ORCPT
+        Fri, 13 Mar 2020 08:18:49 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:33888 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726395AbgCMMSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:16:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n8so9672150wmc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 05:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cos0z2ZnLdhgTrKzYZS98WN2zx2uM2u3a3GtghXGyMM=;
-        b=uyl+0f2vW+990e+EP5QFGafFeKSM6QnC39sXPkUFRtsjZ8lFkyt4cSw06tKYg+HK7Y
-         ynoknG21PmZ/TvatDsuQn4GliguyX86GIMXfgnhFutfl7vOniKKVsLMrfD9rdpt2TCD8
-         2XSGU05a343XbQ053KCylLmfd4HvmfJJwI+lCaNqsBjSRDKvmEiCiTfBnG6v3OHXQVbU
-         +PzDGeqBKdSEpj9Sny7kT4D4AfaPxX2rsSFn/TT9htkqy0nCSD+c2ZF47PDzlkVedeH9
-         ie3gDjsv5pz23lWzXBqZ7LGQn38y+td+eu7eC7m4WMAh9PGuGuN40zOkP7/cfHhILCED
-         6Aew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cos0z2ZnLdhgTrKzYZS98WN2zx2uM2u3a3GtghXGyMM=;
-        b=nCgf0LW7dUYmvlXSh4RMnWbOBHc4NsqX+DTZL3bkceb8IFc5VLM03CA+Aq21cPpZhE
-         PeJIOYth9d+Ink+rE8tc0o70SUhuMe5tRaAwcRqkUFRz5gKxOekFLkraj8Y9cNiiSBxI
-         BgiQCUa0m9hHwzbm3MHqyr7mED6PrAoYKuO3gUP41BYaOv17ucqzxYas1Hkq8Ljl9DRT
-         mtR/lVGZwUaq5ag2wqOhMlj4SyVyZVcNqs8J6x/2t7SpBGtZGP5wsvyJ4onvwQBI0o4Y
-         RcNsB3FlNEcwfLN7qggNRJQYj4UhjBwQqfdYewf1EmEg5sRjPD3aohxD3HYPf5kBnpU/
-         BaJw==
-X-Gm-Message-State: ANhLgQ16wGQAEvuDAn+D2j0EQl0tOpV0WPFn70IuQfkY0jdrVv3uH6ZR
-        mtO38sopEvD2tIulFLcRHT4D4M1OaYA=
-X-Google-Smtp-Source: ADFU+vuDGoIAUIxQUpdgjLTOoFE9zMYRNI6MCt6NH/LR8YP5yQH95VtC4/lS6iAKjJPkWVF1MOmOMg==
-X-Received: by 2002:a1c:5585:: with SMTP id j127mr10605018wmb.35.1584101761142;
-        Fri, 13 Mar 2020 05:16:01 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id v14sm43278354wrr.34.2020.03.13.05.15.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 05:16:00 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 8/9] ASoC: qcom: q6asm-dai: add support for ALAC
- and APE decoders
-To:     Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20200313101627.1561365-1-vkoul@kernel.org>
- <20200313101627.1561365-9-vkoul@kernel.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <fcee2779-fee8-e3d9-590f-e28fc5880ea0@linaro.org>
-Date:   Fri, 13 Mar 2020 12:15:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Mar 2020 08:18:48 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 9F473634C87;
+        Fri, 13 Mar 2020 14:17:46 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jCjG6-0001id-U9; Fri, 13 Mar 2020 14:17:46 +0200
+Date:   Fri, 13 Mar 2020 14:17:46 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-3-robert.foss@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200313101627.1561365-9-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313110350.10864-3-robert.foss@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robert,
 
-
-On 13/03/2020 10:16, Vinod Koul wrote:
-> Qualcomm DSPs also supports the ALAC and APE decoders, so add support
-> for these and convert the snd_codec_params to qdsp format.
+On Fri, Mar 13, 2020 at 12:03:49PM +0100, Robert Foss wrote:
+> Add devicetree match table, and enable ov8856_probe()
+> to initialize power, clocks and reset pins.
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-One minor nit, other that,
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
 > ---
->   sound/soc/qcom/qdsp6/q6asm-dai.c | 67 +++++++++++++++++++++++++++++++-
->   1 file changed, 66 insertions(+), 1 deletion(-)
 > 
-> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> index 53c250778eea..948710759824 100644
-> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> @@ -628,12 +628,16 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
->   	struct q6asm_dai_data *pdata;
->   	struct q6asm_flac_cfg flac_cfg;
->   	struct q6asm_wma_cfg wma_cfg;
-> +	struct q6asm_alac_cfg alac_cfg;
-> +	struct q6asm_ape_cfg ape_cfg;
->   	unsigned int wma_v9 = 0;
->   	struct device *dev = c->dev;
->   	int ret;
->   	union snd_codec_options *codec_options;
->   	struct snd_dec_flac *flac;
->   	struct snd_dec_wma *wma;
-> +	struct snd_dec_alac *alac;
-> +	struct snd_dec_ape *ape;
->   
->   	codec_options = &(prtd->codec_param.codec.options);
->   
-> @@ -756,6 +760,65 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
->   			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
->   			return -EIO;
->   		}
-> +		break;
-> +
-> +	case SND_AUDIOCODEC_ALAC:
-> +		memset(&alac_cfg, 0x0, sizeof(alac_cfg));
-> +		alac = &codec_options->alac_d;
-> +
-> +		alac_cfg.sample_rate = params->codec.sample_rate;
-> +		alac_cfg.avg_bit_rate = params->codec.bit_rate;
-> +		alac_cfg.bit_depth = prtd->bits_per_sample;
-> +		alac_cfg.num_channels = params->codec.ch_in;
-> +
-> +		alac_cfg.frame_length = alac->frame_length;
-> +		alac_cfg.pb = alac->pb;
-> +		alac_cfg.mb = alac->mb;
-> +		alac_cfg.kb = alac->kb;
-> +		alac_cfg.max_run = alac->max_run;
-> +		alac_cfg.compatible_version = alac->compatible_version;
-> +		alac_cfg.max_frame_bytes = alac->max_frame_bytes;
-> +
-> +		switch (params->codec.ch_in) {
-> +		case 1:
-> +			alac_cfg.channel_layout_tag = (100 << 16) | 1;
+> - Changes since v1:
+>   * Fabio: Change n_shutdown_gpio name to reset_gpio
+>   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
+>   * Fabio: Remove empty line
+>   * Fabio: Remove real error from devm_gpiod_get() failures
+>   * Andy & Sakari: Make XVCLK optional since to not break ACPI
+>   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
+>   * Sakari: Use XVCLK rate as provided by DT
+> 
+>  drivers/media/i2c/ov8856.c | 109 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 107 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+> index 8655842af275..db61eed223e8 100644
+> --- a/drivers/media/i2c/ov8856.c
+> +++ b/drivers/media/i2c/ov8856.c
+> @@ -3,10 +3,13 @@
+>  
+>  #include <asm/unaligned.h>
+>  #include <linux/acpi.h>
+> +#include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-fwnode.h>
+> @@ -19,6 +22,8 @@
+>  #define OV8856_LINK_FREQ_180MHZ		180000000ULL
+>  #define OV8856_SCLK			144000000ULL
+>  #define OV8856_MCLK			19200000
+> +#define OV8856_XVCLK_19_2		19200000
 
-We should probably define this layout tag in asm.h
-something like:
+Please use a single macro to refer to 19,2 MHz clock.
 
-#define ALAC_CHANNEL_LAYOUT_TAG_Mono (100<<16) | 1
-#define ALAC_CHANNEL_LAYOUT_TAG_STEREO (100<<16) | 2
+> +#define OV8856_XVCLK_24			24000000
 
---srini
+This doesn't seem to be needed 
 
-> +			break;
-> +		case 2:
-> +			alac_cfg.channel_layout_tag = (101 << 16) | 2;
-> +			break;
-> +		}
+>  #define OV8856_DATA_LANES		4
+>  #define OV8856_RGB_DEPTH		10
+>  
+> @@ -64,6 +69,12 @@
+>  
+>  #define to_ov8856(_sd)			container_of(_sd, struct ov8856, sd)
+>  
+> +static const char * const ov8856_supply_names[] = {
+> +	"dovdd",	/* Digital I/O power */
+> +	"avdd",		/* Analog power */
+> +	"dvdd",		/* Digital core power */
+> +};
+> +
+>  enum {
+>  	OV8856_LINK_FREQ_720MBPS,
+>  	OV8856_LINK_FREQ_360MBPS,
+> @@ -566,6 +577,10 @@ struct ov8856 {
+>  	struct media_pad pad;
+>  	struct v4l2_ctrl_handler ctrl_handler;
+>  
+> +	struct clk		*xvclk;
+> +	struct gpio_desc	*reset_gpio;
+> +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
+> +
+>  	/* V4L2 Controls */
+>  	struct v4l2_ctrl *link_freq;
+>  	struct v4l2_ctrl *pixel_rate;
+> @@ -908,6 +923,46 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
+>  	return ret;
+>  }
+>  
+> +static int __ov8856_power_on(struct ov8856 *ov8856)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(ov8856->xvclk);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable xvclk\n");
+> +		return ret;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> +				    ov8856->supplies);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable regulators\n");
+> +		goto disable_clk;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
+> +
+> +	usleep_range(1500, 1800);
+
+I think you could omit the delay on ACPI based systems. Or just bail out
+early in that case.
+
+> +
+> +	return 0;
+> +
+> +disable_clk:
+
+How about the GPIO here?
+
+> +	clk_disable_unprepare(ov8856->xvclk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void __ov8856_power_off(struct ov8856 *ov8856)
+> +{
+> +	gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+> +	regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
+> +			       ov8856->supplies);
+> +	clk_disable_unprepare(ov8856->xvclk);
+> +}
+
+You'll need to call the two in the driver's suspend and resume functions.
+
+> +
+>  static int __maybe_unused ov8856_suspend(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> @@ -1175,7 +1230,7 @@ static int ov8856_remove(struct i2c_client *client)
+>  static int ov8856_probe(struct i2c_client *client)
+>  {
+>  	struct ov8856 *ov8856;
+> -	int ret;
+> +	int i, ret;
+
+unsigned int?
+
+>  
+>  	ret = ov8856_check_hwcfg(&client->dev);
+>  	if (ret) {
+> @@ -1189,10 +1244,50 @@ static int ov8856_probe(struct i2c_client *client)
+>  		return -ENOMEM;
+>  
+>  	v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
+> +	ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
+> +	if (PTR_ERR(ov8856->xvclk) == -ENOENT) {
+> +		dev_info(&client->dev, "xvclk clock not defined, continuing...\n");
+
+How about dev_dbg()?
+
+> +		ov8856->xvclk = NULL;
+> +	} else if (IS_ERR(ov8856->xvclk)) {
+> +		dev_err(&client->dev, "could not get xvclk clock (%ld)\n",
+> +			PTR_ERR(ov8856->xvclk));
+> +		return PTR_ERR(ov8856->xvclk);
+> +	}
+> +
+> +	ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
+
+This should either come from platform data, or perhaps it'd be even better
+to get the clock rate and use assigned-clock-rates. I guess that's
+preferred nowadays.
+
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
+> +		return ret;
+> +	}
+> +
+> +	ov8856->reset_gpio = devm_gpiod_get(&client->dev, "reset",
+> +					       GPIOD_OUT_HIGH);
+
+Indentation.
+
+What if no gpio is defined?
+
+> +	if (IS_ERR(ov8856->reset_gpio)) {
+> +		dev_err(&client->dev, "failed to get reset-gpios\n");
+> +		return PTR_ERR(ov8856->reset_gpio);
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ov8856_supply_names); i++)
+> +		ov8856->supplies[i].supply = ov8856_supply_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(&client->dev,
+> +				      ARRAY_SIZE(ov8856_supply_names),
+> +				      ov8856->supplies);
+
+What happens if there are no regulators?
+
+> +	if (ret) {
+> +		dev_warn(&client->dev, "failed to get regulators\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = __ov8856_power_on(ov8856);
+> +	if (ret) {
+> +		dev_warn(&client->dev, "failed to power on\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = ov8856_identify_module(ov8856);
+>  	if (ret) {
+>  		dev_err(&client->dev, "failed to find sensor: %d", ret);
+> -		return ret;
+> +		goto probe_power_off;
+>  	}
+>  
+>  	mutex_init(&ov8856->mutex);
+> @@ -1238,6 +1333,9 @@ static int ov8856_probe(struct i2c_client *client)
+>  	v4l2_ctrl_handler_free(ov8856->sd.ctrl_handler);
+>  	mutex_destroy(&ov8856->mutex);
+>  
+> +probe_power_off:
+> +	__ov8856_power_off(ov8856);
+> +
+
+Also remember to power off the device in remove().
+
+>  	return ret;
+>  }
+>  
+> @@ -1254,11 +1352,18 @@ static const struct acpi_device_id ov8856_acpi_ids[] = {
+>  MODULE_DEVICE_TABLE(acpi, ov8856_acpi_ids);
+>  #endif
+>  
+> +static const struct of_device_id ov8856_of_match[] = {
+> +	{ .compatible = "ovti,ov8856" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ov8856_of_match);
+> +
+>  static struct i2c_driver ov8856_i2c_driver = {
+>  	.driver = {
+>  		.name = "ov8856",
+>  		.pm = &ov8856_pm_ops,
+>  		.acpi_match_table = ACPI_PTR(ov8856_acpi_ids),
+> +		.of_match_table = ov8856_of_match,
+>  	},
+>  	.probe_new = ov8856_probe,
+>  	.remove = ov8856_remove,
+
+-- 
+Regards,
+
+Sakari Ailus
