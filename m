@@ -4,244 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA24C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7687C20751
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA0C20749
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 18:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgCMSfc (ORCPT
+        id S1727146AbgCMSgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:35:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28623 "EHLO mga06.intel.com"
+        Fri, 13 Mar 2020 14:36:51 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:60254 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbgCMSeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:34:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 11:34:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="442506083"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Mar 2020 11:34:34 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
-        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 06/17] perf machine: Refine the function for LBR call stack reconstruction
-Date:   Fri, 13 Mar 2020 11:33:08 -0700
-Message-Id: <20200313183319.17739-7-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313183319.17739-1-kan.liang@linux.intel.com>
-References: <20200313183319.17739-1-kan.liang@linux.intel.com>
+        id S1726339AbgCMSgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:36:51 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jCpAv-0002bu-Ds; Fri, 13 Mar 2020 12:36:50 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jCpAv-0000hP-0P; Fri, 13 Mar 2020 12:36:49 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri, 13 Mar 2020 12:36:08 -0600
+Message-Id: <20200313183608.2646-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, bigeasy@linutronix.de, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH] PCI/switchtec: Fix init_completion race condition with poll_wait()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+The call to init_completion() in mrpc_queue_cmd() can theoretically
+race with the call to poll_wait() in switchtec_dev_poll().
 
-LBR only collect the user call stack. To reconstruct a call stack, both
-kernel call stack and user call stack are required. The function
-resolve_lbr_callchain_sample() mix the kernel call stack and user call
-stack.
-Now, with the help of HW idx, perf tool can reconstruct a more complete
-call stack by adding some user call stack from previous sample. However,
-current implementation is hard to be extended to support it.
+  poll()			write()
+    switchtec_dev_poll()   	  switchtec_dev_write()
+      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+			               init_completion(&s->comp)
+				         init_waitqueue_head(&s->comp.wait)
 
-Current code path for resolve_lbr_callchain_sample()
+To my knowledge, no one has hit this bug, but we should fix it for
+correctness.
 
-  for (j = 0; j < mix_chain_nr; j++) {
-       if (ORDER_CALLEE) {
-             if (kernel callchain)
-                  Fill callchain info
-             else if (LBR callchain)
-                  Fill callchain info
-       } else {
-             if (LBR callchain)
-                  Fill callchain info
-             else if (kernel callchain)
-                  Fill callchain info
-       }
-       add_callchain_ip();
-  }
+Fix this by using reinit_completion() instead of init_completion() in
+mrpc_queue_cmd().
 
-With the patch,
-
-  if (ORDER_CALLEE) {
-       for (j = 0; j < NUM of kernel callchain) {
-             Fill callchain info
-             add_callchain_ip();
-       }
-       for (; j < mix_chain_nr) {
-             Fill callchain info
-             add_callchain_ip();
-       }
-  } else {
-       for (; j < NUM of LBR callchain) {
-             Fill callchain info
-             add_callchain_ip();
-       }
-       for (j = 0; j < mix_chain_nr) {
-             Fill callchain info
-             add_callchain_ip();
-       }
-  }
-
-No functional changes.
-
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tools/perf/util/machine.c | 111 ++++++++++++++++++++++++++------------
- 1 file changed, 76 insertions(+), 35 deletions(-)
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 9021e5b6a2a9..cf2c97a6ef81 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2183,6 +2183,7 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- 	bool branch;
- 	struct branch_flags *flags;
- 	int mix_chain_nr;
-+	int err;
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index a823b4b8ef8a..81dc7ac01381 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	init_completion(&stuser->comp);
++	reinit_completion(&stuser->comp);
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
  
- 	for (i = 0; i < chain_nr; i++) {
- 		if (chain->ips[i] == PERF_CONTEXT_USER)
-@@ -2208,50 +2209,90 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- 	 */
- 	mix_chain_nr = i + 1 + lbr_nr + 1;
- 
--	for (j = 0; j < mix_chain_nr; j++) {
--		int err;
--
--		branch = false;
--		flags = NULL;
--
--		if (callchain_param.order == ORDER_CALLEE) {
--			if (j < i + 1)
--				ip = chain->ips[j];
--			else if (j > i + 1) {
--				k = j - i - 2;
--				ip = entries[k].from;
--				branch = true;
--				flags = &entries[k].flags;
--			} else {
--				ip = entries[0].to;
--				branch = true;
--				flags = &entries[0].flags;
--				branch_from = entries[0].from;
--			}
--		} else {
--			if (j < lbr_nr) {
--				k = lbr_nr - j - 1;
--				ip = entries[k].from;
--				branch = true;
--				flags = &entries[k].flags;
--			} else if (j > lbr_nr)
--				ip = chain->ips[i + 1 - (j - lbr_nr)];
--			else {
--				ip = entries[0].to;
--				branch = true;
--				flags = &entries[0].flags;
--				branch_from = entries[0].from;
--			}
-+	if (callchain_param.order == ORDER_CALLEE) {
-+		/* Add kernel ip */
-+		for (j = 0; j < i + 1; j++) {
-+			ip = chain->ips[j];
-+			branch = false;
-+			flags = NULL;
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       branch, flags, NULL,
-+					       branch_from);
-+			if (err)
-+				goto error;
- 		}
-+		/* Add LBR ip from first entries.to */
-+		ip = entries[0].to;
-+		branch = true;
-+		flags = &entries[0].flags;
-+		branch_from = entries[0].from;
-+		err = add_callchain_ip(thread, cursor, parent,
-+				       root_al, &cpumode, ip,
-+				       branch, flags, NULL,
-+				       branch_from);
-+		if (err)
-+			goto error;
- 
-+		/* Add LBR ip from entries.from one by one. */
-+		for (j = i + 2; j < mix_chain_nr; j++) {
-+			k = j - i - 2;
-+			ip = entries[k].from;
-+			branch = true;
-+			flags = &entries[k].flags;
-+
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       branch, flags, NULL,
-+					       branch_from);
-+			if (err)
-+				goto error;
-+		}
-+	} else {
-+		/* Add LBR ip from entries.from one by one. */
-+		for (j = 0; j < lbr_nr; j++) {
-+			k = lbr_nr - j - 1;
-+			ip = entries[k].from;
-+			branch = true;
-+			flags = &entries[k].flags;
-+
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       branch, flags, NULL,
-+					       branch_from);
-+			if (err)
-+				goto error;
-+		}
-+
-+		/* Add LBR ip from first entries.to */
-+		ip = entries[0].to;
-+		branch = true;
-+		flags = &entries[0].flags;
-+		branch_from = entries[0].from;
- 		err = add_callchain_ip(thread, cursor, parent,
- 				       root_al, &cpumode, ip,
- 				       branch, flags, NULL,
- 				       branch_from);
- 		if (err)
--			return (err < 0) ? err : 0;
-+			goto error;
-+
-+		/* Add kernel ip */
-+		for (j = lbr_nr + 1; j < mix_chain_nr; j++) {
-+			ip = chain->ips[i + 1 - (j - lbr_nr)];
-+			branch = false;
-+			flags = NULL;
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       branch, flags, NULL,
-+					       branch_from);
-+			if (err)
-+				goto error;
-+		}
- 	}
- 	return 1;
-+
-+error:
-+	return (err < 0) ? err : 0;
- }
- 
- static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
+ 	mrpc_cmd_submit(stdev);
 -- 
-2.17.1
+2.20.1
 
