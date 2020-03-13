@@ -2,30 +2,30 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C5FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1F3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4DD20746
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC742072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 15:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgCMPpR (ORCPT
+        id S1727415AbgCMPpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:45:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:58978 "EHLO foss.arm.com"
+        Fri, 13 Mar 2020 11:45:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:58910 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbgCMPpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 11:45:14 -0400
+        id S1727389AbgCMPpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:45:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7232B31B;
-        Fri, 13 Mar 2020 08:45:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF7571063;
+        Fri, 13 Mar 2020 08:45:06 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A0D73F67D;
-        Fri, 13 Mar 2020 08:45:10 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE3123F67D;
+        Fri, 13 Mar 2020 08:45:03 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Marc Zyngier <maz@kernel.org>,
         Mark Rutland <Mark.Rutland@arm.com>,
         Will Deacon <will@kernel.org>
-Subject: [PATCH v3 21/26] arm64: Introduce asm/vdso/arch_timer.h
-Date:   Fri, 13 Mar 2020 15:43:40 +0000
-Message-Id: <20200313154345.56760-22-vincenzo.frascino@arm.com>
+Subject: [PATCH v3 19/26] arm64: vdso: Include common headers in the vdso library
+Date:   Fri, 13 Mar 2020 15:43:38 +0000
+Message-Id: <20200313154345.56760-20-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200313154345.56760-1-vincenzo.frascino@arm.com>
 References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
@@ -67,182 +67,41 @@ a userspace library (UAPI and a minimal set of kernel headers). To make
 this possible it is necessary to isolate from the kernel headers the
 common parts that are strictly necessary to build the library.
 
-Introduce asm/vdso/arch_timer.h to contain all the arm64 specific
-code. This allows to replace the second isb() in __arch_get_hw_counter()
-with a fake dependent stack read of the counter which improves the vdso
-library peformances of ~4.5%. Below the results of vdsotest [1] ran for
-100 iterations.
-
-Before the patch:
-=================
-clock-gettime-monotonic: syscall: 771 nsec/call
-clock-gettime-monotonic:    libc: 130 nsec/call
-clock-gettime-monotonic:    vdso: 111 nsec/call
-...
-clock-gettime-realtime: syscall: 762 nsec/call
-clock-gettime-realtime:    libc: 130 nsec/call
-clock-gettime-realtime:    vdso: 111 nsec/call
-
-After the patch:
-================
-clock-gettime-monotonic: syscall: 792 nsec/call
-clock-gettime-monotonic:    libc: 124 nsec/call
-clock-gettime-monotonic:    vdso: 106 nsec/call
-...
-clock-gettime-realtime: syscall: 776 nsec/call
-clock-gettime-realtime:    libc: 124 nsec/call
-clock-gettime-realtime:    vdso: 106 nsec/call
-
-[1] https://github.com/nathanlynch/vdsotest
+Refactor the vdso implementation to include common headers.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/arm64/include/asm/arch_timer.h        | 29 ++++---------------
- arch/arm64/include/asm/vdso/arch_timer.h   | 33 ++++++++++++++++++++++
- arch/arm64/include/asm/vdso/gettimeofday.h |  7 +++--
- 3 files changed, 42 insertions(+), 27 deletions(-)
- create mode 100644 arch/arm64/include/asm/vdso/arch_timer.h
+ arch/arm64/include/asm/vdso/gettimeofday.h | 1 -
+ arch/arm64/kernel/vdso/vgettimeofday.c     | 2 --
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index 7ae54d7d333a..7f22cd00ad45 100644
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -164,24 +164,7 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
- 	isb();
- }
- 
--/*
-- * Ensure that reads of the counter are treated the same as memory reads
-- * for the purposes of ordering by subsequent memory barriers.
-- *
-- * This insanity brought to you by speculative system register reads,
-- * out-of-order memory accesses, sequence locks and Thomas Gleixner.
-- *
-- * http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/631195.html
-- */
--#define arch_counter_enforce_ordering(val) do {				\
--	u64 tmp, _val = (val);						\
--									\
--	asm volatile(							\
--	"	eor	%0, %1, %1\n"					\
--	"	add	%0, sp, %0\n"					\
--	"	ldr	xzr, [%0]"					\
--	: "=r" (tmp) : "r" (_val));					\
--} while (0)
-+#include <asm/vdso/arch_timer.h>
- 
- static __always_inline u64 __arch_counter_get_cntpct_stable(void)
- {
-@@ -189,7 +172,7 @@ static __always_inline u64 __arch_counter_get_cntpct_stable(void)
- 
- 	isb();
- 	cnt = arch_timer_reg_read_stable(cntpct_el0);
--	arch_counter_enforce_ordering(cnt);
-+	cnt = arch_counter_enforce_ordering(cnt);
- 	return cnt;
- }
- 
-@@ -199,7 +182,7 @@ static __always_inline u64 __arch_counter_get_cntpct(void)
- 
- 	isb();
- 	cnt = read_sysreg(cntpct_el0);
--	arch_counter_enforce_ordering(cnt);
-+	cnt = arch_counter_enforce_ordering(cnt);
- 	return cnt;
- }
- 
-@@ -209,7 +192,7 @@ static __always_inline u64 __arch_counter_get_cntvct_stable(void)
- 
- 	isb();
- 	cnt = arch_timer_reg_read_stable(cntvct_el0);
--	arch_counter_enforce_ordering(cnt);
-+	cnt = arch_counter_enforce_ordering(cnt);
- 	return cnt;
- }
- 
-@@ -219,12 +202,10 @@ static __always_inline u64 __arch_counter_get_cntvct(void)
- 
- 	isb();
- 	cnt = read_sysreg(cntvct_el0);
--	arch_counter_enforce_ordering(cnt);
-+	cnt = arch_counter_enforce_ordering(cnt);
- 	return cnt;
- }
- 
--#undef arch_counter_enforce_ordering
--
- static inline int arch_timer_arch_init(void)
- {
- 	return 0;
-diff --git a/arch/arm64/include/asm/vdso/arch_timer.h b/arch/arm64/include/asm/vdso/arch_timer.h
-new file mode 100644
-index 000000000000..a71bc83232f5
---- /dev/null
-+++ b/arch/arm64/include/asm/vdso/arch_timer.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2020 ARM Ltd.
-+ */
-+#ifndef __ASM_VDSO_ARCH_TIMER_H
-+#define __ASM_VDSO_ARCH_TIMER_H
-+
-+#include <uapi/linux/types.h>
-+
-+/*
-+ * Ensure that reads of the counter are treated the same as memory reads
-+ * for the purposes of ordering by subsequent memory barriers.
-+ *
-+ * This insanity brought to you by speculative system register reads,
-+ * out-of-order memory accesses, sequence locks and Thomas Gleixner.
-+ *
-+ * http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/631195.html
-+ *
-+ */
-+static u64 arch_counter_enforce_ordering(u64 val)
-+{
-+	u64 tmp, _val = (val);
-+
-+	asm volatile(
-+	"	eor	%0, %1, %1\n"
-+	"	add	%0, sp, %0\n"
-+	"	ldr	xzr, [%0]"
-+	: "=r" (tmp) : "r" (_val));
-+
-+	return _val;
-+}
-+
-+#endif /* __ASM_VDSO_ARCH_TIMER_H */
 diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-index afba6ba332f8..319808106625 100644
+index 5a534432aa5d..afba6ba332f8 100644
 --- a/arch/arm64/include/asm/vdso/gettimeofday.h
 +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-@@ -8,6 +8,7 @@
+@@ -8,7 +8,6 @@
  #ifndef __ASSEMBLY__
  
  #include <asm/unistd.h>
-+#include <asm/vdso/arch_timer.h>
+-#include <uapi/linux/time.h>
  
  #define VDSO_HAS_CLOCK_GETRES		1
  
-@@ -82,10 +83,10 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
- 	isb();
- 	asm volatile("mrs %0, cntvct_el0" : "=r" (res) :: "memory");
- 	/*
--	 * This isb() is required to prevent that the seq lock is
--	 * speculated.#
-+	 * arch_counter_enforce_ordering() is required to prevent that
-+	 * the seq lock is speculated.
- 	 */
--	isb();
-+	res = arch_counter_enforce_ordering(res);
+diff --git a/arch/arm64/kernel/vdso/vgettimeofday.c b/arch/arm64/kernel/vdso/vgettimeofday.c
+index 747635501a14..4236cf34d7d9 100644
+--- a/arch/arm64/kernel/vdso/vgettimeofday.c
++++ b/arch/arm64/kernel/vdso/vgettimeofday.c
+@@ -5,8 +5,6 @@
+  * Copyright (C) 2018 ARM Limited
+  *
+  */
+-#include <linux/time.h>
+-#include <linux/types.h>
  
- 	return res;
- }
+ int __kernel_clock_gettime(clockid_t clock,
+ 			   struct __kernel_timespec *ts)
 -- 
 2.25.1
 
