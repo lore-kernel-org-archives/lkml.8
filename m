@@ -2,140 +2,139 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45577C4CECE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9C5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2068520749
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584103256;
-	bh=tgITx3udnkEgR1xuM2wgsUOQN1rzYgIiMUlHDX0dYaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wJnjdfURJEzEHr1Y4Iaks5hFY3tUrPQSI+aNoTRGFwMA2LshoC++mLwszjQVcePL0
-	 +U1Da0qY6c1lwdSDcEBKilFvW/eR8RM1vynWeS8ZT6GYMjoQnZ7tgK2hJtrefIsxji
-	 iITJYO8RKT/eiB+4oN4wiGt8GUFE6TxMRyadxgpU=
+	by mail.kernel.org (Postfix) with ESMTP id DEB2A20746
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 12:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgCMMkz (ORCPT
+        id S1726752AbgCMMlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgCMMky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:40:54 -0400
-Received: from localhost (unknown [171.76.107.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11DE520724;
-        Fri, 13 Mar 2020 12:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584103254;
-        bh=tgITx3udnkEgR1xuM2wgsUOQN1rzYgIiMUlHDX0dYaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g+gYR2LvtvlA8v0hrbnFWvTCbNSX+vqRry14M3Uuzpmxt6rk3WQ17iARExRk3loUu
-         /wv5tuKoZZG+9F2ADNlpQUpQL3QvpXf3XRRO/WZWYTz7k9TYO0dmFaevu/XiM3Ocih
-         fgS4UxHUWklz/tB0U6Nqc99mbA8f1sIDr9FwlI3E=
-Date:   Fri, 13 Mar 2020 18:10:49 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        Fri, 13 Mar 2020 08:41:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53264 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMMlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:41:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 905C727E99E
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 1/3] platform/chrome: notify: Add driver data struct
+To:     Prashant Malani <pmalani@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 8/9] ASoC: qcom: q6asm-dai: add support for
- ALAC and APE decoders
-Message-ID: <20200313124049.GJ4885@vkoul-mobl>
-References: <20200313101627.1561365-1-vkoul@kernel.org>
- <20200313101627.1561365-9-vkoul@kernel.org>
- <fcee2779-fee8-e3d9-590f-e28fc5880ea0@linaro.org>
+Cc:     furquan@chromium.org, Benson Leung <bleung@chromium.org>
+References: <20200312100809.21153-1-pmalani@chromium.org>
+ <20200312100809.21153-2-pmalani@chromium.org>
+Message-ID: <06d90fc3-c792-b85f-c4aa-923c5a7f5eea@collabora.com>
+Date:   Fri, 13 Mar 2020 13:41:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcee2779-fee8-e3d9-590f-e28fc5880ea0@linaro.org>
+In-Reply-To: <20200312100809.21153-2-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-03-20, 12:15, Srinivas Kandagatla wrote:
-> 
-> 
-> On 13/03/2020 10:16, Vinod Koul wrote:
-> > Qualcomm DSPs also supports the ALAC and APE decoders, so add support
-> > for these and convert the snd_codec_params to qdsp format.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> One minor nit, other that,
-> 
-> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi Prashant,
 
-Thanks Srini for the reviews
-
-> > ---
-> >   sound/soc/qcom/qdsp6/q6asm-dai.c | 67 +++++++++++++++++++++++++++++++-
-> >   1 file changed, 66 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> > index 53c250778eea..948710759824 100644
-> > --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-> > +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> > @@ -628,12 +628,16 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
-> >   	struct q6asm_dai_data *pdata;
-> >   	struct q6asm_flac_cfg flac_cfg;
-> >   	struct q6asm_wma_cfg wma_cfg;
-> > +	struct q6asm_alac_cfg alac_cfg;
-> > +	struct q6asm_ape_cfg ape_cfg;
-> >   	unsigned int wma_v9 = 0;
-> >   	struct device *dev = c->dev;
-> >   	int ret;
-> >   	union snd_codec_options *codec_options;
-> >   	struct snd_dec_flac *flac;
-> >   	struct snd_dec_wma *wma;
-> > +	struct snd_dec_alac *alac;
-> > +	struct snd_dec_ape *ape;
-> >   	codec_options = &(prtd->codec_param.codec.options);
-> > @@ -756,6 +760,65 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
-> >   			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
-> >   			return -EIO;
-> >   		}
-> > +		break;
-> > +
-> > +	case SND_AUDIOCODEC_ALAC:
-> > +		memset(&alac_cfg, 0x0, sizeof(alac_cfg));
-> > +		alac = &codec_options->alac_d;
-> > +
-> > +		alac_cfg.sample_rate = params->codec.sample_rate;
-> > +		alac_cfg.avg_bit_rate = params->codec.bit_rate;
-> > +		alac_cfg.bit_depth = prtd->bits_per_sample;
-> > +		alac_cfg.num_channels = params->codec.ch_in;
-> > +
-> > +		alac_cfg.frame_length = alac->frame_length;
-> > +		alac_cfg.pb = alac->pb;
-> > +		alac_cfg.mb = alac->mb;
-> > +		alac_cfg.kb = alac->kb;
-> > +		alac_cfg.max_run = alac->max_run;
-> > +		alac_cfg.compatible_version = alac->compatible_version;
-> > +		alac_cfg.max_frame_bytes = alac->max_frame_bytes;
-> > +
-> > +		switch (params->codec.ch_in) {
-> > +		case 1:
-> > +			alac_cfg.channel_layout_tag = (100 << 16) | 1;
+On 12/3/20 11:08, Prashant Malani wrote:
+> Introduce a device driver data structure, cros_usbpd_notify_data, in
+> which we can store the notifier block object and pointers to the struct
+> cros_ec_device and struct device objects.
 > 
-> We should probably define this layout tag in asm.h
-> something like:
+> This will make it more convenient to access these pointers when
+> executing both platform and ACPI callbacks.
 > 
-> #define ALAC_CHANNEL_LAYOUT_TAG_Mono (100<<16) | 1
-> #define ALAC_CHANNEL_LAYOUT_TAG_STEREO (100<<16) | 2
+> While we are here, also add a dev_info print declaring successful device
+> registration at the end of the platform probe function.
+> 
 
-Sure I will add these
+This info can be obtained by other means, i.e function tracing or
+initcall_debug. There is no need to repeat the same explicitly in the driver.
 
--- 
-~Vinod
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_usbpd_notify.c | 30 ++++++++++++++-------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
+> index 3851bbd6e9a39..edcb346024b07 100644
+> --- a/drivers/platform/chrome/cros_usbpd_notify.c
+> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
+> @@ -16,6 +16,12 @@
+>  
+>  static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
+>  
+> +struct cros_usbpd_notify_data {
+> +	struct device *dev;
+> +	struct cros_ec_device *ec;
+> +	struct notifier_block nb;
+> +};
+> +
+>  /**
+>   * cros_usbpd_register_notify - Register a notifier callback for PD events.
+>   * @nb: Notifier block pointer to register
+> @@ -98,23 +104,28 @@ static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
+> -	struct notifier_block *nb;
+> +	struct cros_usbpd_notify_data *pdnotify;
+>  	int ret;
+>  
+> -	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
+> -	if (!nb)
+> +	pdnotify = devm_kzalloc(dev, sizeof(*pdnotify), GFP_KERNEL);
+> +	if (!pdnotify)
+>  		return -ENOMEM;
+>  
+> -	nb->notifier_call = cros_usbpd_notify_plat;
+> -	dev_set_drvdata(dev, nb);
+> +	pdnotify->dev = dev;
+> +	pdnotify->ec = ecdev->ec_dev;
+> +	pdnotify->nb.notifier_call = cros_usbpd_notify_plat;
+> +
+> +	dev_set_drvdata(dev, pdnotify);
+>  
+>  	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
+> -					       nb);
+> +					       &pdnotify->nb);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Failed to register notifier\n");
+>  		return ret;
+>  	}
+>  
+> +	dev_info(dev, "Chrome EC PD notify device registered.\n");
+> +
+
+This is only noise to the kernel log, remove it.
+
+>  	return 0;
+>  }
+>  
+> @@ -122,10 +133,11 @@ static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
+> -	struct notifier_block *nb =
+> -		(struct notifier_block *)dev_get_drvdata(dev);
+> +	struct cros_usbpd_notify_data *pdnotify =
+> +		(struct cros_usbpd_notify_data *)dev_get_drvdata(dev);
+>  
+> -	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier, nb);
+> +	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
+> +					   &pdnotify->nb);
+>  
+>  	return 0;
+>  }
+> 
