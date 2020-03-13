@@ -2,70 +2,160 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C947C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B801C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DC6206B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0481D20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 19:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WKO5oG44"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuhkVmLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbgCMTO1 (ORCPT
+        id S1727202AbgCMTPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:14:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42062 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgCMTO0 (ORCPT
+        Fri, 13 Mar 2020 15:15:24 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38220 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgCMTPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 15:14:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=09yW9h+/nWoQmCEfqkkhObnUi342JHHlf0xuk0jzfN0=; b=WKO5oG44guoe4OsIum/ZbICYeb
-        ScFpySEpmQmrVbg9RX2pJ8BUKtRtJIika4bwC5MsWOM4NMdXjnLK7uZ+Q1juBMU0uxhIytcqB6Bys
-        pbE46Dn3zrwnNB2znw+ErZqqkaNPwNp9/pDzExevw4krky7BiHYgOff0zNEMpcwAG5p4WuG6pk+kd
-        r12PV/l3Q9KqLyoM9Xw5E/poPtanAqSl4xn3dWppISmLlEezXI62MTz9+UfXE++tP88DebFlu3myF
-        czvKMhatDsho48IDWLUoqH+UTRC1jn3xE1SuQj5ddjuxdMfQixeRgFGvhEcxQMTndUdGwcfKLN6eu
-        Fc93+vkA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCplK-0006Cc-6S; Fri, 13 Mar 2020 19:14:26 +0000
-Date:   Fri, 13 Mar 2020 12:14:26 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] radix-tree: fix kernel-doc for
- radix_tree_find_next_bit
-Message-ID: <20200313191426.GO22433@bombadil.infradead.org>
-References: <20200313184909.4560-1-hqjagain@gmail.com>
- <20200313184909.4560-2-hqjagain@gmail.com>
+        Fri, 13 Mar 2020 15:15:23 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h5so13259956edn.5;
+        Fri, 13 Mar 2020 12:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a/Mvn0+PY7Zqcxqn/jETgFaE9sx7vy1J6+fqxPSu5Yk=;
+        b=fuhkVmLz0gXC7XyjGBn7cTymXP5dyrOVvVB9f/Tnr8064WVq1pfjwi7JX5cFeEn2yf
+         4hfh/x5jL7FEsLrBWEH7S1jt4v6Yy9QEGXFKY6AULjKerRJZKILqoY5PFuN8n3daVfYl
+         awUBRY6G7fqWz4i2GTvRJ05OuVDVqNL4bxFY7jDWPZxHVpqgCMgl1AsPuHG2NM1SF7js
+         d4IT7h9k7jCZu1bzp4D4WrvNq7RYRYx+U3YahXAvOfglfYjatLK71vmFz93IsY0LraXE
+         vXmN2pbQCzySLsfI/QmDy6YMgSlrAn7oVk7F/iwCO9TVF+2YPyha8m/bTII43yQy4Wr5
+         Qpww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a/Mvn0+PY7Zqcxqn/jETgFaE9sx7vy1J6+fqxPSu5Yk=;
+        b=kL3yXd4D7DbNbuV+RdqAo1Lh1TUCNPwXlsCA7KwLbv8OWuAxURdoRMtBnpEa/SvoEm
+         npdieQVRc8/WyDilCyBWqFTqc2+W6Ob61ddQ1FXWUmurK6nOWJS2HcWFmHmNyHo2NYC/
+         uBsngqs9BHgwNQv26FnR49towoafA1J7H2V8So1oNiry9ZZ7gYWNSwKwmvEpWz0b2vyP
+         sQPEtx+8MPnozq/xAx9eC2HyuLtp+MEggg8Zfe2X1deXPzpw+8McPzzMkdwFmWUPHHJc
+         15VWeatzA8S45nIxDOPCmpAMeicThf0Z6KzZW5Fx7Uq4AcUWYF3TiG+ACJwjfX9CWFD9
+         iyMA==
+X-Gm-Message-State: ANhLgQ1YLWK4qFdrw1W408bmZbVPr0l+akXreAn82hpIuM6MPBl9rs4p
+        IDiWYeyc+kyemAgebGF+m4s=
+X-Google-Smtp-Source: ADFU+vuWQEL9cTysb661kQdTOnQxHILIOGZA5AemK+0tjWcwsDfvcfV7S8iwXIUEw+EDH7G3oqKPOA==
+X-Received: by 2002:aa7:cf86:: with SMTP id z6mr14954854edx.281.1584126921840;
+        Fri, 13 Mar 2020 12:15:21 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host61-50-dynamic.50-79-r.retail.telecomitalia.it. [79.50.50.61])
+        by smtp.googlemail.com with ESMTPSA id 94sm2552140eda.7.2020.03.13.12.15.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 12:15:21 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     agross@kernel.org
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Ajay Kishore <akisho@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: use scm_call to route GPIO irq to Apps
+Date:   Fri, 13 Mar 2020 20:15:13 +0100
+Message-Id: <20200313191513.11365-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313184909.4560-2-hqjagain@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 02:49:08AM +0800, Qiujun Huang wrote:
->   * radix_tree_find_next_bit - find the next set bit in a memory region
->   *
->   * @addr: The address to base the search on
-> - * @size: The bitmap size in bits
-> + * @tag: The tag index (< RADIX_TREE_MAX_TAGS)
->   * @offset: The bitnumber to start searching at
->   *
->   * Unrollable variant of find_next_bit() for constant size arrays.
-> - * Tail bits starting from size to roundup(size, BITS_PER_LONG) must be zero.
-> - * Returns next bit offset, or size if nothing found.
-> + * Returns next bit offset, or RADIX_TREE_MAP_SIZE if nothing found.
->   */
->  static __always_inline unsigned long
->  radix_tree_find_next_bit(struct radix_tree_node *node, unsigned int tag,
+For IPQ806x targets, TZ protects the registers that are used to
+configure the routing of interrupts to a target processor.
+To resolve this, this patch uses scm call to route GPIO interrupts
+to application processor. Also the scm call interface is changed.
 
-Ugh, this is a static function with kernel-doc.  What a waste of time ;-(
+Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 36 ++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 9a8daa256a32..a83cfd1da219 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -22,6 +22,8 @@
+ #include <linux/reboot.h>
+ #include <linux/pm.h>
+ #include <linux/log2.h>
++#include <linux/qcom_scm.h>
++#include <linux/io.h>
+ 
+ #include <linux/soc/qcom/irq.h>
+ 
+@@ -710,6 +712,9 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 	const struct msm_pingroup *g;
+ 	unsigned long flags;
+ 	u32 val;
++	u32 addr;
++	int ret;
++	const __be32 *reg;
+ 
+ 	if (d->parent_data)
+ 		irq_chip_mask_parent(d);
+@@ -863,6 +868,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	const struct msm_pingroup *g;
+ 	unsigned long flags;
+ 	u32 val;
++	int ret;
+ 
+ 	if (d->parent_data)
+ 		irq_chip_set_type_parent(d, type);
+@@ -882,11 +888,33 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else
+ 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+ 
++	ret = of_device_is_compatible(pctrl->dev->of_node,
++					"qcom,ipq8064-pinctrl");
+ 	/* Route interrupts to application cpu */
+-	val = msm_readl_intr_target(pctrl, g);
+-	val &= ~(7 << g->intr_target_bit);
+-	val |= g->intr_target_kpss_val << g->intr_target_bit;
+-	msm_writel_intr_target(val, pctrl, g);
++	if (!ret) {
++		val = msm_readl_intr_target(pctrl, g);
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++		msm_writel_intr_target(val, pctrl, g);
++	} else {
++		const __be32 *reg = of_get_property(pctrl->dev->of_node,
++						    "reg", NULL);
++
++		if (reg) {
++			u32 addr = be32_to_cpup(reg) + g->intr_target_reg;
++
++			qcom_scm_io_readl(addr, &val);
++			__iormb();
++
++			val &= ~(7 << g->intr_target_bit);
++			val |= g->intr_target_kpss_val << g->intr_target_bit;
++
++			__iowmb();
++			ret = qcom_scm_io_writel(addr, val);
++			if (ret)
++				pr_err("\n Routing interrupts to Apps proc failed");
++		}
++	}
+ 
+ 	/* Update configuration for gpio.
+ 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+-- 
+2.25.0
+
