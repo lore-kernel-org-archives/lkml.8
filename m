@@ -2,118 +2,99 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A10C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C7AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27440206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087BC206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 03:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nz4f66aN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6zu35EC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgCMDJj (ORCPT
+        id S1726486AbgCMDKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:09:39 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40858 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgCMDJi (ORCPT
+        Thu, 12 Mar 2020 23:10:02 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38984 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgCMDKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:09:38 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m2so10201895qka.7;
-        Thu, 12 Mar 2020 20:09:38 -0700 (PDT)
+        Thu, 12 Mar 2020 23:10:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d63so7886951oig.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Mar 2020 20:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=y+mnyt60IrxwqY8gBOAa8U5kdnGh5BymccVlM/S5jFY=;
-        b=Nz4f66aNz6UTRMnsPJWo6PaiGAphRvXBFNmEApfnqp0ngUNkyOWys98tc5BOTi5y5v
-         Bnf264UnBx3FcBO7QPuz1olSvo4ASZVq8wQib9InhpdjcHH1yYz1Smn9Ty7ZHX+SdvTy
-         ZP/vRMW2AzJP9RDCy7o9AnrqHADLkvqqVW7ml/JDCMcm3yXNN62SzTqEy0BigZ8cgyA6
-         N0Zi4hAHTATlw3dscZvq+gt/fURHDj8ka8zKM7cmYAS1QCFR5f0T6d3urRSCMivkfoXP
-         vgf/IAN33DjVgBj6PoC9W+T+/3ucq/F8oiG9rUjN/VBXiuuwGUiStNOpTLnOy8WTaIFY
-         nBEA==
+        h=from:to:cc:subject:date:message-id;
+        bh=hbgniz1KICHBiyzs7HbcZAYxLQx9yaTRfc0Ur6qyrFA=;
+        b=l6zu35EC5jZiSfiq/F2OiEI3o+cXYB3vRgVYlzUUW38s2rRFBgCbMoX2dURMXnz1O2
+         bjQYfFrwHKL+Q1YDqnLGN+q/UWu+HiNdg9rea1Ror1O2EUWpBJjyTwgEWFw/YRBVe9jz
+         sibZCw8AfomDGgwi8Muqr2bIaUYa1R8hGck3BtsURH70MTLpHNr0VGBYyCZ3jgDH6gx/
+         PbYzvj7HOk8ClVcY6+nGuHswmzc6fnnl6wcKz9f149IQB9xQVe9IytyZ9VMvPGmgKjf1
+         KvuL0amDV7YQnFNBSB8rHDd32dLBGpDlj7pLpXoS221kPK5b96LP7vfYlaRS5UrGoD7+
+         VNFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=y+mnyt60IrxwqY8gBOAa8U5kdnGh5BymccVlM/S5jFY=;
-        b=NeV87iIeZxrpQDRedbeS6SVmoAYRA/XsAQrK5mIhPmQcW20IWA/3avNh5byyNS5/Eg
-         PLvh1s7MYV4g6KAb/FkqyHwu6zTisRo2/Pt3VpvKYY3zM4EPiWglkcAwxrpzvv2r4qxl
-         dryH7Ai4DLOprkCTV8K68ntfumsku1uRbqkgexXSKtOR4Mc8fmHvivvszIX8qLW8UlpN
-         FkyCf7GnXoy95CURrrdzDs7LRv/TIr+yvz6d5GRxL4bVJM3/rjp6f1OR31wmOC3Y+4ar
-         HddGxK99ki9KBBDSXjrbmWPsGtRo9iiFuXdXeDNAeTROU41ICcmvLLNSOXzQNbfXBUod
-         jGdg==
-X-Gm-Message-State: ANhLgQ1mByARvrMuHNip62SHiiYlcR7hBOeuvIBBkumuherl3Qp6T/YB
-        Z7UKGCuPxWPd2+yyAjAnCarwi0Yd
-X-Google-Smtp-Source: ADFU+vu+aRNTNzG+JZz8Cif9Nt9Ku+azqqksRXrAV27uFGOEeGQcvkMUMIIc6rVKT9cqdZgFUfJKDQ==
-X-Received: by 2002:a05:620a:1236:: with SMTP id v22mr10999159qkj.101.1584068977427;
-        Thu, 12 Mar 2020 20:09:37 -0700 (PDT)
-Received: from [10.0.0.29] (pool-98-118-94-114.bstnma.fios.verizon.net. [98.118.94.114])
-        by smtp.gmail.com with ESMTPSA id m92sm2452426qtd.94.2020.03.12.20.09.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 20:09:36 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] MIPS: c-r4k: Invalidate BMIPS5000 ZSCM prefetch lines
-Date:   Thu, 12 Mar 2020 23:09:35 -0400
-Message-Id: <2388CCC9-8C2A-4907-988D-7A239DE0DD6C@gmail.com>
-References: <20200311214432.GA5900@alpha.franken.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200311214432.GA5900@alpha.franken.de>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hbgniz1KICHBiyzs7HbcZAYxLQx9yaTRfc0Ur6qyrFA=;
+        b=HRxgDDCxxFs3gw46SrC8LwaqkdNcVyEGoMTHwQ5cQnoDyHWLo4A+pa7Ne0t11w6KYN
+         /3HqArLBVtfK7poKPuf2HuxUrJdQykRBViwZcNDlUW1qqpwd8BEOT3EqaibTtxAYpE4U
+         46LRykzCpApVkRu0u8JMBx6KrkSVvZNi6o7WXiSsSO/bCfuEMjX08YfEbjR7R/WJD38G
+         4FN5L+IgNfeXgU7ts+ATRtmyt/NMeZA93MPQ7yTw2U3VdLg+7f+8igjZE3Gv60L9kqzl
+         h/HS34mei/9ofKGMg2s8ofqnhF0CcUETobO1ljXYK+KZFcPemkmfpXCIo/qZJ3uTHJXz
+         2uOA==
+X-Gm-Message-State: ANhLgQ218SHMjZUlFIm1hOM52qFc5whtS5e40ph6HuoJtPcRBgLHFTDq
+        HMNnuP9jLck/PqoYqE3kwYpu0QiC
+X-Google-Smtp-Source: ADFU+vusI0iP6ekgedOIv+1cpqQPYli+tad0czpVJcz1FWXl5A2DC9qnqyY120IKaK3SNUgrs3J+sg==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr5460231oib.36.1584068997580;
+        Thu, 12 Mar 2020 20:09:57 -0700 (PDT)
+Received: from localhost.localdomain ([205.204.117.32])
+        by smtp.gmail.com with ESMTPSA id k21sm5794812otn.58.2020.03.12.20.09.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 12 Mar 2020 20:09:57 -0700 (PDT)
+From:   ling.ma.program@gmail.com
+To:     linux-kernel@vger.kernel.org
+Cc:     ling.ml@antfin.com
+Subject: [RFC PATCH] locks:Remove spinlock in unshare_files
+Date:   Fri, 13 Mar 2020 11:10:17 +0800
+Message-Id: <20200313031017.71090-1-ling.ma.program@gmail.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is needed on dma reads from device. =20
+From: Ma Ling <ling.ml@antfin.com>
 
-Kamal
+Processor support atomic operation for long/int/short/char type,
+we use the feature to avoid spinlock, which cost hundreds cycles.
 
+Appreciate your comments
+Ling
 
-> On Mar 11, 2020, at 5:44 PM, Thomas Bogendoerfer <tsbogend@alpha.franken.d=
-e> wrote:
->=20
-> =EF=BB=BFOn Wed, Mar 11, 2020 at 01:54:23PM -0700, Florian Fainelli wrote:=
+Signed-off-by: Ma Ling <ling.ml@antfin.com>
+---
+ kernel/fork.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->>> On 2/7/20 2:33 PM, Kamal Dasu wrote:
->>> Zephyr secondary cache is 256KB, 128B lines. 32B sectors. A secondary ca=
-che
->>> line can contain two instruction cache lines (64B), or four data cache
->>> lines (32B). Hardware prefetch Cache detects stream access, and prefetch=
-es
->>> ahead of processor access. Add support to invalidate BMIPS5000 cpu zephy=
-r
->>> secondary cache module (ZSCM) on DMA from device so that data returned i=
-s
->>> coherent during DMA read operations.
->>>=20
->>> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
->>=20
->> Thomas can review and apply this patch? Thank you!
->=20
-> looks good to me. I only wonder whether r4k_dma_cache_wbinv() also
-> needs this ?
->=20
-> Thomas.
->=20
-> --=20
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily=
- a
-> good idea.                                                [ RFC1925, 2.3 ]=
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 60a1295..fe54600 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -3041,9 +3041,7 @@ int unshare_files(struct files_struct **displaced)
+ 		return error;
+ 	}
+ 	*displaced = task->files;
+-	task_lock(task);
+-	task->files = copy;
+-	task_unlock(task);
++	WRITE_ONCE(task->files, copy);
+ 	return 0;
+ }
+ 
+-- 
+1.8.3.1
 
