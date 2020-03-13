@@ -2,136 +2,210 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8870FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0F12072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58022073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fQ7PD+60"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZVTyq2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCMOBh (ORCPT
+        id S1726901AbgCMOCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:01:37 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60078 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMOBg (ORCPT
+        Fri, 13 Mar 2020 10:02:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35879 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726729AbgCMOCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:01:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ebofW7P9NSpXupWM6c+gZTgOsDoM48+wVkeltb0bhIs=; b=fQ7PD+60iZ5/eyMc+OUZU3lKf
-        feSyRiIOA7uTL3RbpCIs+/fbfFc221rr+Izn1Eve4nvtS2Om/DLVORadykSRvdG3PDCDanWaFSThS
-        lPVsQlMlwJNFg6UlANfjdd9As78frbcuSWZ6UQmZ8APPGLta+MT+tSCqQnC+Rc+g/tiC0yyaH5HPT
-        5HivwFJ3rljFWXpVGEF9oYER2ii61kdzKsH5RYDQwU7vG1cbPxSrRDmkuAxtzX42E0FOIOZYjc1JR
-        EhSSB4hlGtZ1yNHTZ8yq0Jy7KfQOntnb4RSEgEueJQy8xAh1SE4+dk6JgLcoUVCJ9c1bj1goyjnnh
-        pLC79TSOQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:60008)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jCksR-0000di-TN; Fri, 13 Mar 2020 14:01:28 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jCksM-0007NR-FD; Fri, 13 Mar 2020 14:01:22 +0000
-Date:   Fri, 13 Mar 2020 14:01:22 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/4] net: phy: xpcs: Clear latched value of
- RX/TX fault
-Message-ID: <20200313140122.GC25745@shell.armlinux.org.uk>
-References: <cover.1584106347.git.Jose.Abreu@synopsys.com>
- <50f3dd2ab58fecfea1156aaf8dbfa99d0c7b36be.1584106347.git.Jose.Abreu@synopsys.com>
+        Fri, 13 Mar 2020 10:02:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584108143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3i7hBK/HmnhrILaRr2C1Odzb1IOSSspXK3muq9nJqKM=;
+        b=VZVTyq2hDNqY5rVsUIjQSVMqrQDkX2nO1JdVYjnuGcPR8u1PwTUYWxqzQZtpQ+D5OGoQ40
+        UjsBT+4cCCxs2QAOlhEmgZvT/4q58Os1CZZNvuUPbBP/yP0YkRDzaRmwc62bnaMH0h9vh4
+        0KUJHAz9fei8Opc2p9V+/Zpc9iFilog=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-qBCd1uDPMV6Vk0QLYgzNyQ-1; Fri, 13 Mar 2020 10:02:19 -0400
+X-MC-Unique: qBCd1uDPMV6Vk0QLYgzNyQ-1
+Received: by mail-wm1-f72.google.com with SMTP id e26so2956612wmk.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:02:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=3i7hBK/HmnhrILaRr2C1Odzb1IOSSspXK3muq9nJqKM=;
+        b=Ugrv8uT6lvl4A2hm8yTO60cXj31hiua1PeAZKt2/+mb8BEO5eWxTL4TxtlSRo7A+7W
+         alhPfgmxm0lDnRzGxdraWrjd8t/Wgq4hRZW2G4hZAxAQUiBTXBEzA1lfSuryBnlwygmw
+         594AMxyIguQAkq/7o4W2+katMuy33V/Ngmqz99/THwintqj8mN5krvTgFIGe3Le3QF31
+         wgqYMo0ID1XyKnFlJ4gUhyp73VMVkDZorvf+rJq2cF5qCTwDLoKBTZS5uRCWKQ/SzZUw
+         va3YYeeuUW7bfASgxQC74qIzstDzqhvXYlQHbPc+KC538y7c/P/ONfNW1P0vyuG+WYRW
+         Yk7A==
+X-Gm-Message-State: ANhLgQ2NsiLRzLk6QbBm8KmILU/ZPctgajtzCJQiMvUVTVIbjReECj59
+        2RYHHYgj2SwP2EYzuRC2Q6j+Q0SSlJLWZ8YH3bPUhA7NX8snZAs5SLAoKY5xypzrpeDCxpkgw7o
+        6NVuUvZXbLP/oyq3jR/1wl0TN
+X-Received: by 2002:a7b:c5da:: with SMTP id n26mr10667918wmk.138.1584108138406;
+        Fri, 13 Mar 2020 07:02:18 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs+hDDOrm44+SR+aBz6r8AgrG8mz8l1qzVsX9PfsqZEyl51N/a1cTIyusInSsiP03l9NBZtNA==
+X-Received: by 2002:a7b:c5da:: with SMTP id n26mr10667891wmk.138.1584108138098;
+        Fri, 13 Mar 2020 07:02:18 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f15sm16977174wmj.25.2020.03.13.07.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 07:02:15 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 08/10] KVM: nVMX: Rename exit_reason to vm_exit_reason for nested VM-Exit
+In-Reply-To: <20200312184521.24579-9-sean.j.christopherson@intel.com>
+References: <20200312184521.24579-1-sean.j.christopherson@intel.com> <20200312184521.24579-9-sean.j.christopherson@intel.com>
+Date:   Fri, 13 Mar 2020 15:01:55 +0100
+Message-ID: <87k13onyjw.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50f3dd2ab58fecfea1156aaf8dbfa99d0c7b36be.1584106347.git.Jose.Abreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 02:39:40PM +0100, Jose Abreu wrote:
-> When reading RX/TX fault register we may have latched values from Link
-> down. Clear the latched value first and then read it again to make sure
-> no old errors are flagged and that new errors are caught.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-The purpose of the latched link down is so that software can respond
-to a momentary loss of link with a possible change in the negotiation
-results.  That is why IEEE 802.3 wants a link loss to be a latched
-event.
+> Use "vm_exit_reason" when passing around the full exit reason for nested
+> VM-Exits to make it clear that it's not just the basic exit reason.  The
+> basic exit reason (bits 15:0 of vmcs.VM_EXIT_REASON) is colloquially
+> referred to as simply "exit reason", e.g. vmx_handle_vmexit() tracks the
+> basic exit reason in a local variable named "exit_reason".
+>
 
-Double-reading the status register loses that information, and hides
-it from phylink.  A change in negotiation, which can occur very
-quickly on fiber links) can go unnoticed if the latching is not
-propagated up through phylink.
+Would it make sense to stop using 'exit_reason' without a prefix (full,
+basic,...) completely?
 
-If the negotiation parameters have changed, and pcs_get_state() does
-not report that the link has failed, then mac_link_up() will _not_ be
-called with the new link parameters, and the MAC will continue using
-the old ones.  Therefore, it is very important that any link-down
-event is reported to phylink.
-
-Phylink currently doesn't respond to a link-down event reported via
-PCS by re-checking after processing the link loss, but it could do,
-which would improve it's behaviour in that scenario.  I would prefer
-this resolution, rather than your proposed double-reading of the
-status register to "lose" the link-down event.
-
-I do have some patches that make that easier, but they're delayed
-behind the mass of patches that I still have outstanding - and trying
-to get progress on getting phylink patches merged has been glacial,
-and fraught with problems this time around.
-
-> 
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
-> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/net/phy/mdio-xpcs.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/phy/mdio-xpcs.c b/drivers/net/phy/mdio-xpcs.c
-> index 973f588146f7..a4cbeecc6d42 100644
-> --- a/drivers/net/phy/mdio-xpcs.c
-> +++ b/drivers/net/phy/mdio-xpcs.c
-> @@ -185,6 +185,7 @@ static int xpcs_read_fault(struct mdio_xpcs_args *xpcs,
->  		return -EFAULT;
->  	}
+>  arch/x86/kvm/vmx/nested.c | 29 +++++++++++++++--------------
+>  arch/x86/kvm/vmx/nested.h |  2 +-
+>  2 files changed, 16 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 86b12a2918c5..c775feca3eb0 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -328,19 +328,19 @@ static void nested_ept_inject_page_fault(struct kvm_vcpu *vcpu,
+>  {
+>  	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> -	u32 exit_reason;
+> +	u32 vm_exit_reason;
+>  	unsigned long exit_qualification = vcpu->arch.exit_qualification;
 >  
-> +	xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT2);
->  	ret = xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT2);
->  	if (ret < 0)
->  		return ret;
-> -- 
-> 2.7.4
-> 
-> 
+>  	if (vmx->nested.pml_full) {
+> -		exit_reason = EXIT_REASON_PML_FULL;
+> +		vm_exit_reason = EXIT_REASON_PML_FULL;
+>  		vmx->nested.pml_full = false;
+>  		exit_qualification &= INTR_INFO_UNBLOCK_NMI;
+>  	} else if (fault->error_code & PFERR_RSVD_MASK)
+> -		exit_reason = EXIT_REASON_EPT_MISCONFIG;
+> +		vm_exit_reason = EXIT_REASON_EPT_MISCONFIG;
+>  	else
+> -		exit_reason = EXIT_REASON_EPT_VIOLATION;
+> +		vm_exit_reason = EXIT_REASON_EPT_VIOLATION;
+>  
+> -	nested_vmx_vmexit(vcpu, exit_reason, 0, exit_qualification);
+> +	nested_vmx_vmexit(vcpu, vm_exit_reason, 0, exit_qualification);
+>  	vmcs12->guest_physical_address = fault->address;
+>  }
+>  
+> @@ -3919,11 +3919,11 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
+>   * which already writes to vmcs12 directly.
+>   */
+>  static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+> -			   u32 exit_reason, u32 exit_intr_info,
+> +			   u32 vm_exit_reason, u32 exit_intr_info,
+>  			   unsigned long exit_qualification)
+>  {
+>  	/* update exit information fields: */
+> -	vmcs12->vm_exit_reason = exit_reason;
+> +	vmcs12->vm_exit_reason = vm_exit_reason;
+>  	vmcs12->exit_qualification = exit_qualification;
+>  	vmcs12->vm_exit_intr_info = exit_intr_info;
+>  
+> @@ -4252,7 +4252,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+>   * and modify vmcs12 to make it see what it would expect to see there if
+>   * L2 was its real guest. Must only be called when in L2 (is_guest_mode())
+>   */
+> -void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+> +void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
+>  		       u32 exit_intr_info, unsigned long exit_qualification)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> @@ -4272,9 +4272,9 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+>  	if (likely(!vmx->fail)) {
+>  		sync_vmcs02_to_vmcs12(vcpu, vmcs12);
+>  
+> -		if (exit_reason != -1)
+> -			prepare_vmcs12(vcpu, vmcs12, exit_reason, exit_intr_info,
+> -				       exit_qualification);
+> +		if (vm_exit_reason != -1)
+> +			prepare_vmcs12(vcpu, vmcs12, vm_exit_reason,
+> +				       exit_intr_info, exit_qualification);
+>  
+>  		/*
+>  		 * Must happen outside of sync_vmcs02_to_vmcs12() as it will
+> @@ -4330,14 +4330,15 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+>  	 */
+>  	kvm_make_request(KVM_REQ_APIC_PAGE_RELOAD, vcpu);
+>  
+> -	if ((exit_reason != -1) && (enable_shadow_vmcs || vmx->nested.hv_evmcs))
+> +	if ((vm_exit_reason != -1) &&
+> +	    (enable_shadow_vmcs || vmx->nested.hv_evmcs))
+>  		vmx->nested.need_vmcs12_to_shadow_sync = true;
+>  
+>  	/* in case we halted in L2 */
+>  	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+>  
+>  	if (likely(!vmx->fail)) {
+> -		if ((u16)exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
+> +		if ((u16)vm_exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
+>  		    nested_exit_intr_ack_set(vcpu)) {
+>  			int irq = kvm_cpu_get_interrupt(vcpu);
+>  			WARN_ON(irq < 0);
+> @@ -4345,7 +4346,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+>  				INTR_INFO_VALID_MASK | INTR_TYPE_EXT_INTR;
+>  		}
+>  
+> -		if (exit_reason != -1)
+> +		if (vm_exit_reason != -1)
+>  			trace_kvm_nested_vmexit_inject(vmcs12->vm_exit_reason,
+>  						       vmcs12->exit_qualification,
+>  						       vmcs12->idt_vectoring_info_field,
+> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+> index 569cb828b6ca..04584bcbcc8d 100644
+> --- a/arch/x86/kvm/vmx/nested.h
+> +++ b/arch/x86/kvm/vmx/nested.h
+> @@ -25,7 +25,7 @@ void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
+>  enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+>  						     bool from_vmentry);
+>  bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu);
+> -void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+> +void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
+>  		       u32 exit_intr_info, unsigned long exit_qualification);
+>  void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu);
+>  int vmx_set_vmx_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 data);
+
+Reviewded-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Vitaly
+
