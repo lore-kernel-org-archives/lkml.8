@@ -2,130 +2,130 @@ Return-Path: <SRS0=CUu6=46=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A880C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FC2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B90D2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8682072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 14:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rvhd8ews"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W1HrsZ8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgCMOHi (ORCPT
+        id S1726882AbgCMOKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:07:38 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60168 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCMOHh (ORCPT
+        Fri, 13 Mar 2020 10:10:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45830 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726861AbgCMOKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:07:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I2rYj07tX855QAdcSOk0Rje4H8eVvnH6CuKQg93fcXA=; b=rvhd8ewsG0OOZPKTQ+geFM1nL
-        nw6R7pwgzFvdh9nAi2ouV7wzwvQYWaAus5FPAWj+kOeCABusjRkVEoQq0DYlZPtFsHYT2xU6gtP4K
-        0ngsMnMcb60GeFGCar1+wc02VEB1aNX8aQQrovzUXVmTAYW4h6DtiaxZ8NnMmiYB/tgj1WYCySpzF
-        3ml+4iug9nEoQq5/BsaZ9nhm40ABY8/oLEhUsP0uHi3+/UDg6+OwNU/3O5RHQ0OmPSNNmBqP2X3VY
-        S2C8Q1j2XNkcDqlRrDiCMCO3O6L2XJ+Oy6tu1PaWx7ENl01V3z0m41GbhlWaXNpgBeaLLloctKGn7
-        cQud0B2VA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35918)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jCkyL-0000fn-2f; Fri, 13 Mar 2020 14:07:33 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jCkyJ-0007NZ-Hq; Fri, 13 Mar 2020 14:07:31 +0000
-Date:   Fri, 13 Mar 2020 14:07:31 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/4] net: phy: xpcs: Return error upon RX/TX
- fault
-Message-ID: <20200313140731.GD25745@shell.armlinux.org.uk>
-References: <cover.1584106347.git.Jose.Abreu@synopsys.com>
- <7918fdf6bbe6505a64e54ae360c59c905aa3fe1d.1584106347.git.Jose.Abreu@synopsys.com>
+        Fri, 13 Mar 2020 10:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584108604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=F1V8F7R+emEsH2Puu+xTU6xnzq5JbKAu2uhy1Jl9ZpQ=;
+        b=W1HrsZ8+iu+NhfnOVMYd86Cwh5jX8ZGRpnqp1lA1lNgqrDnPOyMaYU9iKVpeWGhGUJ/bZY
+        smxqA1XI3agKUWweOEjP1HdiO+pvXROkmWPM8bP+jTH4MgSBqYmdc8NLZ6RjNKEZDFuVvl
+        CEP/OPQ1VjkLmdnyPFscXkpMImpVB08=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-g9vBft6BNmmdRxJRKpiV1g-1; Fri, 13 Mar 2020 10:09:59 -0400
+X-MC-Unique: g9vBft6BNmmdRxJRKpiV1g-1
+Received: by mail-wr1-f71.google.com with SMTP id p5so4276876wrj.17
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Mar 2020 07:09:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=F1V8F7R+emEsH2Puu+xTU6xnzq5JbKAu2uhy1Jl9ZpQ=;
+        b=ZGYMLrEnaBXxaVxFWrRU2F0N5On16ZmmG7GOpRSYgJznl6vIagPlMHgaAeffpN2Ng7
+         UlSfcTvr9yyXgS1HjDLjOAa+PvcE//ZrL9G3JOVGPVn+nB5FPhoEDQfQ6tQ8ZDylqTKc
+         6Sk4DVtAhkjKOffA0IJ1gMq8BqgcWGmg1f1xrHTLu6J1yUW9qOdnpRtRzSsQQQobUfZ2
+         kD0GtbucChRzzQt+GF8IDzO7Oou7HhjNg3aAgp26EJ/Inc4uVSyb40xaCmxdwBFS49t3
+         h22T6BgX8gA/igzSHMIFEXU9WgA2RWPBaXlTMiNl6j4stgxizywgbOO0PLF2X3F17mxI
+         YPlQ==
+X-Gm-Message-State: ANhLgQ3GpFQDYRnBEkkyFnrKUUb9+VlmvPgYafpLYkMy3hmnSKh28xpq
+        1NUOpBNNylPHMGRBU1ZPcqwovdDp94fkJuOsQuwp+HGp/+d95YtTHVS3kVOMB/juQ0EGJquCqP7
+        4jnTud64peVNawBgGIWYIThpJ
+X-Received: by 2002:adf:9071:: with SMTP id h104mr18213507wrh.359.1584108597987;
+        Fri, 13 Mar 2020 07:09:57 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvhEwV3TeTg8xQbLJb4GROPa8wOf4t+geLxrOrIV4oik7bg0a3LBUdPL/nDNQ3nNvTxJhw7oQ==
+X-Received: by 2002:adf:9071:: with SMTP id h104mr18213482wrh.359.1584108597771;
+        Fri, 13 Mar 2020 07:09:57 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id k126sm17084484wme.4.2020.03.13.07.09.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 07:09:54 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 09/10] KVM: VMX: Cache vmx->exit_reason in local u16 in vmx_handle_exit_irqoff()
+In-Reply-To: <20200312184521.24579-10-sean.j.christopherson@intel.com>
+References: <20200312184521.24579-1-sean.j.christopherson@intel.com> <20200312184521.24579-10-sean.j.christopherson@intel.com>
+Date:   Fri, 13 Mar 2020 15:09:47 +0100
+Message-ID: <87h7ysny6s.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7918fdf6bbe6505a64e54ae360c59c905aa3fe1d.1584106347.git.Jose.Abreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 02:39:41PM +0100, Jose Abreu wrote:
-> RX/TX fault status results in link errors. Return error upon these cases
-> so that XPCS can be correctly resumed.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Are you sure about this?  I'm sure that I read in IEEE 802.3 that
-a loss of link results in a receive fault being indicated in
-status register 2.
+> Use a u16 to hold the exit reason in vmx_handle_exit_irqoff(), as the
+> checks for INTR/NMI/WRMSR expect to encounter only the basic exit reason
+> in vmx->exit_reason.
+>
 
-See 49.2.14.1 describing "PCS_status" and the descriptions of MDIO
-registers 3.1.2 and 3.8.10.  Basically, the link status (3.1.2) is a
-latched-low version of PCS_status, and 3.8.10 is an inverted version
-of this, independently latched-high.
+True Sean would also add:
 
-Returning -EFAULT seems to mean that we'll soft-reset the PHY, and
-reconfigure it every time we attempt to read the status whenever the
-link is down.
+"No functional change intended."
 
-> 
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> 
+"Opportunistically align the params to handle_external_interrupt_irqoff()."
+
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
-> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/net/phy/mdio-xpcs.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/phy/mdio-xpcs.c b/drivers/net/phy/mdio-xpcs.c
-> index a4cbeecc6d42..23516397b982 100644
-> --- a/drivers/net/phy/mdio-xpcs.c
-> +++ b/drivers/net/phy/mdio-xpcs.c
-> @@ -190,10 +190,14 @@ static int xpcs_read_fault(struct mdio_xpcs_args *xpcs,
->  	if (ret < 0)
->  		return ret;
+>  arch/x86/kvm/vmx/vmx.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index d43e1d28bb58..910a7cadeaf7 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6287,16 +6287,16 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+>  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
 >  
-> -	if (ret & MDIO_STAT2_RXFAULT)
-> +	if (ret & MDIO_STAT2_RXFAULT) {
->  		xpcs_warn(xpcs, state, "Receiver fault detected!\n");
-> -	if (ret & MDIO_STAT2_TXFAULT)
-> +		return -EFAULT;
-> +	}
-> +	if (ret & MDIO_STAT2_TXFAULT) {
->  		xpcs_warn(xpcs, state, "Transmitter fault detected!\n");
-> +		return -EFAULT;
-> +	}
+>  static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+> -	enum exit_fastpath_completion *exit_fastpath)
+> +				   enum exit_fastpath_completion *exit_fastpath)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> +	u16 exit_reason = vmx->exit_reason;
 >  
->  	ret = xpcs_read_vendor(xpcs, MDIO_MMD_PCS, DW_VR_XS_PCS_DIG_STS);
->  	if (ret < 0)
-> -- 
-> 2.7.4
-> 
-> 
+> -	if (vmx->exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
+> +	if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
+>  		handle_external_interrupt_irqoff(vcpu);
+> -	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
+> +	else if (exit_reason == EXIT_REASON_EXCEPTION_NMI)
+>  		handle_exception_nmi_irqoff(vmx);
+> -	else if (!is_guest_mode(vcpu) &&
+> -		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+> +	else if (!is_guest_mode(vcpu) && exit_reason == EXIT_REASON_MSR_WRITE)
+>  		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+>  }
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Vitaly
+
